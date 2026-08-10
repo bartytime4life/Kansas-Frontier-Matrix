@@ -1,0 +1,97 @@
+# Validate the proposed bounded SpatialGeometry carrier profile.
+#
+# This workflow is read-only and uses synthetic geometry only. A green result
+# does not prove source, survey, domain, policy, release, or publication truth.
+name: spatial-geometry-validator
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/spatial-geometry-validator.yml"
+      - "contracts/common/spatial_geometry.md"
+      - "schemas/contracts/v1/common/spatial_geometry.schema.json"
+      - "fixtures/contracts/v1/common/spatial_geometry/**"
+      - "tools/validators/validate_spatial_geometry.py"
+      - "tools/validators/geometry/README.md"
+      - "tests/validators/test_validate_spatial_geometry.py"
+      - "docs/intake/exploratory/new-ideas-2-spatial-geometry-property-validation-source-map.md"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/spatial-geometry-validator.yml"
+      - "contracts/common/spatial_geometry.md"
+      - "schemas/contracts/v1/common/spatial_geometry.schema.json"
+      - "fixtures/contracts/v1/common/spatial_geometry/**"
+      - "tools/validators/validate_spatial_geometry.py"
+      - "tools/validators/geometry/README.md"
+      - "tests/validators/test_validate_spatial_geometry.py"
+      - "docs/intake/exploratory/new-ideas-2-spatial-geometry-property-validation-source-map.md"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spatial-geometry-validator-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-spatial-geometry:
+    name: validate-spatial-geometry
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused generated-property tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_spatial_geometry.py' \
+            --verbose
+
+      - name: Replay exact synthetic fixture profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_spatial_geometry.py --fixtures
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SpatialGeometry bounded carrier profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: strict JSON, current schema, six coordinate families, dimensionality, line/ring minima, simple polygon-ring checks, EPSG identifier syntax, EPSG:4326 bounds, deterministic value-safe findings, and synthetic fixture polarity."
+            echo "- Boundary: no repair, CRS transformation, source or survey authority, domain truth, rights/sensitivity decision, policy, review approval, lifecycle transition, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -27,6 +27,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
+    "hypothesis>=6.138.0,<7",
     "pytest>=9.1.1,<10",
 ]
 
