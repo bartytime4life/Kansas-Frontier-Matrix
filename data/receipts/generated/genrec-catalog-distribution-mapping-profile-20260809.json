@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-catalog-distribution-mapping-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/catalog-distribution-mapping-profile.yml",
+    "contracts/data/catalog_distribution_mapping_profile.md",
+    "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md",
+    "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/cases.json",
+    "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json",
+    "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py",
+    "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/catalog-distribution-mapping-profile.yml": "sha256:64a2eee3bae685973b1ceb2c9bda0b6c7cc3e9fbd4c01a65f0a4a475c5db629f",
+    "contracts/data/catalog_distribution_mapping_profile.md": "sha256:468b5c2f2e7df1d0e38c3c47bf0d7d550ff7a131c909088bf69639711350f88d",
+    "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md": "sha256:c0bc7c44cfdb149f79a8e2c3dfb52003ba8e1f0c8125e434f9ae5dd9ff3ea350",
+    "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/cases.json": "sha256:78c665ea5bb3fe3bfb6f54e5f3d1892cc6ecad988b2a61d4350224683606f45a",
+    "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json": "sha256:fc07b20dc934fec92a5cbf55182d222e59ad18284ff1d80b8bdd3f11aaa5aad8",
+    "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py": "sha256:13dceccad7fe37facccf3b12d85edc87d81d101ad5ef1d3ec6a234f585ddcc66",
+    "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py": "sha256:a283e79986291230a1d4a58e0cf929a050b124480c5b5d1445fc2c80a35f6c3a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:468b5c2f2e7df1d0e38c3c47bf0d7d550ff7a131c909088bf69639711350f88d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a549a10d0a475e6a4ee0a267ff9dd40374ddd9bc13e7ee424cad36be3e1fb007",
+      "sha256:dc6af77001648387b16b2d26c54ed79f2fc715f16786f165c1142ea79d5601b3",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#STAC-DCAT-PROV-Distribution-Cross-Mapping-Pattern",
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#page=351",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/data/catalog_matrix_closure_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/data/catalog_trust_extension.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/catalog-distribution-mapping-profile.yml": "CONFIRMED",
+    "contracts/data/catalog_distribution_mapping_profile.md": "PROPOSED",
+    "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json": "PROPOSED",
+    "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py": "CONFIRMED",
+    "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "9 deterministic tests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "17 exact cases passed across PASS and DENY."
+    },
+    {
+      "gate": "adjacent-catalog-matrix-closure-tests",
+      "outcome": "PASS",
+      "reason": "8 existing adjacent tests passed."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks passed the repository required profile."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-distribution-cross-mapping-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#STAC-DCAT-PROV-Distribution-Cross-Mapping-Pattern"
+    },
+    {
+      "id": "pass18-explicit-asset-roles-and-checksums",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#page=351"
+    },
+    {
+      "id": "existing-catalog-matrix-closure-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/data/catalog_matrix_closure_profile.md"
+    },
+    {
+      "id": "existing-catalog-trust-extension-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/data/catalog_trust_extension.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T01:34:10Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only CatalogDistributionMappingProfileCandidate packet derived from the Full Atlas distribution cross-mapping proposal and Pass 18 KFM-P18-INV-047. It cross-checks locator, checksum, media type, role, and PROV generation identity without emitting catalog records, contacting a registry, activating OCI/ORAS, resolving evidence, deciding policy, approving review, authorizing release, deploying, publishing, or authorizing public use."
+}
