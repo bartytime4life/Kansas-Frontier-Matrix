@@ -5,15 +5,13 @@
     ".github/workflows/ai-receipt.yml",
     "docs/intake/exploratory/ai-receipt-validator-closure-source-map.md",
     "tests/validators/test_validate_ai_receipt.py",
-    "tools/validators/validate_ai_receipt.py",
-    "tools/validators/validator_registry.json"
+    "tools/validators/validate_ai_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/ai-receipt.yml": "sha256:7355489435c054bb169dbac97832fbe6968d98414ca2eb8408d3afbca1448c6c",
-    "docs/intake/exploratory/ai-receipt-validator-closure-source-map.md": "sha256:01104b57ae08788104c221842c29194ad15b94a09e18547c806f8f23cb919f47",
-    "tests/validators/test_validate_ai_receipt.py": "sha256:db4f1a00ed808c70a3613e9c673166f723efe631b1c5a7fc05e09c891ccb5d93",
-    "tools/validators/validate_ai_receipt.py": "sha256:2929cf00c21f9a1d6804c8788224b935cb87372c1b60e0b6f3a678211747abfc",
-    "tools/validators/validator_registry.json": "sha256:56f10ee7fab0e7f303ab510545bf3d7c04f76cc9d2e5568aadc36d8d789178be"
+    ".github/workflows/ai-receipt.yml": "sha256:24661d0f94d38d554b0f3b184854bd1d0c6457166b6cc375f0d935246e7a3f14",
+    "docs/intake/exploratory/ai-receipt-validator-closure-source-map.md": "sha256:54040732d2f56cdb96ffb9eefeebb7ec656a64e33afc09e21776d8ffabab6736",
+    "tests/validators/test_validate_ai_receipt.py": "sha256:d1c5e49185fe56b77dd06b17768bc3f94eba20180826bc9423c08e76f5c41f70",
+    "tools/validators/validate_ai_receipt.py": "sha256:2929cf00c21f9a1d6804c8788224b935cb87372c1b60e0b6f3a678211747abfc"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -30,19 +28,13 @@
       "GitHub connector",
       "Google Drive connector",
       "repository evidence inspection",
-      "local deterministic Python validation",
-      "content-hash validation"
+      "local deterministic validation"
     ]
   },
   "inputs": {
-    "evidence_hashes": [
-      "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60"
-    ],
     "attached_docs": [
-      "GPT Markdown Prompt 4.0.pdf — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
-      "Kansas Frontier Matrix — AI Build Operating Contract.md",
-      "Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3",
-      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "Kansas Frontier Matrix — AI Build Operating Contract",
       "Google Drive: New Ideas 5-19-26"
     ],
     "evidence_refs": [
@@ -50,8 +42,6 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_ai_receipt.py",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/runtime/ai_receipt.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/schemas/contracts/v1/runtime/ai_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/tree/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/fixtures/contracts/v1/runtime/ai_receipt",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validator_registry.json",
       "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
     ]
   },
@@ -59,72 +49,56 @@
     ".github/workflows/ai-receipt.yml": "PROPOSED",
     "docs/intake/exploratory/ai-receipt-validator-closure-source-map.md": "PROPOSED",
     "tests/validators/test_validate_ai_receipt.py": "PROPOSED",
-    "tools/validators/validate_ai_receipt.py": "PROPOSED",
-    "tools/validators/validator_registry.json": "PROPOSED"
+    "tools/validators/validate_ai_receipt.py": "PROPOSED"
   },
   "validation_gates": [
     {
-      "gate": "repository-base-and-overlap-preflight",
+      "gate": "repository-and-overlap-preflight",
       "outcome": "PASS",
-      "reason": "Pinned main at ef1ba46a19e4de7c176e9d093c1285e73a0af75a, confirmed the dedicated AIReceipt validator stub, strict paired schema, synthetic fixtures, semantic contract, registry state, and absence of an open matching pull request."
+      "reason": "Pinned main, confirmed the AIReceipt stub, paired contract/schema/fixtures, and no open matching PR before branch creation."
     },
     {
-      "gate": "directory-rules-and-dependency-closure",
+      "gate": "directory-and-dependency-closure",
       "outcome": "PASS",
-      "reason": "Kept the existing validator path in tools, added tests, read-only workflow, registry wiring, source lineage, and generated provenance in their established responsibility roots; no contract, schema, policy, source, release, or public authority home changed."
+      "reason": "Kept the same validator path and added only focused tests, read-only workflow, source lineage, and generated provenance in established roots."
     },
     {
-      "gate": "python-compile-and-focused-tests",
+      "gate": "focused-local-validation",
       "outcome": "PASS",
-      "reason": "Python compilation succeeded and seven focused tests passed, including fixture polarity, placeholder digest, blank ref, duplicate-key, non-finite-number, symlink, payload-safe serialization, and registry assertions."
+      "reason": "Python compilation, six focused tests, and replay of two valid and three invalid fixtures passed without network access."
     },
     {
-      "gate": "synthetic-fixture-replay",
+      "gate": "immutable-registry-repair",
       "outcome": "PASS",
-      "reason": "Both existing valid receipt fixtures passed and all three existing invalid fixtures failed without network access."
+      "reason": "Exact-head CI showed the registry edit invalidated earlier immutable receipts; the repaired branch restores validator_registry.json byte-for-byte and uses dedicated workflow coverage."
     },
     {
-      "gate": "workflow-and-json-static-validation",
-      "outcome": "PASS",
-      "reason": "Workflow YAML and validator registry JSON parse successfully; workflow permissions are read-only and all actions are immutably pinned."
-    },
-    {
-      "gate": "repository-native-generated-receipt-validator",
+      "gate": "repository-native-exact-head",
       "outcome": "SKIPPED",
-      "reason": "No mounted full checkout was available; hosted exact-head validation runs the repository-native generated-receipt validator after push."
+      "reason": "The repaired head must rerun hosted checks after push."
     },
     {
       "gate": "human-review-and-runtime-adoption",
       "outcome": "SKIPPED",
-      "reason": "Human semantic review, policy/citation ref resolution, runtime invocation, schema-authority reconciliation, and release-gate adoption remain outside this fixture-only implementation slice."
+      "reason": "Human review, ref resolution, runtime adoption, schema-authority reconciliation, release, and publication remain separate."
     }
   ],
   "policy_decisions": [],
   "citations": [
     {
-      "id": "current-ai-receipt-validator-stub",
+      "id": "current-validator-stub",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_ai_receipt.py"
     },
     {
-      "id": "ai-receipt-semantic-contract",
+      "id": "runtime-ai-receipt-contract",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/runtime/ai_receipt.md"
     },
     {
-      "id": "ai-receipt-strict-runtime-schema",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/schemas/contracts/v1/runtime/ai_receipt.schema.json"
-    },
-    {
-      "id": "drive-governed-ai-idea-source",
+      "id": "drive-governed-ai-source",
       "validated": true,
       "evidence_ref": "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
-    },
-    {
-      "id": "accepted-directory-governance",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     }
   ],
   "human_review": {
@@ -136,9 +110,9 @@
   "created_at": "2026-08-10T19:13:50Z",
   "emitter": "openai/gpt-5.6-pro",
   "links": {
-    "pr_number": null,
+    "pr_number": 2493,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored closure of the existing dedicated AIReceipt validator stub. The change validates only the existing strict runtime schema, local string/digest consistency, fixture polarity, and registry wiring. It does not resolve evidence or policy, validate cited sources, call a model, approve an answer, settle the duplicate AIReceipt schema authority conflict, promote lifecycle state, release, deploy, or publish. Human review remains pending."
+  "notes": "Fixture-only closure of the existing AIReceipt validator stub. The repaired exact head preserves the shared registry bytes after CI proved earlier immutable receipts bind them. This change creates no evidence, policy, citation, review, answer, lifecycle, release, deployment, or publication authority."
 }

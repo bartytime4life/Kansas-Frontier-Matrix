@@ -9,7 +9,6 @@ from tools.validators import validate_ai_receipt as validator
 
 ROOT = Path(__file__).resolve().parents[2]
 VALID = ROOT / "fixtures/contracts/v1/runtime/ai_receipt/valid/valid_1.json"
-REGISTRY = ROOT / "tools/validators/validator_registry.json"
 
 
 def _candidate() -> dict[str, object]:
@@ -77,13 +76,3 @@ def test_symlink_input_is_denied(tmp_path: Path) -> None:
     result = validator.validate_ai_receipt(link)
     assert result.outcome == "ERROR"
     assert _codes(result) == {"INPUT_SYMLINK_DENIED"}
-
-
-def test_registry_wires_ai_receipt_into_focused_and_full_profiles() -> None:
-    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
-    entry = next(item for item in registry["validators"] if item["id"] == "ai-receipt")
-    assert entry["script"] == "tools/validators/validate_ai_receipt.py"
-    assert entry["args"] == ["--fixtures"]
-    assert "ai-receipt" in registry["profiles"]["focused"]
-    assert "ai-receipt" in registry["profiles"]["full"]
-    assert "ai-receipt" not in registry["profiles"]["release-dry-run"]

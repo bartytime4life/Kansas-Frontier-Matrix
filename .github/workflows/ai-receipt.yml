@@ -14,7 +14,6 @@ on:
       - "fixtures/contracts/v1/runtime/ai_receipt/**"
       - "tests/validators/test_validate_ai_receipt.py"
       - "tools/validators/validate_ai_receipt.py"
-      - "tools/validators/validator_registry.json"
   push:
     branches:
       - main
@@ -25,7 +24,6 @@ on:
       - "fixtures/contracts/v1/runtime/ai_receipt/**"
       - "tests/validators/test_validate_ai_receipt.py"
       - "tools/validators/validate_ai_receipt.py"
-      - "tools/validators/validator_registry.json"
   workflow_dispatch:
 
 permissions:
@@ -80,6 +78,6 @@ jobs:
             echo "## AIReceipt — fixture-only validation"
             echo
             echo "This job proves only closed schema shape, local string/digest checks,"
-            echo "fixture polarity, registry wiring, and generated-receipt integrity."
+            echo "fixture polarity and generated-receipt integrity."
             echo "It creates no evidence, policy, citation, review, answer, release, or publication authority."
           } >> "${GITHUB_STEP_SUMMARY}"
