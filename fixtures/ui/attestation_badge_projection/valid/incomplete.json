@@ -1,0 +1,12 @@
+{
+  "profile": "kfm.explorer.attestation-badge.public-safe.v1",
+  "badge_id": "kfm:attestation-badge:synthetic:incomplete",
+  "outcome": "ABSTAIN",
+  "reason_code": "CHECKS_INCOMPLETE",
+  "layer_ref": null,
+  "evaluated_at": null,
+  "attestation_ref": null,
+  "run_receipt_ref": null,
+  "evidence_bundle_ref": null,
+  "release_manifest_ref": null
+}
