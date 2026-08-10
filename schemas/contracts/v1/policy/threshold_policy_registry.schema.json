@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/policy/threshold_policy_registry.schema.json",
+  "title": "ThresholdPolicyRegistry",
+  "description": "Closed, fixture-first profile for an inactive registry of unresolved threshold-policy slots. Version 1 cannot carry an adopted operator, value, unit, effective date, supersession binding, or authority grant.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/policy/threshold_policy_registry.md",
+    "registry": "policy/thresholds/registry.v1.json",
+    "fixtures_root": "fixtures/contracts/v1/policy/threshold_policy_registry/",
+    "validator": "tools/validators/policy/validate_threshold_policy_registry.py",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "hash_profile": "RFC8785-JCS+SHA-256",
+    "authority": "unresolved_slot_registration_only"
+  },
+  "required": [
+    "object_type",
+    "registry_id",
+    "schema_version",
+    "status",
+    "canonicalization_profile",
+    "spec_hash",
+    "thresholds",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "ThresholdPolicyRegistry"
+    },
+    "registry_id": {
+      "const": "kfm://policy/thresholds/registry/v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "thresholds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/threshold_slot"
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numeric_policy_adopted",
+        "policy_evaluation_authorized",
+        "watcher_binding_authorized",
+        "source_activation_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "numeric_policy_adopted": {
+          "const": false
+        },
+        "policy_evaluation_authorized": {
+          "const": false
+        },
+        "watcher_binding_authorized": {
+          "const": false
+        },
+        "source_activation_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 640,
+      "pattern": "^\\S+$"
+    },
+    "reference_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/reference"
+      }
+    },
+    "threshold_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "threshold_id",
+        "domain",
+        "metric",
+        "threshold_class",
+        "purpose",
+        "value_state",
+        "operator",
+        "value",
+        "unit",
+        "binding_state",
+        "review_state",
+        "effective_from",
+        "supersedes",
+        "reason_codes",
+        "steward_roles",
+        "evidence_refs",
+        "pressure_refs"
+      ],
+      "properties": {
+        "threshold_id": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 160,
+          "pattern": "^kfm\\.threshold\\.[a-z0-9][a-z0-9.-]*\\.v[1-9][0-9]*$"
+        },
+        "domain": {
+          "enum": [
+            "agriculture",
+            "atmosphere",
+            "hydrology",
+            "soil"
+          ]
+        },
+        "metric": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 96,
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "threshold_class": {
+          "enum": [
+            "MATERIALITY",
+            "PERSISTENCE",
+            "SIGNAL_QUALITY"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 360
+        },
+        "value_state": {
+          "const": "UNRESOLVED"
+        },
+        "operator": {
+          "type": "null"
+        },
+        "value": {
+          "type": "null"
+        },
+        "unit": {
+          "type": "null"
+        },
+        "binding_state": {
+          "const": "UNBOUND"
+        },
+        "review_state": {
+          "const": "HOLD"
+        },
+        "effective_from": {
+          "type": "null"
+        },
+        "supersedes": {
+          "type": "null"
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "EVIDENCE_UNRESOLVED",
+              "NO_VALUE_ADOPTED",
+              "STEWARD_REVIEW_REQUIRED"
+            ]
+          }
+        },
+        "steward_roles": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_array"
+        },
+        "pressure_refs": {
+          "$ref": "#/$defs/reference_array"
+        }
+      }
+    }
+  }
+}

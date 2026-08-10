@@ -1,0 +1,199 @@
+{
+  "object_type": "ThresholdPolicyRegistry",
+  "registry_id": "kfm://policy/thresholds/registry/v1",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "canonicalization_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:8b5442cbc3eabaee4ddf87ef06c3c080a4e5df7d3a6edc2d79d88b0e5060cfe1",
+  "thresholds": [
+    {
+      "threshold_id": "kfm.threshold.agriculture.cdl-drift-materiality.v1",
+      "domain": "agriculture",
+      "metric": "cdl_drift_materiality",
+      "threshold_class": "MATERIALITY",
+      "purpose": "Name the unresolved policy question for when Cropland Data Layer drift merits steward review without adopting an illustrative percentage or area value.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "AGRICULTURE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008",
+        "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ"
+      ],
+      "pressure_refs": [
+        "docs/domains/agriculture/PIPELINE.md",
+        "tools/ingest/cdl_watch/README.md"
+      ]
+    },
+    {
+      "threshold_id": "kfm.threshold.atmosphere.aod-materiality.v1",
+      "domain": "atmosphere",
+      "metric": "aod_materiality",
+      "threshold_class": "SIGNAL_QUALITY",
+      "purpose": "Name the unresolved policy question for using aerosol optical depth as a review or tile-health signal without treating it as a scientific or emergency conclusion.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "ATMOSPHERE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+      ],
+      "pressure_refs": [
+        "docs/domains/atmosphere/VERIFICATION_BACKLOG.md",
+        "docs/intake/IDEA_INTAKE.md"
+      ]
+    },
+    {
+      "threshold_id": "kfm.threshold.atmosphere.frp-materiality.v1",
+      "domain": "atmosphere",
+      "metric": "frp_materiality",
+      "threshold_class": "SIGNAL_QUALITY",
+      "purpose": "Name the unresolved policy question for using fire radiative power as a review or tile-health signal without converting remote-sensing detections into observed-fire truth.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "ATMOSPHERE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+      ],
+      "pressure_refs": [
+        "docs/domains/atmosphere/VERIFICATION_BACKLOG.md",
+        "docs/sources/catalog/nasa/nasa-firms.md"
+      ]
+    },
+    {
+      "threshold_id": "kfm.threshold.atmosphere.ozone-materiality.v1",
+      "domain": "atmosphere",
+      "metric": "ozone_materiality",
+      "threshold_class": "MATERIALITY",
+      "purpose": "Name the unresolved policy question for an ozone materiality or review threshold without adopting a health, regulatory, or public-alert interpretation.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "ATMOSPHERE_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+      ],
+      "pressure_refs": [
+        "docs/domains/atmosphere/VERIFICATION_BACKLOG.md"
+      ]
+    },
+    {
+      "threshold_id": "kfm.threshold.hydrology.persistence-review.v1",
+      "domain": "hydrology",
+      "metric": "persistence_review",
+      "threshold_class": "PERSISTENCE",
+      "purpose": "Name the unresolved policy question for how long a hydrologic anomaly must persist before review without adopting a duration or event classification.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "HYDROLOGY_STEWARD",
+        "POLICY_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+      ],
+      "pressure_refs": [
+        "docs/domains/hydrology/EXPANSION_BACKLOG.md",
+        "tools/ingest/hydrology_watch/README.md"
+      ]
+    },
+    {
+      "threshold_id": "kfm.threshold.soil.moisture-materiality.v1",
+      "domain": "soil",
+      "metric": "soil_moisture_materiality",
+      "threshold_class": "MATERIALITY",
+      "purpose": "Name the unresolved policy question for soil-moisture materiality without adopting an operational cutoff or changing Soil promotion behavior.",
+      "value_state": "UNRESOLVED",
+      "operator": null,
+      "value": null,
+      "unit": null,
+      "binding_state": "UNBOUND",
+      "review_state": "HOLD",
+      "effective_from": null,
+      "supersedes": null,
+      "reason_codes": [
+        "NO_VALUE_ADOPTED",
+        "STEWARD_REVIEW_REQUIRED"
+      ],
+      "steward_roles": [
+        "POLICY_STEWARD",
+        "SOIL_STEWARD"
+      ],
+      "evidence_refs": [
+        "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-008"
+      ],
+      "pressure_refs": [
+        "policy/domains/soil/soil_moisture_validator.rego",
+        "tools/ingest/ssurgo_watch/README.md"
+      ]
+    }
+  ],
+  "governance": {
+    "numeric_policy_adopted": false,
+    "policy_evaluation_authorized": false,
+    "watcher_binding_authorized": false,
+    "source_activation_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}
