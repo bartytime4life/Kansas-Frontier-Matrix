@@ -18,11 +18,11 @@ related: [../../../apps/explorer-web/src/features/county_ndvi_change_panel/READM
 
 ## Source statement
 
-`KFM-P32-FEAT-0005` in the supplied *KFM Domains v1.1 + Pass 23/Pass 32 Consolidated Atlas* proposes a county panel showing baseline and recent windows, a delta threshold, changed-area percentage, cluster count, and evidence state. `KFM-P32-IDEA-0011` requires county NDVI deltas to remain proposed indicators until source ETags, cloud masks, connected components, persistence, and steward validation support them. The rendered source pages and the connected Drive document `New Ideas 5-19-26` corroborate the county-scale NDVI and deterministic-evidence lineage. They remain proposal evidence, not repository, scientific, source-admission, policy, or release authority.
+`KFM-P32-FEAT-0005` in the supplied private Pass 32 source corpus proposes a county panel showing baseline and recent windows, a delta threshold, changed-area percentage, cluster count, and evidence state. `KFM-P32-IDEA-0011` requires county NDVI deltas to remain proposed indicators until source ETags, cloud masks, connected components, persistence, and steward validation support them. The rendered source pages and a separate private connected-Drive planning document corroborate the county-scale NDVI and deterministic-evidence lineage. Private source titles and identifiers are intentionally withheld from this public branch. These materials remain proposal evidence, not repository, scientific, source-admission, policy, or release authority.
 
 ## Current repository reconciliation
 
-At inspected `main@7c69e025e2b274be4a19f49fa37e22401a2fe757`, the repository already contains the deterministic no-network `NdviDeltaComputation` profile, HLS NDVI materiality and readiness checks, and a separate vegetation connectivity gate. The recent NDVI computation explicitly leaves county aggregation, clustering, evidence closure, and public UI out of its authority. Current open PRs implement a View Registry inspector and streamflow QC dashboard on disjoint paths; neither implements this card.
+At initial inspection `main@7c69e025e2b274be4a19f49fa37e22401a2fe757`, the repository already contained the deterministic no-network `NdviDeltaComputation` profile, HLS NDVI materiality and readiness checks, and a separate vegetation connectivity gate. The NDVI computation explicitly leaves county aggregation, clustering, evidence closure, and public UI out of its authority. Contemporaneous duplicate, branch, and exact-path searches found no implementation of this card. Delivery was refreshed and revalidated against `main@ef1ba46a19e4de7c176e9d093c1285e73a0af75a`; intervening changes were path-disjoint.
 
 The smallest dependency-closed gap is an unmounted Explorer projection that displays supplied synthetic aggregates while exposing that evidence is referenced but unresolved. No source connector, raster reader, county aggregator, cluster detector, EvidenceBundle producer, contract, schema, policy, route, workflow, or lifecycle writer is justified here.
 
@@ -40,7 +40,7 @@ Accepted ADR-0029 and Directory Rules route the user surface and app-local adapt
 
 - Consolidated atlas card `KFM-P32-FEAT-0005`, spec hash `sha256:1ac995f451999184cfac1057ccb48966ff9af464303ad225c56211cd1c5490ed`.
 - Consolidated atlas card `KFM-P32-IDEA-0011`, spec hash `sha256:84a3d05450524471afc055265a1650ef10a615150efdebf8352280d6f63ec4b5`.
-- Google Drive document `New Ideas 5-19-26`: `https://docs.google.com/document/d/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ`.
+- Private connected-Drive corroboration was inspected; its title and identifier are omitted from the public branch.
 - Repository foundations: `contracts/domains/agriculture/ndvi_delta_computation.md` and `contracts/domains/agriculture/vegetation_connectivity_gate.md`.
 
 ## Validation and rollback

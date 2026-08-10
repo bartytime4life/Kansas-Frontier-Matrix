@@ -26,7 +26,7 @@
     "apps/explorer-web/tests/browser/county-ndvi-change-panel.html": "sha256:81b12b6ba58aea1b1b5ecef0ab2b359d4cbc72e4f18a8a76d3a76579c5e49eba",
     "apps/explorer-web/tests/browser/county-ndvi-change-panel.spec.ts": "sha256:b2c334aaa902f9bf20182af14f90511f79d670ff7e64544e82c5075a71dab0a2",
     "apps/explorer-web/tests/county-ndvi-change-panel.test.ts": "sha256:3af0cba38c02b302e5ea025be2f02daa152e73110f9f885ae9cf0234da0bc513",
-    "docs/intake/exploratory/pass-32-county-ndvi-change-panel-source-map.md": "sha256:b9bdd50936112b9eda9cb58b29fbdab69aa19c4470683dfabeac79df12e9e07f",
+    "docs/intake/exploratory/pass-32-county-ndvi-change-panel-source-map.md": "sha256:4b6488dfabf0ba0112ba9bec3572d91efada5924d2f2816d73d5ce596baf53dc",
     "fixtures/ui/county_ndvi_change_projection/README.md": "sha256:b85fd64d16d5d2f6ea025a9aa14851df27858d12796cc8eea153851ac2b34f66",
     "fixtures/ui/county_ndvi_change_projection/invalid/delta-mismatch.json": "sha256:a5d76a47c63db541d7f8544773de937ad249ed31896e3a98f39d21e5a758d864",
     "fixtures/ui/county_ndvi_change_projection/invalid/extra-field.json": "sha256:74466854dd197e8ec730bf8a7093813881acf39dadf0fe1f73b20fa05cd1b5c3",
@@ -61,14 +61,12 @@
       "sha256:84a3d05450524471afc055265a1650ef10a615150efdebf8352280d6f63ec4b5"
     ],
     "attached_docs": [
-      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
-      "New Ideas 5-19-26",
-      "Directory Rules"
+      "Private user-supplied Pass 32 source corpus (identifiers withheld)",
+      "Repository Directory Rules"
     ],
     "evidence_refs": [
-      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0005",
-      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0011",
-      "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "private-corpus:pass32#KFM-P32-FEAT-0005",
+      "private-corpus:pass32#KFM-P32-IDEA-0011",
       "repo:bartytime4life/Kansas-Frontier-Matrix@7c69e025e2b274be4a19f49fa37e22401a2fe757",
       "repo:contracts/domains/agriculture/ndvi_delta_computation.md",
       "repo:contracts/domains/agriculture/vegetation_connectivity_gate.md",
@@ -96,12 +94,17 @@
     {
       "gate": "repository-and-pr-overlap-preflight",
       "outcome": "PASS",
-      "reason": "Current main and open pull requests were searched for both card IDs, feature terms, and intended paths; the two open Explorer PRs are path-disjoint."
+      "reason": "Initial and pre-delivery searches covered both card IDs, feature terms, branches, pull requests, and intended paths; no implementation of this card was found and contemporaneous work was path-disjoint."
     },
     {
       "gate": "source-pdf-visual-inspection",
       "outcome": "PASS",
       "reason": "The consolidated atlas pages carrying KFM-P32-FEAT-0005 and KFM-P32-IDEA-0011 were rendered and visually inspected."
+    },
+    {
+      "gate": "private-source-publication-boundary",
+      "outcome": "PASS",
+      "reason": "Private connected-Drive titles, URLs, and file identifiers are omitted from public artifacts; only card IDs, content digests, and a generic private-corpus reference remain."
     },
     {
       "gate": "projection-and-authority-boundary",
@@ -121,7 +124,12 @@
     {
       "gate": "explorer-full-unit-suite",
       "outcome": "PASS",
-      "reason": "The repository test:unit command passed 24 files and 183 tests."
+      "reason": "The repository test:unit command passed 26 files and 198 tests on the delivery base."
+    },
+    {
+      "gate": "repository-wide-validation",
+      "outcome": "PASS",
+      "reason": "All 8 registered validators passed; 401 schema and contract tests plus 29 subtests passed on the delivery base."
     },
     {
       "gate": "ndvi-computation-foundation-suite",
@@ -159,14 +167,9 @@
   ],
   "citations": [
     {
-      "id": "attachment:pass32-county-ndvi-change-panel",
+      "id": "private-corpus:pass32-county-ndvi-change-panel",
       "validated": true,
-      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0005"
-    },
-    {
-      "id": "gdrive:new-ideas-5-19-26",
-      "validated": true,
-      "evidence_ref": "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+      "evidence_ref": "private-corpus:pass32#KFM-P32-FEAT-0005"
     },
     {
       "id": "repository:ndvi-delta-computation",
