@@ -1,0 +1,92 @@
+# Validate the fixture-only renderer capability profile candidate.
+name: renderer-capability-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/renderer-capability-profile.yml"
+      - "contracts/ui/renderer_capability_profile.md"
+      - "schemas/contracts/v1/ui/renderer_capability_profile.schema.json"
+      - "fixtures/contracts/v1/ui/renderer_capability_profile/**"
+      - "tools/validators/ui/validate_renderer_capability_profile.py"
+      - "tests/validators/ui/test_renderer_capability_profile.py"
+      - "docs/intake/exploratory/renderer-capability-profile-source-map.md"
+      - "contracts/ui/view_registry_profile.md"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "contracts/release/tile_artifact_manifest.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-renderer-capability-profile-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/renderer-capability-profile.yml"
+      - "contracts/ui/renderer_capability_profile.md"
+      - "schemas/contracts/v1/ui/renderer_capability_profile.schema.json"
+      - "fixtures/contracts/v1/ui/renderer_capability_profile/**"
+      - "tools/validators/ui/validate_renderer_capability_profile.py"
+      - "tests/validators/ui/test_renderer_capability_profile.py"
+      - "docs/intake/exploratory/renderer-capability-profile-source-map.md"
+      - "contracts/ui/view_registry_profile.md"
+      - "contracts/ui/evidence_drawer_payload.md"
+      - "contracts/release/tile_artifact_manifest.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-renderer-capability-profile-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renderer-capability-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-renderer-capability-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests and fixture replay
+        run: |
+          python -m unittest -v \
+            tests.validators.ui.test_renderer_capability_profile
+          python tools/validators/ui/validate_renderer_capability_profile.py \
+            --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-renderer-capability-profile-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### RendererCapabilityProfileCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only abstract-interface capability declaration."
+            echo "- Boundary: no renderer selection, install, load, runtime probe, store read, policy decision, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
