@@ -1,0 +1,95 @@
+# Validate the fixture-only Habitat cover-class crosswalk profile candidate.
+name: cover-class-crosswalk-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/cover-class-crosswalk-profile.yml"
+      - "contracts/domains/habitat/land_cover/cover_class_crosswalk_profile.md"
+      - "schemas/contracts/v1/domains/habitat/land_cover/cover_class_crosswalk_profile.schema.json"
+      - "fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json"
+      - "tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py"
+      - "tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py"
+      - "docs/intake/exploratory/cover-class-crosswalk-profile-source-map.md"
+      - "contracts/domains/habitat/land_cover/crosswalk.md"
+      - "contracts/domains/habitat/land_cover/class_scheme.md"
+      - "docs/domains/habitat/sublanes/land_cover.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-cover-class-crosswalk-profile-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cover-class-crosswalk-profile.yml"
+      - "contracts/domains/habitat/land_cover/cover_class_crosswalk_profile.md"
+      - "schemas/contracts/v1/domains/habitat/land_cover/cover_class_crosswalk_profile.schema.json"
+      - "fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json"
+      - "tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py"
+      - "tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py"
+      - "docs/intake/exploratory/cover-class-crosswalk-profile-source-map.md"
+      - "contracts/domains/habitat/land_cover/crosswalk.md"
+      - "contracts/domains/habitat/land_cover/class_scheme.md"
+      - "docs/domains/habitat/sublanes/land_cover.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-cover-class-crosswalk-profile-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cover-class-crosswalk-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-cover-class-crosswalk-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          python -m unittest discover -v \
+            -s tests/domains/habitat/land_cover/crosswalk \
+            -p "test_*.py"
+          python -m pytest -q \
+            tests/validators/domains/habitat/test_land_cover_materiality.py
+          python tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py \
+            --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-cover-class-crosswalk-profile-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### CoverClassCrosswalkProfileCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only ontology-version, coverage, directionality, and lossiness checks."
+            echo "- Boundary: no source activation, real-data recode, evidence or policy authority, review approval, renderer transform, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

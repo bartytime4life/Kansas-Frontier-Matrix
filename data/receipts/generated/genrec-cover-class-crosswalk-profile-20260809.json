@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-cover-class-crosswalk-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/cover-class-crosswalk-profile.yml",
+    "contracts/domains/habitat/land_cover/cover_class_crosswalk_profile.md",
+    "docs/intake/exploratory/cover-class-crosswalk-profile-source-map.md",
+    "fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json",
+    "schemas/contracts/v1/domains/habitat/land_cover/cover_class_crosswalk_profile.schema.json",
+    "tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py",
+    "tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/cover-class-crosswalk-profile.yml": "sha256:d580644759ea83a5f1f8a3e9400ec6d0cf0add3ab81ca76d6b69c85a69087255",
+    "contracts/domains/habitat/land_cover/cover_class_crosswalk_profile.md": "sha256:93e8e20d59a1a9a535db5ec7acd30c181b4357ac614d00dc2a45db2a7b4f0f94",
+    "docs/intake/exploratory/cover-class-crosswalk-profile-source-map.md": "sha256:16e6537eb87c7800f7d4d2d2c87ff0c9aa5b4673d7db258ba54c29ca2bfaf2eb",
+    "fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json": "sha256:f2d2db451ebf2456bacc28a7c4e183ea5ebd5cf599c1d9ad0541b8b3e3c9bec8",
+    "schemas/contracts/v1/domains/habitat/land_cover/cover_class_crosswalk_profile.schema.json": "sha256:4c799bd83ced8a61c58986cda6f1f6bc1f2e903bbe2a0d51bcd1515878b0947c",
+    "tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py": "sha256:f95f8410caaffc20182d6ac703c7f5a16042850fd220e6b5dd2d9ed4a76bbb93",
+    "tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py": "sha256:76096b00ec362b9da7062beb9b6344a0b5612edeb9bd0f8a8d76aebf39f931f4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:93e8e20d59a1a9a535db5ec7acd30c181b4357ac614d00dc2a45db2a7b4f0f94",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:30a010d390cffe11292ea045024f86c240dc3896584479b6d4a3707988f6db44",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:913316440774af9d862e1f375b1d7ff01fbfad61081a576a89dae7ba25eaae50",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MOD-004",
+      "attachment://KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#page=853",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Connector-and-Watcher-as-Anti-Corruption-Layer-Capability",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/domains/habitat/land_cover/crosswalk.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/docs/domains/habitat/sublanes/land_cover.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/cover-class-crosswalk-profile.yml": "CONFIRMED",
+    "contracts/domains/habitat/land_cover/cover_class_crosswalk_profile.md": "PROPOSED",
+    "docs/intake/exploratory/cover-class-crosswalk-profile-source-map.md": "CONFIRMED",
+    "fixtures/domains/habitat/land_cover/crosswalk/profile_cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/habitat/land_cover/cover_class_crosswalk_profile.schema.json": "PROPOSED",
+    "tests/domains/habitat/land_cover/crosswalk/test_cover_class_crosswalk_profile.py": "CONFIRMED",
+    "tools/validators/domains/habitat/validate_cover_class_crosswalk_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "11 deterministic tests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "21 exact cases passed across PASS and DENY."
+    },
+    {
+      "gate": "adjacent-land-cover-materiality-tests",
+      "outcome": "PASS",
+      "reason": "9 existing adjacent tests and 13 parameterized subtests passed."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks passed the repository required profile."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-ontology-version-drift-rule",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MOD-004"
+    },
+    {
+      "id": "consolidated-atlas-class-ontology-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#page=853"
+    },
+    {
+      "id": "full-atlas-anticorruption-version-carriage",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Connector-and-Watcher-as-Anti-Corruption-Layer-Capability"
+    },
+    {
+      "id": "existing-habitat-crosswalk-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/contracts/domains/habitat/land_cover/crosswalk.md"
+    },
+    {
+      "id": "existing-habitat-land-cover-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/docs/domains/habitat/sublanes/land_cover.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7335ed9ea0f81342ae0b1c7828a21ac74711c78b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T01:49:09Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only CoverClassCrosswalkProfileCandidate packet derived from Pass 20 KFM-IDX-MOD-004, consolidated Atlas card KFM-P4-PROG-0006, the Full Atlas anti-corruption/version-carriage proposal, and the existing Habitat crosswalk contract. It checks ontology-version binding, complete class coverage, visible lossiness, forward-only directionality, source-role preservation, and non-authority without activating a source, recoding data, resolving evidence, deciding policy, approving review, controlling a renderer, authorizing release, publishing, or authorizing public use."
+}
