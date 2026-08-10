@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-asynchronous-transfer-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/asynchronous-transfer-assessment.yml",
+    "contracts/source/asynchronous_transfer_assessment.md",
+    "docs/intake/exploratory/asynchronous-transfer-assessment-source-map.md",
+    "fixtures/contracts/v1/source/asynchronous_transfer_assessment/cases.json",
+    "schemas/contracts/v1/source/asynchronous_transfer_assessment.schema.json",
+    "tests/validators/test_validate_asynchronous_transfer_assessment.py",
+    "tools/validators/source/validate_asynchronous_transfer_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/asynchronous-transfer-assessment.yml": "sha256:1fd77456dd6764a8c200401b4e2dfa06534e810d04d2dc4c9a3ca91c0d7d1a12",
+    "contracts/source/asynchronous_transfer_assessment.md": "sha256:3d78e8b7adf5ee7b4c70b95d7c53742222364cb6f5221b4b105416cb64d2389f",
+    "docs/intake/exploratory/asynchronous-transfer-assessment-source-map.md": "sha256:034135bf1e7396a50ef9dd6564de7165269584ab1b0bbd38f9202d1bf83ca3ee",
+    "fixtures/contracts/v1/source/asynchronous_transfer_assessment/cases.json": "sha256:00e789d752d8a195de6caf788eb316b68051925a1b6ab170b0d4993f08aec3b8",
+    "schemas/contracts/v1/source/asynchronous_transfer_assessment.schema.json": "sha256:b74091ad327ca54c07fa4990541c86e0dced11071b25b14fca5f21c42e175d1c",
+    "tests/validators/test_validate_asynchronous_transfer_assessment.py": "sha256:13a798aeaf8ce0acab870da69b629e66d390023aee8439c0a463aa5b61e6c2e9",
+    "tools/validators/source/validate_asynchronous_transfer_assessment.py": "sha256:18f54bd6c7896c09cf48edc8820dd85e1a4b7004bde8fd6bd6fa49b56dbdf61e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:3d78e8b7adf5ee7b4c70b95d7c53742222364cb6f5221b4b105416cb64d2389f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/docs/kfm_full_atlas_seed_cards.md#kfm-triad-050",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/contracts/source/source_polling_checkpoint.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/asynchronous-transfer-assessment.yml": "CONFIRMED",
+    "contracts/source/asynchronous_transfer_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/asynchronous-transfer-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/asynchronous_transfer_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/asynchronous_transfer_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_asynchronous_transfer_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_asynchronous_transfer_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Validated locally with jsonschema 4.25.1; the repository currently declares a newer compatible floor for hosted execution."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "10 deterministic tests and 20 subtests passed in the isolated authoring directory."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "20 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "json-and-workflow-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "SKIPPED",
+      "reason": "The synced local checkout disappeared during authoring; hosted or reviewer-side repository validation remains required."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-corpus-location",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "full-atlas-asynchronous-transfer-triad",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/docs/kfm_full_atlas_seed_cards.md#kfm-triad-050"
+    },
+    {
+      "id": "existing-source-polling-checkpoint-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/contracts/source/source_polling_checkpoint.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/50c52dc5318403fca110d23e523a94613e69adec/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T04:21:03Z",
+  "emitter": "OpenAI GPT-5 via Codex GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only AsynchronousTransferAssessment packet derived from Full Atlas KFM-TRIAD-050 and KFM-CAND-0148 through KFM-CAND-0150 after current-main collision review. It separates provider request identity, normalized query identity, provider job state, local partial bytes, checkpoint state, final artifact identity, archive expiry, retry lineage, and ingest-candidate posture without contacting a provider, downloading bytes, writing RAW data, authorizing ingest, resolving evidence, deciding policy, approving review, promoting, releasing, deploying, publishing, or authorizing public use."
+}
