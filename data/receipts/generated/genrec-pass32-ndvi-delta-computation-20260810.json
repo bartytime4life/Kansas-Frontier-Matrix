@@ -1,0 +1,116 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/agriculture-ndvi-delta-computation.yml": "sha256:d94e9446ba6930927363ba1d9881cf781037f8ff70126bf1b2b2d0a2370d1506",
+    "contracts/domains/agriculture/ndvi_delta_computation.md": "sha256:ae5e5a18d9d99c2823129c9062916deef25f74c664e9b108d5978f7df48fdfa9",
+    "docs/intake/exploratory/pass-32-ndvi-delta-computation-source-map.md": "sha256:2885c45ca8884521618379e35ff5ae8c508e4e700179fe133695b0cd4c90d13a",
+    "fixtures/domains/agriculture/ndvi_delta_computation/cases.json": "sha256:88fc98edeb9b4f41ba88373858144438757e0f26ddfff4a230ba317c40309cfb",
+    "schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json": "sha256:0804a53f7205e47bd7d873aef18dab6a8f021cefbcb13439fefa820c0c2bcb39",
+    "tests/domains/agriculture/test_ndvi_delta_computation.py": "sha256:30717f762e5274be733c5cbee2279162fa66d7d69b54904f517c6da86f2ecf40",
+    "tools/generators/compute_ndvi_delta.py": "sha256:3de144ac9d430bebffde84a72f253ff9cbd2d6a739acf0c5869628e393f8443e"
+  },
+  "artifact_paths": [
+    ".github/workflows/agriculture-ndvi-delta-computation.yml",
+    "contracts/domains/agriculture/ndvi_delta_computation.md",
+    "docs/intake/exploratory/pass-32-ndvi-delta-computation-source-map.md",
+    "fixtures/domains/agriculture/ndvi_delta_computation/cases.json",
+    "schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json",
+    "tests/domains/agriculture/test_ndvi_delta_computation.py",
+    "tools/generators/compute_ndvi_delta.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0005",
+      "id": "KFM-P32-PROG-0005",
+      "validated": true
+    },
+    {
+      "evidence_ref": "gdrive://1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ#ndvi",
+      "id": "new-ideas-5-17-26-ndvi",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/52675a800825c071ddc9df9476b543c49d73efd8",
+      "id": "delivery-main-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "accepted-directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-10T18:03:33Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0005",
+      "gdrive://1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ#ndvi",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/52675a800825c071ddc9df9476b543c49d73efd8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/52675a800825c071ddc9df9476b543c49d73efd8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Codex",
+    "provider": "OpenAI",
+    "version": "2026-08-10"
+  },
+  "notes": "Fixture/captured-input-only adaptation of Pass 32 KFM-P32-PROG-0005 and its Drive source. The packet implements deterministic integer NDVI arithmetic, cloud filtering, baseline/recent medians, threshold classifications, non-vegetated suppression, strict local input, and digest-bound output. It does not fetch or open HLS/STAC/COG assets, calculate temporal windows, perform patch/connectivity/persistence analysis, activate sources, admit RAW data, resolve evidence, promote, release, deploy, publish, or authorize public use. Delivery inspection and non-overlap were checked against main@52675a800825c071ddc9df9476b543c49d73efd8.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Google Drive connector evidence inspection",
+      "GitHub connector repository inspection and mutation",
+      "local PDF extraction and visual verification",
+      "local deterministic Python validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:9e20ec49930a1388695963519df44f5e94a86a830a1cd7d37196f76f9d66ce92",
+  "receipt_id": "genrec-pass32-ndvi-delta-computation-20260810",
+  "truth_labels": {
+    ".github/workflows/agriculture-ndvi-delta-computation.yml": "CONFIRMED",
+    "contracts/domains/agriculture/ndvi_delta_computation.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-ndvi-delta-computation-source-map.md": "CONFIRMED",
+    "fixtures/domains/agriculture/ndvi_delta_computation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/agriculture/ndvi_delta_computation.schema.json": "PROPOSED",
+    "tests/domains/agriculture/test_ndvi_delta_computation.py": "CONFIRMED",
+    "tools/generators/compute_ndvi_delta.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-pytest-suite-9-tests", "outcome": "PASS"},
+    {"gate": "fixture-polarity-5-computational-states", "outcome": "PASS"},
+    {"gate": "integer-arithmetic-cloud-threshold-and-median-closure", "outcome": "PASS"},
+    {"gate": "deterministic-input-order-and-digest-stability", "outcome": "PASS"},
+    {"gate": "strict-input-and-zero-denominator-fail-closed", "outcome": "PASS"},
+    {"gate": "no-network-no-raster-and-all-false-authority", "outcome": "PASS"},
+    {"gate": "git-diff-whitespace-check", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Human semantic and scientific review remains pending on the draft pull request."}
+  ]
+}
