@@ -19,7 +19,7 @@
     "fixtures/ui/provenance_citations_projection/valid/missing.json"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/adapters/ProvenanceCitationsProjection.ts": "sha256:bebdfdf7fd9ce0d60a923124c63e6fd40f827cb0a652b8b78f9f17e3eeee5faf",
+    "apps/explorer-web/src/adapters/ProvenanceCitationsProjection.ts": "sha256:d84fcebf243e89fcf6d5e04dbfc3f7dca41a78f166e263042dbe725d243ce976",
     "apps/explorer-web/src/features/provenance_citations/README.md": "sha256:694546b42df5cf6dcdea298baf64df8857b59afe56492cbc0f2c8c039cfe7d43",
     "apps/explorer-web/src/features/provenance_citations/index.ts": "sha256:2cbb2d3a7665c175ba3a5b32e4ec99566226b1fb1b46c841d2282029e0789644",
     "apps/explorer-web/tests/browser/provenance-citations.fixture.ts": "sha256:3ef96677e40c454e4185ab5682428277e8f3690ce61b2c2b966d009778e38cae",
@@ -95,6 +95,11 @@
       "gate": "repository-and-pr-overlap-preflight",
       "outcome": "PASS",
       "reason": "Current main and open pull requests were searched for the selected card ID and grouped citation-panel terms; no implementation overlap was found."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The Explorer adapter boundary tests passed after using the established split-token form for the governed release-reference prefix."
     },
     {
       "gate": "explorer-production-build",

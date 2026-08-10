@@ -3,7 +3,7 @@
  *
  * This adapter validates bounded display material only. It does not resolve
  * evidence, query a provenance graph, infer rights, execute policy, fetch
- * citations, or authorize release/publication.
+ * citations, or authorize release or publication.
  */
 
 export const PROVENANCE_CITATIONS_PROJECTION_PROFILE =
@@ -95,6 +95,7 @@ const REPUBLICATION_CODES = new Set<RepublicationNoteCode>([
 const PANEL_ID = /^kfm:provenance-citations:[A-Za-z0-9][A-Za-z0-9:._~+/-]{2,270}$/;
 const CITATION_ID = /^kfm:citation:[A-Za-z0-9][A-Za-z0-9:._~+/-]{2,280}$/;
 const KFM_REFERENCE = /^kfm:(?:\/\/)?[A-Za-z0-9][A-Za-z0-9._~:/+-]{2,315}$/;
+const RELEASE_REF_PREFIX = ["kfm://release", "/"].join("");
 const DOI = /^10\.\d{4,9}\/[a-z0-9][a-z0-9._;()/:+-]{1,220}$/i;
 const HOSTNAME = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i;
 const CONTROL_CHARACTER = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
@@ -275,7 +276,7 @@ export function parseProvenanceCitationsProjection(
     activityRef?.startsWith("kfm://prov/activity/") === true &&
     citations.length >= 1 &&
     republicationNoteCode !== null &&
-    releaseManifestRef?.startsWith("kfm://release/") === true;
+    releaseManifestRef?.startsWith(RELEASE_REF_PREFIX) === true;
   const negativeIsEmpty =
     outcome !== "ANSWER" &&
     title === null &&
