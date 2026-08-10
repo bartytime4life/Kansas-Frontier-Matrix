@@ -17,7 +17,7 @@ source_section: PostGIS adapter compatibility and upgrade gate
 source_status: non-authoritative exploratory proposal containing version-sensitive implementation examples
 source_disclosure: privacy-minimized; full text, code, commands, connector locator, private link, timestamps, digest, and file size omitted
 repository: bartytime4life/Kansas-Frontier-Matrix
-repository_snapshot: 65a0bbf8ec3a49e81ed26f8feee557da247c255b
+repository_snapshot: 91bc8581821b9f0e710afed0b4f9ded86d4fb304
 repository_verified_on: 2026-08-10
 related:
   - ./README.md
@@ -60,7 +60,7 @@ notes:
 | Supplied title | *New Ideas Feb-2026* |
 | Reviewed cluster | PostGIS adapter compatibility and upgrade gate |
 | Source posture | Non-authoritative exploratory proposal with version-sensitive examples |
-| Repository comparison | `main@65a0bbf8ec3a49e81ed26f8feee557da247c255b`, inspected `2026-08-10` |
+| Repository comparison | `main@91bc8581821b9f0e710afed0b4f9ded86d4fb304`, inspected `2026-08-10` |
 | Private material | Full text, code, commands, Drive locator, private link, connector metadata, digest, and file size omitted |
 
 The connected document was treated as idea evidence, not as an environment
