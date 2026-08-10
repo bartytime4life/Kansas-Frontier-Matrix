@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-pass18-database-mutation-transaction-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/database-mutation-transaction-receipt.yml",
+    "contracts/runtime/database_mutation_transaction_receipt.md",
+    "docs/intake/exploratory/pass-18-database-mutation-transaction-source-map.md",
+    "fixtures/contracts/v1/runtime/database_mutation_transaction_receipt/cases.json",
+    "schemas/contracts/v1/runtime/database_mutation_transaction_receipt.schema.json",
+    "tests/validators/test_validate_database_mutation_transaction_receipt.py",
+    "tools/validators/runtime/validate_database_mutation_transaction_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/database-mutation-transaction-receipt.yml": "sha256:2e2e5da17167df80ba684cbaf20ea584b69587cdb06c3aff589dc72f057c641e",
+    "contracts/runtime/database_mutation_transaction_receipt.md": "sha256:712f22e30b4478c149d60fc9bcb53d7226966c0a13cdd8079148949bbd9e69f9",
+    "docs/intake/exploratory/pass-18-database-mutation-transaction-source-map.md": "sha256:696aadbecc19b1225a01de2ee801871672cce30c023034d3e357afce430a7d01",
+    "fixtures/contracts/v1/runtime/database_mutation_transaction_receipt/cases.json": "sha256:1639bf12a1588829b8c59b0cbeeddd4d9dbbff8ea73f50279302bb69eb274e57",
+    "schemas/contracts/v1/runtime/database_mutation_transaction_receipt.schema.json": "sha256:214211869d6e78cd5c845d7245dd06b71b23a088b137d1039ee88715e2fc4f77",
+    "tests/validators/test_validate_database_mutation_transaction_receipt.py": "sha256:634768bc5f35c20dc43d341f509d647edf39c3fa4b5bceb06b32e7fa560ee261",
+    "tools/validators/runtime/validate_database_mutation_transaction_receipt.py": "sha256:d702b46c398a306da479f6d8782a8ccccab915f643b9cf37e7c49622cd523746"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:712f22e30b4478c149d60fc9bcb53d7226966c0a13cdd8079148949bbd9e69f9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=273&printed-page=270&card=KFM-P18-INV-404",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/runtime/run_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/runtime/replay_safe_effect_ledger.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/release/conditional_write_attempt_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/database-mutation-transaction-receipt.yml": "CONFIRMED",
+    "contracts/runtime/database_mutation_transaction_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-database-mutation-transaction-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/database_mutation_transaction_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/database_mutation_transaction_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_database_mutation_transaction_receipt.py": "CONFIRMED",
+    "tools/validators/runtime/validate_database_mutation_transaction_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic database-mutation transaction tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Seventeen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-run-receipt-validator-suite",
+      "outcome": "PASS",
+      "reason": "All ten existing RunReceipt validator tests passed against the unchanged shared contract."
+    },
+    {
+      "gate": "no-network-and-no-database-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-database-mutation-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=273&printed-page=270&card=KFM-P18-INV-404"
+    },
+    {
+      "id": "connected-drive-pass18-corpus",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:59:06Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only DatabaseMutationTransactionReceiptCandidate packet derived from supplied Pass 18 card KFM-P18-INV-404. It composes the existing RunReceipt and validates declared transaction boundaries, finite outcome mapping, row-count arithmetic, and recovery-target posture without connecting to a database, parsing or executing SQL, authenticating effects, restoring data, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}
