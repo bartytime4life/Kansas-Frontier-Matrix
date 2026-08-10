@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-historical-signature-verification-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/historical-signature-verification-assessment.yml",
+    "contracts/release/historical_signature_verification_assessment.md",
+    "docs/intake/exploratory/historical-signature-verification-assessment-source-map.md",
+    "fixtures/contracts/v1/release/historical_signature_verification_assessment/cases.json",
+    "schemas/contracts/v1/release/historical_signature_verification_assessment.schema.json",
+    "tests/validators/test_validate_historical_signature_verification_assessment.py",
+    "tools/validators/release/validate_historical_signature_verification_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/historical-signature-verification-assessment.yml": "sha256:77756cf85438cb141d48fc7ac8d8f856b75fa70ccbd85c3b788964574b0f829e",
+    "contracts/release/historical_signature_verification_assessment.md": "sha256:2e7446c5fec37d0fe52a6a654173f1cde76dbf6f2b34a4190b8bc70edae159b3",
+    "docs/intake/exploratory/historical-signature-verification-assessment-source-map.md": "sha256:0c0d92ef351a9bcfb277a7832f597389bb858a3ad0ff708e96e7813ff139c7e1",
+    "fixtures/contracts/v1/release/historical_signature_verification_assessment/cases.json": "sha256:fb5d3a3f4a9a86b9401cbd4875f7fb7ff52fa541bf729c5afdc49403772f494a",
+    "schemas/contracts/v1/release/historical_signature_verification_assessment.schema.json": "sha256:507dc9febb3ec8534734e08e1d84a729e1489cac88f76e1e44b828e9c9108875",
+    "tests/validators/test_validate_historical_signature_verification_assessment.py": "sha256:95b6e870b733fcd238ef69094ebc1b95f0a316b8096f579a12977afa5ad7bd39",
+    "tools/validators/release/validate_historical_signature_verification_assessment.py": "sha256:cd12b2de0bb998bd2de306923e05a875f7abe8ecb0f8b73b8183dd962b4ba9ed"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:2e7446c5fec37d0fe52a6a654173f1cde76dbf6f2b34a4190b8bc70edae159b3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/kfm_full_atlas_seed_cards.md#kfm-triad-056",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/security/KEY_ROTATION.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/standards/SIGNING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/contracts/release/release_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/historical-signature-verification-assessment.yml": "CONFIRMED",
+    "contracts/release/historical_signature_verification_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/historical-signature-verification-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/historical_signature_verification_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/historical_signature_verification_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_historical_signature_verification_assessment.py": "CONFIRMED",
+    "tools/validators/release/validate_historical_signature_verification_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    { "gate": "python-syntax-compilation", "outcome": "PASS" },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Validated locally with jsonschema 4.25.1; the repository currently declares a newer compatible floor for hosted execution."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "10 deterministic tests and 20 subtests passed in the isolated authoring directory."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "20 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    { "gate": "json-and-workflow-parse", "outcome": "PASS" },
+    { "gate": "no-cryptography-and-no-network-boundary", "outcome": "PASS" },
+    { "gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS" },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "SKIPPED",
+      "reason": "The synced local checkout disappeared during authoring; hosted or reviewer-side repository validation remains required."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-corpus-location",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "full-atlas-historical-signature-triad",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/kfm_full_atlas_seed_cards.md#kfm-triad-056"
+    },
+    {
+      "id": "existing-key-rotation-guidance-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/security/KEY_ROTATION.md"
+    },
+    {
+      "id": "existing-release-manifest-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/contracts/release/release_manifest.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/37319c1abbee490a72d474431cc410d1ce16af2e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T04:31:58Z",
+  "emitter": "OpenAI GPT-5 via Codex GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only HistoricalSignatureVerificationAssessment packet derived from Full Atlas KFM-TRIAD-056 and KFM-CAND-0166 through KFM-CAND-0168 after current-main collision review. It separates trust at signing from trust at verification across active, verify-only, expired, revoked, compromised, superseded, and unknown states without accepting key material, performing cryptography, contacting a trust service, mutating a trust store, signing or re-signing, deciding policy, approving review, authorizing correction or withdrawal, releasing, deploying, publishing, or authorizing public use."
+}
