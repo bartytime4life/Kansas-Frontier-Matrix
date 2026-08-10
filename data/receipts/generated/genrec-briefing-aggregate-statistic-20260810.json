@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-briefing-aggregate-statistic-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/aggregate-statistic.yml",
+    "contracts/common/aggregate_statistic.md",
+    "docs/intake/exploratory/briefing-aggregate-statistic-source-map.md",
+    "fixtures/contracts/v1/common/aggregate_statistic/cases.json",
+    "schemas/contracts/v1/common/aggregate_statistic.schema.json",
+    "tests/validators/test_validate_aggregate_statistic.py",
+    "tools/validators/validate_aggregate_statistic.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/aggregate-statistic.yml": "sha256:fd08c759369ecf102d7cf019eb1e84d5aa0408a5cdf3b33db28e8d3fbb7e2ec4",
+    "contracts/common/aggregate_statistic.md": "sha256:bc07b03986a02cb6b013b82f2e0484e74ef2a116d945c06d60f9405a01703f10",
+    "docs/intake/exploratory/briefing-aggregate-statistic-source-map.md": "sha256:df8fab3db1c5545865f9cb29a4fbf2d1b7a6969d57392b58ec8c114ffb8526ee",
+    "fixtures/contracts/v1/common/aggregate_statistic/cases.json": "sha256:fa8887c651fba24d0b43ce2d11e946b2d1c832fba03c28f8c977f235c1658d22",
+    "schemas/contracts/v1/common/aggregate_statistic.schema.json": "sha256:72955a71e63eff1f1c33cc7cc53a81da86753c976b38fcd2606edbd9241696fb",
+    "tests/validators/test_validate_aggregate_statistic.py": "sha256:e13510aa9cd105510aff0bce3134e6db2a30a5d0cc6c764bc05671795502dc3e",
+    "tools/validators/validate_aggregate_statistic.py": "sha256:6ef2ce4a981d752ab12fa0b16581f0e50f6d16764d0be8b74a633e56d812da68"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive source discovery and retrieval",
+      "GitHub connector repository and pull-request inspection",
+      "local deterministic Python validation",
+      "PDF text extraction and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "google-drive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#section-14-conditions-object-families",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-71",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/149af17075f7f12d716aa14de439ea22ee6a343e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/classification_release.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/forecast_product.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/condition_relation.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/aggregate-statistic.yml": "PROPOSED",
+    "contracts/common/aggregate_statistic.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-aggregate-statistic-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/common/aggregate_statistic/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/aggregate_statistic.schema.json": "PROPOSED",
+    "tests/validators/test_validate_aggregate_statistic.py": "CONFIRMED",
+    "tools/validators/validate_aggregate_statistic.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite-14-tests", "outcome": "PASS"},
+    {"gate": "fixture-polarity-4-pass-18-deny-1-error", "outcome": "PASS"},
+    {"gate": "aggregate-geography-weighting-denominator-source-release-and-derived-only-boundary", "outcome": "PASS"},
+    {"gate": "duplicate-key-nonfinite-symlink-no-network-and-value-free-diagnostics", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, statistical, evidence, governance, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-aggregate-statistic-role",
+      "validated": true,
+      "evidence_ref": "google-drive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#section-14-conditions-object-families"
+    },
+    {
+      "id": "atlas-field-truth-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-71"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T16:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing conditions framework's AggregateStatistic as an inactive fixture-only common profile. It preserves aggregation geography, weighting, numerator and denominator posture, missing-data treatment, source release, uncertainty, time, lineage, deterministic identity, and derived-only posture without creating source, local-truth, evidence, policy, review, lifecycle, release, map, AI, or publication authority."
+}
