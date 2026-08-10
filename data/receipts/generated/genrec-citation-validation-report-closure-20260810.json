@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-citation-validation-report-closure-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/citation-validation.yml",
+    "contracts/evidence/citation_validation_report.md",
+    "docs/intake/exploratory/citation-validation-report-closure-source-map.md",
+    "fixtures/contracts/v1/evidence/citation_validation_report/cases.json",
+    "schemas/contracts/v1/evidence/citation_validation_report.schema.json",
+    "tests/validators/test_validate_citation_validation_report.py",
+    "tools/validators/citation/README.md",
+    "tools/validators/citation/validate_citation_validation_report.py",
+    "tools/validators/validate_citation_validation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/citation-validation.yml": "sha256:ae298f6fbfd906ebd88be22f395d42c3f09098f72599a9d95f8f07d8d4eed687",
+    "contracts/evidence/citation_validation_report.md": "sha256:4907012910e93cb7f6e332ed6d5e4d48617add637b2c8282d8e2954266a4d987",
+    "docs/intake/exploratory/citation-validation-report-closure-source-map.md": "sha256:eb9c15820def0c870f535b314bbee7d38962d8ddc553b321957875aa8163681e",
+    "fixtures/contracts/v1/evidence/citation_validation_report/cases.json": "sha256:c62b604bf5133f16940b5848f643326dddec2ac951d1bb0ed7c2c60c85821161",
+    "schemas/contracts/v1/evidence/citation_validation_report.schema.json": "sha256:811e8cf94fc3dc0c0735a9eb1914f64632108e1185b90a8f6fbcc0b49b1ebf36",
+    "tests/validators/test_validate_citation_validation_report.py": "sha256:0a36ecb6fe7b4c1b6429b88d4fc081f138801bce9f1bbe3591bff4b72833f24b",
+    "tools/validators/citation/README.md": "sha256:2c29c58745e754bebe94499a0eebebb1f59f3bd5c268c7c79ad82adbb301f1ab",
+    "tools/validators/citation/validate_citation_validation_report.py": "sha256:476b8e4e70971343b4cf2d86fb9307b34602a267116f1ba0b4382d10deee2421",
+    "tools/validators/validate_citation_validation.py": "sha256:9b7591d606524bf76a1ee66971edd81343d87f414279882bbf81830e753b3794"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:4907012910e93cb7f6e332ed6d5e4d48617add637b2c8282d8e2954266a4d987",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector metadata-only exclusion check",
+      "GitHub connector public repository inspection and draft pull-request authoring",
+      "local git and deterministic Python, JSON, Markdown, and YAML validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d805e50addedccb60ec9044c72dd995110fc23a684bb0a696a5992dd0890dd65",
+      "sha256:5742901e33c786534f3f2002b63bf8f2648c5c71a19c2036c7a86ca3ad11e0e5",
+      "sha256:11dae0efdd4c96d752794733751b58bb69a8c96329eb61145e11fc5eb09b1458",
+      "sha256:690531a5624281b8bb4c0f73f16436965b26861c910fb4d821b7a435c9faca85",
+      "sha256:e902e979a678031a766faa45c20819c6fd93e8fada62509b9c5045a42c0a3b13",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/contracts/evidence/citation_validation_report.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/schemas/contracts/v1/evidence/citation_validation_report.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/tools/validators/validate_citation_validation.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/tools/validators/citation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/.github/workflows/citation-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/citation-validation.yml": "CONFIRMED",
+    "contracts/evidence/citation_validation_report.md": "PROPOSED",
+    "docs/intake/exploratory/citation-validation-report-closure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/citation_validation_report/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/citation_validation_report.schema.json": "PROPOSED",
+    "tests/validators/test_validate_citation_validation_report.py": "CONFIRMED",
+    "tools/validators/citation/README.md": "CONFIRMED",
+    "tools/validators/citation/validate_citation_validation_report.py": "CONFIRMED",
+    "tools/validators/validate_citation_validation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest-13",
+      "outcome": "PASS",
+      "reason": "Thirteen focused tests and twenty subtests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay-27",
+      "outcome": "PASS",
+      "reason": "Twenty-seven exact synthetic PASS, ABSTAIN, DENY, ERROR, and invalid-report cases matched their reviewed results."
+    },
+    {
+      "gate": "compatibility-entrypoint-parity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "validator-runtime-network-denial",
+      "outcome": "PASS",
+      "reason": "The exact fixture suite passed while socket creation was denied."
+    },
+    {
+      "gate": "draft-2020-12-schema-and-json-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "required-doc-metadata-and-local-links",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "existing-citation-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/contracts/evidence/citation_validation_report.md"
+    },
+    {
+      "id": "existing-citation-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/schemas/contracts/v1/evidence/citation_validation_report.schema.json"
+    },
+    {
+      "id": "existing-citation-validator-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/tools/validators/citation/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7c69e025e2b274be4a19f49fa37e22401a2fe757/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:34:05Z",
+  "emitter": "OpenAI GPT-5 Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Public-repository-only, fixture-first CitationValidationReport closure packet. It validates declaration shape, deterministic identity, cite-or-abstain behavior, negative-state preservation, and internal consistency without resolving a source or EvidenceRef, authenticating an EvidenceBundle, deciding rights, sensitivity, policy, review, or release, mutating lifecycle state, deploying, publishing, or authorizing a public answer."
+}

@@ -1,33 +1,8 @@
-# KFM CI workflow scaffold: citation-validation
-# Status: PROPOSED greenfield scaffold; governance-visible but non-enforcing.
+# CitationValidationReport declaration-profile checks.
 #
-# Responsibility:
-# - Preserve the stable `citation-validation`, `citation-resolves`, and
-#   `abstain-on-missing-evidence` check surfaces until repository-owned citation
-#   validators, fixtures, and commands are verified.
-# Authority:
-# - This workflow is orchestration only. It does not prove citation closure,
-#   EvidenceRef resolution, EvidenceBundle sufficiency, release readiness, or
-#   publication authority.
-# Trigger:
-# - Existing pull-request and push-to-main triggers are retained because
-#   branch-protection dependencies are not verified. Manual dispatch is added
-#   for explicit maintainer inspection.
-# Untrusted-code posture:
-# - No repository checkout or pull-request code execution occurs in this scaffold.
-# Permissions:
-# - All GITHUB_TOKEN permissions are disabled.
-# Network and secrets:
-# - No actions, dependency installation, external endpoints, credentials, or
-#   repository secrets are used.
-# Outcome:
-# - Jobs report WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD. A green scaffold
-#   run must not be represented as citation validation.
-# Graduation:
-# - Replace reporting steps only after repository-owned commands, deterministic
-#   valid/invalid fixtures, EvidenceRef-to-EvidenceBundle resolution tests,
-#   missing/stale/conflicting/restricted evidence tests, no-network posture,
-#   reviewer ownership, and rollback/disable behavior are verified.
+# This workflow executes only repository-owned synthetic fixtures. It performs
+# no source lookup, evidence resolution, policy/review/release decision,
+# lifecycle write, public-answer authorization, deployment, or publication.
 name: citation-validation
 
 on:
@@ -37,62 +12,98 @@ on:
       - main
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: read
 
 concurrency:
   group: citation-validation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
 jobs:
   citation-resolves:
+    name: Citation declaration profile
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 10
     steps:
-      - name: Report citation-resolution readiness hold
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: python -m pip install --disable-pip-version-check --no-input -e ".[test]"
+
+      - name: Run focused validator tests
+        run: python -m pytest -q tests/validators/test_validate_citation_validation_report.py
+
+      - name: Replay exact synthetic fixtures
+        run: python tools/validators/citation/validate_citation_validation_report.py --fixtures
+
+      - name: Verify compatibility entrypoint
+        run: python tools/validators/validate_citation_validation.py --fixtures
+
+      - name: Record boundary
+        if: always()
         run: |
-          set -euo pipefail
-
           {
-            echo "## Citation validation — resolution"
+            echo "## Citation validation — declaration profile"
             echo
-            echo '**Outcome:** `WORKFLOW_SKIPPED_EXPLICIT`'
-            echo
-            echo '**Readiness:** `WORKFLOW_HOLD`'
-            echo
-            echo "No reviewed repository-owned citation-resolution command,"
-            echo "deterministic fixture set, or executable EvidenceRef-to-EvidenceBundle"
-            echo "validation harness is established."
-            echo
-            echo "This scaffold did not validate citation closure, source role,"
-            echo "rights, sensitivity, freshness, release state, correction lineage,"
-            echo "or rollback linkage."
+            echo "This job validates only the closed CitationValidationReport schema,"
+            echo "deterministic declaration logic, and synthetic fixture expectations."
+            echo "It does not contact or resolve a cited source and grants no authority."
           } >> "${GITHUB_STEP_SUMMARY}"
-
-          echo "::warning title=Citation resolution not implemented::WORKFLOW_HOLD — this scaffold did not resolve or validate citations."
-          echo "TODO citation-resolves: add a reviewed repository-owned command and deterministic governed fixtures before graduation."
 
   abstain-on-missing-evidence:
+    name: Cite-or-abstain negative paths
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 10
     steps:
-      - name: Report missing-evidence abstention readiness hold
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: python -m pip install --disable-pip-version-check --no-input -e ".[test]"
+
+      - name: Prove missing and governed evidence cannot become PASS
+        run: >-
+          python -m pytest -q
+          tests/validators/test_validate_citation_validation_report.py
+          -k "missing_evidence_abstains or
+          public_candidate_requires_policy_review_and_release or
+          rights_and_withdrawal_denials"
+
+      - name: Validate generated receipt hashes
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-citation-validation-report-closure-20260810.json
+
+      - name: Record boundary
+        if: always()
         run: |
-          set -euo pipefail
-
           {
-            echo "## Citation validation — missing evidence"
+            echo "## Citation validation — cite or abstain"
             echo
-            echo '**Outcome:** `WORKFLOW_SKIPPED_EXPLICIT`'
-            echo
-            echo '**Readiness:** `WORKFLOW_HOLD`'
-            echo
-            echo "No reviewed repository-owned negative-path command or fixture"
-            echo "proves that missing, stale, conflicting, restricted, or unresolved"
-            echo "evidence produces ABSTAIN, DENY, HOLD, or ERROR as required."
-            echo
-            echo "This scaffold did not approve an answer, proof, release, or"
-            echo "publication artifact."
+            echo "Synthetic negative paths preserve ABSTAIN, DENY, and ERROR states."
+            echo "This job does not approve evidence, an answer, release, or publication."
           } >> "${GITHUB_STEP_SUMMARY}"
-
-          echo "::warning title=Missing-evidence abstention not implemented::WORKFLOW_HOLD — this scaffold did not test cite-or-abstain behavior."
-          echo "TODO abstain-on-missing-evidence: add reviewed negative fixtures and a repository-owned command before graduation."
