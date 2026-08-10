@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/delivery_availability_assessment.schema.json",
+  "title": "DeliveryAvailabilityAssessment",
+  "description": "Fixture-only assessment that keeps observation cadence, product cadence, delivery latency, availability, retrieval, freshness, staleness, supersession, and evidenced outage clocks separate without changing source policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "source_id",
+    "source_descriptor_ref",
+    "source_descriptor_version",
+    "assessed_at",
+    "expectation",
+    "observation",
+    "decision",
+    "learned_observation",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "DeliveryAvailabilityAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.delivery-availability.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:delivery-availability:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+    },
+    "assessed_at": { "$ref": "#/$defs/aware_datetime" },
+    "expectation": { "$ref": "#/$defs/expectation" },
+    "observation": { "$ref": "#/$defs/observation" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "learned_observation": { "$ref": "#/$defs/learned_observation" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [
+        { "$ref": "#/$defs/aware_datetime" },
+        { "type": "null" }
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "delivery_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_seconds", "maximum_seconds"],
+      "properties": {
+        "minimum_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31536000
+        },
+        "maximum_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        }
+      }
+    },
+    "expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expectation_version",
+        "observation_cadence_seconds",
+        "product_cadence_seconds",
+        "delivery_window_seconds",
+        "freshness_window_seconds",
+        "stale_threshold_seconds",
+        "tolerance_profile_ref",
+        "calendar_exception_profile_ref",
+        "outage_exception_allowed"
+      ],
+      "properties": {
+        "expectation_version": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$"
+        },
+        "observation_cadence_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "product_cadence_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "delivery_window_seconds": { "$ref": "#/$defs/delivery_window" },
+        "freshness_window_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "stale_threshold_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "tolerance_profile_ref": {
+          "type": "string",
+          "pattern": "^kfm:delivery-tolerance:[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "calendar_exception_profile_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm:delivery-calendar:[a-z0-9][a-z0-9._:-]{2,127}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "outage_exception_allowed": { "type": "boolean" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observed_at",
+        "generated_at",
+        "expected_available_from",
+        "expected_available_until",
+        "actually_available_at",
+        "retrieved_at",
+        "validated_at",
+        "released_at",
+        "source_revision",
+        "superseded_by_revision",
+        "retrieval_result",
+        "source_outage_evidence_ref"
+      ],
+      "properties": {
+        "observed_at": { "$ref": "#/$defs/aware_datetime" },
+        "generated_at": { "$ref": "#/$defs/aware_datetime" },
+        "expected_available_from": { "$ref": "#/$defs/aware_datetime" },
+        "expected_available_until": { "$ref": "#/$defs/aware_datetime" },
+        "actually_available_at": { "$ref": "#/$defs/nullable_datetime" },
+        "retrieved_at": { "$ref": "#/$defs/nullable_datetime" },
+        "validated_at": { "$ref": "#/$defs/nullable_datetime" },
+        "released_at": { "$ref": "#/$defs/nullable_datetime" },
+        "source_revision": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "superseded_by_revision": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            { "type": "null" }
+          ]
+        },
+        "retrieval_result": {
+          "enum": [
+            "SUCCESS",
+            "NOT_YET_AVAILABLE",
+            "NOT_FOUND",
+            "SOURCE_ERROR",
+            "NOT_RETRIEVED"
+          ]
+        },
+        "source_outage_evidence_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm:evidence:[a-z0-9][a-z0-9._:-]{2,191}$"
+            },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "freshness_state",
+        "reason_codes",
+        "review_required",
+        "policy_change_candidate"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "ON_TIME",
+            "EXPECTED_LAG",
+            "LATE",
+            "STALE",
+            "MISSING",
+            "SUPERSEDED",
+            "SOURCE_OUTAGE",
+            "ERROR"
+          ]
+        },
+        "freshness_state": {
+          "enum": [
+            "WITHIN_WINDOW",
+            "PAST_FRESHNESS",
+            "STALE",
+            "UNAVAILABLE",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "DELIVERED_WITHIN_EXPECTED_WINDOW",
+              "WITHIN_EXPECTED_DELIVERY_WINDOW",
+              "DELIVERY_AFTER_EXPECTED_WINDOW",
+              "STALE_THRESHOLD_ELAPSED",
+              "DELIVERY_MISSING_AFTER_EXPECTED_WINDOW",
+              "SOURCE_REVISION_SUPERSEDED",
+              "SOURCE_OUTAGE_EVIDENCED",
+              "ASSESSMENT_ERROR"
+            ]
+          }
+        },
+        "review_required": { "const": true },
+        "policy_change_candidate": { "const": false }
+      }
+    },
+    "learned_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observed_delivery_latency_seconds",
+        "use_for_expectation_update",
+        "expectation_mutated"
+      ],
+      "properties": {
+        "observed_delivery_latency_seconds": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 31536000
+            },
+            { "type": "null" }
+          ]
+        },
+        "use_for_expectation_update": { "const": "REVIEW_REQUIRED" },
+        "expectation_mutated": { "const": false }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_activation_allowed",
+        "expectation_update_authorized",
+        "policy_evaluated",
+        "raw_write_allowed",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_activation_allowed": { "const": false },
+        "expectation_update_authorized": { "const": false },
+        "policy_evaluated": { "const": false },
+        "raw_write_allowed": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "publication_authorized": { "const": false },
+        "public_use_allowed": { "const": false }
+      }
+    }
+  }
+}
