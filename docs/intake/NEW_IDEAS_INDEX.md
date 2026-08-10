@@ -2,15 +2,18 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION
 title: New Ideas Index
 type: standard
-version: v1.9
+version: v1.10
 status: draft; repository-grounded; intake-only
 owner: OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-03
+updated: 2026-08-09
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
+owning_root: docs/
+responsibility: governed packet index and intake navigation without implementation or promotion authority
+truth_posture: CONFIRMED repository paths and recorded source identities / EXPLORATORY packet content / NEEDS VERIFICATION downstream implementation and promotion
+related: [docs/doctrine/directory-rules.md, docs/intake/README.md, docs/intake/new-ideas-register.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/new-ideas-5-19-26-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md]
 tags: [kfm, intake, new-ideas, documentation-control, governance]
-notes: [Repository presence and sibling register verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
+notes: [Repository presence and sibling register verified through remote main 1bab49fa7342a8bb71f335a2efb4924f438486cc; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint source identities and bounded triage maps added; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; source packets remain EXPLORATORY until triaged and promoted; no packet is promoted by this file.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Index
@@ -703,6 +706,40 @@ Existing KFM lifecycle, evidence, renderer, STAC, PMTiles, source, and documenta
 ### Candidate next extraction
 
 Create a separately authorized decision-only GeoParquet version-readiness issue. Inventory current writers/readers/validators/consumers, distinguish stable 1.1.0 from the 2.0 development track, define dual-evaluation and rollback outcomes, and replace fixed layout mandates with a benchmark-profile decision. No data rewrite, source activation, release, deployment, or publication.
+
+</details>
+
+<details>
+<summary><strong>NIP-2026-05-19-new-ideas - biodiversity, environmental automation, sensitive data, attestation, and digest pressure</strong></summary>
+
+### Source
+
+`New Ideas 5-19-26`
+
+- SHA-256: `246c0f9ab4664543a06a91bd8519b170056001a2b3e2c7a8b9ddd79b0151a8f7`
+- Lines: `5,098`
+- UTF-8 bytes: `166,892`
+- Source date: `2026-05-19`, supported by title
+- Capture and triage date: `2026-08-09`
+- Detailed review: [`exploratory/new-ideas-5-19-26-source-map.md`](exploratory/new-ideas-5-19-26-source-map.md)
+
+### Captured themes
+
+- Biodiversity occurrence readiness across GBIF, iDigBio, USDA PLANTS, and natural-heritage sources.
+- STAC/HLS NDVI retrieval, asset identity, masking, materiality, and county summaries.
+- PMTiles publication, attestation, range behavior, renderer fallbacks, and performance budgets.
+- Watcher, Gatehouse, Atlas promotion, evidence, policy, receipt, and CI sketches.
+- Missing-person mapping, small-cell disclosure, living-person privacy, and source restrictions.
+- Consumer-DNA consent, provider terms, GA4GH-style access assertions, and attested compute-to-data.
+- Material-change digest generation and external notification automation.
+
+### Triage notes
+
+Most implementation sketches overlap newer governed repository surfaces. The packet's fixed scores, privacy numbers, rendering budgets, paths, workflows, source summaries, and paste-ready code are not promoted. Missing-person, DNA, and TRE proposals remain high-risk and deny-by-default; ETags are not content identity; attestation is not release authority; automated posting or self-committing workflows require separate authorization.
+
+### Candidate next extraction
+
+Prepare a decision-only attested-compute boundary packet that first proves a gap not already covered by quarantine, policy, receipts, and review. If authorized, limit the next slice to a no-data, no-network synthetic assessment with fixed-false execution, approval, release, and publication effects.
 
 </details>
 
