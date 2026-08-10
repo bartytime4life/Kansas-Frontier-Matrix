@@ -2,18 +2,20 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.4
+version: v1.5
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-08-08
+updated: 2026-08-09
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 31
+numbered_records: 32
 unassigned_scaffolds: 12
 related:
   - docs/adr/README.md
@@ -23,6 +25,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
+  - "ADR-0032 is registered as proposed; index registration does not authorize real or simulated compute, credentials, trust-root enrollment, release, or publication."
   - "ADR-0031 is registered as proposed; index registration does not accept the decision or authorize watcher migration."
   - "ADR-0029 remains the only accepted numbered ADR in this index."
   - "Effective status never outranks source-record status or human review."
@@ -30,15 +33,15 @@ notes:
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-31-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-1_accepted_%7C_30_proposed-1a7f37)](#status-interpretation)
+[![numbered records](https://img.shields.io/badge/numbered_records-32-0969da)](#numbered-records)
+[![effective status](https://img.shields.io/badge/effective_status-1_accepted_%7C_31_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0029 has effective status `accepted`. The other 30 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`.
+> ADR-0029 has effective status `accepted`. The other 31 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`.
 
 ## Status interpretation
 
@@ -52,7 +55,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0031`. ADR-0029 is `accepted`; ADR-0001 through ADR-0028 and ADR-0030 through ADR-0031 remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0032`. ADR-0029 is `accepted`; ADR-0001 through ADR-0028 and ADR-0030 through ADR-0032 remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -88,6 +91,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0031`.
 | `ADR-0029` | [Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md) | `accepted` | `accepted` | — | — |
 | `ADR-0030` | [Define the minimum Geology resource-character vocabulary](./ADR-0030-geology-resource-character-vocabulary.md) | `proposed` | `proposed` | — | — |
 | `ADR-0031` | [Shared watcher ownership and placement](./ADR-0031-shared-watcher-ownership-and-placement.md) | `proposed` | `proposed` | — | — |
+| `ADR-0032` | [Keep attested compute decision-gated and simulation-only by default](./ADR-0032-attested-compute-boundary.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
