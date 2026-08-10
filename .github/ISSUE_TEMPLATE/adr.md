@@ -86,6 +86,8 @@ the decision.
 - [ ] Add, remove, rename, or reclassify a canonical responsibility root.
 - [ ] Promote or retire a compatibility or conditional root.
 - [ ] Change schema-home authority or contract/schema/policy placement.
+- [ ] Change the `CONTRACT_VERSION` pinned by an adopted operating contract or governed prompt.
+- [ ] Change generated-receipt requirements, including applicability, required fields, validation, or review controls.
 - [ ] Split, merge, bypass, or redefine a lifecycle phase.
 - [ ] Create a parallel schema, contract, policy, source, registry, release, proof, receipt, catalog, or canonical-truth home.
 - [ ] Bend a KFM invariant or trust-membrane boundary.
