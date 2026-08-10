@@ -1,0 +1,130 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-quality-projection.yml": "sha256:97f426f78af848afcf154e375f760f15f716871c89fcdc58802fbaf7b04d50e6",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "sha256:a93cfd99b3f47c998fbeb4da8c583d0b9a9a84cc158bca0eb97dbdf4c24c3972",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json": "sha256:f3222f0bd904104604f146e381cbf0aef985d02f72652a2a642169b7dcc4974d",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json": "sha256:126b52ca5cdcd513bed62c88853a04ff91782f16ef4a4178ec6425412cd8c678",
+    "tests/generators/test_project_georeference_transform_quality.py": "sha256:961341b03886207877a854dd1a6ead39ec1048e2728b57110630e05ed980a067",
+    "tools/generators/project_georeference_transform_quality.py": "sha256:2f71281f9d3916238532494584ee5fe26942bb12e48f4568d146e52a1d0026bf"
+  },
+  "artifact_paths": [
+    ".github/workflows/map-georeference-quality-projection.yml",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json",
+    "tests/generators/test_project_georeference_transform_quality.py",
+    "tools/generators/project_georeference_transform_quality.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/intake/exploratory/georeference-control-point-set-source-map.md",
+      "id": "GEOREFERENCE_CONTROL_POINT_SET_FOLLOW_UP",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/map/georeference_control_point_set.md",
+      "id": "GEOREFERENCE_CONTROL_POINT_SET",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/map/georeference_transform_quality.md",
+      "id": "GEOREFERENCE_TRANSFORM_QUALITY",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-10T15:00:02Z",
+  "emitter": "OpenAI Codex in ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/intake/exploratory/georeference-control-point-set-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:contracts/map/georeference_control_point_set.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:contracts/map/georeference_transform_quality.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "2026-08-10"
+  },
+  "notes": "Fixture-only compatibility adapter for the repository's explicit georeference follow-up. It validates a canonical GCP set, preserves set_id/resource_set_hash/target_set_hash in the projection wrapper, maps the exact ordered points into an unchanged affine-quality v1 candidate, and recomputes finite quality metrics. It creates no source, GCP, evidence, policy, promotion, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "receipt_id": "genrec-georeference-quality-projection-20260810",
+  "truth_labels": {
+    ".github/workflows/map-georeference-quality-projection.yml": "CONFIRMED",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json": "CONFIRMED",
+    "tests/generators/test_project_georeference_transform_quality.py": "CONFIRMED",
+    "tools/generators/project_georeference_transform_quality.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-projection-unittest-7",
+      "outcome": "PASS",
+      "reason": "Seven deterministic adapter tests covered exact identity/order preservation, downstream candidate validity, invalid source identity, threshold posture, no-network behavior, dry-run output, and overwrite denial."
+    },
+    {
+      "gate": "adjacent-validator-pytest-21",
+      "outcome": "PASS",
+      "reason": "All 21 existing control-point-set and transform-quality tests remained green."
+    },
+    {
+      "gate": "deterministic-cli-smoke",
+      "outcome": "PASS",
+      "reason": "The committed valid GCP set and projection request emitted parseable JSON without filesystem writes."
+    },
+    {
+      "gate": "python-compile-and-diff-check",
+      "outcome": "PASS",
+      "reason": "Authored Python compiled and the patch had no whitespace errors."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "Six authored non-receipt artifacts are bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

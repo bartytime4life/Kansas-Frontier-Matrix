@@ -1,0 +1,98 @@
+name: map-georeference-quality-projection
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/map-georeference-quality-projection.yml"
+      - "contracts/map/georeference_control_point_set.md"
+      - "contracts/map/georeference_transform_quality.md"
+      - "schemas/contracts/v1/map/georeference_control_point_set.schema.json"
+      - "schemas/contracts/v1/map/georeference_transform_quality.schema.json"
+      - "fixtures/contracts/v1/map/georeference_control_point_set/**"
+      - "fixtures/contracts/v1/map/georeference_transform_quality/**"
+      - "tools/validators/map/validate_georeference_control_point_set.py"
+      - "tools/validators/map/validate_georeference_transform_quality.py"
+      - "tools/generators/project_georeference_transform_quality.py"
+      - "tests/generators/test_project_georeference_transform_quality.py"
+      - "docs/intake/exploratory/georeference-control-point-set-source-map.md"
+      - "data/receipts/generated/genrec-georeference-quality-projection-*.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/map-georeference-quality-projection.yml"
+      - "contracts/map/georeference_control_point_set.md"
+      - "contracts/map/georeference_transform_quality.md"
+      - "schemas/contracts/v1/map/georeference_control_point_set.schema.json"
+      - "schemas/contracts/v1/map/georeference_transform_quality.schema.json"
+      - "fixtures/contracts/v1/map/georeference_control_point_set/**"
+      - "fixtures/contracts/v1/map/georeference_transform_quality/**"
+      - "tools/validators/map/validate_georeference_control_point_set.py"
+      - "tools/validators/map/validate_georeference_transform_quality.py"
+      - "tools/generators/project_georeference_transform_quality.py"
+      - "tests/generators/test_project_georeference_transform_quality.py"
+      - "docs/intake/exploratory/georeference-control-point-set-source-map.md"
+      - "data/receipts/generated/genrec-georeference-quality-projection-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: map-georeference-quality-projection-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-georeference-quality-projection
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run projection and adjacent validator suites
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.generators.test_project_georeference_transform_quality \
+            --verbose
+          python -m pytest -q \
+            tests/map/test_georeference_control_point_set.py \
+            tests/map/test_georeference_transform_quality.py
+          python tools/generators/project_georeference_transform_quality.py \
+            fixtures/contracts/v1/map/georeference_control_point_set/valid.json \
+            fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json \
+            > /tmp/georeference-quality-projection.json
+      - name: Validate current authoring receipt
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-georeference-quality-projection-20260810.json
+          --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Georeference quality projection"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: accepted fixture GCP identity, exact ordered projection, deterministic affine metrics, finite READY/HOLD output, and current-byte receipt integrity."
+            echo "- Boundary: a green result does not authenticate GCPs, establish cartographic or geodetic truth, evaluate policy, or authorize promotion, release, publication, or public use."
+          } >> "$GITHUB_STEP_SUMMARY"
