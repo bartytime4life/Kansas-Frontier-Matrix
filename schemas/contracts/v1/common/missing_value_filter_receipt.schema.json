@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/missing_value_filter_receipt.schema.json",
+  "title": "MissingValueFilterReceiptCandidate",
+  "description": "Fixture-only missing-value filter and population-change disclosure candidate without analysis-truth, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "receipt_ref",
+    "analysis_scope",
+    "input_dataset",
+    "supporting_artifacts",
+    "filter_steps",
+    "summary_statistic_steps",
+    "output_dataset",
+    "population_change_assessment",
+    "downstream_disposition",
+    "evidence_refs",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "MissingValueFilterReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.missing-value-filter-receipt.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-443"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "receipt_ref": {"$ref": "#/$defs/ref"},
+    "analysis_scope": {"$ref": "#/$defs/resolved_reference"},
+    "input_dataset": {"$ref": "#/$defs/dataset_binding"},
+    "supporting_artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analysis_receipt", "dq_report", "summary_statistics", "layer_manifest"],
+      "properties": {
+        "analysis_receipt": {"$ref": "#/$defs/resolved_reference"},
+        "dq_report": {"$ref": "#/$defs/resolved_reference"},
+        "summary_statistics": {"$ref": "#/$defs/resolved_reference"},
+        "layer_manifest": {"$ref": "#/$defs/resolved_reference"}
+      }
+    },
+    "filter_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {"$ref": "#/$defs/filter_step"}
+    },
+    "summary_statistic_steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {"$ref": "#/$defs/summary_step"}
+    },
+    "output_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "artifact_digest", "row_count"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/ref"},
+        "artifact_digest": {"$ref": "#/$defs/sha256"},
+        "row_count": {"$ref": "#/$defs/count"}
+      }
+    },
+    "population_change_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessment_ref", "assessment_digest", "resolution", "status", "compared_dimensions", "rationale"],
+      "properties": {
+        "assessment_ref": {"$ref": "#/$defs/ref"},
+        "assessment_digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "status": {"enum": ["REVIEW_REQUIRED", "MATERIAL_SHIFT_CLAIMED", "NO_MATERIAL_SHIFT_CLAIMED", "UNKNOWN"]},
+        "compared_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"}
+        },
+        "rationale": {"type": "string", "minLength": 20, "maxLength": 1200}
+      }
+    },
+    "downstream_disposition": {"const": "HOLD_FOR_REVIEW"},
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 10, "maxLength": 500}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_truth_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "analysis_truth_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "count": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"},
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "dataset_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "artifact_digest", "resolution", "row_count"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/ref"},
+        "artifact_digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "row_count": {"$ref": "#/$defs/count"}
+      }
+    },
+    "missing_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["null_values", "empty_strings", "sentinel_tokens"],
+      "properties": {
+        "null_values": {"type": "boolean"},
+        "empty_strings": {"type": "boolean"},
+        "sentinel_tokens": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 64}
+        }
+      }
+    },
+    "filter_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "field_name", "operation", "missing_rule", "input_rows", "excluded_rows", "output_rows", "rationale"],
+      "properties": {
+        "step_id": {"$ref": "#/$defs/identifier"},
+        "field_name": {"$ref": "#/$defs/identifier"},
+        "operation": {"const": "EXCLUDE_ROWS_WITH_MISSING"},
+        "missing_rule": {"$ref": "#/$defs/missing_rule"},
+        "input_rows": {"$ref": "#/$defs/count"},
+        "excluded_rows": {"$ref": "#/$defs/count"},
+        "output_rows": {"$ref": "#/$defs/count"},
+        "rationale": {"type": "string", "minLength": 20, "maxLength": 1200}
+      }
+    },
+    "summary_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_id", "filter_step_id", "field_name", "population", "metric", "row_count", "result_ref", "result_digest"],
+      "properties": {
+        "step_id": {"$ref": "#/$defs/identifier"},
+        "filter_step_id": {"$ref": "#/$defs/identifier"},
+        "field_name": {"$ref": "#/$defs/identifier"},
+        "population": {"enum": ["BEFORE_FILTER", "AFTER_FILTER"]},
+        "metric": {"const": "COUNT"},
+        "row_count": {"$ref": "#/$defs/count"},
+        "result_ref": {"$ref": "#/$defs/ref"},
+        "result_digest": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/common/missing_value_filter_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/common/missing_value_filter_receipt/",
+    "validator": "tools/validators/validate_missing_value_filter_receipt.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false,
+    "source_row_payloads": false
+  }
+}
