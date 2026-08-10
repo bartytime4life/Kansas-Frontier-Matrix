@@ -1,0 +1,196 @@
+{
+  "receipt_id": "genrec-pass32-county-ndvi-change-panel-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/CountyNdviChangeProjection.ts",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/README.md",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/index.ts",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.fixture.ts",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.html",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.spec.ts",
+    "apps/explorer-web/tests/county-ndvi-change-panel.test.ts",
+    "docs/intake/exploratory/pass-32-county-ndvi-change-panel-source-map.md",
+    "fixtures/ui/county_ndvi_change_projection/README.md",
+    "fixtures/ui/county_ndvi_change_projection/invalid/delta-mismatch.json",
+    "fixtures/ui/county_ndvi_change_projection/invalid/extra-field.json",
+    "fixtures/ui/county_ndvi_change_projection/valid/candidate.json",
+    "fixtures/ui/county_ndvi_change_projection/valid/denied.json",
+    "fixtures/ui/county_ndvi_change_projection/valid/error.json",
+    "fixtures/ui/county_ndvi_change_projection/valid/missing.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/CountyNdviChangeProjection.ts": "sha256:0689cbd682bdc8fcd52684529c3dd9531ded5b6041476f17272a464b73ba2d06",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/README.md": "sha256:591efdf88bda3ff48bbc9ed318585b8d96af1fb44697c01f68197457c513afa4",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/index.ts": "sha256:583c2d229df7cbf7ff921ad0b712761b0bff0141c904670858c3bf1fa140f63f",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.fixture.ts": "sha256:b6c4d8351ff212fa2abf6e318c3ca36a7e203f93d6c6ae81fa829c20290c7532",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.html": "sha256:81b12b6ba58aea1b1b5ecef0ab2b359d4cbc72e4f18a8a76d3a76579c5e49eba",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.spec.ts": "sha256:b2c334aaa902f9bf20182af14f90511f79d670ff7e64544e82c5075a71dab0a2",
+    "apps/explorer-web/tests/county-ndvi-change-panel.test.ts": "sha256:3af0cba38c02b302e5ea025be2f02daa152e73110f9f885ae9cf0234da0bc513",
+    "docs/intake/exploratory/pass-32-county-ndvi-change-panel-source-map.md": "sha256:b9bdd50936112b9eda9cb58b29fbdab69aa19c4470683dfabeac79df12e9e07f",
+    "fixtures/ui/county_ndvi_change_projection/README.md": "sha256:b85fd64d16d5d2f6ea025a9aa14851df27858d12796cc8eea153851ac2b34f66",
+    "fixtures/ui/county_ndvi_change_projection/invalid/delta-mismatch.json": "sha256:a5d76a47c63db541d7f8544773de937ad249ed31896e3a98f39d21e5a758d864",
+    "fixtures/ui/county_ndvi_change_projection/invalid/extra-field.json": "sha256:74466854dd197e8ec730bf8a7093813881acf39dadf0fe1f73b20fa05cd1b5c3",
+    "fixtures/ui/county_ndvi_change_projection/valid/candidate.json": "sha256:26d9cc915f98cdbed51578b9a32f99e39ff0340a1469943aedb0820782e2b428",
+    "fixtures/ui/county_ndvi_change_projection/valid/denied.json": "sha256:920830805b42e73dc5cfb14c9d86e01a3cb3b95b6f359bfca3982295a61e5cdc",
+    "fixtures/ui/county_ndvi_change_projection/valid/error.json": "sha256:d5ff3c5745447a17c55f769484ac9ec46359a62951579f713eb466845278840c",
+    "fixtures/ui/county_ndvi_change_projection/valid/missing.json": "sha256:dac6c93f36a23c7394e7843a66d33f8104bbd94c6038a5359b7a27017bce96a0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:08c7d20ba02aa9de687b78336786de2e92b0345ba7fe738cbeea8574f437b0bc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1ac995f451999184cfac1057ccb48966ff9af464303ad225c56211cd1c5490ed",
+      "sha256:84a3d05450524471afc055265a1650ef10a615150efdebf8352280d6f63ec4b5"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas 5-19-26",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0005",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0011",
+      "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@7c69e025e2b274be4a19f49fa37e22401a2fe757",
+      "repo:contracts/domains/agriculture/ndvi_delta_computation.md",
+      "repo:contracts/domains/agriculture/vegetation_connectivity_gate.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/CountyNdviChangeProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/county_ndvi_change_panel/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/county-ndvi-change-panel.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/county-ndvi-change-panel.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-county-ndvi-change-panel-source-map.md": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/README.md": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/invalid/delta-mismatch.json": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/valid/candidate.json": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/county_ndvi_change_projection/valid/missing.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main and open pull requests were searched for both card IDs, feature terms, and intended paths; the two open Explorer PRs are path-disjoint."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated atlas pages carrying KFM-P32-FEAT-0005 and KFM-P32-IDEA-0011 were rendered and visually inspected."
+    },
+    {
+      "gate": "projection-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Exact-field, arithmetic, finite-state, digest-reference, unresolved-evidence, negative-detail, no-network, and fixed-false authority checks passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "TypeScript checking and the Vite production build completed locally; Node 24 emitted the expected engine warning while hosted CI uses the pinned Node 22 line."
+    },
+    {
+      "gate": "county-ndvi-targeted-unit-suite",
+      "outcome": "PASS",
+      "reason": "The targeted county NDVI unit file passed all 9 tests."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "The repository test:unit command passed 24 files and 183 tests."
+    },
+    {
+      "gate": "ndvi-computation-foundation-suite",
+      "outcome": "PASS",
+      "reason": "All 9 existing deterministic NDVI computation tests passed against the same base."
+    },
+    {
+      "gate": "browser-fixture-typecheck-and-discovery",
+      "outcome": "PASS",
+      "reason": "The new browser fixture and Playwright spec passed isolated strict TypeScript checking; Playwright discovered all 3 scenarios."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No local Chromium or Chrome executable is installed; the existing hosted ui-build workflow must validate the exact pushed head."
+    },
+    {
+      "gate": "documentation-and-fixture-structure",
+      "outcome": "PASS",
+      "reason": "Metadata-block, local-link, and strict JSON parsing checks passed for the new documentation and fixtures."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator binds all 15 declared artifacts to their final SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-county-ndvi-change-panel",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0005"
+    },
+    {
+      "id": "gdrive:new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive:1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "repository:ndvi-delta-computation",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/agriculture/ndvi_delta_computation.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:29:05Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 KFM-P32-FEAT-0005 and KFM-P32-IDEA-0011. It is an unmounted read-only display projection with unresolved evidence and grants no source, analytical, lifecycle, policy, interpretation, promotion, release, deployment, publication, or public-use authority."
+}
