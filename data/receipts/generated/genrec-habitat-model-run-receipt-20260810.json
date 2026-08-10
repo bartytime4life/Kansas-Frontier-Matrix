@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-habitat-model-run-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/habitat-model-run-receipt.yml",
+    "contracts/domains/habitat/model_run_receipt.md",
+    "docs/intake/exploratory/habitat-model-run-receipt-source-map.md",
+    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json",
+    "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py",
+    "tools/validators/domains/habitat/validate_model_run_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/habitat-model-run-receipt.yml": "sha256:68a205c259f8cf597b303a82a7bf474394d3f868309ab631cc5615f37dc9fdcc",
+    "contracts/domains/habitat/model_run_receipt.md": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
+    "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
+    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:36824dca2738132e50a774c87bcea685007e5193a6fa9c5e3af80646a9f934a0",
+    "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "sha256:9f5454378c24af47332b239391bbdaf1f842ca4ce89220d1cd6d925f1ed372ed",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "sha256:df96fb2a9f8ac00277b863236de069b8b1eba2142c43531dfc6915f7f91d6024",
+    "tools/validators/domains/habitat/validate_model_run_receipt.py": "sha256:91f51205b6b506e1df7f3c6b939f54229edf480f80994f6957df058d36a57b0e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft pull-request publishing",
+      "Google Drive research discovery with private identifiers withheld",
+      "local git and deterministic no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/kfm_full_atlas_seed_cards.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:contracts/evidence/analytic_output_disclosure_assessment.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:docs/doctrine/directory-rules.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/habitat-model-run-receipt.yml": "PROPOSED",
+    "contracts/domains/habitat/model_run_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/habitat/model_run_receipt.schema.json": "PROPOSED",
+    "tests/validators/domains/habitat/test_validate_model_run_receipt.py": "CONFIRMED",
+    "tools/validators/domains/habitat/validate_model_run_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-model-run-receipt-suite",
+      "outcome": "PASS",
+      "reason": "Nine tests, twenty-two subtests, and eighteen exact fixture cases passed."
+    },
+    {
+      "gate": "completed-failed-source-role-and-non-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compilation-and-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "public-atlas-interpretive-analytics",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    },
+    {
+      "id": "analytic-output-model-run-dependency",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/analytic_output_disclosure_assessment.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:32:38Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Completes the existing Habitat ModelRunReceipt schema and validator scaffolds as a closed fixture-only profile. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no model run, evidence resolution, policy or review decision, lifecycle transition, release, deployment, or publication."
+}
