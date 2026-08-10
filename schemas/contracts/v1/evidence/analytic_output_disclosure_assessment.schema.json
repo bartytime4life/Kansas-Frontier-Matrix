@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/analytic_output_disclosure_assessment.schema.json",
+  "title": "AnalyticOutputDisclosureAssessment",
+  "description": "Fixture-only output-level disclosure assessment for statistics, indicators, model outputs, model interpretations, and planning scenarios.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "output",
+    "inputs",
+    "method",
+    "assumption_refs",
+    "uncertainty",
+    "validation",
+    "disclosure",
+    "decision",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "AnalyticOutputDisclosureAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.analytic-output-disclosure.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:analytic-output-disclosure:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "output": { "$ref": "#/$defs/output" },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/input" }
+    },
+    "method": { "$ref": "#/$defs/method" },
+    "assumption_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/ref" }
+    },
+    "uncertainty": { "$ref": "#/$defs/uncertainty" },
+    "validation": { "$ref": "#/$defs/validation" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_datetime": {
+      "oneOf": [{ "$ref": "#/$defs/aware_datetime" }, { "type": "null" }]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}$"
+    },
+    "nullable_ref": {
+      "oneOf": [{ "$ref": "#/$defs/ref" }, { "type": "null" }]
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analytic_output_ref",
+        "analysis_kind",
+        "source_role",
+        "support_state",
+        "scope_ref",
+        "valid_from",
+        "valid_to",
+        "computed_at"
+      ],
+      "properties": {
+        "analytic_output_ref": { "$ref": "#/$defs/ref" },
+        "analysis_kind": {
+          "enum": ["STATISTIC", "INDICATOR", "ML_MODEL", "MODEL_INTERPRETATION", "PLANNING_SCENARIO"]
+        },
+        "source_role": { "enum": ["DERIVED", "MODELED", "INTERPRETIVE"] },
+        "support_state": { "enum": ["SUPPORTED", "PARTIAL", "UNSUPPORTED", "ERROR"] },
+        "scope_ref": { "$ref": "#/$defs/ref" },
+        "valid_from": { "$ref": "#/$defs/aware_datetime" },
+        "valid_to": { "$ref": "#/$defs/nullable_datetime" },
+        "computed_at": { "$ref": "#/$defs/aware_datetime" }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_ref", "source_role", "evidence_bundle_ref", "source_lineage_ref"],
+      "properties": {
+        "input_ref": { "$ref": "#/$defs/ref" },
+        "source_role": {
+          "enum": ["OBSERVED", "REGULATORY", "ADMINISTRATIVE", "AGGREGATE", "MODELED", "SYNTHETIC"]
+        },
+        "evidence_bundle_ref": { "$ref": "#/$defs/nullable_ref" },
+        "source_lineage_ref": { "$ref": "#/$defs/ref" }
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_ref",
+        "indicator_definition_ref",
+        "feature_set_manifest_ref",
+        "model_card_ref",
+        "model_run_receipt_ref",
+        "training_lineage_ref"
+      ],
+      "properties": {
+        "method_ref": { "$ref": "#/$defs/ref" },
+        "indicator_definition_ref": { "$ref": "#/$defs/nullable_ref" },
+        "feature_set_manifest_ref": { "$ref": "#/$defs/nullable_ref" },
+        "model_card_ref": { "$ref": "#/$defs/nullable_ref" },
+        "model_run_receipt_ref": { "$ref": "#/$defs/nullable_ref" },
+        "training_lineage_ref": { "$ref": "#/$defs/nullable_ref" }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uncertainty_ref", "uncertainty_class"],
+      "properties": {
+        "uncertainty_ref": { "$ref": "#/$defs/nullable_ref" },
+        "uncertainty_class": { "enum": ["LOW", "MEDIUM", "HIGH", "UNKNOWN"] }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validation_report_ref", "status"],
+      "properties": {
+        "validation_report_ref": { "$ref": "#/$defs/nullable_ref" },
+        "status": { "enum": ["PASS", "PARTIAL", "FAIL", "NOT_RUN", "ERROR"] }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confidence_class",
+        "citation_refs",
+        "interpretation_limits",
+        "policy_state",
+        "review_state",
+        "release_state"
+      ],
+      "properties": {
+        "confidence_class": { "enum": ["HIGH", "MEDIUM", "LOW", "UNRESOLVED"] },
+        "citation_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/ref" }
+        },
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "MODEL_LIMITS_APPLY",
+              "NO_AUTOMATED_RECOMMENDATION",
+              "NO_CAUSAL_CLAIM",
+              "NO_PUBLICATION_AUTHORITY",
+              "NOT_OBSERVATION",
+              "NOT_ROOT_TRUTH",
+              "SCOPE_BOUND"
+            ]
+          }
+        },
+        "policy_state": { "const": "NOT_EVALUATED" },
+        "review_state": { "const": "PENDING" },
+        "release_state": { "const": "UNRELEASED" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": { "enum": ["PASS", "ABSTAIN", "DENY", "ERROR"] },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["ASSESSMENT_ERROR", "DISCLOSURE_COMPLETE", "DISCLOSURE_PARTIAL", "SUPPORT_UNRESOLVED"]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "reference_resolution_performed",
+        "analysis_executed",
+        "evidence_created",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "reference_resolution_performed": { "const": false },
+        "analysis_executed": { "const": false },
+        "evidence_created": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-analytic-output-disclosure-assessment-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/analytic-output-disclosure-assessment.yml",
+    "contracts/evidence/analytic_output_disclosure_assessment.md",
+    "docs/intake/exploratory/analytic-output-disclosure-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/analytic_output_disclosure_assessment/cases.json",
+    "schemas/contracts/v1/evidence/analytic_output_disclosure_assessment.schema.json",
+    "tests/validators/evidence/test_validate_analytic_output_disclosure_assessment.py",
+    "tools/validators/evidence/validate_analytic_output_disclosure_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/analytic-output-disclosure-assessment.yml": "sha256:d2149e58ad8acdb35a0d592aa5d5a2960183ed5880cfc655c2fee76c70dca5b9",
+    "contracts/evidence/analytic_output_disclosure_assessment.md": "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e",
+    "docs/intake/exploratory/analytic-output-disclosure-assessment-source-map.md": "sha256:4522f04a8fa93b29e3c3b43901a00857a1f08a6778612d606ef4bad13f6357a4",
+    "fixtures/contracts/v1/evidence/analytic_output_disclosure_assessment/cases.json": "sha256:671b72cd269e58a0627c768d75cad64d4df839f97079da025dad0e9d45e0ff41",
+    "schemas/contracts/v1/evidence/analytic_output_disclosure_assessment.schema.json": "sha256:456d19f1a351b83456f0e39ba924bdcae9f368bb52646d10654642c2f7690f99",
+    "tests/validators/evidence/test_validate_analytic_output_disclosure_assessment.py": "sha256:1ae78570cf7f296ddc1767fe0db9194bdfce5d34e89e74f693f06a1f99166103",
+    "tools/validators/evidence/validate_analytic_output_disclosure_assessment.py": "sha256:45a5d5fcb3a2423f2d113b30420954f53cd5d89a69b6469891ef1221d93dc29c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python and repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:1d9da6008c3b28d31e64100d364f330f33406321dc0c8a7bb8f67ef777440967",
+      "sha256:9123c01698646b563cf09ce8df4f8507d0ab651a007f8cfe308819a5b49d469b",
+      "sha256:769e69cb891bb8a9d3649600ef08e67e08ef378c81e17ce6fcbed7647e76eca2",
+      "sha256:417d3f77396bfc58dee8f8d26c92d8dc4fe040665ac2124e07efce8cc850e227",
+      "sha256:7f2d6e643af9d627eb6d6bdc5f88526c64c6d89645ccc1b1f1a2c7126e630d88",
+      "sha256:6e6789d6d647ee5c878fc58cb40a11f4c8f6f8b13d5564383b0ad94ef438280a",
+      "sha256:d9363617a6cd069c33b22ef5e79eee2a6a9c1a8378178e5925a126e17c184de0",
+      "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pass-10/changed-cards-pass-10.jsonl",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/governance/model_card_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/runtime/run_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/data/validation_report.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/source/source_role_transition_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/representation_fitness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/analytic-output-disclosure-assessment.yml": "CONFIRMED",
+    "contracts/evidence/analytic_output_disclosure_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/analytic-output-disclosure-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/analytic_output_disclosure_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/analytic_output_disclosure_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_analytic_output_disclosure_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_analytic_output_disclosure_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "10 deterministic tests and 40 exact fixture cases passed."},
+    {"gate": "adjacent-model-card-suite", "outcome": "PASS", "reason": "10 existing adjacent tests passed."},
+    {"gate": "adjacent-source-role-and-representation-suites", "outcome": "PASS", "reason": "8 existing adjacent tests passed."},
+    {"gate": "adjacent-environmental-indicator-baseline", "outcome": "FAIL", "reason": "Two existing assertions fail on the pinned base because one invalid checksum fixture now reaches schema validation before its expected semantic code; this packet does not change that profile or fixture."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both new metadata blocks passed the required profile."},
+    {"gate": "workflow-yaml-parse-and-read-only-permissions", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "google-drive-full-atlas-corpus", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "full-atlas-interpretive-analytics-cards", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md"},
+    {"id": "retained-analysis-as-interpretation-lineage", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pass-10/changed-cards-pass-10.jsonl"},
+    {"id": "existing-evidence-bundle-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/evidence_bundle.md"},
+    {"id": "existing-model-card-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/governance/model_card_envelope.md"},
+    {"id": "existing-source-role-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/source/source_role_transition_assessment.md"},
+    {"id": "existing-representation-fitness-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/evidence/representation_fitness_assessment.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T03:59:27Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only AnalyticOutputDisclosureAssessment packet derived from the Full Atlas interpretive analytics cards and retained analysis-as-interpretation lineage. It binds one output to evidence, method, assumptions, uncertainty, validation, confidence, citations, and limits while preserving all evidence, policy, review, release, deployment, publication, and public-use authority boundaries."
+}
