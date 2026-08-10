@@ -1,0 +1,92 @@
+{
+  "receipt_id": "genrec-geoparquet-version-readiness-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md",
+    "docs/adr/INDEX.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md": "sha256:1c2a24fc697950736737627994223247819302202ab923f666c00046531cd7da",
+    "docs/adr/INDEX.md": "sha256:596030672cf7150ec59519e0177a819edb72b42b37d34217ea5efc8b70752642"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:1c2a24fc697950736737627994223247819302202ab923f666c00046531cd7da",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "official GeoParquet web and git evidence inspection",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2dd8b82d470d3a937c368ed8c80b92305fbd9e7126d3bd41ad2bf9986f30abd9",
+      "sha256:370e2efcb1b6a755660fab01f15f4d2240d070f9b29dcfd773c3de3c6ab65f30",
+      "sha256:83478d2a99502832592a7770bd581dfbc314b44a72100659ca8ab104748fa036",
+      "sha256:91a5c7687253cabd458aac88fa6f1199ea8ed793ac3a56697228d59b3d719d69",
+      "sha256:bebbaf0d58fe8e5abf4bb20448bd4938733134de5be5e517def4ed1e7a6e1078"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Improvements"
+    ],
+    "evidence_refs": [
+      "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/standards/GEOPARQUET.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/release/geospatial_carrier_readiness.md",
+      "github://opengeospatial/geoparquet/blob/0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa/format-specs/geoparquet.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "adr-index-coherence", "outcome": "PASS", "reason": "33 numbered ADRs and 12 unassigned scaffolds passed exact index validation."},
+    {"gate": "focused-adr-index-tests", "outcome": "PASS", "reason": "8 deterministic tests passed."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Two affected metadata blocks passed the required profile."},
+    {"gate": "documentation-local-link-validation", "outcome": "PASS", "reason": "Two documents and 67 local targets passed; nine external targets were classified without network requests."},
+    {"gate": "repository-parquet-artifact-inventory", "outcome": "PASS", "reason": "Bounded tracked-worktree search found no .parquet or .geoparquet files."},
+    {"gate": "repository-reader-writer-dependency-inventory", "outcome": "PASS", "reason": "Bounded manifest and lockfile search found no declared pyarrow, geopandas, duckdb, geoparquet, or Parquet dependency."},
+    {"gate": "upstream-version-pin", "outcome": "PASS", "reason": "Official v2.0.0-rc.1 tag and specification were inspected at 0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa on 2026-08-10."},
+    {"gate": "no-runtime-or-data-change", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "drive-kfm-improvements", "validated": true, "evidence_ref": "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI"},
+    {"id": "governed-spatiotemporal-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md"},
+    {"id": "current-geoparquet-standard", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/standards/GEOPARQUET.md"},
+    {"id": "current-geospatial-carrier-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/contracts/release/geospatial_carrier_readiness.md"},
+    {"id": "upstream-geoparquet-2-rc1", "validated": true, "evidence_ref": "github://opengeospatial/geoparquet/blob/0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa/format-specs/geoparquet.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9e76413313b8529091d01be6132d6e987e3f9fae/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:12:20Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0033-geoparquet-version-readiness.md",
+    "drift_register_entry": null
+  },
+  "notes": "Decision-only GeoParquet version-readiness packet derived from the governed Google Drive proposal, current KFM inventory, and pinned official upstream evidence. It keeps GeoParquet 1.1.0 as the default, permits only a separately reviewed synthetic dual evaluation, and authorizes no standard change, dependency, data rewrite, source activation, release, deployment, or publication."
+}
