@@ -5,16 +5,20 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/policy-readme
 title: policy/ — Canonical Admissibility Root
-version: v0.3
+type: readme
+version: v0.3.1
 status: draft; repository-grounded; mixed-maturity; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted policy stewardship and independent approval controls were not established
-updated: 2026-08-09
+created: 2026-07-23
+updated: 2026-08-10
 current_path: policy/README.md
 owning_root: policy/
-base_commit: 41bf408df0458feadd086047a813005b3a052201
+policy_label: public; policy; root-contract; mixed-maturity; non-release; non-publication
+responsibility: Define the canonical policy-source root, direct-child boundaries, maturity evidence, validation posture, and trust membrane without becoming semantic, schema, evidence, runtime, release, or publication authority.
+base_commit: 8a671552785b773364f01d2e76d8ca6892a405ea
 prior_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
 directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 remains proposed for the policy/policies compatibility decision
-truth_posture: CONFIRMED canonical singular policy root, adopted Directory Rules placement, recursive direct-child inventory, one bounded PROPOSED_INACTIVE Rego release-gate profile with native tests and checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first policy contracts/schemas/validators/workflows, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, active-evaluator sequence, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests child naming plus inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
+truth_posture: CONFIRMED canonical singular policy root, adopted Directory Rules placement, recursive direct-child inventory, one bounded PROPOSED_INACTIVE Rego release-gate profile with native tests and checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first policy contracts/schemas/validators/workflows, inactive unresolved-only threshold registry candidate, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests child naming plus inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -266,7 +270,7 @@ Accepted policy stewardship, branch-required checks, and independent release app
 
 ## Current direct-child map
 
-Directory Rules `ROOT_FULL` requires the root README to map direct children only. The following inventory is verified from the `policy/` tree at `41bf408df0458feadd086047a813005b3a052201`. Presence does not establish adoption, maturity, or equal authority.
+Directory Rules `ROOT_FULL` requires the root README to map direct children only. The following inventory is verified from the `policy/` tree at `main@8a671552785b773364f01d2e76d8ca6892a405ea` plus this additive candidate. Presence does not establish adoption, maturity, or equal authority.
 
 ```text
 policy/
@@ -309,6 +313,7 @@ policy/
 ├── telemetry/
 ├── test/
 ├── tests/
+├── thresholds/
 ├── transport/
 └── ui/
 ```
@@ -323,11 +328,12 @@ policy/
 | `domains/` and named domain/topic lanes | Policy source scoped beneath the policy responsibility root; a domain name does not create a new authority root. |
 | `fixtures/`, `test/`, `tests/` | Existing policy-local boundaries require continued classification; reusable executable fixtures/tests belong under root `fixtures/` and `tests/`. |
 | `source/` and `sources/` | Parallel naming is a drift/ownership question, not evidence of two source-policy authorities. |
+| `thresholds/` | Inactive unresolved-slot candidate registry only; no threshold value, evaluator binding, watcher binding, activation, release, or publication authority. |
 | `opa/`, `proof/`, `transport/` | Tracked placeholder or narrow lanes; exact role, writers, and graduation conditions remain **NEEDS VERIFICATION**. |
 | `living_persons_geoprivacy.md` | Direct policy source retained at its current path; any move requires reference repair and Directory Rules review. |
 | All other children | Existing policy-family lanes. Their README, rule, fixture, consumer, and maturity evidence must be reviewed independently before operational reliance. |
 
-Selected child indexes: [`access/`](./access/) · [`ai_builder/`](./ai_builder/) · [`bundles/`](./bundles/) · [`consent/`](./consent/) · [`decision/`](./decision/) · [`domains/`](./domains/) · [`evidence/`](./evidence/) · [`geoprivacy/`](./geoprivacy/) · [`rights/`](./rights/) · [`sensitivity/`](./sensitivity/) · [`ui/`](./ui/)
+Selected child indexes: [`access/`](./access/) · [`ai_builder/`](./ai_builder/) · [`bundles/`](./bundles/) · [`consent/`](./consent/) · [`decision/`](./decision/) · [`domains/`](./domains/) · [`evidence/`](./evidence/) · [`geoprivacy/`](./geoprivacy/) · [`rights/`](./rights/) · [`sensitivity/`](./sensitivity/) · [`thresholds/`](./thresholds/) · [`ui/`](./ui/)
 
 [Back to top](#top)
 
@@ -493,6 +499,7 @@ This v0.3 README changes no policy behavior. Before merge, close or abandon its 
 | POL-013 | How should `source/` versus `sources/` and `test/` versus `tests/` converge without creating parallel authority or losing references? | **DRIFT / NEEDS DIRECTORY REVIEW** |
 | POL-014 | What are the intended writer, reader, retention, and graduation rules for placeholder lanes such as `opa/`, `proof/`, and `transport/`? | **NEEDS VERIFICATION** |
 | POL-015 | What process updates the OPA version and checksum while preserving reproducibility and supply-chain review? | **NEEDS VERIFICATION** |
+| POL-016 | Which threshold-policy slots, values, units, operators, owners, evidence bases, consumers, and effective windows are accepted? | **PROPOSED_INACTIVE / ALL VALUES UNRESOLVED** |
 
 [Back to top](#top)
 
@@ -527,5 +534,6 @@ Evidence used includes the v0.2 blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3`,
 | short stub | Before 2026-07-23 | Declared purpose, singular root, basic belongs/exclusions, validation/review/related pointers, and `PROPOSED` status | Historical blob recorded in v0.2 |
 | v0.2 | 2026-07-23 | Same-path repository-grounded modernization with required README order, authority split, maturity evidence, workflow boundaries, outcome separation, authoring rules, sensitive/public controls, rollback, and verification register | Restore blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3` only if paired v0.3 receipt is also removed |
 | v0.3 | 2026-08-09 | Repins the root contract to current main; records ADR-0029 adoption, bounded OPA/Rego execution, inactive fixture-first policy profiles, 18 boundary tests, full direct-child inventory, preserved general readiness holds, and updated validation/rollback/open-work boundaries | Revert the v0.3 README and paired generated receipt together |
+| v0.3.1 | 2026-08-10 | Adds the inactive `thresholds/` child to the direct-child map and records that every candidate slot remains value-free, unbound, and held for review. | Revert the threshold-registry candidate commit; no active rule or consumer changes |
 
 <p align="right"><a href="#top">Back to top</a></p>

@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-pass20-expansion-conformance-baseline-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md"
+  ],
+  "artifact_hashes": {
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md": "sha256:3fe21d6ead16a41b4b8864188509e7f2118960910b94807075c308f81e33aaa2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a44642c55b55271e4807eaca14dbfc6a284ca55fa58943f2900562fa54c4dd58",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic repository inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Google Drive: New Ideas 5-15-26"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-001..EXP-015",
+      "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ",
+      "repo:docs/doctrine/directory-rules.md@8a671552785b773364f01d2e76d8ca6892a405ea",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a671552785b773364f01d2e76d8ca6892a405ea"
+    ]
+  },
+  "truth_labels": {
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-and-duplicate-assay",
+      "outcome": "PASS",
+      "reason": "The matrix uses the existing exploratory-intake owner, identifies collisions, and creates no new root or parallel authority."
+    },
+    {
+      "gate": "documentation-meta-block",
+      "outcome": "PASS",
+      "reason": "The bounded metadata-block validator accepted the required block."
+    },
+    {
+      "gate": "documentation-link-check",
+      "outcome": "PASS",
+      "reason": "The no-network local documentation link checker completed without findings."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-part2-expansion-agenda",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-001..EXP-015"
+    },
+    {
+      "id": "gdrive:new-ideas-5-15-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1boJrrqtqk9DcnzU8zymxFBv83r2-jvbep2kecj7WRCQ"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@8a671552785b773364f01d2e76d8ca6892a405ea"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:08:52Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Point-in-time exploratory conformance baseline for Pass 20 EXP-001 through EXP-015. It performs no live source check, policy evaluation, registry mutation, lifecycle transition, release, deployment, or publication."
+}
