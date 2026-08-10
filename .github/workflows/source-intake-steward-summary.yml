@@ -1,0 +1,121 @@
+# Render validated SourceIntakeRecord fixtures into deterministic steward summaries.
+name: source-intake-steward-summary
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/source-intake-steward-summary.yml"
+      - "contracts/source/source_intake_steward_summary.md"
+      - "docs/intake/exploratory/source-intake-steward-summary-source-map.md"
+      - "tools/ci/render_source_intake_steward_summary.py"
+      - "tools/validators/validate_source_intake_record.py"
+      - "schemas/contracts/v1/source/source_intake_record.schema.json"
+      - "schemas/contracts/v1/source/drift_summary.schema.json"
+      - "fixtures/contracts/v1/source/source_intake_record/**"
+      - "tests/source/test_render_source_intake_steward_summary.py"
+      - "data/receipts/generated/genrec-source-intake-steward-summary-20260810.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-intake-steward-summary.yml"
+      - "contracts/source/source_intake_steward_summary.md"
+      - "docs/intake/exploratory/source-intake-steward-summary-source-map.md"
+      - "tools/ci/render_source_intake_steward_summary.py"
+      - "tools/validators/validate_source_intake_record.py"
+      - "schemas/contracts/v1/source/source_intake_record.schema.json"
+      - "schemas/contracts/v1/source/drift_summary.schema.json"
+      - "fixtures/contracts/v1/source/source_intake_record/**"
+      - "tests/source/test_render_source_intake_steward_summary.py"
+      - "data/receipts/generated/genrec-source-intake-steward-summary-20260810.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-intake-steward-summary-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-source-intake-steward-summary
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+      - name: Compile renderer and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/ci/render_source_intake_steward_summary.py \
+            tests/source/test_render_source_intake_steward_summary.py
+      - name: Run source validator and focused renderer tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_source_intake_record.py --fixtures
+          python -m unittest tests.source.test_render_source_intake_steward_summary --verbose
+      - name: Exercise ready and redacted summary projections
+        shell: bash
+        run: |
+          set -euo pipefail
+          workdir="$(mktemp -d)"
+          trap 'rm -rf "$workdir"' EXIT
+          python tools/ci/render_source_intake_steward_summary.py \
+            --record fixtures/contracts/v1/source/source_intake_record/valid/valid_proposed_work_record.json \
+            --output "$workdir/ready.md"
+          set +e
+          python tools/ci/render_source_intake_steward_summary.py \
+            --record fixtures/contracts/v1/source/source_intake_record/valid/valid_quarantine_blocking.json \
+            --output "$workdir/hold.md"
+          hold_status="$?"
+          set -e
+          test "$hold_status" -eq 1
+          grep -F '`READY_FOR_REVIEW`' "$workdir/ready.md"
+          grep -F '**Changed fields:** `REDACTED`' "$workdir/hold.md"
+          if grep -F 'fixture-sensitive' "$workdir/hold.md"; then
+            echo "sensitive fixture detail leaked into steward summary" >&2
+            exit 1
+          fi
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-source-intake-steward-summary-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### SourceIntake steward summary"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: existing SourceIntakeRecord validation, exact input digest, redacted what-changed projection, policy implications, rollback posture, and finite next-action display."
+            echo "- Boundary: no fetch, lifecycle write, evidence resolution, policy decision, review approval, notification, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
