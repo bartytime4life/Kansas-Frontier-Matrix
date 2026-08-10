@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-atlas-card-delta-assessment-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/atlas-card-delta-assessment.yml",
+    "contracts/governance/atlas_card_delta_assessment.md",
+    "docs/intake/exploratory/new-ideas-5-atlas-card-delta-source-map.md",
+    "fixtures/contracts/v1/governance/atlas_card_delta_assessment/cases.json",
+    "schemas/contracts/v1/governance/atlas_card_delta_assessment.schema.json",
+    "tests/validators/governance/test_atlas_card_delta_assessment.py",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/atlas-card-delta-assessment.yml": "sha256:25a9be0da6257b9077f1d6e323a4b1913c4a6917ebe09a93bc398dbf10f81756",
+    "contracts/governance/atlas_card_delta_assessment.md": "sha256:1c66f4f08ca8a47992134b4f7b3b148fc762f4f426452d8e57f4818671f64fc3",
+    "docs/intake/exploratory/new-ideas-5-atlas-card-delta-source-map.md": "sha256:3a611fa9d06a66729103bb81c41c8549d42864e5a26c3be08f9b6f896b80ed55",
+    "fixtures/contracts/v1/governance/atlas_card_delta_assessment/cases.json": "sha256:df16f4878e4e12726252f5fa9c66a76052665428ce66081a744b2854ff3ec553",
+    "schemas/contracts/v1/governance/atlas_card_delta_assessment.schema.json": "sha256:bf0bcbcdf0e84179f847d094ca2ef0a5d79e87946137b26ca365010b2d2a8619",
+    "tests/validators/governance/test_atlas_card_delta_assessment.py": "sha256:c8a06ebda06cea0df2dbc873d5bed6b7f169f6fc12097f36293e0b79741ba813",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py": "sha256:0612a99742127d5f80024304f9126a1b2f533c63b0999fc0ff4fc7f51ccf340d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:1c66f4f08ca8a47992134b4f7b3b148fc762f4f426452d8e57f4818671f64fc3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "New Ideas 5-19-26",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/intake/exploratory/new-ideas-5-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pass-10/integration-matrix.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/atlas-card-delta-assessment.yml": "CONFIRMED",
+    "contracts/governance/atlas_card_delta_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-5-atlas-card-delta-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/atlas_card_delta_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/atlas_card_delta_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_atlas_card_delta_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "6 deterministic tests passed in an isolated temporary environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "10 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-atlas-diff-visualizer-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "existing-new-ideas-5-intake-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/intake/exploratory/new-ideas-5-source-map.md"
+    },
+    {
+      "id": "atlas-stable-id-carrier",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pass-10/integration-matrix.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T04:16:04Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only AtlasCardDeltaAssessmentCandidate derived from the Drive-proposed Atlas diff visualizer after collision review against current main. It computes deterministic card deltas and finite outcomes without resolving evidence, deciding truth, mutating Atlas state, approving review, authorizing release, creating a visualizer, deploying, publishing, or permitting public use."
+}
