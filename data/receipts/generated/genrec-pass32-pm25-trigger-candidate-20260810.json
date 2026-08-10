@@ -12,12 +12,12 @@
   ],
   "artifact_hashes": {
     ".github/workflows/pm25-trigger-candidate-assessment.yml": "sha256:4dab99867b702c28a614c2d65b9d00797521a0e82a73ee7f634f46181b6813e9",
-    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "sha256:eda089f6bb6de27a24ba52102bce855229a2bac104fc206251caceadd00736ed",
-    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:f25448ee2919dbc5683c5cb88b984a09de0779f7d8d3eb40a99c2532f15b8170",
-    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:7556c82ba29ee5cf4fabce100d8a1044ad1ab80dbc110d66fda766b6551094d5",
-    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:55fc6db85e9b54ce81562a14b6d26d29c89e9c26610ba9e9e56eabf8682583fd",
-    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:53efea073508efd6cdbae6a5c2c5192f33ffd8f2f134620c44509b9abc93033b",
-    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:17dd5b4bd38ede403c25e746d85e2228df56bdebaea1d29ec25f33a5fa3533f3"
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "sha256:dd95b41d80e7d221d9b07b55ff9d7f0e811c3c7e51c129136e17b8adfdbcc60b",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:3d32d488fea5a584bb9318adddfc1faf396d0eb1e860a2db8d90a90cdd55b981",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:0ea27e3d1d9477e77e34a676d44cff51d67fddc9beac2322194e8c0589b527af",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:d0ae4515885f9614d5cf79251ad3525edbf3ee187856c292905359c79572bfa0",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:071735fb5aa2b43efe53895b144f1213076aab2a6bc6922aedf38ba5aee7579a",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:9cd95a1cb50d7cc1ac7dc44f31c9b08f70948a07f125878cbb2d20a7ed9c6787"
   },
   "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
   "prompt_or_contract": "sha256:8fbe7a30cbbf3222411d4e3dc10b329120a26eecc6b1b9c2a5ae86e4de5ab0f9",
