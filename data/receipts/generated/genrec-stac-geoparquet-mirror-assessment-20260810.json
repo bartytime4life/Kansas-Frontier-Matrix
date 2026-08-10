@@ -1,0 +1,102 @@
+{
+  "receipt_id": "genrec-stac-geoparquet-mirror-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/stac-geoparquet-mirror-assessment.yml",
+    "contracts/data/stac_geoparquet_mirror_assessment.md",
+    "docs/intake/exploratory/stac-geoparquet-mirror-assessment-source-map.md",
+    "fixtures/contracts/v1/data/stac_geoparquet_mirror_assessment/cases.json",
+    "schemas/contracts/v1/data/stac_geoparquet_mirror_assessment.schema.json",
+    "tests/validators/test_validate_stac_geoparquet_mirror_assessment.py",
+    "tools/validators/catalog/validate_stac_geoparquet_mirror_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/stac-geoparquet-mirror-assessment.yml": "sha256:2f8241395c67b34b33a38feac76c701f9fc425284061bae50c7db42032cbf7e7",
+    "contracts/data/stac_geoparquet_mirror_assessment.md": "sha256:2dd8b82d470d3a937c368ed8c80b92305fbd9e7126d3bd41ad2bf9986f30abd9",
+    "docs/intake/exploratory/stac-geoparquet-mirror-assessment-source-map.md": "sha256:15fbd4ba7042b216d84ec5689577b372c5012c5e24875c5934d034eb87d32490",
+    "fixtures/contracts/v1/data/stac_geoparquet_mirror_assessment/cases.json": "sha256:6ea1c5f0094e63657a704eebceb49397e7b726ab1682e4b77c3a436f1f9f7f77",
+    "schemas/contracts/v1/data/stac_geoparquet_mirror_assessment.schema.json": "sha256:2e191ba6cfa930259ed84ad3a48b9c2b5531a0075ca993193413b44072778090",
+    "tests/validators/test_validate_stac_geoparquet_mirror_assessment.py": "sha256:a951d60117f153cc1592d2c3741e524f741d68dc38fe1c6ba7b97dcb0f92e0e6",
+    "tools/validators/catalog/validate_stac_geoparquet_mirror_assessment.py": "sha256:499eea3762c0a97d5370861161917fed68acce4288ceb23f5bbf44d1b5feefe3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:2dd8b82d470d3a937c368ed8c80b92305fbd9e7126d3bd41ad2bf9986f30abd9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and upstream-specification inspection",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:798d8ee3ab1d99ce92cb04d5e2e69a66c5c89407d1868da350be153c3b9f04a4",
+      "sha256:91a5c7687253cabd458aac88fa6f1199ea8ed793ac3a56697228d59b3d719d69",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Improvements",
+      "docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md",
+      "radiantearth/stac-geoparquet-spec/stac-geoparquet-spec.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7463ee1347326b72a6998e5331b20a3cae69604b/docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md",
+      "github://radiantearth/stac-geoparquet-spec/blob-sha/dcef2113c42f505cffa8208af9f6525ec5122a69/stac-geoparquet-spec.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7463ee1347326b72a6998e5331b20a3cae69604b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/stac-geoparquet-mirror-assessment.yml": "CONFIRMED",
+    "contracts/data/stac_geoparquet_mirror_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/stac-geoparquet-mirror-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/stac_geoparquet_mirror_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/stac_geoparquet_mirror_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_stac_geoparquet_mirror_assessment.py": "CONFIRMED",
+    "tools/validators/catalog/validate_stac_geoparquet_mirror_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "10 deterministic tests and 18 exact fixture subtests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "18 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."},
+    {"gate": "json-and-workflow-parse", "outcome": "PASS"},
+    {"gate": "no-parquet-and-no-network-boundary", "outcome": "PASS"},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS"},
+    {"gate": "documentation-local-link-validation", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "google-drive-spatiotemporal-modernization-blueprint", "validated": true, "evidence_ref": "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI"},
+    {"id": "repository-governed-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7463ee1347326b72a6998e5331b20a3cae69604b/docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md"},
+    {"id": "upstream-stac-geoparquet-mapping-document", "validated": true, "evidence_ref": "github://radiantearth/stac-geoparquet-spec/blob-sha/dcef2113c42f505cffa8208af9f6525ec5122a69/stac-geoparquet-spec.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7463ee1347326b72a6998e5331b20a3cae69604b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T05:03:13Z",
+  "emitter": "OpenAI GPT-5 via Codex GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only StacGeoParquetMirrorAssessment packet derived from the Google Drive spatiotemporal modernization blueprint, its repository-governed source map, and the upstream STAC GeoParquet mapping document pinned by Git blob SHA. It distinguishes full-collection parity from partial-sample parity and detects declared item, collection, geometry, bbox, link, asset, property, temporal, omission, addition, and reserved-name conflicts without opening Parquet, resolving source objects, mutating a catalog, resolving evidence, deciding policy, approving review, releasing, publishing, or authorizing public use."
+}
