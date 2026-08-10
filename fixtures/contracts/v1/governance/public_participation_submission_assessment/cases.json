@@ -1,0 +1,266 @@
+{
+  "schema_version": "kfm.public-participation-submission-assessment-fixtures.v1",
+  "profile": "kfm.governance.public-participation-submission-assessment.v1",
+  "description": "Synthetic cases proving that a comment window and submission receipt do not create acceptance, endorsement, decision, or publication authority.",
+  "bases": {
+    "received": {
+      "profile": "kfm.governance.public-participation-submission-assessment.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "governance_event_ref": "kfm://governance-event/synthetic-planning-session",
+      "comment_window": {
+        "comment_window_ref": "kfm://comment-window/synthetic-planning-session/2026-09",
+        "state": "CLOSED",
+        "opens_at": "2026-09-01T13:00:00Z",
+        "closes_at": "2026-09-30T22:00:00Z",
+        "cancelled_at": null,
+        "timezone": "America/Chicago",
+        "channel_refs": [
+          "kfm://submission-channel/synthetic-email",
+          "kfm://submission-channel/synthetic-web-form"
+        ],
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-comment-window/notice"
+        ]
+      },
+      "submission": {
+        "submission_ref": "kfm://submission/synthetic-comment-0001",
+        "receipt_state": "RECEIVED",
+        "received_at": "2026-09-15T16:30:00Z",
+        "payload_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "submitter_identity_posture": "IDENTIFIED_RESTRICTED",
+        "privacy_class": "RESTRICTED",
+        "publication_posture": "WITHHELD",
+        "release_ref": null,
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:2222222222222222222222222222222222222222222222222222222222222222"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic-submission/receipt"
+        ]
+      },
+      "assessment": {
+        "window_disposition": "IN_WINDOW",
+        "review_state": "REVIEWED",
+        "action_state": "NO_ACTION_RECORDED",
+        "boundary_outcome": "CONSISTENT",
+        "reason_codes": [
+          "RECEIPT_AND_REVIEW_SEPARATED"
+        ]
+      },
+      "limitations": [
+        "NO_PUBLICATION_AUTHORITY",
+        "RECEIPT_IS_NOT_ACCEPTANCE",
+        "REVIEW_IS_NOT_ACTION",
+        "SUBMISSION_IS_NOT_DECISION",
+        "SUBMISSION_IS_NOT_ENDORSEMENT"
+      ],
+      "effects": {
+        "comment_accepted": false,
+        "review_approved": false,
+        "recommendation_created": false,
+        "decision_created": false,
+        "released": false,
+        "published": false,
+        "public_use_authorized": false,
+        "source_activated": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_received_withheld",
+      "base": "received",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_received_late",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/receipt_state", "value": "RECEIVED_LATE"},
+        {"path": "/submission/received_at", "value": "2026-10-01T13:00:00Z"},
+        {"path": "/assessment/window_disposition", "value": "LATE"},
+        {"path": "/assessment/review_state", "value": "NOT_REVIEWED"},
+        {"path": "/assessment/reason_codes", "value": ["LATE_RECEIPT_RECORDED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_not_received",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/submission_ref", "value": null},
+        {"path": "/submission/receipt_state", "value": "NOT_RECEIVED"},
+        {"path": "/submission/received_at", "value": null},
+        {"path": "/submission/payload_digest", "value": null},
+        {"path": "/submission/submitter_identity_posture", "value": "NOT_COLLECTED"},
+        {"path": "/submission/privacy_class", "value": "UNKNOWN"},
+        {"path": "/submission/publication_posture", "value": "NOT_ASSESSED"},
+        {"path": "/assessment/window_disposition", "value": "NO_SUBMISSION"},
+        {"path": "/assessment/review_state", "value": "NOT_REVIEWED"},
+        {"path": "/assessment/reason_codes", "value": ["NO_SUBMISSION_OBSERVED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_release_reference_only",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/submitter_identity_posture", "value": "ANONYMOUS"},
+        {"path": "/submission/privacy_class", "value": "PUBLIC_CANDIDATE"},
+        {"path": "/submission/publication_posture", "value": "RELEASE_REFERENCE_ONLY"},
+        {"path": "/submission/release_ref", "value": "kfm://release/synthetic-public-comment/redacted-0001"},
+        {"path": "/assessment/reason_codes", "value": ["EXTERNAL_RELEASE_REFERENCE_ONLY"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_unconfirmed_hold",
+      "base": "received",
+      "mutations": [
+        {"path": "/comment_window/state", "value": "STATUS_UNCONFIRMED"},
+        {"path": "/submission/submission_ref", "value": null},
+        {"path": "/submission/receipt_state", "value": "STATUS_UNCONFIRMED"},
+        {"path": "/submission/received_at", "value": null},
+        {"path": "/submission/payload_digest", "value": null},
+        {"path": "/submission/submitter_identity_posture", "value": "UNKNOWN"},
+        {"path": "/submission/privacy_class", "value": "UNKNOWN"},
+        {"path": "/submission/publication_posture", "value": "NOT_ASSESSED"},
+        {"path": "/assessment/window_disposition", "value": "UNRESOLVED"},
+        {"path": "/assessment/review_state", "value": "UNKNOWN"},
+        {"path": "/assessment/action_state", "value": "UNKNOWN"},
+        {"path": "/assessment/boundary_outcome", "value": "HOLD"},
+        {"path": "/assessment/reason_codes", "value": ["SOURCE_STATUS_UNCONFIRMED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "window_interval_invalid",
+      "base": "received",
+      "mutations": [
+        {"path": "/comment_window/opens_at", "value": "2026-10-02T13:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["WINDOW_INTERVAL_INVALID"]
+    },
+    {
+      "name": "received_without_timestamp",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/received_at", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RECEIPT_EVIDENCE_INCOMPLETE"]
+    },
+    {
+      "name": "in_window_timestamp_conflict",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/received_at", "value": "2026-10-01T13:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["IN_WINDOW_TIME_CONFLICT"]
+    },
+    {
+      "name": "late_timestamp_conflict",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/receipt_state", "value": "RECEIVED_LATE"},
+        {"path": "/assessment/window_disposition", "value": "LATE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["LATE_TIME_CONFLICT"]
+    },
+    {
+      "name": "not_received_with_payload_evidence",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/receipt_state", "value": "NOT_RECEIVED"},
+        {"path": "/submission/received_at", "value": null},
+        {"path": "/submission/submitter_identity_posture", "value": "NOT_COLLECTED"},
+        {"path": "/submission/privacy_class", "value": "UNKNOWN"},
+        {"path": "/submission/publication_posture", "value": "NOT_ASSESSED"},
+        {"path": "/assessment/window_disposition", "value": "NO_SUBMISSION"},
+        {"path": "/assessment/review_state", "value": "NOT_REVIEWED"},
+        {"path": "/assessment/reason_codes", "value": ["NO_SUBMISSION_OBSERVED"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["NO_SUBMISSION_EVIDENCE_CONFLICT"]
+    },
+    {
+      "name": "release_reference_wrong_posture",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/release_ref", "value": "kfm://release/synthetic-public-comment/redacted-0001"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RELEASE_REFERENCE_POSTURE_CONFLICT"]
+    },
+    {
+      "name": "release_posture_without_reference",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/privacy_class", "value": "PUBLIC_CANDIDATE"},
+        {"path": "/submission/publication_posture", "value": "RELEASE_REFERENCE_ONLY"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RELEASE_REFERENCE_REQUIRED"]
+    },
+    {
+      "name": "sensitive_release_reference",
+      "base": "received",
+      "mutations": [
+        {"path": "/submission/privacy_class", "value": "SENSITIVE"},
+        {"path": "/submission/publication_posture", "value": "RELEASE_REFERENCE_ONLY"},
+        {"path": "/submission/release_ref", "value": "kfm://release/synthetic-public-comment/unsafe-0001"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SENSITIVE_PUBLICATION_POSTURE_CONFLICT"]
+    },
+    {
+      "name": "action_without_review",
+      "base": "received",
+      "mutations": [
+        {"path": "/assessment/review_state", "value": "NOT_REVIEWED"},
+        {"path": "/assessment/action_state", "value": "ACTED_UPON"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ACTION_WITHOUT_REVIEW"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "received",
+      "mutations": [
+        {"path": "/effects/comment_accepted", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM"]
+    },
+    {
+      "name": "limitation_boundary_missing",
+      "base": "received",
+      "mutations": [
+        {"path": "/limitations", "value": ["NO_PUBLICATION_AUTHORITY", "RECEIPT_IS_NOT_ACCEPTANCE", "REVIEW_IS_NOT_ACTION", "SUBMISSION_IS_NOT_DECISION", "SUBMISSION_IS_NOT_DECISION"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_mismatch",
+      "base": "received",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}
