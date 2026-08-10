@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-full-atlas-nondetection-support-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/non-detection-support-assessment.yml",
+    "contracts/evidence/non_detection_support_assessment.md",
+    "docs/intake/exploratory/full-atlas-nondetection-support-source-map.md",
+    "fixtures/contracts/v1/evidence/non_detection_support_assessment/cases.json",
+    "schemas/contracts/v1/evidence/non_detection_support_assessment.schema.json",
+    "tests/evidence/test_non_detection_support_assessment.py",
+    "tools/validators/evidence/validate_non_detection_support_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/non-detection-support-assessment.yml": "sha256:4fcd88a37ee0faba223fdb3ad832379d10fe39f080782c20efdf4d83b04f53c9",
+    "contracts/evidence/non_detection_support_assessment.md": "sha256:492f345c9e53634e454f6b8d5caacba63fbe2aa833e31d6f4306c9364aaf7ebd",
+    "docs/intake/exploratory/full-atlas-nondetection-support-source-map.md": "sha256:683c6b2be78e0559f3c472d78202f3a7e7113875e3a1ba6e229d47a960efa80c",
+    "fixtures/contracts/v1/evidence/non_detection_support_assessment/cases.json": "sha256:5fe4714c417538694b33bbea2fa9a46fa8d5095f77d1b30b71689c7c6136c333",
+    "schemas/contracts/v1/evidence/non_detection_support_assessment.schema.json": "sha256:a313a83928d525ae35d16ac006b6b11f17a5a6f02d414cccf05d2f62252e21ea",
+    "tests/evidence/test_non_detection_support_assessment.py": "sha256:e6a210d33a6cee5a197f34b86b74aca5a9aa1af4c84071eaa998f5befbb4afdb",
+    "tools/validators/evidence/validate_non_detection_support_assessment.py": "sha256:3070995da0701a86a1d793dcd99b8a15e9978523806e5eee6d2bedee4fad04c1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-045",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0135",
+      "repo:docs/kfm_full_atlas_seed_cards.md@4e4eb979caae21922af2217247ade970bd70cf82",
+      "repo:docs/doctrine/directory-rules.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/non-detection-support-assessment.yml": "PROPOSED",
+    "contracts/evidence/non_detection_support_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/full-atlas-nondetection-support-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/non_detection_support_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/non_detection_support_assessment.schema.json": "PROPOSED",
+    "tests/evidence/test_non_detection_support_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_non_detection_support_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Eight deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Twelve synthetic positive and negative cases produced the expected finite outcomes."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 assessment schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed locally."
+    },
+    {
+      "gate": "runtime-domain-adoption",
+      "outcome": "SKIPPED",
+      "reason": "No domain source, API, runtime, privacy registry, or evidence lifecycle was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human evidence, domain, privacy, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4e4eb979caae21922af2217247ade970bd70cf82"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:full-atlas-triad-045",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-045"
+    },
+    {
+      "id": "gdrive:full-atlas-candidate-0135",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0135"
+    },
+    {
+      "id": "repo:full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@4e4eb979caae21922af2217247ade970bd70cf82"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T00:23:48Z",
+  "emitter": "OpenAI GPT-5.6 via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first sampling-effort and non-detection support proposal from Full Atlas triad KFM-TRIAD-045; coherent validation remains HOLD and cannot establish biological absence."
+}
