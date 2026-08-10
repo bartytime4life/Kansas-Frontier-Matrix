@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-lifecycle-gate-closure-assessment-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/lifecycle-gate-closure-assessment.yml",
+    "contracts/governance/lifecycle_gate_closure_assessment.md",
+    "docs/intake/exploratory/lifecycle-gate-closure-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/lifecycle_gate_closure_assessment/cases.json",
+    "schemas/contracts/v1/governance/lifecycle_gate_closure_assessment.schema.json",
+    "tests/validators/governance/test_validate_lifecycle_gate_closure_assessment.py",
+    "tools/validators/governance/validate_lifecycle_gate_closure_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/lifecycle-gate-closure-assessment.yml": "sha256:d635df614553ac9097aee95003311e79c1f1b64e80f4bb3d11043024b62715aa",
+    "contracts/governance/lifecycle_gate_closure_assessment.md": "sha256:c791b198847a7d36e10e43e11d170cbc13c0b6354f7a1343fa46885a1090bb9e",
+    "docs/intake/exploratory/lifecycle-gate-closure-assessment-source-map.md": "sha256:8a40b5c660d83af24f6d9f5a2a50421743e7eeee308141ef0cc387c7051e4d48",
+    "fixtures/contracts/v1/governance/lifecycle_gate_closure_assessment/cases.json": "sha256:d720126b42464319cdd5a44a02aad3fa8deb072c4721b9ade1641aa884757e55",
+    "schemas/contracts/v1/governance/lifecycle_gate_closure_assessment.schema.json": "sha256:1ae64af678621e6acc20f410528abccbc51f6170445fe32731a3632dbe560eb6",
+    "tests/validators/governance/test_validate_lifecycle_gate_closure_assessment.py": "sha256:54a4a272d61097e4182071b637031c61912043cc693197ddb052bee93e018227",
+    "tools/validators/governance/validate_lifecycle_gate_closure_assessment.py": "sha256:035b4915f2d1a70decc83aeb159de1dd8ce64c9c18d91ecdc707c377ee81db41"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:c791b198847a7d36e10e43e11d170cbc13c0b6354f7a1343fa46885a1090bb9e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python and repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:ecfaa4129decd2259e996e6ea85dece9c8cc62eadf1ba144c1fece16743d3595",
+      "sha256:609cd845930b0eedd57ce7f3b5027fe667da97926c5217dc02ceab0cfe64cae9",
+      "sha256:da6fb6340ed79c61b77a5403cf2ac95f8037b5d1cf89c5b4aa6a8cda9bcf6703",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pipeline-gate-reference.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/governance/gate_outcome_mapping.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/release/promotion_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/lifecycle-gate-closure-assessment.yml": "CONFIRMED",
+    "contracts/governance/lifecycle_gate_closure_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/lifecycle-gate-closure-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/lifecycle_gate_closure_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/lifecycle_gate_closure_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_lifecycle_gate_closure_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_lifecycle_gate_closure_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "10 deterministic tests and 31 exact fixture cases passed."},
+    {"gate": "adjacent-gate-outcome-mapping-suite", "outcome": "PASS", "reason": "9 existing adjacent tests passed."},
+    {"gate": "adjacent-promotion-decision-schema", "outcome": "PASS", "reason": "1 existing release schema test passed."},
+    {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both new metadata blocks passed the required profile."},
+    {"gate": "workflow-yaml-parse-and-read-only-permissions", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "google-drive-full-atlas-corpus", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "full-atlas-universal-pipeline-gate-cards", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/kfm_full_atlas_seed_cards.md"},
+    {"id": "pipeline-gate-executable-gap", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/atlases/pipeline-gate-reference.md"},
+    {"id": "existing-finite-gate-mapping-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/governance/gate_outcome_mapping.md"},
+    {"id": "existing-promotion-decision-boundary", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/contracts/release/promotion_decision.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T03:45:16Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only LifecycleGateClosureAssessment packet derived from the Full Atlas universal pipeline gate cards and the existing pipeline-gate carrier's explicit validator gap. It makes required, missing, unresolved, and invalid artifacts inspectable across seven gates while preserving all evidence, policy, review, lifecycle, release, correction, rollback, deployment, publication, and public-use authority boundaries."
+}
