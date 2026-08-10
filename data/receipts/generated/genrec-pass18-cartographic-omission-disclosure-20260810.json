@@ -67,7 +67,7 @@
     {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic cartographic-omission tests passed in an isolated declared-dependency environment."},
     {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twelve exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
     {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both new Markdown artifacts passed the repository required metadata profile."},
-    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 391 schema/contract tests and 29 subtests passed."},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 394 schema/contract tests and 29 subtests passed."},
     {"gate": "no-network-boundary", "outcome": "PASS"},
     {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
     {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
