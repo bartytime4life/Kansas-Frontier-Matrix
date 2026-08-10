@@ -1,0 +1,329 @@
+{
+  "object_type": "TemporalCoalescingReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.temporal-coalescing-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "TemporalCoalescingReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.temporal-coalescing-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-414",
+    "observed_at": "2026-08-10T16:00:00Z",
+    "run_receipt_ref": "kfm:run-receipt:synthetic-temporal-transform:001",
+    "run_receipt_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "method_ref": "repo:temporal/coalescing-method@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "method_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "method_resolution": "RESOLVED",
+    "operation": "COALESCE",
+    "interval_policy": {
+      "bounds": "HALF_OPEN_UTC",
+      "overlap": "COALESCE",
+      "adjacency": "COALESCE",
+      "fact_key_rule": "EXACT_MATCH"
+    },
+    "input_set": {
+      "ref": "kfm:interval-set:synthetic:input:001",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "intervals": [
+        {
+          "interval_id": "input:001",
+          "fact_key": "fact:soil-moisture:synthetic",
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-01-02T00:00:00Z"
+        },
+        {
+          "interval_id": "input:002",
+          "fact_key": "fact:soil-moisture:synthetic",
+          "valid_from": "2026-01-02T00:00:00Z",
+          "valid_to": "2026-01-03T00:00:00Z"
+        }
+      ]
+    },
+    "output_set": {
+      "ref": "kfm:interval-set:synthetic:output:001",
+      "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "intervals": [
+        {
+          "interval_id": "output:001",
+          "fact_key": "fact:soil-moisture:synthetic",
+          "valid_from": "2026-01-01T00:00:00Z",
+          "valid_to": "2026-01-03T00:00:00Z"
+        }
+      ]
+    },
+    "lineage": [
+      {
+        "output_interval_id": "output:001",
+        "input_interval_ids": [
+          "input:001",
+          "input:002"
+        ]
+      }
+    ],
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic-temporal:001"
+    ],
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_coalesce_adjacent_intervals",
+      "patch": {},
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_split_interval",
+      "patch": {
+        "operation": "SPLIT",
+        "interval_policy": {
+          "overlap": "SPLIT",
+          "adjacency": "PRESERVE"
+        },
+        "input_set": {
+          "intervals": [
+            {
+              "interval_id": "input:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-03T00:00:00Z"
+            }
+          ]
+        },
+        "output_set": {
+          "intervals": [
+            {
+              "interval_id": "output:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-02T00:00:00Z"
+            },
+            {
+              "interval_id": "output:002",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-02T00:00:00Z",
+              "valid_to": "2026-01-03T00:00:00Z"
+            }
+          ]
+        },
+        "lineage": [
+          {
+            "output_interval_id": "output:001",
+            "input_interval_ids": [
+              "input:001"
+            ]
+          },
+          {
+            "output_interval_id": "output:002",
+            "input_interval_ids": [
+              "input:001"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_preserve_separate_intervals",
+      "patch": {
+        "operation": "PRESERVE",
+        "interval_policy": {
+          "overlap": "PRESERVE",
+          "adjacency": "PRESERVE"
+        },
+        "input_set": {
+          "intervals": [
+            {
+              "interval_id": "input:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-02T00:00:00Z"
+            },
+            {
+              "interval_id": "input:002",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-03T00:00:00Z",
+              "valid_to": "2026-01-04T00:00:00Z"
+            }
+          ]
+        },
+        "output_set": {
+          "intervals": [
+            {
+              "interval_id": "output:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-02T00:00:00Z"
+            },
+            {
+              "interval_id": "output:002",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-03T00:00:00Z",
+              "valid_to": "2026-01-04T00:00:00Z"
+            }
+          ]
+        },
+        "lineage": [
+          {
+            "output_interval_id": "output:001",
+            "input_interval_ids": [
+              "input:001"
+            ]
+          },
+          {
+            "output_interval_id": "output:002",
+            "input_interval_ids": [
+              "input:002"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "abstain_unresolved_method",
+      "patch": {
+        "method_resolution": "UNRESOLVED"
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "METHOD_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "deny_coverage_gap",
+      "patch": {
+        "output_set": {
+          "intervals": [
+            {
+              "interval_id": "output:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-02T12:00:00Z"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "COVERAGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_fact_key_collapse",
+      "patch": {
+        "output_set": {
+          "intervals": [
+            {
+              "interval_id": "output:001",
+              "fact_key": "fact:other:synthetic",
+              "valid_from": "2026-01-01T00:00:00Z",
+              "valid_to": "2026-01-03T00:00:00Z"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "COVERAGE_MISMATCH",
+          "LINEAGE_FACT_KEY_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_lineage_omits_input",
+      "patch": {
+        "lineage": [
+          {
+            "output_interval_id": "output:001",
+            "input_interval_ids": [
+              "input:001"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "LINEAGE_INPUT_CLOSURE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_non_positive_interval",
+      "patch": {
+        "output_set": {
+          "intervals": [
+            {
+              "interval_id": "output:001",
+              "fact_key": "fact:soil-moisture:synthetic",
+              "valid_from": "2026-01-03T00:00:00Z",
+              "valid_to": "2026-01-03T00:00:00Z"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "INTERVAL_NOT_POSITIVE"
+        ]
+      }
+    },
+    {
+      "name": "deny_output_digest_mismatch",
+      "patch": {},
+      "tamper": "output_digest",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "OUTPUT_SET_DIGEST_MISMATCH",
+          "PROFILE_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "deny_profile_hash_mismatch",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PROFILE_SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {
+        "private_payload": "MUST_NOT_BE_ACCEPTED"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}
