@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/corroboration_role_assessment.schema.json",
+  "title": "CorroborationRoleAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "aware_datetime": {"type":"string","format":"date-time","pattern":"(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "spec_hash": {"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "source_role": {
+      "enum": [
+        "authoritative_for_claim",
+        "regulatory_context",
+        "legal_context",
+        "observation",
+        "occurrence_evidence",
+        "aggregator",
+        "operational_context",
+        "remote_sensing_observation",
+        "model_context",
+        "candidate_signal",
+        "historical_context",
+        "corroborating_context",
+        "derived_public_product",
+        "steward_review_source",
+        "citation_source",
+        "fixture_only"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"},
+        "source_descriptor_ref": {"type":"string","pattern":"^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"},
+        "source_role": {"$ref":"#/$defs/source_role"},
+        "evidence_ref": {"type":"string","pattern":"^kfm:evidence:[a-z0-9][a-z0-9._:-]{2,220}$"},
+        "observed_at": {"$ref":"#/$defs/aware_datetime"},
+        "fresh_until": {
+          "oneOf": [
+            {"$ref":"#/$defs/aware_datetime"},
+            {"type":"null"}
+          ]
+        },
+        "freshness": {"enum":["CURRENT","STALE","UNKNOWN"]},
+        "relationship": {"enum":["SUPPORTS","QUALIFIES","CONTRADICTS","DUPLICATES","CANNOT_EVALUATE"]},
+        "reason_codes": {
+          "type":"array","minItems":1,"maxItems":1,"uniqueItems":true,
+          "items":{"enum":["DECLARED_SUPPORT","DECLARED_QUALIFICATION","DECLARED_CONTRADICTION","DECLARED_DUPLICATE","FRESHNESS_STALE","FRESHNESS_UNKNOWN"]}
+        }
+      },
+      "required":["source_id","source_descriptor_ref","source_role","evidence_ref","observed_at","fresh_until","freshness","relationship","reason_codes"]
+    },
+    "pair": {
+      "type":"object",
+      "additionalProperties":false,
+      "properties":{
+        "pair_id":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}::[a-z0-9][a-z0-9._-]{2,127}$"},
+        "left_source_id":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"},
+        "right_source_id":{"type":"string","pattern":"^[a-z0-9][a-z0-9._-]{2,127}$"},
+        "independence":{"enum":["INDEPENDENT","SHARED_UPSTREAM","DERIVED_FROM","UNKNOWN"]},
+        "spatial_overlap":{"enum":["FULL","PARTIAL","NONE","UNKNOWN"]},
+        "temporal_overlap":{"enum":["FULL","PARTIAL","NONE","UNKNOWN"]},
+        "role_compatibility":{"enum":["COMPATIBLE","ROLE_COLLAPSE","PROHIBITED","UNKNOWN"]},
+        "reason_codes":{
+          "type":"array","minItems":1,"maxItems":1,"uniqueItems":true,
+          "items":{"enum":["INDEPENDENT_OVERLAP_COMPATIBLE","SHARED_UPSTREAM_DEPENDENCY","DERIVED_DEPENDENCY","INDEPENDENCE_UNKNOWN","NO_SPATIOTEMPORAL_OVERLAP","OVERLAP_UNKNOWN","ROLE_COLLAPSE","PROHIBITED_ROLE_COMBINATION","ROLE_COMPATIBILITY_UNKNOWN"]}
+        }
+      },
+      "required":["pair_id","left_source_id","right_source_id","independence","spatial_overlap","temporal_overlap","role_compatibility","reason_codes"]
+    },
+    "governance": {
+      "type":"object",
+      "additionalProperties":false,
+      "properties":{
+        "execution_mode":{"const":"FIXTURE_ONLY"},
+        "network_attempted":{"const":false},
+        "source_payload_compared":{"const":false},
+        "evidence_resolved":{"const":false},
+        "confidence_calculated":{"const":false},
+        "truth_selected":{"const":false},
+        "claim_authorized":{"const":false},
+        "policy_evaluated":{"const":false},
+        "review_approved":{"const":false},
+        "release_authorized":{"const":false},
+        "publication_authorized":{"const":false},
+        "public_use_allowed":{"const":false}
+      },
+      "required":["execution_mode","network_attempted","source_payload_compared","evidence_resolved","confidence_calculated","truth_selected","claim_authorized","policy_evaluated","review_approved","release_authorized","publication_authorized","public_use_allowed"]
+    }
+  },
+  "properties": {
+    "object_type":{"const":"CorroborationRoleAssessmentCandidate"},
+    "schema_version":{"const":"1.0.0"},
+    "profile":{"const":"kfm.corroboration-role-assessment.fixture.v1"},
+    "assessment_id":{"type":"string","pattern":"^kfm:corroboration-role-assessment:[0-9a-f]{24}$"},
+    "subject_ref":{"type":"string","pattern":"^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"},
+    "assessed_at":{"$ref":"#/$defs/aware_datetime"},
+    "sources":{"type":"array","minItems":2,"maxItems":8,"items":{"$ref":"#/$defs/source"}},
+    "pair_assessments":{"type":"array","minItems":1,"maxItems":28,"items":{"$ref":"#/$defs/pair"}},
+    "summary":{
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "source_count":{"type":"integer","minimum":2,"maximum":8},
+        "supporting_source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "qualifying_source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "contradicting_source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "duplicate_source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "cannot_evaluate_source_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "independent_support_pair_ids":{"type":"array","uniqueItems":true,"items":{"type":"string"}},
+        "outcome":{"enum":["SUPPORTED","SUPPORTED_WITH_QUALIFICATION","CONTRADICTED","INSUFFICIENT","CANNOT_EVALUATE"]},
+        "source_count_is_confidence":{"const":false},
+        "claim_resolution_allowed":{"const":false},
+        "separate_evidence_policy_review_release_gates_required":{"const":true}
+      },
+      "required":["source_count","supporting_source_ids","qualifying_source_ids","contradicting_source_ids","duplicate_source_ids","cannot_evaluate_source_ids","independent_support_pair_ids","outcome","source_count_is_confidence","claim_resolution_allowed","separate_evidence_policy_review_release_gates_required"]
+    },
+    "governance":{"$ref":"#/$defs/governance"},
+    "spec_hash":{"$ref":"#/$defs/spec_hash"}
+  },
+  "required":["object_type","schema_version","profile","assessment_id","subject_ref","assessed_at","sources","pair_assessments","summary","governance","spec_hash"],
+  "x-kfm":{
+    "status":"PROPOSED_INACTIVE",
+    "authority":"NONE",
+    "contract_doc":"contracts/evidence/corroboration_role_assessment.md",
+    "fixtures_root":"fixtures/contracts/v1/evidence/corroboration_role_assessment/",
+    "validator":"tools/validators/evidence/validate_corroboration_role_assessment.py"
+  }
+}

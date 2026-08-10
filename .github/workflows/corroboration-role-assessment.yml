@@ -1,0 +1,87 @@
+# Validate the fixture-only corroboration-role assessment candidate.
+name: corroboration-role-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/corroboration-role-assessment.yml"
+      - "contracts/evidence/corroboration_role_assessment.md"
+      - "schemas/contracts/v1/evidence/corroboration_role_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/corroboration_role_assessment/**"
+      - "tools/validators/evidence/validate_corroboration_role_assessment.py"
+      - "tests/validators/test_validate_corroboration_role_assessment.py"
+      - "docs/intake/exploratory/corroboration-role-assessment-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-corroboration-role-assessment-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/corroboration-role-assessment.yml"
+      - "contracts/evidence/corroboration_role_assessment.md"
+      - "schemas/contracts/v1/evidence/corroboration_role_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/corroboration_role_assessment/**"
+      - "tools/validators/evidence/validate_corroboration_role_assessment.py"
+      - "tests/validators/test_validate_corroboration_role_assessment.py"
+      - "docs/intake/exploratory/corroboration-role-assessment-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-corroboration-role-assessment-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: corroboration-role-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-corroboration-role-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_corroboration_role_assessment.py' \
+            --verbose
+          python tools/validators/evidence/validate_corroboration_role_assessment.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-corroboration-role-assessment-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### CorroborationRoleAssessmentCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: declared source roles, freshness, complete pair topology, independence, spatiotemporal overlap, compatibility, finite relationships, and deterministic identity."
+            echo "- Boundary: no source access, evidence resolution, payload comparison, confidence calculation, truth selection, claim authority, policy, review, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
