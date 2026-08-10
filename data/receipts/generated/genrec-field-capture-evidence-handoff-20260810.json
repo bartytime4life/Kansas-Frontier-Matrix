@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-field-capture-evidence-handoff-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/field-capture-evidence-handoff.yml",
+    "contracts/evidence/field_capture_evidence_handoff.md",
+    "docs/intake/exploratory/field-capture-evidence-handoff-source-map.md",
+    "fixtures/contracts/v1/evidence/field_capture_evidence_handoff/cases.json",
+    "schemas/contracts/v1/evidence/field_capture_evidence_handoff.schema.json",
+    "tests/validators/evidence/test_validate_field_capture_evidence_handoff.py",
+    "tools/validators/evidence/validate_field_capture_evidence_handoff.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/field-capture-evidence-handoff.yml": "sha256:02377dfe892e479a26c9a2101e98e15f78d0fdebe26f7634d5d304f65a14d2f8",
+    "contracts/evidence/field_capture_evidence_handoff.md": "sha256:70a4d3d2da75abd211b4bb946072e13a8d9d490353a2f084f5109ed9fcf794d8",
+    "docs/intake/exploratory/field-capture-evidence-handoff-source-map.md": "sha256:91cff1d286910c3437dd9b5b3694c36e58720bee6995d72726fe3c3027a82da7",
+    "fixtures/contracts/v1/evidence/field_capture_evidence_handoff/cases.json": "sha256:01750a70a0961b5da99c0560c565ac2fcab59cbf302f227b1d7a633107086de2",
+    "schemas/contracts/v1/evidence/field_capture_evidence_handoff.schema.json": "sha256:905dba6e57947f04338debdf459d891115fddb1bab2132f59cacd345941a265a",
+    "tests/validators/evidence/test_validate_field_capture_evidence_handoff.py": "sha256:ac146c4b8b3bf371809babbd670de8aa863fa9fb9648a6690bc85a5d7f149b0d",
+    "tools/validators/evidence/validate_field_capture_evidence_handoff.py": "sha256:4f39f391f8c49cae351528a15db4c76816b881bb21e26b1f07e7d421b3f6216a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:70a4d3d2da75abd211b4bb946072e13a8d9d490353a2f084f5109ed9fcf794d8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft pull-request publishing",
+      "Google Drive research discovery with private identifiers withheld",
+      "local git and deterministic no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:3da0334f1d96043f58c92807a9a21c0b7d9d8b043c786238c4b7e3368bf8d641",
+      "sha256:9123c01698646b563cf09ce8df4f8507d0ab651a007f8cfe308819a5b49d469b",
+      "sha256:0441f9613b79c8dabfe3dcc28b040febdf15989e15e62d9621d9673bd5623da0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/kfm_full_atlas_seed_cards.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:contracts/source/source_descriptor.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:contracts/evidence/evidence_bundle.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:contracts/map/georeference_transform_quality.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:docs/doctrine/directory-rules.md@47fba107144e4f68851ea1265dae48878d4799ab",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/field-capture-evidence-handoff.yml": "PROPOSED",
+    "contracts/evidence/field_capture_evidence_handoff.md": "PROPOSED",
+    "docs/intake/exploratory/field-capture-evidence-handoff-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/field_capture_evidence_handoff/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/field_capture_evidence_handoff.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_field_capture_evidence_handoff.py": "CONFIRMED",
+    "tools/validators/evidence/validate_field_capture_evidence_handoff.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-field-capture-handoff-suite",
+      "outcome": "PASS",
+      "reason": "Nine tests, thirty subtests, and twenty-six exact fixture cases passed."
+    },
+    {
+      "gate": "manual-gnss-geometry-rights-and-non-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "adjacent-georeference-suite",
+      "outcome": "PASS",
+      "reason": "Ten adjacent tests passed."
+    },
+    {
+      "gate": "python-compilation-document-metadata-and-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "public-atlas-field-and-3d-capture-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/kfm_full_atlas_seed_cards.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    },
+    {
+      "id": "source-descriptor-and-evidence-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_descriptor.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@47fba107144e4f68851ea1265dae48878d4799ab"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T17:41:08Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a closed fixture-only assessment between a field-capture candidate and EvidenceBundle handoff. Private research contributed only to candidate discovery; public provenance contains no private identifiers or copied private content. The profile performs no capture, coordinate processing, reference resolution, evidence creation, policy or review decision, lifecycle transition, release, deployment, or publication."
+}
