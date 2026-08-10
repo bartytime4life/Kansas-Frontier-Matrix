@@ -1,0 +1,87 @@
+# Validate the fixture-only pipeline replay assessment candidate.
+name: pipeline-replay-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/pipeline-replay-assessment.yml"
+      - "contracts/validation/pipeline_replay_assessment.md"
+      - "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json"
+      - "fixtures/contracts/v1/validation/pipeline_replay_assessment/**"
+      - "tools/validators/validate_pipeline_replay_assessment.py"
+      - "tests/validators/test_validate_pipeline_replay_assessment.py"
+      - "docs/intake/exploratory/pipeline-replay-assessment-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pipeline-replay-assessment-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/pipeline-replay-assessment.yml"
+      - "contracts/validation/pipeline_replay_assessment.md"
+      - "schemas/contracts/v1/validation/pipeline_replay_assessment.schema.json"
+      - "fixtures/contracts/v1/validation/pipeline_replay_assessment/**"
+      - "tools/validators/validate_pipeline_replay_assessment.py"
+      - "tests/validators/test_validate_pipeline_replay_assessment.py"
+      - "docs/intake/exploratory/pipeline-replay-assessment-source-map.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pipeline-replay-assessment-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-replay-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-pipeline-replay-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_pipeline_replay_assessment.py' \
+            --verbose
+          python tools/validators/validate_pipeline_replay_assessment.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pipeline-replay-assessment-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### PipelineReplayAssessmentCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact source snapshot, transform parameter, model, validator, and output pin comparison with finite drift reporting."
+            echo "- Boundary: no source resolution, pipeline or validator execution, model invocation, receipt attestation, lifecycle write, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
