@@ -19,7 +19,7 @@
     "fixtures/ui/view_registry_inspector_projection/valid/held.json"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/adapters/ViewRegistryInspectorProjection.ts": "sha256:9898dae551a25ffd3d01a9704d93a10f2ef3511d58430eabbddf5d93c68a1632",
+    "apps/explorer-web/src/adapters/ViewRegistryInspectorProjection.ts": "sha256:c77c13361cf4e0d6563d1d30a4a2389fa9b4e5ea8096515f86a1833cd3ff246c",
     "apps/explorer-web/src/features/view_registry_inspector/README.md": "sha256:982b1edb97e9a8dc458c778e546a4b2ab5e17abeaa53fd5d90948a69b97b8e56",
     "apps/explorer-web/src/features/view_registry_inspector/index.ts": "sha256:87a0f1639166c8f650280e51ec55b9e326ba25592e2e40dd8af27f458b472d99",
     "apps/explorer-web/tests/browser/view-registry-inspector.fixture.ts": "sha256:a00f5e95b956012cd48e1d114f75262e67742eb27edc6ccc95bac4e19e53d503",

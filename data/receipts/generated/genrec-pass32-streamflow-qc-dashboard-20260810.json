@@ -21,7 +21,7 @@
     "fixtures/ui/streamflow_qc_dashboard_projection/valid/regional-context.json"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "sha256:21b9ddef6f1abda29f8cad5ed6913c019f8cf705b3413381ef81836911f1b020",
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "sha256:d6195a9aea9a207a390adbbf946c379c5409848ed4c9e79c216cbc77301f577f",
     "apps/explorer-web/src/features/streamflow_qc_dashboard/README.md": "sha256:2b8d5372214b43479b8dfffc48df6385684719c2e717e1bf8303cc29db699010",
     "apps/explorer-web/src/features/streamflow_qc_dashboard/index.ts": "sha256:0486df318f5c11cebdb0c5faca43cde211ca33184371a59216e0b2acbe8b36d8",
     "apps/explorer-web/tests/browser/streamflow-qc-dashboard.fixture.ts": "sha256:1557fbc9129c5ea6165acf14d366b9872ac61e1dd04ea337386417c74ff3b62a",
