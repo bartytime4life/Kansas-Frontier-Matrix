@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-pass20-frontier-definition-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/frontier-definition.yml",
+    "contracts/evidence/frontier_definition.md",
+    "docs/intake/exploratory/pass-20-frontier-definition-source-map.md",
+    "fixtures/contracts/v1/evidence/frontier_definition/cases.json",
+    "schemas/contracts/v1/evidence/frontier_definition.schema.json",
+    "tests/validators/evidence/test_validate_frontier_definition.py",
+    "tools/validators/evidence/validate_frontier_definition.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/frontier-definition.yml": "sha256:201c94fd6f660933cbe1fc2baa37819582bdbaf855f9ccada26dd32808b576dc",
+    "contracts/evidence/frontier_definition.md": "sha256:d1ca0aee02dcc167eadf954aad55a9a716f7ff428aff62f92377adc4679b41ac",
+    "docs/intake/exploratory/pass-20-frontier-definition-source-map.md": "sha256:1cf46b5f6bfc06007b8da1c08bffced2047da13a3d9c1614a9f51d68d7d2465c",
+    "fixtures/contracts/v1/evidence/frontier_definition/cases.json": "sha256:990ef8ceebc5d19fb363cf403148329d83b875817c04763bcada65bca43c206a",
+    "schemas/contracts/v1/evidence/frontier_definition.schema.json": "sha256:86afe34941cccc0731b4e0db6d6db8dd47b2abe840b7ba8ab28a06a92b8c3cf1",
+    "tests/validators/evidence/test_validate_frontier_definition.py": "sha256:b2b9e386c43e51bb0bfbab526525f72b85c94e8f16f9508aff705d18a0972181",
+    "tools/validators/evidence/validate_frontier_definition.py": "sha256:4b83314b921b6d4b12440b9acf33a3bb63a669631790b5100397360dc8dedfef"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:d1ca0aee02dcc167eadf954aad55a9a716f7ff428aff62f92377adc4679b41ac",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:28900a244e68c9599e7a8f3e2acae90475ebcf9ea2645b66aed1c5f3a0378ed3"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 idea atlas",
+      "Repository Directory Rules",
+      "Draft GeographyVersion contract"
+    ],
+    "evidence_refs": [
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/contracts/evidence/indicator_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2502@db29374a0fdb61058d26f7a5c554a13679a3c64f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1398"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/frontier-definition.yml": "CONFIRMED",
+    "contracts/evidence/frontier_definition.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-frontier-definition-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/frontier_definition/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/frontier_definition.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_frontier_definition.py": "CONFIRMED",
+    "tools/validators/evidence/validate_frontier_definition.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, pull-request, and branch probes found no checked-path FrontierDefinition implementation or same-purpose open work at authoring time."
+    },
+    { "gate": "json-and-workflow-yaml-parse", "outcome": "PASS" },
+    { "gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS" },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic tests and thirty-five exact FrontierDefinition fixture cases passed."
+    },
+    {
+      "gate": "adjacent-geography-version-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic GeographyVersion tests and their twenty-case fixture replay passed against the stacked dependency."
+    },
+    { "gate": "no-network-non-reflection-and-no-inline-threshold-boundary", "outcome": "PASS" },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "adjacent-indicator-definition-suite",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector-only workspace is not a repository checkout."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed stacked pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-indicator-definition-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/contracts/evidence/indicator_definition.md"
+    },
+    {
+      "id": "draft-geography-version-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2502@db29374a0fdb61058d26f7a5c554a13679a3c64f"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T23:15:28Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only FrontierDefinition packet derived from Pass 20 KFM-IDX-APP-008 and stacked on the draft GeographyVersion dependency. It declares county-year support, digest-bound analytic dependencies, opaque threshold-policy references, fail-closed criteria, uncertainty, disclosure, and deterministic identity while preserving evidence, policy, classification, review, release, deployment, publication, and public-use boundaries."
+}
