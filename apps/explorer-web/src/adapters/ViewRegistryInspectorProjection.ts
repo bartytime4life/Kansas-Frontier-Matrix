@@ -153,15 +153,17 @@ const DENIED_REFERENCE_MARKERS = [
   "neo4j://",
   "s3://",
   "file://",
-  "data/raw",
-  "data/work",
-  "data/quarantine",
-  "data/processed",
-  "data/published",
   "graph_query",
   "cypher:",
   "select *",
   "match (",
+] as const;
+const INTERNAL_DATA_STAGES = [
+  "raw",
+  "work",
+  "quarantine",
+  "processed",
+  "published",
 ] as const;
 const MAX_ENTRIES = 32;
 const MAX_LAYER_REFS = 16;
@@ -208,8 +210,9 @@ function isSafeReference(value: unknown): value is string {
     return false;
   }
   const lowered = value.toLowerCase();
-  return !DENIED_REFERENCE_MARKERS.some((marker) =>
-    lowered.includes(marker),
+  return (
+    !DENIED_REFERENCE_MARKERS.some((marker) => lowered.includes(marker)) &&
+    !INTERNAL_DATA_STAGES.some((stage) => lowered.includes(`data/${stage}`))
   );
 }
 

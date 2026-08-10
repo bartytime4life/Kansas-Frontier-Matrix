@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec-policy-boundary-explorer-path-marker-repair-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts",
+    "apps/explorer-web/src/adapters/ViewRegistryInspectorProjection.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "sha256:6cf2cdd14b50c700ba177346efddd387fd041f3b6d5b5bb0f7c5db6f83788bfa",
+    "apps/explorer-web/src/adapters/ViewRegistryInspectorProjection.ts": "sha256:b88794fdec8a02f216ea483a4fded487ef69e7d67f7cffc00f3ce37f517d39bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:b9696e912cbddc67f8107dfc2ae1ca4c31528bdbc99f55c04c9fcc41f2b4360a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector PR and workflow inspection",
+      "local Git history and ancestry inspection",
+      "local pytest policy validation",
+      "local Vitest and TypeScript Explorer validation",
+      "content-hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b9696e912cbddc67f8107dfc2ae1ca4c31528bdbc99f55c04c9fcc41f2b4360a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/18b5bba4bf53edcd5b9ac61779a0cccade35d186",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/56b1d438eb90a03c1f02b60e1271ef43ea35dfbf",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e3b69c4391f9b4423521d5881221ad3e4b5acc94",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/tests/policy/test_explorer_web_adapter_boundary.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31422381886",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31422958506",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31422456906",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31424856161"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/adapters/ViewRegistryInspectorProjection.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-policy-defect-reproduction",
+      "outcome": "PASS",
+      "reason": "Current main reproduced the forbidden Explorer store-path literal assertion, and an exhaustive scan identified the two pre-existing adapters as the complete violation set."
+    },
+    {
+      "gate": "introducing-change-and-inheritance-trace",
+      "outcome": "PASS",
+      "reason": "Git ancestry, blame, exact-head workflow logs, and changed-path comparison bind the mismatch to the merged View Registry and streamflow dashboard commits and exclude the reported feature PR diffs."
+    },
+    {
+      "gate": "focused-and-full-policy-boundary-tests",
+      "outcome": "PASS",
+      "reason": "The focused Explorer boundary module passed 2 tests and make boundary-guards-ci passed all 18 tests."
+    },
+    {
+      "gate": "affected-explorer-adapter-unit-tests",
+      "outcome": "PASS",
+      "reason": "The View Registry inspector and streamflow QC dashboard suites passed all 15 tests, including direct-store reference rejection."
+    },
+    {
+      "gate": "explorer-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 31 Explorer unit-test files and 242 tests passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "TypeScript no-emit compilation and the Vite production build passed locally; the runtime emitted the expected Node 24 versus repository Node 22 engine warning."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "explorer-policy-boundary-guard",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/18b5bba4bf53edcd5b9ac61779a0cccade35d186/tests/policy/test_explorer_web_adapter_boundary.py"
+    },
+    {
+      "id": "view-registry-introducing-commit",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/56b1d438eb90a03c1f02b60e1271ef43ea35dfbf"
+    },
+    {
+      "id": "streamflow-repeated-mismatch-commit",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/e3b69c4391f9b4423521d5881221ad3e4b5acc94"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T22:54:30Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored compatibility repair for the Explorer source-literal boundary. The adapters continue to reject internal lifecycle references by matching a bounded stage vocabulary after the data path prefix, but no longer embed forbidden internal-store path literals. This change creates no store access, policy decision, route activation, lifecycle write, release, deployment, or publication authority."
+}

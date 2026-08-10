@@ -206,13 +206,15 @@ const DENIED_REFERENCE_MARKERS = [
   "neo4j://",
   "s3://",
   "file://",
-  "data/raw",
-  "data/work",
-  "data/quarantine",
-  "data/processed",
-  "data/published",
   "select *",
   "match (",
+] as const;
+const INTERNAL_DATA_STAGES = [
+  "raw",
+  "work",
+  "quarantine",
+  "processed",
+  "published",
 ] as const;
 
 function malformed(): StreamflowQcDashboardProjectionResult {
@@ -260,8 +262,9 @@ function isSafeReference(
     return false;
   }
   const lowered = value.toLowerCase();
-  return !DENIED_REFERENCE_MARKERS.some((marker) =>
-    lowered.includes(marker),
+  return (
+    !DENIED_REFERENCE_MARKERS.some((marker) => lowered.includes(marker)) &&
+    !INTERNAL_DATA_STAGES.some((stage) => lowered.includes(`data/${stage}`))
   );
 }
 
