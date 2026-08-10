@@ -1,0 +1,11 @@
+{
+  "profile": "kfm.explorer.layer-lineage.public-safe.v1",
+  "timeline_id": "kfm:layer-lineage:synthetic:invalid-extra",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "layer_ref": null,
+  "current_release_ref": null,
+  "current_state": null,
+  "entries": [],
+  "internal_detail": "LINEAGE_INTERNAL_CANARY_0b71d8"
+}
