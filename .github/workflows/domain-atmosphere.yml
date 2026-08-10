@@ -148,6 +148,10 @@ jobs:
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
+                  "validate_pm25_sensor_colocation_manifest.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
                   "validate_knowledge_character.py"
               ),
               Path(
