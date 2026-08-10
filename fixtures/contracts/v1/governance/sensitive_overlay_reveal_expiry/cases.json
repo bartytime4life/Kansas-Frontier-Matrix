@@ -1,0 +1,243 @@
+{
+  "profile": "kfm.sensitive-overlay-reveal-expiry.fixture.v1",
+  "base": {
+    "object_type": "SensitiveOverlayRevealExpiryAssessment",
+    "schema_version": "1.0.0",
+    "profile": "kfm.sensitive-overlay-reveal-expiry.fixture.v1",
+    "assessment_id": "",
+    "spec_hash": "",
+    "evaluated_at": "2026-08-10T12:00:00Z",
+    "lease": {
+      "reveal_token_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "challenge_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "consent_ref": "kfm:fixture:consent:sensitive-overlay-001",
+      "overlay_ref": "kfm:fixture:overlay:sensitive-genealogy-001",
+      "issued_at": "2026-08-10T11:00:00Z",
+      "expires_at": "2026-08-10T13:00:00Z",
+      "single_use": true,
+      "consumed": false,
+      "revocation_checked_at": "2026-08-10T12:00:00Z",
+      "revoked": false,
+      "revocation_status": "CURRENT",
+      "attestation_status": "VERIFIED",
+      "policy_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "current_policy_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "client_state_before": "REVEALED"
+    },
+    "assessment": {},
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "raw_token_material_present": false,
+      "key_material_present": false,
+      "cleanup_performed": false,
+      "audit_receipt_emitted": false,
+      "policy_evaluated": false,
+      "release_issued": false,
+      "publication_authorized": false
+    },
+    "limitations": [
+      "actions_are_declarative_only",
+      "fixture_only",
+      "no_cleanup_side_effects",
+      "no_key_or_raw_token_material",
+      "no_live_policy_or_attestation_verification",
+      "no_release_or_publication",
+      "no_ui_runtime_mutation"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "active-reveal-hold",
+      "expected_outcome": "HOLD",
+      "expected_state": "ACTIVE",
+      "expected_findings": []
+    },
+    {
+      "case_id": "expiring-reveal-hold",
+      "mutations": [
+        {"path": "/evaluated_at", "value": "2026-08-10T12:56:00Z"},
+        {"path": "/lease/revocation_checked_at", "value": "2026-08-10T12:56:00Z"}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_state": "EXPIRING",
+      "expected_findings": []
+    },
+    {
+      "case_id": "expired-reveal-deny",
+      "mutations": [
+        {"path": "/evaluated_at", "value": "2026-08-10T13:00:00Z"},
+        {"path": "/lease/revocation_checked_at", "value": "2026-08-10T13:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "EXPIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "revoked-reveal-deny",
+      "mutations": [
+        {"path": "/lease/revoked", "value": true},
+        {"path": "/lease/revocation_status", "value": "REVOKED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVOKED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "consumed-single-use-token-deny",
+      "mutations": [
+        {"path": "/lease/consumed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale-revocation-check-deny",
+      "mutations": [
+        {"path": "/lease/revocation_checked_at", "value": "2026-08-10T11:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stale-policy-hash-deny",
+      "mutations": [
+        {"path": "/lease/current_policy_hash", "value": "sha256:4444444444444444444444444444444444444444444444444444444444444444"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "failed-attestation-deny",
+      "mutations": [
+        {"path": "/lease/attestation_status", "value": "FAILED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "unknown-attestation-abstain",
+      "mutations": [
+        {"path": "/lease/attestation_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_state": "ABSTAINED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "ttl-over-24-hours-deny",
+      "mutations": [
+        {"path": "/lease/expires_at", "value": "2026-08-11T11:00:01Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "token-not-single-use-deny",
+      "mutations": [
+        {"path": "/lease/single_use", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "unknown-revocation-status-abstain",
+      "mutations": [
+        {"path": "/lease/revocation_status", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_state": "ABSTAINED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "token-not-yet-valid-deny",
+      "mutations": [
+        {"path": "/evaluated_at", "value": "2026-08-10T10:59:59Z"},
+        {"path": "/lease/revocation_checked_at", "value": "2026-08-10T10:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "invalid-lease-interval-deny",
+      "mutations": [
+        {"path": "/lease/expires_at", "value": "2026-08-10T10:59:59Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "DENIED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "revocation-summary-inconsistent",
+      "mutations": [
+        {"path": "/lease/revoked", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "REVOKED",
+      "expected_findings": [
+        {"code": "REVOCATION_SUMMARY_INCONSISTENT", "path": "/lease/revocation_status"}
+      ]
+    },
+    {
+      "case_id": "cleanup-side-effect-claim-denied",
+      "mutations": [
+        {"path": "/governance/cleanup_performed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "ACTIVE",
+      "expected_findings": [
+        {"code": "CLEANUP_SIDE_EFFECT_CLAIM_DENIED", "path": "/governance/cleanup_performed"}
+      ]
+    },
+    {
+      "case_id": "key-material-claim-denied",
+      "mutations": [
+        {"path": "/governance/key_material_present", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "ACTIVE",
+      "expected_findings": [
+        {"code": "KEY_MATERIAL_DENIED", "path": "/governance/key_material_present"}
+      ]
+    },
+    {
+      "case_id": "raw-token-material-claim-denied",
+      "mutations": [
+        {"path": "/governance/raw_token_material_present", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "ACTIVE",
+      "expected_findings": [
+        {"code": "RAW_TOKEN_MATERIAL_DENIED", "path": "/governance/raw_token_material_present"}
+      ]
+    },
+    {
+      "case_id": "required-actions-mismatch",
+      "assessment_mutations": [
+        {"path": "/assessment/required_actions", "value": ["KEEP_COUNTDOWN_VISIBLE", "WARN_REVEAL_EXPIRING"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "ACTIVE",
+      "expected_findings": [
+        {"code": "ASSESSMENT_ACTIONS_MISMATCH", "path": "/assessment/required_actions"}
+      ]
+    },
+    {
+      "case_id": "countdown-mismatch",
+      "assessment_mutations": [
+        {"path": "/assessment/seconds_remaining", "value": 3599}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": "ACTIVE",
+      "expected_findings": [
+        {"code": "ASSESSMENT_COUNTDOWN_MISMATCH", "path": "/assessment/seconds_remaining"}
+      ]
+    }
+  ]
+}
