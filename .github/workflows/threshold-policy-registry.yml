@@ -1,0 +1,94 @@
+# Validate the inactive unresolved-slot ThresholdPolicyRegistry candidate.
+name: threshold-policy-registry
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/threshold-policy-registry.yml"
+      - "contracts/policy/threshold_policy_registry.md"
+      - "docs/intake/exploratory/threshold-policy-registry-source-map.md"
+      - "schemas/contracts/v1/policy/threshold_policy_registry.schema.json"
+      - "policy/thresholds/**"
+      - "fixtures/contracts/v1/policy/threshold_policy_registry/**"
+      - "tools/validators/policy/validate_threshold_policy_registry.py"
+      - "tests/validators/test_validate_threshold_policy_registry.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/threshold-policy-registry.yml"
+      - "contracts/policy/threshold_policy_registry.md"
+      - "docs/intake/exploratory/threshold-policy-registry-source-map.md"
+      - "schemas/contracts/v1/policy/threshold_policy_registry.schema.json"
+      - "policy/thresholds/**"
+      - "fixtures/contracts/v1/policy/threshold_policy_registry/**"
+      - "tools/validators/policy/validate_threshold_policy_registry.py"
+      - "tests/validators/test_validate_threshold_policy_registry.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: threshold-policy-registry-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-threshold-policy-registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run focused deterministic no-network tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_threshold_policy_registry.py' \
+            --verbose
+          python tools/validators/policy/validate_threshold_policy_registry.py \
+            --registry
+          python tools/validators/policy/validate_threshold_policy_registry.py \
+            --fixtures
+
+      - name: Verify schema fixture polarity
+        run: |
+          set -euo pipefail
+          python -m pytest tests/schemas/test_common_contracts.py \
+            -q -k threshold_policy_registry
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### ThresholdPolicyRegistry candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: inactive unresolved slots, closed schema, deterministic identity, canonical arrays, safe pressure references, fixture polarity, and parser boundaries."
+            echo "- Boundary: this workflow does not adopt a threshold, evaluate policy, bind a watcher, activate a source, promote, release, publish, notify, or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
