@@ -9,11 +9,14 @@ name: soil-ssurgo-yearly-diff
       - "schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json"
       - "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json"
       - "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py"
+      - "tools/generators/build_soil_yearly_diff.py"
       - "fixtures/domains/soil/yearly_diff/**"
       - "tests/validators/domains/soil/test_validate_ssurgo_yearly_diff_profile.py"
+      - "tests/generators/test_build_soil_yearly_diff.py"
       - "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md"
       - "packages/hashing/**"
       - "data/receipts/generated/genrec-pass32-ssurgo-yearly-diff-*.json"
+      - "data/receipts/generated/genrec-pass32-soil-yearly-diff-builder-*.json"
   push:
     branches: [main]
     paths:
@@ -22,11 +25,14 @@ name: soil-ssurgo-yearly-diff
       - "schemas/contracts/v1/domains/soil/ssurgo_yearly_diff_profile.schema.json"
       - "pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json"
       - "tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py"
+      - "tools/generators/build_soil_yearly_diff.py"
       - "fixtures/domains/soil/yearly_diff/**"
       - "tests/validators/domains/soil/test_validate_ssurgo_yearly_diff_profile.py"
+      - "tests/generators/test_build_soil_yearly_diff.py"
       - "docs/intake/exploratory/pass-32-ssurgo-yearly-diff-source-map.md"
       - "packages/hashing/**"
       - "data/receipts/generated/genrec-pass32-ssurgo-yearly-diff-*.json"
+      - "data/receipts/generated/genrec-pass32-soil-yearly-diff-builder-*.json"
   workflow_dispatch:
 
 permissions:
@@ -72,14 +78,21 @@ jobs:
             --start-directory tests/validators/domains/soil \
             --pattern 'test_validate_ssurgo_yearly_diff_profile.py' \
             --verbose
+          python -m unittest \
+            tests.generators.test_build_soil_yearly_diff \
+            --verbose
           python tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py --fixtures
           python tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py \
             pipeline_specs/soil/ssurgo_yearly_diff_profile.v1.json
+          python tools/generators/build_soil_yearly_diff.py \
+            fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2025.json \
+            fixtures/domains/soil/yearly_diff/snapshots/ssurgo-2026.json \
+            > /tmp/soil-yearly-diff-build-result.json
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-pass32-ssurgo-yearly-diff-20260808.json \
+            data/receipts/generated/genrec-pass32-soil-yearly-diff-builder-20260810.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
@@ -88,6 +101,6 @@ jobs:
             echo "### SSURGO and gNATSGO yearly-diff profile"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: fixture-only year pinning, snapshot/diff references, source-role anti-collapse, transform-receipt requirements, canonical spec hash, exact negative findings, and all-false authority posture."
+            echo "- Scope: fixture-only year pinning, deterministic local record diffing, snapshot/diff references, source-role anti-collapse, transform-receipt requirements, canonical spec hash, exact negative findings, and all-false authority posture."
             echo "- Boundary: PASS does not fetch NRCS bytes, activate sources, validate real STAC/PROV records, admit RAW, resolve evidence, promote, release, deploy, or publish."
           } >> "$GITHUB_STEP_SUMMARY"

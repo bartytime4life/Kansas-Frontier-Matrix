@@ -6,7 +6,7 @@ version: v0.1.0
 status: draft
 owners: OWNER_TBD — Soil steward · Source steward · Evidence steward
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-10
 policy_label: internal; exploratory; fixture-only
 owning_root: docs/
 responsibility: Record the bounded adaptation of Pass 32 yearly soil versioning candidates into a fixture-only repository slice.
@@ -60,4 +60,6 @@ The packet uses existing responsibility roots only: semantic meaning in `contrac
 
 ## Follow-up candidates
 
-A later PR may add a dry-run builder that consumes two locally supplied synthetic snapshot manifests and emits an actual diff report. Live NRCS acquisition, source terms, STAC/PROV record emission, promotion, release, and public delivery remain separately governed work.
+The deterministic dry-run builder is now implemented in `tools/generators/build_soil_yearly_diff.py`. It consumes two locally supplied synthetic snapshot manifests, emits a detailed keyed-record diff plus the existing validated profile, writes nothing by default, and preserves the all-false authority posture.
+
+Live NRCS acquisition, source terms, real gNATSGO grid-cell comparison, STAC/PROV record emission, promotion, release, and public delivery remain separately governed work.
