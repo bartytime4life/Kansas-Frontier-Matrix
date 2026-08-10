@@ -1,0 +1,458 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/sensitive_overlay_gatehouse_preflight.schema.json",
+  "title": "SensitiveOverlayGatehousePreflight",
+  "description": "Closed fixture-only preflight over synthetic consent, GA4GH Passport/Visa verification summaries, DUO-match declarations, and tile-only egress declarations. It contains no token material and grants no execution, policy, receipt, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullable_sha256": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "nullable_kfm_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/kfm_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_date_time": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/date_time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verification_status": {
+      "enum": [
+        "VERIFIED",
+        "FAILED",
+        "UNKNOWN"
+      ]
+    },
+    "synthetic_https_ref": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://[a-z0-9.-]+\\.invalid/[A-Za-z0-9._~:/-]+$"
+    },
+    "visa_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "ControlledAccessGrants",
+            "ResearcherStatus",
+            "AcceptedTermsAndPolicies",
+            "AffiliationAndRole",
+            "LinkedIdentities"
+          ]
+        },
+        "value_ref": {
+          "$ref": "#/$defs/synthetic_https_ref"
+        },
+        "issuer_ref": {
+          "$ref": "#/$defs/synthetic_https_ref"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/synthetic_https_ref"
+        },
+        "signature_status": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "issuer_trust": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "source_trust": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "revocation_status": {
+          "enum": [
+            "CURRENT",
+            "REVOKED",
+            "UNKNOWN"
+          ]
+        },
+        "conditions_status": {
+          "enum": [
+            "SATISFIED",
+            "FAILED",
+            "UNKNOWN"
+          ]
+        },
+        "expires_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        }
+      },
+      "required": [
+        "type",
+        "value_ref",
+        "issuer_ref",
+        "source_ref",
+        "signature_status",
+        "issuer_trust",
+        "source_trust",
+        "revocation_status",
+        "conditions_status",
+        "expires_at"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "SensitiveOverlayGatehousePreflight"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.sensitive-overlay-gatehouse-preflight.fixture.v1"
+    },
+    "preflight_id": {
+      "type": "string",
+      "pattern": "^kfm:sensitive-overlay-gatehouse-preflight:[0-9a-f]{24}$"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "job_ref": {
+      "$ref": "#/$defs/kfm_ref"
+    },
+    "target_ref": {
+      "$ref": "#/$defs/synthetic_https_ref"
+    },
+    "requested_ttl_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verification_status": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "REVOKED",
+            "EXPIRED",
+            "UNKNOWN"
+          ]
+        },
+        "token_hash": {
+          "$ref": "#/$defs/nullable_sha256"
+        },
+        "issued_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        },
+        "revocation_checked_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        },
+        "revoked": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "consent_receipt_ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "restricted_genealogy_overlay",
+              "derived_match_summary",
+              "historical_context"
+            ]
+          }
+        },
+        "audience": {
+          "enum": [
+            "restricted_steward",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "verification_status",
+        "status",
+        "token_hash",
+        "issued_at",
+        "expires_at",
+        "revocation_checked_at",
+        "revoked",
+        "consent_receipt_ref",
+        "scopes",
+        "audience"
+      ]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "passport_profile": {
+          "const": "GA4GH_PASSPORT_1_2_1"
+        },
+        "passport_hash": {
+          "$ref": "#/$defs/nullable_sha256"
+        },
+        "signature_status": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "broker_trust": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "audience_match": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "expires_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        },
+        "visa_identity_link": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "visas": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/visa_summary"
+          }
+        }
+      },
+      "required": [
+        "passport_profile",
+        "passport_hash",
+        "signature_status",
+        "broker_trust",
+        "audience_match",
+        "expires_at",
+        "visa_identity_link",
+        "visas"
+      ]
+    },
+    "data_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ontology_profile": {
+          "const": "GA4GH_DUO_DECLARATION_ONLY"
+        },
+        "dataset_terms": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^DUO:[0-9]{7}$"
+          }
+        },
+        "purpose_terms": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^DUO:[0-9]{7}$"
+          }
+        },
+        "match_status": {
+          "$ref": "#/$defs/verification_status"
+        },
+        "evaluator_ref": {
+          "$ref": "#/$defs/nullable_kfm_ref"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/nullable_date_time"
+        },
+        "ontology_digest": {
+          "$ref": "#/$defs/nullable_sha256"
+        }
+      },
+      "required": [
+        "ontology_profile",
+        "dataset_terms",
+        "purpose_terms",
+        "match_status",
+        "evaluator_ref",
+        "evaluated_at",
+        "ontology_digest"
+      ]
+    },
+    "egress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_environment": {
+          "enum": [
+            "SYNTHETIC_TRE",
+            "UNKNOWN"
+          ]
+        },
+        "artifact_class": {
+          "enum": [
+            "MAP_TILES_ONLY",
+            "RAW_GENOMIC",
+            "ROW_LEVEL",
+            "UNKNOWN"
+          ]
+        },
+        "media_type": {
+          "enum": [
+            "application/vnd.pmtiles",
+            "application/vnd.mapbox-vector-tile",
+            "application/octet-stream"
+          ]
+        },
+        "contains_raw_genomic_material": {
+          "type": "boolean"
+        },
+        "contains_row_level_data": {
+          "type": "boolean"
+        },
+        "contains_direct_identifiers": {
+          "type": "boolean"
+        },
+        "outbound_network": {
+          "type": "boolean"
+        },
+        "public_exposure": {
+          "type": "boolean"
+        },
+        "release_state": {
+          "enum": [
+            "NOT_RELEASED",
+            "RELEASED",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "execution_environment",
+        "artifact_class",
+        "media_type",
+        "contains_raw_genomic_material",
+        "contains_row_level_data",
+        "contains_direct_identifiers",
+        "outbound_network",
+        "public_exposure",
+        "release_state"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "token_parsed": {
+          "const": false
+        },
+        "signature_verified": {
+          "const": false
+        },
+        "issuer_trust_resolved": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "receipt_signed": {
+          "const": false
+        },
+        "job_started": {
+          "const": false
+        },
+        "artifact_emitted": {
+          "const": false
+        },
+        "release_issued": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "token_parsed",
+        "signature_verified",
+        "issuer_trust_resolved",
+        "policy_evaluated",
+        "receipt_signed",
+        "job_started",
+        "artifact_emitted",
+        "release_issued",
+        "publication_authorized"
+      ]
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "preflight_id",
+    "evaluated_at",
+    "job_ref",
+    "target_ref",
+    "requested_ttl_seconds",
+    "consent",
+    "identity",
+    "data_use",
+    "egress",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/sensitive_overlay_gatehouse_preflight.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/sensitive_overlay_gatehouse_preflight/",
+    "validator": "tools/validators/governance/validate_sensitive_overlay_gatehouse_preflight.py",
+    "authority": "NONE",
+    "raw_token_material": "DENIED"
+  }
+}

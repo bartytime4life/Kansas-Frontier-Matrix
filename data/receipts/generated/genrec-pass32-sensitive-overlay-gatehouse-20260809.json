@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-pass32-sensitive-overlay-gatehouse-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/sensitive-overlay-gatehouse-preflight.yml",
+    "contracts/governance/sensitive_overlay_gatehouse_preflight.md",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-gatehouse-source-map.md",
+    "fixtures/contracts/v1/governance/sensitive_overlay_gatehouse_preflight/cases.json",
+    "schemas/contracts/v1/governance/sensitive_overlay_gatehouse_preflight.schema.json",
+    "tests/validators/governance/test_sensitive_overlay_gatehouse_preflight.py",
+    "tools/validators/governance/validate_sensitive_overlay_gatehouse_preflight.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/sensitive-overlay-gatehouse-preflight.yml": "sha256:d271639e9a6aec747351967f16f8f58dc5f61b7556ae03f8c03d09434a505d2f",
+    "contracts/governance/sensitive_overlay_gatehouse_preflight.md": "sha256:878fd226e926a315905867821ea5796f3e64742e993118e00c4d82f33d6f0413",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-gatehouse-source-map.md": "sha256:c0af7c2cae806018a9e0ba564cc77ca6db1c816bdb09daf5b9a70c955ce5d385",
+    "fixtures/contracts/v1/governance/sensitive_overlay_gatehouse_preflight/cases.json": "sha256:fb53a04590d777331883a344c368f27b29139e50978a7b0059309c733792865b",
+    "schemas/contracts/v1/governance/sensitive_overlay_gatehouse_preflight.schema.json": "sha256:fa57f563010c52f747eedf30b4db8e56bc22651ff80828a34c8ae2ac9da2a900",
+    "tests/validators/governance/test_sensitive_overlay_gatehouse_preflight.py": "sha256:f482961101bee621863113b4bc7297b75ae72c3284806018a4da0afbf4bbce29",
+    "tools/validators/governance/validate_sensitive_overlay_gatehouse_preflight.py": "sha256:358e27a541ae85ccb62a83b70dc69ffee204fdd858c8586b02193f139749eaaa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:360ec29489c3ec11ff4e48f10f2fbc0e194765bd7349d2f6d221e34a0cfe542f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector evidence inspection",
+      "GitHub connector repository inspection and mutation",
+      "official standards web inspection",
+      "local deterministic Python preflight"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:360ec29489c3ec11ff4e48f10f2fbc0e194765bd7349d2f6d221e34a0cfe542f"
+    ],
+    "attached_docs": [
+      "KFM_Pass_32_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "New Ideas 5-17-26"
+    ],
+    "evidence_refs": [
+      "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-PROG-0018",
+      "gdrive://1cDAPrrPt_AxMB3lBH4z-wQGwKmcGEUt-nOMLLsAlxQQ",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "repo:docs/doctrine/directory-rules.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "repo:contracts/common/identity_token.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "repo:contracts/domains/people-dna-land/consented_genealogy_overlay.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "https://ga4gh.github.io/data-security/ga4gh-passport",
+      "https://ga4gh.github.io/data-security/aai-openid-connect-profile",
+      "https://ga4gh.github.io/data-security/versions",
+      "https://github.com/EBISPOT/DUO"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/sensitive-overlay-gatehouse-preflight.yml": "CONFIRMED",
+    "contracts/governance/sensitive_overlay_gatehouse_preflight.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-sensitive-overlay-gatehouse-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/sensitive_overlay_gatehouse_preflight/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/sensitive_overlay_gatehouse_preflight.schema.json": "CONFIRMED",
+    "tests/validators/governance/test_sensitive_overlay_gatehouse_preflight.py": "CONFIRMED",
+    "tools/validators/governance/validate_sensitive_overlay_gatehouse_preflight.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-gatehouse-suite-12-tests",
+      "outcome": "PASS",
+      "reason": "All 12 deterministic gatehouse tests passed."
+    },
+    {
+      "gate": "gatehouse-fixture-polarity-1-hold-40-deny",
+      "outcome": "PASS",
+      "reason": "All 41 synthetic cases produced their exact finite outcome and finding list."
+    },
+    {
+      "gate": "adjacent-consent-overlay-regression-16-tests",
+      "outcome": "PASS",
+      "reason": "The existing consent-overlay safety suite passed all 16 tests."
+    },
+    {
+      "gate": "no-network-no-token-and-no-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests block socket and urllib entry points, reject undeclared token fields, and assert authority NONE plus all seven operational holds."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "markdown-link-classification",
+      "outcome": "PASS",
+      "reason": "Repository-native checking passed both Markdown artifacts; four cited external standards targets remain explicitly classified as externally unverified by the offline checker."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "Repository-native validation binds all seven non-receipt artifact paths to their final SHA-256 bytes."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-P32-PROG-0018",
+      "validated": true,
+      "evidence_ref": "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-PROG-0018"
+    },
+    {
+      "id": "ADR-0029@6947a2c",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774"
+    },
+    {
+      "id": "GA4GH-PASSPORT-1.2.1",
+      "validated": true,
+      "evidence_ref": "https://ga4gh.github.io/data-security/ga4gh-passport"
+    },
+    {
+      "id": "GA4GH-DUO",
+      "validated": true,
+      "evidence_ref": "https://github.com/EBISPOT/DUO"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T12:00:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only sensitive-overlay gatehouse preflight adapted from Pass 32 card KFM-P32-PROG-0018. A fully verified synthetic summary remains HOLD: raw credential parsing, cryptographic verification, issuer/source trust configuration, DUO policy evaluation, attested TRE execution, signed receipt emission, release, deployment, publication, and public-use authority remain unwired."
+}
