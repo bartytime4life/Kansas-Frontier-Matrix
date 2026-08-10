@@ -1,0 +1,31 @@
+{
+  "profile": "kfm.explorer.view-registry-inspector.public-safe.v1",
+  "outcome": "AVAILABLE",
+  "status": "READY",
+  "reason_code": "REGISTRY_READY",
+  "registry_id": "kfm:view-registry:aaaaaaaaaaaaaaaaaaaaaaaa",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "entries": [
+    {
+      "view_id": "kfm:view:hydrology.streamflow",
+      "route_path": "/map/hydrology/streamflow",
+      "delivery_kind": "GOVERNED_API_CONTRACT",
+      "contract_ref": "kfm:contract:governed-api:hydrology-streamflow-v1",
+      "catalog_closure_state": "READY",
+      "layer_manifest_refs": [
+        "kfm:layer-manifest:streamflow-context-v1"
+      ],
+      "renderer": "MAPLIBRE_2D",
+      "protocol": "PMTILES",
+      "style_ref": "kfm:style:streamflow-v1",
+      "performance_budget_ref": "kfm:performance-budget:map-standard-v1",
+      "access_policy_ref": "kfm:policy:access:public-map-v1",
+      "sensitivity_policy_ref": "kfm:policy:sensitivity:hydrology-v1",
+      "evidence_drawer_profile_ref": "kfm:contract:evidence-drawer:public-v1",
+      "release_manifest_ref": "kfm:release-manifest:streamflow-candidate-v1",
+      "activation_state": "PROPOSED_INACTIVE"
+    }
+  ],
+  "evaluated_at": "2026-08-10T18:00:00Z",
+  "direct_store_endpoint": "SENSITIVE_VIEW_REGISTRY_CANARY_7ad3"
+}
