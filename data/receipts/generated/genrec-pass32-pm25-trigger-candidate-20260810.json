@@ -1,0 +1,69 @@
+{
+  "receipt_id": "genrec-pass32-pm25-trigger-candidate-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pm25-trigger-candidate-assessment.yml",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "sha256:4dab99867b702c28a614c2d65b9d00797521a0e82a73ee7f634f46181b6813e9",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "sha256:eda089f6bb6de27a24ba52102bce855229a2bac104fc206251caceadd00736ed",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:f25448ee2919dbc5683c5cb88b984a09de0779f7d8d3eb40a99c2532f15b8170",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:7556c82ba29ee5cf4fabce100d8a1044ad1ab80dbc110d66fda766b6551094d5",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:55fc6db85e9b54ce81562a14b6d26d29c89e9c26610ba9e9e56eabf8682583fd",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:53efea073508efd6cdbae6a5c2c5192f33ffd8f2f134620c44509b9abc93033b",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:17dd5b4bd38ede403c25e746d85e2228df56bdebaea1d29ec25f33a5fa3533f3"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:8fbe7a30cbbf3222411d4e3dc10b329120a26eecc6b1b9c2a5ae86e4de5ab0f9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@4e4eb979caae21922af2217247ade970bd70cf82",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31344586081",
+      "repo:data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260809.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "PROPOSED",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "PROPOSED",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "PROPOSED",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "receipt-rollover-assay", "outcome": "PASS", "reason": "The 20260809 receipt no longer matched current repository bytes and bound the shared Atmosphere inventory workflow, causing unrelated inventory additions to invalidate this profile's check."},
+    {"gate": "stable-artifact-scope", "outcome": "PASS", "reason": "This superseding receipt binds the trigger profile's own workflow, contract, source map, fixtures, schema, tests, and validator, while the shared domain inventory is governed by its change-specific receipt."},
+    {"gate": "focused-hosted-tests", "outcome": "PASS", "reason": "GitHub Actions run 31344586081 completed all eight deterministic trigger-profile tests before reporting the stale receipt mismatch."},
+    {"gate": "generated-receipt-integrity", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the corrected draft head existed; GitHub Actions remains authoritative for that head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "KFM-P32-IDEA-0012", "validated": true, "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0012"},
+    {"id": "KFM-P32-PROG-0009", "validated": true, "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0009"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T00:40:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Supersedes genrec-pass32-pm25-trigger-candidate-20260809 for current-byte validation. The older receipt remains historical. This rollover intentionally excludes the independently changing shared domain-atmosphere workflow; it creates no source, policy, review, promotion, release, publication, or merge authority."
+}
