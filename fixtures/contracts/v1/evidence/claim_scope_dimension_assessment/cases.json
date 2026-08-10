@@ -1,0 +1,63 @@
+{
+  "object_type": "ClaimScopeDimensionAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.claim-scope-dimension-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ClaimScopeDimensionAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.claim-scope-dimension-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-376",
+    "observed_at": "2026-08-10T19:00:00Z",
+    "claim_ref": "kfm:claim:synthetic-county-surface:001",
+    "claim_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_use": "PUBLIC_MAP",
+    "representation_model": "RASTER_SURFACE",
+    "evidence_bundle_scope": {
+      "ref": "kfm:evidence-bundle:synthetic-county-surface:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "dimensions": {
+      "time": {"role": "CONTROLLED", "scope_ref": "kfm:time-scope:synthetic-instant:001", "scope_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+      "space": {"role": "MEASURED", "scope_ref": "kfm:space-scope:synthetic-county-grid:001", "scope_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "resolution": "RESOLVED"},
+      "attribute": {"role": "CONTROLLED", "scope_ref": "kfm:attribute-scope:synthetic-index:001", "scope_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}
+    },
+    "assessment": {
+      "state": "COMPLETE",
+      "controlled_dimensions": ["ATTRIBUTE", "TIME"],
+      "measured_dimensions": ["SPACE"],
+      "unresolved_dimensions": [],
+      "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "PUBLIC_SCOPE_CAVEAT_REQUIRED", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"],
+      "review_record_refs": ["kfm:review-record:synthetic-claim-scope:001"]
+    },
+    "authority_claims": {
+      "claim_authority": false,
+      "scope_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "lifecycle_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_answer_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_public_space_measured", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_internal_time_measured", "patch": {"intended_use": "INTERNAL_QA", "representation_model": "TABULAR_PANEL", "dimensions": {"time": {"role": "MEASURED"}, "space": {"role": "CONTROLLED"}}, "assessment": {"controlled_dimensions": ["ATTRIBUTE", "SPACE"], "measured_dimensions": ["TIME"], "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"], "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_internal_attribute_measured", "patch": {"intended_use": "EXPLORATORY_ANALYSIS", "representation_model": "VECTOR_FEATURES", "dimensions": {"space": {"role": "CONTROLLED"}, "attribute": {"role": "MEASURED"}}, "assessment": {"controlled_dimensions": ["SPACE", "TIME"], "measured_dimensions": ["ATTRIBUTE"], "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"], "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_assessment", "patch": {"intended_use": "INTERNAL_QA", "assessment": {"state": "INCOMPLETE", "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"], "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_unresolved_dimension", "patch": {"intended_use": "INTERNAL_QA", "dimensions": {"time": {"role": "UNRESOLVED", "resolution": "UNRESOLVED"}}, "assessment": {"state": "INCOMPLETE", "controlled_dimensions": ["ATTRIBUTE"], "measured_dimensions": ["SPACE"], "unresolved_dimensions": ["TIME"], "obligations": ["UNRESOLVED_DIMENSION_REVIEW_REQUIRED"], "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE", "DIMENSION_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_evidence_scope_unresolved", "patch": {"intended_use": "INTERNAL_QA", "evidence_bundle_scope": {"resolution": "UNRESOLVED"}, "assessment": {"state": "UNKNOWN", "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"], "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_UNKNOWN", "EVIDENCE_SCOPE_UNRESOLVED"]}},
+    {"name": "deny_partition_mismatch", "patch": {"assessment": {"controlled_dimensions": ["TIME"]}}, "expected": {"outcome": "DENY", "codes": ["DIMENSION_PARTITION_MISMATCH"]}},
+    {"name": "deny_complete_unresolved_dimension", "patch": {"dimensions": {"time": {"role": "UNRESOLVED", "resolution": "UNRESOLVED"}}, "assessment": {"controlled_dimensions": ["ATTRIBUTE"], "unresolved_dimensions": ["TIME"], "obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "PUBLIC_SCOPE_CAVEAT_REQUIRED", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE", "UNRESOLVED_DIMENSION_REVIEW_REQUIRED"]}}, "expected": {"outcome": "DENY", "codes": ["UNRESOLVED_DIMENSION_COMPLETE_DENIED"]}},
+    {"name": "deny_no_controlled_dimension", "patch": {"dimensions": {"time": {"role": "MEASURED"}, "attribute": {"role": "MEASURED"}}, "assessment": {"controlled_dimensions": [], "measured_dimensions": ["ATTRIBUTE", "SPACE", "TIME"]}}, "expected": {"outcome": "DENY", "codes": ["CONTROLLED_DIMENSION_REQUIRED"]}},
+    {"name": "deny_no_measured_dimension", "patch": {"dimensions": {"space": {"role": "CONTROLLED"}}, "assessment": {"controlled_dimensions": ["ATTRIBUTE", "SPACE", "TIME"], "measured_dimensions": []}}, "expected": {"outcome": "DENY", "codes": ["MEASURED_DIMENSION_REQUIRED"]}},
+    {"name": "deny_public_review_missing", "patch": {"assessment": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_public_caveat_missing", "patch": {"assessment": {"obligations": ["ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"]}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_SCOPE_CAVEAT_REQUIRED"]}},
+    {"name": "deny_resolution_role_mismatch", "patch": {"dimensions": {"time": {"role": "MEASURED", "resolution": "UNRESOLVED"}}, "assessment": {"controlled_dimensions": ["ATTRIBUTE"], "measured_dimensions": ["SPACE", "TIME"]}}, "expected": {"outcome": "DENY", "codes": ["DIMENSION_RESOLUTION_ROLE_MISMATCH"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_raw_coordinates", "patch": {"coordinates": [-98.0, 38.5]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
