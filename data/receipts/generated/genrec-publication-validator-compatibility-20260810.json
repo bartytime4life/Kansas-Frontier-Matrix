@@ -1,0 +1,148 @@
+{
+  "receipt_id": "genrec-publication-validator-compatibility-d99bf9d4a48a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/publication-validator-compatibility.yml",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md",
+    "tests/validators/test_publication_validator_compatibility.py",
+    "tools/validators/validate_layer_manifest.py",
+    "tools/validators/validate_release_manifest.py",
+    "tools/validators/validate_rollback_card.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/publication-validator-compatibility.yml": "sha256:c218b6120cc3aba24e9757a2773ea8b6034d29ca9949a62b34c2490f287171ec",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md": "sha256:bdabaa49cc19504b378d47bb2db033286316d747081ffc242e441d04d2d8e9e4",
+    "tests/validators/test_publication_validator_compatibility.py": "sha256:94c6ea98d1a9b70afc3afbb508b24dc6e8c2198ad0f0076fb1927d1b28830907",
+    "tools/validators/validate_layer_manifest.py": "sha256:fe20e5a96a5be14602f46afdfae87e197fc2c5ca48c51704b55150312aa049a7",
+    "tools/validators/validate_release_manifest.py": "sha256:6d61b3df43932d3c9d786eb4f944e4e14a757a3275ec220fa9b83660ab92d35b",
+    "tools/validators/validate_rollback_card.py": "sha256:1b714a92c5bf48ec648fe285d9e6bfb313a40234873b5314e90d18f99fbd8547"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "repository evidence inspection",
+      "local Python syntax and delegation validation",
+      "content-hash validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60"
+    ],
+    "attached_docs": [
+      "GPT Markdown Prompt 4.0.pdf — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "Kansas Frontier Matrix Definitive Greenfield Building Plan v1.1",
+      "Google Drive: New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_layer_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/data/validate_layer_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_release_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/release/validate_release_manifest.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_rollback_card.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/release/validate_rollback_card.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_citation_validation.py",
+      "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/publication-validator-compatibility.yml": "PROPOSED",
+    "docs/intake/exploratory/publication-validator-compatibility-source-map.md": "PROPOSED",
+    "tests/validators/test_publication_validator_compatibility.py": "PROPOSED",
+    "tools/validators/validate_layer_manifest.py": "PROPOSED",
+    "tools/validators/validate_release_manifest.py": "PROPOSED",
+    "tools/validators/validate_rollback_card.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at ef1ba46a19e4de7c176e9d093c1285e73a0af75a, confirmed three root NotImplementedError stubs, three implemented canonical fixture validators, the established citation compatibility pattern, and absence of an open overlapping pull request."
+    },
+    {
+      "gate": "directory-rules-and-single-implementation-boundary",
+      "outcome": "PASS",
+      "reason": "Preserved existing root paths as delegation-only compatibility entrypoints while retaining one canonical implementation per concern under tools/validators/data or tools/validators/release; no semantic or authority home changed."
+    },
+    {
+      "gate": "python-compile-and-local-delegation-tests",
+      "outcome": "PASS",
+      "reason": "All wrappers and tests compiled, and six local delegation tests passed against temporary canonical-module stand-ins, proving import and exact-main delegation mechanics without adding semantic logic."
+    },
+    {
+      "gate": "canonical-repository-fixture-replay",
+      "outcome": "SKIPPED",
+      "reason": "A mounted full checkout was not available. The exact-head workflow replays the real repository LayerManifest, ReleaseManifest, and RollbackCard fixture profiles after push."
+    },
+    {
+      "gate": "workflow-and-receipt-static-validation",
+      "outcome": "PASS",
+      "reason": "Workflow YAML parses, permissions are read-only, action references are immutable SHA pins, and artifact hashes bind every authored compatibility artifact."
+    },
+    {
+      "gate": "human-review-and-consumer-inventory",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review and a complete inventory of external callers of the legacy root entrypoints remain NEEDS VERIFICATION; no path is removed in this slice."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "layer-manifest-root-stub-and-canonical-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "release-manifest-root-stub-and-canonical-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "rollback-card-root-stub-and-canonical-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "existing-citation-compatibility-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/tools/validators/validate_citation_validation.py"
+    },
+    {
+      "id": "drive-publication-and-rollback-idea-source",
+      "validated": true,
+      "evidence_ref": "gdrive://document/1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T19:16:47Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored compatibility repair for three existing root validator stubs. Each wrapper delegates directly to an existing canonical fixture-only validator and adds no semantic, policy, review, release, rollback-execution, lifecycle, deployment, or publication behavior. Canonical repository fixture replay and human review remain pending."
+}
