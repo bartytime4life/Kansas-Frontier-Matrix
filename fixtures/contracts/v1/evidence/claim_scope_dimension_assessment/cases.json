@@ -1,0 +1,57 @@
+{
+  "object_type": "ClaimScopeDimensionAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.claim-scope-dimension-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ClaimScopeDimensionAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.claim-scope-dimension-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-376",
+    "observed_at": "2026-08-10T20:00:00Z",
+    "claim_ref": "kfm:claim:synthetic-station-temperature-series:001",
+    "claim_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "evidence_bundle_ref": "kfm:evidence-bundle:synthetic-station-temperature-series:001",
+    "evidence_bundle_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "intended_use": "INTERNAL_QA",
+    "assessment": {
+      "state": "COMPLETE",
+      "measured_dimension": "TIME",
+      "interpretation_class": "TIME_SERIES_AT_CONTROLLED_SPACE_ATTRIBUTE",
+      "review_record_refs": ["kfm:review-record:synthetic-claim-scope:001"]
+    },
+    "dimensions": {
+      "time": {"role": "MEASURED", "scope_ref": "kfm:time-scope:synthetic-2026:001", "scope_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+      "space": {"role": "CONTROLLED", "scope_ref": "kfm:space-scope:synthetic-station:001", "scope_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "resolution": "RESOLVED"},
+      "attribute": {"role": "CONTROLLED", "scope_ref": "kfm:attribute-scope:synthetic-temperature:001", "scope_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}
+    },
+    "limitations": ["CLAIM_SCOPE_ONLY", "NO_EVIDENCE_RESOLUTION", "NO_PUBLICATION_AUTHORITY", "NO_REPRESENTATION_AUTHORITY"],
+    "authority_claims": {
+      "claim_truth_authority": false,
+      "evidence_authority": false,
+      "representation_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_time_measured", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_space_measured_public_candidate", "patch": {"intended_use": "PUBLIC_CANDIDATE", "assessment": {"measured_dimension": "SPACE", "interpretation_class": "SPATIAL_CROSS_SECTION_AT_CONTROLLED_TIME_ATTRIBUTE"}, "dimensions": {"time": {"role": "CONTROLLED"}, "space": {"role": "MEASURED"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_attribute_measured", "patch": {"intended_use": "EXPLORATORY_ANALYSIS", "assessment": {"measured_dimension": "ATTRIBUTE", "interpretation_class": "ATTRIBUTE_COMPARISON_AT_CONTROLLED_TIME_SPACE"}, "dimensions": {"time": {"role": "CONTROLLED"}, "attribute": {"role": "MEASURED"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_time_role", "patch": {"assessment": {"state": "INCOMPLETE", "measured_dimension": "UNKNOWN", "interpretation_class": "UNRESOLVED"}, "dimensions": {"time": {"role": "UNRESOLVED", "resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE", "DIMENSION_ROLE_UNRESOLVED", "DIMENSION_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_unknown_space_role", "patch": {"assessment": {"state": "UNKNOWN", "measured_dimension": "UNKNOWN", "interpretation_class": "UNRESOLVED"}, "dimensions": {"time": {"role": "CONTROLLED"}, "space": {"role": "UNRESOLVED", "resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_UNKNOWN", "DIMENSION_ROLE_UNRESOLVED", "DIMENSION_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_attribute_scope", "patch": {"assessment": {"state": "INCOMPLETE", "measured_dimension": "UNKNOWN", "interpretation_class": "UNRESOLVED"}, "dimensions": {"time": {"role": "CONTROLLED"}, "attribute": {"role": "UNRESOLVED", "resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE", "DIMENSION_ROLE_UNRESOLVED", "DIMENSION_SCOPE_UNRESOLVED"]}},
+    {"name": "deny_measured_dimension_mismatch", "patch": {"assessment": {"measured_dimension": "SPACE", "interpretation_class": "SPATIAL_CROSS_SECTION_AT_CONTROLLED_TIME_ATTRIBUTE"}}, "expected": {"outcome": "DENY", "codes": ["MEASURED_DIMENSION_MISMATCH"]}},
+    {"name": "deny_interpretation_mismatch", "patch": {"assessment": {"interpretation_class": "ATTRIBUTE_COMPARISON_AT_CONTROLLED_TIME_SPACE"}}, "expected": {"outcome": "DENY", "codes": ["INTERPRETATION_CLASS_MISMATCH"]}},
+    {"name": "deny_two_measured_dimensions", "patch": {"dimensions": {"space": {"role": "MEASURED"}}}, "expected": {"outcome": "DENY", "codes": ["DIMENSION_ROLE_CARDINALITY_INVALID"]}},
+    {"name": "deny_complete_scope_unresolved", "patch": {"dimensions": {"time": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "DENY", "codes": ["COMPLETE_SCOPE_UNRESOLVED", "DIMENSION_SCOPE_UNRESOLVED"]}},
+    {"name": "deny_public_review_missing", "patch": {"intended_use": "PUBLIC_CANDIDATE", "assessment": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_limitations_not_canonical", "patch": {"limitations": ["NO_PUBLICATION_AUTHORITY", "CLAIM_SCOPE_ONLY", "NO_EVIDENCE_RESOLUTION", "NO_REPRESENTATION_AUTHORITY"]}, "expected": {"outcome": "DENY", "codes": ["LIMITATIONS_NOT_CANONICAL", "LIMITATION_SET_MISMATCH"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"claim_text": "synthetic value must not be carried"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
