@@ -144,6 +144,14 @@ jobs:
           accepted_validators = {
               Path(
                   "tools/validators/domains/atmosphere/"
+                  "validate_pm_sensor_trust_profile.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_pm25_sensor_colocation_manifest.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
                   "validate_knowledge_character.py"
               ),
               Path(
