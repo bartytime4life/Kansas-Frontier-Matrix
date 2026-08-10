@@ -2,15 +2,18 @@
 doc_id: kfm://doc/NEEDS-VERIFICATION/new-ideas-register
 title: New Ideas Register
 type: standard
-version: v0.9
+version: v0.10
 status: draft; repository-grounded; intake-only
 owner: OWNER_TBD
 created: 2026-05-16
-updated: 2026-08-03
+updated: 2026-08-09
 policy_label: public
-related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
+owning_root: docs/
+responsibility: governed exploratory packet ledger without implementation or promotion authority
+truth_posture: CONFIRMED repository paths and recorded source identities / EXPLORATORY packet content / NEEDS VERIFICATION downstream implementation and promotion
+related: [docs/intake/README.md, docs/intake/NEW_IDEAS_INDEX.md, docs/intake/canonicalization-policy.md, docs/intake/exploratory/new-ideas-4-13-source-map.md, docs/intake/exploratory/new-ideas-4-14-source-map.md, docs/intake/exploratory/new-ideas-4-15-source-map.md, docs/intake/exploratory/new-ideas-4-16-source-map.md, docs/intake/exploratory/new-ideas-4-23-source-map.md, docs/intake/exploratory/new-ideas-4-25-source-map.md, docs/intake/exploratory/new-ideas-4-30-source-map.md, docs/intake/exploratory/new-ideas-5-source-map.md, docs/intake/exploratory/new-ideas-5-19-26-source-map.md, docs/intake/exploratory/spatiotemporal-modernization-blueprint-source-map.md, docs/intake/exploratory/tile-artifact-manifest-pmtiles-profile-source-map.md, docs/archive/exploratory/new-ideas/README.md, docs/doctrine/authority-ladder.md, docs/doctrine/truth-posture.md]
 tags: [kfm, intake, new-ideas, canonization, governance, documentation-control]
-notes: [Repository path and sibling intake surfaces verified through remote main 83cca9c66a1eb218f010a75b862d417d429c3c85; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, and the spatiotemporal modernization blueprint are triaged exploratory packets; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
+notes: [Repository path and sibling intake surfaces verified through remote main 1bab49fa7342a8bb71f335a2efb4924f438486cc; New Ideas 4-13-26, 4-14-26, 4-15-26, 4-16-26, 4-23-26, 4-25-26, 4-30-26, New Ideas 5, New Ideas 5-19-26, and the spatiotemporal modernization blueprint are triaged exploratory packets; a bounded partial triage of the New Ideas 5-15-26 PMTiles subset is registered; the 4-14 and 4-15 packets are also prior Pass 23 lineage; register rows remain intake records and not implementation or promotion authority.]
 [/KFM_META_BLOCK_V2] -->
 
 # New Ideas Register
@@ -380,6 +383,20 @@ Each row should carry enough information for a maintainer to decide whether to p
 | Promotion blockers | KFM currently tracks stable GeoParquet 1.1.0; STAC GeoParquet remains under development; packet row/grid/cache/hosting/performance mandates are not universal evidence; existing lifecycle, evidence, renderer, source, and modernization authorities would be duplicated; dependency, infrastructure, release, and public-trust burdens remain open. |
 | Smallest next action | Draft a decision-only GeoParquet version-readiness issue with `KEEP_1_1`, `DUAL_EVALUATE`, `ADOPT_LATER`, and `DENY_UNSUPPORTED` outcomes plus benchmark-profile, migration, correction, and rollback requirements. |
 | Decision note | Triaged as useful modernization pressure with significant version, benchmark, and authority corrections. No standard, schema, dependency, data, source, catalog, workflow, runtime, hosting, release, deployment, or publication change is promoted. |
+
+#### `NI-2026-05-19-mixed-governed-automation`
+
+| Field | Value |
+|---|---|
+| Source identity | Supplied title `New Ideas 5-19-26`; SHA-256 `246c0f9ab4664543a06a91bd8519b170056001a2b3e2c7a8b9ddd79b0151a8f7`; 5,098 lines; 166,892 UTF-8 bytes |
+| Source date | `2026-05-19`, supported by title; Drive modified `2026-05-20T21:19:45.504Z` |
+| Primary category | `multi-cluster exploratory intake` |
+| Secondary tags | `biodiversity`, `GBIF`, `iDigBio`, `NDVI`, `STAC`, `PMTiles`, `watcher`, `Gatehouse`, `Atlas`, `missing-persons`, `DNA`, `consent`, `TRE`, `attestation`, `digest` |
+| Detailed source map | [`exploratory/new-ideas-5-19-26-source-map.md`](exploratory/new-ideas-5-19-26-source-map.md) |
+| Evidence threshold | Current repository evidence for path and gap claims; current primary source terms for every external service; accepted living-person, privacy, consent, identity, attestation, automation, and renderer decisions; synthetic fixtures; finite outcomes; correction and rollback. |
+| Promotion blockers | Extensive overlap with existing occurrence, NDVI, PMTiles, watcher, evidence, consent, material-change, and digest lanes; arbitrary scores/privacy/performance thresholds; ETag-as-identity pressure; unverified source and provider claims; living-person and DNA sensitivity; unresolved TRE threat model and trust roots; external-effect and self-mutating workflow proposals. |
+| Smallest next action | Prepare a decision-only attested-compute boundary packet with `NO_TRE`, `SIMULATED_ASSESSMENT`, `DEFER_REAL_TEE`, and `DENY_UNVERIFIED_ATTESTATION` outcomes; authorize no real data, compute, credential, cloud, external verification, release, deployment, or publication. |
+| Decision note | Triaged as broad corroborative and gap-finding pressure. No source, threshold, code snippet, directory tree, policy, workflow, identity link, compute path, external post, release, or publication is promoted. |
 
 ## Promotion criteria
 
