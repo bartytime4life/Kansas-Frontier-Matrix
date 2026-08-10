@@ -1,0 +1,55 @@
+{
+  "profile": "kfm.explorer.pmtiles-range-diagnostics.public-safe.v1",
+  "panel_id": "kfm:pmtiles-range-diagnostics:synthetic:artifact-001",
+  "outcome": "ANSWER",
+  "reason_code": "DIAGNOSTICS_AVAILABLE",
+  "observed_at": "2026-08-10T17:15:00Z",
+  "artifact_ref": "kfm://artifact/pmtiles/synthetic/kansas-001",
+  "verification_state": "STRUCTURAL_HOLD",
+  "http": {
+    "accept_ranges": "SUPPORTED",
+    "content_range": "VALID",
+    "etag": "MATCH",
+    "cache": "HIT"
+  },
+  "sidecars": {
+    "pmidx_ref": "kfm://pmtiles/pmidx/synthetic/kansas-001",
+    "pmidx_state": "VERIFIED",
+    "pmsig_ref": "kfm://pmtiles/pmsig/synthetic/kansas-001",
+    "pmsig_state": "SHAPE_BOUND",
+    "run_receipt_ref": "kfm://receipt/run/synthetic/pmtiles-001",
+    "cryptographic_state": "UNVERIFIED"
+  },
+  "verified_range": {
+    "offset": 4096,
+    "length": 512,
+    "leaf": 1
+  },
+  "checks": [
+    "PMIDX_DECLARED_RANGE_BINDING",
+    "CAPTURED_RANGE_EQUALS_CONTAINING_LEAF_SLICE",
+    "PMIDX_LEAF_SHA256_AND_MERKLE_ROOT",
+    "PMSIG_SUBJECT_SHAPE_BINDING"
+  ],
+  "holds": [
+    "CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
+    "RANGE_METADATA_NOT_AUTHENTICATED",
+    "BAO_OUTBOARD_PROOF_UNADOPTED",
+    "FULL_ARCHIVE_DIGEST_NOT_RECOMPUTED",
+    "POLICY_EVALUATION_NOT_RUN",
+    "RELEASE_AUTHORIZATION_NOT_EVALUATED"
+  ],
+  "headless_render": {
+    "state": "HOLD",
+    "receipt_ref": "kfm://receipt/render/synthetic/pmtiles-001"
+  },
+  "governance": {
+    "network_attempted": false,
+    "archive_read_performed": false,
+    "cryptographic_verification_performed": false,
+    "policy_evaluated": false,
+    "artifact_health_declared": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}
