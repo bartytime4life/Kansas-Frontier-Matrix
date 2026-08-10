@@ -1,0 +1,309 @@
+{
+  "profile": "kfm.source.activation-portfolio-assessment.fixture-cases.v1",
+  "base": {
+    "profile": "kfm.source.activation-portfolio-assessment.fixture.v1",
+    "schema_version": "1.0.0",
+    "execution_mode": "FIXTURE_ONLY_NO_NETWORK",
+    "assessment_state": "COMPLETE",
+    "evaluated_at": "2026-08-10T05:00:00Z",
+    "portfolio_id": "kfm:source-portfolio:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "candidates": [
+      {
+        "source_id": "kfm:fixture:source:alpha-agency",
+        "risk_class": "CONDITIONAL_AGENCY",
+        "source_descriptor_ref": "kfm://fixture/source-descriptor/alpha-agency/v1",
+        "source_role_ref": "kfm://fixture/source-role/alpha-agency/v1",
+        "rights_currentness_assessment_ref": "kfm://fixture/source-rights/alpha-agency/v1",
+        "sensitivity_assessment_ref": "kfm://fixture/sensitivity/alpha-agency/v1",
+        "reviewer_role_refs": ["kfm://fixture/reviewer-role/source-steward/v1"],
+        "dependency_refs": ["kfm://fixture/dependency/agency-terms/v1"],
+        "acceptance_test_refs": ["kfm://fixture/acceptance-test/alpha-no-network/v1"],
+        "correction_ref": "kfm://fixture/correction/alpha-agency/v1",
+        "rollback_ref": "kfm://fixture/rollback/alpha-agency/v1",
+        "readiness": {
+          "source_role": "DECLARED",
+          "rights_currentness": "CURRENT",
+          "sensitivity": "CLEAR",
+          "reviewer": "ASSIGNED",
+          "dependencies": "SATISFIED",
+          "acceptance_tests": "DECLARED",
+          "correction_rollback": "DECLARED"
+        },
+        "declared_outcome": "CONDITIONAL",
+        "reason_codes": ["CONDITIONAL_SOURCE_REVIEW_REQUIRED"],
+        "governance": {
+          "may_contact_source": false,
+          "may_admit": false,
+          "may_activate": false,
+          "may_schedule_review": false,
+          "may_mutate": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false,
+          "may_enable_public_use": false
+        }
+      },
+      {
+        "source_id": "kfm:fixture:source:beta-denied",
+        "risk_class": "DENIED_CLASS",
+        "source_descriptor_ref": "kfm://fixture/source-descriptor/beta-denied/v1",
+        "source_role_ref": "kfm://fixture/source-role/beta-denied/v1",
+        "rights_currentness_assessment_ref": "kfm://fixture/source-rights/beta-denied/v1",
+        "sensitivity_assessment_ref": "kfm://fixture/sensitivity/beta-denied/v1",
+        "reviewer_role_refs": ["kfm://fixture/reviewer-role/privacy-steward/v1"],
+        "dependency_refs": ["kfm://fixture/dependency/controlled-purpose/v1"],
+        "acceptance_test_refs": ["kfm://fixture/acceptance-test/beta-no-data/v1"],
+        "correction_ref": "kfm://fixture/correction/beta-denied/v1",
+        "rollback_ref": "kfm://fixture/rollback/beta-denied/v1",
+        "readiness": {
+          "source_role": "HOLD",
+          "rights_currentness": "DENIED",
+          "sensitivity": "DENIED",
+          "reviewer": "HOLD",
+          "dependencies": "HOLD",
+          "acceptance_tests": "HOLD",
+          "correction_rollback": "HOLD"
+        },
+        "declared_outcome": "HOLD",
+        "reason_codes": ["DENIED_CLASS_RETAINED"],
+        "governance": {
+          "may_contact_source": false,
+          "may_admit": false,
+          "may_activate": false,
+          "may_schedule_review": false,
+          "may_mutate": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false,
+          "may_enable_public_use": false
+        }
+      },
+      {
+        "source_id": "kfm:fixture:source:gamma-public-fixture",
+        "risk_class": "PUBLIC_SAFE",
+        "source_descriptor_ref": "kfm://fixture/source-descriptor/gamma-public-fixture/v1",
+        "source_role_ref": "kfm://fixture/source-role/gamma-public-fixture/v1",
+        "rights_currentness_assessment_ref": "kfm://fixture/source-rights/gamma-public-fixture/v1",
+        "sensitivity_assessment_ref": "kfm://fixture/sensitivity/gamma-public-fixture/v1",
+        "reviewer_role_refs": ["kfm://fixture/reviewer-role/source-steward/v1"],
+        "dependency_refs": ["kfm://fixture/dependency/public-fixture-profile/v1"],
+        "acceptance_test_refs": ["kfm://fixture/acceptance-test/gamma-no-network/v1"],
+        "correction_ref": "kfm://fixture/correction/gamma-public-fixture/v1",
+        "rollback_ref": "kfm://fixture/rollback/gamma-public-fixture/v1",
+        "readiness": {
+          "source_role": "DECLARED",
+          "rights_currentness": "CURRENT",
+          "sensitivity": "CLEAR",
+          "reviewer": "ASSIGNED",
+          "dependencies": "SATISFIED",
+          "acceptance_tests": "DECLARED",
+          "correction_rollback": "DECLARED"
+        },
+        "declared_outcome": "READY_FOR_REVIEW",
+        "reason_codes": ["READY_FOR_REVIEW_ONLY"],
+        "governance": {
+          "may_contact_source": false,
+          "may_admit": false,
+          "may_activate": false,
+          "may_schedule_review": false,
+          "may_mutate": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false,
+          "may_enable_public_use": false
+        }
+      }
+    ],
+    "portfolio_decision": {
+      "outcome": "HOLD",
+      "ordered_source_ids": [
+        "kfm:fixture:source:alpha-agency",
+        "kfm:fixture:source:beta-denied",
+        "kfm:fixture:source:gamma-public-fixture"
+      ],
+      "ready_source_ids": ["kfm:fixture:source:gamma-public-fixture"],
+      "conditional_source_ids": ["kfm:fixture:source:alpha-agency"],
+      "held_source_ids": ["kfm:fixture:source:beta-denied"],
+      "reason_codes": ["PORTFOLIO_CONTAINS_HOLD"]
+    },
+    "permissions": {
+      "may_contact_source": false,
+      "may_admit": false,
+      "may_activate": false,
+      "may_schedule_review": false,
+      "may_mutate": false,
+      "may_promote": false,
+      "may_release": false,
+      "may_publish": false,
+      "may_enable_public_use": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid-mixed-fail-closed",
+      "operations": [],
+      "expected_status": "ABSTAIN",
+      "expected_portfolio_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-all-ready",
+      "operations": [
+        {"op": "set", "path": "/candidates/0/risk_class", "value": "PUBLIC_SAFE"},
+        {"op": "set", "path": "/candidates/1/risk_class", "value": "PUBLIC_SAFE"},
+        {"op": "set", "path": "/candidates/1/readiness/source_role", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/rights_currentness", "value": "CURRENT"},
+        {"op": "set", "path": "/candidates/1/readiness/sensitivity", "value": "CLEAR"},
+        {"op": "set", "path": "/candidates/1/readiness/reviewer", "value": "ASSIGNED"},
+        {"op": "set", "path": "/candidates/1/readiness/dependencies", "value": "SATISFIED"},
+        {"op": "set", "path": "/candidates/1/readiness/acceptance_tests", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/correction_rollback", "value": "DECLARED"}
+      ],
+      "expected_status": "PASS",
+      "expected_portfolio_outcome": "READY_FOR_REVIEW",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-all-conditional",
+      "operations": [
+        {"op": "set", "path": "/candidates/1/risk_class", "value": "HIGH_RISK"},
+        {"op": "set", "path": "/candidates/1/readiness/source_role", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/rights_currentness", "value": "CURRENT"},
+        {"op": "set", "path": "/candidates/1/readiness/sensitivity", "value": "CLEAR"},
+        {"op": "set", "path": "/candidates/1/readiness/reviewer", "value": "ASSIGNED"},
+        {"op": "set", "path": "/candidates/1/readiness/dependencies", "value": "SATISFIED"},
+        {"op": "set", "path": "/candidates/1/readiness/acceptance_tests", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/correction_rollback", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/2/readiness/sensitivity", "value": "REVIEW_REQUIRED"}
+      ],
+      "expected_status": "ABSTAIN",
+      "expected_portfolio_outcome": "CONDITIONAL",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-assessment-error",
+      "operations": [{"op": "set", "path": "/assessment_state", "value": "ERROR"}],
+      "expected_status": "ERROR",
+      "expected_portfolio_outcome": "ERROR",
+      "expected_findings": []
+    },
+    {
+      "case_id": "deny-candidate-outcome-mismatch",
+      "operations": [{"op": "set", "path": "/candidates/2/declared_outcome", "value": "HOLD"}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_CANDIDATE_OUTCOME_MISMATCH", "path": "/candidates/2/declared_outcome"}]
+    },
+    {
+      "case_id": "deny-candidate-reasons-mismatch",
+      "operations": [{"op": "set", "path": "/candidates/0/reason_codes", "value": ["READY_FOR_REVIEW_ONLY"]}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_CANDIDATE_REASON_MISMATCH", "path": "/candidates/0/reason_codes"}]
+    },
+    {
+      "case_id": "deny-portfolio-outcome-mismatch",
+      "operations": [{"op": "set", "path": "/portfolio_decision/outcome", "value": "READY_FOR_REVIEW"}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_DECISION_MISMATCH", "path": "/portfolio_decision"}]
+    },
+    {
+      "case_id": "deny-partition-mismatch",
+      "operations": [{"op": "set", "path": "/portfolio_decision/held_source_ids", "value": []}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_DECISION_MISMATCH", "path": "/portfolio_decision"}]
+    },
+    {
+      "case_id": "deny-unsorted-candidates",
+      "operations": [{"op": "swap", "path": "/candidates", "indexes": [0, 1]}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_CANDIDATES_NOT_CANONICAL", "path": "/candidates"}]
+    },
+    {
+      "case_id": "deny-duplicate-source-id",
+      "operations": [{"op": "set", "path": "/candidates/2/source_id", "value": "kfm:fixture:source:alpha-agency"}],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SOURCE_ID_DUPLICATE", "path": "/candidates"}]
+    },
+    {
+      "case_id": "deny-unsafe-permission",
+      "operations": [{"op": "set", "path": "/permissions/may_activate", "value": true}],
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SCHEMA_INVALID", "path": "/permissions/may_activate"}]
+    },
+    {
+      "case_id": "deny-missing-correction-ref",
+      "operations": [{"op": "delete", "path": "/candidates/0/correction_ref"}],
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SCHEMA_INVALID", "path": "/candidates/0"}]
+    },
+    {
+      "case_id": "deny-noncanonical-reference",
+      "operations": [{"op": "set", "path": "/candidates/0/source_descriptor_ref", "value": "https://example.invalid/source"}],
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SCHEMA_INVALID", "path": "/candidates/0/source_descriptor_ref"}]
+    },
+    {
+      "case_id": "deny-duplicate-reviewer-ref",
+      "operations": [{"op": "set", "path": "/candidates/0/reviewer_role_refs", "value": ["kfm://fixture/reviewer-role/source-steward/v1", "kfm://fixture/reviewer-role/source-steward/v1"]}],
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SCHEMA_INVALID", "path": "/candidates/0/reviewer_role_refs"}]
+    },
+    {
+      "case_id": "deny-hidden-score",
+      "operations": [{"op": "set", "path": "/candidates/0/score", "value": 100}],
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SCHEMA_INVALID", "path": "/candidates/0"}]
+    },
+    {
+      "case_id": "deny-spec-hash",
+      "operations": [],
+      "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    },
+    {
+      "case_id": "deny-portfolio-id",
+      "operations": [],
+      "portfolio_id_override": "kfm:source-portfolio:000000000000000000000000",
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_ID_MISMATCH", "path": "/portfolio_id"}]
+    },
+    {
+      "case_id": "deny-high-risk-ready-overclaim",
+      "operations": [
+        {"op": "set", "path": "/candidates/1/risk_class", "value": "HIGH_RISK"},
+        {"op": "set", "path": "/candidates/1/readiness/source_role", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/rights_currentness", "value": "CURRENT"},
+        {"op": "set", "path": "/candidates/1/readiness/sensitivity", "value": "CLEAR"},
+        {"op": "set", "path": "/candidates/1/readiness/reviewer", "value": "ASSIGNED"},
+        {"op": "set", "path": "/candidates/1/readiness/dependencies", "value": "SATISFIED"},
+        {"op": "set", "path": "/candidates/1/readiness/acceptance_tests", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/readiness/correction_rollback", "value": "DECLARED"},
+        {"op": "set", "path": "/candidates/1/declared_outcome", "value": "READY_FOR_REVIEW"}
+      ],
+      "recompute_derived": false,
+      "expected_status": "DENY",
+      "expected_portfolio_outcome": null,
+      "expected_findings": [{"code": "SOURCE_PORTFOLIO_CANDIDATE_OUTCOME_MISMATCH", "path": "/candidates/1/declared_outcome"}]
+    }
+  ]
+}
