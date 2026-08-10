@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-distribution-coverage-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/distribution-coverage-assessment.yml",
+    "contracts/evidence/distribution_coverage_assessment.md",
+    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json",
+    "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json",
+    "tests/evidence/test_distribution_coverage_assessment.py",
+    "tools/validators/evidence/validate_distribution_coverage_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/distribution-coverage-assessment.yml": "sha256:65d1851e926be094548a0e8ae05fe0ada3fa608871b858eb6ac7e65a0bb2ccc7",
+    "contracts/evidence/distribution_coverage_assessment.md": "sha256:67e7e96d0d38e493ce864575fb56a312441435f41aa2741c9b00d88191c736bb",
+    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "sha256:7756819a65bd5b7b52a38c95898445098a269a51ecd60c4db6054408fe88ac56",
+    "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json": "sha256:4c24e4e4710dfa4af9d45830a35c503656410369f2c3cd3911589d687474099f",
+    "tests/evidence/test_distribution_coverage_assessment.py": "sha256:80c0c4817550723d10a0f291a72c590010ea1d7c0945cb0dad38bae9627b883d",
+    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "sha256:754ddcfc654677488371b2156f19a73249a651e727eb1a5bdab33b028f142cc7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:ab4a693ea24180c2b9f62460a80f85690f5361a2b69e1cbe36df22f51f1fde08",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-046",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0138",
+      "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/kfm_full_atlas_seed_cards.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/distribution-coverage-assessment.yml": "PROPOSED",
+    "contracts/evidence/distribution_coverage_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/distribution_coverage_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/distribution_coverage_assessment.schema.json": "PROPOSED",
+    "tests/evidence/test_distribution_coverage_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_distribution_coverage_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Nine deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Fifteen synthetic positive and negative cases produced the expected finite outcomes."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 assessment schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed locally."
+    },
+    {
+      "gate": "runtime-domain-adoption",
+      "outcome": "SKIPPED",
+      "reason": "No domain source, connector, runtime, policy, map layer, or evidence lifecycle was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human evidence, domain, spatial, sensitivity, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:full-atlas-triad-046",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-046"
+    },
+    {
+      "id": "gdrive:full-atlas-candidate-0138",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0138"
+    },
+    {
+      "id": "repo:new-ideas-4-30-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-30-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T14:54:15Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first distribution and coverage proposal from Full Atlas triad KFM-TRIAD-046; coherent validation remains HOLD and cannot establish biological presence, absence, abundance, source admission, or publication authority."
+}
