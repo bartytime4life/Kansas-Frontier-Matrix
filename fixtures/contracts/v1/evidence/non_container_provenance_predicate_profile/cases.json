@@ -1,0 +1,70 @@
+{
+  "base": {
+    "schema_version": "1.0.0",
+    "object_type": "NonContainerProvenancePredicateCandidate",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "predicate_type": "https://kansasfrontiermatrix.org/provenance/non-container/v1",
+    "build_definition": {
+      "build_type": "kfm.fixture/non-container-data-build@v1",
+      "pipeline_id": "fixture:pipeline/pass30-provenance",
+      "pipeline_spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "git_repository_ref": "fixture:git/repository/kfm",
+      "git_commit_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "parameters_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    },
+    "declared_inputs": [
+      {"artifact_id": "fixture:artifact/config", "artifact_uri": "fixture:artifact/config", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "media_type": "application/json", "role": "CONFIG_INPUT"},
+      {"artifact_id": "fixture:artifact/source", "artifact_uri": "fixture:artifact/source", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "media_type": "application/octet-stream", "role": "SOURCE_INPUT"}
+    ],
+    "declared_outputs": [
+      {"artifact_id": "fixture:artifact/metadata", "artifact_uri": "fixture:artifact/metadata", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "media_type": "application/json", "role": "METADATA_OUTPUT"},
+      {"artifact_id": "fixture:artifact/product", "artifact_uri": "fixture:artifact/product", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "media_type": "application/vnd.apache.parquet", "role": "DATA_OUTPUT"}
+    ],
+    "run_details": {
+      "builder_id": "fixture:builder/github-actions-readonly",
+      "invocation_id": "fixture:invocation/pass30-provenance",
+      "run_receipt_ref": "fixture:run-receipt/pass30-provenance",
+      "started_on": "2026-01-01T00:00:00Z",
+      "finished_on": "2026-01-01T00:05:00Z"
+    },
+    "verification": {
+      "structural_validation_state": "NOT_RUN",
+      "signature_verification_state": "NOT_RUN",
+      "transparency_verification_state": "NOT_RUN",
+      "opa_trust_evaluation_state": "NOT_RUN"
+    },
+    "governance": {
+      "authority_refs": ["contracts/runtime/run_receipt.md", "docs/standards/PROVENANCE.md"],
+      "evidence_refs": ["fixture:evidence/pass30-provenance-cards"],
+      "policy_refs": ["docs/doctrine/directory-rules.md"],
+      "review_state": "PENDING",
+      "evidence_admitted": false,
+      "policy_trust_granted": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "permissions": {"network_access": false, "file_read": false, "file_mutation": false, "signer_access": false, "transparency_lookup": false, "policy_evaluation": false, "release": false, "publication": false},
+    "non_effects": ["NO_ARTIFACT_MUTATION", "NO_ARTIFACT_READ", "NO_EVIDENCE_ADMISSION", "NO_LIFECYCLE_PROMOTION", "NO_NETWORK_ACCESS", "NO_POLICY_DECISION", "NO_PUBLICATION", "NO_RELEASE", "NO_REVIEW_APPROVAL", "NO_SIGNING", "NO_TRANSPARENCY_LOOKUP"]
+  },
+  "cases": [
+    {"id": "valid-data-and-metadata-outputs", "patch": {}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "valid-proof-candidate-output", "patch": {"declared_outputs": [{"artifact_id": "fixture:artifact/proof-candidate", "artifact_uri": "fixture:artifact/proof-candidate", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "media_type": "application/json", "role": "PROOF_CANDIDATE"}], "governance": {"evidence_refs": ["fixture:evidence/proof-candidate-build"]}}, "expected": {"outcome": "PASS", "findings": []}},
+    {"id": "missing-inputs", "patch": {"declared_inputs": []}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "missing-outputs", "patch": {"declared_outputs": []}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "duplicate-input-id", "patch": {"declared_inputs": [{"artifact_id": "fixture:artifact/source", "artifact_uri": "fixture:artifact/source-a", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "media_type": "application/json", "role": "SOURCE_INPUT"}, {"artifact_id": "fixture:artifact/source", "artifact_uri": "fixture:artifact/source-b", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "media_type": "application/json", "role": "SOURCE_INPUT"}]}, "expected": {"outcome": "FAIL", "findings": ["INPUT_BINDINGS_INVALID"]}},
+    {"id": "unordered-inputs", "patch": {"declared_inputs": [{"artifact_id": "fixture:artifact/source", "artifact_uri": "fixture:artifact/source", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "media_type": "application/octet-stream", "role": "SOURCE_INPUT"}, {"artifact_id": "fixture:artifact/config", "artifact_uri": "fixture:artifact/config", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "media_type": "application/json", "role": "CONFIG_INPUT"}]}, "expected": {"outcome": "FAIL", "findings": ["INPUT_BINDINGS_INVALID"]}},
+    {"id": "output-has-input-role", "patch": {"declared_outputs": [{"artifact_id": "fixture:artifact/product", "artifact_uri": "fixture:artifact/product", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "media_type": "application/vnd.apache.parquet", "role": "SOURCE_INPUT"}]}, "expected": {"outcome": "FAIL", "findings": ["OUTPUT_BINDINGS_INVALID"]}},
+    {"id": "input-output-id-collapse", "patch": {"declared_outputs": [{"artifact_id": "fixture:artifact/source", "artifact_uri": "fixture:artifact/source-output", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "media_type": "application/json", "role": "DATA_OUTPUT"}]}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_ROLE_COLLAPSE"]}},
+    {"id": "input-output-digest-collapse", "patch": {"declared_outputs": [{"artifact_id": "fixture:artifact/product", "artifact_uri": "fixture:artifact/product", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "media_type": "application/json", "role": "DATA_OUTPUT"}]}, "expected": {"outcome": "FAIL", "findings": ["ARTIFACT_ROLE_COLLAPSE"]}},
+    {"id": "inverted-run-timing", "patch": {"run_details": {"started_on": "2026-01-01T00:06:00Z", "finished_on": "2026-01-01T00:05:00Z"}}, "expected": {"outcome": "FAIL", "findings": ["RUN_TIMING_INVALID"]}},
+    {"id": "unversioned-build-type", "patch": {"build_definition": {"build_type": "kfm.fixture/non-container-data-build"}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "opa-trust-claim", "patch": {"verification": {"opa_trust_evaluation_state": "PASS"}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "policy-trust-overclaim", "patch": {"governance": {"policy_trust_granted": true}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "invalid-git-sha", "patch": {"build_definition": {"git_commit_sha": "main"}}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "identity-drift", "recompute_identity": false, "patch": {"spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}, "expected": {"outcome": "FAIL", "findings": ["SPEC_HASH_MISMATCH"]}},
+    {"id": "unknown-field", "patch": {"rekor_inclusion_verified": true}, "expected": {"outcome": "FAIL", "findings": ["SCHEMA_INVALID"]}},
+    {"id": "unordered-governance-refs", "patch": {"governance": {"authority_refs": ["docs/standards/PROVENANCE.md", "contracts/runtime/run_receipt.md"]}}, "expected": {"outcome": "FAIL", "findings": ["REFERENCES_NOT_CANONICAL"]}}
+  ]
+}
