@@ -25,7 +25,7 @@
     "apps/explorer-web/tests/browser/pmtiles-range-diagnostics.fixture.ts": "sha256:031e7662e0045d942b016f093ae753bc8a8e245d9e6b66ead07a7d5864bc15e4",
     "apps/explorer-web/tests/browser/pmtiles-range-diagnostics.html": "sha256:860fba52be3e6911e425df340677cbdb15c00f22ac1a00abb6cec723c585cb22",
     "apps/explorer-web/tests/browser/pmtiles-range-diagnostics.spec.ts": "sha256:812b600eed3f4d6b61a78879eabbc768914dbdc0358551ebe14c4afba6badc17",
-    "apps/explorer-web/tests/pmtiles-range-diagnostics.test.ts": "sha256:a69e9bfaa310201bcd85bd704aceed005079e2debdf4aa332c9a0ca352dcd0fe",
+    "apps/explorer-web/tests/pmtiles-range-diagnostics.test.ts": "sha256:03b29921ecf398a9a21664169f39a913be6e390540a1251189ef9853b7d2cfe6",
     "docs/intake/exploratory/pass-32-pmtiles-range-diagnostics-source-map.md": "sha256:ed216bd9708e41160a75df9af2a9bb56c6d0e0a4645836abfabc56f708a1a7a8",
     "fixtures/ui/pmtiles_range_diagnostics_projection/README.md": "sha256:3349ae0083dbbab4a8691884cb51b86d928ba02d818ec246773a97dcc3d26903",
     "fixtures/ui/pmtiles_range_diagnostics_projection/invalid/crypto-overclaim.json": "sha256:c35ea960e91a770f6af6dccf80a109928e65e48fc2d736bc60de01d1c6fa3ee9",
@@ -131,7 +131,7 @@
     {
       "gate": "hosted-exact-head-checks",
       "outcome": "SKIPPED",
-      "reason": "Workflow runs begin after the branch and draft pull request are created."
+      "reason": "Initial exact-head ui-build exposed an overbroad static archive-IO assertion that matched an ordinary Range-suffixed property. The assertion was narrowed to actual read calls or a quoted Range header, and fresh exact-head runs are pending."
     },
     {
       "gate": "human-review",
@@ -185,5 +185,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "AI-authored fixture-only Explorer diagnostics over a PMTiles partial-read compatibility result. The detailed result remains STRUCTURAL_HOLD and does not prove cryptographic trust, artifact health, policy approval, release, or publication."
+  "notes": "AI-authored fixture-only Explorer diagnostics over a PMTiles partial-read compatibility result. The detailed result remains STRUCTURAL_HOLD and does not prove cryptographic trust, artifact health, policy approval, release, or publication. Initial exact-head ui-build found a false-positive static archive-IO assertion matching an ordinary Range-suffixed property; the assertion was narrowed without changing runtime behavior."
 }
