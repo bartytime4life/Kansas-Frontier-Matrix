@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-geology-steward-plus-geometry-steward-plus-sensitivity-reviewer-plus-redaction-steward-plus-evidence-steward-plus-policy-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-08-10
 policy_label: repository-facing; geology-validator; public-safe-geometry; exact-location-sensitive; redaction; generalization; aggregation; geometry-role-aware; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed Geology public-safe-geometry validator lane for checking geometry role separation, exact/internal geometry denial, public-safe generalized geometry, CRS and topology posture, spatial uncertainty, redaction/generalization/aggregation receipt posture, sensitive subsurface/resource-location exposure, borehole/sample/private-well/resource-targeting denial, EvidenceRef/EvidenceBundle linkage, policy/review/release linkage, correction and rollback linkage, and public-surface denial checks while deferring Geology meaning, geometry helper implementation, source registry authority, policy decisions, evidence records, proof records, receipts, and release authority to their owning roots
@@ -40,7 +40,7 @@ related:
   - ../../../../data/receipts/
   - ../../../../release/
 notes:
-  - "This README replaces an empty file. It does not confirm executable files."
+  - "A bounded executable now validates the synthetic metadata-only public-safe geometry assessment profile; it does not execute transforms or grant policy, review, release, or publication authority."
   - "Geology geometry package evidence says exact/internal geometry must remain separate from public-safe geometry, and that geometry helpers must not publish geometry, decide release, own canonical source geometry, or treat public display geometry as proof."
   - "Geology sensitivity registry evidence says exact subsurface point data, borehole/well-log/core/private-well/geochem sample detail, extraction-targetable resource detail, rights-restricted content, and private-parcel/operator joins fail closed unless governed redaction/review/release gates close."
   - "Geology policy and validator evidence say exact borehole, sample, sensitive-resource, well-log, and private-well locations default to restricted/generalized public geometry and require public-safe transforms, review, evidence, policy, release, correction, and rollback support before exposure."
@@ -81,10 +81,12 @@ The answer should be a deterministic validation result. This folder should not c
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/geology/public_safe_geometry/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Per-domain Geology validator index | **CONFIRMED README / executable NEEDS VERIFICATION** | The Geology validator index names exact subsurface/resource-location sensitivity, public-safe transforms, evidence, policy, release, correction, rollback, and public-surface denial as validator concerns. |
+| `validate_public_safe_geometry.py` | **CONFIRMED bounded executable / PROPOSED profile** | Validates synthetic metadata declarations and returns only `HOLD`, `DENY`, or `ERROR`; consumes no geometry bytes. |
+| Assessment schema and fixture matrix | **CONFIRMED files / PROPOSED profile** | Closed schema plus 18 deterministic synthetic cases; no coordinate payload or live source is present. |
+| Domain CI wiring | **CONFIRMED bounded check** | `domain-geology.yml` runs the focused test and fixture suite while retaining broader Geology holds. |
 | Geology geometry package | **CONFIRMED README / implementation NEEDS VERIFICATION** | The package README describes proposed geometry helpers and states exact/internal geometry must remain separate from public-safe geometry. It does not prove implementation behavior. |
 | Geology sensitivity registry | **CONFIRMED in repo evidence / draft** | The registry README defines exact subsurface point, borehole/well-log/core/private-well/geochem sample detail, extraction-targetable resource detail, rights-restricted source content, private-parcel/operator joins, redaction receipts, and fail-closed release gating. |
-| Public-safe geometry executable, schemas, fixtures, policy bundles, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README does not claim a validator script, schema, fixture set, transform implementation, receipt path, runtime route, or CI check exists. |
+| Transform implementation, live policy/rights/review resolution, receipt emission, runtime behavior, and release integration | **NEEDS VERIFICATION** | The bounded profile deliberately leaves every operational and authority-bearing dependency unwired. |
 
 [Back to top](#top)
 
@@ -114,7 +116,9 @@ This README does not move, replace, or override those roots. It only defines whe
 
 ## Proposed validation focus
 
-Until executable behavior and field-level schemas are verified, this README treats the following as proposed validation concepts:
+The executable freezes only the metadata checks in the paired assessment
+contract. Broader concepts remain proposed until their owning artifacts and
+authority paths are verified:
 
 | Concept | Validator question | Must not be treated as |
 |---|---|---|
@@ -153,7 +157,8 @@ Safe interpretation:
 
 - **CONFIRMED:** this README exists.
 - **PROPOSED:** validator code may live here when it checks declared public-safe geometry, sensitivity, transform-receipt, evidence, policy, release, correction, and public-surface rules and writes reports/receipts only to accepted roots.
-- **NEEDS VERIFICATION:** exact executable names, accepted schemas, geometry-role vocabulary, transform receipt shapes, fixtures, report destinations, receipt emission, package integration, policy enforcement, release integration, runtime behavior, and CI wiring.
+- **CONFIRMED:** the bounded executable, closed assessment schema, synthetic fixture matrix, focused tests, and CI invocation exist.
+- **NEEDS VERIFICATION:** canonical geometry-role vocabulary, transform receipt shapes, report destinations, receipt emission, package integration, live policy enforcement, release integration, and runtime behavior.
 - **DENY:** using this folder as Geology doctrine, geometry semantics, geometry helper implementation, exact geometry storage, source registry, schema home, proof storage, receipt storage, policy home, release record store, public runtime surface, AI answer authority, or publication authority.
 
 [Back to top](#top)

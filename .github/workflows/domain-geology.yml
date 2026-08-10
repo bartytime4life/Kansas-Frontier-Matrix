@@ -1,6 +1,7 @@
 # KFM Geology domain CI readiness workflow.
-# Status: two bounded no-network fixture profiles are executable (resource class
-# and a sparse, announcement-bound GMD 3 AEM campaign candidate);
+# Status: three bounded no-network fixture profiles are executable (resource
+# class, public-safe geometry metadata, and a sparse, announcement-bound GMD 3
+# AEM campaign candidate);
 # broader validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -62,9 +63,11 @@ jobs:
             "tests/domains/geology/README.md"
             "tests/domains/geology/test_source_role_anti_collapse.py"
             "tests/domains/geology/test_aem_campaign.py"
+            "tests/domains/geology/test_public_safe_geometry.py"
             "tools/validators/domains/geology/README.md"
             "tools/validators/domains/geology/validate_resource_class_distinction.py"
             "tools/validators/domains/geology/validate_aem_campaign.py"
+            "tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py"
             "tools/validators/geology/README.md"
             "tools/validators/geology/resource_class/README.md"
             "fixtures/domains/geology/resource_class/README.md"
@@ -73,7 +76,12 @@ jobs:
             "fixtures/contracts/v1/source/source_descriptor/valid/README.md"
             "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json"
             "contracts/domains/geology/AemSurveyCampaign.md"
+            "contracts/domains/geology/public_safe_geometry_assessment.md"
             "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json"
+            "schemas/contracts/v1/domains/geology/public_safe_geometry_assessment.schema.json"
+            "fixtures/contracts/v1/domains/geology/public_safe_geometry/cases.json"
+            "docs/intake/exploratory/geology-public-safe-geometry-source-map.md"
+            "data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -100,6 +108,7 @@ jobs:
                   "test_source_role_anti_collapse.py"
               ),
               Path("tests/domains/geology/test_aem_campaign.py"),
+              Path("tests/domains/geology/test_public_safe_geometry.py"),
               Path("tests/domains/geology/test_production_material_change.py"),
           }
           accepted_validators = {
@@ -114,6 +123,10 @@ jobs:
               Path(
                   "tools/validators/domains/geology/"
                   "validate_production_material_change.py"
+              ),
+              Path(
+                  "tools/validators/geology/public_safe_geometry/"
+                  "validate_public_safe_geometry.py"
               ),
           }
 
@@ -201,6 +214,27 @@ jobs:
           echo "EXPECTED_REJECTION: invalid Geology AEM campaign fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture"
 
+      - name: Run bounded Geology public-safe geometry assessment
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/domains/geology/test_public_safe_geometry.py
+
+          python tools/validators/geology/public_safe_geometry/validate_public_safe_geometry.py \
+            --fixtures
+
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json \
+            --repo-root .
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture"
+
       - name: Run bounded Geology production material-change validation
         shell: bash
         env:
@@ -225,6 +259,8 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: geology-aem-campaign-fixture`
+
+          `WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture`
 
           `WORKFLOW_CHECK_EXECUTED: geology-production-material-change`
 
@@ -264,6 +300,15 @@ jobs:
           or documentation-only lanes and are checked as such. Neither bounded
           profile activates a source, observes official AEM product bytes,
           resolves rights or evidence, applies policy, releases, or publishes.
+
+          The public-safe geometry profile consumes only opaque synthetic
+          references and metadata. It denies coordinate material and exact
+          public geometry, requires restricted exact-source posture, and checks
+          generalized or withheld declarations, transform-receipt references,
+          coarser scale, uncertainty, rights, policy, and review summaries. A
+          coherent generalized candidate remains HOLD because the profile does
+          not execute a transform, resolve live inputs, create receipts, or
+          authorize release, map/API/export serving, or publication.
 
           This check does not establish geologic interpretation, resource class,
           reserve or estimate validity, permit or production status, mineral or
