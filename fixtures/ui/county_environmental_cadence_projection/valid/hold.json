@@ -1,0 +1,39 @@
+{
+  "profile": "kfm.explorer.county-environmental-cadence.fixture.v1",
+  "calendar_id": "kfm:county-environmental-cadence:synthetic-hold-week",
+  "outcome": "ANSWER",
+  "reason_code": "CALENDAR_AVAILABLE",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": {
+    "scope_ref": "kfm://scope/county/synthetic-kansas-001",
+    "state_code": "KS",
+    "geometry_ref": "kfm://geometry/county/synthetic-kansas-001"
+  },
+  "week": {
+    "period_start": "2026-08-02T00:00:00Z",
+    "period_end": "2026-08-09T00:00:00Z",
+    "assessed_at": "2026-08-09T01:00:00Z",
+    "cadence_hours": 168
+  },
+  "source_availability_watchlist_ref": "kfm:source-availability-watchlist:111111111111111111111111",
+  "lanes": [
+    {"lane":"AIR","source_descriptor_ref":"kfm://source/synthetic-air","source_health_assessment_ref":"kfm:source-health:synthetic-air-week","checked_at":"2026-08-03T12:00:00Z","health_outcome":"STALE","check_result":"RECORDED","reason_code":"SOURCE_STALE"},
+    {"lane":"BIODIVERSITY","source_descriptor_ref":"kfm://source/synthetic-biodiversity","source_health_assessment_ref":"kfm:source-health:synthetic-biodiversity-week","checked_at":null,"health_outcome":"UNKNOWN","check_result":"MISSED","reason_code":"CHECK_MISSING"},
+    {"lane":"HYDROLOGY","source_descriptor_ref":"kfm://source/synthetic-hydrology","source_health_assessment_ref":"kfm:source-health:synthetic-hydrology-week","checked_at":"2026-08-05T12:00:00Z","health_outcome":"HEALTHY","check_result":"RECORDED","reason_code":"HEALTHY_WITHIN_WEEK"},
+    {"lane":"IMAGERY","source_descriptor_ref":"kfm://source/synthetic-imagery","source_health_assessment_ref":"kfm:source-health:synthetic-imagery-week","checked_at":"2026-08-06T12:00:00Z","health_outcome":"HEALTHY","check_result":"RECORDED","reason_code":"HEALTHY_WITHIN_WEEK"},
+    {"lane":"SOILS","source_descriptor_ref":"kfm://source/synthetic-soils","source_health_assessment_ref":"kfm:source-health:synthetic-soils-week","checked_at":"2026-08-07T12:00:00Z","health_outcome":"HEALTHY","check_result":"RECORDED","reason_code":"HEALTHY_WITHIN_WEEK"},
+    {"lane":"VEGETATION","source_descriptor_ref":"kfm://source/synthetic-vegetation","source_health_assessment_ref":"kfm:source-health:synthetic-vegetation-week","checked_at":"2026-08-08T12:00:00Z","health_outcome":"HEALTHY","check_result":"RECORDED","reason_code":"HEALTHY_WITHIN_WEEK"}
+  ],
+  "summary": {
+    "lane_count": 6,
+    "recorded_count": 5,
+    "hold_count": 2,
+    "error_count": 0,
+    "overall_outcome": "HOLD",
+    "separate_interpretation_gate_required": true
+  },
+  "interpretation_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}
