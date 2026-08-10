@@ -1,0 +1,101 @@
+{
+  "object_type": "CartographicOmissionDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.data.cartographic-omission-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "CartographicOmissionDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.cartographic-omission-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-401",
+    "observed_at": "2026-08-10T18:00:00Z",
+    "layer_manifest_ref": "kfm:layer-manifest:synthetic-public-orientation:001",
+    "layer_manifest_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "map_purpose": {
+      "ref": "kfm:map-purpose:synthetic-county-orientation:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "evidence_scope": {
+      "ref": "kfm:evidence-scope:synthetic-public-layer:001",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED"
+    },
+    "assessment": {
+      "scope_statement": "Synthetic county-orientation layer representation review.",
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "known_undisclosed_material_count": 0
+    },
+    "entries": [
+      {
+        "omission_id": "omission:001",
+        "subject_kind": "ATTRIBUTE",
+        "subject_ref": "kfm:synthetic-field:internal-quality-note",
+        "action": "OMIT",
+        "reason_code": "MAP_PURPOSE",
+        "materiality": "MATERIAL",
+        "public_disclosure": "EVIDENCE_DRAWER",
+        "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:001"],
+        "policy_decision_refs": [],
+        "review_record_refs": ["kfm:review-record:synthetic-cartography:001"],
+        "transform_receipt_ref": null
+      },
+      {
+        "omission_id": "omission:002",
+        "subject_kind": "GEOMETRY_DETAIL",
+        "subject_ref": "kfm:synthetic-geometry:county-outline:001",
+        "action": "SIMPLIFY",
+        "reason_code": "SCALE_OR_ZOOM",
+        "materiality": "NON_MATERIAL",
+        "public_disclosure": "LAYER_NOTE",
+        "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:002"],
+        "policy_decision_refs": [],
+        "review_record_refs": ["kfm:review-record:synthetic-cartography:001"],
+        "transform_receipt_ref": "kfm:spatial-transform-receipt:synthetic-generalization:001"
+      }
+    ],
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_complete_disclosure", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_sensitivity_policy_binding",
+      "patch": {
+        "entries": [
+          {
+            "omission_id": "omission:001",
+            "subject_kind": "FEATURE_CLASS",
+            "subject_ref": "kfm:synthetic-feature-class:restricted-sites",
+            "action": "OMIT",
+            "reason_code": "SENSITIVITY",
+            "materiality": "MATERIAL",
+            "public_disclosure": "LAYER_NOTE",
+            "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:003"],
+            "policy_decision_refs": ["kfm:policy-decision:synthetic-redaction:001"],
+            "review_record_refs": ["kfm:review-record:synthetic-cartography:002"],
+            "transform_receipt_ref": null
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {"name": "abstain_unresolved_purpose", "patch": {"map_purpose": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["MAP_PURPOSE_UNRESOLVED"]}},
+    {"name": "abstain_incomplete_assessment", "patch": {"assessment": {"state": "INCOMPLETE", "known_undisclosed_material_count": 1}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_unknown_materiality", "patch": {"assessment": {"state": "UNKNOWN"}, "entries": [{"omission_id": "omission:001", "subject_kind": "ATTRIBUTE", "subject_ref": "kfm:synthetic-field:unreviewed", "action": "OMIT", "reason_code": "OTHER_REVIEWED", "materiality": "UNKNOWN", "public_disclosure": "NONE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:004"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}]}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_UNKNOWN", "MATERIALITY_UNKNOWN"]}},
+    {"name": "deny_material_omission_hidden", "patch": {"entries": [{"omission_id": "omission:001", "subject_kind": "ATTRIBUTE", "subject_ref": "kfm:synthetic-field:hidden", "action": "OMIT", "reason_code": "MAP_PURPOSE", "materiality": "MATERIAL", "public_disclosure": "NONE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:005"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}]}, "expected": {"outcome": "DENY", "codes": ["MATERIAL_OMISSION_UNDISCLOSED"]}},
+    {"name": "deny_simplification_without_receipt", "patch": {"entries": [{"omission_id": "omission:001", "subject_kind": "GEOMETRY_DETAIL", "subject_ref": "kfm:synthetic-geometry:unbound", "action": "SIMPLIFY", "reason_code": "SCALE_OR_ZOOM", "materiality": "MATERIAL", "public_disclosure": "LAYER_NOTE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:006"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}]}, "expected": {"outcome": "DENY", "codes": ["SIMPLIFICATION_RECEIPT_REQUIRED"]}},
+    {"name": "deny_sensitive_without_policy", "patch": {"entries": [{"omission_id": "omission:001", "subject_kind": "FEATURE_CLASS", "subject_ref": "kfm:synthetic-feature-class:sensitive", "action": "OMIT", "reason_code": "SENSITIVITY", "materiality": "MATERIAL", "public_disclosure": "LAYER_NOTE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:007"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}]}, "expected": {"outcome": "DENY", "codes": ["POLICY_REFERENCE_REQUIRED"]}},
+    {"name": "deny_noncanonical_entries", "patch": {"entries": [{"omission_id": "omission:002", "subject_kind": "ATTRIBUTE", "subject_ref": "kfm:synthetic-field:b", "action": "OMIT", "reason_code": "MAP_PURPOSE", "materiality": "NON_MATERIAL", "public_disclosure": "NONE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:008"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}, {"omission_id": "omission:001", "subject_kind": "ATTRIBUTE", "subject_ref": "kfm:synthetic-field:a", "action": "OMIT", "reason_code": "MAP_PURPOSE", "materiality": "NON_MATERIAL", "public_disclosure": "NONE", "evidence_refs": ["kfm:evidence-bundle:synthetic-cartography:009"], "policy_decision_refs": [], "review_record_refs": [], "transform_receipt_ref": null}]}, "expected": {"outcome": "DENY", "codes": ["ENTRIES_NOT_CANONICAL"]}},
+    {"name": "deny_complete_with_known_gap", "patch": {"assessment": {"known_undisclosed_material_count": 2}}, "expected": {"outcome": "DENY", "codes": ["COMPLETENESS_CLAIM_INCOHERENT"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"private_payload": "MUST_NOT_BE_ACCEPTED"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
