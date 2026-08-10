@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/measurement_support_reconciliation.schema.json",
+  "title": "MeasurementSupportReconciliation",
+  "description": "Fixture-only cross-domain measurement-support reconciliation shape. Conformance grants no scientific, evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "nullable_number": {
+      "oneOf": [{"type": "number"}, {"type": "null"}]
+    },
+    "nullable_nonnegative": {
+      "oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]
+    },
+    "unit": {
+      "enum": ["Cel", "K", "m3/m3", "mm", "ug/m3"]
+    },
+    "vertical_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "lower_m", "upper_m"],
+      "properties": {
+        "kind": {"enum": ["SURFACE", "DEPTH_INTERVAL", "HEIGHT", "COLUMN", "UNKNOWN"]},
+        "lower_m": {"$ref": "#/$defs/nullable_number"},
+        "upper_m": {"$ref": "#/$defs/nullable_number"}
+      }
+    },
+    "temporal_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "aggregation", "duration_seconds"],
+      "properties": {
+        "start": {"$ref": "#/$defs/aware_datetime"},
+        "end": {"$ref": "#/$defs/aware_datetime"},
+        "aggregation": {"enum": ["INSTANT", "MEAN", "SUM", "MAX", "MIN"]},
+        "duration_seconds": {"type": "integer", "minimum": 0, "maximum": 315576000}
+      }
+    },
+    "spatial_support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["crs", "footprint", "resolution_m", "geometry_ref"],
+      "properties": {
+        "crs": {"type": "string", "pattern": "^EPSG:[1-9][0-9]{3,5}$"},
+        "footprint": {"enum": ["POINT", "GRID_CELL", "POLYGON"]},
+        "resolution_m": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "geometry_ref": {"type": "string", "pattern": "^urn:kfm:synthetic:geometry:[a-z0-9][a-z0-9-]{2,80}$"}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number", "minimum": 0},
+        "unit": {"$ref": "#/$defs/unit"}
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["support_id", "subject_ref", "parameter", "source_role", "knowledge_character", "value", "unit", "vertical", "temporal", "spatial", "uncertainty", "quality_state", "no_data_semantics"],
+      "properties": {
+        "support_id": {"type": "string", "pattern": "^urn:kfm:synthetic:measurement-support:[a-z0-9][a-z0-9-]{2,80}$"},
+        "subject_ref": {"type": "string", "pattern": "^urn:kfm:synthetic:subject:[a-z0-9][a-z0-9-]{2,80}$"},
+        "parameter": {"enum": ["AIR_TEMPERATURE", "SOIL_MOISTURE", "PRECIPITATION", "PM25"]},
+        "source_role": {"enum": ["OBSERVATION", "MODEL", "DERIVED"]},
+        "knowledge_character": {"enum": ["MEASURED", "MODELED", "DERIVED"]},
+        "value": {"type": "number"},
+        "unit": {"$ref": "#/$defs/unit"},
+        "vertical": {"$ref": "#/$defs/vertical_support"},
+        "temporal": {"$ref": "#/$defs/temporal_support"},
+        "spatial": {"$ref": "#/$defs/spatial_support"},
+        "uncertainty": {"$ref": "#/$defs/uncertainty"},
+        "quality_state": {"enum": ["ACCEPTED", "SUSPECT", "UNKNOWN"]},
+        "no_data_semantics": {"enum": ["EXPLICIT_NULL", "SENTINEL_DECLARED", "UNKNOWN"]}
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_support_id", "to_support_id", "profile_ref", "operation", "from_unit", "to_unit", "scale", "offset", "transformed_value", "reviewed"],
+      "properties": {
+        "from_support_id": {"type": "string", "pattern": "^urn:kfm:synthetic:measurement-support:"},
+        "to_support_id": {"type": "string", "pattern": "^urn:kfm:synthetic:measurement-support:"},
+        "profile_ref": {"oneOf": [{"type": "string", "pattern": "^urn:kfm:synthetic:unit-transform:[a-z0-9-]+$"}, {"type": "null"}]},
+        "operation": {"enum": ["IDENTITY", "LINEAR", "UNSUPPORTED"]},
+        "from_unit": {"$ref": "#/$defs/unit"},
+        "to_unit": {"$ref": "#/$defs/unit"},
+        "scale": {"$ref": "#/$defs/nullable_number"},
+        "offset": {"$ref": "#/$defs/nullable_number"},
+        "transformed_value": {"$ref": "#/$defs/nullable_number"},
+        "reviewed": {"type": "boolean"}
+      }
+    },
+    "resampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_ref", "method", "co_location_distance_m", "reviewed"],
+      "properties": {
+        "profile_ref": {"oneOf": [{"type": "string", "pattern": "^urn:kfm:synthetic:resampling:[a-z0-9-]+$"}, {"type": "null"}]},
+        "method": {"enum": ["NONE", "NEAREST", "BILINEAR", "AREA_WEIGHTED", "UNSUPPORTED"]},
+        "co_location_distance_m": {"$ref": "#/$defs/nullable_nonnegative"},
+        "reviewed": {"type": "boolean"}
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parameter_relation", "unit_relation", "vertical_relation", "temporal_relation", "spatial_relation", "knowledge_relation", "outcome", "reason_codes", "profile_state"],
+      "properties": {
+        "parameter_relation": {"enum": ["ALIGNED", "MISMATCH"]},
+        "unit_relation": {"enum": ["IDENTITY", "CONVERTED", "UNSUPPORTED"]},
+        "vertical_relation": {"enum": ["COMPATIBLE", "MISMATCH", "UNKNOWN"]},
+        "temporal_relation": {"enum": ["COMPATIBLE", "PARTIAL", "MISMATCH"]},
+        "spatial_relation": {"enum": ["COMPATIBLE", "RESAMPLED", "MISMATCH"]},
+        "knowledge_relation": {"enum": ["ALIGNED", "QUALIFIED"]},
+        "outcome": {"enum": ["COMPARABLE", "QUALIFIED", "UNSUPPORTED"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"enum": ["KNOWLEDGE_CHARACTER_DIFFERS", "PARAMETER_MISMATCH", "QUALITY_SUSPECT", "QUALITY_UNRESOLVED", "SPATIAL_RESAMPLING_DECLARED", "SPATIAL_SUPPORT_MISMATCH", "SUPPORTS_ALIGNED", "TEMPORAL_OVERLAP_PARTIAL", "TEMPORAL_SUPPORT_MISMATCH", "UNIT_CONVERSION_APPLIED", "UNIT_TRANSFORM_UNSUPPORTED", "VERTICAL_SUPPORT_MISMATCH", "VERTICAL_SUPPORT_UNKNOWN"]}
+        },
+        "profile_state": {"enum": ["REVIEW_REQUIRED", "HOLD"]}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_only", "network_access", "scientific_authority_created", "evidence_resolved", "policy_evaluated", "review_approved", "promotion_authorized", "release_authorized", "publication_authorized", "public_use_allowed"],
+      "properties": {
+        "fixture_only": {"const": true},
+        "network_access": {"const": false},
+        "scientific_authority_created": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  },
+  "required": ["object_type", "schema_version", "profile", "assessment_id", "spec_hash", "declared_use", "supports", "unit_transform", "resampling", "reconciliation", "governance"],
+  "properties": {
+    "object_type": {"const": "MeasurementSupportReconciliation"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.measurement-support-reconciliation.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:measurement-support-reconciliation:[a-f0-9]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "declared_use": {"const": "CROSS_SOURCE_COMPARISON"},
+    "supports": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/support"}},
+    "unit_transform": {"$ref": "#/$defs/transform"},
+    "resampling": {"$ref": "#/$defs/resampling"},
+    "reconciliation": {"$ref": "#/$defs/reconciliation"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "x-kfm": {
+    "authority": "fixture_shape_and_local_reconciliation_only",
+    "contract_doc": "contracts/common/measurement_support_reconciliation.md",
+    "fixtures_root": "fixtures/contracts/v1/common/measurement_support_reconciliation/",
+    "non_effects": ["does_not_perform_scientific_harmonization", "does_not_resolve_evidence", "does_not_decide_policy", "does_not_approve_review", "does_not_authorize_release", "does_not_publish"]
+  }
+}
