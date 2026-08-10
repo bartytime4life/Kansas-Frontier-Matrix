@@ -1,0 +1,92 @@
+# Validate the fixture-only STAC/DCAT/PROV distribution mapping candidate.
+name: catalog-distribution-mapping-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/catalog-distribution-mapping-profile.yml"
+      - "contracts/data/catalog_distribution_mapping_profile.md"
+      - "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json"
+      - "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/**"
+      - "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py"
+      - "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py"
+      - "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "contracts/data/catalog_trust_extension.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-catalog-distribution-mapping-profile-20260809.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/catalog-distribution-mapping-profile.yml"
+      - "contracts/data/catalog_distribution_mapping_profile.md"
+      - "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json"
+      - "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/**"
+      - "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py"
+      - "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py"
+      - "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md"
+      - "contracts/data/catalog_matrix_closure_profile.md"
+      - "contracts/data/catalog_trust_extension.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-catalog-distribution-mapping-profile-20260809.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-distribution-mapping-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-catalog-distribution-mapping-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          python -m unittest -v \
+            tests.validators.catalog_closure.test_catalog_distribution_mapping_profile
+          python -m pytest -q \
+            tests/validators/test_validate_catalog_matrix_closure.py
+          python tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py \
+            --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-catalog-distribution-mapping-profile-20260809.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### CatalogDistributionMappingProfileCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only STAC/DCAT/PROV carrier alignment."
+            echo "- Boundary: no catalog writes, registry or network access, OCI/ORAS activation, evidence or policy authority, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
