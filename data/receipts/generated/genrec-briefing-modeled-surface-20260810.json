@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-briefing-modeled-surface-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/modeled-surface.yml",
+    "contracts/common/modeled_surface.md",
+    "docs/intake/exploratory/briefing-modeled-surface-source-map.md",
+    "fixtures/contracts/v1/common/modeled_surface/cases.json",
+    "schemas/contracts/v1/common/modeled_surface.schema.json",
+    "tests/validators/test_validate_modeled_surface.py",
+    "tools/validators/validate_modeled_surface.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/modeled-surface.yml": "sha256:68e781e1fd9f5172f4189dd8d9484422cb18f04830a2f1156b2d9547c7809809",
+    "contracts/common/modeled_surface.md": "sha256:6c8f217acd641a9f8add85c886412f2d03fd99caba3c9760c4a771665029896f",
+    "docs/intake/exploratory/briefing-modeled-surface-source-map.md": "sha256:e93285538a20354da0c6b03ec526ce65a3d5f155e1253263edf686ed26720047",
+    "fixtures/contracts/v1/common/modeled_surface/cases.json": "sha256:d6c7696a8020a045ae79c4897f9d8dd25e2629ca2702548514d8d21b17b41dbd",
+    "schemas/contracts/v1/common/modeled_surface.schema.json": "sha256:bddbd91f094603d2b3d340c1eb5ef1cf243be254e417fff6cb662dab7085d8e1",
+    "tests/validators/test_validate_modeled_surface.py": "sha256:8378d3eb0708f3f616ab906fbf66b5baeafcc571e7f25c2b19005fbbb3d67c70",
+    "tools/validators/validate_modeled_surface.py": "sha256:3306a617f6dd4fe672a288daf21509d7cb8492cf2dfe15878c26148cc5feae13"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive source discovery and retrieval",
+      "GitHub connector repository and pull-request inspection",
+      "local deterministic Python validation",
+      "PDF text extraction and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "google-drive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#section-14-conditions-object-families",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-71",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/149af17075f7f12d716aa14de439ea22ee6a343e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/classification_release.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/forecast_product.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/common/condition_relation.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/modeled-surface.yml": "PROPOSED",
+    "contracts/common/modeled_surface.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-modeled-surface-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/common/modeled_surface/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/modeled_surface.schema.json": "PROPOSED",
+    "tests/validators/test_validate_modeled_surface.py": "CONFIRMED",
+    "tools/validators/validate_modeled_surface.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite-14-tests", "outcome": "PASS"},
+    {"gate": "fixture-polarity-4-pass-15-deny-1-error", "outcome": "PASS"},
+    {"gate": "model-support-resolution-uncertainty-lineage-and-derived-only-boundary", "outcome": "PASS"},
+    {"gate": "duplicate-key-nonfinite-symlink-no-network-and-value-free-diagnostics", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, model, evidence, governance, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-modeled-surface-role",
+      "validated": true,
+      "evidence_ref": "google-drive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#section-14-conditions-object-families"
+    },
+    {
+      "id": "atlas-field-truth-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#pdf-page-71"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:50:54Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing conditions framework's ModeledSurface as an inactive fixture-only common profile. It preserves model version, training and support limits, spatial resolution, uncertainty, time, lineage, deterministic identity, and derived-only posture without creating source, field-truth, evidence, policy, review, lifecycle, release, map, AI, or publication authority."
+}
