@@ -1,0 +1,10 @@
+{
+  "profile": "kfm.explorer.denial-reason.public-safe.v1",
+  "review_id": "kfm:denial-review:synthetic:invalid-extra-001",
+  "outcome": "DENY",
+  "reason_codes": ["LOW_COUNT_CELL"],
+  "release_candidate_ref": "kfm://release-candidate/synthetic/map-review-invalid@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_decision_ref": "kfm://policy/decision/synthetic/map-review-invalid@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "evaluated_at": "2026-08-10T15:00:00Z",
+  "internal_detail": "SENSITIVE_DENIAL_DETAIL_CANARY_f91c"
+}
