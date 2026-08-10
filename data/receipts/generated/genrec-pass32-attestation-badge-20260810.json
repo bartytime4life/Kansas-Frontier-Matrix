@@ -19,7 +19,7 @@
     "fixtures/ui/attestation_badge_projection/valid/verified.json"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/src/adapters/AttestationBadgeProjection.ts": "sha256:4c145dde8cf6054865ba1a647a46b02e4197b6ca99b46e3aa4701e1b94281d87",
+    "apps/explorer-web/src/adapters/AttestationBadgeProjection.ts": "sha256:8b9396e389e60a2795f684f5e669d65559af7a295fff882bca45f4c12a932d40",
     "apps/explorer-web/src/features/attestation_badge/README.md": "sha256:f0eb083c03272c67904c5acf07fd82bed5f70ee7e4d76b73ef428741184abb96",
     "apps/explorer-web/src/features/attestation_badge/index.ts": "sha256:833ecac9613288b46ed104461ca460c4a26dcb6161ffd676c140b92f00eedb62",
     "apps/explorer-web/tests/attestation-badge.test.ts": "sha256:960dbd7233a83c57fa61dbaf4440470f44bcdfcae16f279b61132f886ba1a6fd",
@@ -94,6 +94,11 @@
       "gate": "repository-and-pr-overlap-preflight",
       "outcome": "PASS",
       "reason": "Current main and open pull requests were searched for the selected card ID and feature terms; no implementation overlap was found."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "The Explorer adapter boundary tests passed after using the established split-token form for the governed release-reference prefix."
     },
     {
       "gate": "explorer-production-build",

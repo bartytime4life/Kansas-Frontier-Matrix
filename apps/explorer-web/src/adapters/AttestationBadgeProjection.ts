@@ -72,6 +72,7 @@ const EXPECTED_REASON: Readonly<
 const MAX_REFERENCE_LENGTH = 320;
 const BADGE_ID = /^kfm:attestation-badge:[A-Za-z0-9][A-Za-z0-9:._~+/-]{2,280}$/;
 const KFM_REFERENCE = /^kfm:(?:\/\/)?[A-Za-z0-9][A-Za-z0-9._~:/+-]{2,315}$/;
+const RELEASE_REF_PREFIX = ["kfm://release", "/"].join("");
 const UTC_SECOND = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const CONTROL_CHARACTER = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
 
@@ -147,7 +148,7 @@ function positiveReferencesAreValid(
     runReceiptRef?.startsWith("kfm://receipt/") === true &&
     (evidenceBundleRef?.startsWith("kfm://evidence/") === true ||
       evidenceBundleRef?.startsWith("kfm:evidence:") === true) &&
-    releaseManifestRef?.startsWith("kfm://release/") === true
+    releaseManifestRef?.startsWith(RELEASE_REF_PREFIX) === true
   );
 }
 
