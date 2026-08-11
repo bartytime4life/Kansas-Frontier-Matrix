@@ -1,0 +1,102 @@
+{
+  "receipt_id": "genrec-new-ideas-5-19-26-attested-compute-boundary-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/attested-compute-boundary-assessment.yml",
+    "contracts/governance/attested_compute_boundary_assessment.md",
+    "docs/intake/exploratory/new-ideas-5-19-26-attested-compute-boundary-source-map.md",
+    "fixtures/contracts/v1/governance/attested_compute_boundary_assessment/cases.json",
+    "schemas/contracts/v1/governance/attested_compute_boundary_assessment.schema.json",
+    "tests/validators/governance/test_validate_attested_compute_boundary_assessment.py",
+    "tools/validators/governance/validate_attested_compute_boundary_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/attested-compute-boundary-assessment.yml": "sha256:685335f102dd4cf2add26da94bd92f794a21fbdcab9b1b15c1be9951f2152445",
+    "contracts/governance/attested_compute_boundary_assessment.md": "sha256:3c3b10395c18f6a56a5aa2b34b91dbb6ffaf8cbccb7bab10e1ab07e7177a585f",
+    "docs/intake/exploratory/new-ideas-5-19-26-attested-compute-boundary-source-map.md": "sha256:4da9e5af818c3c1eb5f8b045a41f183ad9c9761b04196d62c529302e08575744",
+    "fixtures/contracts/v1/governance/attested_compute_boundary_assessment/cases.json": "sha256:c5e342862c581ec00030b0777daec66c43a31cf891d2cb9147acfafee5e5d4b7",
+    "schemas/contracts/v1/governance/attested_compute_boundary_assessment.schema.json": "sha256:6b5699b3d6f8d3c8dabc52ea4001dff42c4c66ab2756e5dde82ea97dd5377d74",
+    "tests/validators/governance/test_validate_attested_compute_boundary_assessment.py": "sha256:5fcc1df2729df7b0da06093ed60379b6083f62bea625bf132ec34053501deadb",
+    "tools/validators/governance/validate_attested_compute_boundary_assessment.py": "sha256:257774d03d5d33b947924d8d5483c913105d2eb2c54bc3e52cb800235c675fa4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:3c3b10395c18f6a56a5aa2b34b91dbb6ffaf8cbccb7bab10e1ab07e7177a585f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:246c0f9ab4664543a06a91bd8519b170056001a2b3e2c7a8b9ddd79b0151a8f7",
+      "sha256:9998e0d21f381680c9ed3de88107353d2d4e485ea159e3532a72e6b1e758cab9",
+      "sha256:828abfcfb5be24d4f401956240dda52711000e9d336bb666bc34ecc26a87936b",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#sha256=246c0f9ab4664543a06a91bd8519b170056001a2b3e2c7a8b9ddd79b0151a8f7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/intake/exploratory/new-ideas-5-19-26-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/adr/ADR-0032-attested-compute-boundary.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/attested-compute-boundary-assessment.yml": "CONFIRMED",
+    "contracts/governance/attested_compute_boundary_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-5-19-26-attested-compute-boundary-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/attested_compute_boundary_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/attested_compute_boundary_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_attested_compute_boundary_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_attested_compute_boundary_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Ten deterministic attested-compute boundary tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Eighteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes, including all four decision postures and the proposed ADR-0032 entry-evidence seams."},
+    {"gate": "documentation-meta-block-and-link-profiles", "outcome": "PASS"},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 415 schema/contract tests and 29 subtests passed."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0032-attested-compute-boundary.md"
+  ],
+  "citations": [
+    {"id": "drive-new-ideas-5-19-26", "validated": true, "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#sha256=246c0f9ab4664543a06a91bd8519b170056001a2b3e2c7a8b9ddd79b0151a8f7"},
+    {"id": "repository-new-ideas-source-map", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/intake/exploratory/new-ideas-5-19-26-source-map.md"},
+    {"id": "proposed-attested-compute-adr", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/adr/ADR-0032-attested-compute-boundary.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:07:22Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, decision-only, inactive AttestedComputeBoundaryAssessmentCandidate packet derived from the connected-Drive New Ideas 5-19-26 source map and explicitly subordinate to proposed ADR-0032. It pins affected owners and a synthetic plan; separates workload identity, input authority, attestation evidence, execution receipt, policy obligations, disclosure review, output transformation, evidence/reviewer decision, release approval, and rollback; records the authorities attestation cannot supply; derives NO_TRE, SIMULATED_ASSESSMENT, DEFER_REAL_TEE, or DENY_UNVERIFIED_ATTESTATION; and fixes all data, credential, network, cloud/TEE selection, key, external-verification, compute, release, deployment, and publication effects false."
+}
