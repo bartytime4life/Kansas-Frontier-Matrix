@@ -88,11 +88,11 @@ jobs:
           python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
             --fixtures
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current stable-packet authoring receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-openlineage-run-event-projection-20260807.json \
+            data/receipts/generated/genrec-openlineage-run-event-projection-20260811.json \
             --repo-root .
 
       - name: Record projection trust boundary

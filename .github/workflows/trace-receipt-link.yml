@@ -67,10 +67,10 @@ jobs:
             --pattern 'test_validate_trace_receipt_link.py' \
             --verbose
           python tools/validators/validate_trace_receipt_link.py --fixtures
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current stable-packet authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-trace-receipt-link-20260806.json \
+            data/receipts/generated/genrec-trace-receipt-link-20260811.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

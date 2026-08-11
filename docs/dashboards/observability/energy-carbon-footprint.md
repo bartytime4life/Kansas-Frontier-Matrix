@@ -13,8 +13,6 @@ responsibility: Specify the proposed internal energy and carbon observability su
 truth_posture: CONFIRMED supplied source and repository proposal state / PROPOSED inactive fixture profile and dashboard vocabulary / UNKNOWN production methodology factors thresholds ownership and activation
 related:
   - kfm://doc/dashboards-observability-readme
-  - kfm://card/p20-feat-0007                   # PROPOSED card: telemetry contract incl. energy/carbon
-  - kfm://card/p18-inv-424                    # CONFIRMED supplied card; map-build telemetry is non-truth operational evidence
   - ../../../contracts/telemetry/map_build_sustainability.md
   - ../../intake/exploratory/pass-18-map-build-sustainability-source-map.md
 tags: [kfm, dashboards, observability, energy, carbon, sustainability, telemetry]
