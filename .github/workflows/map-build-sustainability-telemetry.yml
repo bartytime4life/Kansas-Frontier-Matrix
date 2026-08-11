@@ -16,7 +16,7 @@ name: map-build-sustainability-telemetry
       - "tests/validators/telemetry/README.md"
       - "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md"
       - "docs/dashboards/observability/energy-carbon-footprint.md"
-      - "data/receipts/generated/genrec-map-build-sustainability-telemetry-20260811.json"
+      - "data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json"
   push:
     branches: [main]
     paths:
@@ -32,7 +32,7 @@ name: map-build-sustainability-telemetry
       - "tests/validators/telemetry/README.md"
       - "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md"
       - "docs/dashboards/observability/energy-carbon-footprint.md"
-      - "data/receipts/generated/genrec-map-build-sustainability-telemetry-20260811.json"
+      - "data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json"
   workflow_dispatch:
 
 permissions:
@@ -84,11 +84,11 @@ jobs:
           python tools/validators/telemetry/validate_map_build_sustainability.py \
             --fixtures
 
-      - name: Validate generated authoring receipt integrity
+      - name: Validate current stable-packet authoring receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-map-build-sustainability-telemetry-20260811.json \
+            data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json \
             --repo-root .
 
       - name: Record trust boundary

@@ -198,7 +198,7 @@ class MapBuildSustainabilityTests(unittest.TestCase):
         self.assertNotIn("actions/upload-artifact", workflow)
         self.assertIn("validate_generated_receipt.py", workflow)
         self.assertIn(
-            "genrec-map-build-sustainability-telemetry-20260811.json",
+            "genrec-map-build-sustainability-telemetry-stable-20260811.json",
             workflow,
         )
         pins = [

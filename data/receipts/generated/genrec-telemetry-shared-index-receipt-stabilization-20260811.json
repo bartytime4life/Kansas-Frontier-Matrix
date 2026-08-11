@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-telemetry-shared-index-receipt-stabilization-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-build-sustainability-telemetry.yml",
+    ".github/workflows/openlineage-run-event-projection.yml",
+    ".github/workflows/remote-sensing-lineage-activity.yml",
+    ".github/workflows/trace-receipt-link.yml",
+    "data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json",
+    "data/receipts/generated/genrec-openlineage-run-event-projection-20260811.json",
+    "data/receipts/generated/genrec-pass32-remote-sensing-lineage-activity-20260811.json",
+    "data/receipts/generated/genrec-trace-receipt-link-20260811.json",
+    "docs/dashboards/observability/energy-carbon-footprint.md",
+    "tests/validators/telemetry/test_map_build_sustainability.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "sha256:e7b4def9e5b24782189a918cf7023e82e6772695ee747ba2e1e1ac44a96f7495",
+    ".github/workflows/openlineage-run-event-projection.yml": "sha256:2620a6516adbca8c11b12966f02b3df54da4a0e82a989ee573a982c4fd0b3779",
+    ".github/workflows/remote-sensing-lineage-activity.yml": "sha256:5d013d5de873ab8de010beeba92158fa472ed368a742a10881e52532f0db7cf2",
+    ".github/workflows/trace-receipt-link.yml": "sha256:f69111cb5bd03bb1f9c3a3b90ca734ee0aa199869deaea7300349550723f84f4",
+    "data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json": "sha256:411e43bd8ef3ff2e5da56ed671dfe026c0d05c3dae3607ead31bbdf2bb28a1b5",
+    "data/receipts/generated/genrec-openlineage-run-event-projection-20260811.json": "sha256:97142fad36e2d90fead76be8507a42550cce979ff2a5e663776e68938c47eaa4",
+    "data/receipts/generated/genrec-pass32-remote-sensing-lineage-activity-20260811.json": "sha256:aa9a28fb3f0bc562ae9ec7a6a98264e6310ec0249dfd12846ecbbd2092629d97",
+    "data/receipts/generated/genrec-trace-receipt-link-20260811.json": "sha256:a91517a4ed37dae6d37b734db157771560b369a321e91ee3dec7bd0bec088500",
+    "docs/dashboards/observability/energy-carbon-footprint.md": "sha256:8e31ddf314beaf80163bfdadec5318fd92d60cc8984d1f9a761703e07a3e30c7",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "sha256:c71cb5fb638f830db03538f49a4a6526a10107218f862cacfbe5897fc48878e4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@5aa2818d4c16eaa7e2ff94a2591710e03979bebd",
+      "github:bartytime4life/Kansas-Frontier-Matrix#2548@7f7b2810d066adf87d6c25b24011ab8fd823c7db",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917198",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514916841",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917051",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917180",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917261"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "PROPOSED",
+    ".github/workflows/openlineage-run-event-projection.yml": "PROPOSED",
+    ".github/workflows/remote-sensing-lineage-activity.yml": "PROPOSED",
+    ".github/workflows/trace-receipt-link.yml": "PROPOSED",
+    "data/receipts/generated/genrec-map-build-sustainability-telemetry-stable-20260811.json": "PROPOSED",
+    "data/receipts/generated/genrec-openlineage-run-event-projection-20260811.json": "PROPOSED",
+    "data/receipts/generated/genrec-pass32-remote-sensing-lineage-activity-20260811.json": "PROPOSED",
+    "data/receipts/generated/genrec-trace-receipt-link-20260811.json": "PROPOSED",
+    "docs/dashboards/observability/energy-carbon-footprint.md": "PROPOSED",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-pr-exact-head-assay",
+      "outcome": "PASS",
+      "reason": "Merged PR #2548 exact-head runs showed map-build sustainability, telemetry-policy, and docs-meta-block success. The remaining failures were isolated to three historical shared-index receipt bindings and two unresolved card identities in the document relation graph; all affected semantic tests and fixture replays had passed."
+    },
+    {
+      "gate": "post-merge-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Seven commits advanced main after PR #2548, and GitHub compare showed no overlap with the eight repair paths before this branch was created from main@5aa2818d4c16eaa7e2ff94a2591710e03979bebd."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The merged map-build receipt and the three earlier profile receipts remain byte-for-byte historical process memory; this repair adds successors instead of rewriting them."
+    },
+    {
+      "gate": "stable-packet-rollovers",
+      "outcome": "PASS",
+      "reason": "Map-build sustainability, OpenLineage, remote-sensing lineage, and trace-link workflows now validate current-byte successor receipts that exclude independently changing shared telemetry indexes or dashboard documentation while retaining every profile-owned artifact."
+    },
+    {
+      "gate": "documentation-graph-repair",
+      "outcome": "PASS",
+      "reason": "Two non-resolving card identifiers were removed only from the dashboard metadata relation set; both source anchors remain explicit in the document body, and the exact document-graph workflow command has zero current failures."
+    },
+    {
+      "gate": "local-exact-validation",
+      "outcome": "PASS",
+      "reason": "Forty-one telemetry tests, thirteen trace-link tests, all three exact fixture replays, 42 CI-readiness tests, workflow YAML parsing, documentation metadata, documentation graph, receipt integrity, and git diff checks passed against current main."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Ten non-self repair artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The follow-up pull-request head did not yet exist when this receipt was emitted; GitHub Actions remains authoritative for that head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the follow-up draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "github:merged-map-build-sustainability-pr",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix#2548@7f7b2810d066adf87d6c25b24011ab8fd823c7db"
+    },
+    {
+      "id": "github:first-head-check-set",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917261"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T17:06:10Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Post-merge, no-network CI repair for shared telemetry-index receipt drift and two non-resolving dashboard metadata relations. All four historical profile receipts remain unchanged. The stable-packet successors and workflow pointer updates create no telemetry, source access, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}
