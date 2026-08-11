@@ -1,0 +1,185 @@
+{
+  "fixture_set": "kfm.public-map-service-slo-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "PublicMapServiceSLOAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.validation.public-map-service-slo-assessment.fixture.v1",
+    "assessment_id": "kfm:public-map-service-slo-assessment:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-500",
+    "service_ref": "kfm:map-service:synthetic-statewide-layer",
+    "service_kind": "SERVER_MEDIATED_LAYER",
+    "assessed_at": "2026-08-11T00:00:00Z",
+    "assessment_state": "COMPLETE",
+    "execution": {
+      "mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "live_service_queried": false,
+      "telemetry_authenticated": false
+    },
+    "measurement_window": {
+      "started_at": "2026-08-10T00:00:00Z",
+      "ended_at": "2026-08-11T00:00:00Z",
+      "status": "COMPLETE"
+    },
+    "policy": {
+      "objective_status": "RESOLVED",
+      "slo_policy_ref": "kfm:policy:synthetic-public-map-slo-v1"
+    },
+    "availability": {
+      "target_basis_points": 9900,
+      "eligible_events": 1000,
+      "good_events": 995
+    },
+    "latency": {
+      "percentile": "P95",
+      "target_milliseconds": 500,
+      "observed_milliseconds": 420,
+      "sample_count": 1000,
+      "state": "WITHIN_TARGET"
+    },
+    "error_budget": {
+      "allowed_bad_events": 10,
+      "observed_bad_events": 5,
+      "remaining_bad_events": 5,
+      "state": "WITHIN_BUDGET"
+    },
+    "support": {
+      "telemetry_receipt_refs": [
+        "kfm:telemetry-receipt:synthetic-availability",
+        "kfm:telemetry-receipt:synthetic-latency"
+      ],
+      "review_record_refs": [
+        "kfm:review-record:synthetic-reliability-review"
+      ],
+      "rollback_ref": "kfm:rollback-card:synthetic-map-service",
+      "release_manifest_ref": null
+    },
+    "report": {
+      "assessment_outcome": "PASS",
+      "finding_codes": [],
+      "promotion_effect": "NO_AUTOMATIC_EFFECT",
+      "rollback_effect": "REVIEW_ONLY"
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_LIVE_MONITORING",
+      "NO_PROMOTION_AUTHORITY",
+      "NO_RELEASE_AUTHORITY",
+      "TELEMETRY_NOT_TRUTH"
+    ],
+    "authority_claims": {
+      "telemetry_truth_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "rollback_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_server_mediated_layer", "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_static_pmtiles", "patch": {"service_kind": "STATIC_PMTILES"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_static_cog", "patch": {"service_kind": "STATIC_COG"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_governed_map_api", "patch": {"service_kind": "GOVERNED_MAP_API"}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_composite_map_surface", "patch": {"service_kind": "COMPOSITE_MAP_SURFACE"}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_exact_objective_boundary",
+      "patch": {
+        "availability": {"good_events": 990},
+        "latency": {"observed_milliseconds": 500}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_assessment_incomplete",
+      "patch": {"assessment_state": "INCOMPLETE"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_window_incomplete",
+      "patch": {"measurement_window": {"status": "INCOMPLETE"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["MEASUREMENT_WINDOW_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_policy_unresolved",
+      "patch": {"policy": {"objective_status": "UNRESOLVED", "slo_policy_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SLO_POLICY_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_telemetry_missing",
+      "patch": {"support": {"telemetry_receipt_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["TELEMETRY_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "abstain_review_missing",
+      "patch": {"support": {"review_record_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "abstain_rollback_missing",
+      "patch": {"support": {"rollback_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ROLLBACK_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "abstain_latency_observation_missing",
+      "patch": {"latency": {"observed_milliseconds": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["LATENCY_OBSERVATION_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_latency_sample_missing",
+      "patch": {"latency": {"sample_count": 0}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["LATENCY_SAMPLE_REQUIRED"]}
+    },
+    {
+      "name": "deny_budget_exhausted",
+      "patch": {"availability": {"good_events": 980}},
+      "expected": {"outcome": "DENY", "codes": ["BUDGET_EXHAUSTED"]}
+    },
+    {
+      "name": "deny_latency_breach",
+      "patch": {"latency": {"observed_milliseconds": 800}},
+      "expected": {"outcome": "DENY", "codes": ["LATENCY_BREACH"]}
+    },
+    {
+      "name": "deny_budget_and_latency",
+      "patch": {
+        "availability": {"good_events": 980},
+        "latency": {"observed_milliseconds": 800}
+      },
+      "expected": {"outcome": "DENY", "codes": ["BUDGET_EXHAUSTED", "LATENCY_BREACH"]}
+    },
+    {
+      "name": "deny_window_order",
+      "patch": {"measurement_window": {"started_at": "2026-08-11T00:00:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["MEASUREMENT_WINDOW_ORDER_INVALID"]}
+    },
+    {
+      "name": "deny_good_events_exceed_eligible",
+      "patch": {"availability": {"good_events": 1001}},
+      "expected": {"outcome": "DENY", "codes": ["GOOD_EVENTS_EXCEED_ELIGIBLE"]}
+    },
+    {"name": "deny_allowed_bad_events_mismatch", "tamper": "allowed_bad_events", "expected": {"outcome": "DENY", "codes": ["ALLOWED_BAD_EVENTS_MISMATCH"]}},
+    {"name": "deny_observed_bad_events_mismatch", "tamper": "observed_bad_events", "expected": {"outcome": "DENY", "codes": ["OBSERVED_BAD_EVENTS_MISMATCH"]}},
+    {"name": "deny_remaining_bad_events_mismatch", "tamper": "remaining_bad_events", "expected": {"outcome": "DENY", "codes": ["REMAINING_BAD_EVENTS_MISMATCH"]}},
+    {"name": "deny_budget_state_mismatch", "tamper": "budget_state", "expected": {"outcome": "DENY", "codes": ["BUDGET_STATE_MISMATCH"]}},
+    {"name": "deny_latency_state_mismatch", "tamper": "latency_state", "expected": {"outcome": "DENY", "codes": ["LATENCY_STATE_MISMATCH"]}},
+    {"name": "deny_report_outcome_mismatch", "tamper": "report_outcome", "expected": {"outcome": "DENY", "codes": ["REPORT_OUTCOME_MISMATCH"]}},
+    {"name": "deny_report_findings_mismatch", "tamper": "report_findings", "expected": {"outcome": "DENY", "codes": ["REPORT_FINDINGS_MISMATCH"]}},
+    {"name": "deny_support_refs_not_canonical", "tamper": "support_ref_order", "expected": {"outcome": "DENY", "codes": ["SUPPORT_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_limitation_set_mismatch", "tamper": "limitations", "expected": {"outcome": "DENY", "codes": ["LIMITATION_SET_MISMATCH"]}},
+    {"name": "deny_spec_hash_mismatch", "tamper": "spec_hash", "expected": {"outcome": "DENY", "codes": ["SPEC_HASH_MISMATCH"]}},
+    {"name": "deny_assessment_id_mismatch", "tamper": "assessment_id", "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}},
+    {
+      "name": "error_assessment",
+      "patch": {"assessment_state": "ERROR"},
+      "expected": {"outcome": "ERROR", "codes": ["ASSESSMENT_ERROR"]}
+    },
+    {"name": "error_schema_unknown_field", "tamper": "unknown_field", "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_schema_source_card", "patch": {"source_card": "KFM-P18-INV-499"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_schema_authority_overclaim", "tamper": "authority", "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
