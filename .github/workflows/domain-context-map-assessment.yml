@@ -1,0 +1,86 @@
+# Validate the fixture-only domain context-map assessment candidate.
+name: domain-context-map-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/domain-context-map-assessment.yml"
+      - "contracts/governance/domain_context_map_assessment.md"
+      - "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/domain_context_map_assessment/**"
+      - "tools/validators/governance/validate_domain_context_map_assessment.py"
+      - "tests/validators/governance/test_validate_domain_context_map_assessment.py"
+      - "docs/intake/exploratory/domain-context-map-assessment-source-map.md"
+      - "control_plane/domain_lane_register.yaml"
+      - "control_plane/cross_domain_seam_register.yaml"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-domain-context-map-assessment-20260811.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/domain-context-map-assessment.yml"
+      - "contracts/governance/domain_context_map_assessment.md"
+      - "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/domain_context_map_assessment/**"
+      - "tools/validators/governance/validate_domain_context_map_assessment.py"
+      - "tests/validators/governance/test_validate_domain_context_map_assessment.py"
+      - "docs/intake/exploratory/domain-context-map-assessment-source-map.md"
+      - "control_plane/domain_lane_register.yaml"
+      - "control_plane/cross_domain_seam_register.yaml"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-domain-context-map-assessment-20260811.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-context-map-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-domain-context-map-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests and fixture replay
+        run: |
+          python -m unittest -v tests.validators.governance.test_validate_domain_context_map_assessment
+          python tools/validators/governance/validate_domain_context_map_assessment.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-domain-context-map-assessment-20260811.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### DomainContextMapAssessmentCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only DDD relationship proposal bound to existing domain-lane and seam projections."
+            echo "- Boundary: no domain, seam, register, join, mutation, evidence, policy, review, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

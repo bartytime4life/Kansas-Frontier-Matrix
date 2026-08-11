@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/domain_context_map_assessment.schema.json",
+  "title": "DomainContextMapAssessmentCandidate",
+  "description": "Fixture-only DDD context-map proposal bound to existing KFM domain-lane and cross-domain-seam projections without join, register, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_basis",
+    "projection_refs",
+    "seam_binding",
+    "relationship",
+    "controls",
+    "assessment_state",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "DomainContextMapAssessmentCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.governance.domain-context-map-assessment.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ddd_reference",
+        "kfm_seed_card",
+        "as_of",
+        "authority_state"
+      ],
+      "properties": {
+        "ddd_reference": {
+          "const": "Domain-Driven Design Reference: Context Mapping for Strategic Design"
+        },
+        "kfm_seed_card": {
+          "const": "KFM Domains as DDD Bounded Contexts with Context Map"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date"
+        },
+        "authority_state": {
+          "const": "PROPOSAL_ONLY"
+        }
+      }
+    },
+    "projection_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_lane_register_ref",
+        "cross_domain_seam_register_ref"
+      ],
+      "properties": {
+        "domain_lane_register_ref": {
+          "const": "control_plane/domain_lane_register.yaml"
+        },
+        "cross_domain_seam_register_ref": {
+          "const": "control_plane/cross_domain_seam_register.yaml"
+        }
+      }
+    },
+    "seam_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seam_id",
+        "participant_contexts"
+      ],
+      "properties": {
+        "seam_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,95}(?:--[a-z][a-z0-9-]{1,95})+$",
+          "maxLength": 240
+        },
+        "participant_contexts": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/domain_id"
+          }
+        }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mapping_state",
+        "pattern",
+        "upstream_context",
+        "downstream_context",
+        "translation_boundary_required",
+        "shared_mutation_authorized",
+        "rationale_summary"
+      ],
+      "properties": {
+        "mapping_state": {
+          "enum": [
+            "PROPOSED_MAPPING",
+            "UNRESOLVED"
+          ]
+        },
+        "pattern": {
+          "enum": [
+            "PARTNERSHIP",
+            "SHARED_KERNEL",
+            "CUSTOMER_SUPPLIER",
+            "CONFORMIST",
+            "ANTICORRUPTION_LAYER",
+            "OPEN_HOST_SERVICE",
+            "PUBLISHED_LANGUAGE",
+            "SEPARATE_WAYS",
+            "UNRESOLVED"
+          ]
+        },
+        "upstream_context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/domain_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "downstream_context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/domain_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "translation_boundary_required": {
+          "type": "boolean"
+        },
+        "shared_mutation_authorized": {
+          "const": false
+        },
+        "rationale_summary": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 24,
+              "maxLength": 1024,
+              "pattern": "^[^\\r\\n]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_rule",
+        "source_role_rule",
+        "sensitivity_rule",
+        "policy_rule",
+        "release_rule",
+        "public_join_allowed"
+      ],
+      "properties": {
+        "evidence_rule": {
+          "const": "EACH_PARTICIPANT_EVIDENCE_BUNDLE_REQUIRED"
+        },
+        "source_role_rule": {
+          "const": "PRESERVE"
+        },
+        "sensitivity_rule": {
+          "const": "MOST_RESTRICTIVE"
+        },
+        "policy_rule": {
+          "const": "MOST_RESTRICTIVE"
+        },
+        "release_rule": {
+          "const": "EACH_PARTICIPANT_RELEASE_REQUIRED"
+        },
+        "public_join_allowed": {
+          "const": false
+        }
+      }
+    },
+    "assessment_state": {
+      "const": "REVIEW_REQUIRED"
+    },
+    "limitations": {
+      "const": [
+        "FIXTURE_ONLY",
+        "PROPOSAL_MAPPING_ONLY",
+        "NO_REGISTER_WRITE",
+        "NO_JOIN_OR_MUTATION_AUTHORITY",
+        "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+        "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_authority",
+        "seam_authority",
+        "register_write_authority",
+        "join_authority",
+        "mutation_authority",
+        "lifecycle_write_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "domain_authority": {
+          "const": false
+        },
+        "seam_authority": {
+          "const": false
+        },
+        "register_write_authority": {
+          "const": false
+        },
+        "join_authority": {
+          "const": false
+        },
+        "mutation_authority": {
+          "const": false
+        },
+        "lifecycle_write_authority": {
+          "const": false
+        },
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "deployment_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "public_use_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "domain_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
