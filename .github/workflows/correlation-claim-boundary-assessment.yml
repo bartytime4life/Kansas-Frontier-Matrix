@@ -1,0 +1,81 @@
+name: correlation-claim-boundary-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/correlation-claim-boundary-assessment.yml"
+      - "contracts/evidence/correlation_claim_boundary_assessment.md"
+      - "schemas/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/**"
+      - "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py"
+      - "tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py"
+      - "docs/intake/exploratory/pass-18-correlation-claim-boundary-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-correlation-claim-boundary-assessment-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/correlation-claim-boundary-assessment.yml"
+      - "contracts/evidence/correlation_claim_boundary_assessment.md"
+      - "schemas/contracts/v1/evidence/correlation_claim_boundary_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/correlation_claim_boundary_assessment/**"
+      - "tools/validators/evidence/validate_correlation_claim_boundary_assessment.py"
+      - "tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py"
+      - "docs/intake/exploratory/pass-18-correlation-claim-boundary-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-correlation-claim-boundary-assessment-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: correlation-claim-boundary-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-correlation-claim-boundary-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/evidence/validate_correlation_claim_boundary_assessment.py tests/validators/evidence/test_validate_correlation_claim_boundary_assessment.py
+          python -m unittest tests.validators.evidence.test_validate_correlation_claim_boundary_assessment --verbose
+          python tools/validators/evidence/validate_correlation_claim_boundary_assessment.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-correlation-claim-boundary-assessment-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Correlation claim-boundary assessment candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only identity, composition-reference, method-kind, requested-role, wording-class, causal-design, caveat, review-reference, and canonical-order validation."
+            echo "- Boundary: no statistical calculation, reference resolution, causal-sufficiency finding, evidence or policy decision, review approval, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
