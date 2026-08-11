@@ -68,7 +68,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-claim-scope-dimension-assessment-20260810.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-claim-scope-dimension-assessment-validator-hardening-20260811.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
@@ -76,6 +76,6 @@ jobs:
             echo "### Claim scope dimension assessment"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: fixture-only time, space, and attribute role, reference, interpretation, limitation, and identity coherence."
+            echo "- Scope: fixture-only time, space, and attribute role, reference, interpretation, limitation, identity, and malformed-Unicode handling."
             echo "- Boundary: no claim inspection, EvidenceBundle resolution, geographic inference, policy or review decision, promotion, release, deployment, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"
