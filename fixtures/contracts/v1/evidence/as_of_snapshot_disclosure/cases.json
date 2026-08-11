@@ -1,0 +1,64 @@
+{
+  "fixture_version": "1.0.0",
+  "profile": "kfm.evidence.as-of-snapshot-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "AsOfSnapshotDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.as-of-snapshot-disclosure.fixture.v1",
+    "profile_spec_hash": "3f4884519a8f8000baff5347b1299775cd6e8774fd32191e3f93a01a3070f4dc",
+    "source_card": "KFM-P18-INV-348",
+    "observed_at": "2026-08-11T18:30:00Z",
+    "candidate_id": "asd_frontier-report-2025-001",
+    "output": {"ref": "kfm://report/frontier-conditions-2025-v1", "digest": "1111111111111111111111111111111111111111111111111111111111111111", "kind": "REPORT"},
+    "claim_scope": {"ref": "kfm://claim-scope/frontier-conditions-2025", "digest": "2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+    "claim_valid_time": {"start": "2025-01-01T00:00:00Z", "end": "2026-01-01T00:00:00Z", "boundary": "[)"},
+    "snapshot": {
+      "mode": "BITEMPORAL_SNAPSHOT",
+      "as_of": "2026-02-15T12:00:00Z",
+      "release_manifest_ref": "kfm://release/source-bundle-2026-02-15",
+      "transaction_snapshot_ref": "kfm://transaction-snapshot/2026-02-15t120000z",
+      "tracking_log_ref": "kfm://tracking-log/report-2025-001",
+      "snapshot_digest": "3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED"
+    },
+    "source_snapshots": [
+      {"source_id": "county-boundaries", "source_version_ref": "kfm://source-version/county-boundaries-2025", "source_head_digest": "4444444444444444444444444444444444444444444444444444444444444444", "source_as_of": "2026-02-10T00:00:00Z", "resolution": "RESOLVED"},
+      {"source_id": "frontier-indicators", "source_version_ref": "kfm://source-version/frontier-indicators-2025-r2", "source_head_digest": "5555555555555555555555555555555555555555555555555555555555555555", "source_as_of": "2026-02-14T18:00:00Z", "resolution": "RESOLVED"}
+    ],
+    "corrections": {
+      "included_through": "2026-02-15T11:30:00Z",
+      "correction_refs": ["kfm://correction/frontier-indicators-2026-02-14"],
+      "later_corrections_behavior": "SUPERSEDE_AND_VERSION",
+      "rollback_ref": "kfm://rollback/report-frontier-conditions-2025-v1"
+    },
+    "disclosure": {
+      "intended_use": "PUBLIC_CANDIDATE",
+      "valid_time_label": "Claim period: 2025 calendar year [start inclusive, end exclusive]",
+      "as_of_label": "Source and transaction state as of 2026-02-15 12:00 UTC",
+      "review_record_refs": ["kfm://review/temporal-disclosure-001"],
+      "release_manifest_ref": "kfm://release/source-bundle-2026-02-15"
+    },
+    "evidence_refs": ["kfm://evidence/report-computation-receipt-001", "kfm://evidence/source-version-manifest-001"],
+    "conclusion": {"completeness": "COMPLETE", "declared_outcome": "READY_FOR_REVIEW"},
+    "authority_claims": {"snapshot_execution": false, "report_truth": false, "evidence": false, "correction": false, "policy": false, "review": false, "release": false, "publication": false, "public_use": false}
+  },
+  "cases": [
+    {"case_id": "pass-complete-bitemporal-public-candidate", "expected_outcome": "PASS"},
+    {"case_id": "pass-internal-transaction-snapshot", "expected_outcome": "PASS", "set": {"/snapshot/mode": "TRANSACTION_SNAPSHOT", "/snapshot/release_manifest_ref": null, "/disclosure/intended_use": "INTERNAL_REVIEW", "/disclosure/review_record_refs": [], "/disclosure/release_manifest_ref": null}},
+    {"case_id": "abstain-unresolved-snapshot", "expected_outcome": "ABSTAIN", "set": {"/snapshot/resolution": "UNRESOLVED", "/conclusion/completeness": "INCOMPLETE", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "abstain-unresolved-source", "expected_outcome": "ABSTAIN", "set": {"/source_snapshots/1/resolution": "UNRESOLVED", "/conclusion/completeness": "INCOMPLETE", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "abstain-later-correction-posture-unknown", "expected_outcome": "ABSTAIN", "set": {"/corrections/later_corrections_behavior": "UNKNOWN", "/conclusion/completeness": "UNKNOWN", "/conclusion/declared_outcome": "HOLD"}},
+    {"case_id": "deny-invalid-valid-time-order", "expected_outcome": "DENY", "set": {"/claim_valid_time/end": "2024-01-01T00:00:00Z", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-source-after-as-of", "expected_outcome": "DENY", "set": {"/source_snapshots/1/source_as_of": "2026-02-16T00:00:00Z", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-correction-cutoff-after-as-of", "expected_outcome": "DENY", "set": {"/corrections/included_through": "2026-02-15T12:00:01Z", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-mode-reference-conflict", "expected_outcome": "DENY", "set": {"/snapshot/mode": "RELEASE_SNAPSHOT", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-collapsed-axis-labels", "expected_outcome": "DENY", "set": {"/disclosure/as_of_label": "Claim period: 2025 calendar year [start inclusive, end exclusive]", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-public-review-ref-missing", "expected_outcome": "DENY", "set": {"/disclosure/review_record_refs": [], "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-release-reference-mismatch", "expected_outcome": "DENY", "set": {"/disclosure/release_manifest_ref": "kfm://release/different-bundle", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-source-order-noncanonical", "expected_outcome": "DENY", "set": {"/source_snapshots/0/source_id": "zz-county-boundaries", "/conclusion/declared_outcome": "DENY"}},
+    {"case_id": "deny-ready-declaration-on-unresolved-source", "expected_outcome": "DENY", "set": {"/source_snapshots/0/resolution": "UNRESOLVED"}},
+    {"case_id": "error-authority-overclaim", "expected_outcome": "ERROR", "set": {"/authority_claims/snapshot_execution": true}},
+    {"case_id": "error-wrong-source-card", "expected_outcome": "ERROR", "set": {"/source_card": "KFM-P18-INV-000"}},
+    {"case_id": "error-missing-output-digest", "expected_outcome": "ERROR", "delete": ["/output/digest"]}
+  ]
+}
