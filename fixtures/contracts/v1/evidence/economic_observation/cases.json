@@ -1,0 +1,635 @@
+{
+  "profile": "kfm.economic-observation.fixture-cases.v1",
+  "base": {
+    "object_type": "EconomicObservation",
+    "schema_version": "1.0.0",
+    "profile": "kfm.economic-observation.fixture.v1",
+    "observation_id": "kfm:economic-observation:000000000000000000000000",
+    "subject": {
+      "geography_version_ref": "kfm://common/geography-version/synthetic-ks-county-2020@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "geography_version_profile": "kfm.geography-version.fixture.v1",
+      "geography_feature_key": "99001",
+      "unit_level": "COUNTY",
+      "jurisdiction_code": "US-KS",
+      "identity_scope": "VERSION_LOCAL"
+    },
+    "temporal": {
+      "reference_period_kind": "CALENDAR_YEAR",
+      "reference_year": 2020,
+      "reference_period_start": "2020-01-01",
+      "reference_period_end": "2020-12-31",
+      "source_released_at": "2021-06-01T00:00:00Z",
+      "retrieved_at": "2021-07-01T00:00:00Z",
+      "corrected_at": null
+    },
+    "measure": {
+      "measure_key": "total_employment",
+      "measure_family": "EMPLOYMENT",
+      "unit": "PERSONS",
+      "result_state": "OBSERVED",
+      "value": 1234,
+      "missing_reason": "NOT_APPLICABLE",
+      "price_basis": "NOT_APPLICABLE",
+      "price_year": null,
+      "seasonal_adjustment": "NOT_ADJUSTED",
+      "industry_scope": "ALL_INDUSTRIES",
+      "industry_classification_ref": null,
+      "industry_code": null
+    },
+    "suppression": {
+      "status": "NOT_SUPPRESSED",
+      "reason": "NOT_APPLICABLE",
+      "method_ref": null
+    },
+    "source": {
+      "source_descriptor_ref": "kfm://source/synthetic-economic@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dataset_version_ref": "kfm://dataset/synthetic-economic-2020@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "source_table_ref": "kfm://source-table/synthetic-economic-county@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "source_variable_ref": "kfm://source-variable/synthetic-total-employment@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "source_role": "OFFICIAL_ECONOMIC_AGGREGATE",
+      "source_state": "REFERENCED_NOT_RESOLVED",
+      "evidence_refs": [
+        "kfm://evidence/economic/source@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "kfm://evidence/economic/table@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED"
+    },
+    "lineage": {
+      "correction_state": "ORIGINAL",
+      "predecessor_ref": null,
+      "correction_record_ref": null
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "AGGREGATE_ONLY",
+        "NO_BUSINESS_OR_INDIVIDUAL_INFERENCE",
+        "NO_CAUSAL_CLAIM",
+        "NO_PUBLICATION_AUTHORITY",
+        "PRICE_BASIS_DECLARED",
+        "SOURCE_ROLE_PRESERVED",
+        "SUPPRESSION_PRESERVED",
+        "VERSION_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "source_data_accessed": false,
+      "geography_resolved": false,
+      "classification_resolved": false,
+      "evidence_resolved": false,
+      "rights_evaluated": false,
+      "sensitivity_evaluated": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "employment": [],
+    "employment_adjusted": [
+      { "path": "/measure/seasonal_adjustment", "value": "ADJUSTED" }
+    ],
+    "employment_industry": [
+      { "path": "/measure/industry_scope", "value": "SPECIFIC_INDUSTRY" },
+      { "path": "/measure/industry_classification_ref", "value": "kfm://classification/industry/synthetic-naics@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" },
+      { "path": "/measure/industry_code", "value": "11" }
+    ],
+    "gdp_current": [
+      { "path": "/measure/measure_key", "value": "gross_domestic_product" },
+      { "path": "/measure/measure_family", "value": "GDP" },
+      { "path": "/measure/unit", "value": "USD" },
+      { "path": "/measure/value", "value": 987654 },
+      { "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" },
+      { "path": "/measure/seasonal_adjustment", "value": "NOT_APPLICABLE" }
+    ],
+    "gdp_constant": [
+      { "path": "/measure/measure_key", "value": "real_gross_domestic_product" },
+      { "path": "/measure/measure_family", "value": "GDP" },
+      { "path": "/measure/unit", "value": "USD" },
+      { "path": "/measure/value", "value": 876543 },
+      { "path": "/measure/price_basis", "value": "CONSTANT_DOLLARS" },
+      { "path": "/measure/price_year", "value": 2017 },
+      { "path": "/measure/seasonal_adjustment", "value": "NOT_APPLICABLE" }
+    ],
+    "average_wage": [
+      { "path": "/measure/measure_key", "value": "average_annual_wage" },
+      { "path": "/measure/measure_family", "value": "AVERAGE_ANNUAL_WAGE" },
+      { "path": "/measure/unit", "value": "USD_PER_JOB" },
+      { "path": "/measure/value", "value": 42000 },
+      { "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" },
+      { "path": "/measure/seasonal_adjustment", "value": "NOT_APPLICABLE" }
+    ],
+    "suppressed_gdp": [
+      { "path": "/measure/measure_key", "value": "gross_domestic_product" },
+      { "path": "/measure/measure_family", "value": "GDP" },
+      { "path": "/measure/unit", "value": "USD" },
+      { "path": "/measure/result_state", "value": "SUPPRESSED" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_SUPPRESSED" },
+      { "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" },
+      { "path": "/measure/seasonal_adjustment", "value": "NOT_APPLICABLE" },
+      { "path": "/suppression/status", "value": "SUPPRESSED" },
+      { "path": "/suppression/reason", "value": "CONFIDENTIALITY" },
+      { "path": "/suppression/method_ref", "value": "kfm://method/suppression/synthetic-confidentiality@sha256:3333333333333333333333333333333333333333333333333333333333333333" }
+    ],
+    "missing_employment": [
+      { "path": "/measure/result_state", "value": "MISSING" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_MISSING" },
+      { "path": "/suppression/status", "value": "MISSING" },
+      { "path": "/suppression/reason", "value": "SOURCE_MISSING" }
+    ],
+    "corrected": [
+      { "path": "/temporal/corrected_at", "value": "2021-08-01T00:00:00Z" },
+      { "path": "/lineage/correction_state", "value": "CORRECTED" },
+      { "path": "/lineage/predecessor_ref", "value": "kfm://observation/economic/prior@sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+      { "path": "/lineage/correction_record_ref", "value": "kfm://correction/economic/synthetic@sha256:5555555555555555555555555555555555555555555555555555555555555555" }
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "valid-employment",
+      "base": "employment",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-employment-adjusted",
+      "base": "employment_adjusted",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-specific-industry-employment",
+      "base": "employment_industry",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-gdp-current-dollars",
+      "base": "gdp_current",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-gdp-constant-dollars",
+      "base": "gdp_constant",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-average-annual-wage",
+      "base": "average_wage",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-suppressed-gdp",
+      "base": "suppressed_gdp",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-missing-employment",
+      "base": "missing_employment",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-corrected-employment",
+      "base": "corrected",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "deny-inverted-reference-period",
+      "base": "employment",
+      "mutations": [
+        { "path": "/temporal/reference_period_start", "value": "2021-01-01" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_REFERENCE_PERIOD_INVERTED", "path": "/temporal/reference_period_end" },
+        { "code": "ECONOMIC_REFERENCE_PERIOD_NOT_CALENDAR_YEAR", "path": "/temporal" }
+      ]
+    },
+    {
+      "case_id": "deny-noncalendar-reference-period",
+      "base": "employment",
+      "mutations": [
+        { "path": "/temporal/reference_period_start", "value": "2020-02-01" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_REFERENCE_PERIOD_NOT_CALENDAR_YEAR", "path": "/temporal" }
+      ]
+    },
+    {
+      "case_id": "deny-release-precedes-period-end",
+      "base": "employment",
+      "mutations": [
+        { "path": "/temporal/source_released_at", "value": "2020-06-01T00:00:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_RELEASE_PRECEDES_PERIOD_END", "path": "/temporal/source_released_at" }
+      ]
+    },
+    {
+      "case_id": "deny-retrieval-precedes-release",
+      "base": "employment",
+      "mutations": [
+        { "path": "/temporal/retrieved_at", "value": "2021-05-01T00:00:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_RETRIEVAL_PRECEDES_RELEASE", "path": "/temporal/retrieved_at" }
+      ]
+    },
+    {
+      "case_id": "deny-correction-precedes-release",
+      "base": "corrected",
+      "mutations": [
+        { "path": "/temporal/corrected_at", "value": "2021-05-01T00:00:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_CORRECTION_PRECEDES_RELEASE", "path": "/temporal/corrected_at" }
+      ]
+    },
+    {
+      "case_id": "deny-observed-without-value",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/value", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_OBSERVED_VALUE_REQUIRED", "path": "/measure/value" }
+      ]
+    },
+    {
+      "case_id": "deny-observed-with-missing-reason",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/missing_reason", "value": "SOURCE_MISSING" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_OBSERVED_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }
+      ]
+    },
+    {
+      "case_id": "deny-observed-with-suppression-state",
+      "base": "employment",
+      "mutations": [
+        { "path": "/suppression/status", "value": "MISSING" },
+        { "path": "/suppression/reason", "value": "SOURCE_MISSING" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_OBSERVED_SUPPRESSION_INVALID", "path": "/suppression" }
+      ]
+    },
+    {
+      "case_id": "deny-suppressed-with-value",
+      "base": "suppressed_gdp",
+      "mutations": [
+        { "path": "/measure/value", "value": 1 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SUPPRESSED_VALUE_DENIED", "path": "/measure/value" }
+      ]
+    },
+    {
+      "case_id": "deny-suppressed-without-missing-reason",
+      "base": "suppressed_gdp",
+      "mutations": [
+        { "path": "/measure/missing_reason", "value": "NOT_APPLICABLE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SUPPRESSION_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }
+      ]
+    },
+    {
+      "case_id": "deny-suppressed-without-method",
+      "base": "suppressed_gdp",
+      "mutations": [
+        { "path": "/suppression/method_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SUPPRESSION_CLOSURE_INCOMPLETE", "path": "/suppression" }
+      ]
+    },
+    {
+      "case_id": "deny-suppressed-invalid-reason",
+      "base": "suppressed_gdp",
+      "mutations": [
+        { "path": "/suppression/reason", "value": "NOT_APPLICABLE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SUPPRESSION_CLOSURE_INCOMPLETE", "path": "/suppression" }
+      ]
+    },
+    {
+      "case_id": "deny-missing-with-value",
+      "base": "missing_employment",
+      "mutations": [
+        { "path": "/measure/value", "value": 1 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MISSING_VALUE_DENIED", "path": "/measure/value" }
+      ]
+    },
+    {
+      "case_id": "deny-missing-with-invalid-reason",
+      "base": "missing_employment",
+      "mutations": [
+        { "path": "/measure/missing_reason", "value": "NOT_APPLICABLE" },
+        { "path": "/suppression/reason", "value": "NOT_APPLICABLE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }
+      ]
+    },
+    {
+      "case_id": "deny-missing-suppression-state-mismatch",
+      "base": "missing_employment",
+      "mutations": [
+        { "path": "/suppression/status", "value": "NOT_SUPPRESSED" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MISSING_SUPPRESSION_STATE_INVALID", "path": "/suppression" }
+      ]
+    },
+    {
+      "case_id": "deny-employment-unit-drift",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/unit", "value": "USD" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_EMPLOYMENT_UNIT_INVALID", "path": "/measure/unit" }
+      ]
+    },
+    {
+      "case_id": "deny-employment-price-basis",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_EMPLOYMENT_PRICE_BASIS_INVALID", "path": "/measure/price_basis" }
+      ]
+    },
+    {
+      "case_id": "deny-employment-seasonal-posture-missing",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/seasonal_adjustment", "value": "NOT_APPLICABLE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_EMPLOYMENT_SEASONAL_POSTURE_REQUIRED", "path": "/measure/seasonal_adjustment" }
+      ]
+    },
+    {
+      "case_id": "deny-monetary-unit-drift",
+      "base": "gdp_current",
+      "mutations": [
+        { "path": "/measure/unit", "value": "USD_PER_PERSON" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MONETARY_UNIT_INVALID", "path": "/measure/unit" }
+      ]
+    },
+    {
+      "case_id": "deny-monetary-price-basis-missing",
+      "base": "gdp_current",
+      "mutations": [
+        { "path": "/measure/price_basis", "value": "NOT_APPLICABLE" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MONETARY_PRICE_BASIS_REQUIRED", "path": "/measure/price_basis" }
+      ]
+    },
+    {
+      "case_id": "deny-monetary-seasonal-posture",
+      "base": "gdp_current",
+      "mutations": [
+        { "path": "/measure/seasonal_adjustment", "value": "ADJUSTED" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_MONETARY_SEASONAL_POSTURE_INVALID", "path": "/measure/seasonal_adjustment" }
+      ]
+    },
+    {
+      "case_id": "deny-constant-dollar-without-price-year",
+      "base": "gdp_constant",
+      "mutations": [
+        { "path": "/measure/price_year", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_CONSTANT_PRICE_YEAR_REQUIRED", "path": "/measure/price_year" }
+      ]
+    },
+    {
+      "case_id": "deny-current-dollar-with-price-year",
+      "base": "gdp_current",
+      "mutations": [
+        { "path": "/measure/price_year", "value": 2017 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_PRICE_YEAR_DENIED", "path": "/measure/price_year" }
+      ]
+    },
+    {
+      "case_id": "deny-specific-industry-without-classification",
+      "base": "employment_industry",
+      "mutations": [
+        { "path": "/measure/industry_classification_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_INDUSTRY_BINDING_INCOMPLETE", "path": "/measure" }
+      ]
+    },
+    {
+      "case_id": "deny-specific-industry-without-code",
+      "base": "employment_industry",
+      "mutations": [
+        { "path": "/measure/industry_code", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_INDUSTRY_BINDING_INCOMPLETE", "path": "/measure" }
+      ]
+    },
+    {
+      "case_id": "deny-all-industries-with-classification",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/industry_classification_ref", "value": "kfm://classification/industry/synthetic-naics@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_ALL_INDUSTRIES_BINDING_DENIED", "path": "/measure" }
+      ]
+    },
+    {
+      "case_id": "deny-evidence-order-drift",
+      "base": "employment",
+      "mutations": [
+        {
+          "path": "/source/evidence_refs",
+          "value": [
+            "kfm://evidence/economic/table@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "kfm://evidence/economic/source@sha256:1111111111111111111111111111111111111111111111111111111111111111"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_EVIDENCE_ORDER_INVALID", "path": "/source/evidence_refs" }
+      ]
+    },
+    {
+      "case_id": "deny-limit-order-drift",
+      "base": "employment",
+      "mutations": [
+        {
+          "path": "/disclosure/interpretation_limits",
+          "value": [
+            "VERSION_BOUND",
+            "SUPPRESSION_PRESERVED",
+            "SOURCE_ROLE_PRESERVED",
+            "PRICE_BASIS_DECLARED",
+            "NO_PUBLICATION_AUTHORITY",
+            "NO_CAUSAL_CLAIM",
+            "NO_BUSINESS_OR_INDIVIDUAL_INFERENCE",
+            "AGGREGATE_ONLY"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits" }
+      ]
+    },
+    {
+      "case_id": "deny-original-carries-predecessor",
+      "base": "employment",
+      "mutations": [
+        { "path": "/lineage/predecessor_ref", "value": "kfm://observation/economic/prior@sha256:4444444444444444444444444444444444444444444444444444444444444444" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_ORIGINAL_LINEAGE_INVALID", "path": "/lineage" }
+      ]
+    },
+    {
+      "case_id": "deny-corrected-missing-predecessor",
+      "base": "corrected",
+      "mutations": [
+        { "path": "/lineage/predecessor_ref", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_CORRECTED_LINEAGE_INCOMPLETE", "path": "/lineage" }
+      ]
+    },
+    {
+      "case_id": "deny-corrected-missing-time",
+      "base": "corrected",
+      "mutations": [
+        { "path": "/temporal/corrected_at", "value": null }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_CORRECTED_LINEAGE_INCOMPLETE", "path": "/lineage" }
+      ]
+    },
+    {
+      "case_id": "deny-stored-spec-hash-drift",
+      "base": "employment",
+      "spec_hash_override": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SPEC_HASH_MISMATCH", "path": "/spec_hash" }
+      ]
+    },
+    {
+      "case_id": "deny-stored-observation-id-drift",
+      "base": "employment",
+      "observation_id_override": "kfm:economic-observation:999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_OBSERVATION_ID_MISMATCH", "path": "/observation_id" }
+      ]
+    },
+    {
+      "case_id": "deny-nondigest-geography-reference",
+      "base": "employment",
+      "mutations": [
+        { "path": "/subject/geography_version_ref", "value": "kfm://common/geography-version/synthetic" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SCHEMA_INVALID", "path": "/subject/geography_version_ref" }
+      ]
+    },
+    {
+      "case_id": "deny-public-use-authority",
+      "base": "employment",
+      "mutations": [
+        { "path": "/governance/public_use_allowed", "value": true }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SCHEMA_INVALID", "path": "/governance/public_use_allowed" }
+      ]
+    },
+    {
+      "case_id": "deny-extra-establishment-field",
+      "base": "employment",
+      "mutations": [
+        { "path": "/establishment_id", "value": "forbidden" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SCHEMA_INVALID", "path": "/" }
+      ]
+    },
+    {
+      "case_id": "deny-negative-economic-value",
+      "base": "employment",
+      "mutations": [
+        { "path": "/measure/value", "value": -1 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        { "code": "ECONOMIC_SCHEMA_INVALID", "path": "/measure/value" }
+      ]
+    }
+  ]
+}
