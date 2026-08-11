@@ -1,11 +1,12 @@
 # KFM People/DNA/Land domain CI readiness workflow.
-# Status: one bounded synthetic consent-overlay fixture profile is executable;
-# broader validation, policy-runtime, proof, revocation execution, and release
-# producers remain held.
+# Status: two bounded synthetic consent fixture profiles are executable;
+# broader validation, policy-runtime, proof, revocation execution, cleanup, and
+# release producers remain held.
 #
 # Authority boundary:
 # - This workflow opens only repository-owned synthetic fixture payloads under
-#   fixtures/domains/people-dna-land/consent_overlay/.
+#   fixtures/domains/people-dna-land/consent_overlay/ and
+#   fixtures/domains/people-dna-land/consent_revocation_propagation/.
 # - It does not open real person, genealogy, DNA/genomic, consent, revocation,
 #   parcel, deed, title, assessor, tax, or private person-land payloads.
 # - It does not establish identity, kinship, consent validity, title, boundary,
@@ -58,19 +59,25 @@ jobs:
             "docs/domains/people-dna-land/DNA_HANDLING.md"
             "contracts/domains/people-dna-land/README.md"
             "contracts/domains/people-dna-land/consented_genealogy_overlay.md"
+            "contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md"
             "schemas/contracts/v1/domains/people-dna-land/README.md"
             "schemas/contracts/v1/domains/people-dna-land/consented_genealogy_overlay.schema.json"
             "schemas/contracts/v1/domains/people-dna-land/genealogy_overlay_revocation_manifest.schema.json"
+            "schemas/contracts/v1/domains/people-dna-land/consent_revocation_propagation_assessment.schema.json"
             "fixtures/domains/people-dna-land/README.md"
             "fixtures/domains/people-dna-land/consent_overlay/README.md"
             "fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json"
+            "fixtures/domains/people-dna-land/consent_revocation_propagation/README.md"
+            "fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json"
             "policy/domains/people-dna-land/README.md"
             "policy/consent/people-dna-land/README.md"
             "tests/domains/people-dna-land/README.md"
             "tests/domains/people-dna-land/consent/revocation/README.md"
             "tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py"
+            "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py"
             "tools/validators/domains/people-dna-land/README.md"
             "tools/validators/domains/people-dna-land/validate_consent_overlay.py"
+            "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py"
             "tools/validators/genealogy/README.md"
             "data/registry/sources/people-dna-land/README.md"
             "release/candidates/people-dna-land/README.md"
@@ -96,11 +103,19 @@ jobs:
                   "tests/domains/people-dna-land/consent/revocation/"
                   "test_consent_overlay_safety.py"
               ),
+              Path(
+                  "tests/domains/people-dna-land/consent/revocation/"
+                  "test_consent_revocation_propagation_assessment.py"
+              ),
           }
           accepted_validators = {
               Path(
                   "tools/validators/domains/people-dna-land/"
                   "validate_consent_overlay.py"
+              ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_consent_revocation_propagation_assessment.py"
               ),
           }
 
@@ -136,7 +151,10 @@ jobs:
                       )
 
           fixture_root = Path("fixtures/domains/people-dna-land")
-          accepted_fixture_root = fixture_root / "consent_overlay"
+          accepted_fixture_roots = {
+              fixture_root / "consent_overlay",
+              fixture_root / "consent_revocation_propagation",
+          }
           expected_markers = {
               fixture_root / "golden/PLACEHOLDER.md":
                   "Greenfield placeholder for golden fixture set.",
@@ -165,12 +183,14 @@ jobs:
               for path in fixture_root.rglob("*")
               if path.is_file()
               and path.name not in {"README.md", ".gitkeep", "PLACEHOLDER.md"}
-              and not path.is_relative_to(accepted_fixture_root)
+              and not any(
+                  path.is_relative_to(root) for root in accepted_fixture_roots
+              )
           )
           if surfaced_payloads:
               raise SystemExit(
                   "Unreviewed People/DNA/Land fixture payloads surfaced outside "
-                  f"the accepted synthetic profile: {surfaced_payloads}."
+                  f"the accepted synthetic profiles: {surfaced_payloads}."
               )
 
           print(
@@ -222,6 +242,20 @@ jobs:
           echo "EXPECTED_REJECTION: invalid consent-overlay fixtures"
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture"
 
+      - name: Run bounded consent-revocation propagation assessment
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py --verbose
+          python tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py --fixtures
+
+          echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-revocation-propagation-assessment"
+
       - name: Record People DNA Land validation result and broader hold
         if: always()
         shell: bash
@@ -231,15 +265,19 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-overlay-fixture`
 
+          `WORKFLOW_CHECK_EXECUTED: people-dna-land-consent-revocation-propagation-assessment`
+
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
-          When green, this job has executed a frozen, synthetic, no-network
-          fixture profile for a consent-safe genealogy-overlay candidate. It
-          checks active consent for living-person and DNA-derived summaries,
+          When green, this job has executed two frozen, synthetic, no-network
+          fixture profiles: a consent-safe genealogy-overlay candidate and a
+          consent-revocation propagation assessment. They check active consent
+          for living-person and DNA-derived summaries,
           expiry and revocation precedence, manifest-root and membership checks,
           deterministic hashes, fixture EvidenceRefs, coarse synthetic place and
           time buckets, high-confidence evidence support, identifying-field and
-          raw-genomic denial, public-release denial, bounded JSON parsing,
+          raw-genomic denial, public-release denial, seven-surface dependency
+          coverage, declared propagation receipts, bounded JSON parsing,
           deterministic diagnostics, and explicit network denial.
 
           The profile is not a production overlay contract or consent system. It
@@ -321,8 +359,8 @@ jobs:
           unverified.
 
           A green held result is not an EvidenceBundle, ProofPack, consent proof,
-          revocation execution, kinship finding, DNA finding, title opinion, legal
-          determination, release decision, or publication authority.
+          revocation or cleanup execution, kinship finding, DNA finding, title
+          opinion, legal determination, release decision, or publication authority.
           EOF
 
   publish-dry-run-people-dna-land:
