@@ -1,0 +1,166 @@
+# Supplemental repository security checks.
+#
+# Existing companion workflows remain authoritative for their bounded lanes:
+# - codeql.yml: CodeQL analysis for Python and JavaScript/TypeScript.
+# - dependency-scan.yml: full Python and pnpm dependency audits.
+#
+# This workflow adds pull-request dependency-diff review, repository secret /
+# misconfiguration scanning, and container-image scanning. It is a review signal,
+# not proof that vulnerabilities are absent and not release or publication authority.
+name: security
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "23 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: dependency-review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Review newly introduced dependencies
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          license-check: false
+          vulnerability-check: true
+          comment-summary-in-pr: never
+          retry-on-snapshot-warnings: false
+          warn-only: false
+
+  repository-scan:
+    name: repository-scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Scan repository dependencies, configuration, and secrets
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          version: v0.73.0
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+          format: table
+          timeout: 15m
+          skip-dirs: .git,data/raw,data/work,data/quarantine
+          cache: true
+
+  container-scan:
+    name: container-scan (${{ matrix.component }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: explorer-web
+            dockerfile: infra/docker/Dockerfile.explorer-web
+            image: kfm/explorer-web:security-scan
+          - component: governed-api
+            dockerfile: infra/docker/Dockerfile.governed-api
+            image: kfm/governed-api:security-scan
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build the review image
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
+          IMAGE: ${{ matrix.image }}
+        run: |
+          set -euo pipefail
+          docker build \
+            --file "${DOCKERFILE}" \
+            --tag "${IMAGE}" \
+            infra/docker
+
+      - name: Scan the review image
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          version: v0.73.0
+          scan-type: image
+          image-ref: ${{ matrix.image }}
+          scanners: vuln,secret
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+          format: table
+          timeout: 15m
+          cache: true
+
+  security-result:
+    name: security-result
+    if: always()
+    needs:
+      - dependency-review
+      - repository-scan
+      - container-scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Summarize finite security outcomes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DEPENDENCY_REVIEW_RESULT: ${{ needs.dependency-review.result }}
+          REPOSITORY_SCAN_RESULT: ${{ needs.repository-scan.result }}
+          CONTAINER_SCAN_RESULT: ${{ needs.container-scan.result }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "### Security workflow"
+            echo
+            echo "- Dependency review: ${DEPENDENCY_REVIEW_RESULT}"
+            echo "- Repository scan: ${REPOSITORY_SCAN_RESULT}"
+            echo "- Container scan: ${CONTAINER_SCAN_RESULT}"
+            echo
+            echo "Companion checks remain in codeql.yml and dependency-scan.yml."
+            echo "This result is a review signal, not vulnerability-absence, release, or publication authority."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+          for result in \
+            "${REPOSITORY_SCAN_RESULT}" \
+            "${CONTAINER_SCAN_RESULT}"
+          do
+            case "${result}" in
+              success) ;;
+              *) exit 1 ;;
+            esac
+          done
+
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            [[ "${DEPENDENCY_REVIEW_RESULT}" == "success" ]]
+          else
+            [[ "${DEPENDENCY_REVIEW_RESULT}" == "skipped" ]]
+          fi
