@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-fauna-readme
 title: tools/validators/domains/fauna README
 type: README
-version: v0.3.0
-status: draft; two bounded executable slices confirmed; production authority held
+version: v0.4.0
+status: draft; three bounded executable slices confirmed; production authority held
 owner: TODO-tooling-qa-owner-plus-fauna-steward-plus-sensitive-species-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-08-08
+updated: 2026-08-11
 policy_label: repository-facing; per-domain-validator-index; fauna; sensitive-species; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: Index bounded Fauna validator implementations and proposed child lanes while preserving source, evidence, policy, sensitivity, proof, release, correction, rollback, and public-surface authority in their owning roots.
@@ -22,6 +22,8 @@ related:
   - ../../cross-lane/README.md
   - ./occurrence/README.md
   - ./occurrence/validate_occurrence_evidence.py
+  - ./tiles/README.md
+  - ./tiles/validate_tile_field_allowlist.py
   - ./validate_public_safe_fixture.py
   - ../../../../docs/domains/fauna/README.md
   - ../../../../docs/domains/fauna/IDENTITY_MODEL.md
@@ -40,10 +42,12 @@ related:
   - ../../../../fixtures/domains/fauna/
   - ../../../../tests/domains/fauna/test_fauna_smoke.py
   - ../../../../tests/domains/fauna/test_occurrence_evidence.py
+  - ../../../../tests/domains/fauna/test_tile_field_allowlist.py
   - ../../../../.github/workflows/domain-fauna.yml
   - ../../../../.github/workflows/fauna-occurrence-evidence.yml
+  - ../../../../.github/workflows/fauna-tile-field-allowlist.yml
 notes:
-  - "The lane contains two separate bounded executables: synthetic public-safe fixture hygiene and the draft OccurrenceEvidence schema/semantic profile. Neither is production occurrence-public validation."
+  - "The lane contains three separate bounded executables: synthetic public-safe fixture hygiene, the draft OccurrenceEvidence schema/semantic profile, and an inactive field-name-only Fauna tile allowlist profile. None is production occurrence or tile-publication validation."
   - "OccurrenceEvidence validation was merged by PR #2209 with a closed draft schema, deterministic identity, exact fixtures, focused tests, and a dedicated workflow."
   - "Fauna sensitive taxa, exact occurrences, nests, dens, roosts, hibernacula, spawning sites, breeding/aggregation sites, steward-controlled records, and reverse-engineerable derivatives remain deny-by-default until governing policy, review, evidence, transformation, release, correction, and rollback support exists."
 [/KFM_META_BLOCK_V2] -->
@@ -55,7 +59,7 @@ notes:
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![root](https://img.shields.io/badge/root-tools%2F-blue)
 ![scope](https://img.shields.io/badge/scope-fauna--validators-informational)
-![implementation](https://img.shields.io/badge/implementation-two--bounded--slices-orange)
+![implementation](https://img.shields.io/badge/implementation-three--bounded--slices-orange)
 ![sensitivity](https://img.shields.io/badge/sensitivity-deny--by--default-red)
 ![authority](https://img.shields.io/badge/authority-checkers--only-lightgrey)
 
@@ -79,13 +83,17 @@ The lane owns executable checks and their local documentation only. Fauna meanin
 | `tools/validators/fauna/README.md` and `tools/validators/fauna/source_role/README.md` | **CONFIRMED routing documentation** | Broad Fauna and source-role routing surfaces; they do not replace this per-domain executable home. |
 | [`occurrence/validate_occurrence_evidence.py`](occurrence/validate_occurrence_evidence.py) | **CONFIRMED bounded executable** | Draft closed `OccurrenceEvidence` schema and semantic validation, deterministic identity, role/basis anti-collapse, rights/provenance, sensitivity/geometry consistency, and exact fixture replay. |
 | [`occurrence/README.md`](occurrence/README.md) | **CONFIRMED child-lane documentation** | Exact CLI, input/output, findings, tests, CI, receipt, trust boundary, maintenance, and rollback for the occurrence profile. |
+| [`tiles/validate_tile_field_allowlist.py`](tiles/validate_tile_field_allowlist.py) | **CONFIRMED bounded executable** | Inactive field-name-only comparison of synthetic encoded properties, a candidate `LayerManifest` allowlist, and the Fauna policy profile; no tile-byte inspection or production approval. |
+| [`tiles/README.md`](tiles/README.md) | **CONFIRMED child-lane documentation** | Exact fixture-only CLI, trust boundary, activation hold, and rollback for the tile field allowlist profile. |
 | `tests/domains/fauna/test_fauna_smoke.py` | **CONFIRMED fixture-hygiene suite** | Seven deterministic tests for the older synthetic public-safe fixture profile. |
 | `tests/domains/fauna/test_occurrence_evidence.py` | **CONFIRMED occurrence suite** | Eight deterministic no-network tests for the draft occurrence profile. |
+| `tests/domains/fauna/test_tile_field_allowlist.py` | **CONFIRMED tile-field suite** | Deterministic no-network policy, manifest-relation, deny-pattern, authority, and exact fixture-replay tests. |
 | `.github/workflows/domain-fauna.yml` | **CONFIRMED bounded workflow** | Runs the older synthetic fixture-safety suite and keeps proof/release jobs held. |
 | `.github/workflows/fauna-occurrence-evidence.yml` | **CONFIRMED dedicated workflow** | Runs occurrence tests, exact fixture replay, and current generated-receipt integrity. |
+| `.github/workflows/fauna-tile-field-allowlist.yml` | **CONFIRMED dedicated workflow definition** | Runs the inactive field-name policy tests and exact fixture replay; hosted execution remains `NEEDS VERIFICATION` until the PR check completes. |
 | Live sources, production policy, `EvidenceBundle` proof, public/restricted conversion, release, and public consumers | **NEEDS VERIFICATION / held** | Neither bounded executable creates this authority. |
 
-Do not collapse the two executables. Fixture hygiene answers whether a synthetic test object is safe to keep in the repository. Occurrence validation answers whether a source-bound draft occurrence record is internally consistent with its declared profile. Neither answers whether a real occurrence may be released.
+Do not collapse the three executables. Fixture hygiene answers whether a synthetic test object is safe to keep in the repository. Occurrence validation answers whether a source-bound draft occurrence record is internally consistent with its declared profile. Tile-field validation compares synthetic property names with an inactive allowlist. None answers whether a real occurrence or tile may be released.
 
 [Back to top](#top)
 
@@ -131,6 +139,7 @@ Its CLI reports only stable code/path findings and returns wrapper `PASS` or `ER
 | Child | State | Boundary |
 |---|---|---|
 | [`occurrence/`](occurrence/README.md) | **CONFIRMED bounded executable lane** | Draft source-bound `OccurrenceEvidence`; no source admission, transformation, proof, release, or public occurrence authority. |
+| [`tiles/`](tiles/README.md) | **CONFIRMED bounded executable lane** | Inactive field-name-only tile allowlist profile; no tile bytes, production vocabulary, policy decision, release, or public-tile authority. |
 | `geoprivacy/` | **PROPOSED** | Redaction/generalization/buffering/gridding/aggregation checks after accepted policy and receipt contracts exist. |
 | `sensitive-site/` | **PROPOSED** | Nests, dens, roosts, hibernacula, spawning, breeding, and aggregation-site posture. |
 | `taxon-status/` | **PROPOSED** | Taxon identity, crosswalk, conservation, and legal-status posture. |
@@ -226,7 +235,7 @@ The synthetic fixture-safety executable may emit stable findings including:
 | `FIXTURE_TOO_LARGE`, `FIXTURE_JSON_INVALID` | A fixture exceeds the byte cap or cannot be parsed safely. |
 | `RELEASE_STATE_NOT_HELD`, `PROMOTION_STATE_NOT_HELD` | The fixture is not explicitly unreleased and promotion-ineligible. |
 
-The occurrence child uses lowercase `schema.*`, `identity.*`, `prov.*`, `rights.*`, `geom.*`, `sens.*`, `taxon.*`, and `obs.*` families documented in [`occurrence/README.md`](occurrence/README.md). Both executables report paths/codes without protected values.
+The occurrence child uses lowercase `schema.*`, `identity.*`, `prov.*`, `rights.*`, `geom.*`, `sens.*`, `taxon.*`, and `obs.*` families documented in [`occurrence/README.md`](occurrence/README.md). The tile child uses stable uppercase field-relation codes documented by its fixtures and emits names only as bounded paths, never feature values. All executables report without protected values.
 
 [Back to top](#top)
 
@@ -256,13 +265,27 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   --fixtures
 ```
 
+Inactive Fauna tile-field suite and exact fixture replay:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_tile_field_allowlist.py' \
+  --verbose
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/domains/fauna/tiles/validate_tile_field_allowlist.py \
+  --fixtures
+```
+
 These commands are not source-admission checks, policy-engine evaluations, geoprivacy transforms, evidence/proof closure, release gates, promotion paths, or publication paths.
 
 [Back to top](#top)
 
 ## Review checklist
 
-- [ ] Keep the two bounded executable scopes distinct.
+- [ ] Keep the three bounded executable scopes distinct.
 - [ ] Back every executable claim with current code, fixtures, tests, workflow, or emitted artifact evidence.
 - [ ] Preserve source-role anti-collapse and exact/public-safe geometry separation.
 - [ ] Keep sensitive taxa and exact or reverse-engineerable location detail fail-closed.

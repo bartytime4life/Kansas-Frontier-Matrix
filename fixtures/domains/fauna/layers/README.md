@@ -62,5 +62,5 @@ Do not use this lane for:
 ## Verification status
 
 - Target README: updated from one-character placeholder content.
-- Payload inventory: NEEDS VERIFICATION.
-- Tests and validators: NOT RUN.
+- Payload inventory: `tile_field_allowlist_cases.json` is a CONFIRMED synthetic, name-only fixture suite; other layer-shaped payload families remain NEEDS VERIFICATION.
+- Tests and validators: the inactive tile-field policy/schema/validator/test/workflow packet is CONFIRMED in-tree; local execution is recorded in its draft PR, while hosted CI remains NEEDS VERIFICATION until that check completes.
