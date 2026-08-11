@@ -11,27 +11,27 @@
     "tools/validators/evidence/validate_claim_scope_dimension_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/claim-scope-dimension-assessment.yml": "sha256:54485cea9498837e78af8a524ea09f6727a2f24f454ee8af075656406fe2669b",
-    "contracts/evidence/claim_scope_dimension_assessment.md": "sha256:aa6c638af9368775b75c8317138d3aeab8ad23b5a12e808bb61bd272ebd5208f",
-    "docs/intake/exploratory/pass-18-claim-scope-dimension-assessment-source-map.md": "sha256:f0ce9c340cfb7ba1ad9e39ee6deff67e13cbf066772e418eb32db05eb0f66023",
-    "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json": "sha256:c8db2c7f57d4eeac5c0aaaea3c0d970c17c46027a09986c90232fb361d9eb087",
-    "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json": "sha256:61e8fab35604689ac1933f70cf30498f9ad0cfed885524b51e28f9efb98d21cd",
-    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "sha256:1581c7b763a500b0af298979db5de30bc700b0912b1e02b16ed0bc4e3fe2d03f",
-    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "sha256:41de6010bcaf8ae94de9408490d335af3b9c7f100c0c87ba45f9eb9539c0c3c9"
+    ".github/workflows/claim-scope-dimension-assessment.yml": "sha256:e217b7b43f554171895dcaac41471f8286092cd0d42064f10dfb97509f702461",
+    "contracts/evidence/claim_scope_dimension_assessment.md": "sha256:f70267c98ba94af0d2b06d58439a1aca7f81739acfeea7799b763faa313c94de",
+    "docs/intake/exploratory/pass-18-claim-scope-dimension-assessment-source-map.md": "sha256:98c68ec090adaccab97365878a248f038d8c0fb30c449d143a9b83c37a557e47",
+    "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json": "sha256:9adc9e5147091fd42d8a56c0571e5c82ae749b1b05ec9bc11ace18e8e7aec2f1",
+    "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json": "sha256:bfc0fb62cf38bc4be111d0da1ab08d52d07ebe24798e9f61612a3eed859cbedf",
+    "tests/validators/evidence/test_validate_claim_scope_dimension_assessment.py": "sha256:aa68deb37bee0fe4b12a32300e31772166d472d34e8e746456c548a8820bf14b",
+    "tools/validators/evidence/validate_claim_scope_dimension_assessment.py": "sha256:20e853910fed67a0d9e3ca03bd4bf3db44f6bc5b9956b0b6a295a3ee940905fc"
   },
   "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
-  "prompt_or_contract": "sha256:aa6c638af9368775b75c8317138d3aeab8ad23b5a12e808bb61bd272ebd5208f",
+  "prompt_or_contract": "sha256:f70267c98ba94af0d2b06d58439a1aca7f81739acfeea7799b763faa313c94de",
   "parameters": {
     "seed": null,
     "temperature": null,
     "top_p": null,
     "max_tokens": null,
-    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and connector publication", "local PDF rendering and deterministic validation"]
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local PDF rendering and deterministic validation"]
   },
   "inputs": {
-    "evidence_hashes": ["sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
-    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld", "Supplied repository placement guide; private discovery identifier withheld"],
-    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-376", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/measurement_scale_operation_assessment.md"]
+    "evidence_hashes": ["sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:9123c01698646b563cf09ce8df4f8507d0ab651a007f8cfe308819a5b49d469b", "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-376", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/evidence_bundle.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/representation_fitness_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"]
   },
   "truth_labels": {
     ".github/workflows/claim-scope-dimension-assessment.yml": "CONFIRMED",
@@ -47,22 +47,27 @@
     {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
     {"gate": "workflow-yaml-parse", "outcome": "PASS"},
     {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Six deterministic claim-scope dimension tests passed."},
-    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Fifteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Fourteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-representation-fitness-regression", "outcome": "PASS", "reason": "Nine adjacent representation-fitness tests passed in two separate repository-native collections."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
     {"gate": "no-network-boundary", "outcome": "PASS"},
     {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
     {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
     {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
   ],
   "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
   "citations": [
-    {"id": "pass18-claim-scope-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-376"},
-    {"id": "measurement-scale-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/measurement_scale_operation_assessment.md"},
+    {"id": "pass18-claim-scope-dimension-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-376"},
+    {"id": "evidence-bundle-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/evidence_bundle.md"},
+    {"id": "representation-fitness-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/representation_fitness_assessment.md"},
     {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
   ],
   "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
   "override_record": null,
-  "created_at": "2026-08-10T19:03:30Z",
+  "created_at": "2026-08-10T19:02:13Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
   "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
-  "notes": "Additive, inactive, fixture-only claim-scope dimension assessment. Private connected-source identifiers and content are excluded. A validator result is declaration coherence only and carries no evidence, policy, review, lifecycle, release, publication, or public-answer authority."
+  "notes": "Additive, inactive, fixture-only claim-scope dimension assessment. It records measured and controlled time, space, and attribute roles without authenticating references or creating claim, evidence, representation, policy, review, release, publication, or public-use authority."
 }

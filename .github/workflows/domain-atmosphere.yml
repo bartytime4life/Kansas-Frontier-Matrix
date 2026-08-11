@@ -1,8 +1,9 @@
 # KFM Atmosphere domain CI workflow.
 # Status: bounded synthetic precipitation, knowledge-character, low-cost
 # sensor calibration, observed-versus-modeled, and AirNow-to-AQS reconciliation
-# fixture profiles are executable; broader validation, proof, and release-dry-run
-# producers remain held.
+# fixture profiles are executable; the correctable environmental-event suite is
+# separately governed; broader validation, proof, and release-dry-run producers
+# remain held.
 #
 # Authority boundary:
 # - This workflow inspects repository maturity without performing live source
@@ -58,6 +59,7 @@ jobs:
             "docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md"
             "contracts/domains/atmosphere/README.md"
             "contracts/domains/atmosphere/airnow_aqs_reconciliation.md"
+            "contracts/domains/atmosphere/correctable_environmental_event_assessment.md"
             "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md"
             "schemas/contracts/v1/domains/atmosphere/README.md"
             "schemas/contracts/v1/domains/atmosphere/air_observation.schema.json"
@@ -66,6 +68,7 @@ jobs:
             "schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json"
             "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_candidate.schema.json"
             "schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json"
+            "schemas/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment.schema.json"
             "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json"
             "fixtures/domains/atmosphere/README.md"
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/certified_replacement.json"
@@ -73,6 +76,7 @@ jobs:
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/pending_certification.json"
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/provisional_context_only.json"
             "fixtures/domains/atmosphere/airnow_aqs_reconciliation/valid/regulatory_without_aqs.json"
+            "fixtures/contracts/v1/domains/atmosphere/correctable_environmental_event_assessment/cases.json"
             "policy/domains/atmosphere/README.md"
             "tests/domains/atmosphere/README.md"
             "tests/domains/atmosphere/test_atmosphere_smoke.py"
@@ -80,6 +84,7 @@ jobs:
             "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py"
             "tests/domains/atmosphere/test_observed_modeled_separation.py"
             "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py"
+            "tests/domains/atmosphere/test_correctable_environmental_event_assessment.py"
             "tests/validators/domains/atmosphere/airnow_aqs_reconciliation/test_validate_reconciliation.py"
             "tests/cross_domain/test_environmental_observation_boundaries.py"
             "tools/validators/domains/atmosphere/README.md"
@@ -88,6 +93,7 @@ jobs:
             "tools/validators/domains/atmosphere/validate_public_safe_precipitation_fixture.py"
             "tools/validators/domains/atmosphere/validate_observed_modeled_separation.py"
             "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
+            "tools/validators/domains/atmosphere/validate_correctable_environmental_event_assessment.py"
             "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/README.md"
             "tools/validators/domains/atmosphere/airnow_aqs_reconciliation/validate_reconciliation.py"
             "fixtures/domains/atmosphere/knowledge_character/README.md"
@@ -98,8 +104,11 @@ jobs:
             "fixtures/domains/atmosphere/observed_modeled_separation/invalid/forecast_context_missing_lineage.json"
             "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md"
             ".github/workflows/atmosphere-airnow-aqs-reconciliation.yml"
+            ".github/workflows/correctable-environmental-event-assessment.yml"
             "data/receipts/generated/genrec-atmosphere-airnow-aqs-reconciliation-20260806.json"
+            "data/receipts/generated/genrec-correctable-environmental-event-assessment-20260810.json"
             "data/registry/sources/atmosphere/README.md"
+            "docs/intake/exploratory/correctable-environmental-event-lifecycle-source-map.md"
             "release/candidates/atmosphere/README.md"
           )
 
@@ -120,6 +129,10 @@ jobs:
 
           accepted_tests = {
               Path("tests/domains/atmosphere/test_atmosphere_smoke.py"),
+              Path(
+                  "tests/domains/atmosphere/"
+                  "test_correctable_environmental_event_assessment.py"
+              ),
               Path(
                   "tests/domains/atmosphere/"
                   "test_knowledge_character_registry.py"
@@ -149,6 +162,10 @@ jobs:
               Path(
                   "tools/validators/domains/atmosphere/"
                   "validate_pm25_sensor_colocation_manifest.py"
+              ),
+              Path(
+                  "tools/validators/domains/atmosphere/"
+                  "validate_correctable_environmental_event_assessment.py"
               ),
               Path(
                   "tools/validators/domains/atmosphere/"
@@ -368,6 +385,13 @@ jobs:
           review recommendations. It performs no plume or dispersion modeling,
           source attribution, health determination, detector mutation, or model
           corpus mutation.
+
+          The synthetic correctable environmental-event lifecycle suite is
+          recognized here as a substantive test-and-validator pair, while its
+          deterministic cases and generated-receipt binding remain executed by
+          their own path-filtered workflow. Recognition does not promote a
+          candidate, approve review, declare a real-world event, apply a
+          correction, issue an alert, or authorize release or publication.
 
           Other Atmosphere test and validator modules outside these accepted
           profiles remain explicit placeholders or documentation-only lanes and

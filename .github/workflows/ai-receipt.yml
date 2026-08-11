@@ -1,0 +1,83 @@
+# AIReceipt candidate shape and local-consistency checks.
+#
+# This workflow uses only repository-owned synthetic fixtures. It does not call
+# a model, resolve evidence, evaluate policy, validate a cited source, approve a
+# public answer, mutate lifecycle state, release, deploy, or publish.
+name: ai-receipt
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ai-receipt.yml"
+      - "contracts/runtime/ai_receipt.md"
+      - "schemas/contracts/v1/runtime/ai_receipt.schema.json"
+      - "fixtures/contracts/v1/runtime/ai_receipt/**"
+      - "tests/validators/test_validate_ai_receipt.py"
+      - "tools/validators/validate_ai_receipt.py"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/ai-receipt.yml"
+      - "contracts/runtime/ai_receipt.md"
+      - "schemas/contracts/v1/runtime/ai_receipt.schema.json"
+      - "fixtures/contracts/v1/runtime/ai_receipt/**"
+      - "tests/validators/test_validate_ai_receipt.py"
+      - "tools/validators/validate_ai_receipt.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-receipt-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: AIReceipt fixture profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install declared test dependencies
+        run: python -m pip install --disable-pip-version-check --no-input -e ".[test]"
+
+      - name: Run focused tests
+        run: python -m pytest -q tests/validators/test_validate_ai_receipt.py
+
+      - name: Replay exact synthetic fixtures
+        run: python tools/validators/validate_ai_receipt.py --fixtures
+
+      - name: Validate generated authoring receipt
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-ai-receipt-validator-closure-20260810.json
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "## AIReceipt — fixture-only validation"
+            echo
+            echo "This job proves only closed schema shape, local string/digest checks,"
+            echo "fixture polarity and generated-receipt integrity."
+            echo "It creates no evidence, policy, citation, review, answer, release, or publication authority."
+          } >> "${GITHUB_STEP_SUMMARY}"

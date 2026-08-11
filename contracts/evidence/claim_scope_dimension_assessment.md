@@ -4,16 +4,18 @@ title: ClaimScopeDimensionAssessmentCandidate Contract
 type: semantic-contract
 version: v1.0.0
 status: proposed-inactive; fixture-only; no-network; non-authoritative
-owners: OWNER_TBD — Evidence steward · Spatial representation steward · Validation steward
+owners: OWNER_TBD — Evidence steward · Spatial-representation steward · Validation steward
 created: 2026-08-10
 updated: 2026-08-10
 owning_root: contracts/
-policy_label: internal; evidence; claim-scope; time-space-attribute
-responsibility: Define a fixture-only declaration assessment that makes the controlled, measured, and unresolved roles of time, space, and attribute explicit without creating evidence, policy, review, release, or publication authority.
+policy_label: internal; evidence; claim-scope; representation; time-space-attribute
+responsibility: Define a fixture-only assessment that makes the measured and controlled time, space, and attribute dimensions of one claim scope explicit without creating evidence, policy, review, release, or publication authority.
 truth_posture: "CONFIRMED supplied-card traceability and repository placement; PROPOSED inactive contract; UNKNOWN consumer adoption; NEEDS VERIFICATION human review and hosted CI"
 related:
-  - ./measurement_scale_operation_assessment.md
+  - ./evidence_bundle.md
   - ./representation_fitness_assessment.md
+  - ../common/temporal_window.md
+  - ../common/spatial_geometry.md
   - ../../schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json
   - ../../fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json
   - ../../tools/validators/evidence/validate_claim_scope_dimension_assessment.py
@@ -23,40 +25,42 @@ related:
 
 # ClaimScopeDimensionAssessmentCandidate
 
-`ClaimScopeDimensionAssessmentCandidate` records how one synthetic claim declaration treats the time, space, and attribute dimensions: each dimension is `CONTROLLED`, `MEASURED`, or `UNRESOLVED`. It implements the smallest reviewable portion of supplied Pass 18 card `KFM-P18-INV-376`.
+`ClaimScopeDimensionAssessmentCandidate` records which one of time, space, or attribute is measured while the other two are controlled for one bounded claim-scope candidate. It implements the smallest reviewable portion of supplied Pass 18 card `KFM-P18-INV-376`.
 
 ## Boundary
 
-A validator `PASS` proves only that the candidate's closed shape, deterministic identity, declared EvidenceBundle-scope reference, dimension roles, assessment partition, disclosure obligations, and fixed-false authority declarations are internally coherent.
+A validator `PASS` proves only that the candidate's closed shape, deterministic identity, dimension roles, scope-reference resolution declarations, interpretation label, limitations, and fixed-false authority declarations are internally coherent under this fixture profile.
 
-It does not inspect observations, infer scope, resolve or authenticate an EvidenceBundle, evaluate spatial or temporal fitness, calculate an attribute, approve review, change lifecycle state, release, publish, or authorize a public claim. The profile stores references and digests, not coordinates, observed values, or source payloads.
+It does not inspect a claim, resolve an `EvidenceBundle`, authenticate scope references, evaluate geographic fitness, transform coordinates, infer a temporal or spatial model, decide policy or review, promote, release, deploy, publish, or authorize public use. The three-dimension profile is a proposed disclosure aid, not a universal geographic ontology.
 
-## Dimension-role declaration
+## Dimension profile
 
-| Role | Local meaning |
+A complete candidate declares exactly one `MEASURED` dimension and two `CONTROLLED` dimensions:
+
+| Measured dimension | Local interpretation label |
 |---|---|
-| `CONTROLLED` | The declaration says the dimension is fixed or bounded for the claim. |
-| `MEASURED` | The declaration says the claim varies or is sampled across the dimension. |
-| `UNRESOLVED` | The declaration cannot yet establish the dimension's role and must abstain or remain incomplete. |
+| `TIME` | `TIME_SERIES_AT_CONTROLLED_SPACE_ATTRIBUTE` |
+| `SPACE` | `SPATIAL_CROSS_SECTION_AT_CONTROLLED_TIME_ATTRIBUTE` |
+| `ATTRIBUTE` | `ATTRIBUTE_COMPARISON_AT_CONTROLLED_TIME_SPACE` |
 
-A complete assessment requires at least one controlled and one measured dimension. This is a conservative fixture rule for visible scope metadata, not a universal scientific classification.
+An incomplete or unknown candidate uses `UNRESOLVED` dimension roles, `UNKNOWN` measured dimension, and `UNRESOLVED` interpretation. The validator abstains rather than inventing scope closure.
 
 ## Finite validator outcomes
 
 | Outcome | Meaning |
 |---|---|
-| `PASS` | The declared scope roles, partition, references, and obligations are locally coherent. |
-| `ABSTAIN` | The assessment or a declared scope dependency remains incomplete, unknown, or unresolved. |
-| `DENY` | A complete declaration has a contradictory role, partition, disclosure, or review posture. |
-| `ERROR` | The candidate cannot be evaluated under the closed schema. |
+| `PASS` | Dimension roles, references, interpretation, review posture, and identity are locally coherent. |
+| `ABSTAIN` | The assessment or one or more dimension scopes remain incomplete, unknown, or unresolved. |
+| `DENY` | Role cardinality, measured-dimension identity, interpretation, completeness, public-candidate review, limitation, or deterministic-binding claims are incoherent. |
+| `ERROR` | The candidate cannot be evaluated safely under the closed schema. |
 
-These outcomes are not evidence, policy, review, lifecycle, release, publication, or public-answer decisions.
+These outcomes are not claim-truth, evidence, representation-fitness, policy, review, release, publication, or runtime-answer decisions.
 
 ## Directory Rules basis
 
 Semantic meaning belongs under `contracts/evidence/`; machine shape under `schemas/contracts/v1/evidence/`; synthetic cases under `fixtures/contracts/v1/evidence/`; validation under `tools/validators/evidence/`; executable conformance evidence under `tests/validators/evidence/`; orchestration under `.github/workflows/`; source reconciliation under `docs/intake/exploratory/`; and authoring accountability under `data/receipts/generated/`.
 
-The profile is adjacent to representation-fitness and measurement-scale assessments but does not modify them or create a parallel claim, layer, EvidenceBundle, policy, release, or publication authority.
+The profile composes `EvidenceBundle`, `RepresentationFitnessAssessment`, `TemporalWindow`, and `SpatialGeometry` by opaque reference without modifying or replacing them. It creates no parallel claim, evidence, geometry, time, attribute, layer, policy, release, or publication authority.
 
 ## Validation
 
@@ -67,4 +71,4 @@ python tools/validators/evidence/validate_claim_scope_dimension_assessment.py --
 
 ## Rollback
 
-Revert the additive packet. It has no runtime consumer and changes no source value, evidence object, lifecycle state, map, policy, release, deployment, or public artifact.
+Revert the additive packet. It has no runtime consumer and changes no claim, source, evidence, policy, lifecycle, layer, release, deployment, or public artifact.

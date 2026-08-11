@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-pass18-temporal-reference-integrity-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-reference-integrity-assessment.yml",
+    "contracts/common/temporal_reference_integrity_assessment.md",
+    "docs/intake/exploratory/pass-18-temporal-reference-integrity-source-map.md",
+    "fixtures/contracts/v1/common/temporal_reference_integrity_assessment/cases.json",
+    "schemas/contracts/v1/common/temporal_reference_integrity_assessment.schema.json",
+    "tests/validators/test_validate_temporal_reference_integrity_assessment.py",
+    "tools/validators/validate_temporal_reference_integrity_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-reference-integrity-assessment.yml": "sha256:f9e18c629aae747e6eda3de4f5979fc3f468645974d59a01f8b09cd095c2165f",
+    "contracts/common/temporal_reference_integrity_assessment.md": "sha256:01921e46aa9d4db85f6cf1c1fed46e5286a105201d66cada71b5fd06c5a31892",
+    "docs/intake/exploratory/pass-18-temporal-reference-integrity-source-map.md": "sha256:3971f27903ae504df411d858686c09851905f17188486f69edb73c3bbc78a78e",
+    "fixtures/contracts/v1/common/temporal_reference_integrity_assessment/cases.json": "sha256:413714584bb3459a3f8e8d7c37f2443f29e69a121546bf08a092d0df738938ec",
+    "schemas/contracts/v1/common/temporal_reference_integrity_assessment.schema.json": "sha256:80b423ad224c853e3833aee74fbf2c847411a4a9af9b3399f03c0eae8dbcccce",
+    "tests/validators/test_validate_temporal_reference_integrity_assessment.py": "sha256:10ad1323e85a7ad4ebac9380631e49eca8dd9c18d4de27a121a715abb29257fa",
+    "tools/validators/validate_temporal_reference_integrity_assessment.py": "sha256:d2c9216fb193c633bc940354b646216420663d3cd093882f3496d8d70f830d41"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:01921e46aa9d4db85f6cf1c1fed46e5286a105201d66cada71b5fd06c5a31892",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:f9625ab788315b4e9b307659c9b4c75c344eb645dc39f9499ad850e378cf968e",
+      "sha256:207e5b09a5a5fbb82b7c13bfa7bc2093b822637fb3c8b00ea1b0792b3407463f",
+      "sha256:08409be104836d68caf5b3366351323ca1ab602619f1271bed6bd3a0872447d0",
+      "sha256:fdf5d22efff3a5611fe4da5f6f303260b797d47c2a5ddb15e559352988c1917d"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=124-125&printed-pages=121-122&card=KFM-P18-INV-490",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/period_boundary_predicate_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/temporal_authority_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/data/temporal_slice.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-reference-integrity-assessment.yml": "CONFIRMED",
+    "contracts/common/temporal_reference_integrity_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-temporal-reference-integrity-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/temporal_reference_integrity_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/temporal_reference_integrity_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_temporal_reference_integrity_assessment.py": "CONFIRMED",
+    "tools/validators/validate_temporal_reference_integrity_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Ten deterministic temporal reference-integrity assessment tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-eight exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes across valid-time, transaction-time, bitemporal, boundary, record-presence, and recommendation declarations."},
+    {"gate": "adjacent-contract-tests", "outcome": "PASS", "reason": "Fifty-one TemporalWindow, PeriodBoundaryPredicateDisclosure, TemporalAuthorityEnvelope, TemporalSlice, and TemporalSupportAcceptanceAssessment tests passed."},
+    {"gate": "documentation-meta-block-and-link-profiles", "outcome": "PASS"},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 425 schema/contract tests and 29 subtests passed on the rebased exact head."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-temporal-reference-integrity-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=124-125&printed-pages=121-122&card=KFM-P18-INV-490"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"},
+    {"id": "temporal-window-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/temporal_window.md"},
+    {"id": "period-boundary-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/period_boundary_predicate_disclosure.md"},
+    {"id": "temporal-authority-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/common/temporal_authority_envelope.md"},
+    {"id": "temporal-slice-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/contracts/data/temporal_slice.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T04:11:36Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only TemporalReferenceIntegrityAssessmentCandidate packet derived from supplied Pass 18 card KFM-P18-INV-490. It validates declared subject and target record presence, target role and kind, valid-time, transaction-time, bitemporal axis closure, explicit interval boundaries, finite relationship constraints, overall state, and non-executing DENY_CANDIDATE or QUARANTINE_CANDIDATE recommendations without resolving references, inspecting or mutating a database, executing constraints or quarantine, authenticating records, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

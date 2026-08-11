@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-pass32-remote-sensing-lineage-activity-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/remote-sensing-lineage-activity.yml",
+    "contracts/telemetry/remote_sensing_lineage_activity.md",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json",
+    "schemas/contracts/v1/telemetry/README.md",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json",
+    "tests/validators/telemetry/README.md",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py",
+    "tools/generators/telemetry/README.md",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py",
+    "tools/validators/telemetry/README.md",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/remote-sensing-lineage-activity.yml": "sha256:e214a4e486095a6cae5d6f69fab43228fc3d2e07b61a26866513ccc634451329",
+    "contracts/telemetry/remote_sensing_lineage_activity.md": "sha256:fa5ced3c8e201ea3767211560df4cae13c0c62b8e40f5eed43b2a3b0632e4ad5",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md": "sha256:f5ee957459ed821c252a199462e421ba726cd3e24e6c32be99af046e417f09b3",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md": "sha256:a54f5424102ac52f7034c94d480c816d23dcc26f7def8f6fd4028177925156ea",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json": "sha256:c9e183c578c5242e235d9cc3b2f71bc75ca5c590deda3605b834df12cd0f73d8",
+    "schemas/contracts/v1/telemetry/README.md": "sha256:56fc83e0c92fa96cb9e8ed2cacb7a4189b5de178e0faae6d6e414b6818c9457d",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json": "sha256:1a74d0c4181f4bb2a3c2bfa34db19061ca03c6535184ba9106d095af675cd4a3",
+    "tests/validators/telemetry/README.md": "sha256:4fff9007c36cc4652f35af0ce4ad043cee21050539bf3b6ff193e1943bba4897",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "sha256:b22c8380c952dc2bcb8c4541280c06258b80972951121272d63dfa7a45a920b6",
+    "tools/generators/telemetry/README.md": "sha256:a19cfc3a36b2802a4b1d45faca65c6dfc2a610d84e82ed3f7ab64653a66f7a1d",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py": "sha256:47287a41f22d9c3db30df0fc330d97e8f5835e7d193c13f23068145aa3ddcc8e",
+    "tools/validators/telemetry/README.md": "sha256:06ba75e6976935d5730cd63f54de9caf9b3be1ab9b23d1d347fd992a6f6aae4f",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py": "sha256:b5d9b8631259aa6b15a51b283aee83552c4b91b0fb2f17ba66aa1d5a9c41cd2f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:30cd6af0a2cfa75beeabfa62523fc28dbf8b294838a314616f2152bd1e085f1b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "Python 3.12",
+      "jsonschema 4.26.0",
+      "rfc8785 0.1.4"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:30cd6af0a2cfa75beeabfa62523fc28dbf8b294838a314616f2152bd1e085f1b"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas",
+      "KFM_Full_Atlas_seed_cards",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0012",
+      "gdrive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa",
+      "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo:contracts/telemetry/openlineage_run_event_projection.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/remote-sensing-lineage-activity.yml": "PROPOSED",
+    "contracts/telemetry/remote_sensing_lineage_activity.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json": "PROPOSED",
+    "schemas/contracts/v1/telemetry/README.md": "PROPOSED",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json": "PROPOSED",
+    "tests/validators/telemetry/README.md": "PROPOSED",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "PROPOSED",
+    "tools/generators/telemetry/README.md": "PROPOSED",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py": "PROPOSED",
+    "tools/validators/telemetry/README.md": "PROPOSED",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, repository history, branches, issues, and pull requests were searched for the exact card ID and remote-sensing OpenLineage terms; the generic OpenLineage foundation existed but the selected companion did not."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated-atlas page carrying KFM-P32-PROG-0012 was rendered and visually inspected before implementation."
+    },
+    {
+      "gate": "composed-schema-and-existing-validator",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation resolves the existing OpenLineage and RunReceipt schemas, and each embedded source projection is rechecked by the existing OpenLineage validator."
+    },
+    {
+      "gate": "lineage-regression-and-companion-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 26 focused telemetry lineage tests passed: 15 existing OpenLineage tests and 11 new remote-sensing companion tests."
+    },
+    {
+      "gate": "openlineage-existing-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "All 18 existing OpenLineage projection cases retained exact expected polarity."
+    },
+    {
+      "gate": "remote-sensing-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "All 11 companion cases matched exact outcomes and finding-code sets across success, recorded failure, abstention, denial, and invalid drift."
+    },
+    {
+      "gate": "workflow-safety",
+      "outcome": "PASS",
+      "reason": "Tests confirm read-only permissions, immutable action pins, and the no-network execution marker."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "All changed Markdown carrying metadata passed the bounded metadata profile; the schema README remains an allowed metadata-free README under the present profile."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator bound all 13 declared artifacts to their final local SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-remote-sensing-lineage",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-PROG-0012"
+    },
+    {
+      "id": "gdrive:consolidated-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"
+    },
+    {
+      "id": "gdrive:new-ideas",
+      "validated": true,
+      "evidence_ref": "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "repository:openlineage-run-event-projection",
+      "validated": true,
+      "evidence_ref": "repo:contracts/telemetry/openlineage_run_event_projection.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:56:04Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-PROG-0012. It composes with the existing OpenLineage projection and grants no source, evidence, policy, lifecycle, review, promotion, release, deployment, publication, or public-use authority."
+}

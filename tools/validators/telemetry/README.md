@@ -33,6 +33,7 @@ This lane validates admitted local telemetry projection profiles. It is downstre
 | File | Profile | Finite validator outcomes |
 |---|---|---|
 | `validate_openlineage_run_event_projection.py` | `kfm.telemetry.openlineage-run-event-projection.v1` | `PASS`, `DENY`, `ERROR` |
+| `validate_remote_sensing_lineage_activity.py` | `kfm.telemetry.remote-sensing-lineage-activity.v1` | `PASS`, `DENY`, `ERROR` |
 
 The validator checks:
 
@@ -54,6 +55,9 @@ python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
 
 python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
   --candidate /path/to/candidate.json
+
+python tools/validators/telemetry/validate_remote_sensing_lineage_activity.py \
+  --fixtures
 ```
 
 `PASS` exits `0`; `DENY` and `ERROR` exit `1`.

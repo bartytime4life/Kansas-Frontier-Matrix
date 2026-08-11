@@ -1,0 +1,71 @@
+{
+  "object_type": "InteractionStateReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source.interaction-state-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "InteractionStateReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source.interaction-state-receipt.fixture.v1",
+    "receipt_id": "kfm:interaction-state-receipt:000000000000000000000000",
+    "receipt_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-373",
+    "recorded_at": "2026-08-10T19:01:00Z",
+    "connector_run_ref": "kfm:connector-run:synthetic-dynamic-form:001",
+    "source_descriptor_ref": "kfm:source-descriptor:synthetic-dynamic-source:001",
+    "interaction": {
+      "kind": "FORM_SUBMISSION",
+      "steps": [
+        {"index": 0, "action": "LOAD", "target_ref": "kfm:interaction-target:synthetic-page:001", "request_shape_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "response_shape_digest": "sha256:2111111111111111111111111111111111111111111111111111111111111111", "state_before_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "state_after_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "outcome": "SUCCEEDED"},
+        {"index": 1, "action": "FORM_SUBMIT", "target_ref": "kfm:interaction-target:synthetic-form:001", "request_shape_digest": "sha256:1222222222222222222222222222222222222222222222222222222222222222", "response_shape_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "state_before_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "state_after_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "outcome": "SUCCEEDED"},
+        {"index": 2, "action": "CAPTURE", "target_ref": "kfm:interaction-target:synthetic-result:001", "request_shape_digest": "sha256:1333333333333333333333333333333333333333333333333333333333333333", "response_shape_digest": "sha256:2333333333333333333333333333333333333333333333333333333333333333", "state_before_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "state_after_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "outcome": "SUCCEEDED"}
+      ],
+      "sensitive_state_classes": ["AUTH_TOKEN", "COOKIE", "HIDDEN_FIELD_VALUE", "SESSION_ID"]
+    },
+    "redaction": {
+      "profile": {"ref": "kfm:redaction-profile:synthetic-dynamic-state:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"},
+      "redacted_classes": ["AUTH_TOKEN", "COOKIE", "HIDDEN_FIELD_VALUE", "SESSION_ID"],
+      "redaction_receipt_ref": "kfm:redaction-receipt:synthetic-dynamic-state:001",
+      "retained_sensitive_values": false
+    },
+    "result": {
+      "outcome": "CAPTURED",
+      "capture_artifact_ref": "kfm:source-capture-candidate:synthetic-dynamic-result:001",
+      "capture_artifact_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "capture_state": "QUARANTINE_CANDIDATE",
+      "failure_reason_codes": []
+    },
+    "assessment": {
+      "state": "COMPLETE",
+      "obligations": ["DYNAMIC_RESULT_NOT_EVIDENCE", "NO_SENSITIVE_VALUE_RETENTION", "REDACTION_REVIEW_REQUIRED", "SOURCE_ARTIFACT_HANDOFF_REQUIRED"],
+      "review_record_refs": ["kfm:review-record:synthetic-interaction-state:001"]
+    },
+    "authority_claims": {
+      "source_admission_authority": false,
+      "source_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "lifecycle_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_captured_form_with_redaction", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_failed_script_receipt", "patch": {"interaction": {"kind": "BROWSER_SCRIPT", "steps": [{"index": 0, "action": "SCRIPT_EXECUTE", "target_ref": "kfm:interaction-target:synthetic-script:001", "request_shape_digest": "sha256:8111111111111111111111111111111111111111111111111111111111111111", "response_shape_digest": null, "state_before_digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "state_after_digest": null, "outcome": "FAILED"}], "sensitive_state_classes": []}, "redaction": {"redacted_classes": [], "redaction_receipt_ref": null}, "result": {"outcome": "FAILED", "capture_artifact_ref": null, "capture_artifact_digest": null, "capture_state": "NOT_APPLICABLE", "failure_reason_codes": ["SCRIPT_EXECUTION_FAILED"]}, "assessment": {"obligations": ["DYNAMIC_RESULT_NOT_EVIDENCE", "NO_SENSITIVE_VALUE_RETENTION"], "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_blocked_redirect_receipt", "patch": {"interaction": {"kind": "REDIRECT_CHAIN", "steps": [{"index": 0, "action": "REDIRECT", "target_ref": "kfm:interaction-target:synthetic-redirect:001", "request_shape_digest": "sha256:8222222222222222222222222222222222222222222222222222222222222222", "response_shape_digest": null, "state_before_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "state_after_digest": null, "outcome": "BLOCKED"}], "sensitive_state_classes": []}, "redaction": {"redacted_classes": [], "redaction_receipt_ref": null}, "result": {"outcome": "BLOCKED", "capture_artifact_ref": null, "capture_artifact_digest": null, "capture_state": "NOT_APPLICABLE", "failure_reason_codes": ["REDIRECT_POLICY_BLOCKED"]}, "assessment": {"obligations": ["DYNAMIC_RESULT_NOT_EVIDENCE", "NO_SENSITIVE_VALUE_RETENTION"], "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_composite_capture", "patch": {"interaction": {"kind": "COMPOSITE", "steps": [{"index": 0, "action": "FORM_SUBMIT", "target_ref": "kfm:interaction-target:synthetic-composite-form:001", "request_shape_digest": "sha256:8333333333333333333333333333333333333333333333333333333333333333", "response_shape_digest": "sha256:9333333333333333333333333333333333333333333333333333333333333333", "state_before_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "state_after_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "outcome": "SUCCEEDED"}, {"index": 1, "action": "SCRIPT_EXECUTE", "target_ref": "kfm:interaction-target:synthetic-composite-script:001", "request_shape_digest": "sha256:8444444444444444444444444444444444444444444444444444444444444444", "response_shape_digest": "sha256:9444444444444444444444444444444444444444444444444444444444444444", "state_before_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "state_after_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "outcome": "SUCCEEDED"}, {"index": 2, "action": "CAPTURE", "target_ref": "kfm:interaction-target:synthetic-composite-result:001", "request_shape_digest": "sha256:8555555555555555555555555555555555555555555555555555555555555555", "response_shape_digest": "sha256:9555555555555555555555555555555555555555555555555555555555555555", "state_before_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "state_after_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "outcome": "SUCCEEDED"}]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_assessment", "patch": {"assessment": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_unresolved_non_sensitive_redaction_profile", "patch": {"interaction": {"sensitive_state_classes": []}, "redaction": {"profile": {"resolution": "UNRESOLVED"}, "redacted_classes": [], "redaction_receipt_ref": null}, "assessment": {"obligations": ["DYNAMIC_RESULT_NOT_EVIDENCE", "NO_SENSITIVE_VALUE_RETENTION", "SOURCE_ARTIFACT_HANDOFF_REQUIRED"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["REDACTION_PROFILE_UNRESOLVED"]}},
+    {"name": "deny_step_index_gap", "patch": {}, "mutation": "step_index_gap", "expected": {"outcome": "DENY", "codes": ["STEP_INDEX_SEQUENCE_INVALID"]}},
+    {"name": "deny_state_chain_mismatch", "patch": {}, "mutation": "state_chain_mismatch", "expected": {"outcome": "DENY", "codes": ["STEP_STATE_CHAIN_MISMATCH"]}},
+    {"name": "deny_form_action_missing", "patch": {}, "mutation": "form_action_missing", "expected": {"outcome": "DENY", "codes": ["INTERACTION_KIND_ACTION_MISMATCH"]}},
+    {"name": "deny_sensitive_coverage_mismatch", "patch": {}, "mutation": "sensitive_coverage_mismatch", "expected": {"outcome": "DENY", "codes": ["REDACTION_COVERAGE_MISMATCH"]}},
+    {"name": "deny_sensitive_redaction_receipt_missing", "patch": {}, "mutation": "sensitive_receipt_missing", "expected": {"outcome": "DENY", "codes": ["SENSITIVE_REDACTION_RECEIPT_REQUIRED"]}},
+    {"name": "deny_capture_handoff_obligation_missing", "patch": {}, "mutation": "capture_obligation_missing", "expected": {"outcome": "DENY", "codes": ["REQUIRED_OBLIGATION_MISSING"]}},
+    {"name": "deny_capture_result_incoherent", "patch": {}, "mutation": "capture_result_incoherent", "expected": {"outcome": "DENY", "codes": ["CAPTURE_RESULT_INCOHERENT"]}},
+    {"name": "deny_terminal_step_not_last", "patch": {}, "mutation": "terminal_step_not_last", "expected": {"outcome": "DENY", "codes": ["TERMINAL_STEP_NOT_LAST"]}},
+    {"name": "deny_receipt_hash_tamper", "patch": {}, "tamper": "receipt_hash", "expected": {"outcome": "DENY", "codes": ["RECEIPT_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_raw_cookie_values", "patch": {"cookies": {"session": "forbidden"}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

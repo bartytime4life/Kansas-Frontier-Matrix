@@ -1,0 +1,95 @@
+# Validate the fixture-only AgricultureObservation candidate.
+name: agriculture-observation
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/agriculture-observation.yml"
+      - "contracts/evidence/agriculture_observation.md"
+      - "schemas/contracts/v1/evidence/agriculture_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/agriculture_observation/**"
+      - "tools/validators/evidence/validate_agriculture_observation.py"
+      - "tests/validators/evidence/test_validate_agriculture_observation.py"
+      - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
+      - "contracts/common/geography_version.md"
+      - "schemas/contracts/v1/common/geography_version.schema.json"
+      - "contracts/data/county_year_panel.md"
+      - "schemas/contracts/v1/data/county_year_panel.schema.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-implementation-reference-agriculture-observation-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agriculture-observation.yml"
+      - "contracts/evidence/agriculture_observation.md"
+      - "schemas/contracts/v1/evidence/agriculture_observation.schema.json"
+      - "fixtures/contracts/v1/evidence/agriculture_observation/**"
+      - "tools/validators/evidence/validate_agriculture_observation.py"
+      - "tests/validators/evidence/test_validate_agriculture_observation.py"
+      - "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md"
+      - "contracts/common/geography_version.md"
+      - "schemas/contracts/v1/common/geography_version.schema.json"
+      - "contracts/data/county_year_panel.md"
+      - "schemas/contracts/v1/data/county_year_panel.schema.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-implementation-reference-agriculture-observation-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agriculture-observation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-agriculture-observation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          python -m unittest -v tests.validators.evidence.test_validate_agriculture_observation
+          python -m unittest -v tests.validators.evidence.test_validate_population_observation
+          python -m unittest -v tests.validators.evidence.test_validate_economic_observation
+          python -m unittest -v tests.data.test_county_year_panel
+          python tools/validators/evidence/validate_agriculture_observation.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-implementation-reference-agriculture-observation-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### AgricultureObservation"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only aggregate Kansas county-year agriculture state, units, source classification, missingness, correction lineage, disclosure, and deterministic identity."
+            echo "- Boundary: no live source access, geography or evidence resolution, farm/producer identification, classification resolution, frontier classification, policy evaluation, review approval, promotion, release, public use, publication, or deployment authority."
+          } >> "$GITHUB_STEP_SUMMARY"

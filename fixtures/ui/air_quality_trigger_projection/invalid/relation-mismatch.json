@@ -1,0 +1,34 @@
+{
+  "profile": "kfm.explorer.air-quality-trigger.fixture.v1",
+  "panel_id": "kfm:air-quality-trigger-panel:synthetic-relation-mismatch",
+  "outcome": "ANSWER",
+  "reason_code": "TRIGGER_CANDIDATE_AVAILABLE",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "candidate": {
+    "assessment_ref": "kfm://assessment/pm25-trigger/synthetic-001@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "candidate_state": "PROPOSED_TRIGGER_CANDIDATE",
+    "observation_ref": "kfm://observation/pm25/synthetic-001@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "trailing_median_ref": "kfm://baseline/pm25-median/synthetic-001@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "observed_at": "2026-08-01T12:00:00Z",
+    "knowledge_character": "OBSERVED_SENSOR",
+    "threshold_relation": "AT_OR_BELOW_MONITORED_THRESHOLD",
+    "trailing_median_relation": "ABOVE_TRAILING_MEDIAN",
+    "evidence_state": "REFERENCED_NOT_RESOLVED",
+    "evidence_refs": [
+      "kfm://evidence-ref/pm25-baseline/synthetic-001@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "kfm://evidence-ref/pm25-observation/synthetic-001@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    ]
+  },
+  "network_attempted": false,
+  "detector_configuration_mutated": false,
+  "air_quality_event_declared": false,
+  "regulatory_compliance_decided": false,
+  "health_advice_issued": false,
+  "policy_evaluated": false,
+  "review_approved": false,
+  "promotion_authorized": false,
+  "release_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

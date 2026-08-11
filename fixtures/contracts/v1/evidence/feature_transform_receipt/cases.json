@@ -1,0 +1,108 @@
+{
+  "object_type": "FeatureTransformReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.feature-transform-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "FeatureTransformReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.feature-transform-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-408",
+    "recorded_at": "2026-08-10T23:10:00Z",
+    "receipt_ref": "kfm:feature-transform-receipt:synthetic:001",
+    "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+    "execution_state": "COMPLETE",
+    "feature_set_manifest": {"ref": "kfm:feature-set-manifest:synthetic:001", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "resolution": "RESOLVED"},
+    "model_card": {"ref": "kfm:model-card:synthetic:v1.0.0", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+    "run_receipt": {"ref": "kfm:model-run-receipt:synthetic:001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+    "input_feature_set": {
+      "artifact_ref": "kfm:feature-set:synthetic:raw:001",
+      "artifact_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "resolution": "RESOLVED",
+      "feature_count": 2,
+      "feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"]
+    },
+    "transforms": [
+      {
+        "ordinal": 0,
+        "transform_id": "transform_000",
+        "transform_family": "SCALING",
+        "input_state": "RAW",
+        "output_state": "SCALED",
+        "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"],
+        "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"],
+        "feature_count_before": 2,
+        "feature_count_after": 2,
+        "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"},
+        "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"},
+        "fitted_on": "TRAINING_ONLY",
+        "rationale_ref": "kfm:rationale:synthetic:scaling:001"
+      },
+      {
+        "ordinal": 1,
+        "transform_id": "transform_001",
+        "transform_family": "FEATURE_SELECTION",
+        "input_state": "SCALED",
+        "output_state": "SELECTED",
+        "input_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"],
+        "output_feature_refs": ["kfm:feature:scaled_precipitation"],
+        "feature_count_before": 2,
+        "feature_count_after": 1,
+        "method": {"ref": "kfm:method:synthetic-selection:v1", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED"},
+        "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:selection:001", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "resolution": "RESOLVED"},
+        "fitted_on": "TRAINING_ONLY",
+        "rationale_ref": "kfm:rationale:synthetic:selection:001"
+      }
+    ],
+    "output_feature_set": {
+      "artifact_ref": "kfm:feature-set:synthetic:selected:001",
+      "artifact_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "resolution": "RESOLVED",
+      "feature_count": 1,
+      "feature_refs": ["kfm:feature:scaled_precipitation"]
+    },
+    "training_context": {
+      "evaluation_population_present": true,
+      "split_reference": {"ref": "kfm:validation-split:synthetic:001", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "resolution": "RESOLVED"},
+      "leakage_review": {"ref": "kfm:leakage-assessment:synthetic:001", "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "resolution": "RESOLVED"},
+      "review_record_refs": ["kfm:review-record:synthetic:feature-transform:001"]
+    },
+    "evidence_bundle_refs": ["kfm:evidence-bundle:synthetic:feature-input:001", "kfm:evidence-bundle:synthetic:transform-method:001"],
+    "downstream_disposition": "HOLD_FOR_REVIEW",
+    "limitations": ["DECLARATION_ONLY", "NO_EVIDENCE_RESOLUTION", "NO_MODEL_OR_TRANSFORM_EXECUTION", "NO_PUBLICATION_AUTHORITY"],
+    "authority_claims": {
+      "feature_registry_authority": false,
+      "transform_authority": false,
+      "model_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_scaling_and_selection", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_normalization", "patch": {"input_feature_set": {"feature_count": 1, "feature_refs": ["kfm:feature:raw_index"]}, "transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "NORMALIZATION", "input_state": "RAW", "output_state": "NORMALIZED", "input_feature_refs": ["kfm:feature:raw_index"], "output_feature_refs": ["kfm:feature:normalized_index"], "feature_count_before": 1, "feature_count_after": 1, "method": {"ref": "kfm:method:synthetic-normalization:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:normalization:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:normalization:001"}], "output_feature_set": {"feature_count": 1, "feature_refs": ["kfm:feature:normalized_index"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_encoding", "patch": {"input_feature_set": {"feature_count": 1, "feature_refs": ["kfm:feature:raw_region_class"]}, "transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "ENCODING", "input_state": "RAW", "output_state": "ENCODED", "input_feature_refs": ["kfm:feature:raw_region_class"], "output_feature_refs": ["kfm:feature:encoded_region_east", "kfm:feature:encoded_region_west"], "feature_count_before": 1, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-encoding:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:encoding:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:encoding:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:encoded_region_east", "kfm:feature:encoded_region_west"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_execution_incomplete", "patch": {"execution_state": "INCOMPLETE"}, "expected": {"outcome": "ABSTAIN", "codes": ["EXECUTION_INCOMPLETE"]}},
+    {"name": "abstain_method_unresolved", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "UNRESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}},
+    {"name": "abstain_parameter_unresolved", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "UNRESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}},
+    {"name": "abstain_split_unresolved", "patch": {"training_context": {"split_reference": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}},
+    {"name": "abstain_fit_scope_unresolved", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "UNRESOLVED", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["FIT_SCOPE_UNRESOLVED"]}},
+    {"name": "deny_chain_start_mismatch", "patch": {"input_feature_set": {"feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_temperature"]}}, "expected": {"outcome": "DENY", "codes": ["TRANSFORM_CHAIN_MISMATCH"]}},
+    {"name": "deny_chain_gap", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}, {"ordinal": 1, "transform_id": "transform_001", "transform_family": "FEATURE_SELECTION", "input_state": "SCALED", "output_state": "SELECTED", "input_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_temperature"], "output_feature_refs": ["kfm:feature:scaled_temperature"], "feature_count_before": 2, "feature_count_after": 1, "method": {"ref": "kfm:method:synthetic-selection:v1", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:selection:001", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:selection:001"}], "output_feature_set": {"feature_refs": ["kfm:feature:scaled_temperature"]}}, "expected": {"outcome": "DENY", "codes": ["TRANSFORM_CHAIN_MISMATCH"]}},
+    {"name": "deny_final_output_mismatch", "patch": {"output_feature_set": {"feature_refs": ["kfm:feature:scaled_elevation"]}}, "expected": {"outcome": "DENY", "codes": ["TRANSFORM_CHAIN_MISMATCH"]}},
+    {"name": "deny_feature_count_mismatch", "patch": {"input_feature_set": {"feature_count": 1}}, "expected": {"outcome": "DENY", "codes": ["FEATURE_COUNT_MISMATCH"]}},
+    {"name": "deny_selection_not_reductive", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}, {"ordinal": 1, "transform_id": "transform_001", "transform_family": "FEATURE_SELECTION", "input_state": "SCALED", "output_state": "SELECTED", "input_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-selection:v1", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:selection:001", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:selection:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"]}}, "expected": {"outcome": "DENY", "codes": ["FEATURE_SELECTION_NOT_REDUCTIVE"]}},
+    {"name": "deny_output_state_mismatch", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "NORMALIZED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}, {"ordinal": 1, "transform_id": "transform_001", "transform_family": "FEATURE_SELECTION", "input_state": "NORMALIZED", "output_state": "SELECTED", "input_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "output_feature_refs": ["kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 1, "method": {"ref": "kfm:method:synthetic-selection:v1", "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:selection:001", "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "resolution": "RESOLVED"}, "fitted_on": "TRAINING_ONLY", "rationale_ref": "kfm:rationale:synthetic:selection:001"}]}, "expected": {"outcome": "DENY", "codes": ["FEATURE_STATE_MISMATCH"]}},
+    {"name": "deny_evaluation_leakage", "patch": {"transforms": [{"ordinal": 0, "transform_id": "transform_000", "transform_family": "SCALING", "input_state": "RAW", "output_state": "SCALED", "input_feature_refs": ["kfm:feature:raw_elevation", "kfm:feature:raw_precipitation"], "output_feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"], "feature_count_before": 2, "feature_count_after": 2, "method": {"ref": "kfm:method:synthetic-standard-scaling:v1", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"}, "parameter_manifest": {"ref": "kfm:transform-parameters:synthetic:scaling:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}, "fitted_on": "FULL_DATASET", "rationale_ref": "kfm:rationale:synthetic:scaling:001"}], "output_feature_set": {"feature_count": 2, "feature_refs": ["kfm:feature:scaled_elevation", "kfm:feature:scaled_precipitation"]}}, "expected": {"outcome": "DENY", "codes": ["EVALUATION_LEAKAGE_RISK"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_bundle_refs": ["kfm:evidence-bundle:synthetic:transform-method:001", "kfm:evidence-bundle:synthetic:feature-input:001"]}, "expected": {"outcome": "DENY", "codes": ["REFERENCE_ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_public_review_missing", "patch": {"training_context": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_CANDIDATE_REVIEW_REFERENCE_MISSING"]}},
+    {"name": "deny_non_utc_timestamp", "patch": {"recorded_at": "2026-08-10T23:10:00+00:00"}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"publication_ready": true}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

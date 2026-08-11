@@ -1,0 +1,86 @@
+{
+  "receipt_id": "genrec-pass20-temporal-support-acceptance-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-support-acceptance.yml",
+    "contracts/common/temporal_support_acceptance_assessment.md",
+    "docs/intake/exploratory/pass-20-temporal-support-acceptance-source-map.md",
+    "fixtures/contracts/v1/common/temporal_support_acceptance_assessment/cases.json",
+    "schemas/contracts/v1/common/temporal_support_acceptance_assessment.schema.json",
+    "tests/cross_domain/test_temporal_support_acceptance_assessment.py",
+    "tools/validators/validate_temporal_support_acceptance_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-support-acceptance.yml": "sha256:3afa22816c551d25d4e515f62275d24fd3bee6de17c281dcc9867ab0dc53228e",
+    "contracts/common/temporal_support_acceptance_assessment.md": "sha256:d28b7bce8804793fbf2da8e6ca8db04135e71e7c5493e1ea030b2988cc46d765",
+    "docs/intake/exploratory/pass-20-temporal-support-acceptance-source-map.md": "sha256:f7839464e3f012276504a1c17c6624666d3fb3f0f620876f9edcfef8cbe0171f",
+    "fixtures/contracts/v1/common/temporal_support_acceptance_assessment/cases.json": "sha256:33a6d613221f55c72203380b7eeb1544e99b8a0722ae4cc1229c71730990f055",
+    "schemas/contracts/v1/common/temporal_support_acceptance_assessment.schema.json": "sha256:0bcab3e8b57666187965cf870f81d16685e67b753965310953ad18002cee531d",
+    "tests/cross_domain/test_temporal_support_acceptance_assessment.py": "sha256:e080c3478c21fc2bece98354806a2de1b53922850860120a5b4072ef958dd1b5",
+    "tools/validators/validate_temporal_support_acceptance_assessment.py": "sha256:7ed1cd4a32c1e417b901341f599714066aab0b536f5d24dca0a0f9e47488dbaf"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:d28b7bce8804793fbf2da8e6ca8db04135e71e7c5493e1ea030b2988cc46d765",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:517f5a958812f1974a73530dd692c63dbba7560b6580af6d97fe5ca56bca5247",
+      "sha256:cc4d2baa8cb9114f297a4f95d8202a49ffa364a89348b99171452eec50740c08",
+      "sha256:3fe21d6ead16a41b4b8864188509e7f2118960910b94807075c308f81e33aaa2",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": ["Supplied Pass 20 Part 2 atlas; connected private Drive corpus identifiers withheld"],
+    "evidence_refs": [
+      "attachment://supplied-pass20-part2-atlas#item=KFM-P20-EXP-013",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/evidence/temporal_support_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/layer_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/intake/exploratory/pass20-expansion-conformance-baseline.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-support-acceptance.yml": "CONFIRMED",
+    "contracts/common/temporal_support_acceptance_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-temporal-support-acceptance-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/temporal_support_acceptance_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/temporal_support_acceptance_assessment.schema.json": "PROPOSED",
+    "tests/cross_domain/test_temporal_support_acceptance_assessment.py": "CONFIRMED",
+    "tools/validators/validate_temporal_support_acceptance_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic temporal support acceptance tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-temporal-and-surface-regression", "outcome": "PASS", "reason": "Thirty-eight temporal-support, layer-manifest, policy-decision, runtime-envelope, and AI-receipt tests plus nineteen subtests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both metadata blocks were valid; the advisory profile reported only review-only document-registry add candidates."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass20-temporal-support-expansion", "validated": true, "evidence_ref": "attachment://supplied-pass20-part2-atlas#item=KFM-P20-EXP-013"},
+    {"id": "temporal-support-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/evidence/temporal_support_assessment.md"},
+    {"id": "layer-manifest-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/layer_manifest.md"},
+    {"id": "pass20-conformance-baseline", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/intake/exploratory/pass20-expansion-conformance-baseline.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T03:03:09Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only cross-surface temporal support acceptance. It requires surface-specific time coordinates and resolved temporal-support evidence while preserving deliberate-undated and abstention paths; it does not infer dates, inspect source payloads, mutate surfaces, or create evidence, policy, review, release, publication, or public-use authority."
+}

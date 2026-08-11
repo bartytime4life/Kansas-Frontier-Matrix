@@ -1,8 +1,10 @@
 """Validate fixture-only claim scope dimension assessments.
 
-This module checks declared time, space, and attribute scope metadata. It does
-not inspect observations, resolve evidence, infer scope, decide policy or
-review, change lifecycle state, release, publish, or authorize a public claim.
+The validator proves closed shape, deterministic identity, and local
+time-space-attribute role coherence. It does not inspect claims, resolve
+EvidenceBundles, authenticate scope references, evaluate representation
+fitness or policy, approve review, release, deploy, publish, or authorize
+public use.
 """
 
 from __future__ import annotations
@@ -23,18 +25,31 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/evidence/claim_scope_dimension_assessment.schema.json"
 FIXTURE_PATH = REPO_ROOT / "fixtures/contracts/v1/evidence/claim_scope_dimension_assessment/cases.json"
 MAX_FILE_BYTES = 1_048_576
-DIMENSIONS = ("ATTRIBUTE", "SPACE", "TIME")
-ABSTAIN_CODES = {"ASSESSMENT_INCOMPLETE", "ASSESSMENT_UNKNOWN", "DIMENSION_SCOPE_UNRESOLVED", "EVIDENCE_SCOPE_UNRESOLVED"}
-BASE_DISCLOSURES = {"ATTRIBUTE_SCOPE_DISCLOSURE", "SPACE_SCOPE_DISCLOSURE", "TIME_SCOPE_DISCLOSURE"}
-PUBLIC_USES = {"PUBLIC_MAP", "PUBLIC_ANSWER", "POLICY_CONTEXT"}
+ABSTAIN_CODES = {
+    "ASSESSMENT_INCOMPLETE",
+    "ASSESSMENT_UNKNOWN",
+    "DIMENSION_ROLE_UNRESOLVED",
+    "DIMENSION_SCOPE_UNRESOLVED",
+}
+INTERPRETATION_BY_DIMENSION = {
+    "TIME": "TIME_SERIES_AT_CONTROLLED_SPACE_ATTRIBUTE",
+    "SPACE": "SPATIAL_CROSS_SECTION_AT_CONTROLLED_TIME_ATTRIBUTE",
+    "ATTRIBUTE": "ATTRIBUTE_COMPARISON_AT_CONTROLLED_TIME_SPACE",
+}
+EXPECTED_LIMITATIONS = [
+    "CLAIM_SCOPE_ONLY",
+    "NO_EVIDENCE_RESOLUTION",
+    "NO_PUBLICATION_AUTHORITY",
+    "NO_REPRESENTATION_AUTHORITY",
+]
 
 
 class DuplicateKeyError(ValueError):
-    pass
+    """Raised when a JSON object repeats a member name."""
 
 
 class NonFiniteNumberError(ValueError):
-    pass
+    """Raised when a JSON number is not finite."""
 
 
 @dataclass(frozen=True, order=True)
@@ -81,7 +96,12 @@ def load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding
             return None, [Finding("FILE_NOT_FOUND", "/")]
         if path.stat().st_size > MAX_FILE_BYTES:
             return None, [Finding("FILE_TOO_LARGE", "/")]
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_pairs, parse_constant=_nonfinite, parse_float=_finite_float)
+        value = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=_pairs,
+            parse_constant=_nonfinite,
+            parse_float=_finite_float,
+        )
     except DuplicateKeyError:
         return None, [Finding("JSON_DUPLICATE_KEY", "/")]
     except NonFiniteNumberError:
@@ -94,8 +114,14 @@ def load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding
 
 
 def canonical_hash(value: object) -> str:
-    encoded = json.dumps(value, ensure_ascii=False, allow_nan=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+    payload = json.dumps(
+        value,
+        ensure_ascii=False,
+        allow_nan=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
 
 
 def compute_profile_hash(candidate: Mapping[str, object]) -> str:
@@ -107,8 +133,17 @@ def compute_profile_hash(candidate: Mapping[str, object]) -> str:
 def _schema_findings(candidate: object) -> list[Finding]:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(candidate), key=lambda error: (list(error.absolute_path), str(error.validator)))
-    return [Finding("SCHEMA_INVALID", "/" + "/".join(str(part) for part in error.absolute_path)) for error in errors[:100]]
+    errors = sorted(
+        validator.iter_errors(candidate),
+        key=lambda error: (list(error.absolute_path), str(error.validator)),
+    )
+    return [
+        Finding(
+            "SCHEMA_INVALID",
+            "/" + "/".join(str(part) for part in error.absolute_path),
+        )
+        for error in errors[:100]
+    ]
 
 
 def _is_utc(value: object) -> bool:
@@ -122,7 +157,11 @@ def _is_utc(value: object) -> bool:
 
 
 def _canonical_strings(value: object) -> bool:
-    return isinstance(value, list) and all(isinstance(item, str) for item in value) and value == sorted(set(value))
+    return (
+        isinstance(value, list)
+        and all(isinstance(item, str) for item in value)
+        and value == sorted(set(value))
+    )
 
 
 def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
@@ -132,63 +171,65 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
     if not _is_utc(candidate.get("observed_at")):
         findings.add(Finding("UTC_TIMESTAMP_REQUIRED", "/observed_at"))
 
-    dimensions = candidate["dimensions"]
     assessment = candidate["assessment"]
-    evidence_scope = candidate["evidence_bundle_scope"]
-    assert isinstance(dimensions, Mapping) and isinstance(assessment, Mapping) and isinstance(evidence_scope, Mapping)
+    dimensions = candidate["dimensions"]
+    limitations = candidate["limitations"]
+    assert isinstance(assessment, Mapping)
+    assert isinstance(dimensions, Mapping)
 
-    for field in ("controlled_dimensions", "measured_dimensions", "unresolved_dimensions", "obligations", "review_record_refs"):
-        if not _canonical_strings(assessment.get(field)):
-            findings.add(Finding("ARRAY_NOT_CANONICAL", f"/assessment/{field}"))
+    review_refs = assessment.get("review_record_refs")
+    if not _canonical_strings(review_refs):
+        findings.add(Finding("REVIEW_REFERENCES_NOT_CANONICAL", "/assessment/review_record_refs"))
+    if not _canonical_strings(limitations):
+        findings.add(Finding("LIMITATIONS_NOT_CANONICAL", "/limitations"))
+    if limitations != EXPECTED_LIMITATIONS:
+        findings.add(Finding("LIMITATION_SET_MISMATCH", "/limitations"))
 
-    role_by_name: dict[str, str] = {}
-    for name, key in (("ATTRIBUTE", "attribute"), ("SPACE", "space"), ("TIME", "time")):
-        declaration = dimensions[key]
-        assert isinstance(declaration, Mapping)
-        role = str(declaration["role"])
-        role_by_name[name] = role
-        resolution = declaration["resolution"]
-        if (role == "UNRESOLVED") != (resolution == "UNRESOLVED"):
-            findings.add(Finding("DIMENSION_RESOLUTION_ROLE_MISMATCH", f"/dimensions/{key}"))
+    role_by_dimension: dict[str, object] = {}
+    scope_refs: list[object] = []
+    unresolved = False
+    for name in ("time", "space", "attribute"):
+        item = dimensions[name]
+        assert isinstance(item, Mapping)
+        role_by_dimension[name.upper()] = item.get("role")
+        scope_refs.append(item.get("scope_ref"))
+        if item.get("role") == "UNRESOLVED":
+            unresolved = True
+            findings.add(Finding("DIMENSION_ROLE_UNRESOLVED", f"/dimensions/{name}/role"))
+        if item.get("resolution") == "UNRESOLVED":
+            unresolved = True
+            findings.add(Finding("DIMENSION_SCOPE_UNRESOLVED", f"/dimensions/{name}/resolution"))
+    if len(scope_refs) != len(set(scope_refs)):
+        findings.add(Finding("DUPLICATE_DIMENSION_SCOPE_REFERENCE", "/dimensions"))
 
-    expected = {
-        "controlled_dimensions": sorted(name for name, role in role_by_name.items() if role == "CONTROLLED"),
-        "measured_dimensions": sorted(name for name, role in role_by_name.items() if role == "MEASURED"),
-        "unresolved_dimensions": sorted(name for name, role in role_by_name.items() if role == "UNRESOLVED"),
-    }
-    for field, values in expected.items():
-        if assessment.get(field) != values:
-            findings.add(Finding("DIMENSION_PARTITION_MISMATCH", f"/assessment/{field}"))
-
-    state = assessment["state"]
-    unresolved = expected["unresolved_dimensions"]
-    if state == "INCOMPLETE":
-        findings.add(Finding("ASSESSMENT_INCOMPLETE", "/assessment/state"))
-    elif state == "UNKNOWN":
-        findings.add(Finding("ASSESSMENT_UNKNOWN", "/assessment/state"))
-    if unresolved:
-        if state == "COMPLETE":
-            findings.add(Finding("UNRESOLVED_DIMENSION_COMPLETE_DENIED", "/assessment/state"))
-        else:
-            findings.add(Finding("DIMENSION_SCOPE_UNRESOLVED", "/assessment/unresolved_dimensions"))
-    if evidence_scope["resolution"] == "UNRESOLVED":
-        findings.add(Finding("EVIDENCE_SCOPE_UNRESOLVED", "/evidence_bundle_scope/resolution"))
+    state = assessment.get("state")
+    measured = [name for name, role in role_by_dimension.items() if role == "MEASURED"]
+    controlled = [name for name, role in role_by_dimension.items() if role == "CONTROLLED"]
+    declared = assessment.get("measured_dimension")
+    interpretation = assessment.get("interpretation_class")
 
     if state == "COMPLETE":
-        if not expected["controlled_dimensions"]:
-            findings.add(Finding("CONTROLLED_DIMENSION_REQUIRED", "/assessment/controlled_dimensions"))
-        if not expected["measured_dimensions"]:
-            findings.add(Finding("MEASURED_DIMENSION_REQUIRED", "/assessment/measured_dimensions"))
-        obligations = set(assessment["obligations"])
-        if not BASE_DISCLOSURES <= obligations:
-            findings.add(Finding("SCOPE_DISCLOSURES_REQUIRED", "/assessment/obligations"))
-        if candidate["intended_use"] in PUBLIC_USES:
-            if "PUBLIC_SCOPE_CAVEAT_REQUIRED" not in obligations:
-                findings.add(Finding("PUBLIC_SCOPE_CAVEAT_REQUIRED", "/assessment/obligations"))
-            if not assessment["review_record_refs"]:
-                findings.add(Finding("PUBLIC_REVIEW_REFERENCE_REQUIRED", "/assessment/review_record_refs"))
-            if evidence_scope["resolution"] != "RESOLVED":
-                findings.add(Finding("PUBLIC_EVIDENCE_SCOPE_REQUIRED", "/evidence_bundle_scope/resolution"))
+        if unresolved:
+            findings.add(Finding("COMPLETE_SCOPE_UNRESOLVED", "/assessment/state"))
+        if len(measured) != 1 or len(controlled) != 2:
+            findings.add(Finding("DIMENSION_ROLE_CARDINALITY_INVALID", "/dimensions"))
+        elif declared != measured[0]:
+            findings.add(Finding("MEASURED_DIMENSION_MISMATCH", "/assessment/measured_dimension"))
+        if declared in INTERPRETATION_BY_DIMENSION:
+            if interpretation != INTERPRETATION_BY_DIMENSION[str(declared)]:
+                findings.add(Finding("INTERPRETATION_CLASS_MISMATCH", "/assessment/interpretation_class"))
+        else:
+            findings.add(Finding("COMPLETE_MEASURED_DIMENSION_UNKNOWN", "/assessment/measured_dimension"))
+        if candidate.get("intended_use") in {"PUBLIC_CANDIDATE", "POLICY_CONTEXT"} and not review_refs:
+            findings.add(Finding("PUBLIC_REVIEW_REFERENCE_REQUIRED", "/assessment/review_record_refs"))
+    elif state == "INCOMPLETE":
+        findings.add(Finding("ASSESSMENT_INCOMPLETE", "/assessment/state"))
+        if not unresolved or declared != "UNKNOWN" or interpretation != "UNRESOLVED":
+            findings.add(Finding("ASSESSMENT_STATE_INCOHERENT", "/assessment"))
+    elif state == "UNKNOWN":
+        findings.add(Finding("ASSESSMENT_UNKNOWN", "/assessment/state"))
+        if not unresolved or declared != "UNKNOWN" or interpretation != "UNRESOLVED":
+            findings.add(Finding("ASSESSMENT_STATE_INCOHERENT", "/assessment"))
     return sorted(findings)
 
 
@@ -213,11 +254,16 @@ def _merge_patch(base: object, patch: object) -> object:
         return copy.deepcopy(patch)
     target = copy.deepcopy(base) if isinstance(base, dict) else {}
     for key, value in patch.items():
-        target[key] = None if value is None else _merge_patch(target.get(key), value)
+        if value is None:
+            target.pop(key, None)
+        else:
+            target[key] = _merge_patch(target.get(key), value)
     return target
 
 
-def materialize_fixture_case(manifest: Mapping[str, object], entry: Mapping[str, object]) -> dict[str, object]:
+def materialize_fixture_case(
+    manifest: Mapping[str, object], entry: Mapping[str, object]
+) -> dict[str, object]:
     candidate = _merge_patch(manifest["base_candidate"], entry.get("patch", {}))
     assert isinstance(candidate, dict)
     candidate["profile_spec_hash"] = compute_profile_hash(candidate)
@@ -226,42 +272,50 @@ def materialize_fixture_case(manifest: Mapping[str, object], entry: Mapping[str,
     return candidate
 
 
-def validate_fixture_manifest() -> list[tuple[str, str, list[str]]]:
-    manifest, findings = load_json_object(FIXTURE_PATH)
-    if manifest is None or findings:
-        raise ValueError("fixture manifest is unreadable")
-    results: list[tuple[str, str, list[str]]] = []
+def validate_fixture_manifest(path: Path = FIXTURE_PATH) -> list[dict[str, object]]:
+    manifest, load_findings = load_json_object(path)
+    if manifest is None:
+        return [{
+            "name": "fixture_manifest",
+            "ok": False,
+            "observed": {
+                "outcome": "ERROR",
+                "codes": sorted({item.code for item in load_findings}),
+            },
+        }]
+    results: list[dict[str, object]] = []
     for entry in manifest["cases"]:
-        assert isinstance(entry, Mapping)
-        result = validate_candidate(materialize_fixture_case(manifest, entry))
+        candidate = materialize_fixture_case(manifest, entry)
+        result = validate_candidate(candidate)
+        observed = {"outcome": result.outcome, "codes": result.codes}
         expected = entry["expected"]
-        assert isinstance(expected, Mapping)
-        name = str(entry["name"])
-        if result.outcome != expected["outcome"] or result.codes != expected["codes"]:
-            raise AssertionError(f"{name}: expected {expected}, got {result.outcome} {result.codes}")
-        results.append((name, result.outcome, result.codes))
+        results.append({
+            "name": entry["name"],
+            "ok": observed == expected,
+            "expected": expected,
+            "observed": observed,
+        })
     return results
 
 
-def run(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("files", nargs="*", type=Path)
-    parser.add_argument("--fixtures", action="store_true")
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate fixture-only claim scope dimension assessments.")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--fixtures", action="store_true")
+    group.add_argument("--input", type=Path)
     args = parser.parse_args(argv)
     if args.fixtures:
-        for name, outcome, codes in validate_fixture_manifest():
-            print(json.dumps({"case": name, "codes": codes, "outcome": outcome}, sort_keys=True, separators=(",", ":")))
-        return 0
-    if not args.files:
-        parser.error("provide files or --fixtures")
-    rc = 0
-    for path in sorted(args.files):
-        candidate, findings = load_json_object(path)
-        result = ValidationResult("ERROR", tuple(findings)) if candidate is None else validate_candidate(candidate)
-        print(json.dumps({"file": path.name, "codes": result.codes, "outcome": result.outcome}, sort_keys=True, separators=(",", ":")))
-        rc = max(rc, 0 if result.outcome == "PASS" else 1)
-    return rc
+        results = validate_fixture_manifest()
+        print(json.dumps(results, indent=2, sort_keys=True))
+        return 0 if all(item["ok"] for item in results) else 1
+    candidate, findings = load_json_object(args.input)
+    if candidate is None:
+        result = ValidationResult("ERROR", tuple(sorted(findings)))
+    else:
+        result = validate_candidate(candidate)
+    print(json.dumps({"outcome": result.outcome, "codes": result.codes}, indent=2, sort_keys=True))
+    return 0 if result.outcome == "PASS" else 1
 
 
 if __name__ == "__main__":
-    raise SystemExit(run())
+    raise SystemExit(main())

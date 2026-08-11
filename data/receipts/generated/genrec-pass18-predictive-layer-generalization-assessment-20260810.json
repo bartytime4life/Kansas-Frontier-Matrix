@@ -1,0 +1,73 @@
+{
+  "receipt_id": "genrec-pass18-predictive-layer-generalization-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/predictive-layer-generalization-assessment.yml",
+    "contracts/evidence/predictive_layer_generalization_assessment.md",
+    "docs/intake/exploratory/pass-18-predictive-layer-generalization-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/predictive_layer_generalization_assessment/cases.json",
+    "schemas/contracts/v1/evidence/predictive_layer_generalization_assessment.schema.json",
+    "tests/validators/evidence/test_validate_predictive_layer_generalization_assessment.py",
+    "tools/validators/evidence/validate_predictive_layer_generalization_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/predictive-layer-generalization-assessment.yml": "sha256:7115ece2811e9a9c57fb341dd914c359fa2c6c588cf7544d27619b7dd40f6b77",
+    "contracts/evidence/predictive_layer_generalization_assessment.md": "sha256:4f548f4dc326242aa8e88750a85eb273e70fa579b559dcaf4cc1db3cc32440fa",
+    "docs/intake/exploratory/pass-18-predictive-layer-generalization-assessment-source-map.md": "sha256:ffdd1c985d02984b84c712b94b1e71914e937f5505743c0a432c694a545e84b2",
+    "fixtures/contracts/v1/evidence/predictive_layer_generalization_assessment/cases.json": "sha256:f7a56015ece9e95a33e9a27d8a9712ab54d737d9f6ba9b74550178ea27b13c42",
+    "schemas/contracts/v1/evidence/predictive_layer_generalization_assessment.schema.json": "sha256:82817c20b2d624eccba4788e2929692caf29077615d72acdafbc25a75625bf25",
+    "tests/validators/evidence/test_validate_predictive_layer_generalization_assessment.py": "sha256:b527e34bf2a63f1f4a756b4bfc927ade9a0fe1c8cdd0d9bd8741a624adecc4d6",
+    "tools/validators/evidence/validate_predictive_layer_generalization_assessment.py": "sha256:19f2f53fb296516da6b9f5bf1b2178054efd3db72d231ae054b748b98e1a774f"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:4f548f4dc326242aa8e88750a85eb273e70fa579b559dcaf4cc1db3cc32440fa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and draft PR publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:58b4b3263def0e4edfa134ada51406337a76887f11d0ebebb79b2f731537604e", "sha256:769e69cb891bb8a9d3649600ef08e67e08ef378c81e17ce6fcbed7647e76eca2", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-407", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/analytic_output_disclosure_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/governance/model_card_envelope.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/predictive-layer-generalization-assessment.yml": "CONFIRMED",
+    "contracts/evidence/predictive_layer_generalization_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-predictive-layer-generalization-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/predictive_layer_generalization_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/predictive_layer_generalization_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_predictive_layer_generalization_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_predictive_layer_generalization_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic predictive-layer generalization tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Eighteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-model-disclosure-regression", "outcome": "PASS", "reason": "Twenty-nine analytic-output disclosure, model-card envelope, and Habitat model-run receipt tests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-predictive-generalization-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-407"},
+    {"id": "analytic-output-disclosure-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/evidence/analytic_output_disclosure_assessment.md"},
+    {"id": "model-card-envelope-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/governance/model_card_envelope.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T19:02:13Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only predictive-layer generalization assessment. It carries split, cross-validation, overfitting, and generalization declarations without defining numeric scientific thresholds or creating model-evaluation, evidence, layer, policy, review, release, publication, or public-use authority."
+}

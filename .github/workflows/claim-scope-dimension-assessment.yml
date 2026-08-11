@@ -76,6 +76,6 @@ jobs:
             echo "### Claim scope dimension assessment"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: fixture-only time, space, attribute role, partition, disclosure, reference, and review-posture coherence."
-            echo "- Boundary: no observation inspection, scope inference, EvidenceBundle resolution, policy or review decision, lifecycle write, release, publication, or public-answer authority."
+            echo "- Scope: fixture-only time, space, and attribute role, reference, interpretation, limitation, and identity coherence."
+            echo "- Boundary: no claim inspection, EvidenceBundle resolution, geographic inference, policy or review decision, promotion, release, deployment, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"

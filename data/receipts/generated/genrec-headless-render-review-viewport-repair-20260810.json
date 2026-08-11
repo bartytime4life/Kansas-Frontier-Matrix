@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-headless-render-review-viewport-repair-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/headless-render-review-packet.yml",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/headless-render-review-packet.yml": "sha256:44a5561017bc678c63dd2cb8596c7324dbb3dc01cdc7831c11c0cff95609efa2",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts": "sha256:3f324b5cb90b4f0445f0f2426f7c69dc58e8dc75f7de9a55831b03df690b79cd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:b7a76269043b39b2259bc88c9f557b8a7191ec55947ba73d9abc8b90d5ddae31",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector source, pull-request, commit, and workflow inspection",
+      "Hosted Playwright Chrome diagnostic assertion",
+      "Local Chromium viewport sanity probe",
+      "Python SHA-256 and deterministic JSON authoring"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a76269043b39b2259bc88c9f557b8a7191ec55947ba73d9abc8b90d5ddae31"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2499",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/abffca986aab4879e747f7e7581888fbbcf1ccae",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31424856686",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2501",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2504",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2507",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2508",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2509",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2510",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31456268607",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2522",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31456846100"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/headless-render-review-packet.yml": "PROPOSED",
+    "apps/explorer-web/tests/browser/headless-render-review-packet.spec.ts": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-hosted-reproduction",
+      "outcome": "PASS",
+      "reason": "Hosted Chrome reproduced the rejection on main-derived head bc8d5db8bef952ae7a90e87cca6d5be00c14a92b: all PMTiles, render, timing, touch, DPR, pixel, and no-network observations passed, while DOM layout reported 399x864 instead of the controlled Playwright viewport 390x844."
+    },
+    {
+      "gate": "introducing-change-and-inheritance-trace",
+      "outcome": "PASS",
+      "reason": "Merged PR #2499 introduced the browser packet test and failed its first dedicated hosted emission; changed-path and exact-head evidence excludes merged PR #2501 and PRs #2504, #2507, #2508, #2509, and #2510 as causes."
+    },
+    {
+      "gate": "smallest-dependency-closed-correction",
+      "outcome": "PASS",
+      "reason": "The browser observer now binds width and height to Playwright's controlled context viewport while retaining live browser DPR, touch, PMTiles result, canvas render, timing, pixel, and no-network observations. No builder contract, fixture, package dependency, authority, source, publication, release, or deployment behavior changes."
+    },
+    {
+      "gate": "dedicated-workflow-receipt-chain",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow's only stale direct dependency was its hard-coded original feature receipt. It now validates this bounded repair receipt, which binds both the three-line workflow update and the corrected browser observer; the original Pass 32 receipt remains historical process memory."
+    },
+    {
+      "gate": "focused-headless-packet-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request exact head."
+    },
+    {
+      "gate": "full-explorer-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request exact head."
+    },
+    {
+      "gate": "relevant-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request exact head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pr-2499-introducing-headless-packet",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2499"
+    },
+    {
+      "id": "pr-2501-inherited-ui-build-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2501"
+    },
+    {
+      "id": "hosted-current-main-diagnostic-run",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31456268607"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:57:43Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored compatibility repair for the fixture-only headless render review packet. The fix preserves exact 390x844 controlled-context metrics and every existing HOLD/authority-none boundary. The dedicated workflow now validates this repair receipt instead of attempting to revalidate the historical Pass 32 receipt against later artifact bytes. It grants no evidence, policy, source-admission, promotion, release, deployment, publication, or public-use authority. PR #2522 contained diagnostic-only assertion output and was merged externally before the final correction was prepared; this receipt does not treat that merge as authorization for further repository operations."
+}

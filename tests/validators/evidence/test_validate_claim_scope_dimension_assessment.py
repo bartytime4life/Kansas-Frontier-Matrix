@@ -32,27 +32,43 @@ class ClaimScopeDimensionAssessmentTests(unittest.TestCase):
         return MODULE.materialize_fixture_case(MANIFEST, entry)
 
     def test_exact_fixture_matrix(self) -> None:
-        self.assertEqual(len(MODULE.validate_fixture_manifest()), 15)
+        results = MODULE.validate_fixture_manifest()
+        self.assertEqual(len(results), 14)
+        self.assertTrue(all(item["ok"] for item in results))
 
     def test_each_dimension_can_be_measured_without_authority(self) -> None:
-        for name in ("pass_public_space_measured", "pass_internal_time_measured", "pass_internal_attribute_measured"):
+        for name in (
+            "pass_time_measured",
+            "pass_space_measured_public_candidate",
+            "pass_attribute_measured",
+        ):
             candidate = self._candidate(name)
             self.assertEqual(MODULE.validate_candidate(candidate).outcome, "PASS")
             self.assertFalse(any(candidate["authority_claims"].values()))
 
-    def test_unresolved_scope_abstains(self) -> None:
-        for name in ("abstain_incomplete_assessment", "abstain_unresolved_dimension", "abstain_evidence_scope_unresolved"):
+    def test_unresolved_dimension_profiles_abstain(self) -> None:
+        for name in (
+            "abstain_incomplete_time_role",
+            "abstain_unknown_space_role",
+            "abstain_unresolved_attribute_scope",
+        ):
             self.assertEqual(MODULE.validate_candidate(self._candidate(name)).outcome, "ABSTAIN")
 
-    def test_complete_scope_failures_deny(self) -> None:
-        for name in ("deny_partition_mismatch", "deny_complete_unresolved_dimension", "deny_no_controlled_dimension", "deny_no_measured_dimension", "deny_public_review_missing", "deny_public_caveat_missing", "deny_resolution_role_mismatch"):
-            self.assertEqual(MODULE.validate_candidate(self._candidate(name)).outcome, "DENY")
+    def test_role_interpretation_and_review_invariants_fail_closed(self) -> None:
+        expected = {
+            "deny_measured_dimension_mismatch": ["MEASURED_DIMENSION_MISMATCH"],
+            "deny_interpretation_mismatch": ["INTERPRETATION_CLASS_MISMATCH"],
+            "deny_two_measured_dimensions": ["DIMENSION_ROLE_CARDINALITY_INVALID"],
+            "deny_public_review_missing": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"],
+        }
+        for name, codes in expected.items():
+            self.assertEqual(MODULE.validate_candidate(self._candidate(name)).codes, codes)
 
-    def test_profile_hash_binds_scope_roles(self) -> None:
-        candidate = self._candidate("pass_public_space_measured")
+    def test_profile_hash_binds_scope_semantics(self) -> None:
+        candidate = self._candidate("pass_time_measured")
         self.assertEqual(candidate["profile_spec_hash"], MODULE.compute_profile_hash(candidate))
         changed = copy.deepcopy(candidate)
-        changed["dimensions"]["space"]["role"] = "CONTROLLED"
+        changed["assessment"]["measured_dimension"] = "SPACE"
         self.assertNotEqual(candidate["profile_spec_hash"], MODULE.compute_profile_hash(changed))
 
     def test_fixture_replay_is_deterministic_and_no_network(self) -> None:

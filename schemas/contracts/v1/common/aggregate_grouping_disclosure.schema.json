@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/aggregate_grouping_disclosure.schema.json",
+  "title": "AggregateGroupingDisclosureCandidate",
+  "description": "Fixture-only declaration distinguishing detail, subtotal, and grand-total aggregation rows without analytics, evidence, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "recorded_at",
+    "disclosure_ref",
+    "intended_use",
+    "execution_state",
+    "execution_family",
+    "aggregation_operation",
+    "query_run",
+    "method_definition",
+    "grouping_dimensions",
+    "rows",
+    "aggregate_output",
+    "engine_semantics",
+    "public_disclosure",
+    "evidence_bundle_refs",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "AggregateGroupingDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.aggregate-grouping-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-480"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "disclosure_ref": {"$ref": "#/$defs/ref"},
+    "intended_use": {"enum": ["INTERNAL_QA", "ANALYTICAL_PANEL_CANDIDATE", "PUBLIC_AGGREGATE_SUPPORT_CANDIDATE"]},
+    "execution_state": {"enum": ["COMPLETE", "INCOMPLETE", "ERROR"]},
+    "execution_family": {"enum": ["SQL", "DATAFRAME", "ETL", "CUSTOM"]},
+    "aggregation_operation": {"enum": ["GROUP_BY", "ROLLUP", "CUBE", "GROUPING_SETS", "NON_SQL_EQUIVALENT"]},
+    "query_run": {"$ref": "#/$defs/resolved_reference"},
+    "method_definition": {"$ref": "#/$defs/resolved_reference"},
+    "grouping_dimensions": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/dimension"}
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {"$ref": "#/$defs/grouping_row"}
+    },
+    "aggregate_output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "artifact_digest", "resolution", "declared_row_count"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/ref"},
+        "artifact_digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "declared_row_count": {"type": "integer", "minimum": 1, "maximum": 256}
+      }
+    },
+    "engine_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine_profile", "parity_state", "parity_fixture_ref"],
+      "properties": {
+        "engine_profile": {"$ref": "#/$defs/resolved_reference"},
+        "parity_state": {"enum": ["SINGLE_ENGINE_DECLARED", "SYNTHETIC_PARITY", "UNRESOLVED", "MISMATCH"]},
+        "parity_fixture_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "public_disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detail_rows_labeled",
+        "subtotals_labeled",
+        "grand_total_labeled",
+        "source_nulls_distinguished",
+        "review_record_refs",
+        "release_manifest_refs"
+      ],
+      "properties": {
+        "detail_rows_labeled": {"type": "boolean"},
+        "subtotals_labeled": {"type": "boolean"},
+        "grand_total_labeled": {"type": "boolean"},
+        "source_nulls_distinguished": {"type": "boolean"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "release_manifest_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "evidence_bundle_refs": {"$ref": "#/$defs/ref_array"},
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["DECLARATION_ONLY", "NO_AGGREGATION_EXECUTION", "NO_EVIDENCE_RESOLUTION", "NO_PUBLICATION_AUTHORITY"]
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate_truth_authority",
+        "query_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "aggregate_truth_authority": {"const": false},
+        "query_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "dimension": {"type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z][a-z0-9_]*$"},
+    "dimension_array": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/dimension"}
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "grouping_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "row_ref",
+        "row_kind",
+        "display_label",
+        "grouping_keys",
+        "rolled_up_dimensions",
+        "source_null_dimensions",
+        "grouping_mask",
+        "group_values",
+        "aggregate_statistic"
+      ],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 0, "maximum": 255},
+        "row_ref": {"$ref": "#/$defs/ref"},
+        "row_kind": {"enum": ["DETAIL", "SUBTOTAL", "GRAND_TOTAL"]},
+        "display_label": {"enum": ["DETAIL_GROUP", "SUBTOTAL", "GRAND_TOTAL"]},
+        "grouping_keys": {"$ref": "#/$defs/dimension_array"},
+        "rolled_up_dimensions": {"$ref": "#/$defs/dimension_array"},
+        "source_null_dimensions": {"$ref": "#/$defs/dimension_array"},
+        "grouping_mask": {"type": "integer", "minimum": 0, "maximum": 4095},
+        "group_values": {"$ref": "#/$defs/resolved_reference"},
+        "aggregate_statistic": {"$ref": "#/$defs/resolved_reference"}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/common/aggregate_grouping_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/common/aggregate_grouping_disclosure/",
+    "validator": "tools/validators/validate_aggregate_grouping_disclosure.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false,
+    "group_values_allowed": false
+  }
+}

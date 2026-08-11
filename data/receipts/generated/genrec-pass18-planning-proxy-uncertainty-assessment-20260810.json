@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-pass18-planning-proxy-uncertainty-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/planning-proxy-uncertainty-assessment.yml",
+    "contracts/evidence/planning_proxy_uncertainty_assessment.md",
+    "docs/intake/exploratory/pass-18-planning-proxy-uncertainty-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/planning_proxy_uncertainty_assessment/cases.json",
+    "schemas/contracts/v1/evidence/planning_proxy_uncertainty_assessment.schema.json",
+    "tests/validators/evidence/test_validate_planning_proxy_uncertainty_assessment.py",
+    "tools/validators/evidence/validate_planning_proxy_uncertainty_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/planning-proxy-uncertainty-assessment.yml": "sha256:0c9c9af507071899c6bd2f91aff9d5ed5d56799a24d33a2cb6702cf6088f3f6f",
+    "contracts/evidence/planning_proxy_uncertainty_assessment.md": "sha256:a764af258a6d5c1f5b651f16d0bcaf3419d7fd2f10e6f7a892b10ca45aeab605",
+    "docs/intake/exploratory/pass-18-planning-proxy-uncertainty-assessment-source-map.md": "sha256:27705fd9c7a9cade7f9a167b4d867eef11e5a50191483f62e8bbe4f0e713afec",
+    "fixtures/contracts/v1/evidence/planning_proxy_uncertainty_assessment/cases.json": "sha256:68364eefcf61c223364df71c96f43d24b106579d714c5780193053a8068168f8",
+    "schemas/contracts/v1/evidence/planning_proxy_uncertainty_assessment.schema.json": "sha256:69ba71e8bf41fbcec4413d18f700265433a7af81a8fab91282125ca758ee89bc",
+    "tests/validators/evidence/test_validate_planning_proxy_uncertainty_assessment.py": "sha256:6eb6a05475ad58e034e2b1f87686be3c302a8436293021fb41942818277a279c",
+    "tools/validators/evidence/validate_planning_proxy_uncertainty_assessment.py": "sha256:f64f1b7ad01df0725a96ecf50ef258336ae5376a9e6321088d17b6e67bc9759a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:a764af258a6d5c1f5b651f16d0bcaf3419d7fd2f10e6f7a892b10ca45aeab605",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local deterministic JSON, YAML, Python, schema, and fixture validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Google Drive New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-320",
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#document=New-Ideas-5-19-26",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/evidence/representation_fitness_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/planning-proxy-uncertainty-assessment.yml": "CONFIRMED",
+    "contracts/evidence/planning_proxy_uncertainty_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-planning-proxy-uncertainty-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/planning_proxy_uncertainty_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/planning_proxy_uncertainty_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_planning_proxy_uncertainty_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_planning_proxy_uncertainty_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic planning proxy and uncertainty tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Fifteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-kfm-p18-inv-320",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-320"
+    },
+    {
+      "id": "drive-new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#document=New-Ideas-5-19-26"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:43:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only planning proxy and uncertainty disclosure assessment. It evaluates local declaration coherence for data-poor decision-support candidates without resolving evidence, deciding policy or fitness, authorizing review, changing lifecycle state, releasing, or publishing."
+}

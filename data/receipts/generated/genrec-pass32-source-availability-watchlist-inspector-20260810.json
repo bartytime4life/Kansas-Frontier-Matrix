@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec-pass32-source-availability-watchlist-inspector-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/SourceAvailabilityWatchlistProjection.ts",
+    "apps/explorer-web/src/features/source_availability_watchlist/README.md",
+    "apps/explorer-web/src/features/source_availability_watchlist/index.ts",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.fixture.ts",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.html",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.spec.ts",
+    "apps/explorer-web/tests/source-availability-watchlist.test.ts",
+    "docs/intake/exploratory/pass-32-source-availability-watchlist-inspector-source-map.md",
+    "fixtures/ui/source_availability_watchlist_projection/README.md",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/candidate-binding.json",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/extra-field.json",
+    "fixtures/ui/source_availability_watchlist_projection/valid/available.json",
+    "fixtures/ui/source_availability_watchlist_projection/valid/denied.json",
+    "fixtures/ui/source_availability_watchlist_projection/valid/error.json",
+    "fixtures/ui/source_availability_watchlist_projection/valid/held.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/SourceAvailabilityWatchlistProjection.ts": "sha256:673f41bfbcde99ecf5be7fadeba0e29a46efb79b503858999ac6863e9d26b382",
+    "apps/explorer-web/src/features/source_availability_watchlist/README.md": "sha256:242aea3fc01c23ab52d01c9cf496e1c54518686d7f2a7a401b3dc79660e94cdd",
+    "apps/explorer-web/src/features/source_availability_watchlist/index.ts": "sha256:3df2c5dcc0269672cef345c5e135f717c4278a9b5af803e722408b7df67eccbb",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.fixture.ts": "sha256:68538ad904e0bce42a36d815b54dd1c3b8c64d47db0f3cce88ffab4f30cb6203",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.html": "sha256:affc047f418e9c84c26c45e0a6fba8544bd58247e5e2ad632196f896ba704cc9",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.spec.ts": "sha256:5a272bee15b28ff5c9f0bd5a3a8f544f63cf852ee910d27fbc19e753cbc6923a",
+    "apps/explorer-web/tests/source-availability-watchlist.test.ts": "sha256:4a28927376c3911edf6293c996d365c064df23f8e2ebb08749e7c135756cc450",
+    "docs/intake/exploratory/pass-32-source-availability-watchlist-inspector-source-map.md": "sha256:64ff19759aa75a555e01dcb7e8681c2dbf660a58267b53946e88494600604ce8",
+    "fixtures/ui/source_availability_watchlist_projection/README.md": "sha256:55490ccc56268fe2d1ced41cb38534b762c3d8b27d6d372b675e3c1d8f9d98b7",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/candidate-binding.json": "sha256:bd0c5fd0b3a5b1c4e189939ec02d5ee17a9151cc81f83f237c31d7fd456ed8d3",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/extra-field.json": "sha256:4798de90a5d2f11560f2e0c7bf678efbfbd3fab9f2c00590472943da71c8f8f2",
+    "fixtures/ui/source_availability_watchlist_projection/valid/available.json": "sha256:5df83e3bdbb7a2e253008b8d6db59e9245b53926fbb4ec8ec0db49417c8340b7",
+    "fixtures/ui/source_availability_watchlist_projection/valid/denied.json": "sha256:9e4ff169c1fdd6b60e7c0f58c7373fcea90dce2656a6c2205cf90df2efbe7cd5",
+    "fixtures/ui/source_availability_watchlist_projection/valid/error.json": "sha256:2909cd10d2704f2920dadbd9d58dc1eab6d0c7280518d4c989db2a515204b8a1",
+    "fixtures/ui/source_availability_watchlist_projection/valid/held.json": "sha256:e7663af335be7572b5af48bf2ca199c5b5bbfd4d24d6ee642e7a7f6b3f8ac3fb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "repository evidence inspection",
+      "local TypeScript compilation",
+      "deterministic fixture checks",
+      "content-hash validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0f9d8ba8a17619dadf6db6088df85d9841f3d8a5d88436ee26a888f911949a60",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "GPT Markdown Prompt 4.0.pdf — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Living_Compass_Working_Edition_1.0.docx"
+    ],
+    "evidence_refs": [
+      "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-FEAT-0016",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/source/source_availability_watchlist.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/intake/exploratory/pass-32-source-availability-watchlist-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "gdrive://1w7hk5KyIY1nys1weekfpwgeCLZOvoqOK"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/SourceAvailabilityWatchlistProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/source_availability_watchlist/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/source_availability_watchlist/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/source-availability-watchlist.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/source-availability-watchlist.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-source-availability-watchlist-inspector-source-map.md": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/README.md": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/candidate-binding.json": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/valid/available.json": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/source_availability_watchlist_projection/valid/held.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at ef1ba46a19e4de7c176e9d093c1285e73a0af75a; inspected current foundations and open pull requests; no open PR or target path matched this source availability watchlist inspector slice."
+    },
+    {
+      "gate": "source-to-repository-reconciliation",
+      "outcome": "PASS",
+      "reason": "Adapted KFM-P32-FEAT-0016 through existing repository authorities without creating a parallel contract, schema, policy, release, or publication home."
+    },
+    {
+      "gate": "directory-rules-and-dependency-closure",
+      "outcome": "PASS",
+      "reason": "Placed UI code in apps/, synthetic projections in fixtures/ui/, tests in the Explorer harness, source mapping in docs/intake/exploratory/, and generated accountability in data/receipts/generated/."
+    },
+    {
+      "gate": "typescript-and-projection-validation",
+      "outcome": "PASS",
+      "reason": "TypeScript strict compile and deterministic projection checks passed for available, held, and invalid candidate/field fixtures."
+    },
+    {
+      "gate": "security-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Static source review confirms no fetch, persistence, lifecycle-store read, policy execution, model access, release action, or publication path in the authored adapter/component."
+    },
+    {
+      "gate": "artifact-hash-integrity",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 bindings for all 15 authored non-receipt artifacts."
+    },
+    {
+      "gate": "repository-native-full-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full repository checkout was available. Hosted exact-head workflows are the repository-native evidence after draft PR creation."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Workflow runs begin after the branch and draft pull request are created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; no approval is inferred from generation or local checks."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pass32-card",
+      "validated": true,
+      "evidence_ref": "gdrive://1nNpWLceYOifELgJDB3ihQHTtYfQUsvdN#KFM-P32-FEAT-0016"
+    },
+    {
+      "id": "campaign-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ef1ba46a19e4de7c176e9d093c1285e73a0af75a"
+    },
+    {
+      "id": "current-repository-foundation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/source/source_availability_watchlist.md"
+    },
+    {
+      "id": "source-adaptation-lineage",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/intake/exploratory/pass-32-source-availability-watchlist-source-map.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "drive-living-compass",
+      "validated": true,
+      "evidence_ref": "gdrive://1w7hk5KyIY1nys1weekfpwgeCLZOvoqOK"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:41:25Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored fixture-only Explorer projection for a source availability watchlist. It is read-only review routing and does not probe or activate sources, create or execute candidate work, evaluate policy, mutate lifecycle state, authorize release, or publish."
+}

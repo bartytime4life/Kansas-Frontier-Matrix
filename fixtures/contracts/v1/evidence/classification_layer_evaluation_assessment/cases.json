@@ -1,0 +1,112 @@
+{
+  "object_type": "ClassificationLayerEvaluationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "base_candidate": {
+    "object_type": "ClassificationLayerEvaluationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.classification-layer-evaluation-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-432",
+    "observed_at": "2026-08-10T18:00:00Z",
+    "classification_layer_ref": "kfm:layer:synthetic-crop-classification:001",
+    "classification_layer_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_use": "PUBLIC_INTERPRETATION",
+    "model_card": {"ref": "kfm:model-card:synthetic-classifier:001", "resolution": "RESOLVED"},
+    "model_run_receipt": {"ref": "kfm:model-run:synthetic-classifier:001", "resolution": "RESOLVED"},
+    "evidence_bundle": {"ref": "kfm:evidence-bundle:synthetic-classification-evaluation:001", "resolution": "RESOLVED"},
+    "predictive_generalization_assessment": {"ref": "kfm:predictive-generalization:synthetic-classifier:001", "resolution": "RESOLVED"},
+    "evaluation": {
+      "state": "COMPLETE",
+      "method": "SUPERVISED_CONFUSION_MATRIX",
+      "evaluation_dataset_ref": "kfm:dataset:synthetic-labeled-evaluation:001",
+      "ground_truth_posture": "VERIFIED_REFERENCE",
+      "class_labels": ["crop", "non_crop"],
+      "confusion_matrix": {
+        "orientation": "ROWS_ACTUAL_COLUMNS_PREDICTED",
+        "rows": [
+          {
+            "actual_label": "crop",
+            "predictions": [
+              {"predicted_label": "crop", "count": 8},
+              {"predicted_label": "non_crop", "count": 2}
+            ]
+          },
+          {
+            "actual_label": "non_crop",
+            "predictions": [
+              {"predicted_label": "crop", "count": 2},
+              {"predicted_label": "non_crop", "count": 8}
+            ]
+          }
+        ]
+      },
+      "reported_metrics": {
+        "sample_count": 20,
+        "correct_count": 16,
+        "overall_accuracy": 0.8,
+        "macro_precision": 0.8,
+        "macro_recall": 0.8,
+        "macro_f1": 0.8,
+        "per_class": [
+          {"label": "crop", "support": 10, "precision": 0.8, "recall": 0.8, "f1": 0.8},
+          {"label": "non_crop", "support": 10, "precision": 0.8, "recall": 0.8, "f1": 0.8}
+        ]
+      },
+      "comparable_evaluation_refs": [],
+      "limitation_refs": [
+        "kfm:limitation:synthetic-class-balance:001",
+        "kfm:limitation:synthetic-geography-scope:001"
+      ]
+    },
+    "disclosure": {
+      "validation_report_refs": ["kfm:validation-report:synthetic-classification:001"],
+      "review_record_refs": ["kfm:review-record:synthetic-classification:001"],
+      "evidence_drawer_section_ref": "kfm:evidence-drawer:synthetic-classification-evaluation:001",
+      "public_interpretation_caveat": "Synthetic arithmetic closure does not establish real-world classification fitness."
+    },
+    "limitations": [
+      "ARITHMETIC_CHECK_ONLY",
+      "DECLARATION_ONLY",
+      "NO_EVIDENCE_RESOLUTION",
+      "NO_MODEL_EXECUTION",
+      "NO_PUBLICATION_AUTHORITY",
+      "NO_SCIENTIFIC_THRESHOLD"
+    ],
+    "authority_claims": {
+      "model_evaluation_authority": false,
+      "evidence_authority": false,
+      "layer_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_public_confusion_matrix", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_public_comparable_evaluation", "patch": {"evaluation": {"method": "COMPARABLE_EVALUATION", "ground_truth_posture": "PROXY_LABELS", "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": ["kfm:evaluation:synthetic-comparable:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_internal_weakly_supervised", "patch": {"intended_use": "INTERNAL_QA", "evaluation": {"method": "WEAKLY_SUPERVISED", "ground_truth_posture": "PROXY_LABELS", "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": ["kfm:evaluation:synthetic-weak-review:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_exploratory_unsupervised", "patch": {"intended_use": "EXPLORATORY_ANALYSIS", "evaluation": {"method": "UNSUPERVISED", "evaluation_dataset_ref": null, "ground_truth_posture": "NO_LABELED_REFERENCE", "class_labels": ["cluster_a", "cluster_b"], "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_evaluation", "patch": {"evaluation": {"state": "INCOMPLETE", "method": "UNKNOWN", "evaluation_dataset_ref": null, "ground_truth_posture": "UNKNOWN", "class_labels": [], "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": [], "limitation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVALUATION_INCOMPLETE"]}},
+    {"name": "abstain_unknown_evaluation", "patch": {"evaluation": {"state": "UNKNOWN", "method": "UNKNOWN", "evaluation_dataset_ref": null, "ground_truth_posture": "UNKNOWN", "class_labels": [], "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": [], "limitation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVALUATION_UNKNOWN"]}},
+    {"name": "abstain_evidence_bundle_unresolved", "patch": {"evidence_bundle": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}},
+    {"name": "abstain_public_weakly_supervised", "patch": {"evaluation": {"method": "WEAKLY_SUPERVISED", "ground_truth_posture": "PROXY_LABELS", "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": ["kfm:evaluation:synthetic-weak-review:001"]}}, "expected": {"outcome": "ABSTAIN", "codes": ["PUBLIC_EVALUATION_SUPPORT_INSUFFICIENT"]}},
+    {"name": "abstain_public_unsupervised", "patch": {"evaluation": {"method": "UNSUPERVISED", "evaluation_dataset_ref": null, "ground_truth_posture": "NO_LABELED_REFERENCE", "class_labels": ["cluster_a", "cluster_b"], "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["PUBLIC_EVALUATION_SUPPORT_INSUFFICIENT"]}},
+    {"name": "deny_matrix_actual_label_closure", "patch": {"evaluation": {"confusion_matrix": {"rows": [{"actual_label": "crop", "predictions": [{"predicted_label": "crop", "count": 8}, {"predicted_label": "non_crop", "count": 2}]}, {"actual_label": "crop", "predictions": [{"predicted_label": "crop", "count": 2}, {"predicted_label": "non_crop", "count": 8}]}]}}}, "expected": {"outcome": "DENY", "codes": ["MATRIX_ACTUAL_LABEL_CLOSURE_MISMATCH"]}},
+    {"name": "deny_matrix_predicted_label_closure", "patch": {"evaluation": {"confusion_matrix": {"rows": [{"actual_label": "crop", "predictions": [{"predicted_label": "crop", "count": 8}, {"predicted_label": "crop", "count": 2}]}, {"actual_label": "non_crop", "predictions": [{"predicted_label": "crop", "count": 2}, {"predicted_label": "non_crop", "count": 8}]}]}}}, "expected": {"outcome": "DENY", "codes": ["MATRIX_PREDICTED_LABEL_CLOSURE_MISMATCH"]}},
+    {"name": "deny_sample_count_mismatch", "patch": {"evaluation": {"reported_metrics": {"sample_count": 21}}}, "expected": {"outcome": "DENY", "codes": ["SAMPLE_COUNT_MISMATCH"]}},
+    {"name": "deny_correct_count_mismatch", "patch": {"evaluation": {"reported_metrics": {"correct_count": 15}}}, "expected": {"outcome": "DENY", "codes": ["CORRECT_COUNT_MISMATCH"]}},
+    {"name": "deny_overall_accuracy_mismatch", "patch": {"evaluation": {"reported_metrics": {"overall_accuracy": 0.9}}}, "expected": {"outcome": "DENY", "codes": ["OVERALL_ACCURACY_MISMATCH"]}},
+    {"name": "deny_class_metric_mismatch", "patch": {"evaluation": {"reported_metrics": {"per_class": [{"label": "crop", "support": 10, "precision": 0.8, "recall": 0.7, "f1": 0.8}, {"label": "non_crop", "support": 10, "precision": 0.8, "recall": 0.8, "f1": 0.8}]}}}, "expected": {"outcome": "DENY", "codes": ["CLASS_METRIC_MISMATCH"]}},
+    {"name": "deny_verified_ground_truth_missing", "patch": {"evaluation": {"ground_truth_posture": "PROXY_LABELS"}}, "expected": {"outcome": "DENY", "codes": ["VERIFIED_GROUND_TRUTH_REQUIRED"]}},
+    {"name": "deny_comparable_reference_missing", "patch": {"evaluation": {"method": "COMPARABLE_EVALUATION", "ground_truth_posture": "PROXY_LABELS", "confusion_matrix": null, "reported_metrics": null, "comparable_evaluation_refs": []}}, "expected": {"outcome": "DENY", "codes": ["COMPARABLE_EVALUATION_INCOHERENT"]}},
+    {"name": "deny_public_review_missing", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_public_drawer_missing", "patch": {"disclosure": {"evidence_drawer_section_ref": null}}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_DRAWER_SECTION_REQUIRED"]}},
+    {"name": "deny_public_caveat_missing", "patch": {"disclosure": {"public_interpretation_caveat": null}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_INTERPRETATION_CAVEAT_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_evaluation_state", "patch": {"evaluation": {"state": "ERROR"}}, "expected": {"outcome": "ERROR", "codes": ["EVALUATION_ERROR"]}},
+    {"name": "error_unknown_field", "patch": {"accuracy_threshold": 0.95}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

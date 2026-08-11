@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/interaction_state_receipt.schema.json",
+  "title": "InteractionStateReceiptCandidate",
+  "description": "Fixture-only digest trace of a dynamic source interaction with fail-closed secret redaction and no authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "profile", "receipt_id", "receipt_spec_hash", "source_card", "recorded_at", "connector_run_ref", "source_descriptor_ref", "interaction", "redaction", "result", "assessment", "authority_claims"],
+  "properties": {
+    "object_type": {"const": "InteractionStateReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.source.interaction-state-receipt.fixture.v1"},
+    "receipt_id": {"type": "string", "pattern": "^kfm:interaction-state-receipt:[a-f0-9]{24}$"},
+    "receipt_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-373"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "connector_run_ref": {"$ref": "#/$defs/ref"},
+    "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "steps", "sensitive_state_classes"],
+      "properties": {
+        "kind": {"enum": ["FORM_SUBMISSION", "BROWSER_SCRIPT", "REDIRECT_CHAIN", "COMPOSITE"]},
+        "steps": {"type": "array", "minItems": 1, "maxItems": 100, "items": {"$ref": "#/$defs/step"}},
+        "sensitive_state_classes": {"$ref": "#/$defs/sensitive_classes"}
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "redacted_classes", "redaction_receipt_ref", "retained_sensitive_values"],
+      "properties": {
+        "profile": {"$ref": "#/$defs/resolved_reference"},
+        "redacted_classes": {"$ref": "#/$defs/sensitive_classes"},
+        "redaction_receipt_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "retained_sensitive_values": {"const": false}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "capture_artifact_ref", "capture_artifact_digest", "capture_state", "failure_reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["CAPTURED", "FAILED", "BLOCKED"]},
+        "capture_artifact_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+        "capture_artifact_digest": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "capture_state": {"enum": ["SOURCE_CAPTURE_CANDIDATE", "QUARANTINE_CANDIDATE", "NOT_APPLICABLE"]},
+        "failure_reason_codes": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z0-9_]{3,64}$"}}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "obligations", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN"]},
+        "obligations": {"type": "array", "maxItems": 8, "uniqueItems": true, "items": {"enum": ["DYNAMIC_RESULT_NOT_EVIDENCE", "NO_SENSITIVE_VALUE_RETENTION", "REDACTION_REVIEW_REQUIRED", "REVIEW_REQUIRED", "SOURCE_ARTIFACT_HANDOFF_REQUIRED"]}},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_admission_authority", "source_authority", "evidence_authority", "policy_authority", "review_authority", "lifecycle_authority", "release_authority", "publication_authority"],
+      "properties": {
+        "source_admission_authority": {"const": false},
+        "source_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "lifecycle_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "ref_array": {"type": "array", "maxItems": 100, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "nullable_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "sensitive_class": {"enum": ["AUTH_TOKEN", "COOKIE", "CSRF_TOKEN", "HIDDEN_FIELD_VALUE", "PERSONAL_DATA", "QUERY_SECRET", "SESSION_ID", "OTHER_SECRET"]},
+    "sensitive_classes": {"type": "array", "maxItems": 8, "uniqueItems": true, "items": {"$ref": "#/$defs/sensitive_class"}},
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "action", "target_ref", "request_shape_digest", "response_shape_digest", "state_before_digest", "state_after_digest", "outcome"],
+      "properties": {
+        "index": {"type": "integer", "minimum": 0, "maximum": 99},
+        "action": {"enum": ["LOAD", "FORM_SUBMIT", "SCRIPT_EXECUTE", "REDIRECT", "WAIT_FOR_STATE", "CAPTURE"]},
+        "target_ref": {"$ref": "#/$defs/ref"},
+        "request_shape_digest": {"$ref": "#/$defs/sha256"},
+        "response_shape_digest": {"$ref": "#/$defs/nullable_sha256"},
+        "state_before_digest": {"$ref": "#/$defs/sha256"},
+        "state_after_digest": {"$ref": "#/$defs/nullable_sha256"},
+        "outcome": {"enum": ["SUCCEEDED", "FAILED", "BLOCKED"]}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/source/interaction_state_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/source/interaction_state_receipt/",
+    "validator": "tools/validators/source/validate_interaction_state_receipt.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "retains_sensitive_values": false,
+    "authority_effects": false
+  }
+}
