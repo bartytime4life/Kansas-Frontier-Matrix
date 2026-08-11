@@ -1,0 +1,132 @@
+# Validate the inactive, fixture-only DrinkingWaterAdvisory Hazards profile.
+name: drinking-water-advisory
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/drinking-water-advisory.yml"
+      - "contracts/domains/hazards/drinking_water_advisory.md"
+      - "schemas/contracts/v1/domains/hazards/drinking_water_advisory.schema.json"
+      - "fixtures/domains/hazards/drinking_water_advisory/**"
+      - "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
+      - "tests/domains/hazards/test_drinking_water_advisory.py"
+      - "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md"
+      - "data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json"
+      - "contracts/common/advisory_event_envelope.md"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "fixtures/contracts/v1/common/advisory_event_envelope/**"
+      - "tools/validators/validate_advisory_event_envelope.py"
+      - "tools/validators/advisory_event_envelope_support.py"
+      - "tests/validators/test_validate_advisory_event_envelope.py"
+      - "contracts/source/source_adapter.md"
+      - "contracts/source/source_record_absence_assessment.md"
+      - "schemas/contracts/v1/source/source_record_absence_assessment.schema.json"
+      - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
+      - "tools/validators/validate_source_record_absence_assessment.py"
+      - "tests/validators/test_validate_source_record_absence_assessment.py"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/drinking-water-advisory.yml"
+      - "contracts/domains/hazards/drinking_water_advisory.md"
+      - "schemas/contracts/v1/domains/hazards/drinking_water_advisory.schema.json"
+      - "fixtures/domains/hazards/drinking_water_advisory/**"
+      - "tools/validators/domains/hazards/validate_drinking_water_advisory.py"
+      - "tests/domains/hazards/test_drinking_water_advisory.py"
+      - "docs/intake/exploratory/briefing-drinking-water-advisory-source-map.md"
+      - "data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json"
+      - "contracts/common/advisory_event_envelope.md"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "fixtures/contracts/v1/common/advisory_event_envelope/**"
+      - "tools/validators/validate_advisory_event_envelope.py"
+      - "tools/validators/advisory_event_envelope_support.py"
+      - "tests/validators/test_validate_advisory_event_envelope.py"
+      - "contracts/source/source_adapter.md"
+      - "contracts/source/source_record_absence_assessment.md"
+      - "schemas/contracts/v1/source/source_record_absence_assessment.schema.json"
+      - "fixtures/contracts/v1/source/source_record_absence_assessment/**"
+      - "tools/validators/validate_source_record_absence_assessment.py"
+      - "tests/validators/test_validate_source_record_absence_assessment.py"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drinking-water-advisory-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-drinking-water-advisory
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused drinking-water profile tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.domains.hazards.test_drinking_water_advisory --verbose
+
+      - name: Replay exact drinking-water fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/domains/hazards/validate_drinking_water_advisory.py --fixtures
+
+      - name: Preserve adjacent shared advisory and source-absence mechanics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_advisory_event_envelope --verbose
+          python -m unittest tests.validators.test_validate_source_record_absence_assessment --verbose
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-briefing-drinking-water-advisory-20260810.json --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### DrinkingWaterAdvisory fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Boundary: fixture-only and not for life safety."
+            echo "- A missing row, expiry, failed check, or incomplete source cannot rescind or clear a prior advisory."
+            echo "- No live source, health determination, public guidance, alert, lifecycle write, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
