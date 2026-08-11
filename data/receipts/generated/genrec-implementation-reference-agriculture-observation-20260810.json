@@ -1,0 +1,149 @@
+{
+  "receipt_id": "genrec-implementation-reference-agriculture-observation-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-observation.yml",
+    "contracts/evidence/agriculture_observation.md",
+    "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md",
+    "fixtures/contracts/v1/evidence/agriculture_observation/cases.json",
+    "schemas/contracts/v1/evidence/agriculture_observation.schema.json",
+    "tests/validators/evidence/test_validate_agriculture_observation.py",
+    "tools/validators/evidence/validate_agriculture_observation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-observation.yml": "sha256:b355d9530133b9707603094fec52804c9b37bc1a3b02f6186ba3a559f392f078",
+    "contracts/evidence/agriculture_observation.md": "sha256:69b56ca5b921a13443fa79f62d3146e7e11a2cee974e98ab3fa269f1dec72154",
+    "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md": "sha256:82e9f28fb675b9d86ad1762eb2a65462349735900b63ebd8eb62d7bebe70db05",
+    "fixtures/contracts/v1/evidence/agriculture_observation/cases.json": "sha256:d369819125f1ba81323d50417189f7c38164c0c7707a17bc6e175bf43f930b0e",
+    "schemas/contracts/v1/evidence/agriculture_observation.schema.json": "sha256:e1f30c858faf8826b0a34d2ee5d7aeee06dad0d113e261d1b575e5f43b2ccf25",
+    "tests/validators/evidence/test_validate_agriculture_observation.py": "sha256:e7ee1b37d212ff52a7099f9b97f54369fbea377b57c0ceaeb3ae3c7574dc5119",
+    "tools/validators/evidence/validate_agriculture_observation.py": "sha256:16f3ce93aa5080952157819f52f823325cc73f9128d17b88ca972d9a33386d58"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:69b56ca5b921a13443fa79f62d3146e7e11a2cee974e98ab3fa269f1dec72154",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "Supplied Kansas Frontier Matrix Implementation Reference",
+      "Supplied Pass 20 Part 2 idea atlas",
+      "Connected Drive and supplied repository-architecture guidance"
+    ],
+    "evidence_refs": [
+      "private-corpus:implementation-reference#AgricultureObservation",
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/county_year_panel.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-observation.yml": "CONFIRMED",
+    "contracts/evidence/agriculture_observation.md": "PROPOSED",
+    "docs/intake/exploratory/implementation-reference-agriculture-observation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/agriculture_observation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/agriculture_observation.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_agriculture_observation.py": "CONFIRMED",
+    "tools/validators/evidence/validate_agriculture_observation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, pull-request, and branch probes found no checked-path AgricultureObservation implementation or same-purpose open work at authoring time."
+    },
+    {
+      "gate": "json-and-workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic tests and forty-four exact AgricultureObservation fixture cases passed in the connector workspace."
+    },
+    {
+      "gate": "no-network-non-reflection-and-no-producer-payload-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "repository-hashing-and-adjacent-profile-suites",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector workspace is not a full repository checkout; local identity tests used a compatible SHA-256 canonical-JSON harness."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "implementation-reference-agriculture-observation",
+      "validated": true,
+      "evidence_ref": "private-corpus:implementation-reference#AgricultureObservation"
+    },
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-county-year-panel-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/county_year_panel.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:08:10Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only AgricultureObservation packet derived from the supplied implementation reference and Pass 20 KFM-IDX-APP-008. It declares one aggregate county-year agricultural measure, digest-bound geography and source lineage, explicit zero, suppression and missingness, unit and source-classification posture, correction lineage, interpretation limits, and deterministic identity while preserving evidence, geography, farm/producer identity, classification, policy, review, release, deployment, publication, and public-use boundaries."
+}
