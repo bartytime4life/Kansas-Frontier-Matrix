@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-pass18-temporal-retention-disposition-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/temporal-retention-disposition-assessment.yml",
+    "contracts/governance/temporal_retention_disposition_assessment.md",
+    "docs/intake/exploratory/pass-18-temporal-retention-disposition-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/cases.json",
+    "schemas/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json",
+    "tests/validators/governance/test_temporal_retention_disposition_assessment.py",
+    "tools/validators/governance/validate_temporal_retention_disposition_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/temporal-retention-disposition-assessment.yml": "sha256:97b564206a7b84613f4119c4843f1b618a9273c3f199ac96cc07b1168d580fc8",
+    "contracts/governance/temporal_retention_disposition_assessment.md": "sha256:f37473958e250ad2d36356cd14932e9d1eabb30453d490993e8d4ef7b10bd3d7",
+    "docs/intake/exploratory/pass-18-temporal-retention-disposition-assessment-source-map.md": "sha256:9fd8ccb8cef3407da19db5064c0bde2fe29f9a7b17ce7e88e554cfa98add19ca",
+    "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/cases.json": "sha256:90eccb30282dab200a0a47819521f8f2866b300a4058f65bdf3e48629407086e",
+    "schemas/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json": "sha256:6c98b488882fb86acc5dd369b6bb870baa3c7ceca1bd5847182bcc76b171f71b",
+    "tests/validators/governance/test_temporal_retention_disposition_assessment.py": "sha256:68b5cc9541babecfb5cf414b4f7144f9ec0b978abb6b11e799ff47420d4d64af",
+    "tools/validators/governance/validate_temporal_retention_disposition_assessment.py": "sha256:dda1dc8bc0e71dda39ee1f7ffaaf4c82a5cb827b68e7e082a38452cd57441445"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f37473958e250ad2d36356cd14932e9d1eabb30453d490993e8d4ef7b10bd3d7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c761e5827ae95cc6781715bc1663a6a22aa53129d74ee6b17dcb16fa385466ee",
+      "sha256:2ee51ea3f50a574c2ce4ea6a38b4512ce789f8a6ed50a2eef1f998f93f0b7665"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; card KFM-P18-INV-439 was text-located and its page was visually verified"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-439;physical-page=122",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/evidence/after_image_reconstruction_record.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/correction/correction_propagation_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/temporal-retention-disposition-assessment.yml": "CONFIRMED",
+    "contracts/governance/temporal_retention_disposition_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-temporal-retention-disposition-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_temporal_retention_disposition_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_temporal_retention_disposition_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical page 122 containing card KFM-P18-INV-439 was rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic temporal-retention assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Seventeen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-evidence-and-correction-regression",
+      "outcome": "PASS",
+      "reason": "Twenty-one adjacent after-image reconstruction and correction-propagation tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-temporal-vacuuming-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-439;physical-page=122"
+    },
+    {
+      "id": "adjacent-after-image-reconstruction-record",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/evidence/after_image_reconstruction_record.md"
+    },
+    {
+      "id": "adjacent-correction-propagation-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/correction/correction_propagation_plan.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:33:24Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only assessment that separates retain, archive, compact, and erase proposals. It executes no maintenance, archive write, mutation, compaction, or deletion; decides no policy, legal basis, or erasure obligation; changes no evidence, correction, release, deployment, or public state; and grants no lifecycle, release, publication, or public-use authority."
+}
