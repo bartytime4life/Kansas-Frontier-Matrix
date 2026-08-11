@@ -1,0 +1,64 @@
+{
+  "profile": "kfm.explorer.stac-conformance-inspector.public-safe.v1",
+  "outcome": "AVAILABLE",
+  "reason_code": "INSPECTION_AVAILABLE",
+  "evaluated_at": "2026-08-10T21:12:00Z",
+  "inspection_id": "kfm:stac-conformance-inspection:cccccccccccccccccccccccc",
+  "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "profile_version": "1.0.0-draft.1",
+  "stac_version": "1.0.0",
+  "inspection_state": "CONFORMANT",
+  "item_count": 1,
+  "conformance_classes": [
+    {
+      "class_id": "STAC_1_0_0_ITEM",
+      "status": "FAIL",
+      "checked_count": 1,
+      "finding_codes": [
+        "ITEM_ID_INVALID"
+      ]
+    }
+  ],
+  "extensions": [
+    {
+      "extension_id": "kfm://profile/stac/kfm-profile-v1",
+      "status": "PRESENT_ALL",
+      "item_count": 1
+    }
+  ],
+  "identity_rules": [
+    {
+      "rule_id": "ITEM_ID_PATTERN",
+      "status": "FAIL",
+      "checked_count": 1,
+      "finding_codes": [
+        "ITEM_ID_INVALID"
+      ]
+    }
+  ],
+  "mime_types": [
+    {
+      "media_type": "application/geo+json",
+      "asset_count": 1,
+      "status": "PASS",
+      "finding_codes": []
+    }
+  ],
+  "collection_contract": {
+    "collection_ref": "kfm://catalog/stac/collection/synthetic-contradiction-fixture",
+    "status": "COMPLETE",
+    "required_field_count": 8,
+    "present_field_count": 8,
+    "finding_codes": []
+  },
+  "governance": {
+    "network_attempted": false,
+    "catalog_query_attempted": false,
+    "catalog_mutation_allowed": false,
+    "source_admission_allowed": false,
+    "evidence_authority_created": false,
+    "policy_evaluated": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}
