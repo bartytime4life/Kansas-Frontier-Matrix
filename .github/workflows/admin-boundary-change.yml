@@ -1,0 +1,92 @@
+# Validate the inactive, fixture-only AdminBoundaryChange candidate.
+name: admin-boundary-change
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/admin-boundary-change.yml"
+      - "contracts/common/admin_boundary_change.md"
+      - "schemas/contracts/v1/common/admin_boundary_change.schema.json"
+      - "fixtures/contracts/v1/common/admin_boundary_change/**"
+      - "tools/validators/validate_admin_boundary_change.py"
+      - "tests/validators/test_validate_admin_boundary_change.py"
+      - "docs/intake/exploratory/admin-boundary-change-source-map.md"
+      - "contracts/common/geography_version.md"
+      - "contracts/crosswalks/geography_crosswalk.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-admin-boundary-change-20260810.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/admin-boundary-change.yml"
+      - "contracts/common/admin_boundary_change.md"
+      - "schemas/contracts/v1/common/admin_boundary_change.schema.json"
+      - "fixtures/contracts/v1/common/admin_boundary_change/**"
+      - "tools/validators/validate_admin_boundary_change.py"
+      - "tests/validators/test_validate_admin_boundary_change.py"
+      - "docs/intake/exploratory/admin-boundary-change-source-map.md"
+      - "contracts/common/geography_version.md"
+      - "contracts/crosswalks/geography_crosswalk.md"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-admin-boundary-change-20260810.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: admin-boundary-change-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-admin-boundary-change
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          set -euo pipefail
+          python -m unittest -v tests.validators.test_validate_admin_boundary_change
+          python -m unittest -v tests.validators.test_validate_geography_version
+          python -m unittest -v tests.validators.test_validate_geography_crosswalk
+          python tools/validators/validate_admin_boundary_change.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-admin-boundary-change-20260810.json \
+            --repo-root .
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### AdminBoundaryChange"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: inactive fixture-only administrative event cardinality, version/feature lineage, explicit crosswalk posture, source/time disclosure, and deterministic identity."
+            echo "- Boundary: no source access, legal or boundary truth, geometry, identity inference, crosswalk execution, observation transfer, evidence resolution, policy/review approval, promotion, release, public use, publication, or deployment authority."
+          } >> "$GITHUB_STEP_SUMMARY"
