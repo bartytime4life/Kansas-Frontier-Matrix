@@ -1,0 +1,172 @@
+{
+  "receipt_id": "genrec-pass18-object-identity-kind-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-identity-kind-assessment.yml",
+    "contracts/governance/object_identity_kind_assessment.md",
+    "docs/intake/exploratory/pass-18-object-identity-kind-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/object_identity_kind_assessment/cases.json",
+    "schemas/contracts/v1/governance/object_identity_kind_assessment.schema.json",
+    "tests/validators/governance/test_validate_object_identity_kind_assessment.py",
+    "tools/validators/governance/validate_object_identity_kind_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-identity-kind-assessment.yml": "sha256:5f0189378b1d0e49a67f2dd00afebccf2ff18f0f7fc02852af611e8b21f5ffd1",
+    "contracts/governance/object_identity_kind_assessment.md": "sha256:80611ec20ac8f01df6316664e90b331055b59ee3c6c4496a61aa04f1565f36ca",
+    "docs/intake/exploratory/pass-18-object-identity-kind-assessment-source-map.md": "sha256:9432a53c44b94e365b0b46e2bbbfa3e6fbe95db16f686f3ccfb33e21704aa1e8",
+    "fixtures/contracts/v1/governance/object_identity_kind_assessment/cases.json": "sha256:6b87f0443d9af074871d92bced50bfa2162ac6d11e5721392aceddaeb109f843",
+    "schemas/contracts/v1/governance/object_identity_kind_assessment.schema.json": "sha256:54b7c497eb8ce327646b839d618bb846e5a5a51113c81915eb4c3386f6132932",
+    "tests/validators/governance/test_validate_object_identity_kind_assessment.py": "sha256:af76fa925d7832e134eb86b75014a61344c7371a1af69552a4a116fce20ab020",
+    "tools/validators/governance/validate_object_identity_kind_assessment.py": "sha256:09970e95997e9d86f51fe96c82dddff60b9f9bc261edcfd14ba17478496efdbd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:80611ec20ac8f01df6316664e90b331055b59ee3c6c4496a61aa04f1565f36ca",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:dd474c338d3f6597e2c5e8960d3071828f857cb822c09b030c10055cf7459f36",
+      "sha256:3674fe9deaabda673cf3b3f066cc663494b38e02df830f6729ccf7fcc1889df7"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; connected Drive file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5 was metadata-confirmed but byte identity was not asserted",
+      "Supplied Domain-Driven Design Reference.pdf; physical pages 18-19 were visually verified",
+      "Connected Drive KFM_Full_Atlas_seed_cards; private corpus used only as thematic corroboration"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-464",
+      "attachment://Domain-Driven-Design-Reference.pdf#physical-pages=18-19",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/contracts/governance/object_family_domain_reference_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-identity-kind-assessment.yml": "CONFIRMED",
+    "contracts/governance/object_identity_kind_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-object-identity-kind-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/object_identity_kind_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/object_identity_kind_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_object_identity_kind_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_object_identity_kind_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "Pass 18 physical pages 156-157 and DDD reference physical pages 18-19 were rendered and inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic object identity-kind assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-object-family-and-identity-regression",
+      "outcome": "PASS",
+      "reason": "Twenty-six adjacent tests and twenty-six subtests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred thirty-seven tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Forty-two CI-readiness tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks were valid; only expected review-only registry warnings were emitted."
+    },
+    {
+      "gate": "documentation-link-and-graph-profile",
+      "outcome": "PASS",
+      "reason": "Forty-two documentation tests, explicit local-link validation, and the bounded two-document graph check passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-object-identity-kind-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-464"
+    },
+    {
+      "id": "ddd-entity-value-object-reference",
+      "validated": true,
+      "evidence_ref": "attachment://Domain-Driven-Design-Reference.pdf#physical-pages=18-19"
+    },
+    {
+      "id": "drive-pass18-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "object-family-register-adjacent-control",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/control_plane/object_family_register.yaml"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f2ef6741430f93270eb38a4ee9170f8a3726e5b3/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T18:51:02Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only object identity-kind assessment. It classifies one object-family declaration as entity, value object, derived artifact, or unresolved while creating no identifier, changing no schema, register, object, persistence behavior, or lifecycle state, and granting no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

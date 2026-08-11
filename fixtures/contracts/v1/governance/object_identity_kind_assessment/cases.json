@@ -1,0 +1,155 @@
+{
+  "profile": "kfm.governance.object-identity-kind-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "ObjectIdentityKindAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.governance.object-identity-kind-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-464",
+    "observed_at": "2026-08-11T18:50:00Z",
+    "object_family_ref": "kfm://object-family/run-receipt",
+    "semantic_contract_ref": "kfm://contract/runtime/run-receipt",
+    "semantic_contract_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "register_binding": {
+      "state": "RESOLVED",
+      "ref": "kfm://control-plane/object-family-register@v1",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "declaration": {
+      "identity_kind": "ENTITY",
+      "identity_basis": "DURABLE_IDENTITY",
+      "durable_identity_required": true,
+      "lifecycle_continuity_required": true,
+      "attribute_equality_defines_equivalence": false,
+      "content_digest_defines_equivalence": false,
+      "review_state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "review_record_refs": ["kfm://review/object-identity/run-receipt-v1"],
+      "rationale_summary": "Run receipts retain identity across correction and lifecycle references."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_IDENTIFIER_CREATION_OR_ASSIGNMENT",
+      "NO_SCHEMA_REGISTER_OR_OBJECT_MUTATION",
+      "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+      "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "authority_claims": {
+      "identifier_authority": false,
+      "schema_authority": false,
+      "register_write_authority": false,
+      "object_mutation_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_entity", "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_value_object",
+      "patch": {"declaration": {"identity_kind": "VALUE_OBJECT", "identity_basis": "STRUCTURAL_VALUE", "durable_identity_required": false, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": true, "content_digest_defines_equivalence": false, "rationale_summary": "This immutable value is equivalent when its governed attributes are equal."}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_derived_artifact",
+      "patch": {"declaration": {"identity_kind": "DERIVED_ARTIFACT", "identity_basis": "CONTENT_ADDRESS", "durable_identity_required": false, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": false, "content_digest_defines_equivalence": true, "rationale_summary": "This immutable artifact version is equivalent only when its content digest matches."}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_identity_kind_unresolved",
+      "patch": {"declaration": {"identity_kind": "UNRESOLVED", "identity_basis": "UNRESOLVED", "durable_identity_required": false, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": false, "content_digest_defines_equivalence": false, "rationale_summary": "Identity behavior remains unresolved for the declared object family."}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["IDENTITY_KIND_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_register_unresolved",
+      "patch": {"register_binding": {"state": "UNRESOLVED", "ref": null, "digest": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REGISTER_BINDING_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_not_registered",
+      "patch": {"register_binding": {"state": "NOT_REGISTERED", "ref": null, "digest": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["OBJECT_FAMILY_NOT_REGISTERED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"declaration": {"review_state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_review_unknown",
+      "patch": {"declaration": {"review_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "deny_entity_semantics",
+      "patch": {"declaration": {"identity_basis": "STRUCTURAL_VALUE"}},
+      "expected": {"outcome": "DENY", "codes": ["IDENTITY_SEMANTICS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_value_object_semantics",
+      "patch": {"declaration": {"identity_kind": "VALUE_OBJECT", "identity_basis": "STRUCTURAL_VALUE", "durable_identity_required": false, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": false, "content_digest_defines_equivalence": false}},
+      "expected": {"outcome": "DENY", "codes": ["IDENTITY_SEMANTICS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_derived_artifact_semantics",
+      "patch": {"declaration": {"identity_kind": "DERIVED_ARTIFACT", "identity_basis": "CONTENT_ADDRESS", "durable_identity_required": false, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": false, "content_digest_defines_equivalence": false}},
+      "expected": {"outcome": "DENY", "codes": ["IDENTITY_SEMANTICS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_unresolved_semantics",
+      "patch": {"declaration": {"identity_kind": "UNRESOLVED", "identity_basis": "UNRESOLVED", "durable_identity_required": true, "lifecycle_continuity_required": false, "attribute_equality_defines_equivalence": false, "content_digest_defines_equivalence": false}},
+      "expected": {"outcome": "DENY", "codes": ["IDENTITY_KIND_UNRESOLVED", "IDENTITY_SEMANTICS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_resolved_binding_missing_digest",
+      "patch": {"register_binding": {"digest": null}},
+      "expected": {"outcome": "DENY", "codes": ["REGISTER_BINDING_REQUIRED"]}
+    },
+    {
+      "name": "deny_unresolved_binding_present",
+      "patch": {"register_binding": {"state": "UNRESOLVED"}},
+      "expected": {"outcome": "DENY", "codes": ["REGISTER_BINDING_PROHIBITED", "REGISTER_BINDING_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_complete_without_review_ref",
+      "patch": {"declaration": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_complete_without_rationale",
+      "patch": {"declaration": {"rationale_summary": null}},
+      "expected": {"outcome": "DENY", "codes": ["RATIONALE_SUMMARY_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_review_refs",
+      "patch": {"declaration": {"review_record_refs": ["kfm://review/z", "kfm://review/a"]}},
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_non_utc_observed_at",
+      "patch": {"observed_at": "2026-08-11T13:50:00-05:00"},
+      "expected": {"outcome": "DENY", "codes": ["OBSERVED_AT_NOT_UTC"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"unexpected": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_null_declaration",
+      "patch": {"declaration": null},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
