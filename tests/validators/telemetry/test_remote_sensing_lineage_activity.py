@@ -30,6 +30,9 @@ SCHEMA_PATH = (
     REPO_ROOT
     / "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json"
 )
+CONTRACT_PATH = (
+    REPO_ROOT / "contracts/telemetry/remote_sensing_lineage_activity.md"
+)
 WORKFLOW_PATH = (
     REPO_ROOT / ".github/workflows/remote-sensing-lineage-activity.yml"
 )
@@ -60,6 +63,15 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
             "https://schemas.kfm.local/contracts/v1/telemetry/"
             "openlineage_run_event_projection.schema.json",
         )
+
+    def test_contract_preserves_inactive_no_network_boundary(self) -> None:
+        contract = CONTRACT_PATH.read_text(encoding="utf-8").lower()
+        self.assertIn(
+            "status: draft; proposed; fixture-first; local-only; no-network; "
+            "non-authoritative",
+            contract,
+        )
+        self.assertIn("does not fetch imagery", contract)
 
     def test_fixture_suite_covers_exact_positive_and_negative_cases(self) -> None:
         ok, report = VALIDATOR.run_fixture_suite()
