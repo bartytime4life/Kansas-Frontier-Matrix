@@ -2,16 +2,20 @@
 doc_id: kfm://doc/contracts-joins-readme
 title: contracts/joins — Cross-Domain Join Semantic Contract README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Contract steward · Domain stewards · Policy steward · Schema steward · Evidence steward · Sensitivity reviewer · Release steward · Docs steward · Directory Rules reviewer
 created: 2026-06-24
-updated: 2026-06-24
+updated: 2026-08-11
 policy_label: public-with-gates; contracts; joins; semantic-contracts; cross-domain; evidence-bound; release-gated; no-parallel-authority
+owning_root: contracts/
+responsibility: Orient the canonical semantic-contract lane for cross-domain join meanings without replacing domain truth, schema, policy, evidence, lifecycle, release, or publication authority.
+truth_posture: CONFIRMED lane and child paths / PROPOSED wider join roster and inactive profiles / cite-or-abstain
 related:
   - ../README.md
   - ./people-settlements/README.md
   - ./people-settlements/cemetery/README.md
+  - ./historical_network_proximity_assessment.md
   - ../../docs/architecture/contract-schema-policy-split.md
   - ../../docs/governance/SEPARATION_OF_DUTIES.md
   - ../../schemas/contracts/v1/joins/
@@ -103,6 +107,7 @@ A join contract may define:
 |---|---|---|
 | [`people-settlements/`](./people-settlements/) | Person, genealogy, DNA, land, and settlement/place relationship semantics. | CONFIRMED child README exists; schemas/policy/tests PROPOSED. |
 | [`people-settlements/cemetery/`](./people-settlements/cemetery/) | Cemetery, burial, memorial, and graveyard relationship semantics. | CONFIRMED child README exists; restricted by default. |
+| [`historical_network_proximity_assessment.md`](./historical_network_proximity_assessment.md) | Qualified historical place/route proximity-candidate meaning with separate valid time, uncertainty, source role, and interpretation. | PROPOSED inactive fixture profile; no relationship, route-use, release, or publication authority. |
 | `flora-habitat/` | Plant/ecological context relationships. | PROPOSED; do not create without checking canonical domain lanes. |
 | `fauna-habitat/` | Animal occurrence/context relationships. | PROPOSED; sensitive species location gates likely apply. |
 | `hydrology-hazards/` | Flood, drought, water, and hazard-context joins. | PROPOSED; not-for-life-safety gates likely apply. |
