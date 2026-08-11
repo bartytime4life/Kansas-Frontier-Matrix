@@ -1,5 +1,68 @@
-status: PROPOSED
-source_doc: docs/domains/fauna/MISSING_OR_PLANNED_FILES.md
-path: policy/domains/fauna/tile_field_allowlist.yaml
-notes:
-  - Placeholder created from docs/domains markdown inventory.
+object_type: FaunaTileFieldAllowlistProfile
+schema_version: 1.0.0
+profile: kfm.fauna.tile-field-allowlist.fixture.v1
+profile_status: PROPOSED_INACTIVE_FIXTURE_ONLY
+source_card: KFM-P18-INV-400
+applies_to:
+  domain: fauna
+  exposure: PUBLIC_CANDIDATE
+  property_scope: ENCODED_PROPERTIES_ONLY
+  vector_formats:
+    - MLT
+    - MVT
+    - PMTILES
+required_public_fields:
+  - evidence_ref
+  - feature_id
+allowed_public_fields:
+  - evidence_ref
+  - feature_id
+  - freshness_state
+  - generalization_posture
+  - knowledge_character
+  - public_label
+  - sensitivity_posture
+  - source_role
+  - taxon_ref
+  - time_bucket
+forbidden_exact_fields:
+  - exact_latitude
+  - exact_longitude
+  - internal_record_ref
+  - observer_email
+  - observer_id
+  - observer_name
+  - raw_record_id
+  - restricted_geometry_ref
+  - runtime_endpoint
+  - signed_url
+  - source_record_id
+forbidden_field_patterns:
+  - '(^|_)(collector|observer|submitter)(_?(email|id|name))?($|_)'
+  - '(^|_)(credential|secret|signed_url|token)($|_)'
+  - '(^|_)(internal|quarantine|raw|restricted|work)(_?(id|path|ref|url))?($|_)'
+  - '(^|_)(jitter|offset|precision|redaction_seed|transform_radius)($|_)'
+  - '(^|_)(lat|latitude|lng|lon|longitude)($|_)'
+candidate_requirements:
+  encoded_fields_must_be_manifest_allowlisted: true
+  manifest_fields_must_be_policy_allowlisted: true
+  required_fields_must_be_encoded: true
+  style_only_protection_forbidden: true
+authority_claims:
+  evidence_authority: false
+  policy_decision_authority: false
+  review_authority: false
+  promotion_authority: false
+  release_authority: false
+  publication_authority: false
+  public_use_authority: false
+outcomes:
+  - PASS
+  - DENY
+  - ERROR
+non_effects:
+  - does_not_approve_a_production_field_set
+  - does_not_inspect_or_build_tile_bytes
+  - does_not_verify_geometry_size_or_accessibility
+  - does_not_resolve_evidence_policy_review_or_release
+  - does_not_promote_deploy_publish_or_authorize_public_use

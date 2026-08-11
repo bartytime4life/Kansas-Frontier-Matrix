@@ -1,0 +1,92 @@
+# Validate the inactive, fixture-only Fauna vector-tile field allowlist profile.
+name: fauna-tile-field-allowlist
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/fauna-tile-field-allowlist.yml"
+      - "contracts/domains/fauna/tile_field_allowlist.md"
+      - "schemas/contracts/v1/domains/fauna/tile_field_allowlist.schema.json"
+      - "policy/domains/fauna/tile_field_allowlist.yaml"
+      - "tools/validators/domains/fauna/README.md"
+      - "tools/validators/domains/fauna/tiles/**"
+      - "fixtures/domains/fauna/layers/README.md"
+      - "fixtures/domains/fauna/layers/tile_field_allowlist_cases.json"
+      - "tests/domains/fauna/test_tile_field_allowlist.py"
+      - "tests/domains/fauna/tiles/README.md"
+      - "docs/intake/exploratory/pass-18-vector-tile-field-allowlist-source-map.md"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/fauna-tile-field-allowlist.yml"
+      - "contracts/domains/fauna/tile_field_allowlist.md"
+      - "schemas/contracts/v1/domains/fauna/tile_field_allowlist.schema.json"
+      - "policy/domains/fauna/tile_field_allowlist.yaml"
+      - "tools/validators/domains/fauna/README.md"
+      - "tools/validators/domains/fauna/tiles/**"
+      - "fixtures/domains/fauna/layers/README.md"
+      - "fixtures/domains/fauna/layers/tile_field_allowlist_cases.json"
+      - "tests/domains/fauna/test_tile_field_allowlist.py"
+      - "tests/domains/fauna/tiles/README.md"
+      - "docs/intake/exploratory/pass-18-vector-tile-field-allowlist-source-map.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fauna-tile-field-allowlist-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-fauna-tile-field-allowlist
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared test dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -e ".[test]"
+
+      - name: Run deterministic no-network unit and fixture replay
+        run: |
+          set -euo pipefail
+          python -m unittest discover \
+            --start-directory tests/domains/fauna \
+            --pattern 'test_tile_field_allowlist.py' \
+            --verbose
+          python tools/validators/domains/fauna/tiles/validate_tile_field_allowlist.py \
+            --fixtures
+
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Fauna tile field allowlist fixture profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed inactive policy shape, canonical synthetic field names, LayerManifest allowlist comparison, explicit deny patterns, style-only rejection, and exact fixture polarity."
+            echo "- Boundary: PASS does not inspect tile bytes, geometry, values, size, accessibility, or evidence resolution; approve a production field set; decide policy/review/release; deploy; publish; or authorize public use."
+          } >> "$GITHUB_STEP_SUMMARY"
