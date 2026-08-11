@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import copy
 import importlib.util
+import io
 import json
 import socket
 import sys
+import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -70,6 +73,34 @@ class ClaimScopeDimensionAssessmentTests(unittest.TestCase):
         changed = copy.deepcopy(candidate)
         changed["assessment"]["measured_dimension"] = "SPACE"
         self.assertNotEqual(candidate["profile_spec_hash"], MODULE.compute_profile_hash(changed))
+
+    def test_unpaired_surrogate_candidate_returns_error(self) -> None:
+        candidate = self._candidate("pass_time_measured")
+        candidate["claim_ref"] = str(candidate["claim_ref"]) + "\ud800"
+        result = MODULE.validate_candidate(candidate)
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual(result.codes, ["JSON_UNPAIRED_SURROGATE"])
+
+    def test_canonical_hash_rejects_unpaired_surrogate(self) -> None:
+        candidate = self._candidate("pass_time_measured")
+        candidate["claim_ref"] = str(candidate["claim_ref"]) + "\ud800"
+        with self.assertRaises(MODULE.UnpairedSurrogateError):
+            MODULE.compute_profile_hash(candidate)
+
+    def test_unpaired_surrogate_file_returns_error_without_crashing(self) -> None:
+        candidate = self._candidate("pass_time_measured")
+        candidate["claim_ref"] = str(candidate["claim_ref"]) + "\ud800"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "unpaired-surrogate.json"
+            path.write_text(json.dumps(candidate, ensure_ascii=True), encoding="utf-8")
+            output = io.StringIO()
+            with redirect_stdout(output):
+                return_code = MODULE.main(["--input", str(path)])
+        self.assertEqual(return_code, 1)
+        self.assertEqual(
+            json.loads(output.getvalue()),
+            {"outcome": "ERROR", "codes": ["JSON_UNPAIRED_SURROGATE"]},
+        )
 
     def test_fixture_replay_is_deterministic_and_no_network(self) -> None:
         with mock.patch.object(socket, "create_connection", side_effect=AssertionError("network denied")), mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
