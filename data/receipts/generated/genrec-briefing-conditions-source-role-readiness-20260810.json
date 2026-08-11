@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-briefing-conditions-source-role-readiness-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/conditions-source-role-readiness.yml",
+    "contracts/common/conditions_source_role_readiness_matrix.md",
+    "docs/intake/exploratory/briefing-conditions-source-role-readiness-source-map.md",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/README.md",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/cases.json",
+    "schemas/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json",
+    "tests/cross_domain/test_conditions_source_role_readiness_matrix.py",
+    "tools/validators/validate_conditions_source_role_readiness_matrix.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/conditions-source-role-readiness.yml": "sha256:0cea05e74782193336b39bedb66f15d3b742bfc0f37597e8c7d661e2def2a429",
+    "contracts/common/conditions_source_role_readiness_matrix.md": "sha256:f0ba72263d9d2ff3b00c85373b9253f65ea66a21ebbef6c0e002e589bd00156e",
+    "docs/intake/exploratory/briefing-conditions-source-role-readiness-source-map.md": "sha256:dee59d07297611276654838010b30a2261068b3a8e13883bdfbdf8c74aed1002",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/README.md": "sha256:9bd4efd598b69b152186a73639e0015578bb942c1f62f3820e882748918a556f",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/cases.json": "sha256:ed662114491630c21f73991a68fcc1646794f89743c06cbf54ca0d89808561b8",
+    "schemas/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json": "sha256:9fdd84e9e41cc689872a17e9b1ba1b7e1778483c51df85f84dc55e13b484014f",
+    "tests/cross_domain/test_conditions_source_role_readiness_matrix.py": "sha256:28a50d2940ff100b58f097a49e0da125655ef4fdaeb66defce1fafe41e3f4837",
+    "tools/validators/validate_conditions_source_role_readiness_matrix.py": "sha256:e38b0d98979a071f5473b89a6a5b1bdd7194a48fb9a6de0e6d949cccba863235"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:93547a4874c298fb5e2cd135992df20b65f5ed08b26ee707de9a2905f7d698e6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "connected-google-drive-read",
+      "connected-github-read-write",
+      "local-repository-validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Briefing to System Integration Architecture"
+    ],
+    "evidence_refs": [
+      "connected-source://KFM-Briefing-to-System-Integration-Architecture#conditions-framework",
+      "repo://contracts/common/classification_release.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://contracts/common/forecast_product.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://contracts/common/condition_relation.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://contracts/domains/soil/domain_observation.md@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo://docs/doctrine/directory-rules.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/conditions-source-role-readiness.yml": "PROPOSED",
+    "contracts/common/conditions_source_role_readiness_matrix.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-conditions-source-role-readiness-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/README.md": "PROPOSED",
+    "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/cases.json": "PROPOSED",
+    "schemas/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json": "PROPOSED",
+    "tests/cross_domain/test_conditions_source_role_readiness_matrix.py": "PROPOSED",
+    "tools/validators/validate_conditions_source_role_readiness_matrix.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused cross-domain unittest suite (12 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact readiness fixture replay (12 cases)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "adjacent classification and forecast profile suites (28 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "adjacent Soil DomainObservation fixture replay (5 cases)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Python compilation, JSON parse, and workflow YAML parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted exact-head pull-request checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft pull request did not exist when the receipt was emitted."
+    },
+    {
+      "gate": "human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "connected-briefing-conditions-framework",
+      "validated": true,
+      "evidence_ref": "connected-source://KFM-Briefing-to-System-Integration-Architecture#conditions-framework"
+    },
+    {
+      "id": "repository-classification-profile",
+      "validated": true,
+      "evidence_ref": "repo://contracts/common/classification_release.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-forecast-profile",
+      "validated": true,
+      "evidence_ref": "repo://contracts/common/forecast_product.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-condition-relation-profile",
+      "validated": true,
+      "evidence_ref": "repo://contracts/common/condition_relation.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-soil-observation-profile",
+      "validated": true,
+      "evidence_ref": "repo://contracts/domains/soil/domain_observation.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    },
+    {
+      "id": "repository-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo://docs/doctrine/directory-rules.md@463381703bcd6eada8eea05e95c4a88912ed4b02"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:41:09Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Inactive, fixture-only compatibility packet. It creates no shared ObservationRecord, live source, evidence resolution, policy or review execution, lifecycle write, release, deployment, publication, or public-use authority. Aggregate, model, and survey remain explicitly held. Roll back by closing the draft before merge or reverting the additive packet after an authorized merge."
+}
