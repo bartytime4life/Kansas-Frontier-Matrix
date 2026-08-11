@@ -1,0 +1,88 @@
+name: temporal-retention-disposition-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/temporal-retention-disposition-assessment.yml"
+      - "contracts/governance/temporal_retention_disposition_assessment.md"
+      - "schemas/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/**"
+      - "tools/validators/governance/validate_temporal_retention_disposition_assessment.py"
+      - "tests/validators/governance/test_temporal_retention_disposition_assessment.py"
+      - "docs/intake/exploratory/pass-18-temporal-retention-disposition-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-temporal-retention-disposition-assessment-*.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/temporal-retention-disposition-assessment.yml"
+      - "contracts/governance/temporal_retention_disposition_assessment.md"
+      - "schemas/contracts/v1/governance/temporal_retention_disposition_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/temporal_retention_disposition_assessment/**"
+      - "tools/validators/governance/validate_temporal_retention_disposition_assessment.py"
+      - "tests/validators/governance/test_temporal_retention_disposition_assessment.py"
+      - "docs/intake/exploratory/pass-18-temporal-retention-disposition-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-temporal-retention-disposition-assessment-*.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temporal-retention-disposition-v1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-temporal-retention-disposition-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/governance/validate_temporal_retention_disposition_assessment.py tests/validators/governance/test_temporal_retention_disposition_assessment.py
+          python -m unittest tests.validators.governance.test_temporal_retention_disposition_assessment --verbose
+          python tools/validators/governance/validate_temporal_retention_disposition_assessment.py --fixtures
+      - name: Run adjacent evidence and correction regressions
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.evidence.test_validate_after_image_reconstruction_record --verbose
+          python -m unittest tests.validators.test_validate_correction_propagation_plan --verbose
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-temporal-retention-disposition-assessment-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Temporal retention disposition assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only retention, archival, compaction, erasure-handoff, dependency, proof-preservation, rollback, and identity coherence."
+            echo "- Boundary: no policy or legal decision, erasure authorization, storage maintenance, mutation, deletion, evidence or correction authority, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
