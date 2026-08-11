@@ -1,0 +1,248 @@
+{
+  "profile": "kfm.telemetry.map-build-sustainability.fixture.v1",
+  "cases": [
+    {
+      "case_id": "valid_measured_energy_and_carbon_estimate",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "object_type": "MapBuildSustainabilityTelemetryCandidate",
+        "profile": "kfm.telemetry.map-build-sustainability.fixture.v1",
+        "profile_status": "PROPOSED_INACTIVE_FIXTURE_ONLY",
+        "execution_mode": "FIXTURE_ONLY_NO_NETWORK",
+        "build_binding": {
+          "artifact_class": "MAP_ARTIFACT",
+          "build_ref": "kfm:build:fixture-map-001",
+          "artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "started_at": "2026-08-11T12:00:00Z",
+          "ended_at": "2026-08-11T12:02:00Z"
+        },
+        "energy": {
+          "state": "AVAILABLE",
+          "joules": "7200000",
+          "method": "MEASURED",
+          "method_ref": "urn:kfm:fixture:energy-method:v1",
+          "method_version": "fixture-v1",
+          "relative_uncertainty_percent": "5"
+        },
+        "carbon": {
+          "state": "AVAILABLE",
+          "grams_co2e": "700",
+          "factor_grams_co2e_per_kwh": "350",
+          "factor_region": "US_KS",
+          "factor_source_ref": "urn:kfm:fixture:carbon-factor:v1",
+          "factor_version": "fixture-v1",
+          "relative_uncertainty_percent": "12",
+          "rounding_tolerance_grams_co2e": "0.001"
+        },
+        "review_posture": {
+          "purpose": "REVIEW_SIGNAL_ONLY",
+          "operational_scope": "BUILD_PROCESS_ONLY",
+          "threshold_status": "UNRESOLVED_NO_AUTOMATIC_DENIAL",
+          "mapped_phenomenon_claim": false,
+          "release_decision_effect": "NONE"
+        },
+        "sensitivity": {
+          "classification": "INTERNAL_OPERATIONAL_DETAIL",
+          "per_build_public": false,
+          "per_workflow_public": false,
+          "public_rollup_authorized": false
+        },
+        "authority_claims": {
+          "environmental_truth_authority": false,
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        },
+        "non_effects": [
+          "does_not_measure_or_collect_runtime_telemetry",
+          "does_not_contact_external_factor_or_telemetry_services",
+          "does_not_establish_mapped_environmental_truth",
+          "does_not_define_or_enforce_sustainability_thresholds",
+          "does_not_decide_policy_review_promotion_or_release",
+          "does_not_deploy_publish_or_authorize_public_use",
+          "does_not_modify_build_artifacts_or_receipts"
+        ]
+      },
+      "expected": {"outcome": "PASS", "finding_codes": []}
+    },
+    {
+      "case_id": "valid_estimated_energy_and_carbon_estimate",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "object_type": "MapBuildSustainabilityTelemetryCandidate",
+        "profile": "kfm.telemetry.map-build-sustainability.fixture.v1",
+        "profile_status": "PROPOSED_INACTIVE_FIXTURE_ONLY",
+        "execution_mode": "FIXTURE_ONLY_NO_NETWORK",
+        "build_binding": {
+          "artifact_class": "MAP_ARTIFACT",
+          "build_ref": "kfm:build:fixture-map-002",
+          "artifact_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "started_at": "2026-08-11T13:00:00Z",
+          "ended_at": "2026-08-11T13:05:00Z"
+        },
+        "energy": {
+          "state": "AVAILABLE",
+          "joules": "3600000",
+          "method": "ESTIMATED",
+          "method_ref": "urn:kfm:fixture:energy-model:v2",
+          "method_version": "fixture-v2",
+          "relative_uncertainty_percent": "20"
+        },
+        "carbon": {
+          "state": "AVAILABLE",
+          "grams_co2e": "400",
+          "factor_grams_co2e_per_kwh": "400",
+          "factor_region": "GLOBAL_FIXTURE",
+          "factor_source_ref": "urn:kfm:fixture:carbon-factor:v2",
+          "factor_version": "fixture-v2",
+          "relative_uncertainty_percent": "25",
+          "rounding_tolerance_grams_co2e": "0"
+        },
+        "review_posture": {
+          "purpose": "REVIEW_SIGNAL_ONLY",
+          "operational_scope": "BUILD_PROCESS_ONLY",
+          "threshold_status": "UNRESOLVED_NO_AUTOMATIC_DENIAL",
+          "mapped_phenomenon_claim": false,
+          "release_decision_effect": "NONE"
+        },
+        "sensitivity": {
+          "classification": "INTERNAL_OPERATIONAL_DETAIL",
+          "per_build_public": false,
+          "per_workflow_public": false,
+          "public_rollup_authorized": false
+        },
+        "authority_claims": {
+          "environmental_truth_authority": false,
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        },
+        "non_effects": [
+          "does_not_measure_or_collect_runtime_telemetry",
+          "does_not_contact_external_factor_or_telemetry_services",
+          "does_not_establish_mapped_environmental_truth",
+          "does_not_define_or_enforce_sustainability_thresholds",
+          "does_not_decide_policy_review_promotion_or_release",
+          "does_not_deploy_publish_or_authorize_public_use",
+          "does_not_modify_build_artifacts_or_receipts"
+        ]
+      },
+      "expected": {"outcome": "PASS", "finding_codes": []}
+    },
+    {
+      "case_id": "abstain_when_measurement_not_captured",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "object_type": "MapBuildSustainabilityTelemetryCandidate",
+        "profile": "kfm.telemetry.map-build-sustainability.fixture.v1",
+        "profile_status": "PROPOSED_INACTIVE_FIXTURE_ONLY",
+        "execution_mode": "FIXTURE_ONLY_NO_NETWORK",
+        "build_binding": {
+          "artifact_class": "MAP_ARTIFACT",
+          "build_ref": "kfm:build:fixture-map-003",
+          "artifact_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "started_at": "2026-08-11T14:00:00Z",
+          "ended_at": "2026-08-11T14:01:00Z"
+        },
+        "energy": {"state": "UNAVAILABLE", "reason_code": "MEASUREMENT_NOT_CAPTURED"},
+        "carbon": {"state": "UNAVAILABLE", "reason_code": "ENERGY_UNAVAILABLE"},
+        "review_posture": {
+          "purpose": "REVIEW_SIGNAL_ONLY",
+          "operational_scope": "BUILD_PROCESS_ONLY",
+          "threshold_status": "UNRESOLVED_NO_AUTOMATIC_DENIAL",
+          "mapped_phenomenon_claim": false,
+          "release_decision_effect": "NONE"
+        },
+        "sensitivity": {
+          "classification": "INTERNAL_OPERATIONAL_DETAIL",
+          "per_build_public": false,
+          "per_workflow_public": false,
+          "public_rollup_authorized": false
+        },
+        "authority_claims": {
+          "environmental_truth_authority": false,
+          "evidence_authority": false,
+          "policy_decision_authority": false,
+          "review_authority": false,
+          "promotion_authority": false,
+          "release_authority": false,
+          "publication_authority": false,
+          "public_use_authority": false
+        },
+        "non_effects": [
+          "does_not_measure_or_collect_runtime_telemetry",
+          "does_not_contact_external_factor_or_telemetry_services",
+          "does_not_establish_mapped_environmental_truth",
+          "does_not_define_or_enforce_sustainability_thresholds",
+          "does_not_decide_policy_review_promotion_or_release",
+          "does_not_deploy_publish_or_authorize_public_use",
+          "does_not_modify_build_artifacts_or_receipts"
+        ]
+      },
+      "expected": {"outcome": "ABSTAIN", "finding_codes": []}
+    },
+    {
+      "case_id": "abstain_when_factor_is_unavailable",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {
+        "carbon": {"state": "UNAVAILABLE", "reason_code": "FACTOR_UNAVAILABLE"}
+      },
+      "expected": {"outcome": "ABSTAIN", "finding_codes": []}
+    },
+    {
+      "case_id": "deny_carbon_calculation_mismatch",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {"carbon.grams_co2e": "701"},
+      "expected": {"outcome": "DENY", "finding_codes": ["CARBON_CALCULATION_MISMATCH"]}
+    },
+    {
+      "case_id": "deny_carbon_without_energy",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {
+        "energy": {"state": "UNAVAILABLE", "reason_code": "MEASUREMENT_NOT_CAPTURED"}
+      },
+      "expected": {"outcome": "DENY", "finding_codes": ["CARBON_REQUIRES_ENERGY"]}
+    },
+    {
+      "case_id": "deny_invalid_measurement_window",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {
+        "build_binding.started_at": "2026-08-11T12:03:00Z",
+        "build_binding.ended_at": "2026-08-11T12:02:00Z"
+      },
+      "expected": {"outcome": "DENY", "finding_codes": ["MEASUREMENT_WINDOW_INVALID"]}
+    },
+    {
+      "case_id": "deny_uncertainty_above_one_hundred_percent",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {"energy.relative_uncertainty_percent": "101"},
+      "expected": {"outcome": "DENY", "finding_codes": ["UNCERTAINTY_PERCENT_OUT_OF_RANGE"]}
+    },
+    {
+      "case_id": "deny_environmental_truth_authority",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {"authority_claims.environmental_truth_authority": true},
+      "expected": {"outcome": "DENY", "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "deny_automatic_release_effect",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {"review_posture.release_decision_effect": "DENY_RELEASE"},
+      "expected": {"outcome": "DENY", "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "deny_unbounded_rounding_tolerance",
+      "candidate_from": "valid_measured_energy_and_carbon_estimate",
+      "patch": {"carbon.rounding_tolerance_grams_co2e": "1000"},
+      "expected": {"outcome": "DENY", "finding_codes": ["ROUNDING_TOLERANCE_OUT_OF_RANGE"]}
+    }
+  ]
+}
