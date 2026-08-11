@@ -85,7 +85,8 @@ jobs:
             --comments "${RUNNER_TEMP}/repository-control-comments.json" \
             --control-issue "${KFM_CONTROL_ISSUE}" \
             --authorized-login "${KFM_AUTHORIZED_LOGIN}" \
-            --default-branch "${KFM_DEFAULT_BRANCH}"
+            --default-branch "${KFM_DEFAULT_BRANCH}" \
+            --github-step-summary "${GITHUB_STEP_SUMMARY}"
 
       - name: Record authority boundary
         if: always()

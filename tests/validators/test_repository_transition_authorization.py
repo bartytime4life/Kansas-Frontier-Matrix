@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from tools.validators.repository_control.validate_transition_authorization import (
     MARKER,
+    append_github_step_summary,
     evaluate,
 )
 
@@ -98,6 +99,30 @@ def test_draft_pull_request_is_held_even_with_record() -> None:
 
 def test_missing_record_holds_ready_and_merge() -> None:
     result = run(load(EVENT_PATH), [])
+    assert (result.outcome_class, result.reason_code, result.exit_code) == (
+        "EXPECTED_READINESS_HOLD",
+        "TRANSITION_AUTHORIZATION_MISSING",
+        3,
+    )
+
+
+def test_run_1872_pr_2546_is_missing_transition_authorization_hold() -> None:
+    event = copy.deepcopy(load(EVENT_PATH))
+    event["action"] = "ready_for_review"
+    event["pull_request"].update(
+        number=2546,
+        state="open",
+        draft=False,
+        base={
+            "ref": "main",
+            "sha": "5aa2818d4c16eaa7e2ff94a2591710e03979bebd",
+        },
+        head={
+            "ref": "agent/telemetry-policy-remote-sensing-profile-20260811",
+            "sha": "03c3f3a7f90e04d9fc7ab4da6a867a3cc82b8e2c",
+        },
+    )
+    result = run(event, [])
     assert (result.outcome_class, result.reason_code, result.exit_code) == (
         "EXPECTED_READINESS_HOLD",
         "TRANSITION_AUTHORIZATION_MISSING",
@@ -193,7 +218,7 @@ def test_runtime_shape_rejects_short_id_and_non_rfc3339_expiry() -> None:
         assert result.reason_code == "MATCHING_AUTHORIZATION_INVALID"
 
 
-def test_invalid_record_does_not_echo_comment_fields() -> None:
+def test_invalid_record_does_not_echo_comment_fields(tmp_path: Path) -> None:
     comments = load(COMMENTS_PATH)
     value_record = record(comments)
     value_record["SENSITIVE_UNTRUSTED_FIELD"] = "do-not-echo"
@@ -205,6 +230,12 @@ def test_invalid_record_does_not_echo_comment_fields() -> None:
     assert result.reason_code == "MATCHING_AUTHORIZATION_INVALID"
     assert "SENSITIVE_UNTRUSTED_FIELD" not in rendered
     assert "do-not-echo" not in rendered
+
+    summary_path = tmp_path / "step-summary.md"
+    append_github_step_summary(summary_path, result)
+    summary = summary_path.read_text(encoding="utf-8")
+    assert "SENSITIVE_UNTRUSTED_FIELD" not in summary
+    assert "do-not-echo" not in summary
 
 
 def test_workflow_keeps_event_metadata_out_of_shell_source() -> None:
@@ -224,6 +255,11 @@ def test_workflow_keeps_expected_readiness_hold_blocking() -> None:
     assert 'if [ "$status" -eq 3 ]; then' not in workflow
     assert 'Expected readiness hold; repository transition is not yet authorized.' not in workflow
     assert 'An expected readiness hold remains nonzero and merge-blocking' in workflow
+
+
+def test_workflow_requests_bounded_step_summary_classification() -> None:
+    workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert '--github-step-summary "${GITHUB_STEP_SUMMARY}"' in workflow
 
 
 def test_non_default_target_is_not_applicable() -> None:
@@ -270,6 +306,7 @@ def test_cli_exit_and_output_are_bounded(tmp_path: Path) -> None:
 def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
     comments_path = tmp_path / "comments.json"
     comments_path.write_text("[]\n", encoding="utf-8")
+    summary_path = tmp_path / "step-summary.md"
     completed = subprocess.run(
         [
             sys.executable,
@@ -286,6 +323,8 @@ def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
             "main",
             "--now",
             "2026-07-30T21:00:00Z",
+            "--github-step-summary",
+            str(summary_path),
         ],
         cwd=ROOT,
         text=True,
@@ -296,6 +335,12 @@ def test_cli_missing_authorization_remains_blocking(tmp_path: Path) -> None:
     output = json.loads(completed.stdout)
     assert output["outcome_class"] == "EXPECTED_READINESS_HOLD"
     assert output["reason_code"] == "TRANSITION_AUTHORIZATION_MISSING"
+
+    summary = summary_path.read_text(encoding="utf-8")
+    assert "Outcome class: `EXPECTED_READINESS_HOLD`" in summary
+    assert "Reason code: `TRANSITION_AUTHORIZATION_MISSING`" in summary
+    assert "Transition posture: `BLOCKING`" in summary
+    assert "No current unedited owner transition record" not in summary
 
 
 def test_pr_1869_without_transition_record_would_hold() -> None:

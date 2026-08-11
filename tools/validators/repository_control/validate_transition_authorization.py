@@ -31,6 +31,11 @@ MAX_COMMENT_BYTES = 65_536
 MAX_PAYLOAD_BYTES = 8_192
 MAX_COMMENTS = 10_000
 MAX_AUTHORIZATION_AGE = timedelta(hours=4)
+AUTHORITY_BOUNDARY = (
+    "A pass records an exact owner-account transition decision only. "
+    "It is not independent review, initiating-client attribution, "
+    "ruleset evidence, release authority, or publication authority."
+)
 RFC3339_PATTERN = re.compile(
     r"^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt ][0-9]{2}:[0-9]{2}:[0-9]{2}"
     r"(?:\.[0-9]+)?(?:[Zz]|[+-][0-9]{2}:[0-9]{2})$"
@@ -86,12 +91,42 @@ class Result:
             "authorization_id": self.authorization_id,
             "comment_id": self.comment_id,
             "expires_at": self.expires_at,
-            "authority_boundary": (
-                "A pass records an exact owner-account transition decision only. "
-                "It is not independent review, initiating-client attribution, "
-                "ruleset evidence, release authority, or publication authority."
-            ),
+            "authority_boundary": AUTHORITY_BOUNDARY,
         }
+
+
+def append_github_step_summary(path: Path, result: Result) -> None:
+    """Append a bounded classification without copying untrusted comment text."""
+
+    posture = "BLOCKING" if result.exit_code else "NON_BLOCKING"
+    lines = [
+        "### Repository transition classification",
+        "",
+        f"- Outcome class: `{result.outcome_class}`.",
+        f"- Reason code: `{result.reason_code}`.",
+        f"- Exit code: `{result.exit_code}`.",
+        f"- Transition posture: `{posture}`.",
+    ]
+    if result.pr_number is not None:
+        lines.append(f"- Pull request: `#{result.pr_number}`.")
+    if result.head_sha is not None:
+        lines.append(f"- Head SHA: `{result.head_sha}`.")
+    if result.authorization_id is not None:
+        lines.append(f"- Authorization ID: `{result.authorization_id}`.")
+    if result.comment_id is not None:
+        lines.append(f"- Authorization comment ID: `{result.comment_id}`.")
+    if result.expires_at is not None:
+        lines.append(f"- Authorization expiry: `{result.expires_at}`.")
+    lines.extend(
+        [
+            "- Classification source: bounded validator fields only; untrusted "
+            "issue-comment bodies and free-form reasons are not copied.",
+            f"- Authority boundary: {AUTHORITY_BOUNDARY}",
+            "",
+        ]
+    )
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write("\n".join(lines))
 
 
 def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -435,6 +470,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--authorized-login", required=True)
     parser.add_argument("--default-branch", default="main")
     parser.add_argument("--now")
+    parser.add_argument("--github-step-summary", type=Path)
     args = parser.parse_args(argv)
 
     try:
@@ -453,6 +489,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             now=now,
         )
     print(json.dumps(result.as_dict(), sort_keys=True, separators=(",", ":")))
+    if args.github_step_summary is not None:
+        try:
+            append_github_step_summary(args.github_step_summary, result)
+        except OSError as exc:
+            print(f"REGRESSION: STEP_SUMMARY_WRITE_FAILED: {exc}", file=sys.stderr)
+            return 1
     return result.exit_code
 
 
