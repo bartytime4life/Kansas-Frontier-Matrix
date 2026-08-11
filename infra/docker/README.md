@@ -87,10 +87,10 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 ## Verification status
 
 - Target README: replaced greenfield stub content.
-- Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both are three-line greenfield placeholders. No `.dockerignore` was verified in this lane.
+- Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both remain payload-free security-review placeholders. `Dockerfile.explorer-web` uses Node 22.23.2 on Debian trixie-slim, upgrades the bundled npm CLI to 11.19.0, and ends as the non-root `node` user. `Dockerfile.governed-api` uses Python 3.11.15 on Debian trixie-slim, upgrades `setuptools` to 82.0.1 and `wheel` to 0.46.3, and ends as UID/GID 10001. No `.dockerignore` was verified in this lane.
 - Exact child-lane inventory under `infra/docker/`: **CONFIRMED** `README.md`, `Dockerfile.governed-api`, and `Dockerfile.explorer-web` at the inspected revision.
 - Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
 - Compose sibling alignment: PARTIALLY VERIFIED against `infra/compose/README.md`.
 - Directory Rules alignment: PARTIALLY VERIFIED against `docs/doctrine/directory-rules.md`.
-- Runtime/service alignment: NEEDS VERIFICATION against actual Dockerfiles, app services, runtime adapters, configs, secrets handling, scanners, SBOM tooling, validators, tests, CI, deployment targets, image tags, and registry targets.
-- Tests and validators: both Dockerfile paths resolve statically within the `infra/`-bounded Compose context; image builds, scans, SBOM generation, and runtime behavior remain **NEEDS VERIFICATION** until a supported Docker toolchain runs them.
+- Runtime/service alignment: NEEDS VERIFICATION against app services, runtime adapters, configs, secrets handling, SBOM tooling, deployment targets, image tags, and registry targets.
+- Tests and validators: the no-network Compose static suite verifies path resolution, loopback-only published ports, forbidden mount/privilege markers, and a final non-root `USER` in both Dockerfiles. Local targeted execution passed. Image builds and Trivy repository/container scans remain **NEEDS VERIFICATION** until exact-head hosted checks complete.

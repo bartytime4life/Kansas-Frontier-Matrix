@@ -1,0 +1,179 @@
+{
+  "receipt_id": "genrec-security-run-570-f0c0c5ab9145",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "infra/docker/Dockerfile.explorer-web",
+    "infra/docker/Dockerfile.governed-api",
+    "infra/docker/README.md",
+    "tests/infra/test_compose_static.py"
+  ],
+  "artifact_hashes": {
+    "infra/docker/Dockerfile.explorer-web": "sha256:c778937ff2c4bec03bfe61be568a73611d9e54fa169cda78f0988bf1ff715318",
+    "infra/docker/Dockerfile.governed-api": "sha256:fa76f4d7143d4a04f99183a318dd56be4f46a152b76a06e8c0dad2db423d4ada",
+    "infra/docker/README.md": "sha256:aa2b23434484a967613d14bf8d0d3326786255d576fe35aebc38e3707fdee8bc",
+    "tests/infra/test_compose_static.py": "sha256:5d3f12efbfd341f8f8f7e43de5b26f116615e3ed41653cea43f24e1ad0616c84"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:12cef93c38ba8c2908a391224589356b880e610240370b2c1de723faaab3f04c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub Actions exact-job log inspection",
+      "repository evidence inspection",
+      "official upstream repository verification",
+      "Python targeted test execution",
+      "Bash syntax validation",
+      "SHA-256 artifact binding",
+      "generated receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31458154797",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f9c63e6a227bdcbb80ecb48481ff840776a1b020",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/.github/workflows/security.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/apps/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/Dockerfile.explorer-web",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/Dockerfile.governed-api",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/tests/infra/test_compose_static.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://nodejs/docker-node/commit/c038219a5b0f07b66c9a7c461bc7211e73316ee6",
+      "github://docker-library/python/commit/0eff0905e4b563a6e8132439986add44f625cfa1",
+      "github://npm/cli/tag/v11.19.0",
+      "github://pypa/setuptools/tag/v82.0.1"
+    ]
+  },
+  "truth_labels": {
+    "infra/docker/Dockerfile.explorer-web": "PROPOSED",
+    "infra/docker/Dockerfile.governed-api": "PROPOSED",
+    "infra/docker/README.md": "PROPOSED",
+    "tests/infra/test_compose_static.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "run-570-reproduction-and-inheritance",
+      "outcome": "PASS",
+      "reason": "Inspected security workflow run 570 and its exact failed jobs. The failures resolve to the pre-existing two placeholder Dockerfiles and the newly introduced security workflow, not to the Pass 18 classification-layer assessment merged by PR #2525. Current main still carried the same Dockerfile blobs before this branch."
+    },
+    {
+      "gate": "root-cause-classification",
+      "outcome": "PASS",
+      "reason": "Explorer image scanning found fixed high/critical Debian and bundled npm findings plus a missing non-root USER. Governed API scanning found fixed vendored setuptools dependency findings plus a missing non-root USER. Repository misconfiguration scanning identified the same final-user defect in both Dockerfiles."
+    },
+    {
+      "gate": "directory-and-scope",
+      "outcome": "PASS",
+      "reason": "Kept image packaging changes under infra/docker, the deterministic regression under tests/infra, and this provenance record under data/receipts/generated. No application, workflow, policy, release, source, or Pass 18 assessment files were changed."
+    },
+    {
+      "gate": "upstream-version-verification",
+      "outcome": "PASS",
+      "reason": "Checked official upstream repository evidence for the Node 22 and Python 3.11 trixie-slim image lines, npm 11.19.0, setuptools 82.0.1, and wheel 0.46.3 before selecting the bounded dependency refresh."
+    },
+    {
+      "gate": "static-regression-test",
+      "outcome": "PASS",
+      "reason": "Ran tests/infra/test_compose_static.py against the prepared Dockerfile bytes. All three tests passed, including the new requirement that each Dockerfile's final USER be present and non-root."
+    },
+    {
+      "gate": "dockerfile-run-block-shell-syntax",
+      "outcome": "PASS",
+      "reason": "Validated the complete shell command bodies from both Dockerfile RUN instructions with bash -n."
+    },
+    {
+      "gate": "artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Bound the four authored artifacts to SHA-256 digests and computed artifact-set digest sha256:f0c0c5ab9145849d904d19b2a2dd711cf6b25ed37bba7994265619c06f943678."
+    },
+    {
+      "gate": "container-build-and-trivy-execution",
+      "outcome": "SKIPPED",
+      "reason": "No local Docker, Podman, or Buildah runtime is available. Exact-head GitHub-hosted image builds and Trivy repository/container scans are the remaining execution evidence."
+    },
+    {
+      "gate": "repository-native-full-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout is available. Targeted no-network validation was run against the exact prepared bytes; repository-wide and hosted checks remain post-push evidence."
+    },
+    {
+      "gate": "remote-readback-pr-and-hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "This receipt records pre-push bytes. Branch readback, draft pull-request state, and exact-head hosted checks are verified after the remote writes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "security-run-570",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31458154797"
+    },
+    {
+      "id": "current-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f9c63e6a227bdcbb80ecb48481ff840776a1b020"
+    },
+    {
+      "id": "security-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/.github/workflows/security.yml"
+    },
+    {
+      "id": "explorer-node-engine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/apps/explorer-web/package.json"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "node-container-upstream",
+      "validated": true,
+      "evidence_ref": "github://nodejs/docker-node/commit/c038219a5b0f07b66c9a7c461bc7211e73316ee6"
+    },
+    {
+      "id": "python-container-upstream",
+      "validated": true,
+      "evidence_ref": "github://docker-library/python/commit/0eff0905e4b563a6e8132439986add44f625cfa1"
+    },
+    {
+      "id": "npm-11.19.0",
+      "validated": true,
+      "evidence_ref": "github://npm/cli/tag/v11.19.0"
+    },
+    {
+      "id": "setuptools-82.0.1",
+      "validated": true,
+      "evidence_ref": "github://pypa/setuptools/tag/v82.0.1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T04:37:46Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored bounded repair for security workflow run 570. It hardens only the two payload-free placeholder images, adds a final non-root-user regression, synchronizes the Docker lane documentation, and does not alter the security workflow, Pass 18 assessment artifacts, repository settings, release state, deployment state, publication state, source activation, or default-branch history. Human review remains pending."
+}
