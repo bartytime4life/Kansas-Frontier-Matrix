@@ -1,0 +1,92 @@
+{
+  "object_type": "ApiContractChangeAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "base_candidate": {
+    "object_type": "ApiContractChangeAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.release.api-contract-change-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-413",
+    "observed_at": "2026-08-10T18:30:00Z",
+    "change_subject": {
+      "api_contract_ref": "kfm:api-contract:synthetic-claim-envelope",
+      "previous_contract_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "candidate_contract_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "previous_version": "1.4.2",
+      "candidate_version": "2.0.0",
+      "declared_version_impact": "MAJOR",
+      "change_kind": "BREAKING",
+      "response_shape_impact": "BREAKING",
+      "interpretation_impact": "CHANGED",
+      "client_behavior_impact": "CHANGED",
+      "evidence_handling_impact": "CHANGED",
+      "security_policy_impact": "NONE",
+      "affected_resource_refs": [
+        "kfm:api-resource:claim-envelope",
+        "kfm:api-resource:evidence-resolution"
+      ]
+    },
+    "compatibility": {
+      "state": "COMPLETE",
+      "declared_compatibility": "INCOMPATIBLE",
+      "compatibility_test_refs": ["kfm:test-report:synthetic-api-compatibility:001"],
+      "client_fixture_refs": ["kfm:client-fixture:synthetic-explorer-v1:001"],
+      "compatibility_rationale_ref": "kfm:compatibility-rationale:synthetic-api-change:001",
+      "migration_guide_ref": "kfm:migration-guide:synthetic-api-v2:001",
+      "deprecation_notice_ref": null
+    },
+    "release_closure": {
+      "change_notice_ref": "kfm:change-notice:synthetic-api-v2:001",
+      "release_manifest_ref": "kfm:release-manifest:synthetic-api-v2:001",
+      "correction_notice_ref": "kfm:correction-notice:synthetic-api-v2:001",
+      "rollback_card_ref": "kfm:rollback-card:synthetic-api-v2:001",
+      "review_record_refs": ["kfm:review-record:synthetic-api-v2:001"]
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_API_MUTATION",
+      "NO_CLIENT_DISCOVERY",
+      "NO_COMPATIBILITY_EXECUTION",
+      "NO_RELEASE_AUTHORITY",
+      "NO_VERSION_POLICY_ADOPTION"
+    ],
+    "authority_claims": {
+      "api_mutation_authority": false,
+      "compatibility_authority": false,
+      "client_migration_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "rollback_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_breaking_major_change", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_additive_minor_change", "patch": {"change_subject": {"candidate_version": "1.5.0", "declared_version_impact": "MINOR", "change_kind": "ADDITIVE_COMPATIBLE", "response_shape_impact": "ADDITIVE", "interpretation_impact": "NONE", "client_behavior_impact": "NONE", "evidence_handling_impact": "NONE"}, "compatibility": {"declared_compatibility": "BACKWARD_COMPATIBLE", "migration_guide_ref": null}, "release_closure": {"correction_notice_ref": null}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_patch_correction", "patch": {"change_subject": {"candidate_version": "1.4.3", "declared_version_impact": "PATCH", "change_kind": "PATCH_CORRECTION", "response_shape_impact": "NONE", "interpretation_impact": "CHANGED", "client_behavior_impact": "NONE", "evidence_handling_impact": "CHANGED"}, "compatibility": {"declared_compatibility": "BACKWARD_COMPATIBLE", "migration_guide_ref": null}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_deprecation_minor_change", "patch": {"change_subject": {"candidate_version": "1.5.0", "declared_version_impact": "MINOR", "change_kind": "DEPRECATION", "response_shape_impact": "NONE", "interpretation_impact": "NONE", "client_behavior_impact": "NONE", "evidence_handling_impact": "NONE"}, "compatibility": {"declared_compatibility": "BACKWARD_COMPATIBLE", "migration_guide_ref": null, "deprecation_notice_ref": "kfm:deprecation-notice:synthetic-api-v1:001"}, "release_closure": {"correction_notice_ref": null}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_incomplete_compatibility", "patch": {"change_subject": {"declared_version_impact": "UNKNOWN", "change_kind": "UNKNOWN", "response_shape_impact": "UNKNOWN", "interpretation_impact": "UNKNOWN", "client_behavior_impact": "UNKNOWN", "evidence_handling_impact": "UNKNOWN", "security_policy_impact": "UNKNOWN", "affected_resource_refs": []}, "compatibility": {"state": "INCOMPLETE", "declared_compatibility": "UNKNOWN", "compatibility_test_refs": [], "client_fixture_refs": [], "compatibility_rationale_ref": null, "migration_guide_ref": null, "deprecation_notice_ref": null}, "release_closure": {"change_notice_ref": null, "release_manifest_ref": null, "correction_notice_ref": null, "rollback_card_ref": null, "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["COMPATIBILITY_INCOMPLETE"]}},
+    {"name": "abstain_unknown_compatibility", "patch": {"change_subject": {"declared_version_impact": "UNKNOWN", "change_kind": "UNKNOWN", "response_shape_impact": "UNKNOWN", "interpretation_impact": "UNKNOWN", "client_behavior_impact": "UNKNOWN", "evidence_handling_impact": "UNKNOWN", "security_policy_impact": "UNKNOWN", "affected_resource_refs": []}, "compatibility": {"state": "UNKNOWN", "declared_compatibility": "UNKNOWN", "compatibility_test_refs": [], "client_fixture_refs": [], "compatibility_rationale_ref": null, "migration_guide_ref": null, "deprecation_notice_ref": null}, "release_closure": {"change_notice_ref": null, "release_manifest_ref": null, "correction_notice_ref": null, "rollback_card_ref": null, "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["COMPATIBILITY_UNKNOWN"]}},
+    {"name": "abstain_change_impact_unknown", "patch": {"change_subject": {"security_policy_impact": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CHANGE_IMPACT_UNKNOWN"]}},
+    {"name": "deny_version_not_advanced", "patch": {"change_subject": {"candidate_version": "1.4.2"}}, "expected": {"outcome": "DENY", "codes": ["VERSION_NOT_ADVANCED"]}},
+    {"name": "deny_declared_version_bump_mismatch", "patch": {"change_subject": {"candidate_version": "1.5.0"}}, "expected": {"outcome": "DENY", "codes": ["VERSION_BUMP_MISMATCH"]}},
+    {"name": "deny_contract_digest_unchanged", "patch": {"change_subject": {"candidate_contract_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"}}, "expected": {"outcome": "DENY", "codes": ["CONTRACT_DIGEST_NOT_CHANGED"]}},
+    {"name": "deny_breaking_declared_compatible", "patch": {"compatibility": {"declared_compatibility": "BACKWARD_COMPATIBLE"}}, "expected": {"outcome": "DENY", "codes": ["BREAKING_CHANGE_INCOHERENT"]}},
+    {"name": "deny_incompatible_minor_version", "patch": {"change_subject": {"candidate_version": "1.5.0", "declared_version_impact": "MINOR", "change_kind": "DEPRECATION", "response_shape_impact": "ADDITIVE", "interpretation_impact": "NONE", "client_behavior_impact": "NONE", "evidence_handling_impact": "NONE"}, "compatibility": {"deprecation_notice_ref": "kfm:deprecation-notice:synthetic-api-v1:001"}, "release_closure": {"correction_notice_ref": null}}, "expected": {"outcome": "DENY", "codes": ["INCOMPATIBLE_MAJOR_VERSION_REQUIRED"]}},
+    {"name": "deny_compatibility_tests_missing", "patch": {"compatibility": {"compatibility_test_refs": []}}, "expected": {"outcome": "DENY", "codes": ["COMPATIBILITY_TEST_REFERENCE_REQUIRED"]}},
+    {"name": "deny_client_fixtures_missing", "patch": {"compatibility": {"client_fixture_refs": []}}, "expected": {"outcome": "DENY", "codes": ["CLIENT_FIXTURE_REFERENCE_REQUIRED"]}},
+    {"name": "deny_compatibility_rationale_missing", "patch": {"compatibility": {"compatibility_rationale_ref": null}}, "expected": {"outcome": "DENY", "codes": ["COMPATIBILITY_RATIONALE_REQUIRED"]}},
+    {"name": "deny_change_notice_missing", "patch": {"release_closure": {"change_notice_ref": null}}, "expected": {"outcome": "DENY", "codes": ["CHANGE_NOTICE_REQUIRED"]}},
+    {"name": "deny_release_manifest_missing", "patch": {"release_closure": {"release_manifest_ref": null}}, "expected": {"outcome": "DENY", "codes": ["RELEASE_MANIFEST_REFERENCE_REQUIRED"]}},
+    {"name": "deny_rollback_card_missing", "patch": {"release_closure": {"rollback_card_ref": null}}, "expected": {"outcome": "DENY", "codes": ["ROLLBACK_CARD_REFERENCE_REQUIRED"]}},
+    {"name": "deny_review_record_missing", "patch": {"release_closure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REFERENCE_REQUIRED"]}},
+    {"name": "deny_correction_notice_missing", "patch": {"release_closure": {"correction_notice_ref": null}}, "expected": {"outcome": "DENY", "codes": ["CORRECTION_NOTICE_REQUIRED"]}},
+    {"name": "deny_deprecation_notice_missing", "patch": {"change_subject": {"candidate_version": "1.5.0", "declared_version_impact": "MINOR", "change_kind": "DEPRECATION", "response_shape_impact": "NONE", "interpretation_impact": "NONE", "client_behavior_impact": "NONE", "evidence_handling_impact": "NONE"}, "compatibility": {"declared_compatibility": "BACKWARD_COMPATIBLE", "migration_guide_ref": null, "deprecation_notice_ref": null}, "release_closure": {"correction_notice_ref": null}}, "expected": {"outcome": "DENY", "codes": ["DEPRECATION_NOTICE_REQUIRED"]}},
+    {"name": "deny_migration_guide_missing", "patch": {"compatibility": {"migration_guide_ref": null}}, "expected": {"outcome": "DENY", "codes": ["MIGRATION_GUIDE_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_compatibility_state", "patch": {"compatibility": {"state": "ERROR"}}, "expected": {"outcome": "ERROR", "codes": ["COMPATIBILITY_ERROR"]}},
+    {"name": "error_unknown_field", "patch": {"release_approved": true}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
