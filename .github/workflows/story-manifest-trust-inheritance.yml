@@ -1,0 +1,84 @@
+# Validate the proposed public-safe StoryManifest composite profile.
+name: story-manifest-trust-inheritance
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/story-manifest-trust-inheritance.yml"
+      - "contracts/ui/story_manifest.md"
+      - "schemas/contracts/v1/ui/story_manifest.schema.json"
+      - "fixtures/ui/story_manifest/**"
+      - "tools/validators/ui/validate_story_manifest.py"
+      - "tests/validators/test_validate_story_manifest.py"
+      - "docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md"
+      - "data/receipts/generated/genrec-pass20-story-manifest-inheritance-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/story-manifest-trust-inheritance.yml"
+      - "contracts/ui/story_manifest.md"
+      - "schemas/contracts/v1/ui/story_manifest.schema.json"
+      - "fixtures/ui/story_manifest/**"
+      - "tools/validators/ui/validate_story_manifest.py"
+      - "tests/validators/test_validate_story_manifest.py"
+      - "docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md"
+      - "data/receipts/generated/genrec-pass20-story-manifest-inheritance-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: story-manifest-trust-inheritance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-story-manifest-trust-inheritance
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic tests and replay fixtures
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_story_manifest -v
+          python tools/validators/ui/validate_story_manifest.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass20-story-manifest-inheritance-20260810.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### StoryManifest composite trust inheritance"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: closed synthetic StoryManifest projection, finite worst-state inheritance, dimensionwise trust reduction, visible limiting nodes/reasons, correction linkage, and deterministic identity."
+            echo "- Boundary: no ref resolution, narrative truth, citation validation, policy execution, review/release approval, UI activation, deployment, public use, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"

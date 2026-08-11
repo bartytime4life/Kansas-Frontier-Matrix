@@ -1,0 +1,236 @@
+{
+  "profile": "kfm.ui.story-manifest.fixture-suite.v1",
+  "base": {
+    "profile": "kfm.ui.story-manifest.public-safe.v1",
+    "id": "kfm:story-manifest:000000000000000000000000",
+    "version": "1.0.0",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "story_ref": "kfm://story/synthetic-frontier-overview",
+    "title": "Synthetic frontier overview",
+    "accessibility_summary": "Two synthetic, public-safe story nodes used only to exercise composite trust inheritance.",
+    "state": "READY",
+    "outcome": "ANSWER",
+    "reason_codes": ["SUPPORTED"],
+    "limiting_node_refs": [],
+    "constituents": [
+      {
+        "node_ref": "kfm://story-node/context",
+        "order_index": 0,
+        "state": "READY",
+        "outcome": "ANSWER",
+        "reason_code": "SUPPORTED",
+        "trust_state": {
+          "rights": "CLEARED",
+          "sensitivity": "PUBLIC",
+          "policy": "ALLOW",
+          "review": "REVIEWED",
+          "release": "RELEASED",
+          "freshness": "CURRENT",
+          "correction": "NONE"
+        }
+      },
+      {
+        "node_ref": "kfm://story-node/overview",
+        "order_index": 1,
+        "state": "READY",
+        "outcome": "ANSWER",
+        "reason_code": "SUPPORTED",
+        "trust_state": {
+          "rights": "CLEARED",
+          "sensitivity": "PUBLIC",
+          "policy": "ALLOW",
+          "review": "REVIEWED",
+          "release": "RELEASED",
+          "freshness": "CURRENT",
+          "correction": "NONE"
+        }
+      }
+    ],
+    "trust_state": {
+      "rights": "CLEARED",
+      "sensitivity": "PUBLIC",
+      "policy": "ALLOW",
+      "review": "REVIEWED",
+      "release": "RELEASED",
+      "freshness": "CURRENT",
+      "correction": "NONE"
+    },
+    "support": {
+      "evidence_bundle_refs": ["evidence:synthetic-story-bundle"],
+      "citation_validation_refs": ["citation:synthetic-story-report"],
+      "policy_decision_refs": ["policy:synthetic-story-allow"],
+      "release_refs": ["release:synthetic-story-release"],
+      "review_refs": ["review:synthetic-story-review"],
+      "correction_refs": []
+    },
+    "caveats": ["Synthetic fixture only; no source, evidence, policy, release, or publication authority."],
+    "authoritative": false,
+    "projection_only": true
+  },
+  "variants": {
+    "ready": [],
+    "partial_stale": [
+      {"path": "/constituents/1/state", "value": "PARTIAL"},
+      {"path": "/constituents/1/outcome", "value": "ABSTAIN"},
+      {"path": "/constituents/1/reason_code", "value": "STALE_EVIDENCE"},
+      {"path": "/constituents/1/trust_state/freshness", "value": "STALE"},
+      {"path": "/state", "value": "PARTIAL"},
+      {"path": "/outcome", "value": "ABSTAIN"},
+      {"path": "/reason_codes", "value": ["STALE_EVIDENCE"]},
+      {"path": "/limiting_node_refs", "value": ["kfm://story-node/overview"]},
+      {"path": "/trust_state/freshness", "value": "STALE"}
+    ],
+    "abstained_missing": [
+      {"path": "/constituents/0/state", "value": "ABSTAINED"},
+      {"path": "/constituents/0/outcome", "value": "ABSTAIN"},
+      {"path": "/constituents/0/reason_code", "value": "MISSING_EVIDENCE"},
+      {"path": "/state", "value": "ABSTAINED"},
+      {"path": "/outcome", "value": "ABSTAIN"},
+      {"path": "/reason_codes", "value": ["MISSING_EVIDENCE"]},
+      {"path": "/limiting_node_refs", "value": ["kfm://story-node/context"]}
+    ],
+    "blocked_rights": [
+      {"path": "/constituents/0/state", "value": "BLOCKED"},
+      {"path": "/constituents/0/outcome", "value": "DENY"},
+      {"path": "/constituents/0/reason_code", "value": "RIGHTS_UNRESOLVED"},
+      {"path": "/constituents/0/trust_state/rights", "value": "UNRESOLVED"},
+      {"path": "/state", "value": "BLOCKED"},
+      {"path": "/outcome", "value": "DENY"},
+      {"path": "/reason_codes", "value": ["RIGHTS_UNRESOLVED"]},
+      {"path": "/limiting_node_refs", "value": ["kfm://story-node/context"]},
+      {"path": "/trust_state/rights", "value": "UNRESOLVED"}
+    ],
+    "error_policy": [
+      {"path": "/constituents/1/state", "value": "ERROR"},
+      {"path": "/constituents/1/outcome", "value": "ERROR"},
+      {"path": "/constituents/1/reason_code", "value": "UPSTREAM_ERROR"},
+      {"path": "/constituents/1/trust_state/policy", "value": "ERROR"},
+      {"path": "/state", "value": "ERROR"},
+      {"path": "/outcome", "value": "ERROR"},
+      {"path": "/reason_codes", "value": ["UPSTREAM_ERROR"]},
+      {"path": "/limiting_node_refs", "value": ["kfm://story-node/overview"]},
+      {"path": "/trust_state/policy", "value": "ERROR"}
+    ],
+    "superseded": [
+      {"path": "/constituents/0/state", "value": "SUPERSEDED"},
+      {"path": "/constituents/0/outcome", "value": "ABSTAIN"},
+      {"path": "/constituents/0/reason_code", "value": "SUPERSEDED"},
+      {"path": "/constituents/0/trust_state/release", "value": "WITHDRAWN"},
+      {"path": "/constituents/0/trust_state/correction", "value": "SUPERSEDED"},
+      {"path": "/state", "value": "SUPERSEDED"},
+      {"path": "/outcome", "value": "ABSTAIN"},
+      {"path": "/reason_codes", "value": ["SUPERSEDED"]},
+      {"path": "/limiting_node_refs", "value": ["kfm://story-node/context"]},
+      {"path": "/trust_state/release", "value": "WITHDRAWN"},
+      {"path": "/trust_state/correction", "value": "SUPERSEDED"},
+      {"path": "/support/correction_refs", "value": ["correction:synthetic-story-supersession"]},
+      {"path": "/support/rollback_ref", "value": "rollback:synthetic-story-rollback"},
+      {"path": "/supersession", "value": {"replacement_manifest_ref": "kfm:story-manifest:111111111111111111111111", "public_note": "This synthetic manifest was replaced by a corrected synthetic fixture."}}
+    ]
+  },
+  "cases": [
+    {"case_id": "valid-ready", "variants": ["ready"], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "valid-partial-stale", "variants": ["partial_stale"], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "valid-abstained-missing", "variants": ["abstained_missing"], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "valid-blocked-rights", "variants": ["blocked_rights"], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "valid-error-policy", "variants": ["error_policy"], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "valid-superseded", "variants": ["superseded"], "expected_outcome": "PASS", "expected_findings": []},
+    {
+      "case_id": "deny-optimistic-state",
+      "variants": ["partial_stale"],
+      "mutations": [
+        {"path": "/state", "value": "READY"},
+        {"path": "/outcome", "value": "ANSWER"},
+        {"path": "/reason_codes", "value": ["SUPPORTED"]},
+        {"path": "/limiting_node_refs", "value": []}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "STORY_MANIFEST_LIMITING_REFS_MISMATCH", "path": "/limiting_node_refs"},
+        {"code": "STORY_MANIFEST_OUTCOME_MISMATCH", "path": "/outcome"},
+        {"code": "STORY_MANIFEST_REASON_CODES_MISMATCH", "path": "/reason_codes"},
+        {"code": "STORY_MANIFEST_STATE_MISMATCH", "path": "/state"}
+      ]
+    },
+    {
+      "case_id": "deny-trust-optimism",
+      "variants": ["partial_stale"],
+      "mutations": [{"path": "/trust_state/freshness", "value": "CURRENT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_TRUST_REDUCTION_MISMATCH", "path": "/trust_state/freshness"}]
+    },
+    {
+      "case_id": "deny-limiting-ref-drift",
+      "variants": ["partial_stale"],
+      "mutations": [{"path": "/limiting_node_refs", "value": ["kfm://story-node/context"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_LIMITING_REFS_MISMATCH", "path": "/limiting_node_refs"}]
+    },
+    {
+      "case_id": "deny-reason-drift",
+      "variants": ["partial_stale"],
+      "mutations": [{"path": "/reason_codes", "value": ["PARTIAL_SUPPORT"]}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_REASON_CODES_MISMATCH", "path": "/reason_codes"}]
+    },
+    {
+      "case_id": "deny-constituent-too-permissive",
+      "mutations": [
+        {"path": "/constituents/0/trust_state/rights", "value": "GENERALIZED"},
+        {"path": "/trust_state/rights", "value": "GENERALIZED"},
+        {"path": "/state", "value": "PARTIAL"},
+        {"path": "/outcome", "value": "ABSTAIN"},
+        {"path": "/reason_codes", "value": ["SUPPORTED"]},
+        {"path": "/limiting_node_refs", "value": ["kfm://story-node/context"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_CONSTITUENT_TOO_PERMISSIVE", "path": "/constituents/0/state"}]
+    },
+    {
+      "case_id": "deny-unsorted-constituents",
+      "mutations": [
+        {"path": "/constituents/0/order_index", "value": 1},
+        {"path": "/constituents/1/order_index", "value": 0}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_CONSTITUENT_ORDER_INVALID", "path": "/constituents"}]
+    },
+    {
+      "case_id": "deny-duplicate-node-ref",
+      "mutations": [{"path": "/constituents/1/node_ref", "value": "kfm://story-node/context"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_CONSTITUENT_REF_DUPLICATE", "path": "/constituents"}]
+    },
+    {
+      "case_id": "deny-ready-without-evidence",
+      "mutations": [{"path": "/support/evidence_bundle_refs", "value": []}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_READY_SUPPORT_REQUIRED", "path": "/support/evidence_bundle_refs"}]
+    },
+    {
+      "case_id": "deny-superseded-without-links",
+      "variants": ["superseded"],
+      "mutations": [
+        {"path": "/support/correction_refs", "value": []},
+        {"path": "/supersession", "remove": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "STORY_MANIFEST_CORRECTION_REFS_REQUIRED", "path": "/support/correction_refs"},
+        {"code": "STORY_MANIFEST_SUPERSESSION_REQUIRED", "path": "/supersession"}
+      ]
+    },
+    {
+      "case_id": "deny-raw-body-property",
+      "mutations": [{"path": "/body", "value": "Raw narrative content is outside this projection."}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_SCHEMA_INVALID", "path": "/"}]
+    },
+    {
+      "case_id": "deny-spec-hash-drift",
+      "post_identity_mutations": [{"path": "/spec_hash", "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "STORY_MANIFEST_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    }
+  ]
+}
