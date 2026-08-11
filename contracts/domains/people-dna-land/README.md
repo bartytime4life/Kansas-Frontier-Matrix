@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-domains-people-dna-land-readme
 title: People / DNA / Land Contracts README
 type: readme
-version: v0.2
+version: v0.3
 status: draft; contract-lane-orientation; restricted-review; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — People/DNA/Land domain steward
@@ -18,7 +18,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — scaffold existed before v0.2 expansion
-updated: 2026-06-22
+updated: 2026-08-11
 policy_label: restricted-review; semantic-contracts; people-dna-land; living-person-aware; DNA-aware; title-sensitive; evidence-bound; source-role-aware; consent-aware; release-gated; rollback-aware; not-schema-home; not-policy-home; not-data-home; not-publication-authority
 tags: [kfm, contracts, people-dna-land, README, semantic-contracts, PeopleContracts, GenealogyContracts, LandOwnershipContracts, LandInstrument, PersonAssertion, PersonCanonical, GenealogyRelationship, RelationshipAssertion, DNAMatchEvidence, LandOwnershipAssertion, EvidenceBundle, PolicyDecision, ConsentGrant, RevocationReceipt, ReleaseManifest, RollbackCard, restricted]
 related:
@@ -26,6 +26,8 @@ related:
   - ./genealogy/README.md
   - ./land-ownership/README.md
   - ./LandInstrument.md
+  - ./consented_genealogy_overlay.md
+  - ./consent_revocation_propagation_assessment.md
   - ../../../docs/domains/people-dna-land/README.md
   - ../../../docs/domains/people-dna-land/CANONICAL_PATHS.md
   - ../../../docs/domains/people-dna-land/IDENTITY_MODEL.md
@@ -172,6 +174,8 @@ Current contract files and folders observed or established in this session:
 | `genealogy/README.md` | Genealogy contract-folder orientation. | Draft; PROPOSED subfolder; relationship/living-person/DNA risks. |
 | `land-ownership/README.md` | Land-ownership contract-folder orientation. | Draft; PROPOSED subfolder; title/parcel/private-join risks. |
 | `LandInstrument.md` | Semantic contract for recorded land instruments. | Draft; schema-missing; title-sensitive; filename case convention unresolved. |
+| `consented_genealogy_overlay.md` | Synthetic, restricted genealogy-overlay candidate with manifest-bound revocation denial. | Proposed fixture profile; no real-person or release authority. |
+| `consent_revocation_propagation_assessment.md` | Closed assessment of active scope and withdrawal propagation across read, answer, export, tile, graph, index, and cache surfaces. | Proposed inactive fixture profile; consent dimension only; no cleanup execution or release authority. |
 
 Likely future contract candidates are **PROPOSED** until created and reviewed:
 
