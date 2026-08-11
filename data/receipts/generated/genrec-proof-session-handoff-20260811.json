@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-proof-session-handoff-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/proof-session-handoff-candidate.yml",
+    "contracts/governance/proof_session_handoff.md",
+    "schemas/contracts/v1/governance/proof_session_handoff.schema.json",
+    "fixtures/contracts/v1/governance/proof_session_handoff/cases.json",
+    "tools/validators/governance/validate_proof_session_handoff.py",
+    "tests/validators/governance/test_validate_proof_session_handoff.py",
+    "docs/intake/exploratory/proof-session-handoff-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/proof-session-handoff-candidate.yml": "sha256:570ef65dcf26358d089bd46c8b88dc3f78de2d10768b12f73678d0ab1947ee44",
+    "contracts/governance/proof_session_handoff.md": "sha256:9f5d558bd62ba0e8b306a79cec9f2b1be6cb51add24149856fa288bef7c66725",
+    "schemas/contracts/v1/governance/proof_session_handoff.schema.json": "sha256:331ee482d27a5e76e706f76468b70b67491ee4d8e9ecdc47991c40335587b9a7",
+    "fixtures/contracts/v1/governance/proof_session_handoff/cases.json": "sha256:cae6400b4b66634e0e74724d7edab8a73f8303a6440211813978642856f155f7",
+    "tools/validators/governance/validate_proof_session_handoff.py": "sha256:c8050d4b8846e2855ceaefef46f1081657f3d4ebad4ecb30b6f738fb91513ea9",
+    "tests/validators/governance/test_validate_proof_session_handoff.py": "sha256:13fed7ea7295572f52cedba3f1c476f7233a50fce2370a172e245012d45b8f1f",
+    "docs/intake/exploratory/proof-session-handoff-source-map.md": "sha256:956de0d4725a0c6ff283cc91676ae075d479150f02909dfb43f821c6a02f30de"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:9f5d558bd62ba0e8b306a79cec9f2b1be6cb51add24149856fa288bef7c66725",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Living_Compass_Working_Edition_1.0.docx"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/proof-session-handoff-candidate.yml": "CONFIRMED",
+    "contracts/governance/proof_session_handoff.md": "PROPOSED",
+    "schemas/contracts/v1/governance/proof_session_handoff.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/proof_session_handoff/cases.json": "CONFIRMED",
+    "tools/validators/governance/validate_proof_session_handoff.py": "CONFIRMED",
+    "tests/validators/governance/test_validate_proof_session_handoff.py": "CONFIRMED",
+    "docs/intake/exploratory/proof-session-handoff-source-map.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 focused deterministic tests passed in the isolated authoring workspace."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "17 exact PASS, ABSTAIN, DENY, and ERROR cases matched."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "living-compass-governed-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/intake/exploratory/kfm-living-compass-working-edition-1-0-source-map.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T22:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only ProofSessionHandoffCandidate packet adapted from the governed Living Compass source map. It records a bounded experiment's claim scope, intended value, evidence-shaped references, policy questions, work products, validation outcome, unresolved items, proof boundary, next action, and rollback plan. It establishes no evidence, policy, review, proof, promotion, release, deployment, publication, lifecycle, or public-use authority."
+}
