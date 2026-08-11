@@ -56,7 +56,7 @@
     {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
     {"gate": "git-diff-check", "outcome": "PASS"},
     {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
-    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending after a safely held draft pull request can be opened."}
   ],
   "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
   "citations": [
