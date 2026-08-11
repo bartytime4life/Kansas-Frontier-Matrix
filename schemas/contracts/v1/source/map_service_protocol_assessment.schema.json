@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/map_service_protocol_assessment.schema.json",
+  "title": "MapServiceProtocolAssessment",
+  "description": "Fixture-only, no-network assessment of PMTiles, XYZ, WMTS, or WMS protocol declarations without source, rights, cache, layer, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessment_state",
+    "source_id",
+    "source_descriptor_ref",
+    "descriptor_spec_hash",
+    "layer_manifest_ref",
+    "declaration",
+    "controls",
+    "decision",
+    "authority",
+    "limitations",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "MapServiceProtocolAssessment" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.source.map-service-protocol.fixture.v1" },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:map-service-protocol:[a-f0-9]{24}$"
+    },
+    "assessment_state": { "enum": ["COMPLETE", "ERROR"] },
+    "source_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "source_descriptor_ref": {
+      "type": "string",
+      "pattern": "^kfm://source/[a-z0-9][a-z0-9._:-]{2,127}$"
+    },
+    "descriptor_spec_hash": { "$ref": "#/$defs/sha256" },
+    "layer_manifest_ref": { "$ref": "#/$defs/ref" },
+    "declaration": { "$ref": "#/$defs/declaration" },
+    "controls": { "$ref": "#/$defs/controls" },
+    "decision": { "$ref": "#/$defs/decision" },
+    "authority": { "$ref": "#/$defs/authority" },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "fixture_only",
+          "no_network_or_remote_verification",
+          "no_source_or_rights_authority",
+          "no_cache_or_layer_mutation",
+          "no_release_publication_or_public_use"
+        ]
+      }
+    },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullable_sha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z][a-z0-9-]*/[A-Za-z0-9][A-Za-z0-9._~:/-]{2,255}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/ref" },
+        { "type": "null" }
+      ]
+    },
+    "nullable_text": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000,
+          "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+        },
+        { "type": "null" }
+      ]
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_class",
+        "access_surface",
+        "locator_ref",
+        "artifact_digest",
+        "protocol_evidence_kind",
+        "protocol_evidence_ref",
+        "source_use_role",
+        "immutable"
+      ],
+      "properties": {
+        "protocol_class": { "enum": ["PMTILES", "XYZ", "WMTS", "WMS"] },
+        "access_surface": {
+          "enum": [
+            "LOCAL_IMMUTABLE_ARTIFACT",
+            "REMOTE_TILE_TEMPLATE",
+            "REMOTE_CAPABILITIES_SERVICE"
+          ]
+        },
+        "locator_ref": { "$ref": "#/$defs/ref" },
+        "artifact_digest": { "$ref": "#/$defs/nullable_sha256" },
+        "protocol_evidence_kind": {
+          "enum": [
+            "PMTILES_HEADER_ASSESSMENT",
+            "XYZ_TEMPLATE_ASSESSMENT",
+            "WMTS_CAPABILITIES_ASSESSMENT",
+            "WMS_CAPABILITIES_ASSESSMENT"
+          ]
+        },
+        "protocol_evidence_ref": { "$ref": "#/$defs/ref" },
+        "source_use_role": { "enum": ["VERSIONED_ARTIFACT", "CONTEXT_ONLY"] },
+        "immutable": { "type": "boolean" }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rights_assessment_ref",
+        "rights_assessment_state",
+        "attribution_required",
+        "attribution_text",
+        "cache_policy",
+        "freshness_policy_ref",
+        "source_health_ref",
+        "source_health_state"
+      ],
+      "properties": {
+        "rights_assessment_ref": { "$ref": "#/$defs/ref" },
+        "rights_assessment_state": {
+          "enum": ["CURRENT", "REVIEW_DUE", "BLOCKED", "UNRESOLVED"]
+        },
+        "attribution_required": { "type": "boolean" },
+        "attribution_text": { "$ref": "#/$defs/nullable_text" },
+        "cache_policy": {
+          "enum": ["IMMUTABLE_VERSIONED", "REVALIDATE", "NO_STORE", "UNKNOWN"]
+        },
+        "freshness_policy_ref": { "$ref": "#/$defs/nullable_ref" },
+        "source_health_ref": { "$ref": "#/$defs/nullable_ref" },
+        "source_health_state": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "HEALTHY",
+            "DEGRADED",
+            "STALE",
+            "UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "recommendation",
+        "reason_codes",
+        "review_required",
+        "execution_authorized"
+      ],
+      "properties": {
+        "outcome": { "enum": ["PASS", "ABSTAIN", "DENY", "ERROR"] },
+        "recommendation": {
+          "enum": ["READY_FOR_REVIEW", "HOLD_FOR_REVIEW", "REJECT", "VALIDATOR_ERROR"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ATTRIBUTION_INCOMPLETE",
+              "CACHE_POLICY_UNRESOLVED",
+              "DECLARATION_INCOHERENT",
+              "PROTOCOL_CONTROLS_COHERENT",
+              "PROTOCOL_EVIDENCE_MISMATCH",
+              "PROTOCOL_TRANSPORT_MISMATCH",
+              "RIGHTS_BLOCKED",
+              "RIGHTS_REVIEW_DUE",
+              "RIGHTS_UNRESOLVED",
+              "SOURCE_HEALTH_DEGRADED",
+              "SOURCE_HEALTH_UNRESOLVED",
+              "SOURCE_STALE_OR_UNAVAILABLE",
+              "VALIDATOR_ERROR"
+            ]
+          }
+        },
+        "review_required": { "const": true },
+        "execution_authorized": { "const": false }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network_attempted",
+        "source_activation_authority",
+        "fetch_authority",
+        "reference_resolution_authority",
+        "remote_bytes_verified",
+        "rights_authority",
+        "cache_mutation_authority",
+        "layer_registration_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "network_attempted": { "const": false },
+        "source_activation_authority": { "const": false },
+        "fetch_authority": { "const": false },
+        "reference_resolution_authority": { "const": false },
+        "remote_bytes_verified": { "const": false },
+        "rights_authority": { "const": false },
+        "cache_mutation_authority": { "const": false },
+        "layer_registration_authority": { "const": false },
+        "release_authority": { "const": false },
+        "publication_authority": { "const": false },
+        "public_use_authority": { "const": false }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/source/map_service_protocol_assessment.md",
+    "fixtures": "fixtures/contracts/v1/source/map_service_protocol_assessment/cases.json",
+    "validator": "tools/validators/source/validate_map_service_protocol_assessment.py",
+    "tests": "tests/validators/test_validate_map_service_protocol_assessment.py",
+    "authority": "NONE"
+  }
+}
