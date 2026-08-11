@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/telemetry/map_build_sustainability.schema.json",
+  "title": "MapBuildSustainabilityTelemetryCandidate",
+  "description": "Closed fixture-only map-build energy and carbon telemetry profile with explicit uncertainty and no truth or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "object_type",
+    "profile",
+    "profile_status",
+    "execution_mode",
+    "build_binding",
+    "energy",
+    "carbon",
+    "review_posture",
+    "sensitivity",
+    "authority_claims",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "object_type": {"const": "MapBuildSustainabilityTelemetryCandidate"},
+    "profile": {"const": "kfm.telemetry.map-build-sustainability.fixture.v1"},
+    "profile_status": {"const": "PROPOSED_INACTIVE_FIXTURE_ONLY"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_NETWORK"},
+    "build_binding": {"$ref": "#/$defs/build_binding"},
+    "energy": {"$ref": "#/$defs/energy"},
+    "carbon": {"$ref": "#/$defs/carbon"},
+    "review_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose",
+        "operational_scope",
+        "threshold_status",
+        "mapped_phenomenon_claim",
+        "release_decision_effect"
+      ],
+      "properties": {
+        "purpose": {"const": "REVIEW_SIGNAL_ONLY"},
+        "operational_scope": {"const": "BUILD_PROCESS_ONLY"},
+        "threshold_status": {"const": "UNRESOLVED_NO_AUTOMATIC_DENIAL"},
+        "mapped_phenomenon_claim": {"const": false},
+        "release_decision_effect": {"const": "NONE"}
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "per_build_public",
+        "per_workflow_public",
+        "public_rollup_authorized"
+      ],
+      "properties": {
+        "classification": {"const": "INTERNAL_OPERATIONAL_DETAIL"},
+        "per_build_public": {"const": false},
+        "per_workflow_public": {"const": false},
+        "public_rollup_authorized": {"const": false}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environmental_truth_authority",
+        "evidence_authority",
+        "policy_decision_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "environmental_truth_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_decision_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "does_not_measure_or_collect_runtime_telemetry",
+        "does_not_contact_external_factor_or_telemetry_services",
+        "does_not_establish_mapped_environmental_truth",
+        "does_not_define_or_enforce_sustainability_thresholds",
+        "does_not_decide_policy_review_promotion_or_release",
+        "does_not_deploy_publish_or_authorize_public_use",
+        "does_not_modify_build_artifacts_or_receipts"
+      ]
+    }
+  },
+  "$defs": {
+    "decimal": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]{0,17})(?:\\.[0-9]{1,9})?$"
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 200,
+      "pattern": "^(?:kfm:|urn:)[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "build_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_class", "build_ref", "artifact_digest", "started_at", "ended_at"],
+      "properties": {
+        "artifact_class": {"const": "MAP_ARTIFACT"},
+        "build_ref": {
+          "type": "string",
+          "pattern": "^kfm:build:[a-z0-9][a-z0-9._:-]{2,127}$"
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "started_at": {"type": "string", "format": "date-time", "pattern": "Z$"},
+        "ended_at": {"type": "string", "format": "date-time", "pattern": "Z$"}
+      }
+    },
+    "energy": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "joules", "method", "method_ref", "method_version", "relative_uncertainty_percent"],
+          "properties": {
+            "state": {"const": "AVAILABLE"},
+            "joules": {"$ref": "#/$defs/decimal"},
+            "method": {"enum": ["MEASURED", "ESTIMATED"]},
+            "method_ref": {"$ref": "#/$defs/reference"},
+            "method_version": {"$ref": "#/$defs/version"},
+            "relative_uncertainty_percent": {"$ref": "#/$defs/decimal"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "reason_code"],
+          "properties": {
+            "state": {"const": "UNAVAILABLE"},
+            "reason_code": {"enum": ["MEASUREMENT_NOT_CAPTURED", "METHOD_UNRESOLVED", "TOOL_UNAVAILABLE"]}
+          }
+        }
+      ]
+    },
+    "carbon": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "grams_co2e",
+            "factor_grams_co2e_per_kwh",
+            "factor_region",
+            "factor_source_ref",
+            "factor_version",
+            "relative_uncertainty_percent",
+            "rounding_tolerance_grams_co2e"
+          ],
+          "properties": {
+            "state": {"const": "AVAILABLE"},
+            "grams_co2e": {"$ref": "#/$defs/decimal"},
+            "factor_grams_co2e_per_kwh": {"$ref": "#/$defs/decimal"},
+            "factor_region": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 32,
+              "pattern": "^[A-Z0-9][A-Z0-9_-]*$"
+            },
+            "factor_source_ref": {"$ref": "#/$defs/reference"},
+            "factor_version": {"$ref": "#/$defs/version"},
+            "relative_uncertainty_percent": {"$ref": "#/$defs/decimal"},
+            "rounding_tolerance_grams_co2e": {"$ref": "#/$defs/decimal"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "reason_code"],
+          "properties": {
+            "state": {"const": "UNAVAILABLE"},
+            "reason_code": {"enum": ["ENERGY_UNAVAILABLE", "ESTIMATE_NOT_CAPTURED", "FACTOR_UNAVAILABLE", "METHOD_UNRESOLVED"]}
+          }
+        }
+      ]
+    }
+  }
+}
