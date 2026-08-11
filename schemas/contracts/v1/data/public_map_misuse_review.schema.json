@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/data/public_map_misuse_review.schema.json",
+  "title": "PublicMapMisuseReviewCandidate",
+  "description": "Inactive fixture profile for a declaration-only public-map communication-risk review. Validation grants no review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "profile_spec_hash", "source_card",
+    "observed_at", "candidate_id", "map_candidate", "dependency_refs", "checks",
+    "conclusion", "correction_ref", "rollback_ref", "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "PublicMapMisuseReviewCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.data.public-map-misuse-review.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/hash"},
+    "source_card": {"const": "KFM-P18-INV-352"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "candidate_id": {"type": "string", "pattern": "^pmr_[a-z0-9][a-z0-9._-]{7,95}$"},
+    "map_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "purpose", "evidence_scope", "audience", "consequence_tier"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/hash"},
+        "purpose": {"$ref": "#/$defs/resolvedRef"},
+        "evidence_scope": {"$ref": "#/$defs/resolvedRef"},
+        "audience": {"enum": ["PUBLIC_GENERAL", "PUBLIC_DECISION_SUPPORT", "EDUCATIONAL", "INTERNAL_REVIEW"]},
+        "consequence_tier": {"enum": ["LOW", "MODERATE", "HIGH"]}
+      }
+    },
+    "dependency_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["representation_fitness_assessment", "cartographic_omission_disclosure", "layer_legend_disclosure"],
+      "properties": {
+        "representation_fitness_assessment": {"$ref": "#/$defs/resolvedRef"},
+        "cartographic_omission_disclosure": {"$ref": "#/$defs/resolvedRef"},
+        "layer_legend_disclosure": {"$ref": "#/$defs/resolvedRef"}
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "dimension", "state", "materiality", "finding_code", "disclosure_surface", "evidence_refs", "review_refs", "remediation_ref"],
+        "properties": {
+          "check_id": {"type": "string", "pattern": "^check-[0-9]{2}-[a-z0-9-]{3,48}$"},
+          "dimension": {"enum": ["SELECTIVITY", "FRAMING", "SCALE_PRECISION", "SYMBOLOGY", "OMISSION"]},
+          "state": {"enum": ["CLEAR", "CONCERN", "UNKNOWN"]},
+          "materiality": {"enum": ["NON_MATERIAL", "MATERIAL", "UNKNOWN"]},
+          "finding_code": {"enum": ["NONE", "EVIDENCE_STRENGTH_OVERSTATED", "PRECISION_OVERSTATED", "AUTHORITY_OVERSTATED", "COMPLETENESS_OVERSTATED", "CONTEXT_WITHHELD", "ACCESSIBILITY_BARRIER"]},
+          "disclosure_surface": {"enum": ["NONE", "LAYER_NOTE", "LEGEND", "EVIDENCE_DRAWER", "REPORT_NOTE"]},
+          "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+          "review_refs": {"type": "array", "maxItems": 16, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+          "remediation_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]}
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completeness", "declared_outcome"],
+      "properties": {
+        "completeness": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN"]},
+        "declared_outcome": {"enum": ["READY_FOR_REVIEW", "HOLD", "DENY"]}
+      }
+    },
+    "correction_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "rollback_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["map_mutation", "evidence", "policy", "review", "release", "deployment", "publication", "public_use"],
+      "properties": {
+        "map_mutation": {"const": false}, "evidence": {"const": false}, "policy": {"const": false},
+        "review": {"const": false}, "release": {"const": false}, "deployment": {"const": false},
+        "publication": {"const": false}, "public_use": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 8, "maxLength": 512},
+    "resolvedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/hash"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    }
+  }
+}
