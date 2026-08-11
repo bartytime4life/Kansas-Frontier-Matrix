@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-pass18-rolling-metric-window-disclosure-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rolling-metric-window-disclosure.yml",
+    "contracts/common/rolling_metric_window_disclosure.md",
+    "docs/intake/exploratory/pass-18-rolling-metric-window-disclosure-source-map.md",
+    "fixtures/contracts/v1/common/rolling_metric_window_disclosure/cases.json",
+    "schemas/contracts/v1/common/rolling_metric_window_disclosure.schema.json",
+    "tests/validators/test_validate_rolling_metric_window_disclosure.py",
+    "tools/validators/validate_rolling_metric_window_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rolling-metric-window-disclosure.yml": "sha256:91bca30cfca45490c753375d1c1843354138c271667428e17ac93cad413f8691",
+    "contracts/common/rolling_metric_window_disclosure.md": "sha256:bee4edd0b5f4c7131eedb0411d1481f73fdac9592bbf4b00ed7f684435e1dd42",
+    "docs/intake/exploratory/pass-18-rolling-metric-window-disclosure-source-map.md": "sha256:bfe5d48d16cc3eb4678b975614ed52b753ba60d687681db7e88332bcc60a9b45",
+    "fixtures/contracts/v1/common/rolling_metric_window_disclosure/cases.json": "sha256:fe9cb163344ca605c4d9135231b1abba1957a3f0faf8070f76d644a91e5cb96b",
+    "schemas/contracts/v1/common/rolling_metric_window_disclosure.schema.json": "sha256:802d797f00fefb8b04ecf4865a07301d697f54ba77e50709a66872bf934845b2",
+    "tests/validators/test_validate_rolling_metric_window_disclosure.py": "sha256:4322e1f1014a661d8385eb26c6cd2d9a511494e4bf50bfb3a19ff54bd81375c5",
+    "tools/validators/validate_rolling_metric_window_disclosure.py": "sha256:33c3c658633d8f4f4618586fc31ce63debafc552a5270ad3939b5579e51e1d69"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:bee4edd0b5f4c7131eedb0411d1481f73fdac9592bbf4b00ed7f684435e1dd42",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:bc07b03986a02cb6b013b82f2e0484e74ef2a116d945c06d60f9405a01703f10"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=290&printed-page=287&card=KFM-P18-INV-479",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/common/aggregate_statistic.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rolling-metric-window-disclosure.yml": "CONFIRMED",
+    "contracts/common/rolling_metric_window_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-rolling-metric-window-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/rolling_metric_window_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/rolling_metric_window_disclosure.schema.json": "PROPOSED",
+    "tests/validators/test_validate_rolling_metric_window_disclosure.py": "CONFIRMED",
+    "tools/validators/validate_rolling_metric_window_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic rolling-metric disclosure tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-eight exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes, including ROWS, RANGE, and GROUPS frames."},
+    {"gate": "adjacent-contract-tests", "outcome": "PASS", "reason": "Fifty-two AggregateStatistic, measurement-scale, period-boundary, and generated-receipt tests passed."},
+    {"gate": "documentation-meta-block-and-link-profiles", "outcome": "PASS"},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 414 schema/contract tests and 29 subtests passed."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-rolling-metric-window-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=290&printed-page=287&card=KFM-P18-INV-479"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/docs/doctrine/directory-rules.md"},
+    {"id": "aggregate-statistic-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6b1c60d3814548acaedc7a365c90e0010573790e/contracts/common/aggregate_statistic.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:17:31Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only RollingMetricWindowDisclosureCandidate packet derived from supplied Pass 18 card KFM-P18-INV-479. It validates deterministic partition, ordering, tie-breaker, ROWS/RANGE/GROUPS frame, time, missing-data, revision, parity, public-label, review-reference, and release-reference declarations without inspecting source values, generating or executing SQL, calculating a metric, proving cross-engine parity, resolving evidence, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

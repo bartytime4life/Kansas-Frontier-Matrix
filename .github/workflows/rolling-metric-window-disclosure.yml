@@ -1,0 +1,87 @@
+name: rolling-metric-window-disclosure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/rolling-metric-window-disclosure.yml"
+      - "contracts/common/rolling_metric_window_disclosure.md"
+      - "schemas/contracts/v1/common/rolling_metric_window_disclosure.schema.json"
+      - "fixtures/contracts/v1/common/rolling_metric_window_disclosure/**"
+      - "tools/validators/validate_rolling_metric_window_disclosure.py"
+      - "tests/validators/test_validate_rolling_metric_window_disclosure.py"
+      - "docs/intake/exploratory/pass-18-rolling-metric-window-disclosure-source-map.md"
+      - "contracts/common/aggregate_statistic.md"
+      - "contracts/evidence/measurement_scale_operation_assessment.md"
+      - "contracts/release/release_manifest.md"
+      - "data/receipts/generated/genrec-pass18-rolling-metric-window-disclosure-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/rolling-metric-window-disclosure.yml"
+      - "contracts/common/rolling_metric_window_disclosure.md"
+      - "schemas/contracts/v1/common/rolling_metric_window_disclosure.schema.json"
+      - "fixtures/contracts/v1/common/rolling_metric_window_disclosure/**"
+      - "tools/validators/validate_rolling_metric_window_disclosure.py"
+      - "tests/validators/test_validate_rolling_metric_window_disclosure.py"
+      - "docs/intake/exploratory/pass-18-rolling-metric-window-disclosure-source-map.md"
+      - "contracts/common/aggregate_statistic.md"
+      - "contracts/evidence/measurement_scale_operation_assessment.md"
+      - "contracts/release/release_manifest.md"
+      - "data/receipts/generated/genrec-pass18-rolling-metric-window-disclosure-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rolling-metric-window-disclosure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-rolling-metric-window-disclosure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/validate_rolling_metric_window_disclosure.py tests/validators/test_validate_rolling_metric_window_disclosure.py
+          python -m unittest tests.validators.test_validate_rolling_metric_window_disclosure --verbose
+          python tools/validators/validate_rolling_metric_window_disclosure.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-rolling-metric-window-disclosure-20260810.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Rolling-metric window disclosure candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only identity, partition, ordering, frame, time, missing-data, revision, parity, and public-label declaration coherence."
+            echo "- Boundary: no source inspection, SQL generation or execution, metric calculation, parity proof, evidence resolution, policy or review decision, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
