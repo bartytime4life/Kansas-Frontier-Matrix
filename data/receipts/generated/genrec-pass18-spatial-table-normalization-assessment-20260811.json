@@ -59,8 +59,8 @@
     {"gate": "documentation-metadata-and-link-qa", "outcome": "PASS", "reason": "Both changed Markdown files passed explicit no-network metadata and local-link checks; two missing registry entries were emitted as review-only warnings."},
     {"gate": "adjacent-validator-suite", "outcome": "PASS", "reason": "Thirty-three aggregate-statistic, citation-validation-report, and fixture-root contract tests passed."},
     {"gate": "repository-wide-validation", "outcome": "PASS", "reason": "Eight aggregate validators, 426 schema/contract tests, and 29 subtests passed; the validator registry reported REGISTRY_VALID."},
-    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
-    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+    {"gate": "hosted-exact-head-ci", "outcome": "PASS", "reason": "PR #2545 head 6c756d9500855a1a297a23cf1ecc57e95718ba7a passed run 31513428552, including focused deterministic validation and generated-receipt integrity."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the review-hold draft pull request; no reviewer IDs are recorded."}
   ],
   "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
   "citations": [
@@ -72,6 +72,6 @@
   "override_record": null,
   "created_at": "2026-08-11T05:28:00Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
-  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
-  "notes": "Additive, inactive, fixture-only SpatialTableNormalizationAssessmentCandidate packet. The post-merge P2 repair preserves ABSTAIN for incomplete release-derivative assessments and denies unequal local-to-target relationship tuple arity while retaining the original no-table-read, no-network, and non-authoritative boundary."
+  "links": {"pr_number": 2545, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only SpatialTableNormalizationAssessmentCandidate packet. The post-merge P2 repair preserves ABSTAIN for incomplete release-derivative assessments and denies unequal local-to-target relationship tuple arity while retaining the original no-table-read, no-network, and non-authoritative boundary. Hosted exact-head validation is confirmed; human review remains pending."
 }
