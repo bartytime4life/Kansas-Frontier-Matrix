@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/projection_distortion_disclosure.schema.json",
+  "title": "ProjectionDistortionDisclosureCandidate",
+  "description": "Fixture-only declaration of projection choice and distortion disclosure without coordinate, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "profile_spec_hash", "source_card",
+    "observed_at", "layer_manifest", "evidence_bundle", "intended_use", "claim_scope",
+    "projection", "distortions", "disclosure", "limitations", "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ProjectionDistortionDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.projection-distortion-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-426"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "layer_manifest": {"$ref": "#/$defs/resolved_reference"},
+    "evidence_bundle": {"$ref": "#/$defs/resolved_reference"},
+    "intended_use": {
+      "enum": ["INTERNAL_QA", "EXPLORATORY_ANALYSIS", "PUBLIC_MAP_CANDIDATE", "POLICY_CONTEXT_CANDIDATE"]
+    },
+    "claim_scope": {"enum": ["STATEWIDE", "REGIONAL", "LOCAL", "UNKNOWN"]},
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state", "crs_identifier", "projection_name", "family", "area_of_use_ref",
+        "transformation_ref", "distortion_assessment", "materiality", "materiality_rationale_ref"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "ERROR"]},
+        "crs_identifier": {"$ref": "#/$defs/nullable_ref"},
+        "projection_name": {
+          "oneOf": [{"type": "string", "minLength": 2, "maxLength": 200}, {"type": "null"}]
+        },
+        "family": {"enum": ["EQUAL_AREA", "CONFORMAL", "EQUIDISTANT", "COMPROMISE", "GEOGRAPHIC", "OTHER", "UNKNOWN"]},
+        "area_of_use_ref": {"$ref": "#/$defs/nullable_ref"},
+        "transformation_ref": {"$ref": "#/$defs/nullable_ref"},
+        "distortion_assessment": {"$ref": "#/$defs/resolved_reference"},
+        "materiality": {"enum": ["MATERIAL", "NOT_MATERIAL", "UNKNOWN"]},
+        "materiality_rationale_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "distortions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area", "distance", "direction", "shape", "scale_variation"],
+      "properties": {
+        "area": {"$ref": "#/$defs/distortion_state"},
+        "distance": {"$ref": "#/$defs/distortion_state"},
+        "direction": {"$ref": "#/$defs/distortion_state"},
+        "shape": {"$ref": "#/$defs/distortion_state"},
+        "scale_variation": {"enum": ["DECLARED", "NOT_DECLARED", "UNKNOWN"]}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material_risks", "review_record_refs", "evidence_drawer_section_ref", "public_interpretation_caveat"],
+      "properties": {
+        "material_risks": {
+          "type": "array", "maxItems": 8, "uniqueItems": true,
+          "items": {"enum": [
+            "AREA_DISTORTION", "DISTANCE_DISTORTION", "DIRECTION_DISTORTION", "SHAPE_DISTORTION",
+            "SCALE_VARIATION", "AREA_OF_USE_EXCEEDED", "TRANSFORMATION_UNCERTAINTY", "OTHER"
+          ]}
+        },
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "evidence_drawer_section_ref": {"$ref": "#/$defs/nullable_ref"},
+        "public_interpretation_caveat": {
+          "oneOf": [{"type": "string", "minLength": 20, "maxLength": 1200}, {"type": "null"}]
+        }
+      }
+    },
+    "limitations": {
+      "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true,
+      "items": {"enum": [
+        "DECLARATION_ONLY", "NO_COORDINATE_TRANSFORMATION", "NO_DISTORTION_MEASUREMENT", "NO_PUBLICATION_AUTHORITY"
+      ]}
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crs_authority", "transformation_authority", "cartographic_fitness_authority", "evidence_authority",
+        "policy_authority", "review_authority", "promotion_authority", "release_authority",
+        "publication_authority", "public_use_authority"
+      ],
+      "properties": {
+        "crs_authority": {"const": false},
+        "transformation_authority": {"const": false},
+        "cartographic_fitness_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {"type": "array", "maxItems": 100, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "distortion_state": {"enum": ["PRESERVED_WITHIN_DECLARED_SCOPE", "DISTORTED", "NOT_EVALUATED", "UNKNOWN"]},
+    "resolved_reference": {
+      "type": "object", "additionalProperties": false, "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/projection_distortion_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/projection_distortion_disclosure/",
+    "validator": "tools/validators/evidence/validate_projection_distortion_disclosure.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}
