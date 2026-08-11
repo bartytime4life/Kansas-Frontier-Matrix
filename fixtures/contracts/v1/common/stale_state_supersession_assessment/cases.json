@@ -1,0 +1,269 @@
+{
+  "profile": "kfm.common.stale-state-supersession-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "StaleStateSupersessionAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.stale-state-supersession-assessment.fixture.v1",
+    "assessment_id": "kfm:stale-supersession:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_topic": "FULL_ATLAS_STALE_STATE_SUPERSESSION_LINEAGE",
+    "evaluated_at": "2026-08-11T21:00:00Z",
+    "subject": {
+      "object_ref": "kfm://evidence-bundle/synthetic/soil/v1",
+      "object_family": "EVIDENCE_BUNDLE",
+      "version": "v1",
+      "declared_state": "STALE",
+      "exposure": "PUBLISHED"
+    },
+    "stale_evaluation": {
+      "marker": "SOURCE_FRESHNESS_EXPIRED",
+      "detected_at": "2026-08-11T20:00:00Z",
+      "basis_refs": ["kfm://source-descriptor/synthetic/soil/v1"],
+      "substance_status": "NO_ERROR_IDENTIFIED"
+    },
+    "lineage": {
+      "predecessor_ref": "kfm://evidence-bundle/synthetic/soil/v0",
+      "successor_ref": "kfm://evidence-bundle/synthetic/soil/v2",
+      "relation": "SUPERSEDED_BY",
+      "effective_at": "2026-08-11T20:30:00Z",
+      "lineage_refs": ["kfm://lineage/synthetic/soil/v1-to-v2"],
+      "prior_retained": true,
+      "silent_rebind": false
+    },
+    "proposed_response": {
+      "action": "SUPERSEDE",
+      "correction_ref": null,
+      "withdrawal_ref": null,
+      "rollback_ref": "kfm://rollback/synthetic/soil/v1",
+      "decision_refs": [],
+      "affected_surface_refs": [
+        "kfm://surface/api/synthetic-soil",
+        "kfm://surface/map/synthetic-soil"
+      ]
+    },
+    "review": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "record_refs": [
+        "kfm://review/stale-state/evidence",
+        "kfm://review/stale-state/release"
+      ]
+    },
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "NO_CORRECTION_OR_LINEAGE_MUTATION",
+      "NO_CROSS_LANE_PROPAGATION_DECISION",
+      "NO_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "source_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "lifecycle_mutation_authority": false,
+      "correction_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "review_required_coherent_published_supersession",
+      "expected": {"outcome": "REVIEW_REQUIRED", "codes": []}
+    },
+    {
+      "name": "review_required_ai_receipt_new_cross_reference",
+      "patch": {
+        "subject": {
+          "object_ref": "kfm://ai-receipt/synthetic/answer/v1",
+          "object_family": "AI_RECEIPT",
+          "exposure": "INTERNAL"
+        },
+        "lineage": {
+          "predecessor_ref": null,
+          "successor_ref": "kfm://ai-receipt/synthetic/answer/v2",
+          "relation": "NEW_RECEIPT_CROSS_REFERENCE",
+          "lineage_refs": ["kfm://lineage/synthetic/answer/v1-to-v2"]
+        },
+        "proposed_response": {
+          "action": "REISSUE_AS_NEW",
+          "rollback_ref": null,
+          "affected_surface_refs": []
+        }
+      },
+      "expected": {"outcome": "REVIEW_REQUIRED", "codes": []}
+    },
+    {
+      "name": "abstain_marker_unknown",
+      "patch": {
+        "stale_evaluation": {"marker": "UNKNOWN", "detected_at": null, "basis_refs": []}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["MARKER_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_source_basis_unresolved",
+      "patch": {"stale_evaluation": {"basis_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SOURCE_BASIS_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_lineage_unknown",
+      "patch": {"lineage": {"relation": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["LINEAGE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_subject_state_unknown",
+      "patch": {"subject": {"declared_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_STATE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_review_unknown",
+      "patch": {"review": {"state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_action_held",
+      "patch": {"proposed_response": {"action": "HOLD"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ACTION_HELD"]}
+    },
+    {
+      "name": "deny_state_marker_contradiction",
+      "patch": {
+        "stale_evaluation": {"marker": "NONE", "detected_at": null, "basis_refs": []}
+      },
+      "expected": {"outcome": "DENY", "codes": ["STATE_MARKER_CONTRADICTION"]}
+    },
+    {
+      "name": "deny_missing_detection_time",
+      "patch": {"stale_evaluation": {"detected_at": null}},
+      "expected": {"outcome": "DENY", "codes": ["MARKER_DETECTED_AT_REQUIRED"]}
+    },
+    {
+      "name": "deny_detection_after_evaluation",
+      "patch": {"stale_evaluation": {"detected_at": "2026-08-11T22:00:00Z"}},
+      "expected": {"outcome": "DENY", "codes": ["DETECTED_AFTER_EVALUATION"]}
+    },
+    {
+      "name": "deny_missing_successor",
+      "patch": {"lineage": {"successor_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["SUCCESSOR_REQUIRED"]}
+    },
+    {
+      "name": "deny_self_referential_successor",
+      "patch": {"lineage": {"successor_ref": "kfm://evidence-bundle/synthetic/soil/v1"}},
+      "expected": {"outcome": "DENY", "codes": ["LINEAGE_SELF_REFERENCE"]}
+    },
+    {
+      "name": "deny_prior_artifact_not_retained",
+      "patch": {"lineage": {"prior_retained": false}},
+      "expected": {"outcome": "DENY", "codes": ["PRIOR_ARTIFACT_NOT_RETAINED"]}
+    },
+    {
+      "name": "deny_silent_rebind",
+      "patch": {"lineage": {"silent_rebind": true}},
+      "expected": {"outcome": "DENY", "codes": ["SILENT_REBIND_DENIED"]}
+    },
+    {
+      "name": "deny_ai_receipt_retroactive_supersession",
+      "patch": {"subject": {"object_family": "AI_RECEIPT"}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["AI_RECEIPT_RETROACTIVE_SUPERSESSION_DENIED"]
+      }
+    },
+    {
+      "name": "deny_incorrect_without_correction",
+      "patch": {"stale_evaluation": {"substance_status": "INCORRECT"}},
+      "expected": {"outcome": "DENY", "codes": ["INCORRECT_WITHOUT_CORRECTION"]}
+    },
+    {
+      "name": "deny_published_without_rollback",
+      "patch": {"proposed_response": {"rollback_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_ROLLBACK_REQUIRED"]}
+    },
+    {
+      "name": "deny_published_without_affected_surfaces",
+      "patch": {"proposed_response": {"affected_surface_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLISHED_SURFACES_REQUIRED"]}
+    },
+    {
+      "name": "deny_schema_supersession_without_adr",
+      "patch": {"subject": {"object_family": "SCHEMA"}},
+      "expected": {"outcome": "DENY", "codes": ["ADR_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_policy_supersession_without_adr",
+      "patch": {"subject": {"object_family": "POLICY"}},
+      "expected": {"outcome": "DENY", "codes": ["ADR_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_basis_refs",
+      "patch": {
+        "stale_evaluation": {
+          "basis_refs": [
+            "kfm://source-descriptor/synthetic/zeta/v1",
+            "kfm://source-descriptor/synthetic/alpha/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REFERENCES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"subject": {"object_ref": "kfm://source/data/raw/synthetic"}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query",
+      "patch": {
+        "stale_evaluation": {"basis_refs": ["kfm://evidence/cypher:match"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_complete_review_without_record",
+      "patch": {"review": {"record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_action_lineage_mismatch",
+      "patch": {"proposed_response": {"action": "WITHDRAW"}},
+      "expected": {"outcome": "DENY", "codes": ["ACTION_LINEAGE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unexpected_property",
+      "patch": {"unexpected_field": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_marker",
+      "patch": {"stale_evaluation": {"marker": "MAYBE_STALE"}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_timestamp",
+      "patch": {"evaluated_at": "not-a-time"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_invalid_reference",
+      "patch": {"subject": {"object_ref": "https://example.invalid/object"}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

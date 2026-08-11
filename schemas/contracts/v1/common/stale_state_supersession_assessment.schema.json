@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/stale_state_supersession_assessment.schema.json",
+  "title": "StaleStateSupersessionAssessmentCandidate",
+  "description": "Fixture-only stale-state and supersession declaration without lifecycle, correction, review, release, deployment, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_topic",
+    "evaluated_at",
+    "subject",
+    "stale_evaluation",
+    "lineage",
+    "proposed_response",
+    "review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "StaleStateSupersessionAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.stale-state-supersession-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:stale-supersession:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_topic": {"const": "FULL_ATLAS_STALE_STATE_SUPERSESSION_LINEAGE"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "stale_evaluation": {"$ref": "#/$defs/stale_evaluation"},
+    "lineage": {"$ref": "#/$defs/lineage"},
+    "proposed_response": {"$ref": "#/$defs/proposed_response"},
+    "review": {"$ref": "#/$defs/review"},
+    "limitations": {
+      "const": [
+        "ASSESSMENT_ONLY",
+        "NO_CORRECTION_OR_LINEAGE_MUTATION",
+        "NO_CROSS_LANE_PROPAGATION_DECISION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 512,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "nullable_ref": {
+      "anyOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "nullable_time": {
+      "anyOf": [
+        {"type": "string", "format": "date-time"},
+        {"type": "null"}
+      ]
+    },
+    "refs": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_ref", "object_family", "version", "declared_state", "exposure"],
+      "properties": {
+        "object_ref": {"$ref": "#/$defs/ref"},
+        "object_family": {
+          "enum": [
+            "AI_RECEIPT",
+            "ATLAS",
+            "EVIDENCE_BUNDLE",
+            "GEOGRAPHY_VERSION",
+            "POLICY",
+            "RELEASE_MANIFEST",
+            "SCHEMA",
+            "SOURCE_DESCRIPTOR"
+          ]
+        },
+        "version": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9._+-]+$"},
+        "declared_state": {"enum": ["CURRENT", "STALE", "SUPERSEDED", "WITHDRAWN", "UNKNOWN"]},
+        "exposure": {"enum": ["INTERNAL", "NONE", "PUBLIC_CANDIDATE", "PUBLISHED"]}
+      }
+    },
+    "stale_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marker", "detected_at", "basis_refs", "substance_status"],
+      "properties": {
+        "marker": {
+          "enum": [
+            "GEOGRAPHY_VERSION_DRIFT",
+            "MODEL_VERSION_SUPERSEDED",
+            "NONE",
+            "POLICY_VERSION_CHANGED",
+            "REVIEW_AGED_OUT",
+            "RIGHTS_STATUS_CHANGED",
+            "SCHEMA_VERSION_DRIFT",
+            "SOURCE_FRESHNESS_EXPIRED",
+            "TIME_SCOPE_OUTSIDE_SUPPORT",
+            "UNKNOWN"
+          ]
+        },
+        "detected_at": {"$ref": "#/$defs/nullable_time"},
+        "basis_refs": {"$ref": "#/$defs/refs"},
+        "substance_status": {"enum": ["INCORRECT", "NO_ERROR_IDENTIFIED", "NOT_ASSESSED", "POSSIBLY_INCORRECT"]}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predecessor_ref",
+        "successor_ref",
+        "relation",
+        "effective_at",
+        "lineage_refs",
+        "prior_retained",
+        "silent_rebind"
+      ],
+      "properties": {
+        "predecessor_ref": {"$ref": "#/$defs/nullable_ref"},
+        "successor_ref": {"$ref": "#/$defs/nullable_ref"},
+        "relation": {"enum": ["NEW_RECEIPT_CROSS_REFERENCE", "NONE", "SUPERSEDED_BY", "UNKNOWN", "WITHDRAWN_WITHOUT_SUCCESSOR"]},
+        "effective_at": {"$ref": "#/$defs/nullable_time"},
+        "lineage_refs": {"$ref": "#/$defs/refs"},
+        "prior_retained": {"type": "boolean"},
+        "silent_rebind": {"type": "boolean"}
+      }
+    },
+    "proposed_response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "correction_ref",
+        "withdrawal_ref",
+        "rollback_ref",
+        "decision_refs",
+        "affected_surface_refs"
+      ],
+      "properties": {
+        "action": {"enum": ["HOLD", "MARK_STALE", "NO_ACTION", "REISSUE_AS_NEW", "SUPERSEDE", "WITHDRAW"]},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"},
+        "withdrawal_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"},
+        "decision_refs": {"$ref": "#/$defs/refs"},
+        "affected_surface_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "lifecycle_mutation_authority",
+        "correction_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "source_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "lifecycle_mutation_authority": {"const": false},
+        "correction_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  }
+}
