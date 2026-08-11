@@ -82,7 +82,10 @@ test("emits a digest-bound synthetic screenshot, metrics, and sidecar packet", a
     render: probe.render,
     viewport: probe.viewport,
   });
-  expect(metricsResult.ok).toBe(true);
+  expect(
+    metricsResult.ok,
+    JSON.stringify({ externalRequests, probe }, null, 2),
+  ).toBe(true);
   if (!metricsResult.ok) throw new Error(metricsResult.code);
 
   const outputDirectory = process.env.KFM_HEADLESS_REVIEW_OUTPUT
