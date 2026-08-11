@@ -1,0 +1,111 @@
+name: evidence-binding-chain-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/evidence-binding-chain-assessment.yml"
+      - "contracts/evidence/evidence_binding_chain_assessment.md"
+      - "schemas/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/**"
+      - "tools/validators/validate_evidence_binding_chain_assessment.py"
+      - "tests/validators/test_validate_evidence_binding_chain_assessment.py"
+      - "docs/intake/exploratory/briefing-evidence-binding-chain-source-map.md"
+      - "data/receipts/generated/genrec-briefing-evidence-binding-chain-*.json"
+      - "contracts/source/source_artifact.md"
+      - "contracts/source/source_adapter.md"
+      - "contracts/evidence/evidence_ref.md"
+      - "contracts/evidence/claim_field_binding.md"
+      - "schemas/contracts/v1/source/source_artifact.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "schemas/contracts/v1/evidence/claim_field_binding.schema.json"
+      - "packages/connectors-core/**"
+      - "packages/hashing/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/evidence-binding-chain-assessment.yml"
+      - "contracts/evidence/evidence_binding_chain_assessment.md"
+      - "schemas/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/**"
+      - "tools/validators/validate_evidence_binding_chain_assessment.py"
+      - "tests/validators/test_validate_evidence_binding_chain_assessment.py"
+      - "docs/intake/exploratory/briefing-evidence-binding-chain-source-map.md"
+      - "data/receipts/generated/genrec-briefing-evidence-binding-chain-*.json"
+      - "contracts/source/source_artifact.md"
+      - "contracts/source/source_adapter.md"
+      - "contracts/evidence/evidence_ref.md"
+      - "contracts/evidence/claim_field_binding.md"
+      - "schemas/contracts/v1/source/source_artifact.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "schemas/contracts/v1/evidence/claim_field_binding.schema.json"
+      - "packages/connectors-core/**"
+      - "packages/hashing/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-binding-chain-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-evidence-binding-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/validate_evidence_binding_chain_assessment.py tests/validators/test_validate_evidence_binding_chain_assessment.py
+          python -m unittest tests.validators.test_validate_evidence_binding_chain_assessment -v
+          python tools/validators/validate_evidence_binding_chain_assessment.py --fixtures
+          python tools/validators/validate_evidence_binding_chain_assessment.py \
+            fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/valid_assessment.json
+      - name: Run existing component regressions
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.validators.test_validate_claim_field_binding \
+            tests.validators.test_validate_source_artifact \
+            -v
+          python -m pytest tests/packages/connectors_core/test_source_adapter.py \
+            -q --strict-config --strict-markers
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-briefing-evidence-binding-chain-20260811.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Evidence-binding chain assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic SourceArtifact, executable ParseResult, pre-closure EvidenceRef, EvidenceResolution link, and ClaimFieldBinding reference closure."
+            echo "- Boundary: no source fetch or activation, raw values, EvidenceBundle, policy, review, lifecycle write, release, API, AI answer, map, export, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
