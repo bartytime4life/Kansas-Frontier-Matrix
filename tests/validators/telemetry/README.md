@@ -26,7 +26,7 @@ notes:
 
 # `tests/validators/telemetry/` — Telemetry Projection Validator Tests
 
-The focused test module proves the bounded local behavior of the inactive OpenLineage terminal RunEvent projection profile.
+The focused test modules prove the bounded local behavior of the inactive OpenLineage terminal RunEvent projection and its remote-sensing metrics/PROV companion.
 
 ## Covered behavior
 
@@ -52,6 +52,11 @@ The focused test module proves the bounded local behavior of the inactive OpenLi
 python -m unittest discover \
   --start-directory tests/validators/telemetry \
   --pattern 'test_openlineage_run_event_projection.py' \
+  --verbose
+
+python -m unittest discover \
+  --start-directory tests/validators/telemetry \
+  --pattern 'test_remote_sensing_lineage_activity.py' \
   --verbose
 ```
 
