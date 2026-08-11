@@ -8,7 +8,7 @@
     "tests/infra/test_compose_static.py"
   ],
   "artifact_hashes": {
-    "infra/docker/Dockerfile.explorer-web": "sha256:c778937ff2c4bec03bfe61be568a73611d9e54fa169cda78f0988bf1ff715318",
+    "infra/docker/Dockerfile.explorer-web": "sha256:f646680c444d567af9daef7641ce79db9c400d59801394164edeb040e5739faa",
     "infra/docker/Dockerfile.governed-api": "sha256:fa76f4d7143d4a04f99183a318dd56be4f46a152b76a06e8c0dad2db423d4ada",
     "infra/docker/README.md": "sha256:aa2b23434484a967613d14bf8d0d3326786255d576fe35aebc38e3707fdee8bc",
     "tests/infra/test_compose_static.py": "sha256:5d3f12efbfd341f8f8f7e43de5b26f116615e3ed41653cea43f24e1ad0616c84"
@@ -42,17 +42,23 @@
     ],
     "evidence_refs": [
       "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31458154797",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459667053",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459837079",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459947272",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2535",
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/f9c63e6a227bdcbb80ecb48481ff840776a1b020",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/282d522f3b075d8b91806feac335ef27c45eda7e",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/.github/workflows/security.yml",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/apps/explorer-web/package.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/Dockerfile.explorer-web",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/Dockerfile.governed-api",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/infra/docker/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/tests/infra/test_compose_static.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/282d522f3b075d8b91806feac335ef27c45eda7e/infra/docker/Dockerfile.explorer-web",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/282d522f3b075d8b91806feac335ef27c45eda7e/infra/docker/Dockerfile.governed-api",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/282d522f3b075d8b91806feac335ef27c45eda7e/tests/infra/test_compose_static.py",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/f9c63e6a227bdcbb80ecb48481ff840776a1b020/schemas/contracts/v1/receipts/generated_receipt.schema.json",
       "github://nodejs/docker-node/commit/c038219a5b0f07b66c9a7c461bc7211e73316ee6",
       "github://docker-library/python/commit/0eff0905e4b563a6e8132439986add44f625cfa1",
       "github://npm/cli/tag/v11.19.0",
+      "github://juliangruber/brace-expansion/tag/v5.0.9",
+      "github://beaugunderson/ip-address/tag/v10.3.1",
       "github://pypa/setuptools/tag/v82.0.1"
     ]
   },
@@ -71,7 +77,7 @@
     {
       "gate": "root-cause-classification",
       "outcome": "PASS",
-      "reason": "Explorer image scanning found fixed high/critical Debian and bundled npm findings plus a missing non-root USER. Governed API scanning found fixed vendored setuptools dependency findings plus a missing non-root USER. Repository misconfiguration scanning identified the same final-user defect in both Dockerfiles."
+      "reason": "Explorer image scanning found fixed HIGH/CRITICAL Debian and bundled npm findings plus a missing non-root USER. Governed API scanning found fixed vendored setuptools dependency findings plus a missing non-root USER. Repository misconfiguration scanning identified the same final-user defect in both Dockerfiles."
     },
     {
       "gate": "directory-and-scope",
@@ -81,37 +87,47 @@
     {
       "gate": "upstream-version-verification",
       "outcome": "PASS",
-      "reason": "Checked official upstream repository evidence for the Node 22 and Python 3.11 trixie-slim image lines, npm 11.19.0, setuptools 82.0.1, and wheel 0.46.3 before selecting the bounded dependency refresh."
+      "reason": "Checked official upstream repository evidence for the Node 22 and Python 3.11 trixie-slim image lines, npm 11.19.0, brace-expansion 5.0.9, ip-address 10.3.1, setuptools 82.0.1, and wheel 0.46.3 before selecting the bounded dependency refresh."
     },
     {
       "gate": "static-regression-test",
       "outcome": "PASS",
-      "reason": "Ran tests/infra/test_compose_static.py against the prepared Dockerfile bytes. All three tests passed, including the new requirement that each Dockerfile's final USER be present and non-root."
+      "reason": "Ran tests/infra/test_compose_static.py against the final authored Dockerfile bytes. All three tests passed, including the requirement that each Dockerfile's final USER be present and non-root. The same test was also run against the prior three-line Dockerfiles and failed as expected for missing USER instructions."
     },
     {
       "gate": "dockerfile-run-block-shell-syntax",
       "outcome": "PASS",
-      "reason": "Validated the complete shell command bodies from both Dockerfile RUN instructions with bash -n."
+      "reason": "Validated the complete shell command bodies from both final Dockerfile RUN instructions with bash -n."
     },
     {
       "gate": "artifact-hash-binding",
       "outcome": "PASS",
-      "reason": "Bound the four authored artifacts to SHA-256 digests and computed artifact-set digest sha256:f0c0c5ab9145849d904d19b2a2dd711cf6b25ed37bba7994265619c06f943678."
+      "reason": "Bound the four authored artifacts to SHA-256 digests. The SHA-256 of the sorted compact JSON artifact-hash map is sha256:bc7ed22a5b5b76e38ca635b4662daf26deae677cf3d7db7fbc04a79bcfc317ba."
+    },
+    {
+      "gate": "hosted-repair-iteration-evidence",
+      "outcome": "PASS",
+      "reason": "Security run 581 proved the governed-api image and repository scan were repaired while isolating three remaining npm findings in explorer-web. Run 582 then exposed a failed direct in-place npm-tree update before scanning. That failed experiment was replaced by a temporary-prefix install and exact-package copy with no workflow or scanner weakening."
     },
     {
       "gate": "container-build-and-trivy-execution",
-      "outcome": "SKIPPED",
-      "reason": "No local Docker, Podman, or Buildah runtime is available. Exact-head GitHub-hosted image builds and Trivy repository/container scans are the remaining execution evidence."
+      "outcome": "PASS",
+      "reason": "GitHub-hosted security workflow run 583 built both images and completed dependency-review, repository-scan, explorer-web container scan, governed-api container scan, and the finite security-result job successfully against commit 282d522f3b075d8b91806feac335ef27c45eda7e."
+    },
+    {
+      "gate": "infra-compose-smoke",
+      "outcome": "PASS",
+      "reason": "Exact-head infra-compose-smoke workflow run 8 completed successfully against commit 282d522f3b075d8b91806feac335ef27c45eda7e."
     },
     {
       "gate": "repository-native-full-validation",
       "outcome": "SKIPPED",
-      "reason": "No mounted checkout is available. Targeted no-network validation was run against the exact prepared bytes; repository-wide and hosted checks remain post-push evidence."
+      "reason": "No mounted checkout is available. Targeted no-network validation, exact image builds/scans, validator-suite, and infra-compose-smoke were verified; unrelated repository workflows remain outside this repair's acceptance boundary."
     },
     {
       "gate": "remote-readback-pr-and-hosted-checks",
-      "outcome": "SKIPPED",
-      "reason": "This receipt records pre-push bytes. Branch readback, draft pull-request state, and exact-head hosted checks are verified after the remote writes."
+      "outcome": "PASS",
+      "reason": "Verified draft PR #2535, branch readback, changed-path scope, and the hosted runs tied to the final Dockerfile commit. Human review remains pending, and final PR-head checks after this receipt synchronization are reported separately in the PR body."
     }
   ],
   "policy_decisions": [],
@@ -120,6 +136,26 @@
       "id": "security-run-570",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31458154797"
+    },
+    {
+      "id": "security-run-581",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459667053"
+    },
+    {
+      "id": "security-run-582",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459837079"
+    },
+    {
+      "id": "security-run-583",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31459947272"
+    },
+    {
+      "id": "draft-pr-2535",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2535"
     },
     {
       "id": "current-base",
@@ -157,6 +193,16 @@
       "evidence_ref": "github://npm/cli/tag/v11.19.0"
     },
     {
+      "id": "brace-expansion-5.0.9",
+      "validated": true,
+      "evidence_ref": "github://juliangruber/brace-expansion/tag/v5.0.9"
+    },
+    {
+      "id": "ip-address-10.3.1",
+      "validated": true,
+      "evidence_ref": "github://beaugunderson/ip-address/tag/v10.3.1"
+    },
+    {
       "id": "setuptools-82.0.1",
       "validated": true,
       "evidence_ref": "github://pypa/setuptools/tag/v82.0.1"
@@ -171,9 +217,9 @@
   "created_at": "2026-08-11T04:37:46Z",
   "emitter": "openai/gpt-5.6-pro",
   "links": {
-    "pr_number": null,
+    "pr_number": 2535,
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "AI-authored bounded repair for security workflow run 570. It hardens only the two payload-free placeholder images, adds a final non-root-user regression, synchronizes the Docker lane documentation, and does not alter the security workflow, Pass 18 assessment artifacts, repository settings, release state, deployment state, publication state, source activation, or default-branch history. Human review remains pending."
+  "notes": "AI-authored bounded repair for security workflow run 570. During the still-draft, human-unreviewed repair, this receipt was refreshed in place to bind the final authored artifact bytes after hosted scanner feedback. The repair hardens only the two payload-free placeholder images, adds a final non-root-user regression, synchronizes Docker-lane documentation, and does not alter the security workflow, Pass 18 assessment artifacts, repository settings, release state, deployment state, publication state, source activation, or default-branch history. Human review remains pending."
 }
