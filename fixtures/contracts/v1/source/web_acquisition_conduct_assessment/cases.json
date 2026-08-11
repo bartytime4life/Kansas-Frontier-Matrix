@@ -1,0 +1,213 @@
+{
+  "object_type": "WebAcquisitionConductAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source.web-acquisition-conduct-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "WebAcquisitionConductAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source.web-acquisition-conduct-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_cards": ["KFM-P18-INV-100", "KFM-P18-INV-247", "KFM-P18-INV-423"],
+    "observed_at": "2026-08-11T14:00:00Z",
+    "source_descriptor_ref": "kfm:source-descriptor:synthetic-web:001",
+    "source_descriptor_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "acquisition_route": "OFFICIAL_API",
+    "terms_review": {
+      "state": "PERMITS_AUTOMATION",
+      "evidence_ref": "kfm:terms-evidence:synthetic-web:001",
+      "source_agreement_ref": null
+    },
+    "robots_review": {
+      "state": "NOT_APPLICABLE",
+      "evidence_ref": null
+    },
+    "rate_limit": {
+      "state": "SOURCE_DEFAULT",
+      "max_concurrency": null,
+      "minimum_delay_ms": null,
+      "policy_ref": "kfm:source-rate-policy:synthetic-web:001"
+    },
+    "identity": {
+      "user_agent_posture": "DECLARED_CONTACTABLE",
+      "proxy_posture": "NONE",
+      "distributed_posture": "DISABLED"
+    },
+    "review": {
+      "state": "COMPLETE",
+      "review_record_refs": ["kfm:review-record:synthetic-web:001"]
+    },
+    "authority_claims": {
+      "legal_authority": false,
+      "rights_authority": false,
+      "source_activation_authority": false,
+      "connector_activation_authority": false,
+      "lifecycle_write_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_official_api",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_html_scrape",
+      "patch": {
+        "acquisition_route": "HTML_SCRAPE",
+        "robots_review": {"state": "ALLOWED", "evidence_ref": "kfm:robots-evidence:synthetic-web:001"},
+        "rate_limit": {"state": "DECLARED", "max_concurrency": 1, "minimum_delay_ms": 1500}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_source_authorized_proxy",
+      "patch": {
+        "terms_review": {"source_agreement_ref": "kfm:source-agreement:synthetic-web:001"},
+        "identity": {"proxy_posture": "SOURCE_AUTHORIZED"}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_browser_automation",
+      "patch": {
+        "acquisition_route": "BROWSER_AUTOMATION",
+        "robots_review": {"state": "ALLOWED", "evidence_ref": "kfm:robots-evidence:synthetic-browser:001"},
+        "identity": {"user_agent_posture": "DECLARED_NON_CONTACTABLE"}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_unresolved_route",
+      "patch": {"acquisition_route": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ROUTE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_unknown_terms",
+      "patch": {"terms_review": {"state": "UNKNOWN", "evidence_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["TERMS_REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_unknown_robots",
+      "patch": {
+        "acquisition_route": "HTML_SCRAPE",
+        "robots_review": {"state": "UNKNOWN", "evidence_ref": null}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["ROBOTS_REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_unresolved_rate",
+      "patch": {"rate_limit": {"state": "UNRESOLVED", "policy_ref": null}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RATE_LIMIT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_unknown_identity",
+      "patch": {
+        "identity": {
+          "user_agent_posture": "UNKNOWN",
+          "proxy_posture": "UNKNOWN",
+          "distributed_posture": "UNKNOWN"
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["DISTRIBUTED_POSTURE_UNKNOWN", "PROXY_POSTURE_UNKNOWN", "USER_AGENT_POSTURE_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_pending_review",
+      "patch": {"review": {"state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "deny_terms_prohibited",
+      "patch": {"terms_review": {"state": "PROHIBITS_AUTOMATION"}},
+      "expected": {"outcome": "DENY", "codes": ["TERMS_AUTOMATION_PROHIBITED"]}
+    },
+    {
+      "name": "deny_terms_restricted",
+      "patch": {"terms_review": {"state": "RESTRICTS_AUTOMATION"}},
+      "expected": {"outcome": "DENY", "codes": ["TERMS_AUTOMATION_RESTRICTED"]}
+    },
+    {
+      "name": "deny_robots_disallowed",
+      "patch": {
+        "acquisition_route": "HTML_SCRAPE",
+        "robots_review": {"state": "DISALLOWED", "evidence_ref": "kfm:robots-evidence:synthetic-web:denied"}
+      },
+      "expected": {"outcome": "DENY", "codes": ["ROBOTS_DISALLOWED"]}
+    },
+    {
+      "name": "deny_disguised_user_agent",
+      "patch": {"identity": {"user_agent_posture": "DISGUISED"}},
+      "expected": {"outcome": "DENY", "codes": ["USER_AGENT_DISGUISED"]}
+    },
+    {
+      "name": "deny_rotating_proxy",
+      "patch": {"identity": {"proxy_posture": "ROTATING_EVASION"}},
+      "expected": {"outcome": "DENY", "codes": ["ROTATING_PROXY_EVASION"]}
+    },
+    {
+      "name": "deny_unreviewed_distribution",
+      "patch": {"identity": {"distributed_posture": "UNREVIEWED"}},
+      "expected": {"outcome": "DENY", "codes": ["DISTRIBUTED_ACQUISITION_UNREVIEWED"]}
+    },
+    {
+      "name": "deny_scrape_without_robots_scope",
+      "patch": {"acquisition_route": "HTML_SCRAPE"},
+      "expected": {"outcome": "DENY", "codes": ["ROUTE_ROBOTS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_authorized_proxy_without_agreement",
+      "patch": {"identity": {"proxy_posture": "SOURCE_AUTHORIZED"}},
+      "expected": {"outcome": "DENY", "codes": ["EXCEPTION_SUPPORT_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_declared_rate_incomplete",
+      "patch": {"rate_limit": {"state": "DECLARED"}},
+      "expected": {"outcome": "DENY", "codes": ["RATE_LIMIT_DECLARATION_INCOHERENT"]}
+    },
+    {
+      "name": "deny_source_default_with_override",
+      "patch": {"rate_limit": {"max_concurrency": 2}},
+      "expected": {"outcome": "DENY", "codes": ["RATE_LIMIT_DECLARATION_INCOHERENT"]}
+    },
+    {
+      "name": "deny_terms_without_evidence",
+      "patch": {"terms_review": {"evidence_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["TERMS_EVIDENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_robots_without_evidence",
+      "patch": {
+        "acquisition_route": "HTML_SCRAPE",
+        "robots_review": {"state": "ALLOWED", "evidence_ref": null}
+      },
+      "expected": {"outcome": "DENY", "codes": ["ROBOTS_EVIDENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_complete_review_without_reference",
+      "patch": {"review": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["COMPLETE_REVIEW_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_review_references",
+      "patch": {"review": {"review_record_refs": ["kfm:review-record:synthetic-web:002", "kfm:review-record:synthetic-web:001"]}},
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"fetch_enabled": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
