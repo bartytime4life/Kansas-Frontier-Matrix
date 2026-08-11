@@ -1,0 +1,149 @@
+{
+  "receipt_id": "genrec-receipt-catalog-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/receipt-catalog-assessment.yml",
+    "contracts/governance/receipt_catalog_assessment.md",
+    "docs/intake/exploratory/receipt-catalog-assessment-source-map.md",
+    "fixtures/contracts/v1/governance/receipt_catalog_assessment/cases.json",
+    "schemas/contracts/v1/governance/receipt_catalog_assessment.schema.json",
+    "tests/validators/governance/test_receipt_catalog_assessment.py",
+    "tools/validators/governance/validate_receipt_catalog_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/receipt-catalog-assessment.yml": "sha256:e41f3934c1acbae29401c21ad5eb6b55d45656c35daf0d7271da2d38805c371a",
+    "contracts/governance/receipt_catalog_assessment.md": "sha256:c8348f0dc80dbb3a3d23c602e735c3961c49455fd7eca340d987eccc71ca9deb",
+    "docs/intake/exploratory/receipt-catalog-assessment-source-map.md": "sha256:69a4710d8dd61fdb1f8f7d52868a2c43dba95999cbcc5e6d3d4407223de39c24",
+    "fixtures/contracts/v1/governance/receipt_catalog_assessment/cases.json": "sha256:ffe19708025d0b72b7a974fbb3e819bda50c6fad39a9ea7ff7f3a74835591c14",
+    "schemas/contracts/v1/governance/receipt_catalog_assessment.schema.json": "sha256:6fe6042009deef52b8c9fc6f0ae98e80f89d9ae447dc2f4d6d0dd7a41d5972c4",
+    "tests/validators/governance/test_receipt_catalog_assessment.py": "sha256:c577e8b9aa228f83820a50a1d54d6802256e7519c041cb4a3839db8459b031c0",
+    "tools/validators/governance/validate_receipt_catalog_assessment.py": "sha256:f803d2b4a1e7dc3b6510de822802b6033ede9700225df38237082365c9862684"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:c8348f0dc80dbb3a3d23c602e735c3961c49455fd7eca340d987eccc71ca9deb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:599de1b2814ae842e34afd8f4f6be01cc4739145e331761e270f4923d8678a19",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Master-Receipt-Catalog-and-Lifecycle-Mapping",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/atlases/receipt-catalog.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/receipt-catalog-assessment.yml": "CONFIRMED",
+    "contracts/governance/receipt_catalog_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/receipt-catalog-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/governance/receipt_catalog_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/governance/receipt_catalog_assessment.schema.json": "PROPOSED",
+    "tests/validators/governance/test_receipt_catalog_assessment.py": "CONFIRMED",
+    "tools/validators/governance/validate_receipt_catalog_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Validator and focused test modules compiled successfully in the isolated authoring packet."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed candidate schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 deterministic focused tests passed in the isolated authoring packet."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "13 exact synthetic cases matched their finite outcomes and findings."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow parsed as YAML and remains read-only with no persisted checkout credentials."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and the candidate validator uses local repository evidence only."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All listed artifact SHA-256 values were recomputed after final local edits; the receipt does not bind its own bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-master-receipt-catalog-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#Master-Receipt-Catalog-and-Lifecycle-Mapping"
+    },
+    {
+      "id": "repository-receipt-catalog-carrier",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/atlases/receipt-catalog.md"
+    },
+    {
+      "id": "repository-adr-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/INDEX.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T20:25:08Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only ReceiptCatalogAssessmentCandidate packet derived from the Full Atlas master receipt-catalog proposal and reconciled against the current human receipt-catalog carrier and ADR inventory. It keeps Atlas and adjacent-doctrine family claims explicit, checks only synthetic catalog rows, and does not define receipt instance fields, decide ADR-S-03, reclassify manifests or records, write a canonical catalog, resolve evidence, evaluate policy, release, deploy, publish, or authorize public use."
+}

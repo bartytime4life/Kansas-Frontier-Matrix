@@ -1,0 +1,357 @@
+{
+  "base": {
+    "profile_version": "kfm.receipt-catalog-assessment-candidate.v1",
+    "assessment_id": "kfm:receipt-catalog-assessment:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_snapshot": {
+      "atlas_ref": "kfm-source:atlas-v1.1/section-24.2",
+      "narrative_catalog_ref": "docs/atlases/receipt-catalog.md",
+      "adr_index_ref": "docs/adr/INDEX.md",
+      "as_of": "2026-08-11",
+      "authority_state": "CONFLICTED_REVIEW_REQUIRED"
+    },
+    "families": [
+      {
+        "family_id": "ai_receipt",
+        "display_name": "AIReceipt",
+        "object_class": "RECEIPT",
+        "source_basis": "BOTH",
+        "semantic_contract_ref": "contracts/runtime/ai_receipt.md",
+        "lifecycle_phases": [
+          "WORK",
+          "CATALOG",
+          "PUBLISHED"
+        ],
+        "authority_state": "CATALOGED_DOCTRINE",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "event_run_receipt",
+        "display_name": "EventRunReceipt",
+        "object_class": "RECEIPT",
+        "source_basis": "ADJACENT_DOCTRINE",
+        "semantic_contract_ref": null,
+        "lifecycle_phases": [
+          "PRE_RAW",
+          "RAW"
+        ],
+        "authority_state": "CONFLICTED_ADJACENT",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "promotion_receipt",
+        "display_name": "PromotionReceipt",
+        "object_class": "RECEIPT",
+        "source_basis": "ADJACENT_DOCTRINE",
+        "semantic_contract_ref": "contracts/release/promotion_receipt.md",
+        "lifecycle_phases": [
+          "PUBLISHED"
+        ],
+        "authority_state": "CONFLICTED_ADJACENT",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "redaction_receipt",
+        "display_name": "RedactionReceipt",
+        "object_class": "RECEIPT",
+        "source_basis": "ATLAS_24_2",
+        "semantic_contract_ref": "contracts/shared/redaction_receipt.md",
+        "lifecycle_phases": [
+          "WORK",
+          "QUARANTINE",
+          "PROCESSED",
+          "PUBLISHED"
+        ],
+        "authority_state": "CATALOGED_DOCTRINE",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "release_manifest",
+        "display_name": "ReleaseManifest",
+        "object_class": "MANIFEST",
+        "source_basis": "ATLAS_24_2",
+        "semantic_contract_ref": "contracts/release/release_manifest.md",
+        "lifecycle_phases": [
+          "PUBLISHED",
+          "CORRECTION"
+        ],
+        "authority_state": "CATALOGED_DOCTRINE",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "run_receipt",
+        "display_name": "RunReceipt",
+        "object_class": "RECEIPT",
+        "source_basis": "ADJACENT_DOCTRINE",
+        "semantic_contract_ref": "contracts/runtime/run_receipt.md",
+        "lifecycle_phases": [
+          "PRE_RAW",
+          "RAW",
+          "WORK",
+          "QUARANTINE",
+          "PROCESSED",
+          "CATALOG",
+          "TRIPLETS",
+          "PUBLISHED",
+          "CORRECTION",
+          "CONTROL_LOOP"
+        ],
+        "authority_state": "CONFLICTED_ADJACENT",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      },
+      {
+        "family_id": "source_descriptor",
+        "display_name": "SourceDescriptor",
+        "object_class": "ANCHOR",
+        "source_basis": "ATLAS_24_2",
+        "semantic_contract_ref": "contracts/source/source_descriptor.md",
+        "lifecycle_phases": [
+          "PRE_RAW",
+          "RAW"
+        ],
+        "authority_state": "CATALOGED_DOCTRINE",
+        "schema_authority_resolved": false,
+        "writes_canonical_state": false
+      }
+    ],
+    "summary": {
+      "family_count": 7,
+      "atlas_source_count": 4,
+      "adjacent_source_count": 4,
+      "overlap_count": 1,
+      "unresolved_contract_count": 1,
+      "assessment_state": "REVIEW_REQUIRED",
+      "canonical_catalog_written": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "receipt_schema_authority_claimed": false,
+      "manifest_reclassified": false,
+      "catalog_authority_created": false,
+      "release_authorized": false,
+      "published": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_bounded_receipt_catalog_assessment",
+      "expected_outcome": "PASS",
+      "expected_assessment_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "duplicate_family_id",
+      "mutations": [
+        {
+          "path": "/families/1/family_id",
+          "value": "ai_receipt"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_FAMILY_ID_DUPLICATE",
+          "path": "/families"
+        }
+      ]
+    },
+    {
+      "case_id": "unsorted_family_rows",
+      "mutations": [
+        {
+          "path": "/families/0/family_id",
+          "value": "zeta_receipt"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_FAMILY_ORDER_INVALID",
+          "path": "/families"
+        }
+      ]
+    },
+    {
+      "case_id": "unsorted_lifecycle_phases",
+      "mutations": [
+        {
+          "path": "/families/0/lifecycle_phases",
+          "value": [
+            "PUBLISHED",
+            "WORK",
+            "CATALOG"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_PHASE_ORDER_INVALID",
+          "path": "/families/0/lifecycle_phases"
+        }
+      ]
+    },
+    {
+      "case_id": "source_basis_authority_mismatch",
+      "mutations": [
+        {
+          "path": "/families/1/authority_state",
+          "value": "CATALOGED_DOCTRINE"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_ADJACENT_STATE_MISMATCH",
+          "path": "/families/1/authority_state"
+        }
+      ]
+    },
+    {
+      "case_id": "missing_contract_reference",
+      "mutations": [
+        {
+          "path": "/families/0/semantic_contract_ref",
+          "value": "contracts/runtime/missing_receipt.md"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_CONTRACT_REFERENCE_MISSING",
+          "path": "/families/0/semantic_contract_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "direct_store_reference_denied",
+      "mutations": [
+        {
+          "path": "/families/0/semantic_contract_ref",
+          "value": "data/raw/private.json"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_CONTRACT_REFERENCE_MISSING",
+          "path": "/families/0/semantic_contract_ref"
+        },
+        {
+          "code": "RECEIPT_CATALOG_CONTRACT_REFERENCE_OUTSIDE_CONTRACTS",
+          "path": "/families/0/semantic_contract_ref"
+        },
+        {
+          "code": "RECEIPT_CATALOG_DIRECT_STORE_REFERENCE_DENIED",
+          "path": "/families/0/semantic_contract_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "summary_mismatch",
+      "mutations": [
+        {
+          "path": "/summary/family_count",
+          "value": 99
+        }
+      ],
+      "preserve_summary": true,
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_SUMMARY_MISMATCH",
+          "path": "/summary"
+        }
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "assessment_id_mismatch",
+      "assessment_id_override": "kfm:receipt-catalog-assessment:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_ID_MISMATCH",
+          "path": "/assessment_id"
+        }
+      ]
+    },
+    {
+      "case_id": "schema_authority_overreach",
+      "mutations": [
+        {
+          "path": "/families/0/schema_authority_resolved",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_SCHEMA_INVALID",
+          "path": "/families/0/schema_authority_resolved"
+        }
+      ]
+    },
+    {
+      "case_id": "manifest_reclassification_overreach",
+      "mutations": [
+        {
+          "path": "/governance/manifest_reclassified",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_SCHEMA_INVALID",
+          "path": "/governance/manifest_reclassified"
+        }
+      ]
+    },
+    {
+      "case_id": "release_authority_overreach",
+      "mutations": [
+        {
+          "path": "/governance/release_authorized",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_assessment_state": null,
+      "expected_findings": [
+        {
+          "code": "RECEIPT_CATALOG_SCHEMA_INVALID",
+          "path": "/governance/release_authorized"
+        }
+      ]
+    }
+  ]
+}
