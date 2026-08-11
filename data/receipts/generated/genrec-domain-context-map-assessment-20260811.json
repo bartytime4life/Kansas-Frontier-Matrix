@@ -15,7 +15,7 @@
     "contracts/governance/domain_context_map_assessment.md": "sha256:f07037db5405ed0ddd0a1a0c7f06f1f611d8b5b4c4bda6ba2baa39ea8267bd61",
     "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json": "sha256:111913c7740f5db8f9051a1882742b663d352e759650027d71599ada7ce5660e",
     "fixtures/contracts/v1/governance/domain_context_map_assessment/cases.json": "sha256:f3553bec6f1496689ea96ed648038f2fae3e38f409f33a4475ac99900569a9b1",
-    "tools/validators/governance/validate_domain_context_map_assessment.py": "sha256:c0f524cacdccea89defcfbcd9045195618586819146d0798c16712feae535e15",
+    "tools/validators/governance/validate_domain_context_map_assessment.py": "sha256:4f7e14a3fdc54090becaf899b327b7a0d8607f6be3d462d8144e5b7d08aaf094",
     "tests/validators/governance/test_validate_domain_context_map_assessment.py": "sha256:44933f75c84f1ba17904def764ffb4913f9af85f70db6510a8bba2589e5a7062",
     "docs/intake/exploratory/domain-context-map-assessment-source-map.md": "sha256:7aa990d237502ac07b41eceba11152a2784e9ad57bb87f4c6a394d489930e572"
   },
