@@ -2,11 +2,12 @@
 #
 # Responsibility:
 #   Enforce the current telemetry safety boundary without treating fixture-only
-#   trace/receipt linkage or the inactive OpenLineage projection profile as
-#   operational telemetry, policy, evidence, or release authority. The workflow
-#   validates every admitted fixture-only telemetry profile and keeps raw-evidence,
-#   prompt, restricted-coordinate, emitter, sink, and receipt-instance enforcement
-#   on an explicit fail-closed hold.
+#   trace/receipt linkage, the inactive OpenLineage projection profile, or the
+#   inactive remote-sensing lineage companion as operational telemetry, policy,
+#   evidence, or release authority. The workflow validates every admitted
+#   fixture-only telemetry profile and keeps raw-evidence, prompt,
+#   restricted-coordinate, emitter, sink, and receipt-instance enforcement on an
+#   explicit fail-closed hold.
 #
 # Trust boundary:
 #   Pull-request content is untrusted. Jobs have read-only repository permission,
@@ -83,6 +84,12 @@ jobs:
             --verbose
           python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
             --fixtures
+          python -m unittest discover \
+            --start-directory tests/validators/telemetry \
+            --pattern 'test_remote_sensing_lineage_activity.py' \
+            --verbose
+          python tools/validators/telemetry/validate_remote_sensing_lineage_activity.py \
+            --fixtures
           python - <<'PY'
           from pathlib import Path
           import json
@@ -93,12 +100,16 @@ jobs:
           openlineage_profile_root = (
               telemetry_fixture_root / "openlineage_run_event_projection"
           )
+          remote_sensing_profile_root = (
+              telemetry_fixture_root / "remote_sensing_lineage_activity"
+          )
           schema_root = Path("schemas/contracts/v1/telemetry")
           receipt_root = Path("data/receipts/telemetry")
           required = [
               Path("contracts/telemetry/README.md"),
               Path("contracts/telemetry/trace_receipt_link.md"),
               Path("contracts/telemetry/openlineage_run_event_projection.md"),
+              Path("contracts/telemetry/remote_sensing_lineage_activity.md"),
               Path("docs/standards/TELEMETRY_MINIMUMS.md"),
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
               Path("policy/ui/no_raw_in_telemetry.rego"),
@@ -118,14 +129,30 @@ jobs:
                   "test_openlineage_run_event_projection.py"
               ),
               Path(".github/workflows/openlineage-run-event-projection.yml"),
+              Path(
+                  "tools/generators/telemetry/"
+                  "build_remote_sensing_lineage_activity.py"
+              ),
+              Path(
+                  "tools/validators/telemetry/"
+                  "validate_remote_sensing_lineage_activity.py"
+              ),
+              Path(
+                  "tests/validators/telemetry/"
+                  "test_remote_sensing_lineage_activity.py"
+              ),
+              Path(".github/workflows/remote-sensing-lineage-activity.yml"),
               schema_root / "README.md",
               schema_root / "trace_receipt_link.schema.json",
               schema_root / "openlineage_run_event_projection.schema.json",
+              schema_root / "remote_sensing_lineage_activity.schema.json",
               trace_profile_root / "valid/valid_linked.json",
               trace_profile_root / "valid/valid_linked_restricted.json",
               trace_profile_root / "invalid/expected_findings_manifest.json",
               openlineage_profile_root / "README.md",
               openlineage_profile_root / "cases.json",
+              remote_sensing_profile_root / "README.md",
+              remote_sensing_profile_root / "cases.json",
               receipt_root / "README.md",
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
@@ -139,6 +166,7 @@ jobs:
           assert schema_files == [
               "README.md",
               "openlineage_run_event_projection.schema.json",
+              "remote_sensing_lineage_activity.schema.json",
               "trace_receipt_link.schema.json",
           ], (
               "telemetry schema inventory changed; classify each profile and update "
@@ -149,6 +177,7 @@ jobs:
           )
           assert fixture_profiles == [
               "openlineage_run_event_projection",
+              "remote_sensing_lineage_activity",
               "trace_receipt_link",
           ], (
               "telemetry fixture profile inventory changed without this safety review: "
@@ -203,6 +232,22 @@ jobs:
           )
           assert openlineage_schema["properties"]["authority"]["const"] == "NONE"
 
+          remote_sensing_schema = json.loads(
+              (schema_root / "remote_sensing_lineage_activity.schema.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          assert remote_sensing_schema["additionalProperties"] is False
+          assert (
+              remote_sensing_schema["properties"]["profile_status"]["const"]
+              == "PROPOSED_INACTIVE"
+          )
+          assert (
+              remote_sensing_schema["properties"]["execution_mode"]["const"]
+              == "FIXTURE_ONLY_NO_NETWORK"
+          )
+          assert remote_sensing_schema["properties"]["authority"]["const"] == "NONE"
+
           validator_path = Path("tools/validators/validate_telemetry_safety.py")
           validator = validator_path.read_text(encoding="utf-8")
           assert "# Greenfield validator stub: telemetry_safety" in validator
@@ -249,6 +294,9 @@ jobs:
           openlineage_contract = Path(
               "contracts/telemetry/openlineage_run_event_projection.md"
           ).read_text(encoding="utf-8").lower()
+          remote_sensing_contract = Path(
+              "contracts/telemetry/remote_sensing_lineage_activity.md"
+          ).read_text(encoding="utf-8").lower()
           standard = Path("docs/standards/TELEMETRY_MINIMUMS.md").read_text(
               encoding="utf-8"
           )
@@ -261,14 +309,20 @@ jobs:
               "non-authoritative"
           ) in openlineage_contract
           assert "does not post the event" in openlineage_contract
+          assert (
+              "status: draft; proposed; fixture-first; local-only; no-network; "
+              "non-authoritative"
+          ) in remote_sensing_contract
+          assert "does not fetch imagery" in remote_sensing_contract
           assert "status: draft" in standard
           assert "status: proposed" in adr
           assert "payload fragments" in contract.lower()
           assert "no raw payload echo" in adr.lower()
 
           print(
-              "CONFIRMED: TraceReceiptLink and inactive OpenLineage projection "
-              "tests and exact fixture polarity passed."
+              "CONFIRMED: TraceReceiptLink, inactive OpenLineage projection, and "
+              "inactive remote-sensing lineage companion tests and exact fixture "
+              "polarity passed."
           )
           print(
               "CONFIRMED: admitted telemetry fixtures and schemas contain no raw "
@@ -325,6 +379,7 @@ jobs:
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
               telemetry_fixture_root / "trace_receipt_link",
               telemetry_fixture_root / "openlineage_run_event_projection",
+              telemetry_fixture_root / "remote_sensing_lineage_activity",
           ]
           missing = [path.as_posix() for path in required if not path.exists()]
           assert not missing, f"required prompt-telemetry boundary evidence is missing: {missing}"
@@ -334,6 +389,7 @@ jobs:
           )
           assert fixture_profiles == [
               "openlineage_run_event_projection",
+              "remote_sensing_lineage_activity",
               "trace_receipt_link",
           ], (
               "telemetry fixture profile inventory changed without prompt-safety "
@@ -444,6 +500,7 @@ jobs:
               Path("docs/adr/ADR-0016-telemetry-redaction-posture.md"),
               telemetry_fixture_root / "trace_receipt_link",
               telemetry_fixture_root / "openlineage_run_event_projection",
+              telemetry_fixture_root / "remote_sensing_lineage_activity",
           ]
           missing = [path.as_posix() for path in required if not path.exists()]
           assert not missing, f"required coordinate-telemetry boundary evidence is missing: {missing}"
@@ -453,6 +510,7 @@ jobs:
           )
           assert fixture_profiles == [
               "openlineage_run_event_projection",
+              "remote_sensing_lineage_activity",
               "trace_receipt_link",
           ], (
               "telemetry fixture profile inventory changed without coordinate-safety "
