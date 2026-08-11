@@ -1,0 +1,94 @@
+name: hash-binding-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/hash-binding-assessment.yml"
+      - "contracts/common/hash_binding_assessment.md"
+      - "schemas/contracts/v1/common/hash_binding_assessment.schema.json"
+      - "fixtures/contracts/v1/common/hash_binding_assessment/**"
+      - "tools/validators/validate_hash_binding_assessment.py"
+      - "tests/validators/test_validate_hash_binding_assessment.py"
+      - "docs/intake/exploratory/full-atlas-hash-binding-assessment-source-map.md"
+      - "data/receipts/generated/genrec-full-atlas-hash-binding-assessment-*.json"
+      - "control_plane/hash_profile_readiness_matrix.json"
+      - "packages/hashing/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/hash-binding-assessment.yml"
+      - "contracts/common/hash_binding_assessment.md"
+      - "schemas/contracts/v1/common/hash_binding_assessment.schema.json"
+      - "fixtures/contracts/v1/common/hash_binding_assessment/**"
+      - "tools/validators/validate_hash_binding_assessment.py"
+      - "tests/validators/test_validate_hash_binding_assessment.py"
+      - "docs/intake/exploratory/full-atlas-hash-binding-assessment-source-map.md"
+      - "data/receipts/generated/genrec-full-atlas-hash-binding-assessment-*.json"
+      - "control_plane/hash_profile_readiness_matrix.json"
+      - "packages/hashing/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hash-binding-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-hash-binding-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/validate_hash_binding_assessment.py tests/validators/test_validate_hash_binding_assessment.py
+          python -m unittest tests.validators.test_validate_hash_binding_assessment -v
+          python tools/validators/validate_hash_binding_assessment.py --fixtures
+          python tools/validators/validate_hash_binding_assessment.py \
+            fixtures/contracts/v1/common/hash_binding_assessment/valid_assessment.json
+      - name: Run existing readiness-matrix regression
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_hash_profile_readiness_matrix -v
+          python tools/validators/validate_hash_profile_readiness_matrix.py \
+            control_plane/hash_profile_readiness_matrix.json
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-full-atlas-hash-binding-assessment-20260811.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Hash-binding assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic subject selection, exact readiness closure, recursive-field exclusions, ordering, finite-number, held-gap, and same-profile checks."
+            echo "- Boundary: no new profile, algorithm implementation, production digest, activation, migration, signing, truth, source, evidence, policy, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
