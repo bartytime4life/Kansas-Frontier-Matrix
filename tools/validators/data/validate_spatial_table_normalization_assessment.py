@@ -147,7 +147,7 @@ def _canonical_strings(value: object) -> bool:
 
 
 def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
-    findings: set{Finding] = set()
+    findings: set[Finding] = set()
     if candidate.get("profile_spec_hash") != compute_profile_hash(candidate):
         findings.add(Finding("PROFILE_SPEC_HASH_MISMATCH", "/profile_spec_hash"))
     if not _is_utc(candidate.get("observed_at")):
