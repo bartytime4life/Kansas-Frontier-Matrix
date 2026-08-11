@@ -1,0 +1,333 @@
+{
+  "object_type": "ApiCapabilityExposureAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.release.api-capability-exposure-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ApiCapabilityExposureAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.release.api-capability-exposure-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-274",
+    "observed_at": "2026-08-11T15:00:00Z",
+    "capability": {
+      "capability_ref": "kfm:api-capability:synthetic-published-claim-read:001",
+      "capability_kind": "READ_QUERY",
+      "purpose_statement": "Return one governed, released, evidence-linked claim projection to a public client.",
+      "audience_class": "PUBLIC_CLIENT",
+      "exposure_posture": "PUBLIC_CANDIDATE",
+      "contract_ref": "kfm:api-contract:synthetic-governed-claims:v1",
+      "documentation_ref": "kfm:api-documentation:synthetic-governed-claims:v1",
+      "allowed_data_states": ["PUBLISHED"],
+      "prohibited_uses": [
+        "BYPASS_EVIDENCE_POLICY_REVIEW_RELEASE",
+        "DIRECT_CANONICAL_STORE_ACCESS",
+        "EVIDENCE_FREE_PUBLIC_CLAIM",
+        "RELEASE_OR_PUBLICATION_BY_CALLER"
+      ],
+      "finite_outcomes": ["ABSTAIN", "ANSWER", "DENY", "ERROR"]
+    },
+    "trust_boundary_review": {
+      "state": "COMPLETE",
+      "boundary_kind": "GOVERNED_API",
+      "state_effect": "READ_ONLY",
+      "evidence_resolution_required": true,
+      "policy_evaluation_required": true,
+      "public_payload_scrub_required": true,
+      "risk_assessment_ref": "kfm:risk-assessment:synthetic-published-claim-read:001",
+      "review_record_refs": ["kfm:review-record:synthetic-published-claim-read:001"]
+    },
+    "closure": {
+      "security_review_ref": "kfm:security-review:synthetic-published-claim-read:001",
+      "release_manifest_ref": "kfm:release-manifest:synthetic-published-claim-read:001",
+      "correction_ref": "kfm:correction-path:synthetic-published-claim-read:001",
+      "rollback_ref": "kfm:rollback-card:synthetic-published-claim-read:001"
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_API_OR_ROUTE_MUTATION",
+      "NO_AUTHORIZATION_EXECUTION",
+      "NO_CANONICAL_STORE_ACCESS",
+      "NO_EVIDENCE_OR_POLICY_EXECUTION",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "api_mutation_authority": false,
+      "authorization_authority": false,
+      "canonical_store_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_public_read_candidate",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_internal_read_only",
+      "patch": {
+        "capability": {
+          "capability_ref": "kfm:api-capability:synthetic-internal-catalog-read:001",
+          "purpose_statement": "Support bounded internal review of processed and cataloged candidate records.",
+          "audience_class": "INTERNAL_OPERATOR",
+          "exposure_posture": "INTERNAL_ONLY",
+          "allowed_data_states": ["CATALOG", "PROCESSED", "TRIPLET"]
+        },
+        "trust_boundary_review": {
+          "boundary_kind": "INTERNAL_GOVERNED_SERVICE",
+          "public_payload_scrub_required": false
+        },
+        "closure": {
+          "release_manifest_ref": null,
+          "correction_ref": null,
+          "rollback_ref": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_internal_governed_mutation",
+      "patch": {
+        "capability": {
+          "capability_ref": "kfm:api-capability:synthetic-internal-review-note:001",
+          "capability_kind": "GOVERNED_MUTATION",
+          "purpose_statement": "Record a bounded internal review note without changing evidence, policy, or release state.",
+          "audience_class": "INTERNAL_OPERATOR",
+          "exposure_posture": "INTERNAL_ONLY",
+          "allowed_data_states": ["PROCESSED"]
+        },
+        "trust_boundary_review": {
+          "boundary_kind": "INTERNAL_GOVERNED_SERVICE",
+          "state_effect": "GOVERNED_MUTATION",
+          "public_payload_scrub_required": false
+        },
+        "closure": {
+          "release_manifest_ref": null,
+          "correction_ref": null,
+          "rollback_ref": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_incomplete_review",
+      "patch": {
+        "trust_boundary_review": {
+          "state": "INCOMPLETE",
+          "risk_assessment_ref": null,
+          "review_record_refs": []
+        },
+        "closure": {"security_review_ref": null}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["TRUST_BOUNDARY_REVIEW_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_unknown_capability",
+      "patch": {
+        "capability": {
+          "capability_kind": "UNKNOWN",
+          "purpose_statement": null,
+          "audience_class": "UNKNOWN",
+          "exposure_posture": "UNRESOLVED",
+          "contract_ref": null,
+          "documentation_ref": null,
+          "allowed_data_states": [],
+          "prohibited_uses": [],
+          "finite_outcomes": []
+        },
+        "trust_boundary_review": {
+          "state": "UNKNOWN",
+          "boundary_kind": "UNKNOWN",
+          "state_effect": "UNKNOWN",
+          "evidence_resolution_required": null,
+          "policy_evaluation_required": null,
+          "public_payload_scrub_required": null,
+          "risk_assessment_ref": null,
+          "review_record_refs": []
+        },
+        "closure": {
+          "security_review_ref": null,
+          "release_manifest_ref": null,
+          "correction_ref": null,
+          "rollback_ref": null
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["CAPABILITY_DETAILS_UNRESOLVED", "TRUST_BOUNDARY_REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "deny_placeholder_purpose",
+      "patch": {"capability": {"purpose_statement": "TBD capability purpose"}},
+      "expected": {"outcome": "DENY", "codes": ["BUSINESS_PURPOSE_PLACEHOLDER"]}
+    },
+    {
+      "name": "deny_contract_missing",
+      "patch": {"capability": {"contract_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["API_CONTRACT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_documentation_missing",
+      "patch": {"capability": {"documentation_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["API_DOCUMENTATION_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_risk_assessment_missing",
+      "patch": {"trust_boundary_review": {"risk_assessment_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["RISK_ASSESSMENT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_review_record_missing",
+      "patch": {"trust_boundary_review": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_security_review_missing",
+      "patch": {"closure": {"security_review_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["SECURITY_REVIEW_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_finite_outcome_vocabulary",
+      "patch": {"capability": {"finite_outcomes": ["ABSTAIN", "ANSWER", "ERROR"]}},
+      "expected": {"outcome": "DENY", "codes": ["FINITE_OUTCOME_VOCABULARY_MISMATCH"]}
+    },
+    {
+      "name": "deny_prohibited_use_set_incomplete",
+      "patch": {
+        "capability": {
+          "prohibited_uses": [
+            "BYPASS_EVIDENCE_POLICY_REVIEW_RELEASE",
+            "DIRECT_CANONICAL_STORE_ACCESS",
+            "EVIDENCE_FREE_PUBLIC_CLAIM"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["PROHIBITED_USE_SET_INCOMPLETE"]}
+    },
+    {
+      "name": "deny_direct_store_boundary",
+      "patch": {"trust_boundary_review": {"boundary_kind": "DIRECT_STORE"}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_EXPOSURE_DENIED", "PUBLIC_TRUST_BOUNDARY_INVALID"]}
+    },
+    {
+      "name": "deny_public_raw_state",
+      "patch": {"capability": {"allowed_data_states": ["PUBLISHED", "RAW"]}},
+      "expected": {"outcome": "DENY", "codes": ["NONPUBLISHED_PUBLIC_STATE_DENIED", "PUBLIC_DATA_STATE_SCOPE_INVALID"]}
+    },
+    {
+      "name": "deny_public_processed_state",
+      "patch": {"capability": {"allowed_data_states": ["PROCESSED", "PUBLISHED"]}},
+      "expected": {"outcome": "DENY", "codes": ["NONPUBLISHED_PUBLIC_STATE_DENIED", "PUBLIC_DATA_STATE_SCOPE_INVALID"]}
+    },
+    {
+      "name": "deny_public_mutation",
+      "patch": {
+        "capability": {"capability_kind": "GOVERNED_MUTATION"},
+        "trust_boundary_review": {"state_effect": "GOVERNED_MUTATION"}
+      },
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_MUTATION_CAPABILITY_DENIED"]}
+    },
+    {
+      "name": "deny_administrative_capability",
+      "patch": {
+        "capability": {
+          "capability_kind": "ADMINISTRATIVE_MUTATION",
+          "audience_class": "INTERNAL_OPERATOR",
+          "exposure_posture": "INTERNAL_ONLY",
+          "allowed_data_states": ["PROCESSED"]
+        },
+        "trust_boundary_review": {
+          "boundary_kind": "INTERNAL_GOVERNED_SERVICE",
+          "state_effect": "ADMINISTRATIVE_MUTATION",
+          "public_payload_scrub_required": false
+        },
+        "closure": {
+          "release_manifest_ref": null,
+          "correction_ref": null,
+          "rollback_ref": null
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["ADMINISTRATIVE_CAPABILITY_EXPOSURE_DENIED"]}
+    },
+    {
+      "name": "deny_public_internal_boundary",
+      "patch": {"trust_boundary_review": {"boundary_kind": "INTERNAL_GOVERNED_SERVICE"}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_TRUST_BOUNDARY_INVALID"]}
+    },
+    {
+      "name": "deny_exposure_audience_mismatch",
+      "patch": {"capability": {"audience_class": "INTERNAL_OPERATOR"}},
+      "expected": {"outcome": "DENY", "codes": ["EXPOSURE_AUDIENCE_MISMATCH"]}
+    },
+    {
+      "name": "deny_public_evidence_bypass",
+      "patch": {"trust_boundary_review": {"evidence_resolution_required": false}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_EVIDENCE_RESOLUTION_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_policy_bypass",
+      "patch": {"trust_boundary_review": {"policy_evaluation_required": false}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_POLICY_EVALUATION_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_scrub_bypass",
+      "patch": {"trust_boundary_review": {"public_payload_scrub_required": false}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_PAYLOAD_SCRUB_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_release_manifest_missing",
+      "patch": {"closure": {"release_manifest_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_RELEASE_MANIFEST_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_correction_missing",
+      "patch": {"closure": {"correction_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_CORRECTION_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_rollback_missing",
+      "patch": {"closure": {"rollback_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_ROLLBACK_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_state_order",
+      "patch": {
+        "capability": {
+          "audience_class": "INTERNAL_OPERATOR",
+          "exposure_posture": "INTERNAL_ONLY",
+          "allowed_data_states": ["TRIPLET", "CATALOG"]
+        },
+        "trust_boundary_review": {
+          "boundary_kind": "INTERNAL_GOVERNED_SERVICE",
+          "public_payload_scrub_required": false
+        },
+        "closure": {
+          "release_manifest_ref": null,
+          "correction_ref": null,
+          "rollback_ref": null
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_review_state",
+      "patch": {"trust_boundary_review": {"state": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["TRUST_BOUNDARY_REVIEW_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"route_activated": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
