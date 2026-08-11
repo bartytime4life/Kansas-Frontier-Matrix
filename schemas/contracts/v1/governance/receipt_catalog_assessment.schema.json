@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/receipt_catalog_assessment.schema.json",
+  "title": "ReceiptCatalogAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "assessment_id",
+    "spec_hash",
+    "source_snapshot",
+    "families",
+    "summary",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.receipt-catalog-assessment-candidate.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:receipt-catalog-assessment:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "atlas_ref",
+        "narrative_catalog_ref",
+        "adr_index_ref",
+        "as_of",
+        "authority_state"
+      ],
+      "properties": {
+        "atlas_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "narrative_catalog_ref": {
+          "const": "docs/atlases/receipt-catalog.md"
+        },
+        "adr_index_ref": {
+          "const": "docs/adr/INDEX.md"
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date"
+        },
+        "authority_state": {
+          "const": "CONFLICTED_REVIEW_REQUIRED"
+        }
+      }
+    },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/family"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_count",
+        "atlas_source_count",
+        "adjacent_source_count",
+        "overlap_count",
+        "unresolved_contract_count",
+        "assessment_state",
+        "canonical_catalog_written"
+      ],
+      "properties": {
+        "family_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        },
+        "atlas_source_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "adjacent_source_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "overlap_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "unresolved_contract_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 128
+        },
+        "assessment_state": {
+          "const": "REVIEW_REQUIRED"
+        },
+        "canonical_catalog_written": {
+          "const": false
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "receipt_schema_authority_claimed",
+        "manifest_reclassified",
+        "catalog_authority_created",
+        "release_authorized",
+        "published",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "receipt_schema_authority_claimed": {
+          "const": false
+        },
+        "manifest_reclassified": {
+          "const": false
+        },
+        "catalog_authority_created": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "repo_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 320,
+      "pattern": "^[a-zA-Z0-9_.-]+(?:/[a-zA-Z0-9_.-]+)+$"
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "display_name",
+        "object_class",
+        "source_basis",
+        "semantic_contract_ref",
+        "lifecycle_phases",
+        "authority_state",
+        "schema_authority_resolved",
+        "writes_canonical_state"
+      ],
+      "properties": {
+        "family_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,95}$"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "object_class": {
+          "enum": [
+            "ANCHOR",
+            "RECEIPT",
+            "RECORD",
+            "REPORT",
+            "DECISION",
+            "MANIFEST",
+            "BUNDLE",
+            "NOTICE"
+          ]
+        },
+        "source_basis": {
+          "enum": [
+            "ATLAS_24_2",
+            "ADJACENT_DOCTRINE",
+            "BOTH"
+          ]
+        },
+        "semantic_contract_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/repo_path"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifecycle_phases": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "PRE_RAW",
+              "RAW",
+              "WORK",
+              "QUARANTINE",
+              "PROCESSED",
+              "CATALOG",
+              "TRIPLETS",
+              "PUBLISHED",
+              "CORRECTION",
+              "CONTROL_LOOP"
+            ]
+          }
+        },
+        "authority_state": {
+          "enum": [
+            "CATALOGED_DOCTRINE",
+            "CONFLICTED_ADJACENT"
+          ]
+        },
+        "schema_authority_resolved": {
+          "const": false
+        },
+        "writes_canonical_state": {
+          "const": false
+        }
+      }
+    }
+  }
+}
