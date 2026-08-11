@@ -1,0 +1,308 @@
+{
+  "object_type": "SetOperationProvenanceReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.set-operation-provenance-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "SetOperationProvenanceReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.set-operation-provenance-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-068",
+    "observed_at": "2026-08-10T23:30:00Z",
+    "intended_use": "CROSS_SOURCE_RECONCILIATION",
+    "execution_state": "COMPLETE",
+    "operator": {
+      "execution_family": "SQL",
+      "operation_type": "UNION_ALL",
+      "duplicate_policy": "RETAIN_ALL",
+      "alignment_policy": "BY_NAME",
+      "null_semantics": {
+        "ref": "kfm:null-semantics:synthetic-sql:001",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "resolution": "RESOLVED"
+      },
+      "method_definition": {
+        "ref": "kfm:set-operation-method:synthetic-union-all:001",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "resolution": "RESOLVED"
+      },
+      "rationale_ref": null
+    },
+    "inputs": [
+      {
+        "ordinal": 0,
+        "role": "MEMBER",
+        "ref": "kfm:dataset:synthetic-west:001",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED",
+        "row_count": 7,
+        "schema_ref": "kfm:schema:synthetic-record:001"
+      },
+      {
+        "ordinal": 1,
+        "role": "MEMBER",
+        "ref": "kfm:dataset:synthetic-east:001",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "resolution": "RESOLVED",
+        "row_count": 5,
+        "schema_ref": "kfm:schema:synthetic-record:001"
+      }
+    ],
+    "output": {
+      "ref": "kfm:dataset:synthetic-union-output:001",
+      "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "row_count": 12,
+      "schema_ref": "kfm:schema:synthetic-record:001"
+    },
+    "evidence": {
+      "query_plan": {
+        "ref": "kfm:query-plan:synthetic-union-all:001",
+        "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "resolution": "RESOLVED"
+      },
+      "reconciliation_rule": {
+        "ref": "kfm:reconciliation-rule:synthetic-set-operation:001",
+        "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "resolution": "RESOLVED"
+      },
+      "evidence_bundle_refs": [],
+      "review_record_refs": [],
+      "public_interpretation_caveat": null
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_EVIDENCE_RESOLUTION",
+      "NO_PUBLICATION_AUTHORITY",
+      "NO_QUERY_EXECUTION"
+    ],
+    "authority_claims": {
+      "source_authority": false,
+      "reconciliation_authority": false,
+      "evidence_authority": false,
+      "catalog_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_union_all",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_union_distinct",
+      "patch": {
+        "operator": {"operation_type": "UNION_DISTINCT", "duplicate_policy": "DISTINCT"},
+        "output": {"row_count": 9}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_intersect",
+      "patch": {
+        "operator": {"operation_type": "INTERSECT", "duplicate_policy": "DISTINCT"},
+        "output": {"row_count": 3}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_except",
+      "patch": {
+        "operator": {"operation_type": "EXCEPT", "duplicate_policy": "DISTINCT"},
+        "inputs": [
+          {
+            "ordinal": 0,
+            "role": "MINUEND",
+            "ref": "kfm:dataset:synthetic-west:001",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "resolution": "RESOLVED",
+            "row_count": 7,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          },
+          {
+            "ordinal": 1,
+            "role": "SUBTRAHEND",
+            "ref": "kfm:dataset:synthetic-east:001",
+            "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "resolution": "RESOLVED",
+            "row_count": 5,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          }
+        ],
+        "output": {"row_count": 4}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_symmetric_difference",
+      "patch": {
+        "operator": {"operation_type": "SYMMETRIC_DIFFERENCE", "duplicate_policy": "DISTINCT"},
+        "output": {"row_count": 6}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_custom",
+      "patch": {
+        "operator": {
+          "execution_family": "CUSTOM",
+          "operation_type": "CUSTOM",
+          "duplicate_policy": "CUSTOM",
+          "alignment_policy": "CUSTOM",
+          "rationale_ref": "kfm:rationale:synthetic-custom-set-operation:001"
+        },
+        "output": {"row_count": 8}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_support",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "evidence": {
+          "evidence_bundle_refs": ["kfm:evidence-bundle:synthetic-set-operation:001"],
+          "review_record_refs": ["kfm:review-record:synthetic-set-operation:001"],
+          "public_interpretation_caveat": "Synthetic declaration only; the recorded set operation does not establish evidence, review, release, publication, or public-use authority."
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_incomplete",
+      "patch": {"execution_state": "INCOMPLETE"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["EXECUTION_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_query_plan_unresolved",
+      "patch": {"evidence": {"query_plan": {"resolution": "UNRESOLVED"}}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_input_unresolved",
+      "patch": {
+        "inputs": [
+          {
+            "ordinal": 0,
+            "role": "MEMBER",
+            "ref": "kfm:dataset:synthetic-west:001",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "resolution": "UNRESOLVED",
+            "row_count": 7,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          },
+          {
+            "ordinal": 1,
+            "role": "MEMBER",
+            "ref": "kfm:dataset:synthetic-east:001",
+            "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "resolution": "RESOLVED",
+            "row_count": 5,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          }
+        ]
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_union_all_count_mismatch",
+      "patch": {"output": {"row_count": 11}},
+      "expected": {"outcome": "DENY", "codes": ["UNION_ALL_COUNT_MISMATCH"]}
+    },
+    {
+      "name": "deny_intersect_count_bound",
+      "patch": {
+        "operator": {"operation_type": "INTERSECT", "duplicate_policy": "DISTINCT"},
+        "output": {"row_count": 6}
+      },
+      "expected": {"outcome": "DENY", "codes": ["INTERSECT_COUNT_BOUND_EXCEEDED"]}
+    },
+    {
+      "name": "deny_except_roles",
+      "patch": {
+        "operator": {"operation_type": "EXCEPT", "duplicate_policy": "DISTINCT"},
+        "output": {"row_count": 4}
+      },
+      "expected": {"outcome": "DENY", "codes": ["EXCEPT_INPUT_ROLES_INVALID"]}
+    },
+    {
+      "name": "deny_duplicate_policy",
+      "patch": {"operator": {"duplicate_policy": "DISTINCT"}},
+      "expected": {"outcome": "DENY", "codes": ["DUPLICATE_POLICY_MISMATCH"]}
+    },
+    {
+      "name": "deny_input_order",
+      "patch": {
+        "inputs": [
+          {
+            "ordinal": 0,
+            "role": "MEMBER",
+            "ref": "kfm:dataset:synthetic-west:001",
+            "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "resolution": "RESOLVED",
+            "row_count": 7,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          },
+          {
+            "ordinal": 2,
+            "role": "MEMBER",
+            "ref": "kfm:dataset:synthetic-east:001",
+            "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "resolution": "RESOLVED",
+            "row_count": 5,
+            "schema_ref": "kfm:schema:synthetic-record:001"
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["INPUT_ORDER_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_output_input_ref_collision",
+      "patch": {"output": {"ref": "kfm:dataset:synthetic-west:001"}},
+      "expected": {"outcome": "DENY", "codes": ["OUTPUT_INPUT_REFERENCE_COLLISION"]}
+    },
+    {
+      "name": "deny_custom_rationale_missing",
+      "patch": {
+        "operator": {
+          "execution_family": "CUSTOM",
+          "operation_type": "CUSTOM",
+          "duplicate_policy": "CUSTOM",
+          "alignment_policy": "CUSTOM"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["CUSTOM_RATIONALE_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_evidence_missing",
+      "patch": {
+        "intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE",
+        "evidence": {
+          "review_record_refs": ["kfm:review-record:synthetic-set-operation:001"],
+          "public_interpretation_caveat": "Synthetic declaration only; evidence remains unresolved and no public authority is created."
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_EVIDENCE_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_execution_state",
+      "patch": {"execution_state": "ERROR"},
+      "expected": {"outcome": "ERROR", "codes": ["EXECUTION_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"executed_query": "SELECT * FROM private_source"},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
