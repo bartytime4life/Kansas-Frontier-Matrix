@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/layer_legend_disclosure.schema.json",
+  "title": "LayerLegendDisclosureCandidate",
+  "description": "Fixture-only legend disclosure profile without map, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "layer_manifest_ref",
+    "layer_manifest_digest",
+    "evidence_scope",
+    "legend",
+    "entries",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "LayerLegendDisclosureCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.data.layer-legend-disclosure.fixture.v1"
+    },
+    "profile_spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_card": {
+      "const": "KFM-P18-INV-351"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "layer_manifest_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "layer_manifest_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "evidence_scope": {
+      "$ref": "#/$defs/resolved_reference"
+    },
+    "legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "scope_statement",
+        "state",
+        "known_undisclosed_entry_count"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "scope_statement": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 1000
+        },
+        "state": {
+          "enum": [
+            "COMPLETE_FOR_DECLARED_SCOPE",
+            "INCOMPLETE",
+            "UNKNOWN"
+          ]
+        },
+        "known_undisclosed_entry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "evidence_authority": {
+          "const": false
+        },
+        "policy_authority": {
+          "const": false
+        },
+        "review_authority": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "release_authority": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "public_use_authority": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9_.:-]*$"
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "nonempty_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "digest",
+        "resolution"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "resolution": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED"
+          ]
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_id",
+        "label",
+        "symbol_ref",
+        "feature_class_ref",
+        "evidence_class",
+        "release_state",
+        "render_state",
+        "sensitivity_transform",
+        "uncertainty_cue",
+        "details_surface",
+        "evidence_refs",
+        "policy_decision_refs",
+        "status_refs",
+        "correction_refs"
+      ],
+      "properties": {
+        "entry_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "symbol_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "feature_class_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "evidence_class": {
+          "enum": [
+            "DIRECT",
+            "DERIVED",
+            "MODELED",
+            "CONTEXT_ONLY",
+            "UNKNOWN"
+          ]
+        },
+        "release_state": {
+          "enum": [
+            "RELEASED",
+            "STALE",
+            "DEGRADED",
+            "HELD",
+            "DENIED",
+            "UNKNOWN"
+          ]
+        },
+        "render_state": {
+          "enum": [
+            "VISIBLE",
+            "DISABLED",
+            "HIDDEN"
+          ]
+        },
+        "sensitivity_transform": {
+          "enum": [
+            "NONE",
+            "GENERALIZED",
+            "REDACTED",
+            "WITHHELD"
+          ]
+        },
+        "uncertainty_cue": {
+          "enum": [
+            "NONE",
+            "LOW",
+            "MODERATE",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "details_surface": {
+          "enum": [
+            "LEGEND_ONLY",
+            "LAYER_NOTE",
+            "EVIDENCE_DRAWER",
+            "REPORT"
+          ]
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/nonempty_ref_array"
+        },
+        "policy_decision_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "status_refs": {
+          "$ref": "#/$defs/ref_array"
+        },
+        "correction_refs": {
+          "$ref": "#/$defs/ref_array"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/data/layer_legend_disclosure.md",
+    "fixtures_root": "fixtures/contracts/v1/data/layer_legend_disclosure/",
+    "validator": "tools/validators/data/validate_layer_legend_disclosure.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}
