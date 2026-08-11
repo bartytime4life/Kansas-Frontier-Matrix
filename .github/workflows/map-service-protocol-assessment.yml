@@ -1,0 +1,90 @@
+name: map-service-protocol-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/map-service-protocol-assessment.yml"
+      - "contracts/source/map_service_protocol_assessment.md"
+      - "schemas/contracts/v1/source/map_service_protocol_assessment.schema.json"
+      - "fixtures/contracts/v1/source/map_service_protocol_assessment/**"
+      - "tools/validators/source/validate_map_service_protocol_assessment.py"
+      - "tests/validators/test_validate_map_service_protocol_assessment.py"
+      - "docs/intake/exploratory/pass-18-map-service-protocol-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-map-service-protocol-assessment-*.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/map-service-protocol-assessment.yml"
+      - "contracts/source/map_service_protocol_assessment.md"
+      - "schemas/contracts/v1/source/map_service_protocol_assessment.schema.json"
+      - "fixtures/contracts/v1/source/map_service_protocol_assessment/**"
+      - "tools/validators/source/validate_map_service_protocol_assessment.py"
+      - "tests/validators/test_validate_map_service_protocol_assessment.py"
+      - "docs/intake/exploratory/pass-18-map-service-protocol-assessment-source-map.md"
+      - "data/receipts/generated/genrec-pass18-map-service-protocol-assessment-*.json"
+      - "packages/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: map-service-protocol-v1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-map-service-protocol-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/source/validate_map_service_protocol_assessment.py tests/validators/test_validate_map_service_protocol_assessment.py
+          python -m unittest tests.validators.test_validate_map_service_protocol_assessment --verbose
+          python tools/validators/source/validate_map_service_protocol_assessment.py --fixtures
+      - name: Run adjacent source and map regressions
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_source_rights_currentness_assessment --verbose
+          python -m pytest tests/source/test_source_health_assessment.py -q
+          python -m unittest tests.validators.test_validate_layer_manifest --verbose
+          python -m unittest tests.maplibre.test_source_metadata --verbose
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-map-service-protocol-assessment-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Map service protocol assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only PMTiles, XYZ, WMTS, and WMS protocol, transport, evidence-kind, rights-currentness, attribution, cache, freshness, health, and identity coherence."
+            echo "- Boundary: no network, endpoint or artifact verification, source activation, fetch, rights or evidence decision, cache or layer mutation, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
