@@ -1,0 +1,65 @@
+{
+  "object_type": "SpatialTableNormalizationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.data.spatial-table-normalization-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "SpatialTableNormalizationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.spatial-table-normalization-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-402",
+    "observed_at": "2026-08-11T04:45:00Z",
+    "table_artifact_ref": "kfm:processed-table:synthetic-county-observation:001",
+    "table_artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "schema_registry": {"ref": "kfm:schema-registry:synthetic-county-observation:001", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+    "lifecycle_role": "PROCESSED_CANONICAL_CANDIDATE",
+    "field_inventory": ["county_fips", "county_name", "population_total", "state_fips"],
+    "entity_key_fields": ["county_fips"],
+    "dependencies": [
+      {"dependency_id": "dependency:county-core", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name", "population_total", "state_fips"], "kind": "FULL", "rationale": "Synthetic county identifier determines the declared county attributes.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:001"]}
+    ],
+    "relationships": [
+      {"relationship_id": "relationship:state", "local_fields": ["state_fips"], "target_entity_ref": "kfm:entity:synthetic-state", "target_key_fields": ["state_fips"], "cardinality": "MANY_TO_ONE"}
+    ],
+    "assessment": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "declared_normal_form": "THIRD_NORMAL_FORM",
+      "anomaly_codes": [],
+      "canonical_source_ref": null,
+      "canonical_source_digest": null,
+      "denormalization_purpose": null,
+      "review_record_refs": ["kfm:review-record:synthetic-normalization:001"]
+    },
+    "authority_claims": {
+      "schema_authority": false,
+      "data_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_canonical_third_normal_form", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_canonical_boyce_codd", "patch": {"assessment": {"declared_normal_form": "BOYCE_CODD_NORMAL_FORM"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_intentional_release_derivative", "patch": {"table_artifact_ref": "kfm:release-derivative:synthetic-county-tile:001", "lifecycle_role": "RELEASE_DERIVATIVE_CANDIDATE", "dependencies": [{"dependency_id": "dependency:derivative-duplication", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name", "state_fips"], "kind": "DERIVATIVE_DUPLICATION", "rationale": "Synthetic display carrier repeats labels for bounded read performance.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:002"]}], "assessment": {"declared_normal_form": "DENORMALIZED_DERIVATIVE", "anomaly_codes": ["DERIVATIVE_DUPLICATION"], "canonical_source_ref": "kfm:processed-table:synthetic-county-observation:001", "canonical_source_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "denormalization_purpose": "Repeat public-safe county labels in a synthetic read-optimized delivery carrier.", "review_record_refs": ["kfm:review-record:synthetic-normalization:002"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_unresolved_schema", "patch": {"schema_registry": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["SCHEMA_REGISTRY_UNRESOLVED"]}},
+    {"name": "abstain_incomplete_assessment", "patch": {"assessment": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_INCOMPLETE"]}},
+    {"name": "abstain_unassessed_form", "patch": {"assessment": {"state": "UNKNOWN", "declared_normal_form": "UNASSESSED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["ASSESSMENT_UNKNOWN", "NORMAL_FORM_UNASSESSED"]}},
+    {"name": "deny_entity_key_unknown", "patch": {"entity_key_fields": ["county_code"]}, "expected": {"outcome": "DENY", "codes": ["FIELD_REFERENCE_UNKNOWN"]}},
+    {"name": "deny_dependency_field_unknown", "patch": {"dependencies": [{"dependency_id": "dependency:county-core", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name", "zone_code"], "kind": "FULL", "rationale": "Synthetic unknown field proves fail-closed field reference handling.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:003"]}]}, "expected": {"outcome": "DENY", "codes": ["FIELD_REFERENCE_UNKNOWN"]}},
+    {"name": "deny_dependency_field_overlap", "patch": {"dependencies": [{"dependency_id": "dependency:county-core", "determinant_fields": ["county_fips"], "dependent_fields": ["county_fips"], "kind": "FULL", "rationale": "Synthetic overlap proves determinant and dependent separation.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:004"]}]}, "expected": {"outcome": "DENY", "codes": ["DEPENDENCY_FIELD_OVERLAP"]}},
+    {"name": "deny_canonical_partial_dependency", "patch": {"dependencies": [{"dependency_id": "dependency:county-partial", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name"], "kind": "PARTIAL", "rationale": "Synthetic partial dependency proves canonical anomaly denial.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:005"]}], "assessment": {"anomaly_codes": ["PARTIAL_DEPENDENCY"]}}, "expected": {"outcome": "DENY", "codes": ["CANONICAL_NORMALIZATION_ANOMALY"]}},
+    {"name": "deny_canonical_form_insufficient", "patch": {"assessment": {"declared_normal_form": "SECOND_NORMAL_FORM"}}, "expected": {"outcome": "DENY", "codes": ["CANONICAL_NORMAL_FORM_INSUFFICIENT"]}},
+    {"name": "deny_anomaly_disclosure_mismatch", "patch": {"lifecycle_role": "RELEASE_DERIVATIVE_CANDIDATE", "dependencies": [{"dependency_id": "dependency:derivative-duplication", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name"], "kind": "DERIVATIVE_DUPLICATION", "rationale": "Synthetic duplication supports a declared release derivative.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:006"]}], "assessment": {"declared_normal_form": "DENORMALIZED_DERIVATIVE", "anomaly_codes": [], "canonical_source_ref": "kfm:processed-table:synthetic-county-observation:001", "canonical_source_digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "denormalization_purpose": "Repeat one public-safe label in a synthetic delivery carrier.", "review_record_refs": ["kfm:review-record:synthetic-normalization:003"]}}, "expected": {"outcome": "DENY", "codes": ["ANOMALY_DISCLOSURE_MISMATCH"]}},
+    {"name": "deny_derivative_source_missing", "patch": {"lifecycle_role": "RELEASE_DERIVATIVE_CANDIDATE", "dependencies": [{"dependency_id": "dependency:derivative-duplication", "determinant_fields": ["county_fips"], "dependent_fields": ["county_name"], "kind": "DERIVATIVE_DUPLICATION", "rationale": "Synthetic duplication requires canonical-source binding.", "evidence_refs": ["kfm:evidence-bundle:synthetic-normalization:007"]}], "assessment": {"declared_normal_form": "DENORMALIZED_DERIVATIVE", "anomaly_codes": ["DERIVATIVE_DUPLICATION"], "review_record_refs": ["kfm:review-record:synthetic-normalization:004"]}}, "expected": {"outcome": "DENY", "codes": ["DERIVATIVE_SOURCE_BINDING_REQUIRED"]}},
+    {"name": "deny_derivative_wrong_form", "patch": {"lifecycle_role": "RELEASE_DERIVATIVE_CANDIDATE"}, "expected": {"outcome": "DENY", "codes": ["DERIVATIVE_DECLARATION_REQUIRED", "DERIVATIVE_FORM_REQUIRED", "DERIVATIVE_SOURCE_BINDING_REQUIRED"]}},
+    {"name": "deny_review_reference_missing", "patch": {"assessment": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_noncanonical_field_inventory", "patch": {"field_inventory": ["state_fips", "county_fips", "county_name", "population_total"]}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"sample_rows": [{"county_fips": "00001"}]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
