@@ -22,13 +22,13 @@
     "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md": "sha256:f5ee957459ed821c252a199462e421ba726cd3e24e6c32be99af046e417f09b3",
     "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md": "sha256:a54f5424102ac52f7034c94d480c816d23dcc26f7def8f6fd4028177925156ea",
     "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json": "sha256:c9e183c578c5242e235d9cc3b2f71bc75ca5c590deda3605b834df12cd0f73d8",
-    "schemas/contracts/v1/telemetry/README.md": "sha256:56fc83e0c92fa96cb9e8ed2cacb7a4189b5de178e0faae6d6e414b6818c9457d",
+    "schemas/contracts/v1/telemetry/README.md": "sha256:fe414f4b22664802683d86087ff120f8c59977c9326e63ea6d42c4e250ead8f9",
     "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json": "sha256:1a74d0c4181f4bb2a3c2bfa34db19061ca03c6535184ba9106d095af675cd4a3",
-    "tests/validators/telemetry/README.md": "sha256:4fff9007c36cc4652f35af0ce4ad043cee21050539bf3b6ff193e1943bba4897",
-    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "sha256:b22c8380c952dc2bcb8c4541280c06258b80972951121272d63dfa7a45a920b6",
+    "tests/validators/telemetry/README.md": "sha256:a77360f8b166ddec72b3ea9c4b56405ddc5aca93837945dbd4fc21fe30949541",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "sha256:8d9c56c401422ee2fc109c71ee4e0ea4bea539a52708861ebc10878c9c1ac4d5",
     "tools/generators/telemetry/README.md": "sha256:a19cfc3a36b2802a4b1d45faca65c6dfc2a610d84e82ed3f7ab64653a66f7a1d",
     "tools/generators/telemetry/build_remote_sensing_lineage_activity.py": "sha256:47287a41f22d9c3db30df0fc330d97e8f5835e7d193c13f23068145aa3ddcc8e",
-    "tools/validators/telemetry/README.md": "sha256:06ba75e6976935d5730cd63f54de9caf9b3be1ab9b23d1d347fd992a6f6aae4f",
+    "tools/validators/telemetry/README.md": "sha256:1dccb16597d9bad9d75da2569dc34323e4afdc19162241fa0a605681db8c49bf",
     "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py": "sha256:b5d9b8631259aa6b15a51b283aee83552c4b91b0fb2f17ba66aa1d5a9c41cd2f"
   },
   "model_identity": {
@@ -105,7 +105,7 @@
     {
       "gate": "lineage-regression-and-companion-unit-suite",
       "outcome": "PASS",
-      "reason": "All 26 focused telemetry lineage tests passed: 15 existing OpenLineage tests and 11 new remote-sensing companion tests."
+      "reason": "All 27 focused telemetry lineage tests passed: 15 existing OpenLineage tests and 12 remote-sensing companion tests, including the inactive/no-network contract regression guard."
     },
     {
       "gate": "openlineage-existing-fixture-polarity",
@@ -130,7 +130,7 @@
     {
       "gate": "generated-receipt-integrity",
       "outcome": "PASS",
-      "reason": "The v3 generated-receipt validator bound all 13 declared artifacts to their final local SHA-256 digests."
+      "reason": "The v3 generated-receipt validator binds all 13 declared artifacts to the current dependency-closed SHA-256 digests after telemetry-profile inventory convergence."
     },
     {
       "gate": "human-review",
@@ -182,9 +182,9 @@
   "created_at": "2026-08-11T01:56:04Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": null,
+    "pr_number": 2546,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-PROG-0012. It composes with the existing OpenLineage projection and grants no source, evidence, policy, lifecycle, review, promotion, release, deployment, publication, or public-use authority."
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-PROG-0012. PR #2546 conflict resolution rebinds shared telemetry README digests after map-build profile convergence and adds one focused inactive/no-network contract guard; it grants no source, evidence, policy, lifecycle, review, promotion, release, deployment, publication, or public-use authority."
 }
