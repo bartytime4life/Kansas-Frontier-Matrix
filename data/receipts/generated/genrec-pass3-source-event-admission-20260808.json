@@ -19,7 +19,7 @@
     "fixtures/contracts/v1/source/source_event_admission/valid/valid_receipt_quarantine_unknown_rights.json": "sha256:d61290f5ed191a63777ad2a17e3da84e9de3b3b33342859ac72ea7115b440b1d",
     "schemas/contracts/v1/source/source_event_prefilter_output.schema.json": "sha256:d71f0c6d95ad3b1bed33c4d0475670349d81e2a61cef2f3b9a8888e16df19fd4",
     "schemas/contracts/v1/source/source_event_run_receipt.schema.json": "sha256:b20cb5adfc0f810066ebf7be567cb398227261a8555b4ef03ea5e8e0df89047f",
-    "tests/validators/test_validate_source_event_admission.py": "sha256:850397c4efecdb7ef6e43347967ed092d0b6c9afdc823067c8d45a16b0330ba7",
+    "tests/validators/test_validate_source_event_admission.py": "sha256:8f0b4fab930fbed59aa4cb76468d0590e9573c49f8b903c32bc2bbc2d1f7a815",
     "tools/validators/validate_source_event_admission.py": "sha256:30efbb650382425bfdc647c64785df71b0332b26d5728d43971f648269d3758c"
   },
   "artifact_paths": [
