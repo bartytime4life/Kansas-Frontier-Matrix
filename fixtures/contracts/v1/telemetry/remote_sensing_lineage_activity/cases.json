@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-success-activity",
+      "expected": {"declared_decision": "PASS", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-failed-scene-activity",
+      "scene_count": 8,
+      "processed_scene_count": 7,
+      "failed_scene_count": 1,
+      "retry_count": 2,
+      "run_outcome": "FAIL",
+      "expected": {"declared_decision": "PASS", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-partial-upstream-abstain",
+      "run_outcome": "PARTIAL",
+      "expected": {"declared_decision": "ABSTAIN", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-policy-denied-upstream",
+      "telemetry_allowed": false,
+      "expected": {"declared_decision": "DENY", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-count-mismatch-deny",
+      "mutation": "COUNT_MISMATCH",
+      "expected": {"declared_decision": "DENY", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-runtime-mismatch-deny",
+      "mutation": "RUNTIME_MISMATCH",
+      "expected": {"declared_decision": "DENY", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "valid-source-link-missing-deny",
+      "mutation": "SOURCE_LINK_MISSING",
+      "expected": {"declared_decision": "DENY", "finding_codes": [], "validation_outcome": "PASS"}
+    },
+    {
+      "case_id": "invalid-facet-drift",
+      "mutation": "FACET_DRIFT",
+      "expected": {"finding_codes": ["REMOTE_SENSING_FACET_MISMATCH"], "validation_outcome": "DENY"}
+    },
+    {
+      "case_id": "invalid-prov-drift",
+      "mutation": "PROV_DRIFT",
+      "expected": {"finding_codes": ["PROV_ACTIVITY_MISMATCH"], "validation_outcome": "DENY"}
+    },
+    {
+      "case_id": "invalid-spec-hash-drift",
+      "mutation": "SPEC_HASH_DRIFT",
+      "expected": {"finding_codes": ["SPEC_HASH_MISMATCH"], "validation_outcome": "DENY"}
+    },
+    {
+      "case_id": "invalid-extra-coordinates",
+      "mutation": "EXTRA_COORDINATES",
+      "expected": {"finding_codes": ["SCHEMA_INVALID"], "validation_outcome": "DENY"}
+    }
+  ]
+}

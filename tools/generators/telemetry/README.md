@@ -33,6 +33,7 @@ This lane owns deterministic construction of reviewable telemetry projection can
 | File | Purpose | Effects |
 |---|---|---|
 | `build_openlineage_run_event_projection.py` | Builds one fixture-only terminal OpenLineage `RunEvent`-shaped projection and derives its finite decision and deterministic identity. | Reads an explicit local manifest and writes JSON to stdout; no network or repository write. |
+| `build_remote_sensing_lineage_activity.py` | Composes coherent remote-sensing scene metrics and a PROV-shaped activity with an existing governed terminal projection. | Reads an explicit local manifest and writes JSON to stdout; no source access, network, exporter, or repository write. |
 
 The executable reuses the repository hashing package for RFC 8785 JCS plus SHA-256 identity. It references the canonical runtime `RunReceipt` object rather than inventing a telemetry receipt.
 
@@ -41,6 +42,9 @@ The executable reuses the repository hashing package for RFC 8785 JCS plus SHA-2
 ```bash
 python tools/generators/telemetry/build_openlineage_run_event_projection.py \
   --case valid-internal-success-complete
+
+python tools/generators/telemetry/build_remote_sensing_lineage_activity.py \
+  --case valid-success-activity
 ```
 
 ## Limits
