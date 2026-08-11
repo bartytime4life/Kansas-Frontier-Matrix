@@ -1,0 +1,828 @@
+{
+  "profile": "kfm.evidence.model-evaluation-split-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "ModelEvaluationSplitReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.model-evaluation-split-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "receipt_ref": "kfm:model-evaluation-split-receipt:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "source_card": "KFM-P18-INV-481",
+    "observed_at": "2026-08-11T17:05:00Z",
+    "intended_use": "LAYER_EVALUATION",
+    "evaluation_state": "COMPLETE",
+    "model": {
+      "model_card": {
+        "ref": "kfm://model-card/synthetic-layer-model",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "resolution": "RESOLVED"
+      },
+      "model_artifact": {
+        "ref": "kfm://model-artifact/synthetic-layer-model",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "resolution": "RESOLVED"
+      },
+      "layer_manifest": {
+        "ref": "kfm://layer-manifest/synthetic-model-layer",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED"
+      }
+    },
+    "dataset": {
+      "source_snapshot": {
+        "ref": "kfm://snapshot/synthetic-model-population",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "resolution": "RESOLVED"
+      },
+      "split_manifest": {
+        "ref": "kfm://split-manifest/synthetic-model-evaluation",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "resolution": "RESOLVED"
+      },
+      "population_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "total_count": 100,
+      "identity_basis_ref": "kfm://identity-basis/synthetic-observation-id"
+    },
+    "split": {
+      "method": "RANDOM_HOLDOUT",
+      "method_definition": {
+        "ref": "kfm://method/model-split/random-holdout-v1",
+        "digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "resolution": "RESOLVED"
+      },
+      "random_seed": 1729,
+      "stratification_fields": [],
+      "grouping_fields": [],
+      "spatial_holdout": {
+        "scope": "NOT_APPLICABLE",
+        "geography_ref": null,
+        "policy_ref": null
+      },
+      "temporal_holdout": {
+        "scope": "NOT_APPLICABLE",
+        "window_ref": null,
+        "policy_ref": null
+      }
+    },
+    "partitions": [
+      {
+        "role": "TRAIN",
+        "artifact_ref": "kfm://partition/synthetic-train",
+        "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+        "count": 80,
+        "resolution": "RESOLVED",
+        "class_distribution_ref": null,
+        "spatial_scope_ref": null,
+        "temporal_scope_ref": null
+      },
+      {
+        "role": "TEST",
+        "artifact_ref": "kfm://partition/synthetic-test",
+        "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+        "count": 20,
+        "resolution": "RESOLVED",
+        "class_distribution_ref": null,
+        "spatial_scope_ref": null,
+        "temporal_scope_ref": null
+      }
+    ],
+    "leakage_checks": [
+      {
+        "check_type": "IDENTITY_OVERLAP",
+        "status": "PASS",
+        "evidence_ref": "kfm://check/synthetic-identity-overlap"
+      },
+      {
+        "check_type": "GROUP_OVERLAP",
+        "status": "NOT_APPLICABLE",
+        "evidence_ref": null
+      },
+      {
+        "check_type": "SPATIAL_OVERLAP",
+        "status": "NOT_APPLICABLE",
+        "evidence_ref": null
+      },
+      {
+        "check_type": "TEMPORAL_ORDER",
+        "status": "NOT_APPLICABLE",
+        "evidence_ref": null
+      }
+    ],
+    "evaluation": {
+      "evaluation_receipt": {
+        "ref": "kfm://evaluation-receipt/synthetic-layer-model",
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "resolution": "RESOLVED"
+      },
+      "metric_refs": [
+        "kfm://metric/accuracy",
+        "kfm://metric/f1"
+      ],
+      "generalization_assessment_ref": null
+    },
+    "disclosure": {
+      "holdout_scope_note": "Synthetic random holdout declaration; no partition membership or performance claim is authenticated.",
+      "evidence_bundle_refs": [],
+      "review_record_refs": [],
+      "release_manifest_ref": null
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_DATASET_ACCESS",
+      "NO_EVIDENCE_RESOLUTION",
+      "NO_MODEL_EXECUTION",
+      "NO_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "dataset_truth": false,
+      "split_correctness": false,
+      "model_performance": false,
+      "generalization_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_random_holdout",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_stratified_holdout",
+      "patch": {
+        "split": {
+          "method": "STRATIFIED_HOLDOUT",
+          "stratification_fields": ["class_label"]
+        },
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-train",
+            "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": "kfm://distribution/synthetic-train-classes",
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-test",
+            "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": "kfm://distribution/synthetic-test-classes",
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_group_holdout",
+      "patch": {
+        "split": {
+          "method": "GROUP_HOLDOUT",
+          "grouping_fields": ["station_id"]
+        },
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-identity-overlap"
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-group-overlap"
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_spatial_block",
+      "patch": {
+        "split": {
+          "method": "SPATIAL_BLOCK",
+          "random_seed": null,
+          "spatial_holdout": {
+            "scope": "BLOCKED",
+            "geography_ref": "kfm://geography/synthetic-spatial-blocks",
+            "policy_ref": "kfm://policy/model-evaluation/spatial-block"
+          }
+        },
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-spatial-train",
+            "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": "kfm://geography/synthetic-spatial-train",
+            "temporal_scope_ref": null
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-spatial-test",
+            "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": "kfm://geography/synthetic-spatial-test",
+            "temporal_scope_ref": null
+          }
+        ],
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-identity-overlap"
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-spatial-overlap"
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_temporal_block",
+      "patch": {
+        "split": {
+          "method": "TEMPORAL_BLOCK",
+          "random_seed": null,
+          "temporal_holdout": {
+            "scope": "HOLDOUT_WINDOW",
+            "window_ref": "kfm://time-window/synthetic-temporal-holdout",
+            "policy_ref": "kfm://policy/model-evaluation/temporal-holdout"
+          }
+        },
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-temporal-train",
+            "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": "kfm://time-window/synthetic-temporal-train"
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-temporal-test",
+            "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": "kfm://time-window/synthetic-temporal-test"
+          }
+        ],
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-identity-overlap"
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-temporal-order"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_spatiotemporal_block",
+      "patch": {
+        "split": {
+          "method": "SPATIOTEMPORAL_BLOCK",
+          "random_seed": null,
+          "spatial_holdout": {
+            "scope": "LEAVE_REGION_OUT",
+            "geography_ref": "kfm://geography/synthetic-regions",
+            "policy_ref": "kfm://policy/model-evaluation/leave-region-out"
+          },
+          "temporal_holdout": {
+            "scope": "FORWARD_CHAIN",
+            "window_ref": "kfm://time-window/synthetic-forward-chain",
+            "policy_ref": "kfm://policy/model-evaluation/forward-chain"
+          }
+        },
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-spatiotemporal-train",
+            "digest": "sha256:abababababababababababababababababababababababababababababababab",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": "kfm://geography/synthetic-region-train",
+            "temporal_scope_ref": "kfm://time-window/synthetic-past"
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-spatiotemporal-test",
+            "digest": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": "kfm://geography/synthetic-region-test",
+            "temporal_scope_ref": "kfm://time-window/synthetic-future"
+          }
+        ],
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-identity-overlap"
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-spatial-overlap"
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "PASS",
+            "evidence_ref": "kfm://check/synthetic-temporal-order"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_k_fold",
+      "patch": {"split": {"method": "K_FOLD"}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_explanation_support",
+      "patch": {
+        "intended_use": "PUBLIC_EXPLANATION_SUPPORT_CANDIDATE",
+        "evaluation": {
+          "generalization_assessment_ref": "kfm://assessment/synthetic-generalization"
+        },
+        "disclosure": {
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic-model-evaluation"],
+          "review_record_refs": ["kfm://review/synthetic-model-evaluation"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_incomplete",
+      "patch": {"evaluation_state": "INCOMPLETE"},
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["EVALUATION_INCOMPLETE"]
+      }
+    },
+    {
+      "name": "abstain_model_card_unresolved",
+      "patch": {
+        "model": {"model_card": {"resolution": "UNRESOLVED"}}
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["REFERENCE_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_split_method_unresolved",
+      "patch": {"split": {"method": "UNRESOLVED"}},
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["SPLIT_METHOD_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_partition_unresolved",
+      "patch": {
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-train",
+            "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "count": 80,
+            "resolution": "UNRESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-test",
+            "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["PARTITION_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_leakage_check_unresolved",
+      "patch": {
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "UNRESOLVED",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["LEAKAGE_CHECK_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "abstain_evaluation_receipt_unresolved",
+      "patch": {
+        "evaluation": {
+          "evaluation_receipt": {"resolution": "UNRESOLVED"}
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": ["REFERENCE_UNRESOLVED"]
+      }
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PROFILE_SPEC_HASH_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_receipt_ref_tamper",
+      "patch": {},
+      "tamper": "receipt_ref",
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["RECEIPT_REF_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_partition_count_mismatch",
+      "patch": {"dataset": {"total_count": 101}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PARTITION_COUNT_MISMATCH"]
+      }
+    },
+    {
+      "name": "deny_partition_reference_duplicate",
+      "patch": {
+        "partitions": [
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-shared",
+            "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          },
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-shared",
+            "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PARTITION_REFERENCE_DUPLICATE"]
+      }
+    },
+    {
+      "name": "deny_partition_order",
+      "patch": {
+        "partitions": [
+          {
+            "role": "TEST",
+            "artifact_ref": "kfm://partition/synthetic-test",
+            "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+            "count": 20,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          },
+          {
+            "role": "TRAIN",
+            "artifact_ref": "kfm://partition/synthetic-train",
+            "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "count": 80,
+            "resolution": "RESOLVED",
+            "class_distribution_ref": null,
+            "spatial_scope_ref": null,
+            "temporal_scope_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PARTITION_ORDER_INVALID"]
+      }
+    },
+    {
+      "name": "deny_random_seed_missing",
+      "patch": {"split": {"random_seed": null}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["RANDOM_SEED_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_stratification_fields_missing",
+      "patch": {"split": {"method": "STRATIFIED_HOLDOUT"}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["STRATIFICATION_FIELDS_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_class_distribution_missing",
+      "patch": {
+        "split": {
+          "method": "STRATIFIED_HOLDOUT",
+          "stratification_fields": ["class_label"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["CLASS_DISTRIBUTION_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_grouping_fields_missing",
+      "patch": {"split": {"method": "GROUP_HOLDOUT"}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["GROUPING_FIELDS_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_spatial_holdout_incomplete",
+      "patch": {"split": {"method": "SPATIAL_BLOCK"}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PARTITION_SPATIAL_SCOPE_REQUIRED",
+          "SPATIAL_HOLDOUT_REQUIRED",
+          "SPATIAL_OVERLAP_CHECK_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_temporal_holdout_incomplete",
+      "patch": {"split": {"method": "TEMPORAL_BLOCK"}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "PARTITION_TEMPORAL_SCOPE_REQUIRED",
+          "TEMPORAL_HOLDOUT_REQUIRED",
+          "TEMPORAL_ORDER_CHECK_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_leakage_check_failed",
+      "patch": {
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "FAIL",
+            "evidence_ref": "kfm://check/synthetic-identity-overlap-failure"
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["LEAKAGE_CHECK_FAILED"]
+      }
+    },
+    {
+      "name": "deny_leakage_check_evidence_missing",
+      "patch": {
+        "leakage_checks": [
+          {
+            "check_type": "IDENTITY_OVERLAP",
+            "status": "PASS",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "GROUP_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "SPATIAL_OVERLAP",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          },
+          {
+            "check_type": "TEMPORAL_ORDER",
+            "status": "NOT_APPLICABLE",
+            "evidence_ref": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["LEAKAGE_CHECK_EVIDENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_public_holdout_note_missing",
+      "patch": {
+        "intended_use": "PUBLIC_EXPLANATION_SUPPORT_CANDIDATE",
+        "evaluation": {
+          "generalization_assessment_ref": "kfm://assessment/synthetic-generalization"
+        },
+        "disclosure": {
+          "holdout_scope_note": null,
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic-model-evaluation"],
+          "review_record_refs": ["kfm://review/synthetic-model-evaluation"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_HOLDOUT_SCOPE_NOTE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_public_evidence_missing",
+      "patch": {
+        "intended_use": "PUBLIC_EXPLANATION_SUPPORT_CANDIDATE",
+        "evaluation": {
+          "generalization_assessment_ref": "kfm://assessment/synthetic-generalization"
+        },
+        "disclosure": {
+          "review_record_refs": ["kfm://review/synthetic-model-evaluation"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_EVIDENCE_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_public_review_missing",
+      "patch": {
+        "intended_use": "PUBLIC_EXPLANATION_SUPPORT_CANDIDATE",
+        "evaluation": {
+          "generalization_assessment_ref": "kfm://assessment/synthetic-generalization"
+        },
+        "disclosure": {
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic-model-evaluation"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_public_generalization_missing",
+      "patch": {
+        "intended_use": "PUBLIC_EXPLANATION_SUPPORT_CANDIDATE",
+        "disclosure": {
+          "evidence_bundle_refs": ["kfm://evidence-bundle/synthetic-model-evaluation"],
+          "review_record_refs": ["kfm://review/synthetic-model-evaluation"]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["PUBLIC_GENERALIZATION_ASSESSMENT_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_noncanonical_metric_refs",
+      "patch": {
+        "evaluation": {
+          "metric_refs": [
+            "kfm://metric/f1",
+            "kfm://metric/accuracy"
+          ]
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["METRIC_REFERENCES_NOT_CANONICAL"]
+      }
+    },
+    {
+      "name": "error_evaluation",
+      "patch": {"evaluation_state": "ERROR"},
+      "expected": {
+        "outcome": "ERROR",
+        "codes": ["EVALUATION_ERROR"]
+      }
+    },
+    {
+      "name": "error_schema_unknown_field",
+      "patch": {"training_rows": []},
+      "expected": {
+        "outcome": "ERROR",
+        "codes": ["SCHEMA_INVALID"]
+      }
+    }
+  ]
+}
