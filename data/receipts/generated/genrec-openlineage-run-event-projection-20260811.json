@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-openlineage-run-event-projection-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/openlineage-run-event-projection.yml",
+    "contracts/telemetry/openlineage_run_event_projection.md",
+    "docs/intake/exploratory/new-ideas-4-openlineage-run-event-projection-source-map.md",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/README.md",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/cases.json",
+    "schemas/contracts/v1/telemetry/openlineage_run_event_projection.schema.json",
+    "tests/validators/telemetry/test_openlineage_run_event_projection.py",
+    "tools/generators/telemetry/build_openlineage_run_event_projection.py",
+    "tools/validators/telemetry/validate_openlineage_run_event_projection.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/openlineage-run-event-projection.yml": "sha256:2620a6516adbca8c11b12966f02b3df54da4a0e82a989ee573a982c4fd0b3779",
+    "contracts/telemetry/openlineage_run_event_projection.md": "sha256:2238b717b36fb3f4ef22ae25ff078e9b987d50c0554a0809fc7da70e109c3e3d",
+    "docs/intake/exploratory/new-ideas-4-openlineage-run-event-projection-source-map.md": "sha256:0a9576a4dc1690df5164e902a2a96234482fa7320205e5f31f4bc5d3c4accc6c",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/README.md": "sha256:04063e3233284ac4a22c028de625def1c96461a3b9d85fb8f00bba31c02b6f00",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/cases.json": "sha256:11c3e1490bb960e3a0131282d2548f12a748a0e2defb71fe68ab1ee2a207d3a0",
+    "schemas/contracts/v1/telemetry/openlineage_run_event_projection.schema.json": "sha256:1d3c1be987af396eebe54c220c01dcb2aa27e2e8e31bc47b88c48960a1f691a4",
+    "tests/validators/telemetry/test_openlineage_run_event_projection.py": "sha256:3bc7f0f298f97f5e164262e8e22e85279deddfbedc1b5c34aedae25f285b0f8e",
+    "tools/generators/telemetry/build_openlineage_run_event_projection.py": "sha256:d5f7fc5f77e385dee6bdc988337bdcf4f8a802cfa93dff726b889bcbe47fa723",
+    "tools/validators/telemetry/validate_openlineage_run_event_projection.py": "sha256:6a4869f8fcf42ffdf1595f202ddc3700da82633e2407098e51bfa3c090269fae"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-openlineage-run-event-projection-20260807.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917051",
+      "github:bartytime4life/Kansas-Frontier-Matrix#2548@7f7b2810d066adf87d6c25b24011ab8fd823c7db"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/openlineage-run-event-projection.yml": "PROPOSED",
+    "contracts/telemetry/openlineage_run_event_projection.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-4-openlineage-run-event-projection-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/README.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/openlineage_run_event_projection/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/telemetry/openlineage_run_event_projection.schema.json": "PROPOSED",
+    "tests/validators/telemetry/test_openlineage_run_event_projection.py": "CONFIRMED",
+    "tools/generators/telemetry/build_openlineage_run_event_projection.py": "CONFIRMED",
+    "tools/validators/telemetry/validate_openlineage_run_event_projection.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "receipt-rollover-assay",
+      "outcome": "PASS",
+      "reason": "Exact-head GitHub Actions run 31514917051 passed all OpenLineage projection tests and fixture replay, then failed only because the historical 20260807 receipt bound four shared telemetry lane indexes changed by later profile additions."
+    },
+    {
+      "gate": "stable-artifact-scope",
+      "outcome": "PASS",
+      "reason": "This superseding current-byte receipt binds nine profile-owned workflow, contract, source-map, fixture, schema, test, generator, and validator artifacts while excluding independently changing shared telemetry indexes."
+    },
+    {
+      "gate": "focused-hosted-tests",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31514917051 completed all fifteen deterministic OpenLineage tests and exact eighteen-case fixture polarity before reporting stale historical receipt bindings."
+    },
+    {
+      "gate": "current-byte-local-validation",
+      "outcome": "PASS",
+      "reason": "The OpenLineage projection test suite and exact fixture replay passed locally against the final stable packet."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Nine non-self stable-packet artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The corrected pull-request head did not yet exist when this receipt was emitted; GitHub Actions remains authoritative for that head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft pull request #2548."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:historical-openlineage-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-openlineage-run-event-projection-20260807.json"
+    },
+    {
+      "id": "github:first-head-openlineage-run",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917051"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T17:00:29Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": 2548,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Supersedes genrec-openlineage-run-event-projection-20260807 for current-byte validation while preserving the older receipt as historical process memory. The stable packet excludes independently changing shared telemetry schema, test, generator, and validator indexes; PR #2548's index edits are bound by the map-build sustainability change receipt. This rollover changes no OpenLineage semantics, live telemetry, event export, source access, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

@@ -14,6 +14,7 @@ This directory contains machine-checkable shapes for admitted telemetry contract
 | `trace_receipt_link.schema.json` | `contracts/telemetry/trace_receipt_link.md` | Positive, fixture-first trace-to-receipt-to-evidence linkage assertion. |
 | `openlineage_run_event_projection.schema.json` | `contracts/telemetry/openlineage_run_event_projection.md` | Deterministic, fixture-only terminal OpenLineage RunEvent-shaped projection from a canonical RunReceipt and EvidenceBundle-resolution summaries. |
 | `remote_sensing_lineage_activity.schema.json` | `contracts/telemetry/remote_sensing_lineage_activity.md` | Deterministic, fixture-only remote-sensing metrics and PROV companion composed with the existing OpenLineage projection. |
+| `map_build_sustainability.schema.json` | `contracts/telemetry/map_build_sustainability.md` | Closed fixture-only map-build energy/carbon candidate with explicit method, factor, uncertainty, abstention, and non-authority fields. |
 
 ## Boundary
 

@@ -2,18 +2,24 @@
 doc_id: kfm://doc/dashboards-observability-energy-carbon-footprint
 title: Energy / Carbon Footprint (system-health spec)
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + sustainability owner
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-11
+owning_root: docs/
 policy_label: internal
+responsibility: Specify the proposed internal energy and carbon observability surface without establishing a collector, accounting methodology, threshold, release gate, or public rollup authority.
+truth_posture: CONFIRMED supplied source and repository proposal state / PROPOSED inactive fixture profile and dashboard vocabulary / UNKNOWN production methodology factors thresholds ownership and activation
 related:
   - kfm://doc/dashboards-observability-readme
-  - kfm://card/p20-feat-0007                   # PROPOSED card: telemetry contract incl. energy/carbon
+  - ../../../contracts/telemetry/map_build_sustainability.md
+  - ../../intake/exploratory/pass-18-map-build-sustainability-source-map.md
 tags: [kfm, dashboards, observability, energy, carbon, sustainability, telemetry]
 notes:
   - Source card KFM-P20-FEAT-0007 bundles energy/carbon with telemetry contract health.
+  - Supplied card KFM-P18-INV-424 confirms the map-artifact non-truth boundary and leaves review thresholds unresolved.
+  - The fixture-only candidate profile is an inactive validation surface, not a dashboard feed, collector, methodology, budget, or release gate.
   - OPEN-DASH-OBS-07 flags possible merger with telemetry-contract-health.md; treated as separate here pending ratification.
 [/KFM_META_BLOCK_V2] -->
 
@@ -41,6 +47,7 @@ notes:
 ## 1. Scope
 
 - **Source anchor:** KFM-P20-FEAT-0007 *(PROPOSED card)* — per-run energy & carbon telemetry; rollup view.
+- **Map-artifact anchor:** KFM-P18-INV-424 *(CONFIRMED supplied card; PROPOSED implementation)* — map-build energy/carbon telemetry may inform operational review but is not truth about the mapped phenomenon.
 - **Audience:** Sustainability owner, observability steward, infra-budget owner.
 - **Aggregation scope:** Per run × per workflow × per package; daily / weekly / monthly / quarterly rollups.
 
@@ -105,6 +112,7 @@ notes:
 - **Telemetry source:** `runtime/observability/energy-adapter/` *(PROPOSED)*; per-package energy emitters.
 - **Standards:** `docs/standards/OPENTELEMETRY.md` *(PROPOSED)*; external sustainability accounting standard *(NEEDS VERIFICATION — methodology choice)*.
 - **Policy bundles:** `policy/observability/energy-coverage/` *(PROPOSED; Pass 10 C5-06; enforces non-null per-run energy)*.
+- **Inactive fixture profile:** [`contracts/telemetry/map_build_sustainability.md`](../../../contracts/telemetry/map_build_sustainability.md) validates synthetic shape, uncertainty, abstention, arithmetic, and non-authority only; it emits no telemetry.
 
 [↑ back to top](#top)
 
@@ -145,6 +153,7 @@ notes:
 | Source | Status | Supports |
 |:---|:---|:---|
 | KFM-P20-FEAT-0007 | PROPOSED in corpus | §1 scope, §2 signals, §9 OPEN-DASH-OBS-ENERGY-01. |
+| KFM-P18-INV-424 | CONFIRMED in supplied Pass 18 dossier; implementation remains PROPOSED_INACTIVE | Map-artifact telemetry is operational review evidence, not mapped-phenomenon truth; thresholds remain unresolved. |
 | Pass 10 C5-06 (Observability as Code via OPA) | CONFIRMED in corpus | §6 policy-bundle pointer. |
 | `docs/dashboards/observability/README.md` | CONFIRMED (this folder) | §6 template; §11 public-exposure exception path; OPEN-DASH-OBS-07. |
 

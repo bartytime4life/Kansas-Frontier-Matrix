@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/external_service_operation_receipt.schema.json",
+  "title": "ExternalServiceOperationReceiptCandidate",
+  "description": "Bounded fixture-only declaration of one external-service operation, provider dependency, measured or estimated consumption, replay posture, and cost caveat without executing the operation or creating evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "receipt_ref",
+    "source_card",
+    "observed_at",
+    "intended_use",
+    "operation_state",
+    "operation",
+    "consumption",
+    "dependency",
+    "replay",
+    "disclosure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ExternalServiceOperationReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.external-service-operation-receipt.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "receipt_ref": {
+      "type": "string",
+      "pattern": "^kfm:external-service-operation-receipt:[a-f0-9]{64}$"
+    },
+    "source_card": {"const": "KFM-P18-INV-419"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "intended_use": {
+      "enum": [
+        "INTERNAL_QA",
+        "WORKFLOW_REPRODUCIBILITY",
+        "PUBLIC_CLAIM_SUPPORT_CANDIDATE"
+      ]
+    },
+    "operation_state": {"enum": ["COMPLETE", "INCOMPLETE", "ERROR"]},
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform_descriptor",
+        "service_name",
+        "service_version",
+        "operation_kind",
+        "operation_spec",
+        "input_snapshot",
+        "output_artifact"
+      ],
+      "properties": {
+        "platform_descriptor": {"$ref": "#/$defs/resolved_reference"},
+        "service_name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 160,
+          "pattern": "^[^\\r\\n]+$"
+        },
+        "service_version": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "resolution"],
+          "properties": {
+            "value": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[^\\r\\n]+$"
+                },
+                {"type": "null"}
+              ]
+            },
+            "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+          }
+        },
+        "operation_kind": {
+          "enum": [
+            "ENRICHMENT",
+            "GEOCODING",
+            "GEOPROCESSING",
+            "HOSTED_ANALYSIS",
+            "TILING",
+            "CUSTOM"
+          ]
+        },
+        "operation_spec": {"$ref": "#/$defs/resolved_reference"},
+        "input_snapshot": {"$ref": "#/$defs/resolved_reference"},
+        "output_artifact": {"$ref": "#/$defs/resolved_reference"}
+      }
+    },
+    "consumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "credit_quantity",
+        "cost_minor_units",
+        "currency",
+        "measurement_ref",
+        "pricing_ref"
+      ],
+      "properties": {
+        "status": {"enum": ["MEASURED", "ESTIMATED", "NOT_CHARGED", "UNRESOLVED"]},
+        "credit_quantity": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^(?:0|[1-9][0-9]*)(?:\\.[0-9]{1,6})?$"
+            },
+            {"type": "null"}
+          ]
+        },
+        "cost_minor_units": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+            {"type": "null"}
+          ]
+        },
+        "currency": {
+          "oneOf": [
+            {"type": "string", "pattern": "^[A-Z]{3}$"},
+            {"type": "null"}
+          ]
+        },
+        "measurement_ref": {"$ref": "#/$defs/nullable_ref"},
+        "pricing_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "credential_required",
+        "network_required",
+        "vendor_locked",
+        "dependency_caveat"
+      ],
+      "properties": {
+        "credential_required": {"type": "boolean"},
+        "network_required": {"type": "boolean"},
+        "vendor_locked": {"type": "boolean"},
+        "dependency_caveat": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 1000,
+          "pattern": "^[^\\r\\n]+$"
+        }
+      }
+    },
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["posture", "policy_ref", "limitations"],
+      "properties": {
+        "posture": {
+          "enum": [
+            "EXACT_PROVIDER",
+            "GOVERNED_REPLACEMENT",
+            "REFERENCE_ONLY",
+            "UNRESOLVED"
+          ]
+        },
+        "policy_ref": {"$ref": "#/$defs/nullable_ref"},
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 80,
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          }
+        }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "external_service_cost_caveat",
+        "evidence_bundle_refs",
+        "review_record_refs",
+        "release_manifest_ref"
+      ],
+      "properties": {
+        "external_service_cost_caveat": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 12,
+              "maxLength": 1200,
+              "pattern": "^[^\\r\\n]+$"
+            },
+            {"type": "null"}
+          ]
+        },
+        "evidence_bundle_refs": {"$ref": "#/$defs/ref_array"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "release_manifest_ref": {"type": "null"}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DECLARATION_ONLY",
+          "NO_COST_AUTHENTICATION",
+          "NO_EVIDENCE_RESOLUTION",
+          "NO_EXTERNAL_OPERATION",
+          "NO_PUBLICATION_AUTHORITY"
+        ]
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_correctness",
+        "cost_authentication",
+        "provider_endorsement",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "operation_correctness": {"const": false},
+        "cost_authentication": {"const": false},
+        "provider_endorsement": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 512,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    }
+  }
+}
