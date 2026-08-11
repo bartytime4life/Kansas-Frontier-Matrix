@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-implementation-reference-economic-observation-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/economic-observation.yml",
+    "contracts/evidence/economic_observation.md",
+    "docs/intake/exploratory/implementation-reference-economic-observation-source-map.md",
+    "fixtures/contracts/v1/evidence/economic_observation/cases.json",
+    "schemas/contracts/v1/evidence/economic_observation.schema.json",
+    "tests/validators/evidence/test_validate_economic_observation.py",
+    "tools/validators/evidence/validate_economic_observation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/economic-observation.yml": "sha256:53c71064799a13ba2d37f63ba7076cc58bd7576c28dc4de36f30d2e7301c65cf",
+    "contracts/evidence/economic_observation.md": "sha256:87f6889acaf3351305ff7138130a394aff215e14c1b09cb8c39f35286f81c95b",
+    "docs/intake/exploratory/implementation-reference-economic-observation-source-map.md": "sha256:48d0853249a4db8ff7f53b4f2ce3484cbf87b4bebcbc47b79fdfff2ad6f107f4",
+    "fixtures/contracts/v1/evidence/economic_observation/cases.json": "sha256:42aa2550a56567debd65b2215989605f9c58179775e553582169bc439a48cb84",
+    "schemas/contracts/v1/evidence/economic_observation.schema.json": "sha256:db872e416ee765b28489a74dee732216cc0715298e823a327c18cf4b1ca8e705",
+    "tests/validators/evidence/test_validate_economic_observation.py": "sha256:af1713775576469157ec31fe1bd0c08cadf4fa8adc6e981548014d9373979ac6",
+    "tools/validators/evidence/validate_economic_observation.py": "sha256:7b571ea5be60d25807d4ce4955bbdfd42333e7f2a5c0b0dfc6b296095b7633f0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:87f6889acaf3351305ff7138130a394aff215e14c1b09cb8c39f35286f81c95b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and pull-request mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d948332b6c5bfcdd956cf6264f7bcb88d6881ac00ca8afc2534a02d288d4b3c2",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Kansas Frontier Matrix Implementation Reference",
+      "Supplied Pass 20 Part 2 idea atlas",
+      "Connected Drive Full Atlas"
+    ],
+    "evidence_refs": [
+      "private-corpus:implementation-reference#EconomicObservation",
+      "private-corpus:pass20#KFM-IDX-APP-008",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/evidence/frontier_definition.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/economic-observation.yml": "CONFIRMED",
+    "contracts/evidence/economic_observation.md": "PROPOSED",
+    "docs/intake/exploratory/implementation-reference-economic-observation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/economic_observation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/economic_observation.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_economic_observation.py": "CONFIRMED",
+    "tools/validators/evidence/validate_economic_observation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Exact object, path, pull-request, and branch probes found no checked-path EconomicObservation implementation or same-purpose open work at authoring time."
+    },
+    {
+      "gate": "json-and-workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-and-fixture-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic tests and forty-six exact EconomicObservation fixture cases passed."
+    },
+    {
+      "gate": "no-network-non-reflection-and-no-business-detail-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All seven declared artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "adjacent-geography-version-suite",
+      "outcome": "SKIPPED",
+      "reason": "Configured for hosted exact-head execution because this connector-only workspace is not a repository checkout."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "implementation-reference-economic-observation",
+      "validated": true,
+      "evidence_ref": "private-corpus:implementation-reference#EconomicObservation"
+    },
+    {
+      "id": "pass20-frontier-demography-card",
+      "validated": true,
+      "evidence_ref": "private-corpus:pass20#KFM-IDX-APP-008"
+    },
+    {
+      "id": "repository-geography-version-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/contracts/common/geography_version.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/463381703bcd6eada8eea05e95c4a88912ed4b02/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:47:13Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only EconomicObservation packet derived from the supplied implementation reference and Pass 20 KFM-IDX-APP-008. It declares one aggregate county-year employment, wage, income, GDP, or industry-output state with price basis, industry binding, suppression, source lineage, correction, interpretation limits, and deterministic identity while preserving evidence, geography, classification, policy, review, release, deployment, publication, and public-use boundaries."
+}
