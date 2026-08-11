@@ -1,0 +1,79 @@
+{
+  "object_type": "CartographicCommunicationRiskAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.map.cartographic-communication-risk-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "CartographicCommunicationRiskAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.map.cartographic-communication-risk-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-352",
+    "observed_at": "2026-08-11T18:30:00Z",
+    "map_candidate_ref": "kfm:map-candidate:synthetic-county-context:001",
+    "map_candidate_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_surface": "PUBLIC_CANDIDATE",
+    "supporting_assessments": {
+      "representation_fitness": {"ref": "kfm:representation-fitness:synthetic:001", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "state": "RESOLVED"},
+      "scale_generalization": {"ref": "kfm:map-scale-generalization:synthetic:001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "state": "RESOLVED"},
+      "omission_disclosure": {"ref": "kfm:cartographic-omission:synthetic:001", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "state": "RESOLVED"},
+      "projection_distortion": {"ref": "kfm:projection-distortion:synthetic:001", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "state": "RESOLVED"},
+      "classification_disclosure": {"ref": "kfm:classification-disclosure:synthetic:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "state": "RESOLVED"}
+    },
+    "risk_review": {
+      "consequence": "CONSEQUENTIAL",
+      "axes": [
+        {"axis": "SELECTION", "state": "ACCEPTABLE", "finding_code": "SELECTION_SCOPE_ACCEPTABLE", "mitigation_refs": []},
+        {"axis": "FRAMING", "state": "ACCEPTABLE", "finding_code": "FRAMING_CONTEXT_ACCEPTABLE", "mitigation_refs": []},
+        {"axis": "SCALE", "state": "ACCEPTABLE", "finding_code": "SCALE_SUPPORT_ACCEPTABLE", "mitigation_refs": []},
+        {"axis": "SYMBOLOGY", "state": "ACCEPTABLE", "finding_code": "SYMBOLOGY_EVIDENCE_MATCH_ACCEPTABLE", "mitigation_refs": []},
+        {"axis": "OMISSION", "state": "ACCEPTABLE", "finding_code": "OMISSION_DISCLOSURE_ACCEPTABLE", "mitigation_refs": []}
+      ],
+      "review_state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "review_record_refs": ["kfm:review-record:cartographic-communication:001"],
+      "communication_summary": "Synthetic review declares selection, framing, scale, symbology, and omission coherent for the stated public-candidate scope."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_MAP_RENDERING_OR_STYLE_INSPECTION",
+      "NO_GEOMETRY_COORDINATES_TILES_OR_SOURCE_ROWS",
+      "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+      "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+    ],
+    "authority_claims": {
+      "rendering_authority": false,
+      "style_approval_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_all_axes_acceptable", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_mitigated_scale", "axis_patches": {"SCALE": {"state": "MITIGATED", "finding_code": "SCALE_RISK_MITIGATED", "mitigation_refs": ["kfm:mitigation:scale-limit-label:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_classification_not_applicable", "patch": {"supporting_assessments": {"classification_disclosure": {"ref": null, "digest": null, "state": "NOT_APPLICABLE"}}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_high_consequence_reviewed", "patch": {"risk_review": {"consequence": "HIGH_CONSEQUENCE", "review_record_refs": ["kfm:review-record:cartographic-communication:001", "kfm:review-record:map-evidence:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_selection_unresolved", "axis_patches": {"SELECTION": {"state": "UNRESOLVED", "finding_code": "SELECTION_RISK_UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["SELECTION_RISK_UNRESOLVED"]}},
+    {"name": "abstain_support_unresolved", "patch": {"supporting_assessments": {"representation_fitness": {"ref": null, "digest": null, "state": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["SUPPORTING_ASSESSMENT_UNRESOLVED"]}},
+    {"name": "abstain_review_pending", "patch": {"risk_review": {"review_state": "PENDING"}}, "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}},
+    {"name": "abstain_consequence_unresolved", "patch": {"risk_review": {"consequence": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CONSEQUENCE_UNRESOLVED"]}},
+    {"name": "abstain_review_unknown", "patch": {"risk_review": {"review_state": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}},
+    {"name": "deny_selection_misleading", "axis_patches": {"SELECTION": {"state": "MISLEADING", "finding_code": "SELECTION_RISK_MISLEADING"}}, "expected": {"outcome": "DENY", "codes": ["SELECTION_RISK_MISLEADING"]}},
+    {"name": "deny_mitigation_without_reference", "axis_patches": {"SCALE": {"state": "MITIGATED", "finding_code": "SCALE_RISK_MITIGATED"}}, "expected": {"outcome": "DENY", "codes": ["MITIGATION_REFERENCE_REQUIRED"]}},
+    {"name": "deny_reference_without_mitigation", "axis_patches": {"SCALE": {"mitigation_refs": ["kfm:mitigation:unexpected:001"]}}, "expected": {"outcome": "DENY", "codes": ["MITIGATION_REFERENCE_PROHIBITED"]}},
+    {"name": "deny_axis_code_mismatch", "axis_patches": {"FRAMING": {"finding_code": "FRAMING_RISK_MITIGATED"}}, "expected": {"outcome": "DENY", "codes": ["AXIS_FINDING_CODE_INCOHERENT"]}},
+    {"name": "deny_not_applicable_with_binding", "patch": {"supporting_assessments": {"classification_disclosure": {"state": "NOT_APPLICABLE"}}}, "expected": {"outcome": "DENY", "codes": ["SUPPORTING_ASSESSMENT_BINDING_PROHIBITED"]}},
+    {"name": "deny_resolved_without_digest", "patch": {"supporting_assessments": {"projection_distortion": {"digest": null}}}, "expected": {"outcome": "DENY", "codes": ["SUPPORTING_ASSESSMENT_BINDING_REQUIRED"]}},
+    {"name": "deny_noncanonical_review_refs", "patch": {"risk_review": {"review_record_refs": ["kfm:review-record:z:001", "kfm:review-record:a:001"]}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_noncanonical_mitigation_refs", "axis_patches": {"SCALE": {"state": "MITIGATED", "finding_code": "SCALE_RISK_MITIGATED", "mitigation_refs": ["kfm:mitigation:z:001", "kfm:mitigation:a:001"]}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_non_utc_observed_at", "patch": {"observed_at": "2026-08-11T13:30:00-05:00"}, "expected": {"outcome": "DENY", "codes": ["OBSERVED_AT_NOT_UTC"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"rendered_style": "secret"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}},
+    {"name": "error_missing_axes", "patch": {"risk_review": {"axes": []}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-pass18-cartographic-communication-risk-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/cartographic-communication-risk-assessment.yml",
+    "contracts/map/cartographic_communication_risk_assessment.md",
+    "docs/intake/exploratory/pass-18-cartographic-communication-risk-assessment-source-map.md",
+    "fixtures/contracts/v1/map/cartographic_communication_risk_assessment/cases.json",
+    "schemas/contracts/v1/map/cartographic_communication_risk_assessment.schema.json",
+    "tests/validators/map/test_validate_cartographic_communication_risk_assessment.py",
+    "tools/validators/map/validate_cartographic_communication_risk_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/cartographic-communication-risk-assessment.yml": "sha256:168dccebcdaf49bdece992b163d13e8a83ff5ba40cf1b771da80a8658117f8fb",
+    "contracts/map/cartographic_communication_risk_assessment.md": "sha256:67fa178393daff89d07c78e434f3dda4ffad3e4a5cf267d193d1f6207234c1f5",
+    "docs/intake/exploratory/pass-18-cartographic-communication-risk-assessment-source-map.md": "sha256:0f7acf3754294036d52926fcd44134573ab58e24ed62e8f9b2674d77c9f53b45",
+    "fixtures/contracts/v1/map/cartographic_communication_risk_assessment/cases.json": "sha256:f294f870a2329c55ecab5fbbe5a5506b526e7ca989191659b4c357bf6c95dd2e",
+    "schemas/contracts/v1/map/cartographic_communication_risk_assessment.schema.json": "sha256:2bdbbe8f7565c8623d74879564bb0f83ca8c1eb36aff6ddf40200edec38f588e",
+    "tests/validators/map/test_validate_cartographic_communication_risk_assessment.py": "sha256:fdc2736deeee4a0d68994ed9b4f0ba8cdfa6dd2a836759aead17b3147918c423",
+    "tools/validators/map/validate_cartographic_communication_risk_assessment.py": "sha256:74d0cf786007ab662f4e6b6c919317b19334d6d990a247a84b4cfb9432750bcd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:67fa178393daff89d07c78e434f3dda4ffad3e4a5cf267d193d1f6207234c1f5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:410caad874eba589f339aaa71a5749b432cc9982afa1e27526bcb98a8ca904b7",
+      "sha256:4d06a022c44e19b788813a67d81c099393a4fd082818d71096db5e62eb6c70c9",
+      "sha256:02a951af17b53ec28fe839fb62e00c47ebc9ec008b456386f05d487dd8c97ae8",
+      "sha256:fdf9280eb6f782efb362d46144656cfa01105b43c92561089dfd85179cc88566"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; connected Drive file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5 was metadata-confirmed but byte identity was not asserted",
+      "Connected Drive Kansas Frontier Matrix — Connected-Dots Architecture Brief; private corpus used as thematic corroboration",
+      "Connected Drive KFM_Full_Atlas_seed_cards; private corpus used as thematic corroboration"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-352",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/map/representation_fitness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/data/cartographic_omission_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/data/map_scale_generalization_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/evidence/projection_distortion_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/cartographic-communication-risk-assessment.yml": "CONFIRMED",
+    "contracts/map/cartographic_communication_risk_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-cartographic-communication-risk-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/cartographic_communication_risk_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/map/cartographic_communication_risk_assessment.schema.json": "PROPOSED",
+    "tests/validators/map/test_validate_cartographic_communication_risk_assessment.py": "CONFIRMED",
+    "tools/validators/map/validate_cartographic_communication_risk_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic cartographic communication-risk assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-map-disclosure-regression",
+      "outcome": "PASS",
+      "reason": "Twenty-nine representation-fitness, omission, scale-generalization, and projection-distortion tests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred thirty-five tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Forty-two CI-readiness tests passed."
+    },
+    {
+      "gate": "documentation-meta-block-profile",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks were valid; only expected review-only registry warnings were emitted."
+    },
+    {
+      "gate": "documentation-link-and-graph-profile",
+      "outcome": "PASS",
+      "reason": "Forty-two documentation tests, explicit local-link validation, and the bounded two-document graph check passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-cartographic-communication-risk-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-352"
+    },
+    {
+      "id": "drive-pass18-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "representation-fitness-composed-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/map/representation_fitness_assessment.md"
+    },
+    {
+      "id": "cartographic-omission-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/contracts/data/cartographic_omission_disclosure.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6a79be20e9c74968f7ae8a157e075083d53651c8/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T18:40:19Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only cartographic communication-risk assessment. It records bounded selection, framing, scale, symbology, and omission review declarations while composing adjacent assessments by opaque reference and granting no rendering, style, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

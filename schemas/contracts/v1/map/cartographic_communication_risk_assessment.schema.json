@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/map/cartographic_communication_risk_assessment.schema.json",
+  "title": "CartographicCommunicationRiskAssessmentCandidate",
+  "description": "Fixture-only declaration of selection, framing, scale, symbology, and omission communication risk without rendering, evidence, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "map_candidate_ref",
+    "map_candidate_digest",
+    "intended_surface",
+    "supporting_assessments",
+    "risk_review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "CartographicCommunicationRiskAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.map.cartographic-communication-risk-assessment.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-352"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "map_candidate_ref": {"$ref": "#/$defs/ref"},
+    "map_candidate_digest": {"$ref": "#/$defs/sha256"},
+    "intended_surface": {"enum": ["PUBLIC_CANDIDATE", "SEMI_PUBLIC_CANDIDATE"]},
+    "supporting_assessments": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representation_fitness",
+        "scale_generalization",
+        "omission_disclosure",
+        "projection_distortion",
+        "classification_disclosure"
+      ],
+      "properties": {
+        "representation_fitness": {"$ref": "#/$defs/required_assessment_link"},
+        "scale_generalization": {"$ref": "#/$defs/required_assessment_link"},
+        "omission_disclosure": {"$ref": "#/$defs/required_assessment_link"},
+        "projection_distortion": {"$ref": "#/$defs/required_assessment_link"},
+        "classification_disclosure": {"$ref": "#/$defs/optional_assessment_link"}
+      }
+    },
+    "risk_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consequence", "axes", "review_state", "review_record_refs", "communication_summary"],
+      "properties": {
+        "consequence": {"enum": ["ROUTINE", "CONSEQUENTIAL", "HIGH_CONSEQUENCE", "UNRESOLVED"]},
+        "axes": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/axis_review"}
+        },
+        "review_state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "communication_summary": {
+          "anyOf": [
+            {"type": "string", "minLength": 24, "maxLength": 1024, "pattern": "^[^\\r\\n]+$"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_MAP_RENDERING_OR_STYLE_INSPECTION",
+        "NO_GEOMETRY_COORDINATES_TILES_OR_SOURCE_ROWS",
+        "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+        "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rendering_authority",
+        "style_approval_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "rendering_authority": {"const": false},
+        "style_approval_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "required_assessment_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "state"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/nullable_ref"},
+        "digest": {"$ref": "#/$defs/nullable_sha256"},
+        "state": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "optional_assessment_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "state"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/nullable_ref"},
+        "digest": {"$ref": "#/$defs/nullable_sha256"},
+        "state": {"enum": ["RESOLVED", "UNRESOLVED", "NOT_APPLICABLE"]}
+      }
+    },
+    "axis_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["axis", "state", "finding_code", "mitigation_refs"],
+      "properties": {
+        "axis": {"enum": ["SELECTION", "FRAMING", "SCALE", "SYMBOLOGY", "OMISSION"]},
+        "state": {"enum": ["ACCEPTABLE", "MITIGATED", "UNRESOLVED", "MISLEADING"]},
+        "finding_code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{4,80}$"},
+        "mitigation_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    }
+  }
+}
