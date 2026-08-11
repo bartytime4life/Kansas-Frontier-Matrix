@@ -23,7 +23,7 @@ name: headless-render-review-packet
       - "tools/validators/pmtiles/validate_headless_render_review_packet.py"
       - "tests/validators/test_headless_render_review_packet.py"
       - "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md"
-      - "data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json"
+      - "data/receipts/generated/genrec-headless-render-review-viewport-repair-20260810.json"
       - "apps/explorer-web/package.json"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -45,7 +45,7 @@ name: headless-render-review-packet
       - "tools/validators/pmtiles/validate_headless_render_review_packet.py"
       - "tests/validators/test_headless_render_review_packet.py"
       - "docs/intake/exploratory/pass-32-headless-render-review-packet-source-map.md"
-      - "data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json"
+      - "data/receipts/generated/genrec-headless-render-review-viewport-repair-20260810.json"
       - "apps/explorer-web/package.json"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -98,7 +98,7 @@ jobs:
           python -m unittest -v \
             tests.validators.test_headless_render_review_packet
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-pass32-headless-render-review-packet-20260810.json
+            data/receipts/generated/genrec-headless-render-review-viewport-repair-20260810.json
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
