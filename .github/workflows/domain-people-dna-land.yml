@@ -47,6 +47,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+
       - name: Inspect People DNA Land validation boundaries
         shell: bash
         run: |

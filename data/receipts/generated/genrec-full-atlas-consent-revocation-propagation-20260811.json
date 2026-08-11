@@ -15,7 +15,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/consent-revocation-propagation.yml": "sha256:9a8789d6cc7a42273672009d5fde6fd1be1e489ce9cb3e326983b4c9b876fc2c",
-    ".github/workflows/domain-people-dna-land.yml": "sha256:1eb10608caf22b2bde19a63cb66cd074d388202bb0c7642cfb40d6c5e1453711",
+    ".github/workflows/domain-people-dna-land.yml": "sha256:ea0893574e7d22f5599398248deeb1e9cf99b2093660c8484f0c2cde61467f21",
     "contracts/domains/people-dna-land/README.md": "sha256:bae2df009ee08d9b950694d6f77c65a8605ace36a75b1d1daa25d8c6c783f7d3",
     "contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md": "sha256:470031dd8ac9e4597aade9b07b485437525e3329b32f94d17b5e7b792dfba582",
     "docs/intake/exploratory/full-atlas-consent-revocation-propagation-source-map.md": "sha256:32c3042e8704126ade1594057872857c7077a6b05a7620a6e2a406149a3e3cb2",
