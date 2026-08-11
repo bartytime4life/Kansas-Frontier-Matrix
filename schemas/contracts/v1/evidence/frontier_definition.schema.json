@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/frontier_definition.schema.json",
+  "title": "FrontierDefinition",
+  "description": "Fixture-only declaration of a county-year frontier classification method and its non-authority posture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "definition_id",
+    "frontier",
+    "temporal",
+    "classification",
+    "support",
+    "uncertainty",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "FrontierDefinition" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.frontier-definition.fixture.v1" },
+    "definition_id": {
+      "type": "string",
+      "pattern": "^kfm:frontier-definition:[a-f0-9]{24}$"
+    },
+    "frontier": { "$ref": "#/$defs/frontier" },
+    "temporal": { "$ref": "#/$defs/temporal" },
+    "classification": { "$ref": "#/$defs/classification" },
+    "support": { "$ref": "#/$defs/support" },
+    "uncertainty": { "$ref": "#/$defs/uncertainty" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "digest_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}@sha256:[a-f0-9]{64}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "nullable_date": {
+      "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }]
+    },
+    "frontier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition_key",
+        "version_key",
+        "label",
+        "description",
+        "lifecycle_status",
+        "unit_level",
+        "jurisdiction_code",
+        "intended_use"
+      ],
+      "properties": {
+        "definition_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "version_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "label": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "lifecycle_status": { "const": "PROPOSED_INACTIVE" },
+        "unit_level": { "const": "COUNTY" },
+        "jurisdiction_code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9.-]{1,31}$"
+        },
+        "intended_use": { "const": "RESEARCH_AND_REVIEW" }
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "valid_from",
+        "valid_to",
+        "reference_period_kind",
+        "observation_valid_time_required",
+        "geography_valid_time_alignment_required",
+        "definition_valid_time_required"
+      ],
+      "properties": {
+        "valid_from": { "$ref": "#/$defs/date" },
+        "valid_to": { "$ref": "#/$defs/nullable_date" },
+        "reference_period_kind": { "const": "CALENDAR_YEAR" },
+        "observation_valid_time_required": { "const": true },
+        "geography_valid_time_alignment_required": { "const": true },
+        "definition_valid_time_required": { "const": true }
+      }
+    },
+    "criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criterion_key",
+        "indicator_definition_ref",
+        "comparison_operator",
+        "threshold_policy_ref",
+        "missing_data_action",
+        "uncertainty_action"
+      ],
+      "properties": {
+        "criterion_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "indicator_definition_ref": { "$ref": "#/$defs/digest_ref" },
+        "comparison_operator": {
+          "enum": ["GREATER_THAN", "GREATER_THAN_OR_EQUAL", "LESS_THAN", "LESS_THAN_OR_EQUAL"]
+        },
+        "threshold_policy_ref": { "$ref": "#/$defs/digest_ref" },
+        "missing_data_action": { "const": "ABSTAIN" },
+        "uncertainty_action": { "const": "ABSTAIN" }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "combination_rule",
+        "criteria",
+        "threshold_resolution_state",
+        "rule_execution_state",
+        "satisfied_result",
+        "unsatisfied_result",
+        "indeterminate_result"
+      ],
+      "properties": {
+        "combination_rule": { "enum": ["ALL_CRITERIA", "ANY_CRITERION"] },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": { "$ref": "#/$defs/criterion" }
+        },
+        "threshold_resolution_state": { "const": "REFERENCED_NOT_RESOLVED" },
+        "rule_execution_state": { "const": "NOT_EXECUTED" },
+        "satisfied_result": { "const": "FRONTIER" },
+        "unsatisfied_result": { "const": "NOT_FRONTIER" },
+        "indeterminate_result": { "const": "UNCLASSIFIED" }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geography_version_ref",
+        "geography_version_profile",
+        "indicator_definition_refs",
+        "evidence_refs",
+        "references_state",
+        "different_version_join_policy"
+      ],
+      "properties": {
+        "geography_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "geography_version_profile": { "const": "kfm.geography-version.fixture.v1" },
+        "indicator_definition_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "references_state": { "const": "REFERENCED_NOT_RESOLVED" },
+        "different_version_join_policy": { "const": "CROSSWALK_REQUIRED" }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uncertainty_method_ref",
+        "classification_uncertainty_required",
+        "missingness_disclosure_required",
+        "provenance_required",
+        "source_role_preservation_required"
+      ],
+      "properties": {
+        "uncertainty_method_ref": { "$ref": "#/$defs/digest_ref" },
+        "classification_uncertainty_required": { "const": true },
+        "missingness_disclosure_required": { "const": true },
+        "provenance_required": { "const": true },
+        "source_role_preservation_required": { "const": true }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assumption_refs", "interpretation_limits"],
+      "properties": {
+        "assumption_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "NO_CAUSAL_CLAIM",
+              "NO_INDIVIDUAL_DECISION",
+              "NO_POLICY_DECISION",
+              "NO_PUBLICATION_AUTHORITY",
+              "NOT_CLASSIFICATION_RESULT",
+              "NOT_OBSERVATION",
+              "SCOPE_BOUND",
+              "VERSION_BOUND"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_data_accessed",
+        "geography_resolved",
+        "indicator_definitions_resolved",
+        "thresholds_resolved",
+        "evidence_resolved",
+        "rule_executed",
+        "county_classified",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_data_accessed": { "const": false },
+        "geography_resolved": { "const": false },
+        "indicator_definitions_resolved": { "const": false },
+        "thresholds_resolved": { "const": false },
+        "evidence_resolved": { "const": false },
+        "rule_executed": { "const": false },
+        "county_classified": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}
