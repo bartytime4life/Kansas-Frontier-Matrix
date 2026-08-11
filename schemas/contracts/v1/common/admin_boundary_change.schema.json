@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/admin_boundary_change.schema.json",
+  "title": "AdminBoundaryChange",
+  "description": "Fixture-only declaration of an administrative geography lineage event. No geometry, identity inference, crosswalk execution, observation transfer, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["object_type", "schema_version", "profile", "change_id", "change", "lineage", "support", "disclosure", "governance", "spec_hash"],
+  "properties": {
+    "object_type": { "const": "AdminBoundaryChange" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.admin-boundary-change.fixture.v1" },
+    "change_id": { "type": "string", "pattern": "^kfm:admin-boundary-change:[a-f0-9]{24}$" },
+    "change": { "$ref": "#/$defs/change" },
+    "lineage": { "$ref": "#/$defs/lineage" },
+    "support": { "$ref": "#/$defs/support" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "digest_ref": { "type": "string", "pattern": "^kfm://[a-z0-9][a-z0-9._:/-]{2,191}@sha256:[a-f0-9]{64}$" },
+    "nullable_digest_ref": { "oneOf": [{ "$ref": "#/$defs/digest_ref" }, { "type": "null" }] },
+    "digest_ref_array": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/digest_ref" } },
+    "date": { "type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "aware_datetime": { "type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$" },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["change_type", "unit_level", "jurisdiction_code", "effective_date", "source_published_at", "retrieved_at", "source_role"],
+      "properties": {
+        "change_type": { "enum": ["CREATION", "DISSOLUTION", "SPLIT", "MERGER", "ANNEXATION", "DETACHMENT", "TRANSFER", "RENAME", "CODE_CHANGE", "BOUNDARY_REVISION"] },
+        "unit_level": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,47}$" },
+        "jurisdiction_code": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9.-]{1,31}$" },
+        "effective_date": { "$ref": "#/$defs/date" },
+        "source_published_at": { "$ref": "#/$defs/aware_datetime" },
+        "retrieved_at": { "$ref": "#/$defs/aware_datetime" },
+        "source_role": { "enum": ["OFFICIAL_ADMINISTRATIVE_NOTICE", "STATISTICAL_HISTORY", "SYNTHETIC_FIXTURE"] }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_geography_version_refs", "target_geography_version_refs", "predecessor_feature_refs", "successor_feature_refs", "identity_scope", "identity_assertion", "crosswalk_state", "crosswalk_ref", "different_version_join_policy"],
+      "properties": {
+        "source_geography_version_refs": { "$ref": "#/$defs/digest_ref_array" },
+        "target_geography_version_refs": { "$ref": "#/$defs/digest_ref_array" },
+        "predecessor_feature_refs": { "$ref": "#/$defs/digest_ref_array" },
+        "successor_feature_refs": { "$ref": "#/$defs/digest_ref_array" },
+        "identity_scope": { "const": "VERSION_LOCAL" },
+        "identity_assertion": { "const": "NONE" },
+        "crosswalk_state": { "enum": ["NOT_APPLICABLE", "UNRESOLVED", "REFERENCED_NOT_RESOLVED"] },
+        "crosswalk_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "different_version_join_policy": { "const": "CROSSWALK_REQUIRED" }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_descriptor_ref", "dataset_version_ref", "legal_instrument_ref", "evidence_state", "evidence_refs", "rights_state", "sensitivity_state"],
+      "properties": {
+        "source_descriptor_ref": { "$ref": "#/$defs/digest_ref" },
+        "dataset_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "legal_instrument_ref": { "$ref": "#/$defs/digest_ref" },
+        "evidence_state": { "const": "REFERENCED_NOT_RESOLVED" },
+        "evidence_refs": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/digest_ref" } },
+        "rights_state": { "const": "REFERENCED_NOT_EVALUATED" },
+        "sensitivity_state": { "const": "REFERENCED_NOT_EVALUATED" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interpretation_limits"],
+      "properties": {
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "enum": ["EVENT_ONLY", "NO_CROSS_VERSION_IDENTITY_INFERENCE", "NO_CROSSWALK_INFERENCE", "NO_GEOMETRY", "NO_OBSERVATION_TRANSFER", "NO_PUBLICATION_AUTHORITY", "SOURCE_ROLE_PRESERVED", "VERSION_BOUND"] }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "network_attempted", "source_data_accessed", "geography_resolved", "geometry_resolved", "crosswalk_resolved", "identity_inferred", "observation_transferred", "evidence_resolved", "rights_evaluated", "sensitivity_evaluated", "policy_evaluated", "review_approved", "promotion_authorized", "release_authorized", "public_use_allowed", "publication_authorized"],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_data_accessed": { "const": false },
+        "geography_resolved": { "const": false },
+        "geometry_resolved": { "const": false },
+        "crosswalk_resolved": { "const": false },
+        "identity_inferred": { "const": false },
+        "observation_transferred": { "const": false },
+        "evidence_resolved": { "const": false },
+        "rights_evaluated": { "const": false },
+        "sensitivity_evaluated": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}
