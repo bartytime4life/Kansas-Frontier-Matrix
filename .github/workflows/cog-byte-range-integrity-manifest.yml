@@ -1,0 +1,81 @@
+name: cog-byte-range-integrity-manifest
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/cog-byte-range-integrity-manifest.yml"
+      - "contracts/evidence/cog_byte_range_integrity_manifest.md"
+      - "schemas/contracts/v1/evidence/cog_byte_range_integrity_manifest.schema.json"
+      - "fixtures/contracts/v1/evidence/cog_byte_range_integrity_manifest/**"
+      - "tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py"
+      - "tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py"
+      - "docs/intake/exploratory/pass-18-cog-byte-range-integrity-manifest-source-map.md"
+      - "data/receipts/generated/genrec-pass18-cog-byte-range-integrity-manifest-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cog-byte-range-integrity-manifest.yml"
+      - "contracts/evidence/cog_byte_range_integrity_manifest.md"
+      - "schemas/contracts/v1/evidence/cog_byte_range_integrity_manifest.schema.json"
+      - "fixtures/contracts/v1/evidence/cog_byte_range_integrity_manifest/**"
+      - "tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py"
+      - "tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py"
+      - "docs/intake/exploratory/pass-18-cog-byte-range-integrity-manifest-source-map.md"
+      - "data/receipts/generated/genrec-pass18-cog-byte-range-integrity-manifest-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cog-byte-range-integrity-manifest-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-cog-byte-range-integrity-manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py tests/validators/evidence/test_validate_cog_byte_range_integrity_manifest.py
+          python -m unittest tests.validators.evidence.test_validate_cog_byte_range_integrity_manifest --verbose
+          python tools/validators/evidence/validate_cog_byte_range_integrity_manifest.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-cog-byte-range-integrity-manifest-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### COG byte-range integrity manifest candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only whole-artifact digest, canonical contiguous range coverage, explicit range digests, declared range roles, freshness, and boundary-state coherence."
+            echo "- Boundary: no TIFF parsing, COG-layout validation, HTTP Range proof, BAO/BLAKE3 selection, pixel interpretation, evidence resolution, signature verification, policy or review decision, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
