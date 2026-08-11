@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/field_level_api_authorization_assessment.schema.json",
+  "title": "FieldLevelApiAuthorizationAssessmentCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "assessment_id",
+    "spec_hash",
+    "request_context",
+    "decision_context",
+    "fields",
+    "downstream_surface",
+    "summary",
+    "governance"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.field-level-api-authorization-assessment-candidate.v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:field-level-api-authorization:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "request_context": {
+      "$ref": "#/$defs/request_context"
+    },
+    "decision_context": {
+      "$ref": "#/$defs/decision_context"
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/field"
+      }
+    },
+    "downstream_surface": {
+      "enum": ["API_RESPONSE", "EVIDENCE_DRAWER", "EXPORT", "AI_ANSWER"]
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "route_created",
+        "authentication_executed",
+        "policy_executed",
+        "response_emitted",
+        "release_authorized",
+        "published"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "route_created": {
+          "const": false
+        },
+        "authentication_executed": {
+          "const": false
+        },
+        "policy_executed": {
+          "const": false
+        },
+        "response_emitted": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]{0,238}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "role": {
+      "enum": ["PUBLIC_CLIENT", "AUTHENTICATED_RESEARCHER", "STEWARD", "INTERNAL_OPERATOR", "UNKNOWN"]
+    },
+    "nullable_required_role": {
+      "oneOf": [
+        {
+          "enum": ["PUBLIC_CLIENT", "AUTHENTICATED_RESEARCHER", "STEWARD", "INTERNAL_OPERATOR"]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "request_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability_ref", "api_contract_ref", "audience_role", "operation", "purpose"],
+      "properties": {
+        "capability_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "api_contract_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "audience_role": {
+          "$ref": "#/$defs/role"
+        },
+        "operation": {
+          "enum": ["READ", "ANSWER", "EXPORT", "DRAWER"]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 240
+        }
+      }
+    },
+    "decision_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_decision_ref",
+        "policy_outcome",
+        "grant_state",
+        "obligation_set_ref",
+        "evaluated_at"
+      ],
+      "properties": {
+        "policy_decision_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "policy_outcome": {
+          "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"]
+        },
+        "grant_state": {
+          "enum": ["ACTIVE", "REVOKED", "EXPIRED", "UNKNOWN"]
+        },
+        "obligation_set_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field_name",
+        "classification",
+        "source_state",
+        "requested",
+        "projected",
+        "required_role",
+        "embargo_until",
+        "obligation_refs",
+        "evidence_ref",
+        "reason_code"
+      ],
+      "properties": {
+        "field_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.]{0,127}$"
+        },
+        "classification": {
+          "enum": ["PUBLIC", "ROLE_SCOPED", "EMBARGOED", "NEVER_RETURN"]
+        },
+        "source_state": {
+          "enum": ["PUBLISHED", "PROCESSED", "WORK", "QUARANTINE", "RAW"]
+        },
+        "requested": {
+          "type": "boolean"
+        },
+        "projected": {
+          "type": "boolean"
+        },
+        "required_role": {
+          "$ref": "#/$defs/nullable_required_role"
+        },
+        "embargo_until": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "obligation_refs": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "reason_code": {
+          "enum": [
+            "PROJECTED_PUBLIC",
+            "PROJECTED_ROLE_MATCH",
+            "PROJECTED_EMBARGO_EXPIRED",
+            "NOT_REQUESTED",
+            "SOURCE_NOT_PUBLISHED",
+            "ROLE_MISMATCH",
+            "GRANT_INACTIVE",
+            "POLICY_NOT_ANSWER",
+            "EMBARGO_ACTIVE",
+            "NEVER_RETURN",
+            "EVIDENCE_MISSING"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested_count",
+        "projected_count",
+        "withheld_count",
+        "classification_counts",
+        "assessment_state",
+        "response_emitted"
+      ],
+      "properties": {
+        "requested_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "projected_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "withheld_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "classification_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["PUBLIC", "ROLE_SCOPED", "EMBARGOED", "NEVER_RETURN"],
+          "properties": {
+            "PUBLIC": {"type": "integer", "minimum": 0, "maximum": 64},
+            "ROLE_SCOPED": {"type": "integer", "minimum": 0, "maximum": 64},
+            "EMBARGOED": {"type": "integer", "minimum": 0, "maximum": 64},
+            "NEVER_RETURN": {"type": "integer", "minimum": 0, "maximum": 64}
+          }
+        },
+        "assessment_state": {
+          "const": "REVIEW_REQUIRED"
+        },
+        "response_emitted": {
+          "const": false
+        }
+      }
+    }
+  }
+}
