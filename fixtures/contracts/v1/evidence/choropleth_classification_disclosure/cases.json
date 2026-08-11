@@ -1,0 +1,228 @@
+{
+  "object_type": "ChoroplethClassificationDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.choropleth-classification-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "ChoroplethClassificationDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.choropleth-classification-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-477",
+    "observed_at": "2026-08-10T23:15:00Z",
+    "layer_manifest": {
+      "ref": "kfm:layer-manifest:synthetic-county-rate:001",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED"
+    },
+    "aggregate_statistic": {
+      "ref": "kfm:aggregate-statistic:synthetic-county-rate:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "indicator_definition": {
+      "ref": "kfm:indicator-definition:synthetic-county-rate:001",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "resolution": "RESOLVED"
+    },
+    "geography_version": {
+      "ref": "kfm:geography-version:synthetic-kansas-counties:001",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "resolution": "RESOLVED"
+    },
+    "intended_use": "PUBLIC_MAP_CANDIDATE",
+    "classification": {
+      "state": "COMPLETE",
+      "method": "EQUAL_INTERVAL",
+      "class_count": 5,
+      "break_values": ["0", "20", "40", "60", "80", "100"],
+      "boundary_rule": "LOWER_INCLUSIVE_UPPER_EXCLUSIVE",
+      "geography_unit": "COUNTY",
+      "method_definition": {
+        "ref": "kfm:classification-method:synthetic-equal-interval:001",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "resolution": "RESOLVED"
+      },
+      "rationale_ref": null,
+      "value_range": {
+        "assumption": "FIXED_DOMAIN",
+        "minimum": "0",
+        "maximum": "100",
+        "assumption_ref": "kfm:value-range-assumption:synthetic-percent:001"
+      },
+      "null_treatment": {
+        "mode": "EXCLUDED_WITH_COUNT",
+        "null_count": 3,
+        "treatment_ref": "kfm:missing-value-treatment:synthetic-excluded:001"
+      },
+      "outlier_treatment": {
+        "mode": "INCLUDED",
+        "treatment_ref": null
+      }
+    },
+    "disclosure": {
+      "legend_ref": "kfm:legend:synthetic-county-rate:001",
+      "review_record_refs": ["kfm:review-record:synthetic-choropleth:001"],
+      "evidence_drawer_section_ref": "kfm:evidence-drawer-section:synthetic-choropleth:001",
+      "public_interpretation_caveat": "Synthetic classification declaration; class choices can change visual interpretation and do not prove evidence, review, release, or publication."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_CLASSIFICATION_COMPUTATION",
+      "NO_LEGEND_RENDERING",
+      "NO_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "classification_authority": false,
+      "analytics_authority": false,
+      "legend_authority": false,
+      "geography_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_public_equal_interval",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_internal_quantile",
+      "patch": {
+        "intended_use": "INTERNAL_QA",
+        "classification": {
+          "method": "QUANTILE",
+          "class_count": 4,
+          "break_values": ["0", "10", "25", "55", "100"],
+          "method_definition": {
+            "ref": "kfm:classification-method:synthetic-quantile:001",
+            "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+            "resolution": "RESOLVED"
+          }
+        },
+        "disclosure": {
+          "legend_ref": null,
+          "review_record_refs": [],
+          "evidence_drawer_section_ref": null,
+          "public_interpretation_caveat": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_exploratory_standardized_range",
+      "patch": {
+        "intended_use": "EXPLORATORY_ANALYSIS",
+        "classification": {
+          "method": "STANDARD_DEVIATION",
+          "class_count": 4,
+          "break_values": ["-2", "-1", "0", "1", "2"],
+          "value_range": {
+            "assumption": "STANDARDIZED_EXTENT",
+            "minimum": "-2",
+            "maximum": "2",
+            "assumption_ref": "kfm:value-range-assumption:synthetic-standardized:001"
+          }
+        },
+        "disclosure": {
+          "legend_ref": null,
+          "review_record_refs": [],
+          "evidence_drawer_section_ref": null,
+          "public_interpretation_caveat": null
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_incomplete_classification",
+      "patch": {"classification": {"state": "INCOMPLETE"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["CLASSIFICATION_INCOMPLETE"]}
+    },
+    {
+      "name": "abstain_unknown_classification",
+      "patch": {"classification": {"state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["CLASSIFICATION_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_method_definition_unresolved",
+      "patch": {"classification": {"method_definition": {"resolution": "UNRESOLVED"}}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_geography_version_unresolved",
+      "patch": {"geography_version": {"resolution": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REFERENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_break_count_mismatch",
+      "patch": {"classification": {"class_count": 4}},
+      "expected": {"outcome": "DENY", "codes": ["BREAK_COUNT_MISMATCH"]}
+    },
+    {
+      "name": "deny_unordered_breaks",
+      "patch": {"classification": {"break_values": ["0", "20", "10", "60", "80", "100"]}},
+      "expected": {"outcome": "DENY", "codes": ["BREAKS_NOT_STRICTLY_INCREASING"]}
+    },
+    {
+      "name": "deny_value_range_break_mismatch",
+      "patch": {"classification": {"value_range": {"minimum": "5"}}},
+      "expected": {"outcome": "DENY", "codes": ["VALUE_RANGE_BREAK_MISMATCH"]}
+    },
+    {
+      "name": "deny_invalid_value_range",
+      "patch": {"classification": {"value_range": {"minimum": "100", "maximum": "0"}}},
+      "expected": {"outcome": "DENY", "codes": ["VALUE_RANGE_INVALID"]}
+    },
+    {
+      "name": "deny_manual_rationale_missing",
+      "patch": {"classification": {"method": "MANUAL", "rationale_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["CLASSIFICATION_RATIONALE_REQUIRED"]}
+    },
+    {
+      "name": "deny_custom_range_reference_missing",
+      "patch": {"classification": {"value_range": {"assumption": "CUSTOM", "assumption_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["VALUE_RANGE_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_legend_missing",
+      "patch": {"disclosure": {"legend_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_LEGEND_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_public_review_missing",
+      "patch": {"disclosure": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_imputation_reference_missing",
+      "patch": {"classification": {"null_treatment": {"mode": "IMPUTED_WITH_METHOD_REF", "treatment_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["NULL_TREATMENT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_outlier_reference_missing",
+      "patch": {"classification": {"outlier_treatment": {"mode": "CLIPPED", "treatment_ref": null}}},
+      "expected": {"outcome": "DENY", "codes": ["OUTLIER_TREATMENT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_classification_state",
+      "patch": {"classification": {"state": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["CLASSIFICATION_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"rendered_legend": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
