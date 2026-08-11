@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json",
+  "title": "ConditionsSourceRoleReadinessMatrix candidate profile",
+  "description": "Closed, fixture-only readiness matrix for conditions source-role interoperability. It creates no source, evidence, policy, review, lifecycle, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "matrix_id",
+    "version",
+    "spec_hash",
+    "source_requirements_ref",
+    "base_ref",
+    "matrix_outcome",
+    "bindings",
+    "limitations",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/ref"},
+        {"type": "null"}
+      ]
+    },
+    "nullable_token": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"
+        },
+        {"type": "null"}
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "canonical_strings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "\\S"
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "readiness",
+        "intended_support_type",
+        "contract_ref",
+        "schema_ref",
+        "validator_ref",
+        "fixture_ref",
+        "native_source_role",
+        "native_support_type",
+        "common_source_role",
+        "common_support_type",
+        "temporal_basis",
+        "scale_basis",
+        "reason_codes"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "AGGREGATE",
+            "CLASSIFICATION",
+            "FORECAST",
+            "MODEL",
+            "OBSERVATION",
+            "SURVEY"
+          ]
+        },
+        "readiness": {
+          "enum": ["BOUND", "HOLD"]
+        },
+        "intended_support_type": {
+          "enum": [
+            "AGGREGATE_STATISTIC",
+            "DERIVED_CLASSIFICATION",
+            "DIRECT_MEASUREMENT",
+            "MODELED_ESTIMATE",
+            "PREDICTION",
+            "SURVEY_PRODUCT"
+          ]
+        },
+        "contract_ref": {"$ref": "#/$defs/nullable_ref"},
+        "schema_ref": {"$ref": "#/$defs/nullable_ref"},
+        "validator_ref": {"$ref": "#/$defs/nullable_ref"},
+        "fixture_ref": {"$ref": "#/$defs/nullable_ref"},
+        "native_source_role": {"$ref": "#/$defs/nullable_token"},
+        "native_support_type": {"$ref": "#/$defs/nullable_token"},
+        "common_source_role": {
+          "oneOf": [
+            {
+              "enum": [
+                "AGGREGATE",
+                "CLASSIFICATION",
+                "FORECAST",
+                "MODEL",
+                "OBSERVATION",
+                "SURVEY"
+              ]
+            },
+            {"type": "null"}
+          ]
+        },
+        "common_support_type": {
+          "oneOf": [
+            {
+              "enum": [
+                "AGGREGATE_STATISTIC",
+                "DERIVED_CLASSIFICATION",
+                "DIRECT_MEASUREMENT",
+                "MODELED_ESTIMATE",
+                "PREDICTION",
+                "SURVEY_PRODUCT"
+              ]
+            },
+            {"type": "null"}
+          ]
+        },
+        "temporal_basis": {
+          "enum": [
+            "AGGREGATION_WINDOW",
+            "ISSUE_AND_VALID_INTERVAL",
+            "MODEL_RUN_AND_VALID_INTERVAL",
+            "OBSERVED_TIME",
+            "RELEASE_AND_VALID_INTERVAL",
+            "SURVEY_VINTAGE"
+          ]
+        },
+        "scale_basis": {
+          "enum": [
+            "AGGREGATION_SCOPE",
+            "MODEL_GRID_OR_GEOMETRY",
+            "OBSERVATION_SUPPORT",
+            "RELEASE_GEOGRAPHY",
+            "SURVEY_COVERAGE"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.common.conditions-source-role-readiness-matrix.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "matrix_id": {
+      "type": "string",
+      "pattern": "^conditions-source-role-matrix:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_requirements_ref": {"$ref": "#/$defs/ref"},
+    "base_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "matrix_outcome": {
+      "enum": ["PARTIAL_READY", "FULLY_READY"]
+    },
+    "bindings": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "limitations": {"$ref": "#/$defs/canonical_strings"},
+    "public_use_allowed": {
+      "const": false
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_activated",
+        "evidence_resolved",
+        "policy_evaluated",
+        "profile_adopted",
+        "lifecycle_written",
+        "promoted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "source_activated": {"const": false},
+        "evidence_resolved": {"const": false},
+        "policy_evaluated": {"const": false},
+        "profile_adopted": {"const": false},
+        "lifecycle_written": {"const": false},
+        "promoted": {"const": false},
+        "released": {"const": false},
+        "published": {"const": false}
+      }
+    }
+  }
+}

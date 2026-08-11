@@ -1,0 +1,137 @@
+# Validate the inactive, fixture-only conditions source-role readiness matrix.
+name: conditions-source-role-readiness
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/conditions-source-role-readiness.yml"
+      - "contracts/common/conditions_source_role_readiness_matrix.md"
+      - "schemas/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json"
+      - "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/**"
+      - "tools/validators/validate_conditions_source_role_readiness_matrix.py"
+      - "tests/cross_domain/test_conditions_source_role_readiness_matrix.py"
+      - "docs/intake/exploratory/briefing-conditions-source-role-readiness-source-map.md"
+      - "data/receipts/generated/genrec-briefing-conditions-source-role-readiness-20260810.json"
+      - "contracts/common/classification_release.md"
+      - "contracts/common/forecast_product.md"
+      - "contracts/common/condition_relation.md"
+      - "contracts/domains/soil/domain_observation.md"
+      - "schemas/contracts/v1/common/classification_release.schema.json"
+      - "schemas/contracts/v1/common/forecast_product.schema.json"
+      - "schemas/contracts/v1/domains/soil/domain_observation.schema.json"
+      - "fixtures/contracts/v1/common/classification_release/**"
+      - "fixtures/contracts/v1/common/forecast_product/**"
+      - "fixtures/contracts/v1/common/condition_relation/**"
+      - "fixtures/domains/soil/domain_observation/**"
+      - "tools/validators/validate_classification_release.py"
+      - "tools/validators/validate_forecast_product.py"
+      - "tools/validators/domains/soil/validate_domain_observation.py"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/conditions-source-role-readiness.yml"
+      - "contracts/common/conditions_source_role_readiness_matrix.md"
+      - "schemas/contracts/v1/common/conditions_source_role_readiness_matrix.schema.json"
+      - "fixtures/contracts/v1/common/conditions_source_role_readiness_matrix/**"
+      - "tools/validators/validate_conditions_source_role_readiness_matrix.py"
+      - "tests/cross_domain/test_conditions_source_role_readiness_matrix.py"
+      - "docs/intake/exploratory/briefing-conditions-source-role-readiness-source-map.md"
+      - "data/receipts/generated/genrec-briefing-conditions-source-role-readiness-20260810.json"
+      - "contracts/common/classification_release.md"
+      - "contracts/common/forecast_product.md"
+      - "contracts/common/condition_relation.md"
+      - "contracts/domains/soil/domain_observation.md"
+      - "schemas/contracts/v1/common/classification_release.schema.json"
+      - "schemas/contracts/v1/common/forecast_product.schema.json"
+      - "schemas/contracts/v1/domains/soil/domain_observation.schema.json"
+      - "fixtures/contracts/v1/common/classification_release/**"
+      - "fixtures/contracts/v1/common/forecast_product/**"
+      - "fixtures/contracts/v1/common/condition_relation/**"
+      - "fixtures/domains/soil/domain_observation/**"
+      - "tools/validators/validate_classification_release.py"
+      - "tools/validators/validate_forecast_product.py"
+      - "tools/validators/domains/soil/validate_domain_observation.py"
+      - "packages/hashing/src/hashing/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: conditions-source-role-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-conditions-source-role-readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema, hashing, and test dependencies
+        shell: bash
+        run: python -m pip install -e ".[test]"
+
+      - name: Run focused cross-domain readiness tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.cross_domain.test_conditions_source_role_readiness_matrix --verbose
+
+      - name: Replay exact readiness fixture outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_conditions_source_role_readiness_matrix.py --fixtures
+
+      - name: Preserve selected profile validator boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_classification_release --verbose
+          python -m unittest tests.validators.test_validate_forecast_product --verbose
+          python tools/validators/domains/soil/validate_domain_observation.py --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-briefing-conditions-source-role-readiness-20260810.json --repo-root .
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Conditions source-role readiness matrix"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Bound fixture profiles: classification, observation, and forecast."
+            echo "- Held interoperability roles: aggregate, model, and survey."
+            echo "- Boundary: no live source, new ObservationRecord authority, evidence resolution, policy or review execution, lifecycle write, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
