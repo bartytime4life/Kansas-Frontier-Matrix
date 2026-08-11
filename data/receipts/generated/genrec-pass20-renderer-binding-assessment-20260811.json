@@ -1,0 +1,172 @@
+{
+  "receipt_id": "genrec-pass20-renderer-binding-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/renderer-binding-assessment.yml",
+    "contracts/map/renderer_binding_assessment.md",
+    "docs/intake/exploratory/pass-20-renderer-binding-assessment-source-map.md",
+    "fixtures/contracts/v1/map/renderer_binding_assessment/cases.json",
+    "schemas/contracts/v1/map/renderer_binding_assessment.schema.json",
+    "tests/validators/map/test_validate_renderer_binding_assessment.py",
+    "tools/validators/map/validate_renderer_binding_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/renderer-binding-assessment.yml": "sha256:d5ae05afed6664e030ebfaf3d77059d8e6303e5b638ade2ab4d86ffbd686ae6d",
+    "contracts/map/renderer_binding_assessment.md": "sha256:38c0222f9d8be89309388ec7f5c6a531d718157f51c9e6df08bf144406357544",
+    "docs/intake/exploratory/pass-20-renderer-binding-assessment-source-map.md": "sha256:b0dd6ee4f1cedffc6ec4bf3a7cdbbf58096d0526906da3ea05bed352435e7804",
+    "fixtures/contracts/v1/map/renderer_binding_assessment/cases.json": "sha256:7fbbee346234dc480d4d3753a361e89da6aa200d2b0d7e2c3ff766a223340809",
+    "schemas/contracts/v1/map/renderer_binding_assessment.schema.json": "sha256:f5c03981868368c5e76b331fefc7e9698ec2814e92936aa7c8f002d1459d1c5c",
+    "tests/validators/map/test_validate_renderer_binding_assessment.py": "sha256:de8ee0078aefdf1625d1aa7c2dfe0acb02597c1ca39a8e9ecca844430b3b4d53",
+    "tools/validators/map/validate_renderer_binding_assessment.py": "sha256:572259b895e06e4a2f03fc91826b8fb65d048908379320bc82c06deda8eabb9c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:38c0222f9d8be89309388ec7f5c6a531d718157f51c9e6df08bf144406357544",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:3fe21d6ead16a41b4b8864188509e7f2118960910b94807075c308f81e33aaa2",
+      "sha256:4b738281a276bb313578187b5773c062c0efc9e396cedc9f6ff697e732d131f7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:e3865c73c2ffc1d9275a9addbb3ec907d707b59f3013624c2cad4dc85f67ba53",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 Part 2 dossier; EXP-015 and the MAP trust-boundary passages were text-located",
+      "Supplied revised MapLibre operating manual; physical pages 3 and 5-6 were rendered and visually inspected",
+      "Current repository Pass 20 conformance baseline, map architecture, adjacent contracts, proposed ADR-0007, accepted Directory Rules, and ADR-0029"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass20-part2#agenda=EXP-015",
+      "attachment://supplied-maplibre-operating-manual#physical-pages=3,5-6",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/intake/exploratory/pass20-expansion-conformance-baseline.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/architecture/map-master.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/01b3f70bb0514c0557e777294b36992317e992c8"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/renderer-binding-assessment.yml": "CONFIRMED",
+    "contracts/map/renderer_binding_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-renderer-binding-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/renderer_binding_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/map/renderer_binding_assessment.schema.json": "PROPOSED",
+    "tests/validators/map/test_validate_renderer_binding_assessment.py": "CONFIRMED",
+    "tools/validators/map/validate_renderer_binding_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-pdf-visual-review",
+      "outcome": "PASS",
+      "reason": "MapLibre operating-manual physical pages 3 and 5-6 were rendered and inspected."
+    },
+    {
+      "gate": "pass20-exp015-source-review",
+      "outcome": "PASS",
+      "reason": "The supplied Pass 20 EXP-015 proposal and MAP trust-boundary passages were text-located and compared with the current repository baseline."
+    },
+    {
+      "gate": "current-main-collision-screen",
+      "outcome": "PASS",
+      "reason": "Current main, repository history, branches, and open pull requests contained adjacent layer, capability, and admission objects but no exact renderer-binding assessment packet."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic renderer-binding assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Fifty exact REVIEW_REQUIRED, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred fifty-one tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "documentation-and-ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "One hundred thirty-five metadata, link, document-graph, changed-receipt selection, generated-receipt, and CI-readiness tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-exp015",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass20-part2#agenda=EXP-015"
+    },
+    {
+      "id": "maplibre-operating-manual-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-maplibre-operating-manual#physical-pages=3,5-6"
+    },
+    {
+      "id": "current-pass20-conformance-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/intake/exploratory/pass20-expansion-conformance-baseline.md"
+    },
+    {
+      "id": "current-map-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/architecture/map-master.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:10:42Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only renderer-to-layer binding assessment. It composes existing descriptor, manifest, capability, artifact, evidence, policy, review, promotion, release, correction, and rollback meanings by opaque ref; keeps renderer input to governed APIs or released carriers; treats feature interaction as context rather than authority; does not accept proposed ADR-0007; creates no live registry, resolver, adapter, route, or registration call; and grants no identity, data-access, evidence, policy, review, registry-write, renderer-registration, release, deployment, publication, or public-use authority."
+}

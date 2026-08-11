@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json",
+  "title": "ApiDeveloperExperienceReadinessAssessmentCandidate",
+  "description": "Fixture-only assessment of declared API onboarding, documentation, finite-outcome examples, prototype evidence, consumer validation, and governance closure without API, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "source_card",
+    "profile_spec_hash",
+    "observed_at",
+    "api_subject",
+    "onboarding",
+    "documentation",
+    "prototype_validation",
+    "governance",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ApiDeveloperExperienceReadinessAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.release.api-developer-experience-readiness.fixture.v1"},
+    "source_card": {"const": "KFM-P18-INV-412"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "observed_at": {"$ref": "#/$defs/date_time"},
+    "api_subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability_ref", "api_contract_ref", "audience_class", "exposure_posture"],
+      "properties": {
+        "capability_ref": {"$ref": "#/$defs/ref"},
+        "api_contract_ref": {"$ref": "#/$defs/ref"},
+        "audience_class": {"enum": ["INTERNAL_DEVELOPER", "PARTNER_CLIENT", "PUBLIC_CLIENT", "UNKNOWN"]},
+        "exposure_posture": {"enum": ["INTERNAL_ONLY", "PUBLIC_CANDIDATE", "UNRESOLVED"]}
+      }
+    },
+    "onboarding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "getting_started_ref",
+        "access_guidance_ref",
+        "resource_ontology_ref",
+        "versioning_guidance_ref",
+        "support_path_ref"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "getting_started_ref": {"$ref": "#/$defs/nullable_ref"},
+        "access_guidance_ref": {"$ref": "#/$defs/nullable_ref"},
+        "resource_ontology_ref": {"$ref": "#/$defs/nullable_ref"},
+        "versioning_guidance_ref": {"$ref": "#/$defs/nullable_ref"},
+        "support_path_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "contract_documentation_ref",
+        "terminology_review_ref",
+        "finite_outcome_examples",
+        "documented_failure_modes"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "contract_documentation_ref": {"$ref": "#/$defs/nullable_ref"},
+        "terminology_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "finite_outcome_examples": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "outcome",
+              "example_ref",
+              "response_schema_ref",
+              "citation_duties_disclosed",
+              "policy_semantics_disclosed",
+              "synthetic_data_only"
+            ],
+            "properties": {
+              "outcome": {"enum": ["ABSTAIN", "ANSWER", "DENY", "ERROR"]},
+              "example_ref": {"$ref": "#/$defs/ref"},
+              "response_schema_ref": {"$ref": "#/$defs/ref"},
+              "citation_duties_disclosed": {"type": "boolean"},
+              "policy_semantics_disclosed": {"type": "boolean"},
+              "synthetic_data_only": {"type": "boolean"}
+            }
+          }
+        },
+        "documented_failure_modes": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CITATION_UNRESOLVED",
+              "EVIDENCE_STALE",
+              "POLICY_DENIED",
+              "REFERENCE_UNAVAILABLE",
+              "SCHEMA_INVALID"
+            ]
+          }
+        }
+      }
+    },
+    "prototype_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "prototype_fixture_refs",
+        "consumer_validation_ref",
+        "prototype_receipt_ref",
+        "runtime_behavior_claimed"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "prototype_fixture_refs": {"$ref": "#/$defs/ref_array"},
+        "consumer_validation_ref": {"$ref": "#/$defs/nullable_ref"},
+        "prototype_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "runtime_behavior_claimed": {"type": ["boolean", "null"]}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "security_review_ref",
+        "policy_review_ref",
+        "review_record_refs",
+        "release_readiness_ref",
+        "correction_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "security_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "policy_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"},
+        "release_readiness_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_API_OR_ROUTE_DISCOVERY",
+        "NO_API_OR_DOCUMENTATION_MUTATION",
+        "NO_CONSUMER_OR_REFERENCE_AUTHENTICATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_mutation_authority",
+        "documentation_authority",
+        "consumer_validation_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "api_mutation_authority": {"const": false},
+        "documentation_authority": {"const": false},
+        "consumer_validation_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "date_time": {"type": "string", "format": "date-time"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    }
+  }
+}

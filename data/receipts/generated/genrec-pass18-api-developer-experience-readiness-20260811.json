@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-pass18-api-developer-experience-readiness-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/api-developer-experience-readiness-assessment.yml",
+    "contracts/release/api_developer_experience_readiness_assessment.md",
+    "docs/intake/exploratory/pass-18-api-developer-experience-readiness-source-map.md",
+    "fixtures/contracts/v1/release/api_developer_experience_readiness_assessment/cases.json",
+    "schemas/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json",
+    "tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py",
+    "tools/validators/release/validate_api_developer_experience_readiness_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/api-developer-experience-readiness-assessment.yml": "sha256:5a546eae6549132aa5950b12573e09b6dd11a7af588aa4521f1155a9e315f218",
+    "contracts/release/api_developer_experience_readiness_assessment.md": "sha256:296aaca20bbd5a3304e6050bf7d81b9411ac4eca627a70fe139af315c6745f44",
+    "docs/intake/exploratory/pass-18-api-developer-experience-readiness-source-map.md": "sha256:e74a0de368eff6ab73439c0ed0f7fb2399fc5673350e06c2c8b878a76a707083",
+    "fixtures/contracts/v1/release/api_developer_experience_readiness_assessment/cases.json": "sha256:0658cb23382d13c95770e504c82658690fbb88af6a69fbeefa120930ffa684e9",
+    "schemas/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json": "sha256:4b4c62c793bcad5f5fb821ba916a7d01dd3e3049b15541e41901e2eb36b7a6c1",
+    "tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py": "sha256:46d24189a2b4ed4aa8311419adb00656a952f283a802d02b4fffa221c7812f10",
+    "tools/validators/release/validate_api_developer_experience_readiness_assessment.py": "sha256:3bc92f7a5c6f98342b4209fb6f53274d128a227398983664e5f1a2d02dae2f8c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:296aaca20bbd5a3304e6050bf7d81b9411ac4eca627a70fe139af315c6745f44",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and publication",
+      "local PDF text and visual inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-412",
+      "gdrive://1yEPrPz8YSgNe831tKKpYj2peyiQLR3Qn#Designing-Great-Web-APIs-pages-1-7-37",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-Full-Atlas-seed-cards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/release/api_capability_exposure_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/release/api_contract_change_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/runtime/runtime_response_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/api-developer-experience-readiness-assessment.yml": "CONFIRMED",
+    "contracts/release/api_developer_experience_readiness_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-api-developer-experience-readiness-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/api_developer_experience_readiness_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json": "PROPOSED",
+    "tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py": "CONFIRMED",
+    "tools/validators/release/validate_api_developer_experience_readiness_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic focused tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-eight exact synthetic PASS, ABSTAIN, DENY, and ERROR cases matched expected findings."},
+    {"gate": "adjacent-api-contract-regression", "outcome": "PASS", "reason": "Forty-four developer-experience, capability-exposure, contract-change, field-authorization, and runtime-response tests passed."},
+    {"gate": "aggregate-repository-validation", "outcome": "PASS", "reason": "All eight registered aggregate validators and 452 schema/contract tests plus 29 subtests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both metadata blocks passed the required profile."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed draft pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-api-developer-experience-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-412"},
+    {"id": "designing-great-web-apis-source", "validated": true, "evidence_ref": "gdrive://1yEPrPz8YSgNe831tKKpYj2peyiQLR3Qn#pages-1-7-37"},
+    {"id": "connected-seed-card-doctrine", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"},
+    {"id": "adjacent-api-capability-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/release/api_capability_exposure_assessment.md"},
+    {"id": "adjacent-api-change-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/contracts/release/api_contract_change_assessment.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01b3f70bb0514c0557e777294b36992317e992c8/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:18:16Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only API developer-experience readiness assessment derived from Pass 18 card KFM-P18-INV-412. It checks declared onboarding, documentation, finite-outcome examples, failure modes, prototypes, consumer-validation evidence, review, and public closure without discovering/calling/mutating an API, authenticating references, or creating policy, review, release, deployment, publication, or public-use authority."
+}
