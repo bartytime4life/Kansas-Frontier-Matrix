@@ -1,40 +1,46 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "profile": "kfm.replay_safe_effect_ledger_fixture_manifest.v1",
   "cases": [
     {
       "case_id": "valid-compensated",
       "file": "valid/compensated.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "valid-completed-then-released",
       "file": "valid/completed_then_released.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "valid-duplicate-suppressed",
       "file": "valid/duplicate_suppressed.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "valid-executed-once",
       "file": "valid/executed_once.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "valid-failed-before-effect",
       "file": "valid/failed_before_effect.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "PASS",
       "expected_findings": []
     },
     {
       "case_id": "schema-invalid-missing-governance",
       "file": "schema_invalid/missing_governance.json",
+      "expected_validation_stage": "SCHEMA",
       "expected_outcome": "ERROR",
       "expected_findings": [
         {
@@ -46,6 +52,7 @@
     {
       "case_id": "semantic-invalid-attempt-gap",
       "file": "semantic_invalid/attempt_gap.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -57,6 +64,7 @@
     {
       "case_id": "semantic-invalid-compensation-without-completion",
       "file": "semantic_invalid/compensation_without_completion.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -68,6 +76,7 @@
     {
       "case_id": "semantic-invalid-duplicate-suppression-misbound",
       "file": "semantic_invalid/duplicate_suppression_misbound.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -79,6 +88,7 @@
     {
       "case_id": "semantic-invalid-duplicate-unsuppressed",
       "file": "semantic_invalid/duplicate_unsuppressed.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -90,6 +100,7 @@
     {
       "case_id": "semantic-invalid-entry-before-delivery",
       "file": "semantic_invalid/entry_before_delivery.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -101,6 +112,7 @@
     {
       "case_id": "semantic-invalid-reservation-state-unrecorded",
       "file": "semantic_invalid/reservation_state_unrecorded.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -112,6 +124,7 @@
     {
       "case_id": "semantic-invalid-reservation-time-inverted",
       "file": "semantic_invalid/reservation_time_inverted.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -123,6 +136,7 @@
     {
       "case_id": "semantic-invalid-result-upgrade",
       "file": "semantic_invalid/result_upgrade.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {
@@ -134,6 +148,7 @@
     {
       "case_id": "semantic-invalid-unbound-entry",
       "file": "semantic_invalid/unbound_entry.json",
+      "expected_validation_stage": "SEMANTIC",
       "expected_outcome": "DENY",
       "expected_findings": [
         {

@@ -2,8 +2,8 @@
   "artifact_hashes": {
     ".github/workflows/replay-safe-effect-ledger.yml": "sha256:4515e4e177e327e8e414d6ca34dd5c19d24d4c19a236bc90e19cd4b70be6fe89",
     "contracts/runtime/replay_safe_effect_ledger.md": "sha256:de92590f02209266951e9c05af201ca3b4020cb0905ed4b69b7667bf4b0195ea",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "sha256:5caa978222c34a09c84a4c7e5fe725208c92736c18888aba1cab5eef83f8bbb1",
-    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "sha256:16c8931a08d4e004fa00eb0e3c2bee8a83744d81a9de066cddcd3c0536e75693",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/README.md": "sha256:5213244ac52eb04b16fab3495fd265cf26fb3a432fd4d9b2310b14ad6eff481e",
+    "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/expected_findings_manifest.json": "sha256:1799b332c867daf347a5f9198fe879d2329db08c1e705315469abca743de82b5",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/schema_invalid/missing_governance.json": "sha256:8fc6b582f0b86ddbe9594ba6f50783404bb0f54faa57ef55a381e63532c3130c",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/attempt_gap.json": "sha256:d9c656c7fac9507f32e93ed8f60a0a94197e760c9b44a6fb64cdd4fd0da6f0fc",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/semantic_invalid/compensation_without_completion.json": "sha256:9e71b52017971d4597bf391261c6ae1e1e93ff77d08da1b8db6fa81f5f5b55bb",
@@ -20,10 +20,11 @@
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/executed_once.json": "sha256:3c4df3295aa4fca8a108527e461271b73b50447fd81ad334204127ee65d79a75",
     "fixtures/contracts/v1/runtime/replay_safe_effect_ledger/valid/failed_before_effect.json": "sha256:91b3b82aa5541c1a17a489cd621bcb0cf797b6fc6d6a3c6b6acfee006046bee1",
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "sha256:4837ca760fb796921376d870f777f06ec0491d8bbcb9c6f29cd2d66d58103e74",
-    "tests/validators/test_validate_replay_safe_effect_ledger.py": "sha256:91dd5d9312e5f8fa62e13ce87e82487b6ce7e88b524d6cf4a567a447f807073c",
+    "tests/validators/test_validate_replay_safe_effect_ledger.py": "sha256:cbbb3aaefd7ccab98098b3fc04f1b1edfca12d869f59e0d38edc907546918e5a",
     "tools/validators/runtime/replay_safe_effect_ledger_core.py": "sha256:7e182bf041c7e8d447def1aba906d3d77661136543a91050b7c338c7e4bdd3fc",
+    "tools/validators/runtime/replay_safe_effect_ledger_fixture_expectations.py": "sha256:38b0c06995ad52cefdd444ae0e49daba0d3446061870a9674a90425b42cb8c85",
     "tools/validators/runtime/replay_safe_effect_ledger_semantics.py": "sha256:0f7530c6e0e57ed6f3d7d4771e6a60e79584c7e650f4f236083dff6955e3f467",
-    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "sha256:69447306d4c7de6a4aab0a1cd40556184a7a77e8a990f20afcae536d06f6fead"
+    "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "sha256:13d905aa37b9fb25bda8e9d67165e371a40cf933f63d63cffc88c1ec3be385cf"
   },
   "artifact_paths": [
     ".github/workflows/replay-safe-effect-ledger.yml",
@@ -48,6 +49,7 @@
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json",
     "tests/validators/test_validate_replay_safe_effect_ledger.py",
     "tools/validators/runtime/replay_safe_effect_ledger_core.py",
+    "tools/validators/runtime/replay_safe_effect_ledger_fixture_expectations.py",
     "tools/validators/runtime/replay_safe_effect_ledger_semantics.py",
     "tools/validators/runtime/validate_replay_safe_effect_ledger.py"
   ],
@@ -78,7 +80,8 @@
   },
   "inputs": {
     "attached_docs": [
-      "KFM_Full_Atlas_seed_cards"
+      "KFM_Full_Atlas_seed_cards",
+      "KFM_Briefing_to_System_Integration_Architecture"
     ],
     "evidence_refs": [
       "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-057",
@@ -94,9 +97,9 @@
   "model_identity": {
     "model": "GPT-5.6",
     "provider": "OpenAI",
-    "version": "2026-08-09"
+    "version": "2026-08-11"
   },
-  "notes": "Fixture-only replay-safe event/effect ledger candidate, hardened during PR review with per-delivery suppression binding, causal delivery/ledger/reservation checks, compensation preconditions, and ledger-derived reservation state. It records at-least-once delivery with one idempotent effect and does not claim exactly-once transport, execute an effect, write a lifecycle lane, or authorize review, release, deployment, publication, or public use.",
+  "notes": "Fixture-only replay-safe event/effect ledger candidate with explicit validation-stage expectations. Every fixture now binds the furthest stage reached, finite outcome, and exact finding list, so schema or parse regressions cannot masquerade as semantic-negative coverage. The packet remains no-network and grants no effect, lifecycle, review, release, deployment, publication, or public-use authority.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -137,6 +140,7 @@
     "schemas/contracts/v1/runtime/replay_safe_effect_ledger.schema.json": "CONFIRMED",
     "tests/validators/test_validate_replay_safe_effect_ledger.py": "CONFIRMED",
     "tools/validators/runtime/replay_safe_effect_ledger_core.py": "CONFIRMED",
+    "tools/validators/runtime/replay_safe_effect_ledger_fixture_expectations.py": "CONFIRMED",
     "tools/validators/runtime/replay_safe_effect_ledger_semantics.py": "CONFIRMED",
     "tools/validators/runtime/validate_replay_safe_effect_ledger.py": "CONFIRMED"
   },
@@ -144,22 +148,22 @@
     {
       "gate": "focused-unit-tests",
       "outcome": "PASS",
-      "reason": "Twelve deterministic ReplaySafeEffectLedger tests passed in the bounded review harness."
+      "reason": "Thirteen deterministic ReplaySafeEffectLedger tests passed in the bounded authoring harness, including a regression that shortens the semantic fixture digest and requires a validation-stage mismatch."
     },
     {
       "gate": "fixture-manifest-polarity",
       "outcome": "PASS",
-      "reason": "Fifteen synthetic positive and negative cases matched exact finite outcomes and findings."
+      "reason": "Fifteen synthetic cases matched exact validation stage, finite outcome, and finding list expectations."
     },
     {
       "gate": "schema-and-deterministic-identity",
       "outcome": "PASS",
-      "reason": "The closed Draft 2020-12 schema plus event, effect, and record hashes validated for the fixture-only JSON domain."
+      "reason": "The closed Draft 2020-12 schema plus event, effect, and record hashes remain the fixture-only candidate boundary."
     },
     {
       "gate": "review-findings-closure",
       "outcome": "PASS",
-      "reason": "All six actionable review findings received code, workflow, fixture, test, and contract coverage; hosted re-review remains pending."
+      "reason": "The #2427 masking failure is converted into an explicit fixture-stage invariant for the replay-safe ledger profile."
     },
     {
       "gate": "hosted-exact-head-ci",
