@@ -1,0 +1,81 @@
+name: api-developer-experience-readiness-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/api-developer-experience-readiness-assessment.yml"
+      - "contracts/release/api_developer_experience_readiness_assessment.md"
+      - "schemas/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json"
+      - "fixtures/contracts/v1/release/api_developer_experience_readiness_assessment/**"
+      - "tools/validators/release/validate_api_developer_experience_readiness_assessment.py"
+      - "tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py"
+      - "docs/intake/exploratory/pass-18-api-developer-experience-readiness-source-map.md"
+      - "data/receipts/generated/genrec-pass18-api-developer-experience-readiness-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/api-developer-experience-readiness-assessment.yml"
+      - "contracts/release/api_developer_experience_readiness_assessment.md"
+      - "schemas/contracts/v1/release/api_developer_experience_readiness_assessment.schema.json"
+      - "fixtures/contracts/v1/release/api_developer_experience_readiness_assessment/**"
+      - "tools/validators/release/validate_api_developer_experience_readiness_assessment.py"
+      - "tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py"
+      - "docs/intake/exploratory/pass-18-api-developer-experience-readiness-source-map.md"
+      - "data/receipts/generated/genrec-pass18-api-developer-experience-readiness-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-developer-experience-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-api-developer-experience-readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/release/validate_api_developer_experience_readiness_assessment.py tests/validators/release/test_validate_api_developer_experience_readiness_assessment.py
+          python -m unittest tests.validators.release.test_validate_api_developer_experience_readiness_assessment --verbose
+          python tools/validators/release/validate_api_developer_experience_readiness_assessment.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-api-developer-experience-readiness-20260811.json --repo-root .
+      - name: Record authority boundary
+        if: always()
+        run: |
+          {
+            echo "### API developer-experience readiness"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only onboarding, documentation, finite-outcome examples, failure modes, prototypes, consumer-validation, review, and public-closure declarations."
+            echo "- Boundary: no API or route discovery/call/mutation, documentation mutation, consumer/reference authentication, policy/review authority, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
