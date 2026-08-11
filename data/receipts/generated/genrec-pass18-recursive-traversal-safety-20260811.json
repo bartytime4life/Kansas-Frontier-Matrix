@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-pass18-recursive-traversal-safety-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/recursive-traversal-safety.yml",
+    "contracts/common/recursive_traversal_safety_assessment.md",
+    "docs/intake/exploratory/pass-18-recursive-traversal-safety-source-map.md",
+    "fixtures/contracts/v1/common/recursive_traversal_safety_assessment/cases.json",
+    "schemas/contracts/v1/common/recursive_traversal_safety_assessment.schema.json",
+    "tests/validators/test_validate_recursive_traversal_safety_assessment.py",
+    "tools/validators/validate_recursive_traversal_safety_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/recursive-traversal-safety.yml": "sha256:303082c977d777ca02335a1196032a0460d58dd465a09798701c05b8ce001955",
+    "contracts/common/recursive_traversal_safety_assessment.md": "sha256:b65d1e4775aa0db6f5be88d473993e4104291459143eab36578f8d87c9a4a68b",
+    "docs/intake/exploratory/pass-18-recursive-traversal-safety-source-map.md": "sha256:b133fcf479567726d9b4d2f34aba7de316088cd720bea53db6e547286333572c",
+    "fixtures/contracts/v1/common/recursive_traversal_safety_assessment/cases.json": "sha256:4d385435e4bc3a62b822f82411478927659fc48f04194dcd0312640cddfeb367",
+    "schemas/contracts/v1/common/recursive_traversal_safety_assessment.schema.json": "sha256:bbc75332c798471c51ed20b50737405e141309e02ec90cae27d79aef71238d8a",
+    "tests/validators/test_validate_recursive_traversal_safety_assessment.py": "sha256:4fcc3f7b213ef54f3553a05d048aed01ed768c29dae9698c3ab455b9ce146468",
+    "tools/validators/validate_recursive_traversal_safety_assessment.py": "sha256:694335a2152026b4d00c14f9367b3f2c5f7edcc772b0ac856daf10fe429ccefb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "Codex Work Mode 2026-08-11"
+  },
+  "prompt_or_contract": "sha256:b65d1e4775aa0db6f5be88d473993e4104291459143eab36578f8d87c9a4a68b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus metadata discovery",
+      "GitHub repository inspection and publication",
+      "local deterministic PDF, JSON, YAML, Python, schema, fixture, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Connected Drive metadata for KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf (file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5); byte identity and card-level content not asserted"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-133",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa244eb7bd11d8ff96e91f4925ca8abc5bdaa9fe/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa244eb7bd11d8ff96e91f4925ca8abc5bdaa9fe/contracts/governance/query_run_record.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/recursive-traversal-safety.yml": "CONFIRMED",
+    "contracts/common/recursive_traversal_safety_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-recursive-traversal-safety-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/recursive_traversal_safety_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/recursive_traversal_safety_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_recursive_traversal_safety_assessment.py": "CONFIRMED",
+    "tools/validators/validate_recursive_traversal_safety_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "source-card-pdf-visual-review", "outcome": "PASS", "reason": "Rendered physical page 230 was inspected for card and continuation fidelity."},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic recursive-traversal safety tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-five exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "repository-validator-suite", "outcome": "FAIL", "reason": "The 1,479-test repository validator suite reported 5 failures and 13 errors in three unrelated pre-existing validators; the same 18 failures were reproduced on untouched main@fa244eb7bd11d8ff96e91f4925ca8abc5bdaa9fe."},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-kfm-p18-inv-133", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-133"},
+    {"id": "drive-pass18-metadata", "validated": true, "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fa244eb7bd11d8ff96e91f4925ca8abc5bdaa9fe/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T18:05:35Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only recursive traversal safety profile. It checks digest-bound query and dialect declarations, finite depth/node/edge caps, explicit termination and cycle handling, receipt-visible recursion observations, and deterministic identity without carrying SQL or connection material, executing a query, accessing a database, resolving evidence, proving termination, deciding policy or review, releasing, or publishing."
+}
