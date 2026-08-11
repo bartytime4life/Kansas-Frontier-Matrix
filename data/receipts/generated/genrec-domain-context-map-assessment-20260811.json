@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-domain-context-map-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-context-map-assessment.yml",
+    "contracts/governance/domain_context_map_assessment.md",
+    "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json",
+    "fixtures/contracts/v1/governance/domain_context_map_assessment/cases.json",
+    "tools/validators/governance/validate_domain_context_map_assessment.py",
+    "tests/validators/governance/test_validate_domain_context_map_assessment.py",
+    "docs/intake/exploratory/domain-context-map-assessment-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-context-map-assessment.yml": "sha256:5a1117015eaec0330c0e41257f36dffd2eec77fbae60625bd58eb66d3d8b4d3e",
+    "contracts/governance/domain_context_map_assessment.md": "sha256:f07037db5405ed0ddd0a1a0c7f06f1f611d8b5b4c4bda6ba2baa39ea8267bd61",
+    "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json": "sha256:111913c7740f5db8f9051a1882742b663d352e759650027d71599ada7ce5660e",
+    "fixtures/contracts/v1/governance/domain_context_map_assessment/cases.json": "sha256:f3553bec6f1496689ea96ed648038f2fae3e38f409f33a4475ac99900569a9b1",
+    "tools/validators/governance/validate_domain_context_map_assessment.py": "sha256:c0f524cacdccea89defcfbcd9045195618586819146d0798c16712feae535e15",
+    "tests/validators/governance/test_validate_domain_context_map_assessment.py": "sha256:44933f75c84f1ba17904def764ffb4913f9af85f70db6510a8bba2589e5a7062",
+    "docs/intake/exploratory/domain-context-map-assessment-source-map.md": "sha256:7aa990d237502ac07b41eceba11152a2784e9ad57bb87f4c6a394d489930e572"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f07037db5405ed0ddd0a1a0c7f06f1f611d8b5b4c4bda6ba2baa39ea8267bd61",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards",
+      "Domain-Driven Design Reference.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-Domains-as-DDD-Bounded-Contexts-with-Context-Map",
+      "gdrive://1pOzoctAC0eehJMN9gFUxmdtEUttHKkw_#Context-Mapping-for-Strategic-Design",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/control_plane/domain_lane_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/control_plane/cross_domain_seam_register.yaml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-context-map-assessment.yml": "CONFIRMED",
+    "contracts/governance/domain_context_map_assessment.md": "PROPOSED",
+    "schemas/contracts/v1/governance/domain_context_map_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/domain_context_map_assessment/cases.json": "CONFIRMED",
+    "tools/validators/governance/validate_domain_context_map_assessment.py": "CONFIRMED",
+    "tests/validators/governance/test_validate_domain_context_map_assessment.py": "CONFIRMED",
+    "docs/intake/exploratory/domain-context-map-assessment-source-map.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 focused deterministic tests passed in the isolated authoring workspace."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "15 exact PASS, ABSTAIN, DENY, and ERROR cases matched."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-ddd-context-map-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-Domains-as-DDD-Bounded-Contexts-with-Context-Map"
+    },
+    {
+      "id": "ddd-context-mapping-reference",
+      "validated": true,
+      "evidence_ref": "gdrive://1pOzoctAC0eehJMN9gFUxmdtEUttHKkw_#Context-Mapping-for-Strategic-Design"
+    },
+    {
+      "id": "domain-lane-projection",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/control_plane/domain_lane_register.yaml"
+    },
+    {
+      "id": "cross-domain-seam-projection",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/control_plane/cross_domain_seam_register.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T22:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only DomainContextMapAssessmentCandidate packet. It maps one proposed DDD relationship label to existing KFM lane and seam projections while preserving per-lane evidence, source-role, sensitivity, policy, and release boundaries. It creates no domain, seam, register write, join, mutation, lifecycle state, evidence, policy, review, release, deployment, publication, or public-use authority."
+}
