@@ -153,16 +153,18 @@ const DENIED_REFERENCE_MARKERS = [
   "neo4j://",
   "s3://",
   "file://",
-  "data/raw",
-  "data/work",
-  "data/quarantine",
-  "data/processed",
-  "data/published",
   "graph_query",
   "cypher:",
   "select *",
   "match (",
 ] as const;
+const INTERNAL_DATA_STORE_LANES = new Set([
+  "raw",
+  "work",
+  "quarantine",
+  "processed",
+  "published",
+]);
 const MAX_ENTRIES = 32;
 const MAX_LAYER_REFS = 16;
 
@@ -198,6 +200,17 @@ function isCanonicalUtcSecond(value: unknown): value is string {
   );
 }
 
+function hasInternalDataStorePath(value: string): boolean {
+  const segments = value.split("/");
+  return segments.some((segment, index) => {
+    if (index === 0 || !INTERNAL_DATA_STORE_LANES.has(segment)) {
+      return false;
+    }
+    const previous = segments[index - 1];
+    return previous === "data" || previous.endsWith(":data");
+  });
+}
+
 function isSafeReference(value: unknown): value is string {
   if (
     typeof value !== "string" ||
@@ -208,8 +221,9 @@ function isSafeReference(value: unknown): value is string {
     return false;
   }
   const lowered = value.toLowerCase();
-  return !DENIED_REFERENCE_MARKERS.some((marker) =>
-    lowered.includes(marker),
+  return (
+    !hasInternalDataStorePath(lowered) &&
+    !DENIED_REFERENCE_MARKERS.some((marker) => lowered.includes(marker))
   );
 }
 
