@@ -1,0 +1,75 @@
+{
+  "object_type": "OpenEndedTemporalSemanticsDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.open-ended-temporal-semantics-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "OpenEndedTemporalSemanticsDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.open-ended-temporal-semantics-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-093",
+    "supporting_source_cards": ["KFM-P18-INV-194", "KFM-P18-INV-287"],
+    "observed_at": "2026-08-11T15:00:00Z",
+    "temporal_claim_ref": "kfm:claim:synthetic-open-period:001",
+    "temporal_claim_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "claim_scope": {
+      "ref": "kfm:claim-scope:synthetic-open-period:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "intended_use": "INTERNAL_QA",
+    "period": {
+      "start": "2026-01-01T00:00:00Z",
+      "end": null,
+      "end_semantics": "UNKNOWN_END",
+      "as_of_time": "2026-08-11T14:00:00Z",
+      "now_basis": "NOT_APPLICABLE",
+      "sentinel_used": false,
+      "sentinel_value": null
+    },
+    "disclosure": {
+      "state": "COMPLETE",
+      "interpretation": "END_NOT_KNOWN",
+      "obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN", "OPEN_END_LABEL_REQUIRED"],
+      "explanation": "The synthetic period has no known end and is described only as of the pinned assessment time.",
+      "review_record_refs": []
+    },
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic-open-time:001",
+      "kfm:evidence-bundle:synthetic-open-time:002"
+    ],
+    "authority_claims": {
+      "temporal_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_unknown_end", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_explicit_end", "patch": {"period": {"end": "2026-07-01T00:00:00Z", "end_semantics": "EXPLICIT_END", "as_of_time": null}, "disclosure": {"interpretation": "BOUNDED_PERIOD", "obligations": [], "explanation": "The synthetic period has a finite inclusive-neutral end recorded directly in this disclosure."}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_current_until_superseded", "patch": {"period": {"end_semantics": "CURRENT_UNTIL_SUPERSEDED", "now_basis": "SOURCE_TIME"}, "disclosure": {"interpretation": "CURRENT_KNOWN_STATE", "obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN", "OPEN_END_LABEL_REQUIRED", "SUPERSESSION_CAVEAT_REQUIRED"], "explanation": "The synthetic state is current only at the pinned source time and remains subject to explicit supersession."}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_now_relative_release_time", "patch": {"period": {"end_semantics": "NOW_RELATIVE", "now_basis": "RELEASE_TIME"}, "disclosure": {"interpretation": "NOW_RESOLVED_AT_AS_OF", "explanation": "The synthetic now-relative period is resolved at the pinned release-time basis and is not stored as forever."}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_public_explanation_reviewed", "patch": {"intended_use": "PUBLIC_EXPLANATION", "disclosure": {"obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN", "OPEN_END_LABEL_REQUIRED", "PUBLIC_EXPLANATION_REQUIRED"], "review_record_refs": ["kfm:review-record:synthetic-open-time:001"]}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_claim_scope_unresolved", "patch": {"claim_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["CLAIM_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_disclosure_incomplete", "patch": {"disclosure": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_INCOMPLETE"]}},
+    {"name": "abstain_disclosure_unknown", "patch": {"disclosure": {"state": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_UNKNOWN"]}},
+    {"name": "deny_far_future_sentinel", "patch": {"period": {"sentinel_used": true, "sentinel_value": "9999-12-31T23:59:59Z"}}, "expected": {"outcome": "DENY", "codes": ["FAR_FUTURE_SENTINEL_FORBIDDEN"]}},
+    {"name": "deny_missing_as_of_time", "patch": {"period": {"as_of_time": null}}, "expected": {"outcome": "DENY", "codes": ["AS_OF_TIME_REQUIRED"]}},
+    {"name": "deny_end_semantics_mismatch", "patch": {"period": {"end": "2026-07-01T00:00:00Z"}}, "expected": {"outcome": "DENY", "codes": ["END_SEMANTICS_MISMATCH"]}},
+    {"name": "deny_current_missing_now_basis", "patch": {"period": {"end_semantics": "CURRENT_UNTIL_SUPERSEDED"}, "disclosure": {"interpretation": "CURRENT_KNOWN_STATE", "obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN", "OPEN_END_LABEL_REQUIRED", "SUPERSESSION_CAVEAT_REQUIRED"]}}, "expected": {"outcome": "DENY", "codes": ["NOW_BASIS_REQUIRED"]}},
+    {"name": "deny_interpretation_mismatch", "patch": {"disclosure": {"interpretation": "CURRENT_KNOWN_STATE"}}, "expected": {"outcome": "DENY", "codes": ["INTERPRETATION_MISMATCH"]}},
+    {"name": "deny_required_obligation_missing", "patch": {"disclosure": {"obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN"]}}, "expected": {"outcome": "DENY", "codes": ["REQUIRED_OBLIGATION_MISSING"]}},
+    {"name": "deny_time_order_invalid", "patch": {"period": {"as_of_time": "2025-12-31T23:59:59Z"}}, "expected": {"outcome": "DENY", "codes": ["TIME_ORDER_INVALID"]}},
+    {"name": "deny_non_utc_start", "patch": {"period": {"start": "2026-01-01T00:00:00+00:00"}}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic-open-time:002", "kfm:evidence-bundle:synthetic-open-time:001"]}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_public_review_record_missing", "patch": {"intended_use": "PUBLIC_EXPLANATION", "disclosure": {"obligations": ["AS_OF_TIME_REQUIRED", "FAR_FUTURE_SENTINEL_FORBIDDEN", "OPEN_END_LABEL_REQUIRED", "PUBLIC_EXPLANATION_REQUIRED"]}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_RECORD_REQUIRED"]}},
+    {"name": "deny_sentinel_declaration_mismatch", "patch": {"period": {"sentinel_value": "synthetic-forever-marker"}}, "expected": {"outcome": "DENY", "codes": ["SENTINEL_DECLARATION_MISMATCH"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"private_payload": "MUST_NOT_BE_ACCEPTED"}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
