@@ -135,8 +135,8 @@ class SourceEventAdmissionTests(unittest.TestCase):
 
     def test_diagnostics_are_deterministic_and_do_not_echo_values(self) -> None:
         candidate = json.loads(VALID_PREFILTER.read_text(encoding="utf-8"))
-        secret_marker = "synthetic-private-prefilter-marker"
-        candidate["reason_codes"] = [secret_marker]
+        sentinel_value = "UNIQUE-PREFILTER-SENTINEL-DO-NOT-ECHO"
+        candidate["reason_codes"] = [sentinel_value]
         path = self._write(candidate)
 
         outputs: list[str] = []
@@ -148,7 +148,7 @@ class SourceEventAdmissionTests(unittest.TestCase):
             outputs.append(stream.getvalue())
 
         self.assertEqual(outputs[0], outputs[1])
-        self.assertNotIn(secret_marker, outputs[0])
+        self.assertNotIn(sentinel_value, outputs[0])
         self.assertIn("SCHEMA_INVALID", outputs[0])
 
     def test_receipt_cannot_claim_operational_or_public_authority(self) -> None:
