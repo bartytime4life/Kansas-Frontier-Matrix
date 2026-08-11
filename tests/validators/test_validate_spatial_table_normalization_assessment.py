@@ -40,12 +40,18 @@ class SpatialTableNormalizationAssessmentTests(unittest.TestCase):
             self.assertFalse(any(candidate["authority_claims"].values()))
 
     def test_unresolved_profiles_abstain(self) -> None:
-        for name in ("abstain_unresolved_schema", "abstain_incomplete_assessment", "abstain_unassessed_form"):
+        for name in ("abstain_unresolved_schema", "abstain_incomplete_assessment", "abstain_unassessed_form", "abstain_incomplete_release_derivative"):
             self.assertEqual(MODULE.validate_candidate(self._candidate(name)).outcome, "ABSTAIN")
+
+    def test_incomplete_release_derivative_abstains_without_completeness_denials(self) -> None:
+        result = MODULE.validate_candidate(self._candidate("abstain_incomplete_release_derivative"))
+        self.assertEqual(result.outcome, "ABSTAIN")
+        self.assertEqual(result.codes, ["ASSESSMENT_INCOMPLETE", "NORMAL_FORM_UNASSESSED"])
 
     def test_field_dependency_form_and_derivative_invariants_fail_closed(self) -> None:
         expected = {
             "deny_entity_key_unknown": ["FIELD_REFERENCE_UNKNOWN"],
+            "deny_relationship_field_arity_mismatch": ["RELATIONSHIP_FIELD_ARITY_MISMATCH"],
             "deny_dependency_field_unknown": ["FIELD_REFERENCE_UNKNOWN"],
             "deny_dependency_field_overlap": ["DEPENDENCY_FIELD_OVERLAP"],
             "deny_canonical_partial_dependency": ["CANONICAL_NORMALIZATION_ANOMALY"],
@@ -58,6 +64,11 @@ class SpatialTableNormalizationAssessmentTests(unittest.TestCase):
         }
         for name, codes in expected.items():
             self.assertEqual(MODULE.validate_candidate(self._candidate(name)).codes, codes)
+
+    def test_relationship_field_arity_mismatch_denies(self) -> None:
+        result = MODULE.validate_candidate(self._candidate("deny_relationship_field_arity_mismatch"))
+        self.assertEqual(result.outcome, "DENY")
+        self.assertEqual(result.codes, ["RELATIONSHIP_FIELD_ARITY_MISMATCH"])
 
     def test_profile_hash_binds_dependency_semantics(self) -> None:
         candidate = self._candidate("pass_canonical_third_normal_form")

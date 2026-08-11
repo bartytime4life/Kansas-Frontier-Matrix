@@ -14,10 +14,10 @@
     ".github/workflows/spatial-table-normalization-assessment.yml": "sha256:d592705fda70c3f19e8742222e7d2044ec3e0198701dc9cc0020c361a76f6dbc",
     "contracts/data/spatial_table_normalization_assessment.md": "sha256:a3c769543150556ebd438abe0999da5814b89941015617f753dd1f38b7b6baae",
     "docs/intake/exploratory/pass-18-spatial-table-normalization-assessment-source-map.md": "sha256:1eb571a1418d23c417ccf3f6d51281f1110398e4969b7a2ae10127edd6f9227d",
-    "fixtures/contracts/v1/data/spatial_table_normalization_assessment/cases.json": "sha256:9f8cffa5808b62d492d134e555c24c5f2dec5aa17e31545164d1e3724784230b",
+    "fixtures/contracts/v1/data/spatial_table_normalization_assessment/cases.json": "sha256:9d7c4f29de89006cd8a16cdab67e2e7adef16b2aebe497064a40a14db9e425b9",
     "schemas/contracts/v1/data/spatial_table_normalization_assessment.schema.json": "sha256:c8a3ed6a47f3ff5ff2f1d6abcbcc5b2c578e26540462037701deb4a140d44657",
-    "tests/validators/test_validate_spatial_table_normalization_assessment.py": "sha256:b844a893c0f208fed10fdddb91df099b7294345ff10f1de3e129f218a32139f4",
-    "tools/validators/data/validate_spatial_table_normalization_assessment.py": "sha256:be26dc80ab5aa4d1c552b17dc4ba7961e0a3c4621f501200b3caac9cdd73afe2"
+    "tests/validators/test_validate_spatial_table_normalization_assessment.py": "sha256:d3b106fe04781fd5f59384b00eede6724182cc4fc293f1230b393a9ec946cd54",
+    "tools/validators/data/validate_spatial_table_normalization_assessment.py": "sha256:531267884b47f38256539b4a9ea253c7c92e5304d872cee63482c4a99e5aa08e"
   },
   "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
   "prompt_or_contract": "sha256:a3c769543150556ebd438abe0999da5814b89941015617f753dd1f38b7b6baae",
@@ -53,8 +53,8 @@
     {"gate": "python-syntax-compilation", "outcome": "PASS"},
     {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
     {"gate": "workflow-yaml-parse", "outcome": "PASS"},
-    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic spatial-table normalization tests passed."},
-    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Eighteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Ten deterministic spatial-table normalization tests passed, including both post-merge P2 regressions."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
     {"gate": "no-network-boundary", "outcome": "PASS"},
     {"gate": "documentation-metadata-and-link-qa", "outcome": "PASS", "reason": "Both changed Markdown files passed explicit no-network metadata and local-link checks; two missing registry entries were emitted as review-only warnings."},
     {"gate": "adjacent-validator-suite", "outcome": "PASS", "reason": "Thirty-three aggregate-statistic, citation-validation-report, and fixture-root contract tests passed."},
@@ -73,5 +73,5 @@
   "created_at": "2026-08-11T05:28:00Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
   "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
-  "notes": "Additive, inactive, fixture-only SpatialTableNormalizationAssessmentCandidate packet. It validates declared fields, keys, dependencies, relationships, normal-form posture, intentional derivative binding, anomaly disclosure, and review references without reading table values, resolving registries, mutating or normalizing data, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+  "notes": "Additive, inactive, fixture-only SpatialTableNormalizationAssessmentCandidate packet. The post-merge P2 repair preserves ABSTAIN for incomplete release-derivative assessments and denies unequal local-to-target relationship tuple arity while retaining the original no-table-read, no-network, and non-authoritative boundary."
 }

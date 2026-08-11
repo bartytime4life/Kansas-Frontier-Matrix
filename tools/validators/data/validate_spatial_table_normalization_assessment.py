@@ -147,7 +147,7 @@ def _canonical_strings(value: object) -> bool:
 
 
 def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
-    findings: set[Finding] = set()
+    findings: set{Finding] = set()
     if candidate.get("profile_spec_hash") != compute_profile_hash(candidate):
         findings.add(Finding("PROFILE_SPEC_HASH_MISMATCH", "/profile_spec_hash"))
     if not _is_utc(candidate.get("observed_at")):
@@ -208,6 +208,8 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
                 findings.add(Finding("ARRAY_NOT_CANONICAL", f"/relationships/{index}/{name}"))
         if isinstance(local_fields, list) and not set(local_fields) <= inventory_set:
             findings.add(Finding("FIELD_REFERENCE_UNKNOWN", f"/relationships/{index}/local_fields"))
+        if isinstance(local_fields, list) and isinstance(target_fields, list) and len(local_fields) != len(target_fields):
+            findings.add(Finding("RELATIONSHIP_FIELD_ARITY_MISMATCH", f"/relationships/{index}"))
     if relationship_ids != sorted(relationship_ids) or len(relationship_ids) != len(set(relationship_ids)):
         findings.add(Finding("RELATIONSHIPS_NOT_CANONICAL", "/relationships"))
 
@@ -232,7 +234,7 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
             findings.add(Finding("CANONICAL_NORMAL_FORM_INSUFFICIENT", "/assessment/declared_normal_form"))
         if observed_anomalies:
             findings.add(Finding("CANONICAL_NORMALIZATION_ANOMALY", "/dependencies"))
-    else:
+    elif state == "COMPLETE_FOR_DECLARED_SCOPE":
         if normal_form != "DENORMALIZED_DERIVATIVE":
             findings.add(Finding("DERIVATIVE_FORM_REQUIRED", "/assessment/declared_normal_form"))
         if not all(assessment.get(name) is not None for name in ("canonical_source_ref", "canonical_source_digest", "denormalization_purpose")):
