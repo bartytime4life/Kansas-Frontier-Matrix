@@ -52,6 +52,10 @@ class NonFiniteNumberError(ValueError):
     """Raised when a JSON number is not finite."""
 
 
+class UnpairedSurrogateError(ValueError):
+    """Raised when JSON text contains an unpaired UTF-16 surrogate code point."""
+
+
 @dataclass(frozen=True, order=True)
 class Finding:
     code: str
@@ -88,6 +92,36 @@ def _finite_float(value: str) -> float:
     return parsed
 
 
+def _pointer_token(value: object) -> str:
+    return str(value).replace("~", "~0").replace("/", "~1")
+
+
+def _find_unpaired_surrogate(value: object, path: str = "") -> str | None:
+    """Return the first JSON Pointer containing an unpaired surrogate, if any."""
+
+    if isinstance(value, str):
+        if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+            return path or "/"
+        return None
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            key_path = f"{path}/{_pointer_token(key)}"
+            if isinstance(key, str) and any(
+                0xD800 <= ord(character) <= 0xDFFF for character in key
+            ):
+                return key_path
+            found = _find_unpaired_surrogate(item, key_path)
+            if found is not None:
+                return found
+        return None
+    if isinstance(value, list):
+        for index, item in enumerate(value):
+            found = _find_unpaired_surrogate(item, f"{path}/{index}")
+            if found is not None:
+                return found
+    return None
+
+
 def load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding]]:
     try:
         if path.is_symlink():
@@ -108,12 +142,18 @@ def load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding
         return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
     except (OSError, UnicodeError, json.JSONDecodeError, RecursionError, ValueError):
         return None, [Finding("JSON_INVALID", "/")]
+    surrogate_path = _find_unpaired_surrogate(value)
+    if surrogate_path is not None:
+        return None, [Finding("JSON_UNPAIRED_SURROGATE", surrogate_path)]
     if not isinstance(value, dict):
         return None, [Finding("ROOT_NOT_OBJECT", "/")]
     return value, []
 
 
 def canonical_hash(value: object) -> str:
+    surrogate_path = _find_unpaired_surrogate(value)
+    if surrogate_path is not None:
+        raise UnpairedSurrogateError(surrogate_path)
     payload = json.dumps(
         value,
         ensure_ascii=False,
@@ -234,6 +274,12 @@ def _semantic_findings(candidate: Mapping[str, object]) -> list[Finding]:
 
 
 def validate_candidate(candidate: object) -> ValidationResult:
+    surrogate_path = _find_unpaired_surrogate(candidate)
+    if surrogate_path is not None:
+        return ValidationResult(
+            "ERROR",
+            (Finding("JSON_UNPAIRED_SURROGATE", surrogate_path),),
+        )
     schema_findings = _schema_findings(candidate)
     if schema_findings:
         return ValidationResult("ERROR", tuple(schema_findings))
