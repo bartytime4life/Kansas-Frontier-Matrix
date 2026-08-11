@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-pass18-open-ended-temporal-semantics-disclosure-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/open-ended-temporal-semantics-disclosure.yml",
+    "contracts/common/open_ended_temporal_semantics_disclosure.md",
+    "docs/intake/exploratory/pass-18-open-ended-temporal-semantics-disclosure-source-map.md",
+    "fixtures/contracts/v1/common/open_ended_temporal_semantics_disclosure/cases.json",
+    "schemas/contracts/v1/common/open_ended_temporal_semantics_disclosure.schema.json",
+    "tests/validators/test_validate_open_ended_temporal_semantics_disclosure.py",
+    "tools/validators/validate_open_ended_temporal_semantics_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/open-ended-temporal-semantics-disclosure.yml": "sha256:33b7bf8c5e6c619e7b9eab3ccd3d2faaa0f67ac5855fc9d6f39a27f3e60791cb",
+    "contracts/common/open_ended_temporal_semantics_disclosure.md": "sha256:856c90c63e7e966bde6ceed6383affcf50aa4c81e0d1cd36c2d595f7fbdeaedb",
+    "docs/intake/exploratory/pass-18-open-ended-temporal-semantics-disclosure-source-map.md": "sha256:3c5ae3631a02678df5109610c92c12b16bf63868b01c6fae9230b31482a4fab1",
+    "fixtures/contracts/v1/common/open_ended_temporal_semantics_disclosure/cases.json": "sha256:151966c47f76d72bc8e109f4b334fbdc9ad1e03cf13e1ed30ec7fc3e34774ac6",
+    "schemas/contracts/v1/common/open_ended_temporal_semantics_disclosure.schema.json": "sha256:3ae1c76c3b258f7479f299127ecb1d07b29d158ead3bed9e39bbc18eb6db3770",
+    "tests/validators/test_validate_open_ended_temporal_semantics_disclosure.py": "sha256:1e6f29213b26f097cc23231ca762935ad6cde8eebcc6b3151d5e229efbfd3643",
+    "tools/validators/validate_open_ended_temporal_semantics_disclosure.py": "sha256:4c9d41b1fa96c74eab822240f21581ec3871a4ebeed963cbe4606e428a08c74d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:856c90c63e7e966bde6ceed6383affcf50aa4c81e0d1cd36c2d595f7fbdeaedb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:207e5b09a5a5fbb82b7c13bfa7bc2093b822637fb3c8b00ea1b0792b3407463f",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:f9625ab788315b4e9b307659c9b4c75c344eb645dc39f9499ad850e378cf968e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; private discovery identifier withheld"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-093",
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-194",
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-287",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/common/period_boundary_predicate_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/common/temporal_window.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/open-ended-temporal-semantics-disclosure.yml": "CONFIRMED",
+    "contracts/common/open_ended_temporal_semantics_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-open-ended-temporal-semantics-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/open_ended_temporal_semantics_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/open_ended_temporal_semantics_disclosure.schema.json": "PROPOSED",
+    "tests/validators/test_validate_open_ended_temporal_semantics_disclosure.py": "CONFIRMED",
+    "tools/validators/validate_open_ended_temporal_semantics_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic open-ended temporal-semantics tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Twenty-one exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-temporal-profile-regression", "outcome": "PASS", "reason": "Sixteen adjacent period-boundary and as-of-snapshot tests passed in separate repository-native suites."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS"},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-open-ended-now-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-093"},
+    {"id": "pass18-forever-sentinel-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-194"},
+    {"id": "pass18-now-time-handling-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-287"},
+    {"id": "adjacent-period-boundary-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/contracts/common/period_boundary_predicate_disclosure.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T20:21:14Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only open-ended temporal-semantics disclosure. Private connected-source content is excluded from fixtures and validator output. The end-semantics vocabulary and validation matrix are proposed test logic, not temporal truth, policy, review, release, or publication authority."
+}
