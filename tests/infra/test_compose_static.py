@@ -33,6 +33,15 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
             self.assertRegex(dockerfile_text, r"(?m)^FROM\s+\S+")
             self.assertRegex(dockerfile_text, r"(?m)^WORKDIR\s+\S+")
 
+            users = re.findall(r"(?m)^USER\s+(\S+)\s*$", dockerfile_text)
+            self.assertTrue(users, f"{dockerfile_path}: missing final USER")
+            runtime_user = users[-1].split(":", maxsplit=1)[0]
+            self.assertNotIn(
+                runtime_user.lower(),
+                {"0", "root"},
+                f"{dockerfile_path}: final USER must be non-root",
+            )
+
     def test_published_ports_are_loopback_only(self):
         port_specs = re.findall(r'ports:\s*\["([^"]+)"\]', self.text)
         self.assertEqual(len(port_specs), 2)
