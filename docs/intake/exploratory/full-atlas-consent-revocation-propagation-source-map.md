@@ -24,6 +24,7 @@ truth_posture: cite-or-abstain
 | Intake reconciliation | `docs/intake/exploratory/new-ideas-4-16-source-map.md` | Records extensive consent/revocation doctrine but partial executable status, lookup, dependency, and cleanup behavior. |
 | Existing bounded implementation | `contracts/domains/people-dna-land/consented_genealogy_overlay.md` and its paired schema, manifest, validator, fixtures, and tests | Already denies revoked fixture overlays but explicitly does not prove cleanup or downstream propagation. |
 | Directory authority | `docs/doctrine/directory-rules.md`; SHA-256 `44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e` | Requires contract, schema, fixtures, validator, tests, and docs to stay in their responsibility roots. |
+| AI authoring provenance | `data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-20260811.json` | Binds generated artifact paths to their current SHA-256 bytes under AI Build Operating Contract `3.0.0`; it is not approval. |
 
 The atlas and intake packet are synthesis and exploratory carriers. They do not issue consent or authorize implementation by themselves.
 
@@ -64,4 +65,4 @@ No new root or parallel consent, schema, policy, source, receipt, release, or pr
 
 ## Rollback
 
-Revert the bounded feature commit. No real consent record, cleanup action, cache mutation, graph mutation, index mutation, source activation, lifecycle transition, release, or publication requires operational rollback.
+Revert the dependency-closed feature packet and its paired generated receipt. No real consent record, cleanup action, cache mutation, graph mutation, index mutation, source activation, lifecycle transition, release, or publication requires operational rollback.

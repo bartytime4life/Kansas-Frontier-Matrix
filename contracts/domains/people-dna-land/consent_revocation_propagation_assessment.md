@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/domains/people-dna-land/consent-revocation-propagation-assessment
 title: Consent Revocation Propagation Assessment Contract
-type: semantic-contract; consent-scope; revocation-propagation; fixture-first
+type: semantic-contract
 version: v0.1.0
 status: proposed; inactive; synthetic-fixture-only; no-consent-or-release-authority
 owners: OWNER_TBD - Consent steward; Privacy steward; People/DNA/Land steward; Contracts steward; Validation steward
@@ -10,6 +10,7 @@ updated: 2026-08-11
 policy_label: restricted-review; consent; revocation; fail-closed; non-authoritative
 owning_root: contracts/
 responsibility: Define a bounded assessment of current consent scope and withdrawal propagation across consequential derived surfaces without creating consent, identity, evidence, policy, release, deletion, or publication authority.
+truth_posture: cite-or-abstain
 related:
   - ./consented_genealogy_overlay.md
   - ../../../docs/domains/people-dna-land/CONSENT_MODEL.md
@@ -19,6 +20,7 @@ related:
   - ../../../tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py
   - ../../../tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py
   - ../../../docs/intake/exploratory/full-atlas-consent-revocation-propagation-source-map.md
+  - ../../../data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-20260811.json
 tags: [kfm, consent, revocation, propagation, dependency-index, cache-invalidation, privacy, fixture-first]
 notes:
   - "Implements the bounded programming seam in Full Atlas KFM-TRIAD-038."
@@ -110,4 +112,4 @@ A green result proves only schema validity, deterministic fixture materializatio
 
 ## Rollback
 
-Before merge, close the draft pull request and delete its branch. After an authorized merge, revert the feature commit. The slice creates no real consent record, cleanup job, lifecycle transition, cache mutation, graph mutation, index mutation, release, or publication to unwind.
+Before merge, close the draft pull request and delete its branch. After an authorized merge, revert the dependency-closed feature packet and its paired generated receipt. The slice creates no real consent record, cleanup job, lifecycle transition, cache mutation, graph mutation, index mutation, release, or publication to unwind.

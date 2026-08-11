@@ -10,6 +10,7 @@ name: consent-revocation-propagation
       - "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py"
       - "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py"
       - "docs/intake/exploratory/full-atlas-consent-revocation-propagation-source-map.md"
+      - "data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-*.json"
   push:
     branches: [main]
     paths:
@@ -20,6 +21,7 @@ name: consent-revocation-propagation
       - "tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py"
       - "tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py"
       - "docs/intake/exploratory/full-atlas-consent-revocation-propagation-source-map.md"
+      - "data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-*.json"
   workflow_dispatch:
 
 permissions:
@@ -62,6 +64,12 @@ jobs:
           set -euo pipefail
           python tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py --verbose
           python tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-full-atlas-consent-revocation-propagation-20260811.json \
+            --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
