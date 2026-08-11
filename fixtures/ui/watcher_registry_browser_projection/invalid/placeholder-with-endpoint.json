@@ -1,0 +1,37 @@
+{
+  "profile": "kfm.explorer.watcher-registry-browser.public-safe.v1",
+  "outcome": "AVAILABLE",
+  "reason_code": "REGISTRY_AVAILABLE",
+  "evaluated_at": "2026-08-10T21:00:00Z",
+  "registry_id": "kfm://control-plane/watcher-registry/v1",
+  "registry_spec_hash": "sha256:2fa3d43db474fc244bf9ba5fcb66ffb6e9a711fb905c4d117352edef75f66ab9",
+  "registry_status": "PROPOSED_INACTIVE",
+  "watchers": [
+    {
+      "watcher_id": "kfm.watcher.shared.plants_drift.placeholder",
+      "canonical_id": "kfm://watcher/shared/plants-drift-placeholder",
+      "version": "0.0.0-placeholder",
+      "state": "PLACEHOLDER",
+      "spec_ref": "kfm://watcher-spec/shared/plants-drift-placeholder",
+      "endpoint_ref": "kfm://endpoint/internal/forbidden-placeholder",
+      "poll_mode": "SCHEDULED",
+      "policy_ref": null,
+      "output_types": [],
+      "schema_ref": null,
+      "spec_hash": "sha256:b4fc0c444ee647d101c1a830d9b974e2cfc0cfd9e0e3b4fb5e14c792bdec939a",
+      "signature_ref": null,
+      "reason_codes": [
+        "PLACEHOLDER_ONLY"
+      ]
+    }
+  ],
+  "governance": {
+    "network_attempted": false,
+    "registry_mutation_allowed": false,
+    "watcher_execution_allowed": false,
+    "source_activation_allowed": false,
+    "lifecycle_write_allowed": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}
