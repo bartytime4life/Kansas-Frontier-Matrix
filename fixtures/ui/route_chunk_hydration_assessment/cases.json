@@ -1,0 +1,172 @@
+{
+  "profile": "kfm.ui.route-chunk-hydration-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "RouteChunkHydrationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.ui.route-chunk-hydration-assessment.fixture.v1",
+    "assessment_id": "kfm:route-chunk-hydration:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-329",
+    "observed_at": "2026-08-11T18:00:00Z",
+    "route": {
+      "view_id": "kfm:view:synthetic.route",
+      "route_path": "/synthetic-route",
+      "view_registry_profile_ref": "kfm:view-registry:111111111111111111111111"
+    },
+    "chunk": {
+      "chunk_id": "kfm://ui-chunk/synthetic-route",
+      "chunk_name": "synthetic-route",
+      "module_ref": "kfm://module/explorer/synthetic-route",
+      "integrity_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "load_mode": "LAZY_ROUTE",
+      "dependency_refs": [
+        "kfm://contract/layer-manifest/v1",
+        "kfm://style/synthetic-route/v1"
+      ]
+    },
+    "prerequisites": {
+      "view_registry_state": "READY",
+      "render_hints_state": "READY",
+      "evidence_state": "RESOLVED",
+      "access_state": "ALLOW",
+      "release_state": "RELEASED",
+      "render_hint_ref": "kfm://render-hint/synthetic-route/v1",
+      "evidence_drawer_profile_ref": "kfm://evidence-drawer/synthetic-route/v1",
+      "access_policy_ref": "kfm://policy/access/synthetic-route/v1",
+      "release_manifest_ref": "kfm://release/synthetic-route/v1",
+      "validation_refs": [
+        "kfm://validation/chunk-name/synthetic-route",
+        "kfm://validation/view-registry/synthetic-route"
+      ]
+    },
+    "derived_state": {
+      "disposition": "HYDRATE_READY",
+      "reason_codes": []
+    },
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "NO_LAYER_ACTIVATION_OR_CACHE_MUTATION",
+      "NO_MODULE_LOAD_OR_ROUTE_BINDING",
+      "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY",
+      "NO_REFERENCE_RESOLUTION_OR_POLICY_EVALUATION",
+      "NO_REVIEW_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY"
+    ],
+    "authority_claims": {
+      "module_load_authority": false,
+      "route_binding_authority": false,
+      "reference_resolution_authority": false,
+      "policy_authority": false,
+      "layer_activation_authority": false,
+      "cache_mutation_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_ready", "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "abstain_view_registry_hold",
+      "patch": {"prerequisites": {"view_registry_state": "HOLD"}, "derived_state": {"disposition": "HOLD", "reason_codes": ["VIEW_REGISTRY_HELD"]}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["VIEW_REGISTRY_HELD"]}
+    },
+    {
+      "name": "abstain_render_hints_unknown",
+      "patch": {"prerequisites": {"render_hints_state": "UNKNOWN"}, "derived_state": {"disposition": "HOLD", "reason_codes": ["RENDER_HINTS_UNKNOWN"]}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RENDER_HINTS_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_evidence_partial",
+      "patch": {"prerequisites": {"evidence_state": "PARTIAL"}, "derived_state": {"disposition": "HOLD", "reason_codes": ["EVIDENCE_PARTIAL"]}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_PARTIAL"]}
+    },
+    {
+      "name": "abstain_access_unknown",
+      "patch": {"prerequisites": {"access_state": "UNKNOWN"}, "derived_state": {"disposition": "HOLD", "reason_codes": ["ACCESS_UNKNOWN"]}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["ACCESS_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_release_hold",
+      "patch": {"prerequisites": {"release_state": "HOLD"}, "derived_state": {"disposition": "HOLD", "reason_codes": ["RELEASE_HELD"]}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["RELEASE_HELD"]}
+    },
+    {
+      "name": "deny_view_registry_denied",
+      "patch": {"prerequisites": {"view_registry_state": "DENY"}, "derived_state": {"disposition": "REJECT", "reason_codes": ["VIEW_REGISTRY_DENIED"]}},
+      "expected": {"outcome": "DENY", "codes": ["VIEW_REGISTRY_DENIED"]}
+    },
+    {
+      "name": "deny_access_denied",
+      "patch": {"prerequisites": {"access_state": "DENY"}, "derived_state": {"disposition": "REJECT", "reason_codes": ["ACCESS_DENIED"]}},
+      "expected": {"outcome": "DENY", "codes": ["ACCESS_DENIED"]}
+    },
+    {
+      "name": "deny_release_denied",
+      "patch": {"prerequisites": {"release_state": "DENY"}, "derived_state": {"disposition": "REJECT", "reason_codes": ["RELEASE_DENIED"]}},
+      "expected": {"outcome": "DENY", "codes": ["RELEASE_DENIED"]}
+    },
+    {
+      "name": "deny_derived_disposition_mismatch",
+      "patch": {"derived_state": {"disposition": "HOLD"}},
+      "expected": {"outcome": "DENY", "codes": ["DERIVED_STATE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_reason_code_mismatch",
+      "patch": {"derived_state": {"reason_codes": ["EVIDENCE_MISSING"]}},
+      "expected": {"outcome": "DENY", "codes": ["DERIVED_STATE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_chunk_identity_mismatch",
+      "patch": {"chunk": {"chunk_id": "kfm://ui-chunk/other-route"}},
+      "expected": {"outcome": "DENY", "codes": ["CHUNK_ID_NAME_MISMATCH"]}
+    },
+    {
+      "name": "deny_noncanonical_dependency_refs",
+      "patch": {"chunk": {"dependency_refs": ["kfm://style/z", "kfm://contract/a"]}},
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_reference_role_collapse",
+      "patch": {"prerequisites": {"evidence_drawer_profile_ref": "kfm://policy/access/synthetic-route/v1"}},
+      "expected": {"outcome": "DENY", "codes": ["REFERENCE_ROLE_COLLAPSE"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"chunk": {"module_ref": "kfm://module/data/raw/synthetic-route"}},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query_marker",
+      "patch": {"prerequisites": {"validation_refs": ["kfm://validation/graph_query/internal"]}},
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_non_utc_observed_at",
+      "patch": {"observed_at": "2026-08-11T13:00:00-05:00"},
+      "expected": {"outcome": "DENY", "codes": ["OBSERVED_AT_NOT_UTC"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_duplicate_validation_ref",
+      "patch": {"prerequisites": {"validation_refs": ["kfm://validation/a", "kfm://validation/a"]}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"unexpected": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
