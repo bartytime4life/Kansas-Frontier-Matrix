@@ -1,0 +1,400 @@
+{
+  "profile": "kfm.source.plants-taxa-drift-assessment.fixture-cases.v1",
+  "base_candidate": {
+    "object_type": "PlantsTaxaDriftAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source.plants-taxa-drift-assessment.fixture.v1",
+    "assessment_id": "kfm:plants-taxa-drift:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_cards": ["EXP-001", "KFM-IDX-ANA-004", "KFM-IDX-SRC-006"],
+    "observed_at": "2026-08-11T21:00:00Z",
+    "source_bindings": {
+      "source_descriptor_ref": "kfm://source-descriptor/usda-plants/synthetic",
+      "source_intake_record_ref": "kfm://source-intake-record/usda-plants/synthetic",
+      "watcher_registry_ref": "kfm://registry/source-watchers/v1",
+      "taxonomic_concept_lineage_ref": "kfm://crosswalk/taxonomy/synthetic-plants-lineage"
+    },
+    "snapshot_pair": {
+      "prior": {
+        "snapshot_ref": "kfm://source-snapshot/usda-plants/synthetic-prior",
+        "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "taxonomy_version_ref": "kfm://taxonomy-version/plants/synthetic-v1",
+        "observed_at": "2026-08-11T19:00:00Z"
+      },
+      "current": {
+        "snapshot_ref": "kfm://source-snapshot/usda-plants/synthetic-current",
+        "content_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "taxonomy_version_ref": "kfm://taxonomy-version/plants/synthetic-v1",
+        "observed_at": "2026-08-11T20:00:00Z"
+      }
+    },
+    "set_delta": {
+      "added_taxon_refs": [
+        "kfm://taxon-concept/synthetic/new",
+        "kfm://taxon-concept/synthetic/recode-target"
+      ],
+      "removed_taxon_refs": [
+        "kfm://taxon-concept/synthetic/old",
+        "kfm://taxon-concept/synthetic/recode-source"
+      ],
+      "rename_edges": [
+        {
+          "source_taxon_ref": "kfm://taxon-concept/synthetic/recode-source",
+          "target_taxon_ref": "kfm://taxon-concept/synthetic/recode-target",
+          "relationship": "RENAMED_OR_RECODED_CANDIDATE"
+        }
+      ]
+    },
+    "materiality": "CHANGE_CANDIDATE",
+    "sensitivity": {
+      "occurrence_join_performed": false,
+      "exact_locations_present": false,
+      "conservation_intersection_state": "NONE",
+      "public_detail_mode": "COUNTS_ONLY",
+      "policy_decision_ref": null,
+      "sensitivity_review_required": true
+    },
+    "attestations": {
+      "source_snapshot_attestation_refs": [
+        "kfm://attestation/source-snapshot/synthetic-current",
+        "kfm://attestation/source-snapshot/synthetic-prior"
+      ],
+      "taxonomy_version_attestation_ref": "kfm://attestation/taxonomy-version/synthetic-v1"
+    },
+    "output": {
+      "posture": "WORK_CANDIDATE",
+      "publication_state": "NOT_PUBLISHED",
+      "candidate_ref": "kfm://work-candidate/plants-taxa-drift/synthetic"
+    },
+    "review": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "record_refs": [
+        "kfm://review/plants-taxa-drift/design",
+        "kfm://review/plants-taxa-drift/sensitivity"
+      ]
+    },
+    "limitations": [
+      "FIXTURE_ONLY",
+      "NO_LIVE_SOURCE_OR_NETWORK",
+      "NO_OCCURRENCE_JOIN_OR_EXACT_LOCATION",
+      "NO_TAXONOMY_OR_CONSERVATION_AUTHORITY",
+      "NO_SOURCE_ADMISSION_OR_LIFECYCLE_MUTATION",
+      "NO_PROMOTION_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "source_admission_authority": false,
+      "taxonomy_authority": false,
+      "conservation_status_authority": false,
+      "occurrence_authority": false,
+      "sensitivity_policy_authority": false,
+      "lifecycle_mutation_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_nonsensitive_change_candidate",
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_sensitive_withheld_candidate",
+      "patch": {
+        "sensitivity": {
+          "conservation_intersection_state": "PRESENT",
+          "public_detail_mode": "WITHHELD",
+          "policy_decision_ref": "kfm://policy-decision/plants-sensitive/synthetic"
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_no_material_change_without_work_record",
+      "patch": {
+        "snapshot_pair": {
+          "current": {
+            "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        },
+        "set_delta": {
+          "added_taxon_refs": [],
+          "removed_taxon_refs": [],
+          "rename_edges": []
+        },
+        "materiality": "NO_MATERIAL_CHANGE",
+        "sensitivity": {"sensitivity_review_required": false},
+        "output": {"posture": "NO_WORK_RECORD", "candidate_ref": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_taxonomy_version_drift",
+      "patch": {
+        "snapshot_pair": {
+          "current": {"taxonomy_version_ref": "kfm://taxonomy-version/plants/synthetic-v2"}
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["TAXONOMY_VERSION_DRIFT"]}
+    },
+    {
+      "name": "abstain_unknown_sensitivity_intersection",
+      "patch": {
+        "sensitivity": {
+          "conservation_intersection_state": "UNKNOWN",
+          "public_detail_mode": "WITHHELD"
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["SENSITIVITY_INTERSECTION_UNKNOWN"]}
+    },
+    {
+      "name": "abstain_materiality_unresolved",
+      "patch": {
+        "materiality": "UNRESOLVED",
+        "output": {"posture": "NO_WORK_RECORD", "candidate_ref": null}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["MATERIALITY_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_review_unknown",
+      "patch": {"review": {"state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN"]}
+    },
+    {
+      "name": "deny_noncanonical_added_taxa",
+      "patch": {
+        "set_delta": {
+          "added_taxon_refs": [
+            "kfm://taxon-concept/synthetic/recode-target",
+            "kfm://taxon-concept/synthetic/new"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["ADDED_TAXA_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_noncanonical_removed_taxa",
+      "patch": {
+        "set_delta": {
+          "removed_taxon_refs": [
+            "kfm://taxon-concept/synthetic/recode-source",
+            "kfm://taxon-concept/synthetic/old"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REMOVED_TAXA_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_added_removed_overlap",
+      "patch": {
+        "set_delta": {
+          "added_taxon_refs": [
+            "kfm://taxon-concept/synthetic/new",
+            "kfm://taxon-concept/synthetic/old",
+            "kfm://taxon-concept/synthetic/recode-target"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["DELTA_SET_OVERLAP"]}
+    },
+    {
+      "name": "deny_rename_source_not_removed",
+      "patch": {
+        "set_delta": {
+          "rename_edges": {
+            "0": {"source_taxon_ref": "kfm://taxon-concept/synthetic/untracked-source"}
+          }
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["RENAME_SOURCE_NOT_REMOVED"]}
+    },
+    {
+      "name": "deny_rename_target_not_added",
+      "patch": {
+        "set_delta": {
+          "rename_edges": {
+            "0": {"target_taxon_ref": "kfm://taxon-concept/synthetic/untracked-target"}
+          }
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["RENAME_TARGET_NOT_ADDED"]}
+    },
+    {
+      "name": "deny_self_referential_rename",
+      "patch": {
+        "set_delta": {
+          "rename_edges": {
+            "0": {"target_taxon_ref": "kfm://taxon-concept/synthetic/recode-source"}
+          }
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["RENAME_SELF_REFERENCE", "RENAME_TARGET_NOT_ADDED"]
+      }
+    },
+    {
+      "name": "deny_delta_with_identical_snapshot_digest",
+      "patch": {
+        "snapshot_pair": {
+          "current": {
+            "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["DELTA_WITH_IDENTICAL_SNAPSHOT_DIGEST"]
+      }
+    },
+    {
+      "name": "deny_no_material_change_with_delta",
+      "patch": {
+        "materiality": "NO_MATERIAL_CHANGE",
+        "output": {"posture": "NO_WORK_RECORD", "candidate_ref": null}
+      },
+      "expected": {"outcome": "DENY", "codes": ["NO_MATERIAL_CHANGE_WITH_DELTA"]}
+    },
+    {
+      "name": "deny_change_candidate_without_delta",
+      "patch": {
+        "set_delta": {
+          "added_taxon_refs": [],
+          "removed_taxon_refs": [],
+          "rename_edges": []
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["CHANGE_CANDIDATE_WITHOUT_DELTA"]}
+    },
+    {
+      "name": "deny_occurrence_join",
+      "patch": {"sensitivity": {"occurrence_join_performed": true}},
+      "expected": {"outcome": "DENY", "codes": ["OCCURRENCE_JOIN_DENIED"]}
+    },
+    {
+      "name": "deny_exact_locations",
+      "patch": {"sensitivity": {"exact_locations_present": true}},
+      "expected": {"outcome": "DENY", "codes": ["EXACT_LOCATION_DENIED"]}
+    },
+    {
+      "name": "deny_sensitive_detail_not_withheld",
+      "patch": {
+        "sensitivity": {
+          "conservation_intersection_state": "PRESENT",
+          "policy_decision_ref": "kfm://policy-decision/plants-sensitive/synthetic"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["SENSITIVE_DETAIL_NOT_WITHHELD"]}
+    },
+    {
+      "name": "deny_sensitive_without_policy_reference",
+      "patch": {
+        "sensitivity": {
+          "conservation_intersection_state": "PRESENT",
+          "public_detail_mode": "WITHHELD"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["SENSITIVITY_POLICY_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_change_without_sensitivity_review",
+      "patch": {"sensitivity": {"sensitivity_review_required": false}},
+      "expected": {"outcome": "DENY", "codes": ["CHANGE_REVIEW_REQUIRED"]}
+    },
+    {
+      "name": "deny_sensitive_without_review",
+      "patch": {
+        "sensitivity": {
+          "conservation_intersection_state": "PRESENT",
+          "public_detail_mode": "WITHHELD",
+          "policy_decision_ref": "kfm://policy-decision/plants-sensitive/synthetic",
+          "sensitivity_review_required": false
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["CHANGE_REVIEW_REQUIRED", "SENSITIVITY_REVIEW_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_missing_source_snapshot_attestations",
+      "patch": {"attestations": {"source_snapshot_attestation_refs": []}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["SOURCE_SNAPSHOT_ATTESTATIONS_INCOMPLETE"]
+      }
+    },
+    {
+      "name": "deny_missing_taxonomy_version_attestation",
+      "patch": {"attestations": {"taxonomy_version_attestation_ref": null}},
+      "expected": {
+        "outcome": "DENY",
+        "codes": ["TAXONOMY_VERSION_ATTESTATION_REQUIRED"]
+      }
+    },
+    {
+      "name": "deny_current_snapshot_not_newer",
+      "patch": {
+        "snapshot_pair": {"current": {"observed_at": "2026-08-11T19:00:00Z"}}
+      },
+      "expected": {"outcome": "DENY", "codes": ["CURRENT_SNAPSHOT_NOT_NEWER"]}
+    },
+    {
+      "name": "deny_snapshot_reference_reuse",
+      "patch": {
+        "snapshot_pair": {
+          "current": {"snapshot_ref": "kfm://source-snapshot/usda-plants/synthetic-prior"}
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["SNAPSHOT_REFERENCE_REUSED"]}
+    },
+    {
+      "name": "deny_complete_review_without_record",
+      "patch": {"review": {"record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {
+        "source_bindings": {
+          "source_intake_record_ref": "kfm://source-intake-record/data/raw/synthetic"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_embedded_query_marker",
+      "patch": {
+        "source_bindings": {"watcher_registry_ref": "kfm://registry/cypher:match"}
+      },
+      "expected": {"outcome": "DENY", "codes": ["EMBEDDED_QUERY_DENIED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unexpected_property",
+      "patch": {"unexpected_field": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_publication_state_published",
+      "patch": {"output": {"publication_state": "PUBLISHED"}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
