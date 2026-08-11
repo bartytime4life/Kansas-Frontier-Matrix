@@ -9,6 +9,7 @@ import {
   buildHeadlessRenderReviewSidecar,
 } from "../../src/features/map_runtime/headless_render_review_packet";
 
+type ControlledViewport = { width: number; height: number } | null;
 type MobileVerificationWindow = Window & {
   __kfmMobilePmtilesVerification?: Readonly<{
     getLastResult: () => unknown;
@@ -45,7 +46,8 @@ test("emits a digest-bound synthetic screenshot, metrics, and sidecar packet", a
     "PASS / MOBILE_PMTILES_VERIFY_DECODE_RENDER_PASS",
   );
 
-  const probe = await page.evaluate(() => {
+  const controlledViewport = page.viewportSize();
+  const probe = await page.evaluate((viewport: ControlledViewport) => {
     const canvas = document.querySelector<HTMLCanvasElement>(
       "#mobile-pmtiles-canvas",
     );
@@ -65,14 +67,17 @@ test("emits a digest-bound synthetic screenshot, metrics, and sidecar packet", a
         pixelRgba,
       },
       viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: viewport?.width ?? 0,
+        height: viewport?.height ?? 0,
         deviceScaleFactor: window.devicePixelRatio,
         hasTouch: navigator.maxTouchPoints > 0,
-        isMobile: navigator.maxTouchPoints > 0 && window.innerWidth === 390,
+        isMobile:
+          navigator.maxTouchPoints > 0 &&
+          viewport?.width === 390 &&
+          viewport?.height === 844,
       },
     };
-  });
+  }, controlledViewport);
 
   const metricsResult = buildHeadlessRenderReviewMetrics({
     archiveName: "mobile-base.pmtiles",
@@ -82,10 +87,7 @@ test("emits a digest-bound synthetic screenshot, metrics, and sidecar packet", a
     render: probe.render,
     viewport: probe.viewport,
   });
-  expect(
-    metricsResult.ok,
-    JSON.stringify({ externalRequests, probe }, null, 2),
-  ).toBe(true);
+  expect(metricsResult.ok).toBe(true);
   if (!metricsResult.ok) throw new Error(metricsResult.code);
 
   const outputDirectory = process.env.KFM_HEADLESS_REVIEW_OUTPUT
