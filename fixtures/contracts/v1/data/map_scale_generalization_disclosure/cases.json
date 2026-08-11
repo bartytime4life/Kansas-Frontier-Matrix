@@ -1,0 +1,60 @@
+{
+  "object_type": "MapScaleGeneralizationDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.data.map-scale-generalization-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "MapScaleGeneralizationDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.map-scale-generalization-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-476",
+    "observed_at": "2026-08-11T04:30:00Z",
+    "layer_manifest_ref": "kfm:layer-manifest:synthetic-county-orientation:001",
+    "layer_manifest_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "map_purpose": {"ref": "kfm:map-purpose:synthetic-county-orientation:001", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "resolution": "RESOLVED"},
+    "evidence_scope": {"ref": "kfm:evidence-scope:synthetic-public-layer:001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+    "intended_use": "PUBLIC_MAP_CANDIDATE",
+    "validity_context": {"basis": "ZOOM_RANGE", "minimum_zoom": 6, "maximum_zoom": 14, "minimum_scale_denominator": null, "maximum_scale_denominator": null},
+    "generalization": {
+      "method": "SIMPLIFY",
+      "method_description": "Synthetic topology-preserving simplification for county-orientation display.",
+      "transform_receipt_ref": "kfm:spatial-transform-receipt:synthetic-map-scale:001",
+      "precision_posture": "DISPLAY_ONLY",
+      "retained_properties": ["county_fips", "county_name"],
+      "omitted_detail_classes": ["GEOMETRY_VERTEX_DETAIL"]
+    },
+    "disclosure": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "public_caveat": "Geometry is generalized for display in the declared zoom range and is not survey-grade positioning.",
+      "details_surface": "LAYER_NOTE",
+      "review_record_refs": ["kfm:review-record:synthetic-map-scale:001"]
+    },
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_zoom_simplification", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_scale_denominator_aggregation", "patch": {"validity_context": {"basis": "SCALE_DENOMINATOR_RANGE", "minimum_zoom": null, "maximum_zoom": null, "minimum_scale_denominator": 25000, "maximum_scale_denominator": 500000}, "generalization": {"method": "AGGREGATE", "method_description": "Synthetic aggregation of minor features for a bounded scale-denominator range.", "transform_receipt_ref": "kfm:spatial-transform-receipt:synthetic-map-scale:002", "precision_posture": "SOURCE_LIMITED", "omitted_detail_classes": ["MINOR_FEATURES"]}, "disclosure": {"details_surface": "EVIDENCE_DRAWER"}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_internal_no_generalization", "patch": {"intended_use": "INTERNAL_REVIEW", "generalization": {"method": "NONE", "method_description": "Synthetic internal review carrier with no generalization declared.", "transform_receipt_ref": null, "precision_posture": "SOURCE_LIMITED", "omitted_detail_classes": ["NONE"]}, "disclosure": {"public_caveat": null, "details_surface": "NONE", "review_record_refs": []}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_unresolved_validity", "patch": {"validity_context": {"basis": "UNRESOLVED", "minimum_zoom": null, "maximum_zoom": null}}, "expected": {"outcome": "ABSTAIN", "codes": ["VALIDITY_CONTEXT_UNRESOLVED"]}},
+    {"name": "abstain_unresolved_method", "patch": {"generalization": {"method": "UNRESOLVED", "transform_receipt_ref": null, "omitted_detail_classes": ["UNKNOWN"]}, "disclosure": {"state": "UNKNOWN", "public_caveat": null, "details_surface": "NONE", "review_record_refs": []}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_UNKNOWN", "GENERALIZATION_METHOD_UNRESOLVED"]}},
+    {"name": "abstain_unknown_precision", "patch": {"generalization": {"precision_posture": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["PRECISION_POSTURE_UNKNOWN"]}},
+    {"name": "abstain_incomplete_disclosure", "patch": {"disclosure": {"state": "INCOMPLETE"}}, "expected": {"outcome": "ABSTAIN", "codes": ["DISCLOSURE_INCOMPLETE"]}},
+    {"name": "abstain_unresolved_evidence", "patch": {"evidence_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["EVIDENCE_SCOPE_UNRESOLVED"]}},
+    {"name": "deny_inverted_zoom_range", "patch": {"validity_context": {"minimum_zoom": 15, "maximum_zoom": 8}}, "expected": {"outcome": "DENY", "codes": ["VALIDITY_RANGE_INVERTED"]}},
+    {"name": "deny_basis_field_mismatch", "patch": {"validity_context": {"minimum_scale_denominator": 25000, "maximum_scale_denominator": 500000}}, "expected": {"outcome": "DENY", "codes": ["VALIDITY_BASIS_FIELDS_INCOHERENT"]}},
+    {"name": "deny_generalized_without_receipt", "patch": {"generalization": {"transform_receipt_ref": null}}, "expected": {"outcome": "DENY", "codes": ["GENERALIZATION_RECEIPT_REQUIRED"]}},
+    {"name": "deny_generalized_without_caveat", "patch": {"disclosure": {"public_caveat": null, "details_surface": "NONE"}}, "expected": {"outcome": "DENY", "codes": ["GENERALIZATION_CAVEAT_REQUIRED"]}},
+    {"name": "deny_generalized_without_review", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["GENERALIZATION_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_noncanonical_arrays", "patch": {"generalization": {"retained_properties": ["county_name", "county_fips"]}}, "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"geometry_values": [[-98.0, 38.5]]}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}
