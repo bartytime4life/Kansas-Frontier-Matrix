@@ -1,0 +1,81 @@
+name: count-population-disclosure
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/count-population-disclosure.yml"
+      - "contracts/evidence/count_population_disclosure.md"
+      - "schemas/contracts/v1/evidence/count_population_disclosure.schema.json"
+      - "fixtures/contracts/v1/evidence/count_population_disclosure/**"
+      - "tools/validators/evidence/validate_count_population_disclosure.py"
+      - "tests/validators/evidence/test_validate_count_population_disclosure.py"
+      - "docs/intake/exploratory/pass-18-count-population-disclosure-source-map.md"
+      - "data/receipts/generated/genrec-pass18-count-population-disclosure-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/count-population-disclosure.yml"
+      - "contracts/evidence/count_population_disclosure.md"
+      - "schemas/contracts/v1/evidence/count_population_disclosure.schema.json"
+      - "fixtures/contracts/v1/evidence/count_population_disclosure/**"
+      - "tools/validators/evidence/validate_count_population_disclosure.py"
+      - "tests/validators/evidence/test_validate_count_population_disclosure.py"
+      - "docs/intake/exploratory/pass-18-count-population-disclosure-source-map.md"
+      - "data/receipts/generated/genrec-pass18-count-population-disclosure-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: count-population-disclosure-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-count-population-disclosure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/evidence/validate_count_population_disclosure.py tests/validators/evidence/test_validate_count_population_disclosure.py
+          python -m unittest tests.validators.evidence.test_validate_count_population_disclosure --verbose
+          python tools/validators/evidence/validate_count_population_disclosure.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-count-population-disclosure-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Count population disclosure candidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only count-kind, field, null, grouping, filter, population-note, and review-reference coherence."
+            echo "- Boundary: no SQL execution, row inspection, reference resolution, count computation, metric/evidence/policy/review decision, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
