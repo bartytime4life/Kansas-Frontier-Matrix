@@ -1,0 +1,78 @@
+{
+  "receipt_id": "genrec-pass18-api-capability-exposure-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/api-capability-exposure-assessment.yml",
+    "contracts/release/api_capability_exposure_assessment.md",
+    "docs/intake/exploratory/pass-18-api-capability-exposure-assessment-source-map.md",
+    "fixtures/contracts/v1/release/api_capability_exposure_assessment/cases.json",
+    "schemas/contracts/v1/release/api_capability_exposure_assessment.schema.json",
+    "tests/validators/release/test_validate_api_capability_exposure_assessment.py",
+    "tools/validators/release/validate_api_capability_exposure_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/api-capability-exposure-assessment.yml": "sha256:7b649894ed4529ae7259b7ef3e862f793a5eda6349a971cb0d75f9e267e6b423",
+    "contracts/release/api_capability_exposure_assessment.md": "sha256:82ecee9a1e704ff65623b055a5436248866edf22b061ada47dbeb43238cf2aae",
+    "docs/intake/exploratory/pass-18-api-capability-exposure-assessment-source-map.md": "sha256:471e4c6d317065e6f3a958d97953e6538d3b25566f83d16b8b1f217e1e8e3b36",
+    "fixtures/contracts/v1/release/api_capability_exposure_assessment/cases.json": "sha256:c4bf6f363344c62ef537010f18b14b91a7b6a70e840ffb13ccfe8f5ded9df53f",
+    "schemas/contracts/v1/release/api_capability_exposure_assessment.schema.json": "sha256:19a7f737843541e567a1db9afe480d600f3a4edc2448879f8070148b8d621aaf",
+    "tests/validators/release/test_validate_api_capability_exposure_assessment.py": "sha256:077ed05a315c98b1640142e0e547f373e176b430df8dbf36ca39d22d48ca7e69",
+    "tools/validators/release/validate_api_capability_exposure_assessment.py": "sha256:903a34f028fcc6d35651262e675071ab14fbd3f7f4f42dcd6f94919de7b4d152"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
+  "prompt_or_contract": "sha256:82ecee9a1e704ff65623b055a5436248866edf22b061ada47dbeb43238cf2aae",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and publication tooling", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:175589456a78a78e3047162f138961a02ba5f5e1987e6030dc00c9dc7aa8d18e", "sha256:18f671f44c6d8bc8eee23ad96205ad8d84c6a67f2c114e708ad0652be18740a6", "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61", "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e", "sha256:4cd295ef182e4ea23475b5d22c9ec7708bc8a4eed296b7a7b6b04c854e49f136", "sha256:9b2efd93199bfb359f6111a5d264c12f94edba1d534e7441725c1320cfaa0aa5", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private attachment identifier withheld", "Connected Google Drive KFM_Full_Atlas_seed_cards; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-274", "google-drive://KFM_Full_Atlas_seed_cards#corroborating-doctrine", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/api_contract_change_assessment.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/runtime/runtime_response_envelope.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/release_manifest.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/correction/correction_notice.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/rollback_card.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/docs/doctrine/directory-rules.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/api-capability-exposure-assessment.yml": "CONFIRMED",
+    "contracts/release/api_capability_exposure_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-api-capability-exposure-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/release/api_capability_exposure_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/api_capability_exposure_assessment.schema.json": "PROPOSED",
+    "tests/validators/release/test_validate_api_capability_exposure_assessment.py": "CONFIRMED",
+    "tools/validators/release/validate_api_capability_exposure_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eleven deterministic API capability-exposure assessment tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Thirty exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "adjacent-api-runtime-release-correction-regression", "outcome": "PASS", "reason": "Forty-seven API contract-change, RuntimeResponseEnvelope, ReleaseManifest, RollbackCard, and correction tests passed."},
+    {"gate": "aggregate-repository-validation", "outcome": "PASS", "reason": "All eight registered aggregate validators and 429 tests plus 29 subtests passed."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both metadata blocks were valid; new registry entries remain review-only candidates."},
+    {"gate": "local-document-link-check", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-api-capability-exposure-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-274"},
+    {"id": "connected-seed-card-doctrine", "validated": true, "evidence_ref": "google-drive://KFM_Full_Atlas_seed_cards#corroborating-doctrine"},
+    {"id": "api-contract-change-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/api_contract_change_assessment.md"},
+    {"id": "runtime-response-envelope-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/runtime/runtime_response_envelope.md"},
+    {"id": "release-manifest-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/release_manifest.md"},
+    {"id": "correction-notice-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/correction/correction_notice.md"},
+    {"id": "rollback-card-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/contracts/release/rollback_card.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2119bcd81d2f34df5a16f729918d12b7d84478e/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T16:50:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only API capability-exposure assessment. It checks declared purpose, audience, contract, documentation, data-state, prohibited-use, finite-outcome, trust-boundary, review, security, and release closure without discovering or mutating APIs, accessing canonical stores, executing authorization/evidence/policy, or creating review, release, deployment, publication, or public-use authority."
+}
