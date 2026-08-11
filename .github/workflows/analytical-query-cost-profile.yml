@@ -1,0 +1,81 @@
+name: analytical-query-cost-profile
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/analytical-query-cost-profile.yml"
+      - "contracts/common/analytical_query_cost_profile.md"
+      - "schemas/contracts/v1/common/analytical_query_cost_profile.schema.json"
+      - "fixtures/contracts/v1/common/analytical_query_cost_profile/**"
+      - "tools/validators/validate_analytical_query_cost_profile.py"
+      - "tests/validators/test_validate_analytical_query_cost_profile.py"
+      - "docs/intake/exploratory/pass-18-analytical-query-cost-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass18-analytical-query-cost-profile-*.json"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/analytical-query-cost-profile.yml"
+      - "contracts/common/analytical_query_cost_profile.md"
+      - "schemas/contracts/v1/common/analytical_query_cost_profile.schema.json"
+      - "fixtures/contracts/v1/common/analytical_query_cost_profile/**"
+      - "tools/validators/validate_analytical_query_cost_profile.py"
+      - "tests/validators/test_validate_analytical_query_cost_profile.py"
+      - "docs/intake/exploratory/pass-18-analytical-query-cost-profile-source-map.md"
+      - "data/receipts/generated/genrec-pass18-analytical-query-cost-profile-*.json"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: analytical-query-cost-profile-v1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-analytical-query-cost-profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/validate_analytical_query_cost_profile.py tests/validators/test_validate_analytical_query_cost_profile.py
+          python -m unittest tests.validators.test_validate_analytical_query_cost_profile --verbose
+          python tools/validators/validate_analytical_query_cost_profile.py --fixtures
+      - name: Validate generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-analytical-query-cost-profile-20260811.json --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Analytical query cost profile"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only engine, input-size, plan-digest, logical-index, resource-budget, observation, disclosure, and identity coherence."
+            echo "- Boundary: no raw SQL or plan text, query execution, catalog lookup, telemetry authentication, production budget, policy or review decision, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
