@@ -1,10 +1,12 @@
-# KFM Archaeology domain CI readiness workflow.
-# Status: PROPOSED explicit holds; executable Archaeology validation, proof, and
-# release-dry-run producers are not established in current repository evidence.
+# KFM Archaeology domain CI workflow.
+# Status: one bounded synthetic ThreeDDocumentation paradata validation slice is
+# executable; broader Archaeology validation, proof, and release-dry-run
+# producers remain explicit holds.
 #
 # Authority boundary:
-# - This workflow inspects repository maturity without opening protected
-#   Archaeology payloads or exposing exact or reverse-engineerable locations.
+# - This workflow executes synthetic, no-network paradata fixtures without
+#   opening protected Archaeology payloads or exposing exact or
+#   reverse-engineerable locations.
 # - It does not validate Archaeology truth, resolve cultural or sovereignty
 #   authority, build an EvidenceBundle or ProofPack, admit sources, apply policy,
 #   promote lifecycle artifacts, approve release, write published data, or publish.
@@ -24,13 +26,18 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
   TZ: UTC
   PYTHONUNBUFFERED: "1"
 
 jobs:
   validate-archaeology:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out Archaeology boundaries
@@ -42,64 +49,61 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
-      - name: Evaluate Archaeology validation readiness
+      - name: Install declared Archaeology validation dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Validate bounded synthetic ThreeDDocumentation paradata
         shell: bash
         run: |
           set -euo pipefail
 
           required_paths=(
-            "docs/domains/archaeology/README.md"
-            "docs/domains/archaeology/SENSITIVITY.md"
-            "docs/domains/archaeology/CULTURAL_REVIEW.md"
-            "contracts/domains/archaeology/README.md"
-            "schemas/contracts/v1/domains/archaeology/README.md"
-            "fixtures/domains/archaeology/README.md"
-            "policy/domains/archaeology/README.md"
-            "tests/domains/archaeology/README.md"
-            "tools/validators/archaeology/README.md"
-            "tools/validators/domains/archaeology/README.md"
-            "release/candidates/archaeology/README.md"
+            "contracts/domains/archaeology/three_d_documentation.md"
+            "schemas/contracts/v1/domains/archaeology/three_d_documentation.schema.json"
+            "fixtures/contracts/v1/domains/archaeology/three_d_documentation/cases.json"
+            "tools/validators/domains/archaeology/validate_three_d_documentation.py"
+            "tests/validators/domains/archaeology/test_validate_three_d_documentation.py"
           )
 
           for required_path in "${required_paths[@]}"; do
-            if [[ ! -e "$required_path" ]]; then
-              echo "::error::Required Archaeology boundary is missing: $required_path"
+            if [[ ! -f "$required_path" ]]; then
+              echo "::error::Required Archaeology validation artifact is missing: $required_path"
               exit 1
             fi
           done
 
-          python tools/validators/ci_readiness.py \
-            --label "Archaeology" \
-            --test-root tests/domains/archaeology \
-            --validator-root tools/validators/archaeology \
-            --validator-root tools/validators/domains/archaeology
+          python -m py_compile \
+            tools/validators/domains/archaeology/validate_three_d_documentation.py \
+            tests/validators/domains/archaeology/test_validate_three_d_documentation.py
+          python -m unittest \
+            tests.validators.domains.archaeology.test_validate_three_d_documentation \
+            --verbose
+          python tools/validators/domains/archaeology/validate_three_d_documentation.py \
+            --fixtures
 
-          echo "WORKFLOW_SKIPPED_EXPLICIT: validate-archaeology"
-          echo "WORKFLOW_HOLD: executable Archaeology validation is not established"
-
-      - name: Record Archaeology validation hold
+      - name: Record bounded Archaeology validation scope
         if: always()
         shell: bash
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Archaeology validation status
 
-          `WORKFLOW_SKIPPED_EXPLICIT`
+          Job status: `${{ job.status }}`
 
-          `WORKFLOW_HOLD: executable Archaeology validation is not established`
+          `SUBSTANTIVE_SCOPE: three-d-documentation-paradata`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          This job executes one deterministic, synthetic, no-network paradata
+          suite covering acquisition, processing, scale, georeference,
+          interpretation, asset roles, and governance-reference coherence.
 
-          Current repository evidence contains named test modules, but sampled and
-          collected topology remains placeholder-backed, and both Archaeology
-          validator lanes are README-only.
-
-          This lane inspects structure only. It does not read protected payloads,
-          validate site identity, expose geometry, resolve rights or cultural
-          authority, apply sensitivity policy, establish evidence closure, or
-          prove public-surface safety.
+          A successful job proves fixture-profile conformance only. It does not
+          read a 3D asset, validate archaeological truth or site identity, expose
+          geometry, resolve evidence or rights, establish cultural authority,
+          apply sensitivity policy, approve review, construct proof, promote,
+          release, deploy, publish, or authorize public use.
           EOF
 
   build-proof-archaeology:
