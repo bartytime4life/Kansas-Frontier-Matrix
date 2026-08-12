@@ -22,8 +22,8 @@ authority_rank: implementation orientation subordinate to adopted doctrine, acce
 canonical_relationship: same-path update; no new authority, generated projection, compatibility path, job, queue, runtime binding, writer, receipt instance, release decision, or publication capability created
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 079bedbf566ad321b11e278749a188998f430165
-evidence_repository_tree: ec9204c4eaf6e2b40efa00aa359cb54db87d08ca
+evidence_base_commit: 73038246390f2f2a28952f10eb36f28eace1b409
+evidence_repository_tree: 69777d12df676af92ae1104b54774111f3004520
 evidence_lane_tree: 00e67290ff158b74761133b7e3a5deaea5c57838
 evidence_target_prior_blob: ad25d9d9fd82990b4a2303be3deee774202adeff
 evidence_entrypoint_blob: 0a80db14c4eecb130ad5a5f427742a7d793323d1
@@ -79,7 +79,7 @@ notes:
 [![Receipts: append only](https://img.shields.io/badge/receipts-append--only-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: 079bedb](https://img.shields.io/badge/evidence%20base-079bedb-6e7781?style=flat-square)](#11-inspection-path)
+[![Evidence base: 7303824](https://img.shields.io/badge/evidence%20base-7303824-6e7781?style=flat-square)](#11-inspection-path)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-receipt-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-path) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Rollback](#17-correction-and-rollback)
 
@@ -89,7 +89,7 @@ notes:
 > Badges summarize the pinned repository inspection. They are navigation aids, not live health, deployment, validation, approval, or release signals.
 
 > [!IMPORTANT]
-> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@079bedbf566ad321b11e278749a188998f430165`, this lane contains exactly two tracked files: this README and a 55-byte [`main.py`](./main.py). The Python file contains only `# receipt_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state:** `CONFIRMED / PLACEHOLDER-ONLY`. At `main@73038246390f2f2a28952f10eb36f28eace1b409`, this lane contains exactly two tracked files: this README and a 55-byte [`main.py`](./main.py). The Python file contains only `# receipt_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 Repository-wide name and path inspection found no import, trigger, queue, schedule, package, configuration, test, policy binding, deployment, writer, or output binding for `receipt_worker`. This is bounded repository evidence, not proof about untracked experiments or external systems.
 
@@ -516,15 +516,15 @@ An implementation PR must provide an accepted binding matrix or applicable ADR/m
 The repository state in this README can be reproduced without network access:
 
 ```bash
-git rev-parse 079bedbf566ad321b11e278749a188998f430165^{tree}
-git rev-parse 079bedbf566ad321b11e278749a188998f430165:apps/workers/src/receipt_worker
-git ls-tree -rl 079bedbf566ad321b11e278749a188998f430165 \
+git rev-parse 73038246390f2f2a28952f10eb36f28eace1b409^{tree}
+git rev-parse 73038246390f2f2a28952f10eb36f28eace1b409:apps/workers/src/receipt_worker
+git ls-tree -rl 73038246390f2f2a28952f10eb36f28eace1b409 \
   apps/workers/src/receipt_worker
-git show 079bedbf566ad321b11e278749a188998f430165:apps/workers/src/receipt_worker/main.py
+git show 73038246390f2f2a28952f10eb36f28eace1b409:apps/workers/src/receipt_worker/main.py
 git grep -n -i -E 'receipt_worker|receipt worker' \
-  079bedbf566ad321b11e278749a188998f430165 -- \
+  73038246390f2f2a28952f10eb36f28eace1b409 -- \
   ':!apps/workers/src/receipt_worker/README.md'
-git ls-tree -r --name-only 079bedbf566ad321b11e278749a188998f430165 -- \
+git ls-tree -r --name-only 73038246390f2f2a28952f10eb36f28eace1b409 -- \
   data/receipts
 rg --files contracts schemas fixtures tests tools policy release data docs \
   | rg -i 'receipt|proof|provenance|attest|signature|catalog'
@@ -536,7 +536,7 @@ The file totals above were calculated from the pinned tree, not the mutable work
 
 | Evidence | Pinned object | Supports | Does not prove |
 |---|---|---|---|
-| Repository base | commit `079bedbf566ad321b11e278749a188998f430165`; tree `ec9204c4eaf6e2b40efa00aa359cb54db87d08ca` | Exact review baseline | Runtime, security, release, or deployment state |
+| Repository base | commit `73038246390f2f2a28952f10eb36f28eace1b409`; tree `69777d12df676af92ae1104b54774111f3004520` | Exact review baseline | Runtime, security, release, or deployment state |
 | Receipt Worker lane | tree `00e67290ff158b74761133b7e3a5deaea5c57838` | Complete two-file lane inventory | Off-repository state |
 | Prior README | blob `ad25d9d9fd82990b4a2303be3deee774202adeff` | Same-path baseline and no-loss review | Worker behavior |
 | Placeholder entrypoint | blob `0a80db14c4eecb130ad5a5f427742a7d793323d1` | Exact comment-only source bytes | Importability or execution |
