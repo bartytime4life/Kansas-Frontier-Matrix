@@ -8,7 +8,7 @@
     "fixtures/contracts/v1/governance/verification_backlog_item/cases_ready_hold.json": "sha256:c4622bd2c86cb4995b12b38733a2756055f9f2608bc8b8604069fd94c61cb48a",
     "schemas/contracts/v1/governance/verification_backlog_item.schema.json": "sha256:a71a8df7e20f5344df38ab83eaf3c16ff1b215bd28e401040c60297b4710b30a",
     "tests/validators/governance/test_verification_backlog_item.py": "sha256:b83acd8b7d053f27dc0a84c30bdd6ab740e3c765acf33afeaa84b83d1cf2dac1",
-    "tools/validators/governance/README.md": "sha256:48dcaa0d3c18e866a46309cec1c5da8c99022122c2022858db3160d7b77468f8",
+    "tools/validators/governance/README.md": "sha256:8bf9fd5488cdcb50efc44992b36a558088d70de0fc2decf07e60ae7b8cebdf68",
     "tools/validators/governance/_verification_backlog_item_fixtures.py": "sha256:b0e8ae7aeb8574c13dcb5f90ba54d71ea8982f4e7722a171a13196dc5e5d6c5f",
     "tools/validators/governance/_verification_backlog_item_io.py": "sha256:479a2c35855c5b2ac237a00858f0a79a7e0bd9fc81a0cf3bea6e96357e3d3b07",
     "tools/validators/governance/_verification_backlog_item_model.py": "sha256:6d90a3b4a18e56c76825848c214267491bd8e495f6f387d74147e86724b38af9",
