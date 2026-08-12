@@ -8,6 +8,9 @@ owners: API steward + Release steward · NEEDS VERIFICATION
 created: 2026-05-24
 updated: 2026-08-12
 policy_label: public
+owning_root: docs/
+responsibility: Map governed API promotion gates, lifecycle resources, and request-time outcomes without redefining canonical contracts, schemas, policy, or release authority.
+truth_posture: CONFIRMED doctrine and verified repository homes / PROPOSED cross-family resource map / NEEDS VERIFICATION runtime bindings and human review
 related:
   - README.md
   - ../governed-api.md
