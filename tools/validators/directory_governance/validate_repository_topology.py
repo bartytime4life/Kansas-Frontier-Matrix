@@ -1233,18 +1233,26 @@ def main(argv: Sequence[str] | None = None) -> int:
             "schema_version": REPORT_VERSION,
         }
         code = 2
-    if args.format == "text" and "counts" in report:
-        counts = report["counts"]
+    safe_report = json.loads(json.dumps(report))
+    if (
+        isinstance(safe_report, dict)
+        and isinstance(safe_report.get("baseline"), dict)
+        and "trusted_transition" in safe_report["baseline"]
+    ):
+        safe_report["baseline"]["trusted_transition"] = "[REDACTED]"
+
+    if args.format == "text" and "counts" in safe_report:
+        counts = safe_report["counts"]
         print(
-            f"{report['outcome']}: {report['tracked_path_count']} tracked paths; "
+            f"{safe_report['outcome']}: {safe_report['tracked_path_count']} tracked paths; "
             f"{counts['fail_invariant']} invariant; {counts['fail_new_drift']} new drift; "
             f"{counts['baselined_warning']} baselined warnings; "
-            f"{len(report['baseline']['stale_fingerprints'])} stale baseline entries"
+            f"{len(safe_report['baseline']['stale_fingerprints'])} stale baseline entries"
         )
     elif args.format == "text":
-        print(f"ERROR_VALIDATOR: {report['error']}")
+        print(f"ERROR_VALIDATOR: {safe_report['error']}")
     else:
-        print(json.dumps(report, sort_keys=True, separators=(",", ":")))
+        print(json.dumps(safe_report, sort_keys=True, separators=(",", ":")))
     return code
 
 
