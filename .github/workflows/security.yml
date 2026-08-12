@@ -57,6 +57,14 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Enforce the deterministic workflow-security ratchet
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          TZ: UTC
+        run: python3 tools/validators/governance/validate_workflow_security.py
+
       - name: Scan repository dependencies, configuration, and secrets
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:

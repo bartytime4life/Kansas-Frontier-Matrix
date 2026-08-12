@@ -38,7 +38,6 @@ permissions:
   contents: read
   packages: read
   pull-requests: read
-  security-events: write
 
 concurrency:
   group: codeql-${{ github.workflow }}-${{ github.ref }}
@@ -49,6 +48,12 @@ jobs:
     name: codeql-scan (${{ matrix.language }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+      packages: read
+      pull-requests: read
+      security-events: write
 
     strategy:
       fail-fast: false

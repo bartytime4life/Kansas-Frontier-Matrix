@@ -3,12 +3,12 @@ doc_id: kfm://doc/doctrine/readme
 title: docs/doctrine/ — Doctrine Landing Page
 type: readme
 subtype: directory-landing-page
-version: v0.5
-prior_version: v0.4
+version: v0.6
+prior_version: v0.5
 status: active; repository-grounded; documentation-only; non-authoritative
 owner: "NEEDS VERIFICATION — CODEOWNERS routes /docs/doctrine/ to @bartytime4life; no accepted docs-steward assignment, required-review rule, or independent approval control was verified"
 created: 2026-05-18
-updated: 2026-07-26
+updated: 2026-08-12
 policy_label: public
 current_path: docs/doctrine/README.md
 owning_root: docs/
@@ -21,11 +21,13 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 67f1d7eac9baabd69da997ba569de54c6b7c1d11
-  target_prior_blob: 1544f4b8e71326be74e7e1a15cfc9175a29b4ef3
+  base_commit: c2594045856765c8b155020d9cd2e95b5db873f2
+  target_prior_blob: e6e44bfe8666e0a6d38d2abc5b0e98b68daeba50
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   adr_index_blob: 919ec44d8eb0fab2e558cbc54c90b0d37e56a201
+  link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
+  docs_build_workflow_blob: 7816e07d66774d2e2b3b80b66d5d3349a1393861
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
@@ -45,7 +47,8 @@ notes:
   - "v0.5 reflects accepted ADR-0029 and the exact v2 adoption boundary while preserving this file as a non-authoritative landing page."
   - "ADR-0029 adopts the exact pinned Directory Rules v2 bytes. Tombstoning, reference migration, physical deletion, implementation, release, promotion, and publication remain separate and unauthorized by this landing-page update."
   - "truth-posture.md and trust-membrane.md were verified at the same blob SHA; this README records the identity conflict rather than treating them as independent doctrine."
-  - "The repository link-check and docs-build workflows remain explicit holds; this revision claims bounded source validation, not host-render validation."
+  - "The repository link-check now runs deterministic, no-network checks for local targets in changed Markdown. Historical unchanged documents and several syntax classes remain outside that bounded coverage."
+  - "The docs-build workflow remains an explicit hold; this revision claims no generated-site, preview, hosting, release, or publication readiness."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -114,7 +117,7 @@ The current ADR index records ADR-0029 as `accepted` and the other 28 numbered A
 
 ## Status
 
-| Surface | Finding at `main@b960e098…` | Safe conclusion |
+| Surface | Finding at `main@c259404…` | Safe conclusion |
 |---|---|---|
 | This README | **CONFIRMED present**, prior blob `4db8bac…` | Same-path v0.3 modernization |
 | Core doctrine paths | **CONFIRMED present** for Directory Rules, Authority Ladder, Evidence First, Lifecycle Law, Trust Membrane, Derived Stays Derived, and Doctrine Encyclopedia | Presence is not adoption; each inspected file declares draft status |
@@ -123,7 +126,7 @@ The current ADR index records ADR-0029 as `accepted` and the other 28 numbered A
 | CODEOWNERS | **CONFIRMED** route `/docs/doctrine/ @bartytime4life` | Review routing exists; stewardship and enforced approval remain separate |
 | ADR index | **CONFIRMED** 29 numbered records | ADR-0029 is `accepted`; the other 28 remain `proposed` |
 | `docs-build` | **Explicit workflow hold** | No accepted generator, preview artifact, or publication handoff |
-| `link-check` | **Explicit workflow hold** | No repository-native link or anchor validation currently runs |
+| `link-check` | **CONFIRMED bounded implementation** | Deterministic no-network checks cover supported local targets in changed Markdown; hosted outcome and historical-tree coverage remain separate |
 
 **Overall posture:** active folder; mixed draft documents; visible unresolved conflicts; no implementation, review, release, or publication state inferred.
 
@@ -179,7 +182,7 @@ Doctrine emits constraints and vocabulary for architecture, contracts, schemas, 
 
 ## Validation
 
-| Check | Result for v0.3 |
+| Check | Result for v0.6 |
 |---|---|
 | Directory Rules README contract | **PASS** — first twelve H2 sections follow Purpose → Last reviewed |
 | Same-path identity | **PASS** — no rename, move, sibling README, or parallel authority |
@@ -187,7 +190,7 @@ Doctrine emits constraints and vocabulary for architecture, contracts, schemas, 
 | Internal file links and badge destinations | **PASS** by bounded checks against the pinned snapshot |
 | Local anchors | **PASS** by source inspection |
 | Mermaid source | **PASS** as source; host rendering not run |
-| Repository `link-check` | **NOT RUN / HOLD** — its workflow states that no links or anchors are checked |
+| Repository `link-check` | **IMPLEMENTED / HOSTED RESULT NEEDS VERIFICATION** — focused tests and a changed-Markdown local-target validator run without network access |
 | Repository `docs-build` | **NOT RUN / HOLD** — no accepted generator or preview handoff |
 | Current PR checks | **PENDING** until GitHub records runs for the PR commit |
 
@@ -201,7 +204,7 @@ These checks do not prove doctrine adoption, implementation, policy approval, so
 
 - `.github/CODEOWNERS` routes this path to `@bartytime4life`.
 - That route is not a StewardshipAssignment, ReviewRecord, branch-protection rule, independent approval, release approval, or publication authority.
-- Substantive doctrine changes require the affected doctrine owners and subsystem reviewers; this v0.3 change alters no doctrine.
+- Substantive doctrine changes require the affected doctrine owners and subsystem reviewers; this v0.6 change alters no doctrine.
 - Do not self-approve, auto-merge, release, deploy, or publish from this documentation change.
 
 [Back to top](#top)
@@ -247,12 +250,13 @@ A README or index cannot promote an ADR. A doctrine-changing PR must cite the ex
 
 ## Last reviewed
 
-**2026-07-23** — v0.3 repository-grounded same-path modernization.
+**2026-08-12** — v0.6 repository-grounded correction of stale workflow status.
 
 Re-review when an event- or risk-based trigger applies under [`directory-rules.md` §16.5](./directory-rules.md#165-review-triggers).
 
 | Edition | Date | Change |
 |---|---|---|
+| **v0.6** | 2026-08-12 | Corrected the stale claim that `link-check` is held: the workflow now performs bounded deterministic checks for changed Markdown. Preserved the separate `docs-build` hold and all non-publisher boundaries. **No doctrine changed.** |
 | **v0.5** | 2026-07-26 | Reflected accepted ADR-0029, exact v2 adoption, restored legacy compatibility, and the continuing tombstone/deletion holds. **This landing page grants no authority.** |
 | **v0.4** | 2026-07-26 | Refreshed the proposed v2 ratification packet and ADR inventory labels. **No doctrine changed.** |
 | **v0.3** | 2026-07-23 | Reconciled path presence and status, preserved stable anchors, exposed identity conflicts, repaired links, aligned the folder-README section order, replaced placeholder claims with evidence-bearing status, and documented real workflow holds. **No doctrine changed.** |
@@ -333,7 +337,7 @@ Prefer the smallest useful reversible delta. Presentation must project evidence,
 2. **CONFLICTED — AI operating-contract identity.** Reconcile filename, H1, doc ID, authority class, proposed home, and inbound links.
 3. **NEEDS VERIFICATION — complete inventory.** Run a recursive doctrine inventory and duplicate-content scan without promoting drafts.
 4. **NEEDS VERIFICATION — ownership.** CODEOWNERS routing does not establish stewardship, branch rules, or independent approval.
-5. **NEEDS VERIFICATION — link/render enforcement.** `link-check` and `docs-build` remain explicit holds.
+5. **NEEDS VERIFICATION — link/render coverage.** `link-check` is implemented for supported local targets in changed Markdown, but historical unchanged documents and excluded syntax remain outside its bounded coverage; `docs-build` remains an explicit hold.
 6. **CONFLICTED — renderer docs.** `docs/architecture/maplibre.md` and proposed ADR-0007 exist; repeatedly referenced `docs/architecture/maplibre-3d.md` does not at the snapshot.
 7. **NEEDS VERIFICATION — registry coverage.** `control_plane/document_registry.yaml` is a narrow scaffold, not a complete doctrine inventory.
 8. **OPEN — encyclopedia relationship.** Resolve the rank and maintenance relationship between `docs/doctrine/encyclopedia.md` and `docs/encyclopedia/`.

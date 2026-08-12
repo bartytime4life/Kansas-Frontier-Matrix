@@ -4,6 +4,28 @@
 dry-run analysis tools. They do not create evidence, make policy or review
 decisions, authorize repository operations, release artifacts, or publish.
 
+## Workflow-security ratchet
+
+`validate_workflow_security.py` statically checks every tracked GitHub Actions
+workflow against twenty deterministic rules. The profile covers bounded UTF-8
+input, unique names, immutable action and container pins, non-persisted checkout
+credentials, explicit least-privilege permissions, trusted mutation triggers,
+`pull_request_target` containment, GitHub-hosted runners, secret inheritance and
+global-secret denial, untrusted shell interpolation, pipe-to-shell downloads,
+deprecated command channels, and bounded job timeouts.
+
+The parser accepts the repository's reviewed canonical YAML subset. It rejects
+anchors, aliases, merge keys, quoted or escaped mapping keys, security-relevant
+block scalars, flow-style step mappings, alternate job/step indentation, and
+other partially interpretable structures as `KFM-WF-001` instead of reporting
+a false pass. Inline comments, quoted runner values, and dot or bracket
+expression properties are normalized before security checks.
+
+The current 424-workflow tree passes all twenty rules with an empty waiver
+baseline. The tool reads local bytes only; a pass is static source evidence, not
+a hosted result, ruleset guarantee, vulnerability-absence claim, approval,
+release, deployment, or publication authority.
+
 ## BriefingSignal executables
 
 ### `validate_briefing_signal.py`
@@ -143,6 +165,9 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tools/validators/governance/validate_verification_backlog_item.py \
   --cases
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/governance/validate_workflow_security.py --format text
 ```
 
 None of these tools fetches sources, reads live GitHub state, writes GitHub

@@ -2,6 +2,7 @@
 #
 # Responsibility:
 #   Run the repository-owned aggregate schema validators, exercise the bounded
+#   workflow-security and directory-topology ratchets, exercise the bounded
 #   GENERATED_RECEIPT integrity validator, run the focused MaterialChangeAssessment
 #   profile, and prove that the reviewed invalid EvidenceBundle canary is rejected
 #   for its expected schema reason rather than treating any arbitrary command
@@ -16,7 +17,8 @@
 #
 # Inputs:
 #   The root Makefile and pyproject, tools/validators/_common/run_all.py, its
-#   configured validator scripts and fixtures, the focused shared-runner,
+#   configured validator scripts and fixtures, the workflow and path baselines,
+#   their focused unit tests, the focused shared-runner,
 #   generated-receipt, and MaterialChangeAssessment tests, and the reviewed
 #   EvidenceBundle invalid fixture plus expected-error sidecar.
 #
@@ -75,6 +77,7 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -87,6 +90,14 @@ jobs:
       - name: Install declared validator dependencies
         shell: bash
         run: python -m pip install -e .
+
+      - name: Enforce repository workflow and topology ratchets
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD^' }}
+        run: |
+          set -euo pipefail
+          make repository-guardrails
 
       - name: Require a non-vacuous aggregate validator inventory
         shell: bash
@@ -180,6 +191,8 @@ jobs:
             echo "- Generated-receipt commands: focused no-network unittest suite plus \`python tools/validators/validate_generated_receipt.py --fixtures\`."
             echo "- Material-change commands: focused no-network unittest suite plus \`python tools/validators/validate_material_change_assessment.py --fixtures\`."
             echo "- Aggregate command: \`make schemas\`."
+            echo "- Repository guardrail command: \`make repository-guardrails\` (twenty workflow-security rules plus twenty directory-topology rules)."
+            echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The aggregate runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
             echo "- A green generated-receipt result proves bounded schema, cross-field, path, SHA-256-prefix, citation-presence, and declared-review-claim behavior for synthetic inputs; review claims are not authenticated and grant no repository authority."
