@@ -1,0 +1,79 @@
+{
+  "assessment_id": "kfm:drift-register-triage:bf11a0fd65156a656f6b8c1930bb440d9c770bc592dd93f3c8ae90161640d3b1",
+  "effects": {
+    "approves_adr": false,
+    "assigns_owner": false,
+    "changes_register": false,
+    "executes_correction": false,
+    "inspects_paths": false,
+    "promotes": false,
+    "publishes": false,
+    "releases": false,
+    "resolves_drift": false
+  },
+  "entries": [
+    {
+      "affected_paths": ["docs/architecture/fixture.md"],
+      "candidate_adr_ref": null,
+      "category": "READINESS",
+      "correction_ref": null,
+      "drift_id": "DRIFT-2026-08-11-001",
+      "evidence_refs": ["kfm:evidence:fixture-drift-observation-001"],
+      "next_review_at": "2026-08-18T15:00:00Z",
+      "owner_roles": ["architecture-steward"],
+      "resolution_ref": null,
+      "rollback_ref": null,
+      "severity": "MODERATE",
+      "state": "OPEN"
+    },
+    {
+      "affected_paths": ["schemas/contracts/v1/fixture.schema.json"],
+      "candidate_adr_ref": "docs/adr/ADR-0097-fixture-schema-home.md",
+      "category": "SCHEMA_HOME",
+      "correction_ref": null,
+      "drift_id": "DRIFT-2026-08-11-002",
+      "evidence_refs": ["kfm:evidence:fixture-drift-observation-002"],
+      "next_review_at": "2026-08-15T15:00:00Z",
+      "owner_roles": ["architecture-steward", "schema-steward"],
+      "resolution_ref": null,
+      "rollback_ref": null,
+      "severity": "HIGH",
+      "state": "BLOCKED_ADR"
+    },
+    {
+      "affected_paths": ["tools/validators/fixture.py"],
+      "candidate_adr_ref": null,
+      "category": "COMPATIBILITY",
+      "correction_ref": "kfm:correction:fixture-drift-003",
+      "drift_id": "DRIFT-2026-08-11-003",
+      "evidence_refs": ["kfm:evidence:fixture-drift-observation-003"],
+      "next_review_at": "2026-08-13T15:00:00Z",
+      "owner_roles": ["repository-steward", "validation-steward"],
+      "resolution_ref": null,
+      "rollback_ref": "kfm:rollback:fixture-drift-003",
+      "severity": "CRITICAL",
+      "state": "CORRECTION_IN_PROGRESS"
+    },
+    {
+      "affected_paths": ["docs/registers/fixture.md"],
+      "candidate_adr_ref": null,
+      "category": "PARALLEL_AUTHORITY",
+      "correction_ref": "kfm:correction:fixture-drift-004",
+      "drift_id": "DRIFT-2026-08-11-004",
+      "evidence_refs": ["kfm:evidence:fixture-drift-verification-004"],
+      "next_review_at": null,
+      "owner_roles": ["governance-steward"],
+      "resolution_ref": "kfm:resolution:fixture-drift-004",
+      "rollback_ref": "kfm:rollback:fixture-drift-004",
+      "severity": "HIGH",
+      "state": "RESOLVED"
+    }
+  ],
+  "observed_at": "2026-08-11T15:00:00Z",
+  "profile": "kfm.governance.drift-register-triage-assessment.fixture.v1",
+  "review": {
+    "record_refs": ["kfm:review:fixture-drift-register-triage"],
+    "state": "COMPLETE"
+  },
+  "snapshot_ref": "kfm:drift-register-snapshot:fixture-20260811"
+}
