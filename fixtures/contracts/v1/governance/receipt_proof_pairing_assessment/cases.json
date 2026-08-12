@@ -275,8 +275,8 @@
               "proof_ref": "kfm://synthetic/proof/alpha",
               "logical_key": "alpha.validation",
               "subject_ref": "kfm://synthetic/artifact/alpha",
-              "proof_kind": "VALIDATION_PROOF",
-              "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+              "proof_kind": "VALIDATIOON_PROOF",
+              "artifact_digest": "sha256:222222222222222222222222222222222222222222222222222222222222222",
               "produced_at": "2026-08-11T19:59:00Z",
               "resolution_state": "RESOLVED"
             },
@@ -310,65 +310,5 @@
               "receipt_ref": "kfm://synthetic/receipt/aaa",
               "logical_key": "aaa.validation",
               "subject_ref": "kfm://synthetic/artifact/alpha",
-              "receipt_kind": "VALIDATION_RECEIPT",
-              "artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-              "produced_at": "2026-08-11T19:58:00Z",
-              "resolution_state": "RESOLVED"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "review_complete_without_record",
-      "expected_outcome": "DENY",
-      "expected_codes": [
-        "REVIEW_RECORD_REQUIRED"
-      ],
-      "operations": [
-        {
-          "op": "set",
-          "path": [
-            "review",
-            "state"
-          ],
-          "value": "COMPLETE_FOR_DECLARED_SCOPE"
-        }
-      ]
-    },
-    {
-      "name": "authority_overclaim",
-      "expected_outcome": "ERROR",
-      "expected_codes": [
-        "SCHEMA_INVALID"
-      ],
-      "operations": [
-        {
-          "op": "set",
-          "path": [
-            "permissions",
-            "may_publish"
-          ],
-          "value": true
-        }
-      ]
-    },
-    {
-      "name": "tampered_profile_hash",
-      "expected_outcome": "DENY",
-      "expected_codes": [
-        "PROFILE_SPEC_HASH_MISMATCH"
-      ],
-      "tamper": "profile_hash"
-    },
-    {
-      "name": "tampered_assessment_id",
-      "expected_outcome": "DENY",
-      "expected_codes": [
-        "ASSESSMENT_ID_MISMATCH",
-        "PROFILE_SPEC_HASH_MISMATCH"
-      ],
-      "tamper": "assessment_id"
-    }
-  ]
-}
+              "receipt_kind": "VALIDATIOON_RECEIPT",
+              "artif7EöF–vW7B#¢'6†#Sc£"À¢'&öGV6VEöB#¢###bÓ‚ÓC“£Sƒ£¢"À¢'&W6öÇWF–öå÷7FFR#¢%$U4ôÅdTB ¢Ð¢Ð¢Ð¢Ð¢ÒÀ¢°¢&æÖR#¢'&Wf–Wuö6ö×ÆWFU÷v—F†÷WE÷&V6÷&B"À¢&W‡V7FVEö÷WF6öÖR#¢$DTå’"À¢&W‡V7FVEö6öFW2#¢°¢%$Ud”Uuõ$T4õ$Eõ$UT•$TB ¢ÒÀ¢&÷W&F–öç2#¢°¢°¢&÷#¢'6WB"À¢'F‚#¢°¢'&Wf–Wr"À¢'7FFR ¢ÒÀ¢'fÇVR#¢$4ôÕÄUDUôdõ%ôDT4Ä$TEõ44õR ¢Ð¢Ð¢ÒÀ¢°¢&æÖR#¢&WF†÷&—G•ö÷fW&6Æ–Ò"À¢&W‡V7FVEö÷WF6öÖR#¢$U%$õ""À¢&W‡V7FVEö6öFW2#¢°¢%44„TÔô”ådÄ”B ¢ÒÀ¢&÷W&F–öç2#¢°¢°¢&÷#¢'6WB"À¢'F‚#¢°¢'W&Ö—76–öç2"À¢&Ö•÷V&Æ—6‚ ¢ÒÀ¢'fÇVR#¢G'VP¢Ð¢Ð¢ÒÀ¢°¢&æÖR#¢'F×W&VE÷&öf–ÆUö†6‚"À¢&W‡V7FVEö÷WF6öÖR#¢$DTå’"À¢&W‡V7FVEö6öFW2#¢°¢%$ôd”ÄUõ5T5ô„4…ôÔ•4ÔD4‚ ¢ÒÀ¢'F×W"#¢'&öf–ÆUö†6‚ ¢ÒÀ¢°¢&æÖR#¢'F×W&VEö76W76ÖVçEö–B"À¢&W‡V7FVEö÷WF6öÖR#¢$DTå’"À¢&W‡V7FVEö6öFW2#¢°¢$54U54ÔTåEô”EôÔ•4ÔD4‚"À¢%$ôd”ÄUõ5T5ô„4…ôÔ•4ÔD4‚ ¢ÒÀ¢'F×W"#¢&76W76ÖVçEö–B ¢Ð¢Ð§Ð 
