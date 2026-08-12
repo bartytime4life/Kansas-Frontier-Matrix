@@ -11,7 +11,7 @@
     "tools/validators/ui/validate_view_registry_profile.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/view-registry-profile.yml": "sha256:6c38c04eaf6f4a02a85376d6d20cf03fcec52c0962a63d428477c332012936a5",
+    ".github/workflows/view-registry-profile.yml": "sha256:79d20dacf0da2a0678b363da7c30a959bacd5c6a7f43376651874fa703f86276",
     "contracts/ui/view_registry_profile.md": "sha256:0f8960d6cc585e5085b2603433813904fffd66b9e04c55707ea449f0cc33b8f0",
     "docs/intake/exploratory/pass-32-view-registry-source-map.md": "sha256:e79cbc00d99a10cb842fbcecdd5240f05775c970213e8be67aab431e68cd3b47",
     "fixtures/ui/view_registry_profile/cases.json": "sha256:282f654bb7e3dea5e51d063e2f5fe8e120d07e2b070ac921e4ff8a5a1576db34",
