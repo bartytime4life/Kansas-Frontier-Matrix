@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/drone_capture_authorization_metadata.schema.json",
+  "title": "DroneCaptureAuthorizationMetadata",
+  "description": "Fixture-only metadata for the authorization reference used by drone field-capture handoff. Conformance is not legal or operational authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "source_card",
+    "spec_hash",
+    "metadata_id",
+    "recorded_at",
+    "record_state",
+    "capture",
+    "authorization",
+    "operating_area",
+    "altitude",
+    "airspace_review",
+    "safety",
+    "governance",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "DroneCaptureAuthorizationMetadata"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.drone-capture-authorization-metadata.fixture.v1"},
+    "source_card": {"const": "KFM-P18-INV-466"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "metadata_id": {
+      "type": "string",
+      "pattern": "^kfm:drone-authorization-metadata:[a-f0-9]{24}$"
+    },
+    "recorded_at": {"$ref": "#/$defs/date_time"},
+    "record_state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_ref",
+        "field_handoff_assessment_ref",
+        "source_descriptor_ref",
+        "run_receipt_ref",
+        "aircraft_model_ref",
+        "captured_from",
+        "captured_until"
+      ],
+      "properties": {
+        "capture_ref": {"$ref": "#/$defs/ref"},
+        "field_handoff_assessment_ref": {"$ref": "#/$defs/ref"},
+        "source_descriptor_ref": {"$ref": "#/$defs/ref"},
+        "run_receipt_ref": {"$ref": "#/$defs/ref"},
+        "aircraft_model_ref": {"$ref": "#/$defs/ref"},
+        "captured_from": {"$ref": "#/$defs/date_time"},
+        "captured_until": {"$ref": "#/$defs/date_time"}
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_state",
+        "evidence_ref",
+        "identifier_digest",
+        "authority_source_ref",
+        "reviewed_at",
+        "valid_from",
+        "valid_until",
+        "authorization_parameters_ref"
+      ],
+      "properties": {
+        "evidence_state": {"enum": ["DOCUMENTED", "INCOMPLETE", "UNAVAILABLE", "UNKNOWN"]},
+        "evidence_ref": {"$ref": "#/$defs/nullable_ref"},
+        "identifier_digest": {"$ref": "#/$defs/nullable_sha256"},
+        "authority_source_ref": {"$ref": "#/$defs/nullable_ref"},
+        "reviewed_at": {"$ref": "#/$defs/nullable_date_time"},
+        "valid_from": {"$ref": "#/$defs/nullable_date_time"},
+        "valid_until": {"$ref": "#/$defs/nullable_date_time"},
+        "authorization_parameters_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "operating_area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["geometry_posture", "area_ref", "area_digest", "matches_capture_area"],
+      "properties": {
+        "geometry_posture": {"enum": ["EXACT_RESTRICTED", "GENERALIZED", "WITHHELD"]},
+        "area_ref": {"$ref": "#/$defs/nullable_ref"},
+        "area_digest": {"$ref": "#/$defs/sha256"},
+        "matches_capture_area": {"type": ["boolean", "null"]}
+      }
+    },
+    "altitude": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "authorized_ceiling_m", "observed_maximum_m", "units", "basis_ref"],
+      "properties": {
+        "reference": {"enum": ["AGL", "MSL", "UNKNOWN"]},
+        "authorized_ceiling_m": {"$ref": "#/$defs/nullable_nonnegative"},
+        "observed_maximum_m": {"$ref": "#/$defs/nullable_nonnegative"},
+        "units": {"const": "m"},
+        "basis_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "airspace_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result", "review_ref", "reviewed_at", "constraints_ref"],
+      "properties": {
+        "result": {
+          "enum": [
+            "CLEARED_WITH_CONSTRAINTS",
+            "CONFLICT_DECLARED",
+            "INCOMPLETE",
+            "NO_CONFLICT_DECLARED",
+            "UNKNOWN"
+          ]
+        },
+        "review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "reviewed_at": {"$ref": "#/$defs/nullable_date_time"},
+        "constraints_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["constraint_codes", "safety_plan_ref", "acknowledgment_ref", "unresolved_count"],
+      "properties": {
+        "constraint_codes": {"$ref": "#/$defs/token_array"},
+        "safety_plan_ref": {"$ref": "#/$defs/nullable_ref"},
+        "acknowledgment_ref": {"$ref": "#/$defs/nullable_ref"},
+        "unresolved_count": {"type": "integer", "minimum": 0, "maximum": 1000}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rights_ref", "safety_policy_ref", "evidence_bundle_ref", "review_state"],
+      "properties": {
+        "rights_ref": {"$ref": "#/$defs/nullable_ref"},
+        "safety_policy_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evidence_bundle_ref": {"$ref": "#/$defs/nullable_ref"},
+        "review_state": {"enum": ["APPROVED", "DENIED", "PENDING"]}
+      }
+    },
+    "limitations": {
+      "const": [
+        "AUTHORIZATION_METADATA_ONLY",
+        "NO_COORDINATES_OR_AIRSPACE_QUERY",
+        "NO_CURRENT_LEGAL_OR_OPERATIONAL_ASSERTION",
+        "NO_EVIDENCE_OR_POLICY_AUTHORITY",
+        "NO_REVIEW_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legal_authority",
+        "operational_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "legal_authority": {"const": false},
+        "operational_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "date_time": {"type": "string", "format": "date-time"},
+    "nullable_date_time": {"anyOf": [{"$ref": "#/$defs/date_time"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "nullable_nonnegative": {
+      "anyOf": [
+        {"type": "number", "minimum": 0, "maximum": 100000},
+        {"type": "null"}
+      ]
+    },
+    "token_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,63}$"}
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "contract_doc": "contracts/evidence/drone_capture_authorization_metadata.md",
+    "source_card": "KFM-P18-INV-466"
+  }
+}
