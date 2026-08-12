@@ -1,0 +1,100 @@
+# Validate the closed, synthetic Flora SpecimenRecord conformance profile.
+#
+# This workflow performs no source request, source activation, taxonomic
+# acceptance, evidence resolution, sensitivity approval, lifecycle promotion,
+# release, deployment, or publication.
+name: flora-specimen-record
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/flora-specimen-record.yml"
+      - "contracts/domains/flora/specimen_record.md"
+      - "schemas/contracts/v1/domains/flora/specimen_record.schema.json"
+      - "fixtures/domains/flora/specimen_record/**"
+      - "tools/validators/domains/flora/validate_specimen_record.py"
+      - "tests/domains/flora/test_specimen_record.py"
+      - "docs/intake/exploratory/specimen-record-conformance-source-map.md"
+      - "data/receipts/generated/genrec-flora-specimen-record-20260812.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/flora-specimen-record.yml"
+      - "contracts/domains/flora/specimen_record.md"
+      - "schemas/contracts/v1/domains/flora/specimen_record.schema.json"
+      - "fixtures/domains/flora/specimen_record/**"
+      - "tools/validators/domains/flora/validate_specimen_record.py"
+      - "tests/domains/flora/test_specimen_record.py"
+      - "docs/intake/exploratory/specimen-record-conformance-source-map.md"
+      - "data/receipts/generated/genrec-flora-specimen-record-20260812.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flora-specimen-record-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: flora-specimen-record
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out bounded fixture profile
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Install declared test dependencies
+        run: python -m pip install --no-input -e ".[test]"
+
+      - name: Run focused semantic tests
+        run: >-
+          python -m pytest -q -p no:cacheprovider
+          tests/domains/flora/test_specimen_record.py
+
+      - name: Replay exact fixture polarity
+        run: >-
+          python tools/validators/domains/flora/validate_specimen_record.py
+          --fixtures
+
+      - name: Verify generated authoring receipt integrity
+        run: >-
+          python tools/validators/validate_generated_receipt.py
+          data/receipts/generated/genrec-flora-specimen-record-20260812.json
+          --repo-root .
+
+      - name: Record bounded trust result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Flora SpecimenRecord conformance status
+
+          This job validates a closed synthetic candidate profile for
+          specimen-backed historical evidence, deterministic identity,
+          determination state, locality separation, rights, sensitivity,
+          correction lineage, and public-safe candidate projection.
+
+          A green result does not establish a real specimen, current
+          occurrence, accepted taxonomy, source identity or terms, evidence
+          resolution, rights, sensitivity approval, release, deployment, or
+          publication.
+          EOF
