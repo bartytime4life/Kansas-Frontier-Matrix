@@ -14,12 +14,12 @@ current_path: apps/workers/src/correction_worker/README.md
 scope_id: apps/workers/src/correction_worker/
 owning_root: apps/
 inherited_parent: apps/workers/src/README.md
-responsibility: orient contributors to the inert Correction Worker lane, its correction and release boundaries, implementation admission requirements, validation, maintenance, and rollback
+responsibility: orient contributors to the inert Correction Worker lane, its candidate-first correction and release boundaries, capability-scoped execution admission requirements, validation, maintenance, and rollback
 truth_posture: cite-or-abstain
 truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED]
 authority_class: inherited app-local worker lane
 authority_rank: implementation orientation subordinate to adopted doctrine, accepted ADRs, semantic contracts, schemas, policy, evidence, review, release decisions, correction lineage, receipts, and operational authorization
-canonical_relationship: same-path update; no new authority, generated projection, compatibility path, correction object, or runtime capability created
+canonical_relationship: same-path update; no new authority, generated projection, compatibility path, queue, runtime binding, correction object, release decision, or publication capability created
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: d00422105d38fbd3babafb940f78bcfe4dc1d114
@@ -75,10 +75,10 @@ notes:
 
 `apps/workers/src/correction_worker/`
 
-**Repository-grounded boundary for a possible correction-execution wrapper. The current lane is inert: its only Python file is a one-line greenfield-placeholder comment, and no repository binding makes it a job, queue consumer, correction processor, receipt writer, cache invalidator, or deployable process.**
+**Repository-grounded boundary for a possible correction-support wrapper. The current lane is inert: its only Python file is a one-line greenfield-placeholder comment, and no repository binding makes it a job, queue consumer, correction processor, receipt writer, cache invalidator, or deployable process.**
 
 [![Status: placeholder only](https://img.shields.io/badge/status-placeholder--only-6e7781?style=flat-square)](#2-repo-fit)
-[![Authority: executor only](https://img.shields.io/badge/authority-executor%20only-0969da?style=flat-square)](#3-authority-boundary)
+[![Authority: app-local wrapper](https://img.shields.io/badge/authority-app--local%20wrapper-0969da?style=flat-square)](#3-authority-boundary)
 [![History: append only](https://img.shields.io/badge/history-append--only-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
@@ -102,7 +102,7 @@ Repository-wide name and path inspection found no import, trigger, queue, schedu
 
 `apps/workers/src/correction_worker/` inherits the app-local source boundary from [`apps/workers/src/`](../README.md) and the background deployable boundary from [`apps/workers/`](../../README.md).
 
-If a correction execution model is later accepted, this directory may own only a thin worker wrapper: authenticated job intake, app-local dependency composition, process lifecycle, bounded error translation, capability-scoped dispatch, and delegation to correction, lineage, policy, evidence, release, receipt, cache, and carrier interfaces owned elsewhere.
+If a correction-support model is later accepted, this directory may own only a thin worker wrapper: authenticated job intake, app-local dependency composition, process lifecycle, bounded error translation, candidate assembly, and—only under a separately accepted immutable plan and least-privilege capability—scoped dispatch through correction, lineage, policy, evidence, release, receipt, cache, and carrier interfaces owned elsewhere.
 
 The current lane implements none of those responsibilities. It has no package manifest, import graph, queue consumer, schedule, command-line entry point, message parser, policy client, evidence client, release client, impact assessor, propagation executor, receipt writer, configuration reader, network access, deployment binding, health check, or emitted artifact.
 
