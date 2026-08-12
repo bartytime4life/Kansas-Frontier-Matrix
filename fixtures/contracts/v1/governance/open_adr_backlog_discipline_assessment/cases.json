@@ -1,0 +1,66 @@
+[
+  {
+    "name": "pass_coherent_snapshot",
+    "mutations": [],
+    "expected_outcome": "PASS",
+    "expected_findings": []
+  },
+  {
+    "name": "abstain_active_owner_unknown",
+    "mutations": [{"path": "/entries/0/owner_roles", "value": []}],
+    "expected_outcome": "ABSTAIN",
+    "expected_findings": [{"code": "BACKLOG_OWNER_UNKNOWN", "path": "/entries/0/owner_roles"}]
+  },
+  {
+    "name": "abstain_review_pending",
+    "mutations": [{"path": "/review/state", "value": "PENDING"}],
+    "expected_outcome": "ABSTAIN",
+    "expected_findings": [{"code": "REVIEW_PENDING", "path": "/review/state"}]
+  },
+  {
+    "name": "deny_blocked_without_blocker",
+    "mutations": [{"path": "/entries/0/state", "value": "BLOCKED"}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "BACKLOG_BLOCKER_REQUIRED", "path": "/entries/0/blocker_refs"}]
+  },
+  {
+    "name": "deny_resolved_without_adr",
+    "mutations": [{"path": "/entries/2/candidate_adr_ref", "value": null}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "RESOLUTION_ADR_REQUIRED", "path": "/entries/2/candidate_adr_ref"}]
+  },
+  {
+    "name": "deny_superseded_without_successor",
+    "mutations": [
+      {"path": "/entries/0/state", "value": "SUPERSEDED"},
+      {"path": "/entries/0/decision_required", "value": false}
+    ],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "SUPERSEDED_TARGET_REQUIRED", "path": "/entries/0/superseded_by"}]
+  },
+  {
+    "name": "deny_noncanonical_entry_order",
+    "mutations": [{"path": "/entries/0/backlog_id", "value": "ADR-S-04"}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "BACKLOG_ENTRIES_NOT_CANONICAL", "path": "/entries"}]
+  },
+  {
+    "name": "deny_authority_overreach",
+    "mutations": [{"path": "/effects/approves_decision", "value": true}],
+    "expected_outcome": "DENY",
+    "expected_findings": [{"code": "AUTHORITY_OVERREACH", "path": "/effects"}]
+  },
+  {
+    "name": "error_identity_drift",
+    "mutations": [{"path": "/assessment_id", "value": "kfm:open-adr-backlog:0000000000000000000000000000000000000000000000000000000000000000"}],
+    "preserve_identity": true,
+    "expected_outcome": "ERROR",
+    "expected_findings": [{"code": "ASSESSMENT_ID_MISMATCH", "path": "/assessment_id"}]
+  },
+  {
+    "name": "error_invalid_state_vocabulary",
+    "mutations": [{"path": "/entries/0/state", "value": "APPROVED"}],
+    "expected_outcome": "ERROR",
+    "expected_findings": [{"code": "SCHEMA_INVALID", "path": "/entries/0/state"}]
+  }
+]

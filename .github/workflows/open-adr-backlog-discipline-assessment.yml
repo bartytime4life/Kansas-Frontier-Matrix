@@ -1,0 +1,64 @@
+name: open-adr-backlog-discipline-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/open-adr-backlog-discipline-assessment.yml"
+      - "contracts/governance/open_adr_backlog_discipline_assessment.md"
+      - "schemas/contracts/v1/governance/open_adr_backlog_discipline_assessment.schema.json"
+      - "fixtures/contracts/v1/governance/open_adr_backlog_discipline_assessment/**"
+      - "tools/validators/governance/validate_open_adr_backlog_discipline_assessment.py"
+      - "tests/validators/governance/test_validate_open_adr_backlog_discipline_assessment.py"
+      - "docs/intake/exploratory/full-atlas-open-adr-backlog-discipline-source-map.md"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: open-adr-backlog-discipline-v1-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-open-adr-backlog-discipline-assessment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused deterministic validation
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/validators/governance/validate_open_adr_backlog_discipline_assessment.py tests/validators/governance/test_validate_open_adr_backlog_discipline_assessment.py
+          python -m unittest tests.validators.governance.test_validate_open_adr_backlog_discipline_assessment --verbose
+          python tools/validators/governance/validate_open_adr_backlog_discipline_assessment.py --fixtures
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Open-ADR backlog discipline assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only stable-ID, state, owner, blocker, evidence, ADR-ref, supersession, review, and content-identity coherence."
+            echo "- Boundary: no ADR or backlog mutation, ownership assignment, decision approval, promotion, release, deployment, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"
