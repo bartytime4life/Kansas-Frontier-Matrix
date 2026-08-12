@@ -1,0 +1,391 @@
+{
+  "profile_version": "kfm.flora.specimen-record.fixture-profile.v1",
+  "base_candidate": {
+    "schema_version": "kfm.flora.specimen-record.v1",
+    "object_type": "SpecimenRecordCandidate",
+    "fixture_only": true,
+    "record_id": "kfm://candidate/flora/specimen/sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "domain": "flora",
+    "record_class": "voucher_specimen",
+    "source_role": "observed",
+    "source": {
+      "descriptor_ref": "kfm://source/flora/synthetic-herbarium@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "source_record_ref": "fixture:synthetic-herbarium:KANU-0001",
+      "source_version": "synthetic-2026-08-12",
+      "institution_code": "KANU",
+      "collection_code": "VASC",
+      "catalog_number": "KANU-0001",
+      "terms_ref": "kfm://source-terms/flora/synthetic-herbarium@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "retrieval_receipt_ref": "kfm://receipt/flora/synthetic-herbarium-retrieval@sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "collection_event": {
+      "event_date": "1950-06-15",
+      "time_precision": "day",
+      "historical_evidence_only": true,
+      "current_occurrence_claimed": false,
+      "locality_precision": "exact",
+      "coordinate_uncertainty_meters": 25,
+      "restricted_geometry_ref": "kfm://geometry/flora/specimen-restricted@sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    "determination": {
+      "source_taxon_name": "Syntheticus kansasensis Example",
+      "taxon_ref": "kfm://taxon/flora/syntheticus-kansasensis@sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "crosswalk_ref": "kfm://crosswalk/flora/syntheticus-kansasensis@sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "status": "current",
+      "determination_date": "2026-01-10",
+      "label_text_accepted_as_taxonomy": false
+    },
+    "evidence_refs": [
+      "kfm://evidence/flora/specimen-catalog@sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "kfm://evidence/flora/specimen-image@sha256:8888888888888888888888888888888888888888888888888888888888888888"
+    ],
+    "rights": {
+      "state": "open",
+      "license_ref": "kfm://license/cc-by-4.0@sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "public_metadata_allowed": true,
+      "image_reuse_allowed": true
+    },
+    "sensitivity": {
+      "state": "public_safe",
+      "rare_taxon": false,
+      "exact_locality_public": false,
+      "review_ref": "kfm://review/flora/specimen-sensitivity@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "redaction_receipt_ref": "kfm://receipt/flora/specimen-generalization@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "public_projection": {
+      "candidate": true,
+      "claim_posture": "historical_support",
+      "geometry_ref": "kfm://geometry/flora/specimen-generalized@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "image_refs": [
+        "kfm://image/flora/specimen-public-safe@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "release_ref": null
+    },
+    "governance": {
+      "source_activated": false,
+      "evidence_resolved": false,
+      "policy_approved": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "published": false
+    },
+    "correction": {
+      "supersedes_record_ref": null,
+      "correction_refs": []
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "name": "valid-public-safe-historical-voucher-candidate",
+      "mutations": [],
+      "expected_codes": []
+    },
+    {
+      "name": "valid-sensitive-specimen-held",
+      "mutations": [
+        {"path": "/record_class", "value": "sensitive_specimen"},
+        {"path": "/rights/state", "value": "conditional"},
+        {"path": "/rights/public_metadata_allowed", "value": false},
+        {"path": "/rights/image_reuse_allowed", "value": false},
+        {"path": "/sensitivity/state", "value": "restricted"},
+        {"path": "/sensitivity/rare_taxon", "value": true},
+        {"path": "/sensitivity/redaction_receipt_ref", "value": null},
+        {"path": "/public_projection/candidate", "value": false},
+        {"path": "/public_projection/claim_posture", "value": "no_current_occurrence_claim"},
+        {"path": "/public_projection/geometry_ref", "value": null},
+        {"path": "/public_projection/image_refs", "value": []}
+      ],
+      "expected_codes": []
+    },
+    {
+      "name": "valid-unresolved-catalog-candidate",
+      "mutations": [
+        {"path": "/record_class", "value": "candidate_record"},
+        {"path": "/source_role", "value": "candidate"},
+        {"path": "/collection_event/event_date", "value": null},
+        {"path": "/collection_event/time_precision", "value": "unknown"},
+        {"path": "/collection_event/locality_precision", "value": "unknown"},
+        {"path": "/collection_event/coordinate_uncertainty_meters", "value": null},
+        {"path": "/collection_event/restricted_geometry_ref", "value": null},
+        {"path": "/determination/status", "value": "unresolved"},
+        {"path": "/determination/taxon_ref", "value": null},
+        {"path": "/determination/crosswalk_ref", "value": null},
+        {"path": "/determination/determination_date", "value": null},
+        {"path": "/rights/state", "value": "unknown"},
+        {"path": "/rights/license_ref", "value": null},
+        {"path": "/rights/public_metadata_allowed", "value": false},
+        {"path": "/rights/image_reuse_allowed", "value": false},
+        {"path": "/sensitivity/state", "value": "unknown"},
+        {"path": "/sensitivity/review_ref", "value": null},
+        {"path": "/sensitivity/redaction_receipt_ref", "value": null},
+        {"path": "/public_projection/candidate", "value": false},
+        {"path": "/public_projection/claim_posture", "value": "no_current_occurrence_claim"},
+        {"path": "/public_projection/geometry_ref", "value": null},
+        {"path": "/public_projection/image_refs", "value": []}
+      ],
+      "expected_codes": []
+    },
+    {
+      "name": "valid-synthetic-reality-boundary",
+      "mutations": [
+        {"path": "/record_class", "value": "synthetic"},
+        {"path": "/source_role", "value": "synthetic"},
+        {"path": "/collection_event/event_date", "value": null},
+        {"path": "/collection_event/time_precision", "value": "unknown"},
+        {"path": "/collection_event/locality_precision", "value": "unknown"},
+        {"path": "/collection_event/coordinate_uncertainty_meters", "value": null},
+        {"path": "/collection_event/restricted_geometry_ref", "value": null},
+        {"path": "/determination/status", "value": "unresolved"},
+        {"path": "/determination/taxon_ref", "value": null},
+        {"path": "/determination/crosswalk_ref", "value": null},
+        {"path": "/determination/determination_date", "value": null},
+        {"path": "/rights/state", "value": "unknown"},
+        {"path": "/rights/license_ref", "value": null},
+        {"path": "/rights/public_metadata_allowed", "value": false},
+        {"path": "/rights/image_reuse_allowed", "value": false},
+        {"path": "/sensitivity/state", "value": "unknown"},
+        {"path": "/sensitivity/review_ref", "value": null},
+        {"path": "/sensitivity/redaction_receipt_ref", "value": null},
+        {"path": "/public_projection/candidate", "value": false},
+        {"path": "/public_projection/claim_posture", "value": "no_current_occurrence_claim"},
+        {"path": "/public_projection/geometry_ref", "value": null},
+        {"path": "/public_projection/image_refs", "value": []}
+      ],
+      "expected_codes": []
+    },
+    {
+      "name": "invalid-current-occurrence-overclaim",
+      "mutations": [
+        {"path": "/collection_event/current_occurrence_claimed", "value": true}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_CURRENT_OCCURRENCE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "invalid-historical-boundary-removed",
+      "mutations": [
+        {"path": "/collection_event/historical_evidence_only", "value": false}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_HISTORICAL_BOUNDARY_REQUIRED"
+      ]
+    },
+    {
+      "name": "invalid-label-text-accepted-as-taxonomy",
+      "mutations": [
+        {"path": "/determination/label_text_accepted_as_taxonomy", "value": true}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_LABEL_TAXONOMY_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "invalid-exact-locality-public",
+      "mutations": [
+        {"path": "/sensitivity/exact_locality_public", "value": true}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_EXACT_LOCALITY_PUBLIC_DENIED"
+      ]
+    },
+    {
+      "name": "invalid-governance-authority-overclaim",
+      "mutations": [
+        {"path": "/governance/published", "value": true}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_AUTHORITY_EFFECT_DENIED",
+        "SPECIMEN_RECORD_SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "invalid-record-identity",
+      "mutations": [
+        {"path": "/record_id", "value": "kfm://candidate/flora/specimen/sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+      ],
+      "rehash_record_id": false,
+      "expected_codes": [
+        "SPECIMEN_RECORD_IDENTITY_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid-spec-hash",
+      "mutations": [],
+      "rehash_spec_hash": false,
+      "expected_codes": [
+        "SPECIMEN_RECORD_SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid-synthetic-role-mismatch",
+      "mutations": [
+        {"path": "/record_class", "value": "synthetic"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_SYNTHETIC_ROLE_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid-candidate-role-mismatch",
+      "mutations": [
+        {"path": "/record_class", "value": "candidate_record"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_CANDIDATE_ROLE_MISMATCH"
+      ]
+    },
+    {
+      "name": "invalid-public-redaction-missing",
+      "mutations": [
+        {"path": "/sensitivity/redaction_receipt_ref", "value": null}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_PUBLIC_REDACTION_REQUIRED"
+      ]
+    },
+    {
+      "name": "invalid-public-image-rights",
+      "mutations": [
+        {"path": "/rights/image_reuse_allowed", "value": false}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_PUBLIC_IMAGE_RIGHTS_DENIED"
+      ]
+    },
+    {
+      "name": "invalid-nonpublic-projection-has-fields",
+      "mutations": [
+        {"path": "/public_projection/candidate", "value": false}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_NONPUBLIC_PROJECTION_MUST_BE_EMPTY"
+      ]
+    },
+    {
+      "name": "invalid-public-rights-unresolved",
+      "mutations": [
+        {"path": "/rights/state", "value": "restricted"},
+        {"path": "/rights/public_metadata_allowed", "value": false},
+        {"path": "/rights/image_reuse_allowed", "value": false},
+        {"path": "/public_projection/image_refs", "value": []}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_PUBLIC_RIGHTS_UNRESOLVED"
+      ]
+    },
+    {
+      "name": "invalid-public-sensitivity-restricted",
+      "mutations": [
+        {"path": "/sensitivity/state", "value": "restricted"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_PUBLIC_SENSITIVITY_UNRESOLVED",
+        "SPECIMEN_RECORD_RESTRICTED_PUBLIC_PROJECTION_DENIED"
+      ]
+    },
+    {
+      "name": "invalid-raw-coordinate-field",
+      "mutations": [
+        {"path": "/collection_event/coordinates", "value": [-98.0, 38.5]}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_RAW_GEOMETRY_FIELD_DENIED",
+        "SPECIMEN_RECORD_SCHEMA_INVALID"
+      ]
+    },
+    {
+      "name": "invalid-correction-lineage",
+      "mutations": [
+        {"path": "/correction/supersedes_record_ref", "value": "kfm://candidate/flora/specimen/prior@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_CORRECTION_LINEAGE_INCOMPLETE"
+      ]
+    },
+    {
+      "name": "invalid-evidence-order",
+      "mutations": [
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence/flora/specimen-image@sha256:8888888888888888888888888888888888888888888888888888888888888888",
+            "kfm://evidence/flora/specimen-catalog@sha256:7777777777777777777777777777777777777777777777777777777777777777"
+          ]
+        }
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_EVIDENCE_REF_ORDER_INVALID"
+      ]
+    },
+    {
+      "name": "invalid-current-determination-unresolved",
+      "mutations": [
+        {"path": "/determination/taxon_ref", "value": null}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_CURRENT_DETERMINATION_UNRESOLVED"
+      ]
+    },
+    {
+      "name": "invalid-observed-collection-date-missing",
+      "mutations": [
+        {"path": "/collection_event/event_date", "value": null},
+        {"path": "/collection_event/time_precision", "value": "unknown"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_COLLECTION_DATE_REQUIRED"
+      ]
+    },
+    {
+      "name": "invalid-exact-geometry-ref-missing",
+      "mutations": [
+        {"path": "/collection_event/restricted_geometry_ref", "value": null}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_RESTRICTED_GEOMETRY_REF_REQUIRED"
+      ]
+    },
+    {
+      "name": "invalid-withheld-geometry-ref-present",
+      "mutations": [
+        {"path": "/collection_event/locality_precision", "value": "withheld"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_UNSUPPORTED_GEOMETRY_REF"
+      ]
+    },
+    {
+      "name": "invalid-rare-taxon-not-restricted",
+      "mutations": [
+        {"path": "/sensitivity/rare_taxon", "value": true}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_RARE_TAXON_RESTRICTION_REQUIRED"
+      ]
+    },
+    {
+      "name": "invalid-rights-state-conflict",
+      "mutations": [
+        {"path": "/rights/state", "value": "unknown"},
+        {"path": "/public_projection/candidate", "value": false},
+        {"path": "/public_projection/claim_posture", "value": "no_current_occurrence_claim"},
+        {"path": "/public_projection/geometry_ref", "value": null},
+        {"path": "/public_projection/image_refs", "value": []}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_RIGHTS_STATE_CONFLICT"
+      ]
+    },
+    {
+      "name": "invalid-public-claim-posture",
+      "mutations": [
+        {"path": "/public_projection/claim_posture", "value": "no_current_occurrence_claim"}
+      ],
+      "expected_codes": [
+        "SPECIMEN_RECORD_PUBLIC_CLAIM_POSTURE_INVALID"
+      ]
+    }
+  ]
+}
