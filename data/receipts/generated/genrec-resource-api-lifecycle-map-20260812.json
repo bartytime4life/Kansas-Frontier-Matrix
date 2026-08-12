@@ -5,7 +5,7 @@
     "docs/architecture/governed-api/LIFECYCLE_GATES.md"
   ],
   "artifact_hashes": {
-    "docs/architecture/governed-api/LIFECYCLE_GATES.md": "sha256:4f88fb9cf6862fe505957eb38b3c2eda3d68282362edcdf1e502aec5643afffe"
+    "docs/architecture/governed-api/LIFECYCLE_GATES.md": "sha256:7f2556a5dee6f71cde29418ba8011e60d33642729bafde635cbc6281178af8bf"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -54,7 +54,7 @@
     {
       "gate": "markdown-structure-and-truth-labels",
       "outcome": "PASS",
-      "reason": "The table-of-contents anchor, Mermaid block, ownership table, version/date metadata, and non-effects statement were checked deterministically."
+      "reason": "The table-of-contents anchors (including four legacy hyphenated-heading targets), Mermaid block, ownership table, version/date metadata, and non-effects statement were checked deterministically."
     },
     {
       "gate": "generated-receipt-schema-shape",
@@ -108,12 +108,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-12T17:47:59.818Z",
+  "created_at": "2026-08-12T17:54:12.302Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Cross-family resource lifecycle and API ownership reference for Pass 20 EXP-012. It adds no seventh API family, route, DTO, lifecycle state, schema, policy decision, source activation, release, deployment, or publication."
+  "notes": "Cross-family resource lifecycle and API ownership reference for Pass 20 EXP-012. The same bounded change corrects four legacy TOC anchors exposed by exact-head link validation. It adds no seventh API family, route, DTO, lifecycle state, schema, policy decision, source activation, release, deployment, or publication."
 }
