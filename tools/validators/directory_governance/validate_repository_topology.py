@@ -30,7 +30,7 @@ REPORT_VERSION = "kfm.repository-topology-report.v1"
 BASELINE_VERSION = "kfm.repository-topology-baseline.v1"
 DEFAULT_BASELINE = Path(__file__).with_name("repository_topology_baseline.json")
 BASELINE_REPOSITORY_PATH = "tools/validators/directory_governance/repository_topology_baseline.json"
-BOOTSTRAP_BASE_SHA = "c2594045856765c8b155020d9cd2e95b5db873f2"
+BOOTSTRAP_BASE_SHA = "bff35f5ddf00ef623eacf96be13a743e134f482f"
 ADOPTED_SHA256 = "44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
 MAX_FILE_BYTES = 4 * 1024 * 1024
 MAX_SELECTED_BLOB_BYTES = 256 * 1024 * 1024
@@ -1093,7 +1093,7 @@ def candidate_baseline(findings: Sequence[Finding], *, expires_on: str) -> dict[
         "closure_ref": "ADR-0029-post-adoption-convergence-ratchet",
         "entries": entries,
         "expires_on": expires_on,
-        "generated_from_ref": "main@c2594045856765c8b155020d9cd2e95b5db873f2",
+        "generated_from_ref": f"main@{BOOTSTRAP_BASE_SHA}",
         "non_effects": [
             "does_not_define_or_amend_rules",
             "does_not_authorize_migration_or_deletion",

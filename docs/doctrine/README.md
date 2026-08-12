@@ -21,11 +21,11 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: c2594045856765c8b155020d9cd2e95b5db873f2
+  base_commit: bff35f5ddf00ef623eacf96be13a743e134f482f
   target_prior_blob: e6e44bfe8666e0a6d38d2abc5b0e98b68daeba50
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  adr_index_blob: 919ec44d8eb0fab2e558cbc54c90b0d37e56a201
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
   docs_build_workflow_blob: 7816e07d66774d2e2b3b80b66d5d3349a1393861
 related:
@@ -117,7 +117,7 @@ The current ADR index records ADR-0029 as `accepted` and the other 28 numbered A
 
 ## Status
 
-| Surface | Finding at `main@c259404…` | Safe conclusion |
+| Surface | Finding at `main@bff35f5…` | Safe conclusion |
 |---|---|---|
 | This README | **CONFIRMED present**, prior blob `4db8bac…` | Same-path v0.3 modernization |
 | Core doctrine paths | **CONFIRMED present** for Directory Rules, Authority Ladder, Evidence First, Lifecycle Law, Trust Membrane, Derived Stays Derived, and Doctrine Encyclopedia | Presence is not adoption; each inspected file declares draft status |
