@@ -1059,7 +1059,7 @@ def enforce_trusted_baseline(
     current_data: Mapping[str, object],
     current_entries: Mapping[str, Mapping[str, object]],
     trusted_ref: str,
-) -> str:
+) -> None:
     if not re.fullmatch(r"[A-Za-z0-9_./^~:-]{1,200}", trusted_ref) or trusted_ref.startswith("-"):
         raise TopologyError("trusted baseline ref is invalid")
     try:
@@ -1074,10 +1074,9 @@ def enforce_trusted_baseline(
         expected_generation = f"main@{BOOTSTRAP_BASE_SHA}"
         if trusted_sha != BOOTSTRAP_BASE_SHA or current_data.get("generated_from_ref") != expected_generation:
             raise TopologyError("trusted baseline is missing outside the governed bootstrap")
-        return "BOOTSTRAP_BASE"
+        return
     trusted_data, trusted_entries = _load_baseline_bytes(raw, label="trusted")
     validate_baseline_transition(current_data, current_entries, trusted_data, trusted_entries)
-    return trusted_sha
 
 
 def candidate_baseline(findings: Sequence[Finding], *, expires_on: str) -> dict[str, object]:
@@ -1211,12 +1210,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         trusted_state = "NOT_REQUESTED"
         if args.trusted_baseline_ref:
-            trusted_state = enforce_trusted_baseline(
+            enforce_trusted_baseline(
                 args.repo_root.resolve(),
                 baseline_data,
                 baseline,
                 str(args.trusted_baseline_ref),
             )
+            trusted_state = "VERIFIED"
         code, report = evaluate(
             findings,
             tracked_count,
