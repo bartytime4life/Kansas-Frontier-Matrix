@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/validation/window_ordering_lint_profile.schema.json",
+  "title": "WindowOrderingLintCandidate",
+  "description": "Fixture-only static lint input for explicit SQL window ordering and tie-breaker syntax without database execution or analytical, evidence, policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "query_ref",
+    "query_digest",
+    "dialect",
+    "sql",
+    "requirements",
+    "related_disclosure_ref",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "WindowOrderingLintCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.validation.window-ordering-lint.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-132"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "query_ref": {"$ref": "#/$defs/ref"},
+    "query_digest": {"$ref": "#/$defs/sha256"},
+    "dialect": {"const": "SQL_ANSI_WINDOW_SUBSET_V1"},
+    "sql": {"type": "string", "minLength": 1, "maxLength": 32768},
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_order_key", "tie_breaker_key", "minimum_window_count", "maximum_window_count"],
+      "properties": {
+        "primary_order_key": {"$ref": "#/$defs/identifier"},
+        "tie_breaker_key": {"$ref": "#/$defs/identifier"},
+        "minimum_window_count": {"type": "integer", "minimum": 1, "maximum": 32},
+        "maximum_window_count": {"type": "integer", "minimum": 1, "maximum": 32}
+      }
+    },
+    "related_disclosure_ref": {"$ref": "#/$defs/nullable_ref"},
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sql_execution_authority",
+        "analytics_authority",
+        "metric_truth_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "sql_execution_authority": {"const": false},
+        "analytics_authority": {"const": false},
+        "metric_truth_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "ref": {"type": "string", "minLength": 5, "maxLength": 300, "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[A-Za-z_][A-Za-z0-9_$]*(\\.[A-Za-z_][A-Za-z0-9_$]*)*$"}
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/validation/window_ordering_lint_profile.md",
+    "fixtures_root": "fixtures/contracts/v1/validation/window_ordering_lint_profile/",
+    "validator": "tools/validators/validate_window_ordering_lint_profile.py",
+    "network": false,
+    "sql_execution": false,
+    "authority_effects": false
+  }
+}
