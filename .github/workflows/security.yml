@@ -58,7 +58,7 @@ jobs:
           persist-credentials: false
 
       - name: Scan repository dependencies, configuration, and secrets
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           version: v0.73.0
           scan-type: fs
@@ -104,7 +104,7 @@ jobs:
             infra/docker
 
       - name: Scan the review image
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # 0.36.0
         with:
           version: v0.73.0
           scan-type: image
