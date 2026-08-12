@@ -24,7 +24,9 @@
       "runtime-response-envelope",
       "decision-envelope",
       "run-receipt",
-      "ingest-receipt"
+      "ingest-receipt",
+      "workflow-security",
+      "repository-topology"
     ]
   },
   "validators": [
@@ -169,6 +171,34 @@
         "fixtures/contracts/v1/source/ingest_receipt/**",
         "tests/validators/test_validate_ingest_receipt.py",
         "tools/validators/validate_ingest_receipt.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "workflow-security",
+      "description": "Enforce twenty deterministic GitHub Actions source guardrails without network access.",
+      "script": "tools/validators/governance/validate_workflow_security.py",
+      "args": [],
+      "path_globs": [
+        ".github/workflows/**",
+        "tests/validators/governance/test_validate_workflow_security.py",
+        "tools/validators/governance/validate_workflow_security.py",
+        "tools/validators/governance/workflow_security_baseline.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "repository-topology",
+      "description": "Enforce twenty adopted directory-topology rules with exact inherited-drift ratcheting.",
+      "script": "tools/validators/directory_governance/validate_repository_topology.py",
+      "args": [],
+      "path_globs": [
+        "**",
+        "tests/validators/directory_governance/test_validate_repository_topology.py",
+        "tools/validators/directory_governance/repository_topology_baseline.json",
+        "tools/validators/directory_governance/validate_repository_topology.py"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []

@@ -8,7 +8,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help validate test schemas policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas validator-registry-check workflow-security repository-topology repository-guardrails policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -17,6 +17,10 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
+	@echo "  validator-registry-check Validate the bounded validator registry"
+	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
+	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
+	@echo "  repository-guardrails Run registry, workflow, and topology guardrails"
 	@echo "  hazards-validate      Run bounded synthetic USDM materiality validation"
 	@echo "  governed-api-smoke    Run governed API tests"
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
@@ -53,6 +57,19 @@ schemas:
 
 test:
 	python -m pytest tests/schemas tests/contracts -q
+
+validator-registry-check:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/validate_all.py --validate-registry
+
+workflow-security:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/governance --pattern 'test_validate_workflow_security.py' --verbose
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/governance/validate_workflow_security.py --format text
+
+repository-topology:
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_repository_topology.py' --verbose
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/directory_governance/validate_repository_topology.py --format text
+
+repository-guardrails: validator-registry-check workflow-security repository-topology
 
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
