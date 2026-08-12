@@ -11,7 +11,7 @@
     "tools/validators/evidence/validate_field_capture_evidence_handoff.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/field-capture-evidence-handoff.yml": "sha256:02377dfe892e479a26c9a2101e98e15f78d0fdebe26f7634d5d304f65a14d2f8",
+    ".github/workflows/field-capture-evidence-handoff.yml": "sha256:38d7c318650074d50d5c0a6a652b48310fd4b6e12452be38e0842c857e0a9d59",
     "contracts/evidence/field_capture_evidence_handoff.md": "sha256:70a4d3d2da75abd211b4bb946072e13a8d9d490353a2f084f5109ed9fcf794d8",
     "docs/intake/exploratory/field-capture-evidence-handoff-source-map.md": "sha256:91cff1d286910c3437dd9b5b3694c36e58720bee6995d72726fe3c3027a82da7",
     "fixtures/contracts/v1/evidence/field_capture_evidence_handoff/cases.json": "sha256:01750a70a0961b5da99c0560c565ac2fcab59cbf302f227b1d7a633107086de2",
