@@ -99,8 +99,8 @@ class ConditionalDecisionClosureTests(unittest.TestCase):
 
     def test_cli_is_deterministic_and_does_not_echo_candidate_values(self) -> None:
         candidate = json.loads(SATISFIED.read_text(encoding="utf-8"))
-        secret = "synthetic-sensitive-policy-subject"
-        candidate["subject_ref"] = secret
+        subject_marker = "kfm://fixture/subject/redaction-marker"
+        candidate["subject_ref"] = subject_marker
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "candidate.json"
             path.write_text(json.dumps(candidate), encoding="utf-8")
@@ -111,7 +111,7 @@ class ConditionalDecisionClosureTests(unittest.TestCase):
                     self.assertEqual(main([str(path)]), 1)
                 outputs.append(stream.getvalue())
         self.assertEqual(outputs[0], outputs[1])
-        self.assertNotIn(secret, outputs[0])
+        self.assertNotIn(subject_marker, outputs[0])
         self.assertIn("SPEC_HASH_MISMATCH", outputs[0])
 
     def test_fixture_runner_has_no_authority(self) -> None:

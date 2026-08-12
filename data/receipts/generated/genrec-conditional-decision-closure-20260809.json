@@ -15,7 +15,7 @@
     "fixtures/contracts/v1/policy/conditional_decision_closure/valid/satisfied.json": "sha256:07bb76dff67b77ea2cfe69c9b9c252effdb63c0cc76c2ff9ed7ffb7d9d797dc7",
     "fixtures/contracts/v1/policy/conditional_decision_closure/valid/waived.json": "sha256:3f2184b9566d389db7370d98ebdba7af16453d8db6f86251a44ebf21c51fbd6b",
     "schemas/contracts/v1/policy/conditional_decision_closure.schema.json": "sha256:765964e79a6c1190114956ecc0b383dff7967b3bb19c8c1609a40f383de6bd06",
-    "tests/validators/test_validate_conditional_decision_closure.py": "sha256:55f0ab414d8ec00226b4caa30d449a4ddf4de8a91334114ab529b537b02c25f7",
+    "tests/validators/test_validate_conditional_decision_closure.py": "sha256:711b71f0735c92b908cf18a57869ae2eeb25babec6dae1132b420e13a9dac108",
     "tools/validators/policy/validate_conditional_decision_closure.py": "sha256:2bd902eb2194df698c1b6e11566414dcd248b8dc17c97e7c15cadc88bccce520"
   },
   "artifact_paths": [
