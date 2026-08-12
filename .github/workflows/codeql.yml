@@ -2,65 +2,72 @@
 # Status: implementation-bearing security analysis; non-authoritative for release.
 #
 # Responsibility:
-# - Run GitHub CodeQL analysis for repository-owned Python and
-#   JavaScript/TypeScript source on pull requests, main pushes, a weekly schedule,
-#   and explicit maintainer dispatch.
+# - Analyze repository-owned Python, JavaScript/TypeScript, and GitHub Actions
+#   source with GitHub CodeQL's security-extended query suite.
+# - Run for pull requests to main, pushes to main, merge-queue checks, a weekly
+#   full scan, and explicit maintainer dispatch.
 # Authority:
-# - A successful run means the configured CodeQL queries completed for the
+# - A successful run means the configured CodeQL analysis completed for the
 #   checked revision. It is not proof that the repository is vulnerability-free,
 #   release approval, publication authority, or a substitute for threat modeling,
 #   dependency scanning, secret scanning, runtime controls, or human review.
 # Pull-request posture:
-# - Uses pull_request, never pull_request_target. Untrusted code is analyzed with
-#   the minimum token permissions required to upload code-scanning results.
+# - Uses the merge-ref pull_request event, not a privileged target-context event.
+#   Untrusted code receives only the permissions needed to read and upload results.
 # Network:
 # - GitHub-hosted actions and CodeQL bundles may use GitHub-managed network
-#   access. This workflow does not call KFM source systems or public APIs.
+#   access. This workflow does not call KFM source systems or public data APIs.
 # Outputs:
-# - Code-scanning SARIF/results managed by GitHub. No KFM proof, receipt, release,
-#   lifecycle, catalog, triplet, or published artifact is created by this workflow.
+# - Code-scanning results managed by GitHub. It creates no KFM proof, receipt,
+#   release, lifecycle, catalog, triplet, or published artifact.
 # Compatibility:
 # - Workflow name `codeql` and job id `codeql-scan` are retained because
-#   branch-protection dependencies have not been verified.
+#   branch-protection dependencies have not been verified in this session.
+
 name: codeql
 
 on:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
+  merge_group:
+    types:
+      - checks_requested
   schedule:
     - cron: "23 9 * * 3"
   workflow_dispatch:
 
-permissions:
-  actions: read
-  contents: read
-  packages: read
-  pull-requests: read
+# Deny permissions by default. The analysis job grants only its required token
+# capabilities; unspecified permissions remain `none`.
+permissions: {}
 
 concurrency:
-  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  group: codeql-${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   codeql-scan:
     name: codeql-scan (${{ matrix.language }})
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     permissions:
       actions: read
       contents: read
-      packages: read
-      pull-requests: read
       security-events: write
 
     strategy:
       fail-fast: false
       matrix:
-        language:
-          - python
-          - javascript-typescript
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
 
     steps:
       - name: Check out analyzed revision
@@ -72,27 +79,33 @@ jobs:
         uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
           languages: ${{ matrix.language }}
-          build-mode: none
+          build-mode: ${{ matrix.build-mode }}
           queries: security-extended
 
       - name: Analyze source
+        id: analyze
         uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
-          category: "/language:${{ matrix.language }}"
+          category: /language:${{ matrix.language }}
 
       - name: Record analysis boundary
         if: ${{ always() }}
         shell: bash
+        env:
+          ANALYSIS_OUTCOME: ${{ steps.analyze.outcome }}
+          COMMIT_SHA: ${{ github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          LANGUAGE: ${{ matrix.language }}
         run: |
           set -euo pipefail
 
           {
-            echo "## CodeQL — ${LANGUAGE}"
-            echo
-            echo "CodeQL was configured for the security-extended query suite."
-            echo
-            echo "A successful job means analysis completed for this language and revision."
-            echo "It does not prove vulnerability absence or authorize release or publication."
+            printf '## CodeQL — `%s`\n\n' "${LANGUAGE}"
+            printf -- '- Analysis outcome: `%s`\n' "${ANALYSIS_OUTCOME}"
+            printf -- '- Event: `%s`\n' "${EVENT_NAME}"
+            printf -- '- Revision: `%s`\n' "${COMMIT_SHA}"
+            printf -- '- Query suite: `security-extended`\n\n'
+            printf '%s\n' \
+              'Completion means CodeQL ran for this language and revision.' \
+              'It does not prove vulnerability absence or authorize release or publication.'
           } >> "${GITHUB_STEP_SUMMARY}"
-        env:
-          LANGUAGE: ${{ matrix.language }}
