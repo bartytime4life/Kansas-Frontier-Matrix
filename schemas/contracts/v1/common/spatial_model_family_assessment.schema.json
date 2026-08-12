@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/spatial_model_family_assessment.schema.json",
+  "title": "SpatialModelFamilyAssessmentCandidate",
+  "description": "Fixture-only declaration of spatial model family, family-specific evidence, composite uncertainty partitioning, and fixed non-authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "subject_ref",
+    "subject_digest",
+    "declared_family",
+    "characteristics",
+    "family_evidence",
+    "uncertainty",
+    "review",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "SpatialModelFamilyAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.spatial-model-family-assessment.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:spatial-family:[a-f0-9]{24}$"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-054"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "subject_ref": {"$ref": "#/$defs/ref"},
+    "subject_digest": {"$ref": "#/$defs/sha256"},
+    "declared_family": {
+      "enum": ["POSITION", "NETWORK", "FIELD", "TRANSFORMATION", "COMPOSITE", "UNRESOLVED"]
+    },
+    "characteristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position_identity", "node_edge_topology", "continuous_support", "input_output_derivation"],
+      "properties": {
+        "position_identity": {"type": "boolean"},
+        "node_edge_topology": {"type": "boolean"},
+        "continuous_support": {"type": "boolean"},
+        "input_output_derivation": {"type": "boolean"}
+      }
+    },
+    "family_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["position_method_refs", "network_topology_refs", "field_support_refs", "transformation_lineage_refs", "component_assessment_refs"],
+      "properties": {
+        "position_method_refs": {"$ref": "#/$defs/refs"},
+        "network_topology_refs": {"$ref": "#/$defs/refs"},
+        "field_support_refs": {"$ref": "#/$defs/refs"},
+        "transformation_lineage_refs": {"$ref": "#/$defs/refs"},
+        "component_assessment_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shared_uncertainty_refs", "partitioned_by_family", "family_partition_refs"],
+      "properties": {
+        "shared_uncertainty_refs": {"$ref": "#/$defs/refs"},
+        "partitioned_by_family": {"type": "boolean"},
+        "family_partition_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "record_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "ASSESSMENT_ONLY",
+        "NO_FITNESS_OR_SCIENTIFIC_VALIDATION",
+        "NO_REGISTRY_OR_LAYER_MUTATION",
+        "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+        "NO_VALIDATOR_DISPATCH_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_authority", "evidence_authority", "scientific_authority", "policy_authority", "review_authority", "registry_authority", "lifecycle_authority", "release_authority", "deployment_authority", "publication_authority"],
+      "properties": {
+        "source_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "scientific_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "registry_authority": {"const": false},
+        "lifecycle_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 10, "maxLength": 512, "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"},
+    "refs": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}}
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/common/spatial_model_family_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/common/spatial_model_family_assessment/",
+    "validator": "tools/validators/validate_spatial_model_family_assessment.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}
