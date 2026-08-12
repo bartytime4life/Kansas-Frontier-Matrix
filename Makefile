@@ -66,7 +66,7 @@ workflow-security:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/governance/validate_workflow_security.py --format text
 
 repository-topology:
-	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_*topology.py' --verbose
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/directory_governance --pattern 'test_validate_repository_topology.py' --verbose
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/directory_governance/validate_repository_topology.py --format text
 
 repository-guardrails: validator-registry-check workflow-security repository-topology
