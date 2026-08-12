@@ -11,7 +11,7 @@
     "tools/validators/domains/habitat/validate_model_run_receipt.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/habitat-model-run-receipt.yml": "sha256:68a205c259f8cf597b303a82a7bf474394d3f868309ab631cc5615f37dc9fdcc",
+    ".github/workflows/habitat-model-run-receipt.yml": "sha256:ec7dfc94e54e0da81cf488f253123cd2a4e2d5a1be9ab9c9362bbd0e9c4975fb",
     "contracts/domains/habitat/model_run_receipt.md": "sha256:f611914064a5691dab68c6dff79c19c4df943e93a9141335cc27fef7a332401f",
     "docs/intake/exploratory/habitat-model-run-receipt-source-map.md": "sha256:6128a385928d422602f29bd08bdd2a0cc29c8eda0fdb08fa6d399a4678a99435",
     "fixtures/contracts/v1/domains/habitat/model_run_receipt/cases.json": "sha256:36824dca2738132e50a774c87bcea685007e5193a6fa9c5e3af80646a9f934a0",
