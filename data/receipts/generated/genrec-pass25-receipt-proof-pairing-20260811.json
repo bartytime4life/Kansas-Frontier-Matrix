@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec-pass25-receipt-proof-pairing-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/receipt-proof-pairing-assessment.yml",
+    "contracts/governance/receipt_proof_pairing_assessment.md",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "sha256:d18313bfc4253d4a686b33aee3dc428c02efc7c05b8dc0c38c914273528d3dab",
+    "contracts/governance/receipt_proof_pairing_assessment.md": "sha256:f55b9a48243060a9f8a595f97e34701fbb32b4e830398bbc15589b15b6f1be8b",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json": "sha256:4a1f3097b2de167bece0f534bc4fa65c5ffa33e44a0065904d811f093fcb76c6",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json": "sha256:8d7040e46c874e1aa8453d25584e4f48a31f9bff45afd2eed63e0cecc0c826da",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py": "sha256:2ee4607e9db46cfec9b9fd8df396b44509825a32b724d2f5d23a9eed670e263e",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py": "sha256:89506785d00aa5af39350ca5e5f1edd07a0cf84da723e6b8cb07e61e97d2e910",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md": "sha256:8e0d11726dfd4fde69098e0e905068eec11902a976e4cffb964670a8c5095cf3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:70f29283ab47b0ca5827d462bdee8db44e64e67ebd6390f7e49d02db31f4651f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_25_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "drive:11ex6R6VWcf-Xje8C5gQR0SNM4KVRXQIw#KFM-P25-IDEA-0017",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@074a39c4acb8e4e72cafe4bdea4c9e237dbf2496",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@074a39c4acb8e4e72cafe4bdea4c9e237dbf2496"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "PROPOSED",
+    "contracts/governance/receipt_proof_pairing_assessment.md": "PROPOSED",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json": "PROPOSED",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py": "PROPOSED",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py": "PROPOSED",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-idea-assay",
+      "outcome": "PASS",
+      "reason": "Connected Drive source material contains the bounded proposal and repository searches were used to avoid an existing exact packet."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 responsibility roots are reused; no new root or parallel authority home is created."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic unit tests passed locally."
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS",
+      "reason": "Fourteen exact PASS/ABSTAIN/DENY/ERROR cases matched."
+    },
+    {
+      "gate": "draft-2020-12-schema",
+      "outcome": "PASS",
+      "reason": "The schema parsed and passed Draft 2020-12 meta-validation locally."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed locally."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact path/hash/truth-label closure and local SHA-256 replay passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks begin after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and grants no merge or release authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "drive:pass25-card",
+      "validated": true,
+      "evidence_ref": "drive:11ex6R6VWcf-Xje8C5gQR0SNM4KVRXQIw#KFM-P25-IDEA-0017"
+    },
+    {
+      "id": "repo:current-main-gap-search",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@074a39c4acb8e4e72cafe4bdea4c9e237dbf2496"
+    },
+    {
+      "id": "repo:directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@074a39c4acb8e4e72cafe4bdea4c9e237dbf2496"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T00:59:55Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds an inactive fixture-only one-to-one receipt/proof pairing assessment. It does not resolve evidence, authenticate proof, decide policy or review, change lifecycle state, or authorize promotion, release, deployment, publication, or public use."
+}
