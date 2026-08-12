@@ -22,7 +22,7 @@
     "fixtures/contracts/v1/governance/root_registry/valid/root_classes.yaml": "sha256:073e8dd0b542fa213b8978d2af049678cb36c9fb528efcebf04bf1df05bdf2b1",
     "schemas/contracts/v1/governance/root_registry.schema.json": "sha256:f0fccefd8e641d6d67b231dd63c401cdeba325aa2bda8f2b192ce21d58619c84",
     "tests/validators/directory_governance/test_validate_root_registry.py": "sha256:14746420a8d0b869c1522ac4d769f812332206e6c2dd2f954f17432823a3b20c",
-    "tools/validators/directory_governance/README.md": "sha256:aa959fb7e7ccc7f3e45ed5083f9d086e8513d17def7a2459a53ed3b97b814256",
+    "tools/validators/directory_governance/README.md": "sha256:8a4229cb79ede5c31c62aedc393a949a94c66206b3379ef9c7e372b007c0bbe2",
     "tools/validators/directory_governance/validate_root_registry.py": "sha256:6fd67a3fbb2e838f4e2a17ce3805eb03e3b48eee47560854e2750c096556cf9b"
   },
   "model_identity": {

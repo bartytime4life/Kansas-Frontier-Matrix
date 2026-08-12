@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 MODULE_PATH = Path(__file__).resolve().parents[2] / "tools/validators/validate_all.py"
 SPEC = importlib.util.spec_from_file_location("kfm_validator_orchestrator", MODULE_PATH)
@@ -221,6 +222,24 @@ class ValidatorOrchestratorTests(unittest.TestCase):
             [item["validator_id"] for item in report["results"]],
             ["beta-check", "alpha-check"],
         )
+
+    def test_legacy_inventory_selects_only_fixture_capable_validators(self) -> None:
+        from tools.validators._common import run_all as legacy_runner
+
+        fixture_validator = self._entry(
+            "fixture-check", self._script("validate_fixture.py", 0)
+        )
+        guardrail_validator = self._entry(
+            "guardrail-check", self._script("validate_guardrail.py", 0)
+        )
+        guardrail_validator["args"] = []
+        registry_path = self._registry([fixture_validator, guardrail_validator])
+
+        with mock.patch.object(legacy_runner, "REGISTRY_PATH", registry_path):
+            self.assertEqual(
+                legacy_runner._load_legacy_inventory(),
+                ["validate_fixture.py"],
+            )
 
 
 if __name__ == "__main__":

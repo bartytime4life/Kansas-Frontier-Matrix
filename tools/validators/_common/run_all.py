@@ -23,7 +23,12 @@ LEGACY_FIXTURE_ARGUMENT = "--fixtures"
 def _load_legacy_inventory() -> list[str]:
     data = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     by_id = {item["id"]: item for item in data["validators"]}
-    return [Path(by_id[item]["script"]).name for item in data["profiles"]["full"]]
+    inventory: list[str] = []
+    for validator_id in data["profiles"]["full"]:
+        validator = by_id[validator_id]
+        if LEGACY_FIXTURE_ARGUMENT in validator.get("args", []):
+            inventory.append(Path(validator["script"]).name)
+    return inventory
 
 
 RUNNER_VALIDATORS = _load_legacy_inventory()
