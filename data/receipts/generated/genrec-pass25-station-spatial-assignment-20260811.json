@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-pass25-station-spatial-assignment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/station-spatial-assignment-assessment.yml",
+    "contracts/common/station_spatial_assignment_assessment.md",
+    "schemas/contracts/v1/common/station_spatial_assignment_assessment.schema.json",
+    "fixtures/contracts/v1/common/station_spatial_assignment_assessment/cases.json",
+    "tools/validators/common/validate_station_spatial_assignment_assessment.py",
+    "tests/validators/common/test_validate_station_spatial_assignment_assessment.py",
+    "docs/intake/exploratory/pass-25-station-spatial-assignment-source-map.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/station-spatial-assignment-assessment.yml": "sha256:a19a60c9a3234fdb2e58bcf53d627b3ab156b6c95e5110239c9af0a60091d40f",
+    "contracts/common/station_spatial_assignment_assessment.md": "sha256:ad365a64aaea65e9f4e8f87474c220beb63d6ae5a5bab1c85eef5aaf86342553",
+    "schemas/contracts/v1/common/station_spatial_assignment_assessment.schema.json": "sha256:d32a13b2a00f84774d0386ff12b26eff537678e45597c2eba5be7d08cb076094",
+    "fixtures/contracts/v1/common/station_spatial_assignment_assessment/cases.json": "sha256:bf10ded20165cef8a20ad7aaec6470b58a20272b6aa227a7d4ac89cd0ce0482f",
+    "tools/validators/common/validate_station_spatial_assignment_assessment.py": "sha256:96b1a9a355058f3b2be5afe9c8ae50dcd60e4bae28785c740820292c75462bce",
+    "tests/validators/common/test_validate_station_spatial_assignment_assessment.py": "sha256:e24dfa05c3e4aea46943a277fbc1cd7bf2a3f32c117060e88441c1814c7c6a95",
+    "docs/intake/exploratory/pass-25-station-spatial-assignment-source-map.md": "sha256:3f3e716ace6a0f83b03b9abb4a650bbb40bb9b0e4a019a79f49441a3466acc64"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:70f29283ab47b0ca5827d462bdee8db44e64e67ebd6390f7e49d02db31f4651f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-21-26",
+      "KFM_Pass_25_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "drive:1I5OwdzRzI-26DMXR0ouBIpd3t5EfI2Nj3qvQSbBPZEk",
+      "drive:11ex6R6VWcf-Xje8C5gQR0SNM4KVRXQIw#KFM-P25-IDEA-0014",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@ded9a9755316fee97827d5d65b8fc26e31c2ae4b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ded9a9755316fee97827d5d65b8fc26e31c2ae4b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/station-spatial-assignment-assessment.yml": "PROPOSED",
+    "contracts/common/station_spatial_assignment_assessment.md": "PROPOSED",
+    "schemas/contracts/v1/common/station_spatial_assignment_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/common/station_spatial_assignment_assessment/cases.json": "PROPOSED",
+    "tools/validators/common/validate_station_spatial_assignment_assessment.py": "PROPOSED",
+    "tests/validators/common/test_validate_station_spatial_assignment_assessment.py": "PROPOSED",
+    "docs/intake/exploratory/pass-25-station-spatial-assignment-source-map.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-idea-assay",
+      "outcome": "PASS",
+      "reason": "Connected Drive source material contains the bounded proposal and repository searches were used to avoid an existing exact packet."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 responsibility roots are reused; no new root or parallel authority home is created."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic unit tests passed locally."
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS",
+      "reason": "Fourteen exact PASS/ABSTAIN/DENY/ERROR cases matched."
+    },
+    {
+      "gate": "draft-2020-12-schema",
+      "outcome": "PASS",
+      "reason": "The schema parsed and passed Draft 2020-12 meta-validation locally."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only workflow parsed locally."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact path/hash/truth-label closure and local SHA-256 replay passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head checks begin after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and grants no merge or release authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "drive:pass25-card",
+      "validated": true,
+      "evidence_ref": "drive:1I5OwdzRzI-26DMXR0ouBIpd3t5EfI2Nj3qvQSbBPZEk"
+    },
+    {
+      "id": "repo:current-main-gap-search",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@ded9a9755316fee97827d5d65b8fc26e31c2ae4b"
+    },
+    {
+      "id": "repo:directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ded9a9755316fee97827d5d65b8fc26e31c2ae4b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T00:59:55Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds an inactive fixture-only station-to-state/county/HUC12 spatial assignment assessment using synthetic points and simple polygons. It performs no live boundary access, source activation, canonical geography write, location publication, lifecycle transition, promotion, release, deployment, publication, or public use."
+}
