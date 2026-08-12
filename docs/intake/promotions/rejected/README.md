@@ -267,21 +267,24 @@ Create or restore review in [`../candidates/`](../candidates/README.md) only thr
 
 ## Directory map
 
+Per the adopted Directory Rules `DIR-README-003`–`DIR-README-005`, this child README maps only the directory it governs and its direct children. The parent [promotion-lane README](../README.md#directory-map) owns the sibling-lane map.
+
+The current direct-child map is **CONFIRMED** at the evidence snapshot:
+
 ```text
-docs/intake/promotions/
-├── README.md
-├── candidates/
-│   └── README.md
-├── accepted/
-│   └── README.md
-├── deferred/
-│   └── README.md
-└── rejected/
-    ├── README.md
-    └── <topic-or-source-family>.<short-purpose>.promotion.md
+docs/intake/promotions/rejected/
+└── README.md
 ```
 
-**CONFIRMED at the evidence snapshot:** `rejected/` contained only this README. The packet example above does not claim that any rejected packet currently exists.
+The following is a **PROPOSED illustrative shape**, not current inventory, for a future retained packet:
+
+```text
+docs/intake/promotions/rejected/
+├── README.md
+└── <topic-or-source-family>.<short-purpose>.promotion.md
+```
+
+A new child must be a retained rejected packet with a stable identity and evidence-backed rationale; do not create placeholder children merely for symmetry.
 
 ## Validation
 
