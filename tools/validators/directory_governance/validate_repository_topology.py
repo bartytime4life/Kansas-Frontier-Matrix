@@ -1208,7 +1208,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         baseline_data, baseline = _load_baseline_bytes(
             args.baseline.read_bytes(), label="current"
         )
-        trusted_state = "NOT_REQUESTED"
         if args.trusted_baseline_ref:
             enforce_trusted_baseline(
                 args.repo_root.resolve(),
@@ -1216,16 +1215,18 @@ def main(argv: Sequence[str] | None = None) -> int:
                 baseline,
                 str(args.trusted_baseline_ref),
             )
-            trusted_state = "VERIFIED"
-        code, report = evaluate(
+        code, safe_report = evaluate(
             findings,
             tracked_count,
             baseline,
             expires_on=str(baseline_data["expires_on"]),
         )
-        report["baseline"]["trusted_transition"] = trusted_state
+        # The trusted ref and resolved commit are validation inputs only. Keep
+        # them out of the report object entirely; the public projection is a
+        # constant marker, not a value that is redacted after propagation.
+        safe_report["baseline"]["trusted_transition"] = "[REDACTED]"
     except (OSError, UnicodeError, ValueError, TopologyError) as exc:
-        report = {
+        safe_report = {
             "authority": {"authorizes_repository_write": False},
             "error": type(exc).__name__,
             "outcome": "ERROR_VALIDATOR",
@@ -1233,14 +1234,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             "schema_version": REPORT_VERSION,
         }
         code = 2
-    safe_report = json.loads(json.dumps(report))
-    if (
-        isinstance(safe_report, dict)
-        and isinstance(safe_report.get("baseline"), dict)
-        and "trusted_transition" in safe_report["baseline"]
-    ):
-        safe_report["baseline"]["trusted_transition"] = "[REDACTED]"
-
     if args.format == "text" and "counts" in safe_report:
         counts = safe_report["counts"]
         print(

@@ -3,8 +3,9 @@
 # Threat model:
 # - pull_request_target is required so pull-request changes cannot replace this
 #   workflow or the validator before the check runs.
-# - The workflow checks out only github.event.pull_request.base.sha and never
-#   checks out or executes head code.
+# - The workflow fetches only the standalone validator from the exact
+#   github.event.pull_request.base.sha through the GitHub API. It never checks
+#   out or executes head code.
 # - The token can read contents, issues, and pull requests only. It cannot write
 #   comments, statuses, branches, settings, releases, deployments, or packages.
 # - Issue text and event JSON are untrusted bounded data. The validator parses a
@@ -54,11 +55,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out trusted base without persisted credentials
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          persist-credentials: false
+      - name: Fetch the standalone validator from the exact trusted base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KFM_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          [[ "${KFM_BASE_SHA}" =~ ^[0-9a-f]{40}$ ]]
+          validator="${RUNNER_TEMP}/validate-transition-authorization.py"
+          gh api \
+            -H "Accept: application/vnd.github.raw+json" \
+            "/repos/${GITHUB_REPOSITORY}/contents/tools/validators/repository_control/validate_transition_authorization.py?ref=${KFM_BASE_SHA}" \
+            > "${validator}"
+          chmod 0555 "${validator}"
 
       - name: Read repository-control issue comments
         env:
@@ -80,7 +91,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/validators/repository_control/validate_transition_authorization.py \
+          python3 "${RUNNER_TEMP}/validate-transition-authorization.py" \
             --event "${GITHUB_EVENT_PATH}" \
             --comments "${RUNNER_TEMP}/repository-control-comments.json" \
             --control-issue "${KFM_CONTROL_ISSUE}" \
@@ -97,7 +108,7 @@ jobs:
             echo
             echo "- Check: \`repository-control / authorize-ready-and-merge\`."
             echo "- Result: ${{ job.status }}."
-            echo "- Trust boundary: trusted base checkout; no pull-request code execution; read-only contents/issues/pull-requests token."
+            echo "- Trust boundary: standalone validator fetched from the exact trusted base SHA; no checkout or pull-request code execution; read-only contents/issues/pull-requests token."
             echo "- A success means only that an unedited owner-account comment contains a current exact-base and exact-head transition record."
             echo "- An expected readiness hold remains nonzero and merge-blocking for this authorization check."
             echo "- Expiry and comment state are evaluated when this job runs; GitHub does not time-expire the result or rerun it after a later comment edit/deletion."
