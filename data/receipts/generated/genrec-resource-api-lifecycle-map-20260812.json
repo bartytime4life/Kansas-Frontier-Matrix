@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-resource-api-lifecycle-map-20260812",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/LIFECYCLE_GATES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/LIFECYCLE_GATES.md": "sha256:4f88fb9cf6862fe505957eb38b3c2eda3d68282362edcdf1e502aec5643afffe"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-12"
+  },
+  "prompt_or_contract": "sha256:00bea5aea6961aab5a4dc2293b98503f70b58513cc1a1b157719a6367b8478a9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic repository inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Google Drive: Kansas Frontier Matrix Improvements"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-012",
+      "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI",
+      "repo:docs/doctrine/directory-rules.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c",
+      "repo:main@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/LIFECYCLE_GATES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "resource-enumeration",
+      "outcome": "PASS",
+      "reason": "The map covers the resource families named by EXP-012 plus the verified governance, validation, review, promotion, receipt, and correction objects already present on the pinned repository snapshot."
+    },
+    {
+      "gate": "directory-rules-and-duplicate-assay",
+      "outcome": "PASS",
+      "reason": "The change extends the existing lifecycle-gates architecture document and introduces no new root, object family, route family, schema, policy, release, or authority path."
+    },
+    {
+      "gate": "markdown-structure-and-truth-labels",
+      "outcome": "PASS",
+      "reason": "The table-of-contents anchor, Mermaid block, ownership table, version/date metadata, and non-effects statement were checked deterministically."
+    },
+    {
+      "gate": "generated-receipt-schema-shape",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the required fields, enumerations, hash patterns, and artifact-path/hash parity in generated_receipt.schema.json."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-exp012",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-012"
+    },
+    {
+      "id": "gdrive:kansas-frontier-matrix-improvements",
+      "validated": true,
+      "evidence_ref": "gdrive://1qH0oVs3vQN0YXhk_vASnrwAmJORL_vQigOM0cfHJSDI"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    },
+    {
+      "id": "repository:adr-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    },
+    {
+      "id": "repository:exact-main",
+      "validated": true,
+      "evidence_ref": "repo:main@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T17:47:59.818Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Cross-family resource lifecycle and API ownership reference for Pass 20 EXP-012. It adds no seventh API family, route, DTO, lifecycle state, schema, policy decision, source activation, release, deployment, or publication."
+}
