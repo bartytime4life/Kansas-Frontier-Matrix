@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/archaeology/three_d_visibility_assumption_disclosure.schema.json",
+  "title": "ThreeDVisibilityAssumptionDisclosure",
+  "description": "Fixture-only disclosure of assumptions behind one archaeology 3D visibility analysis. Conformance grants no evidence, interpretation, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "source_card",
+    "spec_hash",
+    "disclosure_id",
+    "recorded_at",
+    "analysis",
+    "scene_model",
+    "observers",
+    "targets",
+    "obstacles",
+    "method",
+    "interpretation",
+    "governance",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ThreeDVisibilityAssumptionDisclosure"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.archaeology.three-d-visibility-assumption-disclosure.fixture.v1"},
+    "source_card": {"const": "KFM-P18-INV-458"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "disclosure_id": {
+      "type": "string",
+      "pattern": "^kfm:archaeology:visibility-disclosure:[a-f0-9]{24}$"
+    },
+    "recorded_at": {"$ref": "#/$defs/date_time"},
+    "analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analysis_ref", "analysis_receipt_ref", "state", "kind"],
+      "properties": {
+        "analysis_ref": {"$ref": "#/$defs/ref"},
+        "analysis_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "state": {"enum": ["COMPLETE", "ERROR", "INCOMPLETE", "UNKNOWN"]},
+        "kind": {"enum": ["INTERVISIBILITY", "LINE_OF_SIGHT", "VIEWSHED"]}
+      }
+    },
+    "scene_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_ref",
+        "model_digest",
+        "horizontal_resolution_m",
+        "vertical_resolution_m",
+        "resolution_basis_ref",
+        "vertical_datum_ref"
+      ],
+      "properties": {
+        "model_ref": {"$ref": "#/$defs/ref"},
+        "model_digest": {"$ref": "#/$defs/sha256"},
+        "horizontal_resolution_m": {"$ref": "#/$defs/nullable_positive"},
+        "vertical_resolution_m": {"$ref": "#/$defs/nullable_positive"},
+        "resolution_basis_ref": {"$ref": "#/$defs/nullable_ref"},
+        "vertical_datum_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "observers": {"$ref": "#/$defs/actor_set"},
+    "targets": {"$ref": "#/$defs/actor_set"},
+    "obstacles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "model_refs", "completeness", "transparency_rule", "rule_statement"],
+      "properties": {
+        "mode": {"enum": ["BUILT_AND_TERRAIN", "CUSTOM", "SURFACE_ONLY", "UNKNOWN"]},
+        "model_refs": {"$ref": "#/$defs/ref_array"},
+        "completeness": {"enum": ["COMPLETE", "PARTIAL", "UNKNOWN"]},
+        "transparency_rule": {"enum": ["DECLARED_CLASSES", "OPAQUE", "UNKNOWN"]},
+        "rule_statement": {"$ref": "#/$defs/nullable_statement"}
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "algorithm_statement",
+        "line_of_sight_rule",
+        "earth_curvature",
+        "atmospheric_refraction",
+        "maximum_distance_m",
+        "scenario_ids"
+      ],
+      "properties": {
+        "algorithm": {"enum": ["OTHER", "RASTER_VIEWSHED", "RAY_CASTING"]},
+        "algorithm_statement": {"$ref": "#/$defs/nullable_statement"},
+        "line_of_sight_rule": {"$ref": "#/$defs/nullable_statement"},
+        "earth_curvature": {"enum": ["EXCLUDED", "INCLUDED", "UNKNOWN"]},
+        "atmospheric_refraction": {"enum": ["EXCLUDED", "INCLUDED", "UNKNOWN"]},
+        "maximum_distance_m": {"$ref": "#/$defs/nullable_positive"},
+        "scenario_ids": {"$ref": "#/$defs/token_array_nonempty"}
+      }
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result_character", "scope_statement", "uncertainty_statement", "archaeological_fact_asserted"],
+      "properties": {
+        "result_character": {"const": "ASSUMPTION_BOUND_INTERPRETATION"},
+        "scope_statement": {"$ref": "#/$defs/statement"},
+        "uncertainty_statement": {"$ref": "#/$defs/statement"},
+        "archaeological_fact_asserted": {"const": false}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intended_use",
+        "sensitivity_state",
+        "evidence_bundle_ref",
+        "technical_review_ref",
+        "cultural_review_ref",
+        "policy_decision_ref",
+        "publication_transform_receipt_ref",
+        "release_manifest_ref",
+        "correction_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "intended_use": {"enum": ["INTERNAL_REVIEW", "PUBLIC_CANDIDATE", "UNKNOWN"]},
+        "sensitivity_state": {"enum": ["CONTROLLED", "PUBLIC_SAFE_REVIEWED", "UNRESOLVED"]},
+        "evidence_bundle_ref": {"$ref": "#/$defs/nullable_ref"},
+        "technical_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "cultural_review_ref": {"$ref": "#/$defs/nullable_ref"},
+        "policy_decision_ref": {"$ref": "#/$defs/nullable_ref"},
+        "publication_transform_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "correction_ref": {"$ref": "#/$defs/nullable_ref"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "ASSUMPTION_DISCLOSURE_ONLY",
+        "NO_COORDINATES_OR_ASSET_ACCESS",
+        "NO_EVIDENCE_OR_INTERPRETATION_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_execution_authority",
+        "evidence_authority",
+        "interpretation_authority",
+        "policy_authority",
+        "review_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "analysis_execution_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "interpretation_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "date_time": {"type": "string", "format": "date-time"},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "nullable_positive": {
+      "anyOf": [
+        {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        {"type": "null"}
+      ]
+    },
+    "statement": {"type": "string", "minLength": 12, "maxLength": 1000},
+    "nullable_statement": {"anyOf": [{"$ref": "#/$defs/statement"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "token_array_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"}
+    },
+    "actor_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "geometry_posture", "geometry_ref", "height_m", "height_basis_ref"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "geometry_posture": {"enum": ["EXACT_RESTRICTED", "GENERALIZED", "WITHHELD"]},
+        "geometry_ref": {"$ref": "#/$defs/nullable_ref"},
+        "height_m": {"$ref": "#/$defs/nullable_positive"},
+        "height_basis_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "contract_doc": "contracts/domains/archaeology/three_d_visibility_assumption_disclosure.md",
+    "source_card": "KFM-P18-INV-458"
+  }
+}
