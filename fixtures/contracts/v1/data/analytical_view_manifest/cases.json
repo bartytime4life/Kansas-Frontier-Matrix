@@ -1,0 +1,248 @@
+{
+  "object_type": "AnalyticalViewManifestFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.data.analytical-view-manifest.fixture.v1",
+  "base_candidate": {
+    "object_type": "AnalyticalViewManifestCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.analytical-view-manifest.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_cards": ["KFM-P18-INV-107", "KFM-P18-INV-311"],
+    "assessed_at": "2026-08-11T18:45:00Z",
+    "view_id": "kfm:analytical-view:synthetic-county-summary:001",
+    "view_kind": "DATABASE_VIEW",
+    "purpose": "Expose a reproducible synthetic county summary for internal analysis.",
+    "definition": {
+      "definition_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "dialect_profile_ref": "kfm:sql-dialect-profile:synthetic-postgresql:001",
+      "raw_sql_stored": false
+    },
+    "upstream": {
+      "dataset_refs": [
+        "kfm:dataset:synthetic-county-observations:001",
+        "kfm:dataset:synthetic-county-registry:001"
+      ],
+      "lineage_ref": "kfm:lineage:synthetic-county-summary:001"
+    },
+    "semantic_dependencies": {
+      "join_assessment_refs": ["kfm:join-assessment:synthetic-county:001"],
+      "filter_predicate_ref": "kfm:predicate:synthetic-active-counties:001",
+      "aggregate_disclosure_refs": ["kfm:aggregate-disclosure:synthetic-county-count:001"],
+      "deduplication_assessment_ref": "kfm:deduplication-assessment:synthetic-county-source:001",
+      "window_disclosure_refs": []
+    },
+    "validation": {
+      "state": "VALIDATED",
+      "validation_report_refs": ["kfm:validation-report:synthetic-county-summary:001"],
+      "fixture_receipt_ref": "kfm:fixture-receipt:synthetic-county-summary:001"
+    },
+    "materialization": {
+      "refresh_mode": "ON_QUERY",
+      "freshness_profile_ref": null
+    },
+    "mutation": {
+      "posture": "READ_ONLY",
+      "predicate_ref": null,
+      "check_option_mode": "NOT_APPLICABLE",
+      "mutation_policy_ref": null
+    },
+    "disclosure": {
+      "intended_use": "INTERNAL_ANALYSIS",
+      "summary": "Synthetic read-only view manifest binds definition, upstream, validation, and rollback references.",
+      "review_record_refs": [],
+      "correction_policy_ref": "kfm:correction-policy:synthetic-view:001",
+      "rollback_target_ref": "kfm:rollback-target:synthetic-view-definition:001"
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_RAW_SQL_OR_DATABASE_ENDPOINTS",
+      "NO_VIEW_CREATION_OR_QUERY_EXECUTION",
+      "NO_DATA_MUTATION_OR_REFRESH_AUTHORITY",
+      "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "view_creation_authority": false,
+      "query_execution_authority": false,
+      "data_mutation_authority": false,
+      "refresh_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_read_only_database_view",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_materialized_view_direct_mutation_prohibited",
+      "patch": {
+        "view_kind": "MATERIALIZED_VIEW",
+        "materialization": {
+          "refresh_mode": "SCHEDULED",
+          "freshness_profile_ref": "kfm:freshness-profile:synthetic-nightly:001"
+        },
+        "mutation": {
+          "posture": "DIRECT_MUTATION_PROHIBITED",
+          "mutation_policy_ref": "kfm:mutation-policy:synthetic-materialized-view:001"
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_internal_updatable_view_with_guard",
+      "patch": {
+        "mutation": {
+          "posture": "UPDATABLE_GOVERNED",
+          "predicate_ref": "kfm:predicate:synthetic-active-counties:001",
+          "check_option_mode": "CASCADED",
+          "mutation_policy_ref": "kfm:mutation-policy:synthetic-governed-view:001"
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_read_only_candidate_with_review",
+      "patch": {
+        "disclosure": {
+          "intended_use": "PUBLIC_CANDIDATE",
+          "review_record_refs": ["kfm:review-record:synthetic-view:001"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_unresolved_view_kind",
+      "patch": {"view_kind": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["VIEW_KIND_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_partial_validation",
+      "patch": {"validation": {"state": "PARTIAL"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["VALIDATION_PARTIAL"]}
+    },
+    {
+      "name": "abstain_not_validated",
+      "patch": {
+        "validation": {
+          "state": "NOT_VALIDATED",
+          "validation_report_refs": [],
+          "fixture_receipt_ref": null
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["VIEW_NOT_VALIDATED"]}
+    },
+    {
+      "name": "abstain_unresolved_mutation",
+      "patch": {
+        "mutation": {
+          "posture": "UNRESOLVED",
+          "predicate_ref": null,
+          "check_option_mode": "UNRESOLVED",
+          "mutation_policy_ref": null
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["MUTATION_POSTURE_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_database_view_wrong_refresh",
+      "patch": {"materialization": {"refresh_mode": "MANUAL"}},
+      "expected": {"outcome": "DENY", "codes": ["DATABASE_VIEW_REFRESH_INCOHERENT"]}
+    },
+    {
+      "name": "deny_materialized_view_missing_freshness",
+      "patch": {"view_kind": "MATERIALIZED_VIEW", "materialization": {"refresh_mode": "SCHEDULED"}},
+      "expected": {"outcome": "DENY", "codes": ["MATERIALIZED_VIEW_FRESHNESS_REQUIRED"]}
+    },
+    {
+      "name": "deny_validated_without_report",
+      "patch": {"validation": {"validation_report_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["VALIDATION_EVIDENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_read_only_with_mutation_policy",
+      "patch": {"mutation": {"mutation_policy_ref": "kfm:mutation-policy:synthetic-unexpected:001"}},
+      "expected": {"outcome": "DENY", "codes": ["READ_ONLY_MUTATION_FIELDS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_updatable_without_guard",
+      "patch": {
+        "mutation": {
+          "posture": "UPDATABLE_GOVERNED",
+          "predicate_ref": "kfm:predicate:synthetic-active-counties:001",
+          "mutation_policy_ref": "kfm:mutation-policy:synthetic-governed-view:001"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["UPDATABLE_GUARD_REQUIRED"]}
+    },
+    {
+      "name": "deny_updatable_predicate_drift",
+      "patch": {
+        "mutation": {
+          "posture": "UPDATABLE_GOVERNED",
+          "predicate_ref": "kfm:predicate:synthetic-different:001",
+          "check_option_mode": "LOCAL",
+          "mutation_policy_ref": "kfm:mutation-policy:synthetic-governed-view:001"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["VIEW_PREDICATE_GUARD_MISMATCH"]}
+    },
+    {
+      "name": "deny_public_updatable_candidate",
+      "patch": {
+        "mutation": {
+          "posture": "UPDATABLE_GOVERNED",
+          "predicate_ref": "kfm:predicate:synthetic-active-counties:001",
+          "check_option_mode": "EQUIVALENT_GUARD",
+          "mutation_policy_ref": "kfm:mutation-policy:synthetic-governed-view:001"
+        },
+        "disclosure": {
+          "intended_use": "PUBLIC_CANDIDATE",
+          "review_record_refs": ["kfm:review-record:synthetic-view:001"]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_UPDATABLE_VIEW_DENIED"]}
+    },
+    {
+      "name": "deny_public_without_review",
+      "patch": {"disclosure": {"intended_use": "PUBLIC_CANDIDATE"}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_DISCLOSURE_REVIEW_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_upstream_refs",
+      "patch": {
+        "upstream": {
+          "dataset_refs": [
+            "kfm:dataset:synthetic-county-registry:001",
+            "kfm:dataset:synthetic-county-observations:001"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["UPSTREAM_REFS_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_recorded_validation_failure",
+      "patch": {"validation": {"state": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["VALIDATION_RECORDED_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"database_endpoint": null},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
