@@ -1,0 +1,91 @@
+# Validate the fixture-only geometry quality scope assessment.
+name: geometry-quality-scope-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/geometry-quality-scope-assessment.yml"
+      - "contracts/evidence/geometry_quality_scope_assessment.md"
+      - "schemas/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/geometry_quality_scope_assessment/**"
+      - "tools/validators/evidence/validate_geometry_quality_scope_assessment.py"
+      - "tests/evidence/test_geometry_quality_scope_assessment.py"
+      - "docs/intake/exploratory/pass-18-geometry-quality-scope-assessment-source-map.md"
+      - "contracts/evidence/representation_fitness_assessment.md"
+      - "contracts/common/identifier_precision_lineage_assessment.md"
+      - "contracts/evidence/field_capture_evidence_handoff.md"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass18-geometry-quality-scope-assessment-20260811.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/geometry-quality-scope-assessment.yml"
+      - "contracts/evidence/geometry_quality_scope_assessment.md"
+      - "schemas/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json"
+      - "fixtures/contracts/v1/evidence/geometry_quality_scope_assessment/**"
+      - "tools/validators/evidence/validate_geometry_quality_scope_assessment.py"
+      - "tests/evidence/test_geometry_quality_scope_assessment.py"
+      - "docs/intake/exploratory/pass-18-geometry-quality-scope-assessment-source-map.md"
+      - "contracts/evidence/representation_fitness_assessment.md"
+      - "contracts/common/identifier_precision_lineage_assessment.md"
+      - "contracts/evidence/field_capture_evidence_handoff.md"
+      - "pyproject.toml"
+      - "data/receipts/generated/genrec-pass18-geometry-quality-scope-assessment-20260811.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geometry-quality-scope-assessment-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-geometry-quality-scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared validation dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Run focused and adjacent deterministic tests
+        run: |
+          python -m pytest -q -p no:cacheprovider tests/evidence/test_geometry_quality_scope_assessment.py
+          python -m pytest -q -p no:cacheprovider tests/evidence/test_representation_fitness_assessment.py
+          python -m pytest -q -p no:cacheprovider tests/validators/test_validate_identifier_precision_lineage_assessment.py
+          python -m pytest -q -p no:cacheprovider tests/validators/evidence/test_validate_field_capture_evidence_handoff.py
+          python tools/validators/evidence/validate_geometry_quality_scope_assessment.py --fixtures
+      - name: Validate generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass18-geometry-quality-scope-assessment-20260811.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### GeometryQualityScopeAssessmentCandidate"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: fixture-only accuracy/precision separation, quality attachment scope, provenance, and derivation coherence."
+            echo "- Boundary: no coordinates, quality measurement, transform execution, fitness, evidence, policy, lifecycle, release, publication, or public-use authority."
+          } >> "$GITHUB_STEP_SUMMARY"

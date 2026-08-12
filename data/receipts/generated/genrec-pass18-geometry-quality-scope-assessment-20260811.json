@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-pass18-geometry-quality-scope-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geometry-quality-scope-assessment.yml",
+    "contracts/evidence/geometry_quality_scope_assessment.md",
+    "docs/intake/exploratory/pass-18-geometry-quality-scope-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/geometry_quality_scope_assessment/cases.json",
+    "schemas/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json",
+    "tests/evidence/test_geometry_quality_scope_assessment.py",
+    "tools/validators/evidence/validate_geometry_quality_scope_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geometry-quality-scope-assessment.yml": "sha256:42f720f553aae08d7abbd48eb075b23639b8158beea038a08b887bb59c1ce958",
+    "contracts/evidence/geometry_quality_scope_assessment.md": "sha256:ebdbc7c027dc9cd044d76213619cf8fa7ecd25148b772d746fd9072f6901718f",
+    "docs/intake/exploratory/pass-18-geometry-quality-scope-assessment-source-map.md": "sha256:b5fa95c60f9bf96f6d91ba9dcead2efe96961c35e33d6729c1e033e3ca5c3c30",
+    "fixtures/contracts/v1/evidence/geometry_quality_scope_assessment/cases.json": "sha256:722fb387e602ccd3d8ab725bf4a441f536bc17fa4921a46742ace725dc87a1c2",
+    "schemas/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json": "sha256:65a2b4f013254625804920091742e5fc64bbfa0fd25a1ad68d46ebe361274495",
+    "tests/evidence/test_geometry_quality_scope_assessment.py": "sha256:75a9e47141096661aeaade8388abef185bdc9060ee8935124f705702ff8fc909",
+    "tools/validators/evidence/validate_geometry_quality_scope_assessment.py": "sha256:909aa91452286426adeb727d4489261b93c31c944c002a366e3510342c73c208"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:ebdbc7c027dc9cd044d76213619cf8fa7ecd25148b772d746fd9072f6901718f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:fab88e58f891e350cec2666d8334565d01b36959d7716ba39161aa767326f5ed",
+      "sha256:742e7dd3249dc2f5b80ce06cfe732412c2c2cd6b4d654b979416c88604df38c7",
+      "sha256:70a4d3d2da75abd211b4bb946072e13a8d9d490353a2f084f5109ed9fcf794d8"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages-35-36",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/representation_fitness_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/identifier_precision_lineage_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/field_capture_evidence_handoff.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geometry-quality-scope-assessment.yml": "CONFIRMED",
+    "contracts/evidence/geometry_quality_scope_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-geometry-quality-scope-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/geometry_quality_scope_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json": "PROPOSED",
+    "tests/evidence/test_geometry_quality_scope_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_geometry_quality_scope_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "pdf-relevant-page-visual-inspection", "outcome": "PASS"},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {
+      "gate": "focused-and-adjacent-tests",
+      "outcome": "PASS",
+      "reason": "41 tests and 44 subtests passed across the new assessment and three adjacent quality profiles."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "26 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-accuracy-precision-source-card",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages-35-36"
+    },
+    {
+      "id": "google-drive-same-titled-dossier-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "existing-representation-fitness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/representation_fitness_assessment.md"
+    },
+    {
+      "id": "existing-precision-lineage-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/common/identifier_precision_lineage_assessment.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T01:42:27Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only GeometryQualityScopeAssessmentCandidate derived from Pass 18 KFM-P18-INV-052 after relevant-page visual inspection and current-main collision review. It separates declared accuracy from precision, supports dataset inheritance and feature overrides, and checks derivation effects without reading coordinates, measuring quality, running transforms, deciding fitness or policy, creating evidence, mutating lifecycle state, releasing, deploying, publishing, or authorizing public use."
+}

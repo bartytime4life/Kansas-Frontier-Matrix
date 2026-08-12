@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/geometry_quality_scope_assessment.schema.json",
+  "title": "GeometryQualityScopeAssessmentCandidate",
+  "description": "Inactive fixture-only assessment that separates declared geometry accuracy, precision, provenance, derivation, and feature-versus-dataset attachment scope without evidence, policy, release, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type", "schema_version", "profile", "status", "assessment_id",
+    "spec_hash", "source_idea_id", "assessed_at", "dataset_ref",
+    "geometry_artifact_digest", "geometry_revision", "feature_count",
+    "quality_scope", "quality_records", "summary", "recommendation",
+    "review_state", "adjacent_refs", "limitations", "effects"
+  ],
+  "properties": {
+    "object_type": {"const": "GeometryQualityScopeAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.geometry-quality-scope-assessment.fixture.v1"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "assessment_id": {"type": "string", "pattern": "^geometry-quality-scope:[a-f0-9]{24}$"},
+    "spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_idea_id": {"const": "KFM-P18-INV-052"},
+    "assessed_at": {"$ref": "#/$defs/utc_datetime"},
+    "dataset_ref": {"$ref": "#/$defs/ref"},
+    "geometry_artifact_digest": {"$ref": "#/$defs/sha256"},
+    "geometry_revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "feature_count": {"type": "integer", "minimum": 1, "maximum": 256},
+    "quality_scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "dataset_quality_profile_ref"],
+      "properties": {
+        "mode": {"enum": ["DATASET_INHERITED", "FEATURE_EXPLICIT", "MIXED_OVERRIDE", "UNKNOWN"]},
+        "dataset_quality_profile_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "quality_records": {
+      "type": "array", "maxItems": 256,
+      "items": {"$ref": "#/$defs/quality_record"}
+    },
+    "summary": {"$ref": "#/$defs/summary"},
+    "recommendation": {"enum": ["READY_FOR_FITNESS_REVIEW", "HOLD", "DENY"]},
+    "review_state": {"const": "HOLD"},
+    "adjacent_refs": {
+      "type": "object", "additionalProperties": false,
+      "required": ["representation_fitness_ref", "identifier_precision_lineage_ref", "field_capture_handoff_ref"],
+      "properties": {
+        "representation_fitness_ref": {"$ref": "#/$defs/nullable_ref"},
+        "identifier_precision_lineage_ref": {"$ref": "#/$defs/nullable_ref"},
+        "field_capture_handoff_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "FIXTURE_ONLY_REFERENCES_UNRESOLVED",
+        "DISCLOSURE_BANDS_ARE_NOT_UNIVERSAL_THRESHOLDS",
+        "NO_COORDINATES_OR_SENSITIVE_FEATURE_IDENTITIES",
+        "NO_ACCURACY_EVIDENCE_FITNESS_POLICY_RELEASE_OR_PUBLIC_USE_AUTHORITY"
+      ]
+    },
+    "effects": {"$ref": "#/$defs/effects"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "utc_datetime": {
+      "type": "string", "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "ref": {"type": "string", "pattern": "^kfm:[A-Za-z0-9][A-Za-z0-9._~:/-]{8,511}$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "quality_class": {
+      "enum": ["SUB_METER", "METER", "TEN_METER", "HUNDRED_METER", "KILOMETER_OR_COARSER", "UNKNOWN", "WITHHELD"]
+    },
+    "derivation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "kind", "input_quality_ref", "input_accuracy_class",
+        "input_precision_class", "accuracy_effect", "precision_effect",
+        "transform_receipt_ref"
+      ],
+      "properties": {
+        "kind": {"enum": ["NONE", "REPROJECTED", "GENERALIZED", "AGGREGATED", "WITHHELD"]},
+        "input_quality_ref": {"$ref": "#/$defs/nullable_ref"},
+        "input_accuracy_class": {"oneOf": [{"$ref": "#/$defs/quality_class"}, {"type": "null"}]},
+        "input_precision_class": {"oneOf": [{"$ref": "#/$defs/quality_class"}, {"type": "null"}]},
+        "accuracy_effect": {"enum": ["NOT_APPLICABLE", "UNCHANGED", "DEGRADED", "UNKNOWN", "WITHHELD"]},
+        "precision_effect": {"enum": ["NOT_APPLICABLE", "UNCHANGED", "COARSENED", "UNKNOWN", "WITHHELD"]},
+        "transform_receipt_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "quality_record": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "subject_kind", "subject_ref_digest", "geometry_revision",
+        "accuracy_class", "precision_class", "acquisition_method",
+        "observation_method_ref", "provenance_ref", "accuracy_inferred_from_precision",
+        "precision_used_as_accuracy", "derivation"
+      ],
+      "properties": {
+        "subject_kind": {"enum": ["DATASET", "FEATURE"]},
+        "subject_ref_digest": {"$ref": "#/$defs/sha256"},
+        "geometry_revision": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+        "accuracy_class": {"$ref": "#/$defs/quality_class"},
+        "precision_class": {"$ref": "#/$defs/quality_class"},
+        "acquisition_method": {"enum": ["SURVEY", "GNSS", "DIGITIZED", "REMOTE_SENSING", "DERIVED", "GENERALIZED_PUBLIC", "UNKNOWN"]},
+        "observation_method_ref": {"$ref": "#/$defs/nullable_ref"},
+        "provenance_ref": {"$ref": "#/$defs/nullable_ref"},
+        "accuracy_inferred_from_precision": {"const": false},
+        "precision_used_as_accuracy": {"const": false},
+        "derivation": {"$ref": "#/$defs/derivation"}
+      }
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "record_count", "dataset_record_count", "feature_record_count",
+        "resolved_accuracy_count", "resolved_precision_count"
+      ],
+      "properties": {
+        "record_count": {"type": "integer", "minimum": 0, "maximum": 256},
+        "dataset_record_count": {"type": "integer", "minimum": 0, "maximum": 1},
+        "feature_record_count": {"type": "integer", "minimum": 0, "maximum": 256},
+        "resolved_accuracy_count": {"type": "integer", "minimum": 0, "maximum": 256},
+        "resolved_precision_count": {"type": "integer", "minimum": 0, "maximum": 256}
+      }
+    },
+    "effects": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "coordinates_read", "feature_identities_disclosed", "references_resolved",
+        "accuracy_measured", "precision_measured", "transform_executed",
+        "fitness_decided", "evidence_created", "policy_decided",
+        "human_review_approved", "lifecycle_mutated", "release_authorized",
+        "published", "public_use_authorized"
+      ],
+      "properties": {
+        "coordinates_read": {"const": false},
+        "feature_identities_disclosed": {"const": false},
+        "references_resolved": {"const": false},
+        "accuracy_measured": {"const": false},
+        "precision_measured": {"const": false},
+        "transform_executed": {"const": false},
+        "fitness_decided": {"const": false},
+        "evidence_created": {"const": false},
+        "policy_decided": {"const": false},
+        "human_review_approved": {"const": false},
+        "lifecycle_mutated": {"const": false},
+        "release_authorized": {"const": false},
+        "published": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_idea_id": "KFM-P18-INV-052",
+    "authority": "fixture_internal_coherence_only"
+  }
+}
