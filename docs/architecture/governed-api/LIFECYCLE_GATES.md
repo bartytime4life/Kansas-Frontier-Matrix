@@ -2,11 +2,11 @@
 doc_id: kfm://doc/architecture-governed-api-lifecycle-gates
 title: Governed API — Lifecycle Gates
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: API steward + Release steward · NEEDS VERIFICATION
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-12
 policy_label: public
 related:
   - README.md
@@ -20,6 +20,7 @@ tags: [kfm, architecture, governed-api, lifecycle, promotion-gates, doctrine]
 notes:
   - PROPOSED. Maps governed-api.md §6 (request flow) and §11.2 (rollback) against synthesis §8 (promotion gates A–G).
   - Release-state enforcement is the API's strongest read of the trust membrane.
+  - PROPOSED. Adds the Pass 20 EXP-012 cross-family resource lifecycle and API ownership map.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -33,7 +34,7 @@ notes:
 ![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
 ![gates](https://img.shields.io/badge/gates-A--G-blue)
 
-**Status:** draft · **Owners:** API steward + Release steward *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
+**Status:** draft · **Owners:** API steward + Release steward *(NEEDS VERIFICATION)* · **Last updated:** 2026-08-12
 
 > [!IMPORTANT]
 > **The API does not create release state — it reflects it.** Promotion is governed inside the membrane *(`kfm_unified_doctrine_synthesis.md` §§7–8, CONFIRMED)*; the API checks **at request time** that the content it is about to surface has passed the gates that apply. Skipping a gate inside is a doctrine violation; skipping the API's check is a membrane breach.
@@ -50,6 +51,7 @@ notes:
 3. [Build-time vs request-time enforcement](#3-buildtime-vs-requesttime-enforcement)
 4. [Per-gate API behavior](#4-pergate-api-behavior)
 5. [Release-state matrix](#5-releasestate-matrix)
+5A. [Resource lifecycle and API ownership map](#5a-resource-lifecycle-and-api-ownership-map)
 6. [Rollback — what the API does](#6-rollback--what-the-api-does)
 7. [Worked example — feature click during rollback](#7-worked-example--feature-click-during-rollback)
 8. [Anti-patterns](#8-anti-patterns)
@@ -193,6 +195,54 @@ Build-time enforcement is necessary but **not sufficient** for the API. A bundle
 
 ---
 
+## 5A. Resource lifecycle and API ownership map
+
+**Status:** PROPOSED reference map; completeness and runtime bindings remain NEEDS VERIFICATION.  
+**Source basis:** Pass 20 EXP-012 and the Google Drive document *Kansas Frontier Matrix Improvements*.  
+**Snapshot basis:** repository paths verified at `main@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c`.
+
+> [!IMPORTANT]
+> This map is navigational. The named contract, schema, policy, proof, and release homes remain authoritative for their responsibilities. The map adds no seventh API family, route, DTO, lifecycle state, policy decision, release, or publication authority.
+
+```mermaid
+flowchart TB
+  A["Admission · SourceDescriptor · SourceIntakeRecord"]
+  B["Evidence · EvidenceRef · EvidenceBundle"]
+  C["Validation and review · reports · decisions"]
+  D["Release · manifests · promotion records"]
+  E["Governed response · envelopes · receipts"]
+  A --> B --> C --> D --> E
+  E -. "correction, withdrawal, or rollback" .-> D
+```
+
+| Resource or object family | Lifecycle position | Canonical repository home verified on the snapshot | Governing API family or membrane role | Request-time posture |
+|---|---|---|---|---|
+| `SourceDescriptor` | Admission before or at `RAW` | `contracts/source/source_descriptor.md`; source schema and registry homes | **Source summary resolver** | Public projection may `ANSWER` only for admitted, releasable source metadata; unresolved source identity `ABSTAIN`. |
+| `SourceIntakeRecord` | Admission work item; may remain `WORK` or `QUARANTINE` | `contracts/source/source_intake_record.md` | **Review queue surface** for steward/internal handling | Not a public payload by default; unresolved or quarantined intake cannot promote. |
+| `EvidenceRef` | Stable reference carried from work through release | `contracts/evidence/evidence_ref.md` | **Evidence resolver**; consumed by every family | Unresolvable reference produces `ABSTAIN evidence/unresolved`. |
+| `EvidenceBundle` | Evidence closure before `PUBLISHED`; rechecked at request time | `contracts/evidence/evidence_bundle.md`; `data/proofs/evidence_bundle/` | **Evidence resolver**; support object for all families | Public-safe projection only; inconsistent or stale closure `ABSTAIN`. |
+| `PolicyDecision` | Gate C/F decision at build or request time | `contracts/policy/policy_decision.md`; `policy/` | Cross-family trust-membrane control | Preserves finite `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; internal decision detail is not exposed by default. |
+| `ValidationReport` and `CitationValidationReport` | Gate D/E proof before promotion and during response validation | `contracts/data/validation_report.md`; `contracts/evidence/citation_validation_report.md`; proof homes under `data/proofs/` | Cross-family validation; citation report is especially relevant to **Focus Mode runtime** | Invalid response `ERROR`; unresolved citations `ABSTAIN`. |
+| `ReviewRecord` | Gate F; steward action while `WORK` or `QUARANTINE` | `schemas/contracts/v1/governance/review_record.schema.json`; canonical narrative contract home NEEDS VERIFICATION | **Review queue surface** | Public clients do not receive the review record; uncleared review blocks or narrows promotion. |
+| `PromotionDecision` and `PromotionReceipt` | Governed transition from `PROCESSED` toward `PUBLISHED` | `contracts/release/promotion_decision.md`; `contracts/release/promotion_receipt.md` | Release-plane input, visible through **Review queue** to authorized stewards | The API reads the resulting state; it does not write promotion state. |
+| `ReleaseManifest` | Declares `PUBLISHED` state and rollback target | `contracts/release/release_manifest.md`; `release/` | Release reference used by all six families | Missing or non-published manifest yields `ABSTAIN` or `DENY` according to the family contract. |
+| `LayerManifest` and `MapReleaseManifest` | Layer candidate in `PROCESSED`; admitted map artifact in `PUBLISHED` | `contracts/data/layer_manifest.md`; `contracts/release/map_release_manifest.md` | **Layer manifest resolver**; consumed by feature/detail and map clients | Only released, audience-safe projection can `ANSWER`; public clients never read storage directly. |
+| `RuntimeResponseEnvelope` and `DecisionEnvelope` | Request-time observation of current release and policy state | `contracts/runtime/runtime_response_envelope.md`; `contracts/runtime/decision_envelope.md` | Envelope discipline across all six families; **Focus Mode runtime** uses the same membrane | Exactly one finite outcome leaves the membrane, with public-safe references. |
+| `RunReceipt` and `AIReceipt` | Audit trail for pipeline or AI work | `contracts/runtime/run_receipt.md`; `contracts/runtime/ai_receipt.md`; receipt homes under `data/receipts/` | Internal audit role; referenced by governed responses where contracts allow | Receipt identifiers may be exposed; sensitive receipt bodies remain internal unless an audience-specific projection is authorized. |
+| `CorrectionNotice`, `WithdrawalNotice`, and `RollbackCard` | Post-publication correction, withdrawal, or rollback marker | `contracts/correction/correction_notice.md`; `contracts/release/withdrawal_notice.md`; `contracts/release/rollback_card.md` | Release plane; reflected by **Layer manifest**, **Feature/detail**, and dependent families | In-progress rollback `ABSTAIN`; withdrawn content must not `ANSWER`; the API reflects rather than edits release state. |
+
+### Ownership rules
+
+1. The six canonical API families remain: Source summary, Feature/detail, Layer manifest, Evidence, Focus Mode, and Review queue.
+2. Lifecycle objects cross the public boundary only through an audience-safe governed projection; internal storage, review, proof, and receipt bodies are not public APIs.
+3. A contract owns meaning, a schema owns shape, policy owns admissibility, release records own publication state, and this document owns only the cross-family map.
+4. Route URLs, methods, runtime wiring, and complete resource enumeration remain **NEEDS VERIFICATION**. Any new object family must update this map in the same change that introduces its governing contract or schema.
+5. If this map conflicts with a canonical object-family authority, the map is wrong and must be corrected; it does not supersede that authority.
+
+[↑ Back to top](#top)
+
+---
+
 ## 6. Rollback — what the API does
 
 > **Evidence basis:** `governed-api.md` §11.2 *(rollback and continuity, CONFIRMED)*; `cross-domain/shared-kernel.md` §7.
@@ -311,6 +361,6 @@ G — Release              →  ABSTAIN release/{no-manifest,state-not-published
 
 **Related (mini)** · [`README.md`](README.md) · [`../governed-api.md`](../governed-api.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`THREAT_MODEL.md`](THREAT_MODEL.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md)
 
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-12 META)*
+**Last updated:** 2026-08-12 · **Doc version:** v0.2 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-12 META)*
 
 [↑ Back to top](#top)
