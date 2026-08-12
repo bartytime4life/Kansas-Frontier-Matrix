@@ -53,6 +53,20 @@ class OpenAdrBacklogDisciplineAssessmentTests(unittest.TestCase):
         changed["entries"][0]["decision_class"] = "REVIEW_DUTY"
         self.assertNotEqual(self.base["assessment_id"], MODULE.expected_id(changed))
 
+    def test_supersession_cycle_is_denied(self) -> None:
+        case = next(case for case in self.cases if case["name"] == "deny_supersession_cycle")
+        result = MODULE.validate_candidate(MODULE.materialize_case(self.base, case))
+        self.assertEqual(
+            result,
+            MODULE.Result(
+                "DENY",
+                (
+                    MODULE.Finding("SUPERSESSION_CYCLE", "/entries/0/superseded_by"),
+                    MODULE.Finding("SUPERSESSION_CYCLE", "/entries/1/superseded_by"),
+                ),
+            ),
+        )
+
     def test_evaluation_is_deterministic_and_no_network(self) -> None:
         with mock.patch.object(
             socket, "create_connection", side_effect=AssertionError("network denied")

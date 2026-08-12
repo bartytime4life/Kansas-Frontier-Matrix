@@ -39,6 +39,22 @@
     "expected_findings": [{"code": "SUPERSEDED_TARGET_REQUIRED", "path": "/entries/0/superseded_by"}]
   },
   {
+    "name": "deny_supersession_cycle",
+    "mutations": [
+      {"path": "/entries/0/state", "value": "SUPERSEDED"},
+      {"path": "/entries/0/decision_required", "value": false},
+      {"path": "/entries/0/superseded_by", "value": "ADR-S-02"},
+      {"path": "/entries/1/state", "value": "SUPERSEDED"},
+      {"path": "/entries/1/decision_required", "value": false},
+      {"path": "/entries/1/superseded_by", "value": "ADR-S-01"}
+    ],
+    "expected_outcome": "DENY",
+    "expected_findings": [
+      {"code": "SUPERSESSION_CYCLE", "path": "/entries/0/superseded_by"},
+      {"code": "SUPERSESSION_CYCLE", "path": "/entries/1/superseded_by"}
+    ]
+  },
+  {
     "name": "deny_noncanonical_entry_order",
     "mutations": [{"path": "/entries/0/backlog_id", "value": "ADR-S-04"}],
     "expected_outcome": "DENY",
