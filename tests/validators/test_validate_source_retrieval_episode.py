@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import contextlib
 import io
 import json
@@ -10,11 +11,15 @@ import unittest
 from collections import Counter
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+CONNECTORS_SRC = ROOT / "packages/connectors-core/src"
+if str(CONNECTORS_SRC) not in sys.path:
+    sys.path.insert(0, str(CONNECTORS_SRC))
+
 from jsonschema import Draft202012Validator
 
+from connectors_core import core as connector_core
 from tools.validators.source import validate_source_retrieval_episode as validator
-
-ROOT = Path(__file__).resolve().parents[2]
 
 
 class SourceRetrievalEpisodeTests(unittest.TestCase):
@@ -35,6 +40,58 @@ class SourceRetrievalEpisodeTests(unittest.TestCase):
                 ]
                 self.assertEqual(case["expected_outcome"], result.outcome)
                 self.assertEqual(case["expected_findings"], actual)
+
+    def test_transport_categories_match_connector_model_and_fixtures(self) -> None:
+        schema = json.loads(validator.SCHEMA.read_text(encoding="utf-8"))
+        schema_categories = set(
+            schema["$defs"]["transport"]["properties"]["category"]["enum"]
+        )
+        connector_categories = {
+            category.value for category in connector_core.TransportCategory
+        }
+        manifest = validator.load_fixtures()
+        fixture_categories = {
+            base["transport"]["category"]
+            for base in manifest["bases"].values()
+        }
+        fixture_categories.update(
+            mutation["value"]
+            for case in manifest["cases"]
+            for mutation in case.get("mutations", [])
+            if mutation["path"] == "/transport/category"
+        )
+        self.assertEqual(connector_categories, schema_categories)
+        self.assertEqual(connector_categories, fixture_categories)
+
+    def test_etag_matches_connector_syntax_and_length_bound(self) -> None:
+        manifest = validator.load_fixtures()
+
+        def validate_etag(value: str) -> validator.Result:
+            document = copy.deepcopy(manifest["bases"]["get_success"])
+            document["transport"]["etag"] = value
+            document["result"] = validator.recompute_result(document)
+            document["spec_hash"], document["episode_id"] = (
+                validator.canonical_identity(document)
+            )
+            return validator.validate_payload(document)
+
+        longest = 'W/"' + ("a" * 512) + '"'
+        self.assertEqual(longest, connector_core.ETag.parse(longest).render())
+        self.assertEqual("PASS", validate_etag(longest).outcome)
+
+        too_long = '"' + ("a" * 513) + '"'
+        with self.assertRaises(connector_core.ConnectorPrimitiveError):
+            connector_core.ETag.parse(too_long)
+        result = validate_etag(too_long)
+        self.assertEqual("DENY", result.outcome)
+        self.assertEqual(
+            (
+                validator.Finding(
+                    "RETRIEVAL_SCHEMA_INVALID", "/transport/etag"
+                ),
+            ),
+            result.findings,
+        )
 
     def test_fixture_polarity_is_non_vacuous(self) -> None:
         manifest = validator.load_fixtures()

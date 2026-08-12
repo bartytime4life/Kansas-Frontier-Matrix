@@ -166,9 +166,18 @@ def recompute_result(value: Mapping[str, Any]) -> dict[str, Any]:
             "status": "RETRY_REQUIRED",
             "reason_codes": ["RETRIEVAL_CANCELLED"],
         }
+    if category == "AUTH_REQUIRED":
+        return {"status": "BLOCKED", "reason_codes": ["AUTH_REQUIRED"]}
     if category == "ACCESS_DENIED":
         return {"status": "BLOCKED", "reason_codes": ["ACCESS_DENIED"]}
-    if category == "INTEGRITY_FAILED":
+    if category == "NOT_FOUND":
+        return {"status": "BLOCKED", "reason_codes": ["SOURCE_NOT_FOUND"]}
+    if category == "RESPONSE_TOO_LARGE":
+        return {
+            "status": "BLOCKED",
+            "reason_codes": ["RESPONSE_TOO_LARGE"],
+        }
+    if category == "INTEGRITY_MISMATCH":
         return {
             "status": "BLOCKED",
             "reason_codes": ["INTEGRITY_CHECK_FAILED"],
@@ -178,12 +187,17 @@ def recompute_result(value: Mapping[str, Any]) -> dict[str, Any]:
             "status": "BLOCKED",
             "reason_codes": ["PARTIAL_RESPONSE_DENIED"],
         }
-    if category == "UNSAFE":
+    if category == "INVALID_RESPONSE_METADATA":
+        return {
+            "status": "BLOCKED",
+            "reason_codes": ["INVALID_RESPONSE_METADATA"],
+        }
+    if category == "UNSAFE_METADATA":
         return {
             "status": "BLOCKED",
             "reason_codes": ["UNSAFE_RESPONSE_DENIED"],
         }
-    return {"status": "ERROR", "reason_codes": ["RETRIEVAL_ERROR"]}
+    return {"status": "ERROR", "reason_codes": ["TRANSPORT_ERROR"]}
 
 
 def _schema_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
@@ -213,6 +227,7 @@ def _schema_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
 def _locator_is_safe(value: str) -> bool:
     try:
         parsed = urlsplit(value)
+        _ = parsed.port
     except ValueError:
         return False
     return (
@@ -286,6 +301,19 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
     method = value["method"]
     status = transport["http_status"]
     body_identity = _has_body_identity(transport)
+    last_modified = _time(transport["last_modified"])
+
+    if transport["last_modified"] is not None and (
+        last_modified is None
+        or completed is None
+        or last_modified > completed
+    ):
+        findings.add(
+            Finding(
+                "RETRIEVAL_LAST_MODIFIED_AFTER_COMPLETION",
+                "/transport/last_modified",
+            )
+        )
 
     if category == "SUCCESS":
         if not isinstance(status, int) or not 200 <= status <= 299:
@@ -353,7 +381,9 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
             findings.add(Finding("RETRIEVAL_BODY_FORBIDDEN", "/transport"))
         expected_statuses = {
             "RATE_LIMITED": {429},
-            "ACCESS_DENIED": {401, 403},
+            "AUTH_REQUIRED": {401},
+            "ACCESS_DENIED": {403, 451},
+            "NOT_FOUND": {404},
             "PARTIAL": {206},
         }
         if category in expected_statuses and status not in expected_statuses[category]:
@@ -390,7 +420,10 @@ def validate_payload(value: Mapping[str, Any]) -> Result:
             "DENY",
             tuple(Finding(code, "/result/status") for code in reasons),
         )
-    return Result("ERROR", (Finding("RETRIEVAL_ERROR", "/result/status"),))
+    return Result(
+        "ERROR",
+        tuple(Finding(code, "/result/status") for code in reasons),
+    )
 
 
 def _replace(document: Any, pointer: str, replacement: Any) -> None:

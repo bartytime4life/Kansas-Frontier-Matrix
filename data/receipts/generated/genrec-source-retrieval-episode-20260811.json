@@ -11,20 +11,20 @@
     "tools/validators/source/validate_source_retrieval_episode.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-retrieval-episode.yml": "sha256:977e0a80fcb1b6b04c3c54761b80f050bd9cb61f39a3537686119d60bf5e89c5",
-    "contracts/source/source_retrieval_episode.md": "sha256:9b8a0f561f9d1c8056a06067ff956bb57b8d2ee2627ca7265bac01dc890aeaa4",
+    ".github/workflows/source-retrieval-episode.yml": "sha256:d46f67b31d451195e38dc2cc8e47c240bd31aca996062f7fd30553eb9444de0e",
+    "contracts/source/source_retrieval_episode.md": "sha256:2ebd34385cbbdc8271305ee2208593bcc4d9153d8d1c18a2bf5847142829e446",
     "docs/intake/exploratory/source-retrieval-episode-source-map.md": "sha256:728d4f3357989fb3414fab2b6d91b6f0d264a93f658dddeedafae0329abf0f8f",
-    "fixtures/contracts/v1/source/source_retrieval_episode/cases.json": "sha256:ed4e3ab6658877d1d9bf42657f59b62e704c205ed0440ed1a2714c08837fcca8",
-    "schemas/contracts/v1/source/source_retrieval_episode.schema.json": "sha256:a560ec8a22beb683983bd30a62b3417e86e4a4d35b443d6ff943902b10555349",
-    "tests/validators/test_validate_source_retrieval_episode.py": "sha256:54db14390bcd5a0c11521ca3dfe7e7c649a8db43b1e602c31b332f5d77d9a1c1",
-    "tools/validators/source/validate_source_retrieval_episode.py": "sha256:c688769684d3b69175ca6e189c7985fa3736e9fff99a74a7ba80d33de399c386"
+    "fixtures/contracts/v1/source/source_retrieval_episode/cases.json": "sha256:db04c38b9a2b603aebc537d8a3b4512344de62d80e8cf620eada0cdc02d1606f",
+    "schemas/contracts/v1/source/source_retrieval_episode.schema.json": "sha256:c5842079633e113444cbf8e078b39e52371a3b0d86429e34c9a8bff5b7f04c91",
+    "tests/validators/test_validate_source_retrieval_episode.py": "sha256:9cc3b90b3f3c033f635b825278f2f4315aa2e289487b78821d4a905885e767e7",
+    "tools/validators/source/validate_source_retrieval_episode.py": "sha256:1db96ece5308cbc7883952b505da5c67cc7cca385d503221829c712324400495"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-5.6 Pro",
     "version": "2026-08-11"
   },
-  "prompt_or_contract": "sha256:9b8a0f561f9d1c8056a06067ff956bb57b8d2ee2627ca7265bac01dc890aeaa4",
+  "prompt_or_contract": "sha256:2ebd34385cbbdc8271305ee2208593bcc4d9153d8d1c18a2bf5847142829e446",
   "parameters": {
     "seed": null,
     "temperature": null,

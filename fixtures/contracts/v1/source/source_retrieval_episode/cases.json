@@ -332,6 +332,51 @@
       ]
     },
     {
+      "case_id": "auth-required",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "AUTH_REQUIRED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 401
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "AUTH_REQUIRED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
       "case_id": "access-denied",
       "base": "get_success",
       "mutations": [
@@ -377,12 +422,147 @@
       ]
     },
     {
-      "case_id": "integrity-failed",
+      "case_id": "access-denied-451",
       "base": "get_success",
       "mutations": [
         {
           "path": "/transport/category",
-          "value": "INTEGRITY_FAILED"
+          "value": "ACCESS_DENIED"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 451
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "ACCESS_DENIED",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "not-found",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "NOT_FOUND"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 404
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "SOURCE_NOT_FOUND",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "response-too-large",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "RESPONSE_TOO_LARGE"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RESPONSE_TOO_LARGE",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "integrity-mismatch",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "INTEGRITY_MISMATCH"
         },
         {
           "path": "/transport/http_status",
@@ -467,12 +647,57 @@
       ]
     },
     {
-      "case_id": "unsafe-response",
+      "case_id": "invalid-response-metadata",
       "base": "get_success",
       "mutations": [
         {
           "path": "/transport/category",
-          "value": "UNSAFE"
+          "value": "INVALID_RESPONSE_METADATA"
+        },
+        {
+          "path": "/transport/http_status",
+          "value": 200
+        },
+        {
+          "path": "/transport/body_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/body_bytes",
+          "value": null
+        },
+        {
+          "path": "/transport/schema_fingerprint",
+          "value": null
+        },
+        {
+          "path": "/transport/semantic_sentinel_digest",
+          "value": null
+        },
+        {
+          "path": "/transport/content_type",
+          "value": null
+        },
+        {
+          "path": "/transport/content_length",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "INVALID_RESPONSE_METADATA",
+          "path": "/result/status"
+        }
+      ]
+    },
+    {
+      "case_id": "unsafe-metadata",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/category",
+          "value": "UNSAFE_METADATA"
         },
         {
           "path": "/transport/http_status",
@@ -512,12 +737,12 @@
       ]
     },
     {
-      "case_id": "retrieval-error",
+      "case_id": "transport-error",
       "base": "get_success",
       "mutations": [
         {
           "path": "/transport/category",
-          "value": "ERROR"
+          "value": "TRANSPORT_ERROR"
         },
         {
           "path": "/transport/http_status",
@@ -551,7 +776,7 @@
       "expected_outcome": "ERROR",
       "expected_findings": [
         {
-          "code": "RETRIEVAL_ERROR",
+          "code": "TRANSPORT_ERROR",
           "path": "/result/status"
         }
       ]
@@ -715,6 +940,23 @@
       ]
     },
     {
+      "case_id": "last-modified-after-completion",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/last_modified",
+          "value": "2026-08-11T12:00:02Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_LAST_MODIFIED_AFTER_COMPLETION",
+          "path": "/transport/last_modified"
+        }
+      ]
+    },
+    {
       "case_id": "locator-query-denied",
       "base": "get_success",
       "mutations": [
@@ -728,6 +970,40 @@
         {
           "code": "RETRIEVAL_LOCATOR_UNSAFE",
           "path": "/redacted_locator"
+        }
+      ]
+    },
+    {
+      "case_id": "locator-invalid-port-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/redacted_locator",
+          "value": "https://official.example.invalid:bad/source"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_LOCATOR_UNSAFE",
+          "path": "/redacted_locator"
+        }
+      ]
+    },
+    {
+      "case_id": "etag-unquoted-denied",
+      "base": "get_success",
+      "mutations": [
+        {
+          "path": "/transport/etag",
+          "value": "not-an-http-etag"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "RETRIEVAL_SCHEMA_INVALID",
+          "path": "/transport/etag"
         }
       ]
     },

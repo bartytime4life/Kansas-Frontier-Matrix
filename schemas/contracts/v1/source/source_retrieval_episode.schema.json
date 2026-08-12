@@ -36,15 +36,19 @@
           "enum": [
             "SUCCESS",
             "NOT_MODIFIED",
+            "PARTIAL",
             "TIMEOUT",
             "RATE_LIMITED",
+            "AUTH_REQUIRED",
             "ACCESS_DENIED",
+            "NOT_FOUND",
             "RETRY_EXHAUSTED",
-            "INTEGRITY_FAILED",
-            "PARTIAL",
-            "UNSAFE",
             "CANCELLED",
-            "ERROR"
+            "RESPONSE_TOO_LARGE",
+            "INTEGRITY_MISMATCH",
+            "INVALID_RESPONSE_METADATA",
+            "UNSAFE_METADATA",
+            "TRANSPORT_ERROR"
           ]
         },
         "http_status": {
@@ -73,8 +77,9 @@
           "anyOf": [
             {
               "type": "string",
-              "minLength": 1,
-              "maxLength": 256
+              "minLength": 2,
+              "maxLength": 516,
+              "pattern": "^(?:W/)?\"[\\u0021\\u0023-\\u005B\\u005D-\\u007E]{0,512}\"$"
             },
             {
               "type": "null"
@@ -179,11 +184,15 @@
               "SOURCE_RATE_LIMITED",
               "RETRY_BUDGET_EXHAUSTED",
               "RETRIEVAL_CANCELLED",
+              "AUTH_REQUIRED",
               "ACCESS_DENIED",
+              "SOURCE_NOT_FOUND",
+              "RESPONSE_TOO_LARGE",
               "INTEGRITY_CHECK_FAILED",
               "PARTIAL_RESPONSE_DENIED",
+              "INVALID_RESPONSE_METADATA",
               "UNSAFE_RESPONSE_DENIED",
-              "RETRIEVAL_ERROR"
+              "TRANSPORT_ERROR"
             ]
           }
         }

@@ -69,7 +69,7 @@ to source evidence or lifecycle state.
 | `NO_CHANGE` | `PASS` | A conditional request coherently records `NOT_MODIFIED`; no new body is claimed. |
 | `RETRY_REQUIRED` | `ABSTAIN` | A full `GET` is still required, or the attempt timed out, was rate-limited, cancelled, or exhausted its retry budget. |
 | `BLOCKED` | `DENY` | Access, integrity, partial-response, or unsafe-response conditions block downstream handoff. |
-| `ERROR` | `ERROR` | The episode declares an internal evaluation error. |
+| `ERROR` | `ERROR` | The connector reports a transport execution error. |
 
 A coherent `HEAD` observation remains `RETRY_REQUIRED`. Transport validators
 can reduce unnecessary transfers, but `HEAD` alone cannot establish semantic
@@ -78,9 +78,14 @@ currentness or produce a `SourceArtifact`.
 ## Core invariants
 
 - `source_descriptor_ref` binds exactly to `source_id`.
+- `transport.category` uses the exact connector `TransportCategory` vocabulary;
+  no episode-only aliases collapse or invent transport failure classes.
 - Attempt and completion times are canonical UTC and completion cannot precede
   the attempt.
-- The safe locator contains no userinfo, query, or fragment.
+- The safe locator contains no userinfo, query, or fragment and its optional
+  port must be valid for the connector URL parser.
+- `ETag` values use the connector's bounded quoted strong/weak syntax, and a
+  `Last-Modified` observation cannot be later than episode completion.
 - A successful `GET` requires exact non-empty byte length, SHA-256 body digest,
   media type, and coherent optional `Content-Length`.
 - A successful `HEAD` contains no body identity and requires a later full
