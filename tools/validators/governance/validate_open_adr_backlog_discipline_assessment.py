@@ -230,6 +230,35 @@ def _semantic_findings(candidate: Mapping[str, object]) -> tuple[set[Finding], s
             elif successor not in declared_ids:
                 deny.add(Finding("SUPERSEDED_TARGET_NOT_DECLARED", f"/entries/{index}/superseded_by"))
 
+    index_by_id = {str(entry["backlog_id"]): index for index, entry in enumerate(typed_entries)}
+    successors = {
+        str(entry["backlog_id"]): str(entry["superseded_by"])
+        for entry in typed_entries
+        if entry["state"] == "SUPERSEDED"
+        and isinstance(entry["superseded_by"], str)
+        and entry["superseded_by"] != entry["backlog_id"]
+        and entry["superseded_by"] in declared_ids
+    }
+    visited: set[str] = set()
+    for backlog_id in successors:
+        chain: list[str] = []
+        positions: dict[str, int] = {}
+        current = backlog_id
+        while current in successors and current not in visited:
+            if current in positions:
+                for cycle_id in chain[positions[current] :]:
+                    deny.add(
+                        Finding(
+                            "SUPERSESSION_CYCLE",
+                            f"/entries/{index_by_id[cycle_id]}/superseded_by",
+                        )
+                    )
+                break
+            positions[current] = len(chain)
+            chain.append(current)
+            current = successors[current]
+        visited.update(chain)
+
     review_refs = review["record_refs"]
     if not _canonical_strings(review_refs):
         deny.add(Finding("REVIEW_RECORDS_NOT_CANONICAL", "/review/record_refs"))
