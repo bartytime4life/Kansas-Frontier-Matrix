@@ -22,11 +22,11 @@ authority_rank: "Implementation orientation subordinate to adopted doctrine, acc
 canonical_relationship: "Same-path update; no new authority, generated projection, compatibility path, queue, review decision, lifecycle transition, runtime binding, or publication capability created."
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
-evidence_base_commit: 40995f1585466972e8f7602613633a64129af60d
-evidence_repository_tree: 5c1e2720f028cb63fb4844e4230adac03910e2ba
-evidence_apps_tree: 10c0abda88db05df4f6e7dd1227cf7458c981faa
-evidence_workers_tree: 34ce627acb17bdad161e72475fc7b53a59567f4b
-evidence_source_tree: ba285414fb215d6802c0bf6278b7bbce1537ce32
+evidence_base_commit: 959017b442179bea2e98483ef4c9c55c7c44ddc0
+evidence_repository_tree: 82b1687d754ebde10ee9c6f036e6a179c2e7a110
+evidence_apps_tree: b42508d948e33456c21f720ff9d60a2ca07228a3
+evidence_workers_tree: c31de1160f1e21332fbc4916b6c0013915a22a01
+evidence_source_tree: ab3dfd47f06fb015d8adcb404505099ec0ab645d
 evidence_lane_tree: 1c8978e7e88a275eec29ff923e14b861e0b5b435
 evidence_target_prior_blob: 5c5a90cc0c471bd17a18678b5c73b35e10049a4a
 evidence_entrypoint_blob: eaef2862a7c1038590e5afba8224b52de54c5c96
@@ -97,14 +97,14 @@ notes:
 [![Reviewer: human or governed authority](https://img.shields.io/badge/reviewer-human%20or%20governed%20authority-8250df?style=flat-square)](#9-worker-obligations)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#6-exclusions)
 [![Directory Rules: ADR-0029 accepted](https://img.shields.io/badge/directory%20rules-ADR--0029%20accepted-2da44e?style=flat-square)](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-[![Evidence base: 40995f1](https://img.shields.io/badge/evidence%20base-40995f1-6e7781?style=flat-square)](#11-inspection-and-evidence)
+[![Evidence base: 959017b](https://img.shields.io/badge/evidence%20base-959017b-6e7781?style=flat-square)](#11-inspection-and-evidence)
 
 **Quick navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs and outputs](#5-inputs-and-outputs) · [Exclusions](#6-exclusions) · [Lane map](#7-current-lane-map) · [Required flow](#8-required-quarantine-review-flow) · [Obligations](#9-worker-obligations) · [Admission contract](#10-job-admission-contract) · [Evidence](#11-inspection-and-evidence) · [Validation](#12-validation-expectations) · [Change pattern](#13-safe-change-pattern) · [Done](#14-definition-of-done) · [Gaps](#15-open-verification-items) · [Maintenance](#16-maintenance-and-review-triggers) · [Rollback](#17-correction-and-rollback)
 
 </div>
 
 > [!IMPORTANT]
-> **Current state: `CONFIRMED / PLACEHOLDER-ONLY`.** At `main@40995f1585466972e8f7602613633a64129af60d`, this lane contains exactly two tracked files: this README and a 65-byte [`main.py`](./main.py). The Python file contains only `# quarantine_review_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
+> **Current state: `CONFIRMED / PLACEHOLDER-ONLY`.** At `main@959017b442179bea2e98483ef4c9c55c7c44ddc0`, this lane contains exactly two tracked files: this README and a 65-byte [`main.py`](./main.py). The Python file contains only `# quarantine_review_worker entrypoint — greenfield placeholder`, for zero imports, definitions, executable statements, or side effects.
 
 Repository-wide name and path inspection found no import, trigger, queue, schedule, package, configuration, worker-local test, deployment, or output binding for `quarantine_review_worker`. This is bounded repository evidence, not proof about untracked experiments or external systems.
 
@@ -862,9 +862,9 @@ git grep -n -E \
 
 | Evidence | Pinned identity | Supports | Does not support |
 |---|---|---|---|
-| Repository base | `40995f1585466972e8f7602613633a64129af60d` | Exact inspection checkpoint | Runtime or external deployment |
-| Repository tree | `5c1e2720f028cb63fb4844e4230adac03910e2ba` | Root topology at checkpoint | Operational behavior |
-| Worker source tree | `ba285414fb215d6802c0bf6278b7bbce1537ce32` | Eight-lane source inventory | Executable workers |
+| Repository base | `959017b442179bea2e98483ef4c9c55c7c44ddc0` | Exact inspection checkpoint | Runtime or external deployment |
+| Repository tree | `82b1687d754ebde10ee9c6f036e6a179c2e7a110` | Root topology at checkpoint | Operational behavior |
+| Worker source tree | `ab3dfd47f06fb015d8adcb404505099ec0ab645d` | Eight-lane source inventory | Executable workers |
 | Target lane tree | `1c8978e7e88a275eec29ff923e14b861e0b5b435` | Two direct target files | Queue, schedule, or runtime |
 | Prior target README | `5c5a90cc0c471bd17a18678b5c73b35e10049a4a` | v0.1 content and rollback source | Current worker behavior |
 | Target `main.py` | `eaef2862a7c1038590e5afba8224b52de54c5c96` | One-line comment-only placeholder | Importability or execution |
