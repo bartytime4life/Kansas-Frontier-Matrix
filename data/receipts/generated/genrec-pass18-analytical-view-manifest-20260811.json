@@ -1,0 +1,165 @@
+{
+  "receipt_id": "genrec-pass18-analytical-view-manifest-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/analytical-view-manifest.yml",
+    "contracts/data/analytical_view_manifest.md",
+    "docs/intake/exploratory/pass-18-analytical-view-manifest-source-map.md",
+    "fixtures/contracts/v1/data/analytical_view_manifest/cases.json",
+    "schemas/contracts/v1/data/analytical_view_manifest.schema.json",
+    "tests/validators/data/test_validate_analytical_view_manifest.py",
+    "tools/validators/data/validate_analytical_view_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/analytical-view-manifest.yml": "sha256:da09e41f930e890c127601d6d6d46732ff67795fa5161f9fe0c6221ea7d4a6db",
+    "contracts/data/analytical_view_manifest.md": "sha256:405d8a679732c7bc9f620588e412df9e1721402d298ecf922ef34f9708a994c2",
+    "docs/intake/exploratory/pass-18-analytical-view-manifest-source-map.md": "sha256:be96b8658646299ceaa784aa9868d9ca354bd04d5b1441e7e0c3207c4ac8c349",
+    "fixtures/contracts/v1/data/analytical_view_manifest/cases.json": "sha256:b0bcd0d13b8c63dc7302d26c73809bab663a9428f297a9cb2093ca919527df7a",
+    "schemas/contracts/v1/data/analytical_view_manifest.schema.json": "sha256:d4b7ac533a60a73960422696e62fef99ec81c1b6cd5f5de91553bb6a38cec81b",
+    "tests/validators/data/test_validate_analytical_view_manifest.py": "sha256:1eac12d478f97432b2f25566df5f54399c10d6ce7056e278a0b914871a77403d",
+    "tools/validators/data/validate_analytical_view_manifest.py": "sha256:15669e7111b1d1d97a3487bea06dc3bf3be98f81a464c42b28de1d109526369b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:405d8a679732c7bc9f620588e412df9e1721402d298ecf922ef34f9708a994c2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local PDF rendering and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:cc4d2baa8cb9114f297a4f95d8202a49ffa364a89348b99171452eec50740c08",
+      "sha256:0f8960d6cc585e5085b2603433813904fffd66b9e04c55707ea449f0cc33b8f0",
+      "sha256:e723aecc576a052a3cd000537755265135a7ea9df4f4e878977101fa59d9414d",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "Supplied Pass 18 atlas; connected Drive file 1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5 was metadata-confirmed but byte identity was not asserted"
+    ],
+    "evidence_refs": [
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-107",
+      "attachment://supplied-pass18-atlas#card=KFM-P18-INV-311",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/data/layer_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/ui/view_registry_profile.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/governance/query_run_record.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/analytical-view-manifest.yml": "CONFIRMED",
+    "contracts/data/analytical_view_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-analytical-view-manifest-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/analytical_view_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/analytical_view_manifest.schema.json": "PROPOSED",
+    "tests/validators/data/test_validate_analytical_view_manifest.py": "CONFIRMED",
+    "tools/validators/data/validate_analytical_view_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic analytical-view manifest tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-data-view-and-query-regression",
+      "outcome": "PASS",
+      "reason": "Forty-one layer-manifest, UI view-registry, query-run, and analytical query-cost tests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred fifty-seven tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "Forty-two metadata and link-check tests passed; both new documents had valid metadata, zero failures, and two expected review-only registry-add warnings. Explicit local link validation passed."
+    },
+    {
+      "gate": "ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "Fifty-six CI and E2E readiness tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-integrity", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-view-contract-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-107"
+    },
+    {
+      "id": "pass18-view-check-option-card",
+      "validated": true,
+      "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-311"
+    },
+    {
+      "id": "drive-pass18-metadata",
+      "validated": true,
+      "evidence_ref": "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5"
+    },
+    {
+      "id": "ui-view-registry-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/ui/view_registry_profile.md"
+    },
+    {
+      "id": "query-run-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/contracts/governance/query_run_record.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/12911a862033546160737479681bed0ac68d1f7b/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T23:56:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only analytical-view manifest. It records definition, upstream, hidden semantics, validation, refresh, mutation-guard, correction, and rollback declarations without storing raw SQL or endpoints, creating a view, executing a query, mutating or refreshing data, or creating evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}
