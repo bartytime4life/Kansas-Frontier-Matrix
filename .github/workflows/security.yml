@@ -5,8 +5,10 @@
 # - dependency-scan.yml: full Python and pnpm dependency audits.
 #
 # This workflow adds pull-request dependency-diff review, repository secret /
-# misconfiguration scanning, and container-image scanning. It is a review signal,
-# not proof that vulnerabilities are absent and not release or publication authority.
+# misconfiguration scanning, container-image scanning, and default-branch OpenSSF
+# Scorecard analysis. Scorecard SARIF is retained briefly for diagnostics and sent
+# to code scanning; this workflow is a review signal, not proof that vulnerabilities
+# are absent and not release or publication authority.
 name: security
 
 "on":
@@ -126,6 +128,41 @@ jobs:
           timeout: 15m
           cache: true
 
+  scorecard:
+    name: scorecard
+    if: github.event_name == 'push' || github.event_name == 'schedule'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Analyze supply-chain posture
+        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
+        with:
+          results_file: scorecard-results.sarif
+          results_format: sarif
+          publish_results: false
+
+      - name: Retain Scorecard SARIF for diagnostics
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: scorecard-results
+          path: scorecard-results.sarif
+          retention-days: 5
+          if-no-files-found: error
+
+      - name: Upload Scorecard SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          sarif_file: scorecard-results.sarif
+
   security-result:
     name: security-result
     if: always()
@@ -133,6 +170,7 @@ jobs:
       - dependency-review
       - repository-scan
       - container-scan
+      - scorecard
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions: {}
@@ -143,6 +181,7 @@ jobs:
           DEPENDENCY_REVIEW_RESULT: ${{ needs.dependency-review.result }}
           REPOSITORY_SCAN_RESULT: ${{ needs.repository-scan.result }}
           CONTAINER_SCAN_RESULT: ${{ needs.container-scan.result }}
+          SCORECARD_RESULT: ${{ needs.scorecard.result }}
         run: |
           set -euo pipefail
 
@@ -152,6 +191,7 @@ jobs:
             echo "- Dependency review: ${DEPENDENCY_REVIEW_RESULT}"
             echo "- Repository scan: ${REPOSITORY_SCAN_RESULT}"
             echo "- Container scan: ${CONTAINER_SCAN_RESULT}"
+            echo "- OpenSSF Scorecard: ${SCORECARD_RESULT}"
             echo
             echo "Companion checks remain in codeql.yml and dependency-scan.yml."
             echo "This result is a review signal, not vulnerability-absence, release, or publication authority."
@@ -171,4 +211,10 @@ jobs:
             [[ "${DEPENDENCY_REVIEW_RESULT}" == "success" ]]
           else
             [[ "${DEPENDENCY_REVIEW_RESULT}" == "skipped" ]]
+          fi
+
+          if [[ "${EVENT_NAME}" == "push" || "${EVENT_NAME}" == "schedule" ]]; then
+            [[ "${SCORECARD_RESULT}" == "success" ]]
+          else
+            [[ "${SCORECARD_RESULT}" == "skipped" ]]
           fi
