@@ -11,7 +11,7 @@
     "tools/validators/runtime/validate_offline_release_capsule_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/offline-release-capsule-assessment.yml": "sha256:45c4dee8a6d177eb0819b1c339b82016e0723c7730f823657a2e649e08308d24",
+    ".github/workflows/offline-release-capsule-assessment.yml": "sha256:6936db76cee819d3be3a55b264f3293a8ed94b0497f270228a9110341bde5a91",
     "contracts/runtime/offline_release_capsule_assessment.md": "sha256:0d03391208b5d80a295eb3da81316223652c635e5da779b20d0cc022f1f04ef9",
     "docs/intake/exploratory/offline-release-capsule-assessment-source-map.md": "sha256:08379f044a7bf075cca0fb56645403755eb498586da9f246477ac6e0d2be3477",
     "fixtures/contracts/v1/runtime/offline_release_capsule_assessment/cases.json": "sha256:abf6da5e94dcbe4b83df6c1c5f00f585bf140d0f247d7f1f6d18e39b74977ee1",

@@ -11,7 +11,7 @@
     "tools/validators/runtime/validate_verified_rendering_resource_envelope.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/verified-rendering-resource-envelope.yml": "sha256:b5c0e0e85eac33fba383f9110f136593dd5059be3fff9e4462db37614fd55908",
+    ".github/workflows/verified-rendering-resource-envelope.yml": "sha256:6a6440e8685cf4cefbad7381a7267823a077e079c6ea4670428da390eebddc7f",
     "contracts/runtime/verified_rendering_resource_envelope.md": "sha256:019b11edcd92bb3dea98a67a9eb311ac5d0aae0284f0fd4df4fc7e9a9e41dbba",
     "docs/intake/exploratory/verified-rendering-resource-envelope-source-map.md": "sha256:a21640860347f5fee51c4146755368fd3774fd4d47246277822efb2922c37c7f",
     "fixtures/contracts/v1/runtime/verified_rendering_resource_envelope/cases.json": "sha256:8dcd7afaaf13a742fb94668a193576b82b314161f0f816dddd65785bd14507d4",
