@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-pass18-model-selection-rationale-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/model-selection-rationale-assessment.yml",
+    "contracts/evidence/model_selection_rationale_assessment.md",
+    "docs/intake/exploratory/pass-18-model-selection-rationale-assessment-source-map.md",
+    "fixtures/contracts/v1/evidence/model_selection_rationale_assessment/cases.json",
+    "schemas/contracts/v1/evidence/model_selection_rationale_assessment.schema.json",
+    "tests/validators/evidence/test_validate_model_selection_rationale_assessment.py",
+    "tools/validators/evidence/validate_model_selection_rationale_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/model-selection-rationale-assessment.yml": "sha256:d9a622a28e1526234d6847d2e6c1de3ebde08ed0a145b7b7e579b55c544c8424",
+    "contracts/evidence/model_selection_rationale_assessment.md": "sha256:f4240d0f17997993a48bc3fbb52584d6492153642d2d00dd43064273e66c4ba6",
+    "docs/intake/exploratory/pass-18-model-selection-rationale-assessment-source-map.md": "sha256:0600f41baf40477b5213bd9b3f2b1ecf58f5a1cd21c7e69a50dadb1ef959bc4f",
+    "fixtures/contracts/v1/evidence/model_selection_rationale_assessment/cases.json": "sha256:f5b414df73d1a27ed4aab153a5d1ddb349adeb6d8bedf7c2299c7f96f317ca68",
+    "schemas/contracts/v1/evidence/model_selection_rationale_assessment.schema.json": "sha256:c32e79f8a07cd08c1614223d10e3d4a73a0481b6c85e4b423219db85046d15f3",
+    "tests/validators/evidence/test_validate_model_selection_rationale_assessment.py": "sha256:e41b29f5c89d9bffb2574d427162e24fd404688f52ec0cd6f4008f4505cdb9a3",
+    "tools/validators/evidence/validate_model_selection_rationale_assessment.py": "sha256:ba6b53b88430e7d05d07f60208722b7fca9c8413af39451624ed832b240b346f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f4240d0f17997993a48bc3fbb52584d6492153642d2d00dd43064273e66c4ba6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation",
+      "local PDF extraction and rendered-page inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Supplied Pass 18 idea corpus (private discovery source; identifier withheld)",
+      "Supplied AI model-selection reference (private discovery source; identifier withheld)",
+      "Connected Full Atlas and Directory Rules documents (private discovery sources; identifiers withheld)"
+    ],
+    "evidence_refs": [
+      "supplied://pass18/KFM-P18-INV-159",
+      "supplied://ai-reference/model-selection/printed-page-105",
+      "connected://full-atlas/interpretive-analytics-governance-pattern",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/analytic_output_disclosure_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/model_evaluation_split_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/predictive_layer_generalization_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/model-selection-rationale-assessment.yml": "CONFIRMED",
+    "contracts/evidence/model_selection_rationale_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-model-selection-rationale-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/model_selection_rationale_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/model_selection_rationale_assessment.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_validate_model_selection_rationale_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_model_selection_rationale_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Twelve deterministic model-selection-rationale tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-seven exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "adjacent-model-governance-tests",
+      "outcome": "PASS",
+      "reason": "Forty-eight tests and forty-nine parameterized subtests passed across the new profile and adjacent analytic-output, evaluation-split, generalization, and classification-evaluation validators."
+    },
+    {
+      "gate": "repository-contract-regression",
+      "outcome": "PASS",
+      "reason": "Four hundred eighty-nine schema, contract, fixture-root, and generated-receipt tests plus twenty-nine parameterized subtests passed."
+    },
+    {"gate": "documentation-metadata-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-model-selection-rationale-proposal",
+      "validated": true,
+      "evidence_ref": "supplied://pass18/KFM-P18-INV-159"
+    },
+    {
+      "id": "supplied-ai-model-selection-section",
+      "validated": true,
+      "evidence_ref": "supplied://ai-reference/model-selection/printed-page-105"
+    },
+    {
+      "id": "connected-interpretive-analytics-doctrine",
+      "validated": true,
+      "evidence_ref": "connected://full-atlas/interpretive-analytics-governance-pattern"
+    },
+    {
+      "id": "predictive-generalization-adjacent-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/contracts/evidence/predictive_layer_generalization_assessment.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ded9a9755316fee97827d5d65b8fc26e31c2ae4b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T20:00:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only ModelSelectionRationaleAssessmentCandidate derived from supplied Pass 18 card KFM-P18-INV-159, a corroborating supplied model-selection section, and the connected Full Atlas interpretive-analytics pattern, then reconciled to existing analytic-output, model-evaluation-split, predictive-generalization, model-card, and Directory Rules authorities. It makes problem, data, interpretability, consequence, alternatives, and governance references inspectable without executing or ranking models, establishing performance or scientific truth, or authorizing evidence, policy, review, lifecycle, release, deployment, publication, or public use."
+}

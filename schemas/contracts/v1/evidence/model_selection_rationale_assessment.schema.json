@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/model_selection_rationale_assessment.schema.json",
+  "title": "ModelSelectionRationaleAssessmentCandidate",
+  "description": "Fixture-only model-selection rationale linking problem, data, interpretability, consequence, alternatives, evaluations, and fixed non-authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "subject_ref",
+    "subject_digest",
+    "intended_use",
+    "problem",
+    "data_characteristics",
+    "candidates",
+    "selection",
+    "governance",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "ModelSelectionRationaleAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.model-selection-rationale-assessment.fixture.v1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:model-selection:[a-f0-9]{24}$"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-159"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "subject_ref": {"$ref": "#/$defs/ref"},
+    "subject_digest": {"$ref": "#/$defs/sha256"},
+    "intended_use": {"enum": ["INTERNAL_QA", "EXPLORATORY_ANALYSIS", "PUBLIC_INTERPRETATION", "POLICY_CONTEXT"]},
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_type", "claim_role", "problem_statement_ref", "consequence_level", "interpretability_requirement"],
+      "properties": {
+        "task_type": {"enum": ["REGRESSION", "CLASSIFICATION", "RANKING", "FORECASTING", "CLUSTERING", "ANOMALY_DETECTION", "IMAGE_INTERPRETATION", "OTHER", "UNRESOLVED"]},
+        "claim_role": {"enum": ["DESCRIPTIVE", "PREDICTIVE", "EXPLORATORY", "CAUSAL", "REGULATORY", "UNRESOLVED"]},
+        "problem_statement_ref": {"$ref": "#/$defs/nullable_ref"},
+        "consequence_level": {"enum": ["LOW", "MEDIUM", "HIGH", "UNRESOLVED"]},
+        "interpretability_requirement": {"enum": ["LOW", "MEDIUM", "HIGH", "UNRESOLVED"]}
+      }
+    },
+    "data_characteristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["training_population_ref", "feature_manifest_ref", "data_quality_ref", "sensitive_data_state", "characteristic_refs"],
+      "properties": {
+        "training_population_ref": {"$ref": "#/$defs/nullable_ref"},
+        "feature_manifest_ref": {"$ref": "#/$defs/nullable_ref"},
+        "data_quality_ref": {"$ref": "#/$defs/nullable_ref"},
+        "sensitive_data_state": {"enum": ["NONE", "PRESENT", "UNKNOWN"]},
+        "characteristic_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_candidate_id", "baseline_candidate_id", "problem_fit_refs", "data_fit_refs", "decision_reason_codes", "policy_consequence_ref", "performance_not_sole_basis"],
+      "properties": {
+        "selected_candidate_id": {"$ref": "#/$defs/nullable_candidate_id"},
+        "baseline_candidate_id": {"$ref": "#/$defs/nullable_candidate_id"},
+        "problem_fit_refs": {"$ref": "#/$defs/refs"},
+        "data_fit_refs": {"$ref": "#/$defs/refs"},
+        "decision_reason_codes": {"$ref": "#/$defs/codes"},
+        "policy_consequence_ref": {"$ref": "#/$defs/nullable_ref"},
+        "performance_not_sole_basis": {"type": "boolean"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_card_ref", "training_receipt_ref", "evaluation_split_ref", "evidence_refs", "review_state", "review_record_refs"],
+      "properties": {
+        "model_card_ref": {"$ref": "#/$defs/nullable_ref"},
+        "training_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evaluation_split_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evidence_refs": {"$ref": "#/$defs/refs"},
+        "review_state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "PENDING", "UNKNOWN"]},
+        "review_record_refs": {"$ref": "#/$defs/refs"}
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_MODEL_EXECUTION_OR_RANKING",
+        "NO_PERFORMANCE_OR_SCIENTIFIC_VALIDATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_selection_authority", "model_evaluation_authority", "source_authority", "evidence_authority", "policy_authority", "review_authority", "lifecycle_authority", "release_authority", "deployment_authority", "publication_authority", "public_use_authority"],
+      "properties": {
+        "model_selection_authority": {"const": false},
+        "model_evaluation_authority": {"const": false},
+        "source_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "lifecycle_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 10, "maxLength": 512, "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "refs": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/ref"}},
+    "candidate_id": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+    "nullable_candidate_id": {"oneOf": [{"$ref": "#/$defs/candidate_id"}, {"type": "null"}]},
+    "codes": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"}},
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "model_family", "eligible", "evaluation_receipt_ref", "interpretability_method_ref", "exclusion_codes"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/candidate_id"},
+        "model_family": {"enum": ["LINEAR_MODEL", "TREE", "ENSEMBLE", "KERNEL", "NEURAL_NETWORK", "PROBABILISTIC", "CLUSTERING", "OTHER"]},
+        "eligible": {"type": "boolean"},
+        "evaluation_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "interpretability_method_ref": {"$ref": "#/$defs/nullable_ref"},
+        "exclusion_codes": {"$ref": "#/$defs/codes"}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/model_selection_rationale_assessment.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/model_selection_rationale_assessment/",
+    "validator": "tools/validators/evidence/validate_model_selection_rationale_assessment.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false
+  }
+}
