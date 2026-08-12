@@ -2,35 +2,22 @@
 doc_id: kfm://doc/contracts-readme
 title: contracts/ — Canonical Semantic-Meaning Root and Contract Governance Boundary
 type: README
-version: v0.3
+version: v0.4
 status: draft; repository-grounded; canonical-semantic-contract-root; mixed-maturity; configured-cross-root-validation; non-schema; non-policy; non-release
 owner: NEEDS VERIFICATION — CODEOWNERS routes /contracts/ to @bartytime4life; no accepted contract steward, required-review enforcement, or independent approval control was verified
-created: NEEDS VERIFICATION — a short root stub predated the v0.2 expansion
-updated: 2026-07-23
-supersedes: v0.2 documentation at the same path; no semantic contract, schema, policy, fixture, validator, test, runtime, release object, or public behavior is superseded
+created: 2026-02-21
+updated: 2026-08-12
+supersedes: v0.3 documentation at the same path; no semantic contract, schema, policy, fixture, validator, test, runtime, release object, or public behavior is superseded
 policy_label: repository-facing; contracts; semantic-meaning; cite-or-abstain; no-parallel-authority; evidence-aware; policy-aware; correction-aware; rollback-aware; non-publisher
 current_path: contracts/README.md
 owning_root: contracts/
 responsibility: own human-readable semantic meaning, field intent, invariants, exclusions, compatibility semantics, and object-family navigation without becoming machine shape, admissibility, evidence, lifecycle, release, runtime, or publication authority
 truth_posture: cite-or-abstain; contract Markdown defines meaning and promises but never makes a claim true, validates an instance, admits a source, authorizes exposure, approves release, or proves production behavior
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: e2466421ced8e41430737d4e7d51f19e3ab61d9f
-  prior_blob: 6e05ba40fcc255e392210e56ef9519203aec6006
-  directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  object_map_blob: 002366e3aac3086287eca93e1c69057da7cecebe
-  domains_readme_blob: 9853efc4b2b8821ccd2b783f87e973c455c2558c
-  contract_schema_policy_split_blob: 40ce4222a98fa7a033d3d383cd9cb557387f9a6e
-  adr_0001_blob: 3c520ea8f2f8bcb3d478329a87d98b135ea335fd
-  adr_0002_blob: 2da10fcf5836a44d46186c233b6b9664c9ccfda5
-  schemas_contracts_v1_readme_blob: bbe931c9f7a5f0132522c0bda4fa5455c050a973
-  tests_contracts_readme_blob: f58e0222de1c8228daff6d4dc6243ed713927607
-  contracts_validate_workflow_blob: 7a14c94784c596b4f74996439217d8128d641bd1
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  common_contract_test_blob: b04342cc034d7f1cc554e155fdd02d6e972976e6
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  object_family_register_blob: 930a9da30d5481f8d7ed5b7789d7846a30d3f4e1
+evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix@6c78cfd3ef8ccc9608800c132e7da2222c812e57
+audit_baseline: 60a54f63404929a4ccb3043a5059a2351747df50
+prior_blob: 1561841b0bfdc64c07e8d3bf0aa6a6d5cc240a88
+authority_evidence: ADR-0029 blob b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62 adopts Directory Rules blob fd49a0b83e55cef52c1124281f093e263526898d
+implementation_evidence: validator registry c65c1c2b27b85be4bdc3c42d0555c6e8e44698e2; object-family register 8673b21ea49cb4a2852595208efdb206ed040690; Makefile c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326
 related:
   - ./OBJECT_MAP.md
   - ./domains/README.md
@@ -50,6 +37,8 @@ related:
   - ../tools/validators/README.md
   - ../data/README.md
   - ../release/README.md
+  - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../docs/doctrine/directory-rules.md
   - ../docs/architecture/directory-rules.md
   - ../docs/architecture/contract-schema-policy-split.md
   - ../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
@@ -57,9 +46,12 @@ related:
   - ../.github/workflows/contracts-validate.yml
 notes:
   - "This is a same-path Markdown modernization. It creates no root, sibling README, schema, policy rule, fixture, validator, test, receipt, proof, release record, runtime behavior, or publication state."
-  - "Directory Rules §15 controls the required canonical-root README section order."
+  - "Path history identifies the first tracked contracts/README.md at commit 8a96629e3fc85872e7fdf4781af767f69b1d7f66 on 2026-02-21; the original file was one newline byte."
+  - "Accepted ADR-0029 adopts the exact docs/doctrine/directory-rules.md bytes as the sole writable human Directory Rules authority; §16 defines the ROOT_FULL profile used here."
   - "The repository configures schemas/contracts/v1/ as a machine-shape validation surface, while ADR-0001 and ADR-0002 remain proposed rather than accepted."
-  - "The direct tests/contracts lane is documentation-only in the bounded evidence snapshot; selected contract-backed schema fixtures are exercised from tests/schemas/test_common_contracts.py."
+  - "At the evidence snapshot, contracts/ has 47 direct entries (45 directories and two Markdown files) and 818 tracked files recursively."
+  - "The full validator profile contains ten validators; the historical run_all.py path is a compatibility entrypoint to that profile, not a six-validator authority surface."
+  - "The object-family register contains six bounded runtime-family entries and remains PROPOSED, partial, and navigational only."
   - "contracts/OBJECT_MAP.md is an evidence-limited maintainer crosswalk, not a generated or complete object-family registry."
 [/KFM_META_BLOCK_V2] -->
 
@@ -70,12 +62,12 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Authority: canonical semantic meaning](https://img.shields.io/badge/authority-canonical%20semantic%20meaning-1f6feb?style=flat-square)](#authority-level)
 [![Schema-home ADR: proposed](https://img.shields.io/badge/schema--home%20ADR-proposed-d4a72c?style=flat-square)](#adrs)
-[![Validation: configured but partial](https://img.shields.io/badge/validation-configured%20but%20partial-8250df?style=flat-square)](#validation)
+[![Validation: full profile = 10](https://img.shields.io/badge/full%20profile-10%20validators-8250df?style=flat-square)](#validation)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
 > **One-line purpose.** `contracts/` owns KFM's human-readable object meaning: vocabulary, field intent, invariants, exclusions, compatibility semantics, and the promises that schemas, policy, validators, applications, and release processes must preserve.
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Authoring contract](#contract-authoring-contract) · [Maturity](#maturity-and-claim-discipline) · [Lanes](#verified-lane-inventory) · [Drift](#compatibility-versioning-and-drift) · [Open verification](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Responsibility](#responsibility-and-ownership) · [Status](#status) · [Map](#current-direct-child-map) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Lifecycle](#lifecycle-exposure-and-storage) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Authoring contract](#contract-authoring-contract) · [Maturity](#maturity-and-claim-discipline) · [Lanes](#verified-lane-inventory) · [Drift](#compatibility-versioning-and-drift) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
 > A semantic contract can state what an object **means**, which invariants bind it, and what support it requires. It does **not** make an instance true, valid, admissible, reviewed, released, public-safe, or implemented.
@@ -147,37 +139,122 @@ A contract is a **published language for maintainers and implementations**, not 
 
 ---
 
+## Responsibility and ownership
+
+| Concern | Current posture |
+|---|---|
+| **Authority responsibility** | `contracts/` owns semantic meaning and interface promises under accepted Directory Rules v2; it does not own shape, admissibility, instances, or release state |
+| **Accepted authority owner** | **NEEDS VERIFICATION** — no separate accepted contract-steward identity or assignment was verified |
+| **Named repository route** | [`CODEOWNERS`](../.github/CODEOWNERS) routes `/contracts/` to `@bartytime4life` |
+| **Machine projection** | [`root_registry.yaml`](../control_plane/root_registry.yaml) projects `contracts/` as a public, versioned, durable canonical root and names `@bartytime4life` as owner, reviewer, and permitted writer; the register cannot grant or amend authority |
+| **Permitted-writer enforcement** | **NEEDS VERIFICATION** beyond the projection — repository access, rulesets, and branch protection were not treated as proof of an accepted semantic-steward assignment or required review |
+| **Accepted stewardship** | **NEEDS VERIFICATION** — CODEOWNERS and projection defaults are routing evidence, not a verified stewardship charter |
+| **Required approval controls** | **NEEDS VERIFICATION** — CODEOWNERS and registry entries do not prove required review, branch protection, separation of duties, or approval |
+| **Escalation** | Meaning changes go to the contract and affected domain reviewers; placement or authority disputes go through accepted Directory Rules and, when the decision changes authority, an accepted ADR or governed migration |
+
+Contributors may propose changes through repository review, but neither authorship nor write access establishes semantic correctness, policy admission, review approval, release authority, or publication authority.
+
+[Back to top](#top)
+
+---
+
 ## Status
 
-Snapshot: `main@e2466421ced8e41430737d4e7d51f19e3ab61d9f`, inspected on 2026-07-23.
+Implementation snapshot: `main@6c78cfd3ef8ccc9608800c132e7da2222c812e57`, inspected on 2026-08-12. The target and its listed governing evidence are byte-identical to audit baseline `60a54f63404929a4ccb3043a5059a2351747df50`; nine later commits changed only two worker READMEs and one API-security workflow.
 
 | Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `contracts/README.md` | **CONFIRMED** at prior blob `6e05ba40...`; this revision is v0.3 | Canonical-root documentation exists and is modernized in place |
+| `contracts/README.md` profile coverage | **CONFIRMED** at prior blob `1561841b...`; this revision is v0.4 | The same-path document now covers the adopted `ROOT_FULL` fields against the current implementation snapshot; coverage does not certify subtree conformance |
+| Root conformance | **PARTIAL / CONFIRMED DRIFT** | Authority and current-state documentation are reconciled, but the three inherited schema files below remain nonconforming and are neither accepted nor migrated by this README |
+| Directory Rules authority | **CONFIRMED / ACCEPTED** by [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), which adopts exact blob `fd49a0b...` at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) | The doctrine path is the sole writable human Directory Rules authority; the architecture copy is read-only compatibility pending a separately governed tombstone migration |
+| Direct and recursive inventory | **CONFIRMED**: 47 direct entries — 45 directories, `README.md`, and `OBJECT_MAP.md`; 818 tracked files recursively | Presence and counts are current-tree evidence, not proof that every lane is canonical, mature, paired, or consumed |
+| Machine-shape placement drift | **CONFIRMED**: three `PROPOSED` scaffold schemas remain at `contracts/atmosphere/air-observation.schema.json`, `contracts/domains/habitat/habitat_patch.schema.json`, and `contracts/people-dna-land/land_ownership_assertion.schema.json` | These files conflict with the adopted responsibility split; disclose and hold new schema writes here pending governed classification and reversible migration rather than treating drift as canonical |
 | `contracts/OBJECT_MAP.md` | **CONFIRMED** evidence-limited crosswalk | Useful maintainer orientation; not a complete generated registry or implementation proof |
-| Child contract-family READMEs | **CONFIRMED** for domains, source, evidence, runtime, policy, release, UI, and the versioned compatibility guard | Multiple semantic lanes are documented; maturity varies by object and companion surface |
+| Child contract-family documentation | **CONFIRMED** across multiple direct and nested lanes | Descendant-specific authority, alias, compatibility, and maturity statements remain local and mixed |
 | `schemas/contracts/v1/` | **CONFIRMED** nonempty configured validation surface with mixed-maturity and compatibility lanes | Machine-shape work exists; completeness and canonical acceptance remain unresolved |
 | ADR-0001 | **CONFIRMED `proposed`** | Schema-home proposal is not accepted decision authority |
-| ADR-0002 | **CONFIRMED draft / effective `proposed`** | The contract/schema/policy/test split is documented and partially exercised, but not accepted by ADR status |
-| `contracts-validate` workflow | **CONFIRMED command-bearing**; installs `.[test]` and runs `make test` | CI definition exercises the selected test aggregate; a current pass is not inferred from the file alone |
+| ADR-0002 | **CONFIRMED `proposed`** despite draft-form prose | It is not accepted decision authority; the mandatory three-way root split comes from adopted Directory Rules v2 |
+| `contracts-validate` workflow | **CONFIRMED command-bearing**; validates a three-family fixture manifest, then runs `make test` | CI definition exercises bounded schema/fixture and test surfaces; a current pass is not inferred from the file alone |
 | `make test` | **CONFIRMED narrow aggregate** | Runs `pytest tests/schemas tests/contracts -q`; it is not a complete semantic-contract suite |
 | Contract-backed schema fixture test | **CONFIRMED** in `tests/schemas/test_common_contracts.py` | Exercises selected schema families and valid/invalid fixtures; does not prove prose semantics |
-| Direct `tests/contracts/` executables | **Not established** in the bounded test-lane evidence | A dedicated semantic-contract runner and direct modules remain **NEEDS VERIFICATION** |
-| Aggregate validators | **CONFIRMED bounded** | Six configured fixture-backed validators cover SourceDescriptor, EvidenceRef, EvidenceBundle, RuntimeResponseEnvelope, DecisionEnvelope, and RunReceipt |
-| Machine object-family register | **CONFIRMED empty** at `control_plane/object_family_register.yaml` | No populated authoritative machine crosswalk exists yet |
+| Direct `tests/contracts/` evidence | **CONFIRMED**: two direct `test_*.py` modules plus a bounded manifest lane | Direct executable coverage exists; complete semantic-contract coverage is not established |
+| Full validator profile | **CONFIRMED bounded**: ten registered validators, invoked by the compatibility aggregate through the full orchestrator | Configuration and execution scope are implementation evidence, not doctrine or semantic authority |
+| Machine object-family register | **CONFIRMED**: six runtime-family entries; status `PROPOSED`, authority `navigational_index_only`, completeness `partial` | The register is a bounded projection, not complete object-family authority or proof of runtime, release, or publication |
 | Contract inventory and consumer coverage | **UNKNOWN / incomplete** | No complete contract-to-schema-to-policy-to-consumer registry or coverage artifact was verified |
 | Required reviews and branch protection | **NEEDS VERIFICATION** | CODEOWNERS routing does not prove required review or separation of duties |
 | Release, publication, and production parity | **DENIED as inference** | Contract presence, schema validity, workflow success, or a merged PR does not establish KFM release or publication |
 
-### Material corrections from v0.2
+<a id="material-corrections-from-v02"></a>
 
-- The README now follows the mandatory Directory Rules §15 root-section sequence.
-- `schemas/contracts/v1/` is described as the **configured** v1 machine-shape surface while ADR-0001 remains proposed.
-- `make test`, `make validate`, the contract workflow, the aggregate validator set, and the common contract-schema fixture test are distinguished by their actual scope.
-- The direct `tests/contracts/` semantic suite is not presented as implemented.
-- `OBJECT_MAP.md` remains an evidence-limited crosswalk, and the empty machine-readable object-family register is visible.
+### Material corrections from v0.3
+
+- Accepted ADR-0029 and the canonical doctrine path replace the obsolete open-conflict and legacy §15 claims; Directory Rules v2 §16 supplies the current `ROOT_FULL` profile.
+- The direct-child map and recursive count are pinned to the implementation snapshot without upgrading descendant maturity.
+- `schemas/contracts/v1/` is described as the **configured** v1 machine-shape surface while ADR-0001 remains proposed; the root-level meaning/shape/admissibility split is separately mandatory through adopted Directory Rules v2.
+- `make test`, `make validate`, the three-family fixture-manifest step and subsequent test aggregate, the ten-validator full profile, and the common contract-schema fixture test are distinguished by actual scope.
+- Direct `tests/contracts/` modules are acknowledged without claiming complete prose-semantic coverage.
+- `OBJECT_MAP.md` remains evidence-limited, and the six-entry machine object-family register remains partial, proposed, and navigational only.
 - CODEOWNERS routing is separated from stewardship, approval, branch protection, and release authority.
-- Immediate rollback now targets the prior v0.2 blob rather than the older pre-v0.2 stub.
+- Immediate documentation rollback targets the prior v0.3 blob.
+
+[Back to top](#top)
+
+---
+
+## Current direct-child map
+
+Verified from `main@6c78cfd3ef8ccc9608800c132e7da2222c812e57`. This map shows direct entries only. A directory's presence does not make it canonical, mature, schema-linked, policy-admitted, implemented, reviewed, released, or published; child documentation owns deeper detail.
+
+```text
+contracts/
+├── OBJECT_MAP.md        # Evidence-limited navigation crosswalk; not object-family authority
+├── README.md            # This ROOT_FULL semantic-meaning boundary
+├── agriculture/         # Direct contract lane; local authority and maturity vary
+├── ai/                  # Direct contract lane; local authority and maturity vary
+├── air/                 # Direct contract lane; alias status remains local evidence
+├── archaeology/         # Direct contract lane; local authority and maturity vary
+├── atmosphere/          # Direct contract lane; alias status remains local evidence
+├── biodiversity/        # Direct contract lane; local authority and maturity vary
+├── biotopes/            # Direct contract lane; local authority and maturity vary
+├── common/              # Shared semantic-contract lane; not schema or policy authority
+├── correction/          # Correction-object meaning; not correction state or execution
+├── cross_domain/        # Cross-domain seam meaning; registered ownership still applies
+├── crosswalks/          # Semantic navigation/crosswalk lane; not generated authority
+├── data/                # Data-object meaning; governed instances remain under data/
+├── domains/             # Domain-specific semantic contracts; child lanes own detail
+├── evidence/            # Evidence-object meaning; not materialized evidence or proof
+├── fauna/               # Direct contract lane; local authority and maturity vary
+├── flora/               # Direct contract lane; local authority and maturity vary
+├── focus/               # Direct contract lane; alias status remains local evidence
+├── focus_mode/          # Direct contract lane; alias status remains local evidence
+├── geology/             # Direct contract lane; local authority and maturity vary
+├── governance/          # Governance-object meaning; not decisions or approval records
+├── habitat/             # Direct contract lane; local authority and maturity vary
+├── hazards/             # Direct contract lane; local authority and maturity vary
+├── joins/               # Join-object meaning; not executable join behavior
+├── layers/              # Layer-object meaning; not rendered or released layers
+├── map/                 # Map-object meaning; not UI, tile, or publication state
+├── people-dna-land/     # Direct contract lane; alias status remains local evidence
+├── people/              # Direct contract lane; alias status remains local evidence
+├── policy/              # Policy-object meaning; executable rules remain under policy/
+├── receipts/            # Receipt-object meaning; emitted receipts remain elsewhere
+├── release/             # Release-object meaning; release decisions remain under release/
+├── review/              # Review-object meaning; not proof that review occurred
+├── runtime/             # Runtime-object meaning; not runtime execution or state
+├── schemas/             # Existing direct lane; no canonical machine-shape authority
+├── settlement/          # Direct contract lane; local authority and maturity vary
+├── shared/              # Shared semantic-contract lane; ownership remains explicit
+├── soil/                # Direct contract lane; local authority and maturity vary
+├── source/              # Source-object meaning; not source admission or registry state
+├── spatial-foundation/  # Spatial-foundation meaning; local maturity varies
+├── story/               # Story-object meaning; not publication authority
+├── telemetry/           # Telemetry-object meaning; not logs, receipts, or runtime state
+├── transport/           # Direct contract lane; alias status remains local evidence
+├── ui/                  # UI payload meaning; not component or public-interface code
+├── v1/                  # Compatibility guard; not a second semantic authority
+├── validation/          # Validation-object meaning; not validator implementation
+└── watchers/            # Proposed-inactive watcher-gate semantics; direct README missing
+```
 
 [Back to top](#top)
 
@@ -327,6 +404,25 @@ No file under `contracts/` is a release, publication, source admission, PolicyDe
 
 ---
 
+## Lifecycle, exposure, and storage
+
+| Dimension | Root posture |
+|---|---|
+| **Lifecycle relationship** | Contract prose may define the meaning of lifecycle objects and transitions, but governed instances and transition records remain in their accepted data, evidence, policy, review, and release homes |
+| **Document change state** | Git history makes proposed and merged bytes inspectable; a commit, merge, or README status does not by itself accept an ADR, approve a semantic change, or transition a governed object |
+| **Public exposure** | Tracked contract documents are repository-visible at this snapshot, and the active root registry projects public exposure. They must not embed secrets, private payloads, precise sensitive data, or restricted source material; the projection itself grants no exposure or authority |
+| **Sensitivity** | Contracts describe sensitivity, rights, access, and redaction obligations at the semantic level; executable restrictions and decisions remain under policy and governed decision surfaces |
+| **Mutation** | Versioned review in place; semantic identity changes require compatibility and migration analysis rather than silent replacement or parallel authority |
+| **Retention** | Durable repository documentation with Git lineage; removal or relocation must preserve references, aliases, supersession, consumers, and rollback evidence |
+| **Generation** | Human-authored semantic Markdown by default. Any generated projection must identify its source and deterministic regeneration path and must not become semantic authority by generation |
+| **Physical storage** | Repository Markdown and navigation only; contract instances, evidence, receipts, proofs, runtime state, release records, and published carriers are prohibited here |
+
+No accepted repository-wide contract-document state machine was verified. Descendant status labels must therefore remain evidence-bounded, and a consumer must not infer implementation or release maturity from a file's presence or merge state.
+
+[Back to top](#top)
+
+---
+
 ## Validation
 
 Validation is layered. Machine-shape validation can support a contract; it cannot prove prose semantics by itself.
@@ -335,13 +431,25 @@ Validation is layered. Machine-shape validation can support a contract; it canno
 
 | Surface | Command or behavior | What it proves | What it does not prove |
 |---|---|---|---|
+| Validator-registry integrity | `make validator-registry-check` | The bounded registry parses, names existing scripts, and has a valid ten-validator `full` profile for the checked revision | That any validator ran or any contract is semantically correct |
 | Root test aggregate | `make test` | Runs `pytest tests/schemas tests/contracts -q` for the checked revision | Complete contract inventory, semantic equivalence, policy behavior, or release readiness |
-| Root validation aggregate | `make validate` | Runs six configured fixture-backed validators, then the root test aggregate | Full repository validation or complete object-family coverage |
-| Contract/schema workflow | `.github/workflows/contracts-validate.yml` → `make test` | Command-bearing CI intent for the selected lane | Current pass rate, branch-protection coupling, or complete semantic coverage |
+| Root validation aggregate | `make validate` | Runs `make schemas test`; `schemas` invokes the historical compatibility entrypoint, which delegates to the ten-validator `full` profile, and `test` runs the selected schema/contract tests | Full repository validation, complete semantic coverage, policy admission, or release readiness |
+| Canonical validator entrypoint | `python tools/validate_all.py --profile full` | Runs the exact registry-defined full profile for the checked revision | Doctrine, semantic authority, source truth, policy approval, or lifecycle state |
+| Compatibility entrypoint | `python tools/validators/_common/run_all.py` | Delegates to the same full orchestrator profile while preserving the historical path and fixture-runner inventory surface | A separate six-validator aggregate or independent authority |
+| Contract/schema workflow | `.github/workflows/contracts-validate.yml` | Runs the three-family fixture-manifest validator and then `make test` | Current pass rate, branch-protection coupling, all-family coverage, or complete semantic equivalence |
+| Contract fixture manifest | `python tools/validators/validate_contract_fixture_manifest.py tests/contracts/manifests/contract_fixture_families.v1.json --format text` | Declared schema/fixture paths, nonempty valid/invalid lanes, and expected JSON Schema polarity for three families | Markdown semantics, policy, evidence closure, review, release, or publication |
 | Common contract-schema fixture test | `python -m pytest tests/schemas/test_common_contracts.py -q` | Valid/invalid fixture behavior for discovered schemas in selected families | Contract Markdown meaning or every schema family |
-| Aggregate validators | `python tools/validators/_common/run_all.py` | Bounded validation for six configured object families | Unconfigured families, policy execution, runtime behavior, or release state |
+| Contract object-map overlay | `PYTHONPATH=apps/governed-api/src python tools/validators/docs/validate_contract_object_map_lifecycle.py contracts/OBJECT_MAP.md --repo-root .` | Adjacent sanity check for required overlay markers, selected resource coverage, referenced paths, and governed-API stub-registry parity | Complete object inventory, semantic maturity, deployment, authority, or this README's conformance |
+| Changed-file Markdown links | `python tools/validators/docs/link-check/check_links.py --repo-root . --git-diff "<base-sha>...HEAD" --format text` | Local target and fragment integrity for changed Markdown | External-link availability or semantic correctness |
+| Target metadata | `python tools/validators/docs/meta-block/check_meta_blocks.py --repo-root . --profile present --format text contracts/README.md` | Bounded structural QA for this metadata block | Doctrine, review, release, or registry mutation; nested evidence metadata remains outside the bounded parser profile |
 
-The selected schema-fixture test currently enumerates the families `evidence`, `runtime`, `common`, `policy`, `source`, `governance`, and `release` when matching schemas and fixture directories exist.
+The full validator profile is configuration, not doctrine. At the snapshot it lists, in registry order: `source-descriptor`, `evidence-ref`, `evidence-bundle`, `layer-manifest`, `runtime-response-envelope`, `decision-envelope`, `run-receipt`, `ingest-receipt`, `workflow-security`, and `repository-topology`. The first eight are fixture-invoked object or carrier checks; the last two are repository guardrails. The `changed-area` profile selects dynamically from path globs and is not evidence of zero capability merely because its static registry list is empty.
+
+The contract workflow's manifest wave covers only `decision-envelope`, `evidence-bundle`, and `runtime-response-envelope`. The selected schema-fixture test separately enumerates the families `evidence`, `runtime`, `common`, `policy`, `source`, `governance`, and `release` when matching schemas and fixture directories exist. Neither scope is a complete semantic-contract inventory.
+
+The validator orchestrator and contract fixture-manifest validator both use finite process outcomes: `PASS` exits `0`, a bounded validation or fixture-polarity `FAIL` exits `1`, and an unsafe input, malformed inventory, or evaluation `ERROR` exits `2`. A caller must preserve those distinctions rather than collapsing every nonzero result into a semantic failure.
+
+The current `docs-meta-block` workflow triggers on Markdown changes but scopes its changed-document scan to root `README.md`, `docs/`, and `tools/validators/docs/`; it does not collect `contracts/README.md`. The explicit target command above is therefore required for this file. That workflow-scope gap is implementation evidence, not authority to widen the workflow in a README-only change.
 
 ### Required semantic review checks
 
@@ -367,6 +475,8 @@ Until an accepted automated semantic-contract linter exists, reviewers must chec
 |---|---|
 | Meaning and schema disagree | Mark the relationship `CONFLICTED`; do not silently choose one |
 | Schema or validator is missing | Keep the contract semantic claim; label enforcement `NEEDS VERIFICATION` |
+| Validator registry is invalid or the orchestrator cannot run | Report `ERROR` and preserve the nonzero result; do not infer validation success |
+| A configured validator rejects its bounded input | Report `FAIL` for that named check and revision; do not generalize the result into policy or release state |
 | Rights, sensitivity, source role, evidence, or release support is unclear | Narrow, hold, abstain, deny, or require review according to the owning policy surface |
 | Compatibility path duplicates canonical meaning | Stop expansion; record drift and require migration or ADR resolution |
 | Test infrastructure fails | Report `ERROR`; do not convert infrastructure failure into semantic success |
@@ -424,14 +534,17 @@ Until an accepted automated semantic-contract linter exists, reviewers must chec
 | [`policy/`](../policy/README.md) | Canonical admissibility responsibility root |
 | [`fixtures/`](../fixtures/README.md) | Reusable deterministic examples |
 | [`tests/`](../tests/README.md) | Authored enforceability proof |
-| [`tests/contracts/`](../tests/contracts/README.md) | Intended semantic-contract test lane; direct executable suite not established in bounded evidence |
+| [`tests/contracts/`](../tests/contracts/README.md) | Bounded direct tests and fixture-manifest lane; complete prose-semantic coverage is not established |
 | [`tools/validators/`](../tools/validators/README.md) | Reusable validator implementation |
 | [`data/`](../data/README.md) | Lifecycle records, source registries, receipts, proofs, catalogs, and published artifacts in their owning lanes |
 | [`release/`](../release/README.md) | Release-governance records and decisions |
 | [Contract/schema/policy/test split](../docs/architecture/contract-schema-policy-split.md) | Human-readable four-layer boundary explanation |
-| [Directory Rules](../docs/architecture/directory-rules.md) | Placement authority and required root README contract |
+| [Accepted ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adoption decision for the exact Directory Rules v2 bytes and single-write authority |
+| [Directory Rules](../docs/doctrine/directory-rules.md) | Sole writable human placement authority; §9.3 defines the three-way split and §16 defines README profiles |
+| [Legacy Directory Rules copy](../docs/architecture/directory-rules.md) | Read-only compatibility body pending separately governed tombstone migration; not a writable authority |
 | [`contracts-validate`](../.github/workflows/contracts-validate.yml) | Command-bearing CI workflow for the selected schema/contract test aggregate |
-| [`object_family_register.yaml`](../control_plane/object_family_register.yaml) | Proposed machine-readable object-family map; currently empty |
+| [`root_registry.yaml`](../control_plane/root_registry.yaml) | Active machine projection of adopted root classes; cannot amend doctrine |
+| [`object_family_register.yaml`](../control_plane/object_family_register.yaml) | Six-entry partial, proposed, navigational-only runtime-family projection; not complete authority |
 
 [Back to top](#top)
 
@@ -439,14 +552,15 @@ Until an accepted automated semantic-contract linter exists, reviewers must chec
 
 ## ADRs
 
-No accepted contracts-root-specific ADR was verified for this documentation update.
+Accepted ADR-0029 governs root placement and README conformance. It does not accept a contract-schema split proposal, define object meaning, or establish object-family maturity.
 
 ### Current decision posture
 
+- [`ADR-0029 — Adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is **accepted**. It adopts the exact bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) as the sole writable human Directory Rules authority. The adopted rules make the `contracts/` / `schemas/` / `policy/` split mandatory and place `ROOT_FULL` README requirements in §16.
 - [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) is **proposed**. The repository configures `schemas/contracts/v1/`, but the ADR is not accepted.
-- [`ADR-0002 — Contracts vs Schemas Split`](../docs/adr/ADR-0002-contracts-vs-schemas-split.md) is **draft** with effective status **proposed**. The repository documents and partially exercises the split without converting configuration into accepted decision authority.
+- [`ADR-0002 — Contracts vs Schemas Split`](../docs/adr/ADR-0002-contracts-vs-schemas-split.md) is **proposed** despite draft-form prose. It is not accepted decision authority; adopted Directory Rules v2 independently require the root-level meaning/shape/admissibility split.
 - [`contracts/v1/`](./v1/README.md) remains a compatibility guard. Making it canonical, mirroring schemas into it, or moving canonical semantic contracts there requires reviewed path authority and a reversible migration.
-- The Directory Rules document-location conflict between `docs/architecture/` and `docs/doctrine/` remains open. New links here follow current contribution guidance and point to the live architecture-path artifact; this README does not settle the conflict.
+- [`docs/architecture/directory-rules.md`](../docs/architecture/directory-rules.md) remains a full read-only compatibility dependency. Accepted ADR-0029 keeps tombstoning, reference closure, and deletion on a separately governed hold; its continued presence does not reopen writable authority.
 
 An accepted ADR and migration plan are required before:
 
@@ -463,27 +577,32 @@ An accepted ADR and migration plan are required before:
 
 ## Last reviewed
 
-**2026-07-23**
+**2026-08-12**
 
-Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at `main@e2466421ced8e41430737d4e7d51f19e3ab61d9f`, prior target blob `6e05ba40fcc255e392210e56ef9519203aec6006`.
+Evidence snapshot: `bartytime4life/Kansas-Frontier-Matrix` at implementation base `main@6c78cfd3ef8ccc9608800c132e7da2222c812e57`, prior target blob `1561841b0bfdc64c07e8d3bf0aa6a6d5cc240a88`. The target and listed governing evidence were compared with audit baseline `60a54f63404929a4ccb3043a5059a2351747df50`; no post-audit material file change was present at that implementation base. Live pull-request collision checks are recorded in the implementation PR rather than treated as durable repository fact here.
 
 Review this README again when:
 
-- six months pass without review;
-- a top-level contract family is added, moved, renamed, consolidated, or retired;
+- authority, root class, owner, permitted writer, reviewer, exposure, sensitivity, storage, retention, or generation posture changes;
+- a direct contract lane is added, moved, renamed, consolidated, reclassified, or retired;
+- an ADR governing placement, semantic identity, schema home, or compatibility is accepted, superseded, or reconsidered;
 - ADR-0001 or ADR-0002 changes status;
 - `contracts/v1/` changes classification;
 - an automated semantic-contract inventory or linter is established;
-- the object-family register is populated;
+- the object-family register changes scope, status, authority, or completeness;
 - the root test or validation aggregate changes scope;
 - a public API, UI, map, export, AI, release, correction, or rollback contract changes materially;
-- Directory Rules or accepted placement ADRs change the responsibility split.
+- Directory Rules or accepted placement ADRs change the responsibility split;
+- drift, security, correction, withdrawal, or rollback evidence affects this boundary;
+- a future risk-based maximum review interval adopted for this root expires.
 
 ### Rollback and correction
 
-Documentation rollback is a same-path revert of the commit that introduces this v0.3 README. The immediate byte-level rollback target is prior blob `6e05ba40fcc255e392210e56ef9519203aec6006`.
+Documentation rollback is a same-path revert of the commit that introduces this v0.4 README. The immediate byte-level rollback target is prior v0.3 blob `1561841b0bfdc64c07e8d3bf0aa6a6d5cc240a88`.
 
-The v0.2 README recorded the older pre-expansion stub blob `a2c5150814c1cac5a360fb03b8ddbfb4d98bb2d7` as lineage. That older blob is not the immediate rollback target for this revision.
+Reverting this README restores documentation bytes only. It does not revert ADR-0029, Directory Rules, registries, validators, schemas, policy, fixtures, tests, workflows, contract documents, object instances, releases, or public state. The prior v0.3 bytes contain known stale authority and implementation claims, so a revert is a recoverability mechanism, not a recommendation to restore those claims as current truth.
+
+Correct factual errors through a same-path review that re-pins evidence. Reconsider semantic authority through the governing ADR or migration process; README prose must not overturn an accepted decision. When a claim is unresolved, narrow it to `UNKNOWN` or `NEEDS VERIFICATION` rather than filling the gap with implementation inference.
 
 A semantic contract change that has already influenced schemas, fixtures, policy, runtime behavior, releases, public artifacts, or dependent documentation requires coordinated correction and rollback across those consumers. Reverting Markdown alone is not sufficient evidence that downstream state was corrected.
 
@@ -584,11 +703,11 @@ Use repository tree generation or an accepted object-family registry for a compl
 | Drift class | Current signal | Required posture |
 |---|---|---|
 | Semantic root vs versioned mirror | `contracts/` and `contracts/v1/` both exist | Keep `contracts/v1/` pointer-only until accepted authority changes |
-| Contract vs schema duplication | Historical and compatibility paths can contain schema-like or duplicate definitions | Machine shape stays outside `contracts/`; migrate with ADR/rollback when required |
+| Contract vs schema duplication | Three confirmed `PROPOSED` scaffold schemas remain under `contracts/`: atmosphere air observation, habitat patch, and land ownership assertion | Treat as nonconforming drift; deny new machine-shape writes here and migrate only through governed identity/consumer inventory with rollback |
 | Aliases and casing | Runtime and other lanes document snake_case, CamelCase, or folder-form aliases | Identify one semantic authority; keep aliases as explicit compatibility surfaces |
 | Domain slug conflicts | Atmosphere/air and Roads-Rail-Trade/transport forms are documented as unresolved | Mark `path-conflicted`; do not add parallel canonical contracts |
 | Release/correction seam | Release contracts reference correction objects in a separate family | Preserve distinct responsibilities and resolve ownership through reviewed crosswalks, not silent moves |
-| Navigation map vs registry | `OBJECT_MAP.md` exists while `object_family_register.yaml` has `entries: []` | Treat the Markdown map as evidence-limited and populate a machine register only through a reviewed process |
+| Navigation map vs registry | `OBJECT_MAP.md` is evidence-limited; `object_family_register.yaml` projects six runtime families and declares itself `PROPOSED`, partial, and navigational only | Treat both as bounded navigation; neither is complete semantic or implementation authority |
 
 ### Change discipline
 
@@ -610,11 +729,11 @@ Do not create a new path simply to avoid resolving an existing conflict.
 
 ## Open verification register
 
-- Complete recursive inventory of `contracts/**/*.md`, file counts, identities, aliases, and ownership.
+- Complete semantic inventory and ownership classification across the confirmed 818-file `contracts/` subtree.
 - Accepted canonical status of ADR-0001 and ADR-0002.
 - Complete contract-to-schema-to-fixture-to-validator-to-policy-to-consumer crosswalk.
-- Population and governing schema for `control_plane/object_family_register.yaml`.
-- Dedicated semantic-contract tests, runner, diagnostics, and CI gate ownership.
+- Expansion, acceptance posture, governing schema, and completeness criteria for the six-entry partial `control_plane/object_family_register.yaml`.
+- Complete semantic-contract tests, runner diagnostics, coverage policy, and CI gate ownership beyond the current bounded modules and fixture-manifest wave.
 - Contract metadata requirements and whether KFM Meta Block v2 is machine-enforced.
 - Canonical naming and alias rules for snake_case, CamelCase, folder-form, singular/plural, and domain slugs.
 - Classification and migration of `contracts/v1/` and other compatibility surfaces.
