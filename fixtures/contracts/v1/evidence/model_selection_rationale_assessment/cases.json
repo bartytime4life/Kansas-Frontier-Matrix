@@ -1,0 +1,416 @@
+{
+  "object_type": "ModelSelectionRationaleAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.model-selection-rationale-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ModelSelectionRationaleAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.model-selection-rationale-assessment.fixture.v1",
+    "assessment_id": "kfm:model-selection:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-159",
+    "observed_at": "2026-08-11T19:30:00Z",
+    "subject_ref": "kfm://model-assisted-layer/synthetic/habitat-suitability/v1",
+    "subject_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "intended_use": "PUBLIC_INTERPRETATION",
+    "problem": {
+      "task_type": "CLASSIFICATION",
+      "claim_role": "PREDICTIVE",
+      "problem_statement_ref": "kfm://problem/synthetic/habitat-classification/v1",
+      "consequence_level": "MEDIUM",
+      "interpretability_requirement": "HIGH"
+    },
+    "data_characteristics": {
+      "training_population_ref": "kfm://population/synthetic/habitat-training/v1",
+      "feature_manifest_ref": "kfm://feature-manifest/synthetic/habitat/v1",
+      "data_quality_ref": "kfm://data-quality/synthetic/habitat/v1",
+      "sensitive_data_state": "NONE",
+      "characteristic_refs": [
+        "kfm://data-characteristic/synthetic/class-imbalance/v1",
+        "kfm://data-characteristic/synthetic/mixed-features/v1"
+      ]
+    },
+    "candidates": [
+      {
+        "candidate_id": "LINEAR_BASELINE",
+        "model_family": "LINEAR_MODEL",
+        "eligible": true,
+        "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+        "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+        "exclusion_codes": []
+      },
+      {
+        "candidate_id": "TREE_SELECTED",
+        "model_family": "TREE",
+        "eligible": true,
+        "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/tree-selected/v1",
+        "interpretability_method_ref": "kfm://interpretability/synthetic/tree-paths/v1",
+        "exclusion_codes": []
+      }
+    ],
+    "selection": {
+      "selected_candidate_id": "TREE_SELECTED",
+      "baseline_candidate_id": "LINEAR_BASELINE",
+      "problem_fit_refs": ["kfm://rationale/synthetic/problem-fit/v1"],
+      "data_fit_refs": ["kfm://rationale/synthetic/data-fit/v1"],
+      "decision_reason_codes": ["HANDLES_NONLINEAR_INTERACTIONS", "RETAINS_PATH_EXPLANATIONS"],
+      "policy_consequence_ref": "kfm://policy-consequence/synthetic/public-habitat/v1",
+      "performance_not_sole_basis": true
+    },
+    "governance": {
+      "model_card_ref": "kfm://model-card/synthetic/habitat-tree/v1",
+      "training_receipt_ref": "kfm://training-receipt/synthetic/habitat-tree/v1",
+      "evaluation_split_ref": "kfm://evaluation-split/synthetic/habitat/v1",
+      "evidence_refs": ["kfm://evidence-bundle/synthetic/habitat-model-selection/v1"],
+      "review_state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "review_record_refs": ["kfm://review/synthetic/model-selection/habitat/v1"]
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_MODEL_EXECUTION_OR_RANKING",
+      "NO_PERFORMANCE_OR_SCIENTIFIC_VALIDATION",
+      "NO_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "model_selection_authority": false,
+      "model_evaluation_authority": false,
+      "source_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "lifecycle_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_classification_tree_over_linear_baseline",
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_regression_linear_over_tree_baseline",
+      "patch": {
+        "problem": {"task_type": "REGRESSION"},
+        "selection": {
+          "selected_candidate_id": "LINEAR_BASELINE",
+          "baseline_candidate_id": "TREE_SELECTED",
+          "decision_reason_codes": ["HIGH_INTERPRETABILITY", "STABLE_LINEAR_RELATION"]
+        },
+        "governance": {"model_card_ref": "kfm://model-card/synthetic/habitat-linear/v1"}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_clustering_with_clustering_baseline",
+      "patch": {
+        "problem": {"task_type": "CLUSTERING", "claim_role": "EXPLORATORY"},
+        "candidates": [
+          {
+            "candidate_id": "CLUSTER_BASELINE",
+            "model_family": "CLUSTERING",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/cluster-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/cluster-profiles/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "CLUSTER_SELECTED",
+            "model_family": "CLUSTERING",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/cluster-selected/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/cluster-profiles-selected/v1",
+            "exclusion_codes": []
+          }
+        ],
+        "selection": {
+          "selected_candidate_id": "CLUSTER_SELECTED",
+          "baseline_candidate_id": "CLUSTER_BASELINE",
+          "decision_reason_codes": ["EXPLORATORY_GROUPING", "STABILITY_REVIEWED"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_problem_unresolved",
+      "patch": {
+        "problem": {
+          "task_type": "UNRESOLVED",
+          "claim_role": "UNRESOLVED",
+          "problem_statement_ref": null,
+          "consequence_level": "UNRESOLVED",
+          "interpretability_requirement": "UNRESOLVED"
+        },
+        "data_characteristics": {
+          "training_population_ref": null,
+          "feature_manifest_ref": null,
+          "data_quality_ref": null,
+          "sensitive_data_state": "UNKNOWN",
+          "characteristic_refs": []
+        },
+        "selection": {
+          "selected_candidate_id": null,
+          "baseline_candidate_id": null,
+          "problem_fit_refs": [],
+          "data_fit_refs": [],
+          "decision_reason_codes": [],
+          "policy_consequence_ref": null
+        },
+        "governance": {
+          "model_card_ref": null,
+          "training_receipt_ref": null,
+          "evaluation_split_ref": null,
+          "evidence_refs": [],
+          "review_state": "UNKNOWN",
+          "review_record_refs": []
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "CLAIM_ROLE_UNRESOLVED",
+          "CONSEQUENCE_UNRESOLVED",
+          "INTERPRETABILITY_UNRESOLVED",
+          "REVIEW_UNKNOWN",
+          "SELECTION_UNRESOLVED",
+          "SENSITIVE_DATA_UNRESOLVED",
+          "TASK_TYPE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "abstain_selection_unresolved",
+      "patch": {
+        "selection": {
+          "selected_candidate_id": null,
+          "baseline_candidate_id": null,
+          "problem_fit_refs": [],
+          "data_fit_refs": [],
+          "decision_reason_codes": []
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["SELECTION_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"governance": {"review_state": "PENDING", "review_record_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "abstain_sensitive_data_unknown",
+      "patch": {"data_characteristics": {"sensitive_data_state": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SENSITIVE_DATA_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_selected_candidate_unknown",
+      "patch": {"selection": {"selected_candidate_id": "MISSING_CANDIDATE"}},
+      "expected": {"outcome": "DENY", "codes": ["SELECTED_CANDIDATE_UNKNOWN"]}
+    },
+    {
+      "name": "deny_selected_candidate_ineligible",
+      "patch": {
+        "candidates": [
+          {
+            "candidate_id": "LINEAR_BASELINE",
+            "model_family": "LINEAR_MODEL",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "TREE_SELECTED",
+            "model_family": "TREE",
+            "eligible": false,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/tree-selected/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/tree-paths/v1",
+            "exclusion_codes": ["EVALUATION_FAILED"]
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["SELECTED_CANDIDATE_INELIGIBLE"]}
+    },
+    {
+      "name": "deny_eligible_evaluation_missing",
+      "patch": {
+        "candidates": [
+          {
+            "candidate_id": "LINEAR_BASELINE",
+            "model_family": "LINEAR_MODEL",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "TREE_SELECTED",
+            "model_family": "TREE",
+            "eligible": true,
+            "evaluation_receipt_ref": null,
+            "interpretability_method_ref": "kfm://interpretability/synthetic/tree-paths/v1",
+            "exclusion_codes": []
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["ELIGIBLE_EVALUATION_REQUIRED"]}
+    },
+    {
+      "name": "deny_baseline_same_as_selected",
+      "patch": {"selection": {"baseline_candidate_id": "TREE_SELECTED"}},
+      "expected": {"outcome": "DENY", "codes": ["BASELINE_MUST_DIFFER"]}
+    },
+    {
+      "name": "deny_candidates_not_canonical",
+      "patch": {
+        "candidates": [
+          {
+            "candidate_id": "TREE_SELECTED",
+            "model_family": "TREE",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/tree-selected/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/tree-paths/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "LINEAR_BASELINE",
+            "model_family": "LINEAR_MODEL",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+            "exclusion_codes": []
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["CANDIDATES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_problem_fit_missing",
+      "patch": {"selection": {"problem_fit_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["PROBLEM_FIT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_data_fit_missing",
+      "patch": {"selection": {"data_fit_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["DATA_FIT_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_performance_only_selection",
+      "patch": {"selection": {"performance_not_sole_basis": false}},
+      "expected": {"outcome": "DENY", "codes": ["PERFORMANCE_ONLY_SELECTION_DENIED"]}
+    },
+    {
+      "name": "deny_high_consequence_policy_missing",
+      "patch": {
+        "problem": {"consequence_level": "HIGH"},
+        "selection": {"policy_consequence_ref": null}
+      },
+      "expected": {"outcome": "DENY", "codes": ["HIGH_CONSEQUENCE_POLICY_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_high_interpretability_opaque_selection",
+      "patch": {
+        "candidates": [
+          {
+            "candidate_id": "LINEAR_BASELINE",
+            "model_family": "LINEAR_MODEL",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "TREE_SELECTED",
+            "model_family": "NEURAL_NETWORK",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/neural-selected/v1",
+            "interpretability_method_ref": null,
+            "exclusion_codes": []
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["INTERPRETABILITY_METHOD_REQUIRED"]}
+    },
+    {
+      "name": "deny_sensitive_data_policy_missing",
+      "patch": {
+        "data_characteristics": {"sensitive_data_state": "PRESENT"},
+        "selection": {"policy_consequence_ref": null}
+      },
+      "expected": {"outcome": "DENY", "codes": ["SENSITIVE_DATA_POLICY_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_causal_claim",
+      "patch": {"problem": {"claim_role": "CAUSAL"}},
+      "expected": {"outcome": "DENY", "codes": ["CAUSAL_OR_REGULATORY_AUTHORITY_DENIED"]}
+    },
+    {
+      "name": "deny_task_model_family_mismatch",
+      "patch": {
+        "candidates": [
+          {
+            "candidate_id": "LINEAR_BASELINE",
+            "model_family": "LINEAR_MODEL",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/linear-baseline/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/linear-coefficients/v1",
+            "exclusion_codes": []
+          },
+          {
+            "candidate_id": "TREE_SELECTED",
+            "model_family": "CLUSTERING",
+            "eligible": true,
+            "evaluation_receipt_ref": "kfm://model-evaluation/synthetic/cluster-selected/v1",
+            "interpretability_method_ref": "kfm://interpretability/synthetic/cluster-profiles/v1",
+            "exclusion_codes": []
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["TASK_MODEL_FAMILY_INCOHERENT"]}
+    },
+    {
+      "name": "deny_governance_reference_missing",
+      "patch": {"governance": {"model_card_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["GOVERNANCE_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_review_record_missing",
+      "patch": {"governance": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_references",
+      "patch": {
+        "data_characteristics": {
+          "characteristic_refs": [
+            "kfm://data-characteristic/synthetic/z/v1",
+            "kfm://data-characteristic/synthetic/a/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REFERENCES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"subject_ref": "kfm://data/raw/synthetic/model-assisted-layer/v1"},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"selection_authorized": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}
