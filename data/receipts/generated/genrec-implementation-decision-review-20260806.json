@@ -17,7 +17,7 @@
     "schemas/contracts/v1/governance/implementation_decision_record.schema.json": "sha256:3597e1da7d91eff83c622c3b81bd83f27a2b74d8a4ee1069bf0e4d6483580895",
     "fixtures/contracts/v1/governance/implementation_decision_record/cases.json": "sha256:0ef4d86eb6d96996f7b3a935e1928c7b29b5c204bfa79ddea1ea7b84de5d714b",
     "tools/validators/governance/validate_implementation_decision_record.py": "sha256:da0168968a942287d65036200b349615b8ab6955973936c4c5bf31389c34954d",
-    "tools/validators/governance/README.md": "sha256:ae606682df2db51dd40f648f00d78e9d5e7c57488af2a410f6ddb2e11e048fe2",
+    "tools/validators/governance/README.md": "sha256:8bf9fd5488cdcb50efc44992b36a558088d70de0fc2decf07e60ae7b8cebdf68",
     "tests/validators/governance/test_implementation_decision_record.py": "sha256:7fa735daec9f837a94ba3a8d2a5f8d2271d38d3376106c831d7914ce26ae0f39",
     "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md": "sha256:a165242c7161ed1bf77032372af876f3c2c401d0384a59e926e0d975abc5847c"
   },

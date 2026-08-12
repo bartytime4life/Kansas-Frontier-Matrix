@@ -80,8 +80,9 @@ def _root_registry() -> dict[str, object]:
 
 def _validator_registry() -> dict[str, object]:
     ids = [f"validator-{index}" for index in range(8)]
+    non_fixture_ids = ["repository-topology", "workflow-security"]
     return {
-        "profiles": {"full": ids},
+        "profiles": {"full": [*ids, *non_fixture_ids]},
         "validators": [
             {
                 "id": validator_id,
@@ -89,6 +90,13 @@ def _validator_registry() -> dict[str, object]:
                 "args": ["--fixtures"],
             }
             for index, validator_id in enumerate(ids)
+        ] + [
+            {
+                "id": validator_id,
+                "script": f"tools/validators/validate_{validator_id}.py",
+                "args": [],
+            }
+            for validator_id in non_fixture_ids
         ],
     }
 
@@ -111,6 +119,10 @@ class FixtureRootContractTests(unittest.TestCase):
             (self.root / f"tools/validators/validate_{index}.py").write_text(
                 "# synthetic validator\n", encoding="utf-8"
             )
+        for validator_id in ("repository-topology", "workflow-security"):
+            (self.root / f"tools/validators/validate_{validator_id}.py").write_text(
+                "# synthetic non-fixture validator\n", encoding="utf-8"
+            )
         (self.root / "Makefile").write_text(
             'fixtures:\n\t@echo "TODO: regenerate deterministic fixtures"\n',
             encoding="utf-8",
@@ -127,7 +139,7 @@ class FixtureRootContractTests(unittest.TestCase):
         self.assertTrue(result.ok, result.findings)
         self.assertEqual(result.outcome, "PASS")
         self.assertEqual(result.direct_child_directories, 2)
-        self.assertEqual(result.aggregate_validators, 8)
+        self.assertEqual(result.aggregate_validators, 10)
 
     def test_root_full_heading_order_fails_closed(self) -> None:
         path = self.root / "fixtures/README.md"

@@ -24,7 +24,7 @@
     "tests/validators/test_validate_layer_manifest.py": "sha256:dcc554b2c4af5f9a12d3aad3d3f020fd8b5ae94f12acef1c9517625347bf8c79",
     "tools/validators/data/README.md": "sha256:613306cdb4be787c321b7d04f3fcee7cfde83551dd62763189ca08331a6c2fdd",
     "tools/validators/data/validate_layer_manifest.py": "sha256:e3857b30f4bea810cb7eed7b1ec95edbe16a09ab4eb5e4746d03cdc80c1c767e",
-    "tools/validators/validator_registry.json": "sha256:3a1194f34f4173c888d0aba7a9e5d732a43559c21ea2f0cc5aaff6566f52d0cc"
+    "tools/validators/validator_registry.json": "sha256:f322f8d584e98aea9beb72d9c87d83018851b2a3622d1930eae280ca7e3f0b2b"
   },
   "artifact_paths": [
     ".github/workflows/layer-manifest.yml",

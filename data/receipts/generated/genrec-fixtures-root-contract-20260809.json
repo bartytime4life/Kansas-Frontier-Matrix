@@ -11,9 +11,9 @@
   ],
   "artifact_hashes": {
     ".github/workflows/fixtures-root-contract.yml": "sha256:c743d93880ecc7f47dac640d2c64fbbfb154bf15b3e23eb0663328e87d689ce3",
-    "tests/validators/test_validate_fixture_root_contract.py": "sha256:b73c8b8f10daa057cd2b4eb084b5bcb241b7b1d1215ebab48718b6c51ab14a80",
+    "tests/validators/test_validate_fixture_root_contract.py": "sha256:c55d7c17dd46fc47cb426fd409937da52b537b2157f4effbda48e1e75ca6e796",
     "tools/validators/_fixture_root_contract_io.py": "sha256:39089f46209433fdbeea79089eafa345e16caeee7541fee10c6bbf66ad441d2b",
-    "tools/validators/_fixture_root_contract_checks.py": "sha256:a1cb36935d03db6ed8f9fcdf1d7a9ee2f1e0467f4cb993f90afea9b8202b7ac3",
+    "tools/validators/_fixture_root_contract_checks.py": "sha256:b6238a458b9c0a4794183729143fd51d1bebdf753bf6a2160f9d46433fe9a191",
     "tools/validators/fixture_root_contract.py": "sha256:cbb09e355ec437c62518834db71ef5ed260346e8e2471038948cbb6b783e7ad6",
     "tools/validators/validate_fixture_root_contract.py": "sha256:34ae464a557236ea7cf128867028000bff9ddcd9f0795bf0ee39a7f621c0ec1b"
   },
