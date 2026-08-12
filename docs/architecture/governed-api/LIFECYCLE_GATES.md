@@ -47,10 +47,10 @@ notes:
 ## Table of contents
 
 1. [Scope](#1-scope)
-2. [Gates A–G — at-a-glance](#2-gates-ag--ataglance)
-3. [Build-time vs request-time enforcement](#3-buildtime-vs-requesttime-enforcement)
-4. [Per-gate API behavior](#4-pergate-api-behavior)
-5. [Release-state matrix](#5-releasestate-matrix)
+2. [Gates A–G — at-a-glance](#2-gates-ag--at-a-glance)
+3. [Build-time vs request-time enforcement](#3-build-time-vs-request-time-enforcement)
+4. [Per-gate API behavior](#4-per-gate-api-behavior)
+5. [Release-state matrix](#5-release-state-matrix)
 5A. [Resource lifecycle and API ownership map](#5a-resource-lifecycle-and-api-ownership-map)
 6. [Rollback — what the API does](#6-rollback--what-the-api-does)
 7. [Worked example — feature click during rollback](#7-worked-example--feature-click-during-rollback)
