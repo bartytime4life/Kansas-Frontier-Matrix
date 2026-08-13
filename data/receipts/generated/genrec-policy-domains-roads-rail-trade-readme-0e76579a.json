@@ -1,0 +1,232 @@
+{
+  "receipt_id": "genrec-policy-domains-roads-rail-trade-readme-0e76579a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/roads-rail-trade/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/roads-rail-trade/README.md": "sha256:0e76579a8ee4d2b8a9b4aef40f25edf29da564ddd8e13735272f3830a74114d9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-192244).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/domains/roads-rail-trade/*.rego@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/domains/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/doctrine/directory-rules.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:control_plane/root_registry.yaml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:control_plane/domain_lane_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/registers/DOMAIN_LANE.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:contracts/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:schemas/contracts/v1/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:fixtures/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tests/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:packages/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:packages/policy-runtime/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/bundles/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tools/validators/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:.github/workflows/domain-roads-rail-trade.yml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/proofs/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:release/candidates/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:.github/CODEOWNERS@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:CONTRIBUTING.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tools/validators/validate_generated_receipt.py@299c8a81325689c68a38304ce7b14921342dcdd0"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/roads-rail-trade/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, immutable base, target history and full bytes, accepted placement, parent boundaries, CODEOWNERS routing, current open pull requests, and matching branch names were inspected. No open pull request overlapping the target path was found."
+    },
+    {
+      "gate": "roads-rail-trade-direct-policy-inventory",
+      "outcome": "PASS",
+      "reason": "The complete direct directory inventory was read at the pinned base: one README and sixteen Rego files. Exact-source inspection confirmed two deny-default-false greenfield stubs, fourteen allow-default-false generated scaffolds, two package families, and no non-default operative rule body."
+    },
+    {
+      "gate": "authority-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes accepted directory placement and repository-visible source from proposed lane registration, unresolved aliases, bounded CorridorRoute schema validation, missing direct native Rego tests, unbound evaluator/consumer state, and explicit proof/release workflow holds."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, logical heading progression, one balanced KFM_META_BLOCK_V2 wrapper, four balanced fenced blocks, no trailing whitespace, UTF-8-compatible text, and a final newline."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "A deterministic local extraction checked every internal fragment against the final README headings and every repository-relative target against GitHub content at the pinned base; all resolved. External Shields.io badge retrieval was observational and not required."
+    },
+    {
+      "gate": "workflow-trigger-and-non-effects-preflight",
+      "outcome": "PASS",
+      "reason": "The relevant domain workflow is pull-request triggered, contents-read only, disables persisted checkout credentials, executes bounded repository tests, and retains explicit proof/release holds. This change does not modify workflow bytes or introduce release, deployment, publication, administration, or secret-bearing execution."
+    },
+    {
+      "gate": "documentation-claim-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The final artifacts contain no credentials, private prompts, hidden reasoning, personal data, restricted payloads, exact sensitive locations, production endpoints, live routing advice, or invented functional-owner claims. Sensitive transport and cultural-corridor risks remain generalized and fail-safe."
+    },
+    {
+      "gate": "receipt-json-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "The receipt passes the repository's JSON Schema Draft 2020-12 shape through an isolated validator, parses as finite JSON, uses contract version 3.0.0, has exact artifact/hash/truth-label key parity, contains policy and documentation citations, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local workspace does not contain the repository checkout or the declared jsonschema dependency. Equivalent required-field, enum, path-parity, citation, policy-reference, format, and SHA-256 checks were performed locally; repository-native validation remains pending on hosted exact-head CI."
+    },
+    {
+      "gate": "direct-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "No policy source changed, and current repository evidence provides no accepted Roads/Rail/Trade bundle, evaluator entrypoint, or direct native Rego test. Static source maturity is recorded without claiming parse or evaluation success."
+    },
+    {
+      "gate": "runtime-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy source, contract, schema, fixture, validator, test, workflow, bundle, evaluator, consumer, lifecycle object, release, deployment, promotion, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Authorized human review remains pending. This receipt and draft do not create policy acceptance, independent approval, merge authority, release authority, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "roads-rail-trade-direct-policy-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "roads-rail-trade-source-inventory-and-defaults",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/roads-rail-trade/*.rego@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "domain-policy-parent-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "canonical-policy-root-and-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "boundary-compact-contract-and-domain-lane-pattern",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "domain-lane-and-alias-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "human-domain-scope-and-sensitivity-register",
+      "validated": true,
+      "evidence_ref": "repo:docs/registers/DOMAIN_LANE.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "roads-rail-trade-domain-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "roads-rail-trade-contract-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "corridor-route-schema-validation-slice",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "roads-rail-trade-test-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "roads-rail-trade-domain-workflow-and-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-roads-rail-trade.yml@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "proof-lane-hold",
+      "validated": true,
+      "evidence_ref": "repo:data/proofs/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "release-candidate-boundary",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/roads-rail-trade/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@299c8a81325689c68a38304ce7b14921342dcdd0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T19:35:25Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of policy/domains/roads-rail-trade/README.md from a generic greenfield scaffold to a repository-grounded BOUNDARY_COMPACT policy index. The update preserves the exact workflow-required PROPOSED (greenfield scaffold) marker, inventories all sixteen direct Rego scaffolds and their mixed defaults/namespaces, separates bounded CorridorRoute schema validation from unproved policy maturity, and documents inputs, outcomes, rights, sensitivity, harmful precision, temporal/source-role separation, cross-domain composition, governed public and AI surfaces, validation, review, correction, and rollback. It changes no Rego source, policy value, contract, schema, fixture, validator, test, workflow, bundle, evaluator, consumer, decision, lifecycle object, release, deployment, promotion, publication, or public behavior. This receipt is provenance and process memory, not factual proof, policy acceptance, independent review, merge authority, release authority, or publication authority; authorized human review remains pending."
+}
