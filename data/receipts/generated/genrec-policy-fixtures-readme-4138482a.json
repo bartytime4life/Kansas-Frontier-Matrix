@@ -66,7 +66,7 @@
     {
       "gate": "markdown-structure-and-hygiene",
       "outcome": "PASS",
-      "reason": "Exactly one H1, logical heading progression, twelve balanced language-tagged fences, final newline, no tabs, and no trailing whitespace."
+      "reason": "Exactly one H1, logical heading progression, six balanced language-tagged fenced blocks, final newline, no tabs, and no trailing whitespace."
     },
     {
       "gate": "repository-links-and-local-fragments",
