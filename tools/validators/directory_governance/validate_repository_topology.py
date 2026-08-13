@@ -540,11 +540,14 @@ def _path_findings(
                 "trailing-dot-or-space",
                 "windows-reserved",
             }
+            # Path grammar is independent of regular-file content. Keep mode in
+            # the evidence, but leave object identity to content-sensitive rules;
+            # otherwise every same-path edit would manufacture a new waiver.
             findings.append(
                 _finding(
                     "KFM-TOPO-001",
                     f"invariant-path:{path}" if hard_unsafe.intersection(unsafe) else path,
-                    [*unsafe, f"mode={modes.get(path, 'MISSING')}", f"object={object_ids.get(path, 'MISSING')}"],
+                    [*unsafe, f"mode={modes.get(path, 'MISSING')}"],
                     baseline_allowed=not bool(hard_unsafe.intersection(unsafe)),
                 )
             )
