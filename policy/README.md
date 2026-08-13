@@ -1,39 +1,36 @@
-# policy
-
-> **One-line purpose.** `policy/` is KFM's canonical responsibility root for admissibility rules: it decides whether a bounded operation may proceed, must be restricted or held, should abstain, or must fail closed—without becoming semantic truth, machine shape, evidence, runtime implementation, lifecycle storage, release approval, or publication authority.
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/policy-readme
 title: policy/ — Canonical Admissibility Root
 type: readme
-version: v0.3.1
-status: draft; repository-grounded; mixed-maturity; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
+version: v0.4.0
+status: draft; repository-grounded; current-state-reconciled; mixed-maturity; direct-child-coverage-audited; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted policy stewardship and independent approval controls were not established
 created: 2026-07-23
-updated: 2026-08-10
+updated: 2026-08-13
 current_path: policy/README.md
 owning_root: policy/
 policy_label: public; policy; root-contract; mixed-maturity; non-release; non-publication
 responsibility: Define the canonical policy-source root, direct-child boundaries, maturity evidence, validation posture, and trust membrane without becoming semantic, schema, evidence, runtime, release, or publication authority.
-base_commit: 8a671552785b773364f01d2e76d8ca6892a405ea
-prior_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
+base_commit: 737dce6357d670e48df85e94ec0641aaa1a365cb
+prior_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
 directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 remains proposed for the policy/policies compatibility decision
-truth_posture: CONFIRMED canonical singular policy root, adopted Directory Rules placement, recursive direct-child inventory, one bounded PROPOSED_INACTIVE Rego release-gate profile with native tests and checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first policy contracts/schemas/validators/workflows, inactive unresolved-only threshold registry candidate, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests child naming plus inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
+truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 523-entry recursive policy tree, 73 README files, 34 substantive direct-child READMEs, five one-byte direct-child README placeholders, one direct child without a README, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, and broad readiness holds / PROPOSED root contract, direct-lane completion, active-evaluator sequence, threshold values and bindings, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
 [/KFM_META_BLOCK_V2] -->
+
+# policy
+
+> **One-line purpose.** `policy/` is KFM's canonical responsibility root for admissibility rules: it decides whether a bounded operation may proceed, must be restricted or held, should abstain, or must fail closed—without becoming semantic truth, machine shape, evidence, runtime implementation, lifecycle storage, release approval, or publication authority.
 
 <a id="top"></a>
 
-[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
-[![Root: policy](https://img.shields.io/badge/root-policy%2F-0969da?style=flat-square)](#authority-level)
-[![Directory Rules: adopted](https://img.shields.io/badge/Directory%20Rules-v2%20adopted-2da44e?style=flat-square)](#adrs)
-[![Bounded Rego lane: tested](https://img.shields.io/badge/bounded%20Rego%20lane-tested-2da44e?style=flat-square)](#validation)
-[![General evaluator: unbound](https://img.shields.io/badge/general%20evaluator-unbound-d97706?style=flat-square)](#current-maturity)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-b42318?style=flat-square)](#authority-level)
+| Placement | Direct lanes | Substantive child READMEs | Native Rego tests | General evaluator | Publisher |
+|---|---:|---:|---:|---|---|
+| [Accepted `policy/` root](#authority-level) | [40](#current-direct-child-map) | [34](#readme-coverage) | [1 bounded profile](#validation) | [Unbound](#current-maturity) | **No** |
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [Direct children](#current-direct-child-map) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Maturity](#current-maturity) · [Outcomes](#outcome-vocabularies) · [Authoring](#policy-authoring-contract) · [Sensitive policy](#rights-sensitivity-consent-and-public-exposure) · [Trust membrane](#runtime-and-public-trust-membrane) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [Direct children](#current-direct-child-map) · [README coverage](#readme-coverage) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Maturity](#current-maturity) · [Outcomes](#outcome-vocabularies) · [Authoring](#policy-authoring-contract) · [Sensitive policy](#rights-sensitivity-consent-and-public-exposure) · [Trust membrane](#runtime-and-public-trust-membrane) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** `policy/` is the adopted placement for policy source. One bounded, `PROPOSED_INACTIVE` Pass 12 release-gate profile has executable Rego, native Rego tests, exact-polarity fixtures, stable deny reasons, and a dedicated workflow that downloads checksum-pinned OPA 1.19.0. The repository also contains several fixture-first policy profiles with schemas, deterministic validators, tests, and focused workflows. These surfaces do **not** establish a repository-wide active bundle, accepted general evaluator, functional policy-runtime package, authenticated `PolicyDecision` flow, production consumer, promotion authority, release approval, deployment enforcement, or publication.
+> **Safe current conclusion:** `policy/` is the adopted placement for policy source. Its direct documentation surface is now broad but not complete: 34 of 40 direct child lanes have substantive READMEs, five retain one-byte placeholder READMEs, and `policy/test/` has no README. One bounded, `PROPOSED_INACTIVE` Pass 12 release-gate profile has executable Rego, the repository's only native Rego test, exact-polarity fixtures, stable deny reasons, and checksum-pinned OPA 1.19.0 CI. These surfaces do **not** establish a repository-wide active bundle, accepted general evaluator, functional policy-runtime package, authenticated `PolicyDecision` flow, production consumer, promotion authority, release approval, deployment enforcement, or publication.
 
 > [!CAUTION]
 > A policy result cannot create evidence, clear rights by assertion, infer consent, downgrade sensitivity, authenticate review, promote lifecycle state, approve release, make generated language authoritative, or turn a map, tile, file path, workflow, commit, or pull request into public truth.
@@ -60,6 +57,8 @@ Policy decisions should be operation-specific, evidence-aware, reason-coded, obl
 
 Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes Directory Rules v2 effective for placement and names singular `policy/` as the policy-source root. [ADR-0003](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) remains **proposed** for the narrower compatibility and migration decision; its status does not undo the adopted Directory Rules placement.
 
+The [`Root Registry`](../control_plane/root_registry.yaml) projects this accepted placement as `root.policy`: canonical, durable, internally exposed, versioned, limited to `policy_rule`, and explicitly prohibited from containing `data_instance`, `release_decision`, or `schema` artifacts. That machine projection is a consistency surface, not authority to create roots, activate rules, migrate paths, or publish.
+
 | Responsibility | Owning surface | `policy/` role |
 |---|---|---|
 | Policy rules and admissibility | `policy/` | Own reviewed rule source, inactive candidate registries, and policy-family boundaries. |
@@ -77,13 +76,17 @@ Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.
 
 ## Status
 
-| Surface | Current status at `41bf408df045` | Safe conclusion |
-|---|---:|---|
-| `policy/README.md` | **CONFIRMED v0.2 baseline** | This v0.3 update replaces it in place and preserves the root contract. |
-| Singular `policy/` root | **CONFIRMED / adopted placement** | Directory Rules v2 is effective through ADR-0029; no second policy root is authorized. |
-| Rego source inventory | **CONFIRMED nonempty** | File presence alone is not activation or correct evaluation. |
+| Surface | Current status at `main@737dce6357d670e48df85e94ec0641aaa1a365cb` | Safe conclusion |
+|---|---|---|
+| `policy/README.md` | **CONFIRMED v0.3.1 baseline; blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`** | v0.4.0 refreshes evidence and navigation in place; it changes no rule or decision. |
+| Singular `policy/` root | **CONFIRMED / accepted placement** | Directory Rules v2 is effective through ADR-0029; no second policy root is authorized. |
+| Root Registry projection | **CONFIRMED `root.policy` / `ACTIVE` registry status** | Projects accepted placement and artifact constraints; it does not create authority or activate rules. |
+| Recursive tree | **CONFIRMED 523 entries: 365 files and 158 directories** | Inventory proves tracked presence only. |
+| Direct-child topology | **CONFIRMED 40 directories and no direct file besides this README** | The prior `living_persons_geoprivacy.md` entry was deleted in `9d41bd04f559e25ea0cf2fc51c3e06955f9771b1` and is removed from the current map. |
+| README coverage | **CONFIRMED 73 total; 34 substantive direct-child READMEs** | Five direct children retain one-byte README placeholders; `policy/test/` has no README. Documentation coverage is not implementation maturity. |
+| Rego source inventory | **CONFIRMED 173 `.rego` files** | Exactly one tracked file matches the repository's native Rego-test naming convention; no broader test-to-source coverage is inferred. Source presence alone is not activation or correct evaluation. |
 | Pass 12 release gate | **CONFIRMED bounded executable profile; `PROPOSED_INACTIVE`** | `policy/rego/release_gate_v1.rego` defaults deny and exposes deterministic reasons. |
-| Native Rego tests | **CONFIRMED for one bounded lane** | `release_gate_v1_test.rego` is exercised by its dedicated workflow; no repository-wide native-test convention is accepted. |
+| Native Rego tests | **CONFIRMED exactly one bounded test file** | `policy/rego/release_gate_v1_test.rego` is exercised by its dedicated workflow; no repository-wide native-test convention is accepted. |
 | OPA execution | **CONFIRMED in dedicated hosted workflow** | `.github/workflows/pass12-release-policy-v1.yml` checksum-pins OPA 1.19.0 and runs format, unit, fixture-polarity, and deny-reason checks. |
 | `policy/bundles/` | **CONFIRMED documentation plus inactive Pass 12 packaging profile** | No non-document bundle payload, accepted manifest, selector, signature, or active bundle is established. |
 | Policy runtime | **CONFIRMED `0.0.0` placeholder** | No functional general evaluator, adapter, public API, or consumer library is established. |
@@ -95,6 +98,8 @@ Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.
 | Enforcement maturity | **CONFIRMED fixture-only assessment profile** | A workflow file is not evidence that a check is merge-, promotion-, or runtime-blocking. |
 | `policy-test` workflow | **CONFIRMED broad readiness hold plus bounded-lane wiring checks** | It evaluates no repository-wide bundle and emits no `PolicyDecision`, receipt, proof, release, or publication authority. |
 | `policy-boundary-guards` | **CONFIRMED 18-test structural/static/API suite** | It protects selected trust boundaries; it is not policy-bundle, rights, sensitivity, or release proof. |
+| Repository-wide `make policy` | **CONFIRMED TODO-only target** | There is no accepted repository-native general policy evaluation command. |
+| Domain-policy routing | **CONFIRMED 14 direct children under `policy/domains/`** | Thirteen canonical domain lanes have substantive boundaries; a residual `people/` marker conflicts with the canonical `people-dna-land/` identity. |
 | Active evaluator, bundle selector, decision receipts, governed consumer, promotion integration | **UNKNOWN / NEEDS VERIFICATION** | No complete governed evaluation flow was proved. |
 | Required checks and independent approval | **UNKNOWN / NEEDS VERIFICATION** | Workflow presence and CODEOWNERS routing are not branch-protection or separation-of-duties evidence. |
 
@@ -189,10 +194,24 @@ Policy outputs do **not** by themselves prove a claim, authenticate evidence or 
 | Focused policy validators | Inactive input, decision, binding, obligation, reviewer-role, and maturity candidates satisfy their documented shape and semantic invariants. | Policy execution, consumer enforcement, rights clearance, or release approval. |
 | Schema harness | Selected schemas and fixtures validate structurally. | Correct policy, source authority, evidence, rights, sensitivity, or review. |
 | `policy-boundary-guards` | Eighteen selected structural/static/API tests in four named modules preserve control-plane, connector/pipeline non-publisher, Explorer adapter/store, and governed-API boundaries. | Policy-bundle evaluation, rights/sensitivity matrices, evidence closure, or release decisions. |
+| Documentation validators | Local links/fragments, required metadata, document-graph reachability, and bounded freshness are checked deterministically for this README. | Correct policy semantics, accepted ownership, operational enforcement, or external-link availability. |
+| Repository-topology ratchet | Adopted placement rules are checked against exact inherited fingerprints. | Rule activation, consumer closure, migration approval, deletion authority, or policy correctness. |
 
 Current command posture:
 
 ```bash
+# Root-document QA; no external URL is requested.
+python tools/validators/docs/link-check/check_links.py policy/README.md
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --profile required policy/README.md
+python tools/validators/docs/document-graph/check_document_graph.py \
+  --entrypoint policy/README.md policy/README.md
+python tools/validators/docs/stale-scan/check_stale_docs.py \
+  --as-of 2026-08-13 --profile bounded-required policy/README.md
+
+# Adopted placement ratchet; baseline findings remain implementation waivers.
+python tools/validators/directory_governance/validate_repository_topology.py
+
 # Bounded executable Rego lane — implemented by the dedicated hosted workflow.
 opa fmt --fail policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego
 opa test policy/rego/release_gate_v1.rego policy/rego/release_gate_v1_test.rego
@@ -212,6 +231,7 @@ make boundary-guards-ci
 Repository qualifications:
 
 - the root `Makefile` `policy` target still prints a TODO command;
+- the recursive policy tree contains 173 Rego files but exactly one native Rego test file;
 - the OPA binary is installed only by the dedicated workflow; no repository-wide checked-in evaluator or accepted general bundle selector exists;
 - the broad `policy-test` job is intentionally static and fail-closed;
 - `packages/policy-runtime` remains a comment-only `0.0.0` placeholder;
@@ -260,9 +280,11 @@ Accepted policy stewardship, branch-required checks, and independent release app
 | [`release/`](../release/README.md) | Promotion, release, correction, withdrawal, and rollback authority. |
 | [`apps/governed-api/`](../apps/governed-api/README.md) | Public trust-membrane consumer boundary. |
 | [Directory Rules](../docs/doctrine/directory-rules.md) | Adopted placement and README contract. |
+| [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) | Machine projection of `root.policy`; not root-creation or activation authority. |
 | [`policy-test`](../.github/workflows/policy-test.yml) | Broad fail-closed readiness holds and bounded-lane wiring checks. |
 | [`pass12-release-policy-v1`](../.github/workflows/pass12-release-policy-v1.yml) | Exact-head OPA execution for the inactive release-gate profile. |
 | [`policy-boundary-guards`](../.github/workflows/policy-boundary-guards.yml) | Eighteen-test structural/static/API trust-boundary suite. |
+| [`repository-topology`](../tools/validators/directory_governance/validate_repository_topology.py) | Exact placement-drift ratchet; not policy or migration authority. |
 
 [Back to top](#top)
 
@@ -270,70 +292,86 @@ Accepted policy stewardship, branch-required checks, and independent release app
 
 ## Current direct-child map
 
-Directory Rules `ROOT_FULL` requires the root README to map direct children only. The following inventory is verified from the `policy/` tree at `main@8a671552785b773364f01d2e76d8ca6892a405ea` plus this additive candidate. Presence does not establish adoption, maturity, or equal authority.
+Directory Rules `ROOT_FULL` requires the root README to map direct children only. The following 40-directory inventory is verified from the Git tree at `main@737dce6357d670e48df85e94ec0641aaa1a365cb`. Presence, a README, a rule stub, or a green workflow does not establish adoption, maturity, activation, or equal authority.
 
 ```text
 policy/
-├── README.md
-├── access/
-├── ai_builder/
-├── biotopes/
-├── bundles/
-├── consent/
-├── contract/
-├── data/
-├── decision/
-├── domains/
-├── evidence/
-├── fixtures/
-├── focus/
-├── genealogy/
-├── geoprivacy/
-├── identity/
-├── intake/
-├── joins/
-├── layers/
-├── living_persons_geoprivacy.md
-├── match-scoring/
-├── opa/
-├── promotion/
-├── proof/
-├── redaction/
-├── rego/
-├── release/
-├── review/
-├── rights/
-├── role/
-├── runtime/
-├── sensitivity/
-├── source/
-├── sources/
-├── story/
-├── supply_chain/
-├── telemetry/
-├── test/
-├── tests/
-├── thresholds/
-├── transport/
-└── ui/
+├── README.md              # This ROOT_FULL authority, routing, and maturity contract
+├── access/                # Capability-authorization policy boundary
+├── ai_builder/            # AI-assisted repository-work policy boundary
+├── biotopes/              # Biotopes compatibility guardrail
+├── bundles/               # Bundle packaging and selection boundary
+├── consent/               # Consent admissibility boundary
+├── contract/              # Contract-change admissibility boundary
+├── data/                  # Lifecycle and public-exposure admissibility boundary
+├── decision/              # Finite outcomes and normalization candidates
+├── domains/               # Domain-specific policy routing
+├── evidence/              # Evidence admissibility boundary
+├── fixtures/              # Held policy-local fixture-routing placeholder
+├── focus/                 # Focus Mode policy scaffold boundary
+├── genealogy/             # Genealogy compatibility boundary
+├── geoprivacy/            # Cross-domain geoprivacy routing
+├── identity/              # Identity-context policy routing
+├── intake/                # Pre-RAW intake admissibility boundary
+├── joins/                 # Cross-domain join admissibility boundary
+├── layers/                # Layer and public-exposure admissibility boundary
+├── match-scoring/         # Marker-only unresolved lane
+├── opa/                   # Placeholder and convergence-hold boundary
+├── promotion/             # Promotion admissibility boundary
+├── proof/                 # Marker-only unresolved lane
+├── redaction/             # Redaction-profile policy boundary
+├── rego/                  # Reviewed Rego source lane
+├── release/               # Release-admissibility rule source
+├── review/                # Review-admissibility boundary
+├── rights/                # Rights-admissibility boundary
+├── role/                  # Marker-only unresolved lane
+├── runtime/               # Runtime-policy source, not evaluator implementation
+├── sensitivity/           # Sensitivity trust boundary
+├── source/                # Current source-admissibility lane
+├── sources/               # Marker-only parallel-name lane
+├── story/                 # Story policy boundary
+├── supply_chain/          # Supply-chain policy boundary
+├── telemetry/             # Telemetry policy boundary
+├── test/                  # Tracked lane without a README
+├── tests/                 # Held policy-local test-routing boundary
+├── thresholds/            # Inactive unresolved threshold candidates
+├── transport/             # Marker-only unresolved lane
+└── ui/                    # UI policy boundary
 ```
 
 ### Child-lane interpretation
 
 | Child family | Current boundary |
 |---|---|
-| `rego/` | Executable declarative source lane; currently includes the bounded Pass 12 release gate and its native test. |
-| `bundles/` | Packaging and selection documentation plus an inactive Pass 12 profile; no accepted executable bundle payload or selector. |
-| `decision/` | Inactive candidate registries for decision vocabulary and reviewer roles; not a store for emitted decisions. |
-| `domains/` and named domain/topic lanes | Policy source scoped beneath the policy responsibility root; a domain name does not create a new authority root. |
-| `fixtures/`, `test/`, `tests/` | Existing policy-local boundaries require continued classification; reusable executable fixtures/tests belong under root `fixtures/` and `tests/`. |
-| `source/` and `sources/` | Parallel naming is a drift/ownership question, not evidence of two source-policy authorities. |
+| `rego/` | Executable declarative source lane; currently includes the bounded Pass 12 release gate and the repository's only native Rego test. The other 172 policy Rego files are not thereby tested or active. |
+| `bundles/`, `decision/`, `opa/`, `runtime/` | Packaging, finite-outcome, convergence-hold, and runtime-policy boundaries. No accepted repository-wide bundle selector, general evaluator, or authoritative decision emitter is established. |
+| `domains/` and named topic lanes | Policy source scoped beneath the singular policy root. The domain parent currently maps 14 direct children, 13 canonical substantive lane READMEs, and one residual marker-only `people/` path. |
+| `fixtures/`, `test/`, `tests/` | Policy-local compatibility or routing lanes. Reusable executable fixtures and tests remain owned by root `fixtures/` and `tests/`; `test/` lacks its required boundary explanation. |
+| `source/` and `sources/` | `source/` has a substantive boundary; `sources/` remains a one-byte marker. Parallel naming is unresolved drift, not evidence of two source-policy authorities. |
 | `thresholds/` | Inactive unresolved-slot candidate registry only; no threshold value, evaluator binding, watcher binding, activation, release, or publication authority. |
-| `opa/`, `proof/`, `transport/` | Tracked placeholder or narrow lanes; exact role, writers, and graduation conditions remain **NEEDS VERIFICATION**. |
-| `living_persons_geoprivacy.md` | Direct policy source retained at its current path; any move requires reference repair and Directory Rules review. |
-| All other children | Existing policy-family lanes. Their README, rule, fixture, consumer, and maturity evidence must be reviewed independently before operational reliance. |
+| `match-scoring/`, `proof/`, `role/`, `sources/`, `transport/` | Each direct README is one byte. The path is tracked, but responsibility, writers, readers, retention, and graduation remain **NEEDS VERIFICATION**. |
+| `access/`, `consent/`, `geoprivacy/`, `identity/`, `rights/`, `sensitivity/` | High-risk admissibility boundaries. Their documentation does not substitute for verified stewards, accepted semantics, negative tests, authenticated evaluation, or production enforcement. |
+| All other children | Existing policy-family boundaries with mixed maturity. Review each lane's exact README, rule, fixtures, tests, validator, bundle, evaluator, consumer, receipt, correction, and rollback evidence before operational reliance. |
 
-Selected child indexes: [`access/`](./access/) · [`ai_builder/`](./ai_builder/) · [`bundles/`](./bundles/) · [`consent/`](./consent/) · [`decision/`](./decision/) · [`domains/`](./domains/) · [`evidence/`](./evidence/) · [`geoprivacy/`](./geoprivacy/) · [`rights/`](./rights/) · [`sensitivity/`](./sensitivity/) · [`thresholds/`](./thresholds/) · [`ui/`](./ui/)
+### README coverage
+
+| Coverage class | Count | Current evidence |
+|---|---:|---|
+| Total README files under `policy/` | 73 | Root, direct-child, and deeper boundary documents in the pinned Git tree. |
+| Substantive direct-child READMEs | 34 | More than one byte and independently reviewable; content maturity still varies from placeholder-routing contract to bounded executable profile. |
+| One-byte direct-child README placeholders | 5 | `match-scoring/`, `proof/`, `role/`, `sources/`, and `transport/`. |
+| Direct children without a README | 1 | `test/`; tracked contents do not explain its authority or compatibility relationship to `tests/`. |
+| Deeper READMEs | 33 | Owned by their nearest substantive parent boundary; not expanded into this root map. |
+
+Substantive direct-child indexes:
+
+- **Core admissibility and context:** [`access/`](./access/) · [`consent/`](./consent/) · [`contract/`](./contract/) · [`data/`](./data/) · [`evidence/`](./evidence/) · [`geoprivacy/`](./geoprivacy/) · [`identity/`](./identity/) · [`intake/`](./intake/) · [`rights/`](./rights/) · [`sensitivity/`](./sensitivity/)
+- **Composition and decisions:** [`bundles/`](./bundles/) · [`decision/`](./decision/) · [`focus/`](./focus/) · [`joins/`](./joins/) · [`layers/`](./layers/) · [`opa/`](./opa/) · [`promotion/`](./promotion/) · [`redaction/`](./redaction/) · [`rego/`](./rego/) · [`release/`](./release/) · [`review/`](./review/) · [`runtime/`](./runtime/) · [`thresholds/`](./thresholds/)
+- **Domains and specialized policy:** [`biotopes/`](./biotopes/) · [`domains/`](./domains/) · [`genealogy/`](./genealogy/) · [`source/`](./source/) · [`story/`](./story/) · [`supply_chain/`](./supply_chain/) · [`telemetry/`](./telemetry/) · [`ui/`](./ui/)
+- **Authoring support boundaries:** [`ai_builder/`](./ai_builder/) · [`fixtures/`](./fixtures/) · [`tests/`](./tests/)
+
+> [!NOTE]
+> The deleted `policy/living_persons_geoprivacy.md` path is not a current direct child. Commit `9d41bd04f559e25ea0cf2fc51c3e06955f9771b1` removed it on 2026-08-13. This README records the observed topology change without deciding whether another lane supersedes its former semantics or whether external consumers exist.
 
 [Back to top](#top)
 
@@ -346,7 +384,7 @@ Selected child indexes: [`access/`](./access/) · [`ai_builder/`](./ai_builder/)
 | [`ADR-0029 — adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Makes Directory Rules v2 effective for placement, root classes, and README contracts. |
 | [`ADR-0003 — policy/ singular is canonical`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Compatibility-root and migration decision; not needed to deny a second active policy authority under adopted Directory Rules. |
 | [`ADR-0001 — schema home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Policy schema placement remains configured but not accepted by this ADR. |
-| [`ADR-0002 — contracts vs schemas`](../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT** | Meaning/shape separation. |
+| [`ADR-0002 — contracts vs schemas`](../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT source / PROPOSED effective status** | Reconciles meaning, shape, admissibility, fixtures, tests, and validator coupling without accepting the decision. |
 | [`ADR-0020 — abstain is first class`](../docs/adr/ADR-0020-abstain-is-a-first-class-decision.md) | **PROPOSED** | Closed outward outcome model. |
 | General evaluator, bundle selector, normalization, activation | **NOT ACCEPTED / NEEDS VERIFICATION** | Operational policy-substrate decisions remain open. |
 
@@ -358,14 +396,18 @@ This README may document current bytes and open decisions. It must not accept an
 
 ## Last reviewed
 
-**2026-08-09** against `main@41bf408df0458feadd086047a813005b3a052201`.
+**2026-08-13** against `main@737dce6357d670e48df85e94ec0641aaa1a365cb`.
 
 Reviewed:
 
-- the complete v0.2 root README and prior blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3`;
-- accepted ADR-0029 and the adopted Directory Rules v2 policy/README requirements;
-- the recursive `policy/` tree and all direct children;
-- ADR-0003, policy/runtime/validator boundaries, and selected child indexes;
+- the complete v0.3.1 root README and prior blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`;
+- accepted ADR-0029 v1.2, exact adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and the active `root.policy` machine projection;
+- the complete 523-entry recursive `policy/` Git tree, all 40 direct directories, and all 73 README files;
+- direct documentation coverage: 34 substantive child READMEs, five one-byte README placeholders, and one direct child without a README;
+- the 173-file policy Rego inventory and exact one-file native Rego-test inventory;
+- ADR-0002, ADR-0003, and ADR-0020 source and effective status boundaries;
+- substantive direct child indexes, including the current 14-child domain-policy map;
+- removal of `policy/living_persons_geoprivacy.md` in commit `9d41bd04f559e25ea0cf2fc51c3e06955f9771b1`;
 - the Pass 12 Rego source, native tests, fixtures, bundle-profile README, and exact-head OPA workflow;
 - `policy-test`, `policy-boundary-guards`, and the focused policy-profile workflows;
 - explicit input, decision vocabulary/semantics, evaluation binding, obligation, reviewer-role, and enforcement-maturity contract/schema/validator slices;
@@ -378,7 +420,8 @@ Not established:
 - repository-wide bundle manifest, selector, signing, or active evaluator;
 - functional policy-runtime imports or production consumers;
 - authenticated decision emission, persistence, receipts, replay, expiry, correction propagation, or cache invalidation;
-- promotion-gate integration, deployment enforcement, release authorization, or public runtime behavior.
+- promotion-gate integration, deployment enforcement, release authorization, or public runtime behavior;
+- external consumers or semantic supersession evidence for the deleted direct policy file.
 
 [Back to top](#top)
 
@@ -388,8 +431,8 @@ Not established:
 
 | Level | Evidence required | Root-wide posture |
 |---|---|---:|
-| M0 — Placeholder | stub README or default-only module | **CONFIRMED in several lanes and in `policy-runtime`** |
-| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED broadly** |
+| M0 — Placeholder | stub README or default-only module | **CONFIRMED in five one-byte direct READMEs, one unexplained direct lane, additional scaffold lanes, and `policy-runtime`** |
+| M1 — Boundary documented | responsibility, inputs, outputs, failures, authority split | **CONFIRMED for 34 direct child READMEs; completeness and exact profile compliance vary by lane** |
 | M2 — Rule or profile candidate | reviewed source, contracts/schemas, synthetic fixtures, stable validator or entrypoint | **CONFIRMED in multiple inactive profiles** |
 | M3 — Evaluator-backed proof | accepted evaluator/bundle, native tests, input assembly, normalization, deterministic CI | **PARTIAL only for one bounded Rego profile; general M3 not established** |
 | M4 — Governed consumer and replay | consumer, authenticated decisions, receipts, replay, expiry, correction, cache invalidation | **NOT ESTABLISHED** |
@@ -474,7 +517,7 @@ Client-side hiding is not a security control. Join-induced sensitivity must prop
 
 Material policy changes should be versioned, preserve prior source/bundle/evaluator/test identities for replay, record supersession and effective time, reevaluate affected decisions and releases, invalidate caches, emit correction or withdrawal records through owning roots, and restore a prior accepted bundle/selector during rollback rather than copying files into an ambiguous state.
 
-This v0.3 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the README commit and paired generated receipt together, or issue a transparent forward fix. The v0.2 baseline is blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3`.
+This v0.4.0 README changes no policy behavior. Before merge, close or abandon its draft PR and branch. After merge, revert the README commit and paired generated receipt together, or issue a transparent forward fix. The exact v0.3.1 baseline is blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`; reverting documentation must not restore the deleted `policy/living_persons_geoprivacy.md` path or roll back unrelated child-lane work by implication.
 
 [Back to top](#top)
 
@@ -485,7 +528,7 @@ This v0.3 README changes no policy behavior. Before merge, close or abandon its 
 | ID | Question | Status |
 |---|---|---:|
 | POL-001 | Is ADR-0003 still proposed in the governing ADR index? | **CONFIRMED proposed at this snapshot** |
-| POL-002 | What is the complete recursive policy inventory and per-lane maturity classification? | **PARTIAL — paths inventoried; semantic maturity still needs review** |
+| POL-002 | What is the complete recursive policy inventory and per-lane maturity classification? | **PARTIAL — 523 entries, 40 direct lanes, README coverage, and Rego/native-test counts are confirmed; semantic maturity still requires per-lane review** |
 | POL-003 | Which repository-wide evaluator, bundle format, manifest, selector, and activation contract are accepted? | **UNKNOWN** |
 | POL-004 | Does the bounded Pass 12 native-test pattern become the general Rego test convention? | **NEEDS DECISION** |
 | POL-005 | Will explicit `PolicyInputBundle` profile v1 replace, extend, or remain beside the permissive parent shape? | **NEEDS VERIFICATION / MIGRATION DECISION** |
@@ -497,9 +540,10 @@ This v0.3 README changes no policy behavior. Before merge, close or abandon its 
 | POL-011 | How does the Pass 12 native result bind into `PolicyDecision`, PromotionDecision, ReleaseManifest, correction, and rollback? | **NEEDS IMPLEMENTATION** |
 | POL-012 | What rollback drill proves prior-bundle restoration and stale-decision invalidation? | **UNKNOWN** |
 | POL-013 | How should `source/` versus `sources/` and `test/` versus `tests/` converge without creating parallel authority or losing references? | **DRIFT / NEEDS DIRECTORY REVIEW** |
-| POL-014 | What are the intended writer, reader, retention, and graduation rules for placeholder lanes such as `opa/`, `proof/`, and `transport/`? | **NEEDS VERIFICATION** |
+| POL-014 | What are the intended writer, reader, retention, and graduation rules for `match-scoring/`, `proof/`, `role/`, `sources/`, `test/`, and `transport/`? | **NEEDS VERIFICATION — five one-byte READMEs and one missing README** |
 | POL-015 | What process updates the OPA version and checksum while preserving reproducibility and supply-chain review? | **NEEDS VERIFICATION** |
 | POL-016 | Which threshold-policy slots, values, units, operators, owners, evidence bases, consumers, and effective windows are accepted? | **PROPOSED_INACTIVE / ALL VALUES UNRESOLVED** |
+| POL-017 | What semantics, if any, supersede deleted `policy/living_persons_geoprivacy.md`, and are any external consumers still unresolved? | **UNKNOWN — path absence confirmed; semantic and external-consumer closure not established** |
 
 [Back to top](#top)
 
@@ -507,21 +551,25 @@ This v0.3 README changes no policy behavior. Before merge, close or abandon its 
 
 ## No-loss and evidence ledger
 
-| Baseline element | Disposition in v0.3 |
+| Baseline element | Disposition in v0.4.0 |
 |---|---|
 | Stable path, document ID, and H1 | Preserved |
 | Policy-as-code plus documentation purpose | Preserved and bounded |
 | Allow/deny/restrict/abstain/redaction/release/promotion/sensitivity scope | Preserved; native and outward vocabularies clarified |
-| Singular policy root | Preserved; placement authority updated to accepted ADR-0029 |
+| Singular policy root | Preserved; accepted ADR-0029 and `root.policy` projection reverified |
 | OPA/Rego, bundles, fixtures, runtime, promotion, sensitivity, rights, release, and UI policy | Preserved and reconciled to current implementation evidence |
 | Schema/source/application exclusions | Preserved and expanded |
 | Inputs, outputs, validation, review, related folders, status | Preserved and refreshed |
 | Maturity, authoring, sensitivity, trust membrane, rollback, open verification | Preserved and updated |
-| Direct-child navigation | Added as a complete root-only inventory |
-| Prior uncertainty about all Rego tests/validators being absent | Repaired: one bounded native lane and multiple candidate validators now exist |
+| Direct-child navigation | Repinned to 40 current directories; removed the deleted direct file; deeper detail remains delegated |
+| Direct README coverage | Added exact 73-total, 34-substantive, five-one-byte, and one-missing counts |
+| Prior uncertainty about Rego tests and validators | Repaired with exact counts: 173 Rego files, one native Rego test, and multiple candidate validators |
+| Child-boundary modernization | Linked all 34 substantive direct child indexes without treating prose maturity as implementation |
+| `source/`/`sources/` and `test/`/`tests/` drift | Preserved explicitly; no implied migration or parallel authority |
+| Deleted `living_persons_geoprivacy.md` direct path | Removed from current topology; semantic supersession and external consumers remain unknown |
 | Prior general evaluator, runtime, consumer, receipt, release, and publication holds | Preserved |
 
-Evidence used includes the v0.2 blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3`, accepted ADR-0029, current Directory Rules v2 bytes, ADR-0003, the recursive `policy/` tree, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
+Evidence used includes v0.3.1 blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35`, `main@737dce6357d670e48df85e94ec0641aaa1a365cb`, accepted ADR-0029, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, the `root.policy` projection, ADR-0002/0003/0020 status records, the complete recursive policy tree, direct child metadata, Pass 12 Rego source/tests/fixtures/workflow, `policy-test`, `policy-boundary-guards`, focused policy contract/schema/validator workflows, and the policy-runtime placeholder.
 
 [Back to top](#top)
 
@@ -535,5 +583,6 @@ Evidence used includes the v0.2 blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3`,
 | v0.2 | 2026-07-23 | Same-path repository-grounded modernization with required README order, authority split, maturity evidence, workflow boundaries, outcome separation, authoring rules, sensitive/public controls, rollback, and verification register | Restore blob `fa9378a6a699d0985fd018dbdb9f27c15efcb1c3` only if paired v0.3 receipt is also removed |
 | v0.3 | 2026-08-09 | Repins the root contract to current main; records ADR-0029 adoption, bounded OPA/Rego execution, inactive fixture-first policy profiles, 18 boundary tests, full direct-child inventory, preserved general readiness holds, and updated validation/rollback/open-work boundaries | Revert the v0.3 README and paired generated receipt together |
 | v0.3.1 | 2026-08-10 | Adds the inactive `thresholds/` child to the direct-child map and records that every candidate slot remains value-free, unbound, and held for review. | Revert the threshold-registry candidate commit; no active rule or consumer changes |
+| v0.4.0 | 2026-08-13 | Repins the root to current main; reconciles 40 direct lanes, exact README/Rego/native-test coverage, modernized child boundaries, the deleted direct file, current ADR and Root Registry evidence, and unchanged evaluator/release/publication holds. | Revert this README and its generated receipt together; do not restore deleted paths or roll back child lanes by implication. |
 
 <p align="right"><a href="#top">Back to top</a></p>

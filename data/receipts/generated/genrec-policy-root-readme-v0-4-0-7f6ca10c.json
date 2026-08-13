@@ -1,0 +1,249 @@
+{
+  "receipt_id": "genrec-policy-root-readme-v0-4-0-7f6ca10c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/README.md": "sha256:7f6ca10c607f2d2cfe0bc82783d1b07d9536faf8952b584122b6a18702ce2122"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:8de1c8e5a8db96a60cc6d8a822342b887b6f1e5c3facd5b8c93f6f832d57751c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "isolated worktree",
+      "repository-native deterministic documentation validation",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "static policy-tree and authority reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7f6ca10c607f2d2cfe0bc82783d1b07d9536faf8952b584122b6a18702ce2122",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa",
+      "sha256:cc4a93ba8deb9f1d44febe579a4384762d25d5b10e0504dbbd624e4775caca66",
+      "sha256:6b55745781961cda0dbedbf12ef8db6f8a4e8d290721c27f8bc8d91aefc8a5ca",
+      "sha256:6c847228d3a6f0e618bbbd592e2970c8adcbaa197c82fc5aa0b94b32f16c0c1d",
+      "sha256:19e8d376e9e1aa9193af7d2318a27453a380e27c768f1916ba77a97b238b370d"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit@737dce6357d670e48df85e94ec0641aaa1a365cb",
+      "repo:tree/policy@117be0e7b6935c16e55e3035a9234d352af7ba66",
+      "repo:policy/README.md@6c5021f9d92778581a4e9331a9dd6ddb7efc5e35",
+      "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b",
+      "repo:docs/adr/ADR-0002-contracts-vs-schemas-split.md@e626d82970932c319a690fc6044727ed114ada6a",
+      "repo:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@42f4cf3f05fb1ce2667f9626217ae0a3f8a11cf6",
+      "repo:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@8d5ec63b658a1194d2c11359cecb77e7857a9471",
+      "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:.github/workflows/policy-test.yml@ac8f125e8a4d3634d86f66836d2aa2c0e3925e75",
+      "repo:.github/workflows/pass12-release-policy-v1.yml@478f910e8e899796d15b8921e3baa55f4ce1ce73",
+      "repo:.github/workflows/policy-boundary-guards.yml@1d7ba1df0f8ed291a15b1d9a44e404ba95d9e35c",
+      "repo:Makefile@c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326",
+      "repo:packages/policy-runtime/README.md@5a20cfac50a93f497765421b7566559ae49a39b8",
+      "repo:commit@9d41bd04f559e25ea0cf2fc51c3e06955f9771b1",
+      "repo:pull/2746"
+    ]
+  },
+  "truth_labels": {
+    "policy/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned live main, exact target blob, policy tree, accepted authority, workflows, runtime boundary, CODEOWNERS, recent target history, branch-name availability, and open work. PR #2746 does not touch policy/README.md; its unmerged ADR-0003 and topology changes were excluded from current-main evidence."
+    },
+    {
+      "gate": "accepted-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved singular policy-root placement under accepted ADR-0029 and exact Directory Rules bytes, while keeping ADR-0002, ADR-0003, and ADR-0020 unaccepted and treating root_registry.yaml as a machine projection only."
+    },
+    {
+      "gate": "direct-and-recursive-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Exact remote tree 117be0e7 confirms 523 entries, 365 files, 158 directories including the policy root, 40 direct child directories, and no direct file besides README.md."
+    },
+    {
+      "gate": "readme-coverage-reconciliation",
+      "outcome": "PASS",
+      "reason": "Exact tree sizes and direct reads confirm 73 total policy READMEs, 34 substantive direct-child READMEs, five one-byte placeholders, one direct child without a README, and 33 deeper READMEs without treating documentation as implementation."
+    },
+    {
+      "gate": "rego-and-native-test-inventory",
+      "outcome": "PASS",
+      "reason": "Exact tree suffix and naming analysis confirms 173 Rego files and one native Rego test file; the bounded Pass 12 profile remains PROPOSED_INACTIVE and is not generalized into repository-wide policy maturity."
+    },
+    {
+      "gate": "no-loss-reconciliation",
+      "outcome": "PASS",
+      "reason": "Retained purpose, authority split, belongs and exclusion rules, inputs, outputs, validation, review, related surfaces, maturity, outcomes, authoring, sensitive-policy controls, trust membrane, rollback, verification register, and history while correcting only stale current-state evidence."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The no-network checker evaluated 110 local targets. It resolved 105 in the older local base; the five locally absent targets were independently confirmed at the exact remote main ref as blobs or a directory. External badge dependencies were removed, leaving zero external targets."
+    },
+    {
+      "gate": "metadata-document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "Required KFM_META_BLOCK_V2 validation, explicit-entrypoint document graph, and bounded-required stale scan passed with zero findings or warnings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "markdown-render-and-static-structure",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed GitHub-Flavored Markdown successfully; UTF-8, LF, final newline, metadata-first placement, one real H1 outside fences, fence balance, tab absence, stable path and identity, and git diff checks passed."
+    },
+    {
+      "gate": "focused-topology-semantics",
+      "outcome": "PASS",
+      "reason": "Seventeen environment-independent repository-topology tests passed, including rule cardinality, invariant non-waivability, shrink-only baselines, conventional README treatment, aliases, and synthetic path/content rules."
+    },
+    {
+      "gate": "exact-remote-topology-live-index",
+      "outcome": "SKIPPED",
+      "reason": "The isolated local checkout predates current main and open PR #2746 proposes topology-validator and baseline changes. Hosted exact-head validation is required rather than representing a stale local live-index result as current proof."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks pytest and the older local base predates the current four-module boundary suite. Targeted hosted checks remain pending; no policy behavior changes are proposed."
+    },
+    {
+      "gate": "bounded-opa-profile",
+      "outcome": "SKIPPED",
+      "reason": "OPA is not installed locally. The unchanged checksum-pinned Pass 12 workflow remains the bounded execution surface; this documentation-only change does not claim a new policy result."
+    },
+    {
+      "gate": "generated-receipt-manual-integrity",
+      "outcome": "PASS",
+      "reason": "Standards-conforming JSON, required-field presence, artifact/hash/truth-label path parity, citation references, pending-review posture, null pre-PR linkage, and final README SHA-256 are checked locally."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the validator's jsonschema dependency; manual bounded integrity checks are recorded separately without claiming full schema-validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal records, protected coordinates, signed URLs, production endpoints, or invented authority claims."
+    },
+    {
+      "gate": "runtime-policy-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy rule, ADR status, registry, validator, baseline, workflow, runtime, lifecycle, migration, release, deployment, publication, repository setting, or physical path changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the final pushed pull-request head and remain pending after this pre-PR receipt is emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Authorized human review remains pending. This receipt is emitted before pull-request creation so the complete two-file provenance scope exists on the first reviewable head."
+    }
+  ],
+  "policy_decisions": [
+    "policy/README.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "policy-root-v0.3.1-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@6c5021f9d92778581a4e9331a9dd6ddb7efc5e35"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "accepted-directory-governance-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b"
+    },
+    {
+      "id": "policy-root-machine-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c"
+    },
+    {
+      "id": "current-policy-tree",
+      "validated": true,
+      "evidence_ref": "repo:tree/policy@117be0e7b6935c16e55e3035a9234d352af7ba66"
+    },
+    {
+      "id": "proposed-policy-root-compatibility-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@42f4cf3f05fb1ce2667f9626217ae0a3f8a11cf6"
+    },
+    {
+      "id": "bounded-policy-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@ac8f125e8a4d3634d86f66836d2aa2c0e3925e75"
+    },
+    {
+      "id": "bounded-native-opa-profile",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/pass12-release-policy-v1.yml@478f910e8e899796d15b8921e3baa55f4ce1ce73"
+    },
+    {
+      "id": "structural-policy-boundary-suite",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-boundary-guards.yml@1d7ba1df0f8ed291a15b1d9a44e404ba95d9e35c"
+    },
+    {
+      "id": "placeholder-general-policy-runtime",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/README.md@5a20cfac50a93f497765421b7566559ae49a39b8"
+    },
+    {
+      "id": "deleted-direct-policy-file",
+      "validated": true,
+      "evidence_ref": "repo:commit@9d41bd04f559e25ea0cf2fc51c3e06955f9771b1"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T22:00:23Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The receipt is emitted before pull-request creation so the first reviewable branch head includes the complete declared scope. It preserves singular policy placement and all evaluator, consumer, required-check, independent-review, promotion, release, deployment, and publication holds while reconciling current topology and documentation evidence."
+}
