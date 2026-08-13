@@ -1,0 +1,182 @@
+{
+  "receipt_id": "genrec-pipeline-specs-air-readme-b719b267",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/air/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/air/README.md": "sha256:b719b267795b4449ea4ff865b93d5737d74a7c4ca3fff044f3a15910d2543156"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 session 2026-08-12"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(20260813-021436).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/96a550a3435b9ef02f5572a1a440eebd9f8ac26a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/normalize.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/catalog.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/publish.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/root_registry.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/domain_lane_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/path_alias_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/air/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, push permission, default branch, exact main commit and tree, prior target blob, branch availability, and open-PR overlap were inspected immediately before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains in the canonical declarative pipeline-spec root and narrows air to a documentation-only compatibility guardrail; no parallel authority is created."
+    },
+    {
+      "gate": "complete-tree-reconciliation",
+      "outcome": "PASS",
+      "reason": "The non-truncated recursive tree was checked; Air has only .gitkeep and README.md, while the five Atmosphere YAML files all retain empty stages arrays."
+    },
+    {
+      "gate": "evidence-boundary",
+      "outcome": "PASS",
+      "reason": "Current, proposed, unknown, held, and verification-needed claims are distinguished; source, parser, runtime, evidence, release, and publication are not overstated."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Single H1, metadata block, hierarchy, anchors, relative links, fences, alerts, Mermaid source, and final newline were checked locally."
+    },
+    {
+      "gate": "illustrative-yaml",
+      "outcome": "PASS",
+      "reason": "The single YAML example parses with PyYAML and is explicitly inactive and non-canonical."
+    },
+    {
+      "gate": "generated-receipt",
+      "outcome": "PASS",
+      "reason": "This receipt conforms to the generated-receipt schema and binds the sole generated artifact path to its SHA-256 digest."
+    },
+    {
+      "gate": "security-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "No private key, access token, credential assignment, private endpoint, live-source query, operational alert instruction, or sensitive payload was introduced."
+    },
+    {
+      "gate": "remote-blob-readback",
+      "outcome": "PASS",
+      "reason": "Remote README blob a4556a1a5f0014838f35cfc3b3613dc3837e0072 matches the locally calculated Git blob and exact prepared bytes."
+    },
+    {
+      "gate": "workflow-execution",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows had not run when this immutable provenance receipt was emitted; hosted outcomes belong in the PR conversation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/commit/96a550a3435b9ef02f5572a1a440eebd9f8ac26a",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/96a550a3435b9ef02f5572a1a440eebd9f8ac26a"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/air/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/air/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/README.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/pipeline_specs/atmosphere/README.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/workflows/domain-atmosphere.yml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/workflows/domain-atmosphere.yml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/doctrine/directory-rules.md",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/root_registry.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/domain_lane_register.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/domain_lane_register.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/path_alias_register.yaml",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/control_plane/path_alias_register.yaml"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/.github/CODEOWNERS"
+    },
+    {
+      "id": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/96a550a3435b9ef02f5572a1a440eebd9f8ac26a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T02:40:04.457Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update only. The README reconciles the Air compatibility guardrail with accepted Directory Rules, the complete current tree, empty-stage Atmosphere scaffolds, and bounded executable CI. Human review is required before merge. No source, parser, schedule, pipeline, proof, release, alerting, or public behavior is activated."
+}
