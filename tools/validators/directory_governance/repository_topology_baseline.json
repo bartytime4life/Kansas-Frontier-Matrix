@@ -77,7 +77,7 @@
       "evidence_zlib_base64": "eNoFwVsKgCAQAEAvFLi6rfbhYdwXGKSB3Z9mnqXWIEZCDHPNo28ZIyy+Tb6mYM5sgpzwjLl4raiJCdBJia6sBSgJh/12sR9nvBZ4",
       "fingerprint": "sha256:101a3b612b40ceec3e67771d3ccc98b89ef548f382a6599c5bbfa5fb0be78da0",
       "rule_id": "KFM-TOPO-001",
-      "subject": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+      "subject": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
     },
     {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
@@ -154,7 +154,7 @@
       "evidence_zlib_base64": "eNoFwVEKwCAIANAuNMgws48OY2rQYDVo92fvPdu8QYyEGNZelxydM+x+u36NCrtCNPCaQACqOVHPVAoyDx5JDEcmCecV9R9RZRYo",
       "fingerprint": "sha256:29f8cf97064ac201babfd5998336e45bbe1759e110c7be06f92fc5472da85faf",
       "rule_id": "KFM-TOPO-001",
-      "subject": "docs/adr/ADR-0028 \u2014 State-scale Focus Mode scope.md"
+      "subject": "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
     },
     {
       "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
@@ -204,13 +204,6 @@
       "fingerprint": "sha256:368db8dd36ec23ca848f2c5575fb0c560f44eba113f3de463fb145abcd8591f4",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/promotion_decisions/hazards-r0002-v1.yaml"
-    },
-    {
-      "evidence_sha256": "sha256:9eea7d5fa767461096c136df56fb151dfb2c18f1db16614b2086a60b0a5490de",
-      "evidence_zlib_base64": "eNqVlNFOwzAMRfdDtOITkNgjL/xAZdzbzSxNQux269+TMSggZRm8RJF8fO17FYWDt0Rs2vZhJPHaKswcRnhrm53YAYgbXqlStSejlvPhwu5T5joXU2Cooq8iYaiMitOLE91nCUcLUoV8myiRN/G4ziQ6VopgSKz5tiTRoUYcQzoUq4OcbEqoR79CH665UxrKZiLxgXY31KJEuBxHpxFcR4pCz9uHx6dtM/abGPI2S33YBUlwIEUNUXgVk1ls+Yll20gzmQR/x2EcJ38G1uYvYSbfS44a5TWU9xhJ2+9HPN9X9y42FEO4RfaI8D08L80FbV41+JttQ0jWYc7Xf7Wtj/XPTs7xCqOjBPo1KmdZ/xLeAX4Em7k=",
-      "fingerprint": "sha256:38efcf826d00f339fe25300bee428eefe67a84d71eb07c3cff9a6cb5a714c99d",
-      "rule_id": "KFM-TOPO-006",
-      "subject": "scope-alias:settlement"
     },
     {
       "evidence_sha256": "sha256:4d7ec1217c7c2e6d82d1c1a6d49d50dc9f449c9f632f10a4914bdcd0c2ad325a",
@@ -402,13 +395,6 @@
       "subject": "release/promotion_decisions/hazards-r0003-v1.yaml"
     },
     {
-      "evidence_sha256": "sha256:09447418c6cbf2210faa09d51fee85875041f68d30f902fc89dcaa701e9a681b",
-      "evidence_zlib_base64": "eNqNkF0KwjAMx72QKx5BcI++eIER2jDj2qQ0obDbOxEcgzL3GPL7fyRe2Ap4UxckAbG6ZWTNUswVgXBWHBOydSmc/I9dmW4kmxDzKYOfYMSWz8pIJD87RVYyqmTzDtXYqH9iAnVrkXpp5D366+3efxofFGwO/Wq6lwq39YeDtgE6FKA4BPSkJDwgV4ySsRloqIsHcYVIYe+lW8E//A2lHbyh",
-      "fingerprint": "sha256:6216b1e45f520f75efdef6814a57aaba86e5ae6e4ce0c3e5549c00f400c11061",
-      "rule_id": "KFM-TOPO-006",
-      "subject": "scope-alias:transport"
-    },
-    {
       "evidence_sha256": "sha256:1f481f6dd6e2a78581349a5585db2b9531aa098332cee717410e315f3d272262",
       "evidence_zlib_base64": "eNqFkkEOgjAQRb0QcAYTWbrxBgMdSsNAyXRY4OmNoqIxv277/3udSevIqNIo0lA7VJf6eDrX5egO7uucvIZ2EVuUq9IHG5jnTAVqtO2Jo0S/Qs1HBWpsjGnuOTPM3kCSjpaJEL+FEJWoGH2ECPX57f2fzXtqgpEh/BVj/ErqEsa3GOKr0+z4ewEpZo6zwGd7pgjWSC4VSkEKU3JQ89NDwsRmwiNPloowdUrJdGlzvzxDwEtiEKi7Z2/wBtaOR2E=",
       "fingerprint": "sha256:63c82b33db84fd88344754cd9380d050dd15f298e9ea0bedd3e60b8ab234109e",
@@ -507,6 +493,13 @@
       "subject": "doc-id:kfm://doc/NEEDS_VERIFICATION"
     },
     {
+      "evidence_sha256": "sha256:4e7d8d0b600ba950043567c18773c6ea3f13fdaa3ffacafa50fa32853f638610",
+      "evidence_zlib_base64": "eNqNk1FygzAMRHsh6umJOopQiAZjuZJIyu3rSUvTgKH8+IN90rKSjZISoYtayCQ5Unjt2Hui/IKSXAHdQisDcJqJpk3QREjt4YoasVRacAhYjijdT/nMFL8Fl1WQzKjdQcZTZLsUJMJEj3hr8mMEheScaJtRuO2I1LG5TsFk1PJf9WwqMZ4A+7rqyuXj1lxuon3V/8yfPiqtBv4EZc4US7x3y4RrhyyRcQplNUbJt+Sjd6CK/zb/ByuMsfOVfVpE+MYHcLw0hqKcui1rpUhgtCX/9VgicymWZFwmX9nljAyQ+ExW2ZiO5TINa3/DCw1g4fEGrm+Hx3qg+Hli1YJlV78H2GnzBSlci00=",
+      "fingerprint": "sha256:8db8a426b2ad0c29d468b4645184df15260434d7475ddc216555a4436154817a",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:people"
+    },
+    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:8ee07b3380566c9eaf58fdbef087f35644ad925143a838d62e3eed70d68eb7d0",
@@ -577,13 +570,6 @@
       "subject": "doc-id:kfm://doc/docs-domains-flora-readme"
     },
     {
-      "evidence_sha256": "sha256:7297f348ce2cc04f519418e6483a443f15e20b324c61ebd57946e9fe0b6de312",
-      "evidence_zlib_base64": "eNqNlE1SwzAMhblQm+EIzNAlGy7AqIqaaurYRlLa5vZ4KKFpbEM2WeR9evpNMHhPaEG0iRSio2bbsZ2I4hMGbwJo2rShB/YTsWk9bBz4dnVEiVgqLRg0mB4udD/hE/O+e3l922379i8oFbUwixKQVKmt+GR6wWLYO9ZjQhyMdJ/R0qmC5YafAwh4Y08VqxzITQQuleiZUgijjtVkbDQMkjovr0CCc3vAU1k14fSytr5LkFOlsrn0WFrA+oFpGix4Ksz9wFcbhLJLe/COHMmlUX5oJMxrnuTM5J4mBsc4NulslbzlDjd57fdRxH/N/8ESo2x8ZhsXXd7wHgyPG8Ug7LtaaiFHoFST5zmWyBSKqTNOOy0c0IT04PlAWjgTGdJt93l+xSP1oM39/3B+Xj3WFcGzla6hH+ZbDFjWYN/tVpMW5XmWL6WkCfM=",
-      "fingerprint": "sha256:97d143291f004b31d7a74c26d0b91a3de6b79acfd08c1a74071f2b6b6e359e82",
-      "rule_id": "KFM-TOPO-006",
-      "subject": "scope-alias:people"
-    },
-    {
       "evidence_sha256": "sha256:a613638ffcb035a3fa81e06bbc306fd1e4fa608accb479bb21937d5c722038a5",
       "evidence_zlib_base64": "eNpLSSxJ1E/JTy7NTc0r0ddLzyzJTk0tYEhBEQ5ydXTxddXLTQEAj+AQcw==",
       "fingerprint": "sha256:981653ca95d290d1f2b0f8d2cb2b286fb8c3ca3343201807b36ae294cb2b5a25",
@@ -619,9 +605,16 @@
       "subject": "release/promotion_decisions/hazards-r0003.yaml"
     },
     {
-      "evidence_sha256": "sha256:68d76d87ee31f1d616b0f199893e445cd982b1accc2461c6e069c81dee595d9e",
-      "evidence_zlib_base64": "eNp9j0EKwjAQRT1RgkeImkXBtpKKLsOYDDbaJiETBG+vVipYqruB9/jMM8HnBCYTB5c4O7t8RYwLGwxxC9SeAiT7PEMPzg/OrtSNrJpa6bXYFisl9kVdaSUPhTyy3i6ii9g5j5oimsnsyMbBKQ6dM/e/LGGHQPjNyLTYA3HzibktB0O41GTILnj2dtiFgv/tKyk2pXxVzCqzj2WkPN/zANGAfmU=",
-      "fingerprint": "sha256:a1e39add45cbf71ecbcb49b4ae0660e22be70b0504d3fc39031347383cf93da5",
+      "evidence_sha256": "sha256:640e85338c1bf33f70e228aba608c54dcfed34a53ee5d0e5a8a5982922387604",
+      "evidence_zlib_base64": "eNqFj1EKhDAMRL3QWjyRhDR0s7ZJaULB26+wsCIU/Qzz3jBBFW+AbiFqARYLxylWtXloCvFllAqJzyVO+GdPZk7sG1GdKuAGiUY9J6OZcQ9GYuzc2fcbapAYvqmAhXNIX552/5z5Yypj/+rZ2oDzGgnZWGUl6ZS10rDHyY4Olg6Z493jV+EJ/wKfjZwj",
+      "fingerprint": "sha256:a2520f08d160dadd0c25f8d4041b4cd93067a5759ffc4bc33e0ec410163a8777",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:transport"
+    },
+    {
+      "evidence_sha256": "sha256:03a027bb13349be03645dc423ea30ef169d92c8dac97721e03414d3295806b30",
+      "evidence_zlib_base64": "eNp9j9EKwjAMRfdFLX7ClD0MdJNt6GOJbXDRrSlNEfx7ZTLBMXwLnMO9N5Z9imCTaKCo1ZXSHTFkjq1oB9JfGKJ7nzwC+ck5HkxbVG3dmF2+L7dN3pV1ZZriVBZnNbosUMCBPBoJaBexM5sDl5gHss+/LOKAIPjLxPY4gmj7feaxmYycYpsgEXv1cdRN2K/7q60JJa2PfQGN3XJk",
+      "fingerprint": "sha256:a4d8fa76a7bf9b063e1af01eb2763f8e24c6617305fef143c549b31e0fafd7ee",
       "rule_id": "KFM-TOPO-006",
       "subject": "scope-alias:air"
     },
@@ -703,13 +696,6 @@
       "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
     },
     {
-      "evidence_sha256": "sha256:110f57cbe8671a74fb4c812fa2075e420390ebd5baa8f984ea8ab648e01acdef",
-      "evidence_zlib_base64": "eNqFkEEOgjAQRT1RG72BiSzdeIGmtgOMbZmmM6DcXiKamCiw/Jk3P/lPiCLrwUb0VqiwbkdfSF+q4+lcqeR38h9wLbhgXCHmu41B5XGdbHu3P6xQkFBMsh3WwLLC1fiQvgBr1aAEgLwEZoroxu0hb+4VTO6vU7KC1KkCDS098TQqWd5u/4COEvpZwpe0+apuTN1SgUw6zK/sJ5Ehp6E=",
-      "fingerprint": "sha256:b9fb7ed92f63c6dcce20c926c55673fd560d3184dc040946433d28182d60cd1a",
-      "rule_id": "KFM-TOPO-006",
-      "subject": "scope-alias:hydro"
-    },
-    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:bb382acfa086f4c69e44bd8cf57e622f7732b1651d4ac3beda9e662de0388218",
@@ -736,6 +722,13 @@
       "fingerprint": "sha256:c5407f0a314b0833913faf3c1df37250aab63c37495754691271166c3bbdc2c1",
       "rule_id": "KFM-TOPO-008",
       "subject": "docs/atlas/->docs/atlases/"
+    },
+    {
+      "evidence_sha256": "sha256:0b8067754be9ad4cfe00ac86bbdc53596bbc26a4c51bad8a1d62b75eda73105a",
+      "evidence_zlib_base64": "eNp9kEEKAyEMRXsipb2QWM2MmVEjJrb19hVmUyi6/OT98BIhiqxfNqK3QpV16L6SdgHcaVwl5reNpyr9JisyNHd/LChIKCbZjBuwLLgNP9IqsFY7yglQZmChiK5fwZT2HMkKUlYVdpqVeMgmy9pRQn85/9x4TdXBlGcLZNib/998AV3VfnE=",
+      "fingerprint": "sha256:c863aa02214c51a4ddd75763c3c849b04d1bf783b58da6fb818b2a23b0861df3",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:hydro"
     },
     {
       "evidence_sha256": "sha256:1d4e9e32ed2ef89802b0b75ae0fc66ec6d92a53b0f5048777f3eb9d174eaa166",
@@ -834,6 +827,13 @@
       "fingerprint": "sha256:e16ed6e6f389e8a5022e3bc1aef48741e6e166724e63b283cd6cb0018e857fcc",
       "rule_id": "KFM-TOPO-017",
       "subject": "artifacts/qa/lint/eslint.json"
+    },
+    {
+      "evidence_sha256": "sha256:ead4b91dd32e989a15e38dc9af612cd5f48156a86a29641ccc668e33cf3f4e53",
+      "evidence_zlib_base64": "eNqVk+FOwzAMhHkhWvFElXGunWmahNjt6NsvY1CG1GbwJ4rkz2ffKeEYLBObti5OJEFbhZnHhGBtM4iNQHrijdqrOjJquRw+Dl8yx1zKkaEKV0ViXxmV5lcveioSnlbkCvk+U6ZgEnDMZDpXimBIqvm2LMmjRpxjHnervXzYnFGPfoM+XXOn1O+bScQjDQ/UkiT4EkenCXyAxDJmravckAwPUtQQRVAxWcTWe6z4QV7IJIZnjtM0hyuwNX8LMwUnJUPsr6F8wkTa/rzO5aW6927DHeiQEBwCr80Nbd40hodtfczWYSnXf7Vtb+vP+11DE0ZHGfRrVEmo/oMvG2t+fA==",
+      "fingerprint": "sha256:e2496c12b4094aab33515eb9f4d88663031b543c9f66ff07d827f3b7faf63c4c",
+      "rule_id": "KFM-TOPO-006",
+      "subject": "scope-alias:settlement"
     },
     {
       "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",

@@ -200,8 +200,10 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         self.assertEqual([], candidate["entries"])
 
-    def test_conventional_readme_is_not_uppercase_or_alias_drift(self) -> None:
-        paths = ("policy/people/.gitkeep", "policy/people/README.md")
+    def test_conventional_readme_does_not_expand_populated_alias_drift(
+        self,
+    ) -> None:
+        paths = ("policy/people/README.md", "policy/people/rule.rego")
         modes = {path: "100644" for path in paths}
         blobs = {
             "control_plane/root_registry.yaml": json.dumps(
@@ -219,13 +221,13 @@ class RepositoryTopologyTests(unittest.TestCase):
             ("KFM-TOPO-001", "path-grammar:uppercase"), identities
         )
         self.assertEqual(
-            ("policy/people/.gitkeep",),
+            ("policy/people/rule.rego",),
             identities[
                 ("KFM-TOPO-006", "scope-alias:people")
             ].evidence_members,
         )
 
-    def test_alias_readme_without_placeholder_still_fails(self) -> None:
+    def test_readme_only_alias_directory_remains_scaffold_drift(self) -> None:
         paths = ("policy/transport/README.md",)
         modes = {path: "100644" for path in paths}
         blobs = {
@@ -236,17 +238,17 @@ class RepositoryTopologyTests(unittest.TestCase):
         object_ids = {path: "a" * 40 for path in paths}
 
         findings = module._path_findings(paths, modes, object_ids, blobs)
-        alias = next(
-            finding
-            for finding in findings
-            if (
-                finding.rule_id,
-                finding.subject,
-            )
-            == ("KFM-TOPO-006", "scope-alias:transport")
-        )
+        identities = {
+            (finding.rule_id, finding.subject): finding for finding in findings
+        }
 
-        self.assertEqual(("policy/transport/README.md",), alias.evidence_members)
+        self.assertNotIn(("KFM-TOPO-006", "scope-alias:transport"), identities)
+        self.assertEqual(
+            ("policy/transport",),
+            identities[
+                ("KFM-TOPO-009", "scaffold-only-leaf-directories")
+            ].evidence_members,
+        )
 
     def test_nonconventional_uppercase_name_still_fails(self) -> None:
         paths = ("policy/example/SHOUT.md",)
