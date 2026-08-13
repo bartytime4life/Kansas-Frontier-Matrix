@@ -2,8 +2,8 @@
 doc_id: kfm://policy/domains
 title: Domain Policy Boundary, Lane Inventory, and Activation Contract
 type: readme
-version: v0.3
-status: draft; BOUNDARY_COMPACT; repository-grounded; mixed-maturity; machine-register-projected; evaluator-unbound; fail-closed; non-release; non-publication
+version: v0.4
+status: draft; BOUNDARY_COMPACT; repository-grounded; current-state-reconciled; mixed-maturity; machine-register-projected; evaluator-unbound; fail-closed; non-release; non-publication
 owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted domain-policy stewardship, specialist review, and independent approval controls remain unproved
 created: 2026-06-15
 updated: 2026-08-13
@@ -11,8 +11,10 @@ current_path: policy/domains/README.md
 owning_root: policy/
 responsibility: Document the domain-specific admissibility-policy boundary, canonical lane projection, physical child inventory, local maturity, activation requirements, validation limits, and compatibility conflicts without creating domain truth, activating policy, approving release, or authorizing publication.
 policy_label: internal-operating-policy; repository-public; domain-policy; admissibility; evidence-bound; source-role-aware; rights-aware; consent-aware; sensitivity-aware; fail-closed; release-gated; correction-aware; rollback-aware
-base_commit: 163110232387b4442c2fcd73d2ea3b79fd39484a
-target_prior_blob: 9babcdc53c0df68f23a2f897371e877108491864
+base_commit: 2d6a87c307c35c9a10492f43646b817cf7583b2a
+base_tree: cb550fab5ee6c8e412f246ec1e06bf84cced7530
+target_prior_blob: ed9be975c9da2c7d77d94fab621db39f23953813
+domain_lane_tree: f7894b200012dc849bc7d95541762ec8ea969f62
 directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
 directory_rules_adr_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
 policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
@@ -23,8 +25,11 @@ soil_watcher_policy_blob: 3c7d0f99507c94bf539fb75a0ce26e215f79cbde
 fauna_tile_allowlist_blob: 3f743b21f3d13b100a1a5bb7c3a7b2bb6d48df69
 policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
 policy_runtime_core_blob: e7e14cf39ae6919fbbc80f1b471de6b907292edb
+bundle_root_readme_blob: 0a13a9c9beddfa764d47e5dd6a2ea7ef91bf0d53
 pass12_bundle_readme_blob: 0c36c7c68180e74ccd9277f92284530cc2a96db0
-truth_posture: CONFIRMED accepted Directory Rules v2, singular policy root, a PROPOSED 13-entry machine projection, 17 direct child directories, all 13 canonical lane READMEs, 189 tracked descendants, one non-default operative domain rule body in the fixture-only Soil watcher slice, no domain-local native Rego test, 13 canonical domain workflows, 12 policy-profile validators, a separate bounded Pass 12 native Rego test, CODEOWNERS routing, and a placeholder policy runtime / PROPOSED inactive policy input, vocabulary, obligation, semantics, evaluation-binding, enforcement-maturity, reviewer, transform, sovereignty, threshold, Soil watcher, Fauna tile-field, and Pass 12 profiles / CONFLICTED canonical lane identities versus physical air, people, roads, and settlement compatibility or legacy children, unresolved air, settlement, and transport aliases, stale statements inside the human register, and engine-native versus outward decision vocabularies / UNKNOWN accepted domain evaluator, active domain bundle, authenticated decision authority, governed consumer, receipt persistence, required-check enforcement, release integration, production operation, and rollback execution
+topology_validator_blob: e2992453d5d78015035ae6e312d839bfc3a2cbda
+topology_baseline_blob: 717c2480686d254ba6a8b8c19276cfcf0c6bbda2
+truth_posture: CONFIRMED accepted Directory Rules v2, singular policy root, a PROPOSED 13-entry machine projection, 14 direct child directories, all 13 canonical lane READMEs as substantive repository-grounded boundaries, 185 tracked files, 126 Rego sources, one non-default operative domain rule body in the fixture-only Soil watcher slice, no domain-local native Rego test, 13 canonical domain workflows, 12 policy-profile validators, a separate bounded Pass 12 native Rego test, CODEOWNERS routing, a placeholder policy runtime, absent air, roads, and settlement direct policy children, and one residual marker-only people child / PROPOSED inactive policy input, vocabulary, obligation, semantics, evaluation-binding, enforcement-maturity, reviewer, transform, sovereignty, threshold, Soil watcher, Fauna tile-field, and Pass 12 profiles / CONFLICTED residual people path identity versus the canonical people-dna-land lane, unresolved air, settlement, and transport register aliases despite absent corresponding direct policy authority, stale statements inside the human register, and engine-native versus outward decision vocabularies / UNKNOWN accepted domain evaluator, active domain bundle, authenticated decision authority, governed consumer, receipt persistence, required-check enforcement, release integration, production operation, and rollback execution
 related:
   - ../README.md
   - ../bundles/README.md
@@ -46,7 +51,7 @@ related:
   - ../../release/README.md
   - ../../.github/CODEOWNERS
 notes:
-  - "This v0.3 revision reconciles the existing v0.2 README with current main and changes documentation only."
+  - "This v0.4 revision reconciles the existing v0.3 README with current main after canonical child-document modernization and physical alias cleanup; it changes documentation only."
   - "No rule, bundle, evaluator, contract, schema, fixture, validator, workflow, registry entry, lifecycle object, receipt, release object, deployment, or public behavior is created or modified."
   - "Static counts and badges describe the pinned repository snapshot; they are not policy, approval, maturity, release, deployment, or publication evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -60,20 +65,21 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Directory Rules: adopted](https://img.shields.io/badge/Directory%20Rules-v2%20adopted-2da44e?style=flat-square)](#authority-level)
 [![Canonical lanes: 13 projected](https://img.shields.io/badge/canonical%20lanes-13%20projected-0969da?style=flat-square)](#domain-lane-inventory)
-[![Direct children: 17](https://img.shields.io/badge/direct%20children-17-d97706?style=flat-square)](#current-direct-child-map)
+[![Canonical lane READMEs: 13 substantive](https://img.shields.io/badge/canonical%20lane%20READMEs-13%20substantive-2da44e?style=flat-square)](#domain-lane-inventory)
+[![Direct children: 14](https://img.shields.io/badge/direct%20children-14-d97706?style=flat-square)](#current-direct-child-map)
 [![Domain Rego: 126 files](https://img.shields.io/badge/domain%20Rego-126%20files-8250df?style=flat-square)](#current-source-inventory)
 [![Evaluator: unbound](https://img.shields.io/badge/evaluator-unbound-d97706?style=flat-square)](#status)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-b42318?style=flat-square)](#authority-level)
 [![Reviewed: 2026-08-13](https://img.shields.io/badge/reviewed-2026--08--13-0969da?style=flat-square)](#last-reviewed)
 
 > [!IMPORTANT]
-> **Safe current conclusion at `main@163110232387`:** the proposed machine register and human register identify the same 13 canonical domain lanes, all 13 canonical policy-lane READMEs exist, and domain policy source is nonempty. The directory also has four compatibility or legacy children, no domain-local native Rego test, no accepted general evaluator, no active domain bundle, no authenticated decision flow, and no proved production consumer or release integration. Repository presence is not policy activation.
+> **Safe current conclusion at `main@2d6a87c307c3`:** the proposed machine register and human register identify the same 13 canonical domain lanes, and all 13 canonical policy-lane READMEs are now substantive repository-grounded boundaries. The physical tree has 14 direct directories because an unregistered, marker-only `people/` scaffold remains. Domain source is still 125 explicit `PROPOSED` scaffolds plus one bounded Soil watcher guard; documentation maturity is not policy activation, native policy proof, evaluator acceptance, release authority, or production enforcement.
 
 > [!CAUTION]
 > Policy may constrain a bounded operation; it cannot create evidence, infer consent, clear rights by assertion, downgrade sensitivity, promote lifecycle state, approve release, turn generated language into authority, or make a path, commit, pull request, badge, map, tile, workflow, or validator result public truth.
 
 > [!WARNING]
-> The machine register is a `PROPOSED` projection with `registration_authority: NEEDS_VERIFICATION`, not a domain-creation instrument. Its 13 entries align with the human register's lane IDs, but physical children still include `air/`, `people/`, `roads/`, and `settlement/`. The human register also retains stale open text questioning whether the machine file exists. Treat those differences as governed drift, not permission to choose an alias silently.
+> The machine register is a `PROPOSED` projection with `registration_authority: NEEDS_VERIFICATION`, not a domain-creation instrument. Its unresolved `air -> atmosphere`, `settlement -> settlements-infrastructure`, and `transport -> roads-rail-trade` vocabulary remains even though `air/`, `settlement/`, `roads/`, and `transport/` are absent as direct policy children. Conversely, the residual `people/` markers have no machine-register mapping to `people-dna-land`. The human register also retains stale verification text. Treat register vocabulary, physical paths, and canonical identity as separate evidence axes; never choose or recreate an alias silently.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Child map](#current-direct-child-map) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Exposure](#exposure-mutation-and-retention) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#domain-lane-inventory) · [Decisions](#policy-decision-model) · [Obligations](#obligations-and-cross-domain-composition) · [Child lanes](#child-lane-contract) · [Trust membrane](#trust-membrane-and-lifecycle) · [Done](#definition-of-done) · [Open verification](#open-verification-register)
 
@@ -140,23 +146,24 @@ This directory is a **`BOUNDARY_COMPACT` child of the canonical singular `policy
 
 ### Repository-grounded snapshot
 
-| Surface | Confirmed state at `main@163110232387` | Safe interpretation |
+| Surface | Confirmed state at `main@2d6a87c307c3` | Safe interpretation |
 |---|---|---|
-| Parent README | v0.2 baseline, blob `9babcdc…` | Same-path v0.3 reconciliation; documentation only. |
+| Parent README | v0.3 baseline, blob `ed9be97…` | Same-path v0.4 reconciliation; documentation and provenance only. |
 | Directory authority | ADR-0029 is accepted; canonical Directory Rules blob `fd49a0b…` | Domain placement is adopted; implementation maturity still requires evidence. |
 | Machine lane register | `PROPOSED`, `machine_projection_only`, 13 entries, reviewed 2026-08-07 | Canonical IDs are projected, but registration authority and owners remain unverified. |
 | Human lane register | Draft narrative with the same 13 IDs | Useful human index; its open question about whether the machine file exists is stale. |
-| Direct child directories | 17 | Thirteen canonical lanes plus `air`, `people`, `roads`, and `settlement` drift surfaces. |
-| Canonical child READMEs | 13 of 13 | Path coverage exists; 11 are short greenfield scaffolds and 2 are substantive drafts. |
-| Compatibility README | `air/README.md` is a substantive compatibility guardrail | It redirects new work to `atmosphere`; it is not parallel policy authority. |
-| Legacy sparse children | `people/`, `roads/`, and `settlement/` have no README and only `.gitkeep` descendants | Their current responsibility and retirement or migration path are unresolved. |
-| Recursive inventory | 189 files: 126 Rego, 9 YAML, 1 JSON, 19 README, 33 `.gitkeep` | Inventory is complete for the pinned commit; maturity does not follow from counts. |
+| Direct child directories | 14 | Thirteen canonical lanes plus the residual marker-only `people/` drift surface. |
+| Canonical child READMEs | 13 of 13 | Every canonical child now has a substantive repository-grounded boundary; this is documentation maturity only. |
+| Retired physical alias surfaces | `air/`, `roads/`, and `settlement/` are absent | Their removal reduces parallel path growth; unresolved register vocabulary and migration history still require governance. |
+| Residual sparse child | `people/` has no README and contains exactly two nested `.gitkeep` files | It has no machine-register mapping and must not be inferred as equivalent to `people-dna-land`. |
+| Recursive inventory | 185 files: 126 Rego, 9 YAML, 1 JSON, 19 Markdown, 30 `.gitkeep` | The Markdown set contains 18 READMEs plus one Fauna redistribution note; maturity does not follow from counts. |
 | Domain Rego semantics | Structural scan found one non-default operative rule body, in `soil/watcher_spec.rego`; the other 125 are package/import/default/comment scaffolds | One fixture-only guard exists; no general domain-policy implementation is established. |
 | Domain-native Rego tests | None under `policy/domains/` | Domain rule behavior is not natively proved. |
 | Canonical domain workflows | 13, one per canonical lane | Readiness/hold surfaces; they are not general domain-policy execution. |
 | Policy-profile validators | 12 executable Python validators with dedicated fixture/test/workflow surfaces | Proposed inactive coherence checks; they are not evaluators or decision authorities. |
 | Broad `policy-test` | Static readiness guard; recognizes one separate Pass 12 native Rego lane | It evaluates no domain rule and emits no `PolicyDecision`. |
 | Policy runtime | Version `0.0.0`, empty initializer, comment-only `core.py` | No accepted general evaluator, bundle selector, normalized decision flow, or consumer. |
+| Topology ratchet | Current validator and baseline distinguish conventional README materialization from substantive alias evidence | Ratchet mechanics do not accept an alias, create a lane, or resolve the residual `people/` markers. |
 | Required checks and production enforcement | Not established by reviewed repository files | Workflow presence and CODEOWNERS do not prove ruleset enforcement or deployment. |
 
 ### Default posture
@@ -177,7 +184,6 @@ Verified at the pinned base; Directory Rules require direct children only:
 policy/domains/
 ├── README.md                     — this parent boundary and inventory
 ├── agriculture/                  — canonical lane
-├── air/                          — compatibility guardrail; alias projects to atmosphere
 ├── archaeology/                  — canonical lane
 ├── atmosphere/                   — canonical lane
 ├── fauna/                        — canonical lane
@@ -186,16 +192,14 @@ policy/domains/
 ├── habitat/                      — canonical lane
 ├── hazards/                      — canonical lane
 ├── hydrology/                    — canonical lane
-├── people/                       — unregistered sparse legacy scaffold; no README
+├── people/                       — unregistered marker-only legacy scaffold; no README
 ├── people-dna-land/              — canonical lane
-├── roads/                        — unregistered sparse legacy scaffold; no README
 ├── roads-rail-trade/             — canonical lane
-├── settlement/                   — sparse compatibility alias to settlements-infrastructure; no README
 ├── settlements-infrastructure/   — canonical lane
 └── soil/                         — canonical lane
 ```
 
-The machine register explicitly projects `air -> atmosphere`, `settlement -> settlements-infrastructure`, and `transport -> roads-rail-trade`. It does **not** project `people` or `roads`; this README does not invent those mappings from similar names.
+The machine register explicitly projects unresolved vocabulary for `air -> atmosphere`, `settlement -> settlements-infrastructure`, and `transport -> roads-rail-trade`. None of `air/`, `settlement/`, `transport/`, or the former unregistered `roads/` exists as a direct child at the pinned snapshot. The register does **not** project `people`; this README does not invent equivalence from a similar name or two marker files.
 
 [Back to top](#top)
 
@@ -387,7 +391,7 @@ Unknown owner identities, required approvals, branch rules, or deployed consumer
 | [`ADR-0002 — contracts vs schemas`](../../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT** | Preserves meaning/shape separation. |
 | [`ADR-0020 — abstain is first class`](../../docs/adr/ADR-0020-abstain-is-a-first-class-decision.md) | **PROPOSED** | Outward abstention semantics and normalization pressure. |
 | Add, rename, merge, or retire a domain lane | **ADR required by Directory Rules** | Prevents topic-as-folder drift and unsynchronized identity. |
-| Alias and legacy-child disposition | **NO ACCEPTED DECISION VERIFIED** | Required for `air`, `people`, `roads`, `settlement`, and projected `transport`. |
+| Alias and legacy-child disposition | **NO ACCEPTED DECISION VERIFIED** | Required for unresolved `air`, `settlement`, and `transport` register vocabulary plus the residual physical `people/` markers; absent legacy paths do not resolve governance history by themselves. |
 | General evaluator, active bundle, normalization, reason/obligation registry | **NO ACCEPTED DECISION VERIFIED** | Required before a general domain-policy flow can be active. |
 
 This README records current decisions and holds. It does not accept an ADR, activate a bundle, or create a canonical lane through prose.
@@ -398,19 +402,19 @@ This README records current decisions and holds. It does not accept an ADR, acti
 
 ## Last reviewed
 
-**2026-08-13** against `main@163110232387b4442c2fcd73d2ea3b79fd39484a`.
+**2026-08-13** against `main@2d6a87c307c35c9a10492f43646b817cf7583b2a` (tree `cb550fab5ee6c8e412f246ec1e06bf84cced7530`).
 
 This review covered:
 
-- the complete prior README and blob `9babcdc…`;
+- the complete prior README and blob `ed9be97…`;
 - accepted Directory Rules and ADR-0029;
 - the root, human domain, and machine domain registers;
-- all 17 direct child directories and the complete 189-file recursive inventory;
-- all 13 canonical lane READMEs plus the `air` compatibility README;
+- all 14 direct child directories and the complete 185-file recursive inventory;
+- all 13 canonical lane READMEs, the three absent former direct alias/legacy paths, and the residual marker-only `people/` child;
 - structural semantics across 126 domain Rego files;
 - the Soil watcher and Fauna tile-field fixture-only slices;
 - the 13 canonical domain workflows, broad `policy-test`, 12 policy-profile validators, and separate Pass 12 native Rego lane;
-- the policy contracts/schemas, bundle boundary, placeholder runtime, and CODEOWNERS route; and
+- the policy contracts/schemas, current bundle boundary, placeholder runtime, topology validator/baseline, and CODEOWNERS route; and
 - target-path overlap in open pull requests and remote branch names.
 
 Not established: accepted domain owners, independent approval, branch/ruleset enforcement, active domain bundle, general evaluator, authenticated decisions, complete native tests, governed consumer enforcement, receipt persistence, release integration, production runtime, or rollback execution.
@@ -427,28 +431,29 @@ The canonical lane set below is projected by both domain registers. Presence and
 
 | Canonical lane | README | Documentation posture | Domain-policy source posture |
 |---|---:|---|---|
-| [`agriculture`](./agriculture/README.md) | Confirmed | Substantive repository-grounded draft | Default/comment scaffolds; no domain-native Rego test or evaluator binding. |
-| [`archaeology`](./archaeology/README.md) | Confirmed | Substantive bounded draft | Default/comment scaffolds; precise-coordinate risk remains release-gated. |
-| [`atmosphere`](./atmosphere/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; `air` compatibility conflict remains open. |
-| [`fauna`](./fauna/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds plus a proposed inactive tile-field YAML profile validated outside Rego. |
-| [`flora`](./flora/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; rights/geoprivacy/sensitivity intent is not active policy. |
-| [`geology`](./geology/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; no native tests or evaluator binding. |
-| [`habitat`](./habitat/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; no native tests or evaluator binding. |
-| [`hazards`](./hazards/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; KFM remains non-alert authority. |
-| [`hydrology`](./hydrology/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; readiness workflow evaluates no policy. |
-| [`people-dna-land`](./people-dna-land/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; living-person and DNA exposure fails closed. |
-| [`roads-rail-trade`](./roads-rail-trade/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; projected `transport` alias remains unresolved. |
-| [`settlements-infrastructure`](./settlements-infrastructure/README.md) | Confirmed | Short greenfield scaffold | Default/comment scaffolds; projected `settlement` alias remains unresolved. |
-| [`soil`](./soil/README.md) | Confirmed | Short greenfield scaffold | One operative fail-closed watcher-spec module in a proposed fixture-only slice; native Rego behavior is not run by its workflow. |
+| [`agriculture`](./agriculture/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.3) | Default/comment scaffolds; no domain-native Rego test or evaluator binding. |
+| [`archaeology`](./archaeology/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.2) | Default/comment scaffolds; precise-coordinate risk remains release-gated. |
+| [`atmosphere`](./atmosphere/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.3) | Default/comment scaffolds; unresolved `air` register vocabulary is not physical policy authority. |
+| [`fauna`](./fauna/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.2) | Default/comment scaffolds plus a proposed inactive tile-field YAML profile validated outside Rego. |
+| [`flora`](./flora/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.1.0) | Default/comment scaffolds; rights/geoprivacy/sensitivity intent is not active policy. |
+| [`geology`](./geology/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.1) | Default/comment scaffolds; no native tests or evaluator binding. |
+| [`habitat`](./habitat/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.3) | Default/comment scaffolds; no native tests or evaluator binding. |
+| [`hazards`](./hazards/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.1) | Default/comment scaffolds; KFM remains non-alert authority. |
+| [`hydrology`](./hydrology/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.1) | Default/comment scaffolds; readiness workflow evaluates no policy. |
+| [`people-dna-land`](./people-dna-land/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.2) | Default/comment scaffolds; living-person and DNA exposure fails closed. |
+| [`roads-rail-trade`](./roads-rail-trade/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.1) | Default/comment scaffolds; projected `transport` alias remains unresolved. |
+| [`settlements-infrastructure`](./settlements-infrastructure/README.md) | Confirmed | Substantive repository-grounded scaffold boundary (v0.1) | Default/comment scaffolds; projected `settlement` alias remains unresolved. |
+| [`soil`](./soil/README.md) | Confirmed | Substantive repository-grounded mixed-maturity boundary (v0.1) | One operative fail-closed watcher-spec module in a proposed fixture-only slice; native Rego behavior is not run by its workflow. |
 
-### Compatibility and legacy children
+### Residual and retired physical surfaces
 
 | Path | Confirmed classification | Required posture |
 |---|---|---|
-| [`air/`](./air/README.md) | Substantive compatibility guardrail; machine alias to `atmosphere` | Redirect new work; no parallel executable policy or bundle selection. |
-| `people/` | Unregistered sparse scaffold with two nested `.gitkeep` files and no README | Do not infer equivalence to `people-dna-land`; classify or retire through governed change. |
-| `roads/` | Unregistered sparse scaffold with one `.gitkeep` and no README | Do not infer equivalence to `roads-rail-trade`; classify or retire through governed change. |
-| `settlement/` | Sparse scaffold with one `.gitkeep`; machine alias to `settlements-infrastructure`; no README | No independent rule growth; document migration/retirement before mutation. |
+| `air/` | Absent as a direct policy child; `air -> atmosphere` remains unresolved machine-register vocabulary | Do not recreate parallel policy authority; resolve alias lifetime and migration through governed change. |
+| `people/` | Present only as two nested `.gitkeep` markers; no README and no machine-register mapping | Do not infer equivalence to `people-dna-land`; classify or retire through governed change. |
+| `roads/` | Absent as a direct policy child; the machine register instead records unresolved `transport -> roads-rail-trade` vocabulary | Do not recreate or silently equate `roads` and `transport`; preserve reviewed migration history. |
+| `settlement/` | Absent as a direct policy child; `settlement -> settlements-infrastructure` remains unresolved machine-register vocabulary | Do not recreate parallel policy authority; resolve alias lifetime and migration through governed change. |
+| `transport/` | No direct policy child exists at the pinned snapshot | Register vocabulary alone is not path or policy authority. |
 
 ### Current source inventory
 
@@ -457,8 +462,8 @@ The canonical lane set below is projected by both domain registers. Presence and
 | Rego | 126 | Structural scan: 125 package/import/default/comment scaffolds and one operative Soil watcher guard. |
 | YAML | 9 | Includes proposed fixture/config profiles such as the Fauna tile-field allowlist; YAML presence is not policy activation. |
 | JSON | 1 | Repository artifact only; inspect its named contract before relying on it. |
-| README | 19 | Parent, lane, compatibility, and deeper local documentation; documentation maturity is mixed. |
-| `.gitkeep` | 33 | Sparse scaffolding; never proof of intended implementation or accepted placement. |
+| Markdown | 19 | Eighteen READMEs plus `fauna/ebird_redistribution.md`; all 13 canonical direct-child READMEs are substantive, while implementation maturity remains mixed. |
+| `.gitkeep` | 30 | Sparse scaffolding, including both residual `people/` markers; never proof of intended implementation or accepted placement. |
 
 [Back to top](#top)
 
@@ -587,12 +592,13 @@ Source and evidence references
 
 - [x] Same-path README and singular policy responsibility verified.
 - [x] Accepted Directory Rules placement and `BOUNDARY_COMPACT` contract applied.
-- [x] All 17 direct children and all 13 canonical child READMEs surfaced.
+- [x] All 14 direct child directories and all 13 canonical child READMEs surfaced.
 - [x] Proposed 13-entry machine register and same-ID human register reconciled accurately.
-- [x] `air`, `people`, `roads`, and `settlement` drift made visible without inventing mappings.
+- [x] Absent `air`, `roads`, and `settlement` policy children plus residual `people` markers made visible without inventing mappings.
 - [x] Complete descendant counts, domain Rego structural posture, policy validators, workflows, and runtime hold recorded at the pinned base.
+- [x] Canonical child-document maturity separated explicitly from policy-source, evaluator, consumer, release, and production maturity.
 - [ ] Accepted domain-policy owners, specialist reviewers, and independent approval controls are recorded.
-- [ ] Human-register stale text and every alias/legacy child are resolved through governed change.
+- [ ] Human-register stale text, unresolved register aliases, migration history, and the residual `people/` child are resolved through governed change.
 - [ ] Every child lane is classified by package, entrypoint, tests, bundle, evaluator, consumer, receipt, release, and rollback support.
 - [ ] An accepted native-to-outward decision mapping and obligation-composition contract exist.
 - [ ] A representative end-to-end domain-policy slice emits replayable decisions and proves consumer enforcement and rollback.
@@ -612,8 +618,8 @@ A child policy is not done until its reviewed identity, scope, source, contracts
 | ID | Question | Status |
 |---|---|---:|
 | DOMPOL-001 | Who can graduate `domain_lane_register.yaml` from `PROPOSED` projection to accepted registration authority, and how will stale human-register text be reconciled? | **NEEDS VERIFICATION** |
-| DOMPOL-002 | What accepted decisions resolve `air`, `settlement`, and `transport` aliases, including lifetime, migration, correction, and rollback? | **UNKNOWN / NEEDS ADR** |
-| DOMPOL-003 | What are the intended responsibilities and dispositions of unregistered `people/` and `roads/` sparse children? | **CONFLICTED / NEEDS VERIFICATION** |
+| DOMPOL-002 | What accepted decisions resolve `air`, `settlement`, and `transport` register aliases, including lifetime, migration evidence, correction, and rollback now that their corresponding direct policy paths are absent? | **UNKNOWN / NEEDS ADR** |
+| DOMPOL-003 | What is the intended responsibility and disposition of the unregistered marker-only `people/` child? | **CONFLICTED / NEEDS VERIFICATION** |
 | DOMPOL-004 | Which scaffold files should remain, be consolidated, gain native tests, or be retired without manufacturing symmetry? | **NEEDS VERIFICATION** |
 | DOMPOL-005 | What evaluator version, bundle manifest, selector, integrity/signing, activation, expiry, and rollback contract are accepted for domain policy? | **UNKNOWN** |
 | DOMPOL-006 | Which complete operation-specific domain-policy input profiles are canonical beyond fixture-only v1 profiles? | **UNKNOWN** |
@@ -633,20 +639,19 @@ A child policy is not done until its reviewed identity, scope, source, contracts
 <details>
 <summary><strong>No-loss and evidence ledger</strong></summary>
 
-| v0.2 element | v0.3 disposition |
+| v0.3 element | v0.4 disposition |
 |---|---|
 | Stable path, document ID, created date, H1 purpose, and policy-only authority | **KEEP / CLARIFY** |
-| Directory Rules basis | **REPAIR** from proposed-era posture to accepted ADR-0029 authority |
-| Human versus empty machine-register warning | **REPAIR** to aligned 13 IDs with proposed authority and stale narrative text |
-| Thirteen canonical lane inventory | **KEEP / ENRICH** with exact physical child and source posture |
-| `air` compatibility classification | **KEEP / ENRICH** with machine alias evidence |
-| Implicit omission of `people`, `roads`, and `settlement` | **REPAIR** through complete direct-child map and explicit non-inference |
-| “Mostly stubbed” Rego statement | **ENRICH** with 126-file structural scan and bounded Soil exception |
-| Policy validation described as readiness-only | **REPAIR / ENRICH** with 12 profile validators, Soil/Fauna slices, broad hold, and separate Pass 12 native test |
-| Inputs, outputs, decision conflict, obligations, and child contract | **KEEP / ENRICH** with inactive profiles and enforcement limits |
-| Trust membrane, review, definition of done, and open register | **KEEP / UPDATE** against current repository evidence |
+| Accepted Directory Rules and proposed 13-entry register posture | **KEEP / REPIN** to current immutable evidence |
+| Seventeen-child physical inventory | **REPAIR** to 14 current directories after `air/`, `roads/`, and `settlement/` removal |
+| Four compatibility or legacy children | **REPAIR** to one residual marker-only `people/` child plus separate unresolved register vocabulary |
+| Eleven short and two substantive canonical READMEs | **REPAIR** to 13 substantive repository-grounded boundaries without implying policy activation |
+| 126-file Rego structural posture | **KEEP / REVERIFY** as 125 explicit proposed scaffolds and one bounded Soil watcher guard |
+| Policy validators, workflows, Pass 12 native proof, and placeholder runtime | **KEEP / REVERIFY** with unchanged authority limits |
+| Inputs, outputs, decision conflict, obligations, and child contract | **KEEP / CLARIFY** around documentation-versus-implementation maturity |
+| Trust membrane, review, definition of done, and open register | **KEEP / UPDATE** against current repository and topology-ratchet evidence |
 
-Evidence snapshot: target prior blob `9babcdc…`; Directory Rules `fd49a0b…`; ADR-0029 `b01322e…`; machine register `1bfc6f9…`; human register `7cd641d…`; root registry `024f668…`; Soil watcher rule `3c7d0f9…`; Fauna tile allowlist `3f743b2…`; broad policy workflow `ac8f125…`; placeholder runtime core `e7e14cf…`; Pass 12 bundle README `0c36c7c…`.
+Evidence snapshot: target prior blob `ed9be97…`; domain tree `f7894b2…`; Directory Rules `fd49a0b…`; ADR-0029 `b01322e…`; machine register `1bfc6f9…`; human register `7cd641d…`; root registry `024f668…`; Soil watcher rule `3c7d0f9…`; Fauna tile allowlist `3f743b2…`; broad policy workflow `ac8f125…`; placeholder runtime core `e7e14cf…`; bundle-root README `0a13a9c…`; Pass 12 profile README `0c36c7c…`; topology validator `e299245…`; topology baseline `717c248…`.
 
 </details>
 
@@ -657,10 +662,11 @@ Evidence snapshot: target prior blob `9babcdc…`; Directory Rules `fd49a0b…`;
 | v0.1 | 2026-06-15 | Expanded the original short stub into a proposed domain-policy parent contract. | Restore through reviewed Git history. |
 | v0.2 | 2026-07-23 | Added repository-grounded lane, workflow, decision, child-contract, validation, and trust-membrane detail. | Restore blob `9babcdc53c0df68f23a2f897371e877108491864`. |
 | v0.3 | 2026-08-13 | Reconciled accepted Directory Rules, the 13-entry proposed machine register, 17 direct children, complete descendant inventory, current source semantics, profile validators, bounded native release proof, and unresolved activation boundaries. | Before merge, close the draft PR and abandon the branch. After merge, revert the documentation commit through review; do not rewrite shared history. |
+| v0.4 | 2026-08-13 | Reconciled 13 substantive canonical child boundaries, 14 physical child directories, three removed alias/legacy paths, one residual marker-only child, the 185-file inventory, and current topology-ratchet evidence while preserving evaluator, release, and publication holds. | Before merge, close the draft PR and abandon the branch. After merge, revert the documentation-and-provenance commit through review; do not rewrite shared history. |
 
 ## Status summary
 
-`policy/domains/` is a real domain-policy responsibility lane with complete canonical README path coverage, a proposed 13-entry machine projection, and nonempty source and validation scaffolding. It is not yet a proved general domain-policy system. The only observed non-default operative domain rule body belongs to an inactive fixture-only Soil watcher slice, while the policy runtime remains a placeholder and no domain-local native Rego tests establish broad behavior.
+`policy/domains/` is a real domain-policy responsibility lane with 13 substantive canonical child boundaries, a proposed 13-entry machine projection, and nonempty source and validation scaffolding. Its physical tree has narrowed to those 13 canonical lanes plus one unregistered marker-only `people/` child; unresolved alias vocabulary remains governance work, not executable policy authority. The lane is not yet a proved general domain-policy system. The only observed non-default operative domain rule body belongs to an inactive fixture-only Soil watcher slice, while the policy runtime remains a placeholder and no domain-local native Rego tests establish broad behavior.
 
 Until identity drift, owners, evaluator, active domain bundles, complete inputs, native tests, normalization, consumers, receipts, release gates, independent review, and rollback drills are accepted and observed, this lane remains **repository-grounded, mixed-maturity, evaluator-unbound, fail-closed, non-release, and non-publication**.
 
