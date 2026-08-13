@@ -1,0 +1,286 @@
+{
+  "receipt_id": "genrec-policy-consent-readme-6c8e9f6c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/consent/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/consent/README.md": "sha256:6c8e9f6c10f3dccd97b6a86902e4049ff5e9b7be7f2bce7d385c53f8c2fe91b5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f7fd2116ec5cf32eb842513e417de9f58b1c43b7f35f9663839761f87d8b79eb",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:47eb7659ba121bd60b69fc8d878ba845185145b62eeaad7d69acdb5ef9bb2328",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:78c3b20ed40b857d8fcba3c34a4bd5798458ae2b6146de1d0c3320fd6993672c",
+      "sha256:ed99e314212ecf7da440b5d8b28f7d968bee84ddb0ffad7472dee8d46ae1e779",
+      "sha256:090908ca2bd5f0982556c12aa9cda2d4bc376edd3493468f87d50b32587e5765",
+      "sha256:605789b818a7f4caefad0836aac631241c6c03e62acd60c5cd1ce36ffc75fdca",
+      "sha256:99582ed0469a4b10813160f0ae9d238ea4295d24312f747b4962f5b91d7b44fa",
+      "sha256:b684afba33b304d8701cba42ce08bb1e6aaeeffad2e45ea3b90ef49ce5be4ea2",
+      "sha256:fc41f15a99d7e3bb9a3da7a795c8513d0075f268da025394e14a6ea6783ff09f",
+      "sha256:0848e690e16467cd4c25a81f546e6244f5eb29c58ed8aec90a5c3a8678c0f276",
+      "sha256:d26c1c84ece7a35f95c6844c7df754286751f25a7c8a576aa7afc59168208982",
+      "sha256:5ec4117ad24025526d8c8b0e856fa8ed0100d5afb36839e027da352550f93f09",
+      "sha256:253f39619ec38e7bdd3c4ed4c088447e50428a607ec59a715def77edf2c9fbce",
+      "sha256:b15c026c383dbee06b33ade4fe8b5215192ae574f50b8552eebcbc875c054744",
+      "sha256:c95c98c128bc2a26ecb99ed9dac4795c26226ecf9eba54b05a6cdd70492c5888",
+      "sha256:ac6fb67dbd8f67009ffb75a75aee27235e2da19d6233ef9917804440a61a89e1",
+      "sha256:486b2e5368c597bf1901acccf0309eac16357d87197695fd98fe5a9077c541f6",
+      "sha256:d9cf1a1c994dbc41e388b6e961f14b2955adf2b6ca421f8e7800ec60d3bd1f5c",
+      "sha256:93e12acc4bb19e6afa44b6a99423b84d1126a094cc93f03040ab5a08e0a8ef52",
+      "sha256:929b381ac1d34f1e6ef16afcdaa168f0a8493a3ef488f8d28ce2bab4d860bfc6",
+      "sha256:470031dd8ac9e4597aade9b07b485437525e3329b32f94d17b5e7b792dfba582",
+      "sha256:e31d0a8f32bd437f678de7760abdb7da2027517a5d6f490b5818897224a257fc",
+      "sha256:5ff62c55261a9e0c96660719d0ad79301bd537f524cc2006fb89147dcba22e6c",
+      "sha256:36fd8d254d22a225375cd95f16bc43d2d995f9b5253ce02d50224a1b2c761745",
+      "sha256:e29dfef78ea6648a8fb18e1cfb5631b16781a4f19b33cd2bbcfb8ebec3685916",
+      "sha256:bf99f97a525534e5fd26b99f6c06c3b17b2d8265fb7064febfe56096244af30c",
+      "sha256:b9344d54dc3e5ef3f0243d6ca240f5f8a31d177c4df0529122eb0ff0af5d2369",
+      "sha256:d45152e98a962f27f7e0ac1e43407eb2eaacf6460fd50e16997275972445b41c",
+      "sha256:f4c55da1e114e07f4c62aae341bd7ffefbdfd452d187fbbc85f6df83c2ee6f0e",
+      "sha256:95a1f9677b4a7e77a7d0014b41299bb471b9db663e0e9744d682c74f23ee4115",
+      "sha256:809d38438fb12c435b0fdf503c2a26db49d51b937db3b192970eb5254d0a89ce",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/consent/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/consent/people/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/consent/people-dna-land/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/domains/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/doctrine/directory-rules.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/domains/people-dna-land/CANONICAL_PATHS.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/domains/people-dna-land/CONSENT_MODEL.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/domains/people-dna-land/consent_validator.rego@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/domains/people-dna-land/consent/dna_consent_revocation.rego@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_input_bundle.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_input_bundle_profile_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_input_bundle.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_input_bundle_profile_v1.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/validators/test_validate_policy_input_bundle_profile_v1.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-input-bundle-profile-v1.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision_vocabulary.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision_semantics_profile_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_decision_vocabulary.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/decision/vocabulary.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_decision_vocabulary.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_decision_semantics_v1.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/domains/people-dna-land/consented_genealogy_overlay.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/domains/people-dna-land/consented_genealogy_overlay.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/domains/people-dna-land/consent_overlay/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/domains/people-dna-land/validate_consent_overlay.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/domains/people-dna-land/consent/revocation/test_consent_overlay_safety.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/domains/people-dna-land/consent_revocation_propagation_assessment.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/domains/people-dna-land/consent/revocation/test_consent_revocation_propagation_assessment.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/consent-revocation-propagation.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:apps/explorer-web/src/features/consent_card/index.ts@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:apps/explorer-web/src/features/consent_card/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/ui/consent_card_projection/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:apps/explorer-web/tests/consent-card.test.ts@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/runtime/consent_grant.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/governance/consent_receipt.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/genealogy/validate_consent_receipt.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:packages/policy-runtime/pyproject.toml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:packages/policy-runtime/src/policy_runtime/core.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-test.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/validate_generated_receipt.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    ]
+  },
+  "truth_labels": {
+    "policy/consent/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-history-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, exact lane inventory, accepted Directory Rules and ADR-0029, current parent and domain-policy indexes, placement conflict, bounded adjacent consent evidence, and exact-target open-pull-request overlap were inspected before authoring. Main advanced only in adjacent domain/evidence READMEs; the branch was rebased and the unchanged target prior blob was reverified."
+    },
+    {
+      "gate": "markdown-structure-metadata-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, balanced fenced blocks, unique explicit and generated anchors, UTF-8-compatible text, a final newline, no diff whitespace errors, and one valid KFM_META_BLOCK_V2 envelope with zero warnings under the required profile."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 52 local targets. Seven shields.io badge targets were classified as external and deliberately not requested."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 24 metadata-block validator tests and all 18 local-link validator tests passed in the repository-provisioned isolated environment."
+    },
+    {
+      "gate": "policy-input-decision-vocabulary-and-semantics-candidate-evidence",
+      "outcome": "PASS",
+      "reason": "The PolicyInputBundle profile, decision vocabulary, and decision semantics suites passed 6, 6, and 7 tests respectively; representative CLI fixtures passed; and 2 targeted PolicyDecision schema-polarity tests passed. These are proposed inactive coherence checks, not policy evaluation or decision authentication."
+    },
+    {
+      "gate": "consent-overlay-candidate-evidence",
+      "outcome": "PASS",
+      "reason": "All 16 no-network consent-overlay tests passed, both valid fixtures passed direct CLI validation, and the 13 invalid fixtures remain bounded negative evidence. The profile is synthetic and fixture-only."
+    },
+    {
+      "gate": "revocation-propagation-candidate-evidence",
+      "outcome": "PASS",
+      "reason": "All 9 focused tests passed and all 17 fixture cases matched their declared validator outcomes: 6 PASS, 8 DENY, and 3 ERROR. Action and receipt references remain inert synthetic assertions; no dependency cleanup or receipt authentication executed."
+    },
+    {
+      "gate": "explorer-consent-card-projection",
+      "outcome": "PASS",
+      "reason": "All 12 focused Vitest cases passed and the Explorer TypeScript/Vite production build completed. The local Node 24 and pnpm 11.16 runtimes differ from the repository's Node 22 and pnpm 11.17 declarations, so exact hosted parity remains pending."
+    },
+    {
+      "gate": "broad-policy-evaluator-and-make-target",
+      "outcome": "SKIPPED",
+      "reason": "The broad policy-test workflow is a static readiness/shape guard, and make policy exits zero after printing only TODO: opa test policy/ -v. No accepted repository-wide consent evaluator, bundle, PolicyDecision emission, or enforcement path exists to execute."
+    },
+    {
+      "gate": "aggregate-repository-topology-ratchet",
+      "outcome": "FAIL",
+      "reason": "The exact unmodified base index fails the inherited topology ratchet with three FAIL_NEW_DRIFT findings: KFM-TOPO-001 path-grammar:uppercase and KFM-TOPO-006 scope-alias:people and scope-alias:transport, plus four stale baseline fingerprints. This documentation-only change adds none of those paths or aliases and does not alter the baseline."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, signed URLs, private endpoints, personal data, real protected locations, exact sensitive coordinates, DNA identifiers, restricted payloads, hidden thresholds, or actor-authority claims."
+    },
+    {
+      "gate": "runtime-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego rule, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consent store, status service, consumer, decision, receipt authority, release, deployment, invalidation, rollback execution, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no placement decision, consent-policy acceptance, policy activation, independent approval, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "exact-consent-lane-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/consent/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "accepted-policy-root-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "unresolved-consent-placement-projection",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/people-dna-land/CANONICAL_PATHS.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "domain-consent-rego-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/people-dna-land/consent_validator.rego@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "explicit-policy-input-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/policy/policy_input_bundle_profile_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "closed-policy-decision-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "inactive-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "repo:policy/decision/vocabulary.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "synthetic-consent-overlay-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/people-dna-land/validate_consent_overlay.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "synthetic-revocation-propagation-assessment",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "fixture-first-explorer-consent-projection",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/consent_card/index.ts@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "placeholder-policy-runtime",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/src/policy_runtime/core.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T16:24:22Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of policy/consent/README.md. The update reconciles the exact lane's documentation-only state with current main; separates consent semantics from evidence, rights, sensitivity, review, release, and viewer choice; distinguishes permissive parent schemas, proposed inactive profiles, synthetic fixture validators, Explorer projection code, and Rego scaffolds from policy evaluation; records finite outcomes, explicit inputs, child inheritance, revocation/correction propagation, security, activation requirements, contribution evidence, and rollback; and preserves the unresolved top-level versus domain-nested placement conflict without declaring a winner. It changes no rule, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, runtime, consent store, decision authority, consumer, release, deployment, invalidation, rollback execution, publication, or public behavior. The inherited topology failures are recorded but not expanded. This receipt is provenance and process memory, not policy acceptance, consent evidence, independent review, release authority, or publication authority; authorized human review remains pending."
+}
