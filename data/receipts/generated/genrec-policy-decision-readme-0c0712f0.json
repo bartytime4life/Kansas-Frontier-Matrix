@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-policy-decision-readme-0c0712f0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/decision/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/decision/README.md": "sha256:0c0712f07bd587881fef4a13eef21e4f1ea2a8b244de830e7ef4794f2ee9be1e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:dc7028ba33fe744bf951aeb1120a4b31077ad3a39dfedf3998a6b713a8d4f806",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:dc7028ba33fe744bf951aeb1120a4b31077ad3a39dfedf3998a6b713a8d4f806",
+      "sha256:7a5c696d3819f18c399bf627392bf64b80bb837c7b6f9cf11e7a72c6b41f1ce4"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/decision/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/decision/vocabulary.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/decision/reviewer_roles.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision_vocabulary.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_decision_semantics_profile_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_reviewer_role_vocabulary.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_input_bundle.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_input_bundle_profile_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_evaluation_binding_v1.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_obligation_set.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/policy/policy_obligation_reduction.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:contracts/runtime/decision_envelope.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_decision_vocabulary.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_reviewer_role_vocabulary.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_decision/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_decision_vocabulary/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_decision_semantics_v1/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:fixtures/contracts/v1/policy/policy_evaluation_binding_v1/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_decision_vocabulary.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_decision_semantics_v1.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/policy/validate_policy_reviewer_role_vocabulary.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/validators/test_validate_policy_decision_vocabulary.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/validators/test_validate_policy_decision_semantics_v1.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tests/validators/test_validate_policy_reviewer_role_vocabulary.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-test.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-decision-vocabulary.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-decision-semantics-v1.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/policy-reviewer-role-vocabulary.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/workflows/pass12-release-policy-v1.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/rego/release_gate_v1.rego@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/rego/release_gate_v1_test.rego@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:policy/bundles/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:packages/policy-runtime/@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:control_plane/policy_gate_register.yaml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:control_plane/root_registry.yaml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:docs/doctrine/directory-rules.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/CODEOWNERS@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:CONTRIBUTING.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a",
+      "repo:tools/validators/validate_generated_receipt.py@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    ]
+  },
+  "truth_labels": {
+    "policy/decision/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-history-overlap-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned the v0.2 target bytes and history, found no open exact-target pull request or planned branch, then rechecked immediately before publication. Main advanced four commits from 16311023 to 1a61d3fb through disjoint policy/domains/README.md and policy/evidence/README.md changes; the target blob remained 1ab41e00."
+    },
+    {
+      "gate": "directory-authority-and-root-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029, adopted Directory Rules v2, the Root Registry projection, parent policy root contract, CODEOWNERS, and contribution guidance were reconciled. The update retains policy/decision under canonical policy/ and creates no parallel authority."
+    },
+    {
+      "gate": "current-state-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete recursive tree and exact artifacts confirm two direct PROPOSED_INACTIVE registries, nine reason codes, eight obligation codes, five reviewer roles, bounded fixture-only profiles, one separately governed OPA-tested inactive release gate, no direct decision Rego, an absent canonical validator, a documentation-only bundle payload set, and a placeholder general runtime."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "The v0.2 finite outcomes, normalization, explicit inputs, reasons, obligations, composition, replay, public safety, implementation, validation, correction, and rollback duties are preserved or tightened while stale README-only, registry-absence, workflow-pinning, and Directory Rules claims are corrected."
+    },
+    {
+      "gate": "markdown-structure-and-hygiene",
+      "outcome": "PASS",
+      "reason": "Exactly one rendered H1, logical heading progression across 54 headings, ten balanced language-tagged fences, one closed KFM_META_BLOCK_V2 envelope, UTF-8-compatible text, no tabs or trailing whitespace, and a final newline were verified."
+    },
+    {
+      "gate": "repository-links-and-local-fragments",
+      "outcome": "PASS",
+      "reason": "All 96 internal link references were checked against the complete pinned tree and generated local heading anchors; all repository-relative paths and all 20 local fragment references resolve."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private review material, real personal or genomic records, exact protected locations, restricted source payloads, hidden reasoning, exploit detail, or production secrets."
+    },
+    {
+      "gate": "repository-native-policy-and-validator-tests",
+      "outcome": "SKIPPED",
+      "reason": "The connected workspace has no repository checkout and gh is unavailable. No local policy, OPA, schema-harness, or validator result is claimed; exact hosted checks are observed separately after publication."
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT schema v3.0.0 and current cross-field rules, names governing policy decisions for the policy/ artifact, and its SHA-256 artifact map matches the final README bytes."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions results are unavailable until the branch and draft pull request are published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Authorized human review remains pending; no candidate vocabulary, policy profile, evaluator, decision, review assignment, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "decision-lane-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/decision/README.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "inactive-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "repo:policy/decision/vocabulary.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "inactive-reviewer-role-vocabulary",
+      "validated": true,
+      "evidence_ref": "repo:policy/decision/reviewer_roles.v1.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "canonical-policy-decision-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "broad-policy-readiness-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "bounded-native-rego-evidence",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/pass12-release-policy-v1.yml@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T16:14:38Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only reconciliation of the decision-policy boundary. It changes no candidate vocabulary, Rego rule, contract, schema, fixture, validator, test, workflow, bundle, evaluator, runtime, consumer, decision, receipt flow, lifecycle state, release, deployment, publication, or public behavior. The receipt is provenance and process memory, not policy acceptance, evaluator proof, review approval, release authority, or publication authority."
+}
