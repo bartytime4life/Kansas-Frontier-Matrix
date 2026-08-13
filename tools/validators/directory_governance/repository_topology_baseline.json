@@ -500,13 +500,6 @@
       "subject": "release/promotion_decisions/hazards-r0001.yaml"
     },
     {
-      "evidence_sha256": "sha256:aa33433d0c947cb046be328f54ebd9ccf8e0b96328214cb3dd1be6f83b091d35",
-      "evidence_zlib_base64": "eNoryM/JTK7UL0pNSUwuyczP0y8oyk/LzEkt1qtMzM0BALmfC+0=",
-      "fingerprint": "sha256:7d751ff55aef4f3915b8554b8f4e9f491b668ddca7fcd69bbdbd70a8313939a6",
-      "rule_id": "KFM-TOPO-018",
-      "subject": "policy/redaction/"
-    },
-    {
       "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
       "evidence_zlib_base64": "eNorSs1JTSxO1c9NzMtMSy0u0ddLzyzJTk0tYChClwlydXTxddXLTQEACH8S8Q==",
       "fingerprint": "sha256:821f7daa9c5c2ab1961dba84f96eed5d3743fd3964503e0454f25ae29490215f",
