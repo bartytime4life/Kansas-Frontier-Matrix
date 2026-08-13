@@ -54,7 +54,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared schema and test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run deterministic no-network test vectors
         run: |
           set -euo pipefail

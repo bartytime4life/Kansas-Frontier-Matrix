@@ -2,11 +2,11 @@
 services:
   governed-api:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.governed-api
+      context: ../docker
+      dockerfile: Dockerfile.governed-api
     ports: ["127.0.0.1:8080:8080"]
   explorer-web:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.explorer-web
+      context: ../docker
+      dockerfile: Dockerfile.explorer-web
     ports: ["127.0.0.1:5173:5173"]

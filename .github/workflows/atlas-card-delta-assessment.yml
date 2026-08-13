@@ -62,7 +62,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
 
       - name: Run deterministic no-network profile checks
         run: |

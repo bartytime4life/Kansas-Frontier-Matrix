@@ -57,7 +57,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run focused deterministic tests
         run: python -m pytest -q tests/release/test_geospatial_carrier_readiness.py
       - name: Run exact case polarity

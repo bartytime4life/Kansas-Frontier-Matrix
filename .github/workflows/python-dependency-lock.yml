@@ -1,0 +1,81 @@
+# Verifies the finite, hash-locked Python CI dependency profiles on every
+# supported interpreter. This is dependency/bootstrap evidence only; it does
+# not approve repository content, release, deployment, or publication.
+name: python-dependency-lock
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/python-dependency-lock.yml"
+      - "packages/connectors-core/pyproject.toml"
+      - "packages/hashing/pyproject.toml"
+      - "packages/schema-registry/pyproject.toml"
+      - "pyproject.toml"
+      - "tests/ci/test_install_python_ci.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-audit.lock"
+      - "tools/ci/python-test.lock"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/python-dependency-lock.yml"
+      - "packages/connectors-core/pyproject.toml"
+      - "packages/hashing/pyproject.toml"
+      - "packages/schema-registry/pyproject.toml"
+      - "pyproject.toml"
+      - "tests/ci/test_install_python_ci.py"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-audit.lock"
+      - "tools/ci/python-test.lock"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-dependency-lock-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  verify:
+    name: verify (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: |
+            tools/ci/python-test.lock
+            tools/ci/python-audit.lock
+
+      - name: Install all approved local test packages from locked dependencies
+        run: python tools/ci/install_python_ci.py all-local-test
+
+      - name: Verify installer invariants and environment consistency
+        run: |
+          python -m unittest tests/ci/test_install_python_ci.py -v
+          python -m pip check
+          python -m py_compile tools/ci/install_python_ci.py

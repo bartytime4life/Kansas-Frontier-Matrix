@@ -68,7 +68,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared schema and test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Validate schema and exact fixture polarity
         run: python tools/validators/ui/validate_evidence_drawer_payload.py --fixtures

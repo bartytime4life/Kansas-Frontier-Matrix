@@ -3,14 +3,14 @@ doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
 version: v0.1
-status: draft; blank-placeholder-replaced; ci-tooling-lane; PROPOSED / NEEDS VERIFICATION
+status: draft; ci-tooling-lane; verified-dependency-bootstrap; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
   - OWNER_TBD - CI steward
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-12
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 tags: [kfm, tools, ci, github-actions, qa, reviewer-summary, validation-summary, workflows, NEEDS_VERIFICATION]
 related:
@@ -29,7 +29,7 @@ notes:
   - "tools/README.md lists tools/ci/ as PROPOSED for CI helpers such as render_ui_validation_summary.py."
   - "This lane contains CI support helper code only. GitHub workflow definitions belong under .github/workflows/."
   - "CI helper scripts render and normalize signals; they do not author policy, schemas, contracts, release decisions, or test truth."
-  - "Executable inventory, helper names, workflow wiring, artifact destinations, tests, and pass rates remain NEEDS VERIFICATION."
+  - "The hash-locked Python CI installer, its finite profiles, lockfiles, focused tests, and workflow wiring are VERIFIED; unrelated proposed helper families retain their stated status."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,12 +46,12 @@ notes:
 </p>
 
 **Path:** `tools/ci/README.md`  
-**Status:** draft / blank placeholder replaced / CI tooling lane / PROPOSED until executable inventory is verified  
+**Status:** draft / CI tooling lane / dependency-bootstrap helper verified / mixed implementation status  
 **Owning root:** `tools/`  
 **Lane family:** `ci`  
 **Workflow companion:** `.github/workflows/`  
 **Default posture:** deterministic, no-network by default, read-only over inputs, summary/report output only  
-**Truth posture:** CONFIRMED target file existed as blank placeholder content before replacement; CONFIRMED `tools/README.md` lists `tools/ci/` as PROPOSED CI helpers; CONFIRMED `.github/` invokes validators, policies, and tools that live elsewhere and does not own their logic; NEEDS VERIFICATION for actual helper files, workflow names, artifact paths, tests, and pass rates.
+**Truth posture:** CONFIRMED `.github/` invokes validators, policies, and tools that live elsewhere and does not own their logic; VERIFIED `install_python_ci.py`, its finite profiles, SHA-256 lock enforcement, focused tests, and `python-dependency-lock.yml` wiring; unrelated helper inventory and artifact destinations retain their file-level status.
 
 ---
 
@@ -66,6 +66,7 @@ In scope:
 - artifact index helpers;
 - workflow-safe wrappers around validators or QA tools;
 - local-parity helper scripts used by CI and developer machines.
+- finite dependency-bootstrap profiles backed by committed hash lockfiles.
 
 Out of scope:
 
@@ -114,6 +115,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 
 | Family | Purpose | Status |
 |---|---|---|
+| `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
 | `render_ui_validation_summary` | Render UI trust-state validation summaries. | PROPOSED in parent README. |
 | `normalize_test_report` | Normalize JUnit/coverage/QA reports for downstream checks. | PROPOSED. |
@@ -123,11 +125,14 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 
 ---
 
-## Suggested layout
+## Current and proposed layout
 
 ```text
 tools/ci/
 |-- README.md
+|-- install_python_ci.py
+|-- python-audit.lock
+|-- python-test.lock
 |-- render_validation_summary.PROPOSED
 |-- render_ui_validation_summary.PROPOSED
 |-- normalize_test_report.PROPOSED
@@ -136,17 +141,17 @@ tools/ci/
 `-- local_ci_parity.PROPOSED
 ```
 
-The layout is schematic. Actual filenames, language, CLI shape, package manager, and workflow wiring remain NEEDS VERIFICATION.
+The dependency-bootstrap entries are tracked and verified. The `.PROPOSED` entries remain schematic.
 
 ---
 
 ## Run posture
 
-No executable command was verified while authoring this README.
+Inspect the finite install profiles and run their invariant tests without performing an install:
 
 ```bash
-: "PROPOSED / NEEDS VERIFICATION"
-python -m tools.ci --help
+python tools/ci/install_python_ci.py --help
+python -m unittest tests/ci/test_install_python_ci.py -v
 ```
 
 Default operation should be deterministic, local, and no-network. Workflow-specific live checks must be explicit, gated, and reviewed.
@@ -172,9 +177,9 @@ Default operation should be deterministic, local, and no-network. Workflow-speci
 | Parent `tools/` boundary | CONFIRMED in `tools/README.md`. |
 | `tools/ci/` placement | CONFIRMED as PROPOSED helper lane in `tools/README.md`. |
 | `.github/` workflow boundary | CONFIRMED in `.github/README.md`. |
-| Executable helper inventory | NEEDS VERIFICATION. |
-| CLI shape and language/runtime | NEEDS VERIFICATION. |
-| Workflow wiring | NEEDS VERIFICATION. |
+| Dependency installer and lockfiles | VERIFIED by `tests/ci/test_install_python_ci.py`. |
+| Dependency CLI shape and Python runtime | VERIFIED for fixed profiles; arbitrary package, URL, index, and shell input are denied by construction. |
+| Dependency workflow wiring | VERIFIED in `.github/workflows/python-dependency-lock.yml` and migrated callers. |
 | Artifact/report destinations | NEEDS VERIFICATION. |
-| Tests and CI pass rates | NEEDS VERIFICATION. |
-| Tests and validators | NOT RUN. |
+| Focused dependency tests | VERIFIED locally; hosted Python 3.11/3.12 checks remain the PR evidence boundary. |
+| Unrelated tests and validators | Not claimed by this dependency-bootstrap update. |

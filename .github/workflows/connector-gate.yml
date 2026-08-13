@@ -52,10 +52,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install repository test dependency
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Install connectors-core package
-        run: python -m pip install -e ./packages/connectors-core
+        run: python tools/ci/install_python_ci.py connectors-core
 
       - name: Compile and import connectors-core without runtime effects
         run: |

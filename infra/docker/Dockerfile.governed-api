@@ -1,7 +1,9 @@
 # Security-review placeholder for governed-api.
 # This image intentionally contains no application payload, secrets, lifecycle data,
 # receipts, proofs, release material, or published artifacts.
-FROM python:3.11.15-slim-trixie
+FROM python:3.11.15-slim-trixie@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
+
+COPY governed-api-requirements.lock /tmp/governed-api-requirements.lock
 
 RUN set -eux; \
     python -m pip install \
@@ -9,8 +11,9 @@ RUN set -eux; \
         --no-cache-dir \
         --no-compile \
         --upgrade \
-        "setuptools==82.0.1" \
-        "wheel==0.46.3"; \
+        --require-hashes \
+        --requirement /tmp/governed-api-requirements.lock; \
+    rm /tmp/governed-api-requirements.lock; \
     groupadd --gid 10001 kfm; \
     useradd \
         --uid 10001 \

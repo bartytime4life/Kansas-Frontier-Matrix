@@ -60,7 +60,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Validate existing readiness and Cosign-plan prerequisites
         run: |

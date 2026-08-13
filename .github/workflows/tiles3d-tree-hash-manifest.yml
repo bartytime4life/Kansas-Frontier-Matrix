@@ -59,7 +59,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
       - name: Run focused tests and deterministic fixtures
         run: |
           set -euo pipefail

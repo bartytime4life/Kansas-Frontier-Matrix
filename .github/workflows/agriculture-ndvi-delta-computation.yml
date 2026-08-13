@@ -60,7 +60,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run deterministic computation tests
         run: python -m pytest tests/domains/agriculture/test_ndvi_delta_computation.py -q --strict-config --strict-markers

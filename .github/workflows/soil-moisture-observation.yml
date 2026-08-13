@@ -62,7 +62,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared schema and test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run focused deterministic no-network tests
         run: |

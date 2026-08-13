@@ -51,14 +51,18 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: pyproject.toml
+          cache-dependency-path: |
+            tools/ci/python-audit.lock
+            tools/ci/python-test.lock
 
       - name: Install pinned audit tool
-        run: python -m pip install "pip-audit==2.10.1"
+        run: python tools/ci/install_python_ci.py audit-tool
 
-      - name: Audit root Python project dependencies
+      - name: Audit the hash-locked Python CI dependency set
         run: >-
-          python -m pip_audit .
+          python -m pip_audit
+          --requirement tools/ci/python-test.lock
+          --no-deps
           --progress-spinner off
           --desc off
           --format columns
@@ -70,14 +74,13 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Python dependency audit boundary
 
-          This lane audits dependencies resolved from the root `pyproject.toml`
-          with pinned scanner version `pip-audit==2.10.1`.
+          This lane audits the complete, hash-locked Python CI dependency set
+          with scanner version `pip-audit==2.10.1`, itself installed from a
+          separate hash-locked environment.
 
           A green result means no known vulnerability was reported for the
-          dependency resolution produced during this run. The repository does
-          not currently provide a committed Python lockfile at this root, so
-          this is a point-in-time resolution rather than a reproducible locked
-          dependency attestation.
+          exact dependency versions in `tools/ci/python-test.lock` against the
+          advisory data available during this run.
 
           The result is not proof of vulnerability absence, compatibility,
           source integrity, release readiness, deployment approval, or

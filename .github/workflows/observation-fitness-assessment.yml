@@ -58,7 +58,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run fixture matrix
         run: python tools/validators/evidence/validate_observation_fitness_assessment.py --fixtures
       - name: Run focused tests

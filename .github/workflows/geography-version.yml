@@ -64,7 +64,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared validation dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run focused and adjacent deterministic tests
         run: |
           python -m unittest -v tests.validators.test_validate_geography_version

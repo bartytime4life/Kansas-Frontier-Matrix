@@ -59,7 +59,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
       - name: Validate metadata, fixtures, and detached bytes
         run: |
           set -euo pipefail
