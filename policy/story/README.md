@@ -10,7 +10,7 @@
 
 > [!IMPORTANT]
 > **Safe current conclusion:** at
-> `main@8fdcfeeb6013dc4432b8892e62e173703f6cd2f4`, this directory contains this
+> `main@96a550a3435b9ef02f5572a1a440eebd9f8ac26a`, this directory contains this
 > README stub and one `PROPOSED` Rego stub. The module declares
 > `default deny := false`; its only denial example is commented out. No
 > story-native Rego test, accepted input or output contract, bundle selection,
@@ -79,7 +79,7 @@ behavior.
 | Release and publication | Separate governed responsibilities | Nothing in this directory releases, deploys, or publishes a story. |
 
 All current-state claims above are pinned to
-`main@8fdcfeeb6013dc4432b8892e62e173703f6cd2f4`. Later changes require a fresh
+`main@96a550a3435b9ef02f5572a1a440eebd9f8ac26a`. Later changes require a fresh
 inventory and claim review.
 
 ### Truth labels used here
@@ -382,7 +382,7 @@ public artifact.
 
 | Evidence | Reviewed identity |
 |---|---|
-| Repository base | `main@8fdcfeeb6013dc4432b8892e62e173703f6cd2f4` |
+| Repository base | `main@96a550a3435b9ef02f5572a1a440eebd9f8ac26a` |
 | Prior target blob | `64cb3860dd2b0a2d64152868ab2437148c899da2` |
 | Rego blob | `9f3791db0da8a91ef3d10c7152fc738eb53139c3` |
 | Parent policy README blob | `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35` |
