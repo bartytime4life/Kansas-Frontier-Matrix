@@ -19,18 +19,26 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out exact pull-request head
+      - name: Check out pull-request merge result without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify checkout provenance
         env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
-          git init .
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPOSITORY}.git"
-          git fetch --depth=1 origin "${HEAD_SHA}"
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "${HEAD_SHA}"
+          checked_out_sha="$(git rev-parse HEAD)"
+          test "${checked_out_sha}" = "${EXPECTED_SHA}"
+
+          if [[ "${EVENT_NAME}" = "pull_request" ]]; then
+            mapfile -t parents < <(git cat-file commit HEAD | sed -n 's/^parent //p')
+            test "${#parents[@]}" -eq 2
+            test "${parents[1]}" = "${EXPECTED_PR_HEAD_SHA}"
+          fi
 
       - name: Parse schema and fixtures
         run: |
