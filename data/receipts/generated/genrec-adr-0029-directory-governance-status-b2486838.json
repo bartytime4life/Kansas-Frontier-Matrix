@@ -1,0 +1,255 @@
+{
+  "receipt_id": "genrec-adr-0029-directory-governance-status-b2486838",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md": "sha256:b24868381cefe6fe22af6576a57ce4500c310941b8aeaef955dd53f6b4e8120a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:9259b40fb673370bca14b92b4675552002e62ef0d423fed5eed206aa2f18261e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "isolated sparse worktree",
+      "repository-native deterministic documentation validation",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "static ADR, index, and directory-governance reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b24868381cefe6fe22af6576a57ce4500c310941b8aeaef955dd53f6b4e8120a",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:a89f0527052062ce0ae659a3e9b5f863b050bc6731a7a569c4c4403d3ff2f46c",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:805cc62ca23614566873173d0fc5ece1cef269a8c303a7cbe1d001b34ac605ca",
+      "sha256:a9f0bce2bfb5c2111e213c6a1ebcd1ff0525360cbeb95bab252edb3c6a9d11d4",
+      "sha256:0b1c9d56110ef933e3d4804e0671b3150f2a49638ee2c93be16be2c0c07beb0f",
+      "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
+      "sha256:6c847228d3a6f0e618bbbd592e2970c8adcbaa197c82fc5aa0b94b32f16c0c1d",
+      "sha256:92243aa97e6ffc9f10101d87e24788791a01807085b2e8b8a86fb7ce50531b39",
+      "sha256:722da22af2a884e7aecca2897474d0bf0371f9620f335fa719cdab31cc7a92a2",
+      "sha256:4dfd56682f08afece775272719ff527d8a2e243e78125f025962359a58498bf0",
+      "sha256:8579d9ec5e5902f74dbf35146f23b33e54f6518dbf3ebe4ba617933d06a4d6a5",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5"
+    ],
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf (rendered lineage companion; no new PDF-byte claim)",
+      "KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md (supplied workflow contract)"
+    ],
+    "evidence_refs": [
+      "repo:commit@1384c5c06e5cb19bae4ac67be037559fa68edd21",
+      "repo:branch-base@c326c913f6d744d6e19a52c97dd0fffbc60abbbd",
+      "repo:commit@072461c50c5bce8b928e79fac5b71473bd45cf36",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62",
+      "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/architecture/directory-rules.md@18653c00ba193a4afaa3e07a0924452807fb98ef",
+      "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:contracts/governance/path_decision_record.md@c91be4f6c2cf0db9db7c07ef10768a98a5d0c247",
+      "repo:control_plane/path_alias_register.yaml@8a6503fb1c7f419e362cf2ced44ace66eff1aa4d",
+      "repo:control_plane/domain_lane_register.yaml@1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "repo:control_plane/cross_domain_seam_register.yaml@dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29",
+      "repo:tools/validators/directory_governance/validate_repository_topology.py@e2992453d5d78015035ae6e312d839bfc3a2cbda",
+      "repo:tools/validators/directory_governance/repository_topology_baseline.json@717c2480686d254ba6a8b8c19276cfcf0c6bbda2",
+      "repo:Makefile@c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326",
+      "repo:.github/workflows/validator-suite.yml@dca889a3135b408767ff6cf21b7ce6eedfcc4781",
+      "repo:docs/adr/INDEX.md@938c5894c36b99e14810918e2c550ab0e92d53b1",
+      "repo:docs/adr/README.md@b497be1714b88550d2f1eb151bc20a6351e99dec",
+      "repo:docs/registers/ADR_INDEX.md@30bf343b044f13b1906fbb5072bf6ca62051aff1",
+      "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:pull/2741",
+      "repo:pull/2744"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned live main, exact target baseline bytes, relevant doctrine, registers, indexes, topology-enforcement artifacts, branch-name availability, and absence of an open pull request touching ADR-0029 before authoring."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced after the documented evidence snapshot through an unrelated Soil fixture-identity correction, then merged the initial ADR v1.2 content through PR #2741 and advanced again through PR #2742. The final provenance branch starts at main@c326c913f6d744d6e19a52c97dd0fffbc60abbbd; its bounded diff adds the merged-PR history link and this receipt without replaying or reverting either merged change."
+    },
+    {
+      "gate": "accepted-decision-integrity",
+      "outcome": "PASS",
+      "reason": "Preserved accepted status, decision date, exact canonical Directory Rules SHA-256 and Git blob, decision authority, supersession scope, compatibility sequence, bootstrap exception, rollback, and physical-deletion hold."
+    },
+    {
+      "gate": "canonical-and-legacy-byte-reverification",
+      "outcome": "PASS",
+      "reason": "Remote main confirms canonical doctrine blob fd49a0b83e55cef52c1124281f093e263526898d and full legacy compatibility blob 18653c00ba193a4afaa3e07a0924452807fb98ef; no doctrine, legacy body, tombstone, or path mutation is proposed."
+    },
+    {
+      "gate": "projection-parity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The Root Registry, PathDecisionRecord, Path Alias Register, Domain Lane Register, and Cross-Domain Seam Register remain byte-identical to the v1.1 status review and retain their declared non-effects."
+    },
+    {
+      "gate": "topology-ratchet-reconciliation",
+      "outcome": "PASS",
+      "reason": "Remote main confirms the 20-rule validator, 139-entry implementation-waiver baseline generated from main@bff35f5 and expiring 2026-11-10, validator-registry wiring, Make targets, focused tests, and aggregate workflow definition without treating any of them as placement or migration authority."
+    },
+    {
+      "gate": "adr-inventory-parity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Canonical INDEX.md coherently records 34 numbered ADRs as one accepted and 33 proposed; the landing page and cross-register summary still say 29 proposed and are recorded as documentation drift without changing any source status."
+    },
+    {
+      "gate": "no-loss-append-only-reconciliation",
+      "outcome": "PASS",
+      "reason": "The v1.2 update retains the acceptance record, consequences, alternatives, evidence, phased migration, rollback, open questions, gates, and history while appending a bounded current-state ledger."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network checker resolved 30 local targets; 19 GitHub references were classified as external and deliberately not requested."
+    },
+    {
+      "gate": "metadata-document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "Required KFM_META_BLOCK_V2, explicit-entrypoint document graph, and bounded-required stale scan passed with zero findings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "adr-index-coherence",
+      "outcome": "PASS",
+      "reason": "The repository validator confirms 34 unique numbered ADR records and 12 unassigned scaffolds with coherent source/index status relationships."
+    },
+    {
+      "gate": "markdown-render-and-static-structure",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed GitHub-Flavored Markdown successfully; UTF-8, LF, final newline, one H1, metadata delimiters, fence balance, tab absence, and git diff checks passed."
+    },
+    {
+      "gate": "focused-topology-semantics",
+      "outcome": "PASS",
+      "reason": "Seventeen non-live-index topology tests passed, including rule cardinality, invariant non-waivability, baseline shrink-only behavior, conventional README handling, alias detection, and high-value synthetic path/content rules."
+    },
+    {
+      "gate": "exact-remote-topology-live-index",
+      "outcome": "SKIPPED",
+      "reason": "The isolated local checkout is sparse and predates the latest remote alias-hardening blobs. Exact-head hosted execution is recorded separately rather than representing a stale local live-index scan as current-main proof."
+    },
+    {
+      "gate": "generated-receipt-manual-integrity",
+      "outcome": "PASS",
+      "reason": "Standards-conforming JSON, required-field presence, artifact/hash/truth-label path parity, policy and citation references, pending-review posture, PR linkage, and final ADR SHA-256 are checked locally."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the validator's jsonschema dependency; manual bounded integrity checks are recorded separately without claiming full schema-validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal records, protected payloads, signed URLs, production endpoints, or invented authority claims."
+    },
+    {
+      "gate": "runtime-migration-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no doctrine, ADR status, register, validator, baseline, workflow, runtime, lifecycle, migration, release, deployment, publication, settings, or physical-path behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the final pushed pull-request head and remain pending after this receipt is emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "PR #2741 merged the initial ADR v1.2 content before provenance closure. Follow-up draft PR #2744 remains pending authorized human review and creates no acceptance, merge, migration, deletion, release, deployment, or publication authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "adr-0029-v1.1-baseline",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "legacy-compatibility-body",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/directory-rules.md@18653c00ba193a4afaa3e07a0924452807fb98ef"
+    },
+    {
+      "id": "five-post-adoption-projections",
+      "validated": true,
+      "evidence_ref": "repo:commit@1384c5c06e5cb19bae4ac67be037559fa68edd21"
+    },
+    {
+      "id": "repository-topology-ratchet",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/directory_governance/validate_repository_topology.py@e2992453d5d78015035ae6e312d839bfc3a2cbda"
+    },
+    {
+      "id": "repository-topology-baseline",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/directory_governance/repository_topology_baseline.json@717c2480686d254ba6a8b8c19276cfcf0c6bbda2"
+    },
+    {
+      "id": "topology-command-and-workflow-wiring",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/validator-suite.yml@dca889a3135b408767ff6cf21b7ce6eedfcc4781"
+    },
+    {
+      "id": "canonical-adr-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@938c5894c36b99e14810918e2c550ab0e92d53b1"
+    },
+    {
+      "id": "stale-adr-summary-prose",
+      "validated": true,
+      "evidence_ref": "repo:docs/registers/ADR_INDEX.md@30bf343b044f13b1906fbb5072bf6ca62051aff1"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T21:27:49Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": 2744,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. PR #2741 merged the initial ADR v1.2 content before its provenance closure; draft PR #2744 carries only the merged-PR history link and this receipt from the later main head. The receipt preserves ADR-0029 as accepted, pins the v1.2 implementation snapshot separately from the branch base, records the topology baseline and stale ADR-summary counts without promoting them to authority, and keeps consumer closure, tombstoning, physical deletion, required-check coupling, independent stewardship, merge, release, deployment, and publication outside this change."
+}
