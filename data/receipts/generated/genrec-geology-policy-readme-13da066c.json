@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-geology-policy-readme-13da066c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/geology/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/geology/README.md": "sha256:13da066c1b3095737ce8e2e641b3cb553862e8f1bcd05e775e91fc8516cf4115"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "complete recursive repository-tree inspection",
+      "exact Geology policy-source inspection",
+      "adjacent contract, schema, fixture, test, validator, workflow, pipeline, source, proof, release, bundle, and runtime reconciliation",
+      "local Markdown structure, link, fact, sensitive-content, and SHA-256 validation",
+      "attached Geology architecture-report text extraction and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/policy/domains/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/SOURCE_ROLE_MATRIX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/contracts/domains/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/schemas/contracts/v1/domains/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/tests/domains/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/tools/validators/domains/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/tools/validators/geology",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/.github/workflows/domain-geology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/decision/vocabulary.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/decision/reviewer_roles.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/bundles/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/packages/policy-runtime/src/policy_runtime/core.py"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/geology/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, target bytes, complete tree, permissions, target history, open pull requests, exact-target overlap, and planned branch availability before authoring."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring only through policy/domains/atmosphere/README.md; the Geology target and cited Geology evidence were unchanged, all links still resolved, and the candidate was re-pinned to main@1cd3da895de5 before review."
+    },
+    {
+      "gate": "accepted-directory-placement",
+      "outcome": "PASS",
+      "reason": "ADR-0029 and accepted Directory Rules retain Geology-specific policy under policy/domains/geology/ and this change creates no root, alias, or authority."
+    },
+    {
+      "gate": "complete-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Parsed the untruncated 16,987-entry recursive tree and reconciled the exact sixteen-blob Geology policy lane plus every cited adjacent responsibility lane."
+    },
+    {
+      "gate": "local-policy-source-classification",
+      "outcome": "PASS",
+      "reason": "Inspected all ten Rego files, one policy JSON, and three rights YAML files; recorded eight allow-false and two deny-false defaults, zero operative rule bodies, split package namespaces, and placeholder-only data."
+    },
+    {
+      "gate": "adjacent-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Separated four bounded executable validation profiles from zero native Geology Rego tests, 38 mixed-maturity schemas, seven comment-only pipeline modules, eleven inactive pipeline specs, and explicit proof/release holds."
+    },
+    {
+      "gate": "attached-report-authority-separation",
+      "outcome": "PASS",
+      "reason": "Text-extracted and visually inspected the 42-page PDF-only Geology architecture report; used it for terminology and anti-collapse review while preserving its explicit proposed/no-mounted-repository posture and treating current GitHub bytes as implementation authority."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the prior purpose, authority, placement, input/output, validation, review, related-folder, and proposed-status intent while repairing overbroad responsibility and stale implementation claims."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one rendered H1, 60 ordered headings, one closed KFM meta block, four balanced language-tagged code-fence pairs, no duplicate heading slugs, no tabs or trailing whitespace, and a final newline; Pandoc parsed the GFM successfully."
+    },
+    {
+      "gate": "internal-link-and-fragment-resolution",
+      "outcome": "PASS",
+      "reason": "All 87 repository-relative links and local fragments resolve against the complete pinned tree and generated heading anchors."
+    },
+    {
+      "gate": "repository-fact-assertions",
+      "outcome": "PASS",
+      "reason": "Programmatic assertions confirmed tree size, policy blob and Rego counts, default/result classifications, schema maturity classes, test/validator profiles, workflow jobs, pipeline/spec placeholders, and source/proof/release holds."
+    },
+    {
+      "gate": "artifact-content-integrity",
+      "outcome": "PASS",
+      "reason": "The final README SHA-256 was recomputed from exact local bytes and bound into this receipt."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credential, private payload, exact protected location, hidden reasoning, or exploit detail is present."
+    },
+    {
+      "gate": "repository-native-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout or gh CLI is available; no local Rego evaluator, repository validator suite, or workflow result is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks occur only after draft pull-request creation and are observed separately from this immutable authoring receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "complete-geology-policy-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/policy/domains/geology"
+    },
+    {
+      "id": "geology-source-role-and-anti-collapse",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/SOURCE_ROLE_MATRIX.md"
+    },
+    {
+      "id": "geology-sensitivity-intent",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/docs/domains/geology/SENSITIVITY.md"
+    },
+    {
+      "id": "geology-schema-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/1cd3da895de521c70096f6d04b406c412b70f707/schemas/contracts/v1/domains/geology"
+    },
+    {
+      "id": "geology-bounded-validation-and-holds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/.github/workflows/domain-geology.yml"
+    },
+    {
+      "id": "shared-inactive-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/decision/vocabulary.v1.json"
+    },
+    {
+      "id": "policy-bundle-and-runtime-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1cd3da895de521c70096f6d04b406c412b70f707/policy/bundles/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T18:59:03Z",
+  "emitter": "openai/gpt-5-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded v0.1 Geology and Natural Resources policy-boundary reconciliation on a focused draft-review branch. The attached PDF-only architecture report was used as proposed terminology evidence only; current repository bytes control implementation claims. Main drift through the separate Atmosphere policy README was reviewed and the candidate was re-pinned before review. This change activates no rule, source term, threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, source, lifecycle transition, release, deployment, or publication. Human review remains pending."
+}
