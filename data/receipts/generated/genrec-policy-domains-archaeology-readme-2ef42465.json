@@ -1,0 +1,269 @@
+{
+  "receipt_id": "genrec-policy-domains-archaeology-readme-2ef42465",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/archaeology/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/archaeology/README.md": "sha256:2ef4246536cbd0386b2d8369a800aac0fe22b5b569da08c4f4aa6e71ebb18806"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:f59062fc26fa466645d77dbf3decb331a9248d75a3190c9315db94160933c1bc",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:47eb7659ba121bd60b69fc8d878ba845185145b62eeaad7d69acdb5ef9bb2328",
+      "sha256:963dd0b014c1f3b9eb9ea4bd8d1bd2c990912b01038e690d51411f94d010db9f",
+      "sha256:a6201a548617ba5234cd6b47df185aeb86956dec55407023ba7c83cd9ce69ead",
+      "sha256:00fa2ba71ed3b5cbb30a0117b6d9e9b5f7c5ae09b5f7e16b0437ea6d4261009b",
+      "sha256:ae8f311d0c0d55e01cc5a8d9eec1a5aee15aadc34c5568d1047c79dacb4d79f0",
+      "sha256:34ac324154f07ef4eb1bc9bf88ef0d75f217ce994a2556fa05be597d6578731f",
+      "sha256:b5ecd864fd86cac9aa619db4050de7fb19e36cf50b9b85114c8cf4e031b15ac0",
+      "sha256:d2d3fa64b7ea68cf9b5d8034b48d637957fd0ea3951ea3f1b466ecd75a852cc3",
+      "sha256:3c569d583fa2288ba8a5a80604aa9e973c48b67decb1de13c474064f3bb8b413",
+      "sha256:e3b1ae18c526925f84ab3179ac318c055d47eea98c77f6867182026456e2c771",
+      "sha256:449ae43e716b8ca812b3093574c165b8ffe55b477851fc515c06c465623b6a3b",
+      "sha256:19e8d376e9e1aa9193af7d2318a27453a380e27c768f1916ba77a97b238b370d",
+      "sha256:c95c98c128bc2a26ecb99ed9dac4795c26226ecf9eba54b05a6cdd70492c5888",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "# KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent.md"
+    ],
+    "evidence_refs": [
+      "repo:commit@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/domains/archaeology/*.rego@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/sensitivity/archaeology/sovereignty_chip_required.rego@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/sensitivity/archaeology_precise_coords_redaction.rego@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/domains/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/bundles/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:policy/decision/vocabulary.v1.json@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:packages/policy-runtime/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/doctrine/directory-rules.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/domains/archaeology/PUBLICATION_AND_POLICY.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/domains/archaeology/SENSITIVITY.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:docs/domains/archaeology/CULTURAL_REVIEW.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:contracts/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:schemas/contracts/v1/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:fixtures/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:tests/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:tools/validators/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:tools/validators/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:.github/workflows/domain-archaeology.yml@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:release/candidates/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:control_plane/domain_lane_register.yaml@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:control_plane/policy_gate_register.yaml@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:.github/CODEOWNERS@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f61d9df6409917610fa45d739fab55cab86f5eb2",
+      "repo:tools/validators/validate_generated_receipt.py@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/archaeology/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, exact target history and bytes, complete direct and adjacent policy inventory, accepted directory placement, CODEOWNERS routing, domain documentation, contracts, schemas, fixtures, tests, validators, workflow, bundle/runtime boundaries, release lane, registers, and exact-target open-pull-request overlap were inspected before authoring."
+    },
+    {
+      "gate": "archaeology-static-inventory",
+      "outcome": "PASS",
+      "reason": "Deterministic assertions confirmed 13 direct Rego sources, 10 allow-default-false scaffolds, 3 deny-default-false stubs, 14 direct test modules with 13 one-line placeholders, and 40 domain schemas split into 3 closed inactive profiles, 22 empty permissive scaffolds, and 15 three-field permissive scaffolds."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, logical heading progression, balanced fenced blocks, no trailing whitespace or diff-check error, UTF-8-compatible text, a final newline, and one KFM_META_BLOCK_V2 envelope that passes the bounded required profile with zero findings."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 89 local README targets and fragments with no external target requests."
+    },
+    {
+      "gate": "document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "The explicit-file document-graph and bounded-required stale-scan profiles passed with zero findings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "archaeology-specialized-validator-suites",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the declared jsonschema dependency. The repository-native project-test installer attempted to resolve the exact locked profile, but network approval was unavailable; no source failure is inferred. Source, fixtures, tests, and command-bearing workflow were inspected without claiming a local pass."
+    },
+    {
+      "gate": "direct-archaeology-domain-tests",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks pytest and dependency installation was unavailable. Static inspection establishes that the direct lane contains thirteen one-line placeholders plus one assert-true smoke test, so no substantive policy evidence would follow from that lane in its current form."
+    },
+    {
+      "gate": "direct-archaeology-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "OPA is unavailable locally and this lane has no accepted checksum-pinned evaluator, bundle manifest, native Rego test, or workflow invocation. Static exact-source inspection is recorded without claiming parse or evaluator success."
+    },
+    {
+      "gate": "json-and-diff-integrity",
+      "outcome": "PASS",
+      "reason": "All forty archaeology domain schemas and this receipt parse as standards-conforming JSON under jq; git diff check reports no whitespace errors; the final README SHA-256 digest is bound in this receipt."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator's jsonschema dependency is unavailable locally and locked dependency installation could not obtain network approval. Manual JSON, required-field, path/key parity, SHA-256, citation, policy-reference, and pending-review checks are performed separately without claiming full validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal data, restricted payloads, exact sensitive locations, signed URLs, production endpoints, consent secrets, or invented actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego source, policy value, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consumer, review record, decision, lifecycle state, release, deployment, or publication behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, cultural or rights-holder approval, independent approval, merge authority, release authority, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "archaeology-direct-policy-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-rule-polarity-and-scaffold-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/archaeology/*.rego@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "canonical-policy-root-and-general-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "directory-placement-and-root-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "accepted-directory-governance-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "draft-sensitive-domain-deny-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-domain-policy-and-sensitivity-intent",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/archaeology/PUBLICATION_AND_POLICY.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-contract-inventory",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-schema-inventory-and-maturity",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-direct-test-placeholder-maturity",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-validator-maturity",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-ci-bounded-slice-and-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-archaeology.yml@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "archaeology-no-candidate-dossier-posture",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/archaeology/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "policy-bundle-and-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/bundles/README.md@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "inactive-shared-reason-and-obligation-vocabulary",
+      "validated": true,
+      "evidence_ref": "repo:policy/decision/vocabulary.v1.json@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@f61d9df6409917610fa45d739fab55cab86f5eb2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T18:52:41Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only current-state reconciliation of policy/domains/archaeology/README.md. The update preserves the v0.1 policy-only placement and sensitive-domain intent while replacing stale blanket uncertainty with exact inventory and maturity evidence. It distinguishes ten allow-default-false scaffolds from three permissive-by-absence deny stubs; separates draft doctrine, permissive schemas, placeholder direct tests, specialized inactive validator profiles, one workflow-executed 3D fixture slice, proof/release holds, and empty policy-gate/candidate state; and adds explicit authority, input, outcome, obligation, composition, public-surface, validation, review, implementation, correction, rollback, no-loss, and evidence boundaries. It changes no Rego rule, policy value, contract, schema, registry, fixture, validator, test, workflow, bundle, evaluator, consumer, review record, decision, lifecycle state, release, deployment, publication, or public behavior. This receipt is provenance and process memory, not policy acceptance, factual evidence, cultural or rights-holder authority, independent review, merge authority, release authority, or publication authority; authorized human review remains pending."
+}
