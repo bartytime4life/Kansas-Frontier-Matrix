@@ -23,7 +23,7 @@ owning_root: docs/
 responsibility: proposed compatibility-root decision record grounded on adopted singular policy placement without independent policy, release, or publication authority
 current_path: "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
