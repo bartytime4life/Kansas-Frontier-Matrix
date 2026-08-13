@@ -94,6 +94,15 @@ class InstallPythonCiTests(unittest.TestCase):
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
 
+    def test_each_migrated_workflow_selects_one_known_profile(self) -> None:
+        counts: dict[str, int] = {}
+        for workflow in sorted((REPO_ROOT / ".github/workflows").glob("*.yml")):
+            for profile in module.profiles_for_workflow(workflow):
+                counts[profile] = counts.get(profile, 0) + 1
+        self.assertGreaterEqual(sum(counts.values()), 388)
+        self.assertEqual(1, counts["audit-tool"])
+        self.assertEqual(1, counts["all-local-test"])
+
 
 if __name__ == "__main__":
     unittest.main()

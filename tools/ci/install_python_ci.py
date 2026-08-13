@@ -83,6 +83,67 @@ PROFILES = {
 }
 
 
+def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
+    """Return the fixed profiles invoked by one repository workflow."""
+
+    if workflow_path.is_symlink() or not workflow_path.is_file():
+        raise InstallConfigurationError("WORKFLOW_UNSAFE")
+    try:
+        workflow_path.resolve().relative_to(REPO_ROOT / ".github/workflows")
+        text = workflow_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError, ValueError) as exc:
+        raise InstallConfigurationError("WORKFLOW_UNREADABLE") from exc
+    marker = "python tools/ci/install_python_ci.py "
+    profiles: set[str] = set()
+    for line in text.splitlines():
+        if marker not in line:
+            continue
+        profile_name = line.split(marker, 1)[1].strip()
+        if profile_name == "verify-workflows":
+            continue
+        profiles.add(profile_name)
+    if not profiles:
+        return frozenset()
+    if any(profile_name not in PROFILES for profile_name in profiles):
+        raise InstallConfigurationError("PROFILE_UNKNOWN")
+    return frozenset(profiles)
+
+
+def verify_workflow_receipts() -> None:
+    """Verify changed workflows through their immutable receipts plus new locks."""
+
+    workflow_root = REPO_ROOT / ".github/workflows"
+    workflows = sorted(workflow_root.glob("*.yml")) + sorted(
+        workflow_root.glob("*.yaml")
+    )
+    locked_count = 0
+    for workflow in workflows:
+        profile_names = profiles_for_workflow(workflow)
+        if not profile_names or workflow.name == "python-dependency-lock.yml":
+            continue
+        locked_count += 1
+        prior_bytes = subprocess.run(
+            (
+                "git",
+                "show",
+                f"HEAD^:{workflow.relative_to(REPO_ROOT).as_posix()}",
+            ),
+            check=True,
+            cwd=REPO_ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        ).stdout
+        old_prefix = b"python -m pip install"
+        if old_prefix not in prior_bytes:
+            raise InstallConfigurationError("PRIOR_WORKFLOW_INSTALL_MISSING")
+        for profile_name in profile_names:
+            profile = PROFILES[profile_name]
+            validate_lockfile(_lock_path(profile))
+            _validate_local_specs(profile)
+    if locked_count < 1:
+        raise InstallConfigurationError("WORKFLOW_MIGRATION_EMPTY")
+
+
 def _lock_path(profile: InstallProfile) -> Path:
     path = REPO_ROOT / profile.lockfile
     if path.is_symlink() or not path.is_file():
@@ -198,9 +259,12 @@ def install(profile_name: str) -> None:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("profile", choices=sorted(PROFILES))
+    parser.add_argument("profile", choices=[*sorted(PROFILES), "verify-workflows"])
     args = parser.parse_args(argv)
-    install(args.profile)
+    if args.profile == "verify-workflows":
+        verify_workflow_receipts()
+    else:
+        install(args.profile)
     return 0
 
 

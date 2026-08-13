@@ -77,5 +77,6 @@ jobs:
       - name: Verify installer invariants and environment consistency
         run: |
           python -m unittest tests/ci/test_install_python_ci.py -v
+          python tools/ci/install_python_ci.py verify-workflows
           python -m pip check
           python -m py_compile tools/ci/install_python_ci.py
