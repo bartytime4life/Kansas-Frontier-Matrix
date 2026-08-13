@@ -2,31 +2,36 @@
 doc_id: kfm://doc/pipeline-specs-air-readme
 title: pipeline_specs/air/ — Air Pipeline Specification Compatibility Guardrail
 type: readme
-version: v0.2
+version: v0.3
 status: draft; repository-grounded; compatibility-guardrail; no-active-specs-established
 owners: OWNER_TBD — Pipeline-spec steward · Atmosphere/Air steward · Pipeline owner · Source steward · Evidence steward · Policy/sensitivity steward · Validation steward · Release steward · Docs steward
 created: 2026-06-13
-updated: 2026-07-15
-supersedes: v0.1
+updated: 2026-08-12
+supersedes: v0.2
 policy_label: public; pipeline-specs; air; atmosphere; compatibility-only; declarative-only; no-secrets; no-live-activation; no-public-path; not-emergency-alerting; official-authority-redirection; release-gated
 current_path: pipeline_specs/air/README.md
-truth_posture: CONFIRMED current target, pipeline_specs root contract, sibling pipeline_specs/atmosphere README, both Air and Atmosphere executable-lane READMEs, Atmosphere source-registry lane, Atmosphere contract/schema/test documentation, 33-line policy scaffold, TODO-only domain-atmosphere workflow, placeholder CODEOWNERS, and bounded searches that surfaced no concrete Air or Atmosphere pipeline-spec file beyond lane READMEs / PROPOSED treating this Air path as a compatibility and migration guardrail while Atmosphere remains the preferred documentation-aligned spec lane / UNKNOWN canonical slug decision, accepted pipeline-spec schema, parser, registry, consumer discovery, executable binding, schedules, source activation, runtime behavior, substantive CI enforcement, receipt emission, release integration, and production use / NEEDS VERIFICATION owners, ADR or lane-register resolution, exact lane inventory beyond bounded search, accepted source descriptors, source roles and rights, temporal and stale-state vocabularies, caveat profiles, fixture payloads, executable tests, validator ownership, correction handling, and rollback execution
+truth_posture: CONFIRMED accepted Directory Rules v2, exact Air and Atmosphere spec-lane inventories, proposed domain-lane projection, bounded executable Atmosphere CI, adjacent contracts/schemas/policy/fixtures/tests/validators, current source-record inventory, CODEOWNERS routing, and empty release-candidate lane / PROPOSED treating this Air path as a compatibility guardrail while Atmosphere remains the preferred stage-scaffold lane / UNKNOWN accepted pipeline-spec schema, parser, registry, scheduler, consumer binding, source activation, full policy evaluation, proof production, release integration, and production use / NEEDS VERIFICATION canonical slug decision, path-alias migration, independent stewards, source rights and activation, canonical failure vocabulary, spec-specific fixture and test homes, adjacent documentation drift, correction handling, and rollback execution
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 7862e6c8b3c724839be32bbc465dc159e443e424
-  prior_blob: 19ec77b8da7b608e1e2ff79a5e07c262d64b6eb5
+  base_commit: 96a550a3435b9ef02f5572a1a440eebd9f8ac26a
+  base_tree: 9cfc5f3e09961b5306f13d6f6f66c38fca41176a
+  prior_blob: 16a5096d5edcad9bbba51c87ef5f5d5521c2a0d6
   requested_lane: pipeline_specs/air/
   preferred_documentation_lane: pipeline_specs/atmosphere/
   implementation_alias_lane: pipelines/domains/air/
   preferred_implementation_lane: pipelines/domains/atmosphere/
-  workflow_posture: domain-atmosphere is pull-request-triggered TODO scaffolding
+  workflow_posture: selected synthetic Atmosphere checks execute; proof production and release dry-run remain on WORKFLOW_HOLD
 related:
   - ../README.md
   - ../atmosphere/README.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/domain_lane_register.yaml
+  - ../../control_plane/path_alias_register.yaml
   - ../../docs/domains/atmosphere/README.md
   - ../../docs/domains/atmosphere/PIPELINE.md
   - ../../docs/domains/atmosphere/CANONICAL_PATHS.md
@@ -37,15 +42,17 @@ related:
   - ../../contracts/domains/atmosphere/README.md
   - ../../schemas/contracts/v1/domains/atmosphere/README.md
   - ../../policy/domains/atmosphere/README.md
-  - ../../tests/domains/atmosphere/policy-deny/README.md
-  - ../../tests/domains/atmosphere/no-network/README.md
+  - ../../fixtures/domains/atmosphere/README.md
+  - ../../tests/domains/atmosphere/README.md
+  - ../../validators/domains/atmosphere/README.md
   - ../../.github/workflows/domain-atmosphere.yml
   - ../../.github/CODEOWNERS
 notes:
-  - "v0.2 replaces a full-spec-lane presentation with a repository-grounded compatibility guardrail because both air and atmosphere lanes exist while current documentation prefers atmosphere and marks air as an alias candidate."
-  - "This revision does not resolve the canonical slug, delete a path, migrate a specification, create an alias implementation, or authorize automatic discovery from either lane."
-  - "The v0.1 what-versus-how, lifecycle, source-role, caveat, evidence, receipt, advisory, release, correction, and rollback controls are preserved as requirements for any future accepted Atmosphere specification."
-  - "No executable spec, source record, connector, schema, contract, policy, fixture, test, workflow, lifecycle object, receipt, proof, release object, runtime behavior, alerting behavior, or public artifact is created or modified."
+  - "v0.3 reconciles the compatibility guardrail with the complete current tree and the now-bounded executable Atmosphere workflow."
+  - "Five Atmosphere YAML files are tracked, but each has an empty stages list and therefore remains inactive scaffolding."
+  - "The proposed domain-lane projection records air as an Atmosphere alias; it does not create a filesystem alias, migration, parser rule, activation, or accepted canonical-slug decision."
+  - "This revision does not resolve the slug, move or delete a path, create a spec, activate a source or schedule, or authorize release or publication."
+  - "The what-versus-how, lifecycle, source-role, caveat, evidence, receipt, advisory, release, correction, and rollback controls remain requirements for any future accepted specification."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -54,67 +61,61 @@ notes:
 
 `pipeline_specs/air/`
 
-> Compatibility and migration guardrail for the `air` pipeline-spec slug. Current repository documentation aligns new Atmosphere/Air/Climate declarative specifications with [`pipeline_specs/atmosphere/`](../atmosphere/README.md). This path must not become a second authority tree without an accepted ADR or governed migration.
+> **One-line purpose.** This directory is the documentation-only compatibility boundary for the unresolved `air` pipeline-spec slug. New declarative Atmosphere work aligns with [`pipeline_specs/atmosphere/`](../atmosphere/README.md) unless an accepted decision establishes a different canonical path.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-informational)
-![authority](https://img.shields.io/badge/authority-compatibility__guardrail-yellow)
-![preferred](https://img.shields.io/badge/preferred__lane-pipeline__specs%2Fatmosphere%2F-1f8fff)
-![inventory](https://img.shields.io/badge/active__specs-not__established-lightgrey)
-![safety](https://img.shields.io/badge/emergency__authority-official__issuer-critical)
+[![Status: draft compatibility guardrail](https://img.shields.io/badge/status-draft%20compatibility%20guardrail-blue)](#current-status)
+[![Version: v0.3](https://img.shields.io/badge/version-v0.3-informational)](#current-status)
+[![Active specs: none established](https://img.shields.io/badge/active%20specs-none%20established-lightgrey)](#current-inspected-inventory)
+[![Runtime authority: none](https://img.shields.io/badge/runtime%20authority-none-yellow)](#authority-and-anti-collapse)
+[![Release: governed elsewhere](https://img.shields.io/badge/release-governed%20elsewhere-critical)](#lifecycle-gates-and-finite-failures)
 
-**Quick links:** [Purpose](#purpose) · [Status](#current-status) · [Authority](#authority-and-anti-collapse) · [Placement](#repository-fit-and-slug-drift) · [Inventory](#current-inspected-inventory) · [Compatibility contract](#compatibility-lane-contract) · [Atmosphere spec requirements](#requirements-for-any-future-atmosphere-specification) · [Source roles](#source-role-rights-time-and-activation) · [Knowledge boundaries](#atmosphere-knowledge-character-boundaries) · [Lifecycle](#lifecycle-gates-and-finite-failures) · [Validation](#validation-and-enforceability) · [Review](#review-migration-and-change-discipline) · [Rollback](#rollback-correction-and-deactivation) · [Backlog](#open-verification-register) · [Evidence](#evidence-ledger)
+**Quick links:** [Purpose](#purpose) · [Status](#current-status) · [Authority](#authority-and-anti-collapse) · [Placement](#repository-fit-and-slug-drift) · [Inventory](#current-inspected-inventory) · [Compatibility contract](#compatibility-lane-contract) · [Future spec](#requirements-for-any-future-atmosphere-specification) · [Source controls](#source-role-rights-time-and-activation) · [Knowledge boundaries](#atmosphere-knowledge-character-boundaries) · [Lifecycle](#lifecycle-gates-and-finite-failures) · [Validation](#validation-and-enforceability) · [Review](#review-migration-and-change-discipline) · [Rollback](#rollback-correction-and-deactivation) · [Open items](#open-verification-register) · [Evidence](#evidence-ledger)
 
 > [!IMPORTANT]
-> **Evidence snapshot:** `main@7862e6c8b3c724839be32bbc465dc159e443e424`  
-> **Target blob before this revision:** `19ec77b8da7b608e1e2ff79a5e07c262d64b6eb5`  
-> **Bounded direct-lane result:** repository search surfaced this README and no concrete `pipeline_specs/air/` profile  
-> **Preferred documentation alignment:** `pipeline_specs/atmosphere/`  
-> **Activation:** path or file presence activates nothing
+> **Pinned evidence:** `main@96a550a3435b9ef02f5572a1a440eebd9f8ac26a` · tree `9cfc5f3e09961b5306f13d6f6f66c38fca41176a` · prior target blob `16a5096d5edcad9bbba51c87ef5f5d5521c2a0d6`  
+> **Exact lane result:** `air/` contains only `.gitkeep` and this README. `atmosphere/` contains its sibling README plus five YAML scaffolds; every YAML file declares `stages: []`.  
+> **Activation:** a path, YAML file, workflow pass, or documentation claim activates nothing.
 
 > [!CAUTION]
-> AQI is not pollutant concentration, AOD is not PM2.5, a model field is not an observation, an advisory reference is not an official warning, a schedule is not freshness proof, and a passing README or YAML check is not release approval. KFM is not an emergency-alerting or life-safety issuing authority.
+> AQI is not pollutant concentration. AOD is not PM2.5. A model field is not an observation. An advisory reference is not an official warning. A schedule is not freshness proof. A passing YAML or CI check is not evidence closure or release approval. KFM is not an emergency-alerting or life-safety issuing authority.
 
 ---
 
 ## Purpose
 
-`pipeline_specs/air/` exists to prevent slug drift from becoming parallel authority.
+`pipeline_specs/air/` prevents slug drift from becoming parallel authority.
 
-The repository currently contains both:
+The current repository carries two related names:
 
-```text
-pipeline_specs/air/
-pipeline_specs/atmosphere/
-```
+| Surface | Current role |
+|---|---|
+| [`pipeline_specs/air/`](./README.md) | Documentation-only compatibility guardrail; no declarative spec is tracked here. |
+| [`pipeline_specs/atmosphere/`](../atmosphere/README.md) | Preferred stage-scaffold lane; its five YAML files are present but have no stages. |
+| [`pipelines/domains/air/`](../../pipelines/domains/air/README.md) | Transitional executable-lane documentation; not a second implementation authority. |
+| [`pipelines/domains/atmosphere/`](../../pipelines/domains/atmosphere/README.md) | Preferred executable documentation lane; current CI proves only selected synthetic profiles. |
 
-The parent pipeline-spec README describes `air/` as an air-quality-oriented alias/lane and `atmosphere/` as the weather, climate, and atmospheric profile lane. The Atmosphere sibling README and both executable-lane READMEs use `atmosphere` as the preferred documentation-aligned lane while marking `air` as unresolved or transitional.
+The parent [pipeline-spec contract](../README.md) classifies Air as compatibility-oriented and Atmosphere as the preferred stage-scaffold lane. The [proposed Domain Lane Register](../../control_plane/domain_lane_register.yaml) projects `air` as an alias for `atmosphere`. The [Path Alias Register](../../control_plane/path_alias_register.yaml) does not establish a corresponding path alias. Those facts support a guardrail; they do not resolve the canonical slug.
 
-Therefore, the safe current use of this directory is limited to:
+Therefore, this directory may:
 
-- preserving an inspectable compatibility boundary;
-- pointing maintainers to the preferred Atmosphere spec lane;
-- recording migration, deprecation, or redirect posture if a governed decision is made;
-- preventing duplicate specifications, IDs, schedules, consumers, or release semantics;
-- preserving the v0.1 safety and governance requirements for any future accepted specification.
+- preserve an inspectable compatibility boundary;
+- direct maintainers to the preferred Atmosphere lane;
+- record migration, deprecation, redirect, or tombstone posture after an accepted decision;
+- prevent duplicate IDs, schedules, consumers, sources, policies, and release semantics;
+- preserve the safety requirements inherited from earlier revisions.
 
 It must not:
 
-- host a second copy of an Atmosphere specification for convenience;
-- define a new canonical slug by README assertion;
-- activate a source, schedule, connector, parser, consumer, pipeline, or release path;
-- contain credentials, private endpoints, operational tokens, or source payloads;
-- turn modeled, indexed, aggregate, advisory, or contextual products into observations;
-- replace Hazards or an official issuing authority for warning or life-safety information;
-- become a public API, UI, map, tile, export, or generated-answer truth source.
+- host a convenient second copy of an Atmosphere specification;
+- declare a canonical slug by README assertion;
+- activate a source, schedule, parser, consumer, pipeline, proof, release, or public route;
+- contain credentials, private endpoints, source payloads, or sensitive examples;
+- collapse modeled, indexed, aggregate, advisory, or contextual products into observations;
+- replace Hazards or an official authority for warning and life-safety information.
 
 ### Audience
 
-- pipeline-spec and Atmosphere/Air maintainers;
-- domain, source, contract, schema, policy, evidence, validation, release, and docs stewards;
-- reviewers resolving the `air` versus `atmosphere` slug;
-- maintainers planning compatibility, migration, deprecation, or path-lint work;
-- reviewers verifying that Atmosphere specifications remain deterministic, caveat-aware, time-aware, no-network-testable, and release-gated.
+This boundary is for pipeline-spec, Atmosphere/Air, source, contract, schema, policy, evidence, validation, release, operations, and documentation reviewers—especially maintainers resolving the `air` versus `atmosphere` identity without creating split-brain behavior.
 
 [Back to top](#top)
 
@@ -124,35 +125,34 @@ It must not:
 
 ### Safe conclusion
 
-`pipeline_specs/air/` is a repository-present documentation lane. It is not established as the canonical Atmosphere spec home, and no active or consumer-bound Air specification was established by the bounded inspection.
+> [!NOTE]
+> `pipeline_specs/air/` is repository-present and documentation-only. `pipeline_specs/atmosphere/` contains five empty-stage scaffolds. Selected Atmosphere CI checks now execute, but no inspected evidence establishes an accepted spec schema, loader, active source, scheduled run, proof producer, release candidate, or public product.
 
-| Capability or artifact | Status | Evidence-bounded conclusion |
+| Surface | Truth label | Evidence-bounded conclusion |
 |---|---:|---|
-| Requested README | `CONFIRMED` | `pipeline_specs/air/README.md` exists. |
-| Concrete Air spec profile | `NOT ESTABLISHED` | Bounded repository search surfaced no Air profile beyond this README. |
-| Atmosphere sibling spec lane | `CONFIRMED README` | `pipeline_specs/atmosphere/README.md` exists and describes Atmosphere as preferred pending ADR. |
-| Canonical slug | `CONFLICTED / NEEDS VERIFICATION` | Both slugs exist; no accepted ADR or lane-register decision was verified. |
-| Air executable lane | `README-BACKED ALIAS CANDIDATE` | `pipelines/domains/air/README.md` marks itself unresolved/transitional. |
-| Atmosphere executable lane | `README-BACKED PREFERRED LANE` | `pipelines/domains/atmosphere/README.md` is documentation-aligned but executable maturity remains unproven. |
-| Source registry | `DRAFT CONTROL LANE` | `data/registry/sources/atmosphere/README.md` exists; concrete descriptor inventory and runtime readers remain unverified. |
-| Semantic contracts | `PARTIAL / DRAFT` | Atmosphere contract README lists object contracts and warns against a parallel `air` contract home. |
-| Schema lane | `PARTIAL SCAFFOLD` | Atmosphere schema README reports one proposed decision-envelope schema and incomplete coverage. |
-| Policy lane | `GREENFIELD SCAFFOLD` | `policy/domains/atmosphere/README.md` is a 33-line proposed scaffold. |
-| Domain tests | `README-BACKED SCAFFOLDS` | Atmosphere negative/no-network/schema lanes are documented; executable implementations remain unverified. |
-| Pipeline-spec-specific tests | `NOT ESTABLISHED` | Bounded search surfaced no `tests/pipeline_specs/air/` or `tests/pipeline_specs/atmosphere/` implementation. |
-| Pipeline-spec fixtures | `NOT ESTABLISHED` | Bounded search surfaced no spec-specific Air fixture lane. |
-| Domain workflow | `TODO SCAFFOLD` | All `domain-atmosphere` jobs execute `echo TODO ...`. |
-| CODEOWNERS | `PLACEHOLDER` | No pipeline-spec or Atmosphere owner rule is present. |
-| Runtime, release, publication | `UNKNOWN / NOT AUTHORIZED HERE` | No parser, schedule, run, receipt, release, or public behavior is proven by this README. |
+| Directory governance | `CONFIRMED` | [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts [Directory Rules v2](../../docs/doctrine/directory-rules.md). |
+| Root responsibility | `CONFIRMED` | [`root_registry.yaml`](../../control_plane/root_registry.yaml) assigns `pipeline_specs/` declarative run graphs, schedules, inputs, outputs, and resource envelopes; executable behavior belongs under `pipelines/`. |
+| Air lane | `CONFIRMED` | Exact direct children are `.gitkeep` and this README. No Air spec profile is tracked here. |
+| Atmosphere spec lane | `CONFIRMED SCAFFOLD` | `ingest.yaml`, `normalize.yaml`, `validate.yaml`, `catalog.yaml`, and `publish.yaml` exist; each declares `stages: []`. |
+| Canonical slug | `PROPOSED / NEEDS VERIFICATION` | The proposed domain-lane projection records `air` as an alias of `atmosphere`, but no accepted ADR or path-alias migration was established. |
+| Pipeline-spec runtime contract | `UNKNOWN` | No accepted root-wide spec schema, canonicalizer, parser, registry, scheduler, or consumer-binding contract was established. |
+| Atmosphere source records | `CONFIRMED FILES / NOT ACTIVATED` | Two JSON records exist under `data/registry/sources/atmosphere/`; presence does not establish rights approval, activation, freshness, or runtime use. |
+| Adjacent domain assets | `CONFIRMED MIXED MATURITY` | Atmosphere contracts, schemas, policy, fixtures, tests, and validators are substantial but mixed; inventory depth is not acceptance or enforcement. |
+| Validation workflow | `CONFIRMED BOUNDED EXECUTION` | [`domain-atmosphere.yml`](../../.github/workflows/domain-atmosphere.yml) runs selected no-network synthetic checks. It does not fetch live sources, evaluate the full Rego surface, or prove end-to-end release. |
+| Proof workflow | `WORKFLOW_HOLD` | The workflow inventories proposed placeholder proof state; no accepted proof producer is established. |
+| Release dry-run | `WORKFLOW_HOLD` | The workflow verifies release-boundary preconditions and an empty candidate lane; no accepted domain release manifest or dry-run producer is established. |
+| Review routing | `CONFIRMED ROUTE / OWNER_TBD` | [CODEOWNERS](../../.github/CODEOWNERS) currently routes files to `@bartytime4life`. Routing is not independent stewardship or policy acceptance. |
+| Runtime and publication | `NOT AUTHORIZED HERE` | This README and the scaffold YAML files provide no activation, release, publication, alerting, or official-authority power. |
 
 ### Truth labels used here
 
 | Label | Meaning in this README |
 |---|---|
-| `CONFIRMED` | Directly inspected in the pinned repository snapshot or verified by the performed branch/read-back checks. |
-| `PROPOSED` | A safe design or migration posture not accepted as implemented authority. |
-| `NEEDS VERIFICATION` | Checkable but not sufficiently verified to act as fact. |
-| `UNKNOWN` | Not resolved by the bounded inspection. |
+| `CONFIRMED` | Verified from the pinned commit, complete tree, inspected bytes, or accepted decision. |
+| `PROPOSED` | Candidate posture or machine projection that is not accepted operational authority. |
+| `NEEDS VERIFICATION` | A concrete decision or check remains open. |
+| `UNKNOWN` | The inspected evidence cannot support a stronger claim. |
+| `WORKFLOW_HOLD` | CI deliberately confirms that a graduation condition is not yet satisfied. |
 
 [Back to top](#top)
 
@@ -281,53 +281,66 @@ Until an accepted ADR, lane register, or migration record resolves the slug:
 
 ## Current inspected inventory
 
-### Direct and sibling spec lanes
+The maps below come from the complete, non-truncated recursive tree at the pinned base. Each map shows direct children only, as required by Directory Rules v2. Presence is not activation.
+
+### Air compatibility lane
 
 ```text
-pipeline_specs/
-├── README.md
-├── air/
-│   └── README.md                 # this compatibility guardrail
-└── atmosphere/
-    └── README.md                 # preferred documentation-aligned spec lane
+pipeline_specs/air/
+├── .gitkeep
+└── README.md
 ```
 
-This is a bounded evidence statement derived from repository search and direct reads. It is not a guarantee that no differently named or unindexed file exists.
-
-### Adjacent implementation and authority surfaces
+### Preferred Atmosphere stage-scaffold lane
 
 ```text
-pipelines/domains/
-├── air/README.md                 # alias candidate / transitional documentation
-└── atmosphere/
-    ├── README.md                 # preferred implementation documentation
-    ├── normalize/README.md       # README-backed stage lane
-    ├── validate/README.md        # README-backed stage lane
-    ├── catalog/README.md         # README-backed stage lane
-    └── publish/README.md         # README-backed stage lane
+pipeline_specs/atmosphere/
+├── README.md
+├── catalog.yaml
+├── ingest.yaml
+├── normalize.yaml
+├── publish.yaml
+└── validate.yaml
+```
 
-contracts/domains/atmosphere/     # semantic-contract lane; partial/draft
-schemas/contracts/v1/domains/atmosphere/
-                                 # draft schema index; proposed scaffold coverage
-policy/domains/atmosphere/        # greenfield policy scaffold
-data/registry/sources/atmosphere/ # draft source-admission control lane
-tests/domains/atmosphere/         # README-backed test lanes; implementation unverified
+Every listed YAML scaffold contains `stages: []`. There is no executable stage graph to schedule.
+
+### Adjacent evidence surfaces
+
+| Surface | Complete-tree inventory at the pinned base | Safe reading |
+|---|---:|---|
+| `data/registry/sources/atmosphere/` | README + 2 JSON files | Records exist; admission, rights, activation, and readers remain unestablished. |
+| `contracts/domains/atmosphere/` | 44 tracked files | Mixed contract coverage; count is not acceptance. |
+| `schemas/contracts/v1/domains/atmosphere/` | 76 tracked files | Broad draft/mixed schema surface; no accepted pipeline-spec schema was established. |
+| `policy/domains/atmosphere/` | 14 tracked files | Policy source exists; the domain workflow does not evaluate the complete Rego surface. |
+| `fixtures/domains/atmosphere/` | 126 tracked files | Mixed fixtures and documentation; public-safe synthetic use remains profile-specific. |
+| `tests/domains/atmosphere/` | 39 tracked files | Selected tests execute; this does not prove full domain or pipeline-spec coverage. |
+| `validators/domains/atmosphere/` | 24 tracked files | Substantive and placeholder validators coexist. |
+| `data/proofs/atmosphere/` | 1 proposed placeholder JSON | No accepted proof producer. |
+| `release/candidates/atmosphere/` | README only | No release candidate record. |
+
+### Authority flow
+
+```mermaid
+flowchart TD
+    SPEC["pipeline_specs/atmosphere<br/>declarative intent"] --> LOAD["verified parser + consumer<br/>not established"]
+    LOAD --> RUN["pipelines/domains/atmosphere<br/>executable behavior"]
+    RUN --> EVIDENCE["evidence + policy + validation"]
+    EVIDENCE --> RELEASE["release authority"]
+    RELEASE --> PUBLIC["governed public clients"]
+    AIR["pipeline_specs/air<br/>compatibility only"] -. "must not fork authority" .-> SPEC
 ```
 
 ### Inventory limits
 
-The inspection did not establish:
+The inspected tree does not establish:
 
-- a canonical pipeline-spec JSON/YAML schema;
-- a parser or loader;
-- a spec registry;
-- a consumer that resolves a `spec_id`;
-- any accepted Air or Atmosphere spec profile;
-- any schedule or event trigger;
-- any source activation;
-- any emitted lifecycle data or receipts from a spec;
-- any released Atmosphere product;
-- any production deployment using either spec path.
+- an accepted pipeline-spec schema, parser, canonicalizer, registry, scheduler, or consumer binding;
+- an active Air or Atmosphere stage graph;
+- an approved source activation or current source fetch;
+- comprehensive policy evaluation or evidence closure;
+- a generated proof, release candidate, approved manifest, publication, or production deployment;
+- accepted steward assignments or a completed Air-to-Atmosphere migration.
 
 [Back to top](#top)
 
@@ -603,52 +616,45 @@ Consumers must not silently:
 
 ## Validation and enforceability
 
-### Documentation checks performed for this revision
+### Documentation checks performed for v0.3
 
-- target blob and pinned main commit confirmed;
-- parent and sibling spec contracts inspected;
-- Air and Atmosphere executable-lane READMEs inspected;
-- Atmosphere source-registry, contract, schema, policy, test-lane, workflow, and CODEOWNERS surfaces inspected;
-- bounded searches performed for direct Air specs, Atmosphere specs, pipeline-spec tests, and pipeline-spec fixtures;
-- Markdown structure, links, anchors, fences, Mermaid boundary, example YAML, and secret patterns checked locally;
-- remote read-back and content hashes required before PR creation.
+- repository identity, permissions, default branch, exact main commit, base tree, and prior target blob pinned;
+- branch-name and open-pull-request overlap checks completed immediately before mutation;
+- complete recursive tree inspected without truncation;
+- accepted Directory Rules v2, ADR-0029, root registry, proposed domain-lane projection, path-alias register, parent contract, sibling lanes, workflow, and review routing inspected;
+- exact Air and Atmosphere direct-child maps reconciled;
+- all five Atmosphere YAML scaffolds confirmed to contain `stages: []`;
+- Markdown H1, heading hierarchy, KFM metadata, anchors, links, fences, alerts, Mermaid source, final newline, and secret patterns checked;
+- illustrative YAML parsed as YAML and kept explicitly inactive;
+- generated-work receipt schema fields, artifact path, and SHA-256 binding checked;
+- created Git blobs and branch files read back remotely; exact two-file commit scope compared before PR handoff.
+
+### What the current workflow proves
+
+The [Atmosphere workflow](../../.github/workflows/domain-atmosphere.yml) executes a bounded repository-local test profile. It can support claims about the selected synthetic checks named in that workflow. It does not prove:
+
+- live-source availability, rights, freshness, or correctness;
+- comprehensive contract, schema, policy, fixture, test, or validator coverage;
+- full Rego bundle evaluation;
+- proof production or evidence closure;
+- release-candidate creation, manifest approval, publication, or rollback readiness;
+- official advisory currency or public-product safety.
 
 ### Required future specification tests
 
-A real Atmosphere spec should have deterministic, no-network tests covering:
+A real Atmosphere spec needs deterministic, no-network tests covering:
 
-1. accepted schema shape and required identity;
-2. unknown field rejection or explicit extension behavior;
-3. duplicate `spec_id` detection;
-4. Air/Atmosphere alias cycle and precedence failure;
-5. unknown parser or consumer rejection;
-6. missing or inactive SourceDescriptor rejection;
-7. rights, sensitivity, attribution, and withdrawal failures;
-8. stale source and invalid time-window behavior;
-9. AQI-versus-concentration denial;
-10. AOD-versus-PM2.5 denial;
-11. model-versus-observation denial;
-12. low-cost-sensor caveat requirements;
-13. advisory official-authority redirection;
-14. lifecycle input/output and quarantine rules;
-15. required receipts and evidence closure;
-16. release-blocked behavior without approved manifest and rollback target;
-17. no network or secret access in default validation;
-18. deterministic digest and no-op behavior;
-19. correction, supersession, deactivation, and rollback behavior.
-
-### Evidence limits
-
-A passing README, link check, YAML parser, schema parser, placeholder domain workflow, or dry-run echo is not proof that:
-
-- a source is admitted;
-- a pipeline ran correctly;
-- output is current;
-- evidence closed;
-- policy allowed release;
-- an advisory is official or current;
-- a public product is safe;
-- rollback works.
+1. accepted schema shape, stable identity, and unknown-field behavior;
+2. duplicate IDs, alias cycles, discovery precedence, and canonical-path enforcement;
+3. parser, consumer, schedule, and resource-envelope binding;
+4. missing, inactive, unauthorized, withdrawn, or stale SourceDescriptors;
+5. rights, attribution, sensitivity, consent, and retention rules;
+6. AQI-versus-concentration, AOD-versus-PM2.5, model-versus-observation, and aggregate-versus-point distinctions;
+7. low-cost-sensor calibration and caveat requirements;
+8. advisory official-authority redirection and expiration;
+9. lifecycle input/output, quarantine, finite failures, and no silent fallback;
+10. evidence, receipt, policy, release, correction, deactivation, and content-addressed rollback;
+11. deterministic digests, no-op behavior, and default denial of network or secret access.
 
 [Back to top](#top)
 
@@ -658,23 +664,19 @@ A passing README, link check, YAML parser, schema parser, placeholder domain wor
 
 ### Review burden
 
-Changes to this lane should require, at minimum:
+Current [CODEOWNERS](../../.github/CODEOWNERS) routing sends repository changes to `@bartytime4life`. That is a review route, not evidence of independent stewardship, subject-matter approval, or accepted ownership. Named pipeline-spec and Atmosphere/Air stewards remain `NEEDS VERIFICATION`.
 
-- pipeline-spec steward;
-- Atmosphere/Air domain steward;
-- docs steward.
+A change should obtain review proportionate to what it alters:
 
-Additional review is required when a change touches or implies:
-
-| Concern | Required reviewer posture |
+| Concern | Minimum review posture |
 |---|---|
-| Canonical slug, alias, deletion, or migration | Governance/Directory Rules steward and ADR review. |
-| Parser, consumer, schedule, or activation | Pipeline owner, operations/runtime reviewer, and security reviewer. |
-| Source descriptors, endpoints, rights, or attribution | Source, rights, and sensitivity stewards. |
-| AQI, health, advisory, or life-safety presentation | Policy reviewer and official-authority redirection review; Hazards liaison where applicable. |
-| Schemas or contracts | Schema and contract stewards. |
-| Evidence, receipts, catalog, release, correction, rollback | Evidence, validation, release, and rollback stewards. |
-| Public API, map, tile, export, or AI surface | Governed API/UI reviewer plus policy and release review. |
+| README-only compatibility wording | Current CODEOWNERS route plus documentation review. |
+| Canonical slug, alias, path retirement, or migration | Governance/Directory Rules steward and an accepted ADR or equivalent decision. |
+| Spec schema, parser, consumer, schedule, resource envelope, or activation | Pipeline owner, operations/runtime reviewer, and security reviewer. |
+| Source record, endpoint, rights, attribution, freshness, or sensitivity | Source, rights, and sensitivity stewards. |
+| AQI, health, advisory, or life-safety presentation | Policy review, official-authority redirection review, and Hazards liaison where applicable. |
+| Contract, schema, evidence, proof, release, correction, or rollback | The corresponding authority-root steward and executable validation evidence. |
+| Public API, map, tile, export, or AI surface | Governed client reviewer plus policy, evidence, and release review. |
 
 ### Migration checklist
 
@@ -703,37 +705,40 @@ When behavior changes materially, update this README, the preferred Atmosphere R
 
 ## Definition of done
 
-### This compatibility README
+### This v0.3 compatibility README
 
-This README is complete for v0.2 when it:
+This documentation change is complete when it:
 
-- records the pinned repository evidence and prior blob;
-- identifies this path as a compatibility guardrail rather than a second full spec authority;
-- points to `pipeline_specs/atmosphere/` as the preferred documentation-aligned lane pending ADR;
-- preserves the `pipeline_specs/` versus `pipelines/` boundary;
-- preserves source-role, temporal, caveat, evidence, policy, lifecycle, receipt, advisory, release, correction, and rollback requirements;
-- states that no active specification, parser, schedule, source, run, release, or public product is established;
-- provides migration, validation, and rollback guidance;
-- remains reversible by restoring the prior README.
+- pins the exact repository commit, tree, and prior target blob;
+- follows the accepted `BOUNDARY_COMPACT` contract;
+- reports the complete Air and Atmosphere direct-child inventories;
+- corrects the former TODO-only CI claim without overstating the selected checks;
+- distinguishes empty-stage scaffolds from active specifications;
+- records the proposed domain alias without inventing a filesystem migration;
+- preserves the `pipeline_specs/` versus `pipelines/` authority boundary;
+- preserves source-role, time, caveat, evidence, policy, lifecycle, receipt, advisory, release, correction, and rollback requirements;
+- binds its generated-work receipt to the exact README bytes;
+- changes only this README and the new append-only receipt;
+- is remotely read back and presented as a draft pull request for human review.
 
 ### A future active Atmosphere specification
 
 A future specification is not done until:
 
-- [ ] accepted schema and stable identity exist;
-- [ ] exact parser and executable consumer are version-bound;
-- [ ] source descriptors are admitted and role/rights/time reviewed;
-- [ ] all caveat and anti-collapse rules are explicit;
-- [ ] no-network valid and invalid fixtures exist;
-- [ ] executable tests prove finite failure behavior;
+- [ ] an accepted schema and stable identity exist;
+- [ ] exact parser, registry, executable consumer, and schedule semantics are version-bound;
+- [ ] source descriptors are admitted and role, rights, sensitivity, time, and withdrawal are reviewed;
+- [ ] caveat and anti-collapse rules are explicit;
+- [ ] deterministic no-network valid and invalid fixtures exist;
+- [ ] tests prove finite failure and no-silent-fallback behavior;
 - [ ] lifecycle and quarantine behavior are enforced;
-- [ ] evidence and receipt requirements are resolvable;
+- [ ] evidence and receipt requirements close;
 - [ ] policy and official-authority redirection are tested;
-- [ ] owner and reviewer assignments are real;
+- [ ] named owners and reviewers are assigned;
 - [ ] activation and deactivation are explicit;
 - [ ] release handoff, correction, supersession, and rollback are tested;
-- [ ] documentation matches actual behavior;
-- [ ] the Air/Atmosphere slug relationship is resolved or safely compatibility-bound.
+- [ ] documentation matches observed behavior;
+- [ ] the Air/Atmosphere identity is accepted or safely compatibility-bound.
 
 [Back to top](#top)
 
@@ -743,11 +748,11 @@ A future specification is not done until:
 
 ### This README change
 
-Before merge, rollback is to close the PR and abandon its branch.
+Before merge, rollback is to close the draft PR and delete or abandon its branch.
 
-After merge, restore the prior README through a transparent revert commit or revert PR. Remove the paired generated-work receipt only through the same visible revert. Do not rewrite shared history.
+After merge, use a transparent revert commit or revert PR to restore prior README blob `16a5096d5edcad9bbba51c87ef5f5d5521c2a0d6`. The new generated-work receipt is append-only provenance; correct or supersede it visibly according to the receipt contract rather than rewriting history.
 
-This README change does not activate runtime behavior, so no runtime or public rollback should be necessary for the documentation change itself.
+This documentation-only change activates no runtime, source, schedule, release, alert, or public behavior.
 
 ### Future spec deactivation
 
@@ -759,10 +764,10 @@ A future active specification must support:
 4. quarantining or holding affected derivatives;
 5. identifying catalog, graph, tile, API, export, and generated-answer dependencies;
 6. withdrawing, superseding, or correcting release artifacts through release authority;
-7. restoring a known-good spec or disabled state;
+7. restoring a known-good content-addressed spec or disabled state;
 8. re-running negative, stale-state, caveat, evidence, and policy tests;
 9. verifying official-authority redirects and caches;
-10. issuing correction and rollback records where public output was affected.
+10. issuing correction and rollback records when public output was affected.
 
 Rollback is a governed state transition, not a file copy.
 
@@ -774,21 +779,21 @@ Rollback is a governed state transition, not a file copy.
 
 | ID | Question | Status | Closure evidence needed |
 |---|---|---|---|
-| `PIPE-SPEC-AIR-001` | Is `air` or `atmosphere` the accepted canonical domain/spec slug? | `NEEDS VERIFICATION / ADR` | Accepted ADR or lane-register decision. |
-| `PIPE-SPEC-AIR-002` | Should `pipeline_specs/air/` remain, become a pointer/tombstone, or be removed? | `NEEDS VERIFICATION` | Migration plan, consumer inventory, compatibility policy, rollback. |
-| `PIPE-SPEC-AIR-003` | What schema validates pipeline specifications? | `UNKNOWN` | Accepted schema, registry record, fixtures, validator, tests. |
-| `PIPE-SPEC-AIR-004` | Which parser/loader and registry discover specs? | `UNKNOWN` | Code, configuration, tests, runtime evidence. |
-| `PIPE-SPEC-AIR-005` | Are concrete specs present under Air or Atmosphere beyond bounded search results? | `NEEDS VERIFICATION` | Full recursive repository inventory. |
-| `PIPE-SPEC-AIR-006` | Which source descriptors are admitted and active? | `NEEDS VERIFICATION` | Concrete descriptor records, rights/sensitivity review, activation record. |
-| `PIPE-SPEC-AIR-007` | What source-role and knowledge-character vocabulary is canonical? | `NEEDS VERIFICATION` | Accepted contract/schema/vocabulary and tests. |
-| `PIPE-SPEC-AIR-008` | What temporal and stale-state fields are mandatory per profile? | `NEEDS VERIFICATION` | Accepted temporal contract, source-specific profiles, tests. |
-| `PIPE-SPEC-AIR-009` | Which caveat profiles are canonical for AQI, AOD, smoke, models, sensors, climate, and advisories? | `NEEDS VERIFICATION` | Policy/contract/schema definitions and negative tests. |
-| `PIPE-SPEC-AIR-010` | Which pipeline-spec fixture and test homes are accepted? | `NEEDS VERIFICATION` | Directory decision, fixture inventory, test modules, CI. |
-| `PIPE-SPEC-AIR-011` | Does any CI job substantively validate Atmosphere specs? | `UNKNOWN / NOT ESTABLISHED` | Non-TODO workflow, logs, tests, artifacts. |
-| `PIPE-SPEC-AIR-012` | Who owns and reviews this path? | `NEEDS VERIFICATION` | CODEOWNERS and steward assignments. |
-| `PIPE-SPEC-AIR-013` | How are activation, deactivation, correction, and rollback recorded? | `UNKNOWN` | Control-plane contract, receipts, runbook, drills. |
-| `PIPE-SPEC-AIR-014` | How are official advisory redirects tested and kept current? | `NEEDS VERIFICATION` | Policy, fixtures, tests, source/freshness controls. |
-| `PIPE-SPEC-AIR-015` | How are public products prevented from reading specs or canonical stores directly? | `NEEDS VERIFICATION` | Governed API contract, release manifests, integration tests. |
+| `PIPE-SPEC-AIR-001` | Is `air` or `atmosphere` the accepted canonical spec slug? | `NEEDS VERIFICATION / ADR` | Accepted decision that reconciles parent docs, domain-lane projection, paths, consumers, and rollback. |
+| `PIPE-SPEC-AIR-002` | Should this path remain a guardrail, become a pointer/tombstone, or be removed? | `NEEDS VERIFICATION` | Complete consumer inventory, compatibility window, migration receipt, cutoff, and rollback plan. |
+| `PIPE-SPEC-AIR-003` | What schema and canonicalization rules validate pipeline specifications? | `UNKNOWN` | Accepted schema, registry record, validator, fixtures, and tests. |
+| `PIPE-SPEC-AIR-004` | Which loader, registry, scheduler, and executable consumer discover specs? | `UNKNOWN` | Versioned code/configuration, negative tests, and runtime receipts. |
+| `PIPE-SPEC-AIR-005` | When may the five empty-stage Atmosphere scaffolds graduate? | `NEEDS VERIFICATION` | Non-empty governed graphs plus schema, consumer, source, tests, evidence, policy, and activation review. |
+| `PIPE-SPEC-AIR-006` | Are the two Atmosphere source records admitted, rights-cleared, active, and consumed? | `NEEDS VERIFICATION` | Descriptor decisions, rights/sensitivity review, activation records, readers, and freshness evidence. |
+| `PIPE-SPEC-AIR-007` | Which source-role, time, stale-state, caveat, and finite-failure vocabularies are canonical? | `NEEDS VERIFICATION` | Accepted contracts/schemas/vocabularies and negative tests. |
+| `PIPE-SPEC-AIR-008` | Where do pipeline-spec fixtures and tests canonically live? | `NEEDS VERIFICATION` | Directory decision, runnable inventory, and CI binding. |
+| `PIPE-SPEC-AIR-009` | What additional profiles must the bounded workflow execute? | `NEEDS VERIFICATION` | Coverage map, full policy plan, logs, artifacts, and explicit non-goals. |
+| `PIPE-SPEC-AIR-010` | How do proof production and release dry-run leave `WORKFLOW_HOLD`? | `NEEDS VERIFICATION` | Accepted producer, proof contract, candidate manifest, release policy, and rollback drill. |
+| `PIPE-SPEC-AIR-011` | Who independently owns and reviews this boundary? | `NEEDS VERIFICATION` | Named steward assignments and path-specific review policy. |
+| `PIPE-SPEC-AIR-012` | How are activation, deactivation, correction, withdrawal, and rollback recorded? | `UNKNOWN` | Control-plane contract, receipts, runbook, and drill evidence. |
+| `PIPE-SPEC-AIR-013` | How are official advisory redirects tested and kept current? | `NEEDS VERIFICATION` | Policy, fixtures, tests, source/freshness controls, and issuer links. |
+| `PIPE-SPEC-AIR-014` | How are public products prevented from reading specs or canonical stores directly? | `NEEDS VERIFICATION` | Governed API contract, release manifests, access controls, and integration tests. |
+| `PIPE-SPEC-AIR-015` | Which adjacent READMEs must be reconciled with accepted Directory Rules and the current workflow? | `NEEDS VERIFICATION` | Follow-up doc patch covering the parent spec README and stale Atmosphere/Air lane status claims. |
 
 [Back to top](#top)
 
@@ -796,35 +801,43 @@ Rollback is a governed state transition, not a file copy.
 
 ## Evidence ledger
 
-| Evidence | Status | Supports | Limits |
+| Evidence | Truth label | Supports | Limit |
 |---|---|---|---|
-| Prior `pipeline_specs/air/README.md` | `CONFIRMED` | Existing v0.1 what/how split, slug conflict, caveat gates, lifecycle, release, and rollback intent. | Presented a proposed full directory tree despite no verified concrete profiles. |
-| `pipeline_specs/README.md` | `CONFIRMED` | Root owns declarative configuration; lists both `air/` and `atmosphere/`; labels Air alias-oriented and warns against parallel authority. | Does not itself resolve the slug or prove consumers. |
-| `pipeline_specs/atmosphere/README.md` | `CONFIRMED DOC` | Treats Atmosphere as preferred spec lane and Air as alias candidate. | Concrete spec files, schema validation, CI, and activation remain unverified. |
-| `pipelines/domains/air/README.md` | `CONFIRMED DOC` | Air executable path is unresolved/transitional and must not create parallel authority. | Does not prove executable code or runtime behavior. |
-| `pipelines/domains/atmosphere/README.md` | `CONFIRMED DOC` | Preferred executable documentation lane; preserves source/evidence/policy/release boundaries. | Marks concrete behavior and CI as unverified. |
-| `data/registry/sources/atmosphere/README.md` | `CONFIRMED DOC` | Atmosphere source-admission path, source-role distinctions, temporal/caveat controls, and official-authority redirection. | Concrete descriptor payload inventory and readers remain unverified. |
-| `contracts/domains/atmosphere/README.md` | `CONFIRMED DOC` | Atmosphere semantic contract home and no-parallel-`air` contract warning. | Contract/schema completeness and enforcement remain partial. |
-| `schemas/contracts/v1/domains/atmosphere/README.md` | `CONFIRMED DOC` | Draft schema lane; one proposed decision-envelope scaffold; incomplete coverage. | Does not define a pipeline-spec schema. |
-| `policy/domains/atmosphere/README.md` | `CONFIRMED SCAFFOLD` | Policy path exists. | Thirty-three-line greenfield scaffold does not prove policy behavior. |
-| `tests/domains/atmosphere/policy-deny/README.md` | `CONFIRMED DOC / SCAFFOLD` | Negative-case spine for AQI, AOD, model, sensor, advisory, freshness, and no-network boundaries. | Child implementation, fixtures, validators, bundles, and CI remain unverified. |
-| `.github/workflows/domain-atmosphere.yml` | `CONFIRMED TODO SCAFFOLD` | Pull-request workflow exists. | Each job only echoes a TODO message; success is not validation proof. |
-| `.github/CODEOWNERS` | `CONFIRMED PLACEHOLDER` | Repository has a placeholder ownership file. | No Air/Atmosphere or pipeline-spec ownership rule. |
-| Bounded repository searches | `CONFIRMED SEARCH` | Surfaced the two spec READMEs and no spec-specific Air/Atmosphere test or fixture implementation. | Search is not a full recursive tree and can miss unindexed or differently named files. |
+| [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) + [Directory Rules v2](../../docs/doctrine/directory-rules.md) | `CONFIRMED ACCEPTED` | Authority-root separation, direct-child maps, compact boundary contract, compatibility requirements. | Does not choose the Air/Atmosphere slug. |
+| [`root_registry.yaml`](../../control_plane/root_registry.yaml) | `CONFIRMED PROJECTION` | `pipeline_specs/` is declarative-only; `pipelines/` owns executable behavior. | Registry projection does not activate a pipeline. |
+| [Parent spec README](../README.md) | `CONFIRMED DOC` | Air is compatibility-oriented; Atmosphere is the preferred stage-scaffold lane. | Its open register still describes Directory Rules adoption as unresolved, conflicting with accepted ADR-0029. |
+| Exact recursive tree | `CONFIRMED COMPLETE` | Air has two direct children; Atmosphere has six. Adjacent counts in this README are tree-grounded. | A file count does not establish maturity or runtime use. |
+| Five Atmosphere YAML files | `CONFIRMED SCAFFOLDS` | Ingest, normalize, validate, catalog, and publish filenames exist. | Every file declares `stages: []`; none defines an executable graph. |
+| [Domain Lane Register](../../control_plane/domain_lane_register.yaml) | `CONFIRMED PROPOSED PROJECTION` | `atmosphere` is the lane ID and `air` is listed as an alias. | The register explicitly does not create, migrate, or activate a lane. |
+| [Path Alias Register](../../control_plane/path_alias_register.yaml) | `CONFIRMED ABSENCE` | No inspected Air/Atmosphere path-alias entry resolves the directory migration. | Absence is not a decision to delete or retain this path. |
+| [Atmosphere workflow](../../.github/workflows/domain-atmosphere.yml) | `CONFIRMED BOUNDED EXECUTION` | Selected synthetic validation profiles run; proof and release gates are explicit. | No live fetch, full Rego evaluation, accepted proof producer, release candidate, or publication is proven. |
+| Atmosphere contracts/schemas/policy/fixtures/tests/validators | `CONFIRMED MIXED INVENTORY` | Material supporting surfaces exist and selected pieces are testable. | Mixed status and coverage require artifact-level review; directory depth is not acceptance. |
+| Atmosphere source registry | `CONFIRMED FILES` | README plus two JSON records are tracked. | Rights, admission, activation, freshness, and consumer use remain unestablished. |
+| Atmosphere proof and release lanes | `CONFIRMED HELD` | One proposed proof placeholder; release-candidate lane contains only a README. | No proof closure, manifest approval, release, or public artifact. |
+| [CODEOWNERS](../../.github/CODEOWNERS) | `CONFIRMED ROUTING` | Current default review route is `@bartytime4life`. | Routing does not prove independent stewards or acceptance. |
+| Prior `pipeline_specs/air/README.md` blob `16a5096d5edcad9bbba51c87ef5f5d5521c2a0d6` | `CONFIRMED` | v0.2 compatibility posture and retained safety controls. | Several inventory and workflow statements were stale. |
 
-### No-loss assessment from v0.1
+### Documentation conflicts surfaced, not resolved here
 
-| v0.1 concern | v0.2 disposition |
+1. The parent spec README still carries an open item about adopting or rejecting Directory Rules v2, while ADR-0029 is accepted.
+2. The sibling and executable-lane READMEs lag the current Atmosphere workflow and adjacent artifact inventory.
+3. The proposed domain-lane alias has no accepted path migration or parser/discovery contract.
+
+This targeted change records those conflicts without broadening scope into unrelated files.
+
+### No-loss assessment from v0.2
+
+| v0.2 concern | v0.3 disposition |
 |---|---|
-| Declarative `pipeline_specs/` versus executable `pipelines/` | Preserved and strengthened. |
-| Air versus Atmosphere slug conflict | Preserved, grounded in current repo evidence, and converted into a compatibility rule. |
-| Source scopes and cadence/freshness | Preserved with explicit admission, temporal, stale-state, and activation requirements. |
-| Low-cost sensor, model, AOD, AQI, smoke, and advisory caveats | Preserved and expanded into knowledge-character boundaries and negative tests. |
-| Lifecycle and quarantine | Preserved with finite failure posture. |
-| Evidence, review, receipts, release, correction, and rollback | Preserved and expanded. |
-| Proposed directory/file trees | Removed from current-state presentation; future profiles point to the preferred Atmosphere lane and remain proposed. |
-| Tests and fixtures | Preserved as requirements; current implementation gaps are explicitly stated. |
-| Emergency/life-safety boundary | Preserved and strengthened with official-authority redirection. |
+| Declarative `pipeline_specs/` versus executable `pipelines/` | Preserved and tied to accepted governance. |
+| Air versus Atmosphere identity conflict | Preserved; proposed alias projection and missing path migration are now explicit. |
+| Source scopes, roles, rights, cadence, and freshness | Preserved with admission and activation held outside the spec. |
+| AQI, AOD, smoke, models, low-cost sensors, climate, and advisories | Preserved as anti-collapse and negative-test requirements. |
+| Lifecycle, quarantine, finite failures, and no silent fallback | Preserved. |
+| Evidence, review, receipts, release, correction, and rollback | Preserved and aligned with the current held workflow. |
+| Current-state inventory | Upgraded from bounded search to a complete, non-truncated tree and exact lane maps. |
+| Workflow posture | Corrected from TODO-only to bounded executable validation with proof/release holds. |
+| Reversibility | Preserved through a two-file draft PR and content-addressed prior blob. |
 
 [Back to top](#top)
 
@@ -832,6 +845,10 @@ Rollback is a governed state transition, not a file copy.
 
 ## Maintainer note
 
-Keep `pipeline_specs/air/` documentation-only until governance resolves the slug or accepts a machine-readable compatibility contract. Do not add a second Atmosphere spec, executable code, source client, secret, schema, contract, policy rule, fixture, test, lifecycle object, receipt, proof, release record, public route, UI behavior, or generated summary authority here.
+Keep `pipeline_specs/air/` documentation-only until accepted governance resolves the slug or establishes a machine-readable compatibility contract. Do not add a second Atmosphere spec, executable code, source client, secret, schema, contract, policy rule, fixture, test, lifecycle object, proof, release record, public route, UI behavior, or generated-answer authority here.
 
-When an actual Atmosphere specification is ready, place it in the accepted spec lane, bind it to a verified parser and consumer, test it without network access, preserve source role and temporal meaning, require evidence and policy closure, redirect official advisories, and provide deactivation, correction, and rollback before activation.
+When an Atmosphere specification is ready to graduate, place it in the accepted lane; bind it to a verified parser, registry, scheduler, and executable consumer; admit sources explicitly; preserve source role and temporal meaning; test without network access; close evidence and policy; redirect official advisories; and prove deactivation, correction, release, and rollback before activation.
+
+**Current safe action:** extend the preferred Atmosphere lane, or propose an ADR-backed migration. Do not copy a scaffold into `air/`.
+
+[Back to top](#top)
