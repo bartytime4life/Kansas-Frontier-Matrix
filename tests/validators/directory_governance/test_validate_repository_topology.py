@@ -200,6 +200,77 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         self.assertEqual([], candidate["entries"])
 
+    def test_conventional_readme_is_not_uppercase_or_alias_drift(self) -> None:
+        paths = ("policy/people/.gitkeep", "policy/people/README.md")
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": json.dumps(
+                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
+            ).encode("utf-8")
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        identities = {
+            (finding.rule_id, finding.subject): finding for finding in findings
+        }
+
+        self.assertNotIn(
+            ("KFM-TOPO-001", "path-grammar:uppercase"), identities
+        )
+        self.assertEqual(
+            ("policy/people/.gitkeep",),
+            identities[
+                ("KFM-TOPO-006", "scope-alias:people")
+            ].evidence_members,
+        )
+
+    def test_alias_readme_without_placeholder_still_fails(self) -> None:
+        paths = ("policy/transport/README.md",)
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": json.dumps(
+                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
+            ).encode("utf-8")
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        alias = next(
+            finding
+            for finding in findings
+            if (
+                finding.rule_id,
+                finding.subject,
+            )
+            == ("KFM-TOPO-006", "scope-alias:transport")
+        )
+
+        self.assertEqual(("policy/transport/README.md",), alias.evidence_members)
+
+    def test_nonconventional_uppercase_name_still_fails(self) -> None:
+        paths = ("policy/example/SHOUT.md",)
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": json.dumps(
+                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
+            ).encode("utf-8")
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        uppercase = next(
+            finding
+            for finding in findings
+            if (
+                finding.rule_id,
+                finding.subject,
+            )
+            == ("KFM-TOPO-001", "path-grammar:uppercase")
+        )
+
+        self.assertEqual(("policy/example/SHOUT.md",), uppercase.evidence_members)
+
     def test_unmerged_or_duplicate_index_entries_fail_closed(self) -> None:
         conflict = b"100644 " + b"a" * 40 + b" 1\tdocs/a.md\0"
         with mock.patch.object(module, "_git", return_value=conflict):

@@ -484,6 +484,14 @@ def _registered_roots(
     return set(by_path), by_path
 
 
+def _is_materialized_placeholder_readme(path: str, path_set: set[str]) -> bool:
+    parsed = PurePosixPath(path)
+    return (
+        parsed.name == "README.md"
+        and (parsed.parent / ".gitkeep").as_posix() in path_set
+    )
+
+
 def _path_findings(
     paths: Sequence[str],
     modes: Mapping[str, str],
@@ -518,7 +526,9 @@ def _path_findings(
                 unsafe.append("non-ascii")
             if "," in segment:
                 unsafe.append("comma")
-            if any(character.isupper() for character in segment):
+            if segment != "README.md" and any(
+                character.isupper() for character in segment
+            ):
                 grammar_groups["uppercase"].append(path)
             if not re.fullmatch(r"[A-Za-z0-9._()-]+", segment):
                 grammar_groups["nonportable-punctuation"].append(path)
@@ -580,7 +590,9 @@ def _path_findings(
         members = [
             path
             for path in paths
-            if path.split("/", 1)[0] in SCOPE_ROOTS and alias in PurePosixPath(path).parts[1:]
+            if path.split("/", 1)[0] in SCOPE_ROOTS
+            and alias in PurePosixPath(path).parts[1:]
+            and not _is_materialized_placeholder_readme(path, path_set)
         ]
         if members:
             findings.append(_finding("KFM-TOPO-006", f"scope-alias:{alias}", members))
