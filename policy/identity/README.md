@@ -2,22 +2,26 @@
 doc_id: kfm://policy/identity
 title: Identity Context Policy Boundary and Routing Contract
 type: policy-readme
-version: v0.1
-status: draft; repository-grounded; empty-target-completion; identity-context-routing; non-credential; non-authentication-provider; evaluator-unbound; fail-closed; non-release; non-publication
-owner: NEEDS VERIFICATION — identity steward, policy steward, security/privacy reviewer, access steward, consent steward, governed-API maintainer, audit steward, release reviewer, docs steward
+version: v0.2
+status: draft; repository-grounded; current-state-reconciled; identity-context-routing; non-credential; non-authentication-provider; evaluator-unbound; fail-closed; non-release; non-publication
+owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted identity stewardship and independent approval controls remain unproved
 created: 2026-07-24
-updated: 2026-07-24
+updated: 2026-08-13
 policy_label: repository-facing; identity-context; subject-binding; service-identity; assurance; access-input; capability-input; consent-input; least-privilege; privacy-minimization; fail-closed; no-secrets; non-release
 current_path: policy/identity/README.md
 owning_root: policy/
 canonical_relationship: PROPOSED identity-context policy routing boundary; current PolicyDecision schema does not include an identity policy family, so identity posture must feed accepted access, capability, or consent evaluations unless contracts and schemas are deliberately versioned
+directory_governance: accepted ADR-0029 adopts Directory Rules v2; policy/ is the singular policy-source root; this same-path BOUNDARY_COMPACT README remains documentation-only
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-  policy_root_blob: fa9378a6a699d0985fd018dbdb9f27c15efcb1c3
+  base_commit: ad31275429d715ad92002f8f2e160299193c9f50
+  target_baseline_blob: ab96b668af94a3fb49e748ecb085a94bfb409592
+  target_initial_empty_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
   access_policy_readme_blob: ca53007caa4ee15ac3ec0c1305169a42d188755e
   consent_policy_readme_blob: 5c56e988cbfa7b613fa39feec3c8f7f5bb44ce1b
+  bundles_policy_readme_blob: 77f59c399fbce668c916cbbc385009121d6169f4
   policy_input_contract_blob: 545c352681dd0db0cd4d169a5d2f9c364356457c
   policy_input_schema_blob: b89db4b1730c61258441e0eed037276b910b1990
   policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
@@ -26,6 +30,11 @@ evidence_snapshot:
   deterministic_identity_package_blob: 7362df62340d27334242a8f5cebfa8909317d4b8
   identity_validator_readme_blob: cbeb616f6dee0967a84dc1a1285b195ee2324972
   people_identity_model_blob: 28c1000b66e82542d8c74cbde5d488a2805de7b0
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
+  pull_request_template_blob: c5624d7dbc2b83055421b4fb4542794bafa10bee
   open_overlapping_pull_requests_found: "0"
 related:
   - ../README.md
@@ -42,14 +51,18 @@ related:
   - ../../tools/validators/identity/README.md
   - ../../apps/governed-api/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/domains/people-dna-land/IDENTITY_MODEL.md
   - ../../release/README.md
+  - ../../.github/CODEOWNERS
+  - ../../CONTRIBUTING.md
 tags: [kfm, policy, identity, authentication-context, subject, service, issuer, assurance, revocation, access, capability, consent, privacy, audit, fail-closed]
-truth_posture: CONFIRMED empty tracked target, singular policy root, access and consent boundaries, PolicyInputBundle and PolicyDecision contracts, placeholder input schema, closed decision-family schema without identity, non-credential IdentityToken contract, deterministic-identity package scaffold, identity-validator documentation, and unproved evaluator/bundle/runtime/release integration / PROPOSED identity-context routing contract, assurance inputs, evaluation order, reason codes, obligations, composition rules, tests, convergence plan, correction, revocation, and rollback / UNKNOWN accepted identity provider, claim vocabulary, assurance profile, credential verifier, subject mapping, delegation model, active bundle, native tests, runtime enforcement, audit sink, decision receipts, branch-protection enforcement, and production operation
+truth_posture: CONFIRMED populated v0.1 target and exact current directory inventory, singular policy root, accepted ADR-0029 placement, current policy-root v0.3.1 contract, access and consent boundaries, PolicyInputBundle and PolicyDecision contracts, permissive input schema, closed decision-family schema without identity, non-credential IdentityToken contract, deterministic-identity package boundary, identity-validator documentation, and unproved identity-lane evaluator/bundle/runtime/release integration / PROPOSED identity-context routing contract, assurance inputs, evaluation order, reason codes, obligations, composition rules, tests, convergence plan, correction, revocation, and rollback / UNKNOWN accepted identity provider, claim vocabulary, assurance profile, credential verifier, subject mapping, delegation model, active identity bundle, native identity-policy tests, runtime enforcement, audit sink, decision receipts, required-check enforcement, and production operation
 notes:
-  - "This revision completes an existing empty README in place. It creates no credential, identity-provider integration, policy module, schema, contract, fixture, validator, runtime route, access grant, release object, or publication state."
+  - "This v0.2 revision reconciles the existing v0.1 README with current main. It creates no credential, identity-provider integration, policy module, schema, contract, fixture, validator, runtime route, access grant, release object, or publication state."
   - "IdentityToken, deterministic object identity, person/entity resolution, authentication, and authorization are distinct concerns and must not be collapsed."
   - "The current PolicyDecision schema permits promotion, access, render, capability, consent, and sensitivity only; policy_family=identity is schema-invalid at the inspected snapshot."
+  - "The current policy root records one bounded executable Rego lane and multiple inactive profiles, but policy/identity itself contains only this README and an empty .gitkeep marker."
   - "Secrets, raw credentials, bearer tokens, private keys, password material, biometric templates, protected identifiers, and full identity-provider assertions must never be placed in this repository-facing README."
 [/KFM_META_BLOCK_V2] -->
 
@@ -64,9 +77,9 @@ notes:
 [![Decision family: composed](https://img.shields.io/badge/decision%20family-access%20%7C%20capability%20%7C%20consent-8250df?style=flat-square)](#decision-family-compatibility)
 [![Default: fail closed](https://img.shields.io/badge/default-fail%20closed-b42318?style=flat-square)](#default-posture)
 [![Credentials: prohibited](https://img.shields.io/badge/credentials-prohibited-b42318?style=flat-square)](#secret-and-sensitive-data-boundary)
-[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Scope](#scope-and-bounded-context) · [Distinctions](#identity-concept-separation) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input-profile) · [Evaluation](#evaluation-order) · [Decisions](#decision-family-compatibility) · [Outcomes](#normalized-outcomes) · [Reasons](#reason-code-vocabulary) · [Obligations](#obligation-vocabulary) · [Composition](#policy-family-composition) · [Threats](#threat-model) · [Validation](#validation-and-acceptance) · [Review](#review-burden) · [Rollback](#correction-revocation-and-rollback) · [Open work](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Directory](#current-directory-map) · [Scope](#scope-and-bounded-context) · [Distinctions](#identity-concept-separation) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input-profile) · [Evaluation](#evaluation-order) · [Decisions](#decision-family-compatibility) · [Outcomes](#normalized-outcomes) · [Reasons](#reason-code-vocabulary) · [Obligations](#obligation-vocabulary) · [Composition](#policy-family-composition) · [Threats](#threat-model) · [Validation](#validation-and-acceptance) · [Review](#review-burden) · [Rollback](#correction-revocation-and-rollback) · [Open work](#open-verification-register) · [Evidence ledger](#no-loss-and-evidence-ledger) · [Changelog](#changelog)
 
 > [!IMPORTANT]
 > **Identity context is an input to a bounded policy decision; it is not permission by itself.** A verified subject or service may still lack the required capability, purpose, evidence, rights, sensitivity clearance, review state, or release state. Identity checks must never bypass the independent gates that govern the requested operation.
@@ -135,35 +148,51 @@ A future rule in this lane may constrain or block an operation. It cannot create
 
 ## Status and evidence
 
+Evidence snapshot: `main@ad31275429d715ad92002f8f2e160299193c9f50`; target baseline blob `ab96b668af94a3fb49e748ecb085a94bfb409592`.
+
 ### Current repository state
 
 | Surface | Current status | Safe conclusion |
 |---|---:|---|
-| `policy/identity/README.md` | **CONFIRMED empty tracked file before this revision** | This update completes the file in place without adding executable behavior. |
-| `policy/README.md` | **CONFIRMED repository-grounded mixed-maturity root** | `policy/` owns admissibility; evaluator, bundle, receipts, and release integration remain unproved. |
+| `policy/identity/README.md` | **CONFIRMED v0.1 baseline** | This v0.2 revision reconciles the populated README in place; it does not create executable policy behavior. |
+| `policy/identity/` inventory | **CONFIRMED `README.md` plus empty `.gitkeep`** | No identity Rego module, bundle payload, fixture, native policy test, or emitted decision lives in this lane. |
+| `policy/README.md` | **CONFIRMED v0.3.1 repository-grounded mixed-maturity root** | `policy/` is the singular policy-source root; one bounded Rego profile and multiple inactive profiles elsewhere do not make this identity lane executable. |
+| Accepted ADR-0029 and Directory Rules v2 | **CONFIRMED placement authority** | `policy/` owns normative admissibility source; this boundary README does not become schema, runtime, decision-instance, release, or publication authority. |
 | `policy/access/README.md` | **CONFIRMED v0.2** | Access policy expects an authenticated subject but explicitly leaves identity-provider mappings and deployed enforcement unverified. |
-| `policy/consent/README.md` | **CONFIRMED v0.2** | Consent is subject/holder bound but identity proof remains independent and cannot create consent. |
+| `policy/consent/README.md` | **CONFIRMED v0.2** | Consent is subject/holder bound, but identity proof remains independent and cannot create consent. |
 | `PolicyInputBundle` contract | **CONFIRMED semantic contract** | Recommends explicit operation, audience, object, evidence, rights, sensitivity, review, release, and evaluator context. |
 | `PolicyInputBundle` schema | **CONFIRMED permissive placeholder** | Requires only `id`; identity-context fields are not machine-enforced. |
 | `PolicyDecision` contract/schema | **CONFIRMED finite and closed** | Outcomes are `ANSWER | ABSTAIN | DENY | ERROR`; policy families exclude `identity`. |
 | `IdentityToken` contract | **CONFIRMED draft contract** | Defines a typed reference carrier and explicitly denies credential or proof-of-identity use. |
-| `packages/identity/` | **CONFIRMED implementation scaffold** | Deterministic identifier package is documentation-heavy, version `0.0.0`, and not an authentication system. |
-| `tools/validators/identity/` | **CONFIRMED README; executable coverage unproved** | Validation routing exists; validation cannot authenticate or authorize. |
+| `packages/identity/` | **CONFIRMED deterministic-object-identity boundary** | It is not an authentication system or identity policy evaluator. |
+| `tools/validators/identity/` | **CONFIRMED README boundary; executable identity-policy coverage unproved** | Validation cannot authenticate, authorize, or activate this policy lane. |
 | Domain person identity model | **CONFIRMED draft documentation** | Person/DNA/land entity resolution is domain semantics, not caller authentication policy. |
-| Executable identity policy | **NOT ESTABLISHED by bounded search** | No accepted identity policy module, bundle entrypoint, or native identity-policy test was proved. |
-| Identity provider, verifier, mapping, revocation service | **UNKNOWN** | No deployed provider or claim vocabulary is asserted here. |
-| Governed consumer enforcement | **UNKNOWN / NEEDS VERIFICATION** | No end-to-end identity-context decision and obligation path was proved. |
+| Executable identity policy | **NOT ESTABLISHED by directory inventory and bounded search** | No accepted identity policy module, bundle entrypoint, or native identity-policy test was proved. |
+| Identity provider, verifier, mapping, revocation service | **UNKNOWN** | No deployed provider or canonical claim vocabulary is asserted here. |
+| Governed consumer enforcement | **UNKNOWN / NEEDS VERIFICATION** | No end-to-end identity-context decision, receipt, and obligation-enforcement path was proved. |
 | Release or publication effect | **None** | This README cannot authorize release, public access, or publication. |
+
+### Current directory map
+
+Verified from the pinned repository tree:
+
+```text
+policy/identity/
+├── .gitkeep               # Empty retention marker; no policy or runtime authority
+└── README.md              # This repository-facing boundary contract
+```
+
+The empty `.gitkeep` marker does not establish implementation maturity, an evaluator, a bundle, or an accepted policy family.
 
 ### Current verification boundary
 
-**CONFIRMED:** the target is an empty tracked file; the adjacent policy, contract, schema, package, and validator documentation above exists.
+**CONFIRMED:** the v0.1 target is populated at the pinned baseline; the lane contains only this README and an empty retention marker; accepted ADR-0029 places normative policy source under singular `policy/`; the adjacent policy, contract, schema, package, validator, and domain documentation cited above exists; the current decision schema still excludes an `identity` family.
 
 **PROPOSED:** the identity-context scope, inputs, evaluation order, reason codes, obligations, composition rules, tests, migration sequence, and rollback discipline in this README.
 
-**UNKNOWN / NEEDS VERIFICATION:** accepted identity provider, claim names, issuer registry, assurance profile, subject mapping, service identity model, delegation, credential verification, revocation checks, native policy modules, bundle selection, evaluator wiring, audit sink, decision receipts, governed consumers, CI enforcement, and production behavior.
+**UNKNOWN / NEEDS VERIFICATION:** accepted identity provider, claim names, issuer registry, assurance profile, subject mapping, service identity model, delegation, credential verification, revocation checks, native identity-policy modules, bundle selection, evaluator wiring, audit sink, decision receipts, governed consumers, required-check enforcement, and production behavior.
 
-This README is not implementation proof.
+This README is boundary documentation, not implementation proof.
 
 [Back to top](#top)
 
@@ -431,7 +460,7 @@ reasons:
 obligations:
   - resolve_subject_mapping
   - require_fresh_identity_verification
-evaluated_at: "2026-07-24T00:00:00Z"
+evaluated_at: "2026-08-13T00:00:00Z"
 ```
 
 This example is illustrative, not a live decision, credential, access grant, or accepted fixture.
@@ -566,7 +595,7 @@ If a caller cannot satisfy every mandatory obligation, it must return `DENY` or 
 Identity-context evaluation is one independent gate in a larger governed decision.
 
 ```mermaid
-flowchart LR
+flowchart TD
     REQ["Bounded request"] --> INPUT["Explicit PolicyInputBundle"]
     INPUT --> ID["Identity-context evaluation"]
     ID -->|"DENY / ERROR"| STOP["Stop / fail closed"]
@@ -856,7 +885,9 @@ Identity context is time-sensitive and correctable.
 
 ### Documentation rollback
 
-This README can be reverted to the prior empty blob without changing runtime behavior because it activates no rules. If future implementation depends on this lane, rollback must include contracts, schemas, policy bundles, selectors, adapters, caches, receipts, consumer behavior, migration records, and release effects—not merely this Markdown file.
+Before merge, close or abandon the draft pull request and its feature branch. After an authorized merge, revert the README commit or restore the v0.1 baseline blob `ab96b668af94a3fb49e748ecb085a94bfb409592` through a reviewable pull request. The original empty blob `8b137891791fe96927ad78e64b0aad7bded08bdc` is historical lineage, not the current rollback target.
+
+This documentation-only revision activates no rules. If future implementation depends on this lane, rollback must include contracts, schemas, policy bundles, selectors, adapters, caches, receipts, consumer behavior, migration records, and release effects—not merely this Markdown file.
 
 [Back to top](#top)
 
@@ -891,9 +922,52 @@ This README can be reverted to the prior empty blob without changing runtime beh
 
 ## Last reviewed
 
-**2026-07-24 — initial repository-grounded completion of the previously empty README.**
+**2026-08-13 — v0.2 current-state reconciliation against `main@ad31275429d715ad92002f8f2e160299193c9f50`.**
 
-This review confirms the documented repository surfaces and current contract/schema incompatibility with an `identity` policy family. It does not accept the lane, activate an evaluator, approve an identity provider, verify a person or service, grant access, establish consent, clear sensitivity or rights, approve release, or create publication state.
+Reviewed:
+
+- the complete v0.1 target at blob `ab96b668af94a3fb49e748ecb085a94bfb409592`;
+- the exact `policy/identity/` tree, which contains this README and an empty `.gitkeep`;
+- the current policy-root v0.3.1 boundary, access, consent, and bundle READMEs;
+- the PolicyInputBundle and PolicyDecision contracts and schemas;
+- the IdentityToken contract, deterministic-identity package boundary, identity-validator README, and People/DNA/Land identity model;
+- accepted ADR-0029, the adopted Directory Rules v2 `policy/` and `BOUNDARY_COMPACT` requirements, CODEOWNERS, CONTRIBUTING, and the pull-request template;
+- current open pull requests and identity-named branches for overlap.
+
+This review confirms the documented responsibility split and the schema incompatibility of `policy_family: identity`. It does not accept this lane as an executable policy family, activate an evaluator, approve an identity provider, verify a person or service, grant access, establish consent, clear sensitivity or rights, approve release, or create publication state.
+
+[Back to top](#top)
+
+---
+
+## No-loss and evidence ledger
+
+| Material element | v0.2 disposition |
+|---|---|
+| Stable path, document ID, H1, and existing heading anchors | **Preserved** |
+| Identity-context versus credentials, object identity, and domain identity | **Preserved and reverified** |
+| Access, consent, sensitivity, rights, evidence, and release non-collapse boundaries | **Preserved** |
+| Fail-closed outcomes, proposed reasons, obligations, and composition rules | **Preserved as proposed** |
+| Stale claim that the current target is empty | **Corrected to the populated v0.1 baseline** |
+| Current directory contents | **Added from the pinned tree** |
+| Policy-root and Directory Rules evidence | **Repinned to current blobs and accepted ADR-0029** |
+| Broken publisher badge anchor | **Repaired to `#authority-level`** |
+| Wide left-to-right policy composition diagram | **Changed to top-down for narrower GFM rendering; semantics unchanged** |
+| Runtime, schema, policy-family, release, and publication state | **Unchanged; no implementation claimed** |
+| Rollback target | **Corrected from the historical empty blob to the v0.1 baseline** |
+
+[Back to top](#top)
+
+---
+
+## Changelog
+
+| Version | Date | Change | Rollback |
+|---|---|---|---|
+| v0.1 | 2026-07-24 | Completed the previously empty tracked README with an identity-context routing boundary, explicit non-credential posture, proposed inputs/reasons/obligations, validation expectations, and rollback discipline. | Historical empty blob `8b137891791fe96927ad78e64b0aad7bded08bdc` |
+| v0.2 | 2026-08-13 | Reconciles status to current main, records the exact lane inventory and accepted placement authority, repins evidence, repairs one anchor, improves diagram width, and corrects rollback to the v0.1 baseline. No executable behavior changes. | Restore v0.1 blob `ab96b668af94a3fb49e748ecb085a94bfb409592` through a reviewed revert or forward fix |
+
+[Back to top](#top)
 
 ---
 
