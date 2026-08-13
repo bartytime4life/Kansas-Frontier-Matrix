@@ -200,6 +200,9 @@ The Directory Rules document retains proposal-era control text because ADR-0029 
 | May public clients consume protected material? | **NO.** Public clients remain governed-interface-only and may receive only released, public-safe, non-reconstructable derivatives. |
 | Does this README activate anything? | **NO.** It changes documentation only. |
 
+> [!NOTE]
+> **Legacy CI compatibility marker — `PROPOSED (greenfield scaffold)`.** The current domain workflow greps for this exact literal as a guard against unreviewed policy activation. It describes the direct Rego scaffolds, not the whole directory's mixed maturity, and must be replaced by a versioned machine-readable activation assertion before the workflow coupling is retired.
+
 ### Authority ceiling
 
 This directory may own **People–DNA–Land-specific policy source and its local explanatory index** after each artifact satisfies its own placement, package, input, output, review, activation, and rollback gates. It may reference—but never absorb—the following authorities:
