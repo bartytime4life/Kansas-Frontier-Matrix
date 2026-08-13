@@ -28,6 +28,8 @@ updated: 2026-08-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: proposed cross-artifact authority-separation decision record without independent evidence, validation, policy, release, or publication authority
 current_path: docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
 supersedes: []
 superseded_by: []

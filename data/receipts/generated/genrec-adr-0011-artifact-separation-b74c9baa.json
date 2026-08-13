@@ -1,11 +1,11 @@
 {
-  "receipt_id": "genrec-adr-0011-artifact-separation-41cd6b92",
+  "receipt_id": "genrec-adr-0011-artifact-separation-b74c9baa",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md"
   ],
   "artifact_hashes": {
-    "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md": "sha256:41cd6b92128a77406710643d2139a86f7b3605dbc7803f1cb1838944e5dfbdeb"
+    "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md": "sha256:b74c9baaf37905c2285d7c493d8e1c48bdf960b003f3bb7c29bd6eeba236f49c"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -87,7 +87,7 @@
     {
       "gate": "documentation-metadata",
       "outcome": "PASS",
-      "reason": "The metadata body parses as YAML with ADR-0011, version v1.3, proposed status, and empty supersession lists; the repository ADR source-status parser normalizes it to proposed."
+      "reason": "The metadata body parses as YAML with ADR-0011, version v1.3, proposed status, empty supersession lists, docs/ ownership, and an explicit non-authoritative responsibility; the repository changed-path metadata workbench reports zero blocking findings and normalizes the ADR source status to proposed."
     },
     {
       "gate": "no-loss-and-claim-boundary-review",
@@ -101,13 +101,18 @@
     },
     {
       "gate": "full-repository-adr-index-suite",
-      "outcome": "SKIPPED",
-      "reason": "The scratch workspace is not a complete Git checkout with every numbered ADR and support document; hosted validator-suite will run the repository's exact full-corpus ADR validator after publication."
+      "outcome": "PASS",
+      "reason": "The repository ADR index validator passes against the complete candidate checkout with 34 numbered records and 12 unassigned scaffolds; coherence does not accept or implement ADR-0011."
+    },
+    {
+      "gate": "topology-ratchet-base-comparison",
+      "outcome": "PASS",
+      "reason": "The candidate and untouched pinned base produce the same four new and five stale repository-topology fingerprints; the open topology failure is inherited and this comparison neither edits nor waives the governed baseline."
     },
     {
       "gate": "hosted-exact-head-checks",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks begin only after the immutable draft branch is published."
+      "reason": "Hosted checks begin only after the corrected immutable draft-branch revision is published."
     },
     {
       "gate": "human-review",
@@ -153,7 +158,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-13T22:50:38Z",
+  "created_at": "2026-08-13T23:02:11Z",
   "emitter": "OpenAI Codex",
   "links": {
     "pr_number": null,
