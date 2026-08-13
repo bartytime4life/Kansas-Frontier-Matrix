@@ -1,0 +1,211 @@
+{
+  "receipt_id": "genrec-hazards-policy-readme-8920d5de",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/hazards/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/hazards/README.md": "sha256:8920d5dead75a8f03bf8c530ac9b5b8693487088321c4a95f706b7125b147d45"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "complete recursive repository-tree inspection",
+      "exact Hazards policy-source inspection",
+      "adjacent doctrine, contract, schema, fixture, test, validator, workflow, pipeline, source-registry, proof, receipt, catalog, release, package, bundle, and runtime reconciliation",
+      "local Markdown structure, link, fact, sensitive-content, and SHA-256 validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/SOURCE_ROLE_MATRIX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/DROUGHT_ANTI_COLLAPSE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/architecture/hazards-trust-membrane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/contracts/domains/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/schemas/contracts/v1/domains/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/fixtures/domains/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/tests/domains/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/tools/validators/domains/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/tools/validators/hazards",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/.github/workflows/domain-hazards.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/decision/vocabulary.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/decision/reviewer_roles.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/bundles/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/packages/policy-runtime/src/policy_runtime/core.py"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/hazards/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, target bytes, complete tree, repository permissions, exact-target open pull requests, and planned branch availability before authoring; no open Hazards overlap or matching branch existed."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring from 43ca3e4751d9 to 299c8a813256 through six unrelated commits affecting repository topology validation, a People README, a removed root policy file, and a generated topology receipt. The Hazards target and 322 inspected Hazards/cited evidence paths were byte-identical; the candidate was re-pinned to main@299c8a813256."
+    },
+    {
+      "gate": "accepted-directory-placement",
+      "outcome": "PASS",
+      "reason": "ADR-0029 and accepted Directory Rules retain Hazards-specific policy under policy/domains/hazards/; this change creates no root, alias, rule, runtime, or authority."
+    },
+    {
+      "gate": "complete-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Parsed the untruncated 16,991-entry recursive tree and reconciled the exact ten-blob Hazards policy lane plus every cited adjacent responsibility lane."
+    },
+    {
+      "gate": "local-policy-source-classification",
+      "outcome": "PASS",
+      "reason": "Inspected all seven Rego files, referrals YAML, and empty operational marker; recorded five allow-false and two deny-false defaults, zero operative rule bodies, zero native Rego tests, split package namespaces, and placeholder-only data."
+    },
+    {
+      "gate": "life-safety-and-authority-separation",
+      "outcome": "PASS",
+      "reason": "Preserved the repository's not-for-life-safety and official-referral doctrine without presenting KFM as an alert, warning, emergency-response, regulatory, legal, insurance, engineering, medical, or current-condition authority."
+    },
+    {
+      "gate": "adjacent-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Separated bounded USDM, drinking-water, NFHL/NLD/NID, drought, HAB, and shared-advisory validation evidence from inactive policy source; classified 23 schemas, 13 root test modules, split validator roots, domain workflow holds, pipeline/spec placeholders, source-registry conflicts, release placeholders, and empty proof/release/public lanes."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the prior purpose, authority, placement, input/output, validation, review, related-folder, and proposed-status intent while repairing overbroad responsibility and unsupported implementation implications."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one rendered H1, 66 ordered headings, one closed KFM meta block, four balanced language-tagged code-fence pairs, no duplicate heading slugs, no tabs or trailing whitespace, and a final newline; Pandoc parsed the GFM successfully."
+    },
+    {
+      "gate": "internal-link-and-fragment-resolution",
+      "outcome": "PASS",
+      "reason": "All 99 repository-relative links and local fragments resolve against the complete pinned tree and generated or explicit heading anchors."
+    },
+    {
+      "gate": "repository-fact-assertions",
+      "outcome": "PASS",
+      "reason": "Programmatic assertions confirmed tree size, policy/Rego/default counts, schema maturity classes, root test classes, validator classes, workflow jobs, fixture counts, pipeline/spec placeholders, source-registry state, release placeholders, and empty proof/candidate/receipt/catalog/rollback/published payload lanes."
+    },
+    {
+      "gate": "artifact-content-integrity",
+      "outcome": "PASS",
+      "reason": "The final README SHA-256 was recomputed from exact local bytes and bound into this receipt."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credential, private payload, exact protected location, hidden reasoning, exploit detail, or unreviewed life-safety instruction is present."
+    },
+    {
+      "gate": "repository-native-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout or gh CLI is available; no local Rego evaluator, repository validator suite, or workflow result is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks occur only after draft pull-request creation and are observed separately from this immutable authoring receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md",
+    "policy/domains/README.md",
+    "docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "complete-hazards-policy-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/hazards"
+    },
+    {
+      "id": "hazards-life-safety-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md"
+    },
+    {
+      "id": "hazards-source-role-and-anti-collapse",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/docs/domains/hazards/SOURCE_ROLE_MATRIX.md"
+    },
+    {
+      "id": "hazards-schema-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/299c8a81325689c68a38304ce7b14921342dcdd0/schemas/contracts/v1/domains/hazards"
+    },
+    {
+      "id": "hazards-bounded-validation-and-holds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/.github/workflows/domain-hazards.yml"
+    },
+    {
+      "id": "hazards-source-registry-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/data/registry/sources/hazards/README.md"
+    },
+    {
+      "id": "shared-inactive-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/decision/vocabulary.v1.json"
+    },
+    {
+      "id": "policy-bundle-and-runtime-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/bundles/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T19:29:39Z",
+  "emitter": "openai/gpt-5-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded v0.1 Hazards policy-boundary reconciliation on a focused draft-review branch. Current GitHub bytes control implementation claims; no attached planning document was used as implementation authority. Main drift through unrelated topology/person changes was reviewed and the candidate was re-pinned before review. This change activates no rule, referral, source, threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, pipeline, lifecycle transition, proof, candidate, release, deployment, alert, notification, or publication. Human review remains pending."
+}
