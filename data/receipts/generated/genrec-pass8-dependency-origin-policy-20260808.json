@@ -4,7 +4,7 @@
     "contracts/governance/dependency_origin_policy.md": "sha256:73f1d7ddcab308b913650cbf798c11a3195e66feed431b5df75e84283877d300",
     "fixtures/contracts/v1/governance/dependency_origin_policy/README.md": "sha256:ff0052f3f45b0708291f7713446f7462ff9929a2472e15073df320c9a48aef87",
     "fixtures/contracts/v1/governance/dependency_origin_policy/cases.json": "sha256:56498382b5bf2e61a7ff58000ff895765c487be3fe9c7c222c3d47f00d9bf635",
-    "policy/supply_chain/README.md": "sha256:0b301a443589e4941c9fc4ed9b451dfb4a6099b6e3d3c00fca0816d55f5e8226",
+    "policy/supply_chain/README.md": "sha256:426552620d573d96285b40dc730b1e134199dc0a302d16bb7da542fe818f0c05",
     "policy/supply_chain/dependency_origin_policy.v1.json": "sha256:804b68a7199e19ce2cfc2777301f0356bbea9b71d5ad37f400ad8923f2b22772",
     "schemas/contracts/v1/governance/dependency_origin_policy.schema.json": "sha256:9d801be2351b97d7ab700c0ae071769fb1c8e24b6d5863d99902885ef4a1e164",
     "tests/validators/governance/test_dependency_origin_policy.py": "sha256:fc03ec368f5d88fb94ec6a59e59e30384d4ca70a7d863155b3f22f59d881bb94",
@@ -64,7 +64,7 @@
     "provider": "OpenAI",
     "version": "2026-08-08"
   },
-  "notes": "Authoring provenance for an additive static dependency-origin guard. The profile checks repository declarations only: exact package-manager pin, single lockfile ownership, @kfm workspace/link binding, direct URL/VCS references, lock integrity, explicit registry hosts when URLs exist, and Python direct references. It installs nothing, contacts no registry, changes no dependency or lockfile bytes, and creates no source, evidence, policy-review, release, deployment, publication, or public-use authority. Base evidence inspection began at c76a4860693830a783579c29bf276977856e9f86; the clean delivery branch was cut from a542a647f70c96351da7464ece97a7eb41492a06. Corrective alignment adds bun.lock and bun.lockb to the competing-lockfile set already enforced by pnpm audit readiness.",
+  "notes": "Authoring provenance for an additive static dependency-origin guard. The profile checks repository declarations only: exact package-manager pin, single lockfile ownership, @kfm workspace/link binding, configured direct references, lock integrity, explicit registry hosts when URLs exist, and configured Python direct references. It installs nothing, contacts no registry, changes no dependency or lockfile bytes, and creates no source, evidence, policy-review, release, deployment, publication, or public-use authority. Base evidence inspection began at c76a4860693830a783579c29bf276977856e9f86; the clean delivery branch was cut from a542a647f70c96351da7464ece97a7eb41492a06. Corrective alignment adds bun.lock and bun.lockb to the competing-lockfile set already enforced by pnpm audit readiness. Documentation amendment reviewed against main@97e124e67320c811fe6528b4828747ff81c22d26 rebinds only policy/supply_chain/README.md to its expanded same-path boundary bytes. The original receipt identity, emitter, timestamp, inputs, truth labels, validation history, and pending human-review state are preserved; this rebind does not claim the amended README was authored at the original timestamp. A separate generated receipt records provenance for the documentation amendment and this hash-closure update.",
   "parameters": {
     "seed": null,
     "temperature": null,
