@@ -48,7 +48,8 @@
     "evidence_refs": [
       "repo:data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json",
       "repo:commit/c5e3158a7593f8a3cfc2de8a18d29fbf4fb6f4d0",
-      "repo:pull/2658"
+      "repo:pull/2658",
+      "repo:pull/2659"
     ]
   },
   "truth_labels": {
@@ -91,7 +92,7 @@
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on draft pull request 2658."
+      "reason": "Human review remains pending on draft pull request 2659."
     }
   ],
   "policy_decisions": [
@@ -119,7 +120,7 @@
   "created_at": "2026-08-13T00:48:19Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": 2658,
+    "pr_number": 2659,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
