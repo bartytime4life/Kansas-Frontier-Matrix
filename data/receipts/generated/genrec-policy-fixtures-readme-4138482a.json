@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-policy-fixtures-readme-4138482a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/fixtures/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/fixtures/README.md": "sha256:4138482adeffbc409be21316c6025254b6d2df108ab20392c6c594095b8ca4d6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:d545d63e395d9015a99356d3868287226a02437e6ee186bf2f4873b33166f69b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "shell validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d545d63e395d9015a99356d3868287226a02437e6ee186bf2f4873b33166f69b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/fixtures/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/policy/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/tests/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/policy/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/policy/policy_decision/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/policy/release_gate_v1/@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/pass12-release-policy-v1.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/root_registry.yaml@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:CONTRIBUTING.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/validate_generated_receipt.py@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    ]
+  },
+  "truth_labels": {
+    "policy/fixtures/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-history-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main and exact target bytes, inspected target history, found no open exact-target pull request or matching branch, and confirmed that four intervening commits changed only the disjoint policy/geoprivacy/README.md and policy/genealogy/README.md paths."
+    },
+    {
+      "gate": "repository-inventory-and-authority-grounding",
+      "outcome": "PASS",
+      "reason": "Claims were reconciled against a complete non-truncated tree, accepted Directory Rules, root registry, current fixture/test owners, workflows, and exact payload inventory at main@e6de606175bb1d352c00000486808f2e7e0f7b2f."
+    },
+    {
+      "gate": "markdown-structure-and-hygiene",
+      "outcome": "PASS",
+      "reason": "Exactly one H1, logical heading progression, twelve balanced language-tagged fences, final newline, no tabs, and no trailing whitespace."
+    },
+    {
+      "gate": "repository-links-and-local-fragments",
+      "outcome": "PASS",
+      "reason": "All 59 repository-relative links resolve to tracked paths and all 42 local fragment references resolve."
+    },
+    {
+      "gate": "placement-and-maturity-anti-overclaim",
+      "outcome": "PASS",
+      "reason": "The README preserves policy/fixtures as HOLD, routes reusable cases to root fixtures and executable conformance to root tests, and does not claim activation, runtime parity, review, release, or publication."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, real personal or genomic records, precise protected locations, restricted source payloads, or unpublished exploit detail."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only documentation workflow has no mounted repository checkout; no repository-native runtime or policy-test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Receipt validates against generated_receipt schema v3.0.0 and its SHA-256 artifact map matches the authored README bytes."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head GitHub Actions results are unavailable until the branch and draft pull request are published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:directory-governance-decision",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:root-fixture-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:policy-parent-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:policy-test-workflow",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:pass12-policy-workflow",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/pass12-release-policy-v1.yml@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    },
+    {
+      "id": "repo:policy-decision-fixtures",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/policy/policy_decision/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T15:32:23Z",
+  "emitter": "OpenAI GPT-5 Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only proposed update. It moves or admits no fixture payload, changes no policy, schema, test, workflow, evaluator, runtime, release, deployment, or publication behavior, and preserves human review as a separate pending action."
+}
