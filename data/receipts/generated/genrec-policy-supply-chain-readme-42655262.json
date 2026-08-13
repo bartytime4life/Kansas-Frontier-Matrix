@@ -1,0 +1,192 @@
+{
+  "receipt_id": "genrec-policy-supply-chain-readme-42655262",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json",
+    "policy/supply_chain/README.md"
+  ],
+  "artifact_hashes": {
+    "data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json": "sha256:6ecd21a708d0276bd71c4e684e5102fe765f1a580c0f949ea85075e7fb6c6610",
+    "policy/supply_chain/README.md": "sha256:426552620d573d96285b40dc730b1e134199dc0a302d16bb7da542fe818f0c05"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-12"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0b301a443589e4941c9fc4ed9b451dfb4a6099b6e3d3c00fca0816d55f5e8226",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-044012).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:policy/supply_chain/README.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:policy/supply_chain/dependency_origin_policy.v1.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:policy/README.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:contracts/governance/dependency_origin_policy.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:schemas/contracts/v1/governance/dependency_origin_policy.schema.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:tools/validators/governance/validate_dependency_origin_policy.py@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:tests/validators/governance/test_dependency_origin_policy.py@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:fixtures/contracts/v1/governance/dependency_origin_policy/README.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:fixtures/contracts/v1/governance/dependency_origin_policy/cases.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/workflows/dependency-origin-policy.yml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:tools/validators/validate_generated_receipt.py@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:docs/doctrine/directory-rules.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:control_plane/root_registry.yaml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/CODEOWNERS@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:package.json@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:pnpm-lock.yaml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:pnpm-workspace.yaml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:pyproject.toml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/workflows/dependency-scan.yml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/workflows/security.yml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/workflows/scorecard.yml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:.github/dependabot.yml@97e124e67320c811fe6528b4828747ff81c22d26",
+      "repo:tools/validators/dependencies/pnpm_audit_readiness.py@97e124e67320c811fe6528b4828747ff81c22d26"
+    ]
+  },
+  "truth_labels": {
+    "data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json": "CONFIRMED",
+    "policy/supply_chain/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete direct-child tree, exact-target pull-request overlap, active branch name, accepted Directory Rules and ADR-0029, parent policy authority, root projection, CODEOWNERS, and directly related policy, contract, schema, validator, fixture, test, workflow, receipt, audit, security, Scorecard, Dependabot, and root dependency evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading progression, balanced language-tagged fences, no tabs or trailing whitespace, UTF-8-compatible text, and a final newline were verified."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All 33 repository-relative targets were checked against the pinned base, and every quick-navigation and back-to-top fragment resolves within the authored Markdown."
+    },
+    {
+      "gate": "inventory-and-claim-alignment",
+      "outcome": "PASS",
+      "reason": "The two direct children, exact proposed profile settings, bounded manifest/lock/Python scan surface, finite outcomes and findings, seven focused tests, nine fixtures, dedicated workflow, original exact-hash receipt, and adjacent audit/security/update controls were reconciled against repository evidence without upgrading their authority."
+    },
+    {
+      "gate": "existing-receipt-rebind",
+      "outcome": "PASS",
+      "reason": "The original nine-artifact receipt changes only its bound README digest and transparent amendment notes; its identity, emitter, timestamp, inputs, truth labels, validation history, and pending human-review state remain intact."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hashes",
+      "outcome": "PASS",
+      "reason": "Both changed receipts parse as JSON; the amendment receipt conforms to the current GENERATED_RECEIPT schema and bounded cross-field rules; and final README and re-bound receipt SHA-256 digests match their declared artifact hashes."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, registry secrets, package payloads, private prompts, personal data, protected cultural records, production endpoints, or exact sensitive locations."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy JSON, contract, schema, fixture, validator, test, workflow, manifest, lockfile, package, runtime, registry, credential, audit, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, dependency approval, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "supply-chain-parent-and-maturity",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "policy-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "dependency-origin-policy-projection",
+      "validated": true,
+      "evidence_ref": "repo:policy/supply_chain/dependency_origin_policy.v1.json@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "dependency-origin-contract-and-schema",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/dependency_origin_policy.md@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "dependency-origin-validator-behavior",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/governance/validate_dependency_origin_policy.py@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "dependency-origin-fixture-and-test-coverage",
+      "validated": true,
+      "evidence_ref": "repo:tests/validators/governance/test_dependency_origin_policy.py@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "dependency-origin-hosted-boundary",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/dependency-origin-policy.yml@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "original-generated-receipt-binding",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass8-dependency-origin-policy-20260808.json@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "adjacent-supply-chain-controls",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/dependency-scan.yml@97e124e67320c811fe6528b4828747ff81c22d26"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@97e124e67320c811fe6528b4828747ff81c22d26"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T04:50:04Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the proposed policy/supply_chain boundary plus exact generated-receipt dependency closure. The update changes no policy JSON, contract, schema, fixture, validator, test, workflow, manifest, lockfile, package, registry, credential, runtime, audit command, release, deployment, publication, or public behavior. Both receipts remain provenance/process memory rather than approval, truth, security proof, or authority; authorized human review remains pending."
+}
