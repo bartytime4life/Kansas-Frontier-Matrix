@@ -62,7 +62,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared validation dependencies
-        run: python -m pip install -e ".[test]" -e ./packages/hashing
+        run: python tools/ci/install_python_ci.py project-test-hashing
 
       - name: Compile bounded implementation
         run: python -m compileall -q tools/ingest/csv_geojson_preflight

@@ -44,7 +44,7 @@ jobs:
           cache: pip
 
       - name: Install declared test dependencies
-        run: python -m pip install --disable-pip-version-check --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run focused validator tests
         run: python -m pytest -q tests/validators/test_validate_citation_validation_report.py
@@ -83,7 +83,7 @@ jobs:
           cache: pip
 
       - name: Install declared test dependencies
-        run: python -m pip install --disable-pip-version-check --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Prove missing and governed evidence cannot become PASS
         run: >-

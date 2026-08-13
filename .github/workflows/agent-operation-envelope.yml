@@ -66,7 +66,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]" -e "./packages/hashing[test]"
+          python tools/ci/install_python_ci.py project-test-hashing-test
 
       - name: Run deterministic no-network role-boundary tests
         run: |

@@ -73,7 +73,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared validation dependencies
-        run: python -m pip install -e .
+        run: python tools/ci/install_python_ci.py project-runtime
 
       - name: Run deterministic no-network unit tests
         run: |

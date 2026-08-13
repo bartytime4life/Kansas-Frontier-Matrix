@@ -47,7 +47,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Atmosphere validation dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Inspect Atmosphere validation boundaries
         shell: bash

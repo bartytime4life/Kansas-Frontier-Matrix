@@ -74,7 +74,7 @@ jobs:
       - name: Install declared schema and test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
 
       - name: Validate source fixtures with existing authorities
         run: |

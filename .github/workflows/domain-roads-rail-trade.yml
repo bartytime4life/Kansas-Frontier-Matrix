@@ -52,7 +52,7 @@ jobs:
 
       - name: Install declared repository test dependencies
         shell: bash
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Evaluate Roads Rail Trade validation readiness
         shell: bash

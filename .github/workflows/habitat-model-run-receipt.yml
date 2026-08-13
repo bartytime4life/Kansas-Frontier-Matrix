@@ -33,7 +33,7 @@ jobs:
           cache: pip
 
       - name: Install test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run focused tests and fixture replay
         env:

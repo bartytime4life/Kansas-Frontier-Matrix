@@ -89,7 +89,7 @@ jobs:
 
       - name: Install declared validator dependencies
         shell: bash
-        run: python -m pip install -e .
+        run: python tools/ci/install_python_ci.py project-runtime
 
       - name: Enforce repository workflow and topology ratchets
         shell: bash
@@ -220,7 +220,7 @@ jobs:
 
       - name: Install declared validator dependencies
         shell: bash
-        run: python -m pip install -e .
+        run: python tools/ci/install_python_ci.py project-runtime
 
       - name: Require the reviewed invalid EvidenceBundle rejection
         shell: bash

@@ -53,7 +53,7 @@ jobs:
           cache-dependency-path: pyproject.toml
 
       - name: Install declared Archaeology validation dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Validate bounded synthetic ThreeDDocumentation paradata
         shell: bash

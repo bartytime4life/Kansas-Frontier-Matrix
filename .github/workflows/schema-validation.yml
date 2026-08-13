@@ -79,7 +79,7 @@ jobs:
 
       - name: Install declared schema and test dependencies
         shell: bash
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Require valid schema inventory and non-vacuous configured fixtures
         shell: bash

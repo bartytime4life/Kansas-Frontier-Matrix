@@ -41,7 +41,7 @@ jobs:
           cache: pip
 
       - name: Install repository test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Validate manifest-driven contract fixture wave
         run: |

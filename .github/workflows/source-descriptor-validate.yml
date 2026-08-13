@@ -46,7 +46,7 @@ jobs:
           cache: pip
 
       - name: Install declared schema and test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Verify bounded schema and validator convergence
         shell: bash
@@ -185,7 +185,7 @@ jobs:
           cache: pip
 
       - name: Install declared schema dependency
-        run: python -m pip install -e .
+        run: python tools/ci/install_python_ci.py project-runtime
 
       - name: Verify rights fields and fail-closed release conditions
         shell: bash

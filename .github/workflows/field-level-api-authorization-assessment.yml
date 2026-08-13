@@ -62,7 +62,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared validation dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run focused deterministic tests and fixture replay
         run: |
           python -m unittest -v tests.validators.release.test_validate_field_level_api_authorization_assessment

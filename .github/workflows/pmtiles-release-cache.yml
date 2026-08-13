@@ -59,7 +59,7 @@ jobs:
           set -euo pipefail
           corepack enable
           pnpm install --frozen-lockfile
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
       - name: Run focused unit test and Explorer build
         run: |
           set -euo pipefail

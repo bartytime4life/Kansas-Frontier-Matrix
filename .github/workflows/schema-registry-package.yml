@@ -58,7 +58,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]" -e "./packages/schema-registry[test]"
+          python tools/ci/install_python_ci.py project-test-schema-registry-test
 
       - name: Run deterministic package tests and fixture snapshot
         run: |

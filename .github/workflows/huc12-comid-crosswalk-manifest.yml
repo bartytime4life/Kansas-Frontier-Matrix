@@ -39,7 +39,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install repository test dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run focused unit tests
         run: >-

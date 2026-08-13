@@ -75,7 +75,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install declared test dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Revalidate shared material-change profile
         shell: bash

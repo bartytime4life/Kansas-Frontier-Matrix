@@ -91,7 +91,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --disable-pip-version-check -e .
+          python tools/ci/install_python_ci.py project-runtime
           python -m py_compile \
             tools/validators/pmtiles/validate_headless_render_review_packet.py \
             tests/validators/test_headless_render_review_packet.py

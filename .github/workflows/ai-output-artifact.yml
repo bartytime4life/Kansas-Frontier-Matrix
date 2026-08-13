@@ -65,7 +65,7 @@ jobs:
       - name: Install declared test dependencies
         run: |
           set -euo pipefail
-          python -m pip install -e ".[test]"
+          python tools/ci/install_python_ci.py project-test
       - name: Validate schemas, fixtures, identity, and partial revocation
         run: |
           set -euo pipefail

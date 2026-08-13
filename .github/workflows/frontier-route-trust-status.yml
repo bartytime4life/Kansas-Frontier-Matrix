@@ -61,7 +61,7 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared schema and test dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Validate schema and exact fixture polarity
         run: python tools/validators/domains/roads-rail-trade/validate_frontier_route_trust_status.py --fixtures
       - name: Run focused Python contract tests

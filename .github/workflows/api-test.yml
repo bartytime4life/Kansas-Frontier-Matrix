@@ -66,7 +66,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install repository test dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run Governed API smoke suite
         run: make governed-api-smoke
@@ -100,7 +100,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install repository test dependencies
-        run: python -m pip install --no-input -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
 
       - name: Run focused ABSTAIN envelope contract test
         run: >-
