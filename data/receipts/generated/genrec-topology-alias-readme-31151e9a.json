@@ -7,7 +7,7 @@
     "tools/validators/directory_governance/validate_repository_topology.py"
   ],
   "artifact_hashes": {
-    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:0d90e3d8c7df09fd9063018bf2c8088c8f7f9bef40bb6f12835ae9234b742eeb",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:56d4b6af9054e9b557727a803ce39a7b7afb504411db90022d3b0d2c4edb6e93",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:714b8fda81c09952fb618bd4baccc0a8423644effbf7298e1528c0322d10b2cb",
     "tools/validators/directory_governance/validate_repository_topology.py": "sha256:31151e9a865c9fe0cee35fa979bcb877832460d8c7219c275f26e065a2e53aad"
   },
@@ -80,14 +80,19 @@
       "reason": "No local Git checkout or gh CLI is available; hosted exact-head checks remain authoritative for the full suite."
     },
     {
-      "gate": "hosted-exact-head-checks",
-      "outcome": "SKIPPED",
-      "reason": "Hosted checks begin only after draft pull-request creation."
+      "gate": "hosted-initial-head-checks",
+      "outcome": "FAIL",
+      "reason": "On initial head d8e678cddd4ca51c637ccf3e76c9ef528e60e68d, schema-validation passed and all live topology/baseline tests passed; validator-suite failed only because the pre-existing all-path-rules synthetic fixture no longer supplied substantive KFM-TOPO-006 alias evidence."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
       "reason": "Human review remains pending; this receipt is provenance, not approval."
+    },
+    {
+      "gate": "hosted-revised-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending after adding connectors/air/source.py to the synthetic all-path-rules fixture and republishing the branch."
     }
   ],
   "policy_decisions": [

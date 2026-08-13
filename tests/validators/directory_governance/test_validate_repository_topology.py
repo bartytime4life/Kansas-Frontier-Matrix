@@ -512,6 +512,7 @@ class RepositoryTopologyTests(unittest.TestCase):
                     "artifacts/release/release_manifest.json",
                     "catalog/README.md",
                     "connectors/air/README.md",
+                    "connectors/air/source.py",
                     "data/rogue/README.md",
                     "data/triplet(s)/.gitkeep",
                     "data/triplets/README.md",
