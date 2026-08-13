@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec-pass25-receipt-proof-pairing-correction-20260812",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/receipt-proof-pairing-assessment.yml",
+    "contracts/governance/receipt_proof_pairing_assessment.md",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md",
+    "tools/ci/python-dependency-lock-migration.json",
+    "tools/validators/validate_generated_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "sha256:dd78dd07938ea1c6dce87cf0a27922577ef4d3484dc2c976556b8dda633f20f1",
+    "contracts/governance/receipt_proof_pairing_assessment.md": "sha256:f55b9a48243060a9f8a595f97e34701fbb32b4e830398bbc15589b15b6f1be8b",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json": "sha256:4a1f3097b2de167bece0f534bc4fa65c5ffa33e44a0065904d811f093fcb76c6",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json": "sha256:bc8807bbc2ce88bdfc851e5f6a661759369c2bbf6082acbf7ebc44cd4e6fadd6",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py": "sha256:2ee4607e9db46cfec9b9fd8df396b44509825a32b724d2f5d23a9eed670e263e",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py": "sha256:89506785d00aa5af39350ca5e5f1edd07a0cf84da723e6b8cb07e61e97d2e910",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md": "sha256:8e0d11726dfd4fde69098e0e905068eec11902a976e4cffb964670a8c5095cf3",
+    "tools/ci/python-dependency-lock-migration.json": "sha256:037eec7126e4c5cd9b14c0dcee5cf3f0ac4209fd59b8e0e23b79fc411d48b9dc",
+    "tools/validators/validate_generated_receipt.py": "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 / 2026-08-12"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git history inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1e10967617548ba9a9270f0b93ee6e59bbee39b69e49a69482ae06e4dcf31336",
+      "sha256:2b7a557327cec41170131fac5979724d548553022610ff9ec79c62f7fac4b197"
+    ],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json",
+      "repo:commit/c5e3158a7593f8a3cfc2de8a18d29fbf4fb6f4d0",
+      "repo:pull/2658"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "PROPOSED",
+    "contracts/governance/receipt_proof_pairing_assessment.md": "NEEDS VERIFICATION",
+    "schemas/contracts/v1/governance/receipt_proof_pairing_assessment.schema.json": "NEEDS VERIFICATION",
+    "fixtures/contracts/v1/governance/receipt_proof_pairing_assessment/cases.json": "NEEDS VERIFICATION",
+    "tools/validators/governance/validate_receipt_proof_pairing_assessment.py": "NEEDS VERIFICATION",
+    "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py": "NEEDS VERIFICATION",
+    "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md": "NEEDS VERIFICATION",
+    "tools/ci/python-dependency-lock-migration.json": "PROPOSED",
+    "tools/validators/validate_generated_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-digest-diagnosis",
+      "outcome": "PASS",
+      "reason": "Commit c5e3158a recorded fixture digest 1e109676... while the exact fixture bytes in that same commit hash to 2b7a5573...."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "The deterministic receipt/proof pairing unit suite passes."
+    },
+    {
+      "gate": "fixture-polarity-replay",
+      "outcome": "PASS",
+      "reason": "The compact exact fixture corpus replays successfully."
+    },
+    {
+      "gate": "successor-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "All nine referenced current artifacts are bound to exact SHA-256 digests; the historical receipt is unchanged."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the successor receipt is published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft pull request 2658."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "historical-generated-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json"
+    },
+    {
+      "id": "repository-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T00:48:19Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": 2658,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor receipt for a digest defect present in the 2026-08-11 historical receipt. It does not mutate that receipt, re-author inherited artifacts, authenticate proof, decide policy or review, change lifecycle state, or grant promotion, release, deployment, publication, or public-use authority."
+}
