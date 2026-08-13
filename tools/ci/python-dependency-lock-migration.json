@@ -2325,7 +2325,7 @@
     {
       "path": ".github/workflows/receipt-proof-pairing-assessment.yml",
       "base_sha256": "sha256:1092b3bd4f6983a99169714a404b6c3a1747a48e63a8586182c57ae30c1a247b",
-      "current_sha256": "sha256:75fcaad01e4aec8c8d51372c5acc81001cc501f755c269468a27e94b38e4acd5",
+      "current_sha256": "sha256:dd78dd07938ea1c6dce87cf0a27922577ef4d3484dc2c976556b8dda633f20f1",
       "profiles": [
         "project-test"
       ],

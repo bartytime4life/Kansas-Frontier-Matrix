@@ -10,7 +10,7 @@ name: receipt-proof-pairing-assessment
       - "tools/validators/governance/validate_receipt_proof_pairing_assessment.py"
       - "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py"
       - "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md"
-      - "data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json"
+      - "data/receipts/generated/genrec-pass25-receipt-proof-pairing-correction-20260812.json"
       - "pyproject.toml"
   push:
     branches: [main]
@@ -22,7 +22,7 @@ name: receipt-proof-pairing-assessment
       - "tools/validators/governance/validate_receipt_proof_pairing_assessment.py"
       - "tests/validators/governance/test_validate_receipt_proof_pairing_assessment.py"
       - "docs/intake/exploratory/pass-25-receipt-proof-pairing-source-map.md"
-      - "data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json"
+      - "data/receipts/generated/genrec-pass25-receipt-proof-pairing-correction-20260812.json"
       - "pyproject.toml"
   workflow_dispatch:
 
@@ -64,7 +64,7 @@ jobs:
           python -m unittest -v tests.validators.governance.test_validate_receipt_proof_pairing_assessment
           python tools/validators/governance/validate_receipt_proof_pairing_assessment.py --fixtures
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass25-receipt-proof-pairing-correction-20260812.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
