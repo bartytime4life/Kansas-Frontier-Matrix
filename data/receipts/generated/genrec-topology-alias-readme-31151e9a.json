@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-topology-alias-readme-31151e9a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json",
+    "tools/validators/directory_governance/validate_repository_topology.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:56d4b6af9054e9b557727a803ce39a7b7afb504411db90022d3b0d2c4edb6e93",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:714b8fda81c09952fb618bd4baccc0a8423644effbf7298e1528c0322d10b2cb",
+    "tools/validators/directory_governance/validate_repository_topology.py": "sha256:31151e9a865c9fe0cee35fa979bcb877832460d8c7219c275f26e065a2e53aad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:28a61fb4a3ac6bc1617b83031675b7a793c84c7f6497447325443489a759249f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "GitHub Actions inspection",
+      "complete Git-tree replay",
+      "deterministic local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bd57a57c9c168b51678cf863cd92ef92fb79689357a845dce17d97218acdbd09"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2723",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31735050732",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31735292429",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/people/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/tools/validators/directory_governance/validate_repository_topology.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/tools/validators/directory_governance/repository_topology_baseline.json"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "PROPOSED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "PROPOSED",
+    "tools/validators/directory_governance/validate_repository_topology.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "superseding-main-drift-attribution",
+      "outcome": "PASS",
+      "reason": "Replayed current main after policy/domains/people/README.md landed and reproduced one exact unbaselined KFM-TOPO-006 people fingerprint; the prior merge runs were cancelled by newer main activity, not test failure."
+    },
+    {
+      "gate": "source-and-test-syntax",
+      "outcome": "PASS",
+      "reason": "The exact proposed validator and test module compile under Python without network access."
+    },
+    {
+      "gate": "complete-path-finding-replay",
+      "outcome": "PASS",
+      "reason": "Replayed 13,381 tracked blobs; all 93 current path-rule findings exactly match the proposed baseline."
+    },
+    {
+      "gate": "trusted-baseline-transition",
+      "outcome": "PASS",
+      "reason": "All five scope-alias aggregate replacements are strict evidence shrinkage; no waiver, metadata, or deadline is added or extended."
+    },
+    {
+      "gate": "regression-coverage",
+      "outcome": "PASS",
+      "reason": "Focused tests prove README materialization does not expand a populated alias, README-only directories still fail under the scaffold rule, and nonconventional uppercase names still fail."
+    },
+    {
+      "gate": "full-repository-checkout",
+      "outcome": "SKIPPED",
+      "reason": "No local Git checkout or gh CLI is available; hosted exact-head checks remain authoritative for the full suite."
+    },
+    {
+      "gate": "hosted-initial-head-checks",
+      "outcome": "FAIL",
+      "reason": "On initial head d8e678cddd4ca51c637ccf3e76c9ef528e60e68d, schema-validation passed and all live topology/baseline tests passed; validator-suite failed only because the pre-existing all-path-rules synthetic fixture no longer supplied substantive KFM-TOPO-006 alias evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    },
+    {
+      "gate": "hosted-revised-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending after adding connectors/air/source.py to the synthetic all-path-rules fixture and republishing the branch."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "prior-bounded-repair",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/2723"
+    },
+    {
+      "id": "superseding-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/policy/domains/people/README.md"
+    },
+    {
+      "id": "topology-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/299c8a81325689c68a38304ce7b14921342dcdd0/tools/validators/directory_governance/validate_repository_topology.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T19:24:00Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up to merged PR #2723 after a later README exposed a narrower-than-intended alias condition. This receipt grants no merge, policy, release, deployment, or publication authority."
+}

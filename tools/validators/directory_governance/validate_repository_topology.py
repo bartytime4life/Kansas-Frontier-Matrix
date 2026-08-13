@@ -484,12 +484,8 @@ def _registered_roots(
     return set(by_path), by_path
 
 
-def _is_materialized_placeholder_readme(path: str, path_set: set[str]) -> bool:
-    parsed = PurePosixPath(path)
-    return (
-        parsed.name == "README.md"
-        and (parsed.parent / ".gitkeep").as_posix() in path_set
-    )
+def _is_conventional_readme(path: str) -> bool:
+    return PurePosixPath(path).name == "README.md"
 
 
 def _path_findings(
@@ -592,7 +588,7 @@ def _path_findings(
             for path in paths
             if path.split("/", 1)[0] in SCOPE_ROOTS
             and alias in PurePosixPath(path).parts[1:]
-            and not _is_materialized_placeholder_readme(path, path_set)
+            and not _is_conventional_readme(path)
         ]
         if members:
             findings.append(_finding("KFM-TOPO-006", f"scope-alias:{alias}", members))
