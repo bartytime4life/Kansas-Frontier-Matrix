@@ -845,7 +845,8 @@
       "github:code-scanning-alerts#110-115,#503-521",
       "github:actions-run/31651265629/scorecard-results.sarif",
       "repo:main@31ac20bcc7dbed71a55014846239959963ba6718",
-      "repo:pull/2657"
+      "repo:pull/2657",
+      "repo:pull/2658"
     ]
   },
   "truth_labels": {
@@ -1299,7 +1300,7 @@
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on draft pull request 2657."
+      "reason": "Human review remains pending on follow-up draft pull request 2658."
     }
   ],
   "policy_decisions": [
@@ -1326,7 +1327,7 @@
   "created_at": "2026-08-13T00:31:04Z",
   "emitter": "OpenAI Codex via ChatGPT Work",
   "links": {
-    "pr_number": 2657,
+    "pr_number": 2658,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
