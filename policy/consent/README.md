@@ -1,58 +1,123 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/consent
 title: policy/consent/ — Consent Policy Boundary and Evaluation Contract
-type: policy-readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Consent steward · Privacy steward · Policy steward · Policy-runtime steward · People-DNA-Land domain steward · Evidence steward · Rights steward · Sensitivity steward · Release steward · Docs steward
-created: 2026-06-15
-updated: 2026-07-14
-policy_label: "restricted-review; consent; cross-cutting-policy; purpose-bound; audience-bound; subject-bound; revocable; explicit-applicability; finite-outcomes; explicit-inputs; no-hidden-fetches; fail-closed; obligations; evidence-aware; rights-aware; sensitivity-aware; release-independent; governed-api; cache-invalidation; replayable; correctable; rollback-aware; no-reidentification; no-secrets"
+type: policy-readme; directory-readme; boundary-compact; consent-policy-boundary
+version: v0.3
+status: draft; repository-grounded; current-state-reconciled; documentation-only-parent; bounded-domain-fixture-profiles; proposed-domain-rego-scaffolds; fixture-first-ui-projection; evaluator-unbound; fail-closed; non-release; non-publication
+owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted consent stewardship, separation of duties, and independent approval controls remain unproved
+created: 2026-06-15; initial empty path confirmed before v0.1
+updated: 2026-08-13
+policy_label: repository-facing; consent; cross-cutting-policy-candidate; purpose-bound; audience-bound; subject-bound; revocable; explicit-applicability; finite-outcomes; explicit-inputs; no-hidden-fetches; fail-closed; obligations; evidence-aware; rights-aware; sensitivity-aware; release-independent; cache-invalidation; replayable; correctable; no-reidentification; no-secrets
 current_path: policy/consent/README.md
-truth_posture: CONFIRMED repository path, policy responsibility root, two consent child READMEs at v0.2, People-DNA-Land consent doctrine, PolicyInputBundle and PolicyDecision semantic contracts, paired policy schemas, canonical PolicyDecision outcome and policy-family enums, policy-runtime placeholder version, and TODO-only policy workflow / PROPOSED cross-cutting consent-policy boundary, consent-applicability result, child-lane inheritance contract, engine-result normalization, reason-code registry, obligation registry, consent grant or sidecar binding, revocation introspection, receipt emission, dependency tracking, cache invalidation, policy-family composition, and governed API integration / CONFLICTED top-level policy/consent placement versus domain-nested consent placement, duplicate CONSENT.md versus CONSENT_MODEL.md doctrine carriers, people versus people-dna-land segment conventions, and engine-native ALLOW-RESTRICT-HOLD vocabulary versus canonical ANSWER-ABSTAIN-DENY-ERROR PolicyDecision vocabulary / UNKNOWN executable consent policy modules, accepted consent credential format, evaluator binding, active policy bundle, deployed revocation service, production cache topology, receipt and proof emission, release integration, and branch-protection enforcement / NEEDS VERIFICATION accepted owners, placement ADR, supersession records, schema hardening, validators, fixtures, tests, real CI, consent applicability rules, reason codes, obligation interpreter, policy-family composition, multi-party consent, authorized-representative rules, retention and purge rules, derivative dependency tracking, cache invalidation SLOs, correction propagation, and rollback automation
+owning_root: policy/
+canonical_relationship: PROPOSED shared consent-policy parent; accepted ADR-0029 confirms policy/ as the singular policy-source root, but exact family ownership between this parent lane and domain-nested consent rule homes remains unresolved
+directory_governance: accepted ADR-0029 adopts Directory Rules v2; this same-path BOUNDARY_COMPACT README documents a lane inside policy/ and does not activate policy
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 266dfb53f4a144940fc3c094b852605dcc2e9356
-  prior_blob: 1a98fadf0105908800a2dd57d5f66d62c1aaf970
-  bounded_path_search: target lane, policy root, merged child consent lanes, People-DNA-Land consent and canonical-path doctrine, policy contracts and schemas, policy runtime package, policy workflow, and repository-indexed consent implementation terms
+  base_commit: 1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a
+  target_baseline_blob: 5c56e988cbfa7b613fa39feec3c8f7f5bb44ce1b
+  target_v0_1_blob: 1a98fadf0105908800a2dd57d5f66d62c1aaf970
+  target_initial_empty_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  people_child_readme_blob: 82bbe2795f96213f6c31c41a49542f1ff8a98f46
+  people_dna_land_child_readme_blob: fa7ea7c95a473a7fd498053536ca0b72b17461f6
+  people_dna_land_policy_root_blob: 571a4a6d5c8ba7cf6c1fa9fcdd63da88bc05eb2a
+  dna_revocation_rego_blob: bb4400e4995bb2381bcb88782a3ff97ea272ebd0
+  domain_consent_validator_rego_blob: 820daa2199be24f0f651404367d89576f96a825f
+  consent_tokens_standard_blob: 954efe37bb02e88bae79008950fe6481c98ac58e
+  policy_input_contract_blob: 545c352681dd0db0cd4d169a5d2f9c364356457c
+  policy_input_schema_blob: b89db4b1730c61258441e0eed037276b910b1990
+  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
+  consent_schema_index_blob: f3df7888166287e4a86c3696204b64799b995eab
+  consent_grant_schema_blob: 90309ad224271ded87c4f66be68be1e67bcc199f
+  consent_receipt_schema_blob: a178b759fa19922f8d6c6adf1ec13402f9784e75
+  consent_overlay_contract_blob: d548e5eb93efe0b48accfa497de90dd924f753eb
+  consent_overlay_schema_blob: dbb3d8cd6310ee4534c4180dafc288f941e82dfd
+  consent_overlay_fixture_readme_blob: 36b755321d0a4d05a72476ba075993967fd446f0
+  consent_overlay_validator_blob: b2ff0e5037de0f1c22486743ab5e20926c68474d
+  consent_overlay_test_blob: 4f529582d961ed2b87df20a7f158e03d52eccbc8
+  revocation_assessment_contract_blob: dbf1fdff6585f3db4213c17d8f18bfc81ecec04d
+  revocation_assessment_schema_blob: e976211d1bf536b2aae7901842474dbcb1c3a484
+  revocation_assessment_fixture_readme_blob: 17644ee9aca193682687cccdb0030a6146c77eae
+  revocation_assessment_validator_blob: 76c7805428f253a7a711c7bc68a27e9cbcce40e7
+  revocation_assessment_test_blob: bceeef36e5c4e456e6f8a3fc192cd1c349d34fb5
+  people_dna_land_workflow_blob: bcf64c3e3b6653b9543489fc5a6031805ae3ef48
+  revocation_assessment_workflow_blob: 49351ddcd05ab21f3d964ca35b86e007f5022138
+  explorer_consent_card_readme_blob: e8e285c6f63f492b13d8cfa0a0eee2299613938d
+  explorer_consent_projection_blob: 8f919bb124f21b432ccbceb0c4efc17ddd8b6ab1
+  explorer_consent_card_test_blob: 9b48541a1a16188e82596286774dfce1b4cdf08f
+  policy_runtime_metadata_blob: ebb6725ad9a00d77df06f779a603814027abe084
+  policy_runtime_core_blob: e7e14cf39ae6919fbbc80f1b471de6b907292edb
+  policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
+  pull_request_template_blob: c5624d7dbc2b83055421b4fb4542794bafa10bee
+  open_pull_requests_inspected: "2706, 2707, 2708"
+  open_overlapping_pull_requests_found: "0 at preflight"
+  inventory_method: authenticated GitHub reads of the exact target history and complete direct tree, accepted directory governance, current consent doctrine and standards, parent and child policy lanes, domain Rego scaffolds, contracts, schemas, fixtures, validators, tests, workflows, UI projection, policy runtime, ownership routing, and pull-request controls
+  direct_lane_files_confirmed:
+    - policy/consent/README.md
+    - policy/consent/people/.gitkeep
+    - policy/consent/people/README.md
+    - policy/consent/people-dna-land/.gitkeep
+    - policy/consent/people-dna-land/README.md
+  bounded_inventory_note: the complete direct lane is documentation and keepfiles only; no accepted parent consent rule, native parent policy test, bundle membership, evaluator binding, emitted consent PolicyDecision, governed producer, release integration, or production enforcement was established
 related:
   - ../README.md
   - ./people/README.md
   - ./people-dna-land/README.md
-  - ../access/README.md
+  - ../domains/people-dna-land/README.md
+  - ../domains/people-dna-land/consent/dna_consent_revocation.rego
+  - ../domains/people-dna-land/consent_validator.rego
+  - ../decision/README.md
   - ../bundles/README.md
   - ../../docs/domains/people-dna-land/CONSENT_MODEL.md
   - ../../docs/domains/people-dna-land/CONSENT.md
   - ../../docs/domains/people-dna-land/CONSENT_REGISTER.md
   - ../../docs/domains/people-dna-land/CANONICAL_PATHS.md
-  - ../../docs/domains/people-dna-land/SENSITIVITY_PROFILE.md
-  - ../../docs/domains/people-dna-land/API_CONTRACTS.md
   - ../../docs/standards/CONSENT_TOKENS.md
   - ../../contracts/policy/policy_input_bundle.md
   - ../../contracts/policy/policy_decision.md
   - ../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
   - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../schemas/contracts/v1/consent/README.md
+  - ../../schemas/contracts/v1/runtime/consent_grant.schema.json
+  - ../../schemas/governance/consent_receipt.schema.json
+  - ../../contracts/domains/people-dna-land/consented_genealogy_overlay.md
+  - ../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md
+  - ../../fixtures/domains/people-dna-land/consent_overlay/README.md
+  - ../../fixtures/domains/people-dna-land/consent_revocation_propagation/README.md
+  - ../../tools/validators/domains/people-dna-land/validate_consent_overlay.py
+  - ../../tools/validators/domains/people-dna-land/validate_consent_revocation_propagation_assessment.py
+  - ../../tests/domains/people-dna-land/consent/revocation/README.md
+  - ../../apps/explorer-web/src/features/consent_card/README.md
+  - ../../apps/explorer-web/src/adapters/ConsentCardProjection.ts
+  - ../../fixtures/ui/consent_card_projection/README.md
   - ../../packages/policy-runtime/README.md
-  - ../../packages/policy-runtime/pyproject.toml
-  - ../../apps/governed-api/README.md
   - ../../docs/doctrine/directory-rules.md
-  - ../../docs/doctrine/trust-membrane.md
-  - ../../docs/registers/DRIFT_REGISTER.md
-  - ../../docs/registers/VERIFICATION_BACKLOG.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../control_plane/root_registry.yaml
+  - ../../.github/workflows/domain-people-dna-land.yml
+  - ../../.github/workflows/consent-revocation-propagation.yml
   - ../../.github/workflows/policy-test.yml
-tags: [kfm, policy, consent, privacy, people, people-dna-land, living-person, genealogy, dna, genomics, revocation, applicability, render-gate, policy-input-bundle, policy-decision, obligations, reason-codes, fail-closed, governed-api, rollback]
+  - ../../.github/CODEOWNERS
+  - ../../CONTRIBUTING.md
+  - ../../.github/PULL_REQUEST_TEMPLATE.md
+tags: [kfm, policy, consent, privacy, people, people-dna-land, living-person, genealogy, dna, genomics, revocation, applicability, synthetic-fixtures, ui-projection, policy-input-bundle, policy-decision, obligations, fail-closed, governed-api, rollback]
+truth_posture: CONFIRMED substantive v0.2 baseline, exact five-file documentation-only direct lane, accepted ADR-0029 singular policy root, two domain consent Rego scaffolds with no native consent-policy evaluation, draft consent-token standard, placeholder general consent schemas, bounded closed People-DNA-Land overlay and revocation-assessment profiles with validators, synthetic fixtures, tests, and executable read-only workflows, fixture-first Explorer consent-card projection with tests, closed PROPOSED PolicyDecision outcomes including consent, permissive PolicyInputBundle schema, placeholder policy runtime, and static policy readiness workflow / PROPOSED shared parent semantics, family-lane convergence, applicability profile, reason and obligation registries, engine-result normalization, composer, accepted executable rules, bundle/evaluator binding, governed producer integration, receipt flow, dependency invalidation, and activation / CONFLICTED current top-level parent versus domain-nested executable-rule topology, duplicate consent doctrine carriers, draft token vocabulary versus absent accepted machine profile, and revocation assessment SATISFIED versus canonical PolicyDecision ANSWER / UNKNOWN production consent issuer or verifier, live status service, actual cleanup, active bundle, runtime enforcement, required-check significance, independent approval, release integration, and publication safety / NEEDS VERIFICATION accepted owners, topology disposition, schema hardening, multi-party and representative rules, retention, invalidation SLOs, incident response, and rollback automation
 notes:
-  - "This revision changes only policy/consent/README.md."
-  - "The path is CONFIRMED repository-present, but its authority remains CONFLICTED because current People-DNA-Land path doctrine says the placement ADR is unresolved and prefers domain-nested consent rules pending that ADR."
-  - "The parent lane defines shared consent semantics and inheritance boundaries; child lanes may tighten controls but must not weaken the parent invariants."
-  - "Bounded repository search did not surface executable consent Rego or equivalent policy, a ConsentSidecar schema, or a consent-specific fixture/test family. This is search-limited and not proof of permanent absence."
-  - "PolicyDecision is repository-present with canonical outcomes ANSWER, ABSTAIN, DENY, and ERROR and policy_family consent. Engine-native ALLOW, RESTRICT, and HOLD require explicit normalization before governed callers consume them."
-  - "PolicyInputBundle is repository-present, but its paired schema remains a permissive placeholder requiring only id; the consent context described here is not yet machine-enforced."
-  - "The policy runtime package is version 0.0.0 and the policy-test workflow contains TODO echo steps, so runtime and CI enforcement remain unproved."
+  - "v0.3 reconciles the existing v0.2 doctrine with current main and preserves every substantive consent boundary."
+  - "The bounded People-DNA-Land profiles validate synthetic declarations only; they do not issue consent, authenticate people, evaluate the parent policy, execute cleanup, approve release, or publish."
+  - "The Explorer card records a viewer-local display choice; it does not grant, revoke, or prove a subject's consent."
+  - "This revision changes only policy/consent/README.md and creates no executable rule, contract, schema, fixture, validator, test, workflow, UI behavior, decision, receipt, release object, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
+
 
 <a id="top"></a>
 
@@ -60,24 +125,28 @@ notes:
 
 `policy/consent/`
 
-> Cross-cutting policy boundary for explicit, purpose-bound, audience-bound, subject-bound, revocable consent evaluation. This lane defines shared consent invariants and child-lane expectations only if its placement is accepted; it cannot establish identity truth, relationship truth, evidence closure, source authority, rights clearance, sensitivity clearance, review approval, release approval, or publication.
+> **One-line purpose.** Define the proposed shared, fail-closed consent-policy boundary for exact operation, purpose, audience, subject, scope, time, derivative, and revocation evaluation—without issuing consent, proving identity or evidence, approving release, or publishing.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.2-informational)
-![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
-![placement](https://img.shields.io/badge/placement-CONFLICTED-orange)
-![policy family](https://img.shields.io/badge/policy__family-consent-0a7ea4)
-![canonical outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0b7285)
-![default](https://img.shields.io/badge/default-fail__closed-critical)
-![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence)
+[![Lane: five tracked files](https://img.shields.io/badge/lane-README%20children%20only-0969da?style=flat-square)](#current-directory-map)
+[![Domain coverage: bounded synthetic](https://img.shields.io/badge/domain%20coverage-bounded%20synthetic-8250df?style=flat-square)](#validation-and-test-matrix)
+[![Policy: evaluator unbound](https://img.shields.io/badge/policy-evaluator%20unbound-d97706?style=flat-square)](#status-and-evidence)
+[![Outcomes: finite](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-0b7285?style=flat-square)](#decision-vocabulary-and-normalization)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-level)
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Scope](#scope-and-bounded-context) · [Invariants](#keystone-invariants) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Child lanes](#child-lane-contract) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input) · [Applicability](#consent-applicability) · [Decisions](#decision-vocabulary-and-normalization) · [Lifecycle](#consent-lifecycle) · [Evaluation](#evaluation-order) · [Composition](#independent-policy-family-composition) · [Revocation](#revocation-correction-and-cache-invalidation) · [Audit](#audit-replay-and-data-minimization) · [Threats](#threat-model) · [Validation](#validation-and-test-matrix) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Rollback](#rollback-correction-and-supersession)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-evidence) · [Scope](#scope-and-bounded-context) · [Invariants](#keystone-invariants) · [Repo fit](#repository-fit-and-directory-rules-basis) · [Child lanes](#child-lane-contract) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#explicit-policy-input) · [Applicability](#consent-applicability) · [Decisions](#decision-vocabulary-and-normalization) · [Lifecycle](#consent-lifecycle) · [Evaluation](#evaluation-order) · [Composition](#independent-policy-family-composition) · [Revocation](#revocation-correction-and-cache-invalidation) · [Audit](#audit-replay-and-data-minimization) · [Surfaces](#governed-api-ui-map-ai-and-export-boundary) · [Threats](#threat-model) · [Validation](#validation-and-test-matrix) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Changelog](#changelog) · [Rollback](#rollback-correction-and-supersession)
 
 > [!IMPORTANT]
-> **Consent is a constraint, not a publication permission.** A consent result may only say whether consent blocks the exact operation, audience, purpose, subject or holder binding, field or relation, precision, export, temporal window, and derivative that were evaluated. Evidence, source role, rights, sensitivity, review, release, correction, and rollback remain independent gates.
+> **Safe current conclusion:** the direct `policy/consent/` lane is documentation-only. KFM separately has two executable, synthetic People–DNA-Land fixture profiles for a consent-safe overlay candidate and consent-revocation propagation assessment, plus a fixture-first Explorer consent-card projection. Those bounded implementations explicitly carry no consent, identity, evidence, policy, cleanup, release, or publication authority and do not activate this parent lane.
 
 > [!CAUTION]
-> **Repository presence is not policy activation.** This README and its child READMEs exist, but current evidence does not establish executable consent rules, an accepted policy bundle, evaluator wiring, a consent schema/profile, fixtures, tests, receipt emission, deployed revocation introspection, dependency-aware cache invalidation, or production enforcement.
+> **Consent is a constraint, not publication permission.** A consent result can address only the exact evaluated operation, audience, purpose, subject or holder binding, field or relation, precision, export, temporal window, and derivative. Evidence, source role, rights, sensitivity, review, release, correction, and rollback remain independent gates.
+
+> [!WARNING]
+> The domain-nested files [`dna_consent_revocation.rego`](../domains/people-dna-land/consent/dna_consent_revocation.rego) and [`consent_validator.rego`](../domains/people-dna-land/consent_validator.rego) are proposed scaffolds. The former only declares `default allow := false`; the latter only declares `default deny := false` with a commented example. Neither is an accepted parent rule, a complete fail-closed evaluator, bundle activation, `PolicyDecision`, or implicit permission.
+
+> [!NOTE]
+> The Explorer consent card records whether one viewer wants a layer shown in the current browser session. It does not issue, grant, alter, revoke, or prove a subject's consent to inclusion.
 
 ---
 
@@ -124,26 +193,27 @@ The parent lane exists to define common semantics that child consent lanes can s
 
 ## Authority level
 
-This lane is **policy-authoritative only after placement, ownership, review, bundle, activation, and rollback controls are accepted**.
+`policy/` is the accepted singular root for normative decision rules under [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and Directory Rules v2. This README is therefore correctly located inside the policy root, but the direct lane remains documentation-only.
 
-| Concern | Authority in this lane |
+The parent lane becomes policy-authoritative only after its shared rule semantics, family topology, ownership, independent review, fixtures, native tests, bundle membership, evaluator binding, activation, and rollback controls are accepted. Repository presence, a README, a Rego default, a validator result, a green workflow, a UI projection, or a generated receipt does not activate it.
+
+| Concern | Current authority in this lane |
 |---|---|
-| Shared consent invariants | Potential authority after the placement ADR and executable-rule review. |
-| Consent applicability semantics | Potential authority after an accepted applicability profile, schema, fixtures, and tests exist. |
-| Child-lane inheritance rules | Potential parent authority if this lane is accepted as the cross-cutting consent home. |
-| Domain-specific consent conditions | Child/domain policy authority, not this parent README. |
-| Policy input meaning | None. `contracts/policy/policy_input_bundle.md` owns meaning. |
-| Policy decision meaning | None. `contracts/policy/policy_decision.md` owns the canonical result. |
-| Machine shape | None. `schemas/contracts/v1/` owns shape. |
-| Runtime execution | None. `packages/policy-runtime/` is the executor boundary. |
-| Consent credential issuance | None. Issuance and identity/holder proof require separate governed systems. |
-| Evidence and source role | None. Evidence and source registries remain independent. |
-| Rights and sensitivity | None. Independent policy families retain authority. |
-| Review and release | None. Review artifacts and `release/` retain authority. |
-| Receipts and proofs | None. Emitted trust artifacts live outside this lane. |
-| Public API/UI behavior | None. Governed applications consume normalized decisions and enforce obligations. |
+| Shared consent invariants | **PROPOSED parent semantics.** Preserved here; no accepted executable parent rule was established. |
+| Consent applicability semantics | **PROPOSED.** No accepted machine profile distinguishes required, verified-not-applicable, and unresolved states. |
+| Parent/child inheritance | **PROPOSED.** Child lanes may tighten controls; accepted executable precedence is not established. |
+| Domain-specific consent conditions | Domain policy/contracts/validators may specialize bounded contexts; they do not inherit parent authority merely by reference. |
+| Policy input meaning | None. [`PolicyInputBundle`](../../contracts/policy/policy_input_bundle.md) owns semantic meaning; its current schema remains permissive. |
+| Policy decision meaning | None. [`PolicyDecision`](../../contracts/policy/policy_decision.md) owns `ANSWER | ABSTAIN | DENY | ERROR`. |
+| Machine shape | None. `schemas/` owns accepted shapes; the general consent shapes inspected here remain placeholders. |
+| Runtime execution | None. [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) remains a `0.0.0` metadata stub with a comment-only core. |
+| Consent issuance or holder proof | None. No accepted issuer, verifier, representative-authority service, or credential binding was established. |
+| Evidence, rights, and sensitivity | None. Independent authorities and policy families retain their own provenance and decisions. |
+| Review and release | None. Review artifacts and `release/` retain separate authority. |
+| Receipts and proofs | None. A fixture result or authoring receipt is not a consent decision, cleanup proof, or approval. |
+| Public API, UI, map, AI, and export | None. Governed producers must supply already-resolved, released, policy-safe projections and enforce obligations. |
 
-A consent rule can block or constrain an operation. It cannot publish, prove, or authorize beyond that exact gate.
+A consent rule may block or constrain an operation. It cannot create identity truth, relationship truth, evidence closure, legal sufficiency, rights clearance, review approval, release approval, or publication.
 
 [Back to top](#top)
 
@@ -151,44 +221,74 @@ A consent rule can block or constrain an operation. It cannot publish, prove, or
 
 ## Status and evidence
 
+Evidence snapshot: `main@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a`; target v0.2 baseline blob `5c56e988cbfa7b613fa39feec3c8f7f5bb44ce1b`.
+
 ### Current repository state
 
-| Surface | Status | Safe conclusion |
-|---|---:|---|
-| `policy/consent/README.md` | **CONFIRMED v0.1 before this revision** | The parent README exists but used engine-native outcomes and did not fully expose current repository maturity or child-lane inheritance. |
-| `policy/consent/people/README.md` | **CONFIRMED v0.2** | People/living-person specialization exists as a README-only boundary. |
-| `policy/consent/people-dna-land/README.md` | **CONFIRMED v0.2** | Restricted-domain specialization exists as a README-only boundary. |
-| `policy/README.md` | **CONFIRMED / PROPOSED root** | `policy/` is the policy-as-code/documentation responsibility root; the root README still labels the implementation PROPOSED. |
-| Placement | **CONFLICTED** | Current path doctrine records an open ADR and prefers domain-nested rules pending resolution. |
-| Domain consent doctrine | **CONFIRMED DRAFT DOCS** | `CONSENT_MODEL.md` and `CONSENT.md` both exist; the former says it supersedes the latter, but supersession cleanup is not complete. |
-| `PolicyInputBundle` contract | **CONFIRMED** | Explicit inputs, no-hidden-fetch behavior, and fail-closed unknown context are documented. |
-| `PolicyInputBundle` schema | **CONFIRMED permissive placeholder** | Requires only `id`; rich consent context is not machine-enforced. |
-| `PolicyDecision` contract/schema | **CONFIRMED** | Canonical outcomes are `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `policy_family` includes `consent`. |
-| Consent executable modules | **NOT SURFACED IN BOUNDED SEARCH** | No consent Rego or equivalent evaluator was established. Search-limited, not proof of permanent absence. |
-| Consent-specific schema, fixtures, tests | **NOT SURFACED IN BOUNDED SEARCH** | No `ConsentSidecar` schema or consent test family was established. |
-| Policy runtime package | **CONFIRMED PLACEHOLDER** | `kfm-policy-runtime` is version `0.0.0`; runtime behavior remains unproved. |
-| Policy workflow | **CONFIRMED TODO-ONLY** | OPA tests and fixture-coverage jobs echo TODO; green CI would not prove consent behavior. |
-| Governed API integration | **UNKNOWN** | No accepted consent evaluator binding, decision composer, or obligation interpreter is established here. |
-| Receipts, dependency tracking, cache invalidation, rollback | **NEEDS VERIFICATION** | Required by doctrine; no accepted implementation is proved. |
+| Surface | Current evidence | Safe conclusion |
+|---|---|---|
+| `policy/consent/README.md` | **CONFIRMED substantive v0.2 baseline** | v0.3 reconciles the existing doctrine in place; it creates no executable behavior. |
+| Direct parent lane | **CONFIRMED five tracked files: three READMEs and two `.gitkeep` files** | No direct Rego, bundle manifest, fixture, test, evaluator configuration, decision, or release record exists in this lane. |
+| Directory governance | **CONFIRMED accepted ADR-0029 / Directory Rules v2** | `policy/` is the singular policy-source root; this lane is a BOUNDARY_COMPACT child, not a new repository root. |
+| Consent-family topology | **CONFLICTED / NEEDS DECISION** | The repository has this cross-cutting parent and domain-nested rule scaffolds; older domain path doctrine prefers the nested form. Accepted root placement does not settle family ownership or activation. |
+| Child READMEs | **CONFIRMED v0.2, documentation-only** | `people/` and `people-dna-land/` preserve proposed specializations; both predate current bounded domain implementation evidence. |
+| Domain consent Rego | **CONFIRMED two proposed scaffolds** | `dna_consent_revocation.rego` defaults `allow` to false; `consent_validator.rego` defaults `deny` to false and has no operative rule. Neither has a native consent-policy test or accepted bundle/evaluator binding. |
+| Consent token standard | **CONFIRMED draft documentation** | `CONSENT_TOKENS.md` documents JWT/GA4GH-style wire forms and claims, but several names and homes remain proposed; no accepted paired token contract/schema/issuer/verifier/runtime binding was established. |
+| General consent shapes | **CONFIRMED placeholders** | `schemas/contracts/v1/consent/` is index-only; `consent_grant` and `consent_receipt` schemas are open, property-empty proposed scaffolds. |
+| `PolicyInputBundle` | **CONFIRMED semantic contract / permissive proposed schema** | The schema requires only `id` and allows additional properties; rich consent context is not machine-enforced. |
+| `PolicyDecision` | **CONFIRMED closed proposed shape** | Required outcomes are `ANSWER | ABSTAIN | DENY | ERROR` and `policy_family` includes `consent`; no consent evaluator was established. |
+| People–DNA–Land consent-overlay profile | **CONFIRMED bounded executable fixture profile** | Closed schema, synthetic fixtures, validator, and tests exercise active/expired/revoked/scope/privacy/non-release cases. The contract is proposed, restricted, fixture-only, and not released. |
+| Revocation-propagation assessment | **CONFIRMED bounded executable fixture profile** | Closed inactive schema, synthetic cases, validator, tests, and focused workflow check seven declared surfaces. They do not execute deletion, purge, invalidation, notification, or release. |
+| People–DNA–Land workflow | **CONFIRMED executable read-only definition** | It runs both bounded validators and test modules with explicit no-network and authority holds; broader policy/runtime/proof/release capability remains held. |
+| Policy-test workflow | **CONFIRMED static readiness guard plus one separate release-gate Rego lane** | It inventories policy files and validates PolicyDecision shape evidence but performs no general OPA evaluation and emits no consent PolicyDecision. |
+| Explorer consent card | **CONFIRMED fixture-first, not production-wired** | The strict app-local projection and tests preserve finite outcomes and viewer/subject distinction; the card changes only local display preference. |
+| Policy runtime | **CONFIRMED greenfield placeholder** | Package version is `0.0.0` and `core.py` is comment-only; no functional consent evaluator or consumer import was established. |
+| Production consent enforcement | **NOT ESTABLISHED** | No accepted parent rules, active bundle, evaluator binding, live issuer/verifier, current-status service, governed producer, dependency cleanup, release integration, or production operation was verified. |
+| Ownership | **PARTIAL / NEEDS VERIFICATION** | CODEOWNERS routes `/policy/` to `@bartytime4life`; consent stewardship, separation of duties, and independent approval remain unproved. |
+| Current CI results and required-check status | **NEEDS VERIFICATION / UNKNOWN** | Exact-head runs can be observed on the resulting pull request; branch-protection and production significance remain separate. |
+
+### Current directory map
+
+Verified from the pinned complete recursive tree and direct reads:
+
+```text
+policy/consent/
+├── README.md
+├── people/
+│   ├── .gitkeep
+│   └── README.md
+└── people-dna-land/
+    ├── .gitkeep
+    └── README.md
+```
+
+The executable synthetic profiles, validators, tests, workflows, UI projection, and proposed domain Rego scaffolds live in their own responsibility roots outside this direct parent lane.
+
+### Evidence limits and truth labels
+
+- **CONFIRMED** — verified from the pinned repository state.
+- **PROPOSED** — designed or documented, but not established as accepted active behavior.
+- **PARTIAL** — a bounded implementation or routing surface exists without complete authority or control.
+- **UNKNOWN** — available evidence is insufficient for a current-state claim.
+- **NEEDS VERIFICATION** — a concrete repository, runtime, policy, ownership, review, release, or ruleset check is required.
+- **CONFLICTED** — inspected authorities, paths, or vocabularies disagree and must remain visible.
+- **NOT ESTABLISHED** — inspected evidence does not support treating the capability as active.
+
+A bounded non-observation is not proof of permanent absence. Later branches, bundles, rulesets, services, caches, releases, or deployments must be verified at their own exact revisions.
 
 ### Evidence boundary
 
-This README may describe inspected repository facts and bounded doctrine. It must not claim:
+This README must not claim:
 
-- active consent enforcement;
-- legal sufficiency;
-- accepted consent-token or credential format;
-- live holder, representative, or subject verification;
-- deployed revocation or suspension service;
-- complete derivative dependency tracking;
-- cache invalidation performance;
-- production policy selection;
-- receipt or proof emission;
-- public-release safety;
-- complete test coverage;
-- branch-protection enforcement.
-
-Those remain `UNKNOWN` or `NEEDS VERIFICATION` until implementation evidence proves them.
+- legal sufficiency or valid real-world consent;
+- identity, holder, subject, representative, or relationship truth;
+- an accepted token/credential implementation merely because a draft standard exists;
+- parent-policy activation from domain Rego defaults or fixture validators;
+- actual revocation, deletion, purge, cache invalidation, notification, or recall from a synthetic propagation assessment;
+- an emitted consent `PolicyDecision`, evaluation receipt, cleanup proof, review approval, release, or publication;
+- production wiring from a fixture-first UI component;
+- a successful workflow until its exact-head run is observed;
+- required-check or branch-protection significance without ruleset evidence.
 
 [Back to top](#top)
 
@@ -271,7 +371,7 @@ All required gates must remain separately inspectable. A combined caller may com
 14. **No reidentification.** Redacted, generalized, aggregated, or withheld information must not be reconstructed through joins, search, AI, or repeated queries.
 15. **Audit without leakage.** Decision records must remain replayable without carrying raw sensitive identifiers or protected facts.
 16. **Correction and rollback remain available.** Consent changes must propagate through decisions, derivatives, caches, and release/correction records.
-17. **Repository presence is not activation.** A README, schema, or workflow stub is not proof of enforcement.
+17. **Repository presence is not activation.** A README, schema, scaffold, fixture, validator, workflow, green result, projection, or receipt is not proof of parent-policy enforcement.
 
 [Back to top](#top)
 
@@ -279,52 +379,62 @@ All required gates must remain separately inspectable. A combined caller may com
 
 ## Repository fit and Directory Rules basis
 
-### Owning root
+### Accepted owning root
 
-The responsibility is policy admissibility, so the owning root is `policy/`.
+[Directory Rules v2](../../docs/doctrine/directory-rules.md), adopted by [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), assigns normative allow, deny, hold, restrict, and abstain rules to the singular `policy/` root. This lane is therefore correctly located inside the policy responsibility root.
 
-That root owns policy-as-code and policy documentation. It does not own:
-
-- semantic object meaning (`contracts/`);
-- machine shape (`schemas/`);
-- runtime helper code (`packages/`);
-- fixtures or tests (`fixtures/`, `tests/`);
-- evidence, receipts, proofs, or lifecycle data (`data/`);
-- release decisions (`release/`);
-- governed application code (`apps/`).
-
-### Placement conflict
-
-The current repository contains `policy/consent/`, but the People-DNA-Land canonical-path document records a genuine unresolved placement question:
-
-- top-level cross-cutting `policy/consent/`; or
-- domain-nested `policy/domains/people-dna-land/consent/`.
-
-The same path doctrine says creating a new top-level lane is ADR-class and prefers the domain-nested form until an ADR decides.
-
-Therefore:
-
-- this path is **CONFIRMED repository-present**;
-- its long-term authority is **CONFLICTED**;
-- no second executable consent-rule home should be created;
-- executable activation must wait for the placement decision;
-- any move must include a migration map, supersession record, compatibility period where required, validation, and rollback plan.
+That accepted root placement does **not** decide which consent family lane owns executable shared versus domain-specific rules, activate a bundle, assign subject-matter stewardship, or convert this README into policy code.
 
 ### Responsibility matrix
 
-| Concern | Owning root | Relationship to this README |
+| Concern | Owning surface | Relationship to this README |
 |---|---|---|
-| Shared consent policy | `policy/` | Potential authority after placement and activation. |
-| Domain consent specialization | accepted domain policy lane | Tightens shared rules for a bounded context. |
-| Human-facing consent doctrine | `docs/` | Explains models and governance; not executable policy. |
-| Policy input meaning | `contracts/` | Owns `PolicyInputBundle` semantics. |
-| Policy decision meaning | `contracts/` | Owns `PolicyDecision` semantics. |
-| Machine shape | `schemas/` | Owns JSON Schema and compatibility. |
-| Runtime execution | `packages/` and governed applications | Executes accepted bundles; cannot redefine semantics. |
-| Fixtures and tests | `fixtures/`, `tests/` | Prove expected behavior with synthetic data. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/`, or accepted homes | Record trust artifacts; exact mapping remains verification-sensitive. |
-| Review and release | review artifacts and `release/` | Independent approval and publication authority. |
-| Public access | `apps/governed-api/` | Trust membrane for public and restricted clients. |
+| Shared consent-policy source | accepted lane under `policy/` | Proposed responsibility of this parent; executable topology remains unresolved. |
+| Domain consent specialization | accepted domain policy lane | May tighten a shared rule; cannot silently create parallel or broader authority. |
+| Human-facing consent doctrine and standards | `docs/` | Explain models, token vocabulary, governance, and open questions; not execution proof. |
+| Policy input meaning | [`contracts/policy/`](../../contracts/policy/policy_input_bundle.md) | Owns `PolicyInputBundle` semantics. |
+| Policy decision meaning | [`contracts/policy/`](../../contracts/policy/policy_decision.md) | Owns `PolicyDecision` and finite result meaning. |
+| Machine shape | `schemas/` | Owns JSON Schema and compatibility; placeholder shapes do not enforce rich semantics. |
+| Bounded domain candidate meaning | [domain contracts](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Define fixture-only object meaning; no parent-policy authority. |
+| Validators and tests | `tools/`, `tests/`, `fixtures/` | Prove bounded synthetic behavior; do not issue consent or approve release. |
+| Runtime execution | `packages/` and governed applications | Execute accepted rules and obligations; cannot redefine policy semantics. |
+| Viewer-local UI behavior | [Explorer consent card](../../apps/explorer-web/src/features/consent_card/README.md) | Consumes a public-safe projection; cannot evaluate or change subject consent. |
+| Receipts and proofs | accepted `data/receipts/` and `data/proofs/` profiles | Record bounded activity; do not become consent, policy, cleanup, or release authority. |
+| Review and release | review records and `release/` | Independent approval, correction, withdrawal, rollback, and publication authority. |
+| Public access | governed application/API surfaces | Consume only released, policy-filtered projections through the trust membrane. |
+
+### BOUNDARY_COMPACT responsibility signature
+
+| Field | Current boundary |
+|---|---|
+| Purpose and parent | Document the proposed shared consent-policy family under the singular `policy/` root. |
+| Local owner | **NEEDS VERIFICATION.** CODEOWNERS routes `/policy/` to `@bartytime4life`; consent stewardship and independent approval are not proved. |
+| Belongs here | Shared exact-scope consent invariants, applicability posture, parent/child tightening rules, finite normalization expectations, safe reason/obligation semantics, and links to accepted rules, fixtures, tests, bundles, and consumers when they exist. |
+| Prohibited here | Contract/schema authority, credentials, raw identifiers, real people or DNA payloads, hidden lookup, mutable status stores, evidence, receipts, proofs, review records, release records, deployment state, or publication. |
+| Inputs | Explicit operation, purpose, audience, subject/holder binding, consent reference and current status, scope, time, precision, derivative/export posture, independent gate refs, bundle/evaluator identity, and correction lineage. |
+| Outputs | Future normalized `PolicyDecision` plus enforceable obligations through accepted contracts; this README currently emits nothing. |
+| Exposure | Repository-facing governance documentation. Consent credentials, living-person context, raw DNA, precise locations, and protected diagnostics remain outside public surfaces. |
+| Mutation and retention | None. Evaluation should be deterministic over explicit input; persistence belongs to accepted decision, receipt, review, status, proof, or release lanes. |
+| Validation | Native policy fixtures/tests, schema and contract compatibility, bundle/evaluator parity, obligation enforcement, status freshness, derivative invalidation, governed consumer tests, and release/correction evidence. Only bounded domain and UI fixture layers are established. |
+| Related authority | Contracts define meaning; schemas define shape; policy/decision normalizes accepted outcomes; bundles package reviewed policy; runtime evaluates; release owns publication-facing decisions. |
+| Status and open work | Documentation is current-state reconciled. Family topology, ownership, token/profile acceptance, general schemas, rules, bundle/evaluator binding, consumers, receipts, actual cleanup, and release enforcement remain open. |
+
+### Placement and convergence status
+
+The prior v0.2 README correctly surfaced a real conflict, but current governance narrows it:
+
+- **Resolved:** `policy/` is an accepted canonical responsibility root. `policy/consent/` is a lane inside that root, not a second repository root.
+- **Still conflicted:** current repository topology contains this cross-cutting parent plus `policy/domains/people-dna-land/` scaffolds, while the older `CANONICAL_PATHS.md` draft prefers domain nesting pending a decision.
+- **Not implied:** accepted root placement does not make either family layout authoritative, nor does a `default allow := false` or `default deny := false` statement activate a policy.
+- **Required:** choose one authoritative executable source topology, record shared-versus-domain ownership and migration, update stale doctrine, prevent duplicate active rule IDs/bundles, and preserve rollback.
+
+### Document authority and supersession
+
+- v0.3 supersedes v0.2 at this same path and preserves its substantive consent doctrine.
+- v0.2 superseded v0.1; the initial empty blob and v0.1 remain provenance, not normal rollback targets.
+- Current contracts, schemas, accepted rules, native tests, bundle records, runtime decisions, receipts, proofs, reviews, and release records outrank this README for implementation claims.
+- CODEOWNERS is review routing, not proof of consent stewardship, policy acceptance, independent approval, or production enforcement.
+- Conflicts must remain visible in an accepted ADR, register, or migration record; prose must not silently normalize them.
 
 [Back to top](#top)
 
@@ -332,40 +442,43 @@ Therefore:
 
 ## Child-lane contract
 
-The parent lane defines shared consent semantics. Child lanes define stricter bounded-context rules.
+The parent lane documents proposed shared consent semantics. Child and domain lanes may define stricter bounded-context rules only after their own authority, scope, fixtures, tests, bundle membership, evaluator binding, and activation are accepted.
 
-### Current child lanes
+### Current child and domain surfaces
 
-| Child lane | Intended specialization | Current maturity |
+| Surface | Intended specialization | Current maturity and authority limit |
 |---|---|---|
-| `policy/consent/people/` | People and living-person attributes, relations, residence/events, genealogy-adjacent claims, collateral-person protection. | README-only v0.2; placement conflicted; runtime unproved. |
-| `policy/consent/people-dna-land/` | Restricted People / Genealogy / DNA / Land operations, DNA/genomic derivatives, land-linked people, sensitive joins. | README-only v0.2; placement conflicted; runtime unproved. |
+| `policy/consent/people/` | People and living-person attributes, relations, events, genealogy-adjacent claims, and collateral-person protection. | README-only v0.2 direct child; no accepted executable people-consent rule was established. |
+| `policy/consent/people-dna-land/` | Restricted People / Genealogy / DNA / Land operations, derivatives, joins, and export controls. | README-only v0.2 direct child; current bounded implementation evidence lives elsewhere and does not activate this child. |
+| `policy/domains/people-dna-land/consent/dna_consent_revocation.rego` | Domain revocation rule candidate. | Proposed three-line scaffold with `default allow := false`; no native test, bundle, evaluator, or consumer binding. |
+| `policy/domains/people-dna-land/consent_validator.rego` | Domain validator rule candidate. | Proposed stub with `default deny := false` and commented example; absence of a deny reason is not permission. |
+| People–DNA–Land overlay and revocation-assessment profiles | Synthetic, restricted fixture validation of narrow domain declarations. | Executable validators/tests and workflows; no parent-policy, real-consent, cleanup, release, or publication authority. |
 
-### Inheritance rules
+### Proposed inheritance rules
 
-1. A child lane inherits every parent invariant.
-2. A child lane may add stricter applicability, scope, revocation, review, precision, export, or obligation rules.
-3. A child lane must not broaden a parent permission.
-4. A child lane must not treat `ANSWER` as publication or unrestricted use.
-5. A child lane must emit the canonical decision vocabulary before a governed caller consumes it.
-6. A child lane must preserve its policy/bundle version and reason/obligation provenance.
-7. If more than one child lane applies, the caller evaluates all applicable lanes rather than choosing the least restrictive one.
-8. Conflicting or ambiguous applicability yields `ABSTAIN` or `DENY`, not an inferred allow.
-9. A domain README cannot activate policy; activation requires accepted executable rules, bundle identity, runtime binding, fixtures, tests, review, and rollback.
-10. Until the placement ADR resolves the authority home, no parallel executable bundle should be created under both top-level and domain-nested paths.
+1. A child inherits every accepted parent invariant.
+2. A child may add stricter applicability, binding, scope, revocation, review, precision, export, retention, or obligation rules.
+3. A child must not broaden a parent permission or weaken a denial.
+4. A child must not treat `ANSWER`, `SATISFIED`, a clean finding set, or a UI `ANSWER` projection as publication.
+5. A child must normalize to the accepted canonical decision contract before a governed caller consumes it.
+6. A child must preserve rule, bundle, evaluator, reason, obligation, and input provenance.
+7. When more than one lane applies, the caller evaluates all applicable lanes; it must not choose the least restrictive result.
+8. Conflicting or ambiguous applicability fails closed as `ABSTAIN`, `DENY`, or `ERROR` according to the accepted cause mapping.
+9. A README, scaffold, fixture profile, validator, workflow, or generated receipt cannot activate policy.
+10. Parallel executable rule homes, duplicate rule IDs, or conflicting bundle membership are prohibited without an accepted migration/supersession record.
 
 ### Strongest-safe composition
 
-When multiple consent rules apply, the safe posture is:
+For accepted, independently evaluated consent rules:
 
-- any applicable `DENY` blocks the operation;
-- any applicable `ERROR` fails closed;
-- any unresolved required rule yields `ABSTAIN`;
-- `ANSWER` is possible only when every required consent rule returns `ANSWER` and every obligation is enforceable;
-- obligations are unioned unless they conflict;
-- conflicting obligations fail closed and require review.
+- machinery failure or incompatible obligations remains `ERROR`;
+- any applicable policy prohibition remains `DENY`;
+- unresolved required support remains `ABSTAIN`;
+- `ANSWER` is possible only when every required rule answers and every obligation is enforceable;
+- allowed scopes intersect; obligations union unless they conflict;
+- any conflict or unsupported obligation fails closed and preserves review/correction context.
 
-This composition is **PROPOSED** until a canonical policy-decision composer and fixtures are accepted.
+This order is **PROPOSED** until the canonical composer and cause mapping are accepted and tested. The bounded revocation assessment's `SATISFIED` value is dimension-local and must not be silently treated as `PolicyDecision.outcome = ANSWER`.
 
 [Back to top](#top)
 
@@ -373,10 +486,11 @@ This composition is **PROPOSED** until a canonical policy-decision composer and 
 
 ## What belongs here
 
-If the placement ADR accepts this parent lane, it may hold:
+If accepted as the shared consent source lane, it may hold:
 
 - shared consent-policy documentation;
-- cross-cutting consent rule modules or bundle manifests;
+- reviewed cross-cutting consent rule modules in the single accepted source topology;
+- references to immutable bundle manifests owned by `policy/bundles/`;
 - consent applicability rules;
 - engine-to-canonical outcome normalization rules;
 - shared reason-code definitions;
@@ -1050,7 +1164,19 @@ Derived surfaces are not sovereign truth and do not escape revocation because th
 
 ## Validation and test matrix
 
-Current repository evidence does not establish a consent test suite. The matrix below is **PROPOSED** and should use synthetic, non-sensitive fixtures.
+Current repository evidence now establishes bounded consent-adjacent test layers, but not a parent consent-policy evaluator. The existing matrices remain **PROPOSED parent acceptance coverage** and should continue to use synthetic, non-sensitive fixtures.
+
+### Confirmed bounded executable coverage
+
+| Layer | Confirmed execution evidence | Explicit non-effect |
+|---|---|---|
+| People–DNA–Land consent-overlay candidate | Closed proposed schema; two valid fixtures; frozen invalid cases; deterministic validator; standard-library tests; no-network checks; domain workflow execution. | No real person, DNA, credential, identity, kinship, EvidenceBundle, policy, review, cleanup, release, or publication validation. |
+| Consent-revocation propagation assessment | Closed inactive schema; synthetic manifest cases; deterministic validator/tests; exact `READ, ANSWER, EXPORT, TILE, GRAPH, INDEX, CACHE` inventory; focused read-only workflow. | Declares expected dependency posture only; performs no purge, deletion, cache invalidation, withdrawal, notification, or receipt authentication. |
+| PolicyDecision shape readiness | Closed proposed schema and baseline positive/negative shape fixtures under the policy-test workflow. | No dedicated evaluator, consent input matrix, reason/obligation semantics, bundle identity, or emitted decision. |
+| Domain consent Rego scaffolds | Static repository inventory only. | No native consent Rego test, accepted semantics, bundle activation, evaluator binding, or consumer enforcement. |
+| Explorer consent card | Strict app-local projection, valid/invalid synthetic fixtures, unit/browser tests, finite negative states, viewer/subject distinction, and no-fetch posture. | Not production-wired; does not issue or revoke subject consent, evaluate policy, read canonical stores, release, or publish. |
+
+A clean bounded result proves only the profile it names. It must never be promoted to general consent validity, parent-policy `ANSWER`, cleanup completion, release readiness, or public permission.
 
 ### Contract and shape tests
 
@@ -1142,18 +1268,25 @@ Current repository evidence does not establish a consent test suite. The matrix 
 
 ### Workflow acceptance
 
-A green workflow is meaningful only when it executes:
+A green parent-policy workflow becomes meaningful only when it executes:
 
-- actual policy tests;
-- fixture coverage;
-- contract/schema validation;
-- obligation-interpreter tests;
-- revocation and dependency-invalidation tests;
-- no-leak tests;
-- child-lane precedence tests;
-- bundle compatibility tests.
+- accepted native consent-policy rules in the single authoritative source topology;
+- positive, negative, boundary, stale, revoked, multi-party, no-leak, and obligation-failure fixtures;
+- `PolicyInputBundle` and `PolicyDecision` compatibility;
+- engine-to-canonical normalization, including disposition of dimension-local `SATISFIED`;
+- reason-code and obligation-registry enforcement;
+- current-status freshness and fail-closed outage behavior;
+- derivative dependency and actual invalidation evidence;
+- child-lane precedence and bundle/evaluator parity;
+- safe governed producer and consumer integration.
 
-The current echo-only workflow does not satisfy this threshold.
+Current workflows are narrower:
+
+- `domain-people-dna-land` executes the two frozen synthetic profiles;
+- `consent-revocation-propagation` executes the inactive propagation-assessment profile;
+- `policy-test` performs static readiness checks and separately recognizes one bounded release-gate Rego lane, but performs no general consent-policy evaluation.
+
+Their green state must remain bounded to those claims.
 
 [Back to top](#top)
 
@@ -1161,69 +1294,58 @@ The current echo-only workflow does not satisfy this threshold.
 
 ## Smallest sound implementation sequence
 
-The smallest governed implementation should remain reversible.
+The smallest governed implementation should reuse the bounded evidence already present and remain reversible.
 
-1. **Resolve placement and authority.**
-   - Accept an ADR for top-level versus domain-nested consent policy.
-   - Name owners and reviewers.
-   - Record supersession/migration expectations.
-2. **Define shared semantic profiles.**
+1. **Resolve consent-family topology and authority.**
+   - Keep `policy/` as the accepted singular root.
+   - Decide shared parent versus domain-nested executable ownership.
+   - Name owners, required independent reviewers, rule identifiers, migration, supersession, and rollback.
+2. **Disposition the two domain Rego scaffolds.**
+   - Retire, replace, or graduate each explicitly.
+   - Do not infer permission from `default deny := false`.
+   - Add native format/compile/semantic tests before bundle admission.
+3. **Accept semantic profiles.**
    - Consent applicability.
-   - Input-bundle consent profile.
-   - Canonical reason-code registry.
-   - Canonical obligation registry.
-   - Child-lane inheritance/precedence.
-3. **Review contract/schema impacts.**
-   - Decide how input bundle refs, bundle versions, prior decisions, decision freshness, and supersession are represented.
-   - Do not add undeclared fields to the closed `PolicyDecision` schema.
-4. **Create synthetic fixtures.**
-   - Positive, negative, boundary, stale, revoked, multi-party, no-leak, and obligation-failure cases.
-5. **Implement one accepted executable bundle.**
-   - In the ADR-approved policy home only.
-   - Default deny/fail closed.
-   - No hidden fetches.
-6. **Implement the runtime adapter.**
-   - Explicit input assembly.
-   - Bundle selection and digest/version capture.
-   - Engine-result normalization.
-   - Timeout/error handling.
-7. **Implement obligation enforcement.**
-   - Typed interpreter.
-   - Enforcement proof or receipt.
-   - Unknown-obligation failure.
-8. **Implement current-status and dependency handling.**
-   - Revocation/suspension lookup.
-   - Decision freshness.
-   - Dependency index.
-   - Invalidation commands and completion states.
-9. **Integrate governed callers.**
-   - API, map, search, graph, AI, export, correction, rollback.
-   - Preserve independent policy-family decisions.
-10. **Replace TODO-only CI.**
-    - Run real fixtures and policy tests.
-    - Fail on uncovered outcomes, unsupported obligations, and leaked sensitive fields.
-11. **Document activation and rollback.**
-    - Bundle activation record.
-    - Compatibility window.
-    - Rollback target.
-    - Correction path.
-12. **Update governance registers.**
-    - Placement conflict, supersession, verification backlog, and remaining unknowns.
+   - Subject/holder/representative and multi-party binding.
+   - Token/grant/receipt/sidecar vocabulary and verification.
+   - Reason codes, obligations, freshness, retention, and revocation status.
+4. **Strengthen contracts and schemas.**
+   - Represent the explicit consent input profile in an accepted `PolicyInputBundle` strategy.
+   - Preserve the closed `PolicyDecision` contract.
+   - Resolve `SATISFIED` versus `ANSWER` and other native-result normalization without inventing a fifth canonical outcome.
+5. **Reuse and graduate bounded fixtures deliberately.**
+   - Keep the People–DNA–Land profiles synthetic and non-authoritative unless their contracts are separately accepted.
+   - Add parent applicability, binding, lifecycle, scope, obligation, composition, and no-leak fixtures.
+6. **Implement one accepted executable consent bundle.**
+   - One authoritative source topology only.
+   - Explicit inputs, default fail-closed behavior, no hidden fetches, deterministic outputs, immutable bundle identity.
+7. **Implement the runtime adapter and composer.**
+   - Validate input, select a pinned bundle, capture evaluator identity, normalize native results, compose independent policy families, and emit schema-valid decision candidates.
+8. **Implement obligation enforcement.**
+   - Typed interpreter, consumer capability declaration, enforcement evidence, and unknown-obligation failure.
+9. **Implement current status and actual dependency handling.**
+   - Governed revocation/suspension lookup, decision freshness, dependency index, invalidation commands, completion/failure states, receipts, and honest limitations.
+10. **Integrate governed producers and consumers.**
+    - API, map, search, graph, AI, export, correction, rollback, and the Explorer card's reviewed public-safe producer.
+11. **Graduate CI and activation controls.**
+    - Native policy tests, fixture coverage, bundle/evaluator parity, consumer tests, exact-head checks, activation record, rollback target, and ruleset verification.
+12. **Update doctrine and registers.**
+    - Reconcile stale canonical-path guidance, duplicate `CONSENT.md` / `CONSENT_MODEL.md` lineage, open verification items, and remaining unknowns.
 
 ### Implementation stop conditions
 
-Stop activation and keep the lane documentation-only when:
+Stop activation and retain the documentation-only parent when:
 
-- placement is unresolved;
-- owners are unassigned;
-- input/output contracts are ambiguous;
-- schema compatibility is unreviewed;
-- current-status checks fail open;
-- obligations are not enforceable;
-- fixtures do not cover negative paths;
-- revocation dependencies cannot be identified;
-- public denial leaks protected facts;
-- rollback is not defined.
+- family topology or ownership is unresolved;
+- a scaffold's operative default or rule meaning is ambiguous;
+- input/output contracts or native-result normalization are unaccepted;
+- token/holder/status verification is not governed;
+- current-status failure can become permission;
+- obligations cannot be interpreted and proved enforced;
+- fixtures omit negative, no-leak, or multi-party paths;
+- dependencies cannot be identified or invalidation cannot report partial failure honestly;
+- a public producer leaks protected facts or gives the UI raw consent records;
+- bundle identity, evaluator parity, independent review, activation, or rollback is missing.
 
 [Back to top](#top)
 
@@ -1231,72 +1353,70 @@ Stop activation and keep the lane documentation-only when:
 
 ## Definition of done
 
-### Governance
+Checked items below record current repository facts only. They are not policy activation.
 
-- [ ] Placement ADR is accepted.
-- [ ] Parent and child authority is explicit.
-- [ ] Owners and required reviewers are assigned.
-- [ ] Duplicate doctrine carrier (`CONSENT.md` versus `CONSENT_MODEL.md`) is superseded through a recorded process.
-- [ ] No parallel executable consent-policy home exists.
-- [ ] Activation and rollback authority are documented.
+### Governance and topology
 
-### Contracts and schemas
+- [x] `policy/` is the accepted singular policy-source root under ADR-0029.
+- [x] The exact five-file direct parent lane is inventoried.
+- [x] This README carries the BOUNDARY_COMPACT responsibility signature.
+- [ ] Shared parent versus domain-nested executable ownership is accepted.
+- [ ] Consent owners and required independent reviewers are assigned.
+- [ ] Duplicate/stale consent doctrine carriers are reconciled through recorded supersession.
+- [ ] No parallel executable consent authority or duplicate active bundle membership exists.
+- [ ] Activation, correction, withdrawal, migration, and rollback authority are documented.
 
+### Contracts, schemas, and vocabularies
+
+- [x] Canonical `PolicyDecision` outcomes remain `ANSWER | ABSTAIN | DENY | ERROR` and `policy_family` includes `consent`.
+- [x] Current placeholder general consent shapes and permissive `PolicyInputBundle` shape are explicitly bounded.
 - [ ] Consent applicability semantics are accepted.
-- [ ] Consent input profile is represented in an accepted contract/schema strategy.
-- [ ] Canonical outcomes remain `ANSWER | ABSTAIN | DENY | ERROR`.
-- [ ] Reason-code registry is accepted.
-- [ ] Obligation registry and interpreter contract are accepted.
-- [ ] Bundle identity/version/digest are representable.
-- [ ] Decision freshness and supersession are representable.
-- [ ] Contract/schema compatibility tests pass.
+- [ ] Token, grant, receipt, sidecar, issuer, verifier, status, and representative semantics are accepted and paired with machine shapes.
+- [ ] The consent input profile is machine-enforced.
+- [ ] Native `SATISFIED` / `ALLOW` / `RESTRICT` / `HOLD` results normalize deterministically.
+- [ ] Reason-code registry, obligation registry, and interpreter contract are accepted.
+- [ ] Bundle identity, evaluator identity, freshness, input reference, and supersession are representable and tested.
 
 ### Policy and runtime
 
-- [ ] Executable consent rules exist in the accepted home.
-- [ ] Default posture is fail-closed.
-- [ ] No-hidden-fetch behavior is enforced.
-- [ ] Child-lane inheritance and strongest-safe composition are implemented.
-- [ ] Engine-native outcomes normalize deterministically.
-- [ ] Unknown engine values fail with `ERROR`.
-- [ ] Current revocation/suspension status is checked.
-- [ ] Multi-party/collateral-subject behavior is defined.
-- [ ] Authorized-representative behavior is defined.
-- [ ] Every obligation is enforceable or causes failure.
-- [ ] Runtime package is no longer merely a `0.0.0` placeholder for this behavior.
+- [x] The two existing domain Rego files are classified as proposed scaffolds, not active rules.
+- [ ] Each scaffold is retired or graduated with accepted semantics and native tests.
+- [ ] Executable shared and specialized rules exist in the accepted source topology.
+- [ ] Rules consume explicit input, perform no hidden fetch, and fail closed.
+- [ ] Parent/child inheritance and strongest-safe composition are implemented.
+- [ ] Current revocation/suspension status and authorized-representative rules are implemented.
+- [ ] Multi-party/collateral-subject behavior is implemented.
+- [ ] Every obligation is enforceable or causes a safe failure.
+- [ ] Policy runtime is functional, versioned, tested, and bound to accepted bundles and consumers.
 
-### Evidence, rights, sensitivity, review, and release
+### Bounded domain and UI evidence
 
-- [ ] Consent remains an independent policy family.
-- [ ] EvidenceRef resolves to EvidenceBundle where claim support is required.
-- [ ] Source-role anti-collapse remains enforced.
-- [ ] Rights and sensitivity decisions remain separate.
-- [ ] Review requirements are explicit.
-- [ ] Release approval remains separate.
-- [ ] Public clients use governed interfaces only.
+- [x] The synthetic consent-overlay and revocation-assessment profiles have closed proposed schemas, validators, fixtures, and tests.
+- [x] Read-only workflows execute both bounded profiles with explicit authority holds.
+- [x] The Explorer card preserves viewer-local choice versus subject consent and finite fail-closed states.
+- [ ] Bounded profile outcomes are mapped to accepted parent-policy inputs/outputs without authority laundering.
+- [ ] The Explorer card has a reviewed governed producer and remains unable to read raw consent or canonical stores.
+- [ ] No test, validator, workflow, projection, or authoring receipt is represented as consent, cleanup, release, or publication proof.
 
-### Revocation, correction, and rollback
+### Independent gates and lifecycle
 
-- [ ] Consent changes supersede prior decisions.
-- [ ] Dependency tracking covers relevant caches and derivatives.
-- [ ] Invalidation completion/failure is auditable.
-- [ ] Correction and withdrawal paths exist.
-- [ ] Prior releases can be assessed for rollback.
-- [ ] External copies that cannot be recalled are recorded honestly.
-- [ ] Minimized audit lineage is preserved.
+- [ ] Consent remains independently composed with evidence, source role, rights, sensitivity, review, and release.
+- [ ] Dependency tracking covers every governed derivative under KFM control.
+- [ ] Actual invalidation, purge, withdrawal, notification, and partial-failure states are auditable.
+- [ ] Decision reuse is freshness-bound and consent changes supersede prior decisions.
+- [ ] Retention, erasure, minimized audit lineage, and unrecalled external-copy limits are accepted.
+- [ ] Release approval remains separate and public clients use governed interfaces only.
 
-### Tests and CI
+### Tests, CI, and operations
 
-- [ ] Synthetic fixtures cover all four canonical outcomes.
-- [ ] Applicability tests distinguish missing from not applicable.
-- [ ] Binding, expiry, suspension, dispute, revocation, and supersession tests pass.
-- [ ] Scope and obligation tests pass.
-- [ ] Child-lane precedence tests pass.
-- [ ] Multi-party tests pass.
-- [ ] No-leak and no-reidentification tests pass.
-- [ ] Dependency-invalidation tests pass.
-- [ ] CI runs real policy and fixture tests rather than TODO echoes.
-- [ ] Documentation and links validate.
+- [ ] Parent fixtures cover all four canonical outcomes and required applicability states.
+- [ ] Binding, expiry, suspension, dispute, revocation, supersession, multi-party, scope, and obligation cases pass.
+- [ ] No-leak, no-reidentification, safe-denial, hidden-fetch, and outage tests pass.
+- [ ] Native consent-policy tests and bundle/evaluator parity run in CI.
+- [ ] Governed producer/consumer and actual invalidation tests pass.
+- [ ] Exact-head checks are green and their required-check/ruleset significance is verified.
+- [ ] Incident response and rollback drills are documented and tested.
+- [ ] Documentation, anchors, links, tables, and metadata validate.
 
 [Back to top](#top)
 
@@ -1304,38 +1424,38 @@ Stop activation and keep the lane documentation-only when:
 
 ## Open verification register
 
-| ID | Item | Status | Why it matters |
-|---|---|---:|---|
-| CONSENT-OPEN-001 | Resolve top-level versus domain-nested policy placement | **CONFLICTED** | Prevents parallel authority and bundle drift. |
-| CONSENT-OPEN-002 | Assign parent/child consent owners | **NEEDS VERIFICATION** | Required for review and activation. |
-| CONSENT-OPEN-003 | Retire or supersede duplicate consent doctrine carrier | **NEEDS VERIFICATION** | Prevents doctrine drift. |
-| CONSENT-OPEN-004 | Accept consent credential/token/sidecar profile | **UNKNOWN** | Required for interoperable validation. |
-| CONSENT-OPEN-005 | Define consent applicability contract | **PROPOSED** | Prevents missing-grant/not-applicable collapse. |
-| CONSENT-OPEN-006 | Strengthen PolicyInputBundle schema/profile | **NEEDS VERIFICATION** | Current schema requires only `id`. |
-| CONSENT-OPEN-007 | Decide how decision input ref/bundle version/freshness is represented | **OPEN** | Current closed decision schema lacks these links. |
-| CONSENT-OPEN-008 | Accept reason-code registry | **PROPOSED** | Required for stable, safe explanations. |
-| CONSENT-OPEN-009 | Accept obligation registry and interpreter | **PROPOSED** | Required before restricted `ANSWER` can be trusted. |
-| CONSENT-OPEN-010 | Define child-lane inheritance and precedence | **PROPOSED** | Prevents least-restrictive rule selection. |
-| CONSENT-OPEN-011 | Define multi-party/collateral-subject consent | **UNKNOWN** | One person cannot authorize another person’s exposure. |
-| CONSENT-OPEN-012 | Define authorized-representative evidence and review | **UNKNOWN** | Prevents authority overreach. |
-| CONSENT-OPEN-013 | Define living/deceased applicability evidence | **UNKNOWN** | Prevents unsafe presumption. |
-| CONSENT-OPEN-014 | Implement accepted executable consent bundle | **NOT VERIFIED** | README-only state is not enforcement. |
-| CONSENT-OPEN-015 | Implement runtime evaluator/normalizer | **NOT VERIFIED** | Canonical decisions require deterministic mapping. |
-| CONSENT-OPEN-016 | Implement current-status service binding | **UNKNOWN** | Revocation must be current. |
-| CONSENT-OPEN-017 | Define decision freshness/reuse policy | **PROPOSED** | Prevents stale replay. |
-| CONSENT-OPEN-018 | Implement decision/derivative dependency index | **UNKNOWN** | Required for targeted invalidation. |
-| CONSENT-OPEN-019 | Define cache invalidation SLO and failure state | **UNKNOWN** | Avoids false cleanup claims. |
-| CONSENT-OPEN-020 | Define consent decision receipt/proof mapping | **UNKNOWN** | Required for replay and audit. |
-| CONSENT-OPEN-021 | Define retention, purge, and audit-minimization rules | **UNKNOWN** | Balances revocation with accountability. |
-| CONSENT-OPEN-022 | Define policy-family decision composer | **PROPOSED** | Preserves independent gate provenance. |
-| CONSENT-OPEN-023 | Integrate governed API/map/search/graph/AI/export callers | **UNKNOWN** | Required for trust-membrane enforcement. |
-| CONSENT-OPEN-024 | Replace TODO-only policy workflow | **NEEDS VERIFICATION** | Green stubs do not prove behavior. |
-| CONSENT-OPEN-025 | Establish synthetic fixture/test homes after placement decision | **NEEDS VERIFICATION** | Required for safe buildability. |
-| CONSENT-OPEN-026 | Verify branch-protection and required-check enforcement | **UNKNOWN** | CI only governs when required. |
-| CONSENT-OPEN-027 | Define incident response for consent leakage | **UNKNOWN** | Required for correction and notification. |
-| CONSENT-OPEN-028 | Define migration/rollback if this parent lane moves | **PROPOSED** | Placement remains conflicted. |
+| ID | Item | Status | Evidence or decision needed |
+|---|---|---|---|
+| CONSENT-OPEN-001 | Choose shared-parent versus domain-nested executable rule topology | **CONFLICTED** | Accepted ADR/register entry, rule inventory, migration, and no-parallel-authority proof. |
+| CONSENT-OPEN-002 | Assign consent owners and independent reviewers | **NEEDS VERIFICATION** | Stewardship and separation-of-duties records beyond CODEOWNERS routing. |
+| CONSENT-OPEN-003 | Reconcile `CANONICAL_PATHS.md` and duplicate `CONSENT.md` / `CONSENT_MODEL.md` lineage | **NEEDS VERIFICATION** | Reviewed doctrine correction and supersession record. |
+| CONSENT-OPEN-004 | Graduate or replace draft token/grant/receipt/sidecar vocabulary | **PROPOSED / CONFLICTED** | Accepted contracts, schemas, namespace, issuer/verifier profile, status method, and migration. |
+| CONSENT-OPEN-005 | Define consent applicability contract | **PROPOSED** | Machine profile distinguishing required, verified-not-applicable, and unresolved. |
+| CONSENT-OPEN-006 | Strengthen `PolicyInputBundle` for consent | **NEEDS VERIFICATION** | Accepted schema/profile, validator, fixtures, compatibility, and consumer tests. |
+| CONSENT-OPEN-007 | Represent decision input, bundle/evaluator identity, freshness, and supersession | **OPEN** | Contract/schema strategy and replay tests. |
+| CONSENT-OPEN-008 | Normalize `SATISFIED`, `ALLOW`, `RESTRICT`, and `HOLD` | **CONFLICTED** | Accepted cause-sensitive mapping to four canonical outcomes. |
+| CONSENT-OPEN-009 | Accept safe reason-code registry | **PROPOSED** | Versioned registry, disclosure classes, validator, and fixtures. |
+| CONSENT-OPEN-010 | Accept obligation registry and interpreter | **PROPOSED** | Typed registry, consumer capability handshake, enforcement evidence, and failure behavior. |
+| CONSENT-OPEN-011 | Accept parent/child applicability, inheritance, and precedence | **PROPOSED** | Composer contract, intersection/obligation rules, and multi-lane fixtures. |
+| CONSENT-OPEN-012 | Define multi-party and collateral-subject consent | **UNKNOWN** | Subject-scoped rules, evidence, privacy review, and negative fixtures. |
+| CONSENT-OPEN-013 | Define authorized-representative authority | **UNKNOWN** | Accepted evidence and review profile; expiry, dispute, and revocation behavior. |
+| CONSENT-OPEN-014 | Define living/deceased/historical applicability evidence | **UNKNOWN** | Accepted evidence sources, freshness, uncertainty, and safe fallback. |
+| CONSENT-OPEN-015 | Disposition `dna_consent_revocation.rego` | **PROPOSED SCAFFOLD** | Retire or add accepted semantics, native tests, bundle membership, and evaluator binding. |
+| CONSENT-OPEN-016 | Disposition `consent_validator.rego` and permissive `default deny := false` | **PROPOSED SCAFFOLD** | Retire or replace with reviewed fail-closed semantics and native tests. |
+| CONSENT-OPEN-017 | Implement accepted parent and specialized consent bundle | **NOT ESTABLISHED** | Immutable source/bundle manifests, selection, activation, rollback, and parity evidence. |
+| CONSENT-OPEN-018 | Implement runtime evaluator, normalizer, and composer | **NOT ESTABLISHED** | Functional package, API, tests, failure handling, and first governed consumer. |
+| CONSENT-OPEN-019 | Bind a governed current-status service | **UNKNOWN** | Issuer/status authority, authenticity, freshness, outage, privacy, and audit evidence. |
+| CONSENT-OPEN-020 | Define decision freshness and reuse | **PROPOSED** | TTL/expiry rules, status dependencies, replay, and supersession tests. |
+| CONSENT-OPEN-021 | Implement derivative dependency index | **PARTIAL FIXTURE MODEL ONLY** | Production inventory, provenance, affected-surface discovery, and access controls. |
+| CONSENT-OPEN-022 | Define invalidation SLOs and actual cleanup proof | **UNKNOWN** | Executed purge/invalidation tests, completion/failure receipts, and honest external-copy limits. |
+| CONSENT-OPEN-023 | Define consent decision, status, cleanup receipt, and proof mapping | **UNKNOWN** | Accepted object families, storage, retention, access, signing, and replay profile. |
+| CONSENT-OPEN-024 | Define retention, erasure, tombstone, and minimized audit rules | **UNKNOWN** | Privacy/legal/steward review and tested lifecycle behavior. |
+| CONSENT-OPEN-025 | Integrate governed API/map/search/graph/AI/export producers and consumers | **UNKNOWN** | Reviewed adapters, obligation enforcement, no-leak tests, and independent gate composition. |
+| CONSENT-OPEN-026 | Production-wire the Explorer consent card | **HOLD** | Governed public-safe producer, release proof, policy-safe projection, and browser boundary review. |
+| CONSENT-OPEN-027 | Graduate native consent-policy CI and ruleset enforcement | **NEEDS VERIFICATION** | Native tests, exact-head runs, required checks, branch rules, and activation controls. |
+| CONSENT-OPEN-028 | Define consent leakage incident response and rollback drills | **UNKNOWN** | Runbook, notification, correction, withdrawal, invalidation, and exercise evidence. |
 
-Open items must not be converted into implied implementation claims.
+Open items, bounded fixtures, and scaffold defaults must not be converted into implied implementation claims.
 
 [Back to top](#top)
 
@@ -1345,47 +1465,128 @@ Open items must not be converted into implied implementation claims.
 
 Consent changes are trust-bearing and can alter access to living-person, relationship, DNA/genomic, land-linked, cultural, or otherwise restricted information.
 
-### Minimum review
+### Current ownership evidence
+
+[CODEOWNERS](../../.github/CODEOWNERS) routes `/policy/` changes to `@bartytime4life`. That routing is **PARTIAL** evidence only. It does not prove subject-matter stewardship, independent review, separation of duties, policy acceptance, bundle activation, runtime ownership, release authority, or production enforcement.
+
+### Minimum review for a material change
 
 A material change should include:
 
-- policy steward review;
-- privacy/consent steward review;
+- policy and consent/privacy steward review;
 - affected domain steward review;
-- contracts/schema review when interfaces change;
-- runtime review when execution changes;
-- evidence/source review when binding or applicability changes;
+- contracts/schema review when meaning or shape changes;
+- runtime and consumer review when execution or obligation enforcement changes;
+- evidence/source/identity review when binding or applicability changes;
 - rights/sensitivity review where relevant;
-- release/correction/rollback review when published derivatives may be affected;
-- security review for credentials, signatures, status services, logs, or secrets.
+- security review for credentials, signatures, status services, caches, logs, or secrets;
+- release/correction/withdrawal/rollback review when derivatives or prior disclosures may be affected;
+- validation/CI review for negative paths, exact-head evidence, and ruleset implications.
 
 ### Separation of duties
 
 As maturity increases, separate:
 
 - rule author;
-- policy reviewer;
+- consent/privacy reviewer;
+- affected-domain reviewer;
 - bundle activator;
 - runtime deployer;
 - release approver;
-- correction/rollback approver.
+- correction/withdrawal/rollback approver.
 
-A single unreviewed path must not author, activate, evaluate, approve, and publish consequential consent changes.
+A single unreviewed path must not author, activate, evaluate, approve, and publish consequential consent changes. CODEOWNERS routing alone does not satisfy this separation.
 
 ### Smallest reversible change
 
-Prefer:
+Prefer one evidence-backed change at a time:
 
-- adding one tested reason code;
-- adding one typed obligation;
-- adding one synthetic fixture family;
-- hardening one schema surface;
-- adding one runtime adapter;
-- replacing one TODO workflow step;
-- adding one dependency/invalidation proof;
-- documenting one migration/rollback target.
+- disposition one scaffold;
+- accept one semantic profile or registry;
+- add one synthetic negative family;
+- harden one schema surface;
+- implement one normalizer or obligation;
+- wire one governed producer/consumer pair;
+- add one actual invalidation proof;
+- document one migration or rollback target.
 
-Avoid broad rewrites that obscure policy provenance or activate multiple unverified surfaces at once.
+Do not mix documentation reconciliation with rule activation, credential handling, runtime deployment, cleanup claims, or release changes unless the expanded authority and review burden is explicit.
+
+[Back to top](#top)
+
+---
+
+## Evidence ledger
+
+Evidence was read from `bartytime4life/Kansas-Frontier-Matrix@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a` unless a historical revision is named explicitly.
+
+### No-loss ledger
+
+| v0.2 asset | v0.3 disposition |
+|---|---|
+| Consent as an exact-scope, revocable constraint—not publication | **Preserved and strengthened.** Bounded domain profiles and the UI projection are explicitly prevented from laundering authority. |
+| Separation from identity, evidence, source role, rights, sensitivity, review, release, correction, and rollback | **Preserved.** Current responsibility roots and independent gates are named. |
+| Explicit input, no-hidden-fetch, applicability, binding, purpose, audience, scope, time, precision, export, and derivative posture | **Preserved.** Current `PolicyInputBundle` and general consent schema limits remain visible. |
+| Four canonical `PolicyDecision` outcomes | **Preserved.** The new `SATISFIED` conflict is surfaced rather than silently normalized. |
+| Child-lane tightening and strongest-safe composition | **Preserved as proposed semantics.** Current direct children and domain scaffolds are distinguished from accepted execution. |
+| Revocation, correction, dependency invalidation, cache safety, receipts, replay, and audit minimization | **Preserved.** Synthetic propagation declarations are not misreported as actual cleanup. |
+| Safe API/UI/map/search/graph/AI/export behavior and no-reidentification | **Preserved.** The Explorer card is accurately bounded as viewer-local and fixture-first. |
+| Threat model and complete proposed validation matrix | **Preserved.** Confirmed bounded executable coverage is added ahead of the parent acceptance matrix. |
+| Implementation sequence, definition of done, open register, review, and rollback | **Preserved and updated** to reflect completed documentation evidence and remaining activation work. |
+| Placement conflict | **Narrowed without erasure.** Accepted ADR-0029 resolves the singular root; executable family topology remains conflicted. |
+| Historical v0.1 and empty-path lineage | **Retained** as provenance; v0.2 is now the correct documentation rollback target. |
+
+### Repository evidence
+
+| Evidence | Status | Supports | Does not prove |
+|---|---|---|---|
+| Target baseline blob `5c56e988cbfa7b613fa39feec3c8f7f5bb44ce1b` | **CONFIRMED v0.2** | The target was already a substantive 1,582-line parent boundary. | That every July maturity claim remained current. |
+| Historical v0.1 blob `1a98fadf0105908800a2dd57d5f66d62c1aaf970` and empty blob `8b137891791fe96927ad78e64b0aad7bded08bdc` | **CONFIRMED lineage** | Path evolution from empty to v0.1 to v0.2. | Current maturity or the normal v0.3 rollback target. |
+| Direct tree and child blobs `82bbe279…` / `fa7ea7c9…` | **CONFIRMED documentation-only lane** | Exact README/keepfile inventory and v0.2 child boundaries. | Accepted child rules, tests, bundles, or runtime enforcement. |
+| [Directory Rules v2](../../docs/doctrine/directory-rules.md), blob `fd49a0b…`, [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), blob `b01322e…`, and root registry blob `024f668…` | **CONFIRMED doctrine / accepted decision / projection** | `policy/` is the singular policy-source root; BOUNDARY_COMPACT applies. | Consent-family topology, ownership, activation, or implementation. |
+| Domain Rego blobs `bb4400e…` and `820daa2…` | **CONFIRMED proposed scaffolds** | Exact package/default posture and absence of operative consent logic beyond defaults. | Accepted consent semantics, native tests, bundle activation, or permission. |
+| [Consent token standard](../../docs/standards/CONSENT_TOKENS.md), blob `954efe3…` | **CONFIRMED draft standard** | Documented token/receipt/sidecar vocabulary, wire-form intent, and fail-closed doctrine. | Accepted KFM claim namespace, paired token schema, issuer/verifier, live status service, or runtime support. |
+| `PolicyInputBundle` contract/schema blobs `545c352…` / `b89db4b…` | **CONFIRMED semantic contract / permissive proposed shape** | Explicit-input and no-hidden-fetch doctrine; `id`-only required field. | Machine enforcement of the consent input profile. |
+| `PolicyDecision` contract/schema blobs `ebfe97f…` / `1472d26…` | **CONFIRMED semantic contract / closed proposed shape** | Six required fields, four outcomes, and `policy_family: consent`. | An accepted evaluator, emitted decision, reason/obligation registry, or release. |
+| General consent schema index/grant/receipt blobs `f3df788…` / `90309ad…` / `a178b75…` | **CONFIRMED placeholders** | Current compatibility/index and proposed open scaffold status. | Credential, grant, receipt, signature, status, or semantic validation. |
+| Consent-overlay contract/schema/fixture/validator/test blobs `d548e5e…` / `dbb3d8c…` / `36b7553…` / `b2ff0e5…` / `4f52958…` | **CONFIRMED bounded executable profile** | Synthetic active/expired/revoked/scope/privacy/non-release validation, deterministic findings, and no-network tests. | Real consent, identity, kinship, DNA validity, EvidenceBundle closure, policy approval, cleanup, release, or publication. |
+| Revocation-assessment contract/schema/fixture/validator/test blobs `dbf1fdf…` / `e976211…` / `17644ee…` / `76c7805…` / `bceeef3…` | **CONFIRMED bounded executable profile** | Synthetic status/scope/dependency declarations across seven closed surfaces and deterministic outcomes. | Actual purge, deletion, invalidation, notification, receipt authentication, policy evaluation, or release. |
+| [People–DNA–Land workflow](../../.github/workflows/domain-people-dna-land.yml), blob `bcf64c3…`, and [focused propagation workflow](../../.github/workflows/consent-revocation-propagation.yml), blob `49351dd…` | **CONFIRMED read-only executable definitions** | Commands that execute the bounded tests/validators and explicit authority holds. | A successful exact-head run, required-check status, parent-policy enforcement, cleanup, or production operation. |
+| Explorer consent-card README/adapter/test blobs `e8e285c…` / `8f919bb…` / `9b48541…` | **CONFIRMED fixture-first UI implementation** | Strict projection, viewer-local choice, finite negative states, and test evidence. | Subject consent, policy evaluation, canonical-store access, governed producer readiness, release, or publication. |
+| Policy-runtime metadata/core blobs `ebb6725…` / `e7e14cf…` | **CONFIRMED placeholder** | Package `0.0.0` and comment-only core. | Installable distribution, evaluator, bundle selection, consumers, receipts, or deployment. |
+| [Policy-test workflow](../../.github/workflows/policy-test.yml), blob `ac8f125…` | **CONFIRMED static readiness guard** | Rego inventory, PolicyDecision shape checks, broader hold, and a separately governed release-gate lane. | General consent Rego evaluation, parent fixtures, emitted decisions, or runtime binding. |
+| [CODEOWNERS](../../.github/CODEOWNERS), blob `dd2a84a…` | **CONFIRMED review route** | `/policy/` routes to `@bartytime4life`. | Consent stewardship, independent review, acceptance, activation, or enforcement. |
+| [CONTRIBUTING.md](../../CONTRIBUTING.md), blob `de5bf14…`, and [pull-request template](../../.github/PULL_REQUEST_TEMPLATE.md), blob `c5624d7…` | **CONFIRMED governance surfaces** | Evidence-backed, reviewable, reversible change expectations. | That every control is required or enforced on `main`. |
+
+[Back to top](#top)
+
+---
+
+## Changelog
+
+### v0.3 — 2026-08-13
+
+- reconciled v0.2 against `main@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a`;
+- recorded the exact five-file documentation-only parent lane;
+- applied accepted Directory Rules v2 / ADR-0029 root placement and the BOUNDARY_COMPACT signature while retaining the unresolved executable family-topology conflict;
+- replaced stale absence claims with the two proposed domain Rego scaffolds, bounded People–DNA–Land overlay and revocation-assessment profiles, executable workflows, and fixture-first Explorer consent-card projection;
+- corrected `policy-test` from echo-only to static readiness evidence with a broader evaluator hold;
+- surfaced the draft token standard, placeholder general consent shapes, dimension-local `SATISFIED` conflict, placeholder policy runtime, ownership limits, and production holds;
+- added a no-loss ledger, refreshed evidence ledger, updated definition of done and open register, and advanced rollback to the v0.2 baseline;
+- preserved all substantive v0.2 consent doctrine and created no executable behavior.
+
+### v0.2 — 2026-07-14
+
+- expanded the parent into a repository-grounded consent boundary;
+- established shared purpose, applicability, explicit input, child-lane inheritance, canonical outcome normalization, lifecycle, revocation, audit, public-surface, threat, validation, implementation, review, and rollback doctrine.
+
+### v0.1 — 2026-06-15
+
+- introduced the first substantive consent-policy README.
+
+### Earlier lineage
+
+- initial empty blob: `8b137891791fe96927ad78e64b0aad7bded08bdc`.
 
 [Back to top](#top)
 
@@ -1393,52 +1594,57 @@ Avoid broad rewrites that obscure policy provenance or activate multiple unverif
 
 ## Rollback, correction, and supersession
 
+Correct this README when the direct lane, family topology, rule defaults, token/profile status, schemas, contracts, bounded fixtures, validators, tests, workflows, UI projection, bundle/evaluator binding, consumers, receipts, cleanup behavior, release integration, ownership, or ruleset evidence changes.
+
+Correction must preserve the superseded statement, why it changed, supporting evidence, downstream impact, migration or invalidation need, and rollback target. Do not erase historical uncertainty by rewriting it as if it never existed.
+
 ### Documentation rollback
 
-This revision can be reverted by restoring prior blob:
+Rollback target for this documentation revision:
 
 ```text
-1a98fadf0105908800a2dd57d5f66d62c1aaf970
+prior v0.2 blob: 5c56e988cbfa7b613fa39feec3c8f7f5bb44ce1b
+historical v0.1 blob: 1a98fadf0105908800a2dd57d5f66d62c1aaf970
+initial empty blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
 ```
 
-A documentation rollback does not roll back executable policy, runtime behavior, decisions, caches, derivatives, or releases.
+The v0.1 and empty blobs are provenance only, not normal rollback targets.
 
-### Policy rollback
+Before merge, rollback means leaving or closing the draft pull request; branch deletion is a separate operation requiring authorization. After merge, create a transparent revert of the documentation commit through review and re-run applicable checks.
 
-An executable consent-policy rollback should identify:
+Reverting this README changes documentation only. It does not alter domain Rego scaffolds, contracts, schemas, fixtures, validators, tests, workflows, UI behavior, policy-runtime files, status services, decisions, receipts, proofs, caches, release state, deployments, or publication.
 
-- prior bundle id/hash/version;
-- current bundle id/hash/version;
-- compatibility assumptions;
-- reason-code and obligation changes;
-- affected child lanes;
-- affected runtime adapters;
-- decisions requiring reevaluation;
-- affected caches and derivatives;
-- activation and rollback receipts;
-- public/restricted correction actions;
-- validation evidence.
+### Future policy rollback
 
-Rollback must not reactivate a revoked grant or restore data that current policy denies.
+An executable consent-policy rollback must identify:
 
-### Placement migration
+- prior and current bundle IDs, versions, digests, source closure, evaluator requirements, and activation records;
+- native-result normalization, reason-code, obligation, applicability, and schema changes;
+- affected parent/domain rules, consumers, decisions, caches, derivatives, receipts, reviews, and releases;
+- current consent/status posture and decisions requiring reevaluation;
+- invalidation, withdrawal, correction, and external-copy limitations;
+- independently reviewed rollback authority and post-rollback validation.
 
-If the ADR moves consent policy:
+Rollback must never reactivate a revoked grant, accept an expired or unverifiable status, restore data current policy denies, or report cleanup that was not proved.
 
-1. designate the canonical destination;
-2. freeze new executable work in the losing home;
-3. inventory all parent/child rules and references;
-4. create a migration and compatibility map;
-5. update bundle identifiers without losing lineage;
-6. update runtime selection and tests;
-7. emit supersession records;
-8. validate no parallel active authority remains;
-9. preserve rollback to the pre-migration state;
-10. update Directory Rules/ADR/register/docs references as required.
+### Family-topology migration
+
+If accepted governance changes the executable consent home:
+
+1. designate the canonical shared and domain-specific source topology;
+2. freeze new executable work in losing or duplicate homes;
+3. inventory all rules, identifiers, fixtures, bundles, evaluators, consumers, and references;
+4. disposition both current scaffolds explicitly;
+5. create a migration, compatibility, supersession, and rollback map;
+6. update bundle selection, rule IDs, native tests, runtime adapters, and governed consumers;
+7. verify no parallel active authority or duplicate bundle membership remains;
+8. correct stale doctrine and registry entries without erasing lineage;
+9. preserve exact pre-migration rollback and reevaluation targets;
+10. record independent review and activation evidence.
 
 ### Correction priority
 
-A restrictive correction or revocation should take effect before documentation or release-polish work. Honest partial invalidation is better than claiming complete cleanup without evidence.
+A restrictive correction, suspension, dispute, or revocation takes priority over documentation or release-polish work. Honest partial invalidation is safer than claiming complete cleanup without evidence.
 
 [Back to top](#top)
 
@@ -1481,7 +1687,7 @@ This example is illustrative. It is not a verified schema and must not be treate
   "consent": {
     "grant_ref": "CONSENT_GRANT_REF_TBD",
     "status_ref": "STATUS_REF_TBD",
-    "status_checked_at": "2026-07-14T00:00:00Z",
+    "status_checked_at": "2026-08-13T00:00:00Z",
     "not_before": "TIME_TBD",
     "expires_at": "TIME_TBD"
   },
@@ -1494,7 +1700,7 @@ This example is illustrative. It is not a verified schema and must not be treate
     "release_refs": ["RELEASE_REF_TBD"],
     "dependency_refs": ["DEPENDENCY_REF_TBD"]
   },
-  "evaluated_at": "2026-07-14T00:00:00Z"
+  "evaluated_at": "2026-08-13T00:00:00Z"
 }
 ```
 
@@ -1507,7 +1713,7 @@ This example conforms conceptually to the current `PolicyDecision` field surface
 
 ```json
 {
-  "decision_id": "poldec:20260714:consent:restricted_review",
+  "decision_id": "poldec:20260813:consent:restricted_review",
   "outcome": "ANSWER",
   "policy_family": "consent",
   "reasons": [
@@ -1519,7 +1725,7 @@ This example conforms conceptually to the current `PolicyDecision` field surface
     "log_minimized",
     "require_fresh_status_check"
   ],
-  "evaluated_at": "2026-07-14T00:00:00Z"
+  "evaluated_at": "2026-08-13T00:00:00Z"
 }
 ```
 
@@ -1555,27 +1761,29 @@ Composed consent result:
 <details>
 <summary><strong>Appendix D — no-loss preservation note</strong></summary>
 
-The prior README established these important boundaries, all preserved and strengthened here:
+The v0.2 README established these boundaries, all preserved in v0.3:
 
-- consent constrains rendering and does not publish;
-- consent is separate from evidence, rights, sensitivity, review, release, correction, and rollback;
-- consent is purpose-, audience-, scope-, retention-, and revocation-aware;
-- missing or unverifiable consent fails closed;
-- revocation affects caches and derivatives;
-- raw DNA identifiers and sensitive subject data must not leak;
-- runtime, schemas, fixtures, tests, receipts, and deployment were not proved;
-- placement remained open.
+- consent constrains exact operations and does not publish;
+- consent remains separate from identity, evidence, source role, rights, sensitivity, review, release, correction, and rollback;
+- consent is applicability-, purpose-, audience-, subject-, scope-, retention-, derivative-, and revocation-aware;
+- missing, stale, ambiguous, or unverifiable required support fails closed;
+- revocation and correction affect decisions, caches, indexes, tiles, graphs, AI context, summaries, and exports;
+- raw DNA identifiers, credentials, secrets, and sensitive subject data must not leak;
+- children may tighten but never weaken accepted parent rules;
+- canonical caller-facing outcomes remain `ANSWER | ABSTAIN | DENY | ERROR`;
+- runtime, activation, receipts, production cleanup, release integration, and publication were not proved.
 
-This revision corrects the parent decision vocabulary to the repository-present canonical outcomes, adds explicit applicability and child-lane inheritance, grounds maturity in current repository evidence, and adds buildable validation, correction, and rollback expectations without claiming implementation.
+v0.3 adds current repository evidence without weakening those rules. It confirms accepted root governance, records the exact parent lane, classifies the domain Rego defaults as scaffolds, recognizes the two bounded synthetic People–DNA–Land validation profiles and the fixture-first Explorer UI, surfaces the `SATISFIED` normalization conflict, and keeps the parent evaluator, actual cleanup, governed producer, release, and production state explicitly unestablished.
 
 </details>
 
 ## Status summary
 
-`policy/consent/` is a repository-present, documentation-only, placement-conflicted parent consent lane.
+`policy/consent/` is a repository-present, documentation-only proposed parent inside the accepted singular `policy/` root.
 
-If accepted as the cross-cutting consent authority, it should define shared applicability, exact-scope evaluation, finite decision normalization, child-lane inheritance, mandatory obligations, revocation/correction propagation, safe denial, audit/replay, and rollback behavior.
+Current KFM evidence includes two domain-nested Rego scaffolds, two bounded synthetic People–DNA–Land consent/revocation validation profiles with executable workflows, a draft token standard, placeholder general consent shapes, a closed proposed `PolicyDecision` shape, and a fixture-first Explorer consent card. None of those surfaces activates the parent, issues or proves real consent, executes cleanup, supplies release authority, or establishes production enforcement.
 
-It must remain subordinate to the canonical input/decision contracts, independent evidence/rights/sensitivity/review/release gates, the trust membrane, and the unresolved placement ADR.
+The next trustworthy step is to settle shared-versus-domain executable ownership and graduate one explicit, tested, bundle-bound, evaluator-bound, reversible consent path. Until then, independent evidence, source-role, rights, sensitivity, review, release, correction, and rollback gates remain mandatory, and public behavior must use governed, released, policy-safe projections only.
 
 <p align="right"><a href="#top">Back to top</a></p>
+
