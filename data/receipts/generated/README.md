@@ -3,14 +3,14 @@ doc_id: kfm://data/receipts/generated/readme
 name: Generated Work Receipts README
 path: data/receipts/generated/README.md
 type: data-generated-receipts-lane-readme
-version: v0.2.0
+version: v0.3.0
 status: draft; repository-grounded; bounded-validator-confirmed
 owners:
   - <receipt-steward>
   - <docs-steward>
   - <validation-steward>
 created: 2026-07-17
-updated: 2026-08-02
+updated: 2026-08-12
 policy_label: internal-governance
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -41,6 +41,7 @@ notes:
   - "This README documents an existing populated lane; it does not certify every pre-existing receipt or prove an emitter is automated."
   - "A generated receipt records provenance for AI-authored work. It is not human approval, factual proof, policy permission, catalog closure, release authority, or publication authority."
   - "v0.2 records the bounded no-network schema, cross-field, local-path, SHA-256-prefix, citation-presence, and optional declared-review-claim validator; BLAKE3 verification remains unsupported without an admitted dependency."
+  - "v0.3 documents the one-time, hash-exact Scorecard dependency-lock migration ledger; it does not create a general receipt bypass."
 [/KFM_META_BLOCK_V2] -->
 
 # Generated work receipts
@@ -166,6 +167,22 @@ git diff --check
 Default validator success means the receipt passed bounded schema, cross-field, path, and supported SHA-256-prefix integrity checks. It reports whether an approved-review or override claim is present without authenticating the reviewer, approver, scope, expiry, or external authorization. `--require-review-claim` requires only that schema-valid declaration; it never authorizes repository mutation, approval, ready-for-review, or merge.
 
 The validator fails closed on BLAKE3 artifact bindings because the repository has not admitted a BLAKE3 implementation dependency. It does not resolve evidence or citations, evaluate Rego, approve review, authorize merge, or grant release/publication status. `make validate` remains a repository-wide schema/contract baseline and does not, by itself, prove that every generated receipt was individually checked.
+
+### One-time workflow dependency-lock transition
+
+Historical receipts remain immutable when the Scorecard dependency-lock
+migration replaces a workflow's prior `pip install` command. The validator may
+recognize only the finite transition ledger at
+`tools/ci/python-dependency-lock-migration.json`, whose complete bytes are
+pinned in the validator. Each ledger entry binds one canonical workflow path,
+the exact base SHA-256, the exact migrated SHA-256, any explicitly superseded
+historical receipt hash, and the finite install profiles used by that workflow.
+
+This is not a general waiver. A missing entry, altered ledger, unknown profile,
+unexpected prior receipt hash, or any later workflow-byte change falls back to
+`ARTIFACT_DIGEST_MISMATCH`. The migration's own generated receipt binds the
+ledger, shared installer, lockfiles, tests, documentation, container inputs,
+and every migrated workflow as one dependency-closed review packet.
 
 ## Review burden
 

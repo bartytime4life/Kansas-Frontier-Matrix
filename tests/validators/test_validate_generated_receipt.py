@@ -13,9 +13,11 @@ from tools.validators.validate_generated_receipt import (
     MAX_SCHEMA_FINDINGS,
     REPO_ROOT,
     Finding,
+    _workflow_dependency_migration_allows,
     main,
     validate_receipt,
 )
+from tools.ci.install_python_ci import load_workflow_migration_manifest
 
 
 class GeneratedReceiptValidatorTests(unittest.TestCase):
@@ -78,6 +80,55 @@ class GeneratedReceiptValidatorTests(unittest.TestCase):
 
     def assertFinding(self, result, code: str) -> None:  # noqa: N802
         self.assertIn(code, {finding.code for finding in result.findings})
+
+    def test_hash_exact_workflow_dependency_migration_is_bounded(self) -> None:
+        _manifest, entries = load_workflow_migration_manifest(REPO_ROOT)
+        ordinary = entries[".github/workflows/access-observation.yml"]
+        self.assertTrue(
+            _workflow_dependency_migration_allows(
+                REPO_ROOT,
+                ordinary["path"],
+                ordinary["base_sha256"],
+                ordinary["current_sha256"],
+            )
+        )
+        superseded = entries[
+            ".github/workflows/environmental-indicator-evidence-bundle-profile.yml"
+        ]
+        self.assertEqual(1, len(superseded["superseded_receipt_sha256s"]))
+        self.assertTrue(
+            _workflow_dependency_migration_allows(
+                REPO_ROOT,
+                superseded["path"],
+                superseded["superseded_receipt_sha256s"][0],
+                superseded["current_sha256"],
+            )
+        )
+        self.assertFalse(
+            _workflow_dependency_migration_allows(
+                REPO_ROOT,
+                ordinary["path"],
+                "sha256:" + "0" * 64,
+                ordinary["current_sha256"],
+            )
+        )
+        self.assertFalse(
+            _workflow_dependency_migration_allows(
+                REPO_ROOT,
+                ordinary["path"],
+                ordinary["base_sha256"],
+                "sha256:" + "f" * 64,
+            )
+        )
+
+    def test_historical_workflow_receipt_accepts_only_ledgered_transition(self) -> None:
+        receipt = (
+            REPO_ROOT
+            / "data/receipts/generated/"
+            "genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json"
+        )
+        result = validate_receipt(receipt, repo_root=REPO_ROOT)
+        self.assertTrue(result.ok, result.findings)
 
     def test_pending_receipt_can_be_integrity_valid_without_review_claim(self) -> None:
         result = self._validate()

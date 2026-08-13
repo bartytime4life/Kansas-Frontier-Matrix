@@ -26,6 +26,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from tools.validators._common.local_resolver import build_registry
+from tools.ci.install_python_ci import (
+    MIGRATION_MANIFEST,
+    InstallConfigurationError,
+    load_workflow_migration_manifest,
+)
 
 
 RECEIPT_SCHEMA = (
@@ -45,6 +50,9 @@ POLICY_DECISION_ROOTS = (
     "release/",
 )
 DOCUMENT_SUFFIXES = frozenset({".md", ".markdown", ".mdx", ".rst"})
+WORKFLOW_MIGRATION_MANIFEST_SHA256 = (
+    "sha256:290772ce2436a3837e137df0bd83c233793b1d08c4f8ae330e3f008eb26f086f"
+)
 
 
 @dataclass(frozen=True, order=True)
@@ -330,6 +338,36 @@ def _sha256(path: Path) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
+def _workflow_dependency_migration_allows(
+    repo_root: Path,
+    artifact_path: str,
+    expected: str,
+    actual: str,
+) -> bool:
+    """Recognize one hash-exact, repository-pinned workflow migration.
+
+    Historical generated receipts remain immutable. The one-time migration
+    ledger binds each prior workflow hash, any explicitly superseded receipt
+    hash, the exact migrated workflow hash, and its finite install profiles.
+    Any later workflow or ledger edit falls back to a normal digest mismatch.
+    """
+
+    if not artifact_path.startswith(".github/workflows/"):
+        return False
+    manifest_path = repo_root / MIGRATION_MANIFEST
+    try:
+        _manifest, entries = load_workflow_migration_manifest(repo_root)
+        if _sha256(manifest_path) != WORKFLOW_MIGRATION_MANIFEST_SHA256:
+            return False
+    except (OSError, InstallConfigurationError):
+        return False
+    entry = entries.get(artifact_path)
+    if entry is None or actual != entry["current_sha256"]:
+        return False
+    accepted = {entry["base_sha256"], *entry["superseded_receipt_sha256s"]}
+    return expected in accepted
+
+
 def _integrity_findings(
     receipt: Mapping[str, object],
     receipt_path: Path,
@@ -371,7 +409,7 @@ def _integrity_findings(
     if len(paths) > MAX_ARTIFACTS:
         return findings
 
-    candidates: list[tuple[int, Path, str]] = []
+    candidates: list[tuple[int, str, Path, str]] = []
     total_bytes = 0
     for index, raw_path in enumerate(paths):
         field = f"/artifact_paths/{index}"
@@ -449,7 +487,7 @@ def _integrity_findings(
         total_bytes += size
         expected = hashes.get(raw_path)
         if isinstance(expected, str):
-            candidates.append((index, resolved_candidate, expected))
+            candidates.append((index, raw_path, resolved_candidate, expected))
 
     if total_bytes > MAX_TOTAL_ARTIFACT_BYTES:
         findings.append(
@@ -461,7 +499,7 @@ def _integrity_findings(
         )
         return findings
 
-    for index, candidate, expected in candidates:
+    for index, raw_path, candidate, expected in candidates:
         field = f"/artifact_paths/{index}"
         algorithm, separator, encoded = expected.partition(":")
         if algorithm == "blake3" and separator:
@@ -502,7 +540,14 @@ def _integrity_findings(
                 )
             )
             continue
-        if not actual.removeprefix("sha256:").startswith(encoded):
+        if not actual.removeprefix("sha256:").startswith(encoded) and not (
+            _workflow_dependency_migration_allows(
+                resolved_root,
+                raw_path,
+                expected,
+                actual,
+            )
+        ):
             findings.append(
                 Finding(
                     "ARTIFACT_DIGEST_MISMATCH",

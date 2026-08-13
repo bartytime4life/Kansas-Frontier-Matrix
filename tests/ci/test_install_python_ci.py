@@ -67,6 +67,13 @@ class InstallPythonCiTests(unittest.TestCase):
         )
         self.assertIn("pip-audit==2.10.1", audit_lock.lower())
 
+    def test_migration_manifest_is_finite_and_exact(self) -> None:
+        manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
+        self.assertEqual(module.MIGRATION_SCHEMA, manifest["schema_version"])
+        self.assertEqual(module.MIGRATION_ID, manifest["migration_id"])
+        self.assertEqual(module.MIGRATION_ENTRY_COUNT, len(entries))
+        self.assertEqual(sorted(entries), list(entries))
+
     def test_lock_validation_rejects_unhashed_and_remote_sources(self) -> None:
         remote = (
             "thing @ https://example.invalid/thing.whl "

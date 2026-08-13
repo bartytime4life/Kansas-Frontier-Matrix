@@ -14,18 +14,27 @@ content, decide policy, create evidence, approve release, or publish anything.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import subprocess
 import sys
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Sequence
+from pathlib import Path, PurePosixPath
+from typing import Any, Sequence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LOCK_LIMIT_BYTES = 1_048_576
+MIGRATION_MANIFEST = "tools/ci/python-dependency-lock-migration.json"
+MIGRATION_SCHEMA = "kfm.python-dependency-lock-migration.v1"
+MIGRATION_ID = "scorecard-pinned-dependencies-20260812"
+MIGRATION_ENTRY_COUNT = 387
 HASH_LINE = re.compile(r"^\s+--hash=sha256:[0-9a-f]{64}(?: \\)?$")
+FULL_SHA256 = re.compile(r"^sha256:[0-9a-f]{64}$")
+RECEIPT_SHA256 = re.compile(r"^sha256:[0-9a-f]{32,64}$")
+COMMIT_SHA = re.compile(r"^[0-9a-f]{40}$")
 FORBIDDEN_LOCK_TEXT = (
     "--extra-index-url",
     "--index-url",
@@ -41,6 +50,23 @@ FORBIDDEN_LOCK_TEXT = (
 
 class InstallConfigurationError(ValueError):
     """Raised when a committed install profile or lockfile is unsafe."""
+
+
+class DuplicateKeyError(ValueError):
+    """Raised when a migration manifest repeats an object member."""
+
+
+def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    value: dict[str, Any] = {}
+    for key, item in pairs:
+        if key in value:
+            raise DuplicateKeyError(key)
+        value[key] = item
+    return value
+
+
+def _sha256_bytes(raw: bytes) -> str:
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -83,6 +109,97 @@ PROFILES = {
 }
 
 
+def load_workflow_migration_manifest(
+    repo_root: Path = REPO_ROOT,
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    """Load and strictly validate the one-time workflow migration ledger."""
+
+    path = repo_root / MIGRATION_MANIFEST
+    if path.is_symlink() or not path.is_file():
+        raise InstallConfigurationError("MIGRATION_MANIFEST_UNSAFE")
+    try:
+        if not 0 < path.stat().st_size <= LOCK_LIMIT_BYTES:
+            raise InstallConfigurationError("MIGRATION_MANIFEST_SIZE_INVALID")
+        value = json.loads(
+            path.read_text(encoding="utf-8"), object_pairs_hook=_unique_object
+        )
+    except InstallConfigurationError:
+        raise
+    except (OSError, UnicodeError, ValueError, DuplicateKeyError) as exc:
+        raise InstallConfigurationError("MIGRATION_MANIFEST_INVALID") from exc
+    if not isinstance(value, dict) or set(value) != {
+        "schema_version",
+        "migration_id",
+        "base_commit",
+        "entries",
+    }:
+        raise InstallConfigurationError("MIGRATION_MANIFEST_SHAPE_INVALID")
+    if value["schema_version"] != MIGRATION_SCHEMA:
+        raise InstallConfigurationError("MIGRATION_SCHEMA_INVALID")
+    if value["migration_id"] != MIGRATION_ID:
+        raise InstallConfigurationError("MIGRATION_ID_INVALID")
+    if not isinstance(value["base_commit"], str) or not COMMIT_SHA.fullmatch(
+        value["base_commit"]
+    ):
+        raise InstallConfigurationError("MIGRATION_BASE_INVALID")
+    entries = value["entries"]
+    if not isinstance(entries, list) or len(entries) != MIGRATION_ENTRY_COUNT:
+        raise InstallConfigurationError("MIGRATION_ENTRY_COUNT_INVALID")
+
+    by_path: dict[str, dict[str, Any]] = {}
+    prior_path = ""
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != {
+            "path",
+            "base_sha256",
+            "current_sha256",
+            "profiles",
+            "superseded_receipt_sha256s",
+        }:
+            raise InstallConfigurationError("MIGRATION_ENTRY_SHAPE_INVALID")
+        workflow_path = entry["path"]
+        parsed = PurePosixPath(workflow_path) if isinstance(workflow_path, str) else None
+        if (
+            parsed is None
+            or parsed.is_absolute()
+            or parsed.as_posix() != workflow_path
+            or len(parsed.parts) != 3
+            or parsed.parts[:2] != (".github", "workflows")
+            or parsed.suffix not in {".yml", ".yaml"}
+            or workflow_path <= prior_path
+        ):
+            raise InstallConfigurationError("MIGRATION_PATH_INVALID")
+        prior_path = workflow_path
+        if not isinstance(entry["base_sha256"], str) or not FULL_SHA256.fullmatch(
+            entry["base_sha256"]
+        ):
+            raise InstallConfigurationError("MIGRATION_BASE_HASH_INVALID")
+        if not isinstance(entry["current_sha256"], str) or not FULL_SHA256.fullmatch(
+            entry["current_sha256"]
+        ):
+            raise InstallConfigurationError("MIGRATION_CURRENT_HASH_INVALID")
+        profiles = entry["profiles"]
+        if (
+            not isinstance(profiles, list)
+            or not profiles
+            or profiles != sorted(set(profiles))
+            or any(profile not in PROFILES for profile in profiles)
+        ):
+            raise InstallConfigurationError("MIGRATION_PROFILES_INVALID")
+        superseded = entry["superseded_receipt_sha256s"]
+        if (
+            not isinstance(superseded, list)
+            or superseded != sorted(set(superseded))
+            or any(
+                not isinstance(item, str) or not RECEIPT_SHA256.fullmatch(item)
+                for item in superseded
+            )
+        ):
+            raise InstallConfigurationError("MIGRATION_RECEIPT_HASHES_INVALID")
+        by_path[workflow_path] = entry
+    return value, by_path
+
+
 def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
     """Return the fixed profiles invoked by one repository workflow."""
 
@@ -112,36 +229,48 @@ def profiles_for_workflow(workflow_path: Path) -> frozenset[str]:
 def verify_workflow_receipts() -> None:
     """Verify changed workflows through their immutable receipts plus new locks."""
 
-    workflow_root = REPO_ROOT / ".github/workflows"
-    workflows = sorted(workflow_root.glob("*.yml")) + sorted(
-        workflow_root.glob("*.yaml")
+    manifest, entries = load_workflow_migration_manifest()
+    base_commit = manifest["base_commit"]
+    migration_head = os.environ.get("KFM_MIGRATION_HEAD", "")
+    if not COMMIT_SHA.fullmatch(migration_head):
+        raise InstallConfigurationError("MIGRATION_HEAD_INVALID")
+    subprocess.run(
+        ("git", "merge-base", "--is-ancestor", base_commit, migration_head),
+        check=True,
+        cwd=REPO_ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
-    locked_count = 0
-    for workflow in workflows:
+    for workflow_path, entry in entries.items():
+        workflow = REPO_ROOT / workflow_path
         profile_names = profiles_for_workflow(workflow)
-        if not profile_names or workflow.name == "python-dependency-lock.yml":
-            continue
-        locked_count += 1
+        if profile_names != frozenset(entry["profiles"]):
+            raise InstallConfigurationError("MIGRATION_PROFILE_MISMATCH")
         prior_bytes = subprocess.run(
             (
                 "git",
                 "show",
-                f"HEAD^:{workflow.relative_to(REPO_ROOT).as_posix()}",
+                f"{base_commit}:{workflow_path}",
             ),
             check=True,
             cwd=REPO_ROOT,
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
         ).stdout
+        if _sha256_bytes(prior_bytes) != entry["base_sha256"]:
+            raise InstallConfigurationError("MIGRATION_BASE_HASH_MISMATCH")
         old_prefix = b"python -m pip install"
         if old_prefix not in prior_bytes:
             raise InstallConfigurationError("PRIOR_WORKFLOW_INSTALL_MISSING")
+        current_bytes = workflow.read_bytes()
+        if _sha256_bytes(current_bytes) != entry["current_sha256"]:
+            raise InstallConfigurationError("MIGRATION_CURRENT_HASH_MISMATCH")
+        if old_prefix in current_bytes:
+            raise InstallConfigurationError("MIGRATION_INSTALL_UNCHANGED")
         for profile_name in profile_names:
             profile = PROFILES[profile_name]
             validate_lockfile(_lock_path(profile))
             _validate_local_specs(profile)
-    if locked_count < 1:
-        raise InstallConfigurationError("WORKFLOW_MIGRATION_EMPTY")
 
 
 def _lock_path(profile: InstallProfile) -> Path:
