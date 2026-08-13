@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.2
-# Updated: 2026-07-23
+# Version: v1.3
+# Updated: 2026-08-12
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
@@ -15,8 +15,10 @@
 #   focused compatibility and workflow-boundary review.
 # - SemVer ecosystems use 30-day major, 7-day minor, and 3-day patch
 #   stabilization windows. Pre-commit hooks use a 7-day default window.
-# - Labels are intentionally omitted until the repository label inventory is
-#   verified. CODEOWNERS remains the review-routing surface.
+# - Repository labels route proposals by ecosystem and review state only; they
+#   do not establish compatibility, security, approval, or merge readiness.
+# - The payload-free Explorer image override package is monitored separately
+#   because it is outside the root npm workspaces and owns an independent lock.
 # - Docker base-image monitoring is not enabled here because the current files
 #   use custom Dockerfile.* placeholder names; supported discovery and intended
 #   activation remain NEEDS VERIFICATION.
@@ -50,6 +52,10 @@ updates:
     open-pull-requests-limit: 6
     assignees:
       - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "python"
+      - "needs-review"
     commit-message:
       prefix: "deps(python)"
       prefix-development: "deps(python-dev)"
@@ -91,6 +97,10 @@ updates:
     open-pull-requests-limit: 4
     assignees:
       - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "needs-review"
     commit-message:
       prefix: "deps(node)"
       prefix-development: "deps(node-dev)"
@@ -115,6 +125,43 @@ updates:
           - "minor"
           - "patch"
 
+  # The payload-free Explorer image's hash-locked npm overrides are outside the
+  # root workspaces. Keep this lockfile lane separate from application updates;
+  # major override changes remain individual for focused image-build review.
+  - package-ecosystem: "npm"
+    directory: "/infra/docker/explorer-web"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
+    open-pull-requests-limit: 2
+    assignees:
+      - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "ci"
+      - "needs-review"
+    commit-message:
+      prefix: "deps(container-node)"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "-"
+    groups:
+      container-node-minor-patch:
+        applies-to: "version-updates"
+        dependency-type: "production"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
   # GitHub Actions references in .github/workflows and repository-local actions.
   # Minor/patch updates are grouped; major action boundary changes stay isolated.
   - package-ecosystem: "github-actions"
@@ -131,6 +178,11 @@ updates:
     open-pull-requests-limit: 3
     assignees:
       - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "github_actions"
+      - "ci"
+      - "needs-review"
     commit-message:
       prefix: "ci(actions)"
       include: "scope"
@@ -159,6 +211,11 @@ updates:
     open-pull-requests-limit: 2
     assignees:
       - "bartytime4life"
+    labels:
+      - "dependencies"
+      - "pre_commit"
+      - "ci"
+      - "needs-review"
     commit-message:
       prefix: "chore(pre-commit)"
       include: "scope"
