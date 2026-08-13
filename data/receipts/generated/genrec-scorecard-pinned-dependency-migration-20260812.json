@@ -799,11 +799,11 @@
     ".github/workflows/xy-point-transform-receipt.yml": "sha256:958a03bbfe986f11a9d6554fd76636053583b9a08074256e944c460abdab6aca",
     "data/receipts/generated/README.md": "sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
     "infra/compose/docker-compose.yml": "sha256:6948f9500ee4e574b8ab8d0e9eda48d12f14a6f28e991a787163be692bd58a25",
-    "infra/docker/Dockerfile.explorer-web": "sha256:efca64157ba977d67246c710524f83644d654d4074424825079b1b7292274611",
+    "infra/docker/Dockerfile.explorer-web": "sha256:b83a1d8ff5f6d3aa8b7c11685178e83c4c32579483bd4f79be1ee1f2a17c0d92",
     "infra/docker/Dockerfile.governed-api": "sha256:916241bb1b94ac7a0e9978fcd984c72a0ad0782d6a6e6fac12f27947296830ec",
-    "infra/docker/README.md": "sha256:689db7ef8b10595d3d1b74c44aa68ba935c23c1bb7105a373bf9764cc024d89e",
-    "infra/docker/explorer-web/package-lock.json": "sha256:25e5dd68cda64dde53ee8306785172b74a47da96e24b8aae14e167a499a9751d",
-    "infra/docker/explorer-web/package.json": "sha256:db1692ee92141f4a2a7868247fab6587098ee3f191306b0949412ca168588d4f",
+    "infra/docker/README.md": "sha256:b0de4457a59970cb288bed2749f2e710ff0179fa619a5de23885f88e0acd3379",
+    "infra/docker/explorer-web/package-lock.json": "sha256:0d9b4df32f0ac0d7786abf4951bbddf690a283996062213464aee5a0d941801a",
+    "infra/docker/explorer-web/package.json": "sha256:f080fdb8b9df4cd555a3c43e6c285eaa762c62888bd313e72a59bb5e56a66278",
     "infra/docker/governed-api-requirements.lock": "sha256:9616e22c2e8ca077a25c9a446672a770c73001436f67b1e1332283b67e904d8e",
     "tests/ci/README.md": "sha256:3a13fb3ebd7981a08bec77b2464b63f5d2d89d4eb470357a2d5975eaac3d9a28",
     "tests/ci/test_install_python_ci.py": "sha256:67b1468900d22f65b5a9c638ee92128ceaf3af09126f7ca3d3414b4bc72fc96c",
@@ -844,6 +844,7 @@
     "evidence_refs": [
       "github:code-scanning-alerts#110-115,#503-521",
       "github:actions-run/31651265629/scorecard-results.sarif",
+      "github:actions-run/31654973577/security",
       "repo:main@31ac20bcc7dbed71a55014846239959963ba6718",
       "repo:pull/2657",
       "repo:pull/2658"
@@ -1275,7 +1276,7 @@
     {
       "gate": "container-dependency-pinning",
       "outcome": "PASS",
-      "reason": "Base images are digest-pinned, the explorer uses npm ci with a lockfile, the API build uses a hash-locked requirements file, and npm ci --dry-run succeeds."
+      "reason": "Base images are digest-pinned, the explorer uses npm ci with a clean lockfile plus a SHA-256-bound npm tarball, the API build uses a hash-locked requirements file, and npm audit reports zero high or critical findings."
     },
     {
       "gate": "generated-receipt-validator",

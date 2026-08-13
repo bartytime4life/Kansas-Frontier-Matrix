@@ -2,10 +2,9 @@
   "name": "kfm-explorer-web-image-overrides",
   "version": "0.0.0",
   "private": true,
-  "description": "Hash-locked npm CLI and transitive-security overrides for the payload-free explorer-web review image.",
+  "description": "Hash-locked transitive-security overrides for the payload-free explorer-web review image.",
   "dependencies": {
     "brace-expansion": "5.0.9",
-    "ip-address": "10.3.1",
-    "npm": "11.19.0"
+    "ip-address": "10.3.1"
   }
 }
