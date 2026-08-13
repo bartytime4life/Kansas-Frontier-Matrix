@@ -46,7 +46,7 @@ notes:
 </p>
 
 **Path:** `tools/ci/README.md`  
-**Status:** draft / CI tooling lane / dependency-bootstrap helper verified / mixed implementation status  
+**Status:** draft / CI tooling lane / dependency-bootstrap helper verified / mixed implementation status
 **Owning root:** `tools/`  
 **Lane family:** `ci`  
 **Workflow companion:** `.github/workflows/`  
@@ -116,6 +116,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 | Family | Purpose | Status |
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
+| `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
 | `render_ui_validation_summary` | Render UI trust-state validation summaries. | PROPOSED in parent README. |
 | `normalize_test_report` | Normalize JUnit/coverage/QA reports for downstream checks. | PROPOSED. |
@@ -131,6 +132,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 tools/ci/
 |-- README.md
 |-- install_python_ci.py
+|-- python-dependency-lock-migration.json
 |-- python-audit.lock
 |-- python-test.lock
 |-- render_validation_summary.PROPOSED

@@ -64,7 +64,7 @@ jobs:
           python -m unittest -v tests.validators.governance.test_validate_receipt_proof_pairing_assessment
           python tools/validators/governance/validate_receipt_proof_pairing_assessment.py --fixtures
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/generc-pass25-receipt-proof-pairing-20260811.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass25-receipt-proof-pairing-20260811.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

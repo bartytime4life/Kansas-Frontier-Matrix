@@ -14,7 +14,7 @@ name: stac-zarr-asset-metadata-profile
       - "docs/intake/exploratory/pass-30-stac-zarr-asset-metadata-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-profile-20260809.json"
+      - "data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-20260809.json"
   push:
     branches: [main]
     paths:
@@ -27,7 +27,7 @@ name: stac-zarr-asset-metadata-profile
       - "docs/intake/exploratory/pass-30-stac-zarr-asset-metadata-source-map.md"
       - "packages/hashing/**"
       - "pyproject.toml"
-      - "data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-profile-20260809.json"
+      - "data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-20260809.json"
   workflow_dispatch:
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
         run: python tools/validators/stac/validate_stac_zarr_asset_metadata_profile.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-profile-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-stac-zarr-asset-metadata-20260809.json
 
       - name: Record trust boundary
         if: always()

@@ -11,10 +11,14 @@ name: python-dependency-lock
       - "packages/hashing/pyproject.toml"
       - "packages/schema-registry/pyproject.toml"
       - "pyproject.toml"
+      - "data/receipts/generated/genrec-scorecard-pinned-dependency-migration-20260812.json"
       - "tests/ci/test_install_python_ci.py"
+      - "tests/validators/test_validate_generated_receipt.py"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
+      - "tools/validators/validate_generated_receipt.py"
   push:
     branches:
       - main
@@ -24,10 +28,14 @@ name: python-dependency-lock
       - "packages/hashing/pyproject.toml"
       - "packages/schema-registry/pyproject.toml"
       - "pyproject.toml"
+      - "data/receipts/generated/genrec-scorecard-pinned-dependency-migration-20260812.json"
       - "tests/ci/test_install_python_ci.py"
+      - "tests/validators/test_validate_generated_receipt.py"
       - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-dependency-lock-migration.json"
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
+      - "tools/validators/validate_generated_receipt.py"
   workflow_dispatch:
 
 permissions:
@@ -38,6 +46,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  KFM_MIGRATION_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
   PYTHONDONTWRITEBYTECODE: "1"
@@ -60,6 +69,7 @@ jobs:
       - name: Check out the triggering revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
