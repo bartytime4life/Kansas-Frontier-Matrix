@@ -1,71 +1,76 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/domains/air
-title: Air Domain Policy Compatibility Guardrail README
-type: readme; directory-readme; domain-policy-compatibility-lane; slug-conflict-guardrail; non-authoritative
-version: v0.2
-status: draft; repository-grounded; compatibility-only; direct-lane-readme-only; preferred-atmosphere-lane-confirmed; executable-policy-unestablished; slug-adr-open; not-for-life-safety
-owners: OWNER_TBD — Atmosphere/Air steward · Policy steward · Directory-governance steward · Sensitivity and rights steward · Source steward · Contract/schema steward · Validator/test steward · Runtime steward · Release steward · Security reviewer · Docs steward
+title: Air Policy Compatibility Boundary README
+type: readme; directory-readme; domain-policy-compatibility-boundary; alias-guardrail; policy-index
+version: v0.3
+status: draft; repository-grounded; compatibility-only; direct-lane-marker-and-readme; preferred-atmosphere-policy-scaffolds; adjacent-fixture-profiles; evaluator-unbound; fail-closed; non-release; non-publication; not-for-life-safety
+owners: "@bartytime4life — verified CODEOWNERS review route; Atmosphere/Air, policy, directory-governance, rights, sensitivity, source, contract/schema, validator/test, runtime, release, security, and docs stewardship assignments NEEDS VERIFICATION"
 created: 2026-06-15
-updated: 2026-07-19
-supersedes: v0.1 Air policy slug-conflict guide
+updated: 2026-08-13
+supersedes: v0.2 Air policy compatibility guardrail
 policy_label: restricted-review; policy; air; atmosphere; compatibility-only; slug-drift; redirect-to-atmosphere; no-active-policy-here; no-public-authority; not-emergency-alerting
 current_path: policy/domains/air/README.md
 owning_root: policy/
 responsibility: >
-  Compatibility and migration guardrail for the unresolved `air` policy segment. It records the
-  current repository evidence, redirects new Atmosphere/Air policy work toward the preferred
-  `policy/domains/atmosphere/` lane, prevents parallel policy authority and duplicate bundle
-  selection, defines finite compatibility outcomes and obligations, and preserves evidence, rights,
-  sensitivity, release, correction, and rollback boundaries without activating this path.
+  Compatibility and migration boundary for the unresolved `air` policy segment. It records the
+  complete direct inventory, redirects new Atmosphere policy work toward
+  `policy/domains/atmosphere/`, distinguishes proposed policy scaffolds from bounded fixture
+  validation, prevents parallel policy and bundle authority, and preserves evidence, rights,
+  sensitivity, review, release, correction, and rollback boundaries without activating this path.
 truth_posture: >
-  CONFIRMED target v0.1 README; canonical singular policy root; bounded direct-lane search surfaced
-  only this README under policy/domains/air; policy/domains/atmosphere/README.md exists as a
-  33-line PROPOSED greenfield scaffold; Atmosphere canonical-path doctrine prefers `atmosphere` for
-  new work and treats `air` as an ADR-class drift candidate; contracts/air, tests/domains/air, and
-  pipeline_specs/air are documented compatibility lanes; Atmosphere policy and sensitivity doctrine
-  define anti-collapse, rights, freshness, caveat, generalization, and official-authority
-  redirection requirements; tests/domains/atmosphere is a scaffolded preferred test lane; the
-  domain-atmosphere workflow emits readiness holds and evaluates no policy; the shared policy
-  runtime remains a comment-only placeholder; the shared PolicyDecision schema currently permits
-  ANSWER, ABSTAIN, DENY, and ERROR only /
-  PROPOSED this lane remain documentation-only, redirect all new executable policy work to the
-  preferred Atmosphere lane pending ADR, define compatibility decision normalization, reason-code
-  and obligation families, alias/migration invariants, validation checks, review burden, and a
-  reversible resolution sequence /
-  CONFLICTED repository presence of both air and atmosphere segments across policy, contracts,
-  pipeline specifications, executable-pipeline documentation, tests, and schemas while current
-  placement doctrine prefers atmosphere; the atmosphere policy README calls itself canonical while
-  also incorrectly allowing non-policy materials; documentation-level REDIRECT/HOLD/RESTRICT
-  vocabulary versus the shared PolicyDecision schema's ANSWER/ABSTAIN/DENY/ERROR vocabulary /
-  UNKNOWN accepted slug ADR, active policy source files, bundle manifest, evaluator, selector,
-  deployment binding, executable Atmosphere policy tests, dedicated policy validators, direct
-  runtime consumers, active public route aliases, branch-protection significance, release mapping,
-  and production enforcement /
-  NEEDS VERIFICATION owners and CODEOWNERS, exhaustive air/atmosphere inventory, accepted canonical
-  slug and alias lifetime, migration/deprecation record, package namespaces, bundle identity,
-  source-specific rights rules, stale-state profile, low-cost-sensor caveat profile, exact-station
-  generalization profile, deterministic fixtures, no-network tests, API/UI/map/AI redirect handling,
-  correction propagation, and rollback drill.
+  CONFIRMED accepted ADR-0029 directory-placement authority and canonical singular policy root;
+  verified CODEOWNERS review route; complete two-blob Air inventory consisting of this README and
+  an empty marker; complete fourteen-blob preferred Atmosphere policy inventory consisting of one
+  short README and thirteen PROPOSED default-only Rego scaffolds; two scaffolds default
+  `deny := false` and eleven default `allow := false`; no operative rule body, native Rego test,
+  accepted bundle payload, evaluator binding, or runtime implementation; mixed adjacent
+  Atmosphere fixture validation with ten substantive and ten placeholder validator modules, seven
+  substantive and eight placeholder Python test modules, and seven relevant no-network workflows;
+  shared PROPOSED_INACTIVE input, decision, reason, obligation, semantics, and reviewer-role
+  profiles whose authority flags remain false; an AtmosphereAirDecisionEnvelope semantic draft
+  whose lower-case schema, validator, and finite-outcome test remain scaffolds or placeholders /
+  PROPOSED keep this lane documentation-only; route new policy source to the Atmosphere lane after
+  accepted namespace and activation review; preserve one active policy source, one bundle
+  identity, one normalized decision, and one rollback path; use repository-local Air reason and
+  obligation terms only as non-normative documentation shorthand /
+  CONFLICTED `air` and `atmosphere` segments across policy, contracts, schemas, tests, pipeline
+  specifications, and pipeline documentation; duplicate or near-duplicate Atmosphere Rego names;
+  inconsistent package/default semantics; semantic decision-envelope prose versus a minimal
+  proposed machine schema; local compatibility dispositions versus the inactive shared
+  ANSWER/ABSTAIN/DENY/ERROR vocabulary /
+  UNKNOWN accepted Air-to-Atmosphere migration ADR, package namespace, entrypoint, bundle manifest,
+  selector, evaluator, authenticated decision emission, production consumer, public alias,
+  deployment binding, required-check significance, promotion integration, monitoring, and
+  release-gate adoption /
+  NEEDS VERIFICATION functional steward assignments, alias lifetime, complete consumer inventory,
+  source-specific rights rules, stale-state thresholds, exact-station generalization, low-cost
+  sensor caveat/correction requirements, decision-envelope alignment, public API/UI/map/AI
+  obligation enforcement, correction propagation, cache invalidation, and rollback drills.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 0c0fc543a82123ea4b2216df7a4b41df0c1c82ae
-  prior_blob: 1531b955ebc8474dae384e896117d0e265405e76
-  policy_root_blob: 09cd966ab188d5e831960869117522a98274cb7f
-  air_policy_guardrail_blob: 1531b955ebc8474dae384e896117d0e265405e76
+  base_commit: f61d9df6409917610fa45d739fab55cab86f5eb2
+  complete_tree: abff80bd000194c69a95d461fa28a4137925d9d2
+  prior_blob: d722464dcce4effeb5f70861bbfb629b8d3aed9d
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  policy_domains_parent_blob: ed9be975c9da2c7d77d94fab621db39f23953813
   atmosphere_policy_readme_blob: d897f4f67458f9d12e0ef2b2e7146eeba935df4b
-  atmosphere_canonical_paths_blob: 97296d516792ad3bc2bc1f18d03e2518e367d28a
-  atmosphere_policy_doctrine_blob: 53480f8a9e7db4d863ed15cc96c708f0e8d40ef4
-  atmosphere_sensitivity_doctrine_blob: 900dbc36d8eac280abd44531691273a6fd07c90f
-  contracts_air_readme_blob: 47c6425000418602a3a351e116a4507a51de67e7
-  tests_air_readme_blob: 57a1df863d1dfb25cfc9c902bf3ec81bb9795bed
-  tests_atmosphere_readme_blob: 6474cc33c3bdd668fd8713e06e94f7dacda97b6b
-  pipeline_specs_air_readme_blob: 16a5096d5edcad9bbba51c87ef5f5d5521c2a0d6
-  domain_atmosphere_workflow_blob: 9d38e1b292d4907e9d910b7a96f1bef9a00f6c84
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  policy_input_profile_blob: 3af1c2b83a6d4a724b2442bf7ee7944c344f63d0
+  decision_semantics_profile_blob: 2df81cf319e45a2e3aa4148c0d1b54a84d0122b5
+  decision_vocabulary_blob: ae68a9f3cf80308f18bd04207ef2c85057750f12
+  reviewer_roles_blob: 01559907b2622606f35bb9a8ae5d0347e9b7e263
+  atmosphere_decision_envelope_contract_blob: e68e33f1750ad944cb1b7e1c5ac72f761c03d80e
+  atmosphere_decision_envelope_schema_blob: 28b217f010ca5be9aa249bfa41f477f03853dd9a
+  atmosphere_tests_readme_blob: 29204b8ecddaa8dd6ce068bf7ff4fe1d1a1cfbe9
+  atmosphere_validators_readme_blob: 64680d859fcb48a521259aeeaab33acbd304e496
+  domain_atmosphere_workflow_blob: fccba4b60f9967c9bf83dcfa35af9c650a6fc9bc
   policy_runtime_core_blob: e7e14cf39ae6919fbbc80f1b471de6b907292edb
-  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
+  policy_bundles_readme_blob: 0a13a9c9beddfa764d47e5dd6a2ea7ef91bf0d53
 related:
   - ../README.md
   - ../../README.md
@@ -75,27 +80,33 @@ related:
   - ../../../docs/domains/atmosphere/POLICY.md
   - ../../../docs/domains/atmosphere/SENSITIVITY.md
   - ../../../docs/domains/atmosphere/PUBLICATION_POSTURE.md
-  - ../../../docs/domains/atmosphere/OBJECT_FAMILY_MAP.md
   - ../../../contracts/air/README.md
   - ../../../contracts/domains/atmosphere/README.md
-  - ../../../schemas/contracts/v1/domains/atmosphere/README.md
-  - ../../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../../contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md
+  - ../../../schemas/contracts/v1/domains/atmosphere/atmosphere_air_decision_envelope.schema.json
   - ../../../tests/domains/air/README.md
   - ../../../tests/domains/atmosphere/README.md
-  - ../../../tests/domains/atmosphere/policy-deny/README.md
-  - ../../../fixtures/domains/atmosphere/
+  - ../../../tools/validators/domains/atmosphere/README.md
   - ../../../pipeline_specs/air/README.md
   - ../../../pipeline_specs/atmosphere/README.md
   - ../../../pipelines/domains/air/README.md
   - ../../../pipelines/domains/atmosphere/README.md
+  - ../../../contracts/policy/policy_input_bundle_profile_v1.md
+  - ../../../contracts/policy/policy_decision_vocabulary.md
+  - ../../../contracts/policy/policy_decision_semantics_profile_v1.md
+  - ../../../contracts/policy/policy_reviewer_role_vocabulary.md
+  - ../../decision/vocabulary.v1.json
+  - ../../decision/reviewer_roles.v1.json
   - ../../../packages/policy-runtime/README.md
   - ../../../policy/bundles/README.md
   - ../../../data/registry/sources/atmosphere/README.md
   - ../../../data/proofs/atmosphere/README.md
   - ../../../release/candidates/atmosphere/README.md
   - ../../../docs/doctrine/directory-rules.md
+  - ../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../docs/doctrine/ai-build-operating-contract.md
   - ../../../docs/registers/DRIFT_REGISTER.md
+  - ../../../.github/workflows/policy-test.yml
   - ../../../.github/workflows/domain-atmosphere.yml
 tags:
   - kfm
@@ -109,6 +120,7 @@ tags:
   - migration
   - anti-collapse
   - source-role
+  - knowledge-character
   - rights
   - sensitivity
   - stale-state
@@ -122,213 +134,242 @@ tags:
   - rollback
 notes:
   - "This revision changes only policy/domains/air/README.md plus the required AI-generated provenance receipt."
-  - "No Rego/YAML rule, policy value, bundle, evaluator, schema, contract, fixture, test, validator, workflow, source record, lifecycle object, receipt/proof instance, release artifact, deployment, route alias, or public behavior is created or modified."
-  - "This README does not resolve the air/atmosphere ADR; it preserves the current preference for atmosphere while preventing silent parallel authority."
+  - "No Rego or YAML rule, policy value, numeric threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, source record, lifecycle object, proof, release artifact, deployment, alias, or public behavior is created or changed."
+  - "File presence, a proposed default, a passing fixture workflow, and a generated receipt are not policy activation, approval, proof, release, or publication."
+  - "Main advanced during authoring only through policy/bundles/README.md; the Air target and all Air/Atmosphere inventories remained unchanged, and this snapshot incorporates the updated documentation-only bundle boundary."
   - "KFM is not an AQI, medical, regulatory, emergency-alerting, or life-safety issuing authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `policy/domains/air/` — Air Policy Compatibility Guardrail
+# Air Policy Compatibility Boundary
 
-> **One-line purpose.** Preserve an inspectable compatibility boundary for the unresolved `air` policy segment, redirect new Atmosphere/Air policy work to [`policy/domains/atmosphere/`](../atmosphere/README.md), and prevent alias paths from becoming duplicate policy, bundle, evidence, release, or public authority.
+> **One-line purpose.** Keep `policy/domains/air/` non-authoritative, direct new Atmosphere policy work to [`policy/domains/atmosphere/`](../atmosphere/README.md), and prevent an unresolved alias from becoming a second rule source, bundle selector, public route, or truth path.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
-  <img alt="Root: policy" src="https://img.shields.io/badge/root-policy%2F-blue">
+  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
   <img alt="Authority: compatibility only" src="https://img.shields.io/badge/authority-compatibility__only-orange">
-  <img alt="Preferred lane: atmosphere" src="https://img.shields.io/badge/preferred-policy%2Fdomains%2Fatmosphere%2F-success">
-  <img alt="Inventory: README only" src="https://img.shields.io/badge/inventory-README__only-lightgrey">
-  <img alt="ADR: required" src="https://img.shields.io/badge/slug__ADR-required-critical">
-  <img alt="Emergency authority: official issuer" src="https://img.shields.io/badge/emergency__authority-official__issuer-red">
+  <img alt="Direct lane: two blobs" src="https://img.shields.io/badge/direct__lane-2__blobs-blue">
+  <img alt="Atmosphere policy: proposed stubs" src="https://img.shields.io/badge/atmosphere__policy-proposed__stubs-orange">
+  <img alt="Validation: fixture bounded" src="https://img.shields.io/badge/validation-fixture__bounded-8250df">
+  <img alt="Runtime: unimplemented" src="https://img.shields.io/badge/runtime-unimplemented-critical">
+  <img alt="Default: fail closed" src="https://img.shields.io/badge/default-fail__closed-critical">
 </p>
 
 > [!IMPORTANT]
-> **This directory is a compatibility guardrail, not a second Atmosphere policy package.** Path presence, README completeness, import aliases, or a green workflow must not activate `air` as a canonical domain segment. Until an accepted ADR or governing lane register resolves the name, new executable Atmosphere policy belongs under `policy/domains/atmosphere/`.
+> **This lane is a compatibility boundary, not an active policy source.** Its tracked marker and README do not select a rule set, emit a decision, authorize an operation, or create a public alias.
 
 > [!CAUTION]
-> **The preferred Atmosphere lane is not implementation proof.** Its current README is a short `PROPOSED` greenfield scaffold and incorrectly suggests that docs, contracts, schemas, fixtures, tests, packages, pipelines, registries, and lifecycle data may live under a policy directory. This Air guardrail must not inherit or repeat that over-broad placement claim.
+> **The preferred Atmosphere lane is not ready to activate.** Its thirteen Rego files are explicitly proposed, default-only scaffolds with inconsistent result relations and duplicate concepts. No native Rego tests, accepted bundle payload, evaluator binding, or runtime implementation was verified.
 
 > [!WARNING]
-> **KFM is not an air-quality, medical, regulatory, emergency-alerting, or life-safety issuing authority.** Policy may preserve source roles, caveats, stale-state labels, evidence requirements, and official-authority redirects. It must not produce protective-action instructions or imply that KFM replaces AirNow, regulatory agencies, emergency management, health authorities, or other official issuers.
+> **A successful Atmosphere fixture workflow proves only its declared bounded profile.** It does not prove policy enforcement, scientific or regulatory validity, source admission, an EvidenceBundle or ProofPack, promotion, release, deployment, publication, medical guidance, emergency alerting, or life-safety authority.
 
-**Quick links:** [Purpose](#purpose) · [Current evidence](#current-evidence-and-maturity) · [Authority](#authority-and-directory-rules-basis) · [Slug contract](#slug-conflict-and-compatibility-contract) · [Belongs](#what-belongs-here) · [Does not](#what-does-not-belong-here) · [Preferred lane](#preferred-atmosphere-policy-lane) · [Policy spine](#atmosphereair-policy-spine) · [Inputs](#minimum-compatibility-input-contract) · [Outcomes](#finite-outcomes-and-normalization) · [Reasons](#reason-codes-and-obligations) · [Public surfaces](#public-surface-contract) · [Validation](#validation-tests-and-ci) · [Review](#review-burden-and-separation-of-duties) · [Migration](#adr-migration-correction-and-rollback) · [Related](#related-folders) · [Conflicts](#conflict-register) · [Sequence](#smallest-sound-resolution-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Changelog](#changelog)
+**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status-and-repository-evidence) · [Alias contract](#air-to-atmosphere-compatibility-contract) · [Belongs](#what-belongs-here) · [Inventory](#preferred-atmosphere-policy-inventory) · [Doctrine](#atmosphereair-policy-spine) · [Inputs](#minimum-policy-input-contract) · [Decisions](#decision-vocabulary-and-normalization) · [Codes](#reason-codes-and-obligations) · [Public surfaces](#public-surface-contract) · [Validation](#validation-tests-and-ci) · [Review](#review-burden-and-separation-of-duties) · [Migration](#migration-correction-and-rollback) · [Related](#related-folders) · [Conflicts](#conflict-register) · [Sequence](#smallest-sound-resolution-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger)
 
 ---
 
 ## Purpose
 
-`policy/domains/air/` exists because the repository contains a historical or proposed `air` domain segment while current Directory Rules and Atmosphere placement documentation prefer `atmosphere` for new domain lanes.
+`policy/domains/air/` exists to make unresolved namespace drift visible and safe. It does not own Atmosphere domain meaning, machine shapes, source records, evidence, runtime logic, release state, or public presentation.
 
 Its durable question is:
 
-> Can KFM preserve the `air` alias as an inspectable compatibility surface without allowing it to create duplicate policy source, bundle selection, object meaning, schema shape, source identity, evidence behavior, release semantics, public routes, or life-safety claims?
+> When a caller encounters the historical `air` segment, how does KFM preserve one governed Atmosphere policy path without inventing authority, evaluating two rule sets, losing provenance, or weakening a denial, restriction, review, correction, or rollback obligation?
 
-This path should support only these functions:
+### In scope
 
-1. document the unresolved `air` versus `atmosphere` naming conflict;
-2. redirect contributors and policy discovery toward the preferred Atmosphere lane;
-3. define invariants a future migration or explicit alias strategy must satisfy;
-4. prevent duplicate rule evaluation and divergent policy outcomes across both slugs;
-5. preserve historical references long enough for reviewed migration, correction, or deprecation;
-6. keep evidence, rights, sensitivity, release, correction, and rollback semantics unchanged by slug choice;
-7. expose bounded compatibility decisions without inventing a new machine enum;
-8. remain non-authoritative until a governed decision explicitly changes that posture.
+- documenting the current `air`/`atmosphere` conflict;
+- pointing contributors and internal tooling to the preferred Atmosphere lane;
+- preventing duplicate discovery, bundle creation, evaluation, and public exposure;
+- defining non-authoritative alias and migration invariants;
+- preserving source, evidence, rights, sensitivity, time, review, release, correction, and rollback references;
+- truth-labeling the maturity of adjacent Atmosphere contracts, schemas, tests, validators, workflows, and pipelines;
+- recording the review and proof needed before any alias or migration can activate.
 
-It is not a place to implement Atmosphere policy while governance remains unresolved.
+### Out of scope
 
-[Back to top](#top)
+- executable Atmosphere policy;
+- policy values, thresholds, scoring, or regulatory interpretation;
+- semantic-contract or JSON Schema authority;
+- live-source acquisition, transformation, or validation;
+- an active bundle, selector, evaluator, or runtime;
+- release, deploy, publication, correction, or withdrawal execution;
+- AQI, medical, regulatory, emergency, or life-safety instructions;
+- resolving the namespace by documentation alone.
 
----
+### Non-goals
 
-## Current evidence and maturity
+This README does not:
 
-### Safe conclusion
-
-At `main@0c0fc543a82123ea4b2216df7a4b41df0c1c82ae`:
-
-- `policy/domains/air/` is established only as a README-backed compatibility guardrail in bounded search.
-- `policy/domains/atmosphere/` exists and is the documentation-preferred domain-policy segment, but its current README is still a 33-line greenfield scaffold.
-- Atmosphere canonical-path doctrine explicitly says new work should use `atmosphere/` and treats `air/` as an ADR-class drift candidate.
-- `contracts/air/`, `tests/domains/air/`, and `pipeline_specs/air/` also document compatibility or unresolved alias roles.
-- the preferred Atmosphere test, schema, contract, pipeline, source-registry, proof, and release lanes exist as documentation surfaces of varying maturity;
-- no active Air policy bundle, evaluator, selector, runtime binding, or public alias is established by the inspected evidence;
-- the `domain-atmosphere` workflow is a readiness-hold workflow that performs no policy evaluation, proof production, release assembly, or publication;
-- the policy runtime core remains a one-line placeholder;
-- the shared `PolicyDecision` schema is concrete enough to require `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, but it does not define `REDIRECT`, `HOLD`, `RESTRICT`, or slug-migration semantics.
-
-### Maturity matrix
-
-| Surface | Inspected status | Safe conclusion |
-|---|---|---|
-| `policy/domains/air/` | **CONFIRMED README-only in bounded search** | Compatibility documentation exists; no direct policy source surfaced. |
-| `policy/domains/atmosphere/` | **CONFIRMED 33-line PROPOSED scaffold** | Preferred lane exists, but no executable policy inventory or safe folder contract is established. |
-| Canonical-path doctrine | **CONFIRMED draft registry** | Uses `atmosphere` for new paths and treats `air` as ADR-class drift. |
-| Atmosphere policy doctrine | **CONFIRMED draft doctrine** | Defines fail-closed anti-collapse, rights, stale-state, caveat, and advisory boundaries. |
-| Atmosphere sensitivity doctrine | **CONFIRMED draft doctrine** | Defines T0/T1 defaults, exact-station generalization, rights holds, and official-authority denial. |
-| `contracts/air/` | **CONFIRMED compatibility folder** | Semantic-contract slug conflict remains open. |
-| `tests/domains/air/` | **CONFIRMED README-only compatibility lane** | New executable tests should use `tests/domains/atmosphere/`. |
-| `tests/domains/atmosphere/` | **CONFIRMED preferred parent README / scaffold** | Child responsibilities are documented; executable coverage remains unestablished. |
-| `pipeline_specs/air/` | **CONFIRMED compatibility guardrail** | No active Air specification established. |
-| Atmosphere policy-deny child READMEs | **CONFIRMED documentation** | AQI/concentration, AOD/PM2.5, model/observed, and low-cost-sensor boundaries are described; execution remains verification-bound. |
-| `domain-atmosphere` workflow | **CONFIRMED readiness holds** | No policy, validation, proof, release, alerting, or publication authority. |
-| Policy runtime core | **CONFIRMED comment-only placeholder** | No accepted evaluator implementation. |
-| Shared PolicyDecision schema | **CONFIRMED PROPOSED concrete shape** | Outcomes are limited to `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. |
-| Canonical slug decision | **CONFLICTED / NEEDS VERIFICATION** | No accepted ADR or lane-register decision was verified. |
-| Active public alias or runtime selector | **UNKNOWN** | No active route, loader, bundle selector, or deployment binding is claimed here. |
-
-### Evidence boundary
-
-This README can state repository presence and inspected content. It cannot establish:
-
-- a byte-complete inventory of every `air` or `atmosphere` path;
-- accepted ADR status;
-- production policy execution;
-- active bundle selection;
-- deployment configuration;
-- complete policy coverage;
-- policy-test pass rates;
-- public route alias behavior;
-- release mapping;
-- branch-protection requirements;
-- monitoring or alerting behavior;
-- medical, regulatory, emergency, or life-safety correctness.
-
-Those remain `UNKNOWN` or `NEEDS VERIFICATION` until current implementation evidence proves them.
+1. rename or delete a lane;
+2. declare a public redirect;
+3. normalize repository paths at runtime;
+4. accept the current Rego defaults;
+5. certify the adjacent fixture profiles;
+6. authorize an AtmosphereAirDecisionEnvelope;
+7. assign functional stewards;
+8. change any policy, workflow, release, or publication state.
 
 [Back to top](#top)
 
 ---
 
-## Authority and Directory Rules basis
+## Authority level
 
-**Compatibility documentation only / no policy authority.**
+**Compatibility documentation only / no policy authority / no release authority / no publication authority.**
 
-Directory Rules make `policy/` the canonical responsibility root for allow, deny, restrict, abstain, redaction, sensitivity, promotion, and release-adjacent decisions. The conflict here is the domain segment—not the responsibility root.
+[ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 text as repository placement authority. Under those rules, the singular `policy/` root owns normative allow, deny, restrict, abstain, redaction, sensitivity, promotion-adjacent, and release-adjacent decisions. The unresolved issue here is the domain segment and its migration—not the responsibility root.
 
-| Concern | Authority home | This lane's role |
+| Concern | Authority home | Role of this lane |
 |---|---|---|
-| Policy source rules | Accepted policy lanes under singular `policy/` | Pointer and migration guard only. |
-| Atmosphere policy intent | [`docs/domains/atmosphere/POLICY.md`](../../../docs/domains/atmosphere/POLICY.md) | Cites intent; does not enforce it. |
-| Sensitivity and tiering | [`docs/domains/atmosphere/SENSITIVITY.md`](../../../docs/domains/atmosphere/SENSITIVITY.md) plus accepted policy lanes | Preserves the most restrictive applicable posture. |
-| Object meaning | Accepted contract home | Does not define semantic contracts. |
-| Machine shape | Accepted schema home | Does not define JSON Schema. |
-| Source identity and rights facts | Governed source registry and review records | Requires explicit context; cannot invent facts. |
-| Evidence | EvidenceRef/EvidenceBundle and proof families | Requires evidence; cannot create closure. |
-| Policy execution | Accepted evaluator and immutable bundle | Cannot execute or select policy. |
-| Tests and validators | `tests/`, `tools/validators/` | Must prove redirect and anti-duplication behavior. |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` | May be referenced; never stored here. |
-| Release, correction, rollback | `release/` | Cannot approve a state transition. |
-| Public API, UI, map, export, AI | Governed applications and released artifacts | Must consume normalized outcomes; cannot select aliases ad hoc. |
-| CI | `.github/workflows/` | May guard drift; cannot activate policy by green status. |
+| Domain meaning | Accepted Atmosphere doctrine and semantic contracts | Link only |
+| Machine shape | `schemas/` | Link only |
+| Source identity, role, rights, and cadence | Governed source registry | Require context; never invent it |
+| Evidence and proof | EvidenceRef, EvidenceBundle, receipt, and proof families | Preserve references; never manufacture closure |
+| Policy source | Accepted lane under `policy/` | Redirect contributors; contain no executable source |
+| Policy bundle and evaluator | Accepted bundle/runtime boundaries | Record prerequisites; select nothing |
+| Tests and validators | `tests/` and `tools/validators/` | Report observed maturity |
+| Pipeline behavior | `pipeline_specs/` and `pipelines/` | No execution role |
+| Release, correction, withdrawal, rollback | `release/` and governed records | Preserve identity; approve nothing |
+| API, UI, map, export, report, AI | Governed application surfaces | Must not expose repository-path choice as authority |
+| CI | `.github/workflows/` | Evidence of declared checks, never activation by itself |
 
 ### Governing order
 
-When Air/Atmosphere path sources conflict, apply this order:
+When sources conflict, apply the most recent accepted authority in this order:
 
-1. KFM core invariants and operating law.
-2. accepted ADRs that explicitly resolve the segment or compatibility strategy;
-3. Directory Rules and the domain-placement law;
-4. accepted domain registry or lane-register decision;
-5. Atmosphere policy and sensitivity doctrine;
-6. source-specific rights, license, confidentiality, cadence, and official-authority requirements;
-7. accepted contracts, schemas, policy bundles, and evaluator profiles;
+1. KFM core invariants and accepted operating law;
+2. accepted ADRs;
+3. accepted Directory Rules and root registry;
+4. an accepted Air-to-Atmosphere namespace/migration decision;
+5. accepted Atmosphere policy, sensitivity, source, rights, and public-serving doctrine;
+6. accepted contracts, schemas, vocabularies, policy bundles, and evaluator profiles;
+7. released artifacts and their correction/rollback records;
 8. this compatibility README;
-9. current greenfield scaffolds and examples.
+9. proposed scaffolds, examples, fixtures, and workflow holds.
 
-A lower-ranked compatibility artifact must not weaken a higher-ranked denial, restriction, evidence, rights, review, release, correction, or rollback obligation.
+A lower-ranked artifact cannot weaken a higher-ranked denial, restriction, attribution, evidence, review, release, correction, or rollback requirement.
+
+### Ownership boundary
+
+[`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes `/policy/` review to `@bartytime4life`. That is **CONFIRMED review routing**, not proof that one person holds every Atmosphere, rights, sensitivity, security, runtime, release, or publication role. Functional stewardship and separation of duties remain **NEEDS VERIFICATION**.
 
 [Back to top](#top)
 
 ---
 
-## Slug conflict and compatibility contract
+## Status and repository evidence
 
-### Current naming conflict
+All counts below are complete for the untruncated tree at `main@f61d9df6409917610fa45d739fab55cab86f5eb2`. They describe tracked repository state, not deployed state.
 
-| Source or surface | Segment | Current posture |
-|---|---|---|
-| Directory Rules domain enumeration | `atmosphere` | Doctrine-preferred segment. |
-| Atmosphere canonical-path registry | `atmosphere` | Use for new work pending ADR. |
-| Atlas crosswalk and historical paths | `air` in some roots | Drift/compatibility candidate. |
-| Current policy compatibility path | `policy/domains/air/` | README-only guardrail. |
-| Preferred policy path | `policy/domains/atmosphere/` | Repository-present scaffold; implementation unproved. |
-| Contracts compatibility path | `contracts/air/` | Conflict documented. |
-| Preferred domain contracts | `contracts/domains/atmosphere/` | Repository-present family, though inventory/path duplication exists. |
-| Test compatibility path | `tests/domains/air/` | README-only redirect lane. |
-| Preferred tests | `tests/domains/atmosphere/` | Parent/child documentation lane. |
-| Pipeline-spec compatibility path | `pipeline_specs/air/` | README-only guardrail. |
-| Preferred pipeline specs | `pipeline_specs/atmosphere/` | Documentation-preferred lane. |
+### Direct Air lane
+
+`policy/domains/air/` contains exactly two tracked blobs:
+
+~~~text
+policy/domains/air/
+├── .gitkeep        # empty marker
+└── README.md       # this compatibility boundary
+~~~
+
+**Safe conclusion:** no direct Rego, data, manifest, selector, bundle, test, validator, workflow, or runtime file exists in this lane.
+
+### Maturity matrix
+
+| Surface | Pinned inventory | Maturity | What may safely be claimed |
+|---|---:|---|---|
+| `policy/domains/air/` | 2 blobs | Compatibility only | Marker + README; no executable policy |
+| `policy/domains/atmosphere/` | 14 blobs | 1 README + 13 PROPOSED default-only Rego scaffolds | Preferred source lane exists; enforcement does not |
+| `policy/sensitivity/atmosphere/` | 1 empty marker | Placeholder | No domain sensitivity rule |
+| `contracts/air/` | README + marker | Compatibility only | Contract alias remains visible |
+| `contracts/domains/atmosphere/` | 44 blobs | Mixed draft/proposed | Substantial semantics exist; acceptance and alignment vary |
+| `schemas/contracts/v1/domains/atmosphere/` | 76 blobs | Mixed, duplicated naming | Machine-shape candidates exist; one namespace is not established here |
+| `tests/domains/air/` | README + marker | Compatibility only | No executable Air tests |
+| `tests/domains/atmosphere/` | 39 blobs; 16 Python files | 7 substantive + 8 placeholder test modules + empty `__init__`; remaining blobs are documentation/markers | Bounded behaviors are partly executable |
+| `tools/validators/domains/atmosphere/` | 24 blobs, including 20 validator modules | 10 substantive + 10 placeholders | Bounded fixture checks exist; broad validation does not |
+| `pipeline_specs/air/` | README + marker | Compatibility only | No active Air spec |
+| `pipeline_specs/atmosphere/` | README + 5 small YAML stubs | Proposed | Declarative pipeline surface is not implemented |
+| `pipelines/domains/air/` | README + marker | Compatibility only | No executable Air pipeline |
+| `pipelines/domains/atmosphere/` | 16 blobs; Python entry files are tiny placeholders | Scaffold | No production pipeline may be inferred |
+| `policy/bundles/` | 2 documentation files; one PROPOSED_INACTIVE packaging profile | Documentation-only direct lane | No accepted Atmosphere bundle payload or active selector |
+| policy runtime core | One comment-only source file | Unimplemented | No evaluator |
+| Atmosphere release candidate lane | README only | Non-release | No released candidate |
+
+### Evidence boundary
+
+This README may establish tracked presence, exact inspected content, and the stated behavior of checked-in workflows. It cannot establish:
+
+- production deployment or runtime selection;
+- branch-protection or required-check significance;
+- complete off-repository consumers;
+- scientific, medical, regulatory, or legal correctness;
+- source authorization or live-source currentness;
+- accepted steward assignments;
+- policy or contract acceptance;
+- EvidenceBundle or ProofPack validity;
+- promotion, release, publication, or life-safety authority.
+
+Those claims remain `UNKNOWN` or `NEEDS VERIFICATION` until direct evidence closes them.
+
+[Back to top](#top)
+
+---
+
+## Air-to-Atmosphere compatibility contract
+
+The placement preference is `atmosphere` for new work. A separately accepted namespace/migration decision was not verified, so the `air` lane remains visible as a guardrail rather than silently disappearing.
 
 ### Compatibility invariants
 
-Until governance resolves the slug, this lane must preserve all of the following:
+Until that decision exists:
 
-1. **One active policy source.** At most one slug may supply the evaluated rule set.
-2. **One bundle identity.** Equivalent rules under both paths must not produce independent bundle IDs or digests.
-3. **One decision.** Alias resolution must not evaluate both paths and merge or race results.
-4. **One reason/obligation meaning.** Slug choice cannot change decision semantics.
-5. **No path-based activation.** Directory or file presence does not make a lane active.
-6. **No silent fallback.** Missing preferred policy cannot fall back to an unreviewed compatibility source.
-7. **No public alias bypass.** Public callers cannot choose `air` to evade `atmosphere` policy.
-8. **No lifecycle bypass.** Alias resolution cannot move candidate data between lifecycle states.
-9. **No release bypass.** Alias resolution cannot grant publication or restore withdrawn content.
-10. **No evidence rewrite.** EvidenceRef, SourceDescriptor, receipt, proof, release, correction, and rollback identities survive migration.
-11. **No semantic collapse.** AQI, concentration, AOD, PM2.5, model, observation, low-cost sensor, advisory, and official warning remain distinct.
-12. **No official-authority impersonation.** Compatibility cannot make KFM an alert or life-safety issuer.
+1. **One active source.** At most one segment may supply evaluated Atmosphere rules.
+2. **One package contract.** Alias handling cannot produce independent package namespaces or entrypoints.
+3. **One bundle identity.** Equivalent content cannot produce separate bundle IDs or digests by slug.
+4. **One evaluation.** A request cannot execute both lanes and merge, race, or prefer whichever returns first.
+5. **One normalized decision.** Repository-path choice cannot change decision meaning.
+6. **No path activation.** A directory, README, Rego filename, or proposed default does not activate policy.
+7. **No silent fallback.** Missing preferred policy cannot fall through to an unreviewed compatibility source.
+8. **No public path selection.** Public callers cannot choose `air` to bypass Atmosphere policy.
+9. **No lifecycle bypass.** Alias resolution cannot admit, promote, release, restore, or publish an object.
+10. **No provenance rewrite.** SourceDescriptor, EvidenceRef, receipt, proof, release, correction, and rollback identities survive migration.
+11. **Most restrictive rule wins.** Rights, sensitivity, audience, join, freshness, lifecycle, and release restrictions are preserved.
+12. **No semantic collapse.** AQI, concentration, AOD, PM2.5, model, observation, calibration, advisory, and official warning remain distinct.
+13. **No authority impersonation.** KFM does not become a medical, regulatory, emergency, or life-safety issuer through an alias.
+
+### Required resolution flow
+
+~~~mermaid
+flowchart LR
+    A[Caller requests air or atmosphere] --> B{Accepted namespace map?}
+    B -- No --> C[ABSTAIN or bounded configuration ERROR]
+    B -- Yes --> D[Resolve one canonical logical domain]
+    D --> E{Accepted bundle + evaluator + input profile?}
+    E -- No --> F[Fail closed]
+    E -- Yes --> G[Evaluate exactly once]
+    G --> H[Normalize to accepted PolicyDecision]
+    H --> I[Apply obligations in governed consumer]
+    I --> J{Separate release/publication approval?}
+    J -- No --> K[No state transition]
+    J -- Yes --> L[Governed release path]
+~~~
+
+The exact `ABSTAIN` versus `ERROR` branch is not settled by this README; it depends on the accepted decision-semantics profile and whether the condition is an intentional policy non-answer or an execution/configuration failure.
 
 ### Forbidden shortcut
 
-```text
-policy/domains/air/
-  -> discovered by path
-  -> treated as active bundle
-  -> evaluated by public caller
-  -> rendered as policy-authorized Atmosphere truth
-```
+~~~text
+repository path exists
+  → path is treated as active policy
+  → public caller chooses a slug
+  → unbound Rego default is evaluated
+  → green fixture check is treated as approval
+  → result is rendered or released
+~~~
 
-This is forbidden without an accepted slug decision, immutable bundle identity, evaluator binding, tests, review, release mapping, and rollback support.
+Every arrow in that shortcut crosses an unproved authority boundary.
 
 [Back to top](#top)
 
@@ -336,98 +377,98 @@ This is forbidden without an accepted slug decision, immutable bundle identity, 
 
 ## What belongs here
 
-While the slug remains unresolved, accepted content is deliberately narrow:
+Accepted content is deliberately narrow:
 
-- this directory README;
-- a compatibility/deprecation marker that contains no policy values;
+- this README;
+- an empty compatibility marker;
 - an ADR pointer;
-- an alias manifest or redirect record only after its schema, owner, and activation semantics are accepted;
-- migration inventories and checksums;
-- a tombstone or supersession note after migration;
-- safe reason-code and obligation documentation for compatibility handling;
-- reviewer instructions for discovering the preferred Atmosphere lane;
-- rollback instructions for reversing a migration;
-- links to drift, correction, or deprecation records.
+- non-executable alias, deprecation, migration, or tombstone metadata **after** its schema and activation semantics are accepted;
+- byte-complete migration inventories and identity maps;
+- checksums and rollback targets;
+- reviewer instructions;
+- links to drift, correction, and supersession records.
 
-Any added file must state:
+Any future non-marker file must state:
 
-- whether it is documentation, redirect metadata, migration state, or a tombstone;
-- that it is non-authoritative unless an accepted decision says otherwise;
-- the preferred target;
-- its activation prohibition;
+- its object kind and non-authoritative status;
+- the preferred target path;
+- whether it can be discovered by runtime code—the default is no;
 - its owner and review state;
-- its correction and rollback path;
-- whether public clients can ever read it directly—the default answer is no.
-
-[Back to top](#top)
-
----
+- activation and expiry conditions;
+- correction and rollback behavior;
+- whether public clients can read it—the default is no.
 
 ## What does not belong here
 
-| Material | Correct authority home |
+| Material | Correct responsibility home |
 |---|---|
-| Atmosphere Rego or equivalent policy source | [`policy/domains/atmosphere/`](../atmosphere/README.md) pending accepted ADR/placement review |
-| Active policy bundle or manifest | `policy/bundles/` or accepted bundle lane |
-| Policy runtime/evaluator code | accepted runtime/package boundary |
-| Policy inputs or decision instances | governed request/receipt/audit surfaces, not this directory |
-| Policy schemas and semantic contracts | `schemas/` and `contracts/` |
-| Source descriptors and rights records | governed `data/registry/` lanes |
-| Source payloads or lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, catalog/triplet, and published roots |
-| Fixtures and executable tests | `fixtures/domains/atmosphere/`, `tests/domains/atmosphere/` |
-| Validator implementation | accepted `tools/validators/` lane |
-| Pipeline specs or executable transforms | `pipeline_specs/atmosphere/`, `pipelines/domains/atmosphere/`, or accepted homes |
-| Receipts and proofs | `data/receipts/`, `data/proofs/` |
-| Release manifests, corrections, withdrawals, rollback cards | `release/` |
-| Public API, UI, MapLibre, report, export, or AI behavior | governed application/runtime roots |
-| AQI, medical, regulatory, emergency, or life-safety instructions | official issuing authorities; KFM may only redirect with bounded context |
-| A second copy of any Atmosphere policy for convenience | forbidden until an accepted migration/alias decision authorizes it |
+| Atmosphere Rego or equivalent source | [`policy/domains/atmosphere/`](../atmosphere/README.md), after accepted design/review |
+| Active bundle or manifest | Accepted `policy/bundles/` lane |
+| Evaluator/runtime implementation | Accepted package/runtime boundary |
+| Policy input or decision instances | Governed audit/receipt surfaces |
+| Semantic contracts | `contracts/` |
+| JSON Schemas | `schemas/` |
+| Sources, rights records, or payloads | Governed registry and data lifecycle roots |
+| Fixtures and executable tests | `fixtures/` and `tests/domains/atmosphere/` |
+| Validators | `tools/validators/domains/atmosphere/` |
+| Pipeline specs or transforms | `pipeline_specs/atmosphere/` and `pipelines/domains/atmosphere/` |
+| Receipts and proofs | `data/receipts/` and `data/proofs/` |
+| Release/correction/withdrawal objects | `release/` |
+| API, UI, MapLibre, report, export, or AI behavior | Governed application/runtime roots |
+| Official AQI, medical, regulatory, emergency, or life-safety direction | The applicable official issuing authority |
 
-Adding executable policy here before ADR resolution would create parallel policy authority and must be rejected.
+Adding executable policy here before a separately accepted namespace decision would create parallel authority and must fail review.
 
 [Back to top](#top)
 
 ---
 
-## Preferred Atmosphere policy lane
+## Preferred Atmosphere policy inventory
 
-The current preferred policy lane is:
+The preferred lane contains exactly one README and thirteen Rego files at the pinned tree.
 
-```text
-policy/domains/atmosphere/
-```
+| File | Declared relation/default | Inspected implementation status |
+|---|---|---|
+| [`abstain_on_ambiguous.rego`](../atmosphere/abstain_on_ambiguous.rego) | `deny := false` | PROPOSED default-only scaffold; name/result mismatch |
+| [`deny_unpublished.rego`](../atmosphere/deny_unpublished.rego) | `deny := false` | PROPOSED default-only scaffold |
+| [`advisory-not-alert.rego`](../atmosphere/advisory-not-alert.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`advisory_no_life_safety.rego`](../atmosphere/advisory_no_life_safety.rego) | `allow := false` | PROPOSED default-only scaffold; overlaps preceding concept |
+| [`aod-not-pm25.rego`](../atmosphere/aod-not-pm25.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`aod_is_not_pm25.rego`](../atmosphere/aod_is_not_pm25.rego) | `allow := false` | PROPOSED default-only scaffold; overlaps preceding concept |
+| [`aqi_is_not_concentration.rego`](../atmosphere/aqi_is_not_concentration.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`dryrun_no_live_fetch.rego`](../atmosphere/dryrun_no_live_fetch.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`freshness_gate.rego`](../atmosphere/freshness_gate.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`low_cost_sensor_caveats_required.rego`](../atmosphere/low_cost_sensor_caveats_required.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`model-as-observed-deny.rego`](../atmosphere/model-as-observed-deny.rego) | `allow := false` | PROPOSED default-only scaffold |
+| [`model_is_not_observation.rego`](../atmosphere/model_is_not_observation.rego) | `allow := false` | PROPOSED default-only scaffold; overlaps preceding concept |
+| [`source_role_required.rego`](../atmosphere/source_role_required.rego) | `allow := false` | PROPOSED default-only scaffold |
 
-Its presence does not yet establish a production policy implementation.
+### Confirmed limitations
 
-### Confirmed current limitation
+- no file contains an operative rule body beyond its default and comments;
+- result relations are inconsistent: two expose `deny` while eleven expose `allow`;
+- package naming is not unified;
+- three concept families have duplicate or near-duplicate filenames;
+- `abstain_on_ambiguous.rego` does not expose an abstain relation;
+- no native Atmosphere Rego test was verified;
+- no accepted entrypoint, input shape, result adapter, bundle manifest, bundle digest, selector, or evaluator binding was verified;
+- the sibling README remains a short proposed scaffold and overstates what material may live under `policy/`;
+- the policy runtime is not implemented and `policy/bundles/` has no accepted active payload.
 
-The inspected sibling README:
+### Hardening required before activation
 
-- is only 33 lines;
-- labels the lane `PROPOSED (greenfield scaffold)`;
-- calls itself canonical;
-- provides no inventory of Rego/YAML policy files;
-- provides no bundle ID, manifest, digest, selector, evaluator, input contract, reason-code registry, obligation registry, fixtures, tests, or runtime evidence;
-- incorrectly states that docs, contracts, schemas, fixtures, tests, packages, pipelines, registries, and lifecycle data may belong under the policy lane.
-
-### Required hardening before executable Atmosphere policy lands
-
-The preferred lane should be updated to:
-
-1. narrow itself to Atmosphere policy source and policy-lane documentation only;
-2. enumerate current direct files and truth-label each one;
-3. bind to accepted `PolicyInputBundle` and `PolicyDecision` contracts;
-4. define or link one package namespace and entrypoint convention;
-5. define fail-closed default semantics;
-6. separate engine-native results from canonical public/runtime outcomes;
-7. define reason-code and obligation registries;
-8. identify bundle/manifest/evaluator/selector expectations;
-9. require deterministic no-network fixtures and negative tests;
-10. preserve source-role, knowledge-character, rights, sensitivity, stale-state, caveat, evidence, review, release, correction, and rollback context;
-11. deny emergency/life-safety authority;
-12. document how the `air` compatibility lane is ignored, redirected, deprecated, or migrated.
-
-This Air README does not perform that sibling update. It records the prerequisite.
+1. accept one package namespace and one entrypoint/result contract;
+2. remove or supersede duplicate concepts with explicit migration history;
+3. bind exact shared or domain-specific input and decision contracts;
+4. implement rules beyond defaults;
+5. define deterministic reason and obligation mapping;
+6. add native positive, negative, ambiguous, missing-input, and invalid-input Rego tests;
+7. add bundle manifest, content digest, evaluator compatibility, and selector rules;
+8. prove no-network execution and deterministic time handling;
+9. integrate governed consumers without repository-path selection;
+10. separate policy acceptance from promotion, release, deploy, and publication;
+11. exercise correction and rollback against an exact prior bundle;
+12. preserve the official-authority boundary.
 
 [Back to top](#top)
 
@@ -435,37 +476,42 @@ This Air README does not perform that sibling update. It records the prerequisit
 
 ## Atmosphere/Air policy spine
 
-Any future accepted Atmosphere policy—regardless of slug—must preserve the domain's knowledge-character and trust boundaries.
+Any future accepted policy, regardless of its final slug, must preserve knowledge character and trust boundaries.
 
 ### Anti-collapse rules
 
-| Boundary | Required policy posture |
+| Boundary | Required posture |
 |---|---|
-| AQI versus concentration | Deny presenting an AQI/report object as a pollutant concentration observation. |
-| AOD versus PM2.5 | Deny presenting an aerosol optical depth raster or smoke mask as a PM2.5 measurement. |
-| Model versus observation | Deny presenting forecast/model context as observed measurement. |
-| Low-cost sensor versus regulatory monitor | Require correction, caveat, confidence, limitations, and source-role display; never silently upgrade authority. |
-| Advisory context versus official warning | Deny KFM-issued life-safety instructions; redirect to official issuer. |
-| Context versus canonical claim | Atmosphere context may support Hazards, Agriculture, Hydrology, Habitat, or Settlement analysis without owning those domains' canonical claims. |
-| Stale versus current | Require explicit valid-time/freshness state; stale data cannot be rendered as current without restriction. |
-| Aggregate versus station-specific | Aggregation cannot be re-expanded into exact station, property, infrastructure, or person-linked detail. |
-| Calibration versus observation | Calibration metadata supports interpretation; it does not become an observation itself. |
-| Map layer versus truth | Tiles, rasters, contours, legends, and map styling are carriers, not evidence authority. |
+| AQI vs pollutant concentration | Never present an index/report object as a concentration observation |
+| AOD/smoke raster vs PM2.5 | Never present modeled or remotely sensed context as a PM2.5 measurement |
+| Model/forecast vs observation | Keep role and knowledge-character labels explicit |
+| Calibration vs observation | Calibration metadata supports interpretation; it is not the observation |
+| Low-cost sensor vs regulatory monitor | Preserve source role, caveats, correction state, confidence, and limitations |
+| Advisory context vs official warning | Do not issue life-safety direction; point to an approved official source when allowed |
+| Stale vs current | Require explicit temporal and freshness state |
+| Aggregate vs exact station | Never re-expand generalized output into sensitive station/property/infrastructure detail |
+| Map layer vs evidence | Tiles, rasters, contours, legends, and styles are carriers, not authority |
+| Cross-domain context vs canonical claim | Atmosphere may support another domain without silently owning its claims |
 
-### Rights and sensitivity rules
+### Rights and sensitivity
 
-- unresolved source terms, license, attribution, redistribution, or written-permission status fail closed;
-- exact station siting may require generalization where private land or sensitive infrastructure exposure is plausible;
-- rights-restricted feeds remain denied or restricted even when technically accessible;
-- sensitive cross-lane joins inherit the most restrictive row;
-- transform receipts and review records are required for public-facing generalization/redaction when policy requires them;
-- a tier or audience upgrade cannot be inferred from a generalized geometry alone;
-- rollback, correction, or source withdrawal can make a previously released derivative unsafe or stale;
-- public clients never receive hidden source credentials, raw payloads, internal policy detail, or restricted geometry.
+Future policy must fail closed when source terms, license, attribution, redistribution, written-permission, confidentiality, or audience rights are missing or unresolved.
 
-### Freshness and operational boundary
+The most restrictive applicable posture must survive:
 
-Atmosphere policy must explicitly distinguish:
+- joins across sources and domains;
+- geometry generalization;
+- aggregation;
+- caching;
+- export and report generation;
+- correction and withdrawal;
+- bundle or slug migration.
+
+Exact station siting may require generalization when private land, sensitive infrastructure, or re-identification risk is plausible. Generalization does not grant a less restrictive audience or release state.
+
+### Time and freshness
+
+A policy input must distinguish, where applicable:
 
 - observed time;
 - valid time;
@@ -473,103 +519,88 @@ Atmosphere policy must explicitly distinguish:
 - retrieval time;
 - processing time;
 - source cadence;
-- stale-after threshold or source-specific freshness state;
-- current versus historical versus model/forecast context.
+- source-specific stale-after or currentness state;
+- historical, current, modeled, and forecast context.
 
-A policy decision may require stale-state badges, disclaimers, restriction, abstention, or denial. It must not assert current operational conditions from stale or time-ambiguous data.
+No policy may infer current operational conditions from stale or time-ambiguous material.
 
-### Official-authority redirection
+### Official-authority boundary
 
-When a request asks for emergency action, health protection, official AQI guidance, regulatory compliance status, or other consequential direction, KFM should:
-
-1. preserve the requested scope safely;
-2. identify that KFM is not the issuing authority;
-3. return a bounded `ABSTAIN` or `DENY` where policy support is absent;
-4. point the caller toward an official authority through the governed public interface when an approved link/reference exists;
-5. avoid reproducing restricted, stale, or unverified instructions;
-6. record the policy reason and obligations without leaking protected detail.
+When asked for emergency action, health protection, official AQI guidance, regulatory status, or other consequential direction, KFM must not fabricate or impersonate the issuing authority. A governed consumer may provide a bounded non-answer or denial and an approved official reference without exposing restricted details.
 
 [Back to top](#top)
 
 ---
 
-## Minimum compatibility input contract
+## Minimum policy input contract
 
-A compatibility decision must not be made from a path string alone.
+A decision cannot be made from a path string or filename.
 
-### Required inputs
+### Shared candidate profile
 
-| Input family | Minimum fields or posture |
+The checked-in `PolicyInputBundle` profile is `PROPOSED_INACTIVE`, fixture-only, and non-evaluator. It currently enumerates five operations—`ANSWER`, `RENDER`, `EXPORT`, `PROMOTE`, and `RELEASE`—and seven audiences—`PUBLIC`, `RESTRICTED_REVIEW`, `STEWARD`, `INTERNAL`, `AI_ADAPTER`, `MAP_RUNTIME`, and `RELEASE_GATE`. Every authority flag remains false.
+
+That profile is useful evidence of candidate vocabulary. It is not an accepted runtime contract.
+
+### Required input families
+
+| Family | Minimum posture |
 |---|---|
-| Requested path | Exact repository or logical path the caller attempted to use. |
-| Requested operation | Discover, load, evaluate, validate, migrate, deprecate, render, export, release, or rollback. |
-| Domain identity | Requested slug plus canonical/compatibility status from an accepted register or explicit unresolved marker. |
-| Preferred target | Exact Atmosphere target path or `UNKNOWN`; never guessed silently. |
-| ADR/migration context | Decision record, migration ID, deprecation state, effective date, rollback target, and review state where available. |
-| Policy bundle context | Bundle ID/version/digest, selector identity, evaluator profile, and activation state when policy execution is requested. |
-| Audience | Public, reviewer, restricted, internal, release steward, or another accepted audience. |
-| Source/evidence context | Source role, rights state, EvidenceRef/EvidenceBundle status, validation state, and time/freshness fields where claim-bearing behavior is involved. |
-| Sensitivity context | Exact siting, private-land/infrastructure, low-cost-sensor caveat, sensitive join, advisory, or other applicable restrictions. |
-| Release context | Candidate/released/superseded/withdrawn state, ReleaseManifest ref, correction state, and rollback ref. |
-| Caller identity | Governed caller/service identity and allowed capabilities where access-controlled behavior is involved. |
-| Trace context | Correlation ID, request ID, or audit reference that does not expose secrets or sensitive data. |
+| Request | Stable request/correlation identity and declared operation |
+| Domain | Logical domain plus accepted canonical/compatibility mapping |
+| Caller | Governed service/user identity and capabilities where applicable |
+| Audience | One accepted audience value |
+| Object and source role | Object family, role, knowledge character, and provenance |
+| Rights | License, attribution, redistribution, consent, confidentiality, and review state |
+| Evidence | EvidenceRef/EvidenceBundle state and validation references |
+| Time | Observed, valid, issue, retrieval, processing, cadence, and freshness fields as applicable |
+| Sensitivity | Precision, station/private-land/infrastructure exposure, join and re-identification risk |
+| Policy | Exact bundle ID/version/digest, evaluator profile, entrypoint, and activation state |
+| Lifecycle/release | Candidate/released/superseded/withdrawn state, manifest, correction, and rollback refs |
+| Migration | Decision ref, alias map, effective state, and exact rollback target |
+| Trace | Audit-safe trace without credentials, raw payloads, or protected geometry |
 
 ### Missing-input posture
 
-| Missing or unresolved input | Safe disposition |
-|---|---|
-| Canonical slug decision | `ABSTAIN` with redirect obligation, or `DENY` for activation. |
-| Preferred target | `ERROR` or `ABSTAIN`; no guessed fallback. |
-| Bundle identity or digest | `DENY` policy execution. |
-| Evaluator profile | `ERROR`; do not evaluate with an arbitrary engine. |
-| Rights or sensitivity context | `DENY` or `ABSTAIN` depending on requested operation. |
-| Evidence support for claim-bearing output | `ABSTAIN` or `DENY`. |
-| Release state | `DENY` public serving. |
-| Correction/rollback context for migration | `HOLD` in review workflow; normalize to `ABSTAIN` or `ERROR` at public runtime. |
-
-Input assembly must be deterministic, documented, sensitivity-minimized, and free of hidden network fetches.
+- missing evidence, rights, sensitivity, audience, or freshness context fails closed;
+- an unresolved alias is not guessed;
+- a missing bundle/evaluator is an execution/configuration condition, not permission;
+- absence of a denial rule is not an allow;
+- unsupported official-authority requests do not become advice;
+- diagnostics disclose only what the caller is authorized to see.
 
 [Back to top](#top)
 
 ---
 
-## Finite outcomes and normalization
+## Decision vocabulary and normalization
 
-### Canonical shared outcome surface
+### Shared candidate outcome surface
 
-The inspected shared `PolicyDecision` schema currently permits:
+The checked-in shared decision vocabulary and semantics profile are `PROPOSED_INACTIVE`. Their outward result surface is finite:
 
-```text
-ANSWER | ABSTAIN | DENY | ERROR
-```
+- `ANSWER`
+- `ABSTAIN`
+- `DENY`
+- `ERROR`
 
-This compatibility README must not silently create additional machine enums.
+The vocabulary explicitly does **not** claim policy evaluation, decision emission, promotion authorization, release authorization, or publication authorization.
 
-### Documentation and workflow dispositions
+### Compatibility dispositions are not new outcomes
 
-Reviewers and migration tooling may need richer internal dispositions:
+Terms such as `REDIRECT`, `HOLD`, `RESTRICT`, `ALLOW`, and `REVIEW` are useful internal documentation or workflow dispositions. They must not leak as extra public outcomes unless an accepted contract adds them.
 
-```text
-REDIRECT | HOLD | RESTRICT | DEPRECATE | SUPERSEDE | MIGRATE
-```
+| Internal condition | Safe normalization requirement |
+|---|---|
+| Accepted alias map rewrites `air` to the canonical logical domain | Resolve before evaluation; do not emit `REDIRECT` as policy |
+| Namespace map absent or intentionally unsupported | `ABSTAIN` or `ERROR` according to accepted semantics; never guess |
+| Required context unresolved | Fail closed; commonly `ABSTAIN` or `DENY` depending on accepted rule |
+| Answer allowed only with enforceable duties | `ANSWER` plus registered obligations; otherwise fail closed |
+| Policy bundle/evaluator unavailable | `ERROR` or accepted fail-closed equivalent; never `ANSWER` |
+| Explicit prohibition | `DENY` with safe registered reasons |
+| Promotion/release/publication requested | A policy result may be necessary but is never sufficient for the state transition |
 
-These are **PROPOSED orchestration dispositions**, not confirmed shared `PolicyDecision.outcome` values.
-
-### Required normalization
-
-| Compatibility disposition | Canonical runtime outcome | Typical obligation |
-|---|---|---|
-| Preferred `atmosphere` policy resolved and accepted | `ANSWER` | Preserve selected bundle/version and normal obligations. |
-| `air` path requested; safe target known | `ABSTAIN` or bounded `ANSWER` containing redirect metadata, per accepted contract | `redirect_required`; no policy evaluation from compatibility path. |
-| Slug unresolved | `ABSTAIN` | `adr_review_required`; `redirect_required` where safe. |
-| Attempt to activate compatibility policy | `DENY` | `canonical_policy_required`; `security_review_required`. |
-| Duplicate active bundles | `DENY` | `duplicate_authority_blocked`; `incident_review_required`. |
-| Alias resolver malfunction | `ERROR` | `fail_closed`; `operator_review_required`. |
-| Sensitive or rights-unclear request | `DENY` or `ABSTAIN` | `rights_review_required`; `sensitivity_review_required`. |
-| Emergency/life-safety request | `DENY` or `ABSTAIN` | `official_authority_redirect_required`. |
-| Migration prerequisites incomplete | `ABSTAIN` in runtime; internal workflow hold | `migration_review_required`; `rollback_target_required`. |
-
-A public caller must never receive `ANSWER` solely because the compatibility target exists.
+Normalization must be deterministic, authenticated, replayable against exact input/bundle identities, and safe for the caller's audience.
 
 [Back to top](#top)
 
@@ -577,50 +608,40 @@ A public caller must never receive `ANSWER` solely because the compatibility tar
 
 ## Reason codes and obligations
 
-The following names are **PROPOSED vocabulary** until an accepted contract or registry makes them normative.
+### Shared reason-code candidates
 
-### Reason-code families
+The current inactive registry contains exactly nine reason codes:
 
-| Family | Candidate examples |
-|---|---|
-| Slug authority | `air_slug_not_canonical`, `canonical_slug_unresolved`, `alias_not_accepted` |
-| Duplicate authority | `parallel_policy_home_detected`, `duplicate_bundle_detected`, `multiple_active_selectors` |
-| Migration | `migration_record_missing`, `deprecation_state_unresolved`, `rollback_target_missing` |
-| Bundle/evaluator | `bundle_identity_missing`, `bundle_digest_mismatch`, `evaluator_profile_missing`, `selector_unapproved` |
-| Evidence/source role | `source_role_missing`, `evidence_unresolved`, `knowledge_character_missing` |
-| Rights/sensitivity | `rights_unresolved`, `exact_station_restricted`, `sensitive_join_unresolved`, `low_cost_sensor_caveat_missing` |
-| Time/freshness | `valid_time_missing`, `source_stale`, `cadence_unknown` |
-| Anti-collapse | `aqi_as_concentration`, `aod_as_pm25`, `model_as_observation`, `advisory_as_alert` |
-| Release | `release_state_missing`, `candidate_not_released`, `withdrawn_artifact`, `rollback_blocked` |
-| System | `alias_resolution_error`, `policy_runtime_unavailable`, `invalid_policy_input` |
+- `CONSENT_REQUIRED`
+- `EVIDENCE_STALE`
+- `EVIDENCE_UNRESOLVED`
+- `OPERATION_ALLOWED_WITH_OBLIGATIONS`
+- `POLICY_BUNDLE_UNAVAILABLE`
+- `POLICY_INPUT_INCOMPLETE`
+- `PUBLIC_PRECISION_UNSAFE`
+- `RIGHTS_UNKNOWN`
+- `SENSITIVITY_UNRESOLVED`
 
-Reason text exposed publicly must remain bounded and must not reveal private coordinates, source restrictions, credentials, internal network details, protected policy logic, or sensitive joins.
+### Shared obligation candidates
 
-### Obligation families
+The inactive registry contains exactly eight obligations, all currently associated with `ANSWER`:
 
-| Obligation | Required effect |
-|---|---|
-| `redirect_required` | Use the accepted Atmosphere path; do not evaluate `air` policy. |
-| `adr_review_required` | Route naming decision to governed architecture review. |
-| `drift_record_required` | Record the existing alias/path in the drift register. |
-| `migration_record_required` | Bind source and target paths, identities, hashes, owners, review state, and rollback target. |
-| `canonical_policy_required` | Refuse compatibility-path activation. |
-| `duplicate_authority_blocked` | Disable or reject simultaneous policy sources/selectors. |
-| `source_role_required` | Preserve observed/model/report/mask/advisory character. |
-| `rights_review_required` | Do not use or expose until source rights are resolved. |
-| `sensitivity_review_required` | Apply most restrictive relevant row. |
-| `generalization_required` | Reduce exact station/private-land/infrastructure precision through an accepted transform. |
-| `caveat_required` | Carry low-cost-sensor/model/mask limitations. |
-| `stale_state_required` | Display or encode freshness state and avoid current-condition overclaim. |
-| `official_authority_redirect_required` | Refer to an official issuer without treating KFM as the issuer. |
-| `evidence_required` | Resolve EvidenceRef/EvidenceBundle before claim-bearing output. |
-| `review_record_required` | Preserve human/steward review where policy significance requires it. |
-| `release_state_required` | Serve only released artifacts through governed interfaces. |
-| `correction_path_required` | Preserve correction/supersession/withdrawal lineage. |
-| `rollback_target_required` | Preserve a prior known-good policy/path state. |
-| `audit_record_required` | Emit a bounded audit/receipt reference without making it proof or release authority. |
+- `ATTACH_CITATIONS`
+- `ATTACH_RIGHTS_NOTICE`
+- `DELAY_PUBLICATION`
+- `GENERALIZE_GEOMETRY`
+- `REDACT_EXACT_LOCATION`
+- `REQUIRE_STEWARD_REVIEW`
+- `VERIFY_ROLLBACK_TARGET`
+- `WITHHOLD_EXPORT`
 
-Downstream systems must either fulfill every obligation or return a bounded negative outcome.
+These codes are candidate shared vocabulary, not proof of an active registry or handler.
+
+### Air-local documentation terms
+
+Phrases such as `alias_unresolved`, `redirect_required`, `source_role_missing`, `official_authority_required`, `preserve_caveat`, or `attach_freshness_label` may clarify this README, tests, or migration design. They are **not registered reason codes or obligations** unless separately accepted into the canonical vocabulary with schemas, handlers, tests, and versioning.
+
+Downstream code must never branch on README-only prose.
 
 [Back to top](#top)
 
@@ -628,58 +649,32 @@ Downstream systems must either fulfill every obligation or return a bounded nega
 
 ## Public-surface contract
 
-### Governed API
+Public clients consume governed logical services and released artifacts—not repository paths, Rego packages, workflow holds, or raw evaluator output.
 
-A governed API must not:
+| Surface | Required behavior |
+|---|---|
+| API | Accept governed domain/operation inputs; never expose a caller-selectable policy path |
+| Explorer UI | Show knowledge character, source role, time/freshness, caveats, and citations that policy requires |
+| MapLibre | Treat map layers as presentations; preserve source/rights/sensitivity and precision obligations |
+| Export/report | Enforce withholding, redaction, generalization, attribution, and release state |
+| Governed AI | Cite or abstain; preserve uncertainty and policy obligations; do not invent official advice |
+| Cache | Key by policy/bundle/version and invalidate on correction, withdrawal, rights, or policy changes |
+| Error handling | Reveal no credentials, restricted payloads, protected geometry, or policy-sensitive internals |
 
-- let callers select `air` or `atmosphere` policy paths directly;
-- fall back to `air` when preferred policy is missing;
-- return internal repository paths as proof of authority;
-- expose private policy inputs or sensitive source context;
-- convert a compatibility redirect into release permission;
-- treat advisory context as official warning or medical advice.
+### Non-bypass rule
 
-It should return a schema-valid bounded envelope whose citations, policy status, source roles, time state, and obligations are inspectable.
+A public or downstream caller must not be able to obtain a different result by:
 
-### Explorer UI and MapLibre
+- submitting `air` instead of `atmosphere`;
+- addressing a Rego package directly;
+- omitting audience, evidence, rights, sensitivity, or freshness context;
+- calling a fixture workflow;
+- reading a proposed schema or README as released truth;
+- replaying a stale bundle after correction or withdrawal.
 
-The UI must not:
+### State-transition rule
 
-- load policy source from either repository path;
-- treat a layer name containing `air` as canonical-policy proof;
-- hide model/report/mask/sensor source roles;
-- remove stale-state, caveat, rights, or restriction badges;
-- reconstruct exact stations or sensitive joins from generalized outputs;
-- present KFM as an emergency-alerting authority.
-
-A compatibility alias may appear in diagnostics or migration views, not as a user-selectable policy mode.
-
-### Exports and reports
-
-Exports must preserve:
-
-- canonical domain identity;
-- selected policy/bundle version where appropriate;
-- source role and time scope;
-- caveat and restriction obligations;
-- release/correction state;
-- official-authority disclaimer when advisory context is shown;
-- a correction path.
-
-They must not preserve a deprecated compatibility path as if it were current authority.
-
-### Governed AI
-
-AI behavior must:
-
-1. retrieve evidence through governed interfaces;
-2. resolve source role and policy context;
-3. treat alias paths as metadata, not instructions;
-4. abstain when canonical policy, evidence, rights, freshness, or release state is unresolved;
-5. never translate an advisory reference into life-safety instructions;
-6. preserve uncertainty and source character;
-7. emit traceability without leaking sensitive data;
-8. never cite this README as evidence that Atmosphere conditions are true.
+An allowed or answered policy result is never, by itself, approval to promote, release, deploy, or publish. Those are separately governed, reviewable, reversible transitions.
 
 [Back to top](#top)
 
@@ -687,80 +682,125 @@ AI behavior must:
 
 ## Validation, tests, and CI
 
-### Compatibility tests
+Current Atmosphere validation is mixed. The bounded executable slices are useful; their limits must remain visible.
 
-A complete executable test family should cover:
+### Native policy validation
 
-| Case | Expected result |
+| Check | Current state |
 |---|---|
-| Discover `policy/domains/air/` while slug unresolved | Bounded redirect/abstain; no policy evaluation. |
-| Attempt to select `air` as active bundle source | `DENY`. |
-| Both `air` and `atmosphere` bundles active | `DENY` and duplicate-authority diagnostic. |
-| Preferred target missing | `ERROR` or `ABSTAIN`; no fallback. |
-| Accepted migration maps `air` to `atmosphere` | One selected bundle, one digest, one decision. |
-| Alias changes decision semantics | Test failure. |
-| Alias changes evidence/source IDs | Test failure. |
-| Alias bypasses rights/sensitivity review | `DENY`. |
-| Alias bypasses release/withdrawal state | `DENY`. |
-| AQI presented as concentration | `DENY`. |
-| AOD presented as PM2.5 | `DENY`. |
-| Model presented as observation | `DENY`. |
-| Low-cost sensor lacks caveat/confidence | `DENY` or `ABSTAIN` per accepted policy. |
-| Stale data presented as current | `DENY`, `ABSTAIN`, or restricted answer with stale-state obligation. |
-| Advisory used for life-safety instruction | `DENY` plus official-authority redirect obligation. |
-| Public caller supplies repository path | Ignore path as authority; evaluate governed logical policy only. |
-| Rollback restores prior path/bundle | Exact previous selector and digest restored; audit trace retained. |
+| Atmosphere Rego sources | 13 proposed default-only scaffolds |
+| Native Rego tests | 0 verified |
+| Accepted package/entrypoint | Not verified |
+| Bundle build/digest | Not verified |
+| Evaluator compatibility | Not verified |
+| PolicyDecision adapter | Not verified |
+| Obligation handlers | Not verified |
+| Runtime core | Comment-only placeholder |
+| Broad policy workflow | Readiness/drift guard; no Rego evaluation or decision emission |
 
-### No-network default
+### Atmosphere Python tests
 
-Compatibility, policy, and migration tests should:
+Seven modules contain substantive deterministic tests:
 
-- use synthetic public-safe fixtures;
-- deny live source requests;
-- avoid credentials and private endpoints;
-- pin policy inputs and expected outputs;
-- preserve deterministic time and freshness fixtures;
-- avoid depending on current AirNow/AQS/forecast state;
-- fail if hidden network access occurs;
-- keep diagnostic output free of sensitive coordinates, source payloads, or restricted terms.
+- `test_atmosphere_smoke.py` — synthetic precipitation-profile behavior despite the broad filename;
+- `test_correctable_environmental_event_assessment.py`;
+- `test_knowledge_character_registry.py`;
+- `test_low_cost_sensor_caveat_required.py`;
+- `test_observed_modeled_separation.py`;
+- `test_pm25_trigger_candidate_assessment.py`;
+- `test_prescribed_burn_quality_flag.py`.
 
-### Current workflow boundary
+Eight modules are explicit placeholders or docstring-only surfaces:
 
-The inspected `domain-atmosphere` workflow:
+- `test_advisory_no_life_safety.py`;
+- `test_aod_as_pm25_denied.py`;
+- `test_aqi_as_concentration_denied.py`;
+- `test_decision_envelope_finite_outcomes.py`;
+- `test_dryrun_no_live_fetch.py`;
+- `test_model_as_observed_denied.py`;
+- `test_temporal_fields_distinct.py`;
+- `test_unit_normalization.py`.
 
-- checks repository maturity;
-- confirms there are no collected Atmosphere test functions;
-- confirms no validator implementation is established in several candidate lanes;
-- emits explicit `WORKFLOW_HOLD` / `WORKFLOW_SKIPPED_EXPLICIT` states;
-- performs no live source requests;
-- emits no PolicyDecision, EvidenceBundle, ProofPack, release, alert, deployment, or publication.
+The zero-byte `__init__.py` is packaging only.
 
-A green readiness hold is evidence of the documented scaffold state only.
+### Atmosphere validators
 
-### Minimum validation commands after implementation
+Ten modules contain substantive bounded logic:
 
-The exact commands remain `NEEDS VERIFICATION`, but a mature lane should provide repository-native equivalents of:
+- `airnow_aqs_reconciliation/validate_reconciliation.py`;
+- `validate_correctable_environmental_event_assessment.py`;
+- `validate_knowledge_character.py`;
+- `validate_low_cost_sensor_caveats.py`;
+- `validate_observed_modeled_separation.py`;
+- `validate_pm25_sensor_colocation_manifest.py`;
+- `validate_pm25_trigger_candidate_assessment.py`;
+- `validate_pm_sensor_trust_profile.py`;
+- `validate_prescribed_burn_quality_flag.py`;
+- `validate_public_safe_precipitation_fixture.py`.
 
-```bash
-# inventory and drift
-find policy/domains/air policy/domains/atmosphere -maxdepth 5 -type f | sort
-find contracts schemas tests fixtures pipeline_specs pipelines data release -maxdepth 6 -type f \
-  | grep -E '/(air|atmosphere)/' \
-  | sort
+Ten remain placeholders:
 
-# policy source and tests
-opa fmt --fail policy/
-opa check --strict policy/
-opa test policy/ -v
+- `validate_air_observation.py`;
+- `validate_aod_raster.py`;
+- `validate_atmosphere_decision_envelope.py`;
+- `validate_catalog_matrix.py`;
+- `validate_evidence_bundle.py`;
+- `validate_forecast_context.py`;
+- `validate_parameter_units.py`;
+- `validate_schema.py`;
+- `validate_smoke_context.py`;
+- `validate_source_descriptor.py`.
 
-# deterministic domain tests
-python -m pytest tests/domains/atmosphere -q --strict-config --strict-markers
+### Relevant no-network workflows
 
-# path/alias guards
-python -m pytest tests/policy tests/architecture -q -k 'air or atmosphere or alias or slug'
-```
+| Workflow | Bounded executable claim | Explicitly withheld |
+|---|---|---|
+| [`domain-atmosphere.yml`](../../../.github/workflows/domain-atmosphere.yml) | Orchestrates declared fixture profiles and maturity checks | Live fetch, policy decision, proof, release, deploy, publication |
+| [`atmosphere-airnow-aqs-reconciliation.yml`](../../../.github/workflows/atmosphere-airnow-aqs-reconciliation.yml) | Fixture reconciliation | Live EPA/KDHE use, admission, certification, alerting, publication |
+| [`atmosphere-aqs-site-delta.yml`](../../../.github/workflows/atmosphere-aqs-site-delta.yml) | Fixture site-delta profile | Live source, lifecycle write, policy, guidance, release |
+| [`correctable-environmental-event-assessment.yml`](../../../.github/workflows/correctable-environmental-event-assessment.yml) | Synthetic event-assessment profile | Real event, threshold, correction authority, deploy |
+| [`pm-sensor-trust-profile.yml`](../../../.github/workflows/pm-sensor-trust-profile.yml) | Fixture trust-profile checks | Live sensor, scientific validity, reference equivalence, health authority |
+| [`pm25-sensor-colocation-manifest.yml`](../../../.github/workflows/pm25-sensor-colocation-manifest.yml) | Fixture manifest checks | Source admission, policy, promotion, publication |
+| [`pm25-trigger-candidate-assessment.yml`](../../../.github/workflows/pm25-trigger-candidate-assessment.yml) | Synthetic candidate assessment | Numeric threshold, AQI/health advice, regulatory decision, deploy |
 
-Commands must not be called implemented until the repository actually supplies them and current runs pass.
+### What green means
+
+A green run supports only the exact checked-in fixture, validator, assertion, and workflow boundary. It does not upgrade `PROPOSED` to `ACCEPTED`, bind an evaluator, validate live currentness, approve source use, create proof, or authorize a state transition.
+
+### Minimum future policy test matrix
+
+An activatable policy lane needs deterministic positive and negative coverage for:
+
+- canonical and compatibility slugs;
+- duplicate discovery and double evaluation;
+- missing/invalid/ambiguous inputs;
+- AQI/concentration, AOD/PM2.5, model/observation, and calibration/observation collapse;
+- low-cost-sensor caveats and correction state;
+- rights, attribution, consent, confidentiality, and audience restrictions;
+- exact-station generalization and sensitive joins;
+- all temporal fields and stale-state boundaries;
+- official-authority requests;
+- every accepted reason code and obligation;
+- bundle/evaluator version mismatch;
+- correction, withdrawal, cache invalidation, and rollback;
+- network denial and safe diagnostic output.
+
+[Back to top](#top)
+
+---
+
+## Decision-envelope alignment gap
+
+[`AtmosphereAirDecisionEnvelope.md`](../../../contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md) is a semantic draft. It explicitly does not establish a PolicyDecision, EvidenceBundle, release decision, or runtime proof.
+
+Its lower-case machine-shape counterpart, [`atmosphere_air_decision_envelope.schema.json`](../../../schemas/contracts/v1/domains/atmosphere/atmosphere_air_decision_envelope.schema.json), exists but is a minimal `PROPOSED` scaffold whose fields remain to be defined. The dedicated validator and finite-outcome test are placeholders.
+
+Therefore:
+
+- contract prose is not validated by the current schema;
+- schema presence is not acceptance;
+- finite outcome claims are not executable proof;
+- no public or release consumer should accept this envelope until semantic, schema, validator, test, policy, and runtime layers align.
 
 [Back to top](#top)
 
@@ -768,122 +808,123 @@ Commands must not be called implemented until the repository actually supplies t
 
 ## Review burden and separation of duties
 
-Changes to this compatibility lane are governance-significant because they can affect policy discovery and public-serving behavior even when they look like path cleanup.
+Alias and namespace changes are governance-significant because they can alter policy discovery even when the diff looks like path cleanup.
 
-### Required review roles
+### Candidate reviewer roles
 
-| Change | Minimum reviewers |
+The shared reviewer-role vocabulary is `PROPOSED_INACTIVE` and currently names:
+
+- `DOMAIN_STEWARD`
+- `EVIDENCE_STEWARD`
+- `POLICY_STEWARD`
+- `RELEASE_STEWARD`
+- `SECURITY_PRIVACY_REVIEWER`
+
+Its role-assignment, approval-recording, policy, promotion, release, and publication authority flags are all false.
+
+### Review matrix
+
+| Change | Required review capability |
 |---|---|
-| README clarification only | Policy steward + Atmosphere/Air steward + docs steward |
-| Alias/redirect metadata | Policy steward + directory-governance steward + runtime owner |
-| Canonical slug decision | Architecture steward + policy steward + domain steward + owners of affected roots |
-| Policy source migration | Policy steward + security reviewer + contract/schema/test owners |
-| Bundle/selector change | Policy runtime steward + security reviewer + policy steward |
-| Public route or export alias | Governed API/UI owner + policy steward + release steward |
-| Rights/sensitivity behavior | Rights/sensitivity reviewer + source steward |
-| Advisory/official-authority behavior | Atmosphere steward + Hazards/life-safety reviewer + security reviewer |
-| Release/correction/rollback mapping | Release steward + independent reviewer |
+| README clarification | Policy + Atmosphere/Air + docs |
+| Alias/migration metadata | Policy + directory governance + runtime |
+| Canonical namespace decision | Architecture + policy + domain + affected-root owners |
+| Rego/package change | Policy + domain + security/privacy + test |
+| Bundle/selector/evaluator change | Policy runtime + policy + security |
+| Rights/sensitivity behavior | Source/rights + sensitivity/privacy |
+| Public route/export behavior | Surface owner + policy + release |
+| Official-authority behavior | Domain + hazards/life-safety boundary + security |
+| Release/correction/rollback mapping | Release + independent reviewer |
+
+These are capability requirements, not assertions that named people are assigned.
 
 ### Separation rules
 
-- the migration author must not be the sole approver;
-- bundle/selector activation is separate from source migration;
-- passing tests are separate from policy acceptance;
-- policy acceptance is separate from release approval;
-- release approval is separate from publication;
+- the author is not the sole approver;
+- path migration is separate from bundle activation;
+- bundle activation is separate from policy acceptance;
+- tests are separate from approval;
+- policy acceptance is separate from promotion and release;
+- release is separate from publication;
 - correction and rollback remain independently executable;
-- an alias cannot be activated through documentation merge alone.
+- a README merge or generated receipt cannot activate an alias.
 
-### Review checklist
+### Reviewer checklist
 
-- [ ] Direct inventories for both slugs are current.
-- [ ] No executable policy was added under `air`.
-- [ ] Preferred Atmosphere lane remains the only active candidate.
-- [ ] Package namespace and entrypoint are unambiguous.
-- [ ] Bundle ID/digest/selector are deterministic.
-- [ ] Alias handling cannot evaluate both paths.
-- [ ] Canonical decision normalization is tested.
-- [ ] Evidence, rights, sensitivity, freshness, review, release, correction, and rollback are preserved.
-- [ ] Public API/UI/map/export/AI cannot choose repository paths.
-- [ ] Official-authority redirection is bounded and tested.
-- [ ] Logs and errors do not expose sensitive details.
-- [ ] Revert and rollback steps are documented and realistic.
-- [ ] Drift and ADR records are linked.
-- [ ] Generated receipts remain provenance, not approval.
+- [ ] Evidence is pinned to a current complete tree.
+- [ ] The Air lane remains non-executable.
+- [ ] No duplicate or newly active Atmosphere rule source is introduced.
+- [ ] Package namespace, entrypoint, input, and result contracts are explicit.
+- [ ] Bundle/evaluator/selector identities are deterministic.
+- [ ] Alias handling evaluates once and fails closed.
+- [ ] Rights, sensitivity, freshness, evidence, review, release, correction, and rollback survive migration.
+- [ ] Public consumers cannot select repository paths.
+- [ ] Official-authority boundaries are tested.
+- [ ] Logs and errors expose no protected detail.
+- [ ] Rollback identifies an exact prior known-good state.
+- [ ] Receipts remain provenance, not approval.
 
 [Back to top](#top)
 
 ---
 
-## ADR, migration, correction, and rollback
+## Migration, correction, and rollback
 
-### ADR requirement
+### Decision required
 
-Resolving `air` versus `atmosphere` across policy, contracts, schemas, tests, pipeline specs, pipelines, data, and release paths changes an authority-bearing namespace and therefore requires an accepted ADR or equivalent governing decision.
+ADR-0029 settles directory-rule authority; it does **not**, by itself, prove an accepted Air-to-Atmosphere migration plan. A separately accepted decision should specify:
 
-The decision should specify:
-
-- canonical segment;
-- whether aliases are allowed;
-- which roots are in scope;
-- package and object namespaces;
-- bundle/selector behavior;
-- compatibility duration;
+- canonical segment and affected roots;
+- package, object, schema, fixture, and route namespaces;
+- whether an alias is permitted and for how long;
+- bundle and selector behavior;
+- consumer migration;
+- public compatibility posture;
 - deprecation milestones;
-- migration identity mapping;
-- public route behavior;
-- release/correction/rollback mapping;
-- ownership and review duties.
+- review and activation duties;
+- correction and rollback behavior.
 
 ### Migration record
 
-A migration should bind:
-
 | Field | Requirement |
 |---|---|
-| `migration_id` | Stable identity. |
-| `decision_ref` | Accepted ADR or governing record. |
-| `source_paths` | Exact `air` paths and blob/digest identities. |
-| `target_paths` | Exact `atmosphere` paths and expected identities. |
-| `policy_bundle_before` | Bundle ID/version/digest/selector before migration. |
-| `policy_bundle_after` | Bundle ID/version/digest/selector after migration. |
-| `identity_map` | Package, object, route, fixture, and release reference mapping. |
-| `review_state` | Named reviewers and approvals. |
-| `effective_at` | Activation time. |
-| `rollback_target` | Exact prior known-good state. |
-| `correction_refs` | Follow-up corrections/supersessions. |
-| `validation_refs` | Tests, reports, receipts, and run IDs. |
-| `public_impact` | Whether any API/UI/export/report reference changes. |
+| `migration_id` | Stable identity |
+| `decision_ref` | Accepted governing decision |
+| `source_paths` | Exact `air` paths and blob/digest identities |
+| `target_paths` | Exact `atmosphere` paths and expected identities |
+| `identity_map` | Package, schema, object, fixture, route, bundle, and release mappings |
+| `consumers` | Complete known internal and public consumer inventory |
+| `bundle_before` / `bundle_after` | ID, version, digest, selector, evaluator |
+| `review_state` | Recorded independent reviews/approvals |
+| `effective_at` / `expires_at` | Activation and compatibility lifetime |
+| `validation_refs` | Tests, reports, runs, and receipts |
+| `rollback_target` | Exact prior selector, bundle, and repository state |
+| `public_impact` | API/UI/map/export/report/AI effects |
+| `correction_refs` | Corrections, supersessions, or withdrawals |
 
 ### Correction triggers
 
-Issue a correction or rollback review when:
+Open a correction or rollback review if:
 
-- both paths become active;
-- a selector chooses the wrong path;
-- policy decisions differ by slug;
-- evidence/source/release identities change unexpectedly;
-- a public route exposes the compatibility slug as authority;
-- stale or withdrawn policy remains selected;
-- advisory behavior implies life-safety authority;
-- logs disclose protected policy inputs;
-- migration breaks rollback;
-- an ADR is superseded.
+- both segments become active;
+- decisions differ only because of slug;
+- a selector loads the wrong or stale bundle;
+- identity, evidence, source, rights, or release references drift;
+- a public route exposes `air` as authority;
+- an obligation is dropped during alias handling;
+- stale, corrected, superseded, or withdrawn policy remains cached;
+- advisory behavior implies medical, regulatory, emergency, or life-safety authority;
+- migration makes exact rollback impossible.
 
-### Rollback
+### README rollback
 
-Rollback should:
+For this documentation-only revision, the exact prior blob is:
 
-1. disable the new selector or alias;
-2. restore the prior bundle ID/digest and target path;
-3. restore prior API/UI/export behavior if affected;
-4. invalidate policy decisions emitted under the faulty mapping where required;
-5. preserve audit records rather than deleting history;
-6. issue correction/withdrawal records for affected public artifacts;
-7. verify the compatibility lane remains non-authoritative;
-8. rerun deterministic path, policy, and public-surface tests.
+~~~text
+d722464dcce4effeb5f70861bbfb629b8d3aed9d
+~~~
 
-For this README-only revision, rollback is a Git revert to prior blob `1531b955ebc8474dae384e896117d0e265405e76` plus removal of the paired generated receipt. No policy, runtime, data, release, or public state requires restoration.
+Restoring that blob reverts only this README. It does not roll back any future policy, bundle, evaluator, migration, release, deploy, or public behavior.
 
 [Back to top](#top)
 
@@ -893,28 +934,36 @@ For this README-only revision, rollback is a Git revert to prior blob `1531b955e
 
 | Path | Relationship |
 |---|---|
-| [`../README.md`](../README.md) | Parent domain-policy boundary. |
-| [`../atmosphere/README.md`](../atmosphere/README.md) | Preferred Atmosphere policy lane; currently a greenfield scaffold requiring hardening. |
-| [`../../../docs/domains/atmosphere/CANONICAL_PATHS.md`](../../../docs/domains/atmosphere/CANONICAL_PATHS.md) | Naming conflict and preferred `atmosphere` placement. |
-| [`../../../docs/domains/atmosphere/POLICY.md`](../../../docs/domains/atmosphere/POLICY.md) | Human-facing fail-closed policy doctrine. |
-| [`../../../docs/domains/atmosphere/SENSITIVITY.md`](../../../docs/domains/atmosphere/SENSITIVITY.md) | Tiering, generalization, rights, advisory, and cross-lane posture. |
-| [`../../../contracts/air/README.md`](../../../contracts/air/README.md) | Air contract compatibility folder and semantic-path conflict. |
-| [`../../../contracts/domains/atmosphere/README.md`](../../../contracts/domains/atmosphere/README.md) | Preferred Atmosphere semantic-contract lane. |
-| [`../../../schemas/contracts/v1/domains/atmosphere/README.md`](../../../schemas/contracts/v1/domains/atmosphere/README.md) | Preferred Atmosphere schema lane. |
-| [`../../../tests/domains/air/README.md`](../../../tests/domains/air/README.md) | Air test compatibility guardrail. |
-| [`../../../tests/domains/atmosphere/README.md`](../../../tests/domains/atmosphere/README.md) | Preferred Atmosphere test parent. |
-| [`../../../pipeline_specs/air/README.md`](../../../pipeline_specs/air/README.md) | Air pipeline-spec compatibility guardrail. |
-| [`../../../pipeline_specs/atmosphere/README.md`](../../../pipeline_specs/atmosphere/README.md) | Preferred Atmosphere declarative-spec lane. |
-| [`../../../pipelines/domains/air/README.md`](../../../pipelines/domains/air/README.md) | Air executable-lane alias candidate. |
-| [`../../../pipelines/domains/atmosphere/README.md`](../../../pipelines/domains/atmosphere/README.md) | Preferred Atmosphere executable lane. |
-| [`../../../packages/policy-runtime/README.md`](../../../packages/policy-runtime/README.md) | Proposed evaluator/runtime boundary; implementation remains unproved. |
-| [`../../../policy/bundles/README.md`](../../../policy/bundles/README.md) | Policy bundle and manifest boundary. |
-| [`../../../schemas/contracts/v1/policy/policy_decision.schema.json`](../../../schemas/contracts/v1/policy/policy_decision.schema.json) | Current shared finite outcome shape. |
-| [`../../../data/registry/sources/atmosphere/README.md`](../../../data/registry/sources/atmosphere/README.md) | Source identity, role, rights, cadence, and activation context. |
-| [`../../../data/proofs/atmosphere/README.md`](../../../data/proofs/atmosphere/README.md) | Evidence/proof support; not policy authority. |
-| [`../../../release/candidates/atmosphere/README.md`](../../../release/candidates/atmosphere/README.md) | Candidate release boundary. |
-| [`../../../.github/workflows/domain-atmosphere.yml`](../../../.github/workflows/domain-atmosphere.yml) | Current explicit readiness-hold workflow. |
-| [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) | Required home for recorded path drift. |
+| [`../README.md`](../README.md) | Parent domain-policy boundary |
+| [`../atmosphere/README.md`](../atmosphere/README.md) | Preferred Atmosphere policy lane; currently proposed scaffolds |
+| [`../../../docs/domains/atmosphere/CANONICAL_PATHS.md`](../../../docs/domains/atmosphere/CANONICAL_PATHS.md) | Placement preference and drift context |
+| [`../../../docs/domains/atmosphere/POLICY.md`](../../../docs/domains/atmosphere/POLICY.md) | Human-facing policy doctrine |
+| [`../../../docs/domains/atmosphere/SENSITIVITY.md`](../../../docs/domains/atmosphere/SENSITIVITY.md) | Sensitivity/generalization posture |
+| [`../../../contracts/air/README.md`](../../../contracts/air/README.md) | Air contract compatibility lane |
+| [`../../../contracts/domains/atmosphere/README.md`](../../../contracts/domains/atmosphere/README.md) | Preferred semantic-contract family |
+| [`../../../contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md`](../../../contracts/domains/atmosphere/AtmosphereAirDecisionEnvelope.md) | Draft semantic envelope |
+| [`../../../schemas/contracts/v1/domains/atmosphere/atmosphere_air_decision_envelope.schema.json`](../../../schemas/contracts/v1/domains/atmosphere/atmosphere_air_decision_envelope.schema.json) | Proposed minimal machine-shape scaffold |
+| [`../../../tests/domains/air/README.md`](../../../tests/domains/air/README.md) | Air test compatibility lane |
+| [`../../../tests/domains/atmosphere/README.md`](../../../tests/domains/atmosphere/README.md) | Mixed executable/placeholder Atmosphere tests |
+| [`../../../tools/validators/domains/atmosphere/README.md`](../../../tools/validators/domains/atmosphere/README.md) | Mixed executable/placeholder validators |
+| [`../../../pipeline_specs/air/README.md`](../../../pipeline_specs/air/README.md) | Air pipeline-spec compatibility lane |
+| [`../../../pipeline_specs/atmosphere/README.md`](../../../pipeline_specs/atmosphere/README.md) | Proposed Atmosphere pipeline-spec lane |
+| [`../../../pipelines/domains/air/README.md`](../../../pipelines/domains/air/README.md) | Air executable-pipeline compatibility lane |
+| [`../../../pipelines/domains/atmosphere/README.md`](../../../pipelines/domains/atmosphere/README.md) | Atmosphere pipeline scaffold |
+| [`../../../contracts/policy/policy_input_bundle_profile_v1.md`](../../../contracts/policy/policy_input_bundle_profile_v1.md) | Inactive shared input profile |
+| [`../../../contracts/policy/policy_decision_vocabulary.md`](../../../contracts/policy/policy_decision_vocabulary.md) | Inactive shared decision/reason/obligation vocabulary |
+| [`../../../contracts/policy/policy_decision_semantics_profile_v1.md`](../../../contracts/policy/policy_decision_semantics_profile_v1.md) | Inactive shared semantics profile |
+| [`../../../contracts/policy/policy_reviewer_role_vocabulary.md`](../../../contracts/policy/policy_reviewer_role_vocabulary.md) | Inactive reviewer-role vocabulary |
+| [`../../decision/vocabulary.v1.json`](../../decision/vocabulary.v1.json) | Machine-readable candidate vocabulary |
+| [`../../decision/reviewer_roles.v1.json`](../../decision/reviewer_roles.v1.json) | Machine-readable candidate reviewer roles |
+| [`../../../packages/policy-runtime/README.md`](../../../packages/policy-runtime/README.md) | Proposed runtime boundary |
+| [`../../../policy/bundles/README.md`](../../../policy/bundles/README.md) | Bundle boundary; no accepted payload verified |
+| [`../../../data/registry/sources/atmosphere/README.md`](../../../data/registry/sources/atmosphere/README.md) | Source identity/role/rights context |
+| [`../../../data/proofs/atmosphere/README.md`](../../../data/proofs/atmosphere/README.md) | Proof boundary; not policy authority |
+| [`../../../release/candidates/atmosphere/README.md`](../../../release/candidates/atmosphere/README.md) | Candidate release boundary |
+| [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) | Accepted placement text via ADR-0029 |
+| [`../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Directory Rules adoption decision |
+| [`../../../docs/registers/DRIFT_REGISTER.md`](../../../docs/registers/DRIFT_REGISTER.md) | Repository drift register |
 
 [Back to top](#top)
 
@@ -922,20 +971,24 @@ For this README-only revision, rollback is a Git revert to prior blob `1531b955e
 
 ## Conflict register
 
-| Conflict | Current evidence | Required resolution |
-|---|---|---|
-| `air` versus `atmosphere` segment | Both appear across multiple roots; doctrine prefers Atmosphere for new work. | Accepted ADR or lane-register decision. |
-| Air policy guardrail versus Atmosphere policy scaffold | Air is compatibility-only; Atmosphere claims canonical but remains over-broad and unimplemented. | Harden preferred lane and keep Air non-authoritative. |
-| Contract homes | `contracts/air/` and `contracts/domains/atmosphere/` both exist. | Inventory, identity map, migration decision. |
-| Schema homes | Air and Atmosphere variants are referenced and/or present. | One accepted schema namespace and compatibility plan. |
-| Test homes | `tests/domains/air/` and `tests/domains/atmosphere/` exist. | Keep Air redirect-only; execute tests in Atmosphere lane. |
-| Pipeline-spec homes | Both slugs exist. | One active spec lane and no duplicate discovery. |
-| Executable pipeline homes | Both slugs have documentation. | One active package/module namespace. |
-| Compatibility dispositions | `REDIRECT`, `HOLD`, `RESTRICT` useful internally. | Normalize into accepted canonical PolicyDecision outcomes. |
-| Policy source maturity | Preferred Atmosphere lane contains only README scaffold. | Implement reviewed source, bundle, evaluator, fixtures, tests, validators, and CI. |
-| Life-safety boundary | Atmosphere docs require official-authority redirect; no runtime proof. | Contract, policy, fixtures, public-surface tests, and review. |
+| ID | Conflict | Confirmed evidence | Closure condition |
+|---|---|---|---|
+| `AIRPOL-001` | `air` vs `atmosphere` | Both segments exist across responsibility roots; placement doctrine prefers Atmosphere | Accepted namespace/migration decision |
+| `AIRPOL-002` | Compatibility vs source authority | Air has only marker + README; Atmosphere has proposed scaffolds | Keep Air non-executable; accept one source lane |
+| `AIRPOL-003` | Rego result contract | 2 `deny` defaults vs 11 `allow` defaults; packages differ | One package/entrypoint/result adapter |
+| `AIRPOL-004` | Duplicate concepts | Three near-duplicate filename pairs | Supersession/identity map + tests |
+| `AIRPOL-005` | Contract/schema alignment | Rich semantic draft vs minimal proposed schema | Aligned accepted contract/schema |
+| `AIRPOL-006` | Envelope execution proof | Validator and finite-outcome test are placeholders | Substantive validator/test + policy/runtime binding |
+| `AIRPOL-007` | Shared vocabulary authority | Profiles are `PROPOSED_INACTIVE`; authority flags false | Accepted versioned vocabulary and handlers |
+| `AIRPOL-008` | Validation maturity | Bounded fixture profiles coexist with placeholders | Dependency-closed policy test/validator suite |
+| `AIRPOL-009` | Bundle/evaluator | No active payload; runtime core placeholder | Immutable bundle + compatible evaluator + selector |
+| `AIRPOL-010` | Public alias behavior | No accepted route/consumer binding verified | Contracted, tested, reviewed non-bypass behavior |
+| `AIRPOL-011` | Rights/freshness profiles | Domain requirements exist; source-specific rules unverified | Accepted source-specific matrices/tests |
+| `AIRPOL-012` | Official-authority boundary | Doctrine/workflows disclaim authority; runtime proof absent | End-to-end governed consumer tests |
+| `AIRPOL-013` | Ownership | CODEOWNERS route verified; functional roles unassigned | Recorded steward assignments and separation |
+| `AIRPOL-014` | Release/rollback | No accepted slug-aware release mapping or drill | Reviewed mapping + exercised rollback |
 
-No conflict in this table is resolved by this README alone.
+This README records conflicts; it resolves none by assertion.
 
 [Back to top](#top)
 
@@ -943,23 +996,25 @@ No conflict in this table is resolved by this README alone.
 
 ## Smallest sound resolution sequence
 
-1. **Freeze expansion under `air`.** Add no executable policy, contracts, schemas, fixtures, tests, specs, pipelines, data, or release artifacts there.
-2. **Build a byte-complete inventory.** Enumerate every tracked `air` and `atmosphere` path, package namespace, route, bundle reference, schema `$id`, fixture pointer, source record, release record, and consumer.
-3. **Record drift.** Add/update the drift register with current paths and evidence.
-4. **Decide the canonical segment.** Accept an ADR with compatibility duration, affected roots, identity mapping, and rollback.
-5. **Harden the preferred Atmosphere policy README.** Remove over-broad placement language and add a repository-grounded inventory.
-6. **Define policy contracts.** Accept policy input, decision, reason-code, obligation, bundle-manifest, selector, and evaluation-receipt contracts.
-7. **Implement one policy source lane.** Use one package namespace and fail-closed default.
-8. **Create deterministic fixtures.** Cover source roles, rights, freshness, exact siting, low-cost sensors, anti-collapse, advisories, release, correction, and alias behavior.
-9. **Implement validators and tests.** Prove policy and migration behavior no-network.
-10. **Build immutable bundle and selector.** Bind exact source, dependencies, evaluator, version, digest, and review state.
-11. **Integrate governed callers.** API/UI/map/export/AI consume normalized outcomes and obligations without path selection.
-12. **Run migration dry-run.** Compare decisions under old/new references and prove identity/evidence/release continuity.
-13. **Activate with rollback target.** Separate approval, activation, release, and publication duties.
-14. **Deprecate or tombstone Air path.** Preserve redirect/audit metadata only for the approved compatibility period.
-15. **Close drift after evidence.** Record validation, review, correction, and rollback results.
+1. **Freeze Air expansion.** Keep `policy/domains/air/` marker-and-documentation only.
+2. **Record drift.** Bind current paths and identities in the drift register.
+3. **Inventory consumers.** Find every repository and deployed reference to both segments.
+4. **Accept the namespace decision.** Define canonical segment, affected roots, alias lifetime, and rollback.
+5. **Harden the Atmosphere README.** Make its inventory and policy-only boundary exact.
+6. **Choose one Rego contract.** One package namespace, entrypoint, result relation, and fail-closed semantics.
+7. **Resolve duplicate scaffolds.** Supersede with explicit identity history.
+8. **Align contracts and schemas.** Close the decision-envelope gap.
+9. **Accept input/decision vocabularies.** Version operations, audiences, reasons, obligations, and reviewer roles.
+10. **Implement rules and native tests.** Cover every policy family and failure mode without network access.
+11. **Build immutable bundle/evaluator binding.** Pin source, dependencies, version, digest, selector, and compatibility.
+12. **Integrate governed consumers.** Preserve obligations; forbid repository-path selection.
+13. **Run migration dry-run.** Compare exact decisions and identity continuity under old/new references.
+14. **Review independently.** Separate authorship, policy acceptance, activation, release, and publication.
+15. **Activate with exact rollback.** Only after accepted evidence; keep correction executable.
+16. **Deprecate or tombstone Air.** Preserve only the approved audit/compatibility surface.
+17. **Close conflicts with evidence.** Update `AIRPOL-*` items and drift records.
 
-Each step should be independently reviewable and reversible.
+Each step is independently reviewable and reversible. No later step is implied by completion of an earlier one.
 
 [Back to top](#top)
 
@@ -967,29 +1022,27 @@ Each step should be independently reviewable and reversible.
 
 ## Definition of done
 
-This compatibility lane is complete only when:
+This compatibility boundary is complete only when:
 
-- [ ] owners and CODEOWNERS are confirmed;
-- [ ] an accepted ADR or lane-register decision resolves the canonical segment;
-- [ ] a complete `air`/`atmosphere` inventory exists across all responsibility roots;
-- [ ] the preferred Atmosphere policy README is repository-grounded and policy-only;
-- [ ] no executable policy source remains under `policy/domains/air/`;
-- [ ] one policy package namespace and entrypoint are accepted;
-- [ ] one immutable bundle/manifest/evaluator/selector path is accepted;
-- [ ] shared policy input and decision contracts cover the required Atmosphere context;
-- [ ] compatibility dispositions are normalized without inventing public outcomes;
-- [ ] reason-code and obligation registries are accepted;
-- [ ] deterministic no-network fixtures and executable tests cover alias, anti-collapse, rights, freshness, caveat, advisory, release, correction, and rollback behavior;
-- [ ] validators and CI invoke repository-native commands and fail closed;
-- [ ] public API/UI/map/export/AI cannot select or expose compatibility policy as authority;
-- [ ] official-authority redirection is implemented and tested;
-- [ ] release/correction/withdrawal/rollback references use the accepted slug;
-- [ ] rollback has been exercised;
-- [ ] drift records are closed with evidence;
-- [ ] generated receipts and review records are complete;
-- [ ] no sensitive, restricted, medical, regulatory, or life-safety claim is introduced.
+- [ ] functional stewards and reviewer separation are recorded;
+- [ ] an accepted namespace/migration decision resolves `air` versus `atmosphere`;
+- [ ] tracked and deployed consumers are inventoried;
+- [ ] the Air lane contains no executable policy;
+- [ ] the Atmosphere lane has one accepted package, entrypoint, input, and result contract;
+- [ ] duplicate rule concepts are superseded with identity history;
+- [ ] semantic contracts, schemas, validators, and tests align;
+- [ ] one immutable bundle/manifest/evaluator/selector chain is accepted;
+- [ ] shared reasons, obligations, and reviewer roles are versioned and active;
+- [ ] deterministic native policy tests cover positive, negative, missing, ambiguous, invalid, correction, and rollback cases;
+- [ ] public API/UI/map/export/report/AI consumers cannot bypass policy by slug;
+- [ ] rights, sensitivity, source role, knowledge character, freshness, and obligations survive every consumer;
+- [ ] official-authority behavior is bounded and tested;
+- [ ] promotion, release, deploy, and publication remain separate approvals;
+- [ ] cache invalidation, correction, withdrawal, and rollback are exercised;
+- [ ] drift and conflict records close with exact evidence;
+- [ ] no sensitive, restricted, medical, regulatory, emergency, or life-safety claim is introduced.
 
-Until then, the lane remains `draft`, compatibility-only, and non-authoritative.
+Until then, this lane remains draft, compatibility-only, non-authoritative, and fail-closed.
 
 [Back to top](#top)
 
@@ -997,27 +1050,23 @@ Until then, the lane remains `draft`, compatibility-only, and non-authoritative.
 
 ## Open verification register
 
-| Item | Why it matters |
-|---|---|
-| Accepted `air` versus `atmosphere` ADR | Determines canonical authority. |
-| Complete tracked-file inventory | Prevents hidden duplicate sources and consumers. |
-| Current CODEOWNERS and steward assignments | Required for accountable review. |
-| Policy package namespace and entrypoint | Prevents evaluator ambiguity. |
-| Preferred Atmosphere policy source inventory | Required before claiming implementation. |
-| Bundle/manifest/evaluator/selector identity | Required for deterministic execution and replay. |
-| Shared policy input completeness | Required for rights, evidence, sensitivity, freshness, and release decisions. |
-| Reason-code and obligation registries | Prevents incompatible downstream behavior. |
-| Exact-station generalization profile | Required for public-safe coordinates where applicable. |
-| Low-cost-sensor caveat/correction profile | Required to prevent authority overclaim. |
-| Source-specific rights matrix | Required for legally and contractually safe use. |
-| Stale-state thresholds per source | Required to avoid current-condition overclaim. |
-| Advisory/official-authority redirect contract | Required to prevent life-safety impersonation. |
-| Executable Atmosphere policy tests | Required before enforcement claims. |
-| Dedicated policy validators | Required for bundle/input/decision integrity. |
-| Public API/UI/map/export/AI behavior | Required to prove compatibility cannot bypass policy. |
-| Release and rollback mapping | Required before any public-impacting migration. |
-| Branch protection and required checks | Required to know whether CI signals are enforced. |
-| Production consumers and deployment state | Required before operational claims. |
+| ID | Verification item | Evidence needed |
+|---|---|---|
+| `AIRPOL-OPEN-001` | Accepted Air-to-Atmosphere decision | Accepted ADR/equivalent with scope and status |
+| `AIRPOL-OPEN-002` | Functional owners | Recorded steward assignments; CODEOWNERS alone is insufficient |
+| `AIRPOL-OPEN-003` | Deployed consumers | Search/inventory beyond tracked repository |
+| `AIRPOL-OPEN-004` | Package and entrypoint | Accepted Rego/runtime contract |
+| `AIRPOL-OPEN-005` | Bundle/evaluator/selector | Manifest, digest, compatibility matrix, activation record |
+| `AIRPOL-OPEN-006` | Decision-envelope alignment | Accepted semantics + schema + validator + tests |
+| `AIRPOL-OPEN-007` | Source rights | Source-specific terms, attribution, redistribution, review |
+| `AIRPOL-OPEN-008` | Freshness | Source-specific temporal/currentness rules |
+| `AIRPOL-OPEN-009` | Exact-station posture | Generalization and sensitive-infrastructure tests |
+| `AIRPOL-OPEN-010` | Low-cost-sensor posture | Caveat, correction, confidence, and source-role profile |
+| `AIRPOL-OPEN-011` | Obligation handlers | API/UI/map/export/AI enforcement evidence |
+| `AIRPOL-OPEN-012` | Official redirection | Approved references and end-to-end negative tests |
+| `AIRPOL-OPEN-013` | Required checks | Branch protection/check significance |
+| `AIRPOL-OPEN-014` | Production enforcement | Deployment/runtime evidence |
+| `AIRPOL-OPEN-015` | Release and rollback | Slug-aware release map and completed drill |
 
 [Back to top](#top)
 
@@ -1027,21 +1076,26 @@ Until then, the lane remains `draft`, compatibility-only, and non-authoritative.
 
 | Evidence | Supports | Limit |
 |---|---|---|
-| Prior `policy/domains/air/README.md` | Existing guardrail intent and path. | v0.1 lacked current repository inventory and cross-root evidence. |
-| `policy/README.md` | Singular policy root owns allow/deny/restrict/abstain behavior. | Root README remains short and `PROPOSED`. |
-| `policy/domains/atmosphere/README.md` | Preferred policy lane exists. | It is a 33-line greenfield scaffold and over-broad. |
-| `docs/domains/atmosphere/CANONICAL_PATHS.md` | Prefers `atmosphere`; treats `air` as ADR-class drift. | Draft navigation document; accepted ADR still absent. |
-| `docs/domains/atmosphere/POLICY.md` | Anti-collapse, rights, caveat, stale-state, and advisory policy intent. | Draft doctrine; paths/enforcement proposed. |
-| `docs/domains/atmosphere/SENSITIVITY.md` | T0/T1 posture, exact-siting generalization, rights holds, official-authority denial. | Per-object implementation remains proposed. |
-| `contracts/air/README.md` | Contract slug conflict and compatibility posture. | Does not settle canonical contract home. |
-| `tests/domains/air/README.md` | Air test lane is compatibility-only. | No direct executable tests established. |
-| `tests/domains/atmosphere/README.md` | Preferred test parent and required proof families. | Executable depth remains unverified. |
-| `pipeline_specs/air/README.md` | Air spec lane is a compatibility guardrail. | No active spec established. |
-| `.github/workflows/domain-atmosphere.yml` | Current repository maturity is guarded by explicit holds. | Performs no substantive domain policy/validation/proof/release work. |
-| `packages/policy-runtime/src/policy_runtime/core.py` | Runtime core is a comment-only placeholder. | No evaluator implementation. |
-| `schemas/contracts/v1/policy/policy_decision.schema.json` | Shared outcome enum and required decision fields. | Status is `PROPOSED`; compatibility dispositions not included. |
-| Directory Rules | Responsibility-root and parallel-authority controls. | Does not itself prove current implementation. |
-| AI Build Operating Contract | Truth labels, cite-or-abstain, trust membrane, fail-safe policy, review and receipt discipline. | Doctrine; runtime proof still required. |
+| Complete main tree | Exact tracked counts and path presence | Does not reveal deployed/off-repo consumers |
+| Prior Air README blob | Compatibility history and rollback target | Documentation only |
+| ADR-0029 + Directory Rules | Accepted placement/root authority | Does not select a domain slug or activate policy |
+| CODEOWNERS | `/policy/` review route | Does not assign all functional roles |
+| Atmosphere policy files | Exact default-only scaffold inventory | Filenames/defaults are not operative policy |
+| Shared policy profiles/vocabularies | Candidate inputs, outcomes, reasons, obligations, roles | `PROPOSED_INACTIVE`; all authority flags false |
+| AtmosphereAirDecisionEnvelope contract + schema | Semantic intent and current alignment gap | Both remain non-runtime; schema is minimal |
+| Atmosphere tests | Seven substantive bounded profiles | Eight test modules remain placeholders; no native Rego tests |
+| Atmosphere validators | Ten substantive bounded validators | Ten validator modules remain placeholders |
+| Seven Atmosphere workflows | Deterministic fixture execution and explicit holds | No live-source, policy, proof, release, or publication authority |
+| Policy runtime core | Implementation state | Comment-only placeholder |
+| Policy bundles README/inventory | Intended bundle boundary | No accepted active payload verified |
+| Air/Atmosphere contracts, schemas, specs, and pipelines | Namespace drift and mixed maturity | Presence does not settle authority |
+| Atmosphere doctrine | Anti-collapse, rights, sensitivity, time, and official-authority intent | Runtime enforcement still needs proof |
+
+### Reproducibility note
+
+The evidence snapshot pins the repository commit, complete tree, target prior blob, and primary governing artifacts. Counts should be recomputed whenever main, either policy lane, shared policy contracts, Atmosphere tests/validators/workflows, runtime, bundles, or governance changes.
+
+[Back to top](#top)
 
 ---
 
@@ -1049,11 +1103,12 @@ Until then, the lane remains `draft`, compatibility-only, and non-authoritative.
 
 | Date | Version | Change | Status |
 |---|---|---|---|
-| 2026-06-15 | v0.1 | Expanded an empty placeholder into an Air/Atmosphere slug-conflict guardrail. | Documentation only; repository depth largely unverified. |
-| 2026-07-19 | v0.2 | Replaced the generic guardrail with a pinned repository-grounded compatibility boundary; confirmed the preferred Atmosphere lane and current scaffolds; added cross-root drift evidence, alias invariants, decision normalization, reason/obligation families, public-surface rules, validation matrix, review duties, ADR/migration/rollback contract, implementation sequence, definition of done, open verification, and evidence ledger. | Documentation and provenance receipt only; no policy enforcement changed. |
+| 2026-06-15 | v0.1 | Expanded an empty placeholder into an Air/Atmosphere slug-conflict guardrail. | Documentation only |
+| 2026-07-19 | v0.2 | Added pinned repository evidence, alias invariants, decision normalization, review, migration, rollback, and evidence sections. | Documentation + provenance receipt only |
+| 2026-08-13 | v0.3 | Reconciled current main: exact two-blob Air lane; thirteen default-only Atmosphere Rego scaffolds; mixed tests/validators; seven bounded workflows; inactive shared policy vocabularies; decision-envelope alignment gap; accepted directory authority and verified review routing. Added stable conflict/open IDs, explicit normalization limits, public non-bypass rules, and an evidence-closed resolution sequence. | Documentation + provenance receipt only; no policy or public behavior changed |
 
 ---
 
-KFM rule: `policy/domains/air/` is a compatibility and migration guardrail only. It must not become an active policy source, bundle selector, public alias, emergency authority, or parallel truth path while the `air` versus `atmosphere` decision remains unresolved.
+KFM rule: `policy/domains/air/` is a compatibility boundary only. It must not become an active rule source, bundle selector, public alias, release shortcut, or parallel truth path.
 
 <p align="right"><a href="#top">Back to top</a></p>
