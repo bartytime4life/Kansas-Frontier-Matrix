@@ -1,42 +1,75 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/ai-builder
-title: AI Builder Policy README
+title: policy/ai_builder/ — AI-Assisted Repository Work Policy Boundary
 type: policy-readme
-version: v0.3
-status: draft
-owners: OWNER_TBD — AI surface steward · Policy steward · Security steward · Docs steward · Release steward · Receipt/provenance steward
+version: v0.4
+status: draft; repository-grounded; current-state-reconciled; proposed-rule-source; bounded-fixture-profiles; workflow-defined; evaluator-unbound; human-review-required; non-release; non-publication
+owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ changes to @bartytime4life; accepted AI-policy stewardship, independent review authority, bundle authority, and release authority were not established
 created: 2026-06-15
-updated: 2026-08-02
-policy_label: restricted
+updated: 2026-08-13
+policy_label: repository-facing; restricted; ai-builder; proposal-only; evidence-bound; receipt-bearing; human-review-required; fail-closed; non-release; non-publication
+current_path: policy/ai_builder/README.md
+owning_root: policy/
+responsibility: Define the local policy-source boundary for AI-assisted repository work without creating factual truth, semantic or schema authority, authenticated review, repository credentials, merge approval, lifecycle mutation, release, deployment, or publication authority.
+base_commit: 999ba5f2a7162dc3126d3dced73070ce101f8c15
+prior_blob: 2c0119efb6adce908c440015dc0b833c1ce5b347
+prior_tree: 7868b6da18e11e9efbc2bcdceae2e3641f1795e9
+contract_version_projection: "3.0.0 is consistently projected by the local Rego stub, generated-receipt schema, prompt documents, and examples; accepted canonical doctrine identity and activation remain NEEDS VERIFICATION"
+directory_governance: accepted ADR-0029 adopts Directory Rules v2 and singular policy/ placement; this same-path README changes no authority root
+truth_posture: CONFIRMED exact two-file direct lane, substantive v0.3 baseline, proposed Rego v3.0 stub with selected deny and warn rules, bounded GENERATED_RECEIPT validator with 26 focused tests, separate inactive AgentOperationEnvelope with 13 synthetic cases and 12 tests, AIChangeProposal with 13 cases and 14 tests, AIOutputArtifact and batch profiles with 26 cases and 14 tests, runtime AIReceipt with five fixtures and six tests, and four read-only profile workflows / PROPOSED unified AI-builder input, accepted rule package, evaluator binding, reason and obligation registry, generated-change detection, receipt automation, authenticated review transition, and governed apply flow / CONFLICTED doctrine carrier identity and placement plus scaffold and runtime AIReceipt schema homes / UNKNOWN branch-protection coupling, accepted owners, production consumers, merge enforcement, release integration, and public operation
 supersedes: v0.1 (2026-06-15)
 related:
   - ../README.md
   - ../access/README.md
   - ./operating_contract.rego
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../docs/doctrine/directory-rules.md
   - ../../contracts/policy/policy_input_bundle.md
   - ../../contracts/policy/policy_decision.md
+  - ../../contracts/governance/agent_operation_envelope.md
+  - ../../contracts/governance/ai_change_proposal.md
+  - ../../contracts/runtime/ai_output_artifact.md
+  - ../../contracts/runtime/ai_output_batch_manifest.md
+  - ../../contracts/runtime/ai_receipt.md
   - ../../schemas/contracts/v1/receipts/generated_receipt.schema.json
+  - ../../schemas/contracts/v1/governance/agent_operation_envelope.schema.json
+  - ../../schemas/contracts/v1/governance/ai_change_proposal.schema.json
+  - ../../schemas/contracts/v1/runtime/ai_output_artifact.schema.json
+  - ../../schemas/contracts/v1/runtime/ai_output_batch_manifest.schema.json
+  - ../../schemas/contracts/v1/runtime/ai_receipt.schema.json
+  - ../../schemas/contracts/v1/ai/ai_receipt.schema.json
   - ../../data/receipts/generated/
   - ../../docs/doctrine/ai-build-operating-contract.md
+  - ../../docs/doctrine/ai-as-assistant.md
   - ../../docs/prompts/ai-builder-system-prompts.md
   - ../../docs/architecture/governed-ai/BOUNDARIES.md
   - ../../docs/architecture/trust-membrane.md
   - ../../docs/doctrine/truth-posture.md
-  - ../../docs/doctrine/directory-rules.md
   - ../../docs/runbooks/FIRST_GOVERNED_PR_RUNBOOK.md
   - ../../packages/policy-runtime/README.md
   - ../../apps/governed-api/README.md
+  - ../../control_plane/root_registry.yaml
+  - ../../control_plane/policy_gate_register.yaml
+  - ../../.github/CODEOWNERS
   - ../../.github/PULL_REQUEST_TEMPLATE.md
+  - ../../.github/workflows/agent-operation-envelope.yml
+  - ../../.github/workflows/ai-change-proposal.yml
+  - ../../.github/workflows/ai-output-artifact.yml
+  - ../../.github/workflows/ai-receipt.yml
   - ../../tools/validators/validate_generated_receipt.py
+  - ../../tools/validators/governance/validate_agent_operation_envelope.py
+  - ../../tools/validators/governance/validate_ai_change_proposal.py
+  - ../../tools/validators/ai/validate_ai_output_artifact.py
+  - ../../tools/validators/validate_ai_receipt.py
   - ../../tests/validators/test_validate_generated_receipt.py
-  - ../../fixtures/generated_receipt/
-tags: [kfm, policy, ai-builder, governed-ai, evidence, generated-receipt, prompt-injection, review, rollback, deny-by-default]
+tags: [kfm, policy, ai-builder, governed-ai, evidence, generated-receipt, proposal-engine, agent-envelope, ai-output-artifact, ai-receipt, prompt-injection, review, rollback, deny-by-default]
 notes:
-  - "v0.3 records the bounded GENERATED_RECEIPT validator, SHA-256-prefix integrity checks, synthetic fixture polarity, focused tests, and validator-suite wiring without claiming automatic corpus-wide enforcement or merge authority."
+  - "v0.4 reconciles the substantive v0.3 policy with current main and preserves every prior authority, safety, receipt, review, correction, and rollback boundary."
+  - "GENERATED_RECEIPT records AI-assisted repository authorship; it is distinct from AgentOperationEnvelope, AIChangeProposal, AIOutputArtifact, AIOutputBatchManifest, and runtime AIReceipt."
+  - "The repository-present file named docs/doctrine/ai-build-operating-contract.md identifies itself as a draft Markdown-authoring prompt with a proposed different placement; it is evidence of a v3.0 projection, not proof of accepted canonical doctrine identity."
   - "v0.2 reconciles this lane with the live Rego policy stub, GENERATED_RECEIPT schema, emitted receipt examples, PR template, first-governed-PR runbook, and current policy decision vocabulary."
   - "The existing underscore path is CONFIRMED in the repository. No parallel policy/ai-builder lane is created; any rename requires a reviewed migration or ADR."
-  - "The Rego module and receipt mechanism are partially implemented. AI-builder Rego CI invocation, corpus-wide receipt coverage, input assembly, reviewer-state updates, and merge enforcement remain NEEDS VERIFICATION; the bounded receipt validator's focused CI step is configured."
-  - "This README defines AI-builder admissibility and governance posture; it is not model authority, repository truth, release approval, credential storage, or an executable workflow."
+  - "This revision changes documentation plus its generated authoring receipt only; it activates no model, rule package, workflow, credential, mutation capability, merge gate, release, deployment, or publication path."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -47,29 +80,38 @@ notes:
 
 **Governed policy lane for AI-assisted repository work: evidence-bound action selection, safe mutation, generated-work provenance, human review, validation, correction, and rollback.**
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![version](https://img.shields.io/badge/version-v0.3-1f6feb)
-![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-6e7681)
-![policy](https://img.shields.io/badge/policy-ai__builder-0a7ea4)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey)
-![default](https://img.shields.io/badge/default-fail__closed-d62728)
-![authority](https://img.shields.io/badge/AI-assistant__not__authority-critical)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#2-evidence-basis-and-verification-boundary)
+[![Version: v0.4](https://img.shields.io/badge/version-v0.4-0969da?style=flat-square)](#appendix-c--v01-to-v04-preservation-and-correction-note)
+[![Lane: two tracked files](https://img.shields.io/badge/lane-two%20tracked%20files-0969da?style=flat-square)](#5-repository-placement)
+[![Rule source: evaluator unbound](https://img.shields.io/badge/Rego-evaluator%20unbound-d97706?style=flat-square)](#19-workflow-trigger-and-execution-threat-preflight)
+[![Profiles: fixture-only](https://img.shields.io/badge/profiles-fixture--only-8250df?style=flat-square)](#165-ai-record-and-receipt-separation)
+[![Review: human required](https://img.shields.io/badge/review-human%20required-b42318?style=flat-square)](#17-review-burden-and-change-classes)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#3-authority-boundary)
 
 > [!IMPORTANT]
 > **Path:** `policy/ai_builder/README.md`
 > **Responsibility root:** `policy/` — admissibility, denial, restriction, review, and governance policy
-> **Pinned doctrine contract:** `CONTRACT_VERSION = "3.0.0"`
-> **Truth posture:** CONFIRMED repository artifacts and boundaries · PROPOSED operational contract · UNKNOWN end-to-end CI and production enforcement
+> **Contract-version projection:** `3.0.0` is consistent across inspected
+> repository artifacts; accepted canonical doctrine identity and activation remain
+> **NEEDS VERIFICATION**.
+> **Truth posture:** CONFIRMED repository artifacts and bounded executable
+> profiles · PROPOSED policy realization · CONFLICTED doctrine/schema carriers ·
+> UNKNOWN end-to-end enforcement
 
 > [!CAUTION]
 > **AI output is never repository truth, policy approval, human review, or publication authority by itself.** Generated prose, code, schemas, fixtures, policies, receipts, plans, patches, map artifacts, and test suggestions remain subordinate to evidence, current repository state, accepted ADRs, validation, policy, review, release, correction, and rollback.
 
 > [!NOTE]
-> The repository contains an AI-builder Rego policy stub, a `GENERATED_RECEIPT` schema, a PR template, a governed-PR runbook, and emitted generated-receipt examples. Those artifacts prove a partial implementation surface. They do **not** prove that every pull request is evaluated by the Rego module, that every AI-authored artifact receives a valid receipt, or that merge enforcement is complete.
+> The repository contains an AI-builder Rego policy stub, a bounded
+> `GENERATED_RECEIPT` validator, and separate fixture-only profiles for agent
+> operations, AI change proposals, AI output artifacts and batches, and runtime
+> AI receipts. Those surfaces prove deterministic candidate checks—not live
+> model execution, accepted policy evaluation, authenticated review, repository
+> mutation, merge authority, release, deployment, or publication.
 
 ## Quick jump
 
-[Scope](#1-scope) · [Evidence boundary](#2-evidence-basis-and-verification-boundary) · [Authority](#3-authority-boundary) · [Action authority](#7-action-authority-and-delivery-modes) · [Decision model](#12-decision-and-disposition-model) · [Receipts](#16-generated-receipt-contract) · [Mutation safety](#18-repository-mutation-and-concurrency-safety) · [Validation](#23-validation-and-acceptance-matrix) · [Definition of done](#27-definition-of-done)
+[Scope](#1-scope) · [Evidence](#2-evidence-basis-and-verification-boundary) · [Authority](#3-authority-boundary) · [Placement](#5-repository-placement) · [Actions](#7-action-authority-and-delivery-modes) · [Decisions](#12-decision-and-disposition-model) · [Receipts](#16-generated-receipt-contract) · [Record seams](#165-ai-record-and-receipt-separation) · [Mutation](#18-repository-mutation-and-concurrency-safety) · [Validation](#23-validation-and-acceptance-matrix) · [Done](#27-definition-of-done) · [Evidence ledger](#appendix-d--evidence-review-and-no-loss-ledger)
 
 ---
 
@@ -113,25 +155,36 @@ notes:
 
 ### 2.1 CONFIRMED repository evidence
 
-The following artifacts were inspected in the repository:
+This reconciliation is pinned to
+`main@999ba5f2a7162dc3126d3dced73070ce101f8c15`.
 
-- `policy/ai_builder/README.md` exists at the requested underscore path.
-- `policy/ai_builder/operating_contract.rego` exists and declares:
-  - Rego v1;
-  - package `kfm.ai_builder.operating_contract`;
-  - `contract_version := "3.0.0"`;
-  - deny/warn rules for selected Directory Rules, receipt, PR-body, lifecycle, and ADR conditions.
-- `schemas/contracts/v1/receipts/generated_receipt.schema.json` exists as a Draft 2020-12 schema for `GENERATED_RECEIPT`.
-- `data/receipts/generated/` contains emitted generated-receipt instances.
-- `.github/PULL_REQUEST_TEMPLATE.md` contains AI-builder preflight, evidence, Directory Rules, validation, rollback, anti-prompt-injection, receipt, ADR, and contract-version sections.
-- `docs/runbooks/FIRST_GOVERNED_PR_RUNBOOK.md` describes a preflight-to-review flow that includes Rego evaluation and generated-receipt emission.
-- `docs/doctrine/ai-build-operating-contract.md` pins `CONTRACT_VERSION = "3.0.0"` and defines the governing AI-builder operating law.
-- `contracts/policy/policy_input_bundle.md`, `contracts/policy/policy_decision.md`, and `packages/policy-runtime/README.md` define related semantic and runtime boundaries.
+| Surface | Confirmed current state | Safe interpretation |
+|---|---|---|
+| Direct lane | Exact two-file tree: this README plus `operating_contract.rego` | No local bundle manifest, native Rego test, fixture family, input builder, evaluator binding, decision emitter, or governed consumer is present. |
+| Rego source | Rego v1 package `kfm.ai_builder.operating_contract`; `contract_version := "3.0.0"`; selected deny/warn rules | Static proposed source exists. Correct parsing, complete input semantics, active evaluation, and required-check coupling are not established. |
+| `GENERATED_RECEIPT` | Draft 2020-12 schema, emitted instances, bounded validator, synthetic fixtures, focused tests, and workflow uses | Repository-authoring provenance is machine-checkable within documented limits; presence or `PASS` is not review, policy approval, merge eligibility, release, or publication. |
+| Agent operation profile | `PROPOSED_INACTIVE`, no-network, non-mutating `AgentOperationEnvelope`; 13 synthetic cases; 12 focused tests | Watcher/Planner/Executor role separation, deterministic identity, kill-switch posture, finite gates, and an Executor feature-branch/draft-PR *ceiling* are testable. No credential or live operation is created. |
+| AI proposal profile | `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, authority `NONE` `AIChangeProposal`; 13 synthetic cases; 14 focused tests | Deterministic JSON compare-and-set proposals, policy/review projections, and readiness can be checked. A proposal cannot apply itself. |
+| AI output profiles | `PROPOSED_INACTIVE`, `FIXTURE_ONLY` `AIOutputArtifact` and `AIOutputBatchManifest`; 26 synthetic cases; 14 focused tests | Per-input identity, finite outcomes, batch membership, and partial revocation are checkable. No output bytes, evidence, review, release, or public-use authority is created. |
+| Runtime `AIReceipt` | Draft/`PROPOSED` contract, closed runtime schema, five synthetic fixtures, bounded validator, and six focused tests | Shape, finite outcome, nonblank references, non-placeholder digests, and parser safety are checkable. References are not resolved or authenticated. |
+| Profile workflows | Four path-scoped workflows use read-only contents permission, non-persisted checkout credentials, declared dependency profiles, focused tests, fixtures, and authoring-receipt checks | Workflow definitions are executable orchestration evidence. They remain candidate-profile QA, not an AI-builder Rego evaluator or live operation authority. |
+| Policy root | Accepted Directory Rules place normative policy source under singular `policy/`; the parent root reports mixed maturity and an unbound general evaluator | Placement is adopted. This child lane is not activated by location. |
+| Control-plane gate register | `PROPOSED` with an empty `entries` list | No active AI-builder gate, bundle, evaluator, required check, or consumer is registered there. |
+| Review routing | CODEOWNERS routes `/policy/` to one account | Routing is not proof of subject expertise, independent review, accepted stewardship, approval, or separation of duties. |
+
+The focused suites above were replayed locally during this reconciliation with
+the repository's hash-locked `project-test-hashing-test` dependency profile.
+All 46 profile tests and all 26 focused `GENERATED_RECEIPT` tests passed. This
+is current-session conformance evidence only; hosted exact-head results remain
+separate evidence.
 
 ### 2.2 PROPOSED operational realization
 
 This README proposes:
 
+- a unified boundary across AI-assisted authoring, proposal, execution-request,
+  output-accountability, and runtime-receipt concerns without merging their
+  object families;
 - the normalized action-authority vocabulary in §7;
 - the preflight and task-contract fields in §8;
 - the evaluation order in §11;
@@ -141,21 +194,38 @@ This README proposes:
 - repository mutation, workflow-trigger, and base-drift controls in §§18–20;
 - the validation and rollout sequence in §§23–26.
 
-### 2.3 UNKNOWN / NEEDS VERIFICATION
+These are policy and convergence targets. They do not activate the Rego source,
+change a schema, bind a workflow, assign a steward, or authorize an effect.
+
+### 2.3 CONFLICTED or unresolved evidence
+
+| Conflict | Current evidence | Required disposition |
+|---|---|---|
+| Operating-contract identity | The file at `docs/doctrine/ai-build-operating-contract.md` identifies itself as a draft **Markdown authoring prompt**, carries `doc_id: .../NEEDS-VERIFICATION`, and names `docs/prompts/ai-builder-markdown-authoring.md` as its proposed home. `docs/prompts/ai-builder-system-prompts.md` is also `PROPOSED`. | Confirm or supersede the canonical doctrine carrier, identity, placement, versioning owner, and relationship to the Rego projection before calling it accepted governing doctrine. |
+| `AIReceipt` schema home | `schemas/contracts/v1/ai/ai_receipt.schema.json` is an empty-property proposed scaffold derived from domain Markdown, while `schemas/contracts/v1/runtime/ai_receipt.schema.json` is a closed nine-field runtime profile with a contract, validator, fixtures, tests, and workflow. | Record canonical/compatibility/deprecation disposition through schema governance; do not silently treat the two files as equivalent. |
+| Receipt vocabulary | `GENERATED_RECEIPT`, runtime `AIReceipt`, and profile-specific execution/output records all use receipt-adjacent language. | Preserve the separation in §16.5 and require type-qualified names in policy, code, PRs, and reviews. |
+| Prompt claims versus binding | Proposed prompt text says downstream policy and receipt mechanisms “will check” outputs. Current repository evidence proves only bounded validators and profile workflows. | Downgrade unverified deployment language until accepted evaluator, input assembly, consumer, and hosted enforcement evidence exist. |
+
+### 2.4 UNKNOWN / NEEDS VERIFICATION
 
 Current evidence does not yet prove:
 
 - that a GitHub Actions workflow invokes `policy/ai_builder/operating_contract.rego`;
+- that the Rego file parses under an admitted, pinned OPA version;
 - that Rego input assembly is implemented and complete;
 - that every AI-authored PR is detected reliably;
-- that every generated receipt is schema-validated in CI;
+- that every generated receipt is selected and validated in CI;
 - that artifact hashes are automatically recomputed after every substantive change;
 - that reviewer approval updates receipt state before merge;
 - that policy-significant changes always reference a valid `PolicyDecision`;
 - that AI-builder policy tests and fixtures cover every deny, warn, and review path;
 - that branch protection or rulesets require the AI-builder checks;
 - that model identity, prompt hashes, tool lists, and evidence references are captured consistently;
-- that policy decisions, receipts, review records, and PR metadata remain synchronized after rebases or base updates.
+- that policy decisions, receipts, review records, and PR metadata remain synchronized after rebases or base updates;
+- that any live model, proposal engine, agent executor, governed apply service,
+  or public AI consumer implements these profiles;
+- that accepted owner, reviewer, security, sensitivity, policy, release, and
+  correction roles are assigned with enforceable separation of duties.
 
 This README must not convert those unknowns into implementation claims.
 
@@ -182,7 +252,8 @@ It does **not** decide whether:
 - a pull request should be merged.
 
 ```text
-docs/doctrine/                    = governing human-readable operating law
+docs/doctrine/                    = human-readable doctrine carriers; accepted status and identity govern
+docs/prompts/                     = operational prompt candidates; never self-activating authority
 policy/ai_builder/                = AI-builder admissibility and policy checks
 policy/access/                    = who may use bounded capabilities
 contracts/                        = semantic meaning
@@ -231,22 +302,31 @@ AI-builder work must preserve these rules:
 The existing path is:
 
 ```text
-policy/ai_builder/
-├── README.md
+policy/ai_builder/  # tree 7868b6da18e11e9efbc2bcdceae2e3641f1795e9
+├── README.md       # prior blob 2c0119efb6adce908c440015dc0b833c1ce5b347
 └── operating_contract.rego
+                    # blob 3a54cd3b8dce254853c76934e3e4d501b3e54a1c
 ```
+
+This is the complete recursive lane at the pinned baseline. The tree contains
+no hidden child bundle, local fixture, native Rego test, evaluator config,
+credential, generated instance, decision record, or release object.
 
 ### Placement determination
 
 | Item | Owning root | Status | Basis |
 |---|---|---|---|
-| AI-builder policy documentation | `policy/ai_builder/` | CONFIRMED existing | `policy/` owns admissibility and denial policy |
-| Rego policy source | `policy/ai_builder/operating_contract.rego` | CONFIRMED existing / PROPOSED enforcement | Executable policy belongs under `policy/` |
-| AI-builder doctrine | `docs/doctrine/` | CONFIRMED separate authority | Human operating law belongs under `docs/` |
-| Generated receipt schema | `schemas/contracts/v1/receipts/` | CONFIRMED existing | Machine shape belongs under `schemas/` |
-| Generated receipt instances | `data/receipts/generated/` | CONFIRMED existing | Emitted provenance belongs under `data/receipts/` |
-| Runtime policy helper code | `packages/policy-runtime/` | CONFIRMED README / implementation depth mixed | Shared execution helpers belong under `packages/` |
-| Tests and fixtures | `tests/`, `fixtures/` | NEEDS VERIFICATION for AI-builder coverage | Executable proof and samples stay outside policy source |
+| AI-builder policy documentation | `policy/ai_builder/` | CONFIRMED existing | `policy/` owns admissibility and denial policy; documentation does not activate it. |
+| Rego policy source | `policy/ai_builder/operating_contract.rego` | CONFIRMED proposed stub / evaluator unbound | Normative source belongs under `policy/`; reusable execution does not. |
+| Human operating law and prompts | `docs/doctrine/`, `docs/prompts/` | CONFIRMED files / CONFLICTED canonical carrier | Human explanation belongs under `docs/`; acceptance and exact placement still require disposition. |
+| Governance and runtime contracts | `contracts/governance/`, `contracts/runtime/` | CONFIRMED separate inactive profiles | Semantic meaning stays outside policy source. |
+| Machine shapes | `schemas/contracts/v1/` | CONFIRMED several closed profiles plus one conflicting scaffold | Schemas own shape; path presence does not settle duplicate authority. |
+| Generated authoring receipts | `data/receipts/generated/` | CONFIRMED instances and validator | Authorship provenance is data, not policy source or approval. |
+| Runtime policy helper code | `packages/policy-runtime/` | CONFIRMED `0.0.0` placeholder | Shared evaluator mechanics belong under `packages/`; current package does not activate this lane. |
+| Validators and generators | `tools/validators/`, `tools/generators/` | CONFIRMED bounded executables | Tooling checks candidates and may build fixtures; it cannot grant policy, review, mutation, release, or publication authority. |
+| Tests and reusable fixtures | `tests/`, `fixtures/` | CONFIRMED for adjacent profile families / absent locally for Rego | Executable conformance stays outside policy source. |
+| Workflow orchestration | `.github/workflows/` | CONFIRMED read-only profile workflows / no AI-builder Rego invocation found | Workflow definitions orchestrate bounded checks; branch-protection coupling remains separate. |
+| Release, correction, and rollback decisions | `release/` | Separate authority | This lane may require their references but cannot create their status. |
 
 ### Slug rule
 
@@ -658,7 +738,11 @@ The repository contains:
   `data/receipts/generated/`;
 - Rego rules that inspect `input.pr.generated_receipt`;
 - a PR template requiring a receipt link when files are AI-authored;
-- a runbook describing receipt emission and review-state updates.
+- a runbook describing receipt emission and review-state updates;
+- `tools/validators/validate_generated_receipt.py`, synthetic fixtures, and 26
+  focused tests covering bounded parser, schema, cross-field, path, digest,
+  citation-presence, policy-reference, and declared-review-claim behavior;
+- multiple read-only workflows that validate named authoring receipts.
 
 ### 16.2 Required receipt content
 
@@ -702,7 +786,37 @@ A receipt with `human_review.state: pending` may be schema-valid and audit-usefu
 - A policy-significant artifact may require `PolicyDecision` references; exact enforcement remains `NEEDS VERIFICATION`.
 - Receipt updates must not falsify review state or backdate approval.
 
-### 16.5 This lane’s current maturity
+### 16.5 AI record and receipt separation
+
+KFM currently carries several AI-adjacent record families. Their names and
+fields may overlap, but their authority must not.
+
+| Record | Primary question | Current profile | It must never be used as |
+|---|---|---|---|
+| `GENERATED_RECEIPT` | Who or what assisted repository authorship, against which artifacts, hashes, inputs, prompt/contract, tools, gates, citations, policy refs, and declared review state? | Repository-artifact provenance; bounded validator; emitted under `data/receipts/generated/` | Runtime model-call receipt, factual evidence, policy decision, authenticated approval, merge authorization, or release proof |
+| `AgentOperationEnvelope` | Which Watcher, Planner, or Executor role is being declared; which inputs, outputs, gates, kill-switch state, idempotency key, and capability ceiling apply? | `PROPOSED_INACTIVE`; no-network; fixture-only; no external effect | Credential, live job, repository permission, branch or PR creation, review, merge, release, deploy, or publish grant |
+| `AIChangeProposal` | What deterministic compare-and-set JSON change is proposed, against which pre-image, with which policy and human-attestation projections? | `PROPOSED_INACTIVE`; fixture-only; authority `NONE` | Applied patch, authenticated policy evaluation, human approval, lifecycle mutation, or steward apply authorization |
+| `AIOutputArtifact` | What finite AI outcome belongs to one input, with which evidence, citation, policy, output, identity, and correction references? | `PROPOSED_INACTIVE`; fixture-only per-input runtime record | Evidence itself, resolved citation, approved answer, released output, or public-use permission |
+| `AIOutputBatchManifest` | Which independently identified output artifacts belong to a batch, and what is their aggregate/revocation posture? | `PROPOSED_INACTIVE`; fixture-only membership manifest | One indivisible authority object, blanket batch approval, or reason to preserve a revoked member |
+| Runtime `AIReceipt` | Which adapter/model run produced which input/output digests and finite outcome, with references to policy and citation validation? | Draft/`PROPOSED`; closed nine-field schema; fixture-only validator | `GENERATED_RECEIPT`, policy/citation execution proof, model approval, public answer approval, or release record |
+
+The trust sequence stays decomposed:
+
+```text
+source correctness
+  -> candidate shape and deterministic identity
+  -> policy execution against admitted inputs
+  -> authenticated independent review
+  -> separately authorized state mutation
+  -> release and publication
+```
+
+A passing earlier stage cannot manufacture a later one. In particular,
+`READY_FOR_STEWARD_APPLY` is a proposal's internal readiness label, and an
+Executor's feature-branch/draft-PR capability ceiling is a declaration. Neither
+is permission to mutate a repository.
+
+### 16.6 This lane’s current maturity
 
 | Capability | Status |
 |---|---|
@@ -712,9 +826,11 @@ A receipt with `human_review.state: pending` may be schema-valid and audit-usefu
 | Rego rules reference receipts | CONFIRMED |
 | PR template requests receipts | CONFIRMED |
 | Runbook describes receipt workflow | CONFIRMED |
-| Bounded generated-receipt validator | CONFIRMED for schema, cross-field, canonical-path, SHA-256-prefix, protected-root policy-reference and documentation-citation presence, plus optional declared-review-claim checks; references and review claims are not authenticated |
+| Bounded generated-receipt validator | CONFIRMED for duplicate-free finite JSON, parser/schema budgets, schema and cross-field checks, canonical local paths, SHA-256 prefixes, protected-root policy-reference and documentation-citation presence, optional declared-review claims, deterministic non-echoing diagnostics, and exact fixture polarity; references and claims are not authenticated |
+| Focused generated-receipt tests | CONFIRMED — 26 tests passed at the pinned reconciliation base after the full referenced fixture surface was materialized |
+| Agent operation, change proposal, output artifact/batch, and runtime receipt profiles | CONFIRMED bounded executables and read-only workflow definitions; every profile remains proposed/inactive or draft, fixture-only, non-authoritative, and non-mutating |
 | Automatic receipt generation | NEEDS VERIFICATION |
-| Automatic schema validation in CI | PARTIAL — synthetic fixtures and focused tests are configured in `validator-suite`; every emitted receipt is not established |
+| Automatic schema validation in CI | PARTIAL — focused tests, fixture polarity, and named receipt checks are configured; complete detection and current-byte validation of every emitted receipt are not established |
 | Automatic artifact-hash reconciliation | PARTIAL — on-demand SHA-256 recomputation is implemented; automatic post-edit updates and BLAKE3 verification are not |
 | Automatic reviewer-state updates | NEEDS VERIFICATION |
 | Merge-blocking enforcement | NEEDS VERIFICATION |
@@ -797,13 +913,28 @@ Before changing a path:
 
 ### Current AI-builder workflow posture
 
-The PR template states that CI runs the AI-builder Rego policy. The runbook provides an `opa eval` command. A bounded repository search in this inspection did not surface a GitHub Actions workflow invocation of that Rego module.
+The PR template states that CI runs the AI-builder Rego policy, and the runbook
+provides an `opa eval` command. A bounded current-tree search did not surface a
+GitHub Actions invocation of `policy/ai_builder/operating_contract.rego`, an
+admitted OPA version for this lane, or a trusted input builder for its package.
 
-Therefore:
+The repository *does* contain these related path-scoped workflows:
 
-- Rego source presence is `CONFIRMED`;
-- documented intended CI use is `CONFIRMED`;
-- actual workflow wiring and merge enforcement are `NEEDS VERIFICATION`.
+| Workflow | Bounded proof | Explicit non-effects |
+|---|---|---|
+| `agent-operation-envelope` | Role separation, identities, idempotency, kill switch, finite gates, draft-PR ceiling, authoring receipt | No credential, branch, PR, approval, merge, policy/review authority, lifecycle effect, release, deploy, or publish |
+| `ai-change-proposal` | Closed proposal shape, RFC 8785 identities, compare-and-set simulation, fixture polarity, authoring receipt | No model or policy-engine call, authenticated reviewer, patch application, repository mutation, promotion, release, or publication |
+| `ai-output-artifact` | Per-input artifact and batch shape, identity, finite outcomes, partial-revocation accounting, authoring receipt | No output fetch, reference resolution, authenticated policy/review/signature, promotion, release, publication, or public use |
+| `ai-receipt` | Runtime receipt shape, local string/digest checks, fixture polarity, authoring receipt | No evidence resolution, policy or citation evaluation, answer approval, lifecycle mutation, release, deploy, or publish |
+
+Each definition uses `contents: read`, sets `KFM_NO_NETWORK=1`, and does not
+persist checkout credentials. A workflow file or green profile check is not
+evidence that an AI-builder operation was authorized.
+
+Therefore Rego source presence and bounded adjacent orchestration are
+`CONFIRMED`; direct Rego workflow wiring, accepted evaluator semantics, hosted
+exact-head success, required-check coupling, and merge enforcement remain
+`NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
@@ -910,7 +1041,7 @@ For large documents:
 - related paths were verified or labeled;
 - truth labels match evidence strength;
 - no secrets, private data, exact sensitive locations, or unsafe examples;
-- v0.1 boundaries and useful content are preserved;
+- v0.1 through v0.3 boundaries and useful content are preserved;
 - remote file read-back matches intended content;
 - base/head comparison contains only authorized files.
 
@@ -935,6 +1066,13 @@ For large documents:
 | Validation or remote-readback failure | `ERROR`; no completion claim |
 | AI output self-marked canonical/released | `DENY` |
 | Sensitive exact-location exposure | `DENY` |
+| Watcher or Planner declares repository write | `DENY` in the bounded AgentOperationEnvelope profile |
+| Executor declares protected-branch, merge, release, deploy, or publish authority | `DENY` in the bounded AgentOperationEnvelope profile |
+| AI proposal pre-image changed | `DENY`; no patch application |
+| AI proposal review remains pending | Conformant `HOLD`; not apply-authorizing |
+| AI output has a negative finite outcome but exposes a result reference | `DENY` in the bounded output-artifact profile |
+| Runtime AI receipt uses blank refs or placeholder digests | `FAIL`; no authority created |
+| Receipt/profile validator reports `PASS` | Candidate conformance only; later policy, review, mutation, release, and publication stages remain separate |
 
 ### 23.3 Acceptance outcomes
 
@@ -958,35 +1096,52 @@ A commit or PR is not complete merely because GitHub accepted the mutation.
 These commands are guidance for a trusted local checkout. Do not run untrusted scripts or expose credentials.
 
 ```bash
-# Inspect the lane and adjacent authority surfaces.
-find policy/ai_builder -maxdepth 4 -type f | sort
-find docs/doctrine docs/prompts docs/runbooks -maxdepth 4 -type f \
-  | grep -Ei 'ai|builder|governed|receipt|directory|truth|trust' | sort
-find schemas/contracts/v1/receipts data/receipts/generated -maxdepth 3 -type f | sort
+# Pin the direct tree and inspect adjacent carriers.
+git ls-tree -r HEAD policy/ai_builder
+rg -n 'policy/ai_builder/operating_contract.rego|GENERATED_RECEIPT|AIReceipt|AIChangeProposal|AgentOperationEnvelope' \
+  .github contracts schemas tools tests fixtures data docs policy
 
-# Inspect likely tests, fixtures, and workflow references.
-find tests fixtures .github/workflows -maxdepth 6 -type f 2>/dev/null \
-  | grep -Ei 'ai[_-]?builder|generated[_-]?receipt|operating[_-]?contract|opa|rego' | sort
-grep -RIn --exclude-dir=.git \
-  'policy/ai_builder/operating_contract.rego\|generated_receipt.schema.json' \
-  .github tests tools scripts Makefile 2>/dev/null
-
-# Validate Rego when OPA is installed and a trusted synthetic input exists.
+# Validate Rego syntax only when an admitted OPA is installed.
+# This lane currently has no accepted OPA pin, input builder, or native fixture.
 opa check policy/ai_builder/operating_contract.rego
-opa eval \
-  --data policy/ai_builder/operating_contract.rego \
-  --input fixtures/policy/ai_builder/pr_input_valid.json \
-  'data.kfm.ai_builder.operating_contract.report'
 
-# Validate generated receipts with the repository-owned bounded validator.
-python tools/validators/validate_generated_receipt.py \
-  data/receipts/generated/<receipt>.json
+# In a disposable environment, install the repository's hash-locked profile.
+python tools/ci/install_python_ci.py project-test-hashing-test
 
-# Exercise the synthetic positive and fail-closed fixture lanes.
+# Replay the four bounded profile suites.
+python -m unittest discover \
+  --start-directory tests/validators/governance \
+  --pattern 'test_agent_operation_envelope.py' --verbose
+python -m unittest discover \
+  --start-directory tests/validators/governance \
+  --pattern 'test_ai_change_proposal.py' --verbose
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_ai_output_artifact.py' --verbose
+python -m pytest -q tests/validators/test_validate_ai_receipt.py
+
+# Replay bounded generated-authoring-receipt validation.
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_generated_receipt.py' --verbose
 python tools/validators/validate_generated_receipt.py --fixtures
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json --repo-root .
+
+# Check this README's bounded metadata and local links.
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . --profile required --format markdown \
+  policy/ai_builder/README.md
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . --format text policy/ai_builder/README.md
+
+git diff --check
 ```
 
-The illustrative fixture path above is `PROPOSED` until verified.
+These commands prove only their declared local scope. Hosted exact-head checks,
+branch-protection coupling, accepted policy evaluation, authenticated review,
+merge eligibility, release, deployment, and publication require separate
+evidence.
 
 [Back to top](#top)
 
@@ -994,11 +1149,27 @@ The illustrative fixture path above is `PROPOSED` until verified.
 
 ## 25. Implementation sequence
 
-1. **Inventory and reconcile**
-   - confirm lane files, consumers, contracts, schemas, receipt examples, workflows, tests, and generated outputs.
-2. **Normalize policy vocabulary**
-   - align task authority, Rego result, `PolicyDecision`, dispositions, reason codes, and obligations.
-3. **Define synthetic policy input fixtures**
+The smallest sound sequence starts from the bounded surfaces that already
+exist. It does not rebuild or silently promote them.
+
+1. **Resolve authority conflicts first**
+   - confirm the accepted operating-contract carrier, document ID, version
+     owner, and prompt relationship;
+   - disposition the two `AIReceipt` schema homes as canonical,
+     compatibility, deprecated, or migration-bound;
+   - preserve distinct, type-qualified names for all six records in §16.5.
+2. **Accept one explicit AI-builder policy input profile**
+   - bind repository, immutable base/head, target paths, actor, action,
+     delivery route, changed roots, generated-authorship signal, receipt,
+     review, policy-decision, lifecycle, sensitivity, and release context;
+   - prohibit hidden fetches and ambient credentials;
+   - define missing, malformed, stale, and conflicted inputs fail-closed.
+3. **Normalize policy vocabulary**
+   - map engine-native deny/warn results to the accepted `PolicyDecision`
+     vocabulary without inventing an `ALLOW` synonym;
+   - accept stable reason codes, obligations, and error semantics;
+   - keep candidate readiness distinct from permission and state transition.
+4. **Add direct synthetic Rego fixtures**
    - valid docs-only PR;
    - missing receipt;
    - wrong contract version;
@@ -1006,33 +1177,50 @@ The illustrative fixture path above is `PROPOSED` until verified.
    - policy-significant change with no decision refs;
    - parallel authority home;
    - lifecycle bypass;
-   - prompt-injection scope expansion.
-4. **Add policy tests**
+   - prompt-injection scope expansion;
+   - malformed or incomplete input and evaluator error.
+5. **Add native policy tests**
    - execute Rego against deterministic fixtures;
-   - assert deny/warn/admissible reports.
-5. **Validate receipt schema and examples**
-   - schema validation;
-   - artifact-path/hash consistency;
-   - truthful human-review state.
-6. **Wire CI**
-   - trusted input assembly;
-   - OPA version pin;
+   - assert exact deny/warn/report polarity, sorted stable outputs, and
+     fail-closed errors;
+   - pin and checksum an admitted OPA version.
+6. **Build trusted input assembly**
+   - use immutable repository state and closed machine profiles;
+   - recompute paths and digests after rebase or conflict resolution;
+   - emit deterministic, payload-safe diagnostics;
+   - test changed-path detection, idempotency, base drift, and concurrency.
+7. **Wire one read-only CI report**
    - path filters;
    - no secret exposure;
-   - failure artifact/report.
-7. **Connect PR metadata**
-   - required tokens, changed paths, base/head refs, receipt link, ADR links.
-8. **Add merge gate only after proof**
+   - non-persisted credentials and no unneeded network;
+   - exact-head fixture, test, input-assembly, Rego, and receipt results;
+   - no repository mutation or approval side effect.
+8. **Connect PR metadata and provenance**
+   - required tokens, changed paths, base/head refs, receipt link, ADR links;
+   - detect AI-assisted authorship without inferring review or approval;
+   - keep `human_review.state: pending` truthful until an authenticated,
+     separately authorized transition occurs.
+9. **Add governed apply as a separate service, if approved**
+   - re-read the subject and verify compare-and-set pre-image;
+   - re-evaluate current policy and authenticated review;
+   - enforce idempotency, kill switch, narrow credentials, non-protected head,
+     and draft-PR-only ceiling;
+   - emit a separate operation receipt; never reuse proposal readiness as
+     permission.
+10. **Add merge gating only after proof**
    - branch protection/ruleset evidence;
    - false-positive and bypass tests;
-   - rollback procedure.
-9. **Add observability**
+   - independent review and emergency-override tests;
+   - rollback and correction drill.
+11. **Add observability without hidden authority**
    - receipt coverage;
    - deny/warn counts;
    - stale receipt and hash mismatch;
-   - missing reviewer or policy-decision references.
-10. **Document correction and supersession**
-    - version changes, policy changes, invalidated receipts, and migration path.
+   - missing reviewer or policy-decision references;
+   - profile, evaluator, and consumer version drift.
+12. **Document correction and supersession**
+    - version changes, policy changes, invalidated receipts, schema-home
+      migration, consumer updates, and rollback path.
 
 Each step should be a small, reviewable PR.
 
@@ -1044,7 +1232,10 @@ Each step should be a small, reviewable PR.
 
 ### Documentation-only rollback
 
-Revert the commit that changes this README.
+Before merge, close the draft PR and abandon its scoped branch. After merge,
+revert the README and its paired `GENERATED_RECEIPT` through a reviewed commit,
+restoring their prior bytes together. Do not rewrite shared history or delete a
+historical receipt to conceal authorship.
 
 ### Policy-source rollback
 
@@ -1073,7 +1264,10 @@ Preferred pattern:
 
 ### Contract-version change
 
-Changing `CONTRACT_VERSION` affects doctrine, Rego, receipt schema/instances, PR template, runbook, prompts, tests, and enforcement. Treat it as a coordinated, reviewed migration—not a one-line edit.
+Changing `CONTRACT_VERSION` affects the accepted doctrine carrier once
+resolved, Rego, receipt schema/instances, PR template, runbook, prompts, tests,
+input assembly, evaluator bindings, consumers, and enforcement. Treat it as a
+coordinated, reviewed migration—not a one-line edit.
 
 [Back to top](#top)
 
@@ -1081,24 +1275,29 @@ Changing `CONTRACT_VERSION` affects doctrine, Rego, receipt schema/instances, PR
 
 ## 27. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
+- [ ] Accepted AI-policy, provenance, security, review, and release owners are confirmed; CODEOWNERS routing alone is insufficient.
 - [x] Existing path `policy/ai_builder/` is confirmed; no parallel slug is created.
-- [x] Rego policy source is identified and documented as a proposed enforcement stub.
-- [x] `GENERATED_RECEIPT` schema and emitted examples are identified.
+- [x] Exact two-file direct lane and prior target/tree blobs are pinned.
+- [x] Rego policy source is identified and bounded as a proposed, evaluator-unbound stub.
+- [x] `GENERATED_RECEIPT` schema, emitted examples, bounded validator, fixture polarity, and 26 focused tests are identified.
+- [x] Agent operation, change proposal, output artifact/batch, and runtime receipt profiles are separated and reconciled with their schemas, fixtures, validators, tests, and read-only workflows.
 - [x] PR template and first-governed-PR runbook are linked.
+- [x] Current documentation preserves generation, validation, policy, authenticated review, mutation, release, and publication as distinct stages.
+- [ ] Canonical operating-contract identity and prompt placement are accepted.
+- [ ] The duplicate/scaffold and runtime `AIReceipt` schema homes have a reviewed disposition.
 - [ ] Canonical AI-builder policy input shape is accepted.
 - [ ] Task authority, Rego results, `PolicyDecision`, dispositions, reason codes, and obligations are machine-aligned.
-- [ ] Synthetic fixtures cover positive, negative, review, warning, and error paths.
-- [ ] Rego policy tests run in a verified workflow.
-- [ ] Generated-receipt schema validation runs in CI.
-- [ ] Artifact path/hash consistency is checked automatically.
+- [ ] Direct AI-builder Rego fixtures cover positive, deny, warning, review, malformed-input, and evaluator-error paths.
+- [ ] Native Rego tests run under a checksum-pinned admitted OPA in a verified workflow.
+- [x] Bounded generated-receipt schema and artifact-path/hash validation is configured and locally replayed; corpus-wide selection remains open.
+- [ ] Artifact path/hash consistency is recomputed automatically after every substantive change and base update.
 - [ ] Human-review state and merge eligibility are enforced without self-approval.
 - [ ] Policy-significant changes reference required policy decisions.
 - [ ] Prompt-injection and untrusted-content tests exist.
 - [ ] Base-drift and concurrent-mutation behavior is tested.
 - [ ] Branch protection/ruleset enforcement is verified.
 - [ ] Rollback and correction drills pass.
-- [ ] Documentation reflects actual implemented behavior.
+- [x] Documentation distinguishes current implemented behavior, proposed convergence, conflicts, and unknown enforcement.
 
 [Back to top](#top)
 
@@ -1108,23 +1307,27 @@ Changing `CONTRACT_VERSION` affects doctrine, Rego, receipt schema/instances, PR
 
 | Item | Status | Evidence needed |
 |---|---|---|
-| Accepted owner identities | UNKNOWN | CODEOWNERS or steward assignment |
+| Accepted owner identities | UNKNOWN | Reviewed steward assignments, authority scope, qualification, independence, and fallback/override route; CODEOWNERS routing alone is insufficient |
+| Canonical operating-contract carrier | CONFLICTED | Accepted document identity, canonical path, status, version owner, supersession rule, and relationship among doctrine and prompt carriers |
+| `AIReceipt` schema-home disposition | CONFLICTED | Reviewed canonical/compatibility/deprecation decision plus consumer inventory and migration/rollback plan |
 | AI-builder input schema | NEEDS VERIFICATION | Accepted contract/schema and fixtures |
-| Rego syntax and OPA version in CI | NEEDS VERIFICATION | Workflow + successful logs |
+| Rego syntax and OPA version in CI | NEEDS VERIFICATION | Checksum-pinned admitted OPA, native tests, workflow, and successful exact-head logs |
 | Rego input assembly | NEEDS VERIFICATION | Trusted builder/action implementation |
 | AI-authored change detection | NEEDS VERIFICATION | Workflow/tool tests |
 | Generated receipt requirement scope | NEEDS VERIFICATION | Accepted policy and exceptions |
-| Receipt schema validation workflow | CONFIGURED / HOSTED RESULT NEEDED | `validator-suite` focused test and fixture steps plus hosted logs |
-| Artifact hash verification | CONFIRMED for bounded SHA-256 / BLAKE3 NEEDS VERIFICATION | Validator, focused negative tests, and any admitted BLAKE3 dependency decision |
+| Receipt schema validation workflow | PARTIAL / HOSTED EXACT-HEAD RESULT NEEDED | Focused test and fixture steps plus named receipt checks are configured; prove complete changed-receipt selection and hosted logs |
+| Artifact hash verification | CONFIRMED for bounded SHA-256 / BLAKE3 NEEDS VERIFICATION | Validator and focused negative tests exist; decide any admitted BLAKE3 dependency and automatic post-edit/base-update recomputation |
 | Receipt review-state update mechanism | NEEDS VERIFICATION | App/tool/runbook implementation |
 | Policy-decision reference requirement | NEEDS VERIFICATION | Accepted mapping and tests |
 | PR template token enforcement | NEEDS VERIFICATION | Rego/CI test |
 | Base-drift handling | NEEDS VERIFICATION | Connector/CLI workflow and tests |
 | Branch protection integration | UNKNOWN | Repository settings/ruleset evidence |
-| Review separation enforcement | NEEDS VERIFICATION | CODEOWNERS/ruleset/test evidence |
-| Prompt registry authority | NEEDS VERIFICATION | Directory/ADR/registry evidence |
+| Review separation enforcement | NEEDS VERIFICATION | Authenticated actor binding, accepted reviewer roles, CODEOWNERS/ruleset integration, override rules, and tests |
+| Prompt registry authority | NEEDS VERIFICATION | Directory/ADR/registry evidence after doctrine-carrier conflict resolution |
 | Receipt correction/supersession contract | NEEDS VERIFICATION | Contract/schema/test evidence |
 | CONTRACT_VERSION migration procedure | NEEDS VERIFICATION | Accepted runbook and migration test |
+| Live proposal/agent/apply integration | UNKNOWN | Accepted service design, narrow credentials, kill switch, idempotency, compare-and-set replay, operation receipt, audit, and rollback tests |
+| Production AI consumer | UNKNOWN | Governed API/runtime binding, evidence and policy resolution, finite outcomes, citation validation, public-safe response tests, and release posture |
 
 [Back to top](#top)
 
@@ -1178,7 +1381,7 @@ The full receipt object must satisfy the generated-receipt schema; this abbrevia
 
 ## Appendix B — vocabulary crosswalk
 
-| v0.1 term | v0.2 treatment |
+| Earlier term or claim | v0.4 treatment |
 |---|---|
 | `ALLOW_DRAFT` | `ANSWER` + `DRAFT_ONLY` disposition |
 | `ALLOW_PATCH_PROPOSAL` | `ANSWER` + `IMPLEMENT` or patch-proposal disposition |
@@ -1189,14 +1392,17 @@ The full receipt object must satisfy the generated-receipt schema; this abbrevia
 | “generated receipt not implemented” | Corrected: schema, examples, Rego references, template, and runbook are CONFIRMED; complete automation remains unverified |
 | “target was an empty placeholder” | Corrected: v0.1 contained a substantive bounded policy README |
 | `ai_builder` slug unresolved | Existing path confirmed; no sibling created; rename remains a governed migration question |
+| `GENERATED_RECEIPT` and `AIReceipt` used generically | Corrected: authoring, operation, proposal, output, batch, and runtime records are type-qualified and authority-separated in §16.5 |
+| “governing AI-builder operating law” at the current doctrine path | Bounded: the repository-present carrier is draft, has an unverified document ID, and proposes a different prompt path; accepted canonical identity remains conflicted |
+| Profile `PASS`, `READY`, or `READY_FOR_STEWARD_APPLY` | Candidate conformance/readiness only; never repository permission, authenticated review, state mutation, merge, release, or publication |
 
 ---
 
-## Appendix C — v0.1 to v0.2 preservation and correction note
+## Appendix C — v0.1 to v0.4 preservation and correction note
 
 ### Preserved
 
-v0.2 retains the strongest v0.1 principles:
+v0.4 retains the strongest v0.1 through v0.3 principles:
 
 - AI is assistant, not authority;
 - generated output remains proposed until reviewed and validated;
@@ -1209,6 +1415,27 @@ v0.2 retains the strongest v0.1 principles:
 - changes should be reviewable, reversible, and auditable.
 
 ### Corrected or expanded
+
+v0.4:
+
+- pins the exact current base, prior target blob, and complete two-file lane tree;
+- reconciles the substantive v0.3 contract with the parent policy-root maturity
+  statement and accepted Directory Rules placement;
+- replaces the earlier clean-doctrine claim with the repository-visible draft,
+  unverified-identity, proposed-placement conflict;
+- records the distinct empty scaffold and closed runtime `AIReceipt` schema homes
+  without silently choosing a winner;
+- separates `GENERATED_RECEIPT`, `AgentOperationEnvelope`, `AIChangeProposal`,
+  `AIOutputArtifact`, `AIOutputBatchManifest`, and runtime `AIReceipt` by meaning,
+  maturity, and non-effects;
+- records four read-only profile workflows, 46 passing profile tests, 26 passing
+  generated-receipt tests, and exact synthetic case counts without claiming live
+  model, policy, review, mutation, merge, release, or publication behavior;
+- replaces the “next proof is receipt validation” posture with a dependency-ordered
+  plan: resolve authority conflicts, accept an input profile, add native Rego
+  fixtures/tests, build trusted input assembly, then consider governed apply and
+  merge enforcement;
+- adds a current evidence/no-loss ledger and paired README/receipt rollback rule.
 
 v0.3:
 
@@ -1231,14 +1458,61 @@ v0.2:
 
 ### Reversibility
 
-Reverting the v0.3 implementation commit removes the validator/test/fixture workflow slice and restores the earlier command uncertainty. The change does not alter `operating_contract.rego`, schemas, branch protection, release, deployment, or publication state.
+This v0.4 revision changes the README and its authoring receipt only. Before
+merge, close the draft PR and abandon its branch. After merge, transparently
+revert both files to their prior bytes. The revision does not alter
+`operating_contract.rego`, contracts, schemas, fixtures, validators, tests,
+workflows, branch protection, runtime behavior, release, deployment, or
+publication state.
+
+The earlier v0.3 validator implementation remains independently reversible
+through the commit that introduced that code/test/fixture/workflow slice; this
+documentation update does not pretend to remove it.
+
+---
+
+## Appendix D — evidence review and no-loss ledger
+
+| Evidence surface | Reviewed state at the pinned base | Effect on v0.4 |
+|---|---|---|
+| `policy/ai_builder/README.md` history and bytes | Substantive 1,244-line v0.3; prior blob `2c0119efb6adce908c440015dc0b833c1ce5b347` | Preserved the complete policy spine; corrected stale maturity and authority claims in place. |
+| Complete `policy/ai_builder/` tree | README plus one Rego file; tree `7868b6da18e11e9efbc2bcdceae2e3641f1795e9` | No new lane, slug, bundle, test home, or authority root created. |
+| `operating_contract.rego` | Proposed v3.0 stub with selected deny/warn rules; no local native test or workflow invocation found | Kept static rule claims precise and evaluator/merge claims unproved. |
+| Parent `policy/README.md` | Canonical root; mixed maturity; one unrelated bounded Rego lane tested; general evaluator unbound | Aligned child status with the root rather than treating file presence as activation. |
+| ADR-0029, Directory Rules, root registry | Singular `policy/` placement accepted and machine-projected | Confirmed same-path `PLACE`; no parallel `policy/ai-builder/`. |
+| Policy-gate register | `PROPOSED`; empty entries | Recorded absence of an active registered gate or evaluator. |
+| Doctrine and prompt carriers | v3.0 projection is consistent; current operating-contract-named file is a draft Markdown prompt with unverified ID and proposed different home; system prompts are proposed | Preserved the version projection while marking canonical identity/placement conflicted. |
+| Generated authoring receipt family | Schema, instances, bounded validator, fixtures, focused workflow use, 26 passing tests | Kept authoring provenance explicit and non-authoritative; retained pending-review semantics. |
+| AgentOperationEnvelope family | 13 cases, 12 passing tests, read-only workflow, no external effect | Added role/capability-ceiling seam without creating live agent authority. |
+| AIChangeProposal family | 13 cases, 14 passing tests, read-only workflow, authority `NONE` | Added deterministic proposal/apply separation and compare-and-set pre-image hold. |
+| AIOutputArtifact and batch families | 26 cases, 14 passing tests, read-only workflow | Added per-input/batch/correction seam and partial-revocation posture. |
+| Runtime AIReceipt family | Closed runtime schema, five fixtures, six passing tests, read-only workflow | Added runtime audit seam while preserving unresolved references and no public-answer authority. |
+| Scaffold `schemas/contracts/v1/ai/ai_receipt.schema.json` | Proposed empty-property scaffold distinct from the runtime profile | Opened a schema-governance disposition item; did not overwrite or bless either home. |
+| CODEOWNERS and review controls | `/policy/` routes to one account; no independent accepted role binding proved | Replaced `OWNER_TBD` with an explicit verification hold rather than inventing stewards. |
+| Open PR overlap | No open PR matching the exact target path or `ai_builder` was found during preflight | Proceeded with one isolated same-path documentation branch. |
+
+No-loss review result: all prior operating-law, evidence, action, decision,
+reason-code, obligation, receipt, review, mutation, workflow-threat,
+prompt-injection, sensitivity, synchronization, validation, correction, and
+rollback sections remain present. v0.4 narrows overclaims and adds current
+machine-profile seams; it removes no safety boundary.
 
 ---
 
 ## Status summary
 
-`policy/ai_builder/` has a real but incomplete governance surface: doctrine, policy source, receipt schema, emitted examples, PR template, and runbook are present.
+`policy/ai_builder/` is a real but inactive two-file policy-source lane. Its
+proposed Rego source and bounded generated-authoring receipt checks coexist with
+four separate fixture-only AI record profiles and read-only workflows. Those
+surfaces provide useful deterministic conformance evidence; none supplies an
+accepted evaluator, authenticated review, repository permission, merge gate,
+release, deployment, or publication authority.
 
-The next proof-bearing increment is not more prose. It is a small synthetic fixture-and-test PR that proves the Rego module, generated-receipt schema, artifact-hash checks, PR input assembly, and human-review gating behave as documented—without live data, secrets, publication, or broad workflow changes.
+The next proof-bearing increment is a small authority-resolution and direct
+Rego fixture/test PR—not another broad runtime. It should settle the canonical
+operating-contract carrier and `AIReceipt` schema-home conflict, accept one
+closed AI-builder input profile, checksum-pin OPA, and prove exact fail-closed
+rule polarity before trusted input assembly or any governed apply path is
+considered.
 
 <p align="right"><a href="#top">Back to top</a></p>
