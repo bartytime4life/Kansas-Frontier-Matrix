@@ -1,29 +1,55 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/evidence
 title: policy/evidence/ — Evidence Admissibility and Claim-Support Boundary
-type: policy-readme; directory-readme; evidence-admissibility-boundary
-version: v0.2
-status: draft; repository-grounded; documentation-only; executable-evidence-policy-not-established
-owners: OWNER_TBD — Evidence steward · Policy steward · Source steward · Rights/sensitivity steward · Validation steward · Runtime steward · Release steward · Docs steward
-created: NEEDS VERIFICATION — a greenfield stub existed before v0.2
-updated: 2026-07-20
-policy_label: "public-governance; restricted-review; evidence-admissibility; cite-or-abstain; fail-closed; obligation-preserving; no-evidence-storage; no-proof-authority; no-release-authority; no-publication-authority"
+type: policy-readme; directory-readme; boundary-compact; evidence-admissibility-boundary
+version: v0.3
+status: draft; repository-grounded; current-state-reconciled; documentation-only; bounded-resolver-candidate; executable-evidence-policy-not-established; evaluator-unbound; fail-closed; non-release; non-publication
+owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted evidence stewardship, separation of duties, and independent approval controls remain unproved
+created: NEEDS VERIFICATION — an initial empty path preceded the 2026-05-08 greenfield stub
+updated: 2026-08-13
+policy_label: repository-facing; evidence-admissibility; cite-or-abstain; fail-closed; obligation-preserving; no-evidence-storage; no-proof-authority; no-release-authority; no-publication-authority
 current_path: policy/evidence/README.md
 owning_root: policy/
-responsibility: define and index the policy boundary for evidence admissibility, EvidenceRef resolution posture, EvidenceBundle claim support, citation sufficiency, source-role preservation, rights, sensitivity, freshness, correction, and public-safe finite outcomes without becoming contract, schema, validator, resolver, evidence store, proof store, receipt store, release authority, or publisher
-truth_posture: CONFIRMED target stub, singular policy root, EvidenceRef and EvidenceBundle contracts, fielded PROPOSED schemas, minimal schema fixtures, dedicated shape validators, focused EvidenceRef validator tests, generic evidence-family schema harness, closed PolicyDecision outcome enum, policy/evidence schema pointers, read-only pull-request workflows, and scaffolded resolver package / PROPOSED evidence-admissibility input, gate sequence, reason codes, obligations, composition, runtime binding, and implementation sequence / CONFLICTED EvidenceBundle schema naming variants and evidence-policy-family representation in the current PolicyDecision enum / UNKNOWN active evidence-policy rules, accepted bundle, evaluator binding, exhaustive consumers, current CI results, branch-protection significance, production enforcement, receipt emission, and release integration / NEEDS VERIFICATION owners, accepted outcome mapping, direct policy modules, evidence-policy fixtures and tests, reason-code and obligation registries, resolver-to-policy integration, correction propagation, and rollback automation
+canonical_relationship: PROPOSED evidence-admissibility source boundary; the bounded evidence-resolver candidate is a non-authoritative helper, bundle_closure_required.rego is an untested greenfield stub, and neither establishes active policy, an accepted bundle, evaluator binding, or public permission
+directory_governance: accepted ADR-0029 adopts Directory Rules v2; policy/ is the singular policy-source root; this same-path BOUNDARY_COMPACT README remains documentation-only
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
-  base_commit: 2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0
-  prior_blob: 61f9a3f699e69fef56e0fe04a6a415ff539f0363
-  inventory_method: authenticated GitHub connector reads of the target, governing placement doctrine, adjacent policy lanes, evidence contracts and schemas, fixtures, validators, tests, resolver package, ADRs, drift register, CODEOWNERS, pull-request template, and triggering workflows
+  base_commit: 163110232387b4442c2fcd73d2ea3b79fd39484a
+  target_baseline_blob: a940ded7c4ae299dd5e6a70764c1e7dd7292b9e7
+  target_initial_empty_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  target_greenfield_stub_blob: 61f9a3f699e69fef56e0fe04a6a415ff539f0363
+  evidence_rego_blob: d60a9ea030ca57f5d577dabd760343e9d73a725c
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  decision_policy_readme_blob: 1ab41e00cb77c0bb34e2169a13261486f5b9c7dd
+  bundles_policy_readme_blob: 77f59c399fbce668c916cbbc385009121d6169f4
+  evidence_contract_root_blob: e0eaf9072faf42edc020787bb6926be9fc5c49e1
+  evidence_ref_contract_blob: afd3a964435445edbb694b5edf16e2b6ddd49a92
+  evidence_bundle_contract_blob: 731c348832add23cddd14e796aa56ce2b9268259
+  citation_validation_report_contract_blob: 29c507e76a9c15c44f2c195b7342e93630cdc701
+  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
+  evidence_schema_root_blob: 57e8d9e36000147be8d56a1a8615e920f172dd13
+  evidence_ref_schema_blob: 42f499df613a9d68e5ca6fc5ec75ff8058c155b9
+  evidence_bundle_schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
+  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
+  evidence_resolver_readme_blob: d64f112e9fe6538178c74dd31cc751235781c7f3
+  evidence_resolver_workflow_blob: 776bf8773ffc1f00b08a04b86a747248978a539f
+  policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
+  pull_request_template_blob: c5624d7dbc2b83055421b4fb4542794bafa10bee
+  open_overlapping_pull_requests_found: "0 at preflight"
+  inventory_method: authenticated GitHub reads of the exact target history and direct tree, governing doctrine and ADR, adjacent policy lanes, evidence contracts and schemas, fixtures, validators, tests, bounded resolver package, workflows, ownership routing, contribution policy, and pull-request controls
   direct_lane_files_confirmed:
     - policy/evidence/README.md
-  bounded_inventory_note: the target README was read directly; no active evidence-policy rule module, accepted bundle membership, runtime evaluator binding, emitted PolicyDecision, release integration, or production enforcement was established by this documentation task; bounded non-observation is not proof of permanent absence
+    - policy/evidence/bundle_closure_required.rego
+  bounded_inventory_note: the complete direct lane was inspected; no accepted evidence-admissibility rule set, evidence-native Rego test, bundle membership, evaluator binding, emitted evidence PolicyDecision, governed runtime consumer, release integration, or production enforcement was established
 related:
   - ../README.md
+  - ./bundle_closure_required.rego
   - ../decision/README.md
   - ../bundles/README.md
   - ../../contracts/evidence/README.md
@@ -46,15 +72,21 @@ related:
   - ../../data/receipts/README.md
   - ../../release/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/architecture/contract-schema-policy-split.md
   - ../../docs/registers/DRIFT_REGISTER.md
   - ../../.github/workflows/policy-test.yml
   - ../../.github/workflows/evidence-resolver.yml
-tags: [kfm, policy, evidence, EvidenceRef, EvidenceBundle, citations, source-role, rights, sensitivity, freshness, correction, cite-or-abstain, fail-closed, finite-outcomes, obligations, release-gated]
+  - ../../.github/CODEOWNERS
+  - ../../CONTRIBUTING.md
+  - ../../.github/PULL_REQUEST_TEMPLATE.md
+tags: [kfm, policy, evidence, EvidenceRef, EvidenceBundle, citations, source-role, rights, sensitivity, freshness, correction, resolver-candidate, Rego-stub, cite-or-abstain, fail-closed, finite-outcomes, obligations, release-gated]
+truth_posture: CONFIRMED populated v0.2 target, exact two-file direct lane, untested bundle_closure_required Rego stub with default deny false and no operative deny rule, singular policy root, accepted ADR-0029 placement, current evidence contracts and PROPOSED schemas, bounded internal v1alpha1 resolver candidate with synthetic fixtures and tests, read-only resolver CI, closed PolicyDecision outcomes without an evidence family, and broader policy-test inventory that does not evaluate this Rego lane / PROPOSED evidence-admissibility input, gate sequence, reason codes, obligations, rule semantics, bundle/evaluator binding, consumer enforcement, correction propagation, and implementation sequence / CONFLICTED EvidenceBundle schema naming/profile representations and evidence-family representation in PolicyDecision / UNKNOWN accepted evidence-policy owners, active bundle and evaluator, native evidence-policy fixtures and tests, governed consumers, decision receipts, required-check enforcement, production operation, and release integration
 notes:
-  - "v0.2 replaces the one-line greenfield stub with a repository-grounded evidence-policy boundary."
-  - "Shape validation is confirmed for a bounded evidence slice; evidence resolution, admissibility evaluation, and public enforcement are not established."
-  - "This README defines policy posture and implementation obligations. It is not executable policy and does not authorize release or publication."
+  - "v0.3 reconciles the existing v0.2 README with current main and preserves its substantive policy doctrine."
+  - "The implemented resolver result is internal and authoritative=false; RESOLVED does not mean evidence truth, policy ANSWER, review approval, release, or publication."
+  - "bundle_closure_required.rego is a proposed stub, has no operative deny rule beyond default deny=false, and has no evidence-native Rego test in the inspected lane; it must not be treated as an allow decision."
+  - "This revision creates no rule semantics, schema, contract, fixture, evaluator, policy bundle, runtime route, decision record, release object, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,49 +97,70 @@ notes:
 
 > **One-line purpose.** Define the fail-closed policy boundary for deciding whether resolved evidence support is sufficient, permissible, current, and appropriately scoped for a requested KFM operation—without storing evidence, resolving references, proving claims, approving release, or publishing artifacts.
 
-![status](https://img.shields.io/badge/status-repository--grounded%20draft-orange)
-![root](https://img.shields.io/badge/root-policy%2F-blue)
-![implementation](https://img.shields.io/badge/evidence__policy-not__established-lightgrey)
-![shape](https://img.shields.io/badge/schema__shape-bounded__coverage-success)
-![posture](https://img.shields.io/badge/posture-cite__or__abstain-critical)
-![publisher](https://img.shields.io/badge/publisher-no-red)
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
+[![Lane: two tracked files](https://img.shields.io/badge/lane-README%20%2B%20Rego%20stub-0969da?style=flat-square)](#current-directory-map)
+[![Resolver: bounded candidate](https://img.shields.io/badge/resolver-bounded%20candidate-8250df?style=flat-square)](#validation-tests-and-ci)
+[![Policy: evaluator unbound](https://img.shields.io/badge/policy-evaluator%20unbound-d97706?style=flat-square)](#status-and-evidence-boundary)
+[![Posture: cite or abstain](https://img.shields.io/badge/posture-cite%20or%20abstain-b42318?style=flat-square)](#evidence-admissibility-gate-model)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-repository-fit)
 
-**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose) · [Authority](#authority-and-repository-fit) · [Scope](#scope) · [Inputs](#required-evaluation-input) · [Gate model](#evidence-admissibility-gate-model) · [Outcomes](#finite-outcomes-and-normalization) · [Obligations](#obligations) · [Lifecycle](#lifecycle-and-public-interface-boundary) · [Sensitivity](#rights-sensitivity-and-source-role) · [Validation](#validation-tests-and-ci) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Rollback](#correction-supersession-and-rollback)
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Directory](#current-directory-map) · [Purpose](#purpose) · [Authority](#authority-and-repository-fit) · [Boundary contract](#boundary_compact-responsibility-signature) · [Scope](#scope) · [Inputs](#required-evaluation-input) · [Gate model](#evidence-admissibility-gate-model) · [Outcomes](#finite-outcomes-and-normalization) · [Obligations](#obligations) · [Lifecycle](#lifecycle-and-public-interface-boundary) · [Sensitivity](#rights-sensitivity-and-source-role) · [Validation](#validation-tests-and-ci) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Changelog](#changelog) · [Rollback](#correction-supersession-and-rollback)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** the repository has fielded, `PROPOSED` EvidenceRef and EvidenceBundle schemas, minimal valid/invalid schema fixtures, dedicated schema-shape validator wrappers, a focused EvidenceRef validator test, and read-only readiness workflows. It does **not** yet establish an accepted EvidenceRef-to-EvidenceBundle resolver, active evidence-policy rules, an accepted policy bundle, evaluator binding, evidence-specific decision normalization, obligation enforcement, production consumers, or release integration.
+> **Safe current conclusion:** KFM now has a bounded, deterministic `kfm/evidence-ref-bundle-candidate/v1alpha1` resolver implementation with synthetic fixtures, standard-library tests, fail-closed negative checks, and read-only CI. That candidate is explicitly non-authoritative and performs no policy evaluation. The repository still does **not** establish an accepted evidence-admissibility rule set, evidence policy bundle, evaluator binding, evidence-family PolicyDecision mapping, governed consumer enforcement, decision-receipt flow, release integration, or production operation.
 
 > [!CAUTION]
-> Schema-valid evidence is not necessarily admissible evidence. An EvidenceBundle is not a PolicyDecision, ReviewRecord, ReleaseManifest, or publication. A passing validator, workflow, pull request, or generated receipt must never be treated as claim truth or public-release permission.
+> **Shape-valid or locally `RESOLVED` evidence is not necessarily admissible evidence.** An EvidenceBundle is not a PolicyDecision, ReviewRecord, ReleaseManifest, proof of claim truth, or publication. A passing validator, resolver check, workflow, pull request, or receipt must never be treated as public-release permission.
+
+> [!WARNING]
+> [`bundle_closure_required.rego`](bundle_closure_required.rego) is a proposed greenfield stub. Its only operative decision is `default deny := false`; the sample deny rule is commented out, and the inspected policy-test workflow inventories but does not evaluate this lane. No caller may interpret `deny = false` as evidence closure, `ANSWER`, release approval, or an implicit allow path.
 
 ---
 
 ## Status and evidence boundary
 
+Evidence snapshot: `main@163110232387b4442c2fcd73d2ea3b79fd39484a`; target baseline blob `a940ded7c4ae299dd5e6a70764c1e7dd7292b9e7`.
+
 | Surface | Current repository evidence | Safe conclusion |
 |---|---|---|
-| `policy/evidence/README.md` | **CONFIRMED** one-line greenfield stub at the pinned base | The lane is declared but the prior README supplied no executable policy. |
-| EvidenceRef contract | **CONFIRMED draft contract** | Defines a governed pointer and pre-closure posture; does not prove resolution. |
-| EvidenceBundle contract | **CONFIRMED draft contract** | Defines claim-scope support and authority boundaries; remains `PROPOSED`. |
-| Evidence schemas | **CONFIRMED fielded schemas / `PROPOSED` status** | Machine shape is defined for the inspected profiles. |
-| Evidence schema naming | **CONFLICTED** | Underscore and hyphen EvidenceBundle variants are documented; no duplicate authority may be inferred. |
-| Evidence fixtures | **CONFIRMED minimal shape fixtures** | EvidenceRef has two valid and three invalid documented cases; EvidenceBundle has one valid and one missing-`bundle_id` invalid case. |
-| Dedicated validators | **CONFIRMED wrappers** | Both wrappers delegate to the shared JSON Schema runner; they do not resolve or evaluate evidence. |
-| Focused validator tests | **CONFIRMED for EvidenceRef** | Valid and missing-`ref` CLI polarity is tested. No focused EvidenceBundle test was found at the checked path. |
-| Generic schema harness | **CONFIRMED code** | Includes the `evidence` family and evaluates discovered valid/invalid fixture lanes. |
-| PolicyDecision shape | **CONFIRMED closed `PROPOSED` schema** | `outcome` is limited to `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; `policy_family` has no `evidence` value. |
-| Evidence resolver package | **CONFIRMED scaffold** | Package metadata and documentation exist; production resolver implementation is not established. |
-| Evidence resolver workflow | **CONFIRMED read-only readiness/hold workflow** | Checks repository boundaries and emits holds; it resolves no evidence. |
-| Evidence-policy execution | **NOT ESTABLISHED** | No accepted direct rule, bundle, evaluator binding, or emitted evidence PolicyDecision was verified. |
-| Current CI results and required-check status | **UNKNOWN / NEEDS VERIFICATION** | Workflow definitions exist; current run results and branch-protection significance were not inspected before authoring. |
+| `policy/evidence/README.md` | **CONFIRMED populated v0.2 baseline** | This v0.3 revision reconciles the substantive README in place; it does not create executable policy behavior. |
+| Direct lane inventory | **CONFIRMED exactly this README plus `bundle_closure_required.rego`** | The complete direct lane was inspected; no hidden child rule, fixture, test, or bundle is inferred. |
+| `bundle_closure_required.rego` | **CONFIRMED proposed greenfield stub** | It declares `package kfm.bundle_closure_required` and `default deny := false`; its example deny rule is commented out. The file is not an accepted allow rule or evidence-closure proof. |
+| EvidenceRef and EvidenceBundle contracts | **CONFIRMED repository-facing contracts** | They define pointer and claim-support meaning; neither proves resolution, admissibility, review, or release. |
+| Evidence schemas | **CONFIRMED fielded / `PROPOSED`** | Machine shape exists for the inspected profiles; EvidenceBundle naming/profile conflict remains unresolved. |
+| Evidence fixtures and schema validators | **CONFIRMED bounded positive/negative coverage** | Schema and CLI polarity do not prove semantic closure or policy permission. |
+| Evidence resolver package | **CONFIRMED bounded internal v1alpha1 candidate** | Pure caller-supplied evaluation returns local `RESOLVED / UNRESOLVED / DENIED / ERROR` with `authoritative: false`; it performs no network lookup, policy evaluation, review, release, or publication. |
+| Evidence resolver workflow | **CONFIRMED read-only executable CI definition** | It runs the bounded candidate and negative profiles with `KFM_NO_NETWORK=1`. A green job is bounded candidate evidence only. |
+| PolicyDecision shape | **CONFIRMED closed `PROPOSED` schema** | `outcome` is `ANSWER / ABSTAIN / DENY / ERROR`; `policy_family` has no `evidence` value. |
+| Policy-test workflow | **CONFIRMED static drift guard** | It inventories all Rego files but recognizes only `policy/rego/release_gate_v1_test.rego` as a native Rego test and does not evaluate this evidence stub. |
+| Active evidence-admissibility execution | **NOT ESTABLISHED** | No accepted rule semantics, native evidence-policy tests, bundle membership, evaluator binding, emitted decision, governed consumer, or release gate was verified. |
+| Directory governance | **CONFIRMED accepted ADR-0029 and Directory Rules v2** | `policy/` is the singular policy-source root; this README is a BOUNDARY_COMPACT contract, not implementation proof. |
+| Ownership | **PARTIAL / NEEDS VERIFICATION** | CODEOWNERS routes `/policy/` to `@bartytime4life`; evidence stewardship and independent approval controls are unproved. |
+| Current CI results and required-check status | **NEEDS VERIFICATION / UNKNOWN** | Exact-head workflow results can be observed on the resulting pull request; branch-protection significance and production enforcement were not established. |
 
-### Truth labels
+### Current directory map
+
+Verified from the pinned recursive tree and direct file reads:
+
+```text
+policy/evidence/
+├── README.md                       # This documentation-only boundary
+└── bundle_closure_required.rego    # PROPOSED, untested greenfield stub
+```
+
+No direct child fixture, test, bundle manifest, evaluator configuration, decision record, or release record exists in this lane at the pinned snapshot.
+
+### Evidence limits and truth labels
 
 - **CONFIRMED** — verified from the pinned repository state in this update.
-- **PROPOSED** — a design, gate, field, obligation, or implementation step not established as active behavior.
+- **PROPOSED** — a design, gate, field, obligation, rule, or implementation step not established as accepted active behavior.
+- **PARTIAL** — a bounded implementation or routing surface exists, but the complete authority or control is not proved.
 - **UNKNOWN** — available evidence is insufficient to support a current-state claim.
-- **NEEDS VERIFICATION** — a concrete repository, runtime, policy, or review check is required.
+- **NEEDS VERIFICATION** — a concrete repository, runtime, policy, ownership, review, or release check is required.
 - **CONFLICTED** — inspected authorities or representations disagree and must not be silently normalized.
+- **NOT ESTABLISHED** — the inspected evidence does not support treating the capability as active.
+
+A bounded non-observation is not proof of permanent absence. Any later branch, bundle, runtime, ruleset, or deployment claim must be re-verified at its own exact revision.
 
 [Back to top](#top)
 
@@ -153,13 +206,31 @@ Directory Rules assign **admissibility** to the singular `policy/` responsibilit
 | Release, correction, withdrawal, rollback | [`release/`](../../release/README.md) | Own release-facing decisions; policy evidence is only one required input. |
 | Public API, UI, map, export, search, and AI | governed application/runtime roots | Receive released, policy-filtered results only. |
 
+### BOUNDARY_COMPACT responsibility signature
+
+| Field | Current boundary |
+|---|---|
+| Purpose and parent | Define the evidence-admissibility and claim-support policy boundary under the singular `policy/` root. |
+| Local owner | **NEEDS VERIFICATION.** `.github/CODEOWNERS` routes `/policy/` to `@bartytime4life`; accepted evidence stewardship and independent approval controls remain unproved. |
+| Belongs here | Reviewed evidence-admissibility source, policy-family routing, deterministic composition posture, public-safe reason semantics, obligation semantics, and links to accepted fixtures/tests/bundles when they exist. |
+| Prohibited here | Canonical contract or schema definitions, source/evidence payloads, hidden lookup, mutable resolver state, credentials, sensitive diagnostics, proofs, receipts, review records, release records, deployments, or publication. |
+| Inputs | Explicit versioned operation, claim scope, caller-supplied EvidenceRef/EvidenceBundle and resolver posture, source roles, citations, rights, sensitivity, lineage, integrity, time/correction, evaluator identity, review, and release context. |
+| Outputs | Future normalized policy posture and enforceable obligations through accepted contracts; this README emits no decision, and the current Rego stub supplies no accepted decision semantics. |
+| Exposure | Repository-facing governance documentation. Restricted evidence and precise sensitive material remain in approved protected systems and governed references. |
+| Mutation and retention | None. Policy evaluation should be deterministic over explicit input; persistence belongs to accepted decision, receipt, proof, review, or release lanes. |
+| Validation | Schema validators and tests, bounded resolver fixtures/tests, native policy fixtures/tests, bundle/evaluator parity, governed consumer tests, and release/correction evidence. Only the first two bounded layers are currently established. |
+| Related authority | Evidence contracts and schemas define meaning/shape; resolver code supplies non-authoritative candidate posture; policy/decision normalizes accepted outcomes; policy/bundles packages reviewed source; release owns publication-facing decisions. |
+| Status and open work | Documentation is current-state reconciled. Ownership, Rego-stub disposition, evidence-family mapping, accepted rules, bundles, evaluator binding, consumers, receipts, and release enforcement remain open. |
+
 ### Document authority and supersession
 
-- v0.2 supersedes the one-line stub at this same path.
-- It does not create a second policy root or a new canonical evidence contract.
-- No inspected ADR affecting this lane was accepted; ADR-0001, ADR-0011, and ADR-0020 remain `proposed`.
-- Current contracts, schemas, executable tests, active bundle records, runtime decisions, receipts, proofs, reviews, and release records outrank this README for implementation claims.
-- Authority or placement conflicts must remain visible in the drift register or an accepted ADR; they must not be resolved by prose alone.
+- v0.3 supersedes the v0.2 README at this same path and preserves its substantive policy model.
+- v0.2 superseded the 2026-05-08 one-line greenfield stub; the initial empty blob and greenfield stub remain provenance, not rollback targets for this revision.
+- Accepted ADR-0029 makes Directory Rules v2 the current placement authority. This lane remains a BOUNDARY_COMPACT policy boundary under the singular `policy/` root.
+- CODEOWNERS is review routing, not proof of subject-matter stewardship, separation of duties, policy acceptance, or production ownership.
+- The direct Rego stub is repository evidence, not higher authority than accepted contracts, schemas, policy decisions, bundles, tests, runtime records, reviews, receipts, proofs, or release records.
+- Current contracts, schemas, executable tests, accepted bundle records, runtime decisions, receipts, proofs, reviews, and release records outrank this README for implementation claims.
+- Authority, profile, or placement conflicts must remain visible in an accepted ADR, drift register, or migration record; prose must not silently resolve them.
 
 [Back to top](#top)
 
@@ -364,17 +435,21 @@ Evidence policy must fail closed when material rights, sensitivity, source autho
 
 | Surface | Confirmed behavior | What it does not prove |
 |---|---|---|
-| `tools/validators/validate_evidence_ref.py` | Runs the shared JSON Schema validator against the EvidenceRef schema and fixture root. | Reference resolution, bundle closure, rights, sensitivity, or release. |
+| `tools/validators/validate_evidence_ref.py` | Runs the shared JSON Schema validator against the EvidenceRef schema and fixture root. | Reference resolution, bundle closure, rights, sensitivity, policy, or release. |
 | `tools/validators/validate_evidence_bundle.py` | Runs the shared JSON Schema validator against the EvidenceBundle schema and fixture root. | Claim truth, citation sufficiency, current-head state, or policy permission. |
 | `tests/schemas/test_evidence_ref_validator.py` | Checks valid EvidenceRef acceptance and missing-`ref` rejection. | Cross-record resolution or evidence policy. |
 | `tests/schemas/test_common_contracts.py` | Includes the evidence family and checks discovered valid/invalid schema fixtures. | Complete evidence-family coverage, semantic closure, or policy enforcement. |
-| `.github/workflows/evidence-resolver.yml` | Performs read-only readiness checks and explicit holds. | No evidence is resolved and no policy decision is emitted. |
-| `.github/workflows/policy-test.yml` | Preserves policy-test readiness holds with read-only permissions. | No policy bundle is evaluated. |
-| `contracts-validate.yml` and `schema-validation.yml` | Run repository-owned schema/contract checks on pull requests. | A green result is not evidence truth, release approval, or publication. |
+| `packages/evidence-resolver/` | Implements the internal `kfm/evidence-ref-bundle-candidate/v1alpha1` profile as pure standard-library checks over explicit caller-supplied snapshots. | Live registry resolution, claim-scope inference, authoritative closure, policy evaluation, public outcomes, or production consumers. |
+| `make evidence-resolver` | Package documentation records 21 synthetic profile fixtures and 19 standard-library tests under `KFM_NO_NETWORK=1`. | Acceptance of the resolver contract or equivalence to a policy `ANSWER`. |
+| `make evidence-resolver-deny` | Requires every negative fixture to remain non-`RESOLVED` with expected local status and issue codes. | Evidence truth, rights/sensitivity clearance, review, release, or publication. |
+| `.github/workflows/evidence-resolver.yml` | Runs the bounded candidate and negative profiles with read-only contents permission, no secrets, and no network-dependent test command. | A live lookup, active evidence policy, successful current run, or required-check enforcement. |
+| `policy/evidence/bundle_closure_required.rego` | Declares the package and `default deny := false`; the example deny rule is commented out. | Any accepted allow/deny semantics, closure evaluation, or safe consumer behavior. |
+| `.github/workflows/policy-test.yml` | Inventories Rego and preserves a broad policy hold; the only recognized native Rego test is the separately governed release-gate test. | Formatting, compilation, or evaluation of this evidence stub; an active evidence bundle; an emitted PolicyDecision. |
+| `contracts-validate.yml` and `schema-validation.yml` | Run repository-owned schema/contract checks on pull requests. | A green result is not evidence truth, policy permission, release approval, or publication. |
 
 ### Repository-native commands
 
-These commands are grounded in the inspected paths but were **not run in this API-only documentation task**:
+These commands are grounded in the inspected paths. They were not run in a local checkout during this connector-only documentation update; exact-head hosted results must be read from the resulting pull request.
 
 ```bash
 python tools/validators/validate_evidence_ref.py \
@@ -385,8 +460,13 @@ python tools/validators/validate_evidence_bundle.py \
 
 python -m pytest -q tests/schemas/test_evidence_ref_validator.py
 python -m pytest -q tests/schemas/test_common_contracts.py
+
+make evidence-resolver
+make evidence-resolver-deny
 make test
 ```
+
+No evidence-native Rego test command is claimed. Before this lane can become active, its rule source must have accepted semantics, syntax/format validation, positive and negative fixtures, native evaluation tests, bundle identity, evaluator parity, and governed consumer tests.
 
 ### Required future negative cases
 
@@ -413,17 +493,17 @@ make test
 
 ## Smallest sound implementation sequence
 
-1. Resolve the EvidenceBundle duplicate-name/profile conflict without creating parallel schema authority.
-2. Accept the evidence-policy input boundary, finite outcome mapping, policy-family representation, reason-code registry, and obligation registry.
-3. Define deterministic resolver input/result semantics and implement no-hidden-I/O EvidenceRef-to-EvidenceBundle resolution with valid, unresolved, denied, stale, corrected, mismatched, and error fixtures.
-4. Add reviewed evidence-policy rules under this lane using exact filenames chosen from repository convention; keep rule source separate from immutable evaluated bundles.
-5. Add policy fixtures and tests for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, including obligation enforcement and sensitive diagnostic redaction.
-6. Pin the accepted policy bundle, evaluator version, normalization profile, and replay inputs; prove CI/runtime digest parity.
-7. Integrate the governed API and internal consumers so they preserve outcomes and obligations without exposing internal stores or allowing clients to choose policy.
-8. Emit accepted receipts and connect evidence policy to review, release, correction, withdrawal, and rollback gates.
-9. Record current runs, owners, branch-protection significance, and production enforcement before advancing maturity labels.
+1. Assign accepted evidence-policy stewardship and independent review controls; resolve the canonical EvidenceBundle schema/profile conflict and the PolicyDecision evidence-family representation.
+2. Decide the disposition of [`bundle_closure_required.rego`](bundle_closure_required.rego): transparently remove/supersede the greenfield stub or replace it at the same authority path with reviewed fail-closed semantics. Never let `default deny := false` become an implicit permit convention.
+3. Accept the evidence-policy input boundary, finite outcome mapping, reason-code registry, obligation registry, and diagnostic-redaction rules without duplicating contract or schema authority.
+4. Either graduate the bounded resolver candidate through accepted input/result contracts, fixtures, tests, compatibility rules, and governed consumers or keep it explicitly internal and non-authoritative.
+5. Add native evidence-policy fixtures and deterministic tests for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, including unresolved refs, integrity mismatch, stale/corrected support, rights, sensitivity, scope narrowing, obligation enforcement, and protected diagnostics.
+6. Pin the accepted rule source, immutable bundle ID/version/digest, evaluator version, entrypoint, normalization profile, and replay inputs; prove CI/runtime digest and result parity.
+7. Integrate governed API and internal consumers so they preserve outcomes and obligations, reject untrusted evaluator context, avoid hidden evidence stores, and never allow clients to select policy.
+8. Emit accepted decision/transform receipts and connect evidence policy to review, release, correction, withdrawal, downstream invalidation, and rollback gates.
+9. Record exact required checks, operational ownership, deployment identity, production enforcement, incident/correction evidence, and release proof before advancing maturity labels.
 
-Exact new filenames, module names, registry IDs, and bundle formats remain **NEEDS VERIFICATION** until the relevant stewards accept them.
+Exact future package names, entrypoints, registry IDs, reason codes, obligation IDs, bundle formats, and migration mechanics remain **NEEDS VERIFICATION** until accepted by the relevant stewards.
 
 [Back to top](#top)
 
@@ -433,25 +513,29 @@ Exact new filenames, module names, registry IDs, and bundle formats remain **NEE
 
 ### Documentation revision
 
-- [x] Replaces the greenfield stub without creating a parallel authority.
-- [x] States scope, exclusions, repository fit, inputs, finite outcomes, obligations, failure modes, validation, implementation sequence, and rollback.
-- [x] Distinguishes confirmed shape validation from unproved resolution and policy enforcement.
-- [x] Surfaces schema naming and PolicyDecision family conflicts.
-- [x] Preserves cite-or-abstain, fail-closed sensitivity, lifecycle, public-interface, correction, and rollback invariants.
-- [x] Uses only verified repository-relative links in this revision.
+- [x] Reconciles the populated v0.2 README in place without creating a parallel authority.
+- [x] Preserves purpose, scope, exclusions, inputs, gate model, finite outcomes, obligations, lifecycle, rights/sensitivity, failure modes, implementation sequence, and rollback.
+- [x] Records the exact two-file direct lane and the current blob-backed evidence snapshot.
+- [x] Distinguishes schema validation, bounded resolver behavior, policy evaluation, review, release, and publication.
+- [x] Corrects the resolver from “scaffold” to an internal non-authoritative v1alpha1 candidate with bounded fixtures/tests and read-only CI.
+- [x] Surfaces `bundle_closure_required.rego` as an untested permissive-default stub rather than active evidence policy.
+- [x] Records accepted ADR-0029 placement, CODEOWNERS routing limits, EvidenceBundle profile conflict, and PolicyDecision family incompatibility.
+- [x] Adds the Directory Rules v2 BOUNDARY_COMPACT signature, no-loss ledger, changelog, evidence ledger, and v0.2 rollback target.
+- [x] Uses repository-relative links verified at the pinned snapshot.
 
 ### Executable evidence-policy capability
 
-- [ ] Evidence policy owners and independent review roles are accepted.
+- [ ] Evidence-policy owners, independent review, and separation-of-duties controls are accepted.
 - [ ] EvidenceRef/EvidenceBundle canonical profiles and resolver semantics are accepted.
+- [ ] The Rego stub is removed/superseded or replaced by reviewed fail-closed rule semantics with native tests.
 - [ ] Evidence-policy input, reason, obligation, and policy-family representations are contract/schema-backed.
-- [ ] Direct policy rules, valid/invalid/denied/abstain/error fixtures, and deterministic tests exist.
-- [ ] Accepted bundle/evaluator/digest and CI/runtime parity are proved.
-- [ ] Resolver, policy, governed API, receipts, review, release, correction, and rollback are integrated.
+- [ ] Direct policy rules plus valid/invalid/deny/abstain/error fixtures and deterministic tests exist.
+- [ ] Accepted bundle/evaluator/entrypoint/digest and CI/runtime parity are proved.
+- [ ] Resolver, policy, governed API, receipts, review, release, correction, withdrawal, and rollback are integrated.
 - [ ] Sensitive diagnostics and public projections are proven non-leaking.
-- [ ] Current CI, branch-protection, runtime, and release evidence supports promotion.
+- [ ] Current required checks, production enforcement, incident response, and release evidence support promotion.
 
-This README being complete does not make the executable capability complete.
+This README being complete does not make the executable capability complete. Any unchecked item remains a hold, not an implied implementation.
 
 [Back to top](#top)
 
@@ -461,18 +545,21 @@ This README being complete does not make the executable capability complete.
 
 | Item | Status | Evidence needed |
 |---|---|---|
-| Evidence-policy owners and separation of duties | **NEEDS VERIFICATION** | Accepted stewardship assignments and review records. |
-| Direct `policy/evidence/` rule inventory | **UNKNOWN** beyond the directly read README | Complete tree or mounted checkout at the final head. |
-| Canonical EvidenceBundle schema/profile | **CONFLICTED / NEEDS VERIFICATION** | Schema-steward decision plus migration/deprecation evidence for duplicate variants. |
-| Evidence policy family in `PolicyDecision` | **CONFLICTED / NEEDS VERIFICATION** | Accepted mapping to an existing family or reviewed contract/schema revision. |
-| Resolver result contract and implementation | **NOT ESTABLISHED** | Accepted semantics, code, deterministic fixtures, tests, and consumer evidence. |
-| Evidence reason-code and obligation registries | **NOT ESTABLISHED** | Accepted machine registries, tests, and compatibility rules. |
-| Active policy bundle and evaluator | **UNKNOWN** | Immutable bundle manifest, digest, selector, evaluator profile, and review evidence. |
-| Runtime and governed API consumers | **UNKNOWN** | Exhaustive imports/routes/adapters plus runtime tests or traces. |
-| Receipt, proof, review, and release integration | **UNKNOWN** | Emitted records and tests linking one decision through correction and rollback. |
-| Current workflow results | **NEEDS VERIFICATION** | Pull-request checks for the resulting commit. |
-| Required-check / branch-protection status | **UNKNOWN** | Repository ruleset or branch-protection evidence. |
-| Production enforcement and public safety | **UNKNOWN** | Deployment configuration, policy digest parity, runtime logs, and governed release evidence. |
+| Evidence-policy owners and separation of duties | **NEEDS VERIFICATION** | Accepted stewardship assignments, independent approval controls, and review records. |
+| `bundle_closure_required.rego` disposition | **PROPOSED STUB / HOLD** | Accepted removal/supersession or reviewed rule semantics, native fixtures/tests, bundle membership, and evaluator behavior. |
+| Canonical EvidenceBundle schema/profile | **CONFLICTED / NEEDS VERIFICATION** | Schema-steward decision plus compatibility, migration, and deprecation evidence for duplicate representations. |
+| Evidence policy family in PolicyDecision | **CONFLICTED / NEEDS VERIFICATION** | Accepted mapping to an existing family or a deliberately versioned contract/schema/fixture/consumer migration. |
+| Resolver candidate graduation | **PARTIAL / NEEDS VERIFICATION** | Accepted resolver contracts, canonical inputs, compatibility policy, governed consumers, and authority decision; current `authoritative: false` posture remains binding. |
+| Evidence reason-code and obligation registries | **NOT ESTABLISHED** | Accepted machine registries, redaction rules, tests, and compatibility guarantees. |
+| Active policy bundle and evaluator | **UNKNOWN / NOT ESTABLISHED** | Immutable bundle manifest and digest, selector/entrypoint, evaluator profile, review evidence, and replay parity. |
+| Native evidence-policy fixtures and tests | **NOT ESTABLISHED** | Positive/negative/adversarial cases plus direct execution of the accepted evidence rule source. |
+| Runtime and governed API consumers | **UNKNOWN** | Exhaustive imports, routes, adapters, caches, failure behavior, and exact-head runtime tests/traces. |
+| Receipt, proof, review, and release integration | **UNKNOWN** | Emitted records and tests linking one decision through correction, withdrawal, downstream invalidation, and rollback. |
+| Current workflow results | **NEEDS VERIFICATION** | Exact-head pull-request runs and logs for the resulting documentation commit. |
+| Required-check / branch-protection status | **UNKNOWN** | Repository ruleset or branch-protection evidence naming required contexts. |
+| Production enforcement and public safety | **UNKNOWN** | Deployment configuration, evaluator/bundle digest parity, runtime logs, incident/correction evidence, and governed release records. |
+
+The direct `policy/evidence/` inventory itself is no longer unknown at this snapshot. Future changes must refresh the pinned tree and this register.
 
 [Back to top](#top)
 
@@ -480,26 +567,67 @@ This README being complete does not make the executable capability complete.
 
 ## Evidence ledger
 
-Evidence was read from `bartytime4life/Kansas-Frontier-Matrix@2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0` unless otherwise stated.
+Evidence was read from `bartytime4life/Kansas-Frontier-Matrix@163110232387b4442c2fcd73d2ea3b79fd39484a` unless a historical revision is named explicitly.
+
+### No-loss ledger
+
+| v0.2 asset | v0.3 disposition |
+|---|---|
+| Evidence-first purpose and cite-or-abstain posture | **Preserved.** The current resolver candidate is explicitly separated from admissibility and truth. |
+| Authority split among contracts, schemas, resolver, policy, decision normalization, bundles, tests, proofs, receipts, release, and public consumers | **Preserved and strengthened** with the accepted Directory Rules v2 BOUNDARY_COMPACT signature. |
+| In-scope and out-of-scope boundaries | **Preserved.** No evidence storage, hidden lookup, schema authority, release authority, or publication authority is added. |
+| Explicit evaluation inputs and ordered admissibility gates | **Preserved.** Current machine and resolver limitations are made more explicit. |
+| Four finite outcomes and PolicyDecision family conflict | **Preserved.** No fifth outcome or schema-invalid `policy_family: evidence` is invented. |
+| Proposed obligations, lifecycle controls, rights, sensitivity, source roles, correction, and rollback | **Preserved.** None is misreported as an active registry or enforcement path. |
+| Schema fixtures, validators, and focused tests | **Preserved and refreshed** against current blobs. |
+| Resolver and workflow posture | **Corrected without loss.** “Scaffold/readiness only” is superseded by the bounded internal v1alpha1 implementation and executable synthetic CI, while its non-authoritative limits remain explicit. |
+| Direct policy-rule inventory | **Corrected without loss.** The previously unknown lane now records the Rego stub, its exact permissive default, absence of operative deny logic, and absence of native evidence-policy evaluation. |
+| Implementation sequence, definition of done, open register, and rollback | **Preserved and updated** so completed documentation work cannot be confused with executable capability. |
+| Historical stub provenance | **Retained** as lineage; the rollback target is correctly advanced to the v0.2 baseline blob. |
+
+### Repository evidence
 
 | Evidence | Status | Supports | Does not prove |
 |---|---|---|---|
-| Prior `policy/evidence/README.md` blob `61f9a3f699e69fef56e0fe04a6a415ff539f0363` | **CONFIRMED** | Target existed as a one-line greenfield stub. | Executable policy, ownership, or current maturity. |
-| [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | **CONFIRMED doctrine file** | Singular `policy/` placement and responsibility-root separation. | That any specific rule module or evaluator exists. |
-| [`docs/architecture/contract-schema-policy-split.md`](../../docs/architecture/contract-schema-policy-split.md) | **CONFIRMED draft architecture file** | Meaning/shape/admissibility/test separation. | Accepted ADR status or runtime enforcement. |
-| [`contracts/evidence/evidence_ref.md`](../../contracts/evidence/evidence_ref.md) | **CONFIRMED draft contract** | EvidenceRef pointer meaning, closure limits, and public/AI posture. | Resolution, policy, review, or release behavior. |
-| [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) | **CONFIRMED draft contract** | EvidenceBundle claim-support meaning and authority boundaries. | Claim truth, policy permission, or release approval. |
-| [`evidence_ref.schema.json`](../../schemas/contracts/v1/evidence/evidence_ref.schema.json) | **CONFIRMED fielded `PROPOSED` schema** | Required `ref` and `kind`, optional `bundle_ref`, closed shape, fixture/validator/policy pointers. | Referential resolution or bundle closure. |
-| [`evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | **CONFIRMED fielded `PROPOSED` schema** | Required claim scope, refs, sources, citations, rights, sensitivity, transforms, checksums, and spec hash. | Admissibility, freshness, current-head status, or release. |
-| Evidence fixture READMEs | **CONFIRMED minimal inventory** | Bounded positive/negative schema cases. | Complete semantic, resolver, policy, or sensitive-case coverage. |
-| Evidence validator wrappers | **CONFIRMED executable source** | JSON Schema runner binding and fixture roots. | Evidence-policy evaluation. |
-| [`tests/schemas/test_evidence_ref_validator.py`](../../tests/schemas/test_evidence_ref_validator.py) | **CONFIRMED executable test source** | Valid and missing-`ref` CLI polarity. | Cross-record resolution or production behavior. |
-| [`tests/schemas/test_common_contracts.py`](../../tests/schemas/test_common_contracts.py) | **CONFIRMED executable test source** | Evidence-family discovery and valid/invalid schema behavior. | Non-vacuous coverage of every evidence schema or policy behavior. |
-| [`policy_decision.schema.json`](../../schemas/contracts/v1/policy/policy_decision.schema.json) | **CONFIRMED closed `PROPOSED` schema** | Four outcomes and current policy-family enum. | Accepted evidence-family mapping, evaluator, or emitted decisions. |
-| [`packages/evidence-resolver/README.md`](../../packages/evidence-resolver/README.md) | **CONFIRMED repository-grounded package README** | Resolver package is documented as a scaffold with unresolved profile conflicts. | Current production resolver implementation. |
-| [`evidence-resolver.yml`](../../.github/workflows/evidence-resolver.yml) | **CONFIRMED read-only workflow** | Readiness checks, explicit holds, and no publication authority. | Successful current run or resolved evidence. |
-| [`policy-test.yml`](../../.github/workflows/policy-test.yml) | **CONFIRMED read-only workflow** | Policy readiness holds and no emitted PolicyDecision. | Active policy evaluation. |
-| [`docs/registers/DRIFT_REGISTER.md`](../../docs/registers/DRIFT_REGISTER.md) | **CONFIRMED register file** | Existing repository drift tracking surface. | That every evidence-policy conflict is registered or resolved. |
+| Current target blob `a940ded7c4ae299dd5e6a70764c1e7dd7292b9e7` | **CONFIRMED v0.2 baseline** | The target was already a substantive 529-line evidence-policy boundary before this revision. | That every current implementation claim in v0.2 remained accurate. |
+| Historical empty blob `8b137891791fe96927ad78e64b0aad7bded08bdc` and greenfield stub blob `61f9a3f699e69fef56e0fe04a6a415ff539f0363` | **CONFIRMED lineage** | The path progressed from empty to one-line stub before v0.2. | Current policy maturity or the correct v0.3 rollback target. |
+| [`bundle_closure_required.rego`](bundle_closure_required.rego), blob `d60a9ea030ca57f5d577dabd760343e9d73a725c` | **CONFIRMED proposed stub** | Package declaration, `default deny := false`, and commented example only; path history shows one upload commit. | Accepted semantics, fail-closed evaluation, closure, native tests, bundle activation, or consumer safety. |
+| [`policy/README.md`](../README.md), blob `6c5021f9d92778581a4e9331a9dd6ddb7efc5e35` | **CONFIRMED current policy root** | Singular policy responsibility, mixed maturity, and policy-wide authority limits. | Activation of this evidence lane. |
+| [Directory Rules v2](../../docs/doctrine/directory-rules.md), blob `fd49a0b83e55cef52c1124281f093e263526898d`, and [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md), blob `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62` | **CONFIRMED doctrine / accepted decision** | Singular `policy/` placement and BOUNDARY_COMPACT obligations. | Evidence-policy implementation or ownership. |
+| [EvidenceRef contract](../../contracts/evidence/evidence_ref.md), blob `afd3a964435445edbb694b5edf16e2b6ddd49a92`, and [EvidenceBundle contract](../../contracts/evidence/evidence_bundle.md), blob `731c348832add23cddd14e796aa56ce2b9268259` | **CONFIRMED contracts** | Pointer meaning, claim-support meaning, closure limits, and authority boundaries. | Resolution, admissibility, truth, review, or release. |
+| [EvidenceRef schema](../../schemas/contracts/v1/evidence/evidence_ref.schema.json), blob `42f499df613a9d68e5ca6fc5ec75ff8058c155b9`, and [EvidenceBundle schema](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json), blob `cf5256831b63dca46a5f68b168441adcf68b8751` | **CONFIRMED fielded / PROPOSED** | Current closed shapes and required fields. | Referential resolution, claim closure, freshness, admissibility, or release. |
+| Evidence fixture READMEs and validator/test source | **CONFIRMED bounded coverage** | Positive/negative schema examples, shared validator bindings, EvidenceRef CLI polarity, and generic evidence-family discovery. | Complete semantic, resolver, policy, or sensitive-case coverage. |
+| [PolicyDecision schema](../../schemas/contracts/v1/policy/policy_decision.schema.json), blob `1472d26a42c73f17545b4464a275412ffa1d098e` | **CONFIRMED closed / PROPOSED** | `ANSWER / ABSTAIN / DENY / ERROR` and the current family enum. | Accepted evidence-family mapping, evaluator, or emitted decisions. |
+| [Evidence resolver README](../../packages/evidence-resolver/README.md), blob `d64f112e9fe6538178c74dd31cc751235781c7f3` | **CONFIRMED bounded implementation contract** | Internal v1alpha1 candidate, pure explicit inputs, local finite results, `authoritative: false`, 21 synthetic profiles, 19 tests, and no hidden I/O. | Live registry resolution, policy evaluation, public API, production consumer, review, release, or publication. |
+| [Evidence resolver workflow](../../.github/workflows/evidence-resolver.yml), blob `776bf8773ffc1f00b08a04b86a747248978a539f` | **CONFIRMED read-only CI definition** | Bounded candidate and negative jobs, no secrets, `KFM_NO_NETWORK=1`, and explicit authority disclaimers. | Successful exact-head run, required-check status, active policy, or production behavior. |
+| [Policy-test workflow](../../.github/workflows/policy-test.yml), blob `ac8f125e8a4d3634d86f66836d2aa2c0e3925e75` | **CONFIRMED static drift guard** | Rego inventory, a single separately governed native release-gate test lane, bundle-payload holds, and no general evaluator. | Formatting, compilation, or evaluation of the evidence Rego stub. |
+| [CODEOWNERS](../../.github/CODEOWNERS), blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` | **CONFIRMED review route** | `/policy/` changes route to `@bartytime4life`. | Evidence stewardship, independence, acceptance, or enforcement. |
+| [CONTRIBUTING.md](../../CONTRIBUTING.md), blob `de5bf143e601e36a794e6e5442ae8f91c6f75aad`, and [pull-request template](../../.github/PULL_REQUEST_TEMPLATE.md), blob `c5624d7dbc2b83055421b4fb4542794bafa10bee` | **CONFIRMED governance surfaces** | Evidence-backed, reviewable, reversible change expectations. | That all controls are required or enforced on the target branch. |
+
+[Back to top](#top)
+
+---
+
+## Changelog
+
+### v0.3 — 2026-08-13
+
+- reconciled v0.2 against `main@163110232387b4442c2fcd73d2ea3b79fd39484a`;
+- recorded the exact two-file lane and current evidence snapshot;
+- corrected resolver status from scaffold/readiness-only to bounded internal v1alpha1 candidate with synthetic fixtures, standard-library tests, negative checks, and read-only CI;
+- documented the Rego stub's `default deny := false` posture, commented-only example, lack of native evidence-policy testing, and non-authoritative status;
+- added accepted Directory Rules v2 / ADR-0029 placement, BOUNDARY_COMPACT responsibility signature, ownership-routing limits, no-loss ledger, updated open register, and correct v0.2 rollback target;
+- preserved all v0.2 policy doctrine and created no executable behavior.
+
+### v0.2 — 2026-07-20
+
+- replaced the one-line greenfield stub with the repository-grounded evidence-admissibility boundary;
+- established the documented purpose, scope, inputs, gate model, finite outcomes, obligations, lifecycle, validation posture, implementation sequence, and rollback discipline.
+
+### Earlier lineage
+
+- initial empty blob: `8b137891791fe96927ad78e64b0aad7bded08bdc`;
+- 2026-05-08 greenfield stub blob: `61f9a3f699e69fef56e0fe04a6a415ff539f0363`.
 
 [Back to top](#top)
 
@@ -509,20 +637,24 @@ Evidence was read from `bartytime4life/Kansas-Frontier-Matrix@2b31ccbd9ba5b3fe67
 
 Correct this README when:
 
-- the target lane gains, loses, renames, or activates policy rules;
-- EvidenceRef, EvidenceBundle, PolicyDecision, resolver, or bundle profiles change;
-- reason codes, obligations, policy-family mapping, fixtures, tests, workflows, consumers, or release gates become accepted;
+- the direct lane gains, loses, renames, removes, supersedes, tests, bundles, or activates policy rules;
+- the Rego stub's semantics or disposition changes;
+- EvidenceRef, EvidenceBundle, PolicyDecision, resolver, bundle, evaluator, or normalization profiles change;
+- reason codes, obligations, fixtures, tests, workflows, consumers, receipts, or release gates become accepted;
 - a current-state claim no longer matches the repository;
-- a rights, sensitivity, source-role, correction, or public-safety rule changes.
+- a rights, sensitivity, source-role, correction, withdrawal, or public-safety rule changes.
 
-Correction must preserve the superseded statement, why it changed, the evidence for the correction, downstream impact, and the rollback target where material. Do not erase historical uncertainty by rewriting it as if it never existed.
+Correction must preserve the superseded statement, why it changed, the supporting evidence, downstream impact, migration or invalidation requirement, and rollback target where material. Do not erase historical uncertainty by rewriting it as if it never existed.
 
 Rollback target for this documentation revision:
 
 ```text
-prior blob: 61f9a3f699e69fef56e0fe04a6a415ff539f0363
+prior v0.2 blob: a940ded7c4ae299dd5e6a70764c1e7dd7292b9e7
+historical greenfield stub blob: 61f9a3f699e69fef56e0fe04a6a415ff539f0363
 ```
 
-Before merge, rollback means leaving or closing the draft pull request; branch deletion requires separate authorization. After merge, create a transparent revert of the documentation commit and re-run applicable checks. Reverting this README changes documentation only; it does not alter evidence records, policy rules, bundles, schemas, contracts, fixtures, tests, validators, resolver behavior, runtime decisions, receipts, proofs, release state, deployment, or publication.
+The historical stub is provenance only, not the normal rollback target.
+
+Before merge, rollback means leaving or closing the draft pull request; branch deletion requires separate authorization. After merge, create a transparent revert of the documentation commit and re-run applicable checks. Reverting this README changes documentation only; it does not alter the Rego stub, evidence records, policy rules, bundles, schemas, contracts, fixtures, tests, validators, resolver behavior, runtime decisions, receipts, proofs, reviews, release state, deployment, or publication.
 
 [Back to top](#top)
