@@ -1,0 +1,278 @@
+{
+  "receipt_id": "genrec-policy-domains-hydrology-readme-397979a2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/hydrology/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/hydrology/README.md": "sha256:397979a2c4d038cd978f15982f2662f7c4688f301bdf1b83a31a4e165e24cb0f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "complete sparse-expanded repository inspection",
+      "repository-native deterministic documentation validation",
+      "static Hydrology maturity and trust-boundary reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:d3b4f65b82ccbc3e4a54ea31fd9faf1af2ecfa8d6679b622c9c27d2a1f7cbce6",
+      "sha256:5b0e31f5492bbb826eaea079ae70a13e21ca03cf81cfc01da402e392e72b8c2e",
+      "sha256:fe7eec8457939754db820983de53c5e9d5fdf3f7d8c955dd184fbf001913b887",
+      "sha256:289d785eeb1f8a48686d6abd7c68d32aee16fa7c65a4f0796db0382c5c30146f",
+      "sha256:013b42b6fa99296630c9eef061e7f7997c72b9d6a90812a7904ffdc7cb7cfdca",
+      "sha256:baac321f4bf577f778f1972fefd4420c49201485dde377f0f91b06129d3b012e",
+      "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f",
+      "sha256:33799792c50fda2a6d4567a39baed1c5e705230f2b9ad0925db7bb061d14503f",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:1b1936bf354503b3704c81c620cad6de5feb17d46bb204b4863e84240a6c7cda"
+    ],
+    "attached_docs": [
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "repo:commit@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/domains/hydrology/*.rego@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/bundles/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:policy/decision/vocabulary.v1.json@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:packages/policy-runtime/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/adr/ADR-0026-hydrology-source-spine-starts-with-wbd-huc12.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/doctrine/directory-rules.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/domains/hydrology/SOURCE_ROLE_MATRIX.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:docs/domains/hydrology/PUBLICATION_POSTURE.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:contracts/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:schemas/contracts/v1/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:fixtures/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tests/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tools/validators/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:.github/workflows/domain-hydrology.yml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:.github/workflows/hydrology-proof-slice.yml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:pipeline_specs/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:pipelines/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/registry/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/registry/sources/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/proofs/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/receipts/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:release/candidates/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:data/published/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:apps/explorer-web/src/features/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:control_plane/domain_lane_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:control_plane/cross_domain_seam_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:control_plane/policy_gate_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:.github/CODEOWNERS@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@299c8a81325689c68a38304ce7b14921342dcdd0",
+      "repo:tools/validators/validate_generated_receipt.py@299c8a81325689c68a38304ce7b14921342dcdd0"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/hydrology/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, exact target history and bytes, direct lane tree, CODEOWNERS route, accepted directory placement, adjacent maturity surfaces, exact-target branch scope, and open-pull-request overlap before authoring."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced during preparation from 43ca3e4751d9 to 299c8a813256 through six unrelated topology, generated-receipt, People alias, and legacy geoprivacy paths. The Hydrology target blob and all Hydrology-scoped cited surfaces remained unchanged, and the candidate was repinned to the final main tree before publication."
+    },
+    {
+      "gate": "hydrology-static-inventory",
+      "outcome": "PASS",
+      "reason": "Deterministic assertions confirmed eight direct Rego sources, six allow-default-false scaffolds, two deny-default-false stubs, zero operative rule bodies, 34 contracts, 40 schemas, 101 JSON fixtures, fourteen direct tests split eight substantive/six placeholders, fifteen domain validators, thirteen pipeline specs, and zero direct proof, receipt, candidate, or published payloads."
+    },
+    {
+      "gate": "authority-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Separated direct Rego scaffolds from seven workflow-executed bounded validation families, dedicated offline candidate and watcher profiles, one fixture-first WBD producer, proposed ADRs, duplicated registry topology, explicit proof/release holds, and placeholder public feature modules."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the prior purpose, policy-home, placement, input/output, validation, review, related-folder, and proposed-status intent while replacing overbroad canonical authority and stale greenfield-only implications with repository-grounded boundaries."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, ordered headings, balanced language-tagged fences, no trailing whitespace, UTF-8-compatible text, a final newline, and one KFM_META_BLOCK_V2 envelope that passes the required profile with zero findings."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 77 local README targets and fragments with zero findings and no external requests."
+    },
+    {
+      "gate": "document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "The explicit-file document-graph and bounded-required stale-scan profiles passed with zero findings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "markdown-render-parse",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed the final GitHub-Flavored Markdown successfully; fence, metadata-delimiter, tab, trailing-whitespace, final-newline, and git diff checks also passed."
+    },
+    {
+      "gate": "hydrology-schema-json-integrity",
+      "outcome": "PASS",
+      "reason": "All forty direct Hydrology domain schemas parse as standards-conforming JSON. This is syntax integrity only, not schema or policy acceptance."
+    },
+    {
+      "gate": "hydrology-executable-domain-suites",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks pytest and jsonschema and dependency installation is unavailable. The unchanged command-bearing workflows, source, tests, validators, and fixture polarity were inspected without claiming a local execution pass."
+    },
+    {
+      "gate": "direct-hydrology-rego-execution",
+      "outcome": "SKIPPED",
+      "reason": "OPA is unavailable locally and the lane has no accepted checksum-pinned evaluator, bundle manifest, native Rego tests, or workflow invocation. Exact static source inspection is recorded without claiming parse or evaluator success."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator's jsonschema dependency is unavailable locally. Manual JSON, required-field, path/key parity, SHA-256, citation, policy-reference, pending-review, and artifact-integrity checks are performed separately without claiming full validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal records, precise private-well or critical-infrastructure payloads, signed URLs, production endpoints, or invented actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego source, policy value, source descriptor, contract, schema, fixture, validator, test, workflow, pipeline, bundle, evaluator, consumer, lifecycle state, proof, release, deployment, warning, or publication behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy acceptance, source or scientific approval, proof graduation, independent approval, merge authority, release authority, deployment, warning, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "hydrology-direct-policy-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-rule-polarity-and-scaffold-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/hydrology/*.rego@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "canonical-policy-root-and-general-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "proposed-first-proof-bearing-decision-and-hold",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-source-role-anti-collapse-intent",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/hydrology/SOURCE_ROLE_MATRIX.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-contract-inventory",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-schema-mixed-maturity",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-test-and-validator-maturity",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-bounded-validation-and-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-hydrology.yml@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-no-proof-payload-posture",
+      "validated": true,
+      "evidence_ref": "repo:data/proofs/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "hydrology-no-candidate-dossier-posture",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/hydrology/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "policy-bundle-and-runtime-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/bundles/README.md@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "empty-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@299c8a81325689c68a38304ce7b14921342dcdd0"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@299c8a81325689c68a38304ce7b14921342dcdd0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T19:28:19Z",
+  "emitter": "openai/gpt-5-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded v0.1 Hydrology policy-boundary reconciliation on a focused draft-review branch. The current repository, accepted Directory Rules, Hydrology doctrine, policy sources, contracts, schemas, fixtures, tests, validators, workflows, pipelines, source registries, proof/release boundaries, and public feature stubs were inspected at main@299c8a8132. The architecture source material informed proposed terminology only; pinned repository bytes control implementation claims. This change activates no rule, source, threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, pipeline, lifecycle transition, proof, release, deployment, warning, or publication. Human review remains pending."
+}
