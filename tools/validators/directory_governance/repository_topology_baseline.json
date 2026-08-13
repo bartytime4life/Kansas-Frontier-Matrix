@@ -73,25 +73,11 @@
       "subject": "release/decisions/"
     },
     {
-      "evidence_sha256": "sha256:2df386b7f3a2981b0585e5a6d6288fa2d2818a687ac55d54df49ad99e0143526",
-      "evidence_zlib_base64": "eNoFwVsKgCAQAEAvFLi6rfbhYdwXGKSB3Z9mnqXWIEZCDHPNo28ZIyy+Tb6mYM5sgpzwjLl4raiJCdBJia6sBSgJh/12sR9nvBZ4",
-      "fingerprint": "sha256:101a3b612b40ceec3e67771d3ccc98b89ef548f382a6599c5bbfa5fb0be78da0",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
-    },
-    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:1032c3d69b1769b08b5bfbae7715511d697161573bf87cc5ba6bbf4a4f0a671b",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/manifests/hazards-r0001.yaml"
-    },
-    {
-      "evidence_sha256": "sha256:e7c2cb38e7daea60fe9458a4c3f2cccc730dc37725cd6bb0b44f2891ef76d7dc",
-      "evidence_zlib_base64": "eNoFwUEOwCAIBECfBJat9uBjUODQhHDp/9OZU5nasswXE90irfbr51veETxZHIzxGAI4FBxOfMFs96kyQvQHe9USxQ==",
-      "fingerprint": "sha256:10dc2da71ed125c820345284b39c22ee76bf42168867642ca5715f94f3bddc7d",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/focus-mode/counties/edwards_county/README,md"
     },
     {
       "evidence_sha256": "sha256:3a18c4f73fa5b26d7d7db0217eeba23bf805d6b8deb6cc682764f19761d8e2f0",
@@ -129,13 +115,6 @@
       "subject": "release/promotion_decisions/hazards-r0001-v1.yaml"
     },
     {
-      "evidence_sha256": "sha256:08c25a2aa63e748175176a0f6924c936db558c409628b9f6fec07d1734d74325",
-      "evidence_zlib_base64": "eNoFwVEOgCAIAFCPBEhYHx4GEdbaypbef713j+4VAYQ5jXa5rcoUbJEDtmhoTiIlDiEhLOqgOXZFtJD06ufPOn36/AHrHxWG",
-      "fingerprint": "sha256:2675d7ca5f3f81fe1ed4830041f38ec2ffd68246036620ae875810141491f761",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
-    },
-    {
       "evidence_sha256": "sha256:00a0eaabe165e059510bcb90719a623730fbfbc1171ffad779099da4a87e0f2e",
       "evidence_zlib_base64": "eNpLyU8u1i/OLy1KTi3WT04sSczJT9fPy09M1MtNYUjBJakf5Oro4usKVAMADqMXRA==",
       "fingerprint": "sha256:28684800e5fd5535ce11a018d9926481608ff57ea6496b5a0b63663a48f9b38d",
@@ -148,13 +127,6 @@
       "fingerprint": "sha256:290f9efe3dbceff387c49f406c1c645dd647a956041670ba5a8c903f9808d691",
       "rule_id": "KFM-TOPO-012",
       "subject": "release/public_safe_geometry.rego"
-    },
-    {
-      "evidence_sha256": "sha256:6d62913eb0d303fea9efefe5047d6d83f623d6fb80f5aaa93f90c6203b87e9e1",
-      "evidence_zlib_base64": "eNoFwVEKwCAIANAuNMgws48OY2rQYDVo92fvPdu8QYyEGNZelxydM+x+u36NCrtCNPCaQACqOVHPVAoyDx5JDEcmCecV9R9RZRYo",
-      "fingerprint": "sha256:29f8cf97064ac201babfd5998336e45bbe1759e110c7be06f92fc5472da85faf",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
     },
     {
       "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
@@ -402,13 +374,6 @@
       "subject": "data/rollback/"
     },
     {
-      "evidence_sha256": "sha256:2c0db7e39809e233dfb0091d88c457dc6a607e9fcd2303431dff4ea5483cf582",
-      "evidence_zlib_base64": "eNoFwUsOwCAIBUCPBJZX7cLDoECafuLC3j+d6Tru9eg60zvNGxPtImn2y8fXPCO4sjgY5TAEMCg4nHiDWc9VpYToD+kBFGQ=",
-      "fingerprint": "sha256:64995623dde82a49e6dc16aec20b111f3deaf385c25e2307d9cfa34e5ff7af06",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/focus-mode/counties/edwards_county\\README.md"
-    },
-    {
       "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
       "evidence_zlib_base64": "eNorSs1JTSxO1c9NzMtMSy0u0ddLzyzJTk0tYChClwlydXTxddXLTQEACH8S8Q==",
       "fingerprint": "sha256:66cf6e298f5a101c6be8f6208ede7198a78c25ab899aad692c541cadc21e4c14",
@@ -421,6 +386,20 @@
       "fingerprint": "sha256:6b78e528037568d4cde192597df9a98875d2555eb2ffc57bc826ef670fbb489c",
       "rule_id": "KFM-TOPO-016",
       "subject": "doc-id:kfm://doc/geology-sublane-surficial"
+    },
+    {
+      "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoLkhMTgUALjQFHg==",
+      "fingerprint": "sha256:6dccd2a876f400e69fa76640438638ef623328ccb1e65afc370d769114db20ba",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md"
+    },
+    {
+      "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWHIy8/TTSxOzsxkKC5ITE4FAHNpCJ8=",
+      "fingerprint": "sha256:6e3aa36a6e142764f9a9a71cb6d602ab599417dd7a6d6b3e4fce0352dd5fba09",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0028 \u2014 State-scale Focus Mode scope.md"
     },
     {
       "evidence_sha256": "sha256:96b6b742adf0170f6498372c4fcb9a5fca25db07e518ecb6493ff72729ac00c1",
@@ -486,11 +465,25 @@
       "subject": "release/manifest/"
     },
     {
+      "evidence_sha256": "sha256:5c1c3a3c98691e708f1c834019f576e19580ab5f9ca1fc3a52a5022fbc33b6e2",
+      "evidence_zlib_base64": "eNpLzs/NTWTIzU9JtTU0MDAzMQEANEoFHw==",
+      "fingerprint": "sha256:82ee351cc21d351f4f940fe1dfd089d12b79455039fcd8a717a307d2cde40a87",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/focus-mode/counties/edwards_county/README,md"
+    },
+    {
       "evidence_sha256": "sha256:7114a40df0df2cd9b3430b1d633194d6f97ae0270e1d45dc04b9279596f8f454",
       "evidence_zlib_base64": "eNo9jEsOwiAQQL1Q5QyasGrDNJRGd4TCqI2FoUNp4u21G9fvE8gXsVa3zNtHRJeXeWJsMvKjedKOnFzyeI7hFA6Ra5qI3kW4LVLJL2QUCqyS5ga6tUYOxupRXQHaf1PQVz7u8t7DMGpp++6ifvgLG+IsMg==",
       "fingerprint": "sha256:84b6db65c19e4e71c7827824abe64dfcce7800b5be715c1f766eaca9046bec69",
       "rule_id": "KFM-TOPO-016",
       "subject": "doc-id:kfm://doc/NEEDS_VERIFICATION"
+    },
+    {
+      "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoSCxKzSvJSC1OLQYAVgMHtA==",
+      "fingerprint": "sha256:89996a501d9f73859b11ec468667147c5e9666d75e20837952f47bfcbaf9cafb",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
     },
     {
       "evidence_sha256": "sha256:4e7d8d0b600ba950043567c18773c6ea3f13fdaa3ffacafa50fa32853f638610",
@@ -556,6 +549,13 @@
       "subject": "release/manifests/rel-roads-historic-claim-v1-template.json"
     },
     {
+      "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWHIy8/TTSxOzsxkKC5ITE4FAHNpCJ8=",
+      "fingerprint": "sha256:9470b11d549bdaec9bae97946e4fafb256de3bb5663ad4fccc5b51b3385d630d",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+    },
+    {
       "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
       "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
       "fingerprint": "sha256:953300d8e1d4ae0adf9c9f29288b0e91784d4965dc24016b3454d9177fa6087b",
@@ -617,6 +617,13 @@
       "fingerprint": "sha256:a4d8fa76a7bf9b063e1af01eb2763f8e24c6617305fef143c549b31e0fafd7ee",
       "rule_id": "KFM-TOPO-006",
       "subject": "scope-alias:air"
+    },
+    {
+      "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoSCxKzSvJSC1OLQYAVgMHtA==",
+      "fingerprint": "sha256:a5da91fcce880241eae567ab95c38f31d13c028ce64f3e7c9644e83691b987f1",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "data/triplet(s)/README.md"
     },
     {
       "evidence_sha256": "sha256:835246521d73db2eba2165cc1085ad5a139f55988489c7cc995af1bc885bb947",
@@ -710,6 +717,13 @@
       "subject": "doc-id:kfm://doc/domain/people-dna-land/scope-and-boundary"
     },
     {
+      "evidence_sha256": "sha256:2371de63d9c0cce2790e06efcc514aa2fe98c3d9bea878538916f08216538213",
+      "evidence_zlib_base64": "eNpLSkzOLs5JLM5gyM1PSbU1NDAwMzEBAFOmBr4=",
+      "fingerprint": "sha256:bfb2e3cf3a63abbafc0f9b950261b6c3596dd32f7c21422b7bba6e0f1209fd9b",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/focus-mode/counties/edwards_county\\README.md"
+    },
+    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:c065ce01fc9f4ac4a3bc7cec2e03dbf918d436e9c0f04c5b18693dfe6158f092",
@@ -757,13 +771,6 @@
       "fingerprint": "sha256:cb90565e46550748cb754b16078a0055338ddc54e36c753c10b64821fd902aef",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/manifests/rel-fauna-public-range-template.json"
-    },
-    {
-      "evidence_sha256": "sha256:6139a28007f654e3a392dd02db218b4089e902983c24a38864578de81d7fc302",
-      "evidence_zlib_base64": "eNoNxEEOgCAMBECetLSU9MJjCpQYE8UI/4/OYa7ZvUQgpxRmPb3tAlJBbCzU/7QaskoWl5ZA0UiNB4E5PPb6vQ9fvj7BlBRO",
-      "fingerprint": "sha256:cbcdb1fd4cf435784de42d29b9af7f8414657eb06c53d9ef1527bc8839bea30c",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "data/triplet(s)/README.md"
     },
     {
       "evidence_sha256": "sha256:1320bb361f06646fcfa3f33965371d007a0c895877c71f3ee394a95c81341e16",
@@ -836,6 +843,13 @@
       "subject": "scope-alias:settlement"
     },
     {
+      "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoLkhMTgUALjQFHg==",
+      "fingerprint": "sha256:e26c2dae233ced7ed0116537e848b27f2d6a83c60ddf47c722ada7f0600eca86",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "docs/DomainDriven Design Reference.pdf"
+    },
+    {
       "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
       "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
       "fingerprint": "sha256:e2f82d843a14e6606521f1bde3b7e0b9174b438bbcaf203400a8bee3d28acda2",
@@ -885,13 +899,6 @@
       "subject": "casefold:contracts/source/source_descriptor.md"
     },
     {
-      "evidence_sha256": "sha256:a1bcd543e971c25c3ced850f95dd01aed5a393124d07581aa9b194260747533f",
-      "evidence_zlib_base64": "eNoFwUEOgDAIBMA+iRYEeuhjkG4PJqYm+v84c++JUYlUpOzzQn4jOcRCww5vbBKEcKpA1SYrGd1hrrOX94nED2bGEqA=",
-      "fingerprint": "sha256:f41dfeef9a819c5e4e6312833ad2820123ed490968ddca453623f016a79c8f72",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md"
-    },
-    {
       "evidence_sha256": "sha256:0fc8f4158e50495b824661219a53d11f50188274c8ba237542ab11e5a7cea9e7",
       "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdZ3dvTz9/N0dvTxjHIM8fT308tNYUhBVZKcmJefl5mcmJNZlViSmZ8HVAIAT3YY4Q==",
       "fingerprint": "sha256:f4f1f94c4b45fa5e1378045bbf07679e8f0af99dd9665b7416bfba8e54e22de4",
@@ -911,6 +918,13 @@
       "fingerprint": "sha256:f76dcc774cdaedcad7bc3080ebb9e1bec42be4ca6dc4abd207fff6153266dc92",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/manifests/hazards-r0002-v1.yaml"
+    },
+    {
+      "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
+      "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoSCxKzSvJSC1OLQYAVgMHtA==",
+      "fingerprint": "sha256:f7a6f27bf2825e4c32a8a2b3b78caf1e0f4256cd50a08575d72f2bf561c2b96c",
+      "rule_id": "KFM-TOPO-001",
+      "subject": "data/triplet(s)/.gitkeep"
     },
     {
       "evidence_sha256": "sha256:773dd6a6de217fa2c645563d38695693edda954d93bd84694e1b7039d46b5a99",
@@ -948,25 +962,11 @@
       "subject": "release/manifests/rel-roads-graph-connectivity-v1-template.json"
     },
     {
-      "evidence_sha256": "sha256:fd1c9dcb3ddcdba829af226955c92403cf1050fc8c8885b2cc56689dc7fb35bb",
-      "evidence_zlib_base64": "eNoFwUsOgCAMBUCORD9CNxymLY8FicFE7x9n7jMxqNamWk5s5DdCxZiuxRHmqhFgmy5o3U0pxclWd1h5H0/8cOYTHg==",
-      "fingerprint": "sha256:fcd21bc0ec89a82d0370d34da2f4a7e30a47f056ee95432d4f41a8202c8f8093",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "docs/DomainDriven Design Reference.pdf"
-    },
-    {
       "evidence_sha256": "sha256:1d4e9e32ed2ef89802b0b75ae0fc66ec6d92a53b0f5048777f3eb9d174eaa166",
       "evidence_zlib_base64": "eNqFjksOgzAQQ7lQyBkqlSWb3mCUGIjIB3mG+3fHplWy9vOziQxR+NBIBEutqv8sr/e6zCVO/JOKlabXAcLPe7ITuEZcX8gmUR0lZWeUOND+0H25wiyjoJq6VDeKGu9g9+h9p/cMfgFUe3cM",
       "fingerprint": "sha256:fe51f413d571176d087bef0c54f58a8fc78271d8946b7c6cd79c3f7b83cf95f8",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/corrections/"
-    },
-    {
-      "evidence_sha256": "sha256:ce304d2db108f061c21e7c1d6fde853301bf75d6f9e1bd4bf3b34921fb40c294",
-      "evidence_zlib_base64": "eNoFwUsKwCAMBUCPpDF+svAwxjyQQmup3p/O3MvQgveZ2S29ME5DFgOJKlmwzJG1KklHKalbHQSuI0UJ7u0fnjOxsX/zhRWY",
-      "fingerprint": "sha256:fe81f77b9a68c40afadb673f5aa8ae9a5a56e54745dcbb193653f715a04948dc",
-      "rule_id": "KFM-TOPO-001",
-      "subject": "data/triplet(s)/.gitkeep"
     },
     {
       "evidence_sha256": "sha256:27fb1f9af41710db788a92f4fb83f6990a6af1e3687ad27a9da46ad97a30c2b3",

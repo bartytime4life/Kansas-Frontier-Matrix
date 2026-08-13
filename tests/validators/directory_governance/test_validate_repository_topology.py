@@ -200,6 +200,43 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         self.assertEqual([], candidate["entries"])
 
+    def test_soft_path_grammar_fingerprint_is_content_insensitive(self) -> None:
+        paths = ("docs/example(name).md",)
+        modes = {paths[0]: "100644"}
+        blobs = {
+            "control_plane/root_registry.yaml": json.dumps(
+                {"roots": [{"path": "docs/", "status": "ACTIVE"}]}
+            ).encode("utf-8")
+        }
+        first = module._path_findings(paths, modes, {paths[0]: "a" * 40}, blobs)
+        second = module._path_findings(paths, modes, {paths[0]: "b" * 40}, blobs)
+        first_path = next(
+            finding
+            for finding in first
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+        second_path = next(
+            finding
+            for finding in second
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+
+        self.assertEqual(first_path.fingerprint, second_path.fingerprint)
+        self.assertEqual(("mode=100644", "parentheses"), first_path.evidence_members)
+
+        executable = module._path_findings(
+            paths, {paths[0]: "100755"}, {paths[0]: "b" * 40}, blobs
+        )
+        executable_path = next(
+            finding
+            for finding in executable
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+        self.assertNotEqual(first_path.fingerprint, executable_path.fingerprint)
+
     def test_conventional_readme_does_not_expand_populated_alias_drift(
         self,
     ) -> None:
