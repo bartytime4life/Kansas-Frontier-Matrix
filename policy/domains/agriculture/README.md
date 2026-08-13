@@ -2,12 +2,12 @@
 doc_id: kfm://policy/domains/agriculture
 title: Agriculture Domain Policy README
 type: readme; directory-readme; domain-policy-boundary; policy-index
-version: v0.2
-status: draft; repository-grounded; policy-scaffolds; evaluator-unimplemented; fail-closed; non-authoritative-for-release
-owners: OWNER_TBD — Agriculture steward · Policy steward · Sensitivity and rights steward · Privacy reviewer · Source steward · Contract/schema steward · Validator/test steward · Runtime steward · Release steward · Security steward · Docs steward
+version: v0.3
+status: draft; repository-grounded; mixed-maturity; direct-policy-scaffolds; adjacent-fixture-profiles; evaluator-unbound; fail-closed; non-release; non-publication
+owners: "@bartytime4life — verified CODEOWNERS review route; Agriculture, policy, sensitivity, rights, privacy, source, contract/schema, validator/test, runtime, release, security, and docs stewardship assignments NEEDS VERIFICATION"
 created: 2026-06-15
-updated: 2026-07-19
-supersedes: v0.1 Agriculture domain policy guide
+updated: 2026-08-13
+supersedes: v0.2 Agriculture domain policy index
 policy_label: restricted-review; policy; agriculture; rights; sensitivity; aggregation; redaction; finite-outcomes; no-public-authority
 current_path: policy/domains/agriculture/README.md
 owning_root: policy/
@@ -18,39 +18,43 @@ responsibility: >
   burdens, and the smallest safe implementation sequence without treating scaffolds, READMEs,
   schemas, workflow holds, or file presence as executable enforcement.
 truth_posture: >
-  CONFIRMED target README and canonical singular policy root; three direct Agriculture Rego
-  sources are present but are PROPOSED stubs/scaffolds with inconsistent package namespaces and
-  default semantics; redaction_profiles.yaml is a PROPOSED placeholder; the aggregation-threshold
-  child README is repository-grounded documentation only; a separate sensitivity Agriculture lane
-  contains a placeholder threshold YAML and farm-operator-join scaffold; policy-test and
-  domain-agriculture workflows are readiness/drift guards rather than policy evaluation; the policy
-  runtime remains a comment-only placeholder; Agriculture policy-deny and aggregate-only test lanes
-  are README-led and do not establish executable enforcement /
-  PROPOSED bounded Agriculture policy architecture, policy-family map, normalized decision contract,
-  reason-code and obligation families, public-surface boundary, review model, validation matrix,
-  and implementation sequence /
-  CONFLICTED deny-named and abstain-named Rego packages defaulting deny to false versus deny-field
-  and farm-operator scaffolds defaulting allow to false; abstain_on_ambiguous exposing a deny relation
-  rather than an abstain result; multiple Rego namespace conventions; domain-policy versus
-  sensitivity-policy placement; engine-native ALLOW/RESTRICT/HOLD vocabulary versus the current
-  PolicyDecision schema's ANSWER/ABSTAIN/DENY/ERROR vocabulary; documentation claims of canonical
-  policy artifacts versus unaccepted bundle/evaluator activation /
-  UNKNOWN accepted policy bundle, manifest, evaluator, selection rule, deployment binding, real
-  Agriculture policy tests, fixture payloads, validator implementation, emitted PolicyDecision
-  records, reason-code registry, obligation registry, production consumers, branch-protection
-  significance, monitoring, and release-gate adoption /
-  NEEDS VERIFICATION owners and CODEOWNERS, accepted package namespace, default-result semantics,
-  canonical child placement, policy input contract, source-specific rights rules, sensitive join
-  composition, bundle identity and digest, evaluator compatibility, deterministic fixtures,
-  no-network tests, API/UI/map/AI obligation handling, correction propagation, and rollback drills.
+  CONFIRMED accepted ADR-0029 placement and canonical singular policy root; verified CODEOWNERS route;
+  complete seven-blob direct inventory; three unchanged PROPOSED Rego stubs/scaffolds with inconsistent
+  namespaces and defaults; one PROPOSED redaction placeholder; one README-only aggregation sublane;
+  two separate Agriculture sensitivity placeholders; no Agriculture-native Rego test; comment-only
+  policy runtime; empty bundle payload inventory; broad policy readiness hold; one domain workflow
+  that executes a fixture-only CDL watcher while preserving proof and release holds; five focused
+  Agriculture workflows for bounded observation, materiality, NDVI, readiness, and connectivity
+  profiles; shared PROPOSED_INACTIVE input, decision, reason, obligation, semantics, and reviewer-role
+  profiles whose authority flags remain false /
+  PROPOSED bounded Agriculture policy architecture, policy-family map, normalization boundary,
+  Agriculture-specific reason and obligation families, public-surface contract, review model,
+  validation matrix, and dependency-closed activation sequence /
+  CONFLICTED deny-named and abstain-named Rego packages defaulting deny to false versus deny-field and
+  farm-operator scaffolds defaulting allow to false; abstain_on_ambiguous exposing a deny relation;
+  multiple package namespaces; domain-policy versus sensitivity-policy placement; Agriculture-local
+  ALLOW/RESTRICT/HOLD language versus outward ANSWER/ABSTAIN/DENY/ERROR; README-local codes versus the
+  inactive shared registries /
+  UNKNOWN accepted Agriculture bundle, manifest, selector, evaluator, native rule tests, normalized
+  authenticated decisions, obligation handlers, production consumers, required-check significance,
+  promotion integration, deployment enforcement, monitoring, and release-gate adoption /
+  NEEDS VERIFICATION functional steward assignments, accepted package namespace, default-result
+  semantics, source-specific rights rules, sensitive-join composition, bundle identity and digest,
+  evaluator compatibility, public API/UI/map/AI obligation enforcement, correction propagation,
+  cache invalidation, and rollback drills.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: 25c0a66f3a722926828b32189802442d40b9b5fd
-  prior_blob: ba73c387e16f70895f32444e489d6d55dd577b75
-  policy_root_blob: 09cd966ab188d5e831960869117522a98274cb7f
+  base_commit: a893b30f4dd1edfed151620c529734f4fd789a89
+  prior_blob: 9fd3762577e6804ed69e6ac278cd3252a50bb75e
+  policy_root_blob: 6c5021f9d92778581a4e9331a9dd6ddb7efc5e35
+  policy_domains_parent_blob: ed9be975c9da2c7d77d94fab621db39f23953813
+  sensitivity_parent_blob: 06197c7a7255264b94fb9dd8d7f73844cfa35682
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   deny_unpublished_blob: 35c813606f37d3578230092fc526430e256b134d
   abstain_on_ambiguous_blob: 7733c0d6389e5e159346ab0bbd118b300970d728
   deny_field_level_blob: dc626a6975309e1356876715385c748bc30c18c2
@@ -64,8 +68,10 @@ evidence_snapshot:
   aggregate_only_test_readme_blob: e872e11c71840cb806717bf1199c74c4a01d4e37
   aggregate_only_placeholder_test_blob: 97939b939122f029f35ecf12c81f5989df00ae63
   agriculture_validator_readme_blob: 40d268b425d9939ab6a8cda7bd197ba758572d3f
-  policy_test_workflow_blob: 003192e1adb3be65e727b58c3414c7ce0f8cceed
-  agriculture_workflow_blob: 1dd9938b92de61c7d905f30170cf6394e6c06ea1
+  decision_vocabulary_blob: ae68a9f3cf80308f18bd04207ef2c85057750f12
+  reviewer_roles_blob: 01559907b2622606f35bb9a8ae5d0347e9b7e263
+  policy_test_workflow_blob: ac8f125e8a4d3634d86f66836d2aa2c0e3925e75
+  agriculture_workflow_blob: d89d5db8861812f7b0a1024ae37a23ed5bd61354
   policy_runtime_core_blob: e7e14cf39ae6919fbbc80f1b471de6b907292edb
   policy_bundles_readme_blob: 77f59c399fbce668c916cbbc385009121d6169f4
 related:
@@ -87,8 +93,15 @@ related:
   - ../../sensitivity/agriculture/farm_operator_join.rego
   - ../../../contracts/policy/policy_input_bundle.md
   - ../../../contracts/policy/policy_decision.md
+  - ../../../contracts/policy/policy_input_bundle_profile_v1.md
+  - ../../../contracts/policy/policy_decision_vocabulary.md
+  - ../../../contracts/policy/policy_decision_semantics_profile_v1.md
+  - ../../../contracts/policy/policy_reviewer_role_vocabulary.md
   - ../../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
   - ../../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../../schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json
+  - ../../decision/vocabulary.v1.json
+  - ../../decision/reviewer_roles.v1.json
   - ../../../tests/domains/agriculture/policy_deny/README.md
   - ../../../tests/domains/agriculture/aggregate_only/README.md
   - ../../../fixtures/domains/agriculture/
@@ -101,6 +114,11 @@ related:
   - ../../../docs/doctrine/ai-build-operating-contract.md
   - ../../../.github/workflows/policy-test.yml
   - ../../../.github/workflows/domain-agriculture.yml
+  - ../../../.github/workflows/agriculture-observation.yml
+  - ../../../.github/workflows/agriculture-hls-ndvi-zonal-materiality.yml
+  - ../../../.github/workflows/agriculture-ndvi-delta-computation.yml
+  - ../../../.github/workflows/agriculture-ndvi-readiness.yml
+  - ../../../.github/workflows/agriculture-vegetation-connectivity-gate.yml
 tags:
   - kfm
   - policy
@@ -126,6 +144,7 @@ tags:
 notes:
   - "This revision changes only policy/domains/agriculture/README.md plus the required AI-generated provenance receipt."
   - "No policy rule, numeric threshold, bundle, evaluator, schema, contract, fixture, test, validator, workflow, receipt instance, release artifact, data object, deployment, or public behavior is created or changed."
+  - "The v0.2 target blob was unchanged while current main gained accepted directory governance, inactive shared policy profiles, and bounded Agriculture fixture/captured-input slices; v0.3 reconciles those additions without collapsing their authority."
   - "A policy file's presence is not activation; a green readiness hold is not policy enforcement."
   - "The most restrictive applicable source, rights, sensitivity, audience, join, lifecycle, and release rule wins."
 [/KFM_META_BLOCK_V2] -->
@@ -138,10 +157,11 @@ notes:
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
-  <img alt="Version: v0.2" src="https://img.shields.io/badge/version-v0.2-informational">
+  <img alt="Version: v0.3" src="https://img.shields.io/badge/version-v0.3-informational">
   <img alt="Root: policy" src="https://img.shields.io/badge/root-policy%2F-blue">
   <img alt="Domain: agriculture" src="https://img.shields.io/badge/domain-agriculture-2e7d32">
-  <img alt="Inventory: scaffolds" src="https://img.shields.io/badge/inventory-scaffolds-orange">
+  <img alt="Direct policy: scaffolds" src="https://img.shields.io/badge/direct__policy-scaffolds-orange">
+  <img alt="Adjacent profiles: fixture only" src="https://img.shields.io/badge/adjacent__profiles-fixture__only-8250df">
   <img alt="Runtime: unimplemented" src="https://img.shields.io/badge/runtime-unimplemented-critical">
   <img alt="Default: fail closed" src="https://img.shields.io/badge/default-fail__closed-critical">
 </p>
@@ -254,13 +274,14 @@ A lower-ranked artifact must not weaken a higher-ranked denial, restriction, rev
 
 ### Confirmed direct inventory
 
-At `main@25c0a66f3a722926828b32189802442d40b9b5fd`, bounded repository inspection establishes:
+At `main@a893b30f4dd1edfed151620c529734f4fd789a89`, the complete recursive tree contains seven tracked blobs under this lane:
 
 ```text
 policy/domains/agriculture/
 ├── README.md
 ├── abstain_on_ambiguous.rego
 ├── aggregation_thresholds/
+│   ├── .gitkeep
 │   └── README.md
 ├── deny-field-level.rego
 ├── deny_unpublished.rego
@@ -269,39 +290,44 @@ policy/domains/agriculture/
 
 | Surface | Confirmed state | Safe conclusion |
 |---|---|---|
-| This README | Existing v0.1 draft | Parent policy documentation exists but predates the detailed child and workflow evidence. |
-| `deny_unpublished.rego` | Fourteen-line `PROPOSED` stub; package `kfm.agriculture_deny_unpublished`; `default deny := false`; only a commented example | Filename and package suggest denial, but no active denial rule exists. |
-| `abstain_on_ambiguous.rego` | Fourteen-line `PROPOSED` stub; package `kfm.agriculture_abstain_on_ambiguous`; `default deny := false`; commented example writes `deny[reason]` | No machine-level abstain outcome is implemented. |
-| `deny-field-level.rego` | Six-line `PROPOSED` scaffold; generated namespace; `default allow := false` | Fail-closed-looking default exists, but no input contract, reason, obligation, or test is established. |
-| `redaction_profiles.yaml` | Seven-line `PROPOSED` placeholder | No redaction profile values or transform contract are implemented. |
-| `aggregation_thresholds/README.md` | Repository-grounded v0.2 documentation; no numeric thresholds accepted | Disclosure-control policy expectations exist; executable threshold enforcement does not. |
+| This README | v0.2, blob `9fd3762…`, unchanged since 2026-07-19 | The boundary is substantial but its implementation snapshot is stale. |
+| `deny_unpublished.rego` | `PROPOSED` stub; package `kfm.agriculture_deny_unpublished`; `default deny := false`; only a commented example | Filename and package suggest denial, but no operative denial rule exists. |
+| `abstain_on_ambiguous.rego` | `PROPOSED` stub; package `kfm.agriculture_abstain_on_ambiguous`; `default deny := false`; commented example writes `deny[reason]` | No machine-level abstain outcome exists. |
+| `deny-field-level.rego` | `PROPOSED` generated scaffold; package `kfm.generated.policy.domains.agriculture.deny_field_level`; `default allow := false` | A restrictive default exists without input semantics, reasons, obligations, or native tests. |
+| `redaction_profiles.yaml` | `PROPOSED` placeholder with no profile values | No redaction transform is authorized or executable. |
+| `aggregation_thresholds/README.md` | v0.2 documentation plus structural `.gitkeep`; no numeric thresholds | The sublane documents disclosure-control expectations only. |
 
-### Adjacent Agriculture policy surfaces
+The three direct Rego blobs and both direct YAML/README policy candidates retain the same Git blob identities cited by v0.2. No `*_test.rego` exists under this Agriculture lane.
 
-| Surface | Confirmed state | Boundary consequence |
-|---|---|---|
-| `policy/sensitivity/agriculture/aggregation_thresholds.yaml` | Eight-line `PROPOSED` placeholder | Placement overlaps the domain child; no numeric values exist. |
-| `policy/sensitivity/agriculture/farm_operator_join.rego` | Six-line generated scaffold; `default allow := false` | Sensitive-join intent exists without active decision logic. |
-| `policy/sensitivity/README.md` | Five-line greenfield stub | Cross-cutting sensitivity bundle architecture is not established. |
-| `policy/bundles/` | README-only in bounded evidence | No accepted bundle artifact, manifest, lock, selector, or active deployment is established. |
-| `packages/policy-runtime/.../core.py` | Comment-only greenfield placeholder | No policy evaluator is implemented. |
-| `tools/validators/agriculture/` | Repository-grounded README; direct lane remains README-only | No Agriculture validator executable is established. |
-| `tests/domains/agriculture/policy_deny/` | README-only test contract | Negative policy expectations exist without collected lane-local tests. |
-| `tests/domains/agriculture/aggregate_only/` | README-only test contract | Aggregate-preservation expectations exist without lane-local executable proof. |
-| `tests/domains/agriculture/test_nass_aggregate_only.py` | Docstring-only placeholder | No pytest assertion is defined. |
-| `.github/workflows/policy-test.yml` | Readiness/drift guard | It confirms absence of an accepted evaluator/test lane; it evaluates no policy. |
-| `.github/workflows/domain-agriculture.yml` | Agriculture readiness holds | It emits no Agriculture PolicyDecision, proof, release, or publication authority. |
+### Current adjacent capability map
+
+| Surface | Current repository evidence | What it proves | What it does **not** prove |
+|---|---|---|---|
+| Directory governance and review route | Accepted ADR-0029, canonical Directory Rules, Root Registry, and `/policy/ @bartytime4life` in CODEOWNERS | Placement and GitHub review routing are explicit. | Functional steward assignment, independent review, or policy approval. |
+| Parent policy indexes | `policy/README.md` v0.3.1 and `policy/domains/README.md` v0.3 | Current mixed-maturity root and domain boundaries are documented. | Agriculture activation or runtime enforcement. |
+| Agriculture sensitivity lane | Substantive `policy/sensitivity/README.md`; Agriculture threshold YAML and farm/operator Rego remain `PROPOSED` placeholders | Cross-cutting composition and unresolved placement are visible. | Accepted thresholds, join logic, or native tests. |
+| Shared explicit input profile | `PolicyInputBundleProfileV1`: five operations, seven audiences, fixture-only validator/tests/workflow, all authority flags false | One bounded input-coherence profile is machine-checkable. | Policy evaluation, an Agriculture input assembler, or permission to act. |
+| Shared decision vocabulary | `PROPOSED_INACTIVE` registry: nine reason codes, eight `ANSWER`-only obligation codes, all governance flags false | Candidate codes and finite outcome relationships are deterministic. | Adoption, runtime normalization, or obligation enforcement. |
+| Shared reviewer-role vocabulary | Five `PROPOSED_INACTIVE` role identifiers; all assignment and approval flags false | Stable candidate role names exist. | That a person is assigned, qualified, or approved this lane. |
+| Direct Agriculture tests | One substantive deterministic NDVI-delta computation test; remaining direct policy-deny, aggregate-only, join, soil-moisture, catalog, vegetation, and smoke modules are placeholders or smoke-only | A bounded computation slice is tested. | Any direct Agriculture Rego rule or policy outcome. |
+| Agriculture validators | Direct `tools/validators/agriculture/` remains documentation-only; domain lane has three substantive fixture validators and four recognized placeholders; evidence lane has one AgricultureObservation validator | Selected materiality, readiness, connectivity, and observation profiles have deterministic checks. | A general Agriculture policy validator or evaluator. |
+| Focused Agriculture workflows | Five path-filtered workflows run observation, HLS materiality, NDVI delta, NDVI readiness, and connectivity fixture slices | Those exact no-network profiles are exercised in CI. | Source admission, evidence closure, policy, promotion, release, or publication. |
+| `domain-agriculture` | Executes one fixture-only CDL watcher proof, inventories the substantive/placeholder split, and preserves explicit proof and release-dry-run holds | Bounded readiness and drift are checked. | A `PolicyDecision`, proof pack, release approval, or public artifact. |
+| Broad `policy-test` | Static policy readiness and fixture-shape checks; recognizes one separately governed inactive Pass 12 Rego lane | Repository-wide absence and graduation triggers remain explicit. | Evaluation of any Agriculture Rego source. |
+| Bundle and runtime | `policy/bundles/` has documentation only; `kfm-policy-runtime` remains `0.0.0` with comment-only `core.py` | The held implementation boundary is preserved. | An accepted bundle, selector, evaluator, adapter, or consumer. |
 
 ### Current maturity determination
 
-**CONFIRMED:** Agriculture policy source scaffolds and substantial documentation exist.
-
-**UNKNOWN:** executable coverage, active bundle selection, evaluator compatibility, deployed enforcement, production callers, current decision receipts, and release-gate use.
-
-**NEEDS VERIFICATION:** whether the direct inventory is byte-complete; current branch protection; CODEOWNERS; source-specific terms; owners; and current workflow run results.
+| Level | Agriculture state | Evidence-backed interpretation |
+|---|---|---|
+| Direct policy source | **M0–M1: scaffold plus documented boundary** | Files and defaults exist; operative rules, coherent native outcomes, and native tests do not. |
+| Shared policy profiles | **M2 candidate, `PROPOSED_INACTIVE`** | Input, vocabulary, semantics, reviewer roles, fixtures, validators, tests, and workflows are bounded and non-authoritative. |
+| Adjacent Agriculture computations | **M2 fixture/captured-input slices** | Selected observation, NDVI, readiness, materiality, connectivity, and watcher behavior is executable without becoming policy. |
+| Agriculture evaluator and governed consumer | **NOT ESTABLISHED** | No accepted bundle/selector/evaluator, normalized authenticated decision, obligation handler, receipt/replay flow, or production consumer is proved. |
+| Promotion, release, deployment, publication | **HOLD / separate authority** | No reviewed evidence grants these effects. |
 
 > [!NOTE]
-> Repository presence is not policy activation. A Rego file, YAML file, schema-valid input, passing readiness workflow, or documentation page cannot be cited as evidence that an Agriculture request would be safely denied or allowed at runtime.
+> Repository presence, schema validity, deterministic computation, or a green workflow is not policy activation. None of the adjacent Agriculture profiles may be collapsed into evidence truth, a `PolicyDecision`, release approval, or public-use authority.
 
 [Back to top](#top)
 
@@ -476,11 +502,24 @@ A consequential Agriculture decision should receive one immutable, explicit `Pol
 Current repository surfaces use more than one vocabulary:
 
 - the current shared `PolicyDecision` schema permits `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
+- `policy/decision/vocabulary.v1.json` is a nine-reason/eight-obligation `PROPOSED_INACTIVE` candidate with all governance flags false;
 - Agriculture documentation also uses `ALLOW`, `RESTRICT`, and `HOLD`;
 - Rego scaffolds expose `allow` or `deny` booleans/sets;
 - `abstain_on_ambiguous.rego` currently exposes a `deny` relation rather than an abstain relation.
 
 This is **CONFLICTED** and must be normalized before runtime adoption.
+
+### Current shared candidate vocabulary
+
+The exact repository-registered candidates are:
+
+| Kind | Exact v1 codes | Current authority |
+|---|---|---|
+| Reasons | `CONSENT_REQUIRED`, `EVIDENCE_STALE`, `EVIDENCE_UNRESOLVED`, `OPERATION_ALLOWED_WITH_OBLIGATIONS`, `POLICY_BUNDLE_UNAVAILABLE`, `POLICY_INPUT_INCOMPLETE`, `PUBLIC_PRECISION_UNSAFE`, `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED` | `PROPOSED_INACTIVE`; fixture-only; non-evaluator |
+| Obligations | `ATTACH_CITATIONS`, `ATTACH_RIGHTS_NOTICE`, `DELAY_PUBLICATION`, `GENERALIZE_GEOMETRY`, `REDACT_EXACT_LOCATION`, `REQUIRE_STEWARD_REVIEW`, `VERIFY_ROLLBACK_TARGET`, `WITHHOLD_EXPORT` | `PROPOSED_INACTIVE`; valid only on `ANSWER` in v1 |
+| Reviewer roles | `DOMAIN_STEWARD`, `EVIDENCE_STEWARD`, `POLICY_STEWARD`, `RELEASE_STEWARD`, `SECURITY_PRIVACY_REVIEWER` | Identifiers only; no people, approval, or authority assignment |
+
+The associated profile validators prove sorted, unique, schema-conformant fixture semantics and all-false authority posture. They do not run a policy bundle, authenticate a decision, assign a reviewer, or authorize Agriculture behavior.
 
 ### Recommended separation
 
@@ -516,7 +555,7 @@ Reason codes should be:
 - versioned or registry-bound;
 - paired with obligations where applicable.
 
-Candidate Agriculture reason families include:
+README-local Agriculture reason families include:
 
 - `object_context_unresolved`;
 - `source_role_unresolved`;
@@ -538,13 +577,15 @@ Candidate Agriculture reason families include:
 - `policy_bundle_mismatch`;
 - `evaluator_unavailable`.
 
-These are `PROPOSED` until a shared registry is accepted.
+These lower-case names are descriptive design shorthand, **not valid v1 registry codes**. An Agriculture implementation must either map them through a reviewed, versioned extension or use accepted shared codes without losing meaning. This README does not mutate or activate the shared registry.
 
 [Back to top](#top)
 
 ---
 
 ## Obligation families
+
+The table below preserves Agriculture-specific design intent. Its lower-case names are documentation shorthand, not currently registered machine codes. Where a shared v1 candidate exists, an implementation should use the exact uppercase code and document any lossless Agriculture extension.
 
 | Obligation | Required downstream behavior |
 |---|---|
@@ -736,35 +777,79 @@ Every caller must:
 | Error safety | evaluator failure leaks no protected input | safe diagnostic emitted |
 | Correction/rollback | withdrawn policy/output no longer answers | prior known-good release can be restored |
 
-### Confirmed current limitations
+### Confirmed current executable evidence
 
-- No Rego test modules are confirmed.
-- `policy-test.yml` is a readiness/drift guard and emits no PolicyDecision.
-- The Agriculture policy-deny and aggregate-only child lanes are README-led.
-- `test_nass_aggregate_only.py` contains no assertion.
-- No accepted Agriculture evaluator or bundle selection is confirmed.
-- No Agriculture validator executable is confirmed in the direct validator lane.
-- No current run proves Agriculture policy enforcement.
+| Profile or lane | Executable evidence | Bounded conclusion |
+|---|---|---|
+| Direct Agriculture Rego | No `*_test.rego` and no operative rule body under this lane | Direct policy behavior is unproved. |
+| CDL watcher | `tests.ingest.cdl_watch.test_cdl_watch` runs synthetic sidecar-change cases | Fixture-only watcher proof; no canonical materiality policy or source admission. |
+| NDVI delta computation | Deterministic integer-arithmetic generator, five-case fixture manifest, schema, substantive pytest module, and focused workflow | Computational classifications only; no observation, evidence, policy, promotion, or release effect. |
+| HLS NDVI zonal materiality | Contract, strict schema, four valid fixtures, validator, pytest suite, and focused workflow | Fixture decision semantics only; thresholds are not production policy. |
+| NDVI readiness | Contract, strict schema, fixture, validator, pytest suite, and focused workflow | `EMIT_CANDIDATE` or `HOLD` sidecar semantics only. |
+| Vegetation connectivity | Contract, strict schema, case manifest, validator, pytest suite, fixture-polarity replay, and focused workflow | Synthetic component-summary gate only; not a `PolicyDecision`. |
+| AgricultureObservation | Fixture-only contract/schema/cases, deterministic validator/tests, and focused workflow | Aggregate county-year observation shape and semantics only. |
+| Shared policy candidates | Twelve deterministic policy-profile validators with dedicated tests/workflows, including input, vocabulary, semantics, reviewer roles, bindings, obligations, and maturity | Inactive coherence checks; no Agriculture evaluator, decision authenticity, or runtime enforcement. |
+| `domain-agriculture` | Readiness inventory plus bounded CDL execution; proof and release jobs remain explicit holds | Drift is visible; broad Agriculture validation and public authority remain unproved. |
+| `policy-test` | Static readiness plus baseline `PolicyDecision` fixture-shape checks | No Agriculture Rego evaluation or emitted decision. |
 
-### Local-parity target—PROPOSED
+### Current limitations
 
-A future accepted command should be narrow and deterministic, for example:
+- No native Rego test or operative rule body is confirmed for the three direct Agriculture policy modules.
+- The direct `tools/validators/agriculture/` lane contains only documentation and `.gitkeep`.
+- Four Python files under `tools/validators/domains/agriculture/` remain recognized placeholders; the three substantive validators are adjacent fixture profiles, not policy evaluators.
+- Agriculture policy-deny, aggregate-only, farm/operator-join, catalog, soil-moisture, and vegetation-index direct test modules remain placeholders; the smoke test proves only that pytest can collect.
+- No accepted Agriculture bundle, selector, evaluator, normalized decision adapter, obligation handler, authenticated decision receipt, replay store, or governed consumer is established.
+- `packages/policy-runtime` remains a comment-only `0.0.0` placeholder.
+- No current workflow proves source authority, evidence closure, rights/sensitivity clearance, policy approval, promotion, release, deployment, publication, or agronomic suitability.
+- Workflow presence does not establish required-check or branch-ruleset significance.
+
+### Current focused commands
+
+The repository-owned workflows currently use commands equivalent to:
+
+```bash
+KFM_NO_NETWORK=1 python -m unittest \
+  tests.ingest.cdl_watch.test_cdl_watch --verbose
+
+KFM_NO_NETWORK=1 python -m pytest \
+  tests/domains/agriculture/test_ndvi_delta_computation.py \
+  -q --strict-config --strict-markers
+
+KFM_NO_NETWORK=1 python -m pytest \
+  tests/validators/domains/agriculture/hls_ndvi_zonal_materiality/test_validate_hls_ndvi_zonal_materiality.py \
+  tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py \
+  tests/validators/domains/agriculture/vegetation_connectivity_gate/test_validate_connectivity_gate.py \
+  -q --strict-config --strict-markers
+
+KFM_NO_NETWORK=1 python tools/validators/evidence/validate_agriculture_observation.py --fixtures
+KFM_NO_NETWORK=1 python tools/validators/policy/validate_policy_input_bundle_profile_v1.py --fixtures
+KFM_NO_NETWORK=1 python tools/validators/policy/validate_policy_decision_vocabulary.py --registry
+KFM_NO_NETWORK=1 python tools/validators/policy/validate_policy_decision_semantics_v1.py --fixtures
+KFM_NO_NETWORK=1 python tools/validators/policy/validate_policy_reviewer_role_vocabulary.py --registry
+```
+
+These commands are evidence for their named profiles only. They are not a combined Agriculture policy command and must not be reported as one.
+
+### General Agriculture policy parity target—PROPOSED
+
+A future accepted command may be named:
 
 ```text
 make policy-agriculture-test
 ```
 
-The command name is `PROPOSED`. It should:
+The name remains `PROPOSED`. Before adoption, it must:
 
-- run no-network by default;
-- validate policy source and bundle manifest;
-- execute engine-native tests;
-- validate normalized PolicyDecision outputs;
-- exercise synthetic valid and invalid fixtures;
-- verify obligation handlers;
-- produce machine-readable test reports;
-- avoid emitting protected payloads;
-- return non-zero on missing coverage or unsafe defaults.
+- run deterministically and no-network by default;
+- validate the exact policy bundle manifest, digest, selector, and evaluator profile;
+- execute native positive and negative Agriculture rule tests;
+- validate complete operation- and audience-specific input bundles;
+- normalize engine-native results into accepted `PolicyDecision` outcomes without semantic loss;
+- validate reason and obligation codes;
+- prove that every governed consumer rejects unknown or unsupported obligations;
+- exercise rights, sensitivity, cross-lane, stale, malformed, revoked, correction, and rollback cases;
+- emit only safe machine-readable test evidence;
+- return non-zero on missing coverage, unsafe defaults, or authority drift.
 
 [Back to top](#top)
 
@@ -804,6 +889,8 @@ A denial that leaks the protected fact is a policy failure.
 ## Review burden and separation of duties
 
 Changes to Agriculture policy are trust-bearing even when syntactically small.
+
+The verified GitHub review route is `@bartytime4life` through `.github/CODEOWNERS`. The inactive reviewer-role registry proposes `DOMAIN_STEWARD`, `EVIDENCE_STEWARD`, `POLICY_STEWARD`, `RELEASE_STEWARD`, and `SECURITY_PRIVACY_REVIEWER`, but those tokens assign no person, record no approval, and grant no authority. Functional assignments and independent review remain `NEEDS VERIFICATION`.
 
 | Change | Required review roles |
 |---|---|
@@ -860,27 +947,34 @@ A child must not claim a threshold, policy value, or enforcement path solely bec
 
 | Path | Relationship |
 |---|---|
-| [`policy/`](../../README.md) | Canonical singular policy root; current root README remains a short proposed scaffold. |
-| [`policy/domains/`](../README.md) | Parent domain-policy grouping. |
+| [`policy/`](../../README.md) | Canonical singular policy root; v0.3.1 documents mixed maturity and an unbound general evaluator. |
+| [`policy/domains/`](../README.md) | v0.3 parent domain-policy grouping and complete direct-child boundary. |
 | [`aggregation_thresholds/`](aggregation_thresholds/README.md) | Aggregation/disclosure-control documentation; no numeric thresholds or enforcement. |
-| [`policy/sensitivity/`](../../sensitivity/README.md) | Cross-cutting sensitivity policy lane; current parent README is a greenfield stub. |
-| [`policy/bundles/`](../../bundles/README.md) | Future immutable bundle/manifest boundary; no accepted bundle instance confirmed. |
+| [`policy/sensitivity/`](../../sensitivity/README.md) | Substantive cross-cutting boundary; Agriculture child artifacts remain proposed placeholders. |
+| [`policy/decision/`](../../decision/) | Inactive reason/obligation and reviewer-role candidate registries; not emitted decision storage. |
+| [`policy/bundles/`](../../bundles/README.md) | Packaging documentation and inactive Pass 12 profile; no accepted Agriculture bundle payload or selector. |
 | [`docs/domains/agriculture/POLICY.md`](../../../docs/domains/agriculture/POLICY.md) | Agriculture policy intent. |
 | [`docs/domains/agriculture/SENSITIVITY.md`](../../../docs/domains/agriculture/SENSITIVITY.md) | Sensitivity, rights, and public-release posture. |
 | [`docs/domains/agriculture/policy/README.md`](../../../docs/domains/agriculture/policy/README.md) | Human-facing policy aspect index; contains older proposed-path assumptions that need periodic reconciliation. |
-| [`contracts/policy/`](../../../contracts/policy/) | Shared policy input/decision meaning. |
+| [`contracts/policy/`](../../../contracts/policy/) | Shared policy input/decision meaning plus inactive explicit-input, vocabulary, semantics, reviewer-role, binding, obligation, and maturity profiles. |
 | [`schemas/contracts/v1/policy/`](../../../schemas/contracts/v1/policy/) | Shared policy input/decision shapes. |
 | [`contracts/domains/agriculture/`](../../../contracts/domains/agriculture/) | Agriculture object and receipt meaning. |
 | [`schemas/contracts/v1/domains/agriculture/`](../../../schemas/contracts/v1/domains/agriculture/) | Agriculture machine-shape scaffolds. |
 | [`fixtures/domains/agriculture/`](../../../fixtures/domains/agriculture/) | Synthetic Agriculture inputs. |
-| [`tests/domains/agriculture/policy_deny/`](../../../tests/domains/agriculture/policy_deny/README.md) | Negative policy test contract; README-only in bounded evidence. |
-| [`tests/domains/agriculture/aggregate_only/`](../../../tests/domains/agriculture/aggregate_only/README.md) | Aggregate-preservation test contract; README-only in bounded evidence. |
-| [`tools/validators/agriculture/`](../../../tools/validators/agriculture/README.md) | Agriculture validation profile; no direct executable established. |
+| [`tests/domains/agriculture/policy_deny/`](../../../tests/domains/agriculture/policy_deny/README.md) | README-only negative policy test contract; sibling Python module remains a placeholder. |
+| [`tests/domains/agriculture/aggregate_only/`](../../../tests/domains/agriculture/aggregate_only/README.md) | README-only aggregate-preservation contract; sibling NASS module remains a placeholder. |
+| [`tools/validators/agriculture/`](../../../tools/validators/agriculture/README.md) | Direct validator lane; documentation-only. |
+| [`tools/validators/domains/agriculture/`](../../../tools/validators/domains/agriculture/README.md) | Three substantive fixture validators plus four recognized placeholder modules; not a policy evaluator. |
 | [`packages/policy-runtime/`](../../../packages/policy-runtime/README.md) | Proposed evaluator/helper boundary; current core is a placeholder. |
 | [`data/receipts/aggregation/`](../../../data/receipts/aggregation/README.md) | Aggregation process-memory boundary; receipt subroot authority remains unresolved. |
 | [`release/agriculture/`](../../../release/agriculture/README.md) | Agriculture release/correction/rollback boundary. |
-| [`policy-test.yml`](../../../.github/workflows/policy-test.yml) | Policy readiness/drift guard; does not evaluate policy. |
-| [`domain-agriculture.yml`](../../../.github/workflows/domain-agriculture.yml) | Agriculture validation/proof/release readiness holds. |
+| [`policy-test.yml`](../../../.github/workflows/policy-test.yml) | Broad policy readiness and shape guard; does not evaluate Agriculture policy. |
+| [`domain-agriculture.yml`](../../../.github/workflows/domain-agriculture.yml) | Readiness inventory plus a bounded CDL watcher test; proof and release paths remain held. |
+| [`agriculture-observation.yml`](../../../.github/workflows/agriculture-observation.yml) | Fixture-only AgricultureObservation validation. |
+| [`agriculture-hls-ndvi-zonal-materiality.yml`](../../../.github/workflows/agriculture-hls-ndvi-zonal-materiality.yml) | Fixture-only HLS materiality validation. |
+| [`agriculture-ndvi-delta-computation.yml`](../../../.github/workflows/agriculture-ndvi-delta-computation.yml) | Deterministic captured-input computation validation. |
+| [`agriculture-ndvi-readiness.yml`](../../../.github/workflows/agriculture-ndvi-readiness.yml) | Fixture-only readiness-sidecar validation. |
+| [`agriculture-vegetation-connectivity-gate.yml`](../../../.github/workflows/agriculture-vegetation-connectivity-gate.yml) | Fixture-only connectivity-gate validation. |
 
 [Back to top](#top)
 
@@ -890,7 +984,8 @@ A child must not claim a threshold, policy value, or enforcement path solely bec
 
 | Conflict / decision | Current status | Required resolution |
 |---|---|---|
-| Canonical singular `policy/` root | Repository-present; doctrine supports it | Preserve; do not create parallel `policies/`. |
+| Directory placement | ADR-0029 **accepted**; canonical writable authority is `docs/doctrine/directory-rules.md` | Preserve singular `policy/`; do not create parallel `policies/` or edit the legacy architecture copy as authority. |
+| GitHub review route | `/policy/ @bartytime4life` is confirmed in CODEOWNERS | Verify functional steward assignments and independent review separately. |
 | Agriculture package namespace | `kfm.agriculture_*` and `kfm.generated.policy.domains.agriculture.*` coexist | Accept one namespace/versioning convention and migrate with tests. |
 | Default result semantics | `deny := false` versus `allow := false` | Define fail-closed engine contract and explicit system-error behavior. |
 | Ambiguity result | `abstain_on_ambiguous` currently defines a deny relation | Define canonical abstain/hold normalization. |
@@ -898,7 +993,8 @@ A child must not claim a threshold, policy value, or enforcement path solely bec
 | Aggregation threshold placement | Child README and separate sensitivity YAML overlap | Decide canonical source/value home without duplicating authority. |
 | Decision vocabulary | ALLOW/RESTRICT/HOLD intent versus ANSWER/ABSTAIN/DENY/ERROR schema | Accept normalized PolicyDecision contract or amend via ADR/schema migration. |
 | Bundle format and selection | No accepted manifest, bundle artifact, selector, or evaluator binding | Define deterministic bundle and activation contract. |
-| Reason/obligation registries | Documentation vocabularies only | Create shared contract/schema/registry and migration rules. |
+| Reason/obligation registries | Nine-reason/eight-obligation `PROPOSED_INACTIVE` registry with validator/tests/workflow | Review extension and migration rules; do not activate or invent Agriculture codes in prose. |
+| Reviewer-role registry | Five `PROPOSED_INACTIVE` identifiers with all authority flags false | Assign verified people and record approval through separate governed actions. |
 | Receipt layout | Domain AggregationReceipt versus broader receipt-family paths | Resolve through receipt-layout ADR/migration. |
 | Policy change effect on release | No confirmed correction cascade | Define re-evaluation, withdrawal, correction, and rollback triggers. |
 
@@ -910,15 +1006,18 @@ Do not resolve these conflicts by prose alone. Use an accepted ADR, contract/sch
 
 ## Smallest sound implementation sequence
 
-1. **Inventory and freeze the current source set.**
-   - byte-complete policy inventory;
+Current checkpoint: the direct source set is byte-complete for the pinned base; shared input, vocabulary, semantics, reviewer-role, binding, obligation, and maturity candidates now exist; several adjacent Agriculture fixture slices are executable. None resolves the direct rule namespace/default conflict or establishes an Agriculture evaluator.
+
+1. **Reconfirm and govern the current source set.**
+   - preserve the byte-complete seven-blob inventory;
    - hashes, package names, owners, and stated status;
+   - classify every source as retain, migrate, replace, or retire;
    - no activation.
 
-2. **Accept shared input and decision contracts.**
-   - immutable PolicyInputBundle;
-   - canonical PolicyDecision;
-   - reason and obligation registries;
+2. **Graduate or supersede the shared inactive profiles through review.**
+   - operation-specific immutable PolicyInputBundle profile;
+   - canonical PolicyDecision semantics;
+   - reason, obligation, and reviewer-role registries;
    - explicit normalization from engine-native results.
 
 3. **Resolve namespace and placement conflicts.**
@@ -979,7 +1078,7 @@ Each step should be independently reviewable and reversible.
 This Agriculture policy lane is not implementation-complete until:
 
 - [ ] owners and independent reviewers are confirmed;
-- [ ] byte-complete source inventory is recorded;
+- [x] byte-complete direct source inventory is recorded for the pinned base;
 - [ ] package namespace and placement conflicts are resolved;
 - [ ] default behavior is explicitly fail-closed and tested;
 - [ ] PolicyInputBundle and PolicyDecision contracts/schemas are accepted;
@@ -1008,28 +1107,25 @@ This Agriculture policy lane is not implementation-complete until:
 
 ## Open verification register
 
-| Item | Why it matters |
-|---|---|
-| Byte-complete Agriculture policy inventory | Bounded search is not a full checkout proof. |
-| Owner and CODEOWNERS enforcement | Trust-bearing changes need accountable review. |
-| Accepted Rego/equivalent namespace | Prevents parallel packages and ambiguous imports. |
-| Default semantics | Current stubs mix permissive-deny and restrictive-allow defaults. |
-| Canonical decision enum | Callers cannot safely consume conflicting vocabularies. |
-| PolicyInputBundle completeness | Hidden/missing facts can turn policy into guessing. |
-| Bundle format, manifest, digest, selector | File presence must not become activation. |
-| Evaluator implementation and version | Runtime behavior is currently unproved. |
-| Reason-code and obligation registries | Prevents caller-specific interpretation drift. |
-| Source-specific rights/confidentiality rules | Agriculture sources may differ materially. |
-| Aggregation/redaction authority and values | Prevents invented or inconsistent disclosure controls. |
-| Sensitive cross-lane join composition | Joins can create new re-identification risk. |
-| Deterministic fixture payloads | Required for no-network replay. |
-| Agriculture validator implementation | Needed for input/output/profile/receipt checks. |
-| Real policy test coverage | README contracts are not executable proof. |
-| Public caller obligation support | A decision is unsafe if obligations are ignored. |
-| Decision/audit receipt home | Needed for replay without collapsing receipt/proof/release. |
-| Release re-evaluation triggers | Policy/source/rights changes may invalidate published outputs. |
-| Correction and rollback automation | Required before policy activation affects public state. |
-| Current workflow run results and branch protection | Workflow files alone do not prove enforcement. |
+| ID | Item | Current posture |
+|---|---|---|
+| AGRPOL-001 | Direct seven-blob inventory | **CONFIRMED** at the pinned base; reopens on path or byte drift. |
+| AGRPOL-002 | Functional owners and independent reviewers | CODEOWNERS route **CONFIRMED**; role assignment and independent approval **NEEDS VERIFICATION**. |
+| AGRPOL-003 | Accepted Rego/equivalent namespace | **CONFLICTED** across `kfm.agriculture_*` and generated namespaces. |
+| AGRPOL-004 | Default and native-result semantics | **CONFLICTED** between permissive `deny` defaults, restrictive `allow` defaults, and missing abstain relation. |
+| AGRPOL-005 | Canonical outward normalization | `ANSWER/ABSTAIN/DENY/ERROR` shape **CONFIRMED**; Agriculture native-to-outward binding **UNKNOWN**. |
+| AGRPOL-006 | Complete Agriculture PolicyInputBundle profile | Shared v1 input profile **PROPOSED_INACTIVE**; Agriculture assembly and accepted completeness **UNKNOWN**. |
+| AGRPOL-007 | Bundle manifest, digest, selector, and evaluator | **NOT ESTABLISHED**. |
+| AGRPOL-008 | Reason, obligation, and reviewer-role registries | Machine-checkable candidates **PROPOSED_INACTIVE**; Agriculture extension/adoption **NEEDS DECISION**. |
+| AGRPOL-009 | Source-specific rights and confidentiality rules | **NEEDS VERIFICATION** per source and requested operation. |
+| AGRPOL-010 | Aggregation/redaction authority and numeric values | Placeholders **CONFIRMED**; accepted values and canonical ownership **UNKNOWN**. |
+| AGRPOL-011 | Sensitive cross-lane join composition | Most-restrictive posture documented; evaluator composition **NOT ESTABLISHED**. |
+| AGRPOL-012 | Direct Agriculture policy fixtures and native tests | **ABSENT / PLACEHOLDER** despite substantive adjacent computation fixtures. |
+| AGRPOL-013 | General Agriculture policy validator | Direct lane documentation-only; specialized fixture validators **CONFIRMED**; evaluator-bound validator **ABSENT**. |
+| AGRPOL-014 | Governed consumer and obligation handlers | **UNKNOWN**; unsupported obligations must fail closed. |
+| AGRPOL-015 | Authenticated decision receipt, replay, expiry, and cache invalidation | **UNKNOWN**. |
+| AGRPOL-016 | Release re-evaluation, correction, withdrawal, and rollback propagation | Documentation exists; end-to-end automation and drills **NEEDS VERIFICATION**. |
+| AGRPOL-017 | Required-check and branch-ruleset significance | Workflow files **CONFIRMED**; enforcement configuration **UNKNOWN**. |
 
 [Back to top](#top)
 
@@ -1066,7 +1162,7 @@ If this README overstates implementation:
 
 For this documentation revision:
 
-- restore prior blob `ba73c387e16f70895f32444e489d6d55dd577b75`;
+- restore prior v0.2 blob `9fd3762577e6804ed69e6ac278cd3252a50bb75e`;
 - remove the paired generated receipt if the change is reverted;
 - no policy source, data, runtime, release, deployment, or public state requires restoration.
 
@@ -1088,6 +1184,7 @@ For future policy behavior changes:
 |---|---|---|---|
 | 2026-06-15 | v0.1 | Replaced a broad greenfield stub with a bounded Agriculture policy README. | Draft; implementation largely unverified. |
 | 2026-07-19 | v0.2 | Rebuilt the parent lane as a repository-grounded policy index; inventoried current Rego/YAML/child surfaces; surfaced namespace/default/output/placement conflicts; added input, decision, obligation, cross-lane, public-surface, test, review, implementation, correction, and rollback contracts. | Documentation update only; enforcement remains unimplemented. |
+| 2026-08-13 | v0.3 | Reconciled accepted Directory Rules and CODEOWNERS authority; proved the complete direct inventory; separated direct policy scaffolds from new shared inactive policy profiles and adjacent executable Agriculture fixture slices; aligned exact candidate vocabularies, workflows, validation, maturity, conflicts, review, and open decisions. | Documentation and provenance only; no policy activation, release, or publication. |
 
 [Back to top](#top)
 
@@ -1097,21 +1194,25 @@ For future policy behavior changes:
 
 | Evidence | Confirmed observation | Limitation |
 |---|---|---|
-| Prior parent README | Existing v0.1 boundary and intended Agriculture obligations | Predates detailed current inventory and workflow readiness changes. |
-| `deny_unpublished.rego` | Proposed stub with `default deny := false` | No active rule or test. |
-| `abstain_on_ambiguous.rego` | Proposed stub with `default deny := false` and deny example | No abstain result or test. |
-| `deny-field-level.rego` | Generated scaffold with `default allow := false` | No decision shape, reason, or test. |
-| `redaction_profiles.yaml` | Placeholder exists | No profile values. |
-| Aggregation-threshold child README | Detailed fail-closed disclosure-control contract | Documentation only; no accepted numeric threshold. |
-| Sensitivity Agriculture scaffolds | Placeholder threshold YAML and farm/operator default-deny scaffold | Separate placement/namespace remains unresolved. |
-| Agriculture policy/sensitivity docs | Deny-exact/private-join and most-restrictive-row doctrine | Draft doctrine; not runtime proof. |
-| Policy-deny/aggregate-only test READMEs | Comprehensive test expectations | README-only maturity; no lane-local executable proof. |
-| NASS aggregate placeholder test | Docstring only | No assertions. |
-| Agriculture validator README | Broad validation contract and conflicts | Direct lane remains README-only. |
-| `policy-test.yml` | Readiness/drift guard with explicit holds | Evaluates no policy and emits no PolicyDecision. |
-| `domain-agriculture.yml` | Agriculture readiness holds | No validation/proof/release authority. |
-| Policy runtime core | Comment-only placeholder | No evaluator. |
-| Policy bundle README | Bundle/manifest boundary documented | No accepted bundle artifact or active selection. |
+| Complete pinned tree | 13,374 tracked blobs; seven under this lane; three direct Rego files; no direct native Rego test | Repository state is a snapshot and must be rechecked on drift. |
+| ADR-0029 and Directory Rules | Singular `policy/` placement is accepted; doctrine path is the sole writable human authority | Placement does not establish implementation maturity. |
+| Root Registry | Projects `policy/` as canonical `policy_rule` root with `normative_policy_only` validation profile | Machine projection grants no policy, release, or publication authority. |
+| CODEOWNERS | `/policy/ @bartytime4life` | Routes GitHub review only; no functional-role or independent-approval proof. |
+| Prior v0.2 README | Strong boundary, source inventory, input/output, public-surface, review, and rollback design | Snapshot predated accepted governance and current fixture profiles. |
+| `deny_unpublished.rego` | `PROPOSED` stub with `default deny := false` | No operative denial or native test. |
+| `abstain_on_ambiguous.rego` | `PROPOSED` stub with `default deny := false` and deny example | No abstain result or native test. |
+| `deny-field-level.rego` | Generated `PROPOSED` scaffold with `default allow := false` | No input binding, reason, obligation, or native test. |
+| Direct and sensitivity YAML | Both redaction and aggregation files are value-free `PROPOSED` placeholders | No accepted transform profile or threshold. |
+| Aggregation-threshold child README | Detailed fail-closed disclosure-control contract | Documentation only; no accepted numeric threshold or evaluator. |
+| Shared policy input profile | Five operations, seven audiences, deterministic validator/tests, all authority flags false | `PROPOSED_INACTIVE`; no Agriculture assembler or evaluator. |
+| Shared decision and reviewer registries | Nine reasons, eight obligations, five roles, deterministic validators/tests | `PROPOSED_INACTIVE`; no activation, person assignment, or enforcement. |
+| Direct Agriculture tests | NDVI delta is substantive; direct policy-deny, aggregate-only, join, and related modules are placeholders | Computation coverage is not policy coverage. |
+| Specialized Agriculture profiles | Observation, materiality, readiness, connectivity, and NDVI artifacts have bounded contracts/schemas/fixtures/validators/tests | Fixture/captured-input semantics only; no source, evidence, policy, promotion, release, or publication authority. |
+| `domain-agriculture.yml` | Executes bounded CDL watcher evidence and preserves proof/release holds | Does not emit a policy decision, proof, release, or public artifact. |
+| Five focused Agriculture workflows | Exercise exact no-network profile slices | Green results do not compose into an Agriculture policy system. |
+| `policy-test.yml` | Readiness and shape guard with explicit holds | Evaluates no Agriculture policy and emits no `PolicyDecision`. |
+| Policy runtime core | Comment-only `0.0.0` placeholder | No evaluator, selector, adapter, or consumer. |
+| Policy bundle inventory | Documentation only; no non-document payload | No accepted Agriculture bundle artifact, manifest, or active selection. |
 
 ---
 
