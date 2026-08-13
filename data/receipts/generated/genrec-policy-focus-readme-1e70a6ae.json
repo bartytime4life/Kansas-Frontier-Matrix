@@ -1,0 +1,245 @@
+{
+  "receipt_id": "genrec-policy-focus-readme-1e70a6ae",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/focus/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/focus/README.md": "sha256:1e70a6aec5e97ec61fad13e13311bbffb36bbe9359fa1c4d7671024a3f70b8bd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c667aef1c5a82a582005931ff6c5be5e6f531dcb80c24bcbb4d5036c6c907625",
+      "sha256:920d780905c5554e14090822d3e30e4b74ff5f1a28fb05543d3e37487ae921b9",
+      "sha256:5c5c61d4810c70da2fd9124fab200df17cf96260ff3fd27eafea89f203443915",
+      "sha256:18e140428afc5d238bb9d3fea261e505135072f2c4592af2515f4827c67348fa",
+      "sha256:68ab9de3c2ebe3bb673720bb87153c589ff2186d31dcef31b05d5e945ac4bda1",
+      "sha256:b137eeb489145cd58941e59280467d4370aa7e7dcdfe3a5833922fbbd9ac00f8",
+      "sha256:b15c026c383dbee06b33ade4fe8b5215192ae574f50b8552eebcbc875c054744",
+      "sha256:7c24404f4ae17c6bd41e08a07dfb26f3845e198b6d27f55c6a438e7d7f215cab",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-131005).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@7ac4330b26419664ee92fb5c9feb66374097f033",
+      "repo:policy/focus/README.md@7ac4330b26419664ee92fb5c9feb66374097f033",
+      "repo:commit@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:policy/focus/README.md@e6de606175bb1d352c00000486808f2e7e0f7b2f",
+      "repo:commit@216253e9863cbac30a863718d6899fa1a2c4497a",
+      "repo:policy/focus/README.md@216253e9863cbac30a863718d6899fa1a2c4497a",
+      "repo:commit@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/focus/citation_validation_required.rego@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/focus/finite_envelope_required.rego@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/focus/focus_request.rego@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/focus/focus_response.rego@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:policy/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:docs/doctrine/directory-rules.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:control_plane/root_registry.yaml@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/ui/focus_request.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/ui/focus_response.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/focus_mode/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/policy/policy_input_bundle.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/policy/policy_input_bundle_profile_v1.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/policy/policy_decision.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:contracts/runtime/runtime_response_envelope.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:schemas/contracts/v1/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:tests/fixtures/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:tests/runtime_proof/test_envelope_finite_outcomes.py@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:.github/workflows/focus-mock-test.yml@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:.github/workflows/policy-test.yml@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:packages/policy-runtime/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:.github/CODEOWNERS@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:CONTRIBUTING.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf",
+      "repo:tools/validators/validate_generated_receipt.py@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    ]
+  },
+  "truth_labels": {
+    "policy/focus/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main and target bytes, inspected target history and exact Focus tree, verified repository identity and CODEOWNERS routing, and found no matching open pull request or branch before authoring. Main later advanced from 3e6db491 through 216253e9, e6de6061, and 7ac4330b via non-overlapping policy/geoprivacy, policy/genealogy, policy/fixtures, and policy/layers README merges; the Focus baseline and all referenced Focus rule bytes remained unchanged."
+    },
+    {
+      "gate": "directory-authority-and-scope-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README replaces the stale competing-Directory-Rules claim with accepted ADR-0029 and canonical doctrine evidence, preserves policy/ as the singular source root, treats Focus as a composition scope, and does not create a new root, domain, policy family, package authority, evaluator, release, or publication."
+    },
+    {
+      "gate": "focus-current-state-evidence",
+      "outcome": "PASS",
+      "reason": "Exact rule packages and defaults, proposed contract and schema surfaces, Focus/UI schema overlap, canonical runtime-envelope alias, absent Focus payload fixtures, static workflow hold, finite-envelope proof boundary, placeholder policy runtime, and three-route governed-API scaffold were inspected at the pinned base."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "The v0.2 purpose, inputs, gates, finite outcomes, sensitivity, review, validation, implementation sequence, open questions, evidence, and rollback duties are preserved or tightened; closed authority claims are corrected and new runtime evidence remains explicitly bounded."
+    },
+    {
+      "gate": "markdown-structure-metadata-and-links",
+      "outcome": "PASS",
+      "reason": "The final README has one rendered H1, logical heading progression, three balanced language-tagged fences, no tabs or diff whitespace errors, UTF-8-compatible text, a final newline, one valid warning-free KFM_META_BLOCK_V2 envelope, and all 80 local links and fragments resolved without network access."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 local-link validator tests and all 24 metadata-block validator tests passed deterministically with no network access. Registry comparison produces only the expected review-only add candidate for the newly machine-visible metadata identity."
+    },
+    {
+      "gate": "finite-envelope-shape-proof",
+      "outcome": "PASS",
+      "reason": "All eight runtime-envelope validator unit tests passed, and the canonical validator accepted four valid ANSWER/ABSTAIN/DENY/ERROR fixtures while rejecting four invalid fixtures as expected. This proves shape and alias behavior only, not Focus policy or runtime execution."
+    },
+    {
+      "gate": "focus-executable-byte-scope",
+      "outcome": "PASS",
+      "reason": "The changed artifact inventory contains the README and this provenance receipt only. The four Rego blobs, contracts, schemas, fixtures, workflows, evaluator/package, API routes, release objects, deployments, and published surfaces are unchanged."
+    },
+    {
+      "gate": "full-repository-topology-scan",
+      "outcome": "SKIPPED",
+      "reason": "The partial checkout attempted an unavailable promisor-object network fetch during the live-index scan. Focused link, metadata, direct-child, duplicate-identity, diff-scope, and synthetic topology-rule checks passed; no full live-index topology pass is claimed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "This receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest. The 26-test generated-receipt validator suite and one-valid/one-invalid fixture polarity profile also passed."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private endpoints, signing material, protected payloads, personal records, exact sensitive locations, operational disclosure thresholds, model secrets, hidden reasoning, or actor-authority claims."
+    },
+    {
+      "gate": "focus-policy-runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Focus rule logic, package, bundle, evaluator, adapter, contract, schema, fixture, workflow, consumer, decision, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no Focus-policy acceptance, independent approval, merge authority, activation, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "focus-readme-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "focus-rule-scaffolds",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/focus_request.rego@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "parent-policy-authority",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "directory-placement-and-focus-scope",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "focus-schema-overlap-and-runtime-alias",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "finite-runtime-envelope-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "policy-decision-family-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "focus-readiness-and-envelope-proof",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/focus-mock-test.yml@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "general-policy-evaluator-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "focus-fixture-absence",
+      "validated": true,
+      "evidence_ref": "repo:tests/fixtures/focus/README.md@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "governed-api-route-absence",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@3e6db4917f89d71331d7f46c08dc64c5000558bf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T15:46:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-led reconciliation of the existing policy/focus v0.2 boundary against current main. The update closes stale Directory Rules authority claims, records Focus as a composition scope, preserves exact inactive rule evidence, distinguishes canonical finite-envelope shape proof from Focus enforcement, documents schema and policy-family conflicts, and adds activation, correction, no-loss, and rollback controls. It changes no Rego, contract, schema, fixture, validator, test, workflow, evaluator, adapter, API route, decision, release, deployment, publication, or public behavior. This receipt is provenance and process memory rather than policy acceptance, proof, independent review, merge authority, activation, release authority, or publication authority; authorized human review remains pending."
+}
