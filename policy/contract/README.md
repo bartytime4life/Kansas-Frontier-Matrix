@@ -1,28 +1,29 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://policy/contract
 title: policy/contract/ — Contract-Change Admissibility Boundary
-type: policy-readme; directory-readme; contract-change-gate-boundary
-version: v0.3
-status: draft; repository-grounded; readme-only-direct-lane; contract-schema-ci-confirmed; structural-policy-boundary-guards-confirmed; contract-policy-enforcement-not-established
-owners: OWNER_TBD — Policy steward · Contract steward · Schema steward · Architecture steward · Validation steward · Release steward · Docs steward
+type: readme
+version: v0.4
+status: draft; BOUNDARY_COMPACT; repository-grounded; readme-only-direct-lane; accepted-directory-rules; adjacent-contract-schema-tests-confirmed; adjacent-policy-validators-confirmed; contract-policy-enforcement-not-established; fail-closed; non-release; non-publication
+owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted Contract policy stewardship, independent approval controls, and a stable local scope ID were not established
 created: 2026-06-15
-updated: 2026-07-22
-policy_label: "public-governance; restricted-review; contract-policy-boundary; fail-closed; no-semantic-authority; no-schema-authority; no-release-authority"
+updated: 2026-08-13
+policy_label: "public; policy; contract-change; admissibility; trust-membrane; fail-closed; no-semantic-authority; no-schema-authority; no-evidence-authority; no-release-authority; no-publication-authority"
 current_path: policy/contract/README.md
 owning_root: policy/
 responsibility: admissibility posture for contract-related repository actions; determines whether a proposed contract change has enough authority, paired shape, review, validation, migration, compatibility, evidence, policy, and rollback support to proceed without redefining contract meaning, schema shape, release state, or implementation behavior
-truth_posture: CONFIRMED target path, singular policy-root placement across the inspected Directory Rules sources, canonical contracts root, repository machine-schema convention with ADR-0001 still proposed, current make test / make validate / make boundary-guards command wiring, selected schema-fixture coverage, README-only direct tests/contracts and policy/contract lanes, expanded policy-test readiness holds, 15-test structural policy-boundary suite, placeholder policy runtime, README-only bundle lane, and README-only policy-validator lane / PROPOSED contract-change classification, gate inputs, obligations, reviewer classes, and executable enforcement sequence / CONFLICTED three Directory Rules copies with overlapping placement authority and two doc identities / UNKNOWN branch-protection requirements, current workflow pass rates, accepted evaluator and bundle selection, exhaustive contract/schema pairing, runtime consumers, and release-gate integration / NEEDS VERIFICATION accepted owners, child-lane naming ratification, direct contract-policy Rego module, contract-policy fixtures and tests, reason-code registry, validator entry point, bundle registration, contract-policy receipts, separation of duties, and rollback automation
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  visibility: public
-  base_ref: main
-  base_commit: 91a2df5aa12c0a060167bc8b79716caf0f04ee35
-  prior_blob: 3d75be8c9f1269d58e7db3a10b6234e2fd4d1d90
-  prior_snapshot_base: aebbca0f18fe8cd907b36b267cc5372a636830d8
-  inventory_method: GitHub connector file reads at the pinned commit, a base comparison from the v0.2 snapshot, and bounded repository code, branch, duplicate-identity, workflow-threat, and open-pull-request searches
-  direct_lane_files_confirmed:
-    - policy/contract/README.md
-  bounded_inventory_note: no competing policy/contracts lane, direct contract-policy Rego module, direct fixture/test module, dedicated validator, bundle registration, runtime consumer, contract-policy receipt emitter, or release integration was established by the bounded searches; the prior v0.2 branch remains visible, but no overlapping open pull request was surfaced; this is not proof of permanent absence
+truth_posture: CONFIRMED accepted ADR-0029 and canonical Directory Rules v2 placement, singular policy root, canonical semantic contracts root, configured schemas/contracts/v1 machine-shape surface, README-only direct Contract policy lane, executable adjacent contract/schema tests, 12 paired deterministic policy validators, 18-test structural boundary suite, bounded inactive Pass 12 Rego profile, broad policy readiness holds, placeholder general policy runtime, and unaccepted repository-wide bundle selection / PROPOSED contract-change classes, gate input, obligations, reviewer classes, and implementation sequence / UNKNOWN effective required checks, accepted general evaluator and bundle selector, exhaustive contract/schema equivalence, governed consumers, decision receipts, production enforcement, and release integration / NEEDS VERIFICATION accepted owners, local scope ID, direct Contract Rego module, Contract fixtures and native tests, dedicated Contract validator, reason-code and obligation compatibility, separation of duties, replay, and rollback automation
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_visibility: public
+evidence_base_ref: main
+evidence_base_commit: 1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a
+prior_blob: cf8fe811c35d9efaf43f05ab9da181ccbb4d3670
+prior_snapshot_base: 91a2df5aa12c0a060167bc8b79716caf0f04ee35
+authority_evidence: accepted ADR-0029 blob b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62 adopts Directory Rules blob fd49a0b83e55cef52c1124281f093e263526898d as the sole writable human Directory Rules authority
+implementation_evidence: policy root blob 6c5021f9d92778581a4e9331a9dd6ddb7efc5f6; contracts root blob e0b7c126e00a8ac6e8890774ed26cf21aef534ba; Makefile blob c5d0aee3de558d76c1e1639bcfd8cf1c71a0d326; policy validators tree 9d27cf72099a1234e2ba0187fd0247e5f8ac9760; contract tests tree 7aaff0b5ffe5361d51a94006efc0501b60cb6734
+inventory_method: GitHub connector reads at the pinned main commit plus deterministic local inspection of the same target and path-disjoint evidence blobs, bounded executable/test/workflow inventory, exact target-path pull-request search, and no-network documentation validation
+direct_lane_tree: 9ec2846e7d4eba112718aea03a103e1cce0a242c
+direct_lane_files_confirmed: policy/contract/.gitkeep; policy/contract/README.md
+bounded_inventory_note: no competing policy/contracts lane, direct Contract Rego module, direct Contract fixture/test module, dedicated Contract validator, accepted bundle registration, governed runtime consumer, Contract PolicyDecision or receipt emitter, or release integration was established; adjacent policy validators and contract/schema tests exist but do not activate this lane
 related:
   - ../README.md
   - ../bundles/README.md
@@ -36,26 +37,26 @@ related:
   - ../../packages/policy-runtime/README.md
   - ../../docs/architecture/contract-schema-policy-split.md
   - ../../docs/architecture/directory-rules.md
-  - ../../docs/architecture/DIRECTORY_RULES.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../docs/adr/ADR-0002-contracts-vs-schemas-split.md
   - ../../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md
   - ../../docs/registers/POLICY_GATE.md
   - ../../docs/registers/DRIFT_REGISTER.md
   - ../../.github/workflows/contracts-validate.yml
+  - ../../.github/workflows/contract-drift.yml
   - ../../.github/workflows/policy-test.yml
   - ../../.github/workflows/policy-boundary-guards.yml
   - ../../.github/workflows/validator-suite.yml
   - ../../.github/workflows/link-check.yml
-  - ../../data/receipts/generated/README.md
   - ../../Makefile
 tags: [kfm, policy, contracts, contract-change, admissibility, governance, schemas, fixtures, validators, migration, compatibility, rollback, fail-closed]
 notes:
-  - "v0.3 preserves the v0.2 authority split and proposed gate model while refreshing the repository evidence boundary after 277 intervening commits."
-  - "The existing path is retained. This documentation revision adds one generated-work receipt but creates no policy rule, contract, schema, fixture, test, validator, runtime behavior, proof, release, or lifecycle artifact."
-  - "Three Directory Rules copies are repository-present: lowercase architecture v1.3.1, uppercase architecture v1, and doctrine v1.4. Their canonical placement and supersession conflict remains unresolved and is not settled here."
-  - "A policy/contract README, structural boundary test, generated receipt, schema-valid fixture, or green workflow is not executable contract-change policy and does not authorize release or publication."
+  - "v0.4 reconciles this boundary with accepted ADR-0029 and current mixed-maturity validation evidence while preserving the v0.3 gate model and stable document identity."
+  - "The existing path is retained. This one-file revision creates no policy rule, contract, schema, fixture, test, validator, receipt, proof, runtime behavior, release object, lifecycle transition, or public artifact."
+  - "docs/doctrine/directory-rules.md is the sole writable human Directory Rules authority; docs/architecture/directory-rules.md is a read-only compatibility dependency pending the controlled migration recorded by ADR-0029."
+  - "A policy/contract README, validator result, schema-valid fixture, passing test, or green workflow is not executable Contract policy and does not authorize merge, release, deployment, promotion, or publication."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -69,20 +70,20 @@ notes:
 ![status](https://img.shields.io/badge/status-repository--grounded%20draft-yellow)
 ![maturity](https://img.shields.io/badge/maturity-README--only-lightgrey)
 ![root](https://img.shields.io/badge/root-policy%2F-0a7ea4)
-![contract--schema--ci](https://img.shields.io/badge/contract%2Fschema%20CI-confirmed-success)
-![structural--guards](https://img.shields.io/badge/structural%20boundary%20guards-confirmed-success)
+![directory--rules](https://img.shields.io/badge/Directory%20Rules-v2%20adopted-2da44e)
+![adjacent--validation](https://img.shields.io/badge/adjacent%20validation-confirmed-success)
 ![policy--enforcement](https://img.shields.io/badge/contract--policy%20enforcement-not%20established-orange)
 ![default](https://img.shields.io/badge/default-fail%20closed-critical)
 ![authority](https://img.shields.io/badge/authority-admissibility%20only-blue)
 
-**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose) · [Authority](#authority-boundary) · [Repository fit](#repository-fit) · [Current state](#confirmed-current-state) · [Change classes](#contract-change-classes) · [Inputs](#required-gate-input) · [Gate model](#contract-change-gate-model) · [Outcomes](#outcomes-and-normalization) · [Obligations](#obligations) · [Validation](#validation-and-negative-cases) · [CI](#ci-and-workflow-boundary) · [Security](#security-rights-sensitivity-and-public-impact) · [Rollback](#migration-correction-supersession-and-rollback) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Changelog](#changelog)
+**Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose) · [Authority](#authority-boundary) · [Ownership](#local-ownership-and-scope) · [Identity](#naming-identity-and-versioning) · [Lifecycle](#lifecycle-exposure-mutation-and-retention) · [Repository fit](#repository-fit) · [Current state](#confirmed-current-state) · [Change classes](#contract-change-classes) · [Inputs](#required-gate-input) · [Gate model](#contract-change-gate-model) · [Outcomes](#outcomes-and-normalization) · [Obligations](#obligations) · [Validation](#validation-and-negative-cases) · [CI](#ci-and-workflow-boundary) · [Security](#security-rights-sensitivity-and-public-impact) · [Rollback](#migration-correction-supersession-and-rollback) · [Implementation](#smallest-sound-implementation-sequence) · [Done](#definition-of-done) · [Open](#open-verification-register) · [Evidence](#evidence-ledger) · [Last reviewed](#last-reviewed) · [Changelog](#changelog)
 
 > [!IMPORTANT]
-> **CONFIRMED current state:** this path exists under the singular `policy/` root, and the three inspected Directory Rules sources agree that policy/admissibility belongs there. Bounded search surfaced no competing `policy/contracts/` lane or overlapping open pull request; the prior v0.2 task branch remains visible. The direct lane remains README-only.
+> **CONFIRMED current state:** accepted ADR-0029 adopts Directory Rules v2 and makes `docs/doctrine/directory-rules.md` the sole writable human Directory Rules authority. Its mandatory three-way split assigns semantic meaning to `contracts/`, machine shape to `schemas/`, and admissibility to singular `policy/`. This direct lane contains only `.gitkeep` and this README; no competing `policy/contracts/` lane or overlapping open pull request was found.
 >
-> **CONFIRMED adjacent enforcement:** contract/schema CI runs repository-owned tests, selected schemas have valid/invalid fixture coverage, and a separate command-bearing suite runs 15 structural policy/API boundary tests. That suite is not a contract-change policy gate and its path filter does not include this README.
+> **CONFIRMED adjacent validation:** contract/schema CI runs repository-owned schema and contract tests; `tests/contracts/` now contains two executable modules and a three-family fixture manifest; `tools/validators/policy/` contains 12 deterministic validators with paired tests and workflows; and the separate boundary suite declares 18 structural/static/API tests. These are bounded validation surfaces, not a Contract policy evaluator.
 >
-> **NOT ESTABLISHED:** a contract-policy Rego module, direct contract-policy fixtures and tests, dedicated validator, accepted bundle selection, functional policy runtime, emitted contract-policy decision receipt, or release-gate integration.
+> **NOT ESTABLISHED:** a Contract-specific Rego module, direct Contract policy fixtures or native tests, a dedicated Contract validator, accepted repository-wide bundle selection, functional general policy runtime, authenticated Contract `PolicyDecision` flow, governed consumer, production enforcement, or release-gate integration.
 
 > [!CAUTION]
 > This directory must never become a second contract or schema authority. A policy gate may decide whether a proposed action is admissible under supplied context; it may not define what an object means, invent a field shape, create evidence, approve release, or treat generated text as reviewed truth.
@@ -91,25 +92,24 @@ notes:
 
 ## Status and evidence boundary
 
-This README is grounded to `main@91a2df5aa12c0a060167bc8b79716caf0f04ee35`, which is 277 commits ahead of the v0.2 evidence snapshot. Statements about current repository presence are bounded to the files, comparison, and searches listed in the [evidence ledger](#evidence-ledger). Workflow definitions were inspected, but current run results, branch protection, deployment, and production enforcement were not established during authoring.
+This README is grounded to `main@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a`. Statements about repository presence are bounded to the paths, blobs, trees, workflows, and searches listed in the [evidence ledger](#evidence-ledger). Current implementation evidence outranks older README maturity claims. Effective rulesets, required-check enforcement, independent approval, deployed consumers, and production enforcement remain outside the established evidence boundary.
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
-| `policy/contract/README.md` | **CONFIRMED** | This boundary document exists and is the only direct-lane file established by bounded search. |
-| `policy/contract/` placement | **CONFIRMED current path / doctrine-aligned** | All three inspected Directory Rules copies place admissibility under singular `policy/`; no move or parallel lane is justified by inspected evidence. |
-| Directory Rules source set | **CONFLICTED / NEEDS VERIFICATION** | Lowercase architecture v1.3.1, uppercase architecture v1, and doctrine v1.4 copies overlap; the placement rule used here agrees across them, but canonical document identity and supersession remain unresolved. |
+| `policy/contract/` direct inventory | **CONFIRMED README-only boundary** | `.gitkeep` and this README are the only direct files; no Contract rule source is present. |
+| `policy/contract/` placement | **CONFIRMED / adopted** | ADR-0029 makes Directory Rules v2 effective; §9.3 assigns admissibility to singular `policy/`. |
+| Directory Rules authority | **CONFIRMED accepted decision** | `docs/doctrine/directory-rules.md` is the sole writable human authority; the lowercase architecture path is read-only compatibility, not parallel authority. |
 | `policy/contracts/` competitor | **NOT SURFACED** | No competing child lane was found. This does not ratify a permanent naming convention by itself. |
-| Contract semantic root | **CONFIRMED** | `contracts/` is the repository-facing semantic-meaning root. |
-| Machine-schema convention | **CONFIRMED repository path / ADR still proposed** | Machine shapes use `schemas/contracts/v1/`; ADR-0001 remains proposed. |
-| Contract/schema fixture harness | **CONFIRMED code** | `tests/schemas/test_common_contracts.py` validates valid and invalid fixtures for selected schema families. |
-| Direct semantic-contract suite | **NOT ESTABLISHED** | `tests/contracts/` is README-only in its bounded evidence; complete semantic enforcement is not proved. |
-| Contract/schema CI | **CONFIRMED workflow wiring** | `contracts-validate` runs `make test` with read-only repository permission. Current pass result and required-check status are unknown. |
-| Contract-policy Rego module | **NOT ESTABLISHED** | No direct executable policy module was found in this lane. |
-| Policy-test behavior | **CONFIRMED readiness holds** | Two command-bearing readiness jobs verify that accepted OPA evaluation, bundle activation, policy-runtime behavior, and complete policy fixture coverage remain unwired; they do not execute policy or emit `PolicyDecision`. |
-| Structural policy-boundary suite | **CONFIRMED adjacent executable coverage** | `make boundary-guards` / `make boundary-guards-ci` run 15 structural/static/API tests in four modules. This is not contract-change policy evaluation, and the workflow path filter excludes this README and generated receipts. |
-| Policy validators | **README-only direct validator lane** | `tools/validators/policy/` contains routing documentation and no established executable validator. |
+| Contract semantic root | **CONFIRMED canonical responsibility** | `contracts/` owns human-readable meaning and invariants without becoming schema, policy, evidence, or release authority. |
+| Machine-schema convention | **CONFIRMED configured path / ADR still proposed** | Repository validation uses `schemas/contracts/v1/`; ADR-0001 and ADR-0002 remain proposed rather than accepted. |
+| Contract/schema tests | **CONFIRMED bounded executable coverage** | `tests/schemas/` and `tests/contracts/` contain executable checks; the latter has two modules, 12 source-declared tests, and a three-family manifest. Complete semantic equivalence is not proved. |
+| Contract/schema CI | **CONFIRMED workflow wiring** | `contracts-validate` runs the manifest validator and `make test`; `contract-drift` runs strict schema/contract tests. Effective required-check status remains unknown. |
+| Contract-specific Rego module | **NOT ESTABLISHED** | No direct executable Contract policy module was found in this lane. |
+| Policy-test behavior | **CONFIRMED broad readiness holds** | Static jobs preserve the general evaluator/bundle/runtime hold while recognizing one separately governed inactive Pass 12 Rego lane and paired deterministic policy validators. No repository-wide policy is evaluated. |
+| Structural policy-boundary suite | **CONFIRMED adjacent executable coverage** | Four modules declare 18 structural/static/API tests. Their path filter excludes this README, and they do not evaluate Contract policy. |
+| Policy validators | **CONFIRMED mixed adjacent support** | Twelve deterministic validators have paired tests and workflows; none is a dedicated Contract-change gate or authoritative policy evaluator. |
 | Policy runtime | **CONFIRMED placeholder** | Package version is `0.0.0`; functional evaluator, exports, consumers, and package tests are not established. |
-| Policy bundles | **CONFIRMED README-only** | No accepted bundle artifact, manifest, selector, evaluator binding, or activation is established. |
+| Policy bundles | **CONFIRMED documentation plus inactive profile** | A Pass 12 packaging profile is documented, but no accepted repository-wide manifest, selector, evaluator binding, or active bundle is established. |
 | Contract-policy receipts and release use | **UNKNOWN / NEEDS VERIFICATION** | No accepted receipt flow, promotion dependency, or runtime consumer was proved. |
 
 ### Truth labels
@@ -170,8 +170,8 @@ The lane is authoritative only as reviewed policy documentation for contract-cha
 | Policy bundle packaging | `policy/bundles/` | Require an accepted bundle reference when runtime evaluation exists; never activate by directory presence. |
 | Runtime evaluation mechanics | `packages/policy-runtime/` | Consume an accepted evaluator result when implemented; never treat placeholder code as enforcement. |
 | Fixtures | accepted `fixtures/` or test-local fixture lane | Require deterministic positive and negative examples where material. |
-| Tests | `tests/` | Prove boundary behavior; no complete direct semantic suite is established. |
-| Validator implementation | `tools/validators/` | Invoke an accepted validator; none is established for this lane. |
+| Tests | `tests/` | Prove bounded behavior; current schema/contract tests do not evaluate this policy lane. |
+| Validator implementation | `tools/validators/` | Invoke accepted validators by declared scope; adjacent policy validators do not substitute for a dedicated Contract gate. |
 | Governance indexes | `control_plane/`, `docs/registers/` | Cross-check ownership, gate identity, deprecation, and drift. |
 | Receipts and proofs | `data/receipts/`, `data/proofs/` | Reference emitted records; never store them here. |
 | Release, correction, withdrawal, rollback | `release/` | Require relevant support; never approve it here. |
@@ -193,48 +193,99 @@ A trust-bearing object family is not implementation-ready merely because one row
 
 ---
 
+## Local ownership and scope
+
+| Field | Current posture |
+|---|---|
+| Inherited parent | [`policy/`](../README.md), the adopted singular policy-source root |
+| Local owner | `NEEDS VERIFICATION`; CODEOWNERS routes `/policy/` to `@bartytime4life`, but routing is not accepted stewardship or independent approval |
+| Local scope ID | `NEEDS VERIFICATION`; do not invent one from the path or document ID |
+| Permitted writers | Reviewed repository contributors operating through governed Git history |
+| Intended readers | Contract, schema, policy, validation, architecture, consumer, security, and release reviewers |
+| Decision-instance home | The process or release object that records the decision, never this rule/document lane |
+| Current execution authority | None; this lane is documentation-only and cannot emit or authenticate a decision |
+
+This README narrows the parent root to Contract-change admissibility. It cannot expand `policy/` authority, accept owners by assertion, or convert a proposed role class into a completed review.
+
+---
+
+## Naming, identity, and versioning
+
+| Surface | Rule |
+|---|---|
+| Stable documentation identity | Preserve `kfm://policy/contract` and `policy/contract/README.md` unless an accepted migration changes both identity and path. |
+| Child-lane name | Retain current singular `contract/`; absence of `policy/contracts/` is not a repo-wide naming law. |
+| Future rule package | Must use a reviewed, stable package/entrypoint name recorded in fixtures, tests, bundle metadata, and consumers; the README does not assign it. |
+| Semantic contract versions | Belong under `contracts/`; this lane evaluates declared impact and compatibility but does not version meaning. |
+| Machine schema versions | Belong under the accepted schema profile; directory presence does not ratify a schema as complete or canonical. |
+| Policy/bundle/evaluator versions | Must be explicit, immutable or digest-bound where consequential, replayable, and independently reviewable. |
+| Outcome/reason/obligation vocabulary | Must be versioned compatibly; an unreviewed rename, deletion, or remapping fails closed. |
+| Breaking change | Requires explicit predecessor/successor identity, migration, deprecation, consumer impact, correction analysis, and rollback target. |
+
+File placement, a friendly label, a workflow name, or a generated identifier must never activate policy or satisfy version authority.
+
+---
+
+## Lifecycle, exposure, mutation, and retention
+
+| Concern | Boundary |
+|---|---|
+| Lifecycle | This directory owns no RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED instance and cannot move one between phases. |
+| Exposure | The README may be public repository documentation; it is not a public policy-query endpoint or data interface. |
+| Mutation | Changes occur through reviewed Git history. Runtime, workflow, validator, or model writes into this lane are not authorized. |
+| Retention | Git history preserves documentation lineage; emitted decisions, receipts, proofs, and release records remain in their accepted owning lanes. |
+| Sensitive content | Real protected coordinates, living-person data, DNA/genomic material, credentials, consent tokens, private source payloads, and exploit details are prohibited. |
+| Inputs | References, hashes, status, review, evidence, rights, sensitivity, compatibility, migration, and rollback context—never hidden fetches or raw sensitive payloads. |
+| Outputs | Documentation guidance today; a future evaluator may return a bounded structured result only after its contracts, schemas, rules, tests, bundle, and consumer binding are accepted. |
+
+A documentation edit does not change lifecycle state. A future `PASS` would authorize only its explicitly named next step and would remain separate from merge, promotion, release, deployment, and publication.
+
+---
+
 ## Repository fit
 
 ### Directory Rules basis
 
-`policy/contract/README.md` explains an admissibility boundary under the singular `policy/` responsibility root. The three inspected Directory Rules copies disagree about their own canonical location and supersession, but all assign allow/deny/restrict/abstain or admissibility responsibility to `policy/`. That shared placement rule, the existing path, and current contribution guidance support retaining this lane without using the document conflict to create a new home.
+Accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact [Directory Rules v2](../../docs/doctrine/directory-rules.md) bytes and makes that doctrine path the sole writable human Directory Rules authority. Section 9.3 makes the contract/schema/policy split mandatory, and §16 assigns this local object-family boundary the `BOUNDARY_COMPACT` profile.
+
+`policy/contract/README.md` therefore explains admissibility for contract-related actions under singular `policy/`; it does not own semantic contracts or machine schemas.
 
 - No root is added, removed, moved, or renamed.
 - No parallel contract, schema, policy, registry, proof, receipt, or release home is created.
-- The singular policy root remains canonical; ADR-0003 is repository-present but still proposed.
+- The singular policy root is adopted placement through ADR-0029; ADR-0003 remains proposed only for the narrower `policy/` versus `policies/` compatibility decision.
 - The child name `contract/` is retained because it is the current repository path and no competing `contracts/` child lane was found.
 - Ratifying a repo-wide child-lane naming law remains a separate governance decision.
 
-### Directory Rules document conflict
+### Directory Rules authority and compatibility
 
-The repository contains three overlapping Directory Rules artifacts:
+The accepted authority relationship is:
 
-| Path | Version and identity | Current posture |
+| Path | Current posture | Effect here |
 |---|---|---|
-| `docs/architecture/directory-rules.md` | v1.3.1 · `kfm://doc/directory-rules` | Lowercase architecture copy; current contribution guidance uses it for preflight while recording its placement as unresolved. |
-| `docs/architecture/DIRECTORY_RULES.md` | v1 · `kfm://doc/directory-rules` | Older same-identity copy with nonconforming casing; explicitly `PROPOSED / CONFLICTED`. |
-| `docs/doctrine/directory-rules.md` | v1.4 · `kfm://doc/doctrine/directory-rules` | Doctrine copy that names itself the proposed home and carries a distinct document identity. |
+| `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` | **ACCEPTED** decision | Establishes adoption, sole-write authority, and controlled compatibility migration. |
+| `docs/doctrine/directory-rules.md` | **ADOPTED** exact v2 bytes | Normative human placement authority used by this README. |
+| `docs/architecture/directory-rules.md` | **READ-ONLY COMPATIBILITY** dependency | Preserved for existing links pending governed tombstone/reference migration; it may not receive independent rule edits. |
 
-This README links all three, uses only their shared `policy/` responsibility rule, and does not select a winner, create another copy, or modify the drift register. Canonical identity, version ordering, and supersession require a separate ADR/migration decision.
+The former uppercase architecture duplicate is absent from the current tree. This README neither advances the legacy tombstone migration nor authorizes deletion. External-consumer closure, final reference migration, and physical retirement remain governed by ADR-0029.
 
 ### Authority and supersession graph
 
 | Artifact | Current posture | Relationship to this README |
 |---|---:|---|
-| `docs/architecture/directory-rules.md` | repository-present v1.3.1 / review | Current contribution-preflight basis; canonical placement remains unresolved. |
-| `docs/architecture/DIRECTORY_RULES.md` | repository-present v1 / draft / same identity as lowercase copy | Older conflicted duplicate; not selected as a separate authority. |
-| `docs/doctrine/directory-rules.md` | repository-present v1.4 / draft / distinct identity | Proposed doctrine home; overlaps the architecture copies. |
-| `contracts/README.md` | repository-present canonical semantic root | Upstream authority boundary. |
+| ADR-0029 | **accepted** | Adopts Directory Rules v2 and the controlled legacy-path migration. |
+| `docs/doctrine/directory-rules.md` | adopted sole writable human authority | Assigns admissibility to `policy/` and defines the local README profile. |
+| `docs/architecture/directory-rules.md` | read-only compatibility dependency | Legacy link surface only; not a writable authority. |
+| `contracts/README.md` | repository-grounded v0.4 canonical semantic root | Owns human-readable object meaning and invariants. |
 | ADR-0001 | repository-present / `proposed` | Proposed canonical machine-schema home. |
 | ADR-0002 | repository-present / `draft` | Proposed contracts-schemas-policy-fixtures-tests-validators split. |
 | ADR-0003 | repository-present / `proposed` | Proposed singular policy-root decision. |
 | `docs/registers/POLICY_GATE.md` | repository-present / draft register | Human-facing gate vocabulary; not executable policy. |
-| `policy/bundles/README.md` | repository-present / README-only lane | Future immutable bundle boundary; no accepted activation. |
-| `tests/contracts/README.md` | repository-present / direct README-only lane | Intended semantic enforceability boundary. |
-| `tools/validators/policy/README.md` | repository-present / README-only routing index | Future executable validator relationship. |
+| `policy/bundles/` | documentation plus inactive Pass 12 profile | No accepted repository-wide bundle selection or activation. |
+| `tests/contracts/` | two test modules plus manifest and documentation | Bounded contract/fixture integrity evidence; not complete semantic proof. |
+| `tools/validators/policy/` | 12 validators plus routing documentation | Deterministic inactive-profile validation; no Contract-specific evaluator. |
 | `packages/policy-runtime/README.md` | repository-present / greenfield placeholder | Future evaluation helper boundary. |
 
-No inspected artifact supersedes this path. This v0.3 revision supersedes v0.2 at the same path; v0.2 already preserved and superseded the v0.1 content.
+No inspected artifact supersedes this path. This v0.4 revision supersedes v0.3 at the same stable path and document identity.
 
 ---
 
@@ -245,16 +296,17 @@ No inspected artifact supersedes this path. This v0.3 revision supersedes v0.2 a
 | Path | Status | Interpretation |
 |---|---:|---|
 | `policy/contract/README.md` | **CONFIRMED** | Current documentation boundary. |
-| direct `.rego` module | **NOT ESTABLISHED** | No executable contract-change policy was surfaced. |
-| direct fixture family | **NOT ESTABLISHED** | No contract-policy positive or negative fixtures were surfaced. |
-| direct test module | **NOT ESTABLISHED** | No executable test for this lane was surfaced. |
-| dedicated validator | **NOT ESTABLISHED** | No accepted contract-policy validator entry point was surfaced. |
+| `policy/contract/.gitkeep` | **CONFIRMED inert placeholder** | Preserves the directory; carries no semantics or enforcement. |
+| direct `.rego` module | **NOT ESTABLISHED** | No executable Contract-change policy was surfaced. |
+| direct fixture family | **NOT ESTABLISHED** | No Contract-policy positive or negative fixtures were surfaced. |
+| direct native policy test | **NOT ESTABLISHED** | No evaluator-backed test for this lane was surfaced. |
+| dedicated Contract validator | **NOT ESTABLISHED** | No accepted Contract-change validator entry point was surfaced. |
 | bundle registration or active selector | **NOT ESTABLISHED** | No runtime activation or bundle binding is proved. |
-| emitted PolicyDecision or policy receipt flow | **NOT ESTABLISHED** | This README emits no decision or receipt. |
+| emitted `PolicyDecision` or policy receipt flow | **NOT ESTABLISHED** | This README emits no decision or receipt. |
 
 ### Adjacent executable evidence
 
-`tests/schemas/test_common_contracts.py` discovers schemas in selected families, finds matching fixture directories, requires valid fixtures to pass, and requires invalid fixtures to fail. That is useful machine-shape evidence. It does not prove:
+`tests/schemas/test_common_contracts.py` discovers schemas in selected families, finds matching fixture directories, requires valid fixtures to pass, and requires invalid fixtures to fail. `tests/contracts/` now adds two executable modules: one exercises a deterministic, no-network three-family contract-fixture manifest and its fail-closed negative cases; the other checks IdentityToken schema, fixture, vocabulary, and declared-validator wiring. That is useful bounded machine-shape and cross-root integrity evidence. It does not prove:
 
 - semantic completeness of every Markdown contract;
 - contract-to-schema equivalence;
@@ -263,11 +315,13 @@ No inspected artifact supersedes this path. This v0.3 revision supersedes v0.2 a
 - domain-steward review;
 - public API or release readiness.
 
-`contracts-validate.yml` executes `make test`; the Makefile currently scopes that command to `tests/schemas` and `tests/contracts`. The direct `tests/contracts/` lane remains README-only in its own repository-grounded inventory.
+`contracts-validate.yml` executes the manifest validator and `make test`; the Makefile scopes that command to `tests/schemas` and `tests/contracts`. `contract-drift.yml` runs the same two test roots with strict configuration and marker handling. The stale maturity wording in `tests/contracts/README.md` does not override the executable files now present.
 
-`policy-test.yml` remains a readiness-hold workflow, but its implementation is now more explicit than at the v0.2 snapshot. Two standard-library inspection jobs confirm that Rego sources exist elsewhere under `policy/` while Rego test modules, an accepted OPA command, non-README bundle artifacts, evaluator binding, functional policy runtime, dedicated policy validators, and complete policy fixture coverage remain absent. The jobs deliberately fail on maturity drift so real evaluation can be wired through a separately reviewed change; they do not execute policy.
+`policy-test.yml` remains a broad readiness-hold workflow. Its static jobs recognize one separately governed `PROPOSED_INACTIVE` Pass 12 release-gate profile with native Rego tests, verify that every current `tools/validators/policy/validate_*.py` helper has a paired no-network test and workflow, inventory `PolicyDecision` shape fixtures, and preserve the hold on a repository-wide bundle manifest, general evaluator binding, functional policy runtime, and general OPA command. It deliberately does not evaluate a repository-wide policy or emit a `PolicyDecision`.
 
-`policy-boundary-guards.yml` is a separate command-bearing workflow. Its Make target runs 15 structural/static/API tests across control-plane metadata, explorer adapter/store boundaries, connector/pipeline non-publication, and governed API boundaries, with JUnit output. This is useful adjacent enforcement, not contract-change policy evaluation. Its path filters do not include `policy/contract/README.md` or `data/receipts/generated/`, so this documentation update does not directly trigger that suite.
+`tools/validators/policy/` contains 12 deterministic validators covering inactive profiles such as PolicyDecision vocabulary and semantics, PolicyInputBundle profile, evaluation binding, obligations, reviewer roles, enforcement maturity, threshold registry, transform simulation, conditional closure, and sovereignty-exception receipts. Each has a paired test and focused workflow. These validators check declared artifacts; they do not execute Contract policy, create evidence, or authorize release.
+
+`policy-boundary-guards.yml` is a separate command-bearing workflow. Its Make target runs four modules that declare 18 structural/static/API tests across control-plane metadata, explorer adapter/store boundaries, connector/pipeline non-publication, and governed API boundaries, with JUnit output. This is useful adjacent enforcement, not Contract-change policy evaluation. Its path filters do not include this README, so this documentation update does not directly trigger that suite.
 
 ---
 
@@ -425,11 +479,13 @@ An obligation is not complete merely because it appears in a decision object. Co
 
 | Command | Confirmed behavior | What it does not prove |
 |---|---|---|
-| `make test` | runs `pytest` for `tests/schemas` and `tests/contracts` | complete semantic contract policy, policy runtime, release readiness |
-| `make validate` | runs schema validators and `make test` | contract-policy evaluation or publication authority |
+| `make test` | runs `pytest` for `tests/schemas` and `tests/contracts` | complete semantic equivalence, Contract policy, runtime enforcement, release readiness |
+| `make validate` | runs the aggregate schema-validator profile and `make test` | Contract-policy evaluation or publication authority |
 | `make policy` | emits a TODO message | no policy test or OPA evaluation occurs |
-| `make boundary-guards` | runs 15 structural/static/API tests in four modules | contract-change policy, evaluator/bundle parity, rights or sensitivity decisions, release readiness |
+| `make boundary-guards` | runs four modules declaring 18 structural/static/API tests | Contract-change policy, evaluator/bundle parity, rights or sensitivity decisions, release readiness |
 | `make boundary-guards-ci` | runs the same suite and writes JUnit under `artifacts/qa/` | a JUnit report is not a policy decision, proof, receipt, or release approval |
+| contract-fixture manifest validator | validates three declared schema/fixture families with deterministic polarity and stable outcomes | complete contract inventory, semantic equivalence, or Contract policy |
+| 12 policy validators | validate paired inactive policy profiles with no-network tests and focused workflows | authoritative policy evaluation, Contract admissibility, or release permission |
 
 ### Required future negative cases
 
@@ -478,23 +534,22 @@ The following table is a bounded trigger/threat preflight, not an exhaustive inv
 
 | Workflow | Trigger and permission posture | Current role for this change |
 |---|---|---|
-| `contracts-validate` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | installs repository test dependencies and runs `make test` |
-| `policy-test` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | runs two standard-library readiness holds; no OPA evaluation or repository dependency install |
-| `validator-suite` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | installs declared dependencies, runs `make schemas`, and checks an invalid EvidenceBundle canary; not contract-policy evaluation |
-| `link-check` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | runs a standard-library readiness hold; it does not resolve Markdown links yet |
-| `docs-control-plane` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | validates control-plane YAML and register metadata; unrelated to contract-policy semantics |
-| `policy-boundary-guards` | path-scoped pull requests/pushes; `contents: read`; hosted runner | command-bearing 15-test suite, but this README and generated-receipt path are outside its trigger filter |
+| `contracts-validate` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | runs the three-family manifest validator and `make test` |
+| `contract-drift` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | runs strict tests over `tests/schemas` and `tests/contracts` |
+| `policy-test` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | preserves broad readiness holds and validates bounded inactive policy-lane wiring; no repository-wide evaluation |
+| `validator-suite` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | runs aggregate schema, workflow-security, directory-topology, receipt-integrity, materiality, and fail-closed checks; not Contract policy evaluation |
+| `link-check` | all pull requests, pushes to `main`, dispatch; `contents: read`; hosted runner | executes no-network link-check tests and validates local targets in changed Markdown |
+| `policy-boundary-guards` | path-scoped pull requests/pushes; `contents: read`; hosted runner | command-bearing 18-test suite; this README is outside its path filter |
 
-The directly inspected workflows use `actions/checkout@v7` and, where Python setup is needed, `actions/setup-python@v7` rather than immutable commit SHAs. Branch-protection coupling, required-check status, current pass rates, organization defaults, effective behavior of uninspected workflows, and the exhaustive changed-path trigger set remain `NEEDS VERIFICATION`.
+The directly inspected workflows pin `actions/checkout` and `actions/setup-python` to immutable commit SHAs, disable persisted credentials, use GitHub-hosted runners, and declare read-only repository permission. Branch-protection coupling, required-check status, organization defaults, bypass actors, effective behavior of uninspected workflows, and the exhaustive changed-path trigger set remain `NEEDS VERIFICATION`.
 
 ### Threat posture for changes under this lane
 
 - Pull-request content is untrusted.
 - The directly inspected workflows use hosted runners, explicit read-only repository permission, and no deployment, release, OIDC, secret, comment, or repository-write step.
-- `contracts-validate`, `validator-suite`, and `docs-control-plane` install declared or pinned dependencies, so submitted packaging, validator, test, and configuration content can become execution inputs on hosted runners even though this PR changes only documentation and a receipt.
-- `policy-test` and `link-check` install no repository dependencies and perform bounded standard-library inspection.
+- `contracts-validate`, `contract-drift`, and `validator-suite` install declared test dependencies, so submitted packaging, validator, test, and configuration content can become execution inputs on hosted runners even though this revision changes only Markdown.
+- `policy-test` and `link-check` use standard-library inspection for their bounded checks after GitHub-managed runtime setup.
 - None of the directly inspected workflows emits a `PolicyDecision`, generated receipt, proof, release record, deployment, or publication side effect.
-- The code-search threat queries were noisy because documentation and receipts describe forbidden events; absence of `pull_request_target`, `workflow_run`, OIDC, or self-hosted execution was therefore not treated as globally proved.
 - A successful readiness hold proves only that its documented placeholder boundary has not drifted unexpectedly.
 - New executable policy, evaluator, bundle, validator, or test files should intentionally fail the relevant readiness hold until real enforcement is accepted and wired deliberately.
 
@@ -540,8 +595,8 @@ Contract changes can alter interpretation of old data and released claims. Revie
 For this README revision:
 
 - before merge: close the draft pull request or reset the review branch;
-- after merge: revert the README commit and its generated-receipt commit;
-- prior target blob: `3d75be8c9f1269d58e7db3a10b6234e2fd4d1d90`.
+- after merge: revert the single README commit through normal reviewed history;
+- prior target blob: `cf8fe811c35d9efaf43f05ab9da181ccbb4d3670`.
 
 Reverting this README restores documentation only. It does not roll back contracts, schemas, policy, tests, runtime, data, or releases because this revision changes none of those surfaces.
 
@@ -604,7 +659,7 @@ A README, passing schema fixture, or green readiness workflow does not satisfy t
 | Item | Current status | Evidence needed to resolve it |
 |---|---:|---|
 | Accepted role owners and reviewer classes | `NEEDS VERIFICATION` | verified stewardship assignments and review policy |
-| Permanent child-lane naming (`contract/` vs another convention) | `NEEDS VERIFICATION` | accepted Directory Rules refinement or ADR; no competing lane currently surfaced |
+| Stable local Contract policy scope ID | `NEEDS VERIFICATION` | accepted policy-family/scope registry entry and compatibility rule |
 | Direct contract-change policy module | `NOT ESTABLISHED` | reviewed `.rego` or equivalent source plus tests |
 | Contract-change input/result contracts and schemas | `NEEDS VERIFICATION` | accepted semantic contracts, schemas, registry entries, and fixtures |
 | Dedicated validator entry point | `NOT ESTABLISHED` | executable file, version, tests, and structured report contract |
@@ -616,7 +671,7 @@ A README, passing schema fixture, or green readiness workflow does not satisfy t
 | Current workflow pass rates and required checks | `UNKNOWN` | GitHub run history, rulesets, and branch-protection evidence |
 | Receipt and replay path | `NEEDS VERIFICATION` | accepted receipt schema/producer, stored instances, and replay test |
 | Release-gate dependency | `UNKNOWN` | explicit release integration, separation of duties, correction, and rollback proof |
-| Directory Rules canonical document placement and identity | `CONFLICTED / NEEDS VERIFICATION` | ADR/migration resolving lowercase architecture v1.3.1, uppercase architecture v1, and doctrine v1.4 copies plus the duplicate `kfm://doc/directory-rules` identity |
+| ADR-0029 compatibility migration closure | `NEEDS VERIFICATION` | reference migration, external-consumer assessment, tombstone evidence, and authorized retirement record |
 
 ---
 
@@ -624,25 +679,26 @@ A README, passing schema fixture, or green readiness workflow does not satisfy t
 
 | Evidence | Observation supported | Limits |
 |---|---|---|
-| `policy/contract/README.md` at prior blob `3d75be8c…` | v0.2 scope, authority split, gate model, obligations, migration, rollback, and bounded implementation plan | Documentation only; its July 19 repository snapshot and CI inventory required refresh |
-| `policy/README.md` | Singular `policy/` root is the repository-facing policy authority lane | Root README remains a short `PROPOSED` scaffold |
-| `contracts/README.md` | `contracts/` owns semantic meaning; policy contracts are separate from executable policy | Does not prove complete inventory or semantic correctness |
-| three Directory Rules copies | All assign admissibility to singular `policy/`; versions, casing, identity, canonical placement, and supersession conflict | Shared placement rule is usable here; selecting a canonical document remains out of scope |
+| `policy/contract/README.md` at prior blob `cf8fe811…` | v0.3 scope, gate model, obligations, security, migration, rollback, and no-loss baseline | Its July 22 authority and maturity inventory became stale |
+| ADR-0029 + `docs/doctrine/directory-rules.md` | Accepted sole-write authority; mandatory contract/schema/policy split; `BOUNDARY_COMPACT` profile | Does not complete the separately governed legacy-path retirement |
+| `docs/architecture/directory-rules.md` | Read-only compatibility dependency remains present | Not a writable placement authority |
+| `policy/README.md` blob `6c5021f9…` | Adopted singular policy-root placement, mixed maturity, bounded inactive Rego profile, 12 paired validators, 18-test structural suite, general hold | Root evidence does not activate the Contract lane |
+| `contracts/README.md` blob `e0b7c126…` | `contracts/` owns semantic meaning and invariants under a repository-grounded v0.4 boundary | Does not prove every semantic contract correct or implemented |
 | ADR-0001 | Proposed `schemas/contracts/v1/` machine-schema home | Status remains proposed |
 | ADR-0002 | Proposed division across contracts, schemas, policy, fixtures, tests, validators, receipts, proofs, release, and control plane | Status remains draft/proposed |
 | ADR-0003 | Proposed singular policy-root decision | Does not specifically ratify the child name `contract/` |
 | `tests/schemas/test_common_contracts.py` | Selected schema families use valid/invalid fixture validation | Does not prove semantic or policy enforcement |
-| `tests/contracts/README.md` | Intended semantic-contract test lane is direct README-only in bounded evidence | Search-limited; current run result not inspected |
+| `tests/contracts/` tree `7aaff0b5…` | Two executable modules, 12 source-declared tests, and a three-family manifest exist | Bounded shape/cross-root evidence, not complete semantic equivalence or Contract policy |
 | `Makefile` | `make test`, `make validate`, `make boundary-guards`, and `make boundary-guards-ci` are command-bearing; `make policy` remains a TODO output | No OPA evaluation or contract-change policy command |
-| `contracts-validate.yml` | Read-only CI runs `make test` on pull requests and `main` pushes with checkout/setup-python v7 major tags | Current pass rate and required-check status unknown |
-| `policy-test.yml` | Two read-only readiness jobs fail on unreviewed policy-lane maturity drift | They evaluate no policy and emit no decision |
-| `policy-boundary-guards.yml` | Path-scoped read-only CI runs a 15-test structural/static/API suite and validates JUnit output | Its trigger excludes this README/receipt change; it is not contract-policy evaluation |
-| `validator-suite.yml`, `link-check.yml`, `docs-control-plane.yml` | Broad pull-request workflows provide aggregate validator, readiness-hold, and control-plane signals | Bounded threat inspection only; exhaustive trigger and current-run status remain unproved |
-| `policy/bundles/README.md` | Bundle lane is README-only; no accepted activation | Runtime state and future format unknown |
+| `contracts-validate.yml` + `contract-drift.yml` | Read-only CI runs manifest and strict schema/contract checks using immutable action pins | Effective required-check status and complete semantic coverage remain unknown |
+| `policy-test.yml` blob `ac8f125e…` | Broad readiness holds recognize one bounded Rego lane and require paired support for policy validators | Evaluates no repository-wide bundle and emits no decision |
+| `policy-boundary-guards.yml` blob `1d7ba1df…` | Path-scoped read-only CI declares 18 structural/static/API tests and validates JUnit output | Trigger excludes this README; suite is not Contract policy evaluation |
+| `tools/validators/policy/` tree `9d27cf72…` | Twelve deterministic validators exist with paired tests/workflows | No dedicated Contract-change validator or policy authority |
+| `validator-suite.yml` + `link-check.yml` | Broad pull-request workflows provide aggregate validator/topology/receipt and changed-Markdown link signals | Results are exact-head CI evidence only, not policy or approval |
+| `policy/bundles/` tree `01eec734…` | Documentation and an inactive Pass 12 profile exist | No accepted repository-wide manifest, selector, or activation |
 | `packages/policy-runtime/README.md` | Policy runtime is a `0.0.0` greenfield placeholder | No functional evaluator or consumer |
-| `tools/validators/policy/README.md` | Policy validator routing boundary is documented | Executable validators are not established |
 | `.github/CODEOWNERS` | `/policy/` review routes to `@bartytime4life` | Independent stewardship and enforcement remain unverified |
-| bounded code/branch/PR searches | Only this direct lane, no competing identity, no matching open PR or branch surfaced | Search is not a recursive checkout or permanent absence proof |
+| bounded code/tree/PR searches | Only `.gitkeep` and this README in the direct lane; no competing path or matching open PR surfaced | Search is not proof of permanent absence |
 
 ---
 
@@ -658,13 +714,37 @@ Re-review this README when any of the following changes:
 - `make policy`, `make boundary-guards`, `contracts-validate`, `policy-test`, `policy-boundary-guards`, `validator-suite`, or `link-check` behavior;
 - reason-code, obligation, review, migration, correction, or rollback rules;
 - first runtime consumer or release-gate integration;
-- Directory Rules placement or supersession resolution.
+- ADR-0029 compatibility-path migration or retirement.
 
-A maintenance revision should pin a new evidence snapshot, preserve this file's stable identity and anchors where practical, and record any authority conflict instead of silently normalizing it.
+A maintenance revision should pin a new evidence snapshot, preserve this file's stable identity and anchors where practical, and report authority or maturity drift instead of silently normalizing it.
+
+---
+
+## Last reviewed
+
+| Field | Value |
+|---|---|
+| Review date | 2026-08-13 |
+| Repository snapshot | `main@1a61d3fbdc111bb3292086a30a53ccc50ed1bb8a` |
+| Prior target blob | `cf8fe811c35d9efaf43f05ab9da181ccbb4d3670` |
+| Authority basis | accepted ADR-0029 + adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d` |
+| Direct-lane tree | `9ec2846e7d4eba112718aea03a103e1cce0a242c` before this revision |
+| Review scope | target path, parent/adjacent authority, contract/schema tests, policy validators, general policy readiness, bundle/runtime placeholders, CI triggers, open PR overlap, and one-file rollback |
+| Human approval | pending; documentation validation is not review approval |
+
+Re-review on any [maintenance trigger](#maintenance-triggers), especially a Contract rule/test/validator appearing, a general evaluator or bundle being accepted, ADR-0029 migration advancing, or a governed consumer/release dependency being introduced.
 
 ---
 
 ## Changelog
+
+### v0.4 — 2026-08-13
+
+- Reconciled the lane with accepted ADR-0029 and the adopted `docs/doctrine/directory-rules.md` authority, replacing the stale three-copy conflict posture.
+- Applied the Directory Rules `BOUNDARY_COMPACT` profile while preserving the stable path, document ID, Contract-change gate model, and fail-closed boundary.
+- Updated the direct inventory to `.gitkeep` plus this README and retained the absence of a Contract-specific Rego module, fixtures, native tests, validator, bundle binding, consumer, decision receipt, or release integration.
+- Recorded current adjacent evidence: two executable `tests/contracts/` modules with 12 source-declared tests, a three-family manifest, 12 paired deterministic policy validators, one bounded inactive Pass 12 Rego profile, an 18-test structural suite, and broad general-policy readiness holds.
+- Updated contract/schema CI, immutable action-pin, threat, evidence, verification, maintenance, and one-file rollback posture without treating validation as policy, review, release, deployment, promotion, or publication authority.
 
 ### v0.3 — 2026-07-22
 
@@ -705,6 +785,6 @@ The v0.1 document's strongest material remains represented here:
 - contract acceptance does not imply release approval;
 - breaking changes preserve lineage and rollback.
 
-The v0.2 blob remains the mechanical rollback target. No runtime, policy, contract, schema, test, fixture, validator, receipt, proof, release, lifecycle, API, UI, map, export, or AI behavior is changed by this README revision.
+The v0.3 blob `cf8fe811c35d9efaf43f05ab9da181ccbb4d3670` is the mechanical rollback target. No runtime, policy rule, semantic contract, schema, test, fixture, validator, receipt, proof, release object, lifecycle state, API, UI, map, export, or AI behavior is changed by this README revision.
 
 <p align="right"><a href="#top">Back to top</a></p>
