@@ -1135,6 +1135,87 @@ class PMTilesAttestationBundleTests(unittest.TestCase):
             result = validate_bundle(archive)
         self.assertEqual(["PMSIG_SYMLINK_DENIED"], [item.code for item in result.findings])
 
+    def test_standalone_pmsig_shape_parser_is_bounded_and_fail_closed(self) -> None:
+        verifier = REPO_ROOT / "tools/attest/verify_cose.py"
+
+        def run(
+            path: Path, *, shape_only: bool = True
+        ) -> subprocess.CompletedProcess[str]:
+            command = [sys.executable, str(verifier)]
+            if shape_only:
+                command.append("--shape-only")
+            command.append(str(path))
+            return subprocess.run(
+                command,
+                check=False,
+                capture_output=True,
+                text=True,
+                cwd=REPO_ROOT,
+            )
+
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            valid = root / "valid.pmsig"
+            _write_json(
+                valid,
+                {
+                    "schema_version": "kfm.pmsig.v1",
+                    "subject": {
+                        "pmtiles_sha256": SPEC_HASH,
+                        "pmidx_merkle_root": SPEC_HASH,
+                        "spec_hash": SPEC_HASH,
+                    },
+                    "key_id": "TEST_ONLY_UNAPPROVED_KEY",
+                    "signature": "DEVELOPMENT_PLACEHOLDER_NOT_A_VALID_COSE_SIGNATURE",
+                },
+            )
+            accepted = run(valid)
+            self.assertEqual(0, accepted.returncode, accepted.stderr)
+            self.assertIn("signature bundle shape valid [shape-only]", accepted.stdout)
+
+            crypto_held = run(valid, shape_only=False)
+            self.assertEqual(1, crypto_held.returncode)
+            self.assertIn(
+                "PMSIG_CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
+                crypto_held.stderr,
+            )
+
+            sentinel = "SENSITIVE_SENTINEL_MUST_NOT_ECHO"
+            malformed = {
+                "duplicate.pmsig": (
+                    '{"schema_version":"kfm.pmsig.v1",'
+                    f'"key_id":"{sentinel}","key_id":"second"}}',
+                    "PMSIG_JSON_DUPLICATE_KEY",
+                ),
+                "nonfinite.pmsig": (
+                    '{"schema_version":"kfm.pmsig.v1","unsafe":NaN}',
+                    "PMSIG_JSON_NONFINITE_NUMBER",
+                ),
+                "root.pmsig": ("[]", "PMSIG_ROOT_INVALID"),
+            }
+            for filename, (payload, expected_code) in malformed.items():
+                with self.subTest(filename=filename):
+                    path = root / filename
+                    path.write_text(payload, encoding="utf-8")
+                    completed = run(path)
+                    self.assertEqual(1, completed.returncode)
+                    self.assertIn(expected_code, completed.stderr)
+                    self.assertNotIn(sentinel, completed.stdout + completed.stderr)
+
+            oversized = root / "oversized.pmsig"
+            oversized.write_bytes(b"x" * ((1024 * 1024) + 1))
+            oversized_result = run(oversized)
+            self.assertEqual(1, oversized_result.returncode)
+            self.assertIn("PMSIG_JSON_TOO_LARGE", oversized_result.stderr)
+
+            target = root / "target.pmsig"
+            target.write_text("{}", encoding="utf-8")
+            symlink = root / "symlink.pmsig"
+            symlink.symlink_to(target)
+            symlink_result = run(symlink)
+            self.assertEqual(1, symlink_result.returncode)
+            self.assertIn("PMSIG_SYMLINK_DENIED", symlink_result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
