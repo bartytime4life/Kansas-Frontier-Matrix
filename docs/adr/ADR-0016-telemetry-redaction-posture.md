@@ -34,7 +34,10 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f5e082d423f1dbb0753f970a662de4f818c77529
+  base_commit: 6a9c4665175edd2c32f2fafae0f3bb0dfb0492df
+  inspection_origin_commit: f5e082d423f1dbb0753f970a662de4f818c77529
+  continuity_compare: f5e082d423f1dbb0753f970a662de4f818c77529...6a9c4665175edd2c32f2fafae0f3bb0dfb0492df
+  continuity_result: "six changed paths limited to geology assessment, generated receipt, and ADR-0009; no ADR-0016 or telemetry evidence path changed"
   target_prior_blob: 65a86c95259be2477d09836de972903cfe84afac
   adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
   telemetry_contract_readme_blob: 7523d7d638f598060661129ed70748b1bb2ad8be
@@ -156,7 +159,7 @@ A profile can pass its tests while remaining intentionally inactive. An accepted
 
 ## Evidence Boundary
 
-This revision uses current repository bytes at `main@f5e082d423f1dbb0753f970a662de4f818c77529`, the hosted `telemetry-policy` run for that exact SHA, and adopted Directory Rules v2. It changes one existing ADR at its indexed path and makes no implementation claim beyond the inspected evidence.
+This revision is reconciled to `main@6a9c4665175edd2c32f2fafae0f3bb0dfb0492df`. Telemetry evidence was inspected at `f5e082d423f1dbb0753f970a662de4f818c77529`; the continuity compare to the current base changed six paths limited to geology-assessment work, one generated geology receipt, and ADR-0009. It changed neither ADR-0016 nor an inspected telemetry evidence path. Hosted `telemetry-policy` run `31812628187` remains exact-SHA evidence for `f5e082d...`, not for later commits. This change updates one existing ADR at its indexed path and makes no implementation claim beyond that bounded evidence.
 
 ### Evidence summary
 
@@ -1291,7 +1294,8 @@ Rollback MUST NOT restore raw prompt, evidence, coordinate, secret, or payload l
 - [x] General validator placeholder confirmed.
 - [x] Three telemetry policy stubs confirmed.
 - [x] Current telemetry readiness workflow reviewed.
-- [x] Hosted run `31812628187` confirmed successful at the pinned main SHA.
+- [x] Hosted run `31812628187` confirmed successful at the telemetry inspection SHA.
+- [x] Continuity from telemetry inspection SHA to current base confirmed with no ADR-0016 or inspected telemetry-path changes.
 - [x] Governed emission distinguished from lifecycle publication.
 - [x] Source-side minimization preserved and sink scrubbing retained as defense in depth.
 - [x] Raw payload, prompt, model, coordinate, identifier, secret, crash, and denial-leak boundaries preserved.
@@ -1395,7 +1399,7 @@ The supplied KFM corpus consistently treats sensitive exposure as policy-governe
 
 | Version | Date | Change |
 |---|---|---|
-| `v1.3` | 2026-08-14 | Same-path current-main evidence refresh: recognized accepted ADR-0029 placement authority; replaced stale schema, fixture, test, and workflow-absence claims with the exact four fixture-only profile families; documented profile validators and hosted workflow success; preserved explicit general-policy, validator, emitter, receipt, sink, retention, and runtime holds; added profile lifecycle and activation guardrails; preserved status `proposed`. |
+| `v1.3` | 2026-08-14 | Same-path current-main evidence refresh reconciled through `main@6a9c4665...`: recognized accepted ADR-0029 placement authority; replaced stale schema, fixture, test, and workflow-absence claims with the exact four fixture-only profile families; documented profile validators and hosted workflow success; preserved explicit general-policy, validator, emitter, receipt, sink, retention, and runtime holds; added profile lifecycle and activation guardrails; preserved status `proposed`. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; distinguished governed emission from lifecycle publication; pinned standards, contracts, policy, validator, receipt, workflow, UI, and ownership evidence; documented allow-by-default stubs and explicit holds; strengthened minimization, reconstruction, AI, secret, crash, sink, retention, receipt, incident, fixture, migration, acceptance, and rollback controls; preserved status `proposed`. |
 | `v1.1` | 2026-05-15 | Tightened evidence boundary, schema-home alignment, synthetic examples, redaction profiles, validation, and rollback posture. |
 | `v1` | 2026-05-11 | Initial telemetry redaction posture. |
