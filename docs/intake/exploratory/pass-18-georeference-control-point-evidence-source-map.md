@@ -2,11 +2,11 @@
 doc_id: kfm://doc/intake/pass-18-georeference-control-point-evidence-source-map
 title: Pass 18 georeference control-point evidence assessment — source map
 type: intake/exploratory
-version: v1
+version: v1.1
 status: draft
 owners: map-steward, evidence-steward, docs-steward
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-14
 policy_label: public
 owning_root: docs/
 responsibility: Exploratory source-to-repository adaptation record for fixture-only GCP evidence assessment.
@@ -65,4 +65,4 @@ This proposal does not dereference inputs, open images, inspect pixels, contact 
 
 1. **NEEDS VERIFICATION:** A later policy proposal may define context-specific adequacy thresholds, but only with domain review and explicit public-geometry safeguards.
 2. **NEEDS VERIFICATION:** A separately reviewed adapter may project evidence from a governed `EvidenceBundle` into this assessment without giving the adapter evidence authority.
-3. **NEEDS VERIFICATION:** Future compatibility work may bind this assessment and `GeoreferenceSpatialDistribution` to the same `resource_set_hash` without merging their responsibilities.
+3. **PARTIAL:** `tools/generators/project_georeference_spatial_distribution.py` now binds an accepted control-point set to an unchanged spatial-distribution v1 candidate through `resource_set_hash`. The evidence-assessment profile remains separate and still requires a future compatibility design before it can share that identity without merging evidence and geometry responsibilities.
