@@ -2,642 +2,749 @@
 doc_id: kfm://doc/architecture/story/readme
 title: Story Subsystem Architecture
 type: standard
-version: v0.2
-status: draft
-owners: Story subsystem owner (TBD) · UI subsystem owner (TBD) · Docs steward
+version: v0.3
+status: draft; repository-grounded
+owners:
+  - "OWNER_TBD — Story subsystem stewardship assignment is not verified"
+reviewers_required:
+  - Architecture steward
+  - Story and UI steward
+  - Evidence and citation steward
+  - Policy and sensitivity steward
+  - Release and correction steward
+  - Accessibility reviewer
+  - Docs steward
 created: 2026-05-10
-updated: 2026-05-24
+updated: 2026-08-14
 policy_label: public
+truth_posture: cite-or-abstain
+owning_root: docs/
+responsibility: "Explain the current Story subsystem boundary, its bounded executable public-safe projection profiles, the absent playback/runtime surfaces, and the governed path from released support to narrative presentation without creating contract, policy, release, or publication authority."
+current_path: docs/architecture/story/README.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 3974da9794fa11bd5355c49243c9193d22b9e81e
+  target_prior_blob: a7669fc421d2027aa977743bf215ba7fbd7b0bd0
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  story_manifest_contract_blob: e0365d00a36f1aef57ed7dd1a051b4c70dec09b2
+  story_node_contract_blob: 694cbe4833d785f25f55f3def2b8fdfad7b98b78
+  story_manifest_schema_blob: 67fa2fae5534ffc7a277fae8adfcb9afb81e9fc0
+  story_node_schema_blob: fd2e40bb8a5167bb592dbb9c42e0219565bf4b48
+  story_manifest_fixture_blob: 98e1ce24cacae42a19134c45ed3158a724282684
+  story_manifest_test_blob: c8ccdb1fef0b277f759a340b993bf9c8684622e1
+  story_manifest_workflow_blob: 6ef97ac0adb3207d92ed8e421a022e578825ce7d
+  story_node_workflow_blob: 8e30f4ceee7dac109a1e53b2aba00281c9721bfd
+  story_player_entry_blob: 9ded576ec8af3fa2405100b50e4524e312b0ed6c
+  story_policy_stub_blob: 9f3791db0da8a91ef3d10c7152fc738eb53139c3
+inspection_boundary: >
+  Current-session GitHub reads against the exact main commit covering this file,
+  the Story architecture directory, accepted Directory Rules authority, ADR and
+  CODEOWNERS posture, UI StoryManifest and StoryNode contracts and schemas,
+  synthetic fixtures, validators, focused tests and workflows, Story Player feature
+  inventory, Story policy stub, Governed API route inventory, MapLibre decision
+  lineage, and the non-canonical data/manifests/story compatibility lane. No local
+  clone, deployed Story route, browser playback, runtime trace, policy evaluation,
+  EvidenceBundle resolution, release, correction drill, or publication was exercised.
 related:
   - docs/architecture/README.md
-  - docs/architecture/maplibre-3d.md
+  - docs/architecture/story/CONTINUITY.md
   - docs/architecture/ui/README.md
-  - docs/architecture/governed-ai/README.md
-  - docs/architecture/review/README.md
-  - docs/adr/ADR-story-node-3d-admission.md
-  - docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md
-  - schemas/contracts/v1/story/story_manifest.schema.json
-  - schemas/contracts/v1/story/story_node.schema.json
-  - schemas/contracts/v1/maplibre/scene_manifest.schema.json
-  - schemas/contracts/v1/maplibre/view_state.schema.json
-  - schemas/contracts/v1/maplibre/camera_path.schema.json
-  - schemas/contracts/v1/maplibre/representation_receipt.schema.json
-  - schemas/contracts/v1/3d/reality_boundary_note.schema.json
-  - schemas/contracts/v1/policy/3d_admission_decision.schema.json
-  - schemas/contracts/v1/policy/plugin_admission.schema.json
-  - contracts/OBJECT_MAP.md
-tags: [kfm, architecture, story, ui, governance, maplibre, 3d]
+  - docs/architecture/ui/STORY_PLAYER.md
+  - docs/architecture/ui/GOVERNED_SHELL.md
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - contracts/ui/story_manifest.md
+  - contracts/ui/story_node.md
+  - contracts/story/README.md
+  - schemas/contracts/v1/ui/story_manifest.schema.json
+  - schemas/contracts/v1/ui/story_node.schema.json
+  - fixtures/ui/story_manifest/cases.json
+  - fixtures/ui/story_node/
+  - tools/validators/ui/validate_story_manifest.py
+  - tools/validators/ui/validate_story_node.py
+  - tests/validators/test_validate_story_manifest.py
+  - tests/validators/test_validate_story_node.py
+  - .github/workflows/story-manifest-trust-inheritance.yml
+  - .github/workflows/story-node-trust-inheritance.yml
+  - apps/explorer-web/src/features/story_player/README.md
+  - apps/explorer-web/src/features/story_player/index.tsx
+  - policy/story/README.md
+  - policy/story/evidence_continuity_required.rego
+  - data/manifests/story/README.md
+tags: [kfm, architecture, story, story-manifest, story-node, public-safe-projection, evidence, finite-outcomes, correction, maplibre, ui]
 notes:
-  - Repository not mounted in this session; all repo-state claims are PROPOSED / UNKNOWN / NEEDS VERIFICATION.
-  - v0.2 aligns with docs/architecture/maplibre-3d.md and the proposed retire-Cesium ADR — 3D is now a layer-level Admission Decision inside the same MapLibre runtime, not a renderer handoff.
-  - Stable anchors preserved from v0.1; section #3d-handoff-boundary retained with reframed content for backlink safety.
+  - "v0.3 is a same-path, documentation-only, repository-grounded reconciliation. It does not alter contracts, schemas, validators, fixtures, workflows, policy, app code, runtime behavior, release state, or publication."
+  - "The current executable Story proof is bounded to synthetic public-safe StoryNode and StoryManifest projection validation; it is not Story playback or narrative truth."
+  - "Story Player code remains a one-export greenfield placeholder, Story policy remains a non-enforcing stub, and no Story route exists in the inspected Governed API route inventory."
+  - "ADR-0007 remains proposed; this file does not accept a renderer decision, create packages/maplibre-runtime, admit a plugin, or activate 3D."
+  - "Stable v0.2 anchors are retained, including #3d-handoff-boundary, but stale no-repo and proposed-path claims are replaced with current repository evidence."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Story Subsystem Architecture
 
-> **Evidence-bound, MapLibre-first, time-aware narrative playback over the governed map.**
-> A Story is a sequence of nodes that move camera, time, layers, and panels — **every consequential claim resolves to drawer evidence or abstains**, and **3D is a governed admission decision on a layer, not a switch to a second renderer.**
+> **A governed narrative boundary over public-safe Story projections—not a narrative truth engine.** KFM can organize released, cited, policy-safe material into ordered Story surfaces, but every consequential claim remains subordinate to evidence, policy, review, release, correction, and rollback.
 
-<!-- top-of-file impact block -->
+[![status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status--authority)
+[![projection proof: bounded](https://img.shields.io/badge/projection%20proof-bounded-2da44e?style=flat-square)](#fixtures-validators-tests)
+[![Story Player: placeholder](https://img.shields.io/badge/Story%20Player-placeholder-6e7781?style=flat-square)](#components)
+[![Story policy: non-enforcing](https://img.shields.io/badge/Story%20policy-non--enforcing-b42318?style=flat-square)](#repository-preflight)
+[![Story API route: absent](https://img.shields.io/badge/Story%20API%20route-absent-b42318?style=flat-square)](#governed-api-surface)
+[![3D: hold](https://img.shields.io/badge/3D-HOLD-b42318?style=flat-square)](#3d-handoff-boundary)
+[![publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#status--authority)
 
-[![status: draft](https://img.shields.io/badge/status-draft-lightgrey)](#status)
-[![doc version: v0.2](https://img.shields.io/badge/doc%20version-v0.2-1f6feb)](#status--authority)
-[![doctrine: PROPOSED](https://img.shields.io/badge/doctrine-PROPOSED-blue)](#status--authority)
-[![implementation: UNKNOWN](https://img.shields.io/badge/implementation-UNKNOWN-orange)](#repository-preflight)
-[![renderer: MapLibre + governed plugins](https://img.shields.io/badge/renderer-MapLibre%20%2B%20governed%20plugins-success)](#3d-handoff-boundary)
-[![3D: admitted per-layer](https://img.shields.io/badge/3D-admitted%20per--layer-yellow)](#3d-handoff-boundary)
-[![truth posture: cite-or-abstain](https://img.shields.io/badge/truth%20posture-cite--or--abstain-success)](#non-negotiable-invariants)
-<!-- TODO: replace with verified CI/coverage shields once workflows are confirmed -->
+> [!IMPORTANT]
+> **Current executable scope is narrower than the prior architecture prose.** The repository now has closed, deterministic, fixture-first `StoryNode` and `StoryManifest` **public-safe projection** profiles. It does not have a functioning Story Player, a Story route in the inspected Governed API, an enforcing Story policy bundle, a verified Story evidence resolver, or an admitted 3D runtime. A green projection test proves local shape and trust-reduction behavior only.
 
-**Status:** `draft` (v0.2) · **Owners:** Story subsystem owner *(TBD)* · UI subsystem owner *(TBD)* · Docs steward
-**Authority of this document:** PROPOSED doctrine · **Authority of any specific path quoted here:** PROPOSED until verified against mounted-repo evidence.
+> [!CAUTION]
+> **Story order is not evidence order.** Node sequence, narrative language, camera movement, map state, screenshots, 3D scenes, generated summaries, and polished presentation cannot upgrade evidence, policy, review, release, or correction state. The least-permissive constituent posture controls a composite Story projection.
 
-> [!TIP]
-> **What changed in v0.2 (high level)** — Cesium is no longer the 3D path. 3D layers render inside the **same MapLibre runtime** via governed plugins (`3d-tiles-renderer` + three.js, `maplibre-three-plugin`, `maplibre-gl-lidar`, deck.gl interleaved). The Story subsystem no longer hands a state off to a second renderer; it requests a layer mode, and a **3D Admission Decision** plus a **Plugin Admission Decision** gate the request inside `packages/maplibre-runtime/`. Per-node and per-claim contracts (drawer continuity, cite-or-abstain, finite outcomes) are unchanged. See [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) for the renderer doctrine and the proposed retire-Cesium ADR.
+**Quick navigation:** [Status](#status--authority) · [Evidence](#repository-preflight) · [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#what-does-not-belong-here) · [Invariants](#non-negotiable-invariants) · [Architecture](#architecture-overview) · [Schemas](#schemas) · [API](#governed-api-surface) · [Components](#components) · [Validation](#fixtures-validators-tests) · [Outcomes](#finite-outcomes--negative-states) · [3D](#3d-handoff-boundary) · [Reality boundary](#reality-boundary-notes-in-stories) · [First runtime slice](#definition-of-done--first-slice) · [Rollback](#rollback-path) · [Propagation](#update-propagation-matrix) · [Related](#related-folders) · [ADRs](#adrs) · [Open work](#open-questions--needs-verification)
 
 ---
 
-## Quick jump
-
-- [Status & Authority](#status--authority)
-- [Repository Preflight](#repository-preflight)
-- [Scope](#scope)
-- [Repo fit](#repo-fit)
-- [Accepted inputs](#accepted-inputs)
-- [What does NOT belong here](#what-does-not-belong-here)
-- [Non-negotiable invariants](#non-negotiable-invariants)
-- [Architecture overview](#architecture-overview)
-- [Schemas](#schemas)
-- [Governed API surface](#governed-api-surface)
-- [Components](#components)
-- [Fixtures, validators, tests](#fixtures-validators-tests)
-- [Finite outcomes & negative states](#finite-outcomes--negative-states)
-- [3D handoff boundary](#3d-handoff-boundary)
-- [Reality Boundary Notes in stories](#reality-boundary-notes-in-stories)
-- [Definition of Done — first slice](#definition-of-done--first-slice)
-- [Rollback path](#rollback-path)
-- [Update-propagation matrix](#update-propagation-matrix)
-- [Related folders](#related-folders)
-- [ADRs](#adrs)
-- [Open questions / NEEDS VERIFICATION](#open-questions--needs-verification)
-
----
+<a id="status--authority"></a>
 
 ## Status & Authority
 
-| Field | Value |
+| Field | Current value |
 |---|---|
-| Document type | Subsystem architecture overview |
-| Version | **v0.2** (revision; supersedes v0.1) |
-| Authority level | Subsystem-architecture documentation under `docs/architecture/` (refines, never contradicts, root doctrine) |
-| Status of doctrine in this doc | PROPOSED — derived from the Whole-UI + Governed AI Expansion plan, Master MapLibre v2.1, the *MapLibre 3D Capabilities* brief (`docs/architecture/maplibre-3d.md`), and Directory Rules |
-| Status of code paths quoted here | UNKNOWN / NEEDS VERIFICATION until mounted-repo inspection |
-| Path lineage | Path `docs/architecture/story/README.md` is PROPOSED per *Whole-UI + Governed AI Expansion Report* §11, Appendix A, and §29 file/folder tree |
-| Reviewers required for change | Story subsystem owner + UI subsystem owner + Docs steward; ADR for any 3D-admission, plugin-admission, or schema-home change |
-| Supersedes | **In-document:** v0.1 of this file. **In doctrine:** the dual-renderer disposition of `KFM-P2-FEAT-0012` is superseded once the retire-Cesium ADR (see [ADRs](#adrs)) is accepted. |
-| Related doctrine | Lifecycle law · trust membrane · cite-or-abstain truth posture · finite outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`) · I-3D-1…I-3D-7 (see `docs/architecture/maplibre-3d.md` §1) |
+| **Document edition** | `v0.3` — repository-grounded same-path reconciliation |
+| **Tracked path** | `docs/architecture/story/README.md` |
+| **Owning root** | `docs/` — explanatory architecture documentation |
+| **Placement authority** | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [`Directory Rules v2`](../../doctrine/directory-rules.md) |
+| **Document authority** | Explanatory only; this file does not define machine shape, execute policy, approve review/release, or publish |
+| **Current executable Story scope** | Closed synthetic `StoryNode` and `StoryManifest` public-safe projection validators, fixtures, tests, and focused workflows |
+| **Current player/runtime scope** | Placeholder only; no functioning Story Player established |
+| **Current Story API scope** | No Story route in the inspected Governed API route inventory |
+| **Current Story policy scope** | Documentation plus a non-enforcing Rego stub |
+| **Current 3D scope** | No Story 3D implementation or accepted Story 3D admission decision established |
+| **Review route** | `.github/CODEOWNERS` routes repository review to `@bartytime4life`; stewardship assignment and completed independent review remain unverified |
+| **Effect of this revision** | Documentation only |
+| **Release/publication effect** | None |
 
-> [!IMPORTANT]
-> The Story subsystem is **PROPOSED doctrine, UNKNOWN code** at the time of writing. No story player, story manifest schema, scene manifest schema, MapLibre runtime adapter, or 3D admission policy bundle has been verified in a mounted repository in this session. Every path, route, and component name below is **PROPOSED / NEEDS VERIFICATION**.
+### Architecture, projection proof, playback, and release are separate states
+
+1. **Architecture documentation** explains the intended boundary.
+2. **Projection proof** validates bounded synthetic public-safe shapes and trust inheritance.
+3. **Playback implementation** would resolve and render those projections through governed interfaces.
+4. **Governed release** would authorize an exact Story artifact or service for a named audience and rollback target.
+
+No state implies the next. A schema, fixture, validator, workflow, pull request, merge, renderer, or generated narrative is not publication authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="repository-preflight"></a>
 
 ## Repository Preflight
 
-This document was authored without a mounted repository. The following claims therefore carry these labels by default:
+This revision is grounded in `main@3974da9794fa11bd5355c49243c9193d22b9e81e`.
 
-- **Schema files** under `schemas/contracts/v1/story/`, `schemas/contracts/v1/maplibre/`, `schemas/contracts/v1/3d/`, and `schemas/contracts/v1/policy/` — PROPOSED.
-- **API routes** under `apps/governed-api/src/routes/story.ts` (or its repo-actual equivalent) — PROPOSED / NEEDS VERIFICATION.
-- **UI components** under `apps/explorer-web/src/features/story/` (or equivalent) — PROPOSED / NEEDS VERIFICATION.
-- **Runtime adapter** under `packages/maplibre-runtime/` — PROPOSED; presence NEEDS VERIFICATION (see `maplibre-3d.md` OQ-3D-03).
-- **Fixtures** under `tests/fixtures/story/` and `fixtures/maplibre/valid|invalid/` — PROPOSED.
-- **Validators** under `tools/validators/story/` — PROPOSED.
+| Surface | CONFIRMED current state | Safe conclusion |
+|---|---|---|
+| Story architecture lane | This README and [`CONTINUITY.md`](./CONTINUITY.md) are the direct files under `docs/architecture/story/`. | The lane exists; its prose does not prove runtime behavior. |
+| UI StoryManifest contract | [`contracts/ui/story_manifest.md`](../../../contracts/ui/story_manifest.md) defines a proposed fixture-only public-safe composite. | Current executable profile is a bounded projection, not a playback manifest or release object. |
+| UI StoryNode contract | [`contracts/ui/story_node.md`](../../../contracts/ui/story_node.md) defines a closed public-safe node projection. | A valid node inherits trust; it does not create evidence or authority. |
+| StoryManifest schema | [`schemas/contracts/v1/ui/story_manifest.schema.json`](../../../schemas/contracts/v1/ui/story_manifest.schema.json) exists and is closed. | The old `schemas/contracts/v1/story/` claim is not current repository fact. |
+| StoryNode schema | [`schemas/contracts/v1/ui/story_node.schema.json`](../../../schemas/contracts/v1/ui/story_node.schema.json) exists and is closed. | Shape proof is present for the UI projection only. |
+| Validators and tests | StoryManifest and StoryNode validators, synthetic fixtures, tests, and focused workflows exist. | Deterministic no-network validation is implemented; ref resolution and runtime behavior are not. |
+| Story Player feature | [`apps/explorer-web/src/features/story_player/`](../../../apps/explorer-web/src/features/story_player/README.md) contains a substantive README and a one-export placeholder entry. | No player, route wiring, hooks, transitions, motion, accessibility behavior, or map integration is established. |
+| Story policy | [`policy/story/evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) says it is a proposed stub with no real rules. | No enforcing Story evidence-continuity policy is established. |
+| Governed API routes | The inspected Python route package contains bootstrap, layers, evidence, and registry surfaces; no Story route is present. | Earlier concrete Story endpoint names remain design lineage, not current behavior. |
+| Renderer decision | `ADR-0007` exists but remains effectively proposed; current MapLibre code is scaffold-level. | Do not claim a sole-renderer implementation, admitted plugin set, or Story 3D path. |
+| Historical manifest lane | [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) marks that lane non-canonical and compatibility-only. | Do not place new StoryManifest or ReleaseManifest authority there. |
 
-Before any PR proposes, creates, moves, or renames a path covered here, run the **§4 Placement Protocol** of [`directory-rules.md`](../../doctrine/directory-rules.md) and verify the actual app, framework, and route conventions.
+### Evidence exclusions
+
+This revision does **not** claim:
+
+- a deployed Story service, public Story route, or browser playback flow;
+- evidence, citation, policy, review, release, correction, or rollback reference resolution;
+- a production StoryManifest format for camera, time, layers, transitions, or bodies;
+- an accepted Story contract-family convergence between `contracts/ui/` and `contracts/story/`;
+- a current exact-head green result for every focused Story workflow;
+- a functioning MapLibre adapter or any admitted 3D plugin;
+- a released or published Story.
+
+[Back to top](#top)
 
 ---
+
+<a id="scope"></a>
 
 ## Scope
 
-The Story subsystem turns a curated sequence of camera, time, layer, and panel states over the governed map into an **inspectable narrative**: each node carries the layer requirements, time window, evidence references, and (where applicable) the 3D admission posture needed to render — and to refuse to render — its claims.
+This document explains the boundary between two different Story concerns that prior prose blurred:
 
-**In scope**
+### Current bounded concern — public-safe projection
 
-- Specifying `StoryManifest`, `StoryNode`, `StoryTransition`, and `StoryEvidenceGate` shapes and lifecycle.
-- The `GET /api/v1/stories/{story_id}` governed endpoint and its envelope.
-- Browser playback boundary (`StoryNodePlayer`) and its coupling to `packages/maplibre-runtime/`, the time owner, the layer catalog, the Evidence Drawer, and `StorySnapshot` receipts.
-- **3D layer admission within the same MapLibre runtime** (terrain, fill-extrusion, globe projection, 3D Tiles via three.js, glTF, point clouds, deck.gl interleaved) and the continuity gates that license it.
-- Reality Boundary Note surfacing for interpretive vs. captured 3D content in nodes (KFM-P9-FEAT-0014).
-- Fixtures, validators, finite outcomes, rollback, and feature-flag posture.
+The repository can validate:
 
-**Out of scope**
+- one public-safe `StoryNode` projection with finite state, outcome, reason code, safe display text, governed references, trust posture, caveats, and optional supersession;
+- one public-safe `StoryManifest` projection that orders bounded node snapshots and reduces every trust dimension to the least-permissive constituent state;
+- deterministic identity and negative cases over synthetic fixtures;
+- explicit non-effects: no ref resolution, no policy execution, no release approval, no UI activation, and no publication.
 
-- Story authoring UX, scene-build workflows, and content production discipline.
-- 3D Tiles production pipelines (the *production* of glTF, 3D Tiles, or LiDAR point clouds; their *rendering* is in scope via `packages/maplibre-runtime/`).
-- Renderer-engine selection and plugin admission rules themselves — those live in [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) and the retire-Cesium ADR; Story consumes the decision.
-- Release approval and destructive review actions (see [`docs/architecture/review/README.md`](../review/README.md)).
-- Source identity, rights, sensitivity defaults (see [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)).
+### Future concern — governed playback
+
+A later implementation may:
+
+- retrieve a reviewed Story projection through the Governed API;
+- resolve node bodies and supporting objects through governed interfaces;
+- render finite states in Explorer Web;
+- preserve map, time, Evidence Drawer, correction, and accessibility continuity;
+- add motion, camera, layer, or 3D behavior only after separate contracts and gates exist.
+
+**Out of scope for this document revision**
+
+- changing the current Story contracts or schemas;
+- implementing a Story API or player;
+- accepting a renderer or package-home decision;
+- activating Story policy;
+- choosing a release-manifest Story sublane;
+- migrating or retiring `data/manifests/story/`;
+- releasing, deploying, or publishing Story content.
+
+[Back to top](#top)
 
 ---
+
+<a id="repo-fit"></a>
 
 ## Repo fit
 
-```
-docs/
-└── architecture/
-    ├── README.md                  ← parent: subsystem index
-    ├── maplibre-3d.md             ← sibling: renderer / 3D doctrine (REVISED upstream)
-    ├── ui/                        ← sibling: shell, state, routing, layering
-    ├── governed-ai/               ← sibling: Focus Mode, model adapter
-    ├── review/                    ← sibling: read-only steward console
-    └── story/
-        └── README.md              ← (this file)
-```
+Directory Rules place this file under `docs/architecture/` because its sole responsibility is human explanation. Current and proposed Story responsibilities remain split by owner:
 
-**Upstream (governs this doc):**
+| Responsibility | Current home | Current status |
+|---|---|---|
+| Cross-root Story architecture explanation | `docs/architecture/story/README.md` | **CONFIRMED** tracked document |
+| Story continuity lineage | `docs/architecture/story/CONTINUITY.md` | **CONFIRMED** tracked but stale lineage document |
+| UI StoryManifest meaning | `contracts/ui/story_manifest.md` | **CONFIRMED** proposed fixture-only semantic contract |
+| UI StoryNode meaning | `contracts/ui/story_node.md` | **CONFIRMED** proposed fixture-first semantic contract |
+| General Story semantic lane | `contracts/story/README.md` | **CONFIRMED** proposal-only lane; overlap remains unresolved |
+| UI StoryManifest machine shape | `schemas/contracts/v1/ui/story_manifest.schema.json` | **CONFIRMED** closed schema |
+| UI StoryNode machine shape | `schemas/contracts/v1/ui/story_node.schema.json` | **CONFIRMED** closed schema |
+| Synthetic projection fixtures | `fixtures/ui/story_manifest/`, `fixtures/ui/story_node/` | **CONFIRMED** fixture lanes |
+| Reusable projection validation | `tools/validators/ui/` | **CONFIRMED** validators |
+| Enforceability tests | `tests/validators/` | **CONFIRMED** focused tests |
+| Focused CI | `.github/workflows/story-*-trust-inheritance.yml` | **CONFIRMED** workflow files; exact-head green state not claimed here |
+| App-local Story playback | `apps/explorer-web/src/features/story_player/` | **CONFIRMED** README plus placeholder entry only |
+| Story policy | `policy/story/` | **CONFIRMED** README and non-enforcing stub |
+| Story API implementation | Current Governed API Python route package | **ABSENT in inspected inventory** |
+| Historical manifest compatibility | `data/manifests/story/` | **CONFIRMED NON-CANONICAL** routing/retirement boundary |
+| Story release objects | `release/` family | **NEEDS VERIFICATION** for an accepted Story sublane and actual records |
 
-- [`docs/architecture/README.md`](../README.md) — subsystem map and authority surface.
-- [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) — renderer choice, plugin admission, 3D primitives.
-- `docs/doctrine/` — lifecycle law, truth posture, trust membrane, authority ladder.
-- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement protocol.
+> [!WARNING]
+> **Do not create a second authority because an old architecture path names it.** In particular, do not add parallel `schemas/contracts/v1/story/`, `packages/maplibre-runtime/`, or a new Story manifest store merely to match this document's prior v0.2 wording. Resolve object meaning and physical package homes against current contracts, ADRs, Directory Rules, consumers, and migration evidence first.
 
-**Downstream (refines or implements this doc):**
-
-- [`schemas/contracts/v1/story/story_manifest.schema.json`](../../../schemas/contracts/v1/story/story_manifest.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/story/story_node.schema.json`](../../../schemas/contracts/v1/story/story_node.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/maplibre/scene_manifest.schema.json`](../../../schemas/contracts/v1/maplibre/scene_manifest.schema.json) — PROPOSED *(consumed; not owned by Story)*.
-- [`schemas/contracts/v1/maplibre/view_state.schema.json`](../../../schemas/contracts/v1/maplibre/view_state.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/maplibre/camera_path.schema.json`](../../../schemas/contracts/v1/maplibre/camera_path.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/maplibre/representation_receipt.schema.json`](../../../schemas/contracts/v1/maplibre/representation_receipt.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/3d/reality_boundary_note.schema.json`](../../../schemas/contracts/v1/3d/reality_boundary_note.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/policy/3d_admission_decision.schema.json`](../../../schemas/contracts/v1/policy/3d_admission_decision.schema.json) — PROPOSED.
-- [`schemas/contracts/v1/policy/plugin_admission.schema.json`](../../../schemas/contracts/v1/policy/plugin_admission.schema.json) — PROPOSED (I-3D-7).
-- [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) — object-meaning crosswalk; PROPOSED.
-- [`policy/story/`](../../../policy/story/) — admissibility gates for story nodes; PROPOSED.
-- [`policy/maplibre/`](../../../policy/maplibre/) — 3D admission and plugin admission policy bundles; PROPOSED.
-- [`tests/fixtures/story/`](../../../tests/fixtures/story/) — schema-valid story manifests for component and validator tests; PROPOSED.
-- [`tools/validators/story/validate_story_manifest.py`](../../../tools/validators/story/validate_story_manifest.py) — PROPOSED.
-- `packages/maplibre-runtime/` — PROPOSED; the only path through which Story touches the renderer.
-- `apps/governed-api/src/routes/story.ts` — PROPOSED / NEEDS VERIFICATION.
-- `apps/explorer-web/src/features/story/StoryNodePlayer.tsx` — PROPOSED / NEEDS VERIFICATION.
-- [`docs/adr/ADR-story-node-3d-admission.md`](../../adr/ADR-story-node-3d-admission.md) — PROPOSED (replaces the v0.1 reference to a Cesium-handoff ADR).
-- [`docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md`](../../adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md) — PROPOSED upstream; gating dependency for Story 3D.
+[Back to top](#top)
 
 ---
+
+<a id="accepted-inputs"></a>
 
 ## Accepted inputs
 
-This subsystem accepts, **only via governed surfaces**:
+### Current executable validation inputs
 
-- Released `LayerDescriptor` / `LayerManifest` payloads (already trust-badged, rights-checked, with `plugin_dependencies` pinned where 3D modes are requested).
-- Resolved `EvidenceBundle` references for any consequential claim a node makes.
-- Curated `StoryManifest` documents authored against the published schema, served by the Story endpoint.
-- `TimeState` snapshots produced by the shell's time owner.
-- `ViewState` / `CameraPath` values authored against the MapLibre schemas (consumed; not authored by Story).
-- Optional 3D layer modes (`terrain | globe | extrusion | tiles3d | gltf | pointcloud`) — only when the per-layer **3D Admission Decision** and the **Plugin Admission Decision** both ALLOW (see [3D handoff boundary](#3d-handoff-boundary)).
-- `RealityBoundaryNote` references for any interpretive or synthetic content cited by a node.
+The current validators accept **bounded synthetic projections** only:
+
+- `StoryNode` JSON matching `kfm.ui.story-node.public-safe.v1`;
+- `StoryManifest` JSON matching `kfm.ui.story-manifest.public-safe.v1`;
+- governed opaque references rather than raw URLs, source payloads, prompts, coordinates, or internal handles;
+- explicit trust state for rights, sensitivity, policy, review, release, freshness, and correction;
+- fixed authority guards: `authoritative: false` and `projection_only: true`.
+
+The StoryManifest validator consumes **prevalidated constituent snapshots**. It does not fetch or dereference a StoryNode.
+
+### Future playback inputs — PROPOSED
+
+A governed player should accept only:
+
+- a schema-valid public-safe StoryManifest projection returned by the Governed API;
+- independently resolved StoryNode projections or governed body references;
+- released evidence and citation-validation references;
+- public-safe policy, review, release, freshness, correction, and rollback projections;
+- map/time context only through accepted shell and adapter contracts;
+- optional Focus output only through a finite, cited governed envelope.
+
+[Back to top](#top)
+
+---
+
+<a id="what-does-not-belong-here"></a>
 
 ## What does NOT belong here
 
-- ❌ Direct browser reads against `data/raw/`, `data/work/`, `data/quarantine/`, canonical stores, graph stores, object stores, vector indexes, or model runtimes. *(Trust membrane.)*
-- ❌ Browser-side calls to Ollama, OpenAI, or any model provider. *(Governed AI boundary.)*
-- ❌ Story manifests asserting claims that do not resolve to a released `EvidenceBundle`.
-- ❌ **Direct imports** of `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, or `maplibre-gl-lidar` from Story feature code. **All renderer access goes through `packages/maplibre-runtime/`** (I-3D-1, I-3D-7).
-- ❌ A second-renderer handoff path (Cesium runtime, Cesium-specific manifests, cross-renderer camera sync). The retire-Cesium ADR explicitly removes this surface.
-- ❌ 3D layer activation that bypasses the 3D Admission Decision or the Plugin Admission Decision.
-- ❌ UI source code, plugin runtimes, or scene assets — those live under `apps/`, `packages/`, and (for assets) `data/published/` per Directory Rules; this folder is `docs/` only.
-- ❌ Story manifest *files* themselves — those are emitted artifacts and live under `data/manifests/story/` (PROPOSED home), not in `docs/`.
+- Direct browser access to RAW, WORK, QUARANTINE, canonical/internal stores, graph stores, object stores, vector indexes, or model runtimes.
+- Narrative claims supported only by prose, pixels, animation, a map layer, a screenshot, a graph edge, a score, or generated text.
+- Raw evidence payloads, source snapshots, prompts, chain-of-thought, credentials, PII, or precise restricted geometry inside Story projections.
+- Release manifests, promotion decisions, proofs, receipts, or published payloads under `docs/architecture/story/`.
+- New StoryManifest or ReleaseManifest instances under the non-canonical `data/manifests/story/` compatibility lane.
+- Direct Story feature imports of renderer libraries or model providers.
+- A `packages/maplibre-runtime/` peer created beside `packages/maplibre/` without a reviewed physical-home decision and migration plan.
+- Concrete Story API paths presented as current behavior before a route, contract, tests, and envelope integration exist.
+- 3D plugin activation or synthetic reconstruction presented as evidence.
+- A passing projection validator presented as evidence resolution, policy approval, review, release, deployment, or publication.
 
-> [!NOTE]
-> **v0.1 had a "conflicted lineage" warning** about `web/story_nodes/` vs `data/manifests/story/`. v0.2 resolves the renderer half of that question via the retire-Cesium ADR; the **manifest-file home** question (`data/manifests/story/`) remains an ADR-class decision and is tracked in [Open questions](#open-questions--needs-verification).
+[Back to top](#top)
 
 ---
+
+<a id="non-negotiable-invariants"></a>
 
 ## Non-negotiable invariants
 
-> [!IMPORTANT]
-> These hold for every Story node, every transition, every release. v0.2 explicitly aligns invariant 4 with the 3D-specific invariants **I-3D-1 … I-3D-7** in [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §1.
+1. **Narrative is not truth.** Story surfaces arrange public-safe projections; they never become source or evidence authority.
+2. **Cite or abstain.** A future consequential Story claim must resolve through `EvidenceRef → EvidenceBundle` and citation validation, or render a bounded non-answer.
+3. **Least-permissive composition.** A StoryManifest cannot be more permissive than any constituent node or any trust dimension.
+4. **Finite outward outcomes.** Runtime presentation uses `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; local validators use their own `PASS`/`DENY` grammar and must not be confused with runtime authorization.
+5. **Governed interfaces only.** Public clients consume public-safe projections and released artifacts through governed adapters.
+6. **No support leakage.** Blocked and error projections expose only the public-safe reason surface permitted by their contracts.
+7. **Correction is visible.** Corrected, withdrawn, and superseded nodes/manifests preserve governed replacement and correction references.
+8. **Projection proof is bounded.** Schema, fixture, validator, and workflow success does not prove refs, policy, review, release, playback, or publication.
+9. **Map and AI remain downstream.** Camera state, layers, 3D scenes, Focus text, and generated narration cannot upgrade support.
+10. **Promotion is a governed state transition.** A story file, commit, pull request, merge, deployment, route, or screenshot does not create `PUBLISHED` state.
+11. **Sensitive material fails closed.** Unknown rights, sovereignty, living-person data, DNA, rare-species locations, archaeology, infrastructure, or harmful precision requires denial, abstention, generalization, or staged access.
+12. **Paths do not grant authority.** Every Story artifact remains governed by its object family and lifecycle state, regardless of filename or folder.
 
-1. **Cite-or-abstain.** Every consequential story claim must resolve to drawer evidence (`EvidenceRef` → `EvidenceBundle`) or the node renders an `ABSTAIN` state. Visual rendering does not establish evidentiary certainty.
-2. **Governed surfaces only.** The browser fetches stories via `GET /api/v1/stories/{story_id}`, evidence via `GET /api/v1/evidence/{bundle_id}`, and feature claims via `POST /api/v1/claims/resolve`. It does **not** read internal stores or call models directly.
-3. **2D is the evidence baseline.** A node MUST be playable in 2D over MapLibre. Under MapLibre-only rendering, evidence parity between 2D and 3D modes is **upheld by construction** — same tiles, same client, same `EvidenceBundle` — but the doctrine still applies: a 3D-mode rendering that loses parity with the 2D baseline is a regression. (Per I-3D-3.)
-4. **3D is a governed admission, not a UI toggle.** Switching any layer into a 3D mode requires a valid `3D Admission Decision` and a valid `Plugin Admission Decision`. The runtime denies, abstains, or falls back to 2D otherwise. (Per I-3D-6 + I-3D-7.) **2.5D surfaces (fill-extrusion, draped DEMs) cannot stand in as evidence for true vertical geometry** (caves, overhangs, strata, building interiors) — the `LayerManifest.geometry_label` must say which it is. (Per I-3D-4.)
-5. **Continuity gates every node.** A node may move camera, time, layers, and panels only if the resulting state preserves **evidence, release, drawer, policy, and (when 3D is requested) plugin-admission and reality-boundary** continuity. Failures fall back to 2D or `ABSTAIN`.
-6. **Finite outcomes.** Story responses are typed: `ANSWER` (node renders), `ABSTAIN` (insufficient evidence), `DENY` (policy / restricted node), `ERROR` (system fault). No `partial`, no `pending`, no soft fallback.
-7. **Promotion is governed.** Story manifests promote through the lifecycle (RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED) like any other artifact. Publication is a state transition, not a file move. A `StorySnapshot` receipt records the evidence, redactions, and release state at the moment of release.
-8. **Derived is not sovereign.** A 3D scene, a tile, a stylized layer, a transition animation, or any AI-drafted node narration is a presentation choice. The `EvidenceBundle` it cites is the truth. Interpretive or synthetic content carries a `RealityBoundaryNote` surfaced in the drawer.
-9. **No naked renderer.** Story feature code MUST NOT import `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, or `maplibre-gl-lidar` directly. All renderer access is through `packages/maplibre-runtime/`. (Per I-3D-7.)
+[Back to top](#top)
 
 ---
+
+<a id="architecture-overview"></a>
 
 ## Architecture overview
 
+### CONFIRMED bounded projection lane
+
 ```mermaid
 flowchart LR
-    subgraph Browser["Browser · apps/explorer-web (PROPOSED)"]
-        SP["StoryNodePlayer<br/>(MapLibre-first)"]
-        ED["Evidence Drawer"]
-        RBB["Reality Boundary<br/>Badge"]
-    end
+    C["contracts/ui/<br/>StoryNode + StoryManifest meaning"]
+    S["schemas/contracts/v1/ui/<br/>closed projection shapes"]
+    F["fixtures/ui/<br/>synthetic cases"]
+    V["tools/validators/ui/<br/>deterministic reduction + identity"]
+    T["tests/validators/<br/>positive + negative proof"]
+    W["focused workflows<br/>tests + fixture replay + receipt check"]
 
-    subgraph Runtime["packages/maplibre-runtime (PROPOSED) — sole renderer adapter"]
-        MR["MapLibre runtime adapter<br/>(camera · time · layers · receipts)"]
-        ADM["3D Admission Evaluator"]
-        PLG["Plugin Registry<br/>(pinned versions)"]
-        H3D["3D plugin hosts<br/>terrain · globe · fill-extrusion ·<br/>3D Tiles (three.js) · glTF (three.js) ·<br/>point cloud · deck.gl interleaved"]
-    end
+    C --> S --> F --> V --> T --> W
 
-    subgraph API["Governed API · apps/governed-api (PROPOSED)"]
-        SR["GET /api/v1/stories/&#123;id&#125;"]
-        EVR["GET /api/v1/evidence/&#123;bundle_id&#125;"]
-        CR["POST /api/v1/claims/resolve"]
-        LMR["GET /api/v1/layers/&#123;id&#125;/manifest"]
-        RCR["POST /api/v1/receipts"]
-    end
-
-    subgraph Schemas["schemas/contracts/v1/ (PROPOSED)"]
-        SM["story/StoryManifest"]
-        SN["story/StoryNode"]
-        ST["story/StoryTransition"]
-        SG["story/StoryEvidenceGate"]
-        SCM["maplibre/SceneManifest"]
-        VS["maplibre/ViewState"]
-        CP["maplibre/CameraPath"]
-        RR["maplibre/RepresentationReceipt"]
-        RBN["3d/RealityBoundaryNote"]
-        ADD["policy/3DAdmissionDecision"]
-        PAD["policy/PluginAdmission"]
-    end
-
-    subgraph Trust["Trust membrane · governed only"]
-        EB[(EvidenceBundle)]
-        LD[(LayerDescriptor /<br/>LayerManifest)]
-    end
-
-    SP -->|fetch story| SR
-    SR -. validates against .-> SM
-    SR -. validates against .-> SN
-    SR --> SP
-
-    SP -->|requestLayer mode| MR
-    MR --> LMR
-    LMR --> MR
-    MR --> PLG
-    MR --> ADM
-    ADM -. evaluates .-> ADD
-    PLG -. checks .-> PAD
-    MR -->|ALLOW| H3D
-    MR -->|DENY/ABSTAIN| SP
-
-    SP -->|on consequential claim| CR
-    SP -->|resolve bundle| EVR
-    CR --> ED
-    EVR --> ED
-    ED --> RBB
-    RBB -. consumes .-> RBN
-
-    H3D --> RCR
-    RCR -. emits .-> RR
-
-    EVR --> EB
-    SR --> LD
-
-    classDef proposed stroke-dasharray: 4 3,stroke:#888;
-    class SP,ED,RBB,MR,ADM,PLG,H3D,SR,EVR,CR,LMR,RCR,SM,SN,ST,SG,SCM,VS,CP,RR,RBN,ADD,PAD proposed;
+    N["NON-EFFECTS<br/>no ref resolution<br/>no policy execution<br/>no review/release approval<br/>no UI activation<br/>no publication"]
+    W -. bounded by .-> N
 ```
 
-> [!NOTE]
-> Dashed nodes are PROPOSED — neither code nor schema has been verified in a mounted repo this session. **There is no second-renderer box.** What v0.1 drew as a "Cesium adapter" is now the 3D plugin host **inside** `packages/maplibre-runtime/`, fronted by admission and registry gates.
+The implemented proof asks: **does this synthetic public-safe projection obey its closed profile and fail-closed trust rules?** It does not ask whether a Story is true or playable.
 
-### Player flow (per node)
+### PROPOSED governed playback lane
 
-1. Shell issues `GET /api/v1/stories/{story_id}` → server validates against `StoryManifest` schema → returns the manifest, fixed scope, and a play sequence.
-2. For each `StoryNode`:
-   1. Apply layer requirements via the **Layer Catalog** + `packages/maplibre-runtime/`. For each layer, the runtime resolves the `LayerManifest` (with `plugin_dependencies` if a 3D mode is requested), then asks the **3D Admission Evaluator** and **Plugin Registry** to authorize the requested mode. If any required layer is unreleased, restricted, or has an unpinned plugin → **`DENY`** or **`ABSTAIN`** with a typed reason.
-   2. Apply time window via **TimeState** (`viewport_time`, `valid_time`, `observed_time`, `freshness`).
-   3. Apply camera/panel state via the runtime adapter. Camera state is a `ViewState`; a sequence of `ViewState` is a `CameraPath` (a governed asset, spec-hashed and validated).
-   4. For each consequential claim attached to the node, **resolve drawer evidence**. The drawer payload is built server-side from `EvidenceDrawerPayload`, not assembled from feature properties.
-   5. If a layer is rendered in any 3D mode and the source is interpretive or synthetic, surface its `RealityBoundaryNote` in the drawer and on the reality-boundary badge.
-   6. On admit/deny/abstain, the runtime emits a `RepresentationReceipt` recording the scene_manifest_id (if applicable), layer set, projection, ViewState, time slice, CARE-mask transforms, and the plugin versions actually used.
-3. Apply `StoryTransition` rules between nodes; cancellable; respects reduced-motion preferences.
-4. On exit, return-conditions restore the shell's prior camera, time, and layer state. A `StorySnapshot` may be issued at release time recording the evidence and redactions at that moment.
+```mermaid
+flowchart LR
+    R["Released Story support<br/>evidence · citations · policy · review · release · correction"]
+    API["Governed API resolver<br/>exact route not selected"]
+    E["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
+    P["Explorer Story Player<br/>currently placeholder"]
+    D["Evidence Drawer"]
+    M["Map/time adapter<br/>optional future capability"]
+
+    R --> API --> E --> P
+    P --> D
+    P -. only after separate contracts .-> M
+
+    I["Internal stores / raw source / model runtime"]
+    I -. DENY direct public path .-> P
+```
+
+The proposed playback lane must not be inferred from the existence of the projection lane.
+
+[Back to top](#top)
 
 ---
+
+<a id="schemas"></a>
 
 ## Schemas
 
-All schemas are PROPOSED. Canonical home is `schemas/contracts/v1/` per ADR-0001 (schema home) referenced in `directory-rules.md` §0.
+### Current machine profiles
 
-**Story-owned schemas** (governed by this subsystem):
-
-| Schema | Proposed path | Purpose | Validated by |
+| Object | Current schema | What it proves locally | What it does not prove |
 |---|---|---|---|
-| `StoryManifest` | `schemas/contracts/v1/story/story_manifest.schema.json` | Story-level sequence, scope, required layers, time windows, drawer refs, optional 3D layer-mode requests. | story fixture tests; `tools/validators/story/validate_story_manifest.py` (PROPOSED) |
-| `StoryNode` | `schemas/contracts/v1/story/story_node.schema.json` | Node-level camera/time/layer/evidence continuity and transition requirements; optional per-layer requested mode (`terrain | globe | extrusion | tiles3d | gltf | pointcloud`). | story node tests (PROPOSED) |
-| `StoryTransition` | *(named in source ledger; path PROPOSED)* | Transition rules between nodes (timing, easing, cancellability, reduced-motion behavior). | transition fixtures (PROPOSED) |
-| `StoryEvidenceGate` | *(named in source ledger; path PROPOSED)* | Continuity check at node entry: evidence, release, drawer, policy, plugin-admission, reality-boundary. | gate fixtures (PROPOSED) |
+| `StoryNode` | [`schemas/contracts/v1/ui/story_node.schema.json`](../../../schemas/contracts/v1/ui/story_node.schema.json) | Closed public-safe node shape, finite posture fields, governed refs, trust state, correction/supersession shape | Source authority, evidence resolution, citation validity, policy execution, review/release authenticity, UI behavior |
+| `StoryManifest` | [`schemas/contracts/v1/ui/story_manifest.schema.json`](../../../schemas/contracts/v1/ui/story_manifest.schema.json) | Closed composite shape, ordered constituent snapshots, least-permissive trust reduction, visible limiting nodes/reasons, correction/supersession shape | StoryNode dereference, narrative body, camera/time/layer playback, policy evaluation, release, UI behavior |
 
-**Consumed schemas** (owned by adjacent subsystems, referenced by Story):
+### Contract-family boundary
 
-| Schema | Owner | Path (PROPOSED) | Role in Story |
-|---|---|---|---|
-| `SceneManifest` | MapLibre/3D | `schemas/contracts/v1/maplibre/scene_manifest.schema.json` | Named scene composition a node may reference when activating multi-layer 3D state. |
-| `ViewState` | MapLibre/3D | `schemas/contracts/v1/maplibre/view_state.schema.json` | Each node's camera/projection/time state. |
-| `CameraPath` | MapLibre/3D | `schemas/contracts/v1/maplibre/camera_path.schema.json` | Sequence of `ViewState`s spanning transitions. |
-| `LayerManifest` | MapLibre/3D | (existing) | Layer descriptor including `geometry_label`, `plugin_dependencies`, `evidence_refs`. |
-| `RepresentationReceipt` | MapLibre/3D | `schemas/contracts/v1/maplibre/representation_receipt.schema.json` | Receipt emitted by the runtime after each render frame batch. |
-| `RealityBoundaryNote` | Planetary/3D | `schemas/contracts/v1/3d/reality_boundary_note.schema.json` | Surfaced in drawer for interpretive/synthetic content. |
-| `3DAdmissionDecision` | Policy | `schemas/contracts/v1/policy/3d_admission_decision.schema.json` | Gates per-layer 3D mode activation. |
-| `PluginAdmission` | Policy | `schemas/contracts/v1/policy/plugin_admission.schema.json` | Gates the pinned plugin set (I-3D-7). |
-| `StorySnapshot` / `ExportReceipt` | Story / Export | (existing receipt catalog) | Records evidence, redactions, release state at the moment of a story / export snapshot. |
+The executable profiles are paired with `contracts/ui/story_node.md` and `contracts/ui/story_manifest.md`. The separate [`contracts/story/README.md`](../../../contracts/story/README.md) remains a broader proposal lane. Until reviewers choose one semantic relationship, this architecture does not authorize duplicate `StoryNode` or `StoryManifest` contracts under `contracts/story/`.
 
-> [!NOTE]
-> The exact field shapes (e.g., `nodes[]`, `scope`, `required_layers[]`, `time_windows[]`, `drawer_refs[]`, `transition_rules[]`, `return_conditions`, `requested_layer_modes?`) are doctrinal in the Whole-UI report and the *MapLibre 3D Capabilities* brief. Field-level shape is decided in the schema files cited above, not here.
+### Not currently established
 
-<details>
-<summary><strong>Illustrative <code>StoryManifest</code> envelope (not a fixture; not releasable)</strong></summary>
+The following prior v0.2 shapes are **PROPOSED**, not current files in the inspected canonical Story schema lane:
 
-```json
-{
-  "story_id": "kfm://story/example",
-  "scope": { "domain": "atmosphere", "valid_time": "1850-01-01/1900-12-31" },
-  "required_layers": ["kfm://layer/example-released"],
-  "time_windows": [{ "node_id": "n1", "valid_time": "1854-01/1855-12" }],
-  "nodes": [
-    {
-      "node_id": "n1",
-      "camera": { "center": [-98.5, 38.5], "zoom": 6, "pitch": 0, "bearing": 0 },
-      "panels": ["evidence_drawer"],
-      "drawer_refs": ["kfm://drawer/example"],
-      "evidence_refs": ["kfm://evidence/ref/example"],
-      "requested_layer_modes": {
-        "kfm://layer/example-released": "extrusion"
-      },
-      "reality_boundary_refs": []
-    },
-    {
-      "node_id": "n2",
-      "camera": { "center": [-98.5, 38.5], "zoom": 12, "pitch": 60, "bearing": 30 },
-      "panels": ["evidence_drawer"],
-      "drawer_refs": ["kfm://drawer/example-3d"],
-      "evidence_refs": ["kfm://evidence/ref/example-photogrammetry"],
-      "requested_layer_modes": {
-        "kfm://layer/example-historic-structures": "gltf"
-      },
-      "reality_boundary_refs": ["kfm://reality-boundary/example-photogrammetry"]
-    }
-  ],
-  "transition_rules": [{ "from": "n1", "to": "n2", "kind": "ease", "cancellable": true }],
-  "return_conditions": { "restore_prior_state": true },
-  "_mock_only": true
-}
-```
+- a playback-oriented `StoryManifest` carrying camera, layer, time, transition, and return-condition objects;
+- separate `StoryTransition` and `StoryEvidenceGate` schemas;
+- a Story-owned `SceneManifest`;
+- Story-specific 3D admission or plugin-admission schemas;
+- a `StorySnapshot` release or receipt schema.
 
-</details>
+A future design should prefer composition with existing UI, evidence, runtime, policy, release, and correction contracts rather than duplicating them.
+
+[Back to top](#top)
 
 ---
+
+<a id="governed-api-surface"></a>
 
 ## Governed API surface
 
-The browser MUST NOT bypass the governed API. All paths PROPOSED.
+**CONFIRMED:** no Story route exists in the inspected `apps/governed-api/src/governed_api/routes/` inventory. The repository's current route implementation is Python, while prior Story prose named TypeScript files and concrete `/api/v1/stories/...` paths. Those names are lineage only.
 
-| Surface | Method · Path | Purpose | Negative states |
-|---|---|---|---|
-| Story | `GET /api/v1/stories/{story_id}` | Story manifest and evidence continuity. | `DENY` restricted nodes; `ABSTAIN` missing evidence; `ERROR` invalid manifest |
-| Evidence (drawer) | `GET /api/v1/evidence/{bundle_id}` | Resolve `EvidenceBundle` for a node's drawer payload. | `DENY` restricted; `ABSTAIN` unresolved; `ERROR` invalid bundle |
-| Claim resolve | `POST /api/v1/claims/resolve` | Resolve a consequential story claim to a drawer payload. | `ABSTAIN` no evidence; `DENY` sensitivity; `ERROR` malformed |
-| Layer manifest | `GET /api/v1/layers/{id}/manifest` | Per-layer `LayerManifest` with `plugin_dependencies` for 3D-mode requests. | `DENY` restricted; `ABSTAIN` unreleased; `ERROR` invalid |
-| Receipts | `POST /api/v1/receipts` | Runtime posts `RepresentationReceipt` and `RenderReceipt` after admission decisions and render batches. | `ERROR` malformed; idempotent on retry |
+A first governed Story API design must decide, through current contracts and tests:
 
-The story endpoint returns content wrapped in a `RuntimeResponseEnvelope` with a `DecisionEnvelope` carrying `outcome`, `reason_codes`, `obligations`, `audit_ref`, `evidence_bundle_refs`, and `freshness`. The browser renders the outcome explicitly; cancellation, timeout, stale evidence, restricted material, invalid citation, **3D admission deny, plugin admission deny, and reality-boundary required** are **first-class** states, not generic failures.
+| Capability | Required boundary |
+|---|---|
+| Resolve a StoryManifest projection | Validate the public-safe UI schema and return a finite runtime envelope |
+| Resolve a StoryNode or governed body reference | Keep evidence, policy, review, release, and correction resolution server-side |
+| Expose a blocked or abstained Story | Return a public-safe reason surface without leaking support or restricted detail |
+| Preserve correction/supersession | Return replacement/correction references through governed projections |
+| Support idempotency and caching | Bind response identity to accepted contract, schema, release, and correction state |
+| Support map/time playback later | Add only after a separate adapter contract and state-ownership decision |
+
+> [!IMPORTANT]
+> No endpoint path should become public contract by repetition in this README. Select path, verb, envelope, auth, caching, and versioning through the Governed API's current conventions and focused compatibility tests.
+
+[Back to top](#top)
 
 ---
+
+<a id="components"></a>
 
 ## Components
 
-All component paths are PROPOSED / NEEDS VERIFICATION; adjust to the actual app path, package manager, and framework once the repo is inspected. If the repo uses something other than `apps/explorer-web/`, an ADR records the placement decision per `directory-rules.md` §2.4.
+### Current repository inventory
 
-| Component | Proposed path | Responsibility |
-|---|---|---|
-| `StoryNodePlayer.tsx` | `apps/explorer-web/src/features/story/StoryNodePlayer.tsx` | MapLibre-first node playback driving the runtime adapter, time state, and Evidence Drawer; renders finite outcomes; surfaces Reality Boundary Badge when applicable. |
-| Story route entry | `apps/explorer-web/src/app/routes/story.tsx` *(naming PROPOSED)* | Feature-flagged shell route; binds the player to the governed client. |
-| **Runtime adapter** | `packages/maplibre-runtime/` | **Sole renderer-facing surface for Story.** Hosts the 3D admission evaluator, plugin registry, terrain/globe/fill-extrusion/3D-Tiles/glTF/point-cloud hosts, and receipt emission. (See `maplibre-3d.md` §7.) |
-| Story API route | `apps/governed-api/src/routes/story.ts` | Validates manifests against schema; emits envelopes; never streams unreleased candidates. |
-| Manifest validator | `tools/validators/story/validate_story_manifest.py` | Validates story manifest, drawer continuity, and (if `requested_layer_modes` is present) that referenced layers' `geometry_label` and `plugin_dependencies` are admissible. |
-| Reality Boundary Badge | `apps/explorer-web/src/map/reality-boundary-badge.tsx` *(naming PROPOSED)* | UI affordance making interpretive/synthetic context visible at glance. *(KFM-P9-FEAT-0014.)* |
+| Surface | CONFIRMED current state |
+|---|---|
+| `apps/explorer-web/src/features/story_player/README.md` | Substantive app-local boundary documentation |
+| `apps/explorer-web/src/features/story_player/index.tsx` | Greenfield placeholder exporting `placeholder = true` |
+| Story Player component, hooks, state machine, transitions | Not found in the inspected feature directory |
+| Story route wiring | Not established |
+| Evidence Drawer handoff | Not established for Story playback |
+| Accessibility and reduced-motion behavior | Not established for Story playback |
+| Story telemetry | Not established |
+| Story map/time integration | Not established |
+| Story 3D integration | Not established |
 
-> [!TIP]
-> Component code MUST speak to `packages/maplibre-runtime/` and the typed governed client — **never** to `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, or `maplibre-gl-lidar` directly, never to a raw `fetch`, and never to a model provider.
+### Smallest future component set — PROPOSED
 
-> [!CAUTION]
-> **The v0.1 "3D handoff adapter" under `packages/cesium/...` is removed in v0.2.** Under the retire-Cesium ADR, that path does not exist. 3D layer hosts live inside `packages/maplibre-runtime/`, behind admission gates.
+The first playback implementation should remain deliberately smaller than the old architecture:
+
+1. a typed governed Story resolver interface;
+2. a finite-state Story card/list renderer for current public-safe projections;
+3. visible limiting-node, reason-code, caveat, correction, and supersession UI;
+4. an Evidence Drawer handoff only for governed support refs;
+5. keyboard, focus, and screen-reader coverage;
+6. a feature flag and kill switch;
+7. no map motion, camera paths, renderer imports, 3D, model calls, source activation, or publication.
+
+This boundary lets KFM prove projection-to-UI integrity before adding orchestration complexity.
+
+[Back to top](#top)
 
 ---
+
+<a id="fixtures-validators-tests"></a>
 
 ## Fixtures, validators, tests
 
-All paths PROPOSED.
-
-| Asset | Proposed path | Purpose |
+| Packet | CONFIRMED coverage | Boundary |
 |---|---|---|
-| Valid manifest | `tests/fixtures/story/story_manifest.valid.json` | Schema-valid mock; carries an obvious `_mock_only` marker; not releasable. |
-| Invalid manifest | `tests/fixtures/story/story_manifest.invalid.json` | Negative fixture — exercises validator failure modes. |
-| 3D-admit valid node | `tests/fixtures/story/story_manifest.3d_admit_valid.json` | Node requesting a 3D mode where admission ALLOWs; positive path. |
-| 3D-admit deny node | `tests/fixtures/story/story_manifest.3d_admit_deny_care.json` | Node requesting a 3D mode where CARE/sensitivity DENIES; verifies fallback to 2D or `ABSTAIN`. |
-| 2.5D-vs-3D mislabel | `tests/fixtures/story/story_manifest.geometry_label_mismatch.json` | Node declares `requested_mode: 'true_3d_evidence'` against a layer with `geometry_label: '2.5D'` → DENY (per I-3D-4). |
-| Plugin unpinned | `tests/fixtures/story/story_manifest.plugin_unpinned.json` | Layer's `plugin_dependencies` carries an unpinned version → DENY (per I-3D-7). |
-| Reality boundary required | `tests/fixtures/story/story_manifest.reality_boundary_required.json` | Interpretive glTF asset cited without a `RealityBoundaryNote` → DENY. |
-| Drawer-continuity case | `tests/fixtures/story/story_manifest.deny_restricted_node.valid.json` | DENY path with restricted node and reason codes. |
-| Player component test | `tests/ui/StoryNodePlayer.test.tsx` | Verifies finite-outcome rendering, cancellation, reduced-motion, reality-boundary badge surfacing. |
-| Manifest validator | `tools/validators/story/validate_story_manifest.py` | Schema validation + drawer-continuity check + 3D admission cross-check. |
-| CI summary tool | `tools/ci/render_ui_validation_summary.py` | Renders reviewer summary without exposing restricted payloads. |
+| StoryManifest fixtures | Synthetic base plus valid and negative trust-reduction cases under `fixtures/ui/story_manifest/cases.json` | No node dereference or real Story content |
+| StoryManifest validator | Closed schema, bounded JSON reader, ordered/unique constituents, least-permissive trust reduction, limiting refs/reasons, correction/supersession, JCS SHA-256 identity | No network, policy execution, evidence/citation verification, review/release approval |
+| StoryManifest tests | 17 exact cases: 6 `PASS`, 11 `DENY`; deterministic identity; network denial; no raw body/claim/geometry/source payload | Local enforceability only |
+| StoryManifest workflow | Unit tests, fixture replay, generated-authoring-receipt integrity | Workflow file exists; this doc does not claim current exact-head success |
+| StoryNode packet | Closed schema, fixtures, validator, tests, generated receipt, focused workflow | Public-safe node projection only |
+| Story policy | One non-enforcing Rego stub | No policy proof |
 
-> [!CAUTION]
-> Fixtures are **not publication artifacts**. Every mock payload must include a visible mock marker, must be schema-valid, and must never be confused with released evidence.
+Run the focused projection checks from a repository checkout:
+
+```bash
+python -m unittest tests.validators.test_validate_story_manifest -v
+python tools/validators/ui/validate_story_manifest.py --fixtures
+python -m unittest tests.validators.test_validate_story_node -v
+python tools/validators/ui/validate_story_node.py --fixtures
+```
+
+A future runtime PR must add its own API, UI, accessibility, integration, denial, correction, and rollback tests. It must not claim that these fixture suites cover playback.
+
+[Back to top](#top)
 
 ---
+
+<a id="finite-outcomes--negative-states"></a>
 
 ## Finite outcomes & negative states
 
-The Story subsystem inherits the finite-outcome grammar shared by Map click, Focus, Review, Export, and Promotion.
+### Public-safe StoryNode projection
 
-| Outcome | When | What the user sees |
+| Node state | Runtime outcome | Meaning |
 |---|---|---|
-| `ANSWER` | Node renders with full continuity. | Node plays; Evidence Drawer reachable; trust badges visible; Reality Boundary Badge if applicable. |
-| `ABSTAIN` | Required `EvidenceRef` cannot resolve, or `StoryEvidenceGate` fails (including 3D Admission ABSTAIN or unresolved plugin admission). | Explicit "evidence chain incomplete" state; structured next steps; node does not render speculatively. The runtime falls back to 2D where feasible. |
-| `DENY` | Policy denies node (rights, sensitivity, restricted source-role, exact geometry, CARE-masked archaeology, 3D Admission DENY, Plugin Admission DENY for unpinned/drifted plugin). | Explicit policy state with reason codes; no fallback render of the denied claim. |
-| `ERROR` | Schema mismatch, invalid envelope, system fault. | Typed error; no leaked prompt, secret, or internal context. |
+| `READY` | `ANSWER` | Released, reviewed, current, policy-allowed, citation-backed projection may render |
+| `PARTIAL` | `ABSTAIN` | Bounded status only; support is incomplete, generalized, pending, stale, or unreleased |
+| `ABSTAINED` | `ABSTAIN` | No authoritative node content is available |
+| `BLOCKED` | `DENY` | Public-safe denial; no evidence/body/support leakage |
+| `ERROR` | `ERROR` | Bounded upstream/system failure |
+| `SUPERSEDED` | `ABSTAIN` | Prior node is withdrawn/replaced; replacement and correction posture remain visible |
 
-> [!NOTE]
-> Cancellation, timeout, stale evidence, restricted material, invalid citation, **3D admission denial**, **plugin admission denial**, and **missing reality boundary** are rendered explicitly and are **not** hidden as generic failures.
+### StoryManifest composite
+
+The manifest derives its state from the worst effective constituent state and reduces rights, sensitivity, policy, review, release, freshness, and correction independently to the least-permissive value. `limiting_node_refs` and `reason_codes` make the controlling constituents visible.
+
+### Validator versus runtime vocabulary
+
+- Projection validators emit local `PASS` or `DENY`.
+- Public/runtime surfaces emit `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
+- A validator `PASS` means the synthetic payload conforms to the bounded profile. It is not a runtime `ANSWER`, policy allow, release approval, or publication decision.
+
+[Back to top](#top)
 
 ---
+
+<a id="3d-handoff-boundary"></a>
 
 ## 3D handoff boundary
 
 > [!NOTE]
-> **Reframed in v0.2.** What v0.1 called a "handoff" between MapLibre and Cesium is no longer the architecture. KFM uses **one renderer** (MapLibre GL JS 5.x) with a **governed plugin ecosystem** hosted inside `packages/maplibre-runtime/`. A node's request to enter a 3D mode is a **layer-level admission decision** evaluated *before* `setTerrain`, `setProjection({type:'globe'})`, or any plugin-hosted custom layer is constructed. (Per `docs/architecture/maplibre-3d.md` §7 and I-3D-6.) The anchor `#3d-handoff-boundary` is preserved for backlink compatibility.
+> **Anchor retained for compatibility; “handoff” is not current implementation.** The prior v0.2 text treated `packages/maplibre-runtime/`, a plugin registry, and per-layer 3D admission as if they formed the selected upstream architecture. Current evidence does not support that claim.
 
-3D is **a burden-bearing mode, not default spectacle.** A node MAY request 3D only when the `StoryEvidenceGate` and the runtime's combined **3D Admission Decision × Plugin Admission Decision** prove continuity.
+### Current status
 
-```mermaid
-flowchart TD
-    A["Node requests layer mode<br/>(terrain · globe · extrusion ·<br/>tiles3d · gltf · pointcloud · deck.gl)"]
-    A --> B{"StoryEvidenceGate<br/>(evidence · release · drawer · policy)"}
-    B -- "fail: evidence/release/drawer" --> D["Fall back to 2D"]
-    B -- "fail: policy" --> E["DENY or ABSTAIN with reason"]
-    B -- pass --> C{"3D Admission Decision<br/>(I-3D-6)"}
-    C -- DENY --> E
-    C -- ABSTAIN --> D
-    C -- ALLOW --> P{"Plugin Admission<br/>(I-3D-7)"}
-    P -- DENY --> E
-    P -- ALLOW --> M["Runtime constructs<br/>plugin-hosted layer"]
-    M --> R["RepresentationReceipt<br/>emitted"]
-    R --> F["Drawer remains reachable"]
-    D --> F
-    F --> S["Reality Boundary Badge<br/>shown if interpretive/synthetic"]
-```
+- [`ADR-0007`](../../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) is a numbered **proposed** decision, not accepted authority.
+- [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) is the related proposed renderer-import seam.
+- The current physical package lane is `packages/maplibre/` and remains scaffold-level.
+- `packages/maplibre-runtime/` was absent in the inspected renderer evidence; do not create it as a peer by documentation implication.
+- No Story 3D admission schema, policy evaluator, plugin registry, runtime host, browser probe, or Story integration is established.
+- No Cesium package was found at the checked path in the ADR evidence, but bounded absence is not a complete repository dependency proof.
 
-**Gate criteria — all MUST hold:**
+### Future 3D rule — PROPOSED
 
-1. **Evidence continuity** — every claim made in the requested mode resolves to the same `EvidenceBundle` it would resolve to in 2D. *(Upheld by construction under one renderer; the gate is the auditor.)*
-2. **Release continuity** — every layer used is in `release_state: published`.
-3. **Drawer continuity** — the Evidence Drawer remains reachable from any rendered state.
-4. **Policy continuity** — rights, sensitivity, CARE/geoprivacy, and source-role checks pass identically in the requested mode. *(Per I-3D-5: CARE-masked archaeology requires ≥5 km generalization on terrain-linked layers.)*
-5. **3D Admission Decision = ALLOW** — the layer's `geometry_label` matches the requested mode (no 2.5D layer claiming true-3D evidence; per I-3D-4) and per-layer policy authorizes the mode.
-6. **Plugin Admission = ALLOW** — every `plugin_dependencies` entry on the layer is pinned, supply-chain-attested, and present in the runtime's registry. *(Per I-3D-7.)*
-7. **Reality Boundary continuity** — if any active layer is interpretive or synthetic (e.g., a photogrammetric reconstruction or a `Synthetic Surface`), a `RealityBoundaryNote` reference is present and the badge surfaces in the drawer. *(KFM-P9-FEAT-0014.)*
+Any future Story 3D capability must:
 
-> [!WARNING]
-> 2.5D ≠ 3D. **`fill-extrusion` and draped DEMs cannot stand in as evidence for true vertical geometry** (caves, overhangs, strata, building interiors). The renderer choice does not loosen this rule. (Per I-3D-4.)
+1. remain downstream of released evidence and policy;
+2. preserve a 2D evidence baseline and a non-3D accessible alternative;
+3. make 2.5D, captured 3D, modeled 3D, and synthetic reconstruction visibly distinct;
+4. perform sensitivity/generalization before rendering, not through style hiding;
+5. use one reviewed physical renderer-adapter home;
+6. admit every plugin/dependency through pinned supply-chain, license, capability, test, and rollback evidence;
+7. emit a public-safe finite outcome when capability or evidence continuity fails;
+8. remain feature-flagged and reversible.
 
-> [!IMPORTANT]
-> **ADR required** before any 3D admission rule is shipped: [`docs/adr/ADR-story-node-3d-admission.md`](../../adr/ADR-story-node-3d-admission.md) (PROPOSED — replaces v0.1's `ADR-story-node-3d-boundary.md`). And: shipping any 3D plugin is gated by the renderer-decision ADR [`ADR-NNNN-maplibre-sole-renderer-retire-cesium.md`](../../adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md) (PROPOSED upstream).
+**HOLD:** no 3D mode should be enabled for Story until the renderer-family decision, adapter home, plugin admission, evidence parity, accessibility, negative tests, and rollback are reviewed and implemented.
+
+[Back to top](#top)
 
 ---
+
+<a id="reality-boundary-notes-in-stories"></a>
 
 ## Reality Boundary Notes in stories
 
-Story nodes that activate interpretive or synthetic 3D content (photogrammetric building models, archaeological reconstructions, modeled surfaces) MUST cite a `RealityBoundaryNote` and surface it in the drawer + on a reality-boundary badge.
+A `RealityBoundaryNote` is useful design vocabulary for telling users whether a scene is observed, captured, derived, modeled, reconstructed, or synthetic. It is **not a current Story schema or runtime object in the inspected implementation**.
 
-| Scenario | Render path | Reality Boundary Note required? |
-|---|---|---|
-| Hillshade context layer | `hillshade` native | No (context, not evidence). |
-| `fill-extrusion` of historic structures with **evidence-bearing** height attributes | `fill-extrusion` native, `geometry_label: '2.5D'` | No, **unless** the heights are modeled rather than recorded. |
-| Photogrammetric building glTF reconstruction | three.js custom layer via `maplibre-three-plugin`, `geometry_label: '3D'` | **Yes** (per KFM-P9-FEAT-0014: "distinguish reality-based capture from interpretive reconstruction before publication or Story Node use"). |
-| Archaeological 3D reconstruction (interpretive) | 3D Tiles via `3d-tiles-renderer` + three.js, `geometry_label: '3D'`, **CARE-masked ≥5 km** | **Yes** — both Reality Boundary Note and CARE generalization. |
-| Synthetic Surface (modeled / interpolated raster) | `raster-dem` with `provenance.role = 'model'` | **Yes** (`Synthetic Surface` always carries one). |
-| LiDAR point-cloud streaming | `maplibre-gl-lidar` (deck.gl) | **Yes** if the cloud is derivative; classifications must be evidence-bearing. |
+A future Story scene that uses modeled or reconstructed content should expose, at minimum:
+
+| Concern | Required public-safe disclosure |
+|---|---|
+| Representation class | observed/captured · derived · modeled · reconstructed · synthetic |
+| Source role | what the source can and cannot support |
+| Spatial/temporal scope | where and when the representation applies |
+| Method and limitations | transform, interpolation, reconstruction, or uncertainty |
+| Evidence links | released EvidenceBundle and citation-validation refs |
+| Policy transforms | redaction, generalization, delay, or staged-access reason |
+| Release/correction state | release ID, correction/supersession, rollback target |
+| Accessible alternative | non-3D description or 2D equivalent |
+
+Until a reviewed contract and runtime exist, this document uses “reality boundary” as **PROPOSED presentation guidance**, not as proof that a specific schema, badge, or route exists.
+
+[Back to top](#top)
 
 ---
+
+<a id="definition-of-done--first-slice"></a>
 
 ## Definition of Done — first slice
 
-The first slice is **2D-only, fixture-driven, feature-flagged off**. The 3D admission path is **schema- and policy-ready** so it can be enabled in a subsequent slice without contract changes. Items are PROPOSED.
+The schemas and fixture validators are no longer the first missing slice. The next smallest dependency-closed implementation is a **finite-state, projection-only Story viewer**, not full cinematic playback.
 
-- [ ] `StoryManifest` and `StoryNode` schemas published under `schemas/contracts/v1/story/` and crosswalked in `contracts/OBJECT_MAP.md`.
-- [ ] Story-side references to the consumed MapLibre/3D schemas (`ViewState`, `CameraPath`, `RepresentationReceipt`, `RealityBoundaryNote`, `3DAdmissionDecision`, `PluginAdmission`) added to `contracts/OBJECT_MAP.md` as `consumes:` edges.
-- [ ] At least one positive and one negative fixture under `tests/fixtures/story/`.
-- [ ] `tools/validators/story/validate_story_manifest.py` runs on fixtures and PRs that touch story paths.
-- [ ] Governed `GET /api/v1/stories/{story_id}` route returns a `RuntimeResponseEnvelope` validated against schema; route gated behind a feature flag.
-- [ ] `StoryNodePlayer` consumes `packages/maplibre-runtime/` only; renders all four finite outcomes; respects reduced-motion.
-- [ ] Evidence Drawer reachable from every node; Reality Boundary Badge wired (even if no node activates it in the first slice).
-- [ ] Component test, accessibility smoke (keyboard, focus, screen-reader, reduced-motion), and an e2e smoke covering one happy path and one `ABSTAIN`/`DENY` path.
-- [ ] Rollback path documented and disable-flag exercised in CI.
-- [ ] No 3D plugin runtime, no model provider, no direct internal store access introduced by the slice.
-- [ ] [`docs/adr/ADR-story-node-3d-admission.md`](../../adr/ADR-story-node-3d-admission.md) accepted before any 3D mode is enabled.
-- [ ] [`docs/adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md`](../../adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md) accepted before any 3D mode is enabled (upstream gate).
+**PROPOSED acceptance boundary**
+
+- [ ] Reuse the current `contracts/ui/` StoryNode and StoryManifest profiles without widening them.
+- [ ] Define one governed resolver contract that returns those projections through the current Python Governed API conventions.
+- [ ] Add positive `READY/ANSWER` and negative `ABSTAIN`, `DENY`, `ERROR`, and `SUPERSEDED` API fixtures.
+- [ ] Implement a feature-flagged Explorer Story surface that renders projection text, caveats, trust state, limiting nodes, reasons, and correction/supersession links.
+- [ ] Resolve support refs through governed adapters; never from browser-readable internal stores.
+- [ ] Add keyboard, focus, screen-reader, reduced-motion/no-motion, and no-support-leakage tests.
+- [ ] Add API/UI contract compatibility and correction/rollback tests.
+- [ ] Keep map camera, timeline orchestration, transitions, 3D, plugins, model calls, live sources, release assembly, and publication out of scope.
+- [ ] Document the disable path and prove it in the focused test lane.
+- [ ] Keep any generated fixture visibly synthetic and non-authoritative.
+
+Only after this slice is reviewed should a separate proposal introduce map/time orchestration or motion.
+
+[Back to top](#top)
 
 ---
+
+<a id="rollback-path"></a>
 
 ## Rollback path
 
-| Layer | Rollback action | Default fail-safe |
-|---|---|---|
-| Schemas | Keep prior version; add `v2` for breaking changes; never silently break fixtures. | Validation failure → `ERROR`/`HOLD`. |
-| API route | Disable `GET /api/v1/stories/{story_id}` via feature flag; envelopes remain compatible. | Route unavailable → `ERROR`. |
-| UI player | Disable story shell route; keep manifests in catalog as `DEFERRED` if not public. | Player off → other UI surfaces unaffected. |
-| 3D layer modes | Disable per-layer 3D admission via `policy/maplibre/3d-admission.rego`; nodes fall back to 2D unconditionally. | Continuity gate failure → 2D fallback or `ABSTAIN`. |
-| Plugin set | Pin a known-good plugin version manifest; revert lockfile; admission gate fails closed on drift. | Drifted/unpinned plugin → DENY (I-3D-7). |
-| Fixtures | Delete/revert added fixtures; no published effect. | Missing fixture → CI fails closed. |
-| Policy | Revert policy bundle version; gates default to `DENY`/`ERROR`. | No allow-by-default. |
-| Published manifest | Immutable; rollback by new pointer/release, not overwrite. Issue `CorrectionNotice` + `StorySnapshot` correction. | Current alias disabled if unsafe. |
+### This documentation revision
+
+Revert the single commit that changes this file, restoring prior blob `a7669fc421d2027aa977743bf215ba7fbd7b0bd0`. No contract, schema, fixture, validator, workflow, app, policy, data, release, deployment, or published state changes.
+
+### Future Story implementation
+
+| Layer | Fail-safe rollback |
+|---|---|
+| Contract/schema | Restore the prior versioned profile and fixtures; breaking shape requires a reviewed successor |
+| Governed API | Disable the Story resolver/route; return a finite unavailable/error envelope |
+| Explorer UI | Disable the Story feature flag; leave the map and other shell surfaces unaffected |
+| Evidence/policy resolution | Fail closed to `ABSTAIN`, `DENY`, or `ERROR`; never fall back to raw content |
+| Correction/supersession | Preserve prior IDs and public correction links; do not overwrite released history |
+| Renderer/3D | Keep off by default; remove or disable the capability without changing Story projection truth |
+| Published Story | Issue a new correction/withdrawal/replacement record and move the public pointer; never mutate the prior release in place |
+
+[Back to top](#top)
 
 ---
+
+<a id="update-propagation-matrix"></a>
 
 ## Update-propagation matrix
 
-When a material change touches the Story subsystem, propagate updates to **all** of:
+| Change | Direct companions that must be reviewed together |
+|---|---|
+| UI StoryNode meaning or finite posture | Contract · schema · fixtures · validator · tests · workflow · generated authoring receipt · architecture docs |
+| UI StoryManifest composite reduction | Contract · schema · fixtures · validator · tests · workflow · generated authoring receipt · Pass 20 source map · architecture docs |
+| Governed Story resolver/API | Semantic contract · runtime envelope compatibility · route implementation · fixtures · API tests · docs · rollback |
+| Story Player behavior | App-local README · UI implementation · adapter boundary · accessibility tests · telemetry tests · end-to-end negative states |
+| Story policy | Policy README/rules · policy fixtures/tests · runtime integration · public-safe reason-code review |
+| Correction/supersession | Story contracts/schemas · correction/release contracts · fixtures/tests · UI presentation · cache/pointer behavior |
+| Renderer or 3D capability | Accepted ADR(s) · one package home · dependency admission · policy · browser probes · accessibility · rollback · Story docs |
+| Story release placement | Release contract and lane decision · manifest/proof/receipt separation · correction/rollback · published payload routing |
+| Path move or rename | Directory Rules decision · consumer/link inventory · migration note · compatibility window · rollback |
 
-| Material change | Owning README | Object map | Fixtures / tests | Runbook | Continuity notes | Rollback notes |
-|---|---|---|---|---|---|---|
-| `StoryManifest` schema | `docs/architecture/story/README.md` *(this file)* | `contracts/OBJECT_MAP.md` | `tests/fixtures/story/` | `docs/runbooks/ui_VALIDATION.md` | `docs/architecture/story/CONTINUITY_NOTES.md` *(PROPOSED)* | Disable story route; freeze 3D admission |
-| Story API route | this file + `docs/architecture/ui/BOUNDARIES.md` *(PROPOSED)* | `contracts/OBJECT_MAP.md` | `tests/api/story/` *(PROPOSED)* | `docs/runbooks/ui_VALIDATION.md` *(PROPOSED)* | this file | Route flag off |
-| 3D admission rules (per-layer) | this file + `docs/architecture/maplibre-3d.md` + ADR | n/a | `tests/policy/maplibre/3d_admission.test.ts` *(PROPOSED)* | `docs/runbooks/ui_LOCAL_DEV.md` *(PROPOSED)* | this file + `maplibre-3d.md` | Disable 3D mode per layer |
-| Plugin admission / pinned plugin set | `docs/architecture/maplibre-3d.md` (primary) + this file | n/a | `tests/policy/maplibre/plugin_admission.test.ts` *(PROPOSED)* | `docs/runbooks/supply_chain.md` *(PROPOSED)* | `maplibre-3d.md` | Revert lockfile; fail closed on drift |
-| Reality Boundary Note coupling | this file + `docs/architecture/maplibre-3d.md` | `contracts/OBJECT_MAP.md` | `tests/fixtures/story/story_manifest.reality_boundary_required.json` *(PROPOSED)* | `docs/runbooks/ui_VALIDATION.md` | this file | Surface as `ABSTAIN` if note missing |
-
-> Source: *Whole-UI + Governed AI Expansion Report*, §24 (update-propagation matrix); v0.2 adds the 3D-admission, plugin-admission, and reality-boundary rows.
+[Back to top](#top)
 
 ---
+
+<a id="related-folders"></a>
 
 ## Related folders
 
-| Direction | Path | Authority |
-|---|---|---|
-| Up | [`docs/architecture/README.md`](../README.md) | Subsystem index (PROPOSED) |
-| Sibling | [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) | **Renderer doctrine and 3D primitives — the upstream this file consumes** |
-| Sibling | [`docs/architecture/ui/`](../ui/) | UI shell, state, routing, layering, telemetry (PROPOSED) |
-| Sibling | [`docs/architecture/governed-ai/`](../governed-ai/) | Focus Mode, model adapter, citation validation (PROPOSED) |
-| Sibling | [`docs/architecture/review/`](../review/) | Read-only review/steward console (PROPOSED) |
-| Schemas | [`schemas/contracts/v1/story/`](../../../schemas/contracts/v1/story/) | Story-owned field-level shapes |
-| Schemas (consumed) | [`schemas/contracts/v1/maplibre/`](../../../schemas/contracts/v1/maplibre/), [`schemas/contracts/v1/3d/`](../../../schemas/contracts/v1/3d/), [`schemas/contracts/v1/policy/`](../../../schemas/contracts/v1/policy/) | MapLibre/3D/policy schemas Story consumes |
-| Contracts | [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) | Object meaning crosswalk |
-| Policy | [`policy/story/`](../../../policy/story/), [`policy/maplibre/`](../../../policy/maplibre/) | Admissibility gates (story + 3D + plugin admission) |
-| Runtime | `packages/maplibre-runtime/` (PROPOSED) | The only path through which Story touches MapLibre or any plugin |
-| Fixtures | [`tests/fixtures/story/`](../../../tests/fixtures/story/), `fixtures/maplibre/valid|invalid/` | Schema-valid mocks |
-| Validators | [`tools/validators/story/`](../../../tools/validators/story/) | Manifest + continuity checks |
-| Runbooks | [`docs/runbooks/ui_VALIDATION.md`](../../runbooks/ui_VALIDATION.md), [`ui_ROLLBACK.md`](../../runbooks/ui_ROLLBACK.md) | Operational discipline |
+| Surface | Relationship |
+|---|---|
+| [`docs/architecture/README.md`](../README.md) | Parent explanatory architecture boundary |
+| [`docs/architecture/story/CONTINUITY.md`](./CONTINUITY.md) | Earlier lineage/continuity record; contains stale no-repo and 3D-handoff assumptions that need a separate reconciliation |
+| [`docs/architecture/ui/STORY_PLAYER.md`](../ui/STORY_PLAYER.md) | UI playback doctrine; currently older than the executable projection profiles and still carries proposed Cesium-handoff language |
+| [`contracts/ui/story_manifest.md`](../../../contracts/ui/story_manifest.md) | Current bounded StoryManifest projection meaning |
+| [`contracts/ui/story_node.md`](../../../contracts/ui/story_node.md) | Current bounded StoryNode projection meaning |
+| [`contracts/story/README.md`](../../../contracts/story/README.md) | Broader proposed Story semantic lane; convergence unresolved |
+| [`policy/story/README.md`](../../../policy/story/README.md) | Story policy boundary documentation |
+| [`apps/explorer-web/src/features/story_player/README.md`](../../../apps/explorer-web/src/features/story_player/README.md) | App-local feature boundary |
+| [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) | Non-canonical compatibility/retirement boundary |
+| [`examples/story_decks/README.md`](../../../examples/story_decks/README.md) | Non-authoritative Story examples |
+| [`docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md`](../../intake/exploratory/pass-20-story-manifest-inheritance-source-map.md) | Source-to-repository mapping for the bounded StoryManifest slice |
+
+[Back to top](#top)
 
 ---
+
+<a id="adrs"></a>
 
 ## ADRs
 
-| ADR | Topic | Status |
+| ADR | Current status | Story relevance |
 |---|---|---|
-| [`ADR-story-node-3d-admission.md`](../../adr/ADR-story-node-3d-admission.md) | Per-layer 3D Admission Decision criteria for story nodes; supersedes v0.1's `ADR-story-node-3d-boundary.md` (which framed the question as a Cesium handoff) | PROPOSED |
-| [`ADR-NNNN-maplibre-sole-renderer-retire-cesium.md`](../../adr/ADR-NNNN-maplibre-sole-renderer-retire-cesium.md) | MapLibre as sole renderer; Cesium retired; supersedes the dual-renderer disposition of `KFM-P2-FEAT-0012` | **PROPOSED — upstream gating dependency** (draft in `maplibre-3d.md` Appendix B; ADR number to be assigned against the live ADR set, since the corpus carries open numbering conflicts on `ADR-0003`) |
-| [`ADR-plugin-admission.md`](../../adr/ADR-plugin-admission.md) | Plugin Admission policy DSL, attestation format, lockfile integration (I-3D-7) | PROPOSED |
-| [`ADR-ui-schema-home.md`](../../adr/ADR-ui-schema-home.md) | Schema home decision (`schemas/contracts/v1/...`) | PROPOSED |
-| [`ADR-maplibre-adapter-boundary.md`](../../adr/ADR-maplibre-adapter-boundary.md) | `packages/maplibre-runtime/` contract that Story rides on | PROPOSED |
+| [`ADR-0001`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Proposed | Schema-home direction; does not by itself choose `ui/` versus `story/` object-family placement |
+| [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposed | Renderer import/acquisition seam |
+| [`ADR-0007`](../../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | Proposed | Renderer-family selection and peer-renderer exception boundary |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **Accepted** | Governs placement, one authority owner, parallel-home avoidance, migration, and rollback |
 
-> The Story subsystem MUST NOT enable any 3D layer mode before **both** `ADR-story-node-3d-admission` and the renderer-decision ADR are accepted, and before the plugin admission ADR provides a workable rule set.
+No numbered accepted Story-specific ADR was verified. This README does not invent one, reserve a number, or treat a slug-only scaffold as accepted authority.
+
+[Back to top](#top)
 
 ---
 
+<a id="open-questions--needs-verification"></a>
+
 ## Open questions / NEEDS VERIFICATION
 
-These items SHOULD be tracked in [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) and resolved by inspection or ADR. Items marked **(carried)** were present in v0.1 and remain open; items marked **(new in v0.2)** are introduced by the renderer revision.
+1. **Contract convergence:** Is `contracts/story/` a future aggregate/domain semantic lane, a compatibility lane, or unnecessary beside the executable `contracts/ui/` projections?
+2. **Playback object:** Should a future playback manifest be a new object that references the public-safe StoryManifest projection, or a versioned successor to it?
+3. **StoryNode body resolution:** What governed object carries narrative body text, localized content, and editorial review without widening the public-safe projection?
+4. **API contract:** Which current Governed API route, authentication, versioning, cache, ETag, correction, and finite-envelope conventions should Story reuse?
+5. **Policy enforcement:** Should Story-specific rules live in `policy/story/`, compose existing UI/evidence/release policy, or both?
+6. **State ownership:** Which component owns current node, return state, map/time synchronization, cancellation, and feature-flag state?
+7. **Path naming:** Should app code remain under `story_player/`, move to `story/`, or use another current feature convention? A move requires consumer and rollback evidence.
+8. **Schema composition:** Do `StoryTransition` and `StoryEvidenceGate` need standalone contracts, or should runtime behavior compose existing envelope/evidence/policy objects?
+9. **Renderer package home:** Does Story consume `packages/maplibre/`, an app adapter, or a future renamed package? Do not activate both `packages/maplibre/` and `packages/maplibre-runtime/`.
+10. **3D admission:** What accepted decision, capability profile, plugin policy, browser proof, accessibility alternative, and reality-boundary contract are required before any 3D Story mode?
+11. **Release placement:** Which `release/` sublane owns Story release manifests, and where do released public-safe Story payloads live?
+12. **Hosted proof:** What is the latest exact-main result for both Story trust-inheritance workflows, and are either required checks?
+13. **Sibling reconciliation:** `CONTINUITY.md`, `docs/architecture/ui/STORY_PLAYER.md`, the app-local README, parent architecture README, and data compatibility README contain different maturity and path claims. Which follow-up sequence closes that drift without broad rewrite?
+14. **Owner assignments:** Which verified people or teams hold Story, UI, evidence, policy, accessibility, release, and correction stewardship?
+15. **First public value:** Which exact synthetic or released Story scenario is sufficiently low-risk to prove the first resolver/player slice?
 
-- **NEEDS VERIFICATION (carried)** — Whether the deployable shell is actually `apps/explorer-web/`, or another path. Adapt component paths and record an ADR.
-- **NEEDS VERIFICATION (carried)** — Backend framework and route convention (`apps/governed-api/`, `apps/governed_api/`, `packages/api/`, etc.).
-- **NEEDS VERIFICATION (carried)** — Whether `schemas/contracts/v1/story/` exists and whether `contracts/` already holds parallel schema content (drift-register candidate).
-- **NEEDS VERIFICATION (carried)** — Whether `StoryTransition` and `StoryEvidenceGate` warrant their own schema files or live as `$defs` inside `StoryNode`. Decide in ADR or schema-author note.
-- **OPEN (carried)** — Story manifest *file* home: source ledger flags `web/story_nodes/` vs `data/manifests/story/` as conflicted lineage. Resolve via ADR; canonical proposed home is `data/manifests/story/`. *(The renderer half of v0.1's conflicted-lineage warning is resolved upstream by the retire-Cesium ADR; the file-home half remains open here.)*
-- **OPEN (carried)** — Offline / pre-loaded-atlas / air-gapped story playback is mentioned but not designed. Defer until first slice is stable.
-- **OPEN (carried)** — Whether story route should also expose a list endpoint (`GET /api/v1/stories`) or only by-id retrieval; the source ledger names only the by-id form.
-- **RESOLVED upstream (was carried)** — ~~Cesium edition (CesiumJS open-source vs Cesium Ion) and token-rotation discipline.~~ **MOOT** under the retire-Cesium ADR. The Cesium token-rotation discipline is no longer a Story concern.
-- **NEW in v0.2** — Does `packages/maplibre-runtime/` exist, or is runtime adapter logic living in `apps/explorer-web/`? *(Mirrors `maplibre-3d.md` OQ-3D-03.)* **NEEDS VERIFICATION.**
-- **NEW in v0.2** — Is `policy/maplibre/` the canonical home for 3D admission rules, or do they live under `policy/sensitivity/`? *(Mirrors `maplibre-3d.md` OQ-3D-04.)* **NEEDS VERIFICATION.**
-- **NEW in v0.2** — How does `StoryEvidenceGate` cite a `3DAdmissionDecision` and a `PluginAdmission` — by reference (`audit_ref`) or by inline projection? **PROPOSED — decide in `ADR-story-node-3d-admission`.**
-- **NEW in v0.2** — Should `RealityBoundaryNote` references on a `StoryNode` be required for any `requested_layer_mode` in `{gltf, tiles3d}` when the underlying layer's source `role` is `model` or `interpretive`? **PROPOSED — yes, by default; specify in schema.**
-- **NEW in v0.2** — Should the story manifest's `requested_layer_modes` map be validated at ingest, at render time, or both? **PROPOSED — both; ingest checks `geometry_label` × mode compatibility, render time invokes the admission evaluator.**
-- **NEW in v0.2** — Should `StorySnapshot` carry an explicit `renderer_set` field (e.g., `{ renderer: 'maplibre-gl', version, plugin_set: [...] }`) to make a snapshot replayable against a known plugin lockfile? **PROPOSED — yes; coordinate field shape with `RepresentationReceipt`.**
+Until these are resolved, keep playback, policy, release, and 3D claims bounded and preserve the existing fixture-only proof.
+
+[Back to top](#top)
+
+---
+
+## Appendix A — No-loss reconciliation ledger
+
+| v0.2 material | v0.3 disposition |
+|---|---|
+| Cite-or-abstain and EvidenceBundle precedence | **Retained** as doctrine |
+| Finite outcomes and visible negative states | **Retained** and aligned with current StoryNode/StoryManifest profiles |
+| Story sequence, map, time, layer, panel, transition ideas | **Retained as PROPOSED future playback**, not current schema/runtime fact |
+| `schemas/contracts/v1/story/` as current Story schema home | **Corrected** to current executable `schemas/contracts/v1/ui/` profiles; future aggregate lane remains open |
+| Concrete TypeScript Story route and `/api/v1/stories/...` behavior | **Reclassified** as lineage; no Story route exists in inspected Python route inventory |
+| `packages/maplibre-runtime/` as the selected runtime home | **Reclassified** as unresolved; current `packages/maplibre/` scaffold and ADR evidence control |
+| Sole MapLibre/retire-Cesium posture | **Bounded** to proposed ADR-0007; not presented as accepted or implemented |
+| 3D Admission Decision and Plugin Admission as current objects | **Reclassified** as future requirements; no Story implementation established |
+| `data/manifests/story/` as StoryManifest home | **Corrected** to non-canonical compatibility/retirement boundary |
+| Story Player implementation claims | **Corrected** to substantive README plus one-export placeholder |
+| Story policy maturity | **Corrected** to non-enforcing stub |
+| Fixtures and validators as proposed | **Updated** to CONFIRMED bounded executable projection packets |
+| First slice centered on creating Story schemas | **Updated** to a finite-state projection viewer/resolver because schemas and validators now exist |
+| Stable anchors | **Preserved**, including `#3d-handoff-boundary` |
+
+---
+
+## Appendix B — Revision history
+
+| Version | Date | Summary |
+|---|---|---|
+| `v0.1` | 2026-05 | Initial Story architecture scaffold/expansion |
+| `v0.2` | 2026-05-24 | MapLibre-only/3D-admission rewrite based primarily on planning lineage |
+| `v0.3` | 2026-08-14 | Repository-grounded reconciliation of current projection proof, runtime/policy/API gaps, renderer proposal status, placement, validation, and rollback |
 
 ---
 
 <sub>
-This document is PROPOSED architecture documentation for the Story subsystem of Kansas Frontier Matrix. Doctrine is grounded in attached project sources (Whole-UI + Governed AI Expansion Report, Master MapLibre v2.1, <code>docs/architecture/maplibre-3d.md</code>, Atlas v1.1 §18, Directory Rules v1.2). Repository state was not mounted in this session; specific paths, routes, and component names remain PROPOSED / NEEDS VERIFICATION until inspected against a mounted repo and accepted by ADR where required.
+This file explains architecture. Current machine behavior is determined by the cited contracts, schemas, validators, tests, workflows, code, policy, release records, and runtime evidence at a pinned revision. Where those surfaces disagree with this prose, narrow the claim, record drift, and let the owning authority decide.
 </sub>
 
-[⬆ Back to top](#story-subsystem-architecture)
+[Back to top](#top)
