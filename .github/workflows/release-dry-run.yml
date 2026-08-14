@@ -76,6 +76,7 @@ jobs:
               Path("release/candidates/README.md"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json"),
+              Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -115,12 +116,14 @@ jobs:
           set -euo pipefail
           make release-dry-run
 
-      - name: Validate current generated authoring receipt binding
+      - name: Validate current generated authoring receipt bindings
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json
 
       - name: Record candidate assembly outcome
         if: always()
@@ -131,7 +134,7 @@ jobs:
             echo
             echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
             echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
-            echo "- The historical 2026-08-09 authoring receipt remains immutable; the workflow validates a current successor binding for the unchanged helper/test surface plus the current Makefile."
+            echo "- The historical 2026-08-09 authoring receipt remains immutable; the workflow validates a current successor binding for the unchanged helper/test surface plus the current Makefile, then validates the repair receipt that binds this workflow to that successor."
             echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
