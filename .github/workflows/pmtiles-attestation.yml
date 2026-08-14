@@ -67,6 +67,7 @@ name: PMTiles Attestation
       - "docs/standards/pmtiles/**"
       - "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md"
       - "data/receipts/generated/genrec-pass32-pmtiles-partial-read-20260809.json"
+      - "data/receipts/generated/genrec-pmtiles-attestation-hold-marker-20260814.json"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   push:
@@ -87,6 +88,7 @@ name: PMTiles Attestation
       - "docs/standards/pmtiles/**"
       - "docs/intake/exploratory/pass-32-pmtiles-partial-read-source-map.md"
       - "data/receipts/generated/genrec-pass32-pmtiles-partial-read-20260809.json"
+      - "data/receipts/generated/genrec-pmtiles-attestation-hold-marker-20260814.json"
       - "tools/attest/**"
       - "policy/rego/tiles_publish.rego"
   workflow_dispatch:
@@ -212,7 +214,7 @@ jobs:
           cose_text = cose_path.read_text(encoding="utf-8")
           for marker in (
               "--shape-only",
-              "cryptographic COSE verification not wired",
+              "PMSIG_CRYPTOGRAPHIC_VERIFICATION_UNWIRED",
               "development only; skips cryptographic verification",
           ):
               if marker not in cose_text:
