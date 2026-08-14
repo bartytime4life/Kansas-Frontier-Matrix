@@ -1,50 +1,95 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-docs-governance-readme
+doc_id: kfm://doc/governance/readme
 title: KFM Governance — Roles, Review Burden, and Separation of Duties
-type: standard
-version: v1
+type: readme
+version: v2-draft
 status: draft
-owners: Docs steward (lead); subsystem owners (review); TODO named individuals
-created: TODO-YYYY-MM-DD
-updated: 2026-05-15
+owners:
+  - "@bartytime4life"
+owner_status: "Verified CODEOWNERS review route only; no independent StewardshipAssignment, release authority, reviewer quorum, or approval is implied."
+created: 2026-05-06
+updated: 2026-08-14
 policy_label: public
-related: [docs/doctrine/directory-rules.md, docs/adr/, docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, control_plane/, release/]
-tags: [kfm, governance, roles, review-burden, separation-of-duties]
-notes: [Updated from attached README baseline; current repo implementation depth and tooling enforcement remain UNKNOWN until mounted-repo evidence is inspected.]
+owning_root: docs/
+responsibility: "Provide the repository-grounded human landing page for governance roles, review burden, separation of duties, escalation, contradiction handling, deprecation, and their boundaries with contracts, schemas, policy, validation, release, correction, and rollback."
+truth_posture: "CONFIRMED repository evidence / PROPOSED governance decisions and role model / UNKNOWN operational enforcement; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: dc30e1d38f9a4ecf45fd589d388886fc872dd189
+  target_prior_blob: 862f85c39f439ae1a8dba18e2700d806d945daf9
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_0024_blob: 57d46867c97a1c8d76ccdfbc12fc012bee3bd2ea
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  active_ruleset_id: 15484585
+  active_ruleset_name: Protect
+  contracts_governance_readme_blob: 0447534a4478c2887f16f690ae67220a628de05a
+  review_authority_binding_contract_blob: f156e100660e9fd97ca95e90092143a3cd6d62ee
+  sensitive_release_review_contract_blob: 235ca86dd807c6842ca8c861f995371fe7758f64
+  review_authority_binding_workflow_blob: d0dd3ea0900bf5a664bbf3e092735f8889ed6e41
+  sensitive_release_review_workflow_blob: cc47e292f20a3a27c97430800f1a0a1c5a8c6a95
+related:
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/governance/STEWARD_CHARTERS.md
+  - docs/governance/REVIEW_DUTIES.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
+  - docs/governance/ESCALATION.md
+  - docs/governance/CONTRADICTION_HANDLING.md
+  - docs/governance/DEPRECATION_PROCESS.md
+  - docs/governance/DECISION_LOG.md
+  - contracts/governance/README.md
+  - contracts/governance/ReviewRecord.md
+  - contracts/governance/steward_assignment.md
+  - contracts/governance/review_authority_binding.md
+  - contracts/governance/sensitive_release_review_closure.md
+  - schemas/contracts/v1/governance/README.md
+  - policy/release/README.md
+  - release/README.md
+  - .github/CODEOWNERS
+  - .github/workflows/review-authority-binding.yml
+  - .github/workflows/sensitive-release-review-closure.yml
+tags: [kfm, governance, roles, stewardship, review, separation-of-duties, escalation, contradiction, deprecation, release, correction, rollback]
+notes:
+  - "v2-draft is a same-path, documentation-only reconciliation against current repository evidence."
+  - "ADR-0029 is accepted and controls responsibility-root placement. This update does not create, move, rename, or canonize another path."
+  - "ADR-0024 is the current numbered decision record for steward separation of duties and remains proposed."
+  - "The repository contains substantive deterministic fixture-only governance profiles, but they grant no authority and do not establish operational release separation."
+  - "CODEOWNERS routing and pull-request mediation are repository controls, not independent approval or publication authority."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # 🧭 KFM Governance — Roles, Review Burden, and Separation of Duties
 
-> Human-facing home for the **people side** of KFM governance: who owns what, when an
-> author may also approve their own work, and where separation of duties is required
-> before a claim becomes public.
+> **Repository-grounded governance landing page.** This folder explains the human responsibilities around stewardship, review, escalation, contradiction handling, deprecation, release-significant decisions, correction, and rollback. It does not create evidence, policy, approval, release authority, or publication state.
 
-<p>
-  <img alt="status" src="https://img.shields.io/badge/status-PROPOSED-yellow">
-  <img alt="authority" src="https://img.shields.io/badge/authority-governance--bearing-blue">
-  <img alt="truth posture" src="https://img.shields.io/badge/truth%20posture-CONFIRMED%20doctrine%20%2F%20UNKNOWN%20enforcement-6E40C9">
-  <img alt="open ADRs" src="https://img.shields.io/badge/open%20ADRs-ADR--S--09-orange">
-  <img alt="last reviewed" src="https://img.shields.io/badge/last%20reviewed-2026--05--12-lightgrey">
-  <img alt="last updated" src="https://img.shields.io/badge/last%20updated-2026--05--15-lightgrey">
-</p>
-
-| Field | Value |
-|---|---|
-| **Target path** | `docs/governance/README.md` |
-| **Document type** | README-like governance doc |
-| **Authority level** | Governance-bearing placement under `docs/`; current repo presence `NEEDS VERIFICATION` |
-| **Truth posture** | `CONFIRMED` doctrine / `PROPOSED` role-scope expansion / `UNKNOWN` tooling enforcement |
-| **Status** | `PROPOSED` — doctrine CONFIRMED; folder contents, owners, CODEOWNERS path, and workflow gates `NEEDS VERIFICATION` |
-| **Owners** | Docs steward (lead) · subsystem owners (review) · `TODO` named individuals |
-| **Last reviewed** | 2026-05-12 |
-| **Last updated** | 2026-05-15 |
+[![Document: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#2-authority-level-and-status)
+[![Directory authority: ADR-0029 accepted](https://img.shields.io/badge/directory%20authority-ADR--0029%20accepted-1f883d?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Release SoD decision: proposed](https://img.shields.io/badge/release%20SoD%20decision-proposed-d4a72c?style=flat-square)](../adr/ADR-0024-steward-separation-of-duties-for-release.md)
+[![Operational enforcement: HOLD](https://img.shields.io/badge/operational%20enforcement-HOLD-b42318?style=flat-square)](#10-maturity-progression)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#3-scope-and-repo-fit)
 
 > [!IMPORTANT]
-> This README defines the **expected human governance posture** for roles, review burden,
-> and separation of duties. It is not proof that CODEOWNERS, branch protections,
-> release-manifest checks, or policy-bundle gates currently enforce that posture. Treat
-> enforcement as `UNKNOWN` until current repo files, workflows, branch rules, and emitted
-> release evidence are inspected.
+> **Current evidence is bounded.** At `main@dc30e1d38f9a4ecf45fd589d388886fc872dd189`, the repository contains this eight-file governance-document lane, semantic and machine governance object families, two focused deterministic no-network review profiles, CODEOWNERS routing, and an active default-branch ruleset. It does **not** establish authenticated actor identity, accepted stewardship assignments, independent reviewer capacity, executable release-policy authority, governed release records, or operational separation of duties.
+
+> [!WARNING]
+> **A document, schema-valid fixture, workflow pass, pull request, merge, CODEOWNERS match, or GitHub ruleset is not release approval.** KFM publication remains a separate governed transition requiring evidence, policy, review, release, correction, and rollback support appropriate to consequence.
+
+| Field | Current bounded value |
+|---|---|
+| **Document status** | `draft` landing page |
+| **Tracked path** | `docs/governance/README.md` — repository-present, same-path update |
+| **Placement authority** | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`directory-rules.md`](../doctrine/directory-rules.md) place human explanation under `docs/` |
+| **Release SoD decision** | [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) is `draft` / effectively `proposed` |
+| **Repository review route** | `@bartytime4life` through [CODEOWNERS](../../.github/CODEOWNERS); routing is not independent approval |
+| **Current executable support** | Fixture-only `ReviewAuthorityBinding` and `SensitiveReleaseReviewClosure` contracts, schemas, fixtures, validators, tests, and workflows |
+| **Platform control** | Active `Protect` ruleset requires pull-request mediation and resolved review threads; it requires zero approving reviews and no code-owner review |
+| **Operational release SoD** | `HOLD` — not established |
+| **Release / deployment / publication effect** | None |
 
 ---
 
@@ -55,566 +100,606 @@ notes: [Updated from attached README baseline; current repo implementation depth
 - [3. Scope and repo fit](#3-scope-and-repo-fit)
 - [4. Role topology](#4-role-topology-diagram)
 - [5. What belongs here](#5-what-belongs-here)
-- [6. What does NOT belong here](#6-what-does-not-belong-here)
-- [7. Directory layout (PROPOSED)](#7-directory-layout-proposed)
+- [6. What does not belong here](#6-what-does-not-belong-here)
+- [7. Current directory layout](#7-directory-layout-proposed)
 - [8. The eight roles](#8-the-eight-roles)
 - [9. Separation-of-duties matrix](#9-separation-of-duties-matrix)
-- [10. Maturity progression — when separation tightens](#10-maturity-progression--when-separation-tightens)
+- [10. Maturity progression](#10-maturity-progression--when-separation-tightens)
 - [11. Validation](#11-validation)
 - [12. Review burden and CODEOWNERS](#12-review-burden-and-codeowners)
 - [13. Anti-patterns](#13-anti-patterns)
 - [14. Related folders and docs](#14-related-folders-and-docs)
-- [15. Open ADRs that affect this folder](#15-open-adrs-that-affect-this-folder)
+- [15. Governing ADRs and open decision work](#15-open-adrs-that-affect-this-folder)
 - [16. FAQ](#16-faq)
-- [17. Last reviewed](#17-last-reviewed)
+- [17. Last reviewed and rollback](#17-last-reviewed)
+- [Appendix A. No-loss modernization ledger](#appendix-a--no-loss-modernization-ledger)
+- [Appendix B. Open verification backlog](#appendix-b--open-verification-backlog)
 
 ---
 
 ## 1. Purpose
 
-This folder is the **human-facing operating manual for KFM governance roles**. It names
-people-shaped responsibilities that the rest of the system relies on — admission,
-review, release, correction, rollback, and AI-surface stewardship — and describes when
-separation of duties is required before a claim or artifact is treated as public.
+This README is the entry point for the repository's human-facing governance lane. It helps maintainers answer four questions without turning prose into enforcement:
 
-> `CONFIRMED` doctrine (KFM operating-law invariant 9): *KFM separates policy-significant
-> release duties when maturity justifies it.* The rules in this folder operationalize
-> that invariant without claiming that enforcement is already wired.
+1. **Which governance responsibility is involved?**
+2. **Which human-facing document carries the detailed guidance?**
+3. **Which contract, schema, policy, validator, release, or platform surface owns the executable or state-bearing part?**
+4. **What evidence is still missing before a stronger claim can be made?**
 
-Specifically, `docs/governance/` answers four recurring questions:
+The lane exists to keep the human side of the KFM trust membrane inspectable:
 
-1. **Who owns this kind of decision?** For example, admission of a new source, release
-   of a sensitive layer, approval of a `CorrectionNotice`, or review of an AI template.
-2. **When is the author allowed to also approve?**
-3. **When must a separate reviewer sign off — and which reviewer?**
-4. **When is review enforced by tooling vs. by custom?** See open ADR-S-09.
+```text
+source or change candidate
+  -> evidence and scope resolution
+  -> accountable role and review routing
+  -> policy / sensitivity / rights checks
+  -> validation and finite outcome
+  -> separate promotion / release decision
+  -> correction, withdrawal, or rollback when required
+```
 
-`docs/governance/` does **not** own doctrine itself, directory rules, machine-readable
-registers, schemas, policy code, or release objects. Those live in their own roots — see
-[§14](#14-related-folders-and-docs).
+### What this README can establish
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+- the repository-present documents and their declared purpose;
+- the current authority and status of the relevant ADRs;
+- the responsibility split between documentation, contracts, schemas, policy, tests, workflows, and release records;
+- the bounded repository controls and fixture profiles verified at the evidence snapshot;
+- the open work required before operational governance can be claimed.
+
+### What this README cannot establish
+
+- that a person or team has an accepted stewardship assignment;
+- that a reviewer is independent, authenticated, authorized, or conflict-free;
+- that policy evaluated a real release;
+- that a release record exists or a published artifact is admissible;
+- that a workflow result authorizes mutation, promotion, release, deployment, or publication;
+- that current public behavior matches a proposed role or matrix.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Authority level and status
 
-| Field | Value | Basis |
-|---|---|---|
-| **Authority class** | Governance-bearing README under `docs/` | Directory Rules place governance prose under the docs control plane; current mounted-repo presence remains `NEEDS VERIFICATION`. |
-| **Doctrine label** | `CONFIRMED` | KFM operating law requires separation of policy-significant release duties when maturity justifies it. |
-| **Roles list** | `PROPOSED` scope statements | The role catalog is a reference for ADR discussion until role homes and owner mappings are verified. |
-| **Separation-of-duties matrix** | `PROPOSED` reference matrix | The matrix states expected posture; it is not yet verified as tooling-enforced. |
-| **Enforcement maturity** | `UNKNOWN` | No mounted-repo evidence in this update proves CODEOWNERS, branch protections, release workflows, or policy gates enforce the matrix. |
-| **Commit readiness** | `NEEDS VERIFICATION` | Relative links, named owners, CODEOWNERS location, and ADR statuses should be checked in the real checkout before merge. |
+Authority depends on the question. One document does not control every layer.
 
-> [!IMPORTANT]
-> The **doctrine** in this folder is settled. The **enforcement** is not. Until ADR-S-09
-> records the tooling threshold and repo evidence confirms implementation, this folder
-> describes the *expected* posture, not a verified runtime guarantee. Do not cite this
-> README as proof that separation of duties is mechanically blocked at PR or release time.
+| Question | Controlling evidence | Current status |
+|---|---|---|
+| Where may this human document live? | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), adopted [`directory-rules.md`](../doctrine/directory-rules.md), and the repository-present path | **CONFIRMED** `docs/` responsibility; same-path update |
+| Is the release SoD model accepted? | [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) and the canonical ADR index | **PROPOSED**, not accepted |
+| What exists now? | Pinned repository files, configuration, ruleset, tests, workflows, and emitted artifacts | **CONFIRMED only where inspected** |
+| What do governance objects mean? | [`contracts/governance/`](../../contracts/governance/) | Mixed repository-present semantic contracts; most remain proposed |
+| What machine shape is valid? | [`schemas/contracts/v1/governance/`](../../schemas/contracts/v1/governance/) | Mixed maturity; path presence is not adoption |
+| What is allowed, denied, held, restricted, or abstained? | Accepted policy source and a digest-bound evaluator | Current release-policy lane is scaffolded; operational authority is not established |
+| Who may release? | Accepted assignments, actor identity, applicable policy, review records, and release authority | **UNKNOWN / HOLD** |
+| Is something released or published? | State-bearing records under [`release/`](../../release/) plus released carrier state | Not established by this folder or this update |
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Verified at the pinned evidence snapshot from repository bytes, configuration, tests, workflows, or accepted decisions. |
+| **PROPOSED** | A role model, decision, matrix, contract, or future state not accepted or operationally proven. |
+| **UNKNOWN** | Evidence is insufficient to state the current condition. |
+| **NEEDS VERIFICATION** | A specific check can resolve the claim but has not been completed strongly enough. |
+| **HOLD** | A stronger transition must not proceed because a required decision or control is unresolved. |
+
+> [!NOTE]
+> Accepted placement authority does not accept a sibling governance standard. A repository-present draft does not become normative merely because this README links to it.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Scope and repo fit
 
-**Repo fit (Directory Rules basis; current repo presence `NEEDS VERIFICATION`):**
+`docs/governance/` is a repository-present human-document lane beneath the canonical `docs/` responsibility root. This same-path update does not create a new root, move a file, decide a future documentation taxonomy, or treat the lane as a second doctrine, contract, schema, policy, register, or release authority.
+
+### Responsibility split
+
+| Responsibility | Owning surface | Relationship to this folder |
+|---|---|---|
+| Human roles, review burden, escalation, contradiction, deprecation | `docs/governance/` | Primary explanatory lane |
+| Stable operating and trust law | [`docs/doctrine/`](../doctrine/) | Outranks draft governance guidance |
+| Decisions of record | [`docs/adr/`](../adr/) | Accepts, rejects, or supersedes material decisions |
+| Human drift and verification tracking | [`docs/registers/`](../registers/) | Tracks unresolved current-state work |
+| Semantic object meaning | [`contracts/governance/`](../../contracts/governance/) | Defines what governance objects mean |
+| Machine-checkable object shape | [`schemas/contracts/v1/governance/`](../../schemas/contracts/v1/governance/) | Defines fields and constraints |
+| Admissibility and release-policy source | [`policy/`](../../policy/) and [`policy/release/`](../../policy/release/) | Decides bounded policy outcomes when accepted and invoked |
+| Reusable validators | [`tools/validators/governance/`](../../tools/validators/governance/) | Executes deterministic checks |
+| Synthetic and negative evidence | [`fixtures/`](../../fixtures/) and [`tests/`](../../tests/) | Proves bounded behavior |
+| Repository review routing and hosted checks | [`.github/`](../../.github/) | Routes and runs checks; does not create KFM authority |
+| Release, correction, withdrawal, rollback | [`release/`](../../release/) | Owns state-bearing decisions |
+| Receipts and proofs | [`data/receipts/`](../../data/receipts/) and [`data/proofs/`](../../data/proofs/) | Stores accountability and proof instances; neither substitutes for release |
+
+### Lifecycle boundary
+
+Governance review participates in the lifecycle but does not replace it:
 
 ```text
-docs/
-├── README.md
-├── doctrine/        ← operating law, lifecycle law, trust membrane, authority ladder
-├── architecture/    ← system context, deployment topology, governed API, map shell
-├── adr/             ← architectural decision records (including ADR-S-09 reviewer separation)
-├── domains/         ← per-domain dossiers
-├── sources/         ← source descriptor standards, source families
-├── standards/       ← external standards KFM conforms to (STAC, DCAT, PROV, …)
-├── runbooks/        ← ops procedures, rollback drills
-├── security/        ← threat model, exposure posture
-├── governance/      ← ← YOU ARE HERE: roles, review burden, separation of duties
-├── registers/       ← AUTHORITY_LADDER, DRIFT_REGISTER, VERIFICATION_BACKLOG, …
-├── intake/          ← IDEA_INTAKE, NEW_IDEAS_INDEX
-├── archive/         ← lineage/, exploratory/, deprecated/
-├── reports/         ← generated review/release reports (read-only)
-└── brand/           ← style guide, logo, voice (only if not in packages/ui/)
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-**Input / output contract:**
+A review may support a promotion decision. It cannot turn a file move, commit, workflow, badge, or merge into promotion.
 
-| Direction | Reads or writes | Notes |
-|---|---|---|
-| **Reads from** | `docs/doctrine/`, `docs/adr/`, `docs/registers/AUTHORITY_LADDER.md`, per-domain dossiers, sensitivity policy, release doctrine | This folder applies doctrine and accepted decisions; it does not create them. |
-| **Writes / defines** | Human-readable role definitions, review burden expectations, separation-of-duties posture, CODEOWNERS-policy rationale, escalation notes | These are prose governance controls until machine registers and enforcement gates are verified. |
-| **Downstream consumers** | PR reviewers, release authorities, sensitivity reviewers, rights-holder representatives, CODEOWNERS authors, drift triage, release-manifest validators | Consumers may cite this README for expected posture, but not as evidence of tooling enforcement. |
-| **Machine-readable counterparts** | `control_plane/` role and policy-gate registers; `release/` manifests; `policy/` gates | `PROPOSED` until actual paths and schemas are verified. |
-
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+[Back to top](#top)
 
 ---
 
 ## 4. Role topology (diagram)
 
-The diagram below names the eight roles and the lifecycle gates each role principally
-acts on. It is a **responsibility map**, not a workflow. Roles may collaborate on a
-single gate; the matrix in [§9](#9-separation-of-duties-matrix) names when more than one
-must.
+The role vocabulary below is the repository's current proposed design language. It is not a verified staffing roster.
 
 ```mermaid
 flowchart LR
-  %% Roles
-  SS["Source steward"]:::role
-  DS["Domain steward"]:::role
-  SR["Sensitivity reviewer"]:::role
-  RR["Rights-holder representative"]:::role
-  RA["Release authority"]:::role
-  CR["Correction reviewer"]:::role
-  AS["AI surface steward"]:::role
-  DOCS["Docs steward"]:::role
+    S["Source steward"] --> D["Domain steward"]
+    D --> V["Validation and evidence review"]
+    D --> SR["Sensitivity reviewer"]
+    SR --> RH["Rights-holder / sovereignty representative"]
+    V --> RA["Release authority"]
+    RH --> RA
+    RA --> CR["Correction reviewer"]
+    CR --> RB["Rollback / supersession path"]
 
-  %% Lifecycle gates
-  G1((Admission)):::gate
-  G2((Normalization)):::gate
-  G3((Validation)):::gate
-  G4((Catalog / Triplet)):::gate
-  G5((Release)):::gate
-  G6((Correction / Rollback)):::gate
-  FOCUS([Focus Mode / AIReceipt]):::ai
-  ATLAS([Atlas · ADR · Drift Register]):::doc
-
-  SS --> G1
-  RR --> G1
-  DS --> G2
-  DS --> G3
-  SR --> G2
-  SR --> G3
-  DS --> G4
-  RA --> G5
-  SR --> G5
-  RR --> G5
-  CR --> G6
-  RA --> G6
-  AS --> FOCUS
-  DOCS --> ATLAS
-  DOCS -. periodic audit .-> G3
-
-  classDef role fill:#EEF2FF,stroke:#4F46E5,color:#312E81;
-  classDef gate fill:#FEF3C7,stroke:#B45309,color:#78350F;
-  classDef ai   fill:#ECFEFF,stroke:#0891B2,color:#155E75;
-  classDef doc  fill:#F0FDF4,stroke:#15803D,color:#14532D;
+    AI["AI surface steward"] --> V
+    AI --> RA
+    DOC["Docs steward"] --> D
+    DOC --> RA
 ```
 
-> [!NOTE]
-> `PROPOSED`: the diagram reflects the current role topology in the attached README
-> baseline. It should be regenerated from the machine-readable role register in
-> `control_plane/` once that register lands and ADR-S-09 is accepted.
+### Reading the diagram
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+- Arrows show common handoffs, not automatic approvals.
+- A person may be associated with more than one role in a bootstrap repository, but role labels do not prove independence.
+- Release-significant independence must be demonstrated through resolved actor identity, current scoped authority, exact subject binding, and state-bearing review evidence.
+- `ReviewAuthorityBinding` checks declared structural agreement only.
+- `SensitiveReleaseReviewClosure` checks a synthetic T3/T4 closure profile only.
+- Neither profile authenticates a human or grants release authority.
+
+The detailed charter and matrix are maintained in [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md), [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md), and [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md). Their current source status remains draft/proposed.
+
+[Back to top](#top)
 
 ---
 
 ## 5. What belongs here
 
-Files in `docs/governance/` describe **who is accountable for which governance action**,
-in prose that humans can read in a PR. Accepted content:
+This folder may contain human-facing guidance whose primary responsibility is governance participation:
 
-- **Role definitions** — one file per role or one consolidated `roles.md`, expanding the
-  role catalog with KFM-specific scope notes.
-- **Separation-of-duties policy** — when the author may also approve, when not, and which
-  reviewer must sign.
-- **Review burden tables** — per-action lists of required reviewers, expected receipts,
-  and the failure-closed outcome when review is missing.
-- **CODEOWNERS policy notes** — *not* the `CODEOWNERS` file itself, but the rationale for
-  ownership assignments and the mapping from roles defined here to CODEOWNERS entries.
-- **Escalation paths** — what happens when a reviewer is unavailable, conflicted, or the
-  lane is sensitive enough to require a rights-holder representative.
-- **Maturity thresholds** — at what point separation must move from custom to tooling.
-- **Linkouts** to the doctrine, ADRs, registers, and policy gates that make these rules
-  normative.
+- role and steward charters;
+- review-duty and review-burden guidance;
+- separation-of-duties explanations;
+- escalation triggers and routing;
+- contradiction classification and disposition guidance;
+- deprecation and planned-retirement process;
+- a landing page that routes readers to the correct authority surface;
+- migration, supersession, and rollback notes for these documents;
+- explicit evidence boundaries and open verification work.
 
-> [!TIP]
-> If a file becomes primarily machine-readable, move it out of this prose folder and into
-> the appropriate governance root (`control_plane/`, `policy/`, `release/`, or
-> `schemas/`) through the Directory Rules and ADR process.
+Every document should state:
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+- its source status and effective authority;
+- who owns review routing, without inventing people or teams;
+- what it explains and what it cannot enforce;
+- which contracts, schemas, policy, fixtures, tests, workflows, release objects, and registers carry adjacent responsibility;
+- what evidence is required before implementation or operational claims advance.
+
+[Back to top](#top)
 
 ---
 
 ## 6. What does NOT belong here
 
-> [!WARNING]
-> Putting any of the following here is a placement violation and a drift candidate.
-
-| Content | Correct home | Why not here |
+| Content | Owning surface | Why |
 |---|---|---|
-| Operating-law statements, lifecycle law, trust-membrane definition | `docs/doctrine/` | This folder *applies* doctrine; it does not author it. |
-| Directory Rules authority decisions | `docs/doctrine/directory-rules.md` | Directory doctrine has its own canonical home. |
-| Architectural decision records, including ADR-S-09 | `docs/adr/` | ADRs have their own lifecycle and template. |
-| Machine-readable role / owner registers | `control_plane/` (for example, `policy_gate_register.yaml`) | Structured registers belong in the machine-readable governance layer, not prose. |
-| Threat model, exposure posture, incident response | `docs/security/` | Security is a peer governance root, not a child of this folder. |
-| Drift register entries, verification backlog | `docs/registers/` | Registers track state; this folder defines roles. |
-| The `CODEOWNERS` file itself | repo root or `.github/CODEOWNERS` (`NEEDS VERIFICATION`) | This folder may describe CODEOWNERS policy; it does not host the file. |
-| Per-PR review checklists for code | `.github/PULL_REQUEST_TEMPLATE/` (`NEEDS VERIFICATION`) | Workflow templates live with GitHub config. |
-| Per-domain role assignments | `docs/domains/<domain>/` under that domain's review section | Domain dossiers own their own steward names and lane-specific review posture. |
+| Accepted operating law | [`docs/doctrine/`](../doctrine/) | Stable doctrine has a separate authority lane |
+| ADR source and canonical status | [`docs/adr/`](../adr/) | Decisions require decision records and an index |
+| Live drift and verification registers | [`docs/registers/`](../registers/) | Registers are append-only current-state views |
+| Governance object semantics | [`contracts/governance/`](../../contracts/governance/) | Contracts define meaning |
+| JSON Schema | [`schemas/contracts/v1/governance/`](../../schemas/contracts/v1/governance/) | Schemas define machine shape |
+| Rego or other policy source | [`policy/`](../../policy/) | Policy decides admissibility |
+| Review, policy, or release instances | Governed data and [`release/`](../../release/) | State-bearing records are not documentation |
+| Validators and workflow implementation | [`tools/`](../../tools/), [`tests/`](../../tests/), [`.github/`](../../.github/) | Executable proof and orchestration live outside docs |
+| Real sensitive payloads, private identities, credentials, or restricted reasons | Denied or governed private systems | Public documentation must not expose them |
+| Publication claims based only on prose, tests, badges, or merges | Nowhere | Publication requires governed release state |
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+> [!CAUTION]
+> Do not duplicate a contract, schema, policy rule, reviewer registry, release manifest, receipt, proof, or decision record in this folder to make documentation appear complete.
+
+[Back to top](#top)
 
 ---
 
-## 7. Directory layout (PROPOSED)
+<a id="7-directory-layout-proposed"></a>
 
-> [!NOTE]
-> `PROPOSED` tree. Directory Rules support this folder as a governance-bearing docs
-> sub-root, but the *contents* below are inferred from the folder's stated purpose
-> (roles, review burden, separation of duties). They are `NEEDS VERIFICATION` until
-> mounted-repo evidence confirms which files actually exist.
+## 7. Current directory layout
+
+The direct-child inventory at the evidence snapshot is:
 
 ```text
 docs/governance/
-├── README.md                       ← this file
-├── roles.md                        ← PROPOSED: expanded definitions for the 8 roles
-├── separation-of-duties.md         ← PROPOSED: action-by-action matrix; machine parity source
-├── review-burden.md                ← PROPOSED: required reviewers + receipts per action
-├── codeowners-policy.md            ← PROPOSED: rationale for CODEOWNERS mapping
-├── escalation.md                   ← PROPOSED: unavailable / conflicted reviewer paths
-├── maturity-thresholds.md          ← PROPOSED: when separation tightens; pre-ADR-S-09 notes
-└── reviewer-rotation/              ← PROPOSED: optional cadence notes; not steward-of-record
+├── README.md
+├── CONTRADICTION_HANDLING.md
+├── DECISION_LOG.md
+├── DEPRECATION_PROCESS.md
+├── ESCALATION.md
+├── REVIEW_DUTIES.md
+├── SEPARATION_OF_DUTIES.md
+└── STEWARD_CHARTERS.md
 ```
 
-Any file added under `docs/governance/` MUST satisfy the per-root README contract in
-Directory Rules: purpose, authority level, status, what belongs here, what does not
-belong here, inputs, outputs, validation, review burden, related folders, ADRs, and last
-reviewed. A folder without a conforming README is a drift candidate.
+| Document | Repository-present purpose | Safe reading posture |
+|---|---|---|
+| [`README.md`](./README.md) | Landing page and responsibility map | This file; draft |
+| [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) | Proposed steward roster, charters, owned artifacts, and co-signers | Draft/proposed; no staffing proof |
+| [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md) | Reviewer roles, review flow, `ReviewRecord` guidance, and proposed SoD matrix | Draft/proposed; not access control |
+| [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) | Detailed authorship/approval separation standard and maturity posture | Draft/proposed; operational enforcement unverified |
+| [`ESCALATION.md`](./ESCALATION.md) | Escalation triggers, routing, receipts, and closure expectations | Draft guidance; enforcement outside docs |
+| [`CONTRADICTION_HANDLING.md`](./CONTRADICTION_HANDLING.md) | Contradiction classification, severity, routing, and anti-smoothing rules | Draft; its own placement/authority claims need reconciliation |
+| [`DEPRECATION_PROCESS.md`](./DEPRECATION_PROCESS.md) | Planned retirement, sunset, successor, and audit guidance | Draft; operational wiring needs verification |
+| [`DECISION_LOG.md`](./DECISION_LOG.md) | Decision-log design and historical path | Draft/lineage; its own text identifies `docs/registers/DECISION_LOG.md` as a proposed best-fit, so placement remains open |
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+> [!IMPORTANT]
+> Presence is confirmed. Freshness, acceptance, staffing, executable enforcement, and operational use must be evaluated per document. This README does not silently promote a sibling or resolve its path drift.
+
+[Back to top](#top)
 
 ---
 
 ## 8. The eight roles
 
-The role catalog below is `CONFIRMED` as the governing role set in this README baseline.
-The individual role *scope statements* are `PROPOSED` pending ADR-S-09, owner mapping,
-and per-role expansion in the files listed in [§7](#7-directory-layout-proposed).
+The following role vocabulary is carried by the current governance documents and ADR-0024. The role scopes remain **proposed** until accepted and bound to verified assignments.
 
-| # | Role | Owns | Principal scope |
-|:-:|---|---|---|
-| 1 | **Source steward** | Admission, rights confirmation, source terms, and sensitivity tagging for a named source family. | `SourceDescriptor` lifecycle; source edge → RAW admission posture. |
-| 2 | **Domain steward** | Meaning, contracts, schemas, fixtures, and validators of a domain's object families. | Domain semantics; validator authorship; review of domain-internal promotion candidates. |
-| 3 | **Sensitivity reviewer** | Redaction, generalization, withholding, delayed release, and tier decisions for sensitive content. | `RedactionReceipt`; public-safe transformations; sensitive-lane release posture. |
-| 4 | **Rights-holder representative** | Sovereignty, cultural-heritage, consent-based, living-person, and DNA-related release decisions. | Rights and consent checks for sensitive, sovereign, cultural, living-person, and restricted data. |
-| 5 | **Release authority** | `ReleaseManifest`, release decision, and rollback authorization. | PUBLISHED transitions; material release approval; rollback authorization; author separation when required. |
-| 6 | **Correction reviewer** | `CorrectionNotice` / `RollbackCard` review before a PUBLISHED claim is amended. | Post-publication corrections; rollback scope; derivative invalidation review. |
-| 7 | **AI surface steward** | Focus Mode templates, `AIReceipt` sampling, policy bindings, and cite-or-abstain audits. | AI behavior vs. doctrine; prompt/template changes; bounded-answer review. |
-| 8 | **Docs steward** | Governance documentation, ADR index, drift register, Atlas / supplement integrity. | The `docs/` tree; ADR index; `docs/registers/DRIFT_REGISTER.md`; documentation-control audits. |
+| Role | Proposed responsibility | Primary detailed document |
+|---|---|---|
+| **Source steward** | Source identity, role, terms, admission, freshness, and source-specific escalation | [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) |
+| **Domain steward** | Domain meaning, object use, domain evidence, and domain review | [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) |
+| **Sensitivity reviewer** | Sensitivity tier, precision, redaction, generalization, withholding, and escalation | [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md) |
+| **Rights-holder / sovereignty representative** | Rights, consent, sovereignty, cultural authority, and controlled release concerns | [`ESCALATION.md`](./ESCALATION.md) |
+| **Release authority** | Accountable release decision, subject scope, obligations, and release-state transition | [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) |
+| **Correction reviewer** | Correction, withdrawal, supersession, and rollback review | [`DEPRECATION_PROCESS.md`](./DEPRECATION_PROCESS.md) and release guidance |
+| **AI surface steward** | Evidence-bounded AI behavior, citation posture, finite outcomes, and safe map-action proposals | [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) |
+| **Docs steward** | Doctrine/navigation integrity, decision and drift visibility, metadata, links, and documentation review | [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) |
 
-> [!TIP]
-> A single person MAY hold multiple roles in early-stage operation. The matrix in
-> [§9](#9-separation-of-duties-matrix) controls when that is acceptable — not the role
-> definitions themselves.
+### Staffing boundary
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+- CODEOWNERS identifies one GitHub review route, not eight accepted assignments.
+- No private roster is asserted by this public README.
+- No role name may be converted into a GitHub team or account without verifying identity, access, assignment, and scope.
+- A single account holding every repository route is transparent bootstrap evidence, not independent release review.
+
+[Back to top](#top)
 
 ---
 
 ## 9. Separation-of-duties matrix
 
-`PROPOSED` reference matrix; enforcement maturity is `UNKNOWN` pending ADR-S-09 and
-current repo verification.
+The matrix below distinguishes the proposed governance posture from current proof.
 
-| Action | May author also approve? | Required separation | Missing-review outcome |
+| Action | Proposed separation posture | Current verified evidence | Safe conclusion |
 |---|---|---|---|
-| Source admission (source edge → RAW) | **Yes** for routine; **No** when source has unresolved rights, sovereignty, or sensitivity. | Source steward + rights-holder representative where applicable. | Hold at admission; do not enter RAW if rights or sensitivity are unresolved. |
-| Normalization receipts | **Yes** for routine; **No** when transforms are sensitivity-relevant. | Domain steward; sensitivity reviewer if sensitivity-relevant. | Keep in WORK or QUARANTINE; no processed artifact. |
-| Validator authorship and run | **Yes** for deterministic validators. | Domain steward; periodic audit by docs steward. | Validator can run, but audit backlog remains open. |
-| Promotion to PROCESSED / CATALOG | **Yes** for non-sensitive routine; **No** for sensitive lanes. | Domain steward + sensitivity reviewer for sensitive lanes. | No promotion; retain rollback target and validation report. |
-| Release to PUBLISHED | **No** when materiality applies. | Author ≠ release authority; rights-holder representative where applicable. | DENY release; no public surface update. |
-| Sensitive-lane release | **No**. | Author + sensitivity reviewer + release authority + rights-holder representative. | DENY release; keep exact or sensitive material withheld. |
-| Correction / rollback | **No** when correction is steward-significant. | Author / detector + correction reviewer + release authority. | Hold correction; do not republish until derivative invalidation is reviewed. |
-| AI surface change (template / policy binding) | **No**. | AI surface steward + docs steward for policy binding. | ABSTAIN or disable changed surface until review completes. |
-| Atlas / supplement publication | **No**. | Docs steward + at least one subsystem owner. | Hold publication; retain prior version as current. |
+| Editorial update to one draft governance doc | Risk-scaled review; no release authority implied | CODEOWNERS routes to one account; PR mediation required | Reviewable repository change only |
+| Contract or schema change affecting review identity or authority | Author and accountable reviewer should be distinguishable when material | Semantic/schema surfaces exist; accepted assignments are absent | `HOLD` for authority claim |
+| Policy change affecting release, rights, sensitivity, or public scope | Policy reviewer must not be inferred from author or workflow | Release-policy lane is scaffolded and inactive | No operational policy approval |
+| T3/T4 sensitive release candidate | Independent reviewer outside author role chain; separate policy/release gate | Fixture-only closure profile exercises declared structure | Structural candidate only; no release |
+| Promotion or public release | Independent, subject-bound review plus policy and release records | ADR-0024 remains proposed; no operational release flow verified | `HOLD` |
+| Correction, withdrawal, or rollback affecting public state | Separate accountable review and explicit target/lineage | Human guidance exists; no executed drill verified here | `NEEDS VERIFICATION` |
+| AI-surface change affecting evidence or policy projection | Domain/evidence/policy review separate from generated language | No direct public model authority is established by this folder | Cite-or-abstain; no AI self-approval |
+| Emergency containment | Immediate containment may precede full review, but must be bounded and retrospectively recorded | No current operational emergency exception was inspected | Follow accepted incident/release procedure; otherwise `HOLD` |
 
-> [!IMPORTANT]
-> "Materiality" and "sensitivity-relevant" are not self-defined here. They resolve via
-> the sensitivity tier scheme and the per-domain rules in `docs/domains/<domain>/`. When
-> in doubt, **escalate to a separate reviewer**. The fail-safe default is more separation,
-> not less.
+> [!NOTE]
+> `BOUND`, `CLOSED_FOR_SEPARATE_RELEASE_GATE`, or validator `PASS` are local profile outcomes. They are not `PromotionDecision`, `ReleaseManifest`, approval, signature, release, deployment, publication, or public-use permission.
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+[Back to top](#top)
 
 ---
 
+<a id="10-maturity-progression"></a>
+
 ## 10. Maturity progression — when separation tightens
 
-> [!NOTE]
-> `CONFIRMED` doctrine: separation of duties is maturity-dependent. Early-stage doctrine
-> work may be authored and approved by the same actor when materiality is low. As
-> maturity rises and the public trust surface expands, separation must move into tooling,
-> not custom.
+| Level | Required capability | Current evidence | Status |
+|---|---|---|---|
+| **L0 — Human doctrine and routing** | Role vocabulary, review guidance, escalation, contradiction, deprecation, and open decisions | Eight repository-present governance documents; ADR-0024 proposed | **PRESENT / PROPOSED** |
+| **L1 — Machine shape and deterministic fixtures** | Closed schemas, synthetic valid/invalid cases, validators, stable outcomes, deterministic identity | `ReviewAuthorityBinding` and `SensitiveReleaseReviewClosure` families exist | **PARTIAL / SUBSTANTIVE** |
+| **L2 — Governed identity and authority** | Actor authentication, alias resolution, scoped current assignments, recusal/conflict handling, accepted policy | Not established by inspected evidence | **HOLD** |
+| **L3 — Repository/platform enforcement** | Required independent approvals, code-owner or named reviewer rules, protected review evidence, exact-subject binding | PR mediation and thread resolution exist; zero approvals and no code-owner review required | **PARTIAL / INSUFFICIENT FOR SoD** |
+| **L4 — Release integration** | Policy evaluation, governed review record, promotion/release decision, correction/rollback drill, observed fail-closed behavior | Not verified | **UNKNOWN / HOLD** |
+| **L5 — Operational and public assurance** | Repeated production evidence, independent capacity, audit, incident response, correction propagation | Not inspected | **UNKNOWN** |
 
-The intended progression:
+### Bounded executable profiles
 
-1. **Pre-public stage.** Author = approver permitted for non-sensitive, low-materiality
-   doctrine and internal review work. The matrix is aspirational and cited in PR notes.
-2. **Early public surface.** Matrix becomes a PR-time custom: reviewers cite this README
-   when refusing self-approval on sensitive lanes. Tooling may route review but does not
-   yet prove separation.
-3. **Mature public surface.** Separation moves into tooling — CODEOWNERS, branch
-   protections, required-reviewer workflows, policy-bundle checks, and release-manifest
-   checks that fail closed when a required role is missing.
+#### `ReviewAuthorityBinding`
 
-The threshold between stages 2 and 3 is the subject of **open ADR-S-09** (*Reviewer
-role separation: when is separation enforced by tooling vs. custom*). Until ADR-S-09 is
-accepted and repo evidence confirms enforcement, this README does **not** claim that any
-tooling enforces the matrix.
+The current semantic contract, schema, fixtures, validator, tests, and workflow check declared agreement among a `ReviewRecord`, a `StewardshipAssignment`, and a reviewed subject. Outcomes are `BOUND`, `HOLD`, or `DENY`.
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+It explicitly does **not** authenticate actors, resolve policy, emit or execute writes, mutate lifecycle state, promote, release, deploy, publish, or authorize public use.
+
+#### `SensitiveReleaseReviewClosure`
+
+The current T3/T4 fixture profile consumes a review-authority binding and requires declared evidence, policy, correction, rollback, promotion-candidate, and release-manifest-candidate references. Outcomes are `CLOSED_FOR_SEPARATE_RELEASE_GATE`, `HOLD`, or `DENY`.
+
+It explicitly fixes repository, lifecycle, policy, promotion, release, deployment, publication, and public-use permissions to `false`.
+
+### Hosted-check boundary
+
+The dedicated workflows are narrow and path-filtered. They do not run merely because this README changes. Their latest inspected historical runs recorded focused test completion followed by generated-authoring-receipt integrity failure. Current receipt repair and exact-main profile health therefore remain **NEEDS VERIFICATION**; this documentation update does not repair or weaken those checks.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Validation
 
-> [!NOTE]
-> `PROPOSED` validation strategy. None of the validators below has been verified as
-> present, wired, or passing in mounted-repo evidence in this update.
+### Documentation validation for this README
 
-| Check | What it would validate | Status | Failure posture |
-|---|---|---|---|
-| README contract check | Every file under `docs/governance/` has a conforming README or is covered by this README. | `PROPOSED` | Flag drift; do not treat orphan prose as authority. |
-| Meta-block check | KFM Meta Block v2 exists and `updated` is current. | `PROPOSED` | Flag documentation-control drift. |
-| Role-name vocabulary lint | Role names used elsewhere in `docs/` match the eight names in [§8](#8-the-eight-roles). | `PROPOSED` | Flag term drift before merge. |
-| Separation-of-duties register parity | Machine-readable matrix in `control_plane/` matches the prose matrix here. | `PROPOSED` (depends on register existing) | Fail closed on release gates if mismatch is material. |
-| CODEOWNERS ↔ role mapping check | Every role named here resolves to at least one CODEOWNERS path / team. | `PROPOSED` | Review routing remains `UNKNOWN`; require manual reviewer assignment. |
-| Release-manifest required-reviewer check | A `ReleaseManifest` for a sensitive lane carries reviewer references in all required roles. | `PROPOSED` (release tooling not verified) | DENY release. |
-| ADR-S-09 acceptance check | ADR-S-09 has reached `status: accepted` and this README links to it. | `PROPOSED` (ADR-S-09 currently open) | Keep tooling-enforcement claims out of this README. |
-| Relative-link check | Links in [§14](#14-related-folders-and-docs) resolve from `docs/governance/README.md`. | `NEEDS VERIFICATION` | Leave link target as TODO / NEEDS VERIFICATION. |
+A valid update should demonstrate:
 
-**Pre-merge verification checklist:**
+- one H1 and one closed `KFM_META_BLOCK_V2`;
+- repository-history-backed creation and update dates;
+- preserved legacy section anchors;
+- links only to verified repository targets;
+- accurate ADR status and Directory Rules authority;
+- an exact direct-child inventory for `docs/governance/`;
+- explicit separation of documentation, contract, schema, policy, test, workflow, and release responsibility;
+- no invented owner, team, approval, policy pass, release, deployment, or publication claim;
+- no raw sensitive payload, private roster, credential, restricted coordinate, or protected reason text;
+- a final newline, balanced fences, and no trailing whitespace.
 
-- [ ] Confirm `docs/governance/README.md` exists in the mounted repo or create it through an ADR-backed placement path.
-- [ ] Confirm named owners or keep `TODO` placeholders visible.
-- [ ] Confirm the actual CODEOWNERS path (`CODEOWNERS` vs `.github/CODEOWNERS`).
-- [ ] Confirm ADR-S-09 and related ADR IDs exist in `docs/adr/` or keep them `PROPOSED`.
-- [ ] Confirm role names match any machine-readable role register in `control_plane/`.
-- [ ] Confirm no public release path relies on this README instead of a governed release gate.
-- [ ] Confirm relative links from this file resolve or are deliberately marked `NEEDS VERIFICATION`.
+### Governance-profile validation
 
-**Rollback path for this README:** revert the README change, restore the previous `Last updated`
-value, and open or update a `DRIFT_REGISTER` entry if the rollback is caused by path-home,
-owner, ADR, or enforcement conflicts. No release artifacts should need invalidation unless a
-public release cited this README as enforcement proof.
+The repository contains focused commands for the two bounded profiles:
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+```bash
+python -m unittest discover \
+  --start-directory tests/validators/governance \
+  --pattern 'test_review_authority_binding.py' \
+  --verbose
+python tools/validators/governance/validate_review_authority_binding.py --fixtures
+
+python -m pytest -q \
+  tests/validators/governance/test_sensitive_release_review_closure.py
+python tools/validators/governance/validate_sensitive_release_review_closure.py \
+  --fixtures
+```
+
+Those commands are reference points for their own families. This README-only change does not modify those contracts, schemas, fixtures, validators, tests, workflows, or receipts and does not claim their current execution result.
+
+### Hosted checks
+
+Repository-hosted documentation checks may run on a pull request. A green result is evidence about the bounded check only. A failing inherited check must be classified rather than hidden. No check result changes this document's draft status or creates release authority.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Review burden and CODEOWNERS
 
-Review burden = the **minimum set of human approvals** a change must collect before
-merging or releasing. This folder describes burden in two layers:
+### Current repository controls
 
-1. **Doc-level burden** (what this folder's own files need to merge): Docs steward
-   review by default; sensitivity reviewer co-sign if a change touches sensitive-lane
-   role scopes; release authority co-sign if a change weakens release-time separation.
-2. **System-level burden** (what changes elsewhere need, by role): captured in the
-   matrix in [§9](#9-separation-of-duties-matrix).
+| Control | Verified state | What it proves | What it does not prove |
+|---|---|---|---|
+| [CODEOWNERS](../../.github/CODEOWNERS) | `docs/governance/` and all relevant trust roots route to `@bartytime4life` | One current GitHub review route | StewardshipAssignment, independent review, release approval, or review occurrence |
+| Active `Protect` ruleset | Applies to the default branch; deletion and non-fast-forward denied | Main is mediated and history rewrites are constrained | KFM review sufficiency |
+| Pull-request rule | Pull request and resolved review threads required | Direct default-branch change path is constrained | Any approving review |
+| Approving review count | `0` | Exact platform configuration | Independent human approval |
+| Code-owner review | Not required | Exact platform configuration | Governance acceptance |
+| Named required reviewers | None | Exact platform configuration | Role coverage |
+| Last-push approval | Not required | Exact platform configuration | Post-change independent review |
+| Bypass actors | None | Current ruleset has no configured bypass actor | Operational SoD or release authority |
 
-> [!CAUTION]
-> `CODEOWNERS` is a GitHub mechanism; it expresses *who is auto-requested for review on
-> a path*. It does **not** by itself enforce separation of duties — an author with commit
-> access can still self-merge unless branch protections require approvals from someone
-> other than the author. Treat CODEOWNERS as a **routing tool**, not as a trust-membrane
-> control. Tooling-enforced separation requires branch protections, required-reviewer
-> rules, and release-manifest checks *in addition to* CODEOWNERS.
+### Review burden for this README
 
-`PROPOSED` CODEOWNERS-policy mapping (to be specified in `codeowners-policy.md`):
+This update is a one-file draft documentation reconciliation. Its repository review route is `@bartytime4life`. The pull request should disclose:
 
-| Path pattern | Required reviewer role(s) | Status |
-|---|---|---|
-| `docs/governance/**` | Docs steward | `PROPOSED` |
-| `docs/doctrine/**` | Docs steward + accepted-ADR reference | `PROPOSED` |
-| `docs/adr/**` | Docs steward + at least one subsystem owner | `PROPOSED` |
-| `release/manifests/**` | Release authority (+ rights-holder representative for sovereign lanes) | `PROPOSED` |
-| `policy/sensitivity/**` | Sensitivity reviewer + release authority | `PROPOSED` |
-| `apps/governed-api/**` | Subsystem owner + docs steward for any policy-binding change | `PROPOSED` / path `NEEDS VERIFICATION` |
-| `runtime/model_adapters/**`, `apps/governed-api/src/ai/**` | AI surface steward | `PROPOSED` / paths `NEEDS VERIFICATION` |
+- the exact base commit and prior blob;
+- the one-file scope;
+- current Directory Rules and ADR status;
+- material current-state corrections;
+- source-level validation;
+- rollback to the prior blob;
+- the fact that no independent governance approval, release, deployment, or publication is created.
 
-A CODEOWNERS-policy entry SHOULD record:
+A later change that accepts ADR-0024, changes role authority, weakens a fail-closed rule, changes release-policy meaning, or modifies platform enforcement is a separate governance or implementation transition with a larger review burden.
 
-- the path pattern;
-- the role being routed;
-- the reviewer team or named owner (`TODO` until verified);
-- the separation rule it supports;
-- the fallback when the reviewer is unavailable;
-- whether branch protection or release tooling enforces the separation.
-
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+[Back to top](#top)
 
 ---
 
 ## 13. Anti-patterns
 
-> [!WARNING]
-> The following are governance-process anti-patterns. They are KFM-explicit, not generic.
+- **Treating documentation as enforcement.** Human guidance does not authenticate actors, evaluate policy, or block a release.
+- **Treating CODEOWNERS as stewardship.** A review route is not an accepted role assignment or proof of independence.
+- **Treating a workflow as approval.** CI evidence is bounded to the checks it performs.
+- **Treating a schema-valid record as a true event.** Shape validity does not prove the actor, authority, evidence, or decision.
+- **Treating `BOUND` as release permission.** Structural agreement is only an input to later governed decisions.
+- **Treating the author as the release authority by default.** Bootstrap capacity must not be disguised as independent review.
+- **Inventing teams, queues, owners, or private rosters.** Unverified identities remain `UNKNOWN`.
+- **Duplicating contracts, schemas, policy, or release objects in docs.** Parallel authority makes audit and rollback ambiguous.
+- **Smoothing contradictions.** Preserve each side, evidence, severity, and disposition; do not silently pick a winner.
+- **Publishing because a pull request merged.** Merge is repository history, not KFM promotion or publication.
+- **Exposing protected reasons or precise sensitive data in review prose.** Use public-safe codes and governed references.
+- **Letting draft sibling docs accept one another.** A draft cannot self-promote or promote another draft.
 
-- **Documenting a change instead of validating it.** Docs are part of the working system
-  but never substitute for validators, fixtures, schemas, policies, or release gates.
-- **Approving one's own release on a sensitive lane.** Matrix [§9](#9-separation-of-duties-matrix)
-  requires release authority to be distinct from author when materiality applies.
-- **Treating an Atlas summary or matrix as evidence.** Atlas, supplements, and master
-  matrices are reference views; `EvidenceBundle` remains authoritative.
-- **Silent migrations between role homes.** Moving role definitions out of
-  `docs/governance/` without an ADR fragments authority and is a drift candidate.
-- **Promotion that "upgrades" a source role** (for example, modeled → observed). Source
-  role is fixed at admission; promotion does not transform source authority.
-- **Re-publishing a corrected claim without invalidating derivatives.** A
-  `CorrectionNotice` must list invalidated derivatives; use a `RollbackCard` when needed.
-- **Using CODEOWNERS as a trust-membrane control.** See [§12](#12-review-burden-and-codeowners).
-- **Letting AI review collapse author and approver.** AI can help surface evidence gaps;
-  it cannot act as the separate human reviewer required by this matrix.
-
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+[Back to top](#top)
 
 ---
 
 ## 14. Related folders and docs
 
-| Folder / file | Why it's related | Status |
+| Surface | Relationship | Current bounded posture |
 |---|---|---|
-| `../doctrine/` | Operating law, lifecycle law, trust membrane, authority ladder — this folder operationalizes them. | `NEEDS VERIFICATION` link target |
-| `../doctrine/directory-rules.md` | Authoritative placement and responsibility-root rules. | `NEEDS VERIFICATION` link target |
-| `../adr/` | ADRs that affect role separation, most importantly ADR-S-09. | `NEEDS VERIFICATION` link target |
-| `../registers/AUTHORITY_LADDER.md` | Authority ranking; reviewers cite this when sources disagree. | `TODO` link target |
-| `../registers/DRIFT_REGISTER.md` | Where drift between this folder and repo state should be recorded. | `TODO` link target |
-| `../registers/VERIFICATION_BACKLOG.md` | Open verification items including matrix-tooling parity. | `TODO` link target |
-| `../security/` | Threat model and exposure posture; peer governance root. | `NEEDS VERIFICATION` link target |
-| `../sources/SOURCE_DESCRIPTOR_STANDARD.md` | Source steward's authoring surface. | `TODO` link target |
-| `../../control_plane/` | Machine-readable governance maps (role / policy-gate / release-state registers). | `PROPOSED` path |
-| `../../release/` | Release decisions; release authority outputs and rollback targets. | `PROPOSED` path |
-| Repo-root `CODEOWNERS` *or* `.github/CODEOWNERS` | The actual ownership routing file. | `NEEDS VERIFICATION` which path the repo uses |
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Accepted placement law through ADR-0029 | **ACCEPTED authority** |
+| [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adopts exact Directory Rules v2 bytes | **ACCEPTED** |
+| [`docs/adr/ADR-0024-steward-separation-of-duties-for-release.md`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) | Current numbered release-SoD decision record | **PROPOSED** |
+| [`contracts/governance/`](../../contracts/governance/) | Governance semantic object family | Repository-present; mixed proposed maturity |
+| [`schemas/contracts/v1/governance/`](../../schemas/contracts/v1/governance/) | Governance machine-shape family | Repository-present; mixed maturity |
+| [`policy/release/`](../../policy/release/) | Release-admissibility policy source | Scaffolds; inactive / no accepted evaluator |
+| [`release/`](../../release/) | Promotion, release, correction, withdrawal, rollback, signature decisions | Separate state-bearing authority |
+| [`tools/validators/governance/`](../../tools/validators/governance/) | Deterministic governance validators | Repository-present implementation surface |
+| [`tests/validators/governance/`](../../tests/validators/governance/) | Focused executable tests | Repository-present bounded evidence |
+| [`fixtures/contracts/v1/governance/`](../../fixtures/contracts/v1/governance/) | Synthetic governance fixtures | Repository-present bounded evidence |
+| [`.github/workflows/review-authority-binding.yml`](../../.github/workflows/review-authority-binding.yml) | Hosted fixture-profile orchestration | No actor or release authority |
+| [`.github/workflows/sensitive-release-review-closure.yml`](../../.github/workflows/sensitive-release-review-closure.yml) | Hosted T3/T4 closure-profile orchestration | No sensitive release authority |
+| [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | Current human drift record | Existing register; quality/freshness evaluated separately |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Checkable unresolved work | Existing register; quality/freshness evaluated separately |
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+[Back to top](#top)
 
 ---
 
-## 15. Open ADRs that affect this folder
+<a id="15-open-adrs-that-affect-this-folder"></a>
 
-| ADR | Question | Why it matters here | Status |
-|---|---|---|---|
-| **ADR-S-09** | Reviewer role separation: when is separation enforced by tooling vs. custom? | Sets the threshold at which the matrix in [§9](#9-separation-of-duties-matrix) becomes a fail-closed tooling rule rather than a PR-time custom. | `PROPOSED` / open |
-| ADR-S-04 | Source-role enum — canonical vocabulary, evolution rule. | The source steward's authoring vocabulary; affects role scope in [§8](#8-the-eight-roles). | `PROPOSED` / `NEEDS VERIFICATION` |
-| ADR-S-05 | Sensitivity tier scheme (T0–T4) — adopt as canonical or revise. | Defines what "sensitivity-relevant" means in the matrix. | `PROPOSED` / `NEEDS VERIFICATION` |
-| ADR-S-13 | Drift register triage — how often, by whom, with what outcome. | Names the docs steward's recurring duty for drift handling. | `PROPOSED` / `NEEDS VERIFICATION` |
-| ADR-S-15 | Atlas / supplement lifecycle — cadence, deprecation, supersession. | Governs this folder's review cadence if Atlas / supplement material is used as reference. | `PROPOSED` / `NEEDS VERIFICATION` |
+## 15. Governing ADRs and open decision work
 
-> [!NOTE]
-> Identifiers `ADR-S-04 / 05 / 09 / 13 / 15` come from the attached README baseline's
-> ADR backlog framing. They remain **PROPOSED** ADR titles until accepted ADRs are filed
-> in `docs/adr/` and verified in the mounted repo.
+| Decision | Effective status | Relevance |
+|---|---|---|
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **accepted** | Placement and responsibility-root authority |
+| [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) | proposed | Actor/authority/subject binding, independent review, T3/T4 closure, release SoD maturity |
+| [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | proposed | Sensitive-lane default-deny posture |
+| [`ADR-0011`](../adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) | proposed | Keeps accountability object families distinct |
+| [`ADR-0018`](../adr/ADR-0018-promotion-gate-sequence.md) | proposed | Promotion-gate order and semantics |
+| [`ADR-0020`](../adr/ADR-0020-abstain-is-a-first-class-decision.md) | proposed | First-class abstention |
+| [`ADR-0025`](../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | proposed | Public-client trust membrane |
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+### Symbolic backlog correction
+
+Older governance documents refer to **ADR-S-09** as the review-separation threshold question. The current numbered repository record is ADR-0024, whose metadata explicitly says it addresses that atlas backlog relationship. The symbolic label remains lineage; it is not a separate accepted decision or verified current file.
+
+Only ADR-0029 is accepted in the inspected numbered ADR corpus. This README cannot promote any other decision.
+
+[Back to top](#top)
 
 ---
 
 ## 16. FAQ
 
 <details>
-<summary><strong>Q: Can one person hold more than one role?</strong></summary>
+<summary><strong>Does this README enforce governance?</strong></summary>
 
-Yes, especially in early-stage operation. The eight roles are **responsibilities**, not
-job titles. The control that matters is not how many roles a person holds in the
-abstract, but whether the [§9 matrix](#9-separation-of-duties-matrix) requires that a
-*different* person sign off for a *specific action*. A single person who is both domain
-steward and release authority MAY do routine non-sensitive work alone, but MAY NOT
-self-approve a sensitive-lane release.
+No. It routes readers and states boundaries. Contracts define meaning, schemas define shape, policy decides admissibility, validators test bounded behavior, and release records carry state.
 
 </details>
 
 <details>
-<summary><strong>Q: Where is the actual list of named owners?</strong></summary>
+<summary><strong>Are the eight roles staffed?</strong></summary>
 
-Named owners belong in the repo `CODEOWNERS` file and in per-domain
-`docs/domains/<domain>/` dossiers in their review sections. This README intentionally
-does **not** name people, so that it stays stable when staffing changes. `TODO`: link to
-CODEOWNERS once its location is verified.
+Not by evidence inspected for this update. CODEOWNERS identifies one verified GitHub account. Accepted role assignments, independent capacity, private roster governance, and operational availability remain unknown.
 
 </details>
 
 <details>
-<summary><strong>Q: Why isn't this folder just CODEOWNERS plus a comment?</strong></summary>
+<summary><strong>Does a green review-binding test mean a release is approved?</strong></summary>
 
-CODEOWNERS is a routing tool. It says *who gets auto-requested for review on a path*.
-It cannot express the four properties this folder must express:
-
-1. Which **role** a reviewer is acting as.
-2. When **multiple roles** must co-sign for one action.
-3. When the **author** is forbidden from also approving.
-4. When the **reviewer must be external** to the lane.
-
-CODEOWNERS plus branch protections plus release-manifest reviewer checks can together
-*enforce* the rules. This folder *defines* them.
+No. A green test can show that synthetic data matches a bounded contract and validator. It cannot authenticate a human, evaluate a live policy, issue a release decision, or publish.
 
 </details>
 
 <details>
-<summary><strong>Q: How do we propose a change to the matrix?</strong></summary>
+<summary><strong>Can one person hold more than one role?</strong></summary>
 
-Open a PR against `docs/governance/separation-of-duties.md` (once created) **and** an
-ADR in `docs/adr/`. A change to the matrix is by definition a separation-of-duties
-change and therefore requires docs-steward review plus a subsystem owner. The PR
-description SHOULD reference the affected matrix row, the proposed new row, the
-materiality argument, and rollback impact.
+The draft model permits bootstrap overlap, but material independence is an evidence question, not a label question. Release-significant separation requires resolved identity, assignment, subject binding, and applicable policy/review records. Current operational closure is held.
 
 </details>
 
 <details>
-<summary><strong>Q: What happens if a required reviewer is unavailable?</strong></summary>
+<summary><strong>Does CODEOWNERS satisfy separation of duties?</strong></summary>
 
-`PROPOSED` (to be expanded in `escalation.md`): the action holds at its current
-lifecycle gate and fails closed — no public surface change occurs. The release authority
-MAY name a temporary alternate for non-sensitive routine work, but MAY NOT name a
-temporary alternate for sensitive-lane release, rights-holder representation, or
-correction/rollback. Sensitive lanes wait.
+No. It routes review requests. The current file itself states that it is not a StewardshipAssignment, ReviewRecord, PolicyDecision, release approval, or proof that review occurred.
 
 </details>
 
 <details>
-<summary><strong>Q: Is the AI surface steward responsible for what the AI says?</strong></summary>
+<summary><strong>Does a pull request or merge publish KFM?</strong></summary>
 
-The AI surface steward is responsible for the **templates, policy bindings, and audit
-cadence** that bound what the AI can say — not for individual generated answers.
-Individual answers are governed by Focus Mode's cite-or-abstain rule, the
-`PolicyDecision` pre/post checks, and the `AIReceipt`. When AI behavior drifts from
-doctrine (for example, uncited language or synthetic-as-observed presentation), the AI
-surface steward opens the corrective ticket and co-signs the template or policy-binding
-change with the docs steward.
+No. A pull request and merge change repository history. Promotion, release, deployment, and publication are separate governed transitions.
 
 </details>
 
 <details>
-<summary><strong>Q: What if the mounted repo does not match this directory plan?</strong></summary>
+<summary><strong>What happens when governance docs conflict?</strong></summary>
 
-Do not silently conform this README to drift and call the drift canon. Record the
-conflict in `docs/registers/DRIFT_REGISTER.md`, then resolve it through an ADR or a
-migration plan. Until resolved, mark affected paths `PROPOSED` / `CONFLICTED` and avoid
-creating parallel homes for roles, policies, release proofs, or machine-readable
-registers.
+Do not silently reconcile them. Apply accepted decisions and current repository evidence to the relevant question, record the contradiction and source statuses, and route material authority changes through an ADR or correction.
 
 </details>
 
-[Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+<details>
+<summary><strong>Why are detailed role and matrix sections still present if sibling docs exist?</strong></summary>
+
+This landing page retains a compact routing summary and the legacy anchors. Detailed role charters, matrices, escalation tables, and deprecation procedure remain in their focused sibling documents to avoid parallel authority.
+
+</details>
+
+[Back to top](#top)
 
 ---
 
-## 17. Last reviewed
+<a id="17-last-reviewed"></a>
+
+## 17. Last reviewed and rollback
 
 | Field | Value |
 |---|---|
-| Last reviewed | **2026-05-12** |
-| Last updated | **2026-05-15** |
-| Next review due | 2026-11-12 (six-month review cadence; verify against Directory Rules before relying on this date) |
-| Reviewed by | Docs steward (`TODO` named) |
-| Updated by | ChatGPT update pass using attached Markdown baseline; not a substitute for docs-steward review |
-| Reviewed against | Atlas / role catalog lineage; KFM operating law; Directory Rules placement and README-contract doctrine (`NEEDS VERIFICATION` in mounted repo) |
-| Remaining blockers | Verify actual path, ADR-S-09 status, CODEOWNERS path, role-register parity, relative links, named owners, and enforcement workflows. |
+| **Reviewed** | `2026-08-14` |
+| **Evidence base** | `main@dc30e1d38f9a4ecf45fd589d388886fc872dd189` |
+| **Prior target blob** | `862f85c39f439ae1a8dba18e2700d806d945daf9` |
+| **Directory Rules blob** | `fd49a0b83e55cef52c1124281f093e263526898d` |
+| **ADR-0024 blob** | `57d46867c97a1c8d76ccdfbc12fc012bee3bd2ea` |
+| **CODEOWNERS blob** | `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61` |
+| **Scope** | One Markdown file; documentation-only |
+| **Operational evidence not established** | Authenticated actors, accepted assignments, live policy evaluation, independent reviewer capacity, release integration, published state, production audit |
 
-**Last updated:** 2026-05-15 · [Back to top](#-kfm-governance--roles-review-burden-and-separation-of-duties)
+### Rollback
+
+Restore prior blob `862f85c39f439ae1a8dba18e2700d806d945daf9` or revert the documentation commit. No contract, schema, policy, fixture, validator, workflow, rule, receipt, proof, release, deployment, or published artifact requires restoration.
+
+[Back to top](#top)
+
+---
+
+## Appendix A — No-loss modernization ledger
+
+| Prior README material | Current disposition |
+|---|---|
+| Purpose and human-governance framing | Retained and grounded in current repository evidence |
+| Authority and truth labels | Corrected to accepted ADR-0029, proposed ADR-0024, and current implementation evidence |
+| Repo fit | Replaced speculative presence claims with verified responsibility boundaries |
+| Eight-role diagram | Retained as a proposed routing map with staffing and authority limits |
+| What belongs / does not belong | Retained and aligned to current responsibility roots |
+| Proposed lowercase directory tree | Replaced with the exact eight-file current directory inventory |
+| Detailed role catalog | Retained compactly; detailed scope routed to steward/review sibling docs |
+| Separation matrix | Retained compactly and split into proposed posture, current evidence, and safe conclusion |
+| Maturity progression | Reframed as L0–L5 with current evidence and holds |
+| Validation | Replaced speculative validator names with the two repository-present focused profiles and docs checks |
+| Review burden and CODEOWNERS | Corrected from unknown to current CODEOWNERS and active-ruleset evidence |
+| Anti-patterns | Retained and strengthened around authority, workflow, and publication boundaries |
+| Related docs | Replaced `NEEDS VERIFICATION` placeholders with verified local targets |
+| Symbolic ADR-S-09 | Mapped to current numbered ADR-0024 as lineage/backlog relationship |
+| FAQ | Retained and updated for current repository evidence |
+| Dates and ownership | Creation recovered from repository history; owner limited to verified review route |
+| Stable navigation | Original H1 and numbered section anchors preserved through headings or explicit aliases |
+
+---
+
+## Appendix B — Open verification backlog
+
+| Priority | Verification item | Closure evidence |
+|---|---|---|
+| P0 | Accept, revise, reject, or supersede ADR-0024 | Canonical ADR/index transition with review evidence |
+| P0 | Establish actor identity and alias/conflict resolution | Accepted identity authority, fixtures, negative tests, and audit records |
+| P0 | Establish scoped StewardshipAssignment authority | Accepted contract/schema/policy and accountable assignments |
+| P0 | Define independent reviewer capacity and recusal | Verified assignments, conflict policy, and subject-bound review records |
+| P0 | Bind release policy to an accepted evaluator and bundle | Digest-bound evaluator, native tests, replay, receipts, and fail-closed integration |
+| P0 | Integrate review closure with separate promotion and release records | End-to-end fixture and no-publication negative path |
+| P1 | Repair or supersede stale generated authoring receipts for the two focused workflows through legitimate producers | Green receipt-integrity verification with preserved lineage |
+| P1 | Decide whether platform rules should require approving or code-owner review | Reviewed repository-control decision and enforced ruleset |
+| P1 | Reconcile stale placeholder owners, paths, and symbolic ADR references in sibling docs | Focused documentation PRs with link and metadata validation |
+| P1 | Resolve `DECISION_LOG.md` and contradiction-handling placement questions | Directory Rules decision, migration note, or explicit retained-path rationale |
+| P2 | Run correction, withdrawal, rollback, and reviewer-unavailability drills | Recorded drill artifacts, findings, and remediation |
+| P2 | Define governance health indicators without turning metrics into authority | Accepted metric contracts, bounded telemetry, and review cadence |
+
+---
+
+**Truth posture:** CONFIRMED repository evidence / PROPOSED governance decisions and role model / UNKNOWN operational enforcement
+
+[Back to top](#top)
