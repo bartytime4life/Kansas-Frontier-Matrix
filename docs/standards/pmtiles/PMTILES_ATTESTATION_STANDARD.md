@@ -6,7 +6,7 @@ version: v1.2-draft
 status: draft; PROPOSED; partial-implementation-confirmed
 owner: TODO-pmtiles-steward
 created: NEEDS_VERIFICATION
-updated: 2026-08-03
+updated: 2026-08-14
 policy_label: internal-governance; derived-artifact; release-gated; no-public-authority
 owning_root: docs/
 responsibility: defines a proposed PMTiles attestation chain and records the bounded structural bundle and opt-in declared-manifest compatibility checks currently implemented without granting schema, signature, policy, release, or publication authority
@@ -55,6 +55,7 @@ checks described below. Structural success is not publication eligibility.
 | Opt-in declared-manifest profile | `kfm.pmtiles.tile-artifact-manifest.compat.v1` reconciles archive name, digest, size, `spec_hash`, v3 tile type, zoom, bounds, optional TileJSON scheme (default `xyz`), and vector-layer id/field maps. Media type is a fixed literal; ASCII digest-bound artifact-ref, ASCII versioned source-ref, and generator-identifier checks are syntax-only. | **CONFIRMED STRUCTURAL / NON-CANONICAL / PROVENANCE HELD** |
 | Metadata compression subset | The local archive reader handles uncompressed and gzip metadata. Upstream PMTiles v3 Brotli and Zstandard metadata are unsupported in this lane and fail closed. | **HOLD / COMPATIBILITY SUBSET** |
 | Synthetic valid/invalid fixtures | Root-owned mutation descriptors generate all bundle bytes in temporary test directories. | **CONFIRMED TEST SURFACE** |
+| Standalone PMSIG shape parsing | The shape-only verifier rejects symlinks, non-files, oversized input, duplicate JSON keys, non-finite numbers, malformed JSON, and non-object roots before checking the PMSIG subject. | **CONFIRMED STRUCTURAL / NON-CRYPTOGRAPHIC** |
 | PMSIG cryptographic verification and key trust | Current verifier is shape-only in CI. | **HOLD / NEEDS VERIFICATION** |
 | Policy, release, correction, rollback, and publication | Not executed or authorized by structural validation. | **HOLD / NEEDS VERIFICATION** |
 | Canonical PMTiles attestation profile | Repository drafts describe competing BLAKE3, split SHA-256, and GeoManifest/DSSE directions. | **UNRESOLVED / NEEDS GOVERNED DECISION** |
