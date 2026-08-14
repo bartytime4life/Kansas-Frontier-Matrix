@@ -2,11 +2,11 @@
 doc_id: kfm://doc/intake/georeference-control-point-set-source-map
 title: Georeference control-point-set identity — source map
 type: intake/exploratory
-version: v1
+version: v1.1
 status: draft
 owners: map-steward, docs-steward
 created: 2026-08-06
-updated: 2026-08-10
+updated: 2026-08-14
 policy_label: public
 owning_root: docs/
 responsibility: Exploratory source-to-repository adaptation record for canonical georeference control-point-set identity.
@@ -45,7 +45,7 @@ This profile does not establish source provenance or GCP accuracy. It does not i
 ## Follow-up candidates
 
 1. **Implemented:** `tools/generators/project_georeference_transform_quality.py` validates an accepted `GeoreferenceControlPointSet`, preserves its three identities in a projection wrapper, and maps the exact ordered point set into the existing affine-quality v1 candidate without changing affine-quality semantics.
-2. Bind the spatial-distribution profile to `resource_set_hash` after a separately reviewed compatibility design confirms versioning and migration posture.
+2. **Implemented:** `tools/generators/project_georeference_spatial_distribution.py` validates an accepted `GeoreferenceControlPointSet`, binds its `resource_set_hash` in a projection wrapper, and maps the exact ordered IDs and resource coordinates into the unchanged spatial-distribution v1 candidate. Target-coordinate-only changes do not change this resource-space projection.
 3. Add real CRS/coordinate-epoch declarations only through a separately reviewed geodetic identity profile.
 
-The adapter is fixture-only, deterministic, no-network, stdout-only by default, and overwrite-denying unless `--force` is explicit. Its embedded candidate remains independently validatable by `validate_georeference_transform_quality.py`; the wrapper does not create a new GCP, quality, evidence, policy, release, or publication authority.
+Both adapters are fixture-only, deterministic, no-network, stdout-only by default, and overwrite-denying unless `--force` is explicit. Their embedded candidates remain independently validatable by the existing v1 validators; the wrappers do not create new GCP, quality, evidence, policy, release, or publication authority.
