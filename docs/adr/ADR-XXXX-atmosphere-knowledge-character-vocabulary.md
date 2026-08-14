@@ -59,7 +59,7 @@ prior blob: c101657be0915331693ea1bd8a44a03801bdfbb4
 
 | Surface | CONFIRMED observation at the evidence checkpoint | Limit |
 | --- | --- | --- |
-| This file | The tracked target was a five-line `PROPOSED scaffold` sourced from `MISSING_OR_PLANNED_FILES.md`. | A planned path and scaffold do not establish a decision. |
+| This file | The tracked target was a short `PROPOSED scaffold` sourced from `MISSING_OR_PLANNED_FILES.md`. | A planned path and scaffold do not establish a decision. |
 | [`docs/adr/INDEX.md`](./INDEX.md) | Lists this exact path as an explicit `ADR-XXXX` placeholder with decision status `not-assigned`. | Index presence does not reserve a number or accept a decision. |
 | [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [`directory-rules.md`](../doctrine/directory-rules.md) | ADR-0029 accepts the exact Directory Rules v2 bytes and confirms `docs/adr/` as the human ADR authority. | Placement authority does not decide this vocabulary or prove implementation. |
 | [`KNOWLEDGE_CHARACTERS.md`](../domains/atmosphere/KNOWLEDGE_CHARACTERS.md) | Defines the Atmosphere concept, the eleven candidate machine-style values, source-role separation, immutability, and anti-collapse rationale. | It is a draft human-facing standard and cannot independently accept the enum. |
@@ -739,7 +739,7 @@ No external source or live Atmosphere endpoint was required for this ADR moderni
 
 | Date | Change | Decision effect |
 | --- | --- | --- |
-| Before 2026-08-14 | Tracked five-line `PROPOSED scaffold` sourced from the Atmosphere planned-files register. | None |
+| Before 2026-08-14 | Tracked short `PROPOSED scaffold` sourced from the Atmosphere planned-files register. | None |
 | 2026-08-14 | Replaced scaffold in place with a repository-grounded proposed decision, exact token set, anti-collapse semantics, current implementation maturity, convergence plan, acceptance gates, and rollback. | Remains unassigned and proposed; no implementation, release, or publication effect |
 
 ### No-loss reconciliation
