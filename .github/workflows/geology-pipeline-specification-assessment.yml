@@ -7,7 +7,7 @@ name: geology-pipeline-specification-assessment
       - "contracts/domains/geology/geology_pipeline_specification_assessment.md"
       - "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json"
       - "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/**"
-      - "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py"
+      - "tools/validators/validate_geology_pipeline_specification_assessment.py"
       - "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py"
       - "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md"
       - "data/receipts/generated/genrec-geology-pipeline-specification-assessment-*.json"
@@ -19,7 +19,7 @@ name: geology-pipeline-specification-assessment
       - "contracts/domains/geology/geology_pipeline_specification_assessment.md"
       - "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json"
       - "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/**"
-      - "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py"
+      - "tools/validators/validate_geology_pipeline_specification_assessment.py"
       - "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py"
       - "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md"
       - "data/receipts/generated/genrec-geology-pipeline-specification-assessment-*.json"
@@ -58,17 +58,17 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
       - name: Install declared validation dependencies
-        run: python -m pip install -e ".[test]"
+        run: python tools/ci/install_python_ci.py project-test
       - name: Run focused deterministic validation
         run: |
           set -euo pipefail
-          python -m py_compile tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py
+          python -m py_compile tools/validators/validate_geology_pipeline_specification_assessment.py tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py
           python -m unittest tests.validators.domains.geology.test_validate_geology_pipeline_specification_assessment --verbose
-          python tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py --fixtures
+          python tools/validators/validate_geology_pipeline_specification_assessment.py --fixtures
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-pipeline-specification-assessment-20260814.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20260814.json --repo-root .
       - name: Record authority boundary
         if: always()
         run: |

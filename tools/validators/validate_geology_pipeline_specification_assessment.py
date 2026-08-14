@@ -20,7 +20,7 @@ from typing import Mapping, Sequence
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-ROOT = Path(__file__).resolve().parents[4]
+ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = ROOT / "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json"
 FIXTURE_PATH = ROOT / "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json"
 MAX_FILE_BYTES = 1_048_576
