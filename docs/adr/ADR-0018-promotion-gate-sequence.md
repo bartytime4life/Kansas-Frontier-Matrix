@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0018-promotion-gate-sequence
 title: ADR-0018 — Promotion Gate Sequence
 type: adr
 adr_id: ADR-0018
-version: v1.4
+version: v1.5
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -22,47 +22,46 @@ reviewers_required:
   - Validation and CI stewards
   - Docs steward
 created: 2026-05-09
-updated: 2026-08-03
+updated: 2026-08-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: Record the proposed final promotion-readiness sequence, its finite vocabularies, its object-family boundaries, and the evidence required before a CATALOG/TRIPLET candidate may be considered ready for a separately authorized transition toward PUBLISHED.
 current_path: docs/adr/ADR-0018-promotion-gate-sequence.md
 supersedes: []
 superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 68069dce9e292649697f63f96fa57edd07181a27
-  target_prior_blob: 6cde5af9a7c8ef03df3fb22816074c900df659b7
-  adr_index_blob: 919ec44d8eb0fab2e558cbc54c90b0d37e56a201
-  adr_readme_blob: bde5a950197a9d3e989abd12feda3d19b31dd2b9
+  base_commit: 9d924c665073263f2cbf376d2bf29e7b9f252b06
+  target_prior_blob: cb76d7af6cf6972cada2017b61d4081bc916ab4b
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_readme_blob: 793015c38f4066c2c23753d4e3dd26bcc890279d
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  promotion_workflow_blob: c22941d5e1fad3317f46591705091ef2b6e7d265
-  promotion_contract_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
-  promotion_release_schema_blob: a2d087a46772cf60e4b9dfb394892690e8a88b31
-  promotion_policy_schema_scaffold_blob: f124b2b866450949e415afbb4597ae98531e0ed0
-  decision_envelope_schema_blob: 349782c8760f77e432ed1e9239d5ddc2ffe1f9b8
-  promotion_fixture_validator_blob: ead33d6c5c073f319627ee42d99c5933c0e370d1
-  promotion_fixture_test_blob: 495c76aa9d3a016b7a60831e47c15d3a21efaa0c
-  generic_promotion_validator_blob: c2921ba816362d6a1073bd01ed870603a13537cb
-  review_validator_blob: e1aa5fcc4b2da4055eb61276a031512512bcb4ca
-  promotion_validator_readme_blob: 23b3cd6339f2c953ade044312568338140671d64
-  promotion_prerequisites_policy_blob: 782b24af3c0fe28871a58da202a3efdbd5991647
-  rollback_required_policy_blob: b2eb37b31b572e1d97d1afbe4babe8200f87df7d
-  promotion_runbook_blob: 757f8a07cc35030ceb39f308d5f6dcea6c459fd1
-  release_reviews_readme_blob: d927536c39a2102b1f012007fc8de4facb7abd90
-  policy_gate_register_blob: 10e66eb9d587797a3f12e2aaac00fb4e60ec7fa2
-  hydrology_promoter_blob: 98ec4d03ec0b41f03a85ee1fcedd5b75b4a2f68e
-  hydrology_smoke_decision_blob: 50d611f8ef800863e04eafde0716ed2c45303299
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  promotion_workflow_blob: 9b567aad17de2a7419a2a0238386745c1cb5c11c
+  promotion_gate_validator_blob: 143a8a9720d052870ca0adaa48894e4ce633d9d1
+  promotion_gate_readme_blob: e729df0cc007e8cf0d9811afc25ec1f5ffbdffdd
+  promotion_gate_test_blob: ef5746d3657cb121f3f040b4cb426c8c355ddb1d
+  promotion_receipt_contract_blob: ed432f8e3e02d170589c9e04d78087a69346909d
+  promotion_receipt_schema_blob: b9819cc92303aae5b4ab17f0ec9aac48ca236d10
+  promotion_receipt_validator_blob: 876c1b82d712623e52c7029a87f33c8ed9eb9668
+  promotion_receipt_test_blob: 2ad8ad4c7253043acc5514291dde9a9a385e1c6e
+  promotion_receipt_workflow_blob: f4e685f85c232e7ea82b5ad5eb5253969f53b098
+  promotion_decision_contract_blob: 42295bfc83a621cf125d33aa821912b426f70bd2
+  promotion_decision_schema_blob: a2d087a46772cf60e4b9dfb394892690e8a88b31
+  promotion_decision_validator_blob: ead33d6c5c073f319627ee42d99c5933c0e370d1
+  promotion_policy_readme_blob: 79287df1d828010d716ed43d2e24d6dbd610305b
+  hosted_promotion_receipt_run: 31654973080
 inspection_boundary: >
-  Current-session GitHub reads, bounded repository search, ADR inventory and operating
-  contract, Directory Rules, release contracts and schemas, fixtures and tests, validator
-  and policy scaffolds, promotion workflow source, runbook, review guidance, Makefile,
-  hydrology smoke promoter, and tracked smoke decision. No production policy evaluator,
-  signer, release service, public deployment, branch ruleset, audit dashboard, or live
-  promotion was exercised.
+  Current-session GitHub reads over the exact target and ADR inventory, accepted
+  Directory Rules decision, promotion-gate and PromotionReceipt workflows,
+  PromotionDecision and PromotionReceipt contracts/schemas/validators/tests,
+  bounded A-G readiness implementation, policy boundary, and hosted workflow
+  history. No production policy bundle, live evidence resolver, signer trust root,
+  authenticated reviewer/authority registry, release service, public deployment,
+  repository ruleset, rollback execution, or actual lifecycle transition was
+  exercised.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -74,60 +73,93 @@ related:
   - docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
   - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
-  - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/publication/promotion-gates.md
+  - docs/architecture/publication/RELEASE_GATES.md
   - docs/runbooks/PROMOTION_RUNBOOK.md
   - .github/workflows/promotion-gate.yml
+  - .github/workflows/promotion-receipt.yml
   - contracts/release/promotion_decision.md
+  - contracts/release/promotion_receipt.md
   - schemas/contracts/v1/release/promotion_decision.schema.json
+  - schemas/contracts/v1/release/promotion_receipt.schema.json
   - schemas/contracts/v1/runtime/decision_envelope.schema.json
-  - fixtures/release/promotion_decision/README.md
-  - tools/validators/release/validate_promotion_decision.py
-  - tools/validators/validate_promotion_gate.py
-  - tools/validators/validate_review_record.py
+  - fixtures/release/promotion_gate/README.md
+  - fixtures/release/promotion_receipt/README.md
   - tools/validators/promotion_gate/README.md
+  - tools/validators/promotion_gate/validate_promotion_gate.py
+  - tools/validators/validate_review_record.py
+  - tools/validators/release/validate_promotion_decision.py
+  - tools/validators/release/validate_promotion_receipt.py
+  - tests/release/test_promotion_gate.py
+  - tests/release/test_review_record.py
   - tests/release/test_promotion_decision_schema.py
+  - tests/release/test_promotion_receipt.py
+  - policy/promotion/README.md
   - policy/promotion/promotion_prerequisites.rego
   - policy/promotion/rollback_card_required.rego
+  - control_plane/policy_gate_register.yaml
   - release/reviews/README.md
   - pipelines/domains/hydrology/promote.py
   - release/promotion_decisions/hydrology/run-local-smoke.json
   - Makefile
-tags: [kfm, adr, promotion, release, gates, workflow-hold, fail-closed, evidence, policy, review, rollback, publication]
+tags: [kfm, adr, promotion, release, gates, promotion-receipt, fail-closed, evidence, policy, review, rollback, publication]
 notes:
-  - "v1.4 reconciles current evidence with the bounded no-network A-G candidate validator and fixture-only ReviewRecord profile; it preserves effective status proposed and every live authority hold."
-  - "v1.3 re-pins the evidence snapshot to current checkout `6d6010f6cbedf1e096e3d8da3d660b6350e106e8`, records an explicit REVISE checkpoint, and preserves effective status proposed."
-  - "The current promotion-gate workflow is a four-job read-only readiness and hold workflow, not an implementation of the proposed seven-gate sequence."
-  - "The current PromotionDecision schema exercises shape only and uses APPROVE, DENY, ABSTAIN; the DecisionEnvelope schema uses ANSWER, ABSTAIN, DENY, ERROR. These vocabularies must remain separate."
-  - "The proposed per-gate DecisionGate and PromotionReceipt schemas are not present at the paths named by v1; no receipt, proof, manifest, or release authority is inferred."
-  - "The tracked hydrology promoter and smoke decision are explicit scaffolds with automation-smoke approval and unresolved evidence/rollback references; CI intentionally does not execute the promoter."
-  - "The empty `control_plane/policy_gate_register.yaml` remains a PROPOSED register with no entries; it does not create policy gate authority."
+  - "v1.5 is a same-path repository-grounded modernization. It preserves source and effective status as proposed; it does not accept ADR-0018."
+  - "The bounded final-readiness profile now has an executable A-G validator and a separate PROPOSED PromotionReceipt contract/schema/fixture/test/workflow family."
+  - "v1.5 revises the ADR's candidate gate names to match the coherent bounded implementation and PromotionReceipt profile while explicitly preserving conflicts with lifecycle-wide A-G documentation."
+  - "The current policy/promotion lane remains inactive: two Rego modules are no-op PROPOSED stubs, the policy-gate register has no active entry, and no accepted evaluator or governed consumer was verified."
+  - "PASS means APPROVE_READY for accountable review only; it is not APPROVE, a transition, release, deployment, publication, or public permission."
+  - "The last inspected main-branch promotion-receipt run passed fixture polarity and contract tests but failed generated-receipt integrity; no exact-base hosted promotion-receipt run was verified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0018 — Promotion Gate Sequence
 
-> **Proposed decision.** Define one ordered, fail-closed promotion-evaluation sequence for the final governed transition from `CATALOG / TRIPLET` toward `PUBLISHED`, while keeping lifecycle gates, policy outcomes, gate-runner results, review records, `PromotionDecision`, receipts, proofs, manifests, and publication authority distinct.
+> **Revised proposed decision.** Define one ordered, fail-closed **final
+> promotion-readiness** profile for a candidate already at `CATALOG` or
+> `TRIPLET` and seeking a separately authorized transition toward `PUBLISHED`.
+> Keep readiness validation, policy evaluation, accountable review,
+> `PromotionDecision`, `PromotionReceipt`, `ReleaseManifest`, receipts, proofs,
+> rollback, correction, transition execution, and publication as distinct
+> responsibilities and object families.
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
-[![ADR ID: confirmed](https://img.shields.io/badge/ADR--0018-confirmed-0969da?style=flat-square)](#current-repository-evidence)
-[![Workflow: hold](https://img.shields.io/badge/workflow-WORKFLOW__HOLD-b42318?style=flat-square)](#current-implementation-maturity)
-[![PromotionDecision: shape only](https://img.shields.io/badge/PromotionDecision-shape%20only-f59e0b?style=flat-square)](#current-repository-evidence)
-[![Gate runtime: bounded candidate](https://img.shields.io/badge/gate%20runtime-bounded%20candidate-f59e0b?style=flat-square)](#current-implementation-maturity)
+[![ADR identity: confirmed](https://img.shields.io/badge/ADR--0018-confirmed-0969da?style=flat-square)](#current-repository-evidence)
+[![A–G validator: bounded](https://img.shields.io/badge/A--G%20validator-bounded-0969da?style=flat-square)](#bounded-a-g-proof)
+[![PromotionReceipt: proposed](https://img.shields.io/badge/PromotionReceipt-PROPOSED-f59e0b?style=flat-square)](#promotionreceipt-boundary)
+[![Policy: inactive](https://img.shields.io/badge/policy-inactive-b42318?style=flat-square)](#policy-review-and-release-holds)
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
-[![Governance checkpoint: revise](https://img.shields.io/badge/checkpoint-REVISE-bc4c00?style=flat-square)](#governance-checkpoint)
+[![Checkpoint: revise](https://img.shields.io/badge/checkpoint-REVISE-bc4c00?style=flat-square)](#governance-checkpoint)
 
 > [!IMPORTANT]
-> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0018` to this exact file and records both source metadata and effective decision status as `proposed`. Editing this record, merging a pull request, or passing the ADR index validator does not accept the decision.
+> **Current implementation is meaningful but non-authoritative.** The repository
+> has a deterministic, no-network A–G readiness validator and a separate
+> fixture-first `PromotionReceipt` contract/schema/validator/test/workflow
+> family. Their `PROPOSED` status, synthetic inputs, declared-reference checks,
+> and non-publishing boundaries remain load-bearing. They do not authenticate
+> evidence, evaluate the current Rego stubs, establish reviewer authority,
+> apply a lifecycle transition, or release anything.
 
 > [!CAUTION]
-> **The current repository does not run seven authoritative promotion gates.** The tracked [`promotion-gate` workflow](../../.github/workflows/promotion-gate.yml) has four read-only readiness jobs and executes a bounded synthetic A-G candidate profile plus fixture-only ReviewRecord checks. It authenticates no live support or reviewer and emits no release decision, receipt, proof, manifest, rollback card, or public artifact.
+> **The repository still has multiple A–G vocabularies.** Lifecycle-wide
+> publication guidance names A as source admission and G as release. The bounded
+> final-readiness implementation names A as identity-and-closure and G as
+> review-and-rollback. Earlier editions of this ADR used a third naming set.
+> This revision selects the bounded final-readiness set as the **candidate
+> decision for this ADR's narrow scope**; it does not silently rewrite the other
+> documents or make the choice accepted.
 
 > [!WARNING]
-> **A schema-valid `APPROVE` object is not approval.** The tracked hydrology promoter is a stub that writes an automation-approved smoke decision whose evidence and rollback paths are unresolved. Current CI deliberately does not execute it.
+> **`PASS` is not `APPROVE`, and `transition.applied: true` is not proof that a
+> transition occurred.** `PASS` means only `APPROVE_READY` under the bounded
+> declared packet. A schema-valid receipt validates internal consistency; it
+> does not prove support authenticity, accountable authorization, release, or
+> publication.
 
-**Quick navigation:** [Status](#status) · [Checkpoint](#governance-checkpoint) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Sequence](#proposed-a-g-sequence) · [Vocabularies](#decision-and-status-vocabularies) · [Identity](#identity-and-join-contract) · [Failure](#failure-hold-and-quarantine) · [Authority](#authority-and-publication-boundary) · [Current evidence](#current-repository-evidence) · [Maturity](#current-implementation-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
+**Quick navigation:** [Status](#status) · [Checkpoint](#governance-checkpoint) · [Evidence](#evidence-boundary) · [Context](#context-and-scope) · [Decision](#decision) · [Sequence](#revised-candidate-a-g-sequence) · [Conflicts](#sequence-and-vocabulary-conflict-register) · [Receipt](#promotionreceipt-boundary) · [Vocabularies](#finite-vocabularies-and-mappings) · [Identity](#identity-and-binding) · [Failure](#failure-hold-and-quarantine) · [Authority](#authority-and-publication-boundary) · [Current evidence](#current-repository-evidence) · [Maturity](#current-implementation-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
 
 ---
 
@@ -140,22 +172,44 @@ notes:
 | **ADR ID** | `ADR-0018` — unique and confirmed in [`INDEX.md`](./INDEX.md) |
 | **Tracked path** | `docs/adr/ADR-0018-promotion-gate-sequence.md` |
 | **Source metadata** | `proposed` |
-| **Effective decision status** | `proposed` |
-| **Decision class** | Repository-wide promotion-evaluation ordering and vocabulary boundary |
-| **Current repository maturity** | PromotionDecision shape checks, bounded synthetic A-G and ReviewRecord candidate validators, and explicit authority holds; no accepted gate runtime |
-| **Implementation effect of this revision** | Reconciles this proposed ADR with a companion fixture-only hardening slice; does not accept the decision |
+| **Effective decision status** | `proposed` — non-binding |
+| **Decision class** | Final `CATALOG`/`TRIPLET` → `PUBLISHED` promotion-readiness sequence and vocabulary boundaries |
+| **Revised candidate profile** | `kfm/promotion-readiness/A-G/v1` |
+| **Current executable posture** | Bounded synthetic A–G readiness validator plus fixture-only ReviewRecord and PromotionReceipt validation |
+| **Current policy posture** | Inactive; two no-op Rego stubs; no accepted bundle/evaluator/consumer |
+| **Current release posture** | No authenticated review packet, applied transition, release, deployment, or publication established |
+| **Implementation effect of v1.5** | Documentation only; reconciles current repository evidence and revises the proposed candidate names |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 
-### Acceptance versus implementation
+### Acceptance, implementation, and release are independent
 
-Two states remain independent:
+Three state transitions must remain visible:
 
-1. **ADR acceptance** would approve the sequence, responsibility split, and vocabulary boundaries described here.
-2. **Implementation graduation** would require accepted contracts and schemas, meaningful policy, deterministic fixtures, executable validators, accountable review, receipt/proof placement, release assembly, rollback validation, CI wiring, and observed no-public-write behavior.
+1. **ADR acceptance** would approve the final-readiness sequence, names,
+   responsibility split, mappings, and compatibility obligations recorded here.
+2. **Implementation graduation** would require accepted contracts/schemas,
+   production-capable policy and support resolution, accountable review,
+   deterministic replay, and governed integration.
+3. **Release application** would require a separately authorized release action
+   to apply the evaluated lifecycle transition and emit authoritative release,
+   correction, and rollback records.
 
-An accepted ADR without those implementation gates would be doctrine, not proof that promotion is operational. Conversely, code, a workflow, a fixture pass, or a tracked `PromotionDecision` cannot accept this ADR.
+A fixture pass, schema-valid object, workflow success, pull request, merge, or
+accepted ADR cannot collapse those transitions.
 
+### Directory Rules basis
+
+Accepted [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts the exact Directory Rules v2 bytes at
+[`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). This
+same-path update remains in `docs/adr/` because the file records a human
+architecture decision. It creates no root, moves no file, and grants no contract,
+schema, policy, release, receipt, proof, or publication authority.
+
+[Back to top](#top)
+
+---
 
 <a id="governance-checkpoint"></a>
 
@@ -164,33 +218,43 @@ An accepted ADR without those implementation gates would be doctrine, not proof 
 | Field | Recorded outcome |
 |---|---|
 | **Governance outcome** | `REVISE` |
-| **Recorded on** | `2026-07-29` |
-| **Effective ADR status after this checkpoint** | Remains `proposed` |
-| **Why not `ACCEPT`** | The runbook still uses a different A–G lifecycle sequence, the policy-side `promotion_decision` scaffold still conflicts by name, the implemented validators are bounded synthetic candidates rather than accepted gate/review authorities, `control_plane/policy_gate_register.yaml` is empty, and no governed review/rollback/release packet is implemented. |
-| **Why not `REJECT`** | The candidate A–G ordering, fail-closed vocabulary split, and no-public-write release boundary remain viable once the unresolved contract and authority conflicts are explicitly repaired. |
-| **Current authority effect** | This proposed ADR grants none. Companion candidate validator/workflow/fixture changes remain non-authoritative and create no receipt, proof, manifest, governed review, release, or publication authority. |
+| **Recorded on** | `2026-08-14` |
+| **Effective ADR status afterward** | Remains `proposed` |
+| **Why not `ACCEPT`** | Lifecycle-wide A–G documentation conflicts with the final-readiness profile; promotion policy is inactive; live evidence, attestation, review-authority, rollback, and release integration are unproved; hosted PromotionReceipt receipt-integrity evidence is not green at an exact current head. |
+| **Why not `REJECT`** | The bounded final-readiness profile, fixture matrix, `PromotionReceipt` shape, finite statuses, digest binding, and non-publisher boundary form a coherent and testable candidate architecture. |
+| **Authority effect** | None. This revision records a proposed convergence target and the remaining holds. |
 
-### Decision questions resolved by this revision
+### Decisions revised in v1.5
 
-| Question | Resolution for this checkpoint |
+| Question | Revised proposed resolution |
 |---|---|
-| Is the proposed A–G sequence the accepted promotion-evaluation order? | **No.** It remains the candidate acceptance target and implementation decomposition baseline, not an accepted runtime order. |
-| Which contracts and schemas are authoritative for each gate? | Semantic authority stays in `contracts/`; machine shape stays in `schemas/contracts/v1/`. The current authoritative release decision shape is `contracts/release/promotion_decision.md` with `schemas/contracts/v1/release/promotion_decision.schema.json`. Runtime/policy decision envelopes remain `contracts/runtime/decision_envelope.md` with `schemas/contracts/v1/runtime/decision_envelope.schema.json`. Missing gate-record, gate-set, and governed ReviewRecord contracts keep the later gates held. |
-| How are PromotionDecision, DecisionEnvelope, gate outcomes, ReviewRecord, receipts, proofs, manifests, rollback cards, and publication authority kept distinct? | `PromotionDecision` remains the release-family decision, `DecisionEnvelope` remains the runtime/policy envelope, future per-gate outcomes remain `PASS / FAIL / HOLD / ERROR`, review outcomes stay with governed review records, receipts/proofs/manifests/rollback cards stay in their owning roots, and publication authority remains a separate authorized release action. |
-| What finite result vocabulary and exit-code contract must the validator expose? | This proposed ADR still targets `PASS`, `FAIL`, `HOLD`, or `ERROR` with distinct exits for an accepted gate-record profile. The current non-authoritative candidate instead emits `PASS`, `DENY`, `ABSTAIN`, or `ERROR` with bounded CLI polarity. That implementation evidence does not silently accept or rewrite this proposed vocabulary. |
-| Which references must resolve before `APPROVE` is structurally eligible? | At minimum: exact `PromotionDecision.id`, candidate `run_id`, pinned schema/version/digest inputs, resolved `EvidenceRef` and `EvidenceBundle` support, policy bundle identity/digest plus any emitted `DecisionEnvelope.decision_id`, accountable review record reference(s), rollback-card reference, correction-path reference where required, and the release-manifest relation/target. Missing or unresolved references make `APPROVE` structurally ineligible. |
-| What separation-of-duties rule applies during Model B single-owner bootstrap and after an independent reviewer exists? | The current single-owner bootstrap may record documentation-level governance outcomes only; it does **not** authorize self-approval of release readiness or publication. Until independent reviewer capacity exists, Gate G remains `HOLD`. After an independent reviewer exists, the candidate author/assembler and release authority must resolve to distinct human actors under ADR-0024, and automation still cannot substitute for required human review. |
-| Which workflow check names must remain stable for repository rules? | Preserve workflow name `promotion-gate` and job/check names `doctrine-artifact-prereq`, `doctrine-artifact-schema`, `promotion-prerequisites`, and `review-records-present` until a reviewed ruleset migration explicitly changes them. |
-| What migration and rollback path applies to the current hold workflow and candidate commands? | The repository has completed a bounded fixture/test, candidate-validator, and read-only CI slice without accepting the full gate contracts. Continue with contract/schema disposition and governed integrations only through separate reviewed changes. Roll back by reverting the newest slice; do not execute the hydrology smoke promoter or infer release/publication authority from any intermediate slice. |
+| What does ADR-0018 govern? | Only the final readiness evaluation for a candidate already at `CATALOG` or `TRIPLET` and targeting `PUBLISHED`; not the entire lifecycle. |
+| Which A–G names are the candidate for this scope? | `identity_and_closure`, `asset_integrity`, `geometry_and_crs`, `temporal_semantics`, `rights_and_sensitivity`, `proof_and_catalog_support`, `review_and_rollback`. |
+| Which readiness statuses apply? | `PASS`, `ABSTAIN`, `DENY`, `ERROR`, with precedence `ERROR > DENY > ABSTAIN > PASS`. |
+| What does a complete bounded pass mean? | `APPROVE_READY` for separately governed review/decision processing only. |
+| What is `PromotionReceipt`? | A separate release-scoped process receipt for one declared promotion attempt; not a `PromotionDecision`, proof, manifest, policy result, review record, or transition authority. |
+| What is the final transition decision? | The separately governed `PromotionDecision` with `APPROVE`, `DENY`, or `ABSTAIN`. |
+| May Gate G publish? | No. Gate G establishes declared review-and-rollback readiness only. Release application stays separate. |
+| Must the tool short-circuit after the first non-pass? | Not necessarily. Implementations may evaluate all seven gates over one pinned packet for complete deterministic diagnostics, but any non-`PASS` result blocks readiness. |
+| Does `transition.applied: true` prove application? | No. It is a receipt declaration whose internal prerequisites are validated; authenticity and the real transition remain externally governed. |
+| Which implementation names are retired by this proposed revision? | The v1.4 candidate names `schema_valid`, `inputs_pinned`, `checks_pass`, `signatures_valid`, `provenance_complete`, `no_policy_violations`, and `release_ready` become historical proposal vocabulary inside ADR-0018. No repository artifact is renamed by this documentation-only change. |
 
-### Follow-up issue decomposition
+### Required follow-up decomposition
 
-1. **Contract and schema slice** — reconcile runbook naming, disposition the policy-side `promotion_decision` scaffold, and define gate-record, gate-set, ReviewRecord, rollback-verification, and release-manifest binding contracts.
-2. **Fixture and test slice** — add closed valid/invalid fixtures plus focused tests for gate results, identity joins, unresolved-reference holds, rollback binding, and ReviewRecord subject binding.
-3. **Validator slice** — implement the generic promotion-gate and ReviewRecord validators with the finite results and exit-code contract above, still in non-authoritative dry-run mode.
-4. **CI integration slice** — wire the validators into a no-public-write dry run, preserve the stable workflow check names or migrate them through reviewed ruleset changes, and keep rollback to the current hold workflow trivial.
-
-Each slice still requires fresh bounded authorization before any repository-control, promotion, release, or publication mutation.
+1. **Vocabulary reconciliation** — crosswalk or rename lifecycle-wide A–G docs so
+   their letters cannot be mistaken for the final-readiness profile.
+2. **Policy activation slice** — define accepted input/output contracts, meaningful
+   fail-closed Rego rules, native tests, immutable bundle identity, selector,
+   evaluator, and governed consumer.
+3. **Support-resolution slice** — authenticate evidence, policy, attestation,
+   review, decision, manifest, correction, and rollback references rather than
+   checking presence only.
+4. **Release-integration slice** — prove an accountable, reversible, zero-shortcut
+   transition with correction and rollback drills while keeping validation and
+   release authority separate.
+5. **Hosted-proof repair** — reconcile the PromotionReceipt generated-receipt
+   integrity failure through the legitimate receipt producer and rerun the
+   exact-head workflow.
 
 [Back to top](#top)
 
@@ -200,102 +264,122 @@ Each slice still requires fresh bounded authorization before any repository-cont
 
 ## Evidence boundary
 
-This revision is grounded in repository bytes at `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped follow-on hardening diff.
+This edition is grounded in repository evidence at
+`main@9d924c665073263f2cbf376d2bf29e7b9f252b06`.
 
 ### Truth labels
 
 | Label | Meaning in this ADR |
 |---|---|
-| **CONFIRMED** | Verified from current repository files, workflow source, tests, or exact readback |
-| **PROPOSED** | Architecture, object, field, path, migration, or implementation target not accepted or operationally proved |
-| **NEEDS VERIFICATION** | Checkable state not verified strongly enough to act as fact |
-| **UNKNOWN** | Not resolved by the inspected surfaces |
-| **CONFLICTED** | Tracked surfaces make incompatible claims that require a reviewed resolution |
-| **HELD** | Current workflow intentionally blocks graduation while preserving a green readiness-check path |
+| **CONFIRMED** | Verified from current repository bytes or hosted workflow records inspected in this session |
+| **PROPOSED** | Decision, semantic rule, mapping, field, migration, or implementation target not accepted or operationally proved |
+| **NEEDS VERIFICATION** | A concrete owner, reference, evaluator, authority, setting, or behavior remains to be checked |
+| **UNKNOWN** | The inspected surfaces do not support a stronger conclusion |
+| **CONFLICTED** | Repository surfaces make incompatible naming, responsibility, or maturity claims |
+| **HELD** | Graduation or release is intentionally blocked while prerequisites remain open |
 
-### What was inspected
+### Inspected surfaces
 
-- ADR inventory and operating contract;
-- Directory Rules placement doctrine;
-- this ADR’s prior bytes;
-- current promotion workflow;
-- `control_plane/policy_gate_register.yaml`;
-- `PromotionDecision` contract, release schema, fixtures, validator, and test;
-- runtime `DecisionEnvelope` schema;
-- the empty policy-side `promotion_decision` schema scaffold;
-- bounded generic promotion and fixture-only ReviewRecord candidate validators;
-- promotion validator routing README;
-- promotion policy stubs;
-- release-review guidance;
-- promotion runbook;
-- Makefile target state;
-- hydrology promotion stub and tracked smoke decision;
-- neighboring ADRs for artifact separation, abstention, quarantine, rollback, public boundaries, and separation of duties.
+- the complete prior ADR and canonical ADR inventory;
+- accepted ADR-0029 and the exact adopted Directory Rules bytes;
+- promotion-gate workflow, validator, README, fixtures, focused tests, and
+  fixture-only ReviewRecord integration;
+- PromotionDecision contract, schema, validator, fixtures, and tests;
+- PromotionReceipt contract, schema, validator, tests, workflow, and hosted run
+  history;
+- promotion policy boundary and its two no-op Rego stubs;
+- policy-gate register, review lane, runbook, hydrology promoter, smoke decision,
+  and neighboring release/evidence/rollback ADRs.
 
-### What this evidence cannot prove
+### What was not exercised
 
-This revision does not prove:
+This update did not:
 
-- an accepted A–G gate contract;
-- a `DecisionGate` or `PromotionReceipt` schema;
-- a promotion policy bundle;
-- evidence resolution;
-- signature verification;
-- accountable release review;
-- separation-of-duties enforcement;
-- rollback-card usability;
-- release-manifest closure;
-- deterministic replay;
-- branch-protection requirements;
-- a successful promotion, release, rollback, correction, or publication.
+- run a local checkout or the repository's test commands;
+- authenticate an `EvidenceRef` or resolve a live `EvidenceBundle`;
+- evaluate an accepted promotion policy bundle;
+- verify DSSE/cosign against accepted trust roots;
+- authenticate reviewer identity, assignment, qualification, or independence;
+- validate an operational `ReleaseManifest` or usable rollback target;
+- apply, release, correct, withdraw, or roll back a lifecycle transition;
+- inspect repository rulesets or required-check settings;
+- inspect a deployed public API, map, export, or AI consumer.
+
+### Hosted workflow boundary
+
+The latest inspected main-branch `promotion-receipt` run was
+`31654973080` at `3911c519d9bc134c3ab0662fed6577ebd966813b`.
+Its fixture-polarity and contract-test steps passed; the job failed at the
+AI-authored generated-receipt integrity step. Because the workflow is
+path-filtered and no exact-base run was inspected, current hosted
+PromotionReceipt integrity remains **NEEDS VERIFICATION**. The failure does not
+invalidate the checked-in contract bytes by itself, but it blocks a claim of a
+green end-to-end workflow.
 
 [Back to top](#top)
 
 ---
 
-<a id="context"></a>
+<a id="context-and-scope"></a>
 
-## Context
+## Context and scope
 
-KFM’s lifecycle invariant remains:
+KFM's lifecycle invariant remains:
 
 ```text
 RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ```
 
-Promotion is a governed state transition, not a file move, merge, deployment, tile build, generated answer, or placement under a familiar path.
+Promotion is a governed state transition, not a file move, branch merge,
+deployment, alias update, tile build, generated answer, or placement under a
+familiar directory.
 
-The repository currently carries several related but different sequences:
+### Why this ADR is narrow
 
-| Surface | Current role | Current evidence |
-|---|---|---|
-| [`PROMOTION_RUNBOOK.md`](../runbooks/PROMOTION_RUNBOOK.md) | Human lifecycle operating procedure | Uses lettered lifecycle stages from admission through release |
-| [`promotion-gate.yml`](../../.github/workflows/promotion-gate.yml) | Read-only CI readiness and hold workflow | Four jobs; no promotion or public write |
-| [`PromotionDecision`](../../contracts/release/promotion_decision.md) | Release-transition decision object | Shape contract and proposed schema exist |
-| [`DecisionEnvelope`](../../schemas/contracts/v1/runtime/decision_envelope.schema.json) | Policy/runtime decision envelope | Proposed schema with `ANSWER / ABSTAIN / DENY / ERROR` |
-| Release-review guidance | Human review records and recommendations | README exists; governed review records are not established |
-| This ADR | Proposed canonical promotion-evaluation sequence | Not accepted or implemented |
+The phrase **promotion gate** is overloaded in the repository. Some documents
+use A–G for controls distributed across the whole lifecycle, beginning with
+source admission. The executable validator and PromotionReceipt use A–G for one
+final-readiness packet already positioned at `CATALOG`/`TRIPLET`. Those are not
+the same decision boundary.
 
-The earlier ADR text treated these as if they were already one operational system. Current repository evidence requires a stricter separation.
+ADR-0018 governs only the latter:
 
-### Scope
+```text
+CATALOG / TRIPLET candidate
+        -> bounded final-readiness A-G evaluation
+        -> accountable PromotionDecision processing
+        -> separately authorized transition application
+        -> PUBLISHED
+```
 
-This ADR is limited to the **promotion-evaluation packet for a candidate already at `CATALOG / TRIPLET` and seeking the governed transition toward `PUBLISHED`**.
+### Out of scope
 
-It does not rename the lifecycle transitions in the promotion runbook. It does not convert source admission, normalization, processing, catalog closure, correction, or rollback into the seven gates below.
+This ADR does not:
 
-### Forces
+- replace source admission or pre-RAW governance;
+- rename all lifecycle stages or runbook steps;
+- make the Atmosphere, Hydrology, Archaeology, or another domain's promotion
+  rules globally authoritative;
+- accept the current PromotionDecision or PromotionReceipt schemas;
+- activate policy or a signer;
+- choose production storage, registry, service, or deployment topology;
+- authorize the hydrology smoke promoter;
+- make public clients read internal candidate, receipt, review, or release paths;
+- release, deploy, publish, correct, withdraw, or roll back any object.
 
-| Force | Architectural pressure |
+### Decision drivers
+
+| Driver | Architectural pressure |
 |---|---|
-| Auditability | Each consequential concern must have an inspectable result and stable input identity |
-| Fail-closed behavior | Missing or unverifiable support must block continuation |
-| Vocabulary stability | Contracts must not depend on temporary CI job names |
-| Current compatibility | Existing `PromotionDecision`, `DecisionEnvelope`, workflow check names, and release records must not be silently redefined |
-| Separation of duties | Review and release authority must remain independent from validation and authorship where required |
-| Artifact separation | Receipts, proofs, manifests, decisions, catalog records, and published artifacts must not collapse |
-| Reversibility | Every material transition requires correction and rollback support |
-| Buildability | The target sequence must be implementable through small, testable, reversible changes |
+| **Auditability** | Every declared gate result, support reference, digest, decision relation, and lifecycle effect must be inspectable. |
+| **Fail-closed behavior** | Missing, contradictory, stale, unsupported, denied, or failed context blocks readiness. |
+| **Vocabulary stability** | Gate names and outcomes must not depend on temporary CI job names. |
+| **Source and evidence integrity** | Presence of a reference must not be confused with resolution or truth. |
+| **Separation of duties** | Validation, authorship, review, transition approval, and release application remain distinct when material. |
+| **Artifact-family separation** | Receipts, decisions, proofs, manifests, review records, corrections, rollback cards, and published artifacts do not collapse. |
+| **Reversibility** | Every material transition has correction and rollback support before application. |
+| **Buildability** | The profile is implementable through deterministic, bounded, independently testable parts. |
+| **Compatibility** | Current workflow check names and existing object enums are preserved until a reviewed migration says otherwise. |
 
 [Back to top](#top)
 
@@ -305,158 +389,269 @@ It does not rename the lifecycle transitions in the promotion runbook. It does n
 
 ## Decision
 
-If later accepted after the REVISE checkpoint above, KFM will adopt the following rules.
+> [!IMPORTANT]
+> **PROPOSED:** If accepted, KFM will use the exact
+> `kfm/promotion-readiness/A-G/v1` profile below as the final-readiness sequence
+> for a `CATALOG`/`TRIPLET` candidate targeting `PUBLISHED`.
 
-1. The final publication-facing promotion evaluation uses one ordered logical sequence, Gates **A–G**.
-2. Gate names describe **outcomes being established**, not CI actions.
-3. The sequence is a target contract; current workflow job names are not retroactively relabeled as completed gates.
-4. Every gate consumes explicit inputs and produces a deterministic gate record or an explicitly held/error result.
-5. A gate may delegate to schemas, validators, policy evaluators, evidence resolvers, signing verifiers, review systems, and release tools, but it cannot absorb their authority.
-6. No gate may publish. Gate G may establish release readiness only; a separately authorized release action performs the lifecycle transition.
-7. A candidate may not continue when any required gate record is missing, stale, contradictory, malformed, unsupported, or unresolved.
-8. Promotion-level decisions use the release `PromotionDecision` vocabulary. Policy/runtime decisions use `DecisionEnvelope` vocabulary. Gate-runner status is a third axis.
-9. Review and separation-of-duties obligations are explicit inputs to release readiness; they are not inferred from CODEOWNERS, workflow identity, or an automation username.
-10. The audit packet must enumerate every required gate and bind to the candidate, policy, evidence, review, rollback, and release objects through stable identifiers and digests. The final artifact family and schema name remain an acceptance gate rather than an assumed `PromotionReceipt`.
+1. The sequence contains exactly seven ordered logical gates, A through G.
+2. Every evaluation binds one explicit candidate packet and deterministic
+   evaluation instant.
+3. Gate statuses are `PASS`, `ABSTAIN`, `DENY`, or `ERROR`.
+4. Overall status uses `ERROR > DENY > ABSTAIN > PASS`.
+5. `PASS` maps to `APPROVE_READY`; every other status maps to `BLOCKED`.
+6. Gate evaluation may produce a complete seven-gate diagnostic set rather than
+   short-circuit, but no non-`PASS` packet may become ready.
+7. Readiness validation does not make the final `PromotionDecision`.
+8. `PromotionReceipt` records one declared attempt and its A–G outcomes; it does
+   not replace the decision, proof, manifest, review, or release record.
+9. Gate G does not apply a transition. A separately authorized release action
+   owns lifecycle mutation.
+10. `transition.applied` is an auditable declaration, not sovereign proof of
+    application. Operational verification must resolve the referenced decision,
+    support, release, and prior/current state.
+11. Every transition-capable implementation must be fail-closed, replayable,
+    correctable, and reversible.
+12. Public clients consume governed released surfaces and must never infer
+    release from a gate output, receipt, workflow, or candidate path.
 
 [Back to top](#top)
 
 ---
 
-<a id="proposed-a-g-sequence"></a>
+<a id="revised-candidate-a-g-sequence"></a>
 
-## Proposed A–G sequence
+## Revised candidate A–G sequence
 
-| Gate | Proposed outcome name | Establishes | Minimum evidence before `PASS` | Current implementation |
+| Gate | Exact name | Declared responsibility | Minimum bounded `PASS` posture | What remains outside the bounded validator |
 |:---:|---|---|---|---|
-| **A** | `schema_valid` | Candidate and required control objects conform to accepted, pinned schemas | Schema identifiers, versions, validation report, canonical input digest | **PARTIAL:** `PromotionDecision` shape fixtures are tested; no full candidate packet schema |
-| **B** | `inputs_pinned` | Candidate inputs, source roles, rights, versions, and digests are fixed and reproducible | Candidate identity, `run_id`, source descriptors/heads, rights posture, content/spec digests | **NOT ESTABLISHED** |
-| **C** | `checks_pass` | Required domain, join, spatial, temporal, sensitivity-transform, catalog, and public-contract checks pass | Named validators, versions, deterministic reports, negative-path coverage | **NOT ESTABLISHED as a promotion gate** |
-| **D** | `signatures_valid` | Required receipts or attestations are authentic and bind the evaluated bytes | Signed subject digests, verifier identity/version, verification result | **NOT ESTABLISHED** |
-| **E** | `provenance_complete` | Required `EvidenceRef` values resolve to admissible `EvidenceBundle` or proof support and lineage closes | Evidence resolver report, source-role preservation, supersession/correction lineage | **NOT ESTABLISHED** |
-| **F** | `no_policy_violations` | Pinned policy evaluates the exact candidate packet and yields no blocking decision or unmet obligation | Policy bundle identity/digest, decision envelope, reasons, obligations, sensitivity/rights result | **HELD:** policy files are greenfield stubs |
-| **G** | `release_ready` | Review, separation of duties, manifest relationship, rollback target, correction path, and public-boundary prerequisites are complete | Review record, final `PromotionDecision` packet, release-manifest relation, rollback validation, no unresolved holds | **HELD:** review and generic gate validators are stubs |
+| **A** | `identity_and_closure` | Candidate/profile/author/spec identity, declared lifecycle boundary, and minimal release-manifest closure | Exact profile; non-empty candidate/author; SHA-256 `spec_hash`; `CATALOG` or `TRIPLET` → `PUBLISHED`; minimal manifest identity | Accepted candidate and manifest contracts; source authority; real manifest completeness; object existence |
+| **B** | `asset_integrity` | Candidate, manifest, and run-receipt specification and artifact-digest agreement | Matching spec hashes; non-empty unique digest sets; manifest/receipt artifact-set equality | Production canonicalization policy; signer trust; actual byte retrieval; immutable storage |
+| **C** | `geometry_and_crs` | Declared geometry validity, deterministic processing, CRS, and ordered finite bounds | `valid: true`; `deterministic: true`; `EPSG:4326`; bounded ordered bbox | Domain topology, scientific fitness, sensitivity transform, full geometry retrieval |
+| **D** | `temporal_semantics` | Strict UTC-second evaluation and candidate temporal ordering | Real canonical UTC timestamps; `start <= end`; declared evaluation instant | Source freshness policy, valid-time/transaction-time authority, external clock trust |
+| **E** | `rights_and_sensitivity` | Declared policy profile, labels, public-safe discipline, and finite policy evaluation | Known profile/labels; valid public-safe combination; supplied evaluation not denied or errored | Execution of `policy/promotion/`; rights/consent/sovereignty truth; accepted policy bundle/evaluator |
+| **F** | `proof_and_catalog_support` | Declared evidence, attestation, run-receipt, catalog, and conditional AI-receipt support | Required reference arrays present; STAC/DCAT/PROV support declared; AI receipt when mediation was used | URI resolution; EvidenceBundle truth; cryptographic verification; catalog integrity outside declarations |
+| **G** | `review_and_rollback` | Fixture-only review shape, identity/authority interval declarations, separation, scope/subject/hash binding, rollback, and correction linkage | Declared approving review with empty obligations; canonical distinct actors; current declared authority/review intervals; matching subject/hashes; rollback/correction support | Live identity and authority registry; reviewer qualification; independent approval; actual rollback usability or correction propagation |
 
-### Ordering
+### Logical flow
 
 ```mermaid
 flowchart LR
-  CAND["CATALOG / TRIPLET candidate"] --> A["A schema_valid"]
-  A --> B["B inputs_pinned"]
-  B --> C["C checks_pass"]
-  C --> D["D signatures_valid"]
-  D --> E["E provenance_complete"]
-  E --> F["F no_policy_violations"]
-  F --> G["G release_ready"]
-  G --> AUTH["separate release authority"]
+  CAND["CATALOG / TRIPLET candidate"] --> A["A identity_and_closure"]
+  A --> B["B asset_integrity"]
+  B --> C["C geometry_and_crs"]
+  C --> D["D temporal_semantics"]
+  D --> E["E rights_and_sensitivity"]
+  E --> F["F proof_and_catalog_support"]
+  F --> G["G review_and_rollback"]
+  G --> READY["APPROVE_READY"]
+  READY --> DEC["separate PromotionDecision processing"]
+  DEC --> AUTH["separately authorized transition application"]
   AUTH --> PUB["PUBLISHED"]
 
-  A -. fail / hold / error .-> STOP["prior state preserved"]
-  B -. fail / hold / error .-> STOP
-  C -. fail / hold / error .-> STOP
-  D -. fail / hold / error .-> STOP
-  E -. fail / hold / error .-> STOP
-  F -. deny / abstain / error .-> STOP
-  G -. fail / hold / error .-> STOP
+  A -. non-PASS .-> BLOCK["BLOCKED; prior state preserved"]
+  B -. non-PASS .-> BLOCK
+  C -. non-PASS .-> BLOCK
+  D -. non-PASS .-> BLOCK
+  E -. non-PASS .-> BLOCK
+  F -. non-PASS .-> BLOCK
+  G -. non-PASS .-> BLOCK
 ```
 
-Cross-gate parallelism is not normative. Independent subchecks inside one gate may run in parallel when they consume identical pinned inputs and their aggregation is deterministic.
+The arrows express logical dependency and readiness, not a requirement that an
+implementation suppress later diagnostics after an earlier failure. Complete,
+deterministic findings are allowed when all gates inspect the same bounded,
+pinned input without side effects.
 
-### Gate records
+### Why the names changed from v1.4
 
-The repository does not currently contain the proposed per-gate schema. Acceptance requires a machine contract that, at minimum, binds:
+The v1.4 labels were broad desired outcomes, but they did not match the
+implemented validator or the later PromotionReceipt schema. The current
+bounded profile has one exact, schema-pinned naming set shared by:
 
-```json
-{
-  "gate": "A",
-  "name": "schema_valid",
-  "gate_result": "PASS",
-  "promotion_id": "promo:hydrology:example",
-  "run_id": "run-example",
-  "policy_decision_id": null,
-  "input_digest": "sha256:...",
-  "spec_hash": "sha256:...",
-  "evidence_refs": [],
-  "reasons": [],
-  "obligations": [],
-  "evaluated_at": "2026-07-24T00:00:00Z",
-  "evaluator": {
-    "name": "example-validator",
-    "version": "v1"
-  }
-}
-```
+- `tools/validators/promotion_gate/validate_promotion_gate.py`;
+- `contracts/release/promotion_receipt.md`;
+- `schemas/contracts/v1/release/promotion_receipt.schema.json`;
+- `tests/release/test_promotion_receipt.py`.
 
-This is an **illustrative target shape**, not a current contract. The accepted schema must resolve field names, required identifiers, canonicalization, format checking, evaluator identity, amendment rules, and compatibility before implementation.
+Selecting those names as the revised proposal reduces one source of drift while
+keeping the decision explicitly non-binding until accepted.
 
 [Back to top](#top)
 
 ---
 
-<a id="decision-and-status-vocabularies"></a>
+<a id="sequence-and-vocabulary-conflict-register"></a>
 
-## Decision and status vocabularies
+## Sequence and vocabulary conflict register
 
-The repository already has distinct vocabularies. This ADR must preserve them.
-
-| Vocabulary | Current or proposed values | Owner | Use |
+| ID | Surface | A–G meaning | Current disposition |
 |---|---|---|---|
-| `PromotionDecision.decision` | `APPROVE`, `DENY`, `ABSTAIN` | Release contract/schema | Final transition decision |
-| `DecisionEnvelope.outcome` | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Runtime/policy contract/schema | Policy or governed-runtime evaluation |
-| Proposed `gate_result` | `PASS`, `FAIL`, `HOLD`, `ERROR` | Future gate-record schema | Whether one gate may continue |
-| Workflow/job status | GitHub job conclusion plus documented `WORKFLOW_HOLD` | CI workflow | Readiness execution state |
-| Release-review outcome | `READY_FOR_DECISION`, `HOLD_FOR_EVIDENCE`, and related guidance terms | Review-record contract or guidance | Human review routing |
+| `ADR18-C1` | This ADR v1.5 candidate | Final `CATALOG`/`TRIPLET` → `PUBLISHED` readiness: identity, integrity, geometry, time, policy context, support, review/rollback | **PROPOSED selected candidate for ADR-0018 scope** |
+| `ADR18-C2` | Bounded validator and PromotionReceipt | Same exact seven names as the v1.5 candidate | **CONFIRMED fixture-first implementation; non-authoritative** |
+| `ADR18-C3` | `docs/architecture/publication/promotion-gates.md` | Lifecycle-wide source admission, provenance, sensitivity, validation, evidence closure, review, release | **CONFLICTED naming/scope; retain as doctrine evidence pending crosswalk or rename** |
+| `ADR18-C4` | `docs/runbooks/PROMOTION_RUNBOOK.md` | Operational lifecycle steps using lettered sequencing | **CONFLICTED/NEEDS VERIFICATION; do not equate letters without review** |
+| `ADR18-C5` | ADR-0018 v1.4 | `schema_valid`, `inputs_pinned`, `checks_pass`, `signatures_valid`, `provenance_complete`, `no_policy_violations`, `release_ready` | **SUPERSEDED within this proposed ADR edition; historical proposal only** |
+| `ADR18-C6` | Release `PromotionDecision` | `APPROVE`, `DENY`, `ABSTAIN` | **Separate decision vocabulary; substantive PROPOSED shape** |
+| `ADR18-C7` | Runtime `DecisionEnvelope` | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | **Separate policy/runtime vocabulary** |
 
-### Required mappings
+### Required reconciliation rule
 
-| Gate condition | Gate result | Policy outcome, when policy ran | Promotion effect |
-|---|---|---|---|
-| All required checks established | `PASS` | usually `ANSWER` | Continue |
-| Deterministic blocking defect | `FAIL` | may be `DENY` | Block; final decision may be `DENY` |
-| Evidence, review, or support unresolved | `HOLD` | usually `ABSTAIN` | Preserve prior state; final decision may be `ABSTAIN` |
-| Evaluator or trust machinery failed | `ERROR` | `ERROR` where a DecisionEnvelope exists | Block; do not fabricate `APPROVE` or a false denial |
+Acceptance requires one explicit crosswalk and terminology repair:
 
-A workflow success that proves a hold condition is visible is not a gate `PASS`. A schema-valid `APPROVE` example is not a policy `ANSWER`, reviewer approval, or release authorization.
+- call the whole-lifecycle controls **lifecycle/publication gates** or another
+  reviewed term;
+- call this profile **final promotion-readiness A–G**;
+- do not reuse one letter as proof that a different concern passed;
+- update links and diagrams without erasing historical decisions;
+- preserve stable workflow check names unless repository rules are deliberately
+  migrated.
 
-### Current schema conflict
-
-Two tracked schemas use the name `promotion_decision`:
-
-- `schemas/contracts/v1/release/promotion_decision.schema.json` is a substantive, closed, proposed release-transition schema.
-- `schemas/contracts/v1/policy/promotion_decision.schema.json` is an empty, permissive proposed scaffold with no contract document.
-
-This ADR does not silently reconcile them. The release schema is the observed shape exercised by the promotion workflow. The policy-side scaffold must not become a competing authority. Acceptance requires an explicit disposition: retire it, convert it to a compatibility pointer, or define a genuinely distinct object with a distinct name.
+This ADR does not perform that multi-document migration in the same change that
+proposes the authority decision.
 
 [Back to top](#top)
 
 ---
 
-<a id="identity-and-join-contract"></a>
+<a id="promotionreceipt-boundary"></a>
 
-## Identity and join contract
+## `PromotionReceipt` boundary
 
-The current repository exposes three relevant identities:
+The repository now contains a separate **PROPOSED** release-scoped
+`PromotionReceipt` contract and schema. This resolves the earlier “not found”
+gap but not operational authority.
 
-| Field | Current owner | Meaning |
+### Purpose
+
+A `PromotionReceipt` records:
+
+- one `promotion_id` and candidate identity;
+- `kfm/promotion-receipt/v1` profile identity;
+- candidate `spec_hash` and artifact digests;
+- `kfm/promotion-readiness/A-G/v1` evaluation status/readiness;
+- exactly seven ordered gate records with the names in this ADR;
+- declared `CATALOG`/`TRIPLET` → `PUBLISHED` transition and `applied` flag;
+- optional `decision_ref`;
+- evidence, policy, review, and attestation references;
+- canonical receipt digest;
+- actor and creation time.
+
+### It is not
+
+| Object or authority | Why distinct |
+|---|---|
+| `PromotionDecision` | Records accountable `APPROVE`/`DENY`/`ABSTAIN`; receipt records the attempt and declared outcomes. |
+| Readiness validator output | Validator output is a bounded execution result; the receipt is a versioned release-family record shape. |
+| `ReleaseManifest` | Manifest inventories the released artifact set; receipt does not make that set authoritative. |
+| `RunReceipt` | RunReceipt records process memory for a tool or pipeline; PromotionReceipt records a promotion attempt. |
+| Proof pack | Proof assembles support; receipt references support and does not establish truth. |
+| Policy decision | Policy is an independent admissibility input. |
+| Review record | Review establishes accountable human/authority posture. |
+| Transition application | Applying state remains an authorized release operation. |
+| Publication | Public serving requires released, public-safe governed surfaces. |
+
+### Declared transition rules
+
+A receipt may validly record `transition.applied: false` even when every gate is
+`PASS`. That is the expected readiness-only posture.
+
+When `transition.applied: true`, the current validator requires these declarations:
+
+1. all seven gates are `PASS`;
+2. overall status is `PASS` and readiness is `APPROVE_READY`;
+3. `decision_ref` is present;
+4. evidence, policy, review, and attestation arrays are non-empty;
+5. the receipt digest matches the canonical payload.
+
+Those checks prove internal consistency only. An operational verifier must still
+resolve the decision, referenced support, authorized actor, prior state, applied
+state, manifest, correction, and rollback behavior.
+
+### Digest rule
+
+The proposed profile computes SHA-256 over UTF-8 JSON after removing the
+top-level `integrity` member, sorting keys, omitting insignificant whitespace,
+and enabling ASCII escaping. The stored value uses `sha256:<lowercase-hex>`.
+
+This is a profile-specific rule, not a repository-wide hash-policy decision for
+all object families.
+
+[Back to top](#top)
+
+---
+
+<a id="finite-vocabularies-and-mappings"></a>
+
+## Finite vocabularies and mappings
+
+| Axis | Values | Meaning |
 |---|---|---|
-| `PromotionDecision.id` | Release schema | Stable transition-decision identity; hydrology has a conditional `promo:hydrology:<suffix>` pattern |
-| `PromotionDecision.run_id` | Release schema | Candidate run being evaluated |
-| `DecisionEnvelope.decision_id` | Runtime schema | Policy/runtime evaluation identity |
+| **Gate status** | `PASS`, `ABSTAIN`, `DENY`, `ERROR` | Result of one bounded final-readiness gate |
+| **Overall readiness status** | `PASS`, `ABSTAIN`, `DENY`, `ERROR` | Fail-closed aggregate of seven gate statuses |
+| **Readiness** | `APPROVE_READY`, `BLOCKED` | Whether the bounded packet may proceed to accountable decision processing |
+| **PromotionDecision** | `APPROVE`, `DENY`, `ABSTAIN` | Separately governed release-transition decision |
+| **DecisionEnvelope** | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Policy/runtime public or internal response vocabulary |
+| **Receipt transition declaration** | `applied: true / false` | Declared lifecycle effect, not proof by itself |
+| **CI status** | GitHub job/check state plus documented holds | Execution state, not a gate or release decision |
 
-The prior version of this ADR claimed one `decision_id` was already the cross-artifact join key. Current contracts do not establish that.
-
-### Proposed convergence rule
-
-Before acceptance, the gate packet must adopt an explicit relationship:
+### Deterministic mappings
 
 ```text
-promotion_id = PromotionDecision.id
-run_id       = candidate run identity
-decision_id  = each policy/runtime DecisionEnvelope identity
+ERROR   > DENY > ABSTAIN > PASS
+PASS    -> APPROVE_READY
+other   -> BLOCKED
 ```
 
-Every gate record must carry `promotion_id` and `run_id`. A gate that invokes policy also carries the exact `decision_id`. A final `PromotionDecision` references the gate-report set by stable digest or accepted reference field once the release contract is revised.
+| Readiness condition | PromotionDecision implication | What is forbidden |
+|---|---|---|
+| `PASS / APPROVE_READY` | Structurally eligible for separately governed decision processing | Auto-generating `APPROVE`; applying transition; public serving |
+| `ABSTAIN / BLOCKED` | May support a later `ABSTAIN` after accountable processing | Guessing missing support; treating uncertainty as approval |
+| `DENY / BLOCKED` | May support a later `DENY` after accountable processing | Treating validator denial as a complete policy/release record |
+| `ERROR / BLOCKED` | Tooling or evaluation failure must be remediated | Falling back to allow or fabricating a substantive denial |
 
-No implementation may guess that the three identifiers are interchangeable. Deterministic derivation is permitted only after the contract, schema, collision rules, canonicalization, and migration behavior are accepted.
+A green workflow that proves a hold is visible is not an A–G `PASS`. A
+schema-valid `APPROVE` object is not accountable approval. A receipt with
+`applied: true` is not sovereign proof of state.
+
+[Back to top](#top)
+
+---
+
+<a id="identity-and-binding"></a>
+
+## Identity and binding
+
+The current object families expose related but distinct identities.
+
+| Identity | Owner | Meaning |
+|---|---|---|
+| `promotion_id` | PromotionReceipt | One promotion attempt and its A–G result set |
+| `candidate.candidate_id` | PromotionReceipt / readiness packet | Candidate being evaluated |
+| `PromotionDecision.id` | PromotionDecision | Accountable transition-decision identity |
+| `PromotionDecision.run_id` | PromotionDecision | Candidate run or execution under decision |
+| `DecisionEnvelope.decision_id` | Runtime/policy envelope | One policy/runtime evaluation identity |
+| `ReleaseManifest` identity | Release contract | Authoritative released artifact-set identity |
+
+### Proposed binding rule
+
+Before implementation graduation:
+
+- every receipt and decision binds the exact candidate/run and `spec_hash`;
+- artifact digests bind the evaluated bytes;
+- a final PromotionDecision references the applicable readiness/receipt set by an
+  accepted field or immutable digest;
+- policy evaluations retain their own `decision_id` and are referenced rather
+  than renamed;
+- review records bind subject, scope, candidate/spec/artifact hashes, authority
+  interval, and decision recommendation;
+- ReleaseManifest binds the authoritative released artifact set and rollback
+  target;
+- supersession and correction are append-only and never silently mutate prior
+  receipts or decisions.
+
+No implementation may assume these identifiers are interchangeable merely
+because they describe the same promotion attempt.
 
 [Back to top](#top)
 
@@ -468,35 +663,31 @@ No implementation may guess that the three identifiers are interchangeable. Dete
 
 ### Core rule
 
-A failed or unresolved promotion evaluation preserves the candidate’s prior lifecycle state. It does not copy bytes into `PUBLISHED`, update a public alias, expose a public DTO, or cause a renderer or AI surface to infer release.
+Every non-`PASS` result preserves the prior lifecycle state. It does not copy
+bytes to `PUBLISHED`, update a public alias, expose a public DTO, or authorize a
+renderer or AI surface.
 
-| Condition | Required response |
-|---|---|
-| Schema or deterministic validation defect | `FAIL`; record reasons; preserve prior state |
-| Evidence or source cannot resolve | `HOLD` / policy `ABSTAIN`; preserve prior state |
-| Rights, sensitivity, access, or release policy denies | `FAIL` / policy `DENY`; preserve prior state |
-| Evaluator, signer, registry, or resolver error | `ERROR`; preserve prior state; record operator-visible diagnostic |
-| Human review required | `HOLD`; create or require accountable review record; no same-actor shortcut where separation applies |
-| Rollback target or release relationship missing | `FAIL` or `HOLD` according to accepted policy; no release |
-| Public write observed during dry-run | `ERROR` and correction investigation; no success claim |
+| Condition | Gate/overall posture | Lifecycle posture |
+|---|---|---|
+| Missing or unresolved evidence/support | `ABSTAIN` | Keep candidate at current phase; request support or review |
+| Deterministic invalid, contradictory, unsafe, or policy-denied declaration | `DENY` | Preserve prior state; correct or explicitly reject |
+| Evaluator/parser/trust machinery failure | `ERROR` | Preserve prior state; operator remediation required |
+| Review authority absent or approving obligations remain open | `ABSTAIN` | Hold for accountable review |
+| Self-review, stale/superseded review, scope/hash mismatch, invalid geometry, or artifact disagreement | `DENY` | Preserve prior state; correction required |
+| Candidate/support itself is unsafe, malformed, rights-unclear, or sensitivity-unsafe | `DENY` plus possible quarantine decision | Use ADR-0021 structured quarantine path when lifecycle isolation is warranted |
 
-### Quarantine versus review hold
+### Release hold versus quarantine
 
-Not every failed final promotion should physically move to `data/quarantine/`. The candidate may remain at `CATALOG / TRIPLET` with a release hold when the bytes are valid but release support is incomplete.
+A valid catalog candidate can remain at `CATALOG`/`TRIPLET` with a release hold
+when release support is incomplete. Physical quarantine is reserved for unsafe,
+malformed, rights-unclear, sensitivity-unsafe, or otherwise inadmissible
+material. This ADR does not collapse a readiness hold into a file move.
 
-Use `QUARANTINE` when the candidate or its support is unsafe, malformed, rights-unclear, sensitivity-unsafe, or otherwise requires lifecycle isolation. Use a release-review hold when the candidate remains admissible at its current phase but lacks release support.
+### Amendment, replay, and correction
 
-ADR-0021 governs structured quarantine exits. Release-review guidance owns review routing. This ADR does not collapse them.
-
-### Amendment and replay
-
-A held evaluation must not be silently edited. The accepted gate schema must decide whether review completion:
-
-- emits a new gate record under the same `promotion_id`;
-- emits a superseding `promotion_id`; or
-- uses an append-only amendment object.
-
-Until that choice is accepted, no implementation may mutate prior gate records in place.
+A later review, evidence resolution, or corrected candidate produces a new,
+traceable evaluation/receipt/decision or accepted append-only amendment. Prior
+records remain immutable and linked by supersession/correction lineage.
 
 [Back to top](#top)
 
@@ -506,37 +697,32 @@ Until that choice is accepted, no implementation may mutate prior gate records i
 
 ## Authority and publication boundary
 
-| Responsibility | Authority home | Role in this ADR |
+| Responsibility | Owning surface | Boundary |
 |---|---|---|
-| Architecture decision | `docs/adr/` | Records the proposed sequence |
-| Semantic meaning | `contracts/` | Defines PromotionDecision, ReviewRecord, ReleaseManifest, RollbackCard, and future gate-report meaning |
-| Machine shape | `schemas/contracts/v1/` | Defines accepted JSON shapes |
-| Policy admissibility | `policy/` | Produces explicit decisions and obligations |
-| Validator implementation | `tools/validators/`, package/test-owned lanes | Checks explicit inputs; does not approve release |
-| Fixtures | `fixtures/` and `tests/fixtures/` by responsibility | Prove bounded behavior; never authority |
-| Evidence and proofs | `data/proofs/` and evidence authorities | Resolve support; do not approve release |
-| Receipts | `data/receipts/` | Record process execution; do not replace proof or decision |
-| Review records | `release/reviews/` or accepted review home | Bind accountable review and recommendations |
-| Release decisions and manifests | `release/` | Own release-governance state |
-| Lifecycle data | `data/<phase>/` | Preserve phase-visible material |
-| Public clients | Governed API and released surfaces | Consume only released public-safe artifacts |
-| CI | `.github/workflows/` | Orchestrates checks with least privilege; never release authority by itself |
+| Human architecture decision | `docs/adr/` | Records this proposed sequence; no operational authority |
+| Domain/release explanation | `docs/architecture/`, runbooks | Explains flows; cannot accept the ADR or apply state |
+| Semantic object meaning | `contracts/` | Defines PromotionDecision, PromotionReceipt, ReviewRecord, ReleaseManifest, RollbackCard, CorrectionNotice |
+| Machine shape | `schemas/contracts/v1/` | Validates shape; cannot prove truth or authority |
+| Admissibility policy | `policy/` | Produces policy results/obligations after acceptance and evaluator binding |
+| Validation mechanics | `tools/validators/`, `fixtures/`, `tests/` | Proves bounded deterministic behavior; non-publisher |
+| Evidence and proofs | evidence authorities and `data/proofs/` | Support claims; do not approve transition |
+| Operational receipts | `data/receipts/` or accepted receipt instance home | Record execution; do not replace decisions or proof |
+| Review records | `release/reviews/` or accepted review authority | Bind accountable review and separation of duties |
+| Release decisions/manifests | `release/` | Own authoritative transition and release-governance records |
+| Lifecycle data | `data/<phase>/` | Stores phase-scoped material; state changes only through governed transition |
+| CI orchestration | `.github/workflows/` | Runs checks with least privilege; cannot become release authority by name |
+| Public delivery | Governed API and released public-safe artifacts | Serves only released state; never infers from internal paths or checks |
 
-A promotion gate may establish readiness. Only a separately authorized release action may perform the public transition. A public client must never inspect candidate paths, workflow artifacts, fixture paths, internal stores, or generated text to infer release state.
+### Separation of duties
 
-### Audit packet versus artifact-family authority
+The current single-account CODEOWNERS route is review routing, not proof of
+independent reviewer capacity. Until accountable distinct reviewer and release
+authority assignments are resolved, promotion application remains held where
+ADR-0024 requires separation.
 
-The complete gate set needs one inspectable index or report. The earlier ADR called it `PromotionReceipt`, but ADR-0011 requires receipts, proofs, manifests, catalog records, and decisions to remain distinct.
-
-Before acceptance, the project must decide whether the gate index is:
-
-- a process receipt;
-- a validation report;
-- a proof index;
-- a release packet index; or
-- another explicitly named contract.
-
-Its home follows its responsibility. The name `PromotionReceipt` is not accepted merely because it appeared in prior documentation.
+Automation may validate, assemble, and record candidate evidence. It cannot
+substitute for a required independent human decision or self-authorize the
+transition.
 
 [Back to top](#top)
 
@@ -548,50 +734,53 @@ Its home follows its responsibility. The name `PromotionReceipt` is not accepted
 
 | Surface | Status | Safe conclusion |
 |---|---:|---|
-| ADR identity and index | **CONFIRMED** | Exact path and ID exist; status remains proposed |
-| Promotion workflow | **CONFIRMED bounded** | Four read-only readiness jobs; no seven-gate runtime or public write |
-| Doctrine-artifact checks | **CONFIRMED narrow** | Validate selected prerequisite and descriptor fixture behavior |
-| PromotionDecision contract | **CONFIRMED draft / PROPOSED** | Defines release-transition meaning |
-| Release PromotionDecision schema | **CONFIRMED substantive / PROPOSED** | Closed shape with `APPROVE / DENY / ABSTAIN` |
-| PromotionDecision fixtures/test | **CONFIRMED narrow** | Non-empty valid/invalid shape fixtures are exercised |
-| Runtime DecisionEnvelope schema | **CONFIRMED / PROPOSED** | Defines `ANSWER / ABSTAIN / DENY / ERROR` policy/runtime shape |
-| Policy-side Promotion Decision schema | **CONFIRMED permissive scaffold** | Empty shape; must not compete with release schema |
-| Policy gate register | **CONFIRMED PROPOSED empty** | `entries: []`; no current policy-gate authority is registered |
-| Generic promotion validator | **CONFIRMED bounded candidate** | Executes a strict no-network synthetic A-G profile and emits finite readiness results without promotion authority |
-| Review validator | **CONFIRMED fixture-only candidate** | Checks synthetic Gate G declarations; it does not authenticate live identity/authority or create a ReviewRecord |
-| Promotion validator directory | **CONFIRMED executable bounded lane** | README, package entrypoint, fixtures, and focused tests are wired |
-| Promotion policy modules | **CONFIRMED greenfield stubs** | No meaningful prerequisite or rollback policy |
-| Make `publish-check` | **CONFIRMED executable bounded target** | Runs the synthetic promotion and ReviewRecord profiles; zero exit does not prove promotion |
-| Release review lane | **CONFIRMED guidance-only at parent** | No governed review record established by inspected inventory |
-| Hydrology promoter | **CONFIRMED stub** | Emits automation-smoke `APPROVE` without resolving support |
-| Tracked hydrology decision | **CONFIRMED smoke artifact** | Schema-shaped object; not admissible release evidence |
-| Proposed DecisionGate schema | **NOT FOUND** | No per-gate machine contract at prior path |
-| Proposed PromotionReceipt schema | **NOT FOUND** | No accepted seven-gate receipt contract |
-| End-to-end release closure | **NOT ESTABLISHED** | No evidence, policy, review, rollback, manifest, or public transition proof |
+| ADR identity/index | **CONFIRMED** | Exact path and ID exist; source/effective status remain proposed |
+| `promotion-gate` workflow | **CONFIRMED bounded** | Four read-only jobs execute prerequisite checks, PromotionDecision shape, A–G readiness, fixture-only review, and holds; no public write |
+| A–G readiness validator | **CONFIRMED executable bounded** | Seven gates, deterministic non-echoing findings, finite statuses, no network, no artifact emission |
+| A–G fixture/test family | **CONFIRMED substantive fixture proof** | One pass, three abstain, twelve deny, and two error fixtures plus focused edge/security tests |
+| ReviewRecord validator | **CONFIRMED fixture-only** | Validates declared identity/authority/review relations; authenticates no live actor or assignment |
+| PromotionDecision contract/schema | **CONFIRMED substantive / PROPOSED** | Closed `APPROVE`/`DENY`/`ABSTAIN` shape; separate from readiness |
+| PromotionDecision validator/tests | **CONFIRMED shape validation** | Executes JSON Schema fixtures; does not establish authenticated decision authority |
+| PromotionReceipt contract/schema | **CONFIRMED fixture-first / PROPOSED** | Exact A–G ordered receipt, declared transition, reference arrays, canonical digest |
+| PromotionReceipt validator/tests | **CONFIRMED executable bounded** | Checks shape, status/readiness consistency, transition declarations, digest, deterministic fixture polarity |
+| `promotion-receipt` workflow | **CONFIRMED read-only** | Validates fixtures/tests/generated receipt when path-triggered; no transition or release permission |
+| Hosted PromotionReceipt history | **CONFLICTED / NEEDS VERIFICATION** | Last inspected run passed fixtures/tests and failed generated-receipt integrity; no exact-base green run verified |
+| Promotion policy boundary | **CONFIRMED inactive** | Two no-op `default deny := false` stubs; no accepted input/output, bundle, evaluator, or consumer |
+| Policy gate register | **CONFIRMED empty PROPOSED register** | No active promotion policy gate is registered |
+| Verification execution adapter | **CONFIRMED fixture-first** | Uses bounded local/fake tool paths; not production signer or policy proof |
+| Release review lane | **CONFIRMED guidance/placeholder inventory** | No authenticated governed review packet established in this evidence set |
+| Hydrology promoter/smoke decision | **CONFIRMED held scaffold** | Automation-authored `APPROVE` with unresolved support; workflow intentionally does not execute it |
+| Actual transition/release/publication | **NOT ESTABLISHED** | No authoritative state mutation or public serving proved |
 
-### Material corrections in v1.4
+### Bounded A–G proof
 
-- Reconciles the current tree with the implemented bounded A-G and fixture-only ReviewRecord candidate validators.
-- Records canonical identity syntax, issuance by review time, declared authority interval, empty approving-review obligations, and no-live-authentication boundaries without treating them as governed review.
-- Preserves the proposed ADR status, the unresolved candidate-vocabulary difference, the empty policy register, the hydrology smoke hold, and the absence of a governed review/release packet.
+The current validator establishes a real implementation slice:
 
-### Material corrections in v1.3
+- closed declared input shape;
+- bounded JSON and duplicate/non-finite rejection;
+- per-gate stable reason codes;
+- deterministic sorted findings and CLI output;
+- non-echoing diagnostics and external-path redaction;
+- no-network behavior;
+- exact status precedence;
+- candidate/manifest/receipt digest-set checks;
+- geometry/CRS and timestamp checks;
+- declared policy-context checks;
+- support-reference and conditional AI-receipt checks;
+- fixture-only review separation, scope/subject/hash, interval, rollback, and
+  correction checks;
+- no decision, receipt, manifest, release, or publication emission.
 
-- Re-pins the evidence snapshot to the current checkout and re-verifies every cited implementation surface against one SHA.
-- Records an explicit `REVISE` checkpoint rather than silently drifting toward acceptance.
-- Adds the empty `control_plane/policy_gate_register.yaml` as confirmed evidence that policy gate authority is not yet registered.
-- Defines the future generic validator result vocabulary and exit-code contract without wiring any placeholder as a required gate.
-- Decomposes follow-up work into contract/schema, fixture/test, validator, and later CI-integration slices.
-- Confirms the ADR identity and removes obsolete “mounted repo unknown” language.
-- Replaces the proposed `.github/workflows/promotion.yml` claim with the actual `.github/workflows/promotion-gate.yml`.
-- States that current workflow jobs are readiness checks, not Gates A–G.
-- Reconciles `APPROVE / DENY / ABSTAIN` with `ANSWER / ABSTAIN / DENY / ERROR` by keeping them separate.
-- Narrows the prior single-`decision_id` claim to a proposed explicit identity crosswalk.
-- Records the absent DecisionGate and PromotionReceipt schemas.
-- Records the empty policy-side Promotion Decision schema scaffold.
-- Records the placeholder validators, TODO `publish-check`, policy stubs, review hold, and hydrology smoke risk.
-- Separates quarantine from a release-review hold.
-- Preserves A–G as a proposed architecture target without presenting it as current behavior.
+It does **not** dereference or authenticate the claims it checks.
+
+### Current dangerous shortcut
+
+The tracked hydrology promoter remains an explicit scaffold that writes an
+automation-smoke `APPROVE` decision with unresolved evidence and rollback
+references. The workflow's correct current behavior is to inspect and hold it,
+not execute it. Graduation requires a separate dependency-closed change with
+real evidence, policy, review, rollback, release, correction, and negative-path
+proof.
 
 [Back to top](#top)
 
@@ -602,45 +791,82 @@ Its home follows its responsibility. The name `PromotionReceipt` is not accepted
 ## Current implementation maturity
 
 ```text
-shape fixtures present
+bounded A-G validator + fixture-only ReviewRecord
+        |
+        +--> PROPOSED PromotionReceipt contract/schema/validator/tests
+        |
+        +--> read-only workflows and generated-receipt checks
         |
         v
-read-only readiness workflow
+APPROVE_READY is possible for a synthetic declared packet
         |
+        +--> policy inactive
+        +--> support refs not authenticated
+        +--> reviewer authority not authenticated
+        +--> signer trust roots not accepted
+        +--> rollback not operationally proven
+        +--> release decision/application not integrated
+        +--> hosted PromotionReceipt integrity not exact-head green
         v
-WORKFLOW_HOLD
-        |
-        +--> no accepted promotion-gate authority
-        +--> no governed ReviewRecord validator/registry
-        +--> no meaningful promotion policy
-        +--> no gate-record schema
-        +--> no gate-report/receipt schema
-        +--> no accountable review record
-        +--> unresolved smoke decision support
-        +--> no release or public write
+RELEASE / PUBLICATION HOLD
 ```
 
-### Current workflow mapping
+### Maturity matrix
 
-| Current job | What it actually checks | A–G relationship |
+| Layer | Current state | Graduation requirement |
 |---|---|---|
-| `doctrine-artifact-prereq` | Proves missing required doctrine artifacts remain visible and fail closed | Prerequisite outside the proposed sequence |
-| `doctrine-artifact-schema` | Checks non-vacuous DoctrineArtifactDescriptor fixtures and selected shape behavior | Prerequisite outside the proposed sequence |
-| `promotion-prerequisites` | Checks non-empty PromotionDecision fixtures and runs the bounded synthetic A-G candidate profile | Candidate A-G implementation evidence only; no authoritative gate run |
-| `review-records-present` | Runs the fixture-only ReviewRecord profile, confirms no governed review record exists, and does not execute the smoke promoter | Bounded Gate G candidate evidence plus explicit live-authority hold |
+| ADR | Proposed v1.5 candidate | Named owners/quorum, conflict reconciliation, explicit acceptance |
+| Gate profile | Executable bounded v1 | Accepted semantic ownership and compatibility/version policy |
+| Gate input packet | Validator profile, not a release object contract | Accepted input contract/schema or explicit projection from accepted objects |
+| PromotionReceipt | Proposed fixture-first release receipt | Accepted object lifecycle, instance home, retention, supersession, operational producer/verifier |
+| PromotionDecision | Proposed closed shape | Accountable producer, support binding, review authority, supersession, release integration |
+| Policy | Two inactive no-op stubs | Fail-closed rules, reason codes, obligations, tests, bundle/evaluator/consumer |
+| Evidence/attestation/catalog | Reference presence only | Authentic resolution, currentness, role/rights/sensitivity checks, cryptographic verification |
+| Review | Fixture-only declarations | Authenticated identity/assignment, qualification, independence, revocation/currentness registry |
+| Rollback/correction | Declared references | Usability validation, drill, public invalidation/restoration, correction propagation |
+| Workflow | Read-only bounded checks | Exact-head green evidence, required-check review, no-public-write and replay proof |
+| Release application | Absent/held | Separately authorized service/process with decision/manifest/state/correction/rollback evidence |
+| Public consumer | Not inspected | Contract tests proving only released public-safe state is served |
 
-The workflow’s green result means the repository remains safely held and drift-sensitive. It does not mean promotion prerequisites are satisfied.
+[Back to top](#top)
 
-### Current dangerous shortcut
+---
 
-The hydrology stub:
+<a id="policy-review-and-release-holds"></a>
 
-- always writes `"decision": "APPROVE"`;
-- names `automation-smoke` as reviewer;
-- references evidence and rollback paths that do not resolve;
-- writes directly under `release/promotion_decisions/`.
+## Policy, review, and release holds
 
-The workflow intentionally inspects and holds this state rather than executing it. Any attempt to graduate the promoter requires a separate implementation change with real evidence resolution, policy, review, rollback, fixtures, tests, and release authority.
+### Policy hold
+
+`policy/promotion/` is the correct policy-source responsibility boundary, but
+its two Rego files are explicit no-op proposals. They are not executed by the
+A–G readiness workflow. No accepted scope ID, input schema, outcome contract,
+entrypoint, bundle, evaluator, selector, native test, reason code, obligation
+handler, or governed consumer was verified.
+
+### Review hold
+
+The bounded Gate G profile checks synthetic declarations. It does not:
+
+- prove that the actor exists;
+- prove reviewer qualification or current assignment;
+- query revocation/supersession registries;
+- prove independence beyond declared identifiers;
+- establish human signoff or release authority.
+
+### Release hold
+
+No inspected surface proved:
+
+- a final accountable PromotionDecision linked to the evaluated receipt;
+- an authoritative ReleaseManifest relation;
+- transition application from the actual prior state;
+- correction and rollback propagation;
+- public cache/search/map/API/AI invalidation;
+- public serving of only the new released state.
+
+These are release-plane requirements, not reasons to weaken or overload the
+validator.
 
 [Back to top](#top)
 
@@ -650,69 +876,70 @@ The workflow intentionally inspects and holds this state rather than executing i
 
 ## Implementation and convergence plan
 
-Use the smallest reversible sequence.
+Use dependency-ordered, independently reversible changes.
 
-### Phase 0 — Preserve the hold
+### Phase 0 — Preserve the safe boundary
 
-- Keep ADR status `proposed`.
-- Keep the promotion workflow read-only.
-- Do not run the hydrology promoter in CI.
-- Do not treat the smoke decision as release evidence.
-- Keep public clients isolated from candidate and release-internal paths.
+- Keep ADR status proposed.
+- Keep both workflows read-only and least-privileged.
+- Keep the hydrology promoter unexecuted.
+- Do not treat synthetic receipts or decisions as operational records.
+- Keep public clients isolated from candidate, fixture, review, receipt, and
+  release-internal paths.
 
-### Phase 1 — Resolve contracts and vocabulary
+### Phase 1 — Reconcile names and semantic authority
 
-1. Decide the authoritative PromotionDecision schema and disposition the empty policy-side scaffold.
-2. Define or revise semantic contracts for:
-   - gate record;
-   - gate-set index/report;
-   - ReviewRecord binding;
-   - rollback verification result;
-   - release-manifest relationship.
-3. Define the identity crosswalk among `PromotionDecision.id`, `run_id`, and `DecisionEnvelope.decision_id`.
-4. Define canonical gate results and mappings without changing existing enums silently.
-5. Update the promotion runbook so lifecycle stage letters cannot be confused with promotion evaluation gates.
+1. Crosswalk lifecycle-wide A–G documentation against this final-readiness
+   profile and rename one family so letter identity cannot imply equivalence.
+2. Update the promotion runbook with explicit scope labels.
+3. Decide and document the accepted owner/version lifecycle for the readiness
+   profile and PromotionReceipt.
+4. Disposition the empty policy-side `promotion_decision` schema scaffold so it
+   cannot compete with the release object.
+5. Define the accepted bindings among candidate, receipt, policy decisions,
+   review records, PromotionDecision, ReleaseManifest, correction, and rollback.
 
-### Phase 2 — Land machine shapes and fixtures
+### Phase 2 — Activate policy safely
 
-- Add closed schemas under the accepted schema home.
-- Add non-vacuous valid and invalid fixtures for every gate.
-- Add expected diagnostic or reason-code assertions.
-- Add format checking where schemas declare formats.
-- Add canonicalization and digest tests.
-- Add compatibility tests for existing PromotionDecision fixtures.
+1. Define one closed policy input and finite native/normalized outcome contract.
+2. Replace no-op stubs with meaningful fail-closed rules.
+3. Add native Rego tests for missing/unknown/stale/denied/revoked context.
+4. Produce immutable bundle identity and accepted evaluator/selector binding.
+5. Keep policy result distinct from readiness and PromotionDecision.
 
-### Phase 3 — Implement independent consumers
+### Phase 3 — Resolve support and trust
 
-- Implement the generic promotion packet validator.
-- Implement ReviewRecord validation and subject binding.
-- Implement evidence-resolution checks.
-- Implement meaningful default-deny policy.
-- Implement signature and digest verification only after signer and trust roots are accepted.
-- Implement rollback-target validation without executing a public rollback.
-- Emit reports to accepted QA or trust-object homes according to their semantics.
+- Resolve EvidenceRefs to EvidenceBundles.
+- Verify source roles, rights, sensitivity, freshness, and correction lineage.
+- Verify attestations against accepted offline/online trust roots.
+- Validate STAC/DCAT/PROV closure and receipt/proof/manifests by responsibility.
+- Authenticate identity and authority assignments.
+- Verify rollback target usability without applying a public rollback.
 
-### Phase 4 — Wire a no-public-write dry run
+### Phase 4 — Repair hosted proof and replay
 
-- Replace readiness-only jobs deliberately; do not rename them into false gates.
-- Preserve stable workflow check names when repository rules may depend on them, or migrate rules explicitly.
-- Run A–G on one synthetic domain thin slice.
-- Assert no write to `data/published/`, release aliases, public services, or deployment surfaces.
-- Upload only bounded QA artifacts; do not create trust-shaped artifacts in `artifacts/`.
-- Demonstrate failure, hold, error, and negative-path behavior for every gate.
+- Regenerate or correct the AI-authored PromotionReceipt generated receipt
+  through the legitimate producer.
+- Run PromotionReceipt and promotion-gate workflows at the exact same head.
+- Prove deterministic replay from pinned inputs.
+- Preserve stable required-check identities or migrate rulesets deliberately.
+- Record introduced versus inherited failures precisely.
 
-### Phase 5 — Accountable review and release integration
+### Phase 5 — Accountable transition dry run
 
-- Bind accepted ReviewRecord identity and separation-of-duties rules.
-- Require resolved rollback support.
-- Bind the gate-set digest to a final PromotionDecision.
-- Assemble or validate the ReleaseManifest relationship.
-- Keep release execution separate from validation.
-- Require correction and rollback drills before public maturity.
+- Use one synthetic public-safe domain slice.
+- Produce accepted readiness, policy, review, decision, receipt, manifest,
+  correction, and rollback objects.
+- Apply only to an isolated fixture/dry-run state plane.
+- Prove failure, abstention, denial, error, no-public-write, correction,
+  withdrawal, and rollback paths.
+- Verify author/assembler/reviewer/release separation appropriate to materiality.
 
-### Phase 6 — Acceptance review
+### Phase 6 — Acceptance and later release integration
 
-Only after the acceptance gates below pass may ADR-0018 move from `proposed` to `accepted`. Update this record and [`INDEX.md`](./INDEX.md) together. A green workflow alone cannot perform that transition.
+Only after the acceptance gates below pass may ADR-0018 and `INDEX.md` change
+together to `accepted`. Implementation graduation and any real release remain
+separate reviewed transitions.
 
 [Back to top](#top)
 
@@ -722,26 +949,43 @@ Only after the acceptance gates below pass may ADR-0018 move from `proposed` to 
 
 ## Acceptance gates
 
-- [ ] ADR identity, owners, reviewers, and decision quorum are accepted.
-- [ ] A–G names and ordering are reconciled with `PROMOTION_RUNBOOK.md`.
-- [ ] PromotionDecision schema authority is resolved; the policy-side scaffold is retired, redirected, or distinctly renamed.
-- [ ] Gate record and gate-set index/report semantic contracts exist.
-- [ ] Closed schemas and meaningful valid/invalid fixtures exist for those contracts.
-- [ ] Identity mapping among `PromotionDecision.id`, `run_id`, and `DecisionEnvelope.decision_id` is explicit and tested.
-- [ ] Gate-result, policy-outcome, promotion-decision, review-outcome, and workflow-status vocabularies remain separate.
-- [ ] Promotion policy contains meaningful fail-closed rules and negative tests.
-- [ ] Evidence resolution, source-role preservation, and lineage checks are implemented.
-- [ ] ReviewRecord validation and separation-of-duties enforcement are implemented at the required maturity.
-- [ ] Rollback target and release-manifest relationship checks are implemented.
-- [ ] Every gate has positive, negative, hold, and error coverage where semantically applicable.
-- [ ] The dry run proves zero public writes.
-- [ ] Gate records and reports have accepted output homes and retention rules.
-- [ ] Replay is deterministic for pinned inputs.
-- [ ] Correction and rollback paths are exercised.
-- [ ] Branch/ruleset migration for workflow check names is verified.
-- [ ] The hydrology smoke promoter is removed, quarantined as fixture-only, or replaced with governed behavior.
-- [ ] The ADR validator and tests pass after the reviewed status change.
-- [ ] Human reviewers explicitly accept the ADR; CODEOWNERS routing alone is insufficient.
+### ADR acceptance
+
+- [ ] ADR identity, named owners, required reviewers, and decision quorum are accepted.
+- [ ] This final-readiness scope is distinguished from lifecycle-wide publication gates.
+- [ ] Exact A–G names/order and `kfm/promotion-readiness/A-G/v1` versioning are reviewed.
+- [ ] Gate status, readiness, PromotionDecision, DecisionEnvelope, receipt-applied, and CI vocabularies remain distinct.
+- [ ] PromotionReceipt's receipt-family classification is reviewed against ADR-0011.
+- [ ] PromotionDecision and policy-side same-name schema conflict is dispositioned.
+- [ ] Identity/reference/digest/supersession bindings are explicit.
+- [ ] Runbook and architecture crosswalk/migration is defined.
+- [ ] This source ADR and canonical index change status together through explicit review.
+
+### Implementation graduation
+
+- [ ] Gate input/profile semantic contract and machine projection are accepted.
+- [ ] PromotionReceipt contract/schema/instance lifecycle and operational producer are accepted.
+- [ ] PromotionDecision has an accountable producer and accepted support bindings.
+- [ ] Policy input/output, rules, reason codes, obligations, tests, bundle, evaluator, and consumer are accepted.
+- [ ] Evidence, rights, sensitivity, freshness, and source-role resolution are real, not presence-only.
+- [ ] Attestation/signature verification uses accepted trust roots and negative fixtures.
+- [ ] ReviewRecord identity, qualification, authority, currentness, revocation, and separation are authenticated.
+- [ ] ReleaseManifest, correction, rollback, and prior/current state relationships are validated.
+- [ ] Every gate has meaningful positive, abstain, deny, error, boundary, parser, replay, and non-echoing coverage where applicable.
+- [ ] Exact-head promotion-gate and promotion-receipt hosted checks are green, including generated-receipt integrity.
+- [ ] Repository ruleset/check-name dependencies are inspected and migration-safe.
+- [ ] Hydrology smoke promoter is removed, isolated as fixture-only, or replaced with governed behavior.
+- [ ] Zero public writes are proven for readiness-only execution.
+- [ ] Correction, withdrawal, cache invalidation, and rollback drills pass.
+- [ ] Public consumers are contract-tested against released public-safe interfaces only.
+
+### Release application
+
+- [ ] An authorized release actor/process separately approves and applies the transition.
+- [ ] The authoritative PromotionDecision and ReleaseManifest resolve.
+- [ ] Applied state is verified against the prior state and receipt declaration.
+- [ ] Correction and rollback targets are operational and auditable.
+- [ ] Public surfaces expose the new release only after all release-plane checks pass.
 
 [Back to top](#top)
 
@@ -753,27 +997,38 @@ Only after the acceptance gates below pass may ADR-0018 move from `proposed` to 
 
 ### Positive
 
-- One target ordering for publication-facing promotion concerns.
-- Clear separation between current readiness CI and future gate runtime.
-- Stable boundaries among policy outcomes, gate results, and release decisions.
-- Explicit evidence, review, rollback, and public-boundary prerequisites.
-- Incremental implementation path with preserved holds.
-- Better auditability without granting authority to workflow artifacts.
-- Reduced risk that a schema-valid `APPROVE` object is mistaken for release approval.
+- One exact candidate vocabulary now aligns the ADR with the bounded validator
+  and PromotionReceipt schema.
+- Final readiness is separated from whole-lifecycle admission and processing
+  controls.
+- Gate result, readiness, policy outcome, release decision, receipt declaration,
+  CI result, and publication state stay distinct.
+- Current implementation progress is acknowledged without converting it into
+  authority.
+- PromotionReceipt has a clear receipt-family role rather than an ambiguous
+  proof/manifest/decision role.
+- Complete diagnostics are allowed without weakening fail-closed readiness.
+- The acceptance path is dependency-ordered, testable, and reversible.
 
 ### Costs
 
-- Existing documents using alternate A–G lifecycle or gate vocabularies require reconciliation.
-- New contracts and schemas are needed before implementation.
-- The policy-side Promotion Decision scaffold requires disposition.
-- Identity crosswalk and amendment semantics require design work.
-- Review, evidence resolution, signature verification, rollback validation, and release integration are separate implementation efforts.
-- Stable workflow check names may constrain CI refactoring.
-- A complete dry run is more expensive than a shape test.
+- Several existing docs use conflicting A–G names and need a reviewed
+  crosswalk/rename.
+- The v1.4 gate labels become historical proposal language.
+- Policy activation, support resolution, identity authority, signing, review,
+  rollback, and release application remain substantial work.
+- The PromotionReceipt generated-receipt failure needs legitimate repair and an
+  exact-head rerun.
+- Stable workflow check names may constrain refactoring until rulesets are
+  inspected.
+- Operational transition proof requires more than schema and fixture validation.
 
 ### Tradeoff
 
-This ADR prefers visible incompleteness and a safe hold over a persuasive but ungrounded “seven gates implemented” claim. The cost is slower graduation; the benefit is that every release-relevant assertion remains inspectable and reversible.
+This decision prefers an explicit, bounded final-readiness profile over a broad
+seven-word checklist that appears complete but cannot be mapped deterministically
+to current code. It also preserves visible conflicts instead of treating
+implementation as retroactive ADR acceptance.
 
 [Back to top](#top)
 
@@ -785,18 +1040,20 @@ This ADR prefers visible incompleteness and a safe hold over a persuasive but un
 
 | Alternative | Disposition |
 |---|---|
-| Treat the current four workflow jobs as the seven gates | Rejected. Job names and checks do not cover A–G and explicitly preserve holds |
-| Keep one monolithic promotion validator | Rejected. It hides failure location and encourages authority collapse |
-| Use runtime `ANSWER / ABSTAIN / DENY / ERROR` as PromotionDecision values | Rejected. Current release schema uses `APPROVE / DENY / ABSTAIN` |
-| Treat a schema-valid PromotionDecision as sufficient | Rejected. Shape does not resolve evidence, policy, review, rollback, or release |
-| Use the hydrology smoke promoter as the first implementation | Rejected in current form. It auto-approves with unresolved support |
-| Let Gate G publish directly | Rejected. Validation and release authority remain separate |
-| Route every failed promotion to physical quarantine | Rejected. Valid catalog candidates may need a release hold rather than lifecycle isolation |
-| Preserve one universal `decision_id` without contract changes | Rejected. Current schemas expose distinct identities |
-| Require a `PromotionReceipt` immediately | Deferred. Artifact-family semantics and home must be resolved first |
-| Run all gates in parallel | Rejected as a normative model; within-gate parallelism remains allowed |
-| Rely on manual approval alone | Rejected. Human review is an auditable input, not a replacement for deterministic checks |
-| Accept ADR-0018 now and implement later | Rejected. Acceptance requires reviewed architecture and explicit migration gates, not runtime completion, but current contract conflicts remain material |
+| Keep v1.4 names and treat current implementation as an adapter | Rejected for the revised candidate. It perpetuates duplicate vocabulary without adding safety. |
+| Treat lifecycle-wide source-admission-to-release A–G as this ADR's sequence | Rejected for scope. Those controls span multiple lifecycle transitions; this ADR governs final readiness only. |
+| Accept the executable profile automatically because code exists | Rejected. Implementation cannot accept its governing ADR. |
+| Treat the four promotion-gate workflow jobs as Gates A–G | Rejected. Jobs orchestrate multiple prerequisites and holds; job identity is not gate semantics. |
+| Use `PASS / FAIL / HOLD / ERROR` | Rejected for v1.5 candidate. Current coherent validator/receipt family uses `PASS / ABSTAIN / DENY / ERROR`. |
+| Use `APPROVE / DENY / ABSTAIN` directly for every gate | Rejected. That collapses readiness findings into final transition decisions. |
+| Let Gate G or PromotionReceipt apply/publish the transition | Rejected. Validation and receipt recording do not own release application. |
+| Require runtime short-circuit after first failure | Rejected as a semantic requirement. Complete deterministic diagnostics are valuable; any non-pass still blocks readiness. |
+| Treat `transition.applied: true` as authoritative state proof | Rejected. A declaration needs external decision, state, manifest, actor, and support verification. |
+| Merge PromotionReceipt into PromotionDecision | Rejected. Process memory and accountable decision are distinct object families. |
+| Remove PromotionReceipt because receipts are not proofs | Rejected. The record is useful when correctly bounded and kept distinct. |
+| Route every non-pass to physical quarantine | Rejected. Release holds and lifecycle quarantine have different meanings. |
+| Use the hydrology smoke promoter as the first operational producer | Rejected in current form because it auto-approves unresolved support. |
+| Accept ADR-0018 now and defer conflicts | Rejected. Naming/scope and authority conflicts are material acceptance prerequisites. |
 
 [Back to top](#top)
 
@@ -806,22 +1063,24 @@ This ADR prefers visible incompleteness and a safe hold over a persuasive but un
 
 ## Risk and open-question ledger
 
-| ID | Status | Question or risk | Required next evidence |
+| ID | Status | Question or risk | Required evidence or decision |
 |---|---|---|---|
-| `ADR18-R1` | **CONFLICTED** | PromotionDecision schema exists in substantive release and empty policy locations | Architecture/contracts/schema review and migration decision |
-| `ADR18-R2` | **OPEN** | Gate-set index is called `PromotionReceipt`, report, proof index, or release packet | ADR-0011-aligned semantic contract |
-| `ADR18-R3` | **OPEN** | How gate records bind PromotionDecision and DecisionEnvelope identities | Contract, schema, deterministic identity tests |
-| `ADR18-R4` | **OPEN** | Whether held review appends under one promotion ID or creates a superseding ID | Review and correction contract |
-| `ADR18-R5` | **PARTIAL / HELD** | Bounded promotion/review candidate validators exist, but accepted gate contracts, governed records, and live authority resolution do not | Accepted profiles, registry/policy integration, governed fixtures/records, and observed finite behavior |
-| `ADR18-R6` | **HELD** | Policy files contain no real promotion rules | Accepted bundle, reason codes, obligations, policy tests |
-| `ADR18-R7` | **HELD** | Hydrology smoke decision auto-approves unresolved references | Remove/replace scaffold; governed thin-slice test |
-| `ADR18-R8` | **NEEDS VERIFICATION** | Release review record schema and actual accountable records | Review contract/schema, subject binding, SoD tests |
-| `ADR18-R9` | **NEEDS VERIFICATION** | Signature and attestation trust roots | Signing ADR/standard, pinned verifier, offline fixtures |
-| `ADR18-R10` | **NEEDS VERIFICATION** | ReleaseManifest and rollback closure maturity | Contract/schema/validator/drill evidence |
-| `ADR18-R11` | **NEEDS VERIFICATION** | Rulesets depend on current workflow job names | Repository ruleset inspection |
-| `ADR18-R12` | **OPEN** | Reconcile runbook lifecycle gate letters with A–G promotion-evaluation letters | Runbook/ADR coordinated change |
-| `ADR18-R13` | **OPEN** | Gate H/I proposals from the prior text | Decide only after A–G contract exists; do not preallocate authority |
-| `ADR18-R14` | **UNKNOWN** | Production release service, signer, audit store, and replay environment | Operational evidence outside this documentation update |
+| `ADR18-R1` | **CONFLICTED** | Same A–G letters denote different lifecycle and final-readiness responsibilities | Reviewed crosswalk/rename and updated navigation |
+| `ADR18-R2` | **PARTIAL / PROPOSED** | PromotionReceipt exists, but its accepted lifecycle, instance home, retention, producer, and supersession remain open | Release/receipt contract review under ADR-0011 |
+| `ADR18-R3` | **OPEN** | How final PromotionDecision binds receipt/readiness, policy decisions, review, and manifest | Contract/schema and deterministic identity tests |
+| `ADR18-R4` | **OPEN** | Whether repeated/held evaluations reuse a promotion attempt, append amendments, or create superseding IDs | Receipt/review/correction lifecycle decision |
+| `ADR18-R5` | **CONFIRMED bounded / HELD operationally** | A–G and fixture-only review validators are substantive, but support and authority are declaration-only | Authenticated integration and observed finite behavior |
+| `ADR18-R6` | **HELD** | Promotion policy is two no-op stubs | Accepted policy contract, rules, tests, bundle, evaluator, consumer |
+| `ADR18-R7` | **HELD** | Hydrology smoke promoter auto-approves unresolved references | Remove/isolate/replace and prove governed thin slice |
+| `ADR18-R8` | **NEEDS VERIFICATION** | Accountable review identity, qualification, authority, independence, currentness, and revocation | Governed identity/assignment/review records and tests |
+| `ADR18-R9` | **NEEDS VERIFICATION** | Signature/attestation trust roots and offline verification | Accepted signing/attested-compute authority, pinned verifier, negative fixtures |
+| `ADR18-R10` | **NEEDS VERIFICATION** | ReleaseManifest, prior/current state, correction, and rollback closure | Operational contracts, validator, dry run, rollback drill |
+| `ADR18-R11` | **NEEDS VERIFICATION** | Rulesets depend on current workflow/check names | Repository ruleset inspection and migration plan |
+| `ADR18-R12` | **CONFLICTED** | Policy-side and release-side `promotion_decision` schema names can compete | Retire/redirect/rename policy scaffold through reviewed migration |
+| `ADR18-R13` | **HELD** | Last inspected PromotionReceipt workflow failed generated-receipt integrity | Legitimate receipt regeneration/correction and exact-head green run |
+| `ADR18-R14` | **OPEN** | Does production use the current canonical JSON receipt digest or a wider repository canonicalization standard? | Hash/canonicalization policy by object family |
+| `ADR18-R15` | **UNKNOWN** | Production release service, audit store, public consumer, and replay environment | Commit-pinned operational and runtime evidence |
+| `ADR18-R16` | **DEFERRED** | Gate H/I or expedited route proposals | Decide only after A–G acceptance and measured need; do not preallocate authority |
 
 [Back to top](#top)
 
@@ -831,37 +1090,39 @@ This ADR prefers visible incompleteness and a safe hold over a persuasive but un
 
 ## Rollback and supersession
 
-This revision is documentation-only and keeps the ADR proposed.
+### Roll back this documentation revision
 
-### Roll back this edit
+Revert the documentation commit or restore prior blob
+`cb76d7af6cf6972cada2017b61d4081bc916ab4b`.
 
-- Revert the documentation commit; or
-- restore prior blob `6cde5af9a7c8ef03df3fb22816074c900df659b7`.
+That rollback changes no workflow, contract, schema, policy, fixture, validator,
+receipt, decision, review, release state, lifecycle data, deployment, or public
+surface.
 
-That rollback changes no workflow, contract, schema, fixture, policy, validator, review, release object, data, or public state.
+### Supersede this decision
 
-### Supersede the decision
+If a later reviewed ADR changes the scope, gate names/order, status vocabulary,
+identity model, receipt classification, or authority split:
 
-If a later reviewed ADR changes the gate names, ordering, identity model, or authority split:
-
-1. create a successor ADR;
-2. accept the successor through explicit review;
-3. mark ADR-0018 `superseded`;
-4. add reciprocal links;
-5. update [`INDEX.md`](./INDEX.md);
-6. migrate contracts, schemas, fixtures, workflows, runbooks, records, and rulesets with rollback;
-7. preserve historical gate records without rewriting them.
+1. create and explicitly accept the successor ADR;
+2. mark ADR-0018 `superseded` and add the forward link;
+3. update [`INDEX.md`](./INDEX.md) in the same reviewed transition;
+4. migrate contracts, schemas, fixtures, validators, workflows, runbooks,
+   policy, records, and rulesets with compatibility tests;
+5. preserve historical receipts/decisions and their original profile semantics;
+6. provide correction and rollback for emitted records and public state.
 
 ### Implementation rollback
 
-Any future gate implementation must preserve:
+Every later implementation slice must preserve:
 
-- a feature flag or non-public dry-run mode;
-- prior workflow check compatibility or reviewed ruleset migration;
-- deterministic fixture replay;
-- no-public-write assertions;
-- removal of newly emitted trust-shaped QA artifacts from incorrect homes;
-- restoration of the prior held state if evidence, policy, review, or rollback checks regress.
+- a no-public-write/readiness-only mode;
+- exact prior inputs and deterministic replay;
+- compatibility or explicit migration for workflow check names;
+- safe removal or supersession of generated receipts;
+- no deletion of prior receipts/decisions/reviews/manifests;
+- restoration of the previous held state when support, policy, review, or
+  rollback checks regress.
 
 [Back to top](#top)
 
@@ -871,32 +1132,44 @@ Any future gate implementation must preserve:
 
 ## Verification checklist
 
-| Check | Result |
+| Check | Result in this revision |
 |---|---|
 | ADR identity and exact path | **CONFIRMED** |
-| ADR status | **CONFIRMED proposed** |
-| Same-path documentation update | **PASS** |
-| Directory Rules responsibility | **CONFIRMED** — `docs/adr/` owns decision records |
-| Current workflow source | **CONFIRMED** |
-| Seven-gate runtime | **NOT ESTABLISHED** |
-| PromotionDecision semantic contract | **CONFIRMED draft / PROPOSED** |
-| Release PromotionDecision schema | **CONFIRMED substantive / PROPOSED** |
-| PromotionDecision fixtures and shape test | **CONFIRMED narrow** |
-| Runtime DecisionEnvelope schema | **CONFIRMED / PROPOSED** |
-| Policy-side Promotion Decision schema | **CONFIRMED permissive scaffold** |
-| Policy gate register | **CONFIRMED PROPOSED empty** |
-| Generic promotion validator | **CONFIRMED bounded synthetic candidate** |
-| Review validator | **CONFIRMED fixture-only candidate** |
-| Promotion policy | **CONFIRMED greenfield stubs** |
-| Review records | **NOT ESTABLISHED beyond guidance inventory** |
-| Hydrology promoter and smoke decision | **CONFIRMED unsafe scaffold / held** |
-| DecisionGate schema | **NOT FOUND at prior proposed path** |
-| PromotionReceipt schema | **NOT FOUND at prior proposed path** |
-| Local ADR validator and focused tests | **PASS** — `python tools/validators/validate_adr_index.py` and `python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers` |
-| Workflow execution for this edit | **PENDING after pull request creation** |
-| Release or publication | **NOT CLAIMED** |
+| Source and effective status | **CONFIRMED proposed** |
+| Same-path update under `docs/adr/` | **CONFIRMED placement** |
+| Canonical index change required | **No** — status/path unchanged |
+| Current target blob read | **CONFIRMED** |
+| Bounded A–G implementation | **CONFIRMED executable, synthetic, no-network, non-publisher** |
+| Exact candidate A–G names | **CONFIRMED shared by validator and PromotionReceipt schema** |
+| PromotionReceipt contract/schema/validator/tests/workflow | **CONFIRMED present; PROPOSED/non-authoritative** |
+| PromotionDecision contract/schema/validator | **CONFIRMED present; PROPOSED shape** |
+| Policy execution | **NOT ESTABLISHED; current stubs inactive** |
+| Evidence/support authentication | **NOT ESTABLISHED** |
+| Accountable review authority | **NOT ESTABLISHED** |
+| Applied transition/release/publication | **NOT ESTABLISHED** |
+| Hosted PromotionReceipt exact-base green run | **NOT VERIFIED; last inspected run failed generated-receipt integrity** |
+| Open PR touching this path at branch creation | **None found** |
+| Local repository tests | **NOT RUN — no mounted checkout in this connector-only change** |
+| Pull-request hosted checks | **PENDING after PR creation** |
 
-Remote repository reads establish exact bytes and source relationships. They do not substitute for local validation, workflow logs, policy execution, review records, signer verification, release dry-run, rollback drill, or public-runtime inspection.
+### Repository-native validation requested for the change
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+
+make publish-check
+python tools/validators/release/validate_promotion_receipt.py --fixtures
+python -m unittest -q tests.release.test_promotion_receipt
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-promotion-receipt-contract-20260805.json \
+  --repo-root .
+```
+
+The PromotionReceipt commands are regression context, not a claim that this
+one-file ADR change should update generated trust artifacts. Any genuine stale
+receipt must be repaired through its legitimate producer in a separate
+bounded change.
 
 [Back to top](#top)
 
@@ -906,7 +1179,7 @@ Remote repository reads establish exact bytes and source relationships. They do 
 
 ## References
 
-### Governing and adjacent ADR surfaces
+### Governing and adjacent ADRs
 
 - [`docs/adr/README.md`](./README.md)
 - [`docs/adr/INDEX.md`](./INDEX.md)
@@ -918,48 +1191,98 @@ Remote repository reads establish exact bytes and source relationships. They do 
 - [`ADR-0021 — Structured Quarantine Exit Paths`](./ADR-0021-quarantine-has-structured-exit-paths.md)
 - [`ADR-0024 — Steward Separation of Duties for Release`](./ADR-0024-steward-separation-of-duties-for-release.md)
 - [`ADR-0025 — Public Client Never Reads Canonical/Internal Stores`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
-- [`Directory Rules`](../doctrine/directory-rules.md)
 - [`ADR-0029 — Adopt Directory Governance Standard v2`](./ADR-0029-adopt-directory-governance-standard-v2.md)
+- [`Directory Rules`](../doctrine/directory-rules.md)
 
-### Current implementation and documentation evidence
+### Architecture, runbook, and policy boundaries
 
+- [`Publication promotion gates`](../architecture/publication/promotion-gates.md)
+- [`Detailed release gates`](../architecture/publication/RELEASE_GATES.md)
 - [`Promotion runbook`](../runbooks/PROMOTION_RUNBOOK.md)
-- [`promotion-gate` workflow](../../.github/workflows/promotion-gate.yml)
-- [`PromotionDecision` contract](../../contracts/release/promotion_decision.md)
-- [`PromotionDecision` release schema](../../schemas/contracts/v1/release/promotion_decision.schema.json)
-- [`DecisionEnvelope` runtime schema](../../schemas/contracts/v1/runtime/decision_envelope.schema.json)
-- [`PromotionDecision` fixture family](../../fixtures/release/promotion_decision/README.md)
-- [`PromotionDecision` fixture validator](../../tools/validators/release/validate_promotion_decision.py)
-- [`PromotionDecision` shape test](../../tests/release/test_promotion_decision_schema.py)
-- [`Promotion gate` validator index](../../tools/validators/promotion_gate/README.md)
-- [`Generic promotion validator` candidate](../../tools/validators/validate_promotion_gate.py)
-- [`Review validator` fixture-only candidate](../../tools/validators/validate_review_record.py)
-- [`Promotion prerequisites` policy stub](../../policy/promotion/promotion_prerequisites.rego)
-- [`Rollback card required` policy stub](../../policy/promotion/rollback_card_required.rego)
-- [`Release review lane`](../../release/reviews/README.md)
+- [`Promotion policy boundary`](../../policy/promotion/README.md)
 - [`Policy gate register`](../../control_plane/policy_gate_register.yaml)
-- [`Hydrology promoter` stub](../../pipelines/domains/hydrology/promote.py)
+
+### Bounded readiness implementation
+
+- [`promotion-gate` workflow](../../.github/workflows/promotion-gate.yml)
+- [`Promotion gate validator README`](../../tools/validators/promotion_gate/README.md)
+- [`A–G readiness validator`](../../tools/validators/promotion_gate/validate_promotion_gate.py)
+- [`Compatibility validator entry point`](../../tools/validators/validate_promotion_gate.py)
+- [`ReviewRecord validator`](../../tools/validators/validate_review_record.py)
+- [`A–G fixtures`](../../fixtures/release/promotion_gate/README.md)
+- [`A–G focused tests`](../../tests/release/test_promotion_gate.py)
+- [`ReviewRecord focused tests`](../../tests/release/test_review_record.py)
+
+### Release-family objects
+
+- [`PromotionDecision` contract](../../contracts/release/promotion_decision.md)
+- [`PromotionDecision` schema](../../schemas/contracts/v1/release/promotion_decision.schema.json)
+- [`PromotionDecision` validator](../../tools/validators/release/validate_promotion_decision.py)
+- [`PromotionDecision` tests](../../tests/release/test_promotion_decision_schema.py)
+- [`PromotionReceipt` contract](../../contracts/release/promotion_receipt.md)
+- [`PromotionReceipt` schema](../../schemas/contracts/v1/release/promotion_receipt.schema.json)
+- [`PromotionReceipt` validator](../../tools/validators/release/validate_promotion_receipt.py)
+- [`PromotionReceipt` tests](../../tests/release/test_promotion_receipt.py)
+- [`promotion-receipt` workflow](../../.github/workflows/promotion-receipt.yml)
+- [`Release review lane`](../../release/reviews/README.md)
+
+### Held scaffold evidence
+
+- [`Hydrology promoter`](../../pipelines/domains/hydrology/promote.py)
 - [`Hydrology smoke decision`](../../release/promotion_decisions/hydrology/run-local-smoke.json)
+- [`Promotion prerequisite policy stub`](../../policy/promotion/promotion_prerequisites.rego)
+- [`Rollback policy stub`](../../policy/promotion/rollback_card_required.rego)
 - [`Makefile`](../../Makefile)
+
+---
+
+## Change history
+
+| Edition | Date | Change | Decision effect |
+|---|---|---|---|
+| v1.3 | 2026-07-29 | Repository-grounded REVISE checkpoint; separated current workflow, decisions, and proposed gates. | Remained proposed |
+| v1.4 | 2026-08-03 | Reconciled bounded synthetic A–G and fixture-only ReviewRecord implementation. | Remained proposed |
+| **v1.5** | **2026-08-14** | Re-pinned current evidence; incorporated the PromotionReceipt family; revised the candidate A–G names/statuses to the coherent bounded profile; recorded lifecycle-gate conflict, inactive policy, hosted receipt-integrity failure, and exact graduation/rollback boundaries. | **Remains proposed; documentation only** |
+
+### No-loss reconciliation ledger
+
+| v1.4 content family | v1.5 disposition |
+|---|---|
+| ADR identity, proposed status, Directory Rules placement | **Preserved and re-pinned** |
+| Lifecycle invariant and no-file-move rule | **Preserved** |
+| Acceptance vs implementation distinction | **Expanded to acceptance / graduation / release application** |
+| REVISE checkpoint | **Preserved and refreshed** |
+| Four workflow jobs and stable-check warning | **Preserved** |
+| PromotionDecision / DecisionEnvelope / gate / workflow vocabulary separation | **Preserved and expanded with readiness and receipt-applied axes** |
+| Old A–G names | **Retained as historical proposal; revised candidate now matches bounded implementation** |
+| Identity crosswalk requirement | **Preserved and expanded for PromotionReceipt and ReleaseManifest** |
+| Failure, hold, quarantine, amendment, replay | **Preserved and aligned to current finite statuses** |
+| Receipts/proofs/manifests/decisions separation | **Preserved; PromotionReceipt classified explicitly** |
+| Current bounded validator/ReviewRecord evidence | **Preserved and strengthened with current fixture/test boundaries** |
+| PromotionReceipt absence | **Corrected: contract/schema/validator/tests/workflow now exist as PROPOSED fixture-first surfaces** |
+| Policy stubs, empty register, review hold, hydrology shortcut | **Preserved as explicit holds** |
+| Implementation plan, acceptance gates, alternatives, risks, rollback | **Preserved and updated to current dependency closure** |
+| Publication claim | **None before or after** |
 
 ---
 
 ## Last reviewed
 
-**2026-08-03** — repository-grounded review against `main@68069dce9e292649697f63f96fa57edd07181a27` plus the scoped bounded-candidate hardening diff.
+**2026-08-14** — repository-grounded review against
+`main@9d924c665073263f2cbf376d2bf29e7b9f252b06`.
 
 Review again when:
 
 - this ADR changes status;
-- the promotion workflow changes its jobs or authority;
-- a bounded promotion/review candidate graduates, changes profile, or gains governed integrations;
-- meaningful promotion policy lands;
-- a gate-record or gate-set schema is proposed;
-- PromotionDecision schema authority is reconciled;
+- any A–G profile, name, responsibility, status, or ordering changes;
+- lifecycle-wide promotion-gate documentation is crosswalked or renamed;
+- PromotionReceipt or PromotionDecision changes contract/schema/version;
+- meaningful promotion policy, evidence, attestation, review, rollback, or
+  release integration lands;
+- the PromotionReceipt generated-receipt failure is repaired and rerun;
 - the hydrology promoter or smoke decision changes;
-- governed review records appear;
-- release-manifest or rollback validation graduates;
-- rulesets or required checks change;
+- rulesets or required-check identities change;
+- a transition is actually applied in a governed dry run;
 - six months pass without review.
 
 [Back to top](#top)
