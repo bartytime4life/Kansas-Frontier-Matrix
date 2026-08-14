@@ -18,6 +18,7 @@ name: briefing-implementation-campaign
       - "fixtures/maplibre/v6_readiness/**"
       - "fixtures/domains/hazards/usdm_materiality/**"
       - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
+      - "data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json"
   push:
     branches: [main]
     paths:
@@ -35,6 +36,7 @@ name: briefing-implementation-campaign
       - "fixtures/maplibre/v6_readiness/**"
       - "fixtures/domains/hazards/usdm_materiality/**"
       - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
+      - "data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json"
   workflow_dispatch:
 
 permissions:
@@ -95,11 +97,11 @@ jobs:
           printf '%s\n' "$output"
           test "$code" -eq 3
           python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert "MAPLIBRE_DEPENDENCY_UNPINNED" in value["reasons"]; assert "RUNTIME_PROBES_PENDING" in value["reasons"]' "$output"
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current MapLibre readiness receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json \
+            data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
