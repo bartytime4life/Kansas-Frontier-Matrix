@@ -603,7 +603,7 @@ jobs:
               "docs/adr/ADR-0016-telemetry-redaction-posture.md"
           ).read_text(encoding="utf-8").lower()
           assert "exact restricted coordinates" in contract
-          assert "replaces precise `lat` / `lon`" in adr
+          assert "replaces precise lat / lon" in adr.replace("`", "")
           assert "status: proposed" in adr
           assert "status: draft" in standard
 
