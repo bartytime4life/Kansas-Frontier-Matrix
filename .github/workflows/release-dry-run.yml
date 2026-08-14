@@ -75,6 +75,7 @@ jobs:
               Path("fixtures/release/promotion_gate/valid/pass__complete_candidate.json"),
               Path("release/candidates/README.md"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -105,6 +106,7 @@ jobs:
               "exist and no candidate packet payload is present."
           )
           print("CONFIRMED: the Make target invokes the bounded dry run and its no-write tests.")
+          print("CONFIRMED: the historical receipt is retained and the current successor binding is present.")
           PY
 
       - name: Prove bounded publication-denial behavior
@@ -113,12 +115,12 @@ jobs:
           set -euo pipefail
           make release-dry-run
 
-      - name: Validate generated authoring receipt binding
+      - name: Validate current generated authoring receipt binding
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-publication-deny-dry-run-20260809.json
+            data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json
 
       - name: Record candidate assembly outcome
         if: always()
@@ -129,6 +131,7 @@ jobs:
             echo
             echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
             echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
+            echo "- The historical 2026-08-09 authoring receipt remains immutable; the workflow validates a current successor binding for the unchanged helper/test surface plus the current Makefile."
             echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
