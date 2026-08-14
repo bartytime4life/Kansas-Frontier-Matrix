@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-geology-subsurface-public-geometry-assessment-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geology-subsurface-public-geometry-assessment.yml",
+    "contracts/domains/geology/subsurface_public_geometry_assessment.md",
+    "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md",
+    "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json",
+    "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json",
+    "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py",
+    "tools/validators/validate_geology_subsurface_public_geometry_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geology-subsurface-public-geometry-assessment.yml": "sha256:d4842ba9785a1c330749ca7035915127c980b8030f8c676f017ab4cfec0afd85",
+    "contracts/domains/geology/subsurface_public_geometry_assessment.md": "sha256:c324c7a9d1713fef1b0e442cfafe901968f37c77e17a42d59e95fd08c30d64d8",
+    "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "sha256:a04deb706b4025cf958e93202fd107c186d0a16eead700cdf3f42aa282085776",
+    "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json": "sha256:15e28a843628bb5a08d22685f8967e3d182f12415bbe4bef963dc93e80b999bd",
+    "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json": "sha256:276cbda5389886c1f0128d86485e536c8f1a5953fc4dd21c349193d9afc79632",
+    "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "sha256:6f6126da59d01dbd713db5a7d89c2f67dbb971e8af86dfb087bdcd3235886986",
+    "tools/validators/validate_geology_subsurface_public_geometry_assessment.py": "sha256:ec3ca5fb53d137c15a44f9842c9dc02dc73f49d748bb0298577af1743726b0ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:c324c7a9d1713fef1b0e442cfafe901968f37c77e17a42d59e95fd08c30d64d8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connected repository inspection and branch/PR delivery",
+      "uploaded KFM document inspection",
+      "local deterministic validation and artifact generation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=public-safe-geometry-and-redaction-plan",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/domains/geology/BoreholeReference.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/domains/geology/WellLogReference.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/schemas/contracts/v1/domains/geology/borehole_reference.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/schemas/contracts/v1/domains/geology/well_log_reference.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/evidence/geometry_quality_scope_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/tools/validators/validate_geology_pipeline_specification_assessment.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geology-subsurface-public-geometry-assessment.yml": "PROPOSED",
+    "contracts/domains/geology/subsurface_public_geometry_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json": "PROPOSED",
+    "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "CONFIRMED",
+    "tools/validators/validate_geology_subsurface_public_geometry_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Nine deterministic focused tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-six exact synthetic cases matched: four PASS, three ABSTAIN, eighteen DENY, and one ERROR."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "current-main-baseline",
+      "outcome": "FAIL",
+      "reason": "Current main has pre-existing docs-document-graph, docs-meta-block, and telemetry-policy failures from the latest documentation merge; this packet does not modify their target files or workflows."
+    },
+    {
+      "gate": "aggregate-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; repository-wide integration remains a hosted exact-head gate."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending until the draft pull request exists."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no source, policy, review, release, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "geology-public-safe-geometry-plan",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf"
+    },
+    {
+      "id": "borehole-reference-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/domains/geology/BoreholeReference.md"
+    },
+    {
+      "id": "well-log-reference-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/domains/geology/WellLogReference.md"
+    },
+    {
+      "id": "geometry-quality-scope-assessment",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/contracts/evidence/geometry_quality_scope_assessment.md"
+    },
+    {
+      "id": "shared-redaction-receipt-profile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f8a0466f6bd246dcf69b88e507efca267e6e5b67/schemas/contracts/v1/receipts/redaction_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T16:05:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector and local artifact runtime",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a proposed inactive fixture-only subsurface public-geometry declaration assessment. It embeds no coordinates or protected payloads, performs no network or transform execution, activates no source or policy, mutates no lifecycle state, and grants no evidence, review, release, publication, or public-use authority."
+}
