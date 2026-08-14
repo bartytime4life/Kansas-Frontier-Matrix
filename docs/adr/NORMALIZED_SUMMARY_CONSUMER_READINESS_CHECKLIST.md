@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/normalized-summary-consumer-readiness-checklist
 title: "Normalized Summary Consumer Readiness Checklist"
-type: checklist; migration-readiness; support-document
+type: checklist
 version: v1.1
 status: draft; repository-grounded; validation-guidance-only
 owners:
