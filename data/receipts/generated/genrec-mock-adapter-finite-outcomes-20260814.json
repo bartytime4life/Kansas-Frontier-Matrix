@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-mock-adapter-finite-outcomes-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/focus-mock-test.yml",
+    "runtime/model_adapters/MockAdapter.py",
+    "runtime/model_adapters/README.md",
+    "tests/runtime_proof/README.md",
+    "tests/runtime_proof/test_mock_adapter_finite_outcomes.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/e2e-smoke.yml": "sha256:02e5f5974e09e1fd579b93a5d0b0dfaa67c2f4c7d4cde75edc8b3a9f6fd153d1",
+    ".github/workflows/focus-mock-test.yml": "sha256:528b294e94ebd8b8dad8857978b4c485fd8fc774d144721ca02e861011d349b4",
+    "runtime/model_adapters/MockAdapter.py": "sha256:57dec281b61d076f839b2ad73c7a6c919f16040462390eb8570649e74701c760",
+    "runtime/model_adapters/README.md": "sha256:e5df911f3bb4b1b10d1bb86946f4e087077c312556108c940c958df083c3efa7",
+    "tests/runtime_proof/README.md": "sha256:277e77f783ff403a6d7abb5dc4f4aeb60be53b25f5ed8ed9b93d8f99c5d51578",
+    "tests/runtime_proof/test_mock_adapter_finite_outcomes.py": "sha256:c924ab09b02367f5b8de2ab86d12f87efb921da78c731da360de9f2615ef595e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:476ec4269c78cfa435784b575df36120fab93c412789d8e3164b1d469e9d39f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "container",
+      "GitHub connector",
+      "Google Drive connector"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:fec724a82755db691c06fd8f05af558d2187509165807c16f33ffa115549f2ff",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:runtime/model_adapters/MockAdapter.py@dd9ac61fae518f0b0947050fc1457e4fe199a589",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@dd9ac61fae518f0b0947050fc1457e4fe199a589",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/runtime/runtime_response_envelope/@dd9ac61fae518f0b0947050fc1457e4fe199a589",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/focus-mock-test.yml@dd9ac61fae518f0b0947050fc1457e4fe199a589",
+      "source:KFM_Full_Atlas_seed_cards.md:KFM-TRIAD-012,KFM-CAND-0036:sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "drive:1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs:sections-21.1-21.5",
+      "drive:1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM:sections-8-9",
+      "source:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf:pages-13,22:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "source:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md:MockAdapter-proof-and-ranked-pilots:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "source:Unified-Implementation-Architecture-Build-Manual.md:phase-7-governed-ai-mockadapter:sha256:fec724a82755db691c06fd8f05af558d2187509165807c16f33ffa115549f2ff"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    ".github/workflows/focus-mock-test.yml": "PROPOSED",
+    "runtime/model_adapters/MockAdapter.py": "PROPOSED",
+    "runtime/model_adapters/README.md": "PROPOSED",
+    "tests/runtime_proof/README.md": "PROPOSED",
+    "tests/runtime_proof/test_mock_adapter_finite_outcomes.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "mock-adapter-and-envelope-standard-library-suites",
+      "outcome": "PASS",
+      "reason": "Thirteen tests passed: seven selector tests and six canonical finite-envelope tests."
+    },
+    {
+      "gate": "e2e-readiness-regression",
+      "outcome": "PASS",
+      "reason": "Fourteen focused tests and the repository readiness CLI passed while preserving the explicit composed-E2E hold."
+    },
+    {
+      "gate": "workflow-security-ratchet",
+      "outcome": "PASS",
+      "reason": "Nineteen focused tests passed; 434 workflows produced zero invariant findings, new drift, warnings, or stale entries."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "PASS",
+      "reason": "Twenty-four focused tests passed and the final staged tree produced zero invariant findings or new drift."
+    },
+    {
+      "gate": "documentation-links",
+      "outcome": "PASS",
+      "reason": "Eighteen link-check tests passed and 91 local targets in the two changed READMEs resolved without network access."
+    },
+    {
+      "gate": "diff-whitespace-and-json-parse",
+      "outcome": "PASS",
+      "reason": "git diff --check and standard-library JSON parsing completed without findings."
+    },
+    {
+      "gate": "pytest-runtime-proof-collection",
+      "outcome": "SKIPPED",
+      "reason": "The local execution image does not provide pytest; the dependency limitation is inherited from the campaign baseline and hosted checks remain required."
+    },
+    {
+      "gate": "generated-receipt-schema-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local execution image does not provide jsonschema, matching the recorded baseline dependency limitation; JSON shape and artifact hashes are checked separately and hosted validation remains required."
+    },
+    {
+      "gate": "current-main-hosted-baseline",
+      "outcome": "SKIPPED",
+      "reason": "At dd9ac61fae518f0b0947050fc1457e4fe199a589, 44 push workflows succeeded, APIsec was skipped, no workflow had failed, and CodeQL remained in progress; the overall exact-baseline conclusion therefore remains NEEDS VERIFICATION."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The branch has not yet been published; exact-head hosted checks remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; the pull request must remain draft."
+    }
+  ],
+  "policy_decisions": [
+    "repo:bartytime4life/Kansas-Frontier-Matrix:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dd9ac61fae518f0b0947050fc1457e4fe199a589",
+    "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md:sections-7,10.3,14@dd9ac61fae518f0b0947050fc1457e4fe199a589"
+  ],
+  "citations": [
+    {
+      "id": "repo:mock-adapter-placeholder-gap",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:runtime/model_adapters/MockAdapter.py@dd9ac61fae518f0b0947050fc1457e4fe199a589"
+    },
+    {
+      "id": "repo:canonical-finite-envelope",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@dd9ac61fae518f0b0947050fc1457e4fe199a589"
+    },
+    {
+      "id": "repo:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md:sections-7,10.3,14@dd9ac61fae518f0b0947050fc1457e4fe199a589"
+    },
+    {
+      "id": "source:evidence-subordinate-ai-implementation-surface",
+      "validated": true,
+      "evidence_ref": "source:KFM_Full_Atlas_seed_cards.md:KFM-TRIAD-012,KFM-CAND-0036:sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445"
+    },
+    {
+      "id": "source:ai-build-mockadapter-first",
+      "validated": true,
+      "evidence_ref": "drive:1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs:sections-21.1-21.5"
+    },
+    {
+      "id": "source:maplibre-minimum-ai-proof",
+      "validated": true,
+      "evidence_ref": "source:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf:pages-13,22:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T13:57:45Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed synthetic fixture-selector proof only. The MockAdapter requires a complete four-outcome matrix and returns isolated copies; it does not interpret requests, choose outcomes, validate complete schema semantics, resolve evidence, execute policy, validate citations, emit AIReceipt, start a runtime, call a model, expose a public interface, or publish. No external code, live data, credentials, exact locations, sensitive records, repository settings, release state, or Drive bytes were changed. Roll back by reverting this draft PR or abandoning its branch. This receipt is process memory, not truth, policy, review, merge, release, or publication authority."
+}

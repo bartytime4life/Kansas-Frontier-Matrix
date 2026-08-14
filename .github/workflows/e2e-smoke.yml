@@ -124,6 +124,11 @@ jobs:
             exit 1
           fi
 
+          if ! grep -Fq "python -m unittest tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose" ".github/workflows/focus-mock-test.yml"; then
+            echo "::error::The deterministic MockAdapter selector proof changed. Preserve its no-network finite-outcome boundary while mock-runtime E2E remains held."
+            exit 1
+          fi
+
           if grep -Eq '^(mock-runtime|runtime-mock|mock-runtime-smoke):' Makefile; then
             echo "::error::A mock-runtime target now exists. Wire and verify it deliberately instead of retaining this hold."
             exit 1
@@ -144,10 +149,10 @@ jobs:
           `WORKFLOW_HOLD: no accepted executable deterministic mock runtime or startup command`
 
           The repository currently establishes a canonical mock-runtime lane,
-          a mock-adapter documentation lane, and a safe example environment.
-          It does not establish an executable mock adapter, fixture registry,
-          deterministic startup command, health check, receipt stream, or
-          substantive mock-focus workflow.
+          a bounded finite-outcome fixture selector, its no-network proof, and
+          a safe example environment. It does not establish a mock runtime,
+          semantic outcome selection, a startup command, health check, receipt
+          stream, or substantive mock-focus workflow.
 
           No service was started. A green held result is readiness evidence
           only; it is not runtime, policy, evidence, release, deployment, or

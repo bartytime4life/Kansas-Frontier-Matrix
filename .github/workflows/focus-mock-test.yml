@@ -1,8 +1,8 @@
 # KFM Focus mock readiness workflow.
 # Status: PROPOSED bounded static readiness for the mock Focus lane plus a
-# CONFIRMED deterministic, no-network finite-envelope shape proof. An accepted
-# executable mock Focus runtime and mock-generated response suite are not
-# established in current repository evidence.
+# CONFIRMED deterministic, no-network finite-envelope and fixture-selector
+# proof. An accepted executable mock Focus runtime and semantically generated
+# response suite are not established in current repository evidence.
 #
 # Responsibility:
 # - Preserve the existing mock Focus and finite-envelope check surfaces while
@@ -20,18 +20,21 @@
 #   no-network after checkout and Python action setup; no packages are installed.
 # Command:
 # - No mock Focus command exists. Inline standard-library checks inspect its
-#   documented scaffolds. The finite-envelope job executes the repository-owned
-#   standard-library proof suite and verifies validator/fixture wiring.
+#   documented scaffolds. The finite-envelope job executes repository-owned
+#   standard-library envelope and MockAdapter proofs and verifies
+#   validator/fixture wiring.
 # Inputs:
 # - Mock runtime/adapter boundaries, Focus examples, schemas, contracts, policy
-#   scaffolds, runtime-envelope fixtures, executable shape tests, and the Makefile.
+#   scaffolds, runtime-envelope fixtures, executable selector/shape tests, and
+#   the Makefile.
 # Outputs:
 # - GitHub job conclusions, logs, and step summaries only; no model output,
-#   RuntimeResponseEnvelope, receipt, proof, release record, or published artifact.
+#   runtime-emitted envelope, receipt, proof, release record, or published artifact.
 # Outcome:
 # - The mock Focus scaffold reports WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD.
-# - The finite-envelope job tests canonical aliasing, all four outcomes, and
-#   positive/negative closed-shape fixtures without starting a runtime.
+# - The finite-envelope job tests canonical aliasing, all four outcomes,
+#   deterministic fixture selection, isolation, and positive/negative shape
+#   fixtures without starting a runtime.
 # - Missing boundaries or newly surfaced implementation fail readiness until
 #   owners wire reviewed deterministic commands and valid/negative fixtures.
 # Compatibility:
@@ -121,6 +124,7 @@ jobs:
           fi
 
           python - <<'PY'
+          import ast
           import json
           import re
           from pathlib import Path
@@ -162,12 +166,46 @@ jobs:
               )
 
           adapter_path = Path("runtime/model_adapters/MockAdapter.py")
-          expected_adapter = "# MockAdapter — finite envelopes only — greenfield placeholder"
-          if adapter_path.read_text(encoding="utf-8").strip() != expected_adapter:
+          adapter_source = adapter_path.read_text(encoding="utf-8")
+          adapter_tree = ast.parse(adapter_source, filename=str(adapter_path))
+          class_names = {
+              node.name
+              for node in adapter_tree.body
+              if isinstance(node, ast.ClassDef)
+          }
+          required_classes = {
+              "MockAdapter",
+              "MockAdapterConfigurationError",
+              "MockAdapterScenarioError",
+          }
+          if not required_classes <= class_names:
               raise SystemExit(
-                  "MockAdapter.py is no longer the exact placeholder. Inspect its API, "
-                  "hidden-I/O posture, finite outcomes, fixtures, tests, and consumers "
-                  "before wiring mock Focus CI."
+                  "The bounded MockAdapter class surface changed. Reconcile its "
+                  "fixture-selector tests before changing mock Focus readiness."
+              )
+
+          finite_outcomes = None
+          imported_roots = set()
+          for node in ast.walk(adapter_tree):
+              if isinstance(node, ast.Assign):
+                  for target in node.targets:
+                      if isinstance(target, ast.Name) and target.id == "FINITE_OUTCOMES":
+                          finite_outcomes = ast.literal_eval(node.value)
+              elif isinstance(node, ast.Import):
+                  imported_roots.update(
+                      alias.name.split(".", 1)[0] for alias in node.names
+                  )
+              elif isinstance(node, ast.ImportFrom) and node.module:
+                  imported_roots.add(node.module.split(".", 1)[0])
+
+          if finite_outcomes != ("ANSWER", "ABSTAIN", "DENY", "ERROR"):
+              raise SystemExit(
+                  "MockAdapter.py no longer exposes the closed four-outcome tuple."
+              )
+          if not imported_roots <= {"__future__", "collections", "copy"}:
+              raise SystemExit(
+                  "MockAdapter.py gained an import outside its bounded no-I/O "
+                  "standard-library surface."
               )
 
           focus_example_root = Path("examples/focus_flows")
@@ -484,7 +522,7 @@ jobs:
               )
 
           print("runtime/mock and runtime/model_adapters/mock remain README-only lanes.")
-          print("MockAdapter.py remains the exact one-line greenfield placeholder.")
+          print("MockAdapter.py remains a bounded no-I/O finite-outcome fixture selector.")
           print("Focus request/response schemas remain open PROPOSED scaffolds.")
           print("The only Focus flow payload is synthetic, non-authoritative, do-not-publish, and expected-ABSTAIN.")
           print("No Focus fixture payload or repository-native mock Focus target surfaced.")
@@ -504,10 +542,11 @@ jobs:
 
           `WORKFLOW_HOLD: no accepted deterministic mock Focus runtime, fixture suite, or command`
 
-          This job checks the documented mock runtime/adapter lanes, placeholder
-          adapter, Focus schemas, policy scaffolds, examples, fixture inventory,
-          and command surface. It stops succeeding when implementation or
-          operational fixtures surface so they must be wired deliberately.
+          This job checks the documented mock runtime/adapter lanes, bounded
+          finite-outcome selector, Focus schemas, policy scaffolds, examples,
+          fixture inventory, and command surface. It stops succeeding when a
+          mock Focus runtime or operational fixtures surface so they must be
+          wired deliberately.
 
           No mock Focus request ran and no adapter or model was called. A green
           held result is readiness evidence only; it does not prove Focus flow,
@@ -534,6 +573,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python -m unittest tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose
           python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
 
           python - <<'PY'
@@ -588,8 +628,9 @@ jobs:
           canonical JSON Schema validator remains wired to the same schema and
           fixture family and is exercised by the schema/validator workflows.
 
-          This is fixture and machine-shape proof only. No mock response was
-          generated, no runtime or public client executed, and no evidence was
+          This is fixture selection and machine-shape proof only. Synthetic
+          envelopes were selected in memory; no semantic outcome decision,
+          runtime, provider, or public client executed, and no evidence was
           resolved. A green result is not policy approval, citation validation,
           runtime acceptance, release approval, or publication authority.
           EOF
