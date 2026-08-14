@@ -1,200 +1,135 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://adr/ADR-0031
-title: Shared watcher ownership and placement
+title: "ADR-0031 — Shared Watcher Ownership and Placement"
 type: adr
-version: v1
+adr_id: ADR-0031
+version: v1.1
 status: proposed
-owners: ["Architecture steward", "Pipeline steward", "Source steward", "Domain stewards"]
+effective_decision_status: proposed
+owners:
+  - "OWNER_TBD — architecture decision owner"
+  - "OWNER_TBD — pipeline and watcher steward"
+  - "OWNER_TBD — source and evidence steward"
+  - "OWNER_TBD — affected domain stewards"
+owner_status: "CODEOWNERS routes docs/adr/ and the affected implementation and governance roots to @bartytime4life; accepted stewardship, decision quorum, independent review, source-activation authority, and release authority remain unverified"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Pipeline and watcher steward
+  - Pipeline-spec steward
+  - Source and evidence steward
+  - Affected domain steward
+  - Contract and schema steward
+  - Policy and sensitivity reviewer
+  - Validation steward
+  - Release and rollback steward
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-14
 policy_label: public
-related:
-  - "docs/doctrine/directory-rules.md"
-  - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-  - "pipelines/watchers/README.md"
-  - "pipelines/domains/flora/watchers/README.md"
-  - "pipeline_specs/watchers/README.md"
-  - "pipeline_specs/flora/watchers/README.md"
-  - "tools/watchers/README.md"
-  - "tools/watchers/plants_watch/README.md"
-  - "contracts/runtime/run_receipt.md"
-tags: [adr, kfm, pipelines, watchers, source-change, material-change, governance]
+truth_posture: cite-or-abstain
+responsibility_root: docs/
+owning_root: docs/
+responsibility: "Records the proposed ownership split for watcher registries, declarative specs, shared executable orchestration, domain watcher behavior, connectors, helpers, candidate outputs, migration, and rollback without granting source activation, execution, lifecycle-write, release, deployment, notification, publication, or settings authority."
+current_path: docs/adr/ADR-0031-shared-watcher-ownership-and-placement.md
 supersedes: []
 superseded_by: []
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: b7352aba93f7298bdd5a6ee6fd8de475b05c9e42
+  target_prior_blob: 8cffe2917e9d9646ef1ddd62d5cdda3331b50ac0
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_readme_blob: 793015c38f4066c2c23753d4e3dd26bcc890279d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  shared_watcher_readme_blob: 42680e55b6e736f7f447f17cec7e5f71e8f67c08
+  flora_watcher_readme_blob: ca41b4fc94582eae81fba4b91f397cf9c63004c7
+  tools_watchers_readme_blob: 9711995283cbccd80b89189c08002088c28d9b07
+  shared_plants_placeholder_blob: fa8ab22f84d2ac41a3a49b9633509c196d989925
+  flora_plants_placeholder_blob: efc75e02896e99451fbd103d4a858c55c83784c1
+  watcher_gate_profile_blob: fcb4fa6313428b36223b94e2b003dc6ad2430b04
+  soil_watcher_spec_blob: e592a06765ce9f2a61aef50ae8f20b2f5d9d6209
+  watcher_registry_contract_blob: 8e92b67a47161689f54952a14745c1efd443e540
+  watcher_registry_schema_blob: 9f144b42be72917fd16c127fcec35b3900453706
+  watcher_registry_projection_blob: 03eaa309c5aac01f7755e7f1df4f04073bf1ad0f
+  watcher_registry_validator_blob: 448a5bc5631e91bb3f6ddfda30f09d62c8b2c164
+  watcher_registry_tests_blob: 19a5d9d6654f48a5c7963c59e914858d08574fc1
+  watcher_registry_workflow_blob: 2da9c6b343b45b2bee33c559dd5fab84a7ba7eb4
+  watcher_registry_extension_receipt_blob: 09cba6e791b634b735e2d603bf37250a19d2939b
+  last_green_watcher_registry_run: 31263074530
+  latest_watcher_registry_run: 31654972163
+related:
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - docs/adr/ADR-0012-connector-outputs-to-data-raw-or-data-quarantine-only.md
+  - docs/adr/ADR-0017-source-descriptor-admission-process.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - pipelines/watchers/README.md
+  - pipelines/domains/flora/watchers/README.md
+  - pipeline_specs/watchers/README.md
+  - pipeline_specs/watchers/plants_drift.yaml
+  - pipeline_specs/watchers/soil_ssurgo_gnatsgo.json
+  - pipeline_specs/watchers/watcher_gate_profile.v1.json
+  - pipeline_specs/flora/plants_drift_watcher.yaml
+  - tools/watchers/README.md
+  - contracts/source/watcher_registry.md
+  - contracts/domains/soil/soil_watcher_spec.md
+  - schemas/contracts/v1/source/watcher_registry.schema.json
+  - schemas/contracts/v1/domains/soil/soil_watcher_spec.schema.json
+  - control_plane/watcher_registry.json
+  - policy/domains/soil/watcher_spec.rego
+  - tools/validators/validate_watcher_registry.py
+  - tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py
+  - tests/validators/test_validate_watcher_registry.py
+  - tests/validators/domains/soil/watcher_spec/test_validate_soil_watcher_spec.py
+  - .github/workflows/watcher-registry.yml
+  - .github/workflows/soil-watcher-spec.yml
+  - .github/workflows/policy-boundary-guards.yml
+  - data/receipts/generated/genrec-watcher-registry-soil-extension-20260808.json
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+tags: [adr, kfm, pipelines, watchers, watcher-registry, source-change, material-change, governance, non-publisher, fixture-first, placement]
 notes:
-  - "PROPOSED: this ADR does not activate a watcher, choose a source, authorize network access, or move files until accepted and a reviewed migration is supplied."
+  - "v1.1 is a same-path documentation-only reconciliation. It preserves proposed status and does not accept ADR-0031 or authorize migration."
+  - "ADR-0029 separately accepted the exact Directory Rules v2 bytes; that confirms this ADR lane but does not accept this decision."
+  - "A fixture-first WatcherRegistry packet and an inactive Soil watcher extension now exist; neither creates execution or publication authority."
+  - "No executable shared watcher runtime is present under pipelines/watchers/ at the evidence checkpoint."
+  - "The Soil spec is domain-specific by contract, policy, sources, and outputs but currently sits in the shared watcher-spec lane; migration remains HOLD."
+  - "The latest observed watcher-registry run passed focused logic and fixture checks, then failed generated-receipt validation with ARTIFACT_DIGEST_MISMATCH."
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0031: Shared watcher ownership and placement
+<a id="top"></a>
 
-KFM should use `pipelines/watchers/` as the home for executable watcher orchestration that is genuinely reusable across multiple admitted sources or domains, keep domain-specific watcher semantics under `pipelines/domains/<domain>/watchers/`, keep declarative activation intent in the matching `pipeline_specs/` lane, and restrict `tools/watchers/` to side-effect-bounded reusable helpers. This proposal resolves the currently documented placement conflict without giving watchers source-admission, evidence, lifecycle, release, or publication authority.
+# ADR-0031 — Shared Watcher Ownership and Placement
 
-| Field | Value |
-|---|---|
-| **ID** | ADR-0031 |
-| **Status** | proposed |
-| **Date** | 2026-08-08 |
-| **Deciders** | Architecture steward · Pipeline steward · Source steward · affected domain stewards |
-| **Consulted** | Contracts · schema · policy · evidence · release · correction/rollback reviewers |
-| **Informed** | Connector, pipeline-spec, tooling, domain, CI, docs maintainers |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Directory Rules trigger** | §2.4 parallel-authority prevention and §14.2 structural migration discipline |
-| **Primary responsibility root** | `pipelines/` |
-| **Migration required** | yes, only after acceptance |
-| **Rollback required** | yes |
-| **Truth posture** | CONFIRMED current placement conflict / PROPOSED decision and migration |
+> **Proposed decision.** KFM separates watcher responsibilities by ownership: `control_plane/` indexes watcher identities and non-authority state; `pipeline_specs/` declares intent; `pipelines/` owns executable orchestration; domain lanes own domain meaning; `connectors/` own approved upstream access; and `tools/` owns bounded helpers and validators. Shared executable placement requires proven reuse. Watchers remain candidate producers and non-publishers.
+
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![Registry: partial](https://img.shields.io/badge/registry-PARTIAL-0969da?style=flat-square)](#current-repository-evidence)
+[![Shared runtime: absent](https://img.shields.io/badge/shared%20runtime-ABSENT-6e7781?style=flat-square)](#current-repository-evidence)
+[![Receipt closure: hold](https://img.shields.io/badge/receipt%20closure-HOLD-b42318?style=flat-square)](#hosted-workflow-evidence)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#watcher-non-authority-law)
+
+> [!IMPORTANT]
+> **Decision status, placement authority, registry implementation, and watcher execution are separate facts.** The ADR index keeps this record `proposed`. ADR-0029 separately accepted Directory Rules v2. The repository has a bounded watcher registry and inactive Soil specification, but neither accepts this ADR, establishes a shared runtime, activates a source, or grants lifecycle, release, notification, or publication authority.
+
+> [!CAUTION]
+> **Current placement is not fully aligned with the proposed decision.** `pipeline_specs/watchers/soil_ssurgo_gnatsgo.json` is Soil-specific through its contract, policy, source families, and outputs. Its shared-lane path is therefore migration evidence, not authority to move it in this docs-only update.
+
+> [!NOTE]
+> Watcher-registry run `31654972163` passed all five focused tests, current registry validation, and four fixture-polarity cases, then failed generated-receipt validation with `ARTIFACT_DIGEST_MISMATCH`. The last observed green run remains `31263074530`. Current classification: **logic PASS / receipt HOLD**.
+
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Repository evidence](#current-repository-evidence) · [Decision](#decision) · [Admission](#shared-orchestration-admission-test) · [Non-authority](#watcher-non-authority-law) · [Graduation](#graduation-gates) · [Migration](#migration-plan) · [Validation](#validation-plan) · [Risks](#risk-ledger) · [Open work](#open-questions) · [References](#references) · [No-loss](#no-loss-reconciliation)
 
 ---
 
-## 1. Context
+<a id="status"></a>
 
-Current repository evidence documents several overlapping watcher surfaces:
+## Status
 
-- `pipelines/watchers/` describes a candidate shared executable-orchestration boundary;
-- `pipelines/domains/flora/watchers/` describes domain-owned watcher behavior;
-- `pipeline_specs/watchers/` and `pipeline_specs/flora/watchers/` contain duplicated plants-drift specification placeholders;
-- `tools/watchers/` and `tools/watchers/plants_watch/` describe reusable watcher tooling.
-
-The parent watcher README explicitly classifies shared-versus-domain-versus-tool ownership as **CONFLICTED**, says the shared watcher runtime is unverified, and warns against resolving the conflict by copying code or specifications into multiple roots. It also confirms a non-publisher boundary: watcher output is candidate evidence-development material and cannot itself become source admission, EvidenceBundle closure, release, or publication.
-
-Pass 20 implementation ideas add pressure for material-change monitoring across PLANTS, CDL, SSURGO, air-quality, and other sources. Implementing those watchers before selecting a responsibility owner would multiply the current ambiguity.
-
-ADR-0029 is the accepted directory-governance decision. This proposed ADR applies that responsibility-root discipline to watcher orchestration; it does not amend ADR-0029.
-
-## 2. Decision
-
-If accepted, KFM will use the following ownership rules.
-
-### 2.1 Shared executable orchestration
-
-`pipelines/watchers/` owns long-lived executable orchestration only when the same watcher mechanics are consumed by two or more accepted source/domain lanes without embedding domain-specific interpretation.
-
-Shared orchestration may:
-
-- compare an approved current signal with pinned prior state;
-- apply a versioned materiality rule supplied by the owning source/domain configuration;
-- create deterministic process memory and a bounded candidate handoff;
-- route a candidate to WORK or QUARANTINE review surfaces through governed interfaces.
-
-Shared orchestration may not:
-
-- retrieve an upstream source unless a connector explicitly owns that access;
-- activate or admit a source;
-- interpret domain meaning that belongs to a domain pipeline;
-- create EvidenceBundle closure or PolicyDecision authority;
-- write CATALOG/TRIPLET/PUBLISHED state;
-- approve promotion, release, correction, rollback, deployment, or publication.
-
-### 2.2 Domain-specific watcher behavior
-
-`pipelines/domains/<domain>/watchers/` owns executable watcher behavior when materiality, sensitivity, cultural authority, interpretation, or review requirements are domain-specific. Domain watchers may reuse bounded helpers from `tools/watchers/` but must not duplicate shared orchestration code.
-
-### 2.3 Declarative intent
-
-`pipeline_specs/watchers/` is the shared declarative home for accepted shared watcher specifications. `pipeline_specs/<domain>/watchers/` is the declarative home for domain-owned watchers. A specification states what may run; it does not activate itself or grant source/network authority.
-
-A watcher specification must identify its executable owner unambiguously. The same active watcher specification must not be maintained in both shared and domain lanes.
-
-### 2.4 Reusable tools
-
-`tools/watchers/` is limited to side-effect-bounded helpers such as parsers, canonicalizers, materiality comparators, local validators, and deterministic fixture utilities. It must not become a scheduler or long-lived orchestration authority.
-
-### 2.5 Candidate output law
-
-Watcher outputs remain pre-publication candidate/process-memory objects. A material-change result may route to WORK or QUARANTINE review, but it is not RAW capture, source truth, ValidationReport, EvidenceBundle, PolicyDecision, ReleaseManifest, or publication.
-
-## 3. Consequences
-
-### Positive
-
-- One responsibility root owns each executable watcher behavior.
-- Shared mechanics can be reused without collapsing domain interpretation.
-- Pass 20 material-change ideas gain a governed implementation path.
-- `tools/` remains side-effect limited.
-- Watcher automation remains subordinate to source admission, evidence, policy, lifecycle, and release governance.
-
-### Costs
-
-- Existing duplicate plants-drift placeholders require an explicit migration decision after this ADR is accepted.
-- Some current READMEs and paths may need compatibility notes or retirement plans.
-- Shared watcher implementations must demonstrate at least two real consumers before being treated as genuinely shared.
-
-### Risks
-
-- Prematurely moving files could break consumers or silently change authority.
-- A generic materiality vocabulary could flatten domain meaning if shared too aggressively.
-- A watcher could become an accidental publisher if outputs are allowed to bypass lifecycle and release gates.
-
-The migration plan below is therefore mandatory and remains inactive while this ADR is proposed.
-
-## 4. Alternatives considered
-
-### Keep all watchers domain-owned
-
-Rejected as the default because common polling/comparison/receipt mechanics would be duplicated across source/domain lanes. It remains appropriate for behavior whose meaning or sensitivity is genuinely domain-specific.
-
-### Put all watcher behavior in `tools/watchers/`
-
-Rejected because long-lived orchestration is a pipeline responsibility under current directory doctrine; turning `tools/` into a scheduler would blur side-effect and authority boundaries.
-
-### Keep both shared and domain watcher implementations indefinitely
-
-Rejected because parallel executable/specification homes create ambiguous authority, drift, and inconsistent corrections.
-
-### Resolve ad hoc per source without a repository-wide rule
-
-Rejected because Pass 20 calls for several watcher families and the repository already documents the conflict. Repeating the placement decision source-by-source would accumulate design debt.
-
-## 5. Evidence and references
-
-Current-session repository evidence supporting this proposal includes:
-
-- `pipelines/watchers/README.md` — placement conflict, non-publisher law, responsibility split, duplicated plants-drift placeholders;
-- `tools/watchers/README.md` and `tools/watchers/plants_watch/README.md` — reusable helper surface;
-- `pipeline_specs/watchers/README.md` and `pipeline_specs/flora/watchers/README.md` — declarative shared/domain lanes;
-- `contracts/runtime/run_receipt.md` — generic execution process-memory surface;
-- `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` — accepted directory governance.
-
-The attached Pass 20 dossier supplies implementation pressure for material-change monitoring, but does not establish current repository runtime behavior.
-
-## 6. Migration plan
-
-**HOLD while status is `proposed`.** No file move or runtime activation is authorized by this ADR draft.
-
-After acceptance, perform migration in a separate reviewed PR:
-
-1. inventory every watcher implementation, specification, fixture, workflow, consumer, and generated receipt;
-2. classify each watcher as `SHARED_ORCHESTRATION`, `DOMAIN_OWNED`, or `TOOL_HELPER` using the rules above;
-3. select one canonical plants-drift specification and mark the other path compatibility-only or retire it with an explicit migration note;
-4. update all consumers atomically;
-5. add deterministic no-network fixtures for no-change, material-change, malformed-source, stale-state, sensitivity hold, and rights hold;
-6. prove watcher output cannot target `data/catalog`, `data/published`, or `release/` directly;
-7. bind process memory to the existing RunReceipt family or a separately reviewed watcher-specific profile without creating a competing receipt root;
-8. update affected READMEs and registers;
-9. run focused and repository-wide validation;
-10. only then consider one fixture-first watcher implementation.
-
-No live source activation, credential use, scheduler enablement, or public notification belongs in that migration PR.
-
-## 7. Rollback plan
-
-Before acceptance, close the ADR PR; no runtime behavior changes.
-
-After acceptance but before implementation migration, supersede or reject this ADR through normal ADR governance.
-
-After a later migration, rollback means restoring the prior executable/specification routing through a reviewed revert or migration reversal while preserving historical receipts and records. Rollback must not delete evidence, correction history, or relied-on process memory.
-
-## 8. Open questions
-
-- Which first two watcher consumers are sufficient to prove the shared lane is genuinely shared?
-- Should materiality reason codes be a small shared vocabulary with domain extensions, or remain entirely domain-owned?
-- Does an accepted watcher-specific RunReceipt profile add value beyond the generic RunReceipt contract?
-- What scheduler, if any, is appropriate after fixture-first behavior is proven?
-- Which source rights/sensitivity checks must block network activation before the first live watcher?
-
-## 9. Change history
-
-| Date | Change |
+| Field | Current value |
 |---|---|
-| 2026-08-08 | Initial proposed ADR based on current watcher placement conflict and Pass 20 material-change implementation pressure. |
+| ADR
