@@ -45,7 +45,7 @@ evidence_snapshot:
   connectors_domains_readme_blob: a8a384c6c19a22b393f02188123147a205e276ea
   connectors_fauna_readme_blob: 535e59d1de733c6fc717a8e5d3c2cd32d9cdfc46
   connectors_geology_readme_blob: 9575bec2c30a5f7a7a227ed4a48d548a00be83d1
-  fauna_canonical_paths_blob: NEEDS_VERIFICATION
+  fauna_canonical_paths_blob: abfc6ddb2e958ea636ebc2e9e3705b59ec42c2ca
   connector_output_adr_blob: a3534bff3331ca2052bc6c5d179f354f021a52e3
   source_admission_adr_blob: b5c0ac83be6f00897ee626c46df2bf64f15d82f5
   source_authority_register_blob: 82c23722520922f5ca0dad7f37ed794d1c2edf81
@@ -761,8 +761,8 @@ Use repository-native documentation graph, stale-scan, link, and accessibility c
 ### Current connector checks
 
 ```bash
-python -m pip install -e ".[test]"
-python -m pip install -e "./packages/connectors-core"
+python tools/ci/install_python_ci.py project-test
+python tools/ci/install_python_ci.py connectors-core
 
 python -m pytest \
   tests/packages/connectors_core \
