@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-atlases-readme
 title: docs/atlases/ — Curated Atlas Documentation Lane
-type: README; directory-readme; documentation-index; atlas-boundary
+type: directory-readme
 version: v0.2
 status: draft; repository-grounded; canonical-lane; mixed-lineage; naming-conflicted; non-release; non-publication
 owners:
