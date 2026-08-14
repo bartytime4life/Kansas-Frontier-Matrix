@@ -28,9 +28,11 @@ updated: 2026-08-13
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Architecture decision record for the proposed spec_hash and run_id identity grammar, current implementation evidence, conflicts, migration gates, and trust boundaries."
 current_path: docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
