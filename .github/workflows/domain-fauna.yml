@@ -88,12 +88,14 @@ jobs:
           `VALIDATION_SCOPE: synthetic-public-safe-fixture-only`
 
           This job runs only the accepted deterministic standard-library suite in
-          `tests/domains/fauna/test_fauna_smoke.py`. It reads five small synthetic
-          fixtures, blocks network calls in the test boundary, accepts only a
-          fixture-only candidate that is explicitly not released and not eligible
-          for promotion, and proves fail-closed findings for missing source
-          reference; unresolved taxonomy, evidence, rights, sensitivity, policy,
-          geoprivacy, review, correction, and rollback; and precision hints.
+          `tests/domains/fauna/test_fauna_smoke.py`. It reads seven small synthetic
+          fixtures, blocks network calls in the test boundary, accepts only two
+          fixture-only candidates that are explicitly not released and not eligible
+          for promotion, requires transform-reference/caveat closure for the
+          sensitive-withheld scenario, and proves fail-closed findings for
+          missing source reference; unresolved taxonomy, evidence, rights,
+          sensitivity, policy, geoprivacy, review, correction, and rollback;
+          and precision hints.
 
           A green result does not establish Fauna truth, taxonomic identity,
           source admission, rights clearance, geoprivacy review, evidence closure,

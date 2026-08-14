@@ -12,7 +12,7 @@ These files are examples only. They are not authoritative project records, sourc
 
 Directory Rules make file placement part of governance: a file's location encodes ownership, responsibility, and lifecycle posture. The `fixtures/` root is the canonical home for reusable valid, invalid, golden, synthetic, and public-safe examples, while `tests/fixtures/` owns test-local-only examples and `data/` remains the governed lifecycle root.
 
-The five accepted JSON fixtures in this lane are shared by the reusable validator, its executable tests, and the domain workflow, so they remain under `fixtures/domains/fauna/` rather than becoming test-local copies. The root fixture README prohibits RAW, WORK, or QUARANTINE data; restricted geospatial detail; and treating fixture corpora as canonical truth. This README inherits those boundaries for every Fauna fixture sublane.
+The seven accepted JSON fixtures in this lane are shared by the reusable validator, its executable tests, and the domain workflow, so they remain under `fixtures/domains/fauna/` rather than becoming test-local copies. The root fixture README prohibits RAW, WORK, or QUARANTINE data; restricted geospatial detail; and treating fixture corpora as canonical truth. This README inherits those boundaries for every Fauna fixture sublane.
 
 ## Current fixture lanes
 
@@ -31,6 +31,7 @@ The five accepted JSON fixtures in this lane are shared by the reusable validato
 | Path | Status | Notes |
 |---|---|---|
 | `valid/non_sensitive_occurrence.json` | ACCEPTED for bounded fixture-safety validation | Synthetic, fixture-only candidate with withheld spatial support, synthetic refs, no live URL, and explicit not-released / not-eligible governance state. It is not an accepted `OccurrencePublic` instance. |
+| `valid/sensitive_withheld_occurrence.json` | ACCEPTED for bounded fixture-safety validation | Synthetic sensitive-location scenario with no coordinates; the bounded profile requires withheld support, a synthetic redaction-receipt reference, a withholding caveat, and held release/promotion states. It is not an accepted `OccurrencePublic` instance or a RedactionReceipt. |
 | `valid/range_polygon.geojson` | PROPOSED placeholder | Proposed public-safe range fixture slot, not a canonical range layer. |
 | `valid/seasonal_range.geojson` | PROPOSED placeholder | Proposed public-safe seasonal-range fixture slot, not a canonical range layer. |
 | `synthetic/no_network_drift_window.json` | PROPOSED placeholder | Proposed no-network drift-window fixture slot, not proof of implemented drift-window behavior. |
@@ -38,8 +39,9 @@ The five accepted JSON fixtures in this lane are shared by the reusable validato
 | `invalid/unresolved_governance.json` | ACCEPTED negative fixture | Proves unresolved evidence, rights, policy, geoprivacy, review, correction, and rollback state fail closed while release and promotion remain held. |
 | `invalid/unresolved_taxonomy.json` | ACCEPTED negative fixture | Proves the bounded validator fails closed when synthetic taxonomy state is unresolved. |
 | `invalid/over_precise_sensitive.json` | ACCEPTED negative fixture | Uses non-numeric `SYNTHETIC-ONLY` precision hints to prove unresolved sensitivity and location-shaped fields are rejected without adding a real location. |
+| `invalid/encoded_location_clue.json` | ACCEPTED negative fixture | Proves aliased location fields plus encoded URL- and coordinate-shaped caveats fail closed without echoing values. |
 
-Payload inventory remains partial. The five accepted entries above are consumed only by `tools/validators/domains/fauna/validate_public_safe_fixture.py` and `tests/domains/fauna/test_fauna_smoke.py`; no other fixture or consumer is promoted by that acceptance.
+Payload inventory remains partial. The seven accepted entries above are consumed only by `tools/validators/domains/fauna/validate_public_safe_fixture.py` and `tests/domains/fauna/test_fauna_smoke.py`; no other fixture or consumer is promoted by that acceptance.
 
 ## Related references
 
@@ -149,6 +151,6 @@ Before adding or changing a Fauna fixture, confirm:
 
 - Target README: replaced greenfield stub content.
 - Fixture-lane inventory: PARTIALLY VERIFIED by repository search and recently populated lane READMEs.
-- Payload inventory: PARTIALLY VERIFIED; the five accepted JSON fixtures above were inspected, while other listed payloads remain placeholders or NEEDS VERIFICATION.
+- Payload inventory: PARTIALLY VERIFIED; the seven accepted JSON fixtures above were inspected, while other listed payloads remain placeholders or NEEDS VERIFICATION.
 - Consumer alignment: CONFIRMED only for the bounded synthetic fixture validator and `test_fauna_smoke.py`; renderer, governed-API, Focus Mode, source-refresh, production schema, policy runtime, and release consumers remain NEEDS VERIFICATION.
-- Tests and validator: the accepted five-test standard-library suite passed locally on 2026-07-25; CI execution remains subject to the focused pull request.
+- Tests and validator: the accepted eight-test standard-library suite passed locally on 2026-08-14; CI execution remains subject to the focused pull request.

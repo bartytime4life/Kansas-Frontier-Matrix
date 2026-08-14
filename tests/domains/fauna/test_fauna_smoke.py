@@ -24,7 +24,13 @@ from tools.validators.domains.fauna.validate_public_safe_fixture import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_ROOT = REPO_ROOT / "fixtures" / "domains" / "fauna"
-VALID_FIXTURE = FIXTURE_ROOT / "valid" / "non_sensitive_occurrence.json"
+NON_SENSITIVE_FIXTURE = (
+    FIXTURE_ROOT / "valid" / "non_sensitive_occurrence.json"
+)
+SENSITIVE_WITHHELD_FIXTURE = (
+    FIXTURE_ROOT / "valid" / "sensitive_withheld_occurrence.json"
+)
+VALID_FIXTURES = {NON_SENSITIVE_FIXTURE, SENSITIVE_WITHHELD_FIXTURE}
 ENCODED_FIXTURE = FIXTURE_ROOT / "invalid" / "encoded_location_clue.json"
 LOCATION_ALIASES = (
     "lat",
@@ -98,14 +104,66 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
             patcher.start()
             self.addCleanup(patcher.stop)
 
-    def test_synthetic_public_safe_fixture_passes_without_network(self):
-        findings = validate_file(VALID_FIXTURE)
-        self.assertEqual(findings, ())
+    def test_synthetic_public_safe_fixtures_pass_without_network(self):
+        for fixture in sorted(VALID_FIXTURES):
+            with self.subTest(fixture=fixture.name):
+                findings = validate_file(fixture)
+                self.assertEqual(findings, ())
+
+    def test_sensitive_withheld_fixture_requires_transform_disclosure(self):
+        sensitive = json.loads(
+            SENSITIVE_WITHHELD_FIXTURE.read_text(encoding="utf-8")
+        )
+        sensitive.pop("redaction_receipt_ref")
+        caveats = sensitive["public_caveats"]
+        self.assertIsInstance(caveats, list)
+        caveats.remove(
+            "Synthetic sensitive-location scenario; exact precision withheld."
+        )
+        governance = sensitive["governance"]
+        self.assertIsInstance(governance, dict)
+        governance["geoprivacy_state"] = "not-applicable-no-location"
+        actual = {
+            (finding.code, finding.path)
+            for finding in validate_candidate(sensitive)
+        }
+        self.assertIn(
+            ("REDACTION_RECEIPT_REF_MISSING", "$.redaction_receipt_ref"),
+            actual,
+        )
+        self.assertIn(
+            (
+                "SENSITIVE_WITHHOLDING_CAVEAT_REQUIRED",
+                "$.public_caveats",
+            ),
+            actual,
+        )
+        self.assertIn(
+            ("GEOPRIVACY_STATE_UNRESOLVED", "$.governance.geoprivacy_state"),
+            actual,
+        )
+
+        non_sensitive = json.loads(
+            NON_SENSITIVE_FIXTURE.read_text(encoding="utf-8")
+        )
+        non_sensitive["redaction_receipt_ref"] = (
+            "fixture:receipt:redaction:fauna:unexpected-alpha"
+        )
+        self.assertIn(
+            (
+                "REDACTION_RECEIPT_REF_UNEXPECTED",
+                "$.redaction_receipt_ref",
+            ),
+            {
+                (finding.code, finding.path)
+                for finding in validate_candidate(non_sensitive)
+            },
+        )
 
     def test_accepted_fixture_inventory_is_explicit(self):
         self.assertEqual(
             set((FIXTURE_ROOT / "valid").glob("*.json")),
-            {VALID_FIXTURE},
+            VALID_FIXTURES,
         )
         self.assertEqual(
             set((FIXTURE_ROOT / "invalid").glob("*.json")),
@@ -134,7 +192,9 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
         self.assertNotIn("999999", output.getvalue())
 
     def test_location_aliases_and_numeric_values_fail_closed(self):
-        base_payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        base_payload = json.loads(
+            NON_SENSITIVE_FIXTURE.read_text(encoding="utf-8")
+        )
 
         for alias in LOCATION_ALIASES:
             with self.subTest(alias=alias):
@@ -268,7 +328,9 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
         )
 
     def test_public_caveats_reject_malformed_and_encoded_content(self):
-        base_payload = json.loads(VALID_FIXTURE.read_text(encoding="utf-8"))
+        base_payload = json.loads(
+            NON_SENSITIVE_FIXTURE.read_text(encoding="utf-8")
+        )
         malformed_cases = (
             (
                 "null",
@@ -431,7 +493,10 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
             )
 
     def test_fixture_corpus_contains_no_live_target_or_plausible_coordinate(self):
-        for fixture_path in (VALID_FIXTURE, *INVALID_FIXTURES):
+        for fixture_path in (
+            *sorted(VALID_FIXTURES),
+            *sorted(INVALID_FIXTURES),
+        ):
             with self.subTest(fixture=fixture_path.name):
                 payload = json.loads(fixture_path.read_text(encoding="utf-8"))
                 serialized = json.dumps(payload, sort_keys=True).casefold()
@@ -452,15 +517,25 @@ class FaunaPublicSafeFixtureValidationTests(unittest.TestCase):
     def test_cli_emits_stable_pass_envelope_for_accepted_fixture(self):
         output = io.StringIO()
         with redirect_stdout(output):
-            return_code = main([str(VALID_FIXTURE)])
+            return_code = main(
+                [str(NON_SENSITIVE_FIXTURE), str(SENSITIVE_WITHHELD_FIXTURE)]
+            )
 
         self.assertEqual(return_code, 0)
-        envelope = json.loads(output.getvalue())
-        self.assertEqual(envelope["findings"], [])
-        self.assertEqual(envelope["outcome"], "PASS")
+        envelopes = [
+            json.loads(line) for line in output.getvalue().splitlines()
+        ]
+        self.assertEqual(len(envelopes), 2)
         self.assertEqual(
-            envelope["scope"], "synthetic-public-safe-fixture-only"
+            [envelope["file"] for envelope in envelopes],
+            sorted(envelope["file"] for envelope in envelopes),
         )
+        for envelope in envelopes:
+            self.assertEqual(envelope["findings"], [])
+            self.assertEqual(envelope["outcome"], "PASS")
+            self.assertEqual(
+                envelope["scope"], "synthetic-public-safe-fixture-only"
+            )
 
 
 def _walk_values(value):
