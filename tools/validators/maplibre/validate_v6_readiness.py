@@ -7,6 +7,12 @@ import-boundary hygiene, absence of known internal API use, and whether the
 required browser probes were recorded. It cannot prove rendering equivalence,
 WebGL2 availability, CSP behavior, or query parity unless those external probes
 have been executed and their finite results are supplied.
+
+Dependency detection considers the root and Explorer manifests plus the
+repository-present ``packages/maplibre/package.json`` manifest. The package
+manifest is optional because this readiness classifier does not select or
+accept a package-ownership architecture; when present, however, it must be
+readable and participate in conflict detection.
 """
 from __future__ import annotations
 
@@ -152,12 +158,27 @@ def scan_repository(root: Path) -> ReadinessResult:
     reasons: list[str] = []
     root_manifest, root_error = _load_json(root / "package.json")
     explorer_manifest, explorer_error = _load_json(root / "apps/explorer-web/package.json")
+    package_manifest, package_error = _load_json(root / "packages/maplibre/package.json")
     tsconfig, ts_error = _load_json(root / "apps/explorer-web/tsconfig.json")
-    if root_error or explorer_error or ts_error or root_manifest is None or explorer_manifest is None or tsconfig is None:
-        codes = [code for code in (root_error, explorer_error, ts_error) if code]
+    package_error = None if package_error == "FILE_NOT_FOUND" else package_error
+    if (
+        root_error
+        or explorer_error
+        or package_error
+        or ts_error
+        or root_manifest is None
+        or explorer_manifest is None
+        or tsconfig is None
+    ):
+        codes = [code for code in (root_error, explorer_error, package_error, ts_error) if code]
         return ReadinessResult(Outcome.ERROR, tuple(sorted(set(codes))), None, None, None, {})
 
-    versions = [value for value in (_dependency_version(root_manifest), _dependency_version(explorer_manifest)) if value is not None]
+    manifests = (
+        (root_manifest, explorer_manifest)
+        if package_manifest is None
+        else (root_manifest, explorer_manifest, package_manifest)
+    )
+    versions = [value for manifest in manifests if (value := _dependency_version(manifest)) is not None]
     selected_version: str | None
     if not versions:
         selected_version = None
