@@ -23,8 +23,9 @@ policy-source singularity, trust-shaped artifacts, public/internal-store
 separation, schema and document identities, generated-output provenance,
 boundary READMEs, adopted-authority binding, and active-alias closure.
 
-At the pinned `main@c259404…` baseline it records 141 exact inherited finding
-groups. Those are warnings, not conformance claims: any addition or changed
+Derived from the pinned `main@c259404…` bootstrap, the current ratchet records
+138 exact inherited finding groups after reviewed convergence. Those are
+warnings, not conformance claims: any addition or changed
 fingerprint fails as new drift, any removed finding requires the baseline to
 shrink in the same change, and invariant rules cannot be baselined.
 In pull-request CI the proposed baseline is also compared with the trusted base
