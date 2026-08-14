@@ -10,7 +10,7 @@ updated: 2026-08-14
 owning_root: docs/
 policy_label: internal; intake; exploratory; geology; subsurface; public-safe-geometry; fixture-only
 responsibility: Reconcile the uploaded Geology public-safe geometry plan with current repository BoreholeReference, WellLogReference, geometry-quality, redaction-receipt, and pipeline-assessment evidence and record the smallest distinct no-network implementation slice.
-truth_posture: "CONFIRMED uploaded Geology plan and current repository evidence at main@f8a0466f6bd246dcf69b88e507efca267e6e5b67; PROPOSED inactive fixture-only assessment semantics; UNKNOWN real source rights, protected geometry, transform fitness, policy/review state, release fitness, and public use; NEEDS VERIFICATION hosted exact-head CI and human review"
+truth_posture: "CONFIRMED uploaded Geology plan and current repository evidence at main@64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1; PROPOSED inactive fixture-only assessment semantics; UNKNOWN real source rights, protected geometry, transform fitness, policy/review state, release fitness, and public use; NEEDS VERIFICATION hosted exact-head CI and human review"
 related:
   - ../../../contracts/domains/geology/subsurface_public_geometry_assessment.md
   - ../../../schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json
@@ -47,7 +47,7 @@ rights, policy decisions, transform quality, review, release, or public use.
 
 ## 3. Current repository evidence
 
-Pinned comparison: `main@f8a0466f6bd246dcf69b88e507efca267e6e5b67`.
+Pinned comparison: `main@64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1`.
 
 | Evidence | CONFIRMED finding |
 |---|---|
@@ -57,7 +57,7 @@ Pinned comparison: `main@f8a0466f6bd246dcf69b88e507efca267e6e5b67`.
 | `schemas/contracts/v1/domains/geology/well_log_reference.schema.json` | Open scaffold with no field-level enforcement. |
 | `contracts/evidence/geometry_quality_scope_assessment.md` and paired packet | Existing inactive profile owns accuracy/precision separation, attachment scope, and declared derivation coherence, but explicitly does not decide fitness or policy. |
 | `schemas/contracts/v1/receipts/redaction_receipt.schema.json` and paired packet | Existing inactive shared profile records transform classes and public summaries while all policy/review/lifecycle/release/publication authority remains false. |
-| `tools/validators/validate_geology_pipeline_specification_assessment.py` | Existing inactive Geology profile requires controlled sensitivity and datum/depth closure for borehole and well-log specification declarations but does not assess one public projection. |
+| `tools/validators/validate_geology_pipeline_specification_assessment.py` | Existing inactive Geology profile requires controlled sensitivity and datum/depth closure for borehole and well-log specification declarations but does not assess a specific public projection declaration. |
 | Repository-wide candidate search | No `GeologySubsurfacePublicGeometryAssessmentCandidate` or equivalent closed profile was found. |
 
 ## 4. Distinctness and dependency closure
@@ -107,9 +107,9 @@ transform correctness, geometry fitness, policy execution, authenticated review,
 evidence support, lifecycle transitions, release, deployment, publication, or public
 use. Those remain `UNKNOWN` or `NEEDS VERIFICATION`.
 
-Current-main failures in `docs-document-graph`, `docs-meta-block`, and
-`telemetry-policy` predate this branch and are classified as inherited baseline until
-exact-head evidence proves otherwise.
+Current-main `docs-meta-block` failure from the latest ADR documentation merge
+predates this branch and is classified as inherited baseline until exact-head evidence
+proves otherwise.
 
 ## 7. Rollback
 
