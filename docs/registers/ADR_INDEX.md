@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.5
+version: v1.6
 status: draft; repository-grounded
 owners:
   - Docs steward
@@ -24,7 +24,7 @@ related:
 tags: [kfm, registers, adr, pointer, governance]
 notes:
   - "This file is a non-duplicating human cross-register pointer; numbered ADRs are indexed only in docs/adr/INDEX.md."
-  - "ADR-0035 raises the inventory to 35 records while remaining proposed; this summary creates no decision authority."
+  - "ADR-0036 raises the inventory to 36 records while remaining proposed; this summary creates no decision authority."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR Index Cross-Register
@@ -41,14 +41,14 @@ This register connects the human register lane to the canonical Architecture Dec
 ## Register contract
 
 | Field | Value |
-| --- | --- |
+|---|---|
 | Owning root | `docs/` — human-facing control plane |
 | Register lane | `docs/registers/` |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
-| Current numbered inventory | 35 tracked records, `ADR-0001` through `ADR-0035` |
-| Current effective decision status | ADR-0029 `accepted`; 34 numbered records remain `proposed` |
-| Current unassigned scaffolds | 12, unchanged by the ADR-0035 packet |
+| Current numbered inventory | 36 tracked records, `ADR-0001` through `ADR-0036` |
+| Current effective decision status | ADR-0029 `accepted`; 35 numbered records remain `proposed` |
+| Current unassigned scaffolds | 12, unchanged by the ADR-0036 packet |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
 | Authority limit | Inventory and routing only; never decision acceptance, policy, release, promotion, or publication authority |
@@ -67,7 +67,7 @@ Keeping one row source ensures that:
 ## Inputs and consumers
 
 | Direction | Surface | Relationship |
-| --- | --- | --- |
+|---|---|---|
 | Upstream | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Defines placement, status vocabulary, and ADR triggers |
 | Canonical record set | [`docs/adr/`](../adr/) | Holds numbered records, scaffolds, template, and canonical index |
 | Drift input | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md) | Placement or authority conflicts may require an ADR |
@@ -81,7 +81,7 @@ Keeping one row source ensures that:
 1. Update the source ADR and [`docs/adr/INDEX.md`](../adr/INDEX.md) together.
 2. Run the ADR index validator and its negative-path tests.
 3. Change this pointer only when its contract, canonical target, summary, consumers, or validation path changes.
-4. Keep unresolved decisions proposed until their source records carry explicit reviewed status; do not infer broader authority from ADR-0029's bounded acceptance.
+4. Keep unresolved decisions proposed until their source records carry explicit reviewed status.
 5. Preserve superseded and rejected records; never delete decision history.
 
 ## Validation boundary
@@ -95,9 +95,10 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the remaining 34 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
+- Human status review for the remaining 35 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
 - Acceptance or rejection of proposed ADR-0035 before repository-wide numbering and pointer-only domain-index guidance becomes binding.
+- Acceptance or rejection of proposed ADR-0036 before the encyclopedia lane, chapter writer, generated mirror, or compatibility migration becomes binding.
 - Disposition of the 12 unassigned scaffolds through separately reviewed numbering, merge, lineage-retention, retirement, or hold packets.
 - Review of proposed ADR-0011 before any `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.

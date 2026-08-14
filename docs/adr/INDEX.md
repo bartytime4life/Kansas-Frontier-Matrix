@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.8
+version: v1.9
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -15,7 +15,7 @@ responsibility_root: docs/
 owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 35
+numbered_records: 36
 unassigned_scaffolds: 12
 related:
   - docs/adr/README.md
@@ -25,26 +25,23 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
-  - "ADR-0035 is registered as proposed; index registration assigns inventory identity only and does not accept the repository-wide numbering or domain-indexing decision."
-  - "ADR-0034 is registered as proposed; index registration creates no COMPASS score, threshold, workflow, authority effect, release, deployment, or publication."
-  - "ADR-0033 is registered as proposed; index registration does not change the GeoParquet standard or authorize evaluation, migration, data rewrite, release, deployment, or publication."
-  - "ADR-0032 is registered as proposed; index registration does not authorize real or simulated compute, credentials, trust-root enrollment, release, or publication."
-  - "ADR-0031 is registered as proposed; index registration does not accept the decision or authorize watcher migration."
+  - "ADR-0036 is registered as proposed; index registration does not accept the planning-encyclopedia carrier, single-writer, generated-mirror, or migration decision."
+  - "ADR-0035 remains proposed; registration assigns inventory identity only and does not accept repository-wide numbering or domain-indexing guidance."
   - "ADR-0029 remains the only accepted numbered ADR in this index."
   - "Effective status never outranks source-record status or human review."
 [/KFM_META_BLOCK_V2] -->
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-35-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-1_accepted_%7C_34_proposed-1a7f37)](#status-interpretation)
+[![numbered records](https://img.shields.io/badge/numbered_records-36-0969da)](#numbered-records)
+[![effective status](https://img.shields.io/badge/effective_status-1_accepted_%7C_35_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-12-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0029 has effective status `accepted`. The other 34 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`.
+> ADR-0029 has effective status `accepted`. The other 35 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`.
 
 ## Status interpretation
 
@@ -58,7 +55,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0035`. ADR-0029 is `accepted`; ADR-0001 through ADR-0028 and ADR-0030 through ADR-0035 remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0036`. ADR-0029 is `accepted`; ADR-0001 through ADR-0028 and ADR-0030 through ADR-0036 remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -98,6 +95,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0035`.
 | `ADR-0033` | [Keep GeoParquet 1.1 as the default and gate 2.0 evaluation](./ADR-0033-geoparquet-version-readiness.md) | `proposed` | `proposed` | — | — |
 | `ADR-0034` | [Keep COMPASS qualitative and subordinate to KFM authority gates](./ADR-0034-compass-qualitative-checklist-boundary.md) | `proposed` | `proposed` | — | — |
 | `ADR-0035` | [Repository-Wide ADR Identity, Numbering, and Domain Indexing](./ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md) | `proposed` | `proposed` | — | — |
+| `ADR-0036` | [Planning Encyclopedia Carrier, Single-Writer, and Scaffold Disposition](./ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
@@ -157,6 +155,7 @@ The validator rejects collisions, missing or extra rows, mismatched filename/H1 
 - This index does not prove that the architecture described by an ADR is implemented.
 - It does not verify GitHub rulesets, independent review, or status-transition authorization outside the repository.
 - Proposed ADR-0035 does not resolve domain-local versus repository-wide ADR placement until explicit acceptance.
+- Proposed ADR-0036 does not admit or populate `docs/encyclopedia/` until explicit acceptance and a separate implementation change.
 - It does not accept [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) or authorize migration of `artifacts/release/` or `artifacts/perf/`.
 - It treats current `draft` and legacy `PROPOSED` metadata conservatively as `proposed`; metadata cleanup remains separate work.
 
