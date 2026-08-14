@@ -2,22 +2,37 @@
 doc_id: kfm://doc/configs-test-readme
 title: configs/test/ — Commit-Safe Test Configuration Boundary
 type: readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Config steward · Test steward · QA steward · Security steward · Consumer owner(s) · Validation steward · CI steward · Docs steward
+version: v0.3
+prior_version: v0.2
+status: repository-grounded; draft; boundary-compact; readme-only; non-authoritative
+owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; accepted config, test, QA, security, and independent-review stewardship remain NEEDS VERIFICATION"
 created: 2026-06-16
-updated: 2026-07-13
+updated: 2026-08-13
 policy_label: public; config-sublane; test-configuration; commit-safe; non-secret; no-network-default; no-side-effect-default; non-authoritative; no-test-proof; no-ci-authority; no-release-authority
 current_path: configs/test/README.md
-truth_posture: CONFIRMED repository-present README-only lane at the inspected path search and named conventional probes, parent configs root contract, canonical tests root, tests/fixtures versus root fixtures split, no-secrets doctrine, and v0.1 introduction lineage / PROPOSED test-configuration contract, runner-binding metadata, marker and selection guardrails, environment isolation defaults, validation matrix, review workflow, and minimum safe test-config slice / UNKNOWN exhaustive recursive inventory, differently named config files, consumers, runner/framework bindings, precedence, auto-discovery, schema bindings, secret scanning, CI enforcement, pass rates, deployment integration, owner assignments, and runtime behavior
+owning_root: configs/
+responsibility: document the commit-safe test-configuration boundary, exact tracked lane inventory, consumer-binding requirements, isolation defaults, validation limits, and rollback posture without owning tests, fixtures, policy, CI, release, or runtime behavior
+truth_posture: CONFIRMED exact README-only tracked tree, canonical configs root, accepted Directory Rules basis, Root Registry projection, inherited CODEOWNERS route, canonical tests boundary, fixture-home split, and bounded documentation tooling / PROPOSED future consumer-bound test-config contract and safety profile / UNKNOWN runner consumers, load paths, precedence, semantic validation, test collection, secret-scanner coverage, required-check coupling, and runtime or release use
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8
-  prior_blob: 02023ee483fa245c0c761630dcd0f1c28fc790eb
+  base_commit: 160938b3f4717b6f2551b3430ab5c08f9b33cecb
+  root_tree: 0a24e934e17d00b3cf8062bce65a4b59c07d65c1
+  configs_tree: 30b6e254f54edce077e9b00b8ee4271878979f33
+  configs_test_tree: 167c512c12f4e901ed7949aded00798073e82391
+  prior_blob: 06c635480879e3c449fbd5f8c5b205c87f7bf9db
   introduction_commit: c41b0c45d43220a8964effca50658d7966cb8f44
+  directory_rules_doctrine_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision_blob: 3ba5f902ffe20a65a259cb0a7dab07f1725d204b
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  parent_configs_readme_blob: a800983eac7582a84e9dd82bc7d4baf04f552ad8
+  tests_readme_blob: 5e497ae0f5b2f6a22d795346315b94393802e38f
+  link_check_workflow_blob: 7b6c675d879a36d685b19b18fde401fca1bdd00e
+  docs_meta_block_workflow_blob: c2054a053ba3050cf41b731d85a7a0996e9231f6
+  docs_stale_scan_workflow_blob: 4717668d30f98d9be2e6d2ebf57862e820cd41aa
 related:
   - ../README.md
   - ../examples/README.md
@@ -29,30 +44,36 @@ related:
   - ../../tests/fixtures/README.md
   - ../../fixtures/README.md
   - ../../tools/README.md
+  - ../../tools/validators/docs/link-check/README.md
+  - ../../tools/validators/docs/meta-block/README.md
+  - ../../tools/validators/docs/stale-scan/README.md
   - ../../docs/doctrine/directory-rules.md
+  - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../docs/security/SECRETS.md
-  - ../../docs/runbooks/SECRET_LEAK_RUNBOOK.md
-  - ../../schemas/contracts/v1/
-  - ../../contracts/
-  - ../../policy/
-  - ../../apps/
-  - ../../packages/
-  - ../../pipelines/
-  - ../../pipeline_specs/
-  - ../../runtime/
-  - ../../infra/
-  - ../../artifacts/
-  - ../../release/
+  - ../../docs/runbooks/INCIDENT_RESPONSE.md
+  - ../../control_plane/root_registry.yaml
+  - ../../schemas/README.md
+  - ../../contracts/README.md
+  - ../../policy/README.md
+  - ../../apps/README.md
+  - ../../packages/README.md
+  - ../../pipelines/README.md
+  - ../../pipeline_specs/README.md
+  - ../../runtime/README.md
+  - ../../infra/README.md
+  - ../../artifacts/README.md
+  - ../../release/README.md
   - ../../.github/CODEOWNERS
   - ../../.github/PULL_REQUEST_TEMPLATE.md
-tags: [kfm, configs, test, testing, runner-config, markers, selection, sharding, deterministic, no-network, no-side-effects, fixtures, placeholders, non-secret, commit-safe, config-validation, consumer-binding, non-authoritative, governance]
+tags: [kfm, configs, test, testing, runner-config, markers, selection, sharding, deterministic, no-network, no-side-effects, fixtures, non-secret, commit-safe, config-validation, consumer-binding, non-authoritative, governance]
 notes:
-  - "At the pinned base, a path-scoped repository search returned this README but no additional configs/test files. Exact probes for pytest.example.toml, test.template.yaml, validation.md, and ci.example.yaml returned Not Found. These are bounded findings, not an exhaustive recursive tree receipt."
-  - "configs/test/ contains configuration-facing documentation and future safe templates only. tests/ remains the canonical enforceability root; fixtures live under tests/fixtures/ or root fixtures/ according to the documented ownership split."
-  - "A test config may select, parameterize, or isolate a verified test consumer. It cannot prove collection, execution, coverage, pass state, policy enforcement, release readiness, correction, rollback, or trust-spine closure."
-  - "No real secret, live endpoint, production identifier, sensitive geometry, source payload, lifecycle record, proof, receipt, release object, or generated report may be stored here."
-  - "Main advanced from b2db8a4f84754c111b28d756cbaac145fa0fcd84 to b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8 before branching. The compare touched configs/examples/README.md and connectors/manual_curation/README.md; this target retained prior blob 02023ee483fa245c0c761630dcd0f1c28fc790eb."
-  - "Only this Markdown file changes. No test config, test, fixture, schema, contract, policy, validator, workflow, secret-scanning rule, runner, lifecycle artifact, release object, or public artifact is created or modified."
+  - "The exact configs/test Git tree at the pinned base contains one tracked blob: README.md at prior blob 06c635480879e3c449fbd5f8c5b205c87f7bf9db. No tracked child directory or test-config payload exists in this lane."
+  - "Accepted ADR-0029 makes docs/doctrine/directory-rules.md the sole writable human Directory Rules authority; the Root Registry projects configs/ as canonical and ACTIVE for non-secret configuration."
+  - "The /configs/ CODEOWNERS rule routes review to @bartytime4life. That is review routing, not proof of accepted stewardship, required code-owner enforcement, independent review, or approval."
+  - "The changed-Markdown link-check covers this file. The docs-meta-block and docs-stale-scan workflows trigger on Markdown changes but their explicit validation roots omit configs/, so lane coverage remains a disclosed gap."
+  - "No open pull request existed at preflight, and the current target blob had not changed since commit d9aec344f90001fc2e8869f144ed106ab6814def."
+  - "Main advanced from 695748928f254c2c234b9058bf41cdb23f27e3c6 to 160938b3f4717b6f2551b3430ab5c08f9b33cecb before mutation. The target, configs/test tree, parent contract, governing doctrine/ADR/projection, CODEOWNERS, and documentation workflow blobs remained unchanged, so the evidence base was repinned without content reconciliation."
+  - "Only this Markdown file changes. No test config, test, fixture, schema, contract, policy, validator, workflow, runner, lifecycle artifact, release object, or public artifact is created or modified."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -62,8 +83,8 @@ notes:
 > `configs/test/` is the test-configuration sublane under `configs/`. It may document or template safe settings for a named test consumer, but it does not create tests, fixtures, validation proof, CI authority, policy enforcement, release readiness, or operational truth.
 
 > [!IMPORTANT]
-> **Document lifecycle:** `draft v0.2`  
-> **Observed lane maturity:** README-only at the inspected repository search and named conventional probes  
+> **Document lifecycle:** `draft v0.3`  
+> **Observed lane maturity:** exactly one tracked blob—this README—at the pinned Git tree  
 > **Owning responsibility root:** `configs/` — safe, non-secret defaults and templates  
 > **Authority:** test-configuration documentation only; no test, fixture, schema, policy, CI, lifecycle, proof, release, or publication authority  
 > **Default posture:** deterministic · no-network · no-side-effect · fail closed · not proof of execution
@@ -71,7 +92,9 @@ notes:
 > [!CAUTION]
 > A test configuration can change which tests run, which tests are skipped, what environment they see, and where they write. Treat it as trust-bearing configuration. Never use it to hide negative tests, weaken fail-closed behavior, inherit real credentials, enable live network access by default, write to governed lifecycle or release roots, or represent a green run that did not occur.
 
-**Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [What belongs](#what-belongs-here) · [What does not](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Evidence](#evidence-basis) · [Lane distinctions](#test-configuration-lane-distinctions) · [Config contract](#proposed-test-config-contract) · [Runner binding](#runner-and-consumer-binding) · [Selection](#selection-markers-skips-and-sharding) · [Isolation](#environment-and-isolation-contract) · [Secrets](#secret-sensitive-and-production-value-handling) · [Fixtures](#fixture-and-test-data-boundary) · [Determinism](#time-randomness-and-determinism) · [Network](#network-and-side-effect-posture) · [CI parity](#local-ci-and-matrix-parity) · [Failures](#failure-semantics) · [Naming](#file-format-and-naming-posture) · [Change pattern](#safe-change-pattern) · [Rollback](#rollback-and-correction-posture) · [Backlog](#verification-backlog) · [Done](#definition-of-done)
+**Core navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed)
+
+**Operational guidance:** [Evidence](#evidence-basis) · [Lane distinctions](#test-configuration-lane-distinctions) · [Config contract](#proposed-test-config-contract) · [Runner binding](#runner-and-consumer-binding) · [Selection](#selection-markers-skips-and-sharding) · [Isolation](#environment-and-isolation-contract) · [Secrets](#secret-sensitive-and-production-value-handling) · [Fixtures](#fixture-and-test-data-boundary) · [Determinism](#time-randomness-and-determinism) · [Network](#network-and-side-effect-posture) · [CI parity](#local-ci-and-matrix-parity) · [Failures](#failure-semantics) · [Naming](#file-format-and-naming-posture) · [Change pattern](#safe-change-pattern) · [Rollback](#rollback-and-correction-posture) · [Backlog](#verification-backlog) · [Done](#definition-of-done)
 
 ---
 
@@ -103,14 +126,17 @@ This lane should make test execution safer and more reproducible. It must not ma
 
 | Concern | Authority status | Determination |
 |---|---:|---|
-| Folder placement | **CONFIRMED** | The path exists under `configs/`, whose parent README identifies that root as the home for safe non-secret defaults and templates. |
+| Folder placement | **CONFIRMED** | Accepted Directory Rules §§7 and 10.4 place shared non-secret configuration under `configs/`; the active Root Registry projects that root as canonical. |
+| Root projection | **CONFIRMED / NON-NORMATIVE** | `control_plane/root_registry.yaml` permits `configuration`, prohibits `data_instance`, `policy_rule`, and `release_decision`, and applies `non_secret_configuration`; the projection cannot amend doctrine. |
 | Test authority | **NONE** | Executable tests and enforceability proof belong under `tests/`. |
 | Fixture authority | **NONE** | Unit-test-scoped fixtures belong under `tests/fixtures/`; cross-cutting fixtures belong under root `fixtures/` according to the documented split. |
-| Current inventory | **BOUNDED README-ONLY FINDING** | Search returned this README only; common candidate filenames were absent at named probes. Differently named or unindexed files remain `UNKNOWN`. |
+| Current inventory | **CONFIRMED README-ONLY** | Exact Git tree `167c512c12f4e901ed7949aded00798073e82391` contains only `README.md`; there is no tracked child directory or test-config payload at the pinned base. |
 | Runner behavior | **UNKNOWN** | No runner, config loader, auto-discovery rule, import path, precedence order, or supported command is established by this README. |
-| Validation | **PROPOSED / NEEDS VERIFICATION** | This README defines expected checks; executable bindings were not established in the inspected evidence. |
-| CI enforcement | **UNKNOWN** | Workflow success, collection, coverage, pass rate, and matrix completeness require workflow and log evidence. |
+| Documentation validation | **PARTIAL** | The changed-Markdown `link-check` definition covers local targets in this file. Metadata and freshness workflows omit `configs/` from their explicit validation roots. Hosted exact-head results remain separate evidence. |
+| Test-config enforcement | **NOT ESTABLISHED** | No syntax, schema, known-key, collection, selection, isolation, or consumer-binding validator is wired to this lane. |
+| CI enforcement | **UNKNOWN** | Workflow definitions do not prove required-check coupling, test collection, coverage, pass rate, or matrix completeness. |
 | Secret safety | **CONFIRMED DOCTRINE / ENFORCEMENT UNKNOWN** | Real secrets are forbidden in the repository; automated secret-scanning coverage remains `NEEDS VERIFICATION`. |
+| Review route | **CONFIRMED** | `/configs/` routes to `@bartytime4life` in CODEOWNERS; accepted stewardship, independent review, required-review enforcement, and approval remain `NEEDS VERIFICATION`. |
 | Production/release use | **NOT AUTHORIZED** | Test configuration cannot activate a source, mutate governed data, approve release, or establish public readiness. |
 
 A test config can point to an authority surface. It cannot become that authority surface.
@@ -123,30 +149,30 @@ A test config can point to an authority surface. It cannot become that authority
 
 ### Bounded repository snapshot
 
-At base commit `b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8`, the directly verified lane is:
+At `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`, exact Git tree
+`167c512c12f4e901ed7949aded00798073e82391` contains:
 
 ```text
 configs/test/
 └── README.md
 ```
 
-A path-scoped repository search returned no additional file in this lane. Exact probes returned `Not Found` for:
+| Object | Identity | Interpretation |
+|---|---|---|
+| Repository tree | `0a24e934e17d00b3cf8062bce65a4b59c07d65c1` | Exact tracked root at the pinned commit. |
+| `configs/` tree | `30b6e254f54edce077e9b00b8ee4271878979f33` | Exact tracked parent configuration tree. |
+| `configs/test/` tree | `167c512c12f4e901ed7949aded00798073e82391` | Exactly one direct entry and no child tree. |
+| Prior README blob | `06c635480879e3c449fbd5f8c5b205c87f7bf9db` | Rollback identity for the pre-v0.3 document. |
 
-```text
-configs/test/pytest.example.toml
-configs/test/test.template.yaml
-configs/test/validation.md
-configs/test/ci.example.yaml
-```
-
-These are bounded absence statements for named paths and indexed search results—not a recursive filesystem receipt. Differently named files, ignored files, generated files, branch-only work, or unindexed content remain `UNKNOWN`.
+This closes the tracked recursive inventory at that commit. Untracked, ignored, external, or other-branch material is outside the Git-tree claim and remains unobserved; none may be treated as repository configuration evidence.
 
 ### Current maturity
 
 | Capability | Status | Safe conclusion |
 |---|---:|---|
 | README boundary | **CONFIRMED** | The lane has documentation. |
-| Test configuration files | **NOT ESTABLISHED** | No actual test-config payload was verified in the inspected lane. |
+| Exact tracked inventory | **CONFIRMED** | The lane contains only this README at the pinned tree. |
+| Test configuration files | **ABSENT FROM TRACKED TREE** | No operational, example, template, or generated test-config payload exists in this lane. |
 | Named consumers | **NOT ESTABLISHED** | No runner, harness, package, domain suite, validator, or workflow was bound here. |
 | Auto-discovery and precedence | **NOT ESTABLISHED** | Do not infer that any runner reads this directory automatically. |
 | Test collection | **NOT ESTABLISHED** | No collected-test count or zero-test guard is proven here. |
@@ -155,8 +181,10 @@ These are bounded absence statements for named paths and indexed search results�
 | Environment isolation | **NOT ESTABLISHED** | No environment allowlist, temp-root policy, clock, locale, timezone, or seed binding was verified. |
 | Network/side-effect blocking | **NOT ESTABLISHED** | No executable guard was verified from this lane. |
 | Secret scanning | **NEEDS VERIFICATION** | Doctrine forbids secrets; automation coverage was not established by the inspected evidence. |
-| Test/CI enforcement | **NEEDS VERIFICATION** | No lane-specific executable check or passing proof was verified. |
-| Ownership | **OWNER_TBD** | `CODEOWNERS` has no verified `configs/test/`-specific mapping. |
+| Local-link QA | **CONFIRMED DEFINITION** | `link-check` validates local targets in changed Markdown without network access; a passing run proves only its bounded assertions. |
+| Metadata/freshness QA | **COVERAGE GAP** | Both workflows trigger on Markdown but validate only `README.md`, `docs/`, and `tools/validators/docs/`; `configs/test/README.md` is outside those explicit roots. |
+| Test/CI enforcement | **NOT ESTABLISHED** | No lane-specific test-config check, collection proof, or passing semantic result was verified. |
+| Review routing | **CONFIRMED** | Parent `/configs/` CODEOWNERS pattern routes to `@bartytime4life`; stewardship and independent enforcement remain unverified. |
 
 ### What this README does not establish
 
@@ -405,15 +433,16 @@ This README revision can validate Markdown structure and repository evidence. It
 
 Performed:
 
-- one H1;
-- required folder-README sections present and ordered;
-- internal quick-link targets resolved;
-- balanced fenced blocks;
-- no stale rollback placeholder;
-- no secret-like value;
-- current target and prior blob verified;
-- bounded named-path absence checks;
-- one-file branch comparison and remote read-back.
+- immutable base, current target blob, exact `configs/test/` Git tree, and target history verified;
+- accepted Directory Rules, ADR-0029, Root Registry, parent `configs/` contract, `tests/` boundary, CODEOWNERS, and documentation workflows inspected;
+- exact README-only tracked inventory confirmed from the Git tree;
+- open pull-request overlap checked; none existed at preflight;
+- `KFM_META_BLOCK_V2` required fields, owning-root agreement, dates, and related-path hygiene checked with the repository validator against this file;
+- metadata and advisory freshness checks returned zero failures; both surfaced 19 delegated `evidence_snapshot` nesting warnings, which remain visible because their hosted workflow roots do not cover `configs/`;
+- one H1, logical heading order, internal quick-link targets, balanced fences, and final newline checked;
+- local Markdown targets and fragments checked with the repository's bounded no-network link checker;
+- changed bytes scanned for credential-shaped values and private-key markers;
+- one-file base-to-head diff and remote bytes read back after the branch update.
 
 Not performed:
 
@@ -428,6 +457,7 @@ Not performed:
 - network/side-effect guards;
 - secret-scanner execution;
 - CI parity;
+- hosted exact-head documentation checks or required-check coupling;
 - release or promotion-gate integration.
 
 [Back to top](#top)
@@ -473,7 +503,11 @@ Reviewers should ask:
 
 ### CODEOWNERS posture
 
-The current `CODEOWNERS` file provides a general maintainer fallback but no verified `configs/test/`-specific owner. Ownership remains `NEEDS VERIFICATION`.
+The current `CODEOWNERS` file routes `/configs/` to `@bartytime4life`, so this
+path has a **CONFIRMED repository review route** through the parent pattern. It
+does not establish an accepted configuration or test steward, required
+code-owner enforcement, independent QA/security review, completed approval, or
+separation of duties. Those governance properties remain `NEEDS VERIFICATION`.
 
 [Back to top](#top)
 
@@ -493,9 +527,13 @@ The current `CODEOWNERS` file provides a general maintainer fallback but no veri
 | [`../../tests/fixtures/`](../../tests/fixtures/README.md) | Unit-test-scoped fixtures. | Test-local inputs; not config authority. |
 | [`../../fixtures/`](../../fixtures/README.md) | Cross-cutting reusable fixtures. | Shared synthetic corpora; not test config. |
 | `../../tools/` | Validators and repo-wide checks. | Executable tooling, not configuration examples. |
+| [`../../tools/validators/docs/link-check/`](../../tools/validators/docs/link-check/README.md) | Bounded local Markdown target validation. | Documentation QA only; external URLs are not requested. |
+| [`../../tools/validators/docs/meta-block/`](../../tools/validators/docs/meta-block/README.md) | Metadata structure and review-only registry-delta validation. | Current workflow roots omit `configs/`; no authority or automatic registry mutation. |
+| [`../../tools/validators/docs/stale-scan/`](../../tools/validators/docs/stale-scan/README.md) | Advisory documentation freshness workbench. | Current workflow roots omit `configs/`; freshness is not correctness. |
 | `../../schemas/` | Machine shape. | Config may reference; never duplicate. |
 | `../../contracts/` | Semantic meaning. | Config may reference; never replace. |
 | `../../policy/` | Allow/deny/restrict/abstain rules. | Test config cannot weaken policy. |
+| [`../../control_plane/root_registry.yaml`](../../control_plane/root_registry.yaml) | Machine projection of adopted root governance. | Does not create or amend configuration authority. |
 | `../../artifacts/` | Generated reports and test outputs. | Never store generated results in configs. |
 | `../../release/` | Promotion, release, correction, rollback. | Test config cannot approve release. |
 | `../../.github/workflows/` | CI orchestration. | Workflow definitions and permissions do not belong here. |
@@ -519,7 +557,11 @@ release/            real promotion/release/correction/rollback authority
 
 ## ADRs
 
-No ADR is enacted by this README.
+[`ADR-0029 — Adopt Directory Governance Standard v2`](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+is accepted. It makes `docs/doctrine/directory-rules.md` the sole writable human
+Directory Rules authority. This README applies that decision and the
+configuration ownership rules; it does not amend ADR-0029, change its pinned
+bytes, execute its separate compatibility migration, or enact a new ADR.
 
 An ADR or explicit per-root decision may be required before:
 
@@ -542,11 +584,12 @@ A lane-local naming or documentation convention may be resolved by test/config s
 
 ## Last reviewed
 
-**Last reviewed:** 2026-07-13  
-**Evidence base:** `main@b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8`  
-**Prior target blob:** `02023ee483fa245c0c761630dcd0f1c28fc790eb`  
-**Review scope:** target README, parent configs root, canonical tests root, fixture-home docs, secrets doctrine, path search, named candidate probes, CODEOWNERS, and recent base movement  
-**Not reviewed as implementation proof:** recursive tree, runner manifests, imports, config loaders, test files, fixture payloads, workflow logic, logs, pass rates, coverage, release integration, deployment, or ownership acceptance
+**Last reviewed:** 2026-08-13  
+**Evidence base:** `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`  
+**Exact lane tree:** `167c512c12f4e901ed7949aded00798073e82391`  
+**Prior target blob:** `06c635480879e3c449fbd5f8c5b205c87f7bf9db`  
+**Review scope:** complete target, exact tracked lane tree and history, accepted Directory Rules and ADR-0029, Root Registry, parent `configs/` contract, canonical `tests/` boundary, fixture-home docs, CODEOWNERS, documentation validators/workflows, PR overlap, and changed-area Markdown checks  
+**Not reviewed as implementation proof:** runner manifests, imports, loaders, config precedence, test files, fixture payloads, hosted logs, pass rates, coverage, semantic test-config enforcement, release integration, deployment, or accepted stewardship
 
 Refresh this section whenever an actual test config, consumer, marker registry, fixture binding, validation tool, CI check, or owner is added.
 
@@ -558,25 +601,29 @@ Refresh this section whenever an actual test config, consumer, marker registry, 
 
 | Evidence | Status | Supports | Does not prove |
 |---|---:|---|---|
-| `configs/test/README.md` | **CONFIRMED** | Existing target and v0.1 boundary. | Any test config payload or runtime behavior. |
-| Introduction commit `c41b0c45...` | **CONFIRMED** | Lineage from three-line stub to v0.1. | Current maturity or accepted behavior. |
-| `configs/README.md` | **CONFIRMED** | `configs/` owns safe non-secret defaults/templates. | Current child inventory, consumers, or validation. |
+| `configs/test/README.md` prior blob `06c63548...` | **CONFIRMED** | Existing target, identity, anchors, v0.2 content, and rollback bytes. | Any test-config payload or runtime behavior. |
+| `configs/test/` tree `167c512c...` | **CONFIRMED EXACT TREE** | The tracked lane contains only `README.md`. | Untracked, ignored, external, or other-branch material. |
+| Target history | **CONFIRMED** | Introduction at `c41b0c45...`; latest target change at `d9aec344...`; current blob unchanged through the pinned base. | Current runner or CI behavior. |
+| Accepted ADR-0029 and Directory Rules blob `fd49a0b8...` | **CONFIRMED / ACCEPTED** | Canonical human placement authority and `configs/` responsibility. | Test-config consumer binding or semantic correctness. |
+| Root Registry blob `024f668b...` | **CONFIRMED PROJECTION** | `configs/` is canonical/ACTIVE with `non_secret_configuration`. | New authority, runtime use, or release effect. |
+| `configs/README.md` blob `a800983e...` | **CONFIRMED** | Parent root contract and its commit-pinned inventory method. | Current child consumers, loaders, validation, or current-tree identity by itself. |
 | `tests/README.md` | **CONFIRMED** | `tests/` is the canonical enforceability root and documents trust-spine expectations. | That any particular runner or suite currently passes. |
 | `tests/fixtures/README.md` | **CONFIRMED DOC** | Test-local fixture posture and no-network/synthetic expectations. | Fixture payload completeness or consumer tests. |
 | `fixtures/README.md` | **CONFIRMED DOC** | Cross-cutting fixture root and split from test-local fixtures. | Complete payload inventory or executable bindings. |
 | `docs/security/SECRETS.md` | **CONFIRMED DOC** | No real secrets in repository, including test/local material. | Automated secret scanning or operational rotation. |
-| Path-scoped search | **CONFIRMED SEARCH** | Returned this README and no additional indexed lane files. | Exhaustive recursive absence. |
-| Named file probes | **CONFIRMED ABSENCE AT PATHS** | Four common candidate files returned `Not Found`. | Absence of differently named files. |
-| `.github/CODEOWNERS` | **CONFIRMED** | General fallback ownership exists. | Accepted lane-specific owners. |
-| Current branch comparison | **CONFIRMED** | This revision can remain one-file scoped. | Runtime correctness. |
+| `.github/CODEOWNERS` blob `dd2a84aa...` | **CONFIRMED** | `/configs/` routes this path to `@bartytime4life`. | Accepted stewardship, independent review, enforcement, or approval. |
+| `link-check` workflow blob `7b6c675d...` | **CONFIRMED DEFINITION** | Changed Markdown receives bounded no-network local-target QA. | External URL health, hosted exact-head pass, or required-check coupling. |
+| Metadata/freshness workflow definitions | **CONFIRMED COVERAGE GAP** | Both trigger on Markdown; explicit validation roots omit `configs/`. | Metadata or freshness conformance for this file in hosted CI. |
+| Open pull-request inventory | **CONFIRMED AT PREFLIGHT** | No active PR overlapped this path when the slice was frozen. | Future concurrency after preflight. |
 
 ### Evidence conflicts and limits
 
 - README doctrine is richer than verified implementation.
 - The tests root describes required test classes but explicitly bounds runner/CI/pass-rate claims.
 - Fixture READMEs describe ownership and safety but do not prove payloads or test consumption.
-- Repository search is not a recursive tree receipt.
-- A green generic workflow may be a placeholder and does not prove test-config enforcement.
+- Exact Git-tree inventory closes tracked contents only; it does not observe untracked, ignored, external, or future bytes.
+- Documentation link QA is implemented, while metadata/freshness coverage for this path remains incomplete.
+- A workflow definition or green documentation check does not prove test-config enforcement.
 - No config payload exists in the inspected lane to parse or execute.
 
 [Back to top](#top)
@@ -1308,10 +1355,12 @@ Reject these patterns:
 Restore prior blob:
 
 ```text
-02023ee483fa245c0c761630dcd0f1c28fc790eb
+06c635480879e3c449fbd5f8c5b205c87f7bf9db
 ```
 
-or revert the documentation commit through reviewed history.
+Before merge, close or abandon the draft pull request and branch; `main` remains
+unchanged. After merge, revert the documentation commit through reviewed
+history or apply a transparent forward fix. Do not rewrite shared history.
 
 ### Future config rollback
 
@@ -1356,9 +1405,10 @@ Documentation errors should be fixed by transparent commits. A misleading green 
 
 | Item | Status | Evidence needed |
 |---|---:|---|
-| Produce recursive `configs/test/` inventory | **NEEDS VERIFICATION** | Tree receipt pinned to commit. |
+| Produce recursive tracked `configs/test/` inventory | **CONFIRMED** | Exact tree `167c512c12f4e901ed7949aded00798073e82391` at the pinned commit. |
 | Confirm whether lane should remain README-only | **OPEN** | Config/test steward decision. |
-| Assign owners and CODEOWNERS coverage | **NEEDS VERIFICATION** | Accepted ownership mapping. |
+| Confirm repository review route | **CONFIRMED** | Parent `/configs/` CODEOWNERS pattern routes to `@bartytime4life`. |
+| Establish accepted config/test stewardship and independent review | **NEEDS VERIFICATION** | Approved responsibility assignment and enforced review evidence. |
 | Identify supported runners/frameworks | **UNKNOWN** | Dependency/manifests and test entrypoints. |
 | Identify actual consumers | **UNKNOWN** | Code, commands, workflows, and tests. |
 | Document load path and auto-discovery | **UNKNOWN** | Runner behavior and invocation proof. |
@@ -1379,10 +1429,11 @@ Documentation errors should be fixed by transparent commits. A misleading green 
 | Verify secret scanning | **NEEDS VERIFICATION** | Tool/workflow config and safe positive/negative fixtures. |
 | Verify sensitive-value scanning/review | **NEEDS VERIFICATION** | Policy/review checks. |
 | Verify local/CI parity | **NEEDS VERIFICATION** | Commands, config digests, and logs. |
-| Verify substantive docs/link checks | **NEEDS VERIFICATION** | Real workflow rather than placeholder echo. |
+| Verify changed-Markdown local-link QA | **CONFIRMED DEFINITION / HOSTED PENDING** | `link-check` command and workflow exist; exact-head result and required-check coupling remain separate. |
+| Close metadata/freshness coverage gap for `configs/` | **PROPOSED** | Extend the explicit workflow roots or record an accepted intentional exclusion with equivalent validation. |
 | Define generated report/artifact routing | **NEEDS VERIFICATION** | Workflow and `artifacts/` contract. |
 | Define migration/sunset rules | **PROPOSED** | Maintainer policy and tests. |
-| Confirm secret-leak runbook operational readiness | **NEEDS VERIFICATION** | Runbook inspection and drill evidence. |
+| Confirm incident-response runbook operational readiness | **NEEDS VERIFICATION** | Runbook inspection and drill evidence. |
 | Prove promotion/release gate use, if any | **UNKNOWN** | Gate configs, tests, logs, review records. |
 
 [Back to top](#top)
@@ -1393,8 +1444,11 @@ Documentation errors should be fixed by transparent commits. A misleading green 
 
 This lane may advance beyond README-only draft when:
 
-- [ ] a commit-pinned recursive inventory exists;
-- [ ] owners and CODEOWNERS coverage are assigned;
+- [x] a commit-pinned recursive tracked inventory exists;
+- [x] the repository CODEOWNERS review route is identified;
+- [ ] accepted config/test stewardship and independent-review expectations are assigned;
+- [x] this revision's internal anchors and local Markdown targets pass the bounded repository link checker;
+- [ ] metadata and freshness validation cover this lane or an accepted equivalent is documented;
 - [ ] supported runners/frameworks and versions are documented;
 - [ ] every config names a verified consumer and test scope;
 - [ ] every config documents load method and precedence;
