@@ -1,2 +1,6 @@
-// roads-rail-trade EvidenceDrawer — greenfield placeholder
-export const placeholder = true;
+export {
+  mountEvidenceDrawer,
+  resolveEvidenceDrawer,
+  type EvidenceDrawerController,
+  type EvidenceDrawerViewModel,
+} from "../../evidence_drawer";
