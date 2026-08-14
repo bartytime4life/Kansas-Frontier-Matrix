@@ -1,0 +1,16 @@
+{
+  "assessed_at": "2026-08-14T14:50:00Z",
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "object_type": "GeoreferenceSpatialDistributionProjectionRequest",
+  "resource_mask": [[0, 0], [1000, 0], [1000, 800], [0, 800], [0, 0]],
+  "schema_version": "1.0.0",
+  "thresholds": {
+    "max_centroid_offset_ratio": 0.15,
+    "max_extrapolation_ratio": 0.2,
+    "min_hull_area_ratio": 0.35,
+    "minimum_gcps": 4,
+    "minimum_occupied_quadrants": 4
+  },
+  "transform_quality_ref": "kfm:map:georeference-transform-quality:synthetic-001"
+}
