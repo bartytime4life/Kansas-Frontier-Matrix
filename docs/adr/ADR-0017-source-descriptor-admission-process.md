@@ -19,7 +19,7 @@ owning_root: docs/
 responsibility: "Record the proposed source descriptor admission, activation, intake, policy, connector, lifecycle, and rollback boundary."
 current_path: docs/adr/ADR-0017-source-descriptor-admission-process.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
