@@ -36,7 +36,7 @@
     "evidence_refs": [
       "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MAP-004-and-EXP-002",
       "attachment:Unified Implementation Architecture Build Manual.md#12.3",
-      "github://bartytime4life/Kansas-Frontier-Matrix/commit/eb95930a784252be7a24cba425185ff26294e8bb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/26a65b1b5f888b25754ce91c972a3b1c28d5854a",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/2781",
       "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31810972082",
       "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
@@ -95,7 +95,7 @@
     {
       "id": "repository:finite-cryptographic-hold",
       "validated": true,
-      "evidence_ref": "github:tools/attest/verify_cose.py@eb95930a784252be7a24cba425185ff26294e8bb"
+      "evidence_ref": "github:tools/attest/verify_cose.py@26a65b1b5f888b25754ce91c972a3b1c28d5854a"
     },
     {
       "id": "attachment:pmtiles-fail-closed-proposal",
