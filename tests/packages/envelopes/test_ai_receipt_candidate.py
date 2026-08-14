@@ -10,11 +10,11 @@ import sys
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
-from envelopes import (
+from envelopes.ai_receipt import (
     AI_RECEIPT_OUTCOMES,
-    EnvelopeBuildError,
     build_ai_receipt_candidate,
 )
+from envelopes.runtime_response import EnvelopeBuildError
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]

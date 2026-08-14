@@ -3,13 +3,11 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     "packages/envelopes/src/envelopes/ai_receipt.py",
-    "packages/envelopes/src/envelopes/__init__.py",
     "tests/packages/envelopes/test_ai_receipt_candidate.py"
   ],
   "artifact_hashes": {
     "packages/envelopes/src/envelopes/ai_receipt.py": "sha256:2c18d207dbf4c956547ca6d90f54b4957ca894e5b5a917f82d873f8d947a03a5",
-    "packages/envelopes/src/envelopes/__init__.py": "sha256:0ebb7f121eec970ed14613314a6b86e36d93687db2f033aedb0db144529edb6c",
-    "tests/packages/envelopes/test_ai_receipt_candidate.py": "sha256:5aca3b6efb23a18b748ab3d255499ef64778274da2751e8c99374c6aa8e6ea86"
+    "tests/packages/envelopes/test_ai_receipt_candidate.py": "sha256:8ba8ca0544883774209b97af832be488ab148e77f1c7271d1e68ccba571d9048"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -56,14 +54,13 @@
   },
   "truth_labels": {
     "packages/envelopes/src/envelopes/ai_receipt.py": "PROPOSED",
-    "packages/envelopes/src/envelopes/__init__.py": "PROPOSED",
     "tests/packages/envelopes/test_ai_receipt_candidate.py": "PROPOSED"
   },
   "validation_gates": [
     {
       "gate": "current-main-baseline",
       "outcome": "PASS",
-      "reason": "Verified main at 8bda119d223573a58035bd0ce420066c0f961640; 103 visible check runs were completed with no failure, cancellation, queued, or in-progress result."
+      "reason": "Verified main at 8bda119d223573a58035bd0ce420066c0f961640; 103 visible main check runs were completed with no failure, cancellation, queued, or in-progress result. Pull-request-only ratchets were not part of that visible baseline and later exposed inherited repository-topology drift."
     },
     {
       "gate": "overlap-reconciliation",
@@ -73,7 +70,7 @@
     {
       "gate": "focused-unit-tests",
       "outcome": "PASS",
-      "reason": "PYTHONPATH=packages/envelopes/src python -m pytest -q tests/packages/envelopes/test_ai_receipt_candidate.py passed 18 tests locally with no network access."
+      "reason": "PYTHONPATH=packages/envelopes/src python -m pytest -q tests/packages/envelopes/test_ai_receipt_candidate.py passed 18 tests locally with no network access after the package-root export was removed to preserve existing authoring-receipt bindings."
     },
     {
       "gate": "schema-validator-integration",
@@ -88,7 +85,7 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "This generated receipt binds the final module, package export, and focused test bytes with SHA-256."
+      "reason": "This generated receipt binds the final module and focused test bytes with SHA-256."
     },
     {
       "gate": "repository-wide-ratchets",
@@ -98,7 +95,7 @@
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted CI starts after the draft pull request opens."
+      "reason": "A first draft-PR run exposed two existing generated-receipt bindings invalidated by the package-root export and an inherited repository-topology baseline drift. The export was removed to preserve existing bindings; hosted CI reruns on the corrected head."
     },
     {
       "gate": "human-review",
@@ -145,9 +142,9 @@
   "created_at": "2026-08-14T23:00:41Z",
   "emitter": "OpenAI ChatGPT via GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 2857,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "prompt_or_contract is the SHA-256 of the exact campaign summary: \"Implement the strongest verified unimplemented KFM ideas from connected Drive and attached sources as small dependency-closed draft PRs; preserve Directory Rules, evidence, policy, validation, correction, rollback, and no publication.\" The change adds a deterministic, side-effect-minimal AIReceipt candidate helper only. It does not call a model, compute digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen public access. The generated receipt is process memory and is not proof, review approval, release authority, or publication authority."
+  "notes": "prompt_or_contract is the SHA-256 of the exact campaign summary: \"Implement the strongest verified unimplemented KFM ideas from connected Drive and attached sources as small dependency-closed draft PRs; preserve Directory Rules, evidence, policy, validation, correction, rollback, and no publication.\" The change adds a deterministic, side-effect-minimal AIReceipt candidate helper at envelopes.ai_receipt only; it does not alter package-root exports or invalidate existing authoring receipts. It does not call a model, compute digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen public access. The generated receipt is process memory and is not proof, review approval, release authority, or publication authority. The first hosted draft-PR run proved that changing the shared package __init__.py invalidated older legitimate authoring receipts; the corrected slice restores that file byte-for-byte and keeps the helper importable from envelopes.ai_receipt."
 }
