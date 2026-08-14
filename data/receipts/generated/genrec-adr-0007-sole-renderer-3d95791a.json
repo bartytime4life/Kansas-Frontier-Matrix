@@ -1,11 +1,11 @@
 {
-  "receipt_id": "genrec-adr-0007-sole-renderer-7373dd7c",
+  "receipt_id": "genrec-adr-0007-sole-renderer-3d95791a",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
   ],
   "artifact_hashes": {
-    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md": "sha256:7373dd7c3bdf0a1deb1ddb1cd94ee39769880391698011b61c73505ad3b34033"
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md": "sha256:3d95791a15a422b7d64148973e95eb92a506ee23b90e95c76f905c4a3f7f61da"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -24,7 +24,7 @@
       "GitHub Actions run, job, and log inspection",
       "local apply_patch authoring",
       "Poppler PDF extraction and page rendering",
-      "repository metadata, freshness, link, ADR-index, and MapLibre readiness validators",
+      "repository metadata, freshness, link, document-graph, ADR-index, and MapLibre readiness validators",
       "deterministic unittest, boundary, syntax, Markdown, and artifact-integrity checks"
     ]
   },
@@ -115,6 +115,11 @@
       "reason": "One H1, 65 headings with monotonic levels, 15 unique explicit anchors, balanced fences/details/meta delimiters, zero trailing whitespace, all 78 local targets resolved, and Pandoc GitHub-Flavored Markdown parsing passed. Ten external targets were classified without network requests."
     },
     {
+      "gate": "documentation-graph",
+      "outcome": "PASS",
+      "reason": "The deterministic no-network document graph passes for the candidate range after representing the non-ADR KFM-P2-FEAT-0012 lineage as a note and using empty formal supersession arrays; package evidence remains linked and graph-resolvable without inventing a supersession target."
+    },
+    {
       "gate": "adr-index-coherence",
       "outcome": "PASS",
       "reason": "The full repository ADR validator passes with 34 numbered records and 12 unassigned scaffolds; coherence grants no acceptance or implementation authority."
@@ -198,7 +203,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-14T01:57:04Z",
+  "created_at": "2026-08-14T02:06:27Z",
   "emitter": "OpenAI Codex",
   "links": {
     "pr_number": null,

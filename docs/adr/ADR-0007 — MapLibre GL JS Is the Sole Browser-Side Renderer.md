@@ -22,9 +22,8 @@ owning_root: docs/
 responsibility_root: docs/
 current_path: "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
 responsibility: "Record the proposed browser renderer-family decision, its admission and exception boundaries, acceptance evidence, migration obligations, and rollback without granting implementation, release, or publication authority."
-supersedes:
-  - "KFM-P2-FEAT-0012 — proposed dual-renderer planning posture; non-ADR lineage only"
-superseded_by: null
+supersedes: []
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -87,6 +86,7 @@ related:
   - .github/workflows/briefing-implementation-campaign.yml
 tags: [kfm, adr, maplibre, browser-renderer, renderer-boundary, plugin-admission, v6-readiness, workflow-hold, 3d, globe, terrain, supply-chain, no-parallel-authority]
 notes:
+  - "KFM-P2-FEAT-0012 is proposed dual-renderer planning lineage, not a formal superseded ADR or accepted decision."
   - "v1.2 is a same-path, documentation-only, repository-grounded reconciliation; it does not accept ADR-0007, admit a dependency or plugin, or change runtime behavior."
   - "ADR-0029 is accepted and adopts Directory Rules v2; ADR-0007 remains legacy-proposed and effectively proposed among the other 33 proposed numbered records."
   - "The private @kfm/maplibre 0.0.0 package, its placeholder export, and the comment-only Explorer adapter remain dependency-free and non-functional even though the pnpm workspace and Explorer build/test scripts now exist."
