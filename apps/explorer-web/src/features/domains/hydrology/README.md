@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/domains/hydrology/readme
 title: Explorer Web Hydrology Domain Feature README
 type: app-readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Hydrology steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-08-14
 policy_label: public
 related:
   - ../../README.md
@@ -32,10 +32,12 @@ related:
 tags: [kfm, apps, explorer-web, domains, hydrology, feature, watershed, huc, gauge, nfhl, not-for-life-safety, evidence-drawer, map-first, no-direct-data-root, flood-role-anti-collapse]
 notes:
   - "v0.2 updates the uploaded Hydrology domain-feature README into a current repo-aware feature contract."
+  - "v0.3 records the bounded Evidence Drawer convergence: the Hydrology component delegates to the shared Explorer renderer, and the Hydrology schema path is a field-free compatibility projection to the shared closed UI profile."
   - "apps/explorer-web/src/features/domains/hydrology/README.md, docs/domains/hydrology/README.md, docs/domains/hydrology/PUBLICATION_POSTURE.md, and policy/domains/hydrology/README.md were verified through the GitHub app in this update. Prior related Explorer Web feature/adapter/source/app boundaries remain relevant, but adapter files, routes, runtime wiring, tests, and envelopes remain NEEDS VERIFICATION."
-  - "Feature implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior remain NEEDS VERIFICATION."
+  - "Feature implementation beyond the bounded Evidence Drawer projection, route wiring, domain-view inventory, fixtures, governed API envelopes, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, Focus Mode behavior, live Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior remain NEEDS VERIFICATION."
   - "Hydrology UI features may compose governed hydrology envelopes into public/semi-public views, but they must not become emergency flood-warning, observed-flood authority, FEMA/NFHL authority, regulatory determination, lifecycle storage, source truth, direct model-output truth, or a route around official issuing authorities."
   - "Public Hydrology UI must default to deny/hold/restrict when source role, time kind, NFHL role, model/observation distinction, freshness, evidence, release, stale-state, rollback, correction, policy, sensitivity, cross-lane ownership, or export support is unresolved."
+  - "This convergence proves only shared parser/renderer reuse and schema ownership; live route wiring, governed transport, Hydrology-specific policy decisions, EvidenceBundle authenticity, review, release, correction propagation, and production behavior remain NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -62,11 +64,12 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
+> **Status:** draft / bounded Evidence Drawer projection confirmed / broader implementation behavior `NEEDS VERIFICATION`
+>
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Hydrology steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/domains/hydrology/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path and supporting Hydrology docs/policy README surfaces / PROPOSED domain-feature contract / UNKNOWN implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, Focus Mode behavior, Evidence Drawer behavior, package scripts, runtime behavior, and deployment behavior
+> **Truth posture:** CONFIRMED README path, field-free shared-schema projection, shared Evidence Drawer delegation, and focused no-network convergence tests / PROPOSED domain-feature contract / UNKNOWN route wiring, domain-view inventory, governed API transport, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, Focus Mode behavior, production Evidence Drawer behavior, runtime behavior, and deployment behavior
 
 > [!CAUTION]
 > Hydrology UI is not an emergency flood-warning system. It must never collapse observed gauge readings, regulatory NFHL zones, modeled hydrographs, hydraulic forecasts, and operational warnings into one truth class. NFHL is regulatory context only unless a governed source role and evidence path support a distinct claim.
@@ -110,7 +113,7 @@ It may eventually hold route modules, panels, view models, hooks, and feature or
 - Focus Mode bounded hydrology answers with citation discipline and AIReceipt support;
 - compare/export handoffs that preserve source role, rights, freshness, release, stale-state, correction, supersession, and rollback state.
 
-This directory is not proof that any route, panel, hook, map layer, adapter, test, fixture, package script, governed API envelope, NFHL role check, ModelRunReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, stale-state rule, Evidence Drawer behavior, Focus Mode behavior, export handoff, or runtime wiring is implemented.
+Beyond the bounded shared Evidence Drawer delegation and convergence test named in §2, this directory is not proof that any route, panel, hook, map layer, adapter, fixture, package script, governed API envelope, NFHL role check, ModelRunReceipt, ReleaseManifest, RollbackCard, CorrectionNotice, stale-state rule, live Evidence Drawer behavior, Focus Mode behavior, export handoff, or runtime wiring is implemented.
 
 [Back to top](#top)
 
@@ -120,7 +123,8 @@ This directory is not proof that any route, panel, hook, map layer, adapter, tes
 
 | Surface | Status | What it proves | What it does **not** prove |
 |---|---|---|---|
-| `apps/explorer-web/src/features/domains/hydrology/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.2. | Hydrology UI implementation files, route wiring, domain-view inventory, tests, fixtures, governed API envelopes, NFHL checks, release manifests, rollback cards, export handoff, or runtime behavior. |
+| `apps/explorer-web/src/features/domains/hydrology/README.md` | **CONFIRMED README** | This README exists and has been updated to v0.3. | Broader Hydrology UI implementation, route wiring, domain-view inventory, governed API envelopes, NFHL checks, release manifests, rollback cards, export handoff, or runtime behavior. |
+| Bounded Hydrology Evidence Drawer projection | **CONFIRMED BOUNDED EXECUTABLE** | `EvidenceDrawer.tsx` delegates to the shared closed parser/renderer; the Hydrology schema path is a field-free `$ref` projection; focused standard-library tests enforce both relationships. | Live API transport, EvidenceBundle authenticity, Hydrology policy, review, release, map-click wiring, production accessibility, deployment, or publication behavior. |
 | `apps/explorer-web/src/features/README.md` | **CONFIRMED prior related boundary** | Parent feature README was previously verified in this session and says feature modules must not treat map features, tiles, local files, model text, or lifecycle data as claim truth. | That domain feature modules, route inventory, tests, fixtures, or runtime wiring exist. |
 | `apps/explorer-web/src/adapters/README.md` | **CONFIRMED prior related boundary** | Adapter README was previously verified in this session as the governed API / renderer / evidence / layer / export / diagnostics adapter boundary. | That hydrology adapters or governed API client adapters are implemented. |
 | `docs/domains/hydrology/README.md` | **CONFIRMED domain-doc surface** | Hydrology domain docs define Hydrology as evidence-bound/time-aware, not an emergency flood-warning system, and NFHL as regulatory context only. | That app UI behavior, schemas, validators, policy bundles, source descriptors, releases, or routes are implemented. |
@@ -128,7 +132,7 @@ This directory is not proof that any route, panel, hook, map layer, adapter, tes
 | `policy/domains/hydrology/README.md` | **CONFIRMED policy-lane scaffold** | Hydrology policy-lane README exists. | It is still a greenfield scaffold and does not prove concrete policy files, tests, fixtures, CI binding, release integration, or runtime enforcement. |
 | `apps/explorer-web/src/features/domains/README.md` | **NOT VERIFIED** | A parent domain-feature README was not confirmed in this update. | Does not prove absence across all refs; a future index remains useful if accepted. |
 | Uploaded Hydrology Markdown | **CONFIRMED source text for this update** | Provided the base Hydrology domain-feature contract updated here. | Does not prove live implementation. |
-| Implementation beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, route inventory, fixtures, tests, package scripts, governed API envelopes, receipts, release records, and runtime evidence. | Not claimed by this README. |
+| Implementation beyond the bounded drawer projection | **NEEDS VERIFICATION** | Checkable by repo scan, route inventory, fixtures, tests, package scripts, governed API envelopes, receipts, release records, and runtime evidence. | Not claimed by this README. |
 
 [Back to top](#top)
 
@@ -185,7 +189,7 @@ Safe interpretation:
 
 - **CONFIRMED:** this README surface, Hydrology domain README, Hydrology publication-posture doc, and Hydrology policy-lane scaffold exist.
 - **PROPOSED:** Hydrology feature modules may live here when they preserve governed API, source-role, time-kind, NFHL/flood-role anti-collapse, model/observation distinction, evidence, sensitivity, rights, stale-state, review, release, rollback, correction, export, and public-boundary constraints.
-- **NEEDS VERIFICATION:** Hydrology modules, route wiring, domain-view inventory, adapter dependencies, fixtures, tests, package scripts, governed API envelopes, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, Evidence Drawer behavior, Focus Mode behavior, runtime behavior, and deployment behavior.
+- **NEEDS VERIFICATION:** Hydrology modules beyond the bounded drawer projection, route wiring, domain-view inventory, adapter dependencies, fixtures, package scripts, governed API envelopes, NFHL role checks, ModelRunReceipts, RedactionReceipts, AggregationReceipts, ReviewRecords, PolicyDecisions, ReleaseManifests, RollbackCards, CorrectionNotices, stale-state rules, export handoff, live Evidence Drawer behavior, Focus Mode behavior, runtime behavior, and deployment behavior.
 - **DENY:** using this feature as emergency flood-warning, life-safety instruction, observed-flood authority, FEMA/NFHL authority, regulatory determination, Hydrology truth, policy authority, release authority, lifecycle store, schema/contract home, direct canonical/internal store client, direct model-output surface, renderer authority, export authority, or public-data shortcut.
 
 [Back to top](#top)
@@ -278,7 +282,7 @@ Exact modules remain `NEEDS VERIFICATION`. Candidate views should be introduced 
 | `model-context` | Show model-derived hydrology context. | ModelRunReceipt and model/observation separation. | PROPOSED |
 | `sensitive-denial` | Explain why exact/private/sensitive detail is unavailable. | Safe reason code; no exposure hints. | PROPOSED |
 | `domain-focus` | Hydrology Focus Mode UI. | Finite outcomes; no emergency instruction. | PROPOSED |
-| `domain-evidence` | Evidence Drawer handoff. | Audience-appropriate payload only. | PROPOSED |
+| `domain-evidence` | Evidence Drawer handoff. | Audience-appropriate payload only. | PARTIAL — shared projection and renderer delegation only |
 | `domain-export` | Hydrology export handoff. | Citation, disclaimer, rights, release checks. | PROPOSED |
 | `domain-compare` | Hydrology compare handoff. | Source role, time-kind, NFHL posture, release, and freshness preserved. | PROPOSED |
 | `correction-status` | Public-safe stale/supersession/correction/rollback status. | Release/correction/rollback refs only; no flood-warning instruction. | PROPOSED |
@@ -455,13 +459,13 @@ For Hydrology feature changes:
 <details>
 <summary>Appendix A — no-loss preservation note</summary>
 
-The uploaded README replaced a greenfield Hydrology domain-feature stub with a bounded Hydrology feature contract without claiming Hydrology routes, panels, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, NFHL role checks, ModelRunReceipts, ReleaseManifests, RollbackCards, Focus Mode, Evidence Drawer, Compare, or export handoff are implemented. This v0.2 update preserves that structure while adding current repo evidence, supporting Hydrology docs/policy evidence, stronger no-direct-data-root language, NFHL/flood-role anti-collapse posture, source-role/time-kind posture, model/observation separation, release/correction/rollback posture, compare/export handoff posture, local-parity expectations, and expanded verification items.
+The uploaded README replaced a greenfield Hydrology domain-feature stub with a bounded Hydrology feature contract without claiming Hydrology routes, panels, hooks, adapters, fixtures, package scripts, governed API envelopes, NFHL role checks, ModelRunReceipts, ReleaseManifests, RollbackCards, Focus Mode, live Evidence Drawer transport, Compare, or export handoff are implemented. The v0.2 update established that repository-aware boundary. This v0.3 update records only the field-free shared-schema projection, shared renderer delegation, and focused no-network convergence test while preserving every upstream evidence, policy, release, and runtime hold.
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/features/domains/hydrology/` should contain Hydrology-specific Explorer Web feature modules only after route contracts, governed API envelopes, NFHL/flood-role posture, fixtures, tests, Evidence Drawer behavior, Focus Mode behavior, Compare behavior, release/stale/rollback handling, and export handoff are verified.
+Additional Hydrology-specific Explorer Web feature modules beyond the bounded drawer projection should land only after route contracts, governed API envelopes, NFHL/flood-role posture, fixtures, tests, live Evidence Drawer behavior, Focus Mode behavior, Compare behavior, release/stale/rollback handling, and export handoff are verified.
 
 It must preserve the trust membrane and Hydrology boundary: the feature may show watersheds, HUCs, reaches, gauges, observations, hydrographs, water quality, groundwater, NFHL regulatory context, and upstream traces, but it must not become emergency warning, observed-flood authority, NFHL regulatory authority, release authority, lifecycle storage, direct model-output truth, or a source of unsupported hydrology claims.
 
