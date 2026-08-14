@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0005-apps-explorer-web-canonical-map-first-shell
 title: "ADR-0005 — `apps/explorer-web/` is the canonical map-first shell"
 type: adr
 adr_id: ADR-0005
-version: v1.1
+version: v1.2
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -20,7 +20,7 @@ reviewers_required:
   - Policy and evidence reviewer
   - "at least one affected map-runtime or client owner"
 created: 2026-05-09
-updated: 2026-07-23
+updated: 2026-08-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -30,23 +30,31 @@ superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f7826223ae7c443647aae2206fb27e1e37d71d9d
-  inspection_origin_commit: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7
-  continuity_compare: 79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7...f7826223ae7c443647aae2206fb27e1e37d71d9d
-  relevant_path_changes_after_inspection: 0
-  target_prior_blob: 34f59c8b4729c35591344852ea17988c400f1846
-  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
-  directory_rules_doctrine_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  base_commit: 6eab7cd37861d25cb007b7777f024a4b68d6e9d1
+  target_prior_blob: c8cae17b8ca88b5f7a47b613bfc522d923e7d721
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  directory_rules_doctrine_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  apps_readme_blob: 7ab9c8b9c507d8d17b72eec1344e593cbf0c91ec
-  explorer_readme_blob: 755dae3e175b103702caba573a5171d62ed710da
-  explorer_package_blob: ce981192e725483c747affb45ca3de36a22ce9ce
+  apps_readme_blob: 6cd825905976b2b662e43497203206305cb78827
+  explorer_readme_blob: 3d7944fcd31b7edeabca5b793eb7b88e12563f56
+  root_package_blob: 5cba790c88c40b885cc65fe2d585f3205aa1ef9d
+  pnpm_lock_blob: 69a45e6aaca1ea6521e01ff274e4f1b3e1bf3975
+  explorer_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  explorer_main_blob: 9c95ae67333b7cbf6bc88051fa5c76e4cd97efa4
+  explorer_shell_blob: 64c78c78820af33fb7a622094e4c0944ad9412f8
+  governed_client_blob: 21f6e4d1225ab0427ecb689d6782f4b56fc25ea2
+  evidence_drawer_blob: 7746843c259594568fe75e975155a67eb8372e8f
+  map_evidence_bridge_blob: 18d61ea0ef2fbe2fc2f3cc9d42291c101003037f
   packages_ui_entry_blob: 2c9ea341d61bf4d1733b9982fda8a9b869a3a720
   packages_maplibre_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
-  ui_build_workflow_blob: a4fec64dc445b060d334c2ae56886cc814cb0e61
+  explorer_maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
+  ui_build_workflow_blob: 52382d796a8dd5ecafc39a801515aff0a8b013f8
   explorer_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  latest_exact_head_ui_build_run: "31808443943 — success"
   packages_cesium_path_at_base: absent
-  pnpm_lock_path_at_base: absent
+  packages_maplibre_runtime_path_at_base: absent
+  explorer_dist_path_at_base: absent
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -56,22 +64,30 @@ related:
   - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/map-shell.md
   - docs/architecture/ui/BOUNDARIES.md
   - apps/README.md
   - apps/explorer-web/README.md
+  - apps/explorer-web/src/main.ts
+  - apps/explorer-web/src/adapters/GovernedClient.ts
+  - apps/explorer-web/src/features/evidence_drawer/index.tsx
+  - apps/explorer-web/src/features/map_runtime/index.tsx
   - packages/ui/README.md
   - packages/maplibre/README.md
+  - package.json
+  - pnpm-lock.yaml
   - .github/workflows/ui-build.yml
   - tests/policy/test_explorer_web_adapter_boundary.py
 tags: [kfm, adr, explorer-web, map-first, shell, trust-membrane, governed-api, maplibre, ui, accessibility, static-delivery, fail-closed, rollback]
 notes:
-  - "v1.1 is a same-path repository-grounded modernization. It preserves effective decision status `proposed`; it does not accept ADR-0005 or change executable behavior."
-  - "Explorer Web is a broad documentation and placeholder tree. Its package scripts echo TODO, and ui-build intentionally fails readiness until real scripts, an exact pnpm pin, and pnpm-lock.yaml exist."
-  - "packages/ui/ and packages/maplibre/ are private 0.0.0 scaffolds with placeholder exports. packages/cesium/ is absent."
-  - "Directory Rules v1.4 proposes packages/maplibre-runtime/ while the repository contains packages/maplibre/. This ADR records the conflict but does not resolve renderer naming or accept ADR-0006/ADR-0007."
-  - "Dynamic trust-bearing responses belong behind apps/governed-api/. A governed static edge may serve released public-safe immutable artifacts, but it is not a second truth authority."
+  - "v1.2 is a same-path, documentation-only current-state reconciliation; it preserves effective decision status `proposed` and changes no executable behavior."
+  - "ADR-0029 is the only accepted numbered ADR. Its adopted Directory Rules place deployables under apps/ and reusable code under packages/ but do not accept ADR-0005 or choose a renderer child-package name."
+  - "The root workspace now pins pnpm@11.17.0 and Node 22, pnpm-lock.yaml exists, Explorer has real Vite/TypeScript/Vitest/Playwright scripts, and exact-head ui-build run 31808443943 passed build and test."
+  - "The default browser entrypoint still renders a fixed fail-closed shell and mounts a no-input Evidence Drawer. Independently tested fixture-first modules and synthetic map-selection bridges are not live Governed API, released-layer, or production map flows."
+  - "packages/ui/ and packages/maplibre/ remain private 0.0.0 scaffolds; MapLibreAdapter.ts is comment-only; no MapLibre dependency, packages/maplibre-runtime/, or packages/cesium/ exists at the pinned tree."
+  - "Dynamic trust-bearing responses belong behind a governed interface. A governed static edge may serve released public-safe immutable artifacts, but it is not a second truth or publication authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -82,16 +98,16 @@ notes:
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
 [![Configured shell: present](https://img.shields.io/badge/apps%2Fexplorer--web-present-0969da?style=flat-square)](#evidence)
-[![Implementation: placeholders](https://img.shields.io/badge/implementation-placeholders-f59e0b?style=flat-square)](#evidence)
-[![UI build: readiness hold](https://img.shields.io/badge/ui%20build-readiness%20hold-b42318?style=flat-square)](#validation)
-[![Renderer seam: conflicted](https://img.shields.io/badge/renderer%20seam-CONFLICTED-b42318?style=flat-square)](#renderer-boundary)
+[![Implementation: bounded baseline](https://img.shields.io/badge/implementation-bounded%20baseline-d4a72c?style=flat-square)](#evidence)
+[![UI build: exact-head success](https://img.shields.io/badge/ui%20build-exact--head%20success-1a7f37?style=flat-square)](#validation)
+[![Renderer seam: hold](https://img.shields.io/badge/renderer%20seam-HOLD-b42318?style=flat-square)](#renderer-boundary)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
 > [!IMPORTANT]
 > **Repository presence is not accepted decision authority.** The app, source tree, supporting packages, static boundary tests, and CI readiness workflow exist. The ADR index still records ADR-0005 as `proposed`. This revision describes current evidence and the proposed target without promoting the decision.
 
 > [!CAUTION]
-> **A broad placeholder tree is not a working shell.** Explorer Web has placeholder scripts and modules, no verified app-local test lane, no pinned pnpm version, and no `pnpm-lock.yaml`. The workflow fails closed on those prerequisites. No browser route, governed client, renderer adapter, Evidence Drawer, Focus Mode, export flow, deployment, or production operation is established by the current tree.
+> **Bounded executable slices are not a working map product.** Explorer now has a locked toolchain, real build/test scripts, a static entrypoint, finite no-leak projections, a keyboard-operable Evidence Drawer, and synthetic map-selection bridge tests. The default entrypoint still renders fixed `ABSTAIN` and mounts a no-input drawer. No live Governed API transport, accepted client envelope, MapLibre dependency or adapter, released-layer load, production route tree, deployment, or public operation is established.
 
 **Quick navigation:** [Status](#status) · [Evidence](#evidence) · [Context](#context) · [Decision](#decision) · [Architecture](#architecture) · [Invariants](#invariants) · [Consequences](#consequences) · [Alternatives](#alternatives) · [Migration](#migration) · [Validation](#validation) · [Rollback](#rollback) · [Open work](#open-work)
 
@@ -108,11 +124,11 @@ notes:
 | **Decision class** | Canonical shell placement, client authority boundary, dynamic/static delivery boundary, and no-parallel-shell rule |
 | **Tracked path** | `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` |
 | **Configured app path** | [`apps/explorer-web/`](../../apps/explorer-web/) |
-| **Current implementation** | Repository-present, documentation-rich source tree; executable behavior remains placeholder-only |
-| **Current enforcement** | Static path/import guards plus fail-closed build/test readiness workflow |
+| **Current implementation** | Static fail-closed entrypoint plus independently tested fixture-first trust, evidence, time, and map-selection modules; no live map or API transport |
+| **Current enforcement** | Locked Explorer build/test workflow plus bounded path/import guards; latest exact-head `ui-build` passed |
 | **Publication effect** | None. ADRs, routes, packages, tests, workflows, commits, PRs, merges, builds, and deployments do not publish KFM data or claims. |
 
-The intent is stable: one map-first browser shell home. Implementation, package boundaries, acceptance, and operational maturity remain incomplete.
+The intent is stable: one map-first browser shell home. The reproducible build/test baseline is now present, while live composition, renderer closure, decision acceptance, deployment, and operational maturity remain incomplete.
 
 [Back to top](#top)
 
@@ -122,23 +138,26 @@ The intent is stable: one map-first browser shell home. Implementation, package 
 
 ## Current repository evidence
 
-The findings below are **CONFIRMED at `main@f7826223ae7c443647aae2206fb27e1e37d71d9d`** unless marked otherwise. Inspection began at `79603b7981e52a4b1cdb5f1eb42a7f1dd34436d7`; intervening commits changed only `data/README.md` and its generated receipt, so relevant evidence stayed unchanged.
+The findings below are **CONFIRMED at `main@6eab7cd37861d25cb007b7777f024a4b68d6e9d1`** unless marked otherwise.
 
 | Surface | Verified state | Limit |
 |---|---|---|
-| ADR index | Exact path and `proposed` status. | Identity/status, not acceptance. |
-| Directory Rules | Deployables under `apps/`; Explorer Web named as map-first shell. Duplicate Directory Rules placement remains conflicted. | Supports app home, not renderer naming. |
-| [`apps/README.md`](../../apps/README.md) | 87 Explorer files and 48 TypeScript/TSX files; implementation modules characterized as placeholders. | Broad scaffold, not functional app. |
-| [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) | Private `0.0.0`; `dev`, `build`, `test` echo `TODO`. | Explicit placeholder state. |
-| Root [`package.json`](../../package.json) and lockfile | Workspaces declared; root scripts remain placeholders; no exact package-manager pin; `pnpm-lock.yaml` absent. | Not reproducible install/build/test. |
-| Representative modules | Governed client, shell, export, soil FocusFlow, and soil EvidenceDrawer are greenfield placeholders. | Filenames/slots only. |
-| [`packages/ui/`](../../packages/ui/) and [`packages/maplibre/`](../../packages/maplibre/) | Private `0.0.0` scaffolds with placeholder exports. | No reusable UI, renderer seam, consumers, or deployment. |
-| `packages/cesium/` | Exact path absent. | Does not accept sole-renderer proposal. |
-| [Static boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py) | Constrains renderer imports to `src/adapters/`; rejects configured internal-store literals. | Not network/rendering/accessibility/deployment proof. |
-| [`ui-build.yml`](../../.github/workflows/ui-build.yml) | Rejects placeholder commands, missing lockfile, and missing exact pnpm pin before install/build/test. | Red readiness is expected while placeholders remain. |
-| Deployment, auth, CSP, observability, public operation | **UNKNOWN** | No deployed-system evidence inspected. |
+| ADR index | ADR-0005 is uniquely indexed at this path with source and effective status `proposed`; ADR-0029 alone is accepted. | Identity/status, not acceptance or implementation. |
+| [Accepted Directory Rules](../doctrine/directory-rules.md) and [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) | `apps/` owns deployables; `packages/` owns reusable non-deployable code; public clients use governed APIs or released carriers. | Does not accept ADR-0005 or choose an Explorer, UI, or renderer child-package name. |
+| [`apps/README.md`](../../apps/README.md) | Classifies Explorer as a static fail-closed shell with independently tested fixture-first components. | Root orientation, not deployed behavior. |
+| Root [`package.json`](../../package.json) and [`pnpm-lock.yaml`](../../pnpm-lock.yaml) | Pin `pnpm@11.17.0`, Node 22, workspace membership, and locked dependencies. Root aggregate lint/test/build scripts still fail closed with `WORKFLOW_HOLD`. | Reproducible Explorer lane; not a complete monorepo toolchain. |
+| [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) | Real Vite development/build, TypeScript check, Vitest unit, and Playwright browser scripts. | Tooling exists; scripts do not prove product readiness. |
+| [`src/main.ts`](../../apps/explorer-web/src/main.ts) and shell resolver | Build a static entrypoint that emits fixed `ABSTAIN / NO_GOVERNED_RESPONSE` and mounts a no-input Evidence Drawer. | No route tree, map, live transport, authentication, or released data. |
+| Explorer source and tests | 293 tracked Explorer files, 100 source TypeScript/TSX files, 35 app-local unit test files, and 30 browser spec files at the pinned tree. | Inventory and passing tests do not mean every module is composed or production-ready. |
+| [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) and [Evidence Drawer](../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Strict fixture-only projection parsing; finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; fixed no-leak negative copy; correction/history visibility; keyboard focus entry/return. | No accepted cross-root response contract or network transport is wired. |
+| [Map-selection bridge](../../apps/explorer-web/src/features/map_runtime/index.tsx) | Renderer-neutral synthetic selection parsing, governed-resolver injection, evidence-subset enforcement, and fail-closed drawer outcomes. | Resolver is supplied by tests; no MapLibre runtime, real click, API request, or released layer is present. |
+| [`packages/ui/`](../../packages/ui/) and [`packages/maplibre/`](../../packages/maplibre/) | Private `0.0.0` scaffolds with placeholder exports; Explorer `MapLibreAdapter.ts` is comment-only and the workspace has no MapLibre dependency. | No shared UI package API, functioning renderer seam, or browser map. |
+| `packages/maplibre-runtime/` and `packages/cesium/` | Exact paths absent at the pinned tree. | Absence does not accept a sole-renderer decision or complete a dependency inventory. |
+| [`ui-build.yml`](../../.github/workflows/ui-build.yml) | Exact-head run [31808443943](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31808443943) passed readiness, locked install, build, unit tests, and browser tests for `main@6eab7cd…`. | CI signal only; no deployment, release, policy, evidence, or publication effect. |
+| [Static boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py) | Restricts renderer imports to `src/adapters/` and rejects configured internal-store literals. | Bounded source scan, not complete network, CSP, information-flow, renderer, or deployed-isolation proof. |
+| Deployment, auth, CSP, observability, service health, public operation | **UNKNOWN** | No admissible deployed-system evidence inspected. |
 
-The negative evidence is useful: placeholders prevent false success, guards catch selected drift, and the next increment can remain small and testable.
+The current tree has crossed from placeholder-only scaffolding to a reproducible, fixture-first executable baseline. Its safest description is still **bounded and fail-closed**, not a functional governed map application.
 
 [Back to top](#top)
 
@@ -152,8 +171,8 @@ KFM is map-first, time-aware, evidence-first, policy-aware, and correction-aware
 
 1. **One composition root.** Routes, state, accessibility, clients, adapters, evidence views, and exports otherwise fragment across app and compatibility surfaces.
 2. **UI is not a data plane.** The browser is downstream of `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → governed release`.
-3. **Map interaction implies claims.** A tile, property, popup, selection, camera, or pixel is a candidate interaction, not evidence; claim detail resolves through governed evidence/policy.
-4. **Shell and renderer decisions diverge.** The repo has `packages/maplibre/`; Directory Rules proposes `packages/maplibre-runtime/`; ADR-0006/0007 remain proposed; `packages/cesium/` is absent.
+3. **Map interaction implies claims.** A tile, property, popup, selection, camera, or pixel is a candidate interaction, not evidence. The current synthetic selection bridge enforces that distinction in tests; live claim detail still requires governed evidence and policy resolution.
+4. **Shell and renderer decisions diverge.** The repository has `packages/maplibre/`; supplied design lineage proposed `packages/maplibre-runtime/`; accepted Directory Rules select only the `packages/` responsibility root; ADR-0006/0007 remain proposed; `packages/cesium/` is absent.
 
 This ADR decides the **shell home and client authority boundary** without silently accepting a renderer decision or creating a new renderer package.
 
@@ -181,12 +200,12 @@ It **must not** own source admission, canonical evidence, policy, release/correc
 |---|---|---|
 | Dynamic trust-bearing API | [`apps/governed-api/`](../../apps/governed-api/) | Consume validated finite responses; never replace policy/evidence/release work. |
 | Shared reusable UI | [`packages/ui/`](../../packages/ui/) | Consume reviewed exports once implemented. |
-| Renderer seam | **CONFLICTED; below** | Consume one accepted adapter; no ad hoc peer renderer. |
+| Renderer seam | **OPEN / HOLD; below** | Consume one accepted adapter; no ad hoc peer renderer. |
 | Evidence / policy / release | Owning contracts, resolvers, `policy/`, `release/` | Render projections/outcomes/lineage; do not author or decide. |
 | Lifecycle data | `data/` | No direct normal browser path. |
 | Model adapters | `runtime/` behind Governed API | No direct browser provider/model call. |
 
-Dynamic claim-bearing requests **must** pass through `apps/governed-api/` and return the accepted client envelope. Public semantic outcomes remain:
+Under this proposed decision, dynamic claim-bearing requests **must** pass through `apps/governed-api/` and return a reviewed client envelope. Current Explorer has no live transport, and current Governed API routes themselves remain fail-closed scaffolds. Public semantic outcomes remain:
 
 ```text
 ANSWER | ABSTAIN | DENY | ERROR
@@ -204,10 +223,11 @@ ADR-0005 does **not** decide the final renderer package name or accept the sole-
 
 | Surface | Current state | Posture |
 |---|---|---|
-| `packages/maplibre/` | Repository-present private `0.0.0` scaffold | **CONFIRMED path; incomplete** |
-| `packages/maplibre-runtime/` | Proposed by Directory Rules v1.4 | **PROPOSED; absent/unverified here** |
+| `packages/maplibre/` | Repository-present private `@kfm/maplibre` `0.0.0` scaffold with a placeholder export | **CONFIRMED path; non-functional** |
+| `apps/explorer-web/src/adapters/MapLibreAdapter.ts` | One boundary comment; no implementation or runtime import | **CONFIRMED placeholder** |
+| `packages/maplibre-runtime/` | Supplied design-lineage name; absent; not selected by accepted Directory Rules | **PROPOSED lineage only** |
 | `packages/cesium/` | Exact path absent | **Do not create as a side effect** |
-| ADR-0006 / ADR-0007 | Single importer / sole renderer proposals | **Proposed; not accepted here** |
+| ADR-0006 / ADR-0007 | Single importer / sole renderer proposals | **Effective status `proposed`; not accepted here** |
 
 Until reviewed renderer closure:
 
@@ -217,7 +237,7 @@ Until reviewed renderer closure:
 4. No renderer package owns truth, policy, evidence, release, or publication.
 5. The current static test is a guard, not final-architecture proof.
 
-`packages/ui/` is the proposed reusable component home. Routing, shell state, and app integrations remain app-local. A component moves only when reuse, API, accessibility, trust-state semantics, tests, and consumers are reviewable. The current package is a scaffold.
+`packages/ui/` is the repository-present candidate reusable-component lane under the accepted `packages/` responsibility root. Routing, shell state, and app integrations remain app-local. A component moves only when reuse, API, accessibility, trust-state semantics, tests, and consumers are reviewable. The current package remains a scaffold.
 
 Compatibility families (`ui/`, `web/`, `styles/`, `viewer_templates/`) are not shell authorities. Inspect actual content/class before migration; do not create missing roots solely to deprecate them; preserve history, links, generator/mirror contracts, and rollback.
 
@@ -242,7 +262,7 @@ flowchart TB
       SHELL["Map-first shell<br/>routes · time · selection · panels"]
       VIEW["Evidence Drawer · Focus · Story · Compare · Export"]
       CLIENT["Governed client<br/>full response validation"]
-      ADAPTER["Accepted map adapter<br/>package naming CONFLICTED"]
+      ADAPTER["Accepted map adapter<br/>package naming OPEN"]
       UI["packages/ui<br/>shared seam"]
       SHELL --> VIEW
       SHELL --> CLIENT
@@ -298,9 +318,9 @@ This is responsibility/allowed traffic, not deployed topology. Routes, CDN, auth
 
 ## Consequences
 
-**Benefits:** one reviewable deployable boundary; honest placeholder maturity; no implied renderer decision; governed dynamic/static delivery; visible refusal/correction states; accessibility tied to inspectability; evidence-driven migration.
+**Benefits:** one reviewable deployable boundary; a reproducible fail-closed Explorer baseline; exact build/test evidence; independently testable finite-state, no-leak, evidence-history, time, and synthetic selection seams; no implied renderer decision; governed dynamic/static delivery; accessibility tied to inspectability; evidence-driven graduation.
 
-**Costs:** first slice must close package pin/lock/scripts/config/tests; renderer naming needs separate governance; static caches need correction/withdrawal semantics; envelope-first UI handles negative states/obligations; shared-package extraction stays slow until reuse is proved; proof is cross-cutting.
+**Costs:** many tested modules are not composed into the default shell; the app-local fixture projection is not yet a reviewed cross-root client contract; Governed API transport, renderer naming/version/admission, released-layer flow, complete accessibility, deployment, and operational rollback remain open; shared-package extraction stays slow until reuse is proved; proof is cross-cutting.
 
 [Back to top](#top)
 
@@ -320,7 +340,7 @@ This is responsibility/allowed traffic, not deployed topology. Routes, CDN, auth
 | Let browser read `data/published/` directly | Rejected: directory alone is not audience/integrity/correction/cache/policy contract. |
 | Resolve renderer package naming here or create `packages/cesium/` | Rejected: belongs to renderer ADR/migration; path absent. |
 | Put policy/evidence/release/direct model calls in shell | Rejected: collapses responsibility roots/trust membrane. |
-| Keep placeholders indefinitely | Rejected as end state: honest hold, not product architecture. |
+| Stop at fixture-first modules and a static abstaining entrypoint | Rejected as end state: useful conformance baseline, not a governed map product. |
 
 [Back to top](#top)
 
@@ -330,15 +350,15 @@ This is responsibility/allowed traffic, not deployed topology. Routes, CDN, auth
 
 ## Migration plan
 
-The app path exists; next work is **graduation, not a broad move**.
+The app path exists; next work is **graduation and composition, not a broad move**.
 
-1. **Preserve hold.** Keep ADR proposed, placeholder scripts fail-closed, guards active, and no second shell/renderer/static edge/compatibility root.
-2. **Reproducible workspace.** Pin package manager/version, add lockfile, real scripts, minimal TS/build config, browser entrypoint, test home, deterministic public-safe no-network fixtures. Roll back the coherent package/config/lock/script change together.
-3. **One finite-response route.** Implement small shell/route and governed client; validate full envelope; render all outcomes plus loading/retry/invalid/offline; use deterministic mock/bounded API, no live sources/models. Roll back via feature flag/route selector to hold screen.
-4. **Renderer closure.** Resolve package naming through reviewed ADR/migration; preserve one package/adapter; implement minimal map lifecycle; expand guards; pin dependencies/protocols; no second renderer. Roll back map route/import graph together.
-5. **Proof-bearing interaction.** Low-sensitivity released layer → governed map source → selection → governed evidence request → EvidenceBundle-derived drawer → visible release/time/correction/limitations. Add keyboard flow, safe export, bounded telemetry, and cache/release rollback drill.
+1. **Preserve decision and trust holds.** Keep ADR-0005 proposed, retain fail-closed defaults and boundary guards, and create no second shell, renderer, static edge, or compatibility root.
+2. **Treat the reproducible baseline as complete but bounded.** Preserve the exact package-manager pin, lockfile, real scripts, TypeScript/Vite entrypoint, Vitest/Playwright lanes, and deterministic public-safe fixtures. Do not claim that passing them establishes live integration.
+3. **Compose one governed finite-response flow.** Wire one reviewed client-envelope profile into the default shell through a deterministic mock or bounded Governed API route; render all finite and invalid/offline states; preserve no-network fixtures and a reversible hold-screen selector. No live sources or models.
+4. **Close the renderer decision separately.** Resolve `packages/maplibre/` versus design-lineage naming through reviewed ADR/migration; accept and pin the dependency/version only with one physical adapter, import/acquisition enforcement, browser probes, and rollback. Do not create a peer renderer.
+5. **Build one proof-bearing interaction.** Low-sensitivity released layer → governed carrier → renderer-neutral selection → governed evidence request → EvidenceBundle-derived drawer → visible release, time, correction, and limitation state. Add keyboard/non-pointer flow, safe export, bounded telemetry, and cache/release rollback drill.
 
-ADR-0005 may become accepted only when ADR/index transition together; owners/reviewers are verified; the slice passes validation below; renderer governance is visible; dynamic/static boundaries are tested; rollback/correction is rehearsed; deployment/exposure is reviewed.
+ADR-0005 may become accepted only when ADR/index transition together; owners/reviewers are verified; current bounded slices are reconciled with a reviewed client contract; renderer governance is visible; dynamic/static boundaries are tested; accessibility and rollback/correction are reviewed; and deployment/exposure evidence is available.
 
 [Back to top](#top)
 
@@ -348,45 +368,36 @@ ADR-0005 may become accepted only when ADR/index transition together; owners/rev
 
 ## Validation
 
-Current enforcement is bounded: ADR index coherence, static renderer/import and internal-path checks, workspace declarations, and UI readiness hold. These do not prove a functional shell.
+Current enforcement is bounded but executable. At the pinned base, `ui-build` run [31808443943](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31808443943) completed successfully: both `build-explorer-web` and `test-explorer-web` passed readiness, frozen install, build, unit, and browser steps. The ADR index and static boundary guard are separate checks. None proves a live governed map.
 
-Acceptance requires:
+Acceptance still requires:
 
-- identity/status coherence;
-- exact package-manager pin, lockfile, clean install, real build/test;
-- browser entrypoint and one route;
-- full client envelope validation and finite/negative-state tests;
-- Governed API-only dynamic network and governed static-edge tests;
-- selection-to-EvidenceBundle continuity;
-- accepted renderer package/adapter with one consumer and no peer;
-- sensitive payload/tile/cache/export/diagnostic leakage tests;
-- no direct model client;
-- automated plus manual accessibility;
+- identity/status coherence and verified review authority;
+- a reviewed cross-root client envelope and live/bounded Governed API integration;
+- route composition with all finite, invalid, loading, retry, and offline states;
+- Governed API-only dynamic network behavior and governed static-carrier tests;
+- selection-to-EvidenceBundle continuity over a released low-sensitivity layer;
+- an accepted renderer package/adapter with one consumer and no peer;
+- sensitive payload, tile, cache, export, and diagnostic leakage tests;
+- no direct model client or canonical/internal-store path;
+- automated plus manual accessibility, including a non-pointer map path;
 - trust-preserving export and redacted observability;
-- reviewed TLS/CSP/CORS/origin/secrets/dependencies/cache/identity/incident/isolation;
-- rehearsed app/renderer/static/cache/release/correction rollback;
+- reviewed TLS, CSP, CORS, origin, secret, dependency, cache, identity, incident, and isolation controls;
+- rehearsed app, renderer, static-cache, release, correction, and rollback behavior;
 - documentation closure without overclaiming.
 
-Suggested current checks:
+Suggested changed-area checks:
 
 ```bash
 python tools/validators/validate_adr_index.py
 python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
 python -m pytest tests/policy/test_explorer_web_adapter_boundary.py -q --strict-config --strict-markers
-make boundary-guards
-make validate
-```
-
-After workspace readiness:
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm --filter explorer-web build
+make ui-build
 pnpm --filter explorer-web test
+make boundary-guards
 ```
 
-Validation is not release/publication approval.
+Validation is CI and conformance evidence only. It is not ADR acceptance, release approval, deployment proof, or publication authority.
 
 [Back to top](#top)
 
@@ -396,17 +407,17 @@ Validation is not release/publication approval.
 
 ## Rollback and supersession
 
-Restore prior blob:
+Restore the prior target blob:
 
 ```text
-34f59c8b4729c35591344852ea17988c400f1846
+c8cae17b8ca88b5f7a47b613bfc522d923e7d721
 ```
 
-or revert the v1.1 commit. No executable path requires rollback because this revision is documentation-only.
+or revert the v1.2 documentation commit. No executable path requires rollback because this revision changes only this ADR.
 
 A future shell-home change requires a successor ADR, `superseded` status, same-change index update, reciprocal links, consumer/surface inventory, and migration/rollback plan.
 
-Future package/build changes revert coherently; routes return to finite hold/error state; renderer rollback restores package/import graph; static rollback withdraws/invalidate/purges cache and exposes correction; deployment rollback verifies health/envelope versions. Code rollback must not erase release, correction, or audit history.
+Future package/build changes revert coherently; routes return to a finite hold/error state; renderer rollback restores the package/import graph; static rollback withdraws, invalidates, or purges cache and exposes correction; deployment rollback verifies health and envelope versions. Code rollback must not erase release, correction, or audit history.
 
 [Back to top](#top)
 
@@ -416,24 +427,36 @@ Future package/build changes revert coherently; routes return to finite hold/err
 
 ## Open verification backlog
 
+### Closed since the v1.1 checkpoint
+
+| Prior gap | Current evidence | Remaining limit |
+|---|---|---|
+| Exact package-manager pin and lockfile | Root pins `pnpm@11.17.0` and Node 22; `pnpm-lock.yaml` exists. | Root aggregate scripts still hold; this closes Explorer reproducibility only. |
+| Real Explorer build/test scripts | Vite/TypeScript build plus Vitest and Playwright scripts are present; exact-head `ui-build` passed. | Passing build/test is not a live map or deployment. |
+| Browser entrypoint and finite baseline | `src/main.ts` renders fixed `ABSTAIN` and mounts a no-input Evidence Drawer. | No route tree, transport, authentication, or released data. |
+| Fixture-first evidence and selection seams | Strict finite projection, no-leak drawer, correction/history, keyboard, and synthetic selection-to-drawer tests exist. | Test resolver and fixtures are not Governed API or EvidenceBundle end-to-end proof. |
+
+### Remaining work
+
 | ID | Topic | Closure evidence |
 |---|---|---|
-| `ADR5-V01` | Owners/review/status and duplicate Directory Rules identity | Verified controls plus governed reconciliation and matching ADR/index transition. |
-| `ADR5-V02` | `packages/maplibre/` vs `packages/maplibre-runtime/`; ADR-0006/0007 disposition | Accepted renderer ADR and migration/connected-doc plan. |
-| `ADR5-V03` | Package manager/scripts/lockfile | Reviewed policy and clean install/build/test. |
-| `ADR5-V04` | Route/client/envelope/auth | Entry point, mapping contract, fixtures, tests, role/session proof. |
-| `ADR5-V05` | Static edge and evidence surfaces | Artifact/header/cache/withdrawal profile; Evidence Drawer/Focus API and evidence trace. |
-| `ADR5-V06` | Sensitive-domain hardening | Negative payload/tile/export/diagnostic fixtures. |
-| `ADR5-V07` | Shared UI, accessibility, performance | Package API/consumers/tests; automated/manual a11y; representative budgets. |
-| `ADR5-V08` | Observability, deployment, rollback, compatibility/doc drift | Redacted telemetry, reviewed infra, rehearsed rollback, pinned inventory and bounded doc convergence. |
+| `ADR5-V01` | Owners, review authority, and ADR status | Verified stewardship/required review plus matching reviewed ADR/index transition. |
+| `ADR5-V02` | `packages/maplibre/` versus design-lineage `packages/maplibre-runtime/`; ADR-0006/0007 disposition | Accepted renderer ADR, one package and adapter, dependency/version admission, imports/acquisition tests, consumers, migration, and rollback. |
+| `ADR5-V03` | Default-shell composition, client envelope, transport, auth, and route state | Reviewed cross-root mapping contract; bounded route; finite/invalid/offline fixtures; role/session evidence; no canonical-store or direct-model path. |
+| `ADR5-V04` | Proof-bearing map interaction | Released low-sensitivity carrier; real renderer-neutral selection; governed EvidenceRef resolution to EvidenceBundle-derived drawer; citation, time, release, correction, and limitation continuity. |
+| `ADR5-V05` | Governed static carrier | Artifact/header/integrity/cache/withdrawal profile and proof that it cannot become a parallel API, policy engine, or release authority. |
+| `ADR5-V06` | Sensitive-domain hardening | Negative payload, tile, cache, export, diagnostic, and audience-bound fixtures with generalization/redaction proof. |
+| `ADR5-V07` | Shared UI, accessibility, and performance | Reviewed package API/consumers; automated and manual accessibility; non-pointer map path; representative budgets and browser evidence. |
+| `ADR5-V08` | Deployment, observability, incident response, rollback, and documentation drift | Reviewed infra and exposure; redacted telemetry; health/incident evidence; rehearsed rollback; bounded convergence of stale architecture and app docs. |
 
 ### Change log
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.2` | 2026-08-14 | Reconciled the ADR to the locked Explorer build/test baseline and exact-head UI success; documented the static abstaining entrypoint, fixture-first Evidence Drawer and synthetic map-selection seams, current package/renderer holds, remaining live-integration gap, acceptance burden, and rollback; preserved proposed status. |
 | `v1.1` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity/status and Explorer scaffold; replaced repo-unavailable assumptions; separated shell placement from renderer decisions; documented placeholder/readiness state, static guards, dynamic/static delivery, finite outcomes, accessibility, acceptance gates, incremental graduation, rollback, and verification backlog; preserved proposed status. |
 | `v1` | 2026-05-09 | Initial proposal selecting `apps/explorer-web/` as canonical shell and naming companion packages, compatibility roots, migration phases, validation ideas, and rollback posture. |
 
 ---
 
-**Last updated:** 2026-07-23 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Path:** `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` · [Back to top](#top)
+**Last updated:** 2026-08-14 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Path:** `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` · [Back to top](#top)
