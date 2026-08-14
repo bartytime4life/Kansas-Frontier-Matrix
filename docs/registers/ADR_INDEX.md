@@ -2,16 +2,18 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.3
+version: v1.4
 status: draft; repository-grounded
 owners:
   - Docs steward
   - Architecture steward
 created: 2026-07-22
-updated: 2026-08-03
+updated: 2026-08-14
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: Cross-register pointer and current ADR inventory summary derived from docs/adr/INDEX.md without duplicating its record table or granting decision authority.
 canonical_adr_index: ../adr/INDEX.md
 related:
   - docs/adr/INDEX.md
@@ -44,8 +46,8 @@ This register connects the human register lane to the canonical Architecture Dec
 | Register lane | `docs/registers/` |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
-| Current numbered inventory | 30 tracked records, `ADR-0001` through `ADR-0030` |
-| Current effective decision status | ADR-0029 `accepted`; 29 numbered records remain `proposed` |
+| Current numbered inventory | 34 tracked records, `ADR-0001` through `ADR-0034` |
+| Current effective decision status | ADR-0029 `accepted`; 33 numbered records remain `proposed` |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
 | Authority limit | Inventory and routing only; never decision acceptance, policy, release, promotion, or publication authority |
@@ -92,7 +94,7 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the remaining 29 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
+- Human status review for the remaining 33 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
 - Domain-local versus repository-wide ADR placement reconciliation.
 - Review of proposed ADR-0011 before any `artifacts/release/` migration.
