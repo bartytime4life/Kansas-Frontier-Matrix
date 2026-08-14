@@ -1,724 +1,619 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-map-master-readme
-title: Map Master — Renderer Architecture
+title: Map Master Architecture
 type: standard
-version: v0.2
+version: v1.0
 status: draft
-owners: <ARCHITECTURE-DOCTRINE-OWNER> · <MAP-SURFACE-STEWARD> · NEEDS VERIFICATION
+owners:
+  - "@bartytime4life"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-14
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the repository-present map and renderer architecture boundary, direct-child documentation map, current implementation evidence, and fail-closed validation posture without deciding renderer adoption or publication."
+truth_posture: "CONFIRMED current repository evidence / PROPOSED architecture and decisions not yet accepted or implemented / NEEDS VERIFICATION runtime, release, and public behavior"
 related:
-  - directory-rules.md#7
-  - directory-rules.md#12
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md#10
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#19
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#2492
-  - ai-build-operating-contract.md#22
-  - kfm_unified_doctrine_synthesis.md#11
-  - connected-dots-architecture-brief.md#8
-  - docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md
-  - docs/architecture/maplibre-3d.md
-  - docs/architecture/governed-api/README.md
-  - docs/architecture/governed-ai/ROUTE_MAP.md
-  - docs/architecture/cross-domain/README.md
-tags: [kfm, architecture, map-master, maplibre, maplibre-3d, single-renderer, renderer, tile-artifacts, trust-membrane]
+  - docs/architecture/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/architecture/maplibre.md
+  - docs/architecture/map-shell.md
+  - packages/maplibre/README.md
+  - packages/maplibre/package.json
+  - packages/maplibre/src/index.ts
+  - apps/explorer-web/package.json
+  - apps/explorer-web/src/adapters/MapLibreAdapter.ts
+  - tools/validators/maplibre/validate_v6_readiness.py
+  - tests/maplibre/test_validate_v6_readiness.py
+  - fixtures/maplibre/v6_readiness/cases.json
+tags:
+  - kfm
+  - architecture
+  - map-master
+  - maplibre
+  - renderer-boundary
+  - evidence-drawer
+  - trust-membrane
+  - readiness-hold
 notes:
-  - v0.2 (2026-05-24) — Material revision. Renderer architecture realigned to a single MapLibre GL JS renderer (native + admitted plugin set) per ADR-0007 (PROPOSED). Multi-renderer framing removed throughout.
-  - PROPOSED. Fourth folder pattern under docs/architecture/; same OPEN-DR-12 META family as cross-domain/, governed-ai/, governed-api/.
-  - Canonical doctrinal anchor is the "Master MapLibre Components-Functions-Features" body of work (v1.4 → v2.0+ accumulating; CONFIRMED through v2.1). Category W entries that previously assumed multi-renderer artifacts/overlay-sync are flagged for refresh per ADR-0007 §11 step 4.
-  - "Renderer is downstream of trust" posture preserved verbatim from Master MapLibre executive determinations across versions.
-  - No mounted repo evidence in this session; all repo-shaped claims labeled PROPOSED.
+  - "v1.0 is a same-path, repository-grounded reconciliation against main@3974da9794fa11bd5355c49243c9193d22b9e81e."
+  - "The accepted Directory Rules v2 make docs/architecture/ a canonical explanatory lane; the former OPEN-DR-12 and path-PROPOSED framing is stale."
+  - "ADR-0007 remains legacy-proposed with effective decision status proposed; this README does not accept it."
+  - "The current package and adapter are placeholders, the MapLibre dependency is unpinned, and browser probes are not recorded; no functioning renderer runtime, released layer flow, deployment, or publication is claimed."
+  - "The seven existing sibling documents remain tracked draft lineage and are not silently promoted by this README."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Map Master — Renderer Architecture
+# Map Master Architecture
 
-> *Architecture lane for the KFM map and renderer surface — **MapLibre GL JS** as the disciplined **sole** browser-side renderer for 2D, 2.5D, true-3D, globe, point-cloud, and visualization-overlay surfaces; PMTiles/MVT/COG as released artifact carriers; the Evidence Drawer as the click-to-truth resolution point. The renderer is downstream of trust; tiles, popups, screenshots, scenes, and AI answers are downstream carriers, never sovereign truth.*
+> Repository-grounded entry point for KFM's map and renderer architecture lane. It preserves the governing rule that a renderer is downstream of evidence, policy, review, release, correction, and rollback while making the current implementation boundary explicit.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED%20(spine)-blue)
-![role](https://img.shields.io/badge/role-downstream%20renderer-success)
-![renderer](https://img.shields.io/badge/renderer-MapLibre%20GL%20JS%20(sole)-blueviolet)
-![aligned-with](https://img.shields.io/badge/aligned%20with-ADR--0007-blue)
-![master-maplibre](https://img.shields.io/badge/Master%20MapLibre-v2.1%2B%20cumulative-informational)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![open-dr-12](https://img.shields.io/badge/OPEN--DR--12-family-orange)
-![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft · **Doc version:** v0.2 · **Owners:** `<ARCHITECTURE-DOCTRINE-OWNER>` · `<MAP-SURFACE-STEWARD>` *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
-
-> [!IMPORTANT]
-> **Core determination — verbatim from doctrine.** *"MapLibre remains a downstream renderer and interaction runtime. Tiles, PMTiles, MVT, MLT, COGs, style JSON, sprites, glyphs, popups, screenshots, Story Nodes, 3D scenes, graph projections, catalog records, and AI answers remain downstream carriers, not sovereign truth."* *(`Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`, **CONFIRMED** across executive determinations from v1.4 onward.)*
+| Field | Current state |
+|---|---|
+| **Owning root** | `docs/` — canonical human-readable explanation surface |
+| **Local profile** | `BOUNDARY_COMPACT` architecture-lane README |
+| **Evidence snapshot** | `main@3974da9794fa11bd5355c49243c9193d22b9e81e` |
+| **Directory decision** | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is **accepted** |
+| **Renderer-family decision** | [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) is **proposed**, not accepted |
+| **Implementation maturity** | **Scaffold + readiness HOLD** |
+| **Verified owner route** | `@bartytime4life`; independent map/runtime stewardship remains **NEEDS VERIFICATION** |
+| **Release or publication effect** | None |
 
 > [!IMPORTANT]
-> **Single-renderer commitment (per ADR-0007, PROPOSED).** MapLibre GL JS is KFM's **default and sole** browser-side renderer. Every 2D, 2.5D, true-3D, globe, point-cloud, and visualization-overlay surface lives inside MapLibre's API surface — native capabilities plus an explicitly admitted plugin set governed by a `PluginAdmission` PolicyDecision. The prior dual-renderer card `KFM-P2-FEAT-0012` is **superseded** by ADR-0007. Any introduction of a browser-side rendering technology beyond the admitted plugin set requires an accepted **exception-ADR**.
+> **Operating law:** the renderer is downstream of trust. A rendered feature, layer, popup, screenshot, scene, camera state, performance result, or generated explanation is a carrier or interpretation—not canonical truth, source admission, policy approval, citation validation, human review, release approval, or publication.
 
 > [!CAUTION]
-> **Path placement diverges from Directory Rules v1.2 §12 — same OPEN-DR-12 family.** This is the **fourth** folder pattern under `docs/architecture/` *(after `cross-domain/`, `governed-ai/`, `governed-api/`)*. The systemic divergence is consolidated in **OPEN-DR-12 (PROPOSED META amendment)** — see [`docs/architecture/governed-api/README.md` §2.2](../governed-api/README.md). Resolution lands once; this folder is one more application of the same pattern.
+> **Current implementation is not a working MapLibre runtime.** The repository contains a private `@kfm/maplibre` `0.0.0` package scaffold, a placeholder export, a comment-only Explorer adapter, and a deterministic readiness classifier. It does not currently pin `maplibre-gl`, record the required browser probes, or establish a released map flow.
 
-> [!NOTE]
-> **What this README is and is not.** It is the **architectural landing** for the map / renderer lane — orientation, scope, sibling map. It is **not** the canonical authority for any one map-surface concept *(that is the Master MapLibre document)*; **not** the canonical decision for sole-renderer status *(that is [`docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md`](../../adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md), PROPOSED)*; **not** the route inventory *(that is [`ROUTE_MAP.md`](../governed-ai/ROUTE_MAP.md))*; **not** schemas, policies, or app code. It points to them and consolidates the architecture view.
-
----
-
-## Table of contents
-
-1. [Scope](#1-scope)
-2. [Repo fit — OPEN-DR-12 family](#2-repo-fit--open-dr-12-family)
-3. [The canonical posture — renderer is downstream of trust](#3-the-canonical-posture--renderer-is-downstream-of-trust)
-4. [The seven negative authorities](#4-the-seven-negative-authorities)
-5. [Relationship to other architecture lanes](#5-relationship-to-other-architecture-lanes)
-6. [The click-to-truth flow](#6-the-click-to-truth-flow)
-7. [Map object families](#7-map-object-families)
-8. [2D default · 3D conditional · tile artifact discipline](#8-2d-default--3d-conditional--tile-artifact-discipline)
-9. [Viewer-side verification fails closed · UI negative states](#9-viewer-side-verification-fails-closed--ui-negative-states)
-10. [Reality Boundary Note — synthetic vs observed](#10-reality-boundary-note--synthetic-vs-observed)
-11. [What lives here · What does not live here](#11-what-lives-here--what-does-not-live-here)
-12. [Directory tree (PROPOSED)](#12-directory-tree-proposed)
-13. [Anti-patterns](#13-anti-patterns)
-14. [Open questions and ADR triggers](#14-open-questions-and-adr-triggers)
-15. [Related docs](#15-related-docs)
-16. [Appendix — glossary and reference](#16-appendix--glossary-and-reference)
+**Quick navigation:** [Purpose](#1-purpose-and-authority) · [Evidence](#2-current-repository-evidence) · [Operating law](#3-renderer-boundary-and-negative-authorities) · [Boundary contract](#4-boundary-contract) · [Directory map](#5-verified-direct-child-map) · [Implementation](#6-current-implementation-surfaces) · [Click-to-truth](#7-target-click-to-truth-flow) · [Views and artifacts](#8-view-and-artifact-posture) · [Validation](#9-validation-and-finite-outcomes) · [Decision gates](#10-decision-and-implementation-gates) · [Change rules](#11-change-and-review-rules) · [Open work](#12-open-verification-register) · [Rollback](#13-rollback-and-correction) · [References](#14-related-repository-evidence) · [Change ledger](#15-no-loss-change-ledger)
 
 ---
 
-## 1. Scope
+<a id="1-scope"></a>
+<a id="2-repo-fit--open-dr-12-family"></a>
 
-This lane covers the **map and renderer surface as an architectural concern** — every aspect of how KFM presents released, governed evidence on a 2D plan view, a 3D terrain or globe view, or a hybrid surface, **all rendered by MapLibre GL JS** (native APIs + the admitted plugin set). The lane covers:
+## 1. Purpose and authority
 
-- **Renderer discipline** — what MapLibre is and is not allowed to do; what an admitted plugin is and is not.
-- **Tile and artifact lifecycle** — PMTiles, MVT, COG, MBTiles, Zarr; release manifests, sidecars, BAO proofs, signatures.
-- **The Evidence Drawer** — the canonical click-to-truth resolution point on the map.
-- **Cross-mode parity (2D ↔ 3D / globe)** — when each mode is admissible and how all modes preserve evidence identity across one renderer.
-- **UI negative states** — `MISSING_EVIDENCE`, `SOURCE_STALE`, `DENIED_BY_POLICY`, etc.
-- **Performance budgets** — runtime probes, mobile-first tile playbook, decode/heap budgets.
-- **Plugin admission** — the `PluginAdmission` PolicyDecision that gates every non-native rendering path *(per ADR-0007 §3.2 / §3.4)*.
+`docs/architecture/map-master/` explains how KFM's map-facing concerns compose across the governed API, Explorer Web, renderer adapter seam, evidence resolution, policy, release, correction, and rollback.
 
-> [!TIP]
-> **When to read this lane.** Read it when your change touches the map shell, tile pipeline, style discipline, cross-mode parity, viewer-side verification, plugin admission, or Evidence Drawer rendering. Per-route work *(governed-API contract for a tile endpoint, AI surface behavior, cross-lane invariants)* lives in the other architecture lanes.
+This README is an **architecture boundary document**. It:
 
-[↑ Back to top](#top)
+- orients readers to the tracked direct children of this directory;
+- records current repository evidence separately from proposed architecture;
+- preserves the renderer's negative-authority boundary;
+- names the validation and acceptance evidence required before runtime claims become credible;
+- routes normative questions to the correct authority.
+
+This README does **not**:
+
+- accept or amend an ADR;
+- select or pin a MapLibre version;
+- admit a plugin, protocol, endpoint, asset host, or dependency;
+- define object meaning, machine schema, or policy;
+- prove a functional adapter, browser render, public layer, deployed application, release, or publication;
+- upgrade any sibling draft to adopted doctrine or implemented behavior.
+
+### 1.1 Authority order for this lane
+
+| Question | Controlling evidence |
+|---|---|
+| Where does this README belong? | Accepted Directory Rules v2 and the repository-present path |
+| Which renderer family is selected? | The effective status of ADR-0007 or a later accepted decision |
+| What exists now? | Current repository bytes, manifests, validators, fixtures, workflows, and run evidence |
+| What does an object mean? | `contracts/` |
+| What machine shape is valid? | `schemas/` |
+| What is allowed, denied, held, restricted, or abstained? | `policy/` and the resulting decision records |
+| What may public clients consume? | Governed APIs and released public-safe artifacts with evidence and release closure |
+| What proves runtime behavior? | Representative browser/runtime tests and emitted records tied to a known revision |
+
+The accepted Directory Rules make `docs/architecture/` a canonical explanatory lane. Therefore, the former claim that this existing folder was merely a **PROPOSED** path in an unresolved `OPEN-DR-12` family is stale and is removed by this revision.
+
+[Back to top](#top)
 
 ---
 
-## 2. Repo fit — OPEN-DR-12 family
+## 2. Current repository evidence
 
-### 2.1 Four folder patterns under `docs/architecture/`
+The statements in this section are bounded to the pinned snapshot. They do not infer deployment, publication, or external runtime behavior.
 
-| # | Folder | Introduced | Status |
-|---|---|---|---|
-| 1 | `docs/architecture/cross-domain/` | Earlier session *(README)* | OPEN-DR-10 *(rolled into OPEN-DR-12)* |
-| 2 | `docs/architecture/governed-ai/` | Earlier session *(3 siblings — BOUNDARIES, CONTINUITY_NOTES, ROUTE_MAP)* | OPEN-DR-11 *(rolled into OPEN-DR-12; 3-sibling threshold reached)* |
-| 3 | `docs/architecture/governed-api/` | Earlier session *(README + 6 PROPOSED siblings)* | OPEN-DR-12 *(META amendment proposed)* |
-| 4 | `docs/architecture/map-master/` *(this lane)* | This turn *(README + PROPOSED siblings)* | OPEN-DR-12 family |
-
-Four folders, one systemic question. **OPEN-DR-12 (PROPOSED META amendment)** consolidates all four; filing per-folder OPEN-DRs is no longer productive.
-
-### 2.2 What this README assumes
-
-Pending OPEN-DR-12, this README **assumes the folder pattern will be accepted** *(because the systemic pattern argues for it, and this lane warrants multiple siblings — see §12)* but labels every sibling path PROPOSED so flattening remains reversible.
-
-> [!IMPORTANT]
-> **The case for the `map-master/` folder is straightforward.** The Master MapLibre document is itself a multi-hundred-page body of doctrine accumulated across versions *(v1.4 → v1.5 → v1.6 → v1.8 → v1.9 → v2.0 → v2.1+)*. The lane has a clearly enumerable set of sub-concerns *(renderer boundary, tile artifacts, layer lifecycle, Evidence Drawer, cross-mode parity, performance budgets, viewer verification, plugin admission)*. This satisfies **two of three** OPEN-DR-12 criteria for folder admission. See §12.
-
-[↑ Back to top](#top)
-
----
-
-## 3. The canonical posture — renderer is downstream of trust
-
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` *(executive determinations preserved verbatim across v1.4–v2.0+)*; `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §19 *(Cross-Domain Systems)*; `ai-build-operating-contract.md` §22 *(map, UI, renderer contract)*; idea card `KFM-P1-FEAT-0039` *(MapLibre as downstream renderer)*; `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md` *(PROPOSED — single-renderer commitment)*. **CONFIRMED doctrine throughout.**
-
-The KFM map shell exists **inside** the trust membrane, never astride it.
-
-| Direction | What flows | Authority |
+| Surface | CONFIRMED current evidence | Safe conclusion |
 |---|---|---|
-| **Trust → renderer** | Released layers, tile artifacts, evidence bundles, evidence drawer payloads, Focus Mode envelopes — all **governed**, all **post-promotion**. | The governed API *(`apps/governed-api/`)* and `ReleaseManifest`. |
-| **Renderer → trust** | User clicks, viewport state, time selections, feature IDs — bounded `MapContextEnvelope`. Receipts emitted by every consequential interaction. | The renderer carries no authority of its own; it carries context. |
+| Repository base | `main@3974da9794fa11bd5355c49243c9193d22b9e81e` | Exact review base for this edition |
+| Directory Rules | `docs/doctrine/directory-rules.md` is adopted through accepted ADR-0029 | `docs/architecture/` is a canonical explanatory root segment |
+| This directory | Eight tracked files, including this README | The directory is current repository state, not a future tree |
+| ADR-0007 | `legacy-proposed`; effective decision status `proposed` | Sole-renderer selection is not accepted |
+| MapLibre package | `packages/maplibre/package.json` declares private `@kfm/maplibre` version `0.0.0` and no dependency or export surface | Package scaffold only |
+| Package source | `packages/maplibre/src/index.ts` exports only `placeholder = true` | No functioning package adapter is established |
+| Explorer adapter | `apps/explorer-web/src/adapters/MapLibreAdapter.ts` contains one boundary comment | No functioning adapter is established |
+| Explorer toolchain | Vite, TypeScript, Vitest, and Playwright scripts are declared; `maplibre-gl` is not declared | Build/test tooling exists, renderer dependency does not |
+| Readiness classifier | `tools/validators/maplibre/validate_v6_readiness.py` is executable and fixture-backed | Static readiness can be classified without installing MapLibre |
+| Dependency input | Root, Explorer, and package manifests do not pin `maplibre-gl` | `MAPLIBRE_DEPENDENCY_UNPINNED` is unavoidable at this snapshot |
+| Probe input | `configs/maplibre/v6-probe-results.json` is absent | All required browser probes remain `NOT_RUN`; `RUNTIME_PROBES_PENDING` is unavoidable |
+| Current readiness | Classifier rules require `HOLD` while either condition above remains | Runtime readiness is not established |
 
-> [!IMPORTANT]
-> **The posture is unidirectional.** Public surfaces use **governed APIs, released artifacts, catalog records, tile services, `EvidenceBundle` resolution, and release manifests** *(`Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` verbatim)*. The renderer does not author truth, does not register sources, does not run policy, does not validate citations, does not approve reviews, does not publish releases, does not generate AI answers.
+### 2.1 What remains unknown
 
-> [!IMPORTANT]
-> **One renderer, one trust membrane.** Per ADR-0007 (PROPOSED), MapLibre GL JS is the sole renderer; this means **one** `ViewState` model, **one** `CameraPath`, **one** `RepresentationReceipt` stream, **one** supply chain, **one** `PluginAdmission` surface, **one** reviewer burden. The single-renderer posture is what upholds evidence identity across all view modes by construction.
+The current snapshot does not establish:
 
-[↑ Back to top](#top)
+- a functional browser renderer;
+- an accepted MapLibre version or upgrade policy;
+- an admitted plugin or protocol set;
+- a complete repository-wide renderer/acquisition inventory;
+- browser behavior for WebGL2 failure, worker/CSP loading, style compatibility, GeoJSON updates, feature queries, or visual parity;
+- a released layer-to-Evidence-Drawer flow;
+- deployed Explorer behavior, production telemetry, public-safe tile hosting, or cache invalidation;
+- a release, correction, withdrawal, rollback, or publication path for map artifacts.
 
----
+A successful static check, documentation build, or performance workflow is not sufficient evidence for any of those claims.
 
-## 4. The seven negative authorities
-
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` *(executive determinations — verbatim seven-item list preserved across every version from v1.4 onward)*; `KFM-P1-FEAT-0039`. **CONFIRMED enumeration** *(not a synthesis; the list is doctrinal verbatim)*.
-
-The Master MapLibre document explicitly enumerates **seven authorities** the renderer is **not**. The list appears verbatim, in this order, across every executive determination:
-
-| # | Authority the renderer is NOT | What does carry that authority | If the renderer tried to | The DENY surface |
-|---|---|---|---|---|
-| 1 | **Canonical truth store** | `EvidenceBundle` + `ReleaseManifest` | Read from canonical/internal stores directly to render. | `apps/governed-api/`; layer manifest resolver. |
-| 2 | **Source registry** | `SourceDescriptor` registry | Treat tile metadata as source provenance. | Source admission gate. |
-| 3 | **Policy engine** | OPA/Rego policy under `policy/` | Apply visibility rules client-side as a substitute for `PolicyDecision`. | Policy precheck/postcheck. |
-| 4 | **Citation authority** | `CitationValidationReport` | Treat a popup or feature label as a citation. | Focus Mode citation validator. |
-| 5 | **Review authority** | Steward review via `apps/review-console/` | Mark a layer as "reviewed" through a UI toggle. | Review queue surface. |
-| 6 | **Publication authority** | `ReleaseManifest` + release authority | Toggle visibility = release the layer. | Release queue; release authority. |
-| 7 | **AI authority** | Focus Mode runtime *(governed)* | Render generated text as authoritative answer. | Focus Mode; AI surface steward. |
-
-> [!CAUTION]
-> **The seven are not negotiable.** A change that would let the renderer assume any of these roles is a contract-level violation and ADR-class *(per `directory-rules.md` §2.4)*. The seven are also the **anti-pattern register for this lane** — see §13.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 5. Relationship to other architecture lanes
+<a id="3-the-canonical-posture--renderer-is-downstream-of-trust"></a>
+<a id="4-the-seven-negative-authorities"></a>
+<a id="13-anti-patterns"></a>
 
-```mermaid
-flowchart TB
-  subgraph ARCH["docs/architecture/  ✅ canonical (directory-rules §12)"]
-    XD["cross-domain/<br/><i>cross-lane invariants</i>"]
-    GAI["governed-ai/<br/><i>AI surface — spatial · temporal · structural</i>"]
-    GAPI["governed-api/<br/><i>API surface as a whole</i>"]
-    MM["map-master/  (this lane)<br/><i>map & renderer surface</i>"]
-  end
-  subgraph SURFACES["The four governed surfaces of KFM"]
-    A["Data lifecycle<br/><i>(governed via cross-domain)</i>"]
-    B["AI runtime<br/><i>(governed via governed-ai)</i>"]
-    C["API endpoints<br/><i>(governed via governed-api)</i>"]
-    D["Map / renderer<br/><i>(governed via map-master)</i>"]
-  end
-  XD -. governs .-> A
-  GAI -. governs .-> B
-  GAPI -. governs .-> C
-  MM -. governs .-> D
-  D -. consumes .-> C
-  D -. embeds .-> B
-  D -. respects .-> A
-  classDef arch fill:#e1f5fe,stroke:#01579b;
-  classDef surface fill:#c8e6c9,stroke:#1b5e20;
-  class XD,GAI,GAPI,MM arch;
-  class A,B,C,D surface;
+## 3. Renderer boundary and negative authorities
+
+The durable architectural rule is independent of the eventual renderer-family decision:
+
+> **A browser renderer consumes governed, released, public-safe carriers and returns bounded interaction context. It does not become an authority because it can display or query pixels and features.**
+
+### 3.1 The seven negative authorities
+
+| # | The renderer is not | Authority belongs to | Boundary failure |
+|---:|---|---|---|
+| 1 | **Canonical truth store** | Evidence and release object families | Client state or tile bytes treated as canonical truth |
+| 2 | **Source registry** | Governed source admission and `SourceDescriptor` records | A URL or tile metadata silently becomes source identity |
+| 3 | **Policy engine** | Policy rules and auditable decision records | Client styling substitutes for allow/deny/redaction |
+| 4 | **Citation authority** | Resolved evidence and citation validation | Popup text or feature properties are treated as support |
+| 5 | **Review authority** | Steward review and review records | A UI control marks material reviewed or approved |
+| 6 | **Publication authority** | Release decision, manifest, proof, correction, and rollback closure | Visibility or upload is treated as publication |
+| 7 | **AI authority** | Governed AI over admissible evidence with finite outcomes | Raw generated language is rendered as authoritative |
+
+### 3.2 Trust directions
+
+| Direction | Permitted flow | Prohibited inference |
+|---|---|---|
+| Trust plane → map surface | Released layer descriptors, public-safe artifacts, evidence references, release and correction state | Presence on the map proves truth or publication |
+| Map surface → governed services | Feature candidates, layer identifiers, viewport, camera, time selection, and user intent | Rendered properties supply evidence or policy |
+| Governed services → evidence surface | Resolved evidence, caveats, conflicts, finite outcome, correction and release state | A successful route call grants release authority |
+
+Sensitive or restricted geometry must be transformed, generalized, aggregated, omitted, or denied **before** it reaches a public rendering artifact. Hiding a feature with a client-side style filter is not a public-safety control.
+
+[Back to top](#top)
+
+---
+
+<a id="11-what-lives-here--what-does-not-live-here"></a>
+
+## 4. Boundary contract
+
+This section implements the accepted Directory Rules `BOUNDARY_COMPACT` README profile for the map-master lane.
+
+### 4.1 Belongs here
+
+- architecture explanations spanning the map shell, renderer boundary, evidence drawer, layer lifecycle, artifact delivery, parity, verification, and performance;
+- current-state evidence summaries that cite repository files and keep uncertainty visible;
+- cross-links to decisions, contracts, schemas, policy, fixtures, tests, workflows, release records, and runbooks;
+- migration or contradiction notes needed to prevent stale architecture prose from being mistaken for current behavior.
+
+### 4.2 Prohibited here
+
+- renderer dependencies or executable adapter code;
+- semantic contracts or copied JSON Schemas;
+- policy source or allowlists;
+- source registry instances, lifecycle data, receipts, proofs, release decisions, or published carriers;
+- live endpoint, credential, or private-location configuration;
+- claims that documentation, a green check, a screenshot, or a PR accepts an ADR or publishes KFM material.
+
+### 4.3 Inputs and outputs
+
+| Kind | Inputs | Outputs |
+|---|---|---|
+| Authority | Accepted doctrine and ADRs | Bounded explanatory architecture |
+| Current state | Pinned repository bytes, tests, validators, workflows, and emitted evidence | Truth-labeled implementation snapshot |
+| Design | Reviewed proposals and source lineage | Explicitly PROPOSED target flows and acceptance gates |
+| Correction | Drift, supersession, runtime failures, and review findings | Updated prose, forward links, and open verification items |
+
+### 4.4 Exposure, mutation, and retention
+
+- **Exposure:** public documentation; it must not disclose secrets, protected locations, private evidence, or restricted denial reasons.
+- **Mutation:** reviewed, versioned Markdown. Changes to decisions or enforcement belong in their owning roots and may require an ADR.
+- **Retention:** preserve Git history and explicit supersession. Do not delete contradictory lineage merely to make the architecture look settled.
+- **Writers:** repository contributors through normal review. A README edit cannot self-authorize a renderer, plugin, release, or public path.
+- **Review trigger:** renderer-family status, package ownership, dependency pinning, adapter behavior, public exposure, sensitivity behavior, validation coverage, or release/correction behavior changes.
+
+[Back to top](#top)
+
+---
+
+<a id="12-directory-tree-proposed"></a>
+
+## 5. Verified direct-child map
+
+The tree below is **CONFIRMED** from the pinned repository snapshot and shows direct children only, as required by Directory Rules.
+
+```text
+docs/architecture/map-master/
+├── 2D_3D_PARITY.md
+├── EVIDENCE_DRAWER.md
+├── LAYER_LIFECYCLE.md
+├── PERFORMANCE_BUDGETS.md
+├── README.md
+├── RENDERER_BOUNDARY.md
+├── TILE_ARTIFACTS.md
+└── VIEWER_VERIFICATION.md
 ```
 
-| Lane | Owns | Relationship to `map-master/` |
+| File | Local role | Current reading posture |
 |---|---|---|
-| `docs/architecture/cross-domain/` | Cross-lane invariants *(source role, ownership, sensitivity, EvidenceBundle support)* | The map MUST preserve all four invariants at every render. The renderer is a consumer of cross-lane discipline, not its author. |
-| `docs/architecture/governed-ai/` | AI surface — boundaries, continuity, route map for AI | Focus Mode is rendered **on the map**; the map embeds the AI surface but does not own it. AI-specific concerns live in `governed-ai/`; map-specific concerns *(how Focus Mode integrates with the Evidence Drawer, tile click flow, etc.)* live here. |
-| `docs/architecture/governed-api/` | API surface as a whole — membrane, envelopes, audience classes, threat model | The map shell **consumes** the governed API; never bypasses it. `apps/explorer-web/` reads via `apps/governed-api/` only *(directory-rules §7.1)*. |
-| **`docs/architecture/map-master/`** *(this lane)* | The map shell, renderer discipline, tile artifacts, Evidence Drawer, cross-mode parity, viewer-side verification, plugin admission. | This lane. |
+| [`README.md`](README.md) | Boundary entry point and current evidence snapshot | This edition |
+| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Seven negative authorities and downstream-renderer rule | Retained draft guidance; implementation claims require re-verification |
+| [`EVIDENCE_DRAWER.md`](EVIDENCE_DRAWER.md) | Click-to-evidence and drawer behavior | Retained draft guidance; payload and runtime existence are not established here |
+| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Layer state, release, correction, and rollback concepts | Retained draft guidance |
+| [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Tile-carrier integrity and delivery concepts | Retained draft guidance; tooling and release claims require evidence |
+| [`VIEWER_VERIFICATION.md`](VIEWER_VERIFICATION.md) | Fail-closed verification before rendering | Retained draft guidance; browser enforcement is not established |
+| [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Performance targets and probe expectations | Retained draft guidance; budgets and measurements require current run evidence |
+| [`2D_3D_PARITY.md`](2D_3D_PARITY.md) | Cross-view evidence, policy, release, and reality-boundary parity | **STALE / CONFLICTED lineage:** it still assumes a Cesium/dual-renderer path while ADR-0007 now proposes a MapLibre-only family; neither position is accepted |
 
-> [!NOTE]
-> **The four lanes together cover the four governed surfaces of KFM** — data lifecycle, AI runtime, API endpoints, map/renderer. A reviewer auditing the trust path end-to-end consults all four.
+The sibling documents are useful lineage, but their May 2026 `PROPOSED` and document-only assumptions must not be promoted into current implementation facts. Reconcile each sibling against the current ADR, package, adapter, validator, and repository tree before material reuse.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 6. The click-to-truth flow
+## 6. Current implementation surfaces
 
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(Governance and Trust-Membrane Chapter)*; `ai-build-operating-contract.md` §22.1 *(click-to-truth path)*; `connected-dots-architecture-brief.md` §8.1. **CONFIRMED doctrine** *(flow preserved verbatim across carriers)*.
+### 6.1 Package boundary
+
+The repository-present package is:
+
+```text
+packages/maplibre/
+├── README.md
+├── package.json
+└── src/
+    └── index.ts
+```
+
+Current evidence establishes a private `0.0.0` package scaffold and a placeholder export. It does not establish:
+
+- `maplibre-gl` installation;
+- a public or internal export contract;
+- a functional source/layer/style adapter;
+- plugin or protocol registration;
+- a browser support matrix;
+- package-local tests or a released software distribution.
+
+The package name is not permission to create a parallel `packages/maplibre-runtime/` authority. That ownership question must be decided before a second active package is introduced.
+
+### 6.2 Explorer boundary
+
+`apps/explorer-web/` has a real TypeScript/Vite/Vitest/Playwright toolchain, but the checked adapter is comment-only and the app manifest does not declare MapLibre. Therefore:
+
+- the canonical Explorer shell decision does not prove a map runtime;
+- a file named `MapLibreAdapter.ts` does not prove an adapter;
+- build scripts do not prove that a map renders;
+- browser tests do not prove they exercise MapLibre unless the tested code and results show it.
+
+### 6.3 Readiness classifier
+
+The repository owns a bounded, no-network v6 readiness classifier. It checks:
+
+- exact MapLibre major/version selection from declared manifests;
+- ESM mode;
+- the Explorer TypeScript target;
+- a bounded source scan for direct imports outside the package seam;
+- selected internal `map.transform` access patterns;
+- six finite browser-probe results when a probe record is supplied.
+
+It intentionally does not prove rendering equivalence, WebGL2 availability, CSP/worker behavior, query parity, visual parity, release state, or publication.
+
+### 6.4 Current implementation summary
+
+```text
+package scaffold          CONFIRMED
+placeholder export        CONFIRMED
+comment-only app adapter  CONFIRMED
+MapLibre dependency       UNPINNED
+browser probe record      ABSENT
+readiness result          HOLD
+functional renderer       NOT ESTABLISHED
+released map flow         NOT ESTABLISHED
+deployment/publication    NOT ESTABLISHED
+```
+
+[Back to top](#top)
+
+---
+
+<a id="6-the-click-to-truth-flow"></a>
+
+## 7. Target click-to-truth flow
+
+The flow below is a **PROPOSED acceptance target**, not a claim about current runtime behavior.
 
 ```mermaid
 flowchart LR
-  L["released layer<br/>(via Layer manifest resolver)"] --> CLK["user click<br/>or time selection"]
-  CLK --> ENV["MapContextEnvelope assembled<br/>(camera · layers · features · time · evidence refs)"]
-  ENV --> API["governed-api/<br/>(trust membrane)"]
-  API --> EB["EvidenceBundle resolution<br/>(via Evidence resolver)"]
-  EB --> DRW["EvidenceDrawerPayload<br/>(sensitivity-redacted projection)"]
-  DRW --> FM{"Focus Mode<br/>requested?"}
-  FM -->|no| DONE["display drawer"]
-  FM -->|yes| FMR["FocusModeResponse:<br/>ANSWER · ABSTAIN · DENY · ERROR"]
-  FMR --> RCPT["AIReceipt + RunReceipt"]
-  RCPT -.->|"if correction needed"| ROLL["correction /<br/>rollback lineage"]
-  classDef map fill:#c8e6c9,stroke:#1b5e20;
-  classDef gov fill:#e1f5fe,stroke:#01579b;
-  class L,CLK,ENV,DONE map;
-  class API,EB,DRW,FMR,RCPT gov;
+    A["Released public-safe layer candidate"] --> B["User click / time / viewport context"]
+    B --> C["Bounded map context envelope"]
+    C --> D["Governed API boundary"]
+    D --> E{"Evidence reference resolves?"}
+    E -->|No| F["ABSTAIN / DENY / ERROR<br/>with reason"]
+    E -->|Yes| G["EvidenceBundle + policy + release state"]
+    G --> H["Evidence Drawer projection"]
+    H --> I{"Focus Mode requested?"}
+    I -->|No| J["Display bounded evidence"]
+    I -->|Yes| K["ANSWER / ABSTAIN / DENY / ERROR"]
+    K --> L["Receipt and correction lineage"]
 ```
 
-> [!IMPORTANT]
-> **No step is skippable.** A "click → answer" interaction is **never one route call** — it composes layer resolution + envelope admission + evidence resolution + drawer projection + optional Focus Mode + receipt emission. Per `ai-build-operating-contract.md` §22.1: *"If any step relies only on rendered feature properties, popup text, or model output, the trust membrane has been bypassed."*
+Acceptance rules:
 
-[↑ Back to top](#top)
+1. Rendered feature properties identify a **candidate**, not evidence.
+2. Consequential claims resolve through `EvidenceRef` to admissible `EvidenceBundle` support.
+3. Policy and sensitivity checks run before the public projection is returned.
+4. The drawer exposes source role, temporal and spatial scope, caveats, conflicts, release state, and correction state appropriate to the audience.
+5. Focus Mode receives bounded, governed context; it does not call a model provider directly from the browser.
+6. Missing evidence, policy denial, stale support, withdrawn release, or operational failure produces a visible finite outcome rather than an uncited fallback.
+7. Interaction receipts are process evidence only; they are not proof that the underlying claim is true.
 
----
-
-## 7. Map object families
-
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §9 *(component table)*; idea cards `KFM-P1-FEAT-0040` *(layer metadata)*, `KFM-P1-FEAT-0042` *(viewer-side verification fails closed)*; ADR-0007 *(PROPOSED — adds `PluginAdmission` family and pins `LayerManifest.plugin_dependencies`)*. **CONFIRMED doctrine for the object families; PROPOSED for schema homes pending mounted-repo verification.**
-
-The map surface has its own object vocabulary. All schema homes below are PROPOSED — verify at next mounted-repo session.
-
-| Object | Role | Schema home *(PROPOSED)* |
-|---|---|---|
-| **`SourceDescriptor`** | Defines admissible source identity and role *(used across all lanes; consumed by the map for source-of-source resolution)*. | `schemas/contracts/v1/sources/source_descriptor.schema.json` |
-| **`LayerManifest`** | Binds a UI layer to governed source/evidence semantics. Carries `layer_id`, `title`, `geometry_type`, `geometry_label` *(2D / 2.5D / 3D)*, `source_id`, `source_layer`, `evidence_ref_field`, `temporal_fields`, `policy_label`, `release_state`, `plugin_dependencies[]` *(per ADR-0007)*. | `schemas/contracts/v1/map/layer_manifest.schema.json` |
-| **`StyleManifest`** | Controls style identity and dependencies. Carries `style_id`, `version`, `style_json_url`, `sprites`, `glyphs`, `style_digest`, `layer_ids`, `release_id`. | `schemas/contracts/v1/map/style_manifest.schema.json` |
-| **`TileArtifactManifest`** | Controls PMTiles/MVT/COG/MBTiles release artifacts. Carries `artifact_id`, `type`, `url`, `digest`, `zooms`, `bounds`, `format`, `source_layers`, `metadata`, `range_required`, `cors_required`. | `schemas/contracts/v1/map/tile_artifact_manifest.schema.json` |
-| **`MapReleaseManifest`** | Defines a complete published map release. Links `LayerManifest`, `StyleManifest`, tile artifacts, `EvidenceBundle`, `PolicyDecision`, `PromotionDecision`, cache keys, rollback target. Per ADR-0007, default `layers[*].renderer == "maplibre"`. | `schemas/contracts/v1/map/map_release_manifest.schema.json` |
-| **`PluginAdmission`** *(PROPOSED — ADR-0007 §3.2)* | Per-plugin, per-version `PolicyDecision` that gates non-native rendering paths. Required for `3d-tiles-renderer`, `maplibre-three-plugin`, `maplibre-gl-lidar`, `maplibre-cog-protocol`, `pmtiles`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`, `deck.gl` interleaved, three.js, and any other admitted plugin. | `schemas/contracts/v1/policy/plugin_admission.schema.json` |
-| **`SceneManifest`** *(Atlas §18)* | Governs assembly of native + plugin-hosted layers into a render-ready scene; carries `view_state`, `layers[]`, `plugin_versions[]`, `representation_receipt_ref`. | `schemas/contracts/v1/maplibre/scene_manifest.schema.json` *(PROPOSED)* |
-| **`TerrainModel`** *(Atlas §18)* | Governs the `raster-dem` source used by `Map.setTerrain`; carries CRS, encoding, checksum, provenance, source vintage, processing pipeline, bbox, temporal extent, license. | `schemas/contracts/v1/3d/terrain_model.schema.json` *(PROPOSED)* |
-| **`ViewState` / `CameraPath`** *(Atlas §18)* | View-mode and cinematic motion as governed assets; JSON-validated, spec-hashed. | `schemas/contracts/v1/maplibre/view_state.schema.json`, `.../camera_path.schema.json` |
-| **`EvidenceBundle`** | Truth-bearing evidence object that outranks generated language and rendered state. | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` |
-| **`EvidenceDrawerPayload`** | UI-side projection shown after click / selection. Includes feature context, source/citation display, caveats, conflicts. | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` |
-| **`MapContextEnvelope`** | Bounded map context sent to governed API / Focus Mode. | `schemas/contracts/v1/ui/map_context_envelope.schema.json` |
-| **PMTiles sidecar** *(`.pmtiles.attest.json`)* | Per-artifact integrity proof — `spec_hash`, `pmtiles_filename`, `root_hash` *(BLAKE3)*, `size_bytes`, `delta`, `byte_ranges_manifest`, signature/attestation. | Co-located with the tile artifact; schema PROPOSED. |
-| **`VerifyReceipt`** | Records digest, bounds, schema verification *(per SRC-058)*. | `schemas/contracts/v1/proofs/verify_receipt.schema.json` *(PROPOSED)* |
-| **`RuntimeProbeResult`** | Reviewable report from runtime probes *(decode, heap, token stability)*; emitted into promotion gates; does not decide truth. | `schemas/contracts/v1/proofs/runtime_probe_result.schema.json` *(PROPOSED)* |
-| **`RepresentationReceipt`** *(Atlas §18)* | Records what was rendered, when, with which `spec_hashes` and plugin versions. | `schemas/contracts/v1/maplibre/representation_receipt.schema.json` *(PROPOSED)* |
-| **`Reality Boundary Note`** *(Atlas §18)* | Required marker distinguishing synthetic / reconstructed / AI-generated content from observed reality. | `schemas/contracts/v1/3d/reality_boundary_note.schema.json` *(PROPOSED)* |
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 8. 2D default · 3D conditional · tile artifact discipline
+<a id="7-map-object-families"></a>
+<a id="8-2d-default--3d-conditional--tile-artifact-discipline"></a>
+<a id="10-reality-boundary-note--synthetic-vs-observed"></a>
 
-> **Evidence basis:** `KFM-P2-FEAT-0013` *(mobile-first tile playbook)*; `KFM-P1-FEAT-0042` *(viewer-side verification fails closed)*; SRC-058 *(PMTiles BAO sidecars, runtime probes, ReleaseRuntimeGate)*; SRC-066 *(PMTiles operational governance)*; `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md` *(PROPOSED — single-renderer 2D ↔ 3D ↔ globe across MapLibre)*; `docs/architecture/maplibre-3d.md` *(PROPOSED — companion architecture document)*. **CONFIRMED doctrine throughout; the prior dual-renderer card `KFM-P2-FEAT-0012` is superseded by ADR-0007.**
+## 8. View and artifact posture
 
-### 8.1 2D default; 3D conditional — all within MapLibre
+### 8.1 View parity
 
-KFM presents three view modes, **all rendered by MapLibre GL JS**. They are governed view-state transformations of the same underlying tiles and `LayerManifest` set; switching modes is a `ViewState` change, not a renderer change.
+KFM's durable parity requirement is about **evidence and governance**, not renderer branding:
 
-| Mode | When it wins | When it fails | Trust consequence |
-|---|---|---|---|
-| **2D plan-view MapLibre** *(default)* | Inspection, accessibility, low-bandwidth, sensitive-context parity with Evidence Drawer. | — | Canonical inspection path. |
-| **3D terrain MapLibre** *(conditional)* | Terrain context, viewshed reasoning, line-of-sight evidence, draped imagery, Story Node scenes. Native via `raster-dem` + `Map.setTerrain` + `hillshade`; admitted plugins host OGC 3D Tiles *(via `3d-tiles-renderer` + three.js)*, glTF *(via `maplibre-three-plugin` or three.js)*, LiDAR point clouds *(via `maplibre-gl-lidar`)*, and `deck.gl` interleaved overlays. | 3D admission gate may DENY *(missing `Scene Manifest`, missing `Reality Boundary Note`, generalization not applied, plugin admission missing, evidence non-parity)*. Failure falls back to 2D with a visible reason. | 2D MapLibre remains canonical; 3D adds visualization value but never substitutes for the 2D evidence path. |
-| **Globe MapLibre** *(conditional — MapLibre 5.0+)* | Kansas-in-context overview, atmospheric/day-night context. Native via `setProjection({type:'globe'})` + `sky` + `light`. | Older runtimes: graceful failure to mercator. Sensitive layers: globe inherits 2D admission *(no projection-driven loosening)*. | Globe is a `ViewState` transformation; same tiles, evidence parity by construction. |
+- the same claim identity;
+- the same evidence support;
+- the same policy and sensitivity posture;
+- the same temporal selection;
+- the same release, correction, and withdrawal state;
+- the same finite failure behavior.
 
-> [!IMPORTANT]
-> **Switching between view modes preserves active layer set, filter set, and Focus Mode.** Because all three modes run on the same renderer over the same tiles, evidence identity is upheld **by construction** *(per ADR-0007 §6.1)* — no cross-renderer drift can occur.
+A 3D, globe, terrain, extrusion, point-cloud, or synthetic representation cannot become a second truth path. A representation that cannot preserve the 2D evidence baseline must abstain, deny, or visibly fall back.
 
-> [!CAUTION]
-> **3D admission gate is real.** Per Atlas §18 / SRC-057, 3D layers require `Scene Manifest`, `Reality Boundary Note` *(where applicable)*, plugin admission *(where applicable)*, and 3D admission closure before publication. A layer with `geometry_label: '2.5D'` and `requested_mode: 'true_3d_evidence'` is DENIED *(Atlas §18 invariant `I-3D-4`)*. **PROPOSED implementation; CONFIRMED doctrine.**
+### 8.2 Decision status
 
-### 8.2 Tile artifact discipline
+ADR-0007 currently proposes MapLibre GL JS as the sole browser-side renderer family with governed integrations behind an adapter seam. Because that ADR is not accepted:
 
-KFM tile artifacts *(PMTiles, MVT, MLT, COG, MBTiles, Zarr)* are **derived release artifacts**, never sovereign data. Every public tile artifact carries:
+- this README does not state the proposal as an effective decision;
+- the stale dual-renderer sibling remains lineage, not authority;
+- no second renderer or replacement package should be created casually;
+- any implementation should remain behind a bounded adapter until the decision and ownership gates close.
 
-1. **A signed `TileArtifactManifest`** linking to `MapReleaseManifest`.
-2. **A sidecar** *(e.g., `.pmtiles.attest.json`)* with `spec_hash`, `root_hash` *(BLAKE3)*, `byte_ranges_manifest`, optional `bao_proof_ref`.
-3. **A DSSE/cosign signature** transparency-logged in Rekor.
-4. **A `VerifyReceipt`** recording digest, bounds, and schema verification.
-5. **A rollback target** *(prior release manifest + cache invalidation record)*.
+### 8.3 Synthetic and reconstructed surfaces
 
-> [!IMPORTANT]
-> **The publication flow is fixed** *(per SRC-058 p.49)*: *"Delta PMTiles built → BAO root → manifest → cosign signature → range verify → all gates → publish candidate → RunReceipt → released."* **No step is skippable.**
+Modeled, interpolated, reconstructed, simulated, and generated surfaces remain derivatives. Where a representation could be mistaken for observation, the public surface needs an explicit reality-boundary explanation and a traceable representation/transform record. Exact object names and schema homes remain **NEEDS VERIFICATION** until current contracts and schemas prove them.
 
-### 8.3 PMTiles publication gates *(CONFIRMED — SRC-058 pp.48–49)*
+### 8.4 Tile and raster carriers
 
-The PMTiles publication gates DENY on:
+PMTiles, MVT, COG, MBTiles, MLT, Zarr, style JSON, sprites, glyphs, and similar assets are delivery carriers. Public use requires evidence appropriate to consequence, including identity, rights, sensitivity, provenance, integrity, release state, correction path, and rollback target.
 
-- `invalid_spec_hash`
-- `unsigned_release_manifest`
-- `unverified_tile_chunk`
-- `public_unsigned_delta`
-- `rollback_root_mismatch`
-- `missing_run_receipt`
+This README does not claim that any specific sidecar, hash-tree, signing, range-proof, CDN, CORS, cache, plugin, or browser-verification design is currently implemented. Those claims require current contracts, schemas, policy, tooling, fixtures, tests, emitted artifacts, and runtime evidence.
 
-### 8.4 Plugin admission gates *(PROPOSED — ADR-0007 §3.4)*
-
-Beyond tile artifact gates, the renderer enforces plugin admission gates against the `LayerManifest`, `SceneManifest`, and `MapReleaseManifest`:
-
-- `unadmitted_plugin` — a plugin identifier in `LayerManifest.plugin_dependencies` not present in the admitted set.
-- `unpinned_plugin_version` — admitted plugin without a pinned version.
-- `drifted_plugin_version` — pinned version does not match the lockfile entry.
-- `non_maplibre_renderer_without_exception_adr` — `MapReleaseManifest.layers[*].renderer != "maplibre"` without an accepted exception-ADR id.
-- `cross_renderer_bridge_field` — appearance of any cross-renderer bridge field in `SceneManifest` *(structurally disallowed under single-renderer commitment)*.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 9. Viewer-side verification fails closed · UI negative states
+<a id="9-viewer-side-verification-fails-closed--ui-negative-states"></a>
 
-> **Evidence basis:** `KFM-P1-FEAT-0042` *(viewer-side verification fails closed)*; SRC-058 pp.190–214 *(MapLibre verify-before-addSource)*; `ai-build-operating-contract.md` §22.2 *(UI negative states)*. **CONFIRMED doctrine.**
+## 9. Validation and finite outcomes
 
-### 9.1 Viewer-side fails-closed flow
+### 9.1 Repository-owned readiness commands
 
-```text
-MapLibre app init
-  → fetch sidecar
-  → verify DSSE/cosign signature
-  → check spec_hash / tiling_scheme / tile_format
-  → sample byte ranges
-  → verify plugin admissions for required plugin set (per LayerManifest)
-  → IF all pass → addSource (and instantiate admitted plugin layers)
-  → IF any fail → DENY (post status = chunk_verification_failed
-                        or unadmitted_plugin; no tile / layer exposed)
+```bash
+python tools/validators/maplibre/validate_v6_readiness.py --fixtures
+python tools/validators/maplibre/validate_v6_readiness.py --scan-root .
 ```
 
-> [!CAUTION]
-> **The renderer fails CLOSED.** Per `KFM-P1-FEAT-0042` *(PROPOSED, EXPANDED across passes)*: *"A viewer should fail closed or degrade visibly when artifact signatures, sidecars, hashes, policy state, or release manifests cannot be verified."* A renderer that silently falls back to unverified content has bypassed the trust membrane. Plugin-hosted layers are admitted to the same fails-closed flow *(per ADR-0007)*.
+The classifier uses these process exits:
 
-### 9.2 UI negative states *(CONFIRMED — AIBOC §22.2)*
+| Outcome | Exit | Meaning |
+|---|---:|---|
+| `READY` | `0` | Every configured static requirement and recorded browser probe passes |
+| `HOLD` | `3` | Evidence or required execution is incomplete or a bounded readiness condition is unmet |
+| `ERROR` | `1` | The classifier could not safely evaluate the input |
 
-The UI surfaces **nine negative states as first-class**, not as error toasts or missing content:
+At the pinned snapshot, the exact dependency is unpinned and the browser-probe record is absent. Therefore `READY` is not a supportable claim.
 
-| State | Meaning |
+### 9.2 Documentation validation
+
+A change to this README should at minimum run the repository's changed-area documentation checks, including:
+
+```bash
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  docs/architecture/map-master/README.md
+```
+
+Hosted documentation metadata, links, stale-state, graph, build, and changed-area checks remain separate evidence. A green documentation workflow proves bounded document QA only.
+
+### 9.3 Runtime outcomes
+
+Map-facing governed responses should remain finite:
+
+| Outcome | Meaning |
 |---|---|
-| `MISSING_EVIDENCE` | `EvidenceRef` did not resolve. |
-| `SOURCE_STALE` | `SourceDescriptor.cadence` passed without re-admission. |
-| `DENIED_BY_POLICY` | `PolicyDecision = DENY`. |
-| `GENERALIZED_GEOMETRY` | Sensitivity-redacted projection applied. |
-| `RESTRICTED_ACCESS` | Audience class does not match required tier. |
-| `CONFLICTED_SUPPORT` | Multiple `EvidenceRef`s with material disagreement. |
-| `CITATION_FAILED` | `CitationValidationReport.verdict = FAIL`. |
-| `RELEASE_WITHDRAWN` | `ReleaseManifest` superseded; rollback target active. |
-| `RUNTIME_ERROR` | Governed API cannot evaluate. |
+| `ANSWER` | Released, admissible, citation-valid evidence supports the bounded request |
+| `ABSTAIN` | Evidence is missing, stale, conflicted, unresolved, or outside supported scope |
+| `DENY` | Rights, sensitivity, access, policy, or harmful precision blocks exposure |
+| `ERROR` | A required resolver, policy evaluator, validator, adapter, or runtime failed safely |
 
-[↑ Back to top](#top)
+Expected negative-state classes include missing evidence, stale source, policy denial, generalized geometry, restricted access, conflicted support, citation failure, withdrawn release, and runtime error. Their exact contract names and UI implementation remain **NEEDS VERIFICATION**.
+
+[Back to top](#top)
 
 ---
 
-## 10. Reality Boundary Note — synthetic vs observed
+## 10. Decision and implementation gates
 
-> **Evidence basis:** `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.1.1 *(source-role table — "Synthetic" row)*; §24.9.2 *(anti-pattern: "Synthetic surface presented without Reality Boundary Note → Reconstruction read as observation")*. **CONFIRMED doctrine.**
+ADR-0007 should remain proposed until equivalent evidence closes all applicable gates.
 
-When the map presents synthetic / reconstructed / AI-generated content *(reconstructed historical scenes, AI-summary outputs, smoothed/interpolated rasters, 3D meshes derived from sparse evidence, glTF reconstructions, point-cloud-derived surfaces)*, the surface MUST carry a **`Reality Boundary Note`** plus a **`Representation Receipt`** recording the transform.
-
-| Content class | Marker required | DENY if missing |
+| Gate | Required evidence | Current state |
 |---|---|---|
-| Synthetic terrain surface | `Reality Boundary Note` + `Representation Receipt` | ✅ |
-| Reconstructed historical scene *(glTF or 3D Tiles)* | `Reality Boundary Note` + `Representation Receipt` | ✅ |
-| AI-summary output rendered as map annotation | `Reality Boundary Note` + `AIReceipt` cross-reference | ✅ |
-| Interpolated raster *(suitability surface, smoke trajectory, etc.)* labeled and presented as observed | — *(deny entirely — source-role anti-collapse, see [`cross-domain/README.md` §6.2](../cross-domain/README.md))* | ✅ |
-| Point-cloud-derived shaded surface *(LiDAR slope/hillshade derivative)* presented as observation rather than as a visibility-aid context layer | `Reality Boundary Note` + clear labeling as "context layer" | ✅ |
+| Decision coherence | Reviewed ADR status transition and index parity | **OPEN** |
+| Vocabulary | Reviewed definitions for renderer, plugin, protocol, custom integration, and peer renderer | **OPEN** |
+| One adapter/package home | Decision between current `packages/maplibre/` and any proposed alternative, with migration and rollback | **OPEN** |
+| Version and distribution | Exact dependency pin, lock closure, ESM/CSP/worker strategy, browser matrix, update and rollback policy | **OPEN** |
+| Complete inventory | Recursive manifests, imports, dynamic acquisition, CDN scripts, globals, workers, plugins, custom layers, examples, and tests | **OPEN** |
+| Functional adapter | Tested KFM-shaped API with no raw renderer leakage across the boundary | **OPEN** |
+| Runtime probes | Reviewed six-probe record tied to the accepted dependency and build | **OPEN** |
+| Governed flow | Released-input, evidence, negative-state, correction, withdrawal, and rollback behavior | **OPEN** |
+| Documentation reconciliation | This lane, package docs, adapter ADR, tests, and backlog agree with the accepted state | **PARTIAL** |
+| Human review | Required reviewers approve the decision evidence | **OPEN** |
 
-> [!IMPORTANT]
-> **The renderer is the last line of defense.** A synthetic raster or 3D mesh could pass through ingestion, validation, and release if the `Reality Boundary Note` is malformed but present. The renderer MUST verify the note exists *and* renders, and MUST refuse to display the surface as observed reality without it.
+No package scaffold, green static check, successful performance workflow, screenshot, or documentation update substitutes for these gates.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 11. What lives here · What does not live here
+## 11. Change and review rules
 
-### 11.1 What lives here
+### 11.1 Ordinary documentation changes
 
-| Content | Why it belongs in `docs/architecture/map-master/` |
+A same-path edit may clarify current evidence, repair links, update navigation, or reconcile prose with accepted doctrine. It must not:
+
+- promote a proposed ADR;
+- invent a dependency or package ownership decision;
+- claim runtime behavior without representative evidence;
+- copy normative contract, schema, or policy content into this lane.
+
+### 11.2 ADR-class changes
+
+Open or amend an ADR when work would:
+
+- accept or replace the renderer-family decision;
+- introduce a peer browser renderer or an exception to the selected family;
+- create a second active renderer package or move the adapter authority;
+- create or relocate a normative object family, schema authority, policy authority, or public trust boundary;
+- relax evidence, sensitivity, release, correction, or rollback controls.
+
+### 11.3 Required propagation
+
+When renderer behavior materially changes, review at least:
+
+- this README and the affected sibling architecture page;
+- ADR-0006 and ADR-0007;
+- `packages/maplibre/README.md` and package metadata;
+- Explorer adapter and app documentation;
+- readiness validator, fixtures, and tests;
+- workflow and runbook documentation;
+- contracts, schemas, policy, release, correction, and rollback references actually affected.
+
+Documentation should describe verified behavior; it must not be used to manufacture the verification.
+
+[Back to top](#top)
+
+---
+
+<a id="14-open-questions-and-adr-triggers"></a>
+
+## 12. Open verification register
+
+| Item | Status | Closure evidence |
+|---|---|---|
+| Effective renderer-family decision | **PROPOSED** | Accepted ADR and synchronized index |
+| Physical adapter/package authority | **NEEDS VERIFICATION** | Reviewed ownership decision and one active home |
+| Exact MapLibre dependency and update policy | **UNKNOWN** | Pinned manifest, lock, dependency review, rollback |
+| Functional adapter API | **UNKNOWN** | Implementation, contract, tests, and consumer proof |
+| Complete renderer/import/acquisition inventory | **NEEDS VERIFICATION** | Repository-wide validator and reviewed report |
+| Browser probe results | **NOT RUN** | Committed or otherwise governed six-probe record tied to a revision |
+| Plugin/protocol allowlist | **UNKNOWN** | Admission policy, version pins, licensing and supply-chain evidence |
+| Released layer and Evidence Drawer flow | **UNKNOWN** | Representative integration test and emitted evidence |
+| Public-safe artifact hosting and verification | **UNKNOWN** | Contracts, policy, fixture, runtime, failure, correction, and rollback proof |
+| 2D/3D parity sibling | **STALE / CONFLICTED** | Reconcile dual-renderer wording after an effective decision |
+| Remaining sibling metadata and repo-state claims | **NEEDS VERIFICATION** | Same-path repository-grounded modernization of each sibling |
+| Independent map/runtime steward | **NEEDS VERIFICATION** | Verified owner and review route |
+
+Until these close, the safe posture is a scaffolded architecture lane with an explicit readiness HOLD.
+
+[Back to top](#top)
+
+---
+
+## 13. Rollback and correction
+
+This revision changes documentation only.
+
+- **Before merge:** close the draft pull request and abandon the feature branch.
+- **After merge:** revert the documentation commit or apply a forward correction.
+- **Prior blob:** `47edaec117f784ce146c1e3def94beabcdf965a1`.
+- **Caution:** restoring the prior blob also restores stale path-proposal claims, broken ADR links, and overconfident renderer/plugin/runtime language. A transparent forward fix is preferable unless the entire v1.0 reconciliation is rejected.
+- **Runtime effect:** none. No dependency, adapter, policy, schema, source, artifact, release, deployment, or publication state changes.
+- **Sibling effect:** none. Existing sibling documents remain available as lineage and can be corrected independently.
+
+[Back to top](#top)
+
+---
+
+<a id="5-relationship-to-other-architecture-lanes"></a>
+<a id="15-related-docs"></a>
+
+## 14. Related repository evidence
+
+| Reference | Role | Current status |
+|---|---|---|
+| [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Canonical placement and README-profile authority | Adopted through ADR-0029 |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adoption record for Directory Rules v2 | **Accepted** |
+| [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Renderer-family proposal and acceptance gates | **Proposed** |
+| [`docs/architecture/README.md`](../README.md) | Parent explanatory architecture lane | Repository-present; contains older repo-state assumptions |
+| [`docs/architecture/maplibre.md`](../maplibre.md) | MapLibre lane orientation and design lineage | Draft; current-state claims require reconciliation |
+| [`docs/architecture/map-shell.md`](../map-shell.md) | Map shell and trust-visible interaction lineage | Draft architecture guidance |
+| [`packages/maplibre/README.md`](../../../packages/maplibre/README.md) | Package boundary and scaffold evidence | Repository-present |
+| [`packages/maplibre/package.json`](../../../packages/maplibre/package.json) | Package identity and declared dependencies | Private `0.0.0` scaffold |
+| [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Current package entry | Placeholder only |
+| [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Explorer adapter seam | Comment-only placeholder |
+| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | Explorer scripts and declared dependencies | Toolchain present; no MapLibre dependency |
+| [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Bounded static/probe readiness classifier | Executable; current inputs imply HOLD |
+| [`test_validate_v6_readiness.py`](../../../tests/maplibre/test_validate_v6_readiness.py) | Classifier tests | Repository-present |
+| [`cases.json`](../../../fixtures/maplibre/v6_readiness/cases.json) | Positive/negative readiness fixtures | Repository-present |
+| [MapLibre performance workflow](../../../.github/workflows/maplibre-perf-governance.yml) | Static/performance governance workflow | A green run may still record explicit HOLD |
+
+[Back to top](#top)
+
+---
+
+<a id="16-appendix--glossary-and-reference"></a>
+
+## 15. No-loss change ledger
+
+| Prior material | v1.0 disposition |
 |---|---|
-| Renderer-discipline doctrine *(MapLibre is the sole downstream renderer)* | This is the canonical scope of the Master MapLibre document; the lane consolidates its architectural posture. |
-| Tile artifact lifecycle architecture *(PMTiles, MVT, COG, MBTiles, Zarr — release, sidecars, BAO proofs, signatures)* | Cross-format discipline applies to all tile types; per-format specifics live in the contracts/schemas, but the cross-format posture lives here. |
-| Layer / Style / TileArtifact / MapRelease / PluginAdmission manifest **architectural** concerns | The schemas live under `schemas/contracts/v1/map/` and `.../policy/`; the discipline that connects them lives here. |
-| Evidence Drawer architecture *(click-to-truth flow, negative-state surfacing)* | The drawer composes API outputs into a UI surface; the composition rules live here. |
-| Cross-mode parity discipline *(2D plan ↔ 3D terrain ↔ globe)* within MapLibre | View-mode discipline is renderer-internal but cross-cutting across layer/style/evidence concerns. |
-| Reality Boundary Note enforcement at the renderer | The renderer is the last gate before display; the rule belongs here as well as in cross-domain doctrine. |
-| Plugin admission discipline *(per ADR-0007)* | What it means for a plugin to be admitted; how `PluginAdmission` composes with `LayerManifest`, `SceneManifest`, and `MapReleaseManifest`. |
-| Performance budgets, runtime probes, mobile-first playbook | Cross-cutting performance discipline; per-format implementations live with each format's manifest. |
-| Anti-pattern register scoped to map / renderer concerns | E.g., map shell consuming canonical store, popup-as-citation, style-only sensitivity hiding. |
+| Renderer downstream of trust | **Retained and promoted to the primary operating law** |
+| Seven negative authorities | **Retained** |
+| Click-to-truth flow | **Retained, explicitly labeled PROPOSED acceptance target** |
+| Evidence Drawer, layer lifecycle, viewer verification, performance, and artifact siblings | **Retained and linked as tracked draft lineage** |
+| 2D/3D evidence, policy, release, and reality-boundary parity | **Retained** |
+| Reality-boundary discipline | **Retained, object names/schema homes narrowed to NEEDS VERIFICATION** |
+| Fail-closed negative states and finite outcomes | **Retained with implementation status bounded** |
+| Proposed directory tree | **Replaced by the verified direct-child tree** |
+| `OPEN-DR-12` and path-PROPOSED framing | **Removed as stale after accepted Directory Rules v2** |
+| Wrong ADR-0007 filename and implied acceptance | **Corrected to the repository-present record and proposed status** |
+| Claimed functional renderer/package/plugin surface | **Corrected to scaffold + HOLD** |
+| Version-sensitive plugin, 3D, signing, BAO, hosting, and format claims | **Narrowed; require current primary-source and repository admission evidence** |
+| Large glossary and duplicated sibling detail | **Removed from the landing page; sibling documents remain the deeper lineage surfaces** |
 
-### 11.2 What does NOT live here
-
-| Excluded | Canonical home |
-|---|---|
-| The Master MapLibre document itself *(the cumulative doctrine)* | `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` *(at project knowledge root or `docs/lineage/`)* |
-| ADR-0007 *(the single-renderer decision itself)* | `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md` |
-| The MapLibre 3D implementation reference *(native APIs, plugin paths, examples)* | `docs/architecture/maplibre-3d.md` |
-| Per-layer / per-style / per-tile schema files *(`.schema.json`)* | `schemas/contracts/v1/map/...`, `schemas/contracts/v1/3d/...`, `schemas/contracts/v1/policy/...` |
-| Style JSON, sprites, glyphs | `data/published/styles/...` *(per directory-rules.md)*; or `apps/explorer-web/src/styles/` for app-local |
-| Tile artifacts *(PMTiles, MVT, COG)* themselves | `data/published/tiles/<area>/...` *(per lifecycle invariant)* |
-| Rego policy enforcing renderer-side gates | `policy/map/...`, `policy/maplibre/...`, `policy/release/...` |
-| App-level code *(`apps/explorer-web/`, MapLibre integration; plugin host code under `packages/maplibre-runtime/`)* | `apps/explorer-web/src/...`, `packages/maplibre-runtime/src/...` |
-| Per-area Focus Mode UI | `apps/explorer-web/src/focus-modes/<area>/...` *(per directory-rules §6.7)* |
-| Domain-specific layer designs | `docs/domains/<domain>/` |
-| AI surface boundaries / continuity / route map | `docs/architecture/governed-ai/{BOUNDARIES,CONTINUITY_NOTES,ROUTE_MAP}.md` |
-
-> [!WARNING]
-> **Do not let this lane absorb implementation.** Same rule as every other architecture lane: schemas, policies, validators, and app code live under their canonical responsibility roots, **never** inside `docs/architecture/`.
-
-[↑ Back to top](#top)
-
----
-
-## 12. Directory tree (PROPOSED)
-
-**PROPOSED — assumes OPEN-DR-12 resolves to "permit folder pattern".** If OPEN-DR-12 is rejected, all siblings below flatten to `docs/architecture/map-master-<topic>.md` or merge into a single `docs/architecture/map-master.md`.
-
-```text
-docs/architecture/map-master/          ⚠ PROPOSED · OPEN-DR-12 family
-├── README.md                          ◄── this file (landing + navigation)
-├── RENDERER_BOUNDARY.md               ◄── seven negative authorities expanded; renderer-as-downstream contract; single-renderer commitment per ADR-0007 (PROPOSED; expands §4)
-├── TILE_ARTIFACTS.md                  ◄── PMTiles / MVT / COG / MBTiles / Zarr; sidecars; BAO; signatures; publication gates (PROPOSED; expands §8.2, §8.3)
-├── LAYER_LIFECYCLE.md                 ◄── LayerManifest · StyleManifest · TileArtifactManifest · MapReleaseManifest · PluginAdmission composition (PROPOSED; expands §7)
-├── EVIDENCE_DRAWER.md                 ◄── click-to-truth flow; drawer composition; conflict/caveat surfaces (PROPOSED; expands §6, §9)
-├── 2D_3D_PARITY.md                    ◄── plan-view ↔ terrain ↔ globe parity within MapLibre; Reality Boundary Note discipline; 3D admission gate (PROPOSED; expands §8.1, §10)
-├── PLUGIN_ADMISSION.md                ◄── PluginAdmission contract; admitted plugin set; pinning, attestation, lockfile guardrails (PROPOSED; expands §8.4)
-├── PERFORMANCE_BUDGETS.md             ◄── runtime probes; decode/heap budgets; mobile-first tile playbook; per-mode budgets (2D / terrain / globe / 3D Tiles / point clouds) (PROPOSED)
-└── VIEWER_VERIFICATION.md             ◄── verify-before-addSource; fails-closed semantics; chunk verification; plugin-admission verification (PROPOSED; expands §9.1)
-```
-
-> [!NOTE]
-> **Eight PROPOSED siblings expand eight distinct sub-concerns.** The pattern matches `governed-ai/` *(three siblings on three axes)* and the proposed `governed-api/` siblings *(six sub-concerns)*. Each sibling owns its sub-topic; the README orients. The added `PLUGIN_ADMISSION.md` sibling reflects the new governance surface introduced by ADR-0007.
-
-[↑ Back to top](#top)
-
----
-
-## 13. Anti-patterns
-
-> **Evidence basis:** `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.9.2 *(trust-membrane anti-patterns)*; `ai-build-operating-contract.md` §22.3 *(denied map behaviors)*; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(governance and trust-membrane chapter)*; ADR-0007 *(single-renderer anti-patterns)*. **CONFIRMED doctrine.**
-
-Each row maps a violation back to one of the seven negative authorities of §4 *(or to the single-renderer commitment of ADR-0007)*.
-
-| Anti-pattern | Negative authority violated | Counter-rule |
-|---|---|---|
-| **Map shell consumes canonical / internal store directly.** | #1 truth store | Public clients read via `apps/governed-api/` only; never directly from `data/raw\|work\|quarantine` or canonical stores. |
-| **Tile metadata treated as source provenance** *(skipping `SourceDescriptor`)*. | #2 source registry | Source provenance lives in the source registry; the tile carries `source_id` references, not source identity. |
-| **Style filter used to "hide" sensitive geometry.** | #3 policy engine | Generalization / redaction happens **before** public tile release with a `RedactionReceipt`; style-only hiding is a leak waiting to happen. |
-| **Popup text treated as a citation.** | #4 citation authority | Popups are non-authoritative; the Evidence Drawer carries the `EvidenceBundle` with validated citations. |
-| **UI toggle marks a layer as "reviewed".** | #5 review authority | Review state lives in `ReviewRecord`; UI displays the state but does not author it. |
-| **Layer visibility toggle = layer publication.** | #6 publication authority | Publication requires `ReleaseManifest` + rollback target + promotion gate; visibility is post-publication only. |
-| **Generated AI text rendered as authoritative answer.** | #7 AI authority | Focus Mode answers are bounded by envelope and citation validation; the renderer displays the envelope, not the raw model output. |
-| **Public RAW tile path** *(loading unreleased tiles directly)*. | #1, #6 | Tile load only when `release_state`, policy, rights, sensitivity, evidence refs, hashes, and rollback are all valid *(Master MapLibre §10)*. |
-| **Direct browser → model traffic.** | #7 | Model adapters live behind the governed membrane *(`BOUNDARIES.md` §10)*. |
-| **Renderer falls back silently on signature verification failure.** | #1 | Fail closed; DENY on `chunk_verification_failed` *(`KFM-P1-FEAT-0042`)*. |
-| **3D scene presented as observed reality without `Reality Boundary Note`.** | #1 | Admission gate requires `Reality Boundary Note` + `Representation Receipt` *(Atlas §24.9.2)*. |
-| **Synthetic AI-summary annotation overlaid as map feature** *(no marker)*. | #7, #1 | `Reality Boundary Note` + `AIReceipt` cross-reference; visible badge. |
-| **Mutating published tile artifacts in place.** | #6 | Tile artifacts are immutable by release ID; new release = new manifest + new digest. |
-| **No range-verification before tile add.** | #1 | `MapLibre verify-before-addSource` is doctrinal *(SRC-058 pp.190–194, 208–211)*. |
-| **Adding a second browser-side renderer to the default path.** | ADR-0007 single-renderer commitment | DENY at `policy/release/renderer-boundary.rego` unless an accepted exception-ADR is referenced *(ADR-0007 §3.4)*. |
-| **Unadmitted plugin in `LayerManifest.plugin_dependencies`.** | ADR-0007 / `PluginAdmission` | DENY at `policy/maplibre/plugin-admission.rego`; plugin must transit `PluginAdmission` first *(ADR-0007 §3.2)*. |
-| **Unpinned or drifted plugin version.** | ADR-0007 / `PluginAdmission` | DENY at lockfile validator; pin in `packages/maplibre-runtime/src/plugin-registry.ts` and CI lockfile guardrail *(ADR-0007 §8.4)*. |
-| **`fill-extrusion` height pulled from generated attribute** *(not evidence-bearing)*. | Atlas §18 invariant `I-3D-4` | DENY at `policy/maplibre/3d-admission.rego`; `height_m` / `base_m` must be evidence-bearing per `LayerManifest`. |
-| **`geometry_label: '2.5D'` layer cited as true-3D evidence.** | Atlas §18 invariant `I-3D-4` | DENY — the 2.5D label is not a 3D claim; cite a `'3D'`-labeled layer or abstain. |
-
-[↑ Back to top](#top)
-
----
-
-## 14. Open questions and ADR triggers
-
-| Open item | Class | Suggested ADR title *(PROPOSED)* |
-|---|---|---|
-| **OPEN-DR-12** *(carried)* — META amendment to `directory-rules.md` §12 permitting folder-with-README pattern; covers `cross-domain/`, `governed-ai/`, `governed-api/`, `map-master/`. | Directory Rules §12 *(structural)* | "docs/architecture/ — folder-with-README pattern admission". |
-| Which MapLibre GL JS target version *(and plugin allowlist)* is approved for the first release? | Tool selection / version pin | "MapLibre GL JS version pin and admitted plugin set v1". |
-| `PluginAdmission` schema home — `schemas/contracts/v1/policy/plugin_admission.schema.json` vs `schemas/contracts/v1/maplibre/plugin_admission.schema.json`. | Schema home *(intersects ADR-S-03)* | "PluginAdmission schema home". |
-| Admitted plugin licensing inventory — `3d-tiles-renderer`, `maplibre-three-plugin`, `maplibre-gl-lidar`, `maplibre-cog-protocol`, `pmtiles`, `maplibre-gl-vector-text-protocol`, `maplibre-contourmap`. | Licensing inventory | "Admitted plugin licensing baseline". |
-| MLT *(MapLibre Tiles)* implementation status and rollout plan. | Tool selection / format | "MLT format admission". |
-| Server-side raster fallback policy *(when MapLibre vector runtime gates fail, when to fall back to server-rasterized tiles)*. | Renderer-internal fallback | "Vector vs server-rasterized fallback policy within MapLibre". |
-| Tile-host conventions *(CDN, signed URLs, Range header requirements, CORS configuration)*. | Operations | "Tile artifact hosting conventions". |
-| 3D admission gate composition — what objects compose a `Scene Manifest` and which reviewers approve. | Object family / governance | "3D Scene Manifest composition and admission". |
-| three.js custom-layer host pattern — single `custom-layer-host.ts` base class vs per-asset (3D Tiles / glTF / volumetric) host. | Implementation pattern | "three.js custom layer host architecture". |
-| `freestiler` / `tipmtiles` / `tippecanoe` / `go-pmtiles` tooling readiness; build pipeline placement. | Tooling | "Tile build toolchain selection". |
-| Renderer-side telemetry — what is sent, with what consent, and where it lands. | Privacy / operations | "Renderer telemetry contract". |
-| Style asset homes — `data/published/styles/` vs `apps/explorer-web/src/styles/`. | Schema home | "Style asset placement". |
-
-> [!NOTE]
-> **Closed by ADR-0007 (PROPOSED).** The prior open question on "which secondary renderer edition is sanctioned" is closed by ADR-0007's single-renderer commitment. Any future need for a browser-side rendering technology outside the admitted plugin set transits the §3.5 exception-ADR path of ADR-0007.
-
-> [!IMPORTANT]
-> **OPEN-DR-12 is the unblocker** for the four architecture folders. Other map-specific OPEN questions can proceed in parallel ADR streams once the structural pattern is settled.
-
-[↑ Back to top](#top)
-
----
-
-## 15. Related docs
-
-| Reference | Role | Truth label |
-|---|---|---|
-| `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` *(cumulative doctrine, v1.4 → v2.0+)* | **Canonical** map-surface doctrine; this lane consolidates its architectural posture | CONFIRMED doctrine |
-| `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §9 *(component table)* | Object families and schema homes | CONFIRMED doctrine |
-| `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(Governance and Trust-Membrane Chapter)* | Trust-membrane rules for the map surface | CONFIRMED doctrine |
-| `docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md` | **Canonical** decision: MapLibre GL JS is KFM's sole browser-side renderer; defines `PluginAdmission` and exception-ADR path | PROPOSED *(per ADR-0007 §1)*; CONFIRMED at doctrine rank |
-| `docs/architecture/maplibre-3d.md` | Companion architecture document: MapLibre 3D features and implementation across KFM domains | PROPOSED placement; CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §18 *(Planetary/3D Domain)* | 3D object families, invariants `I-3D-1` through `I-3D-7` | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §19 *(Cross-Domain Systems — MapLibre UI + Evidence Drawer + Focus Mode)* | Renderer guardrails | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.9.2 *(trust-membrane anti-patterns)* | Anti-pattern register | CONFIRMED doctrine |
-| `ai-build-operating-contract.md` §22 *(map, UI, renderer contract; §22.1 click-to-truth; §22.2 negative states; §22.3 denied map behaviors)* | Builder-side rules for map / UI / renderer | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §11 *(finite outcome envelope)* | Outcome semantics that the drawer and Focus Mode honor | CONFIRMED doctrine |
-| `connected-dots-architecture-brief.md` §8 *(MapLibre, Evidence Drawer, and Focus Mode)* | Runtime flow + surface table | CONFIRMED doctrine |
-| `directory-rules.md` §7.1 *(apps roles — `apps/explorer-web/` reads via `apps/governed-api/`)* | App-to-route mapping | CONFIRMED doctrine |
-| `docs/architecture/governed-api/README.md` | API surface lane | PROPOSED placement; CONFIRMED doctrine |
-| `docs/architecture/governed-ai/ROUTE_MAP.md` | Route inventory *(including Focus Mode runtime)* | PROPOSED placement; CONFIRMED doctrine |
-| `docs/architecture/cross-domain/README.md` | Cross-lane invariants | PROPOSED placement; CONFIRMED doctrine |
-| Atlas seed cards: `KFM-P1-FEAT-0038` *(Governed API as trust membrane)*, `KFM-P1-FEAT-0039` *(MapLibre as downstream renderer)*, `KFM-P1-FEAT-0040` *(layer metadata carries trust state)*, `KFM-P1-FEAT-0042` *(viewer-side verification fails closed)*, `KFM-P2-FEAT-0013` *(mobile-first tile playbook)* | Lineage for the doctrine in this README | PROPOSED *(seed cards)* |
-| Atlas seed card: `KFM-P2-FEAT-0012` *(prior dual-renderer posture)* | **Superseded by ADR-0007 (PROPOSED).** Retained in the register with `superseded_by: ADR-0007` and forward link; not deleted. | SUPERSEDED |
-
-[↑ Back to top](#top)
-
----
-
-## 16. Appendix — glossary and reference
-
-<details>
-<summary><strong>16.1 Glossary of map-master vocabulary</strong></summary>
-
-| Term | Definition *(CONFIRMED doctrine unless noted)* |
-|---|---|
-| **MapLibre GL JS** | Open-source map renderer with native support for 2D vector/raster, 3D terrain *(via `raster-dem` + `Map.setTerrain`)*, `hillshade`, globe projection *(5.0+)*, sky/atmosphere, 2.5D `fill-extrusion`, and custom WebGL layers. In KFM: **disciplined sole browser-side renderer inside a governed shell** *(per ADR-0007; aligned with Master MapLibre executive determinations)*. Not a truth authority. |
-| **MapLibre 3D** | The set of MapLibre native APIs and admitted plugins that together provide 3D capability: `raster-dem` + `setTerrain`, `hillshade`, globe projection, `fill-extrusion`, `3d-tiles-renderer` via three.js custom layers, glTF via `maplibre-three-plugin` or direct three.js, point clouds via `maplibre-gl-lidar`, and `deck.gl` interleaved overlays. See `docs/architecture/maplibre-3d.md`. |
-| **Admitted plugin set** | The plugins explicitly admitted via `PluginAdmission` and pinned in `packages/maplibre-runtime/src/plugin-registry.ts` *(per ADR-0007 §3.2)*. Membership is per-plugin, per-version. |
-| **`PluginAdmission`** | Per-plugin, per-version `PolicyDecision` that gates non-native rendering paths. Required for every plugin entry in `LayerManifest.plugin_dependencies` *(per ADR-0007)*. |
-| **three.js** | WebGL 3D library used as the foundation for MapLibre's plugin-hosted 3D paths *(OGC 3D Tiles, glTF, custom volumetric layers)*. Admitted via `PluginAdmission` per ADR-0007. |
-| **`3d-tiles-renderer`** | Three.js-based renderer for OGC 3D Tiles *(b3dm, i3dm, pnts)*. Hosted inside a MapLibre custom layer; the path confirmed by MapLibre's official example dated 2026-03-03. |
-| **`maplibre-three-plugin`** | Bridge plugin between MapLibre and three.js for 3D model rendering and animation. |
-| **`maplibre-gl-lidar`** | LiDAR point cloud plugin supporting LAS 1.0–1.4, COPC, EPT streaming *(deck.gl-based)*. |
-| **`deck.gl` interleaved** | `MapboxOverlay` with `interleaved: true` over MapLibre's WebGL2 context; supports MapLibre ≥ 3. |
-| **OGC 3D Tiles** | Open standard for streaming 3D geographic content. In KFM: rendered inside MapLibre via the `3d-tiles-renderer` + three.js custom layer path. |
-| **glTF** | Royalty-free 3D scene/asset format. In KFM: rendered inside MapLibre via `maplibre-three-plugin` or a direct three.js custom layer. |
-| **PMTiles** | Single-file tile archive format; KFM's primary released tile artifact carrier. |
-| **MVT** | Mapbox Vector Tile format; embedded in PMTiles for vector layers. |
-| **MLT** | MapLibre Tiles — newer tile format under evaluation *(version pinning pending; PROPOSED)*. |
-| **COG** | Cloud Optimized GeoTIFF; primary raster release format. |
-| **MBTiles** | SQLite-based tile format; secondary / legacy. |
-| **Zarr** | Cloud-native array format; emerging in KFM for multidimensional data *(per SRC-064/SRC-066)*. |
-| **Style JSON** | MapLibre style document; governed under `StyleManifest`. |
-| **Evidence Drawer** | UI surface that displays `EvidenceBundle` for a feature click; canonical click-to-truth resolution. |
-| **`Reality Boundary Note`** | Marker distinguishing synthetic / reconstructed / AI-generated content from observed reality. |
-| **`Representation Receipt`** | Companion to `Reality Boundary Note`; records the transform that produced a synthetic or rendered surface. |
-| **`SceneManifest`** | Governs assembly of native + plugin-hosted layers into a render-ready scene *(Atlas §18)*. |
-| **`TerrainModel`** | Governed `raster-dem` source for `Map.setTerrain` *(Atlas §18)*. |
-| **`ViewState` / `CameraPath`** | View-mode and cinematic motion as governed JSON assets *(Atlas §18)*. |
-| **BAO** | Streaming hash tree algorithm used in PMTiles outboard proofs *(per SRC-058, SRC-066)*. |
-| **Sidecar** | Companion file *(e.g., `.pmtiles.attest.json`)* carrying integrity proof metadata for a primary artifact. |
-| **`spec_hash`** | Hash of the canonical spec string / tag fixing the format version. |
-| **`root_hash`** | BLAKE3 hash of the full artifact / Bao root; integrity anchor. |
-| **`byte_ranges_manifest`** | List of `z/x/y, start, end, range_hash, optional bao_proof_ref` for tile-range proofs. |
-| **`RuntimeProbeResult`** | Reviewable report from runtime probes; emitted into promotion gates; does not decide truth. |
-| **`VerifyReceipt`** | Records digest, bounds, and schema verification at viewer-side. |
-| **Story Node** | Narrative/scene unit composed of layers + camera + time + evidence; subject to its own admission gate. |
-| **3D admission gate** | Gate requiring `Scene Manifest`, `Reality Boundary Note` *(where applicable)*, plugin admission *(where applicable)*, and admission closure before 3D publication. |
-| **`geometry_label`** | Layer-level label declaring `'2D'`, `'2.5D'`, or `'3D'`. A `'2.5D'`-labeled layer cannot be cited as true-3D evidence *(Atlas §18 `I-3D-4`)*. |
-
-</details>
-
-<details>
-<summary><strong>16.2 The seven negative authorities — quick reference card</strong></summary>
-
-```text
-The renderer is NOT:
-
-  1. Canonical truth store          — EvidenceBundle is
-  2. Source registry                 — SourceDescriptor registry is
-  3. Policy engine                   — OPA/Rego policy is
-  4. Citation authority              — CitationValidationReport is
-  5. Review authority                — apps/review-console/ + ReviewRecord is
-  6. Publication authority           — ReleaseManifest + release authority is
-  7. AI authority                    — Focus Mode runtime (governed) is
-
-If a renderer behavior would assume any of these roles, the change is ADR-class.
-
-Additionally (per ADR-0007 PROPOSED):
-  - MapLibre GL JS is the sole browser-side renderer.
-  - Any rendering technology outside the admitted plugin set
-    requires an accepted exception-ADR.
-```
-
-*(Verbatim seven-item enumeration preserved from Master MapLibre executive determinations across v1.4–v2.0+; eighth posture added per ADR-0007.)*
-
-</details>
-
-<details>
-<summary><strong>16.3 PMTiles publication gates — quick reference</strong></summary>
-
-```text
-PMTiles publication DENIES on (CONFIRMED — SRC-058 pp.48–49):
-
-  · invalid_spec_hash
-  · unsigned_release_manifest
-  · unverified_tile_chunk
-  · public_unsigned_delta
-  · rollback_root_mismatch
-  · missing_run_receipt
-
-Publication flow (verbatim — SRC-058 p.49):
-
-  Delta PMTiles built
-    → BAO root
-    → manifest
-    → cosign signature
-    → range verify
-    → all gates
-    → publish candidate
-    → RunReceipt
-    → released
-
-No step is skippable.
-```
-
-</details>
-
-<details>
-<summary><strong>16.4 Plugin admission gates — quick reference (PROPOSED — ADR-0007 §3.4)</strong></summary>
-
-```text
-Plugin admission DENIES on:
-
-  · unadmitted_plugin
-  · unpinned_plugin_version
-  · drifted_plugin_version
-  · non_maplibre_renderer_without_exception_adr
-  · cross_renderer_bridge_field
-
-Admission flow (per ADR-0007):
-
-  License clearance
-    → version pin in plugin-registry.ts
-    → supply-chain attestation
-    → schema-checked round-trip in LayerManifest.plugin_dependencies
-    → PluginAdmission PolicyDecision = allow
-    → lockfile entry verified
-    → CI bundle-analyzer guardrail pass
-    → admitted
-
-Per-release re-verification is required (admissions do not auto-roll forward).
-```
-
-</details>
-
-<details>
-<summary><strong>16.5 UI negative states — quick reference</strong></summary>
-
-```text
-The UI MUST distinguish (CONFIRMED — AIBOC §22.2):
-
-  · MISSING_EVIDENCE
-  · SOURCE_STALE
-  · DENIED_BY_POLICY
-  · GENERALIZED_GEOMETRY
-  · RESTRICTED_ACCESS
-  · CONFLICTED_SUPPORT
-  · CITATION_FAILED
-  · RELEASE_WITHDRAWN
-  · RUNTIME_ERROR
-
-Negative states are first-class: surfaced explicitly, not as error toasts or
-missing content. A RuntimeResponseEnvelope with outcome=ABSTAIN and a defined
-reason code is a valid, finite, successful response.
-```
-
-</details>
-
-<details>
-<summary><strong>16.6 Truth-label legend</strong></summary>
-
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests, logs, or generated artifacts.
-- **PROPOSED** — design, recommendation, file path, placement, or inference not yet verified in implementation.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **UNKNOWN** — not resolvable without more evidence.
-- **EXTERNAL** — sourced from authoritative external research. *(Used here only via ADR-0007's MapLibre 5.x capability evidence, which is itself externally verified against MapLibre's published documentation and examples.)*
-
-</details>
-
-<details>
-<summary><strong>16.7 Changelog</strong></summary>
+### Changelog
 
 | Version | Date | Change |
 |---|---|---|
-| **v0.2** | 2026-05-24 | Material revision. Renderer architecture realigned to **single MapLibre GL JS renderer (native + admitted plugin set)** per **ADR-0007 (PROPOSED)**. Multi-renderer framing removed throughout. Prior dual-renderer card `KFM-P2-FEAT-0012` marked superseded *(retained in the register with `superseded_by: ADR-0007` per directory-rules §17)*. Added `PluginAdmission` object family to §7. Expanded §8 with view-mode table and plugin-admission gates (§8.4). Added `PLUGIN_ADMISSION.md` sibling to §12 directory tree. Added single-renderer anti-patterns (§13). Closed the "secondary renderer edition" open question via §14 note. Added ADR-0007 and `docs/architecture/maplibre-3d.md` to §15 related docs. Updated glossary (§16.1) and added quick-reference card for plugin admission (§16.4). |
-| **v0.1** | 2026-05-24 | Initial draft. |
+| **v1.0** | 2026-08-14 | Repository-grounded same-path rewrite against current main; accepted Directory Rules basis, verified child map, current scaffold/HOLD evidence, corrected ADR status/path, bounded target architecture, validation, rollback, and no-loss ledger |
+| **v0.2** | 2026-05-24 | Single-renderer-oriented document-only revision with proposed path, plugin, and runtime assumptions |
+| **v0.1** | 2026-05-24 | Initial draft |
 
-</details>
-
----
-
-**Related (mini)** · [`docs/adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md`](../../adr/ADR-0007-maplibre-is-the-sole-browser-renderer.md) · [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) · [`Master_MapLibre_Components-Functions-Features_v2.1_FULL.md`](../../../Master_MapLibre_Components-Functions-Features_v2.1_FULL.md) · [`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §§18, 19, 24.9.2](../../../Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md) · [`ai-build-operating-contract.md` §22](../../../ai-build-operating-contract.md) · [`directory-rules.md` §7.1](../../../directory-rules.md) · [`docs/architecture/governed-api/README.md`](../governed-api/README.md) · [`docs/architecture/governed-ai/ROUTE_MAP.md`](../governed-ai/ROUTE_MAP.md) · [`docs/architecture/cross-domain/README.md`](../cross-domain/README.md)
-
-**Last updated:** 2026-05-24 · **Doc version:** v0.2 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-12 family)*
-
-[↑ Back to top](#top)
+[Back to top](#top)
