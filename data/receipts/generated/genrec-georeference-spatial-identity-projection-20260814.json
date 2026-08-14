@@ -1,0 +1,149 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-spatial-projection.yml": "sha256:97c62c47678969b5cae6dde2c7c143b837238e2b9cfdd9c990cd3085c5c9c3ee",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "sha256:cd7954bd46613e480d2fbd7b38223b417dac3dbd2d49967a73441b6863694657",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md": "sha256:abf24db718a5465cae046b47ca1213a7bd8d7b5e713da6d4538d7e4cce080f7d",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/projection_request.json": "sha256:af4fd881e1e2ed04ed67fd89038d57e74b84aebea0b99ba061783f16ce0cf6b4",
+    "tests/generators/test_project_georeference_spatial_distribution.py": "sha256:8814b92847a40937c9ab16cefb2c7ea8eb82bbdf09b9c4fd6cd63bac9cbc68e5",
+    "tools/generators/project_georeference_spatial_distribution.py": "sha256:ea6b4ddb27ce48939c58d9bbb8370e14cd6f8dbebe52935699a5835eca6dc350"
+  },
+  "artifact_paths": [
+    ".github/workflows/map-georeference-spatial-projection.yml",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/projection_request.json",
+    "tests/generators/test_project_georeference_spatial_distribution.py",
+    "tools/generators/project_georeference_spatial_distribution.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md",
+      "id": "PASS_18_INV_317_GCP_DISTRIBUTION",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/intake/exploratory/georeference-control-point-set-source-map.md",
+      "id": "RESOURCE_SET_HASH_FOLLOW_UP",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/map/georeference_control_point_set.md",
+      "id": "GEOREFERENCE_CONTROL_POINT_SET",
+      "validated": true
+    },
+    {
+      "evidence_ref": "contracts/map/georeference_spatial_distribution.md",
+      "id": "GEOREFERENCE_SPATIAL_DISTRIBUTION",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-14T14:54:59Z",
+  "emitter": "OpenAI Codex in ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "repo:docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md@f8bb66f9a000e031e18143539dfe4259a6c13657",
+      "repo:docs/intake/exploratory/georeference-control-point-set-source-map.md@f8bb66f9a000e031e18143539dfe4259a6c13657",
+      "repo:contracts/map/georeference_control_point_set.md@f8bb66f9a000e031e18143539dfe4259a6c13657",
+      "repo:contracts/map/georeference_spatial_distribution.md@f8bb66f9a000e031e18143539dfe4259a6c13657",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f8bb66f9a000e031e18143539dfe4259a6c13657",
+      "attached:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-317:physical-pages-329-330"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "2026-08-14"
+  },
+  "notes": "Fixture-only compatibility adapter for two explicit repository follow-ups and Pass 18 card KFM-P18-INV-317. It validates a canonical GCP set, binds only its resource_set_hash in the projection wrapper, maps exact ordered point IDs and resource coordinates into an unchanged spatial-distribution v1 candidate, and recomputes finite distribution metrics. Target-coordinate-only changes leave the resource-space projection unchanged. It creates no source, GCP, evidence, policy, promotion, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:aae14768e8d26ed48759ed9ae8413767f431f7cb8f9ed725e1c0378ed321f9fe",
+  "receipt_id": "genrec-georeference-spatial-identity-projection-20260814",
+  "truth_labels": {
+    ".github/workflows/map-georeference-spatial-projection.yml": "CONFIRMED",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "CONFIRMED",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/projection_request.json": "CONFIRMED",
+    "tests/generators/test_project_georeference_spatial_distribution.py": "CONFIRMED",
+    "tools/generators/project_georeference_spatial_distribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Refreshed to main@f8bb66f9a000e031e18143539dfe4259a6c13657 after comparing the 15-commit delta from the authoring baseline; no changed path overlaps this adapter. Current contracts, schemas, validators, tests, workflows, accepted ADR, adopted Directory Rules, recent commits, issues, branches, and open pull requests were inspected; open draft PR #2789 is ADR-summary-only."
+    },
+    {
+      "gate": "focused-projection-unittest-9",
+      "outcome": "PASS",
+      "reason": "Nine deterministic adapter tests cover downstream candidate validity, resource identity and exact-order preservation, target-lane independence, invalid source identity, threshold and mask failure, no-network behavior, stdout default, and overwrite denial."
+    },
+    {
+      "gate": "adjacent-validator-pytest-22",
+      "outcome": "PASS",
+      "reason": "All 22 existing control-point-set and spatial-distribution validator tests remain green."
+    },
+    {
+      "gate": "deterministic-cli-smoke",
+      "outcome": "PASS",
+      "reason": "The committed valid GCP set and projection request emit parseable JSON without filesystem writes."
+    },
+    {
+      "gate": "python-compile-and-diff-check",
+      "outcome": "PASS",
+      "reason": "Authored Python compiles and the patch has no whitespace errors."
+    },
+    {
+      "gate": "repository-guardrails",
+      "outcome": "PASS",
+      "reason": "The refreshed baseline passes validator-registry, workflow-security, and repository-topology ratchets; branch replay is required before publication."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "Six authored non-receipt artifacts are bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt grants no ready, merge, release, deployment, or publication authority."
+    }
+  ]
+}
