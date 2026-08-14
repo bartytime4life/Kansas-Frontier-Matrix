@@ -457,6 +457,9 @@ def apply_mutation(base: dict[str, object], mutation: str) -> dict[str, object]:
         assert isinstance(subject, dict)
         subject["pmtiles_sha256"] = _sha256(b"different-archive")
         _rebind_sidecar_digest(bundle, "pmsig")
+    elif mutation == "PMSIG_SIGNATURE_CARRIER_MISMATCH":
+        pmsig["signature"] = "DEVELOPMENT_PLACEHOLDER_CORRUPTED"
+        _rebind_sidecar_digest(bundle, "pmsig")
     elif mutation == "RANGE_OUT_OF_BOUNDS":
         ranges = pmidx["ranges"]
         assert isinstance(ranges, list) and isinstance(ranges[0], dict)

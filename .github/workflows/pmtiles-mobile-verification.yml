@@ -1,8 +1,8 @@
 # KFM synthetic mobile PMTiles verification workflow.
 #
 # Responsibility:
-# - Prove one fixture-only PMTiles v3 archive/index/signature-subject/receipt
-#   packet under deterministic Python and mobile-emulated browser checks.
+# - Prove one fixture-only PMTiles v3 archive/index/signature-subject/carrier/
+#   receipt packet under deterministic Python and mobile-emulated browser checks.
 # - Preserve explicit cryptographic, MapLibre-runtime, policy, release, and
 #   publication holds.
 #
@@ -35,10 +35,17 @@ name: pmtiles-mobile-verification
       - "apps/explorer-web/package.json"
       - "apps/explorer-web/playwright.config.ts"
       - "apps/explorer-web/tsconfig.json"
+      - ".github/dependency-install.v1.json"
       - "package.json"
+      - "pyproject.toml"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/validators/validate_generated_receipt.py"
       - "data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json"
+      - "data/receipts/generated/genrec-mobile-pmtiles-signature-denial-20260814.json"
   push:
     branches: [main]
     paths:
@@ -55,10 +62,17 @@ name: pmtiles-mobile-verification
       - "apps/explorer-web/package.json"
       - "apps/explorer-web/playwright.config.ts"
       - "apps/explorer-web/tsconfig.json"
+      - ".github/dependency-install.v1.json"
       - "package.json"
+      - "pyproject.toml"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
+      - "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      - "tools/ci/install_python_ci.py"
+      - "tools/validators/_common/local_resolver.py"
+      - "tools/validators/validate_generated_receipt.py"
       - "data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json"
+      - "data/receipts/generated/genrec-mobile-pmtiles-signature-denial-20260814.json"
   workflow_dispatch:
 
 permissions:
@@ -94,6 +108,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install declared Python validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
       - name: Validate Python fixture integrity and polarity
         shell: bash
         run: |
@@ -105,7 +122,10 @@ jobs:
             "tools/validators/pmtiles/validate_header.py"
             "tools/validators/pmtiles/verify_merkle.py"
             "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+            "tools/validators/validate_generated_receipt.py"
             "tests/validators/test_pmtiles_mobile_verification_fixture.py"
+            "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+            "data/receipts/generated/genrec-mobile-pmtiles-signature-denial-20260814.json"
           )
           for path in "${required_paths[@]}"; do
             if [[ ! -f "$path" ]]; then
@@ -123,6 +143,14 @@ jobs:
 
           python tools/validators/pmtiles/validate_mobile_verification_fixture.py \
             --fixtures
+
+      - name: Validate successor generated receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-mobile-pmtiles-signature-denial-20260814.json \
+            --repo-root .
 
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -234,8 +262,8 @@ jobs:
             echo "### Synthetic mobile PMTiles verification"
             echo
             echo "- Result: \`${{ job.status }}\`"
-            echo "- Python: header, archive digest, PMIDX leaf/root/range, tile digest, PMSIG subject, RunReceipt subject, exact fixture polarity, no-network guard"
-            echo "- Browser: 390x844 viewport, device scale factor 3, touch/mobile emulation, in-memory PNG decode/canvas render, tampered-archive denial, external-request absence"
+            echo "- Python: header, archive digest, PMIDX leaf/root/range, tile digest, PMSIG subject/carrier, RunReceipt subject, exact fixture polarity, no-network guard"
+            echo "- Browser: 390x844 viewport, device scale factor 3, touch/mobile emulation, in-memory PNG decode/canvas render, tampered-archive denial, signature-carrier denied state, external-request absence"
             echo "- Holds: cryptographic verification, live MapLibre runtime boot, policy, release authorization, deployment, publication"
             echo "- Authority: NONE; synthetic fixture proof only"
           } >> "$GITHUB_STEP_SUMMARY"

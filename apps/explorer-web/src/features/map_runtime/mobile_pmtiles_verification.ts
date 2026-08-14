@@ -34,6 +34,7 @@ export type MobilePmtilesVerificationCode =
   | "MOBILE_PMTILES_TILE_BUDGET_EXCEEDED"
   | "MOBILE_PMTILES_TILE_PAYLOAD_INVALID"
   | "MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH"
+  | "MOBILE_PMTILES_SIGNATURE_HOLD_INVALID"
   | "MOBILE_PMTILES_RUNRECEIPT_SUBJECT_MISMATCH"
   | "MOBILE_PMTILES_MAPLIBRE_AUTHORITY_OVERCLAIM"
   | "MOBILE_PMTILES_AUTHORITY_OVERCLAIM"
@@ -759,12 +760,20 @@ export async function verifyMobilePmtilesFixture(
     !isRecord(subject) ||
     subject.pmtiles_sha256 !== archiveDigest ||
     subject.pmidx_merkle_root !== pmidx.merkleRoot ||
-    subject.spec_hash !== pmidx.specHash ||
+    subject.spec_hash !== pmidx.specHash
+  ) {
+    return failure("MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH", "DENY", {
+      archiveBytes: archiveBytes.length,
+      tileBytes: tileBytes.length,
+      verifyMs: now() - verifyStart,
+    });
+  }
+  if (
     pmsig.key_id !== "TEST_ONLY_UNAPPROVED_KEY" ||
     pmsig.signature !==
       "DEVELOPMENT_PLACEHOLDER_NOT_A_VALID_COSE_SIGNATURE"
   ) {
-    return failure("MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH", "DENY", {
+    return failure("MOBILE_PMTILES_SIGNATURE_HOLD_INVALID", "DENY", {
       archiveBytes: archiveBytes.length,
       tileBytes: tileBytes.length,
       verifyMs: now() - verifyStart,

@@ -9,15 +9,18 @@
     <main aria-labelledby="mobile-pmtiles-title">
       <h1 id="mobile-pmtiles-title">Synthetic mobile PMTiles verification</h1>
       <p>
-        This fixture verifies in-memory synthetic archive, index, signature-subject,
-        receipt, tile, decode, and render behavior. It does not load MapLibre or
-        authorize release.
+        This fixture verifies in-memory synthetic archive, index,
+        signature-subject, signature-carrier, receipt, tile, decode, and render
+        behavior. It does not load MapLibre or authorize release.
       </p>
       <button id="verify-mobile-pmtiles" type="button">
         Verify and render synthetic tile
       </button>
       <button id="verify-tampered-pmtiles" type="button">
         Verify tampered archive
+      </button>
+      <button id="verify-signature-mismatch" type="button">
+        Verify signature mismatch
       </button>
       <p id="mobile-pmtiles-status" role="status" aria-live="polite">
         HOLD / VERIFICATION_REQUIRED

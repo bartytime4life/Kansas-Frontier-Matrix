@@ -32,7 +32,7 @@ home.
 - a 390 x 844, device-scale-factor 3, touch-capable mobile profile;
 - archive, tile, verification, and decode/render budgets;
 - one 1 x 1 PNG pixel with expected RGBA `[17, 34, 51, 255]`;
-- eight finite positive and negative cases.
+- nine finite positive and negative cases.
 
 The archive bytes are synthetic and contain no Kansas source payload,
 coordinate-sensitive record, person, species occurrence, infrastructure
@@ -46,6 +46,7 @@ location, credential, or external URL.
 | Archive byte altered | `DENY / MOBILE_PMTILES_ARCHIVE_DIGEST_MISMATCH` |
 | PMIDX root altered | `DENY / MOBILE_PMTILES_MERKLE_ROOT_MISMATCH` |
 | PMSIG subject altered | `DENY / MOBILE_PMTILES_SIGNATURE_SUBJECT_MISMATCH` |
+| PMSIG signature carrier altered | `DENY / MOBILE_PMTILES_SIGNATURE_HOLD_INVALID` |
 | Tile range outside archive | `DENY / MOBILE_PMTILES_RANGE_OUT_OF_BOUNDS` |
 | Tile digest altered | `DENY / MOBILE_PMTILES_TILE_DIGEST_MISMATCH` |
 | MapLibre readiness overclaimed | `DENY / MOBILE_PMTILES_MAPLIBRE_AUTHORITY_OVERCLAIM` |
@@ -64,6 +65,11 @@ load or boot MapLibre because the current repository keeps the
 `@kfm/maplibre` package and runtime dependency under an explicit readiness
 hold. A future MapLibre-boot slice requires separately reviewed dependency,
 adapter, protocol, browser-budget, and rollback evidence.
+
+The signature-carrier case changes the explicit development placeholder and
+rebinds the PMSIG sidecar digest so the verifier reaches the carrier check. It
+proves a distinct fail-closed UI result; it does not verify COSE, approve a key,
+or lift `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`.
 
 ## Validation
 
@@ -84,5 +90,5 @@ result is fixture integrity and browser-handoff evidence only.
 
 Before merge, close the draft pull request and leave its branch unmerged. After
 an authorized merge, revert the fixture, validator, tests, workflow, feature
-module, documentation, and generated receipt together. No live source, cache,
-release, deployment, or publication state exists to unwind.
+module, documentation, and successor generated receipt together. No live
+source, cache, release, deployment, or publication state exists to unwind.
