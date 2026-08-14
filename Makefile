@@ -8,7 +8,10 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help validate test schemas validator-registry-check workflow-security repository-topology repository-guardrails policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
+VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
+
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-guardrails policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -17,7 +20,6 @@ help:
 	@echo "  validate              Run aggregate schema validators and schema/contract tests"
 	@echo "  schemas               Run configured aggregate validators against fixtures"
 	@echo "  test                  Run repository schema and contract tests"
-	@echo "  validator-registry-check Validate the bounded validator registry"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
 	@echo "  repository-guardrails Run registry, workflow, and topology guardrails"
@@ -35,6 +37,15 @@ help:
 	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
 	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
 	@echo "  evidence-resolver-deny Run its fail-closed negative fixture suite"
+	@echo
+	@echo "Registry-driven validator profiles (finite checker outcomes only):"
+	@echo "  validators            Alias of validator-full"
+	@echo "  validator-list        List profiles and registered validator IDs"
+	@echo "  validator-full        Run every registered validator once"
+	@echo "  validator-focused     Run the focused trust-spine profile"
+	@echo "  validator-release-profile Run the release-adjacent fixture profile; no release effect"
+	@echo "  validator-changed-area Select validators from CHANGED_PATH_FILE"
+	@echo "  validator-registry-check Validate the registry without running validators"
 	@echo
 	@echo "Implemented local runtime targets:"
 	@echo "  api-run               Start the governed API locally (alias of governed-api-dev)"
@@ -58,8 +69,32 @@ schemas:
 test:
 	python -m pytest tests/schemas tests/contracts -q
 
+# Canonical registry-driven validator profiles. The historical `schemas` target
+# remains a workflow-compatible surface and delegates through its compatibility
+# wrapper; new operator-facing profile targets use tools/validate_all.py.
+validators: validator-full
+
+validator-list:
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --list
+
+validator-full:
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile full
+
+validator-focused:
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile focused
+
+validator-release-profile:
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile release-dry-run
+
+validator-changed-area:
+	@if [ -z "$(CHANGED_PATH_FILE)" ]; then \
+		echo "ERROR: set CHANGED_PATH_FILE to a newline-delimited repository path list" >&2; \
+		exit 2; \
+	fi
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --profile changed-area --changed-path-file "$(CHANGED_PATH_FILE)"
+
 validator-registry-check:
-	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/validate_all.py --validate-registry
+	$(KFM_VALIDATION_ENV) $(VALIDATOR_ORCHESTRATOR) --validate-registry
 
 workflow-security:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/validators/governance --pattern 'test_validate_workflow_security.py' --verbose
