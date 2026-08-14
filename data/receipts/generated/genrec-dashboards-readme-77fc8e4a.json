@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-dashboards-readme-77fc8e4a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/README.md": "sha256:77fc8e4a63be41fb746e135bfc569a0bc80a345526f78d2f19b7cc157ad38d4f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-14"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260814-170400).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/README.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/INDICATOR_CATALOG.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/governance/@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/operational/@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/domain/@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/dashboards/observability/@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/README.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/doctrine/directory-rules.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:control_plane/root_registry.yaml@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:.github/CODEOWNERS@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:CONTRIBUTING.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:data/receipts/generated/README.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, complete target content and history, parent docs contract, accepted ADR-0029, adopted Directory Rules v2, top-level root projection, CODEOWNERS routing, contribution rules, dashboard catalogs, four complete category subtrees, atlas path, review-console boundary, generated-receipt contract, and exact-target overlap were inspected before authoring."
+    },
+    {
+      "gate": "dashboard-subtree-inventory",
+      "outcome": "PASS",
+      "reason": "The four pinned subtree listings reconcile to 5 governance, 4 operational, 14 domain, and 11 observability specification files: 34 specs plus seven README/catalog navigation files, or 41 Markdown files total."
+    },
+    {
+      "gate": "metadata-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one parseable KFM_META_BLOCK_V2, one H1, logical heading progression, six balanced fenced blocks, UTF-8 text, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All internal quick-jump targets resolve, legacy section anchors for the README contract, directory tree, quickstart, indicator catalog, and open questions are preserved, and all 21 unique repository-relative destinations were confirmed from the pinned repository tree or direct fetches."
+    },
+    {
+      "gate": "authority-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "The README confirms existing path and inventory while retaining HOLD for nested-lane placement and NEEDS VERIFICATION for runtime, telemetry, enforcement, and release; it does not use its own edit to admit the lane or transfer machine, policy, evidence, or release authority into docs."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private endpoints, telemetry payloads, personal data, restricted source material, exact sensitive locations, hidden reasoning, or public-release claims."
+    },
+    {
+      "gate": "generated-receipt-json-and-binding",
+      "outcome": "PASS",
+      "reason": "The receipt parses as duplicate-free JSON, uses the current contract field vocabulary, covers the sole AI-modified artifact, and declares the exact final SHA-256 binding."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available for executing tools/validators/validate_generated_receipt.py before push; hosted exact-head checks will provide repository-native validation."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no dashboard code, query, panel, telemetry store, contract, schema, policy, data, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The generated receipt remains pending authorized human review and creates no approval, placement admission, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "dashboard-target-baseline",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/README.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "dashboard-current-tree",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "dashboard-spec-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "indicator-mirror",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/INDICATOR_CATALOG.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "parent-docs-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/README.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "directory-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc30e1d38f9a4ecf45fd589d388886fc872dd189"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T19:57:47Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization of docs/dashboards/README.md. The update replaces stale 2026-05 repository assumptions with pinned current inventory, distinguishes the canonical docs root from the nested dashboards placement HOLD, records 34 specification files and 41 Markdown files total, corrects the atlas path, preserves trust boundaries and legacy anchors, and leaves runtime, telemetry, policy, release, deployment, and publication unchanged. The receipt is provenance/process memory only; human review remains pending."
+}
