@@ -78,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260808.json \
+            data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260814.json \
             --repo-root .
 
       - name: Record trust boundary
