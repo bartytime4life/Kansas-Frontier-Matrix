@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests/domains/fauna/readme
 title: Fauna Domain Test Lane README
 type: test-lane-readme
-version: v0.2.1
+version: v0.2.2
 status: draft
 owners:
   - <PLACEHOLDER — Fauna steward>
@@ -11,10 +11,10 @@ owners:
   - <PLACEHOLDER — Release steward>
   - <PLACEHOLDER — UI steward>
 created: 2026-07-05
-updated: 2026-07-25
+updated: 2026-08-14
 policy_label: public
 implementation_status: bounded-public-safe-fixture-validation-slice-hardened
-verification_status: seven deterministic standard-library tests over six fixtures verified locally; production schemas, source admission, policy runtime, proof, release, promotion, and publication remain unverified and held
+verification_status: eight deterministic standard-library tests over seven fixtures verified locally; production schemas, source admission, policy runtime, proof, release, promotion, and publication remain unverified and held
 related:
   - tests/README.md
   - docs/doctrine/directory-rules.md
@@ -125,8 +125,8 @@ tests/domains/fauna/
 | `tests/README.md` allows policy, evidence-resolution, lifecycle, receipt/proof, release-manifest, governed API, UI trust-state, e2e, runtime-proof, and domain-specific tests | CONFIRMED from current repo docs. |
 | `tests/README.md` excludes sensitive material, live network calls, duplicate authority homes, trust-bearing receipts/proofs, and release decisions from `tests/` | CONFIRMED from current repo docs. |
 | Fauna domain docs define Fauna as sensitivity-aware and deny-by-default for policy-withheld material | CONFIRMED from current repo docs. |
-| Accepted executable test slice | CONFIRMED: `test_fauna_smoke.py` contains seven standard-library tests for the synthetic public-safe fixture profile. |
-| Accepted fixture inventory | CONFIRMED only for one positive and five fail-closed JSON fixtures named in §3.1; all other fixture maturity remains unchanged. |
+| Accepted executable test slice | CONFIRMED: `test_fauna_smoke.py` contains eight standard-library tests for the synthetic public-safe fixture profile. |
+| Accepted fixture inventory | CONFIRMED only for two positive and five fail-closed JSON fixtures named in §3.1; all other fixture maturity remains unchanged. |
 | Accepted validator | CONFIRMED: `tools/validators/domains/fauna/validate_public_safe_fixture.py`; standard-library, deterministic, fixture-only, and hardened against declared location aliases and free-form URL/coordinate-shaped clues. |
 | Current occurrence schemas | CONFIRMED as permissive `PROPOSED` scaffolds; this slice does not promote or treat them as production validation authority. |
 | Current source descriptors | CONFIRMED as `PROPOSED` templates with unresolved `TBD` role, authority, rights, sensitivity, cadence, and access fields; this slice accepts only `fixture:` refs and synthetic source role. |
@@ -139,7 +139,7 @@ This README defines the parent test-lane contract. Acceptance of the bounded sli
 | Surface | Accepted scope |
 |---|---|
 | Validator | Synthetic fixture safety only; it does not validate `OccurrencePublic`, source admission, policy execution, evidence closure, geoprivacy transforms, release, or publication. |
-| Positive fixture | `fixtures/domains/fauna/valid/non_sensitive_occurrence.json` passes only because it is synthetic, fixture-only, location-withheld, no-network, and explicitly not released or promotion-eligible. |
+| Positive fixtures | `fixtures/domains/fauna/valid/non_sensitive_occurrence.json` and `sensitive_withheld_occurrence.json` pass only because they are synthetic, fixture-only, location-withheld, no-network, and explicitly not released or promotion-eligible. The sensitive scenario additionally requires a synthetic redaction-receipt reference, matching geoprivacy state, and an explicit withholding caveat. |
 | Negative fixtures | Missing source reference; unresolved taxonomy; unresolved evidence, rights, policy, geoprivacy, review, correction, and rollback; unresolved sensitivity plus precision-shaped keys; and aliased/free-form location or URL-shaped clues return stable fail-closed findings. |
 | Hardening coverage | Common coordinate/location aliases, finite and bounded oversized numeric values under location-like keys, malformed caveat containers, more than 16 caveats, caveats over 512 characters, whitespace- or Unicode-format-obfuscated URL-like strings, control characters, and comma/semicolon/slash/whitespace coordinate-pair-shaped strings fail closed without echoing protected values. Cyclic, deeper-than-64-level, more-than-4,096-node, over-1,000,000-byte, over-512-digit-integer, and unparseable JSON inputs return bounded findings. Structural limit findings short-circuit secondary field inspection. |
 | Network posture | The validator uses only the Python standard library; every accepted test blocks socket and URL-opening calls. |
@@ -259,7 +259,7 @@ Other Fauna test, policy, release, UI, tile, Playwright, or validator commands r
 | Question | Status | Notes |
 |---|---|---|
 | Which Fauna child lanes already contain executable tests? | PARTIALLY RESOLVED | Only the bounded root `test_fauna_smoke.py` slice is accepted; child-lane executable maturity remains NEEDS VERIFICATION. |
-| Which fixture families already exist? | PARTIALLY RESOLVED | One positive and five negative JSON fixtures are accepted for the bounded slice; other fixture families remain NEEDS VERIFICATION. |
+| Which fixture families already exist? | PARTIALLY RESOLVED | Two positive and five negative JSON fixtures are accepted for the bounded slice; other fixture families remain NEEDS VERIFICATION. |
 | Which validators are canonical for Fauna domain tests? | PARTIALLY RESOLVED | `validate_public_safe_fixture.py` is accepted only for synthetic fixture safety; broader validator ownership remains open. |
 | Which schema and contract files are canonical for Fauna tests? | NEEDS VERIFICATION | Must inspect `schemas/` and `contracts/`. |
 | Which policy bundles govern Fauna sensitivity and admissibility? | NEEDS VERIFICATION | Must inspect policy roots. |
@@ -289,6 +289,7 @@ This parent lane is mature when:
 
 | Date | Version | Change |
 |---|---:|---|
+| 2026-08-14 | v0.2.2 | Added a synthetic sensitive-withheld positive fixture and enforced its synthetic redaction-receipt reference, matching geoprivacy state, explicit precision-withholding caveat, and held release/promotion posture. |
 | 2026-07-25 | v0.2.1 | Hardened the bounded fixture-safety slice against aliased numeric location fields, malformed caveats, normalized URL-like strings, control characters, and coordinate-pair-shaped free text without expanding production authority. |
 | 2026-07-25 | v0.2 | Accepted one deterministic, no-network, synthetic fixture-safety slice and kept all production policy, schema, source, proof, release, promotion, and publication claims held. |
 | 2026-07-05 | v0.1 | Replaced greenfield stub with governed parent README for the Fauna domain test lane. |
@@ -297,6 +298,6 @@ This parent lane is mature when:
 
 ## 14. Last reviewed
 
-**2026-07-25** — Verified the Directory Rules lane placement, current fail-closed Fauna policy scaffolds, permissive occurrence-schema scaffolds, bounded fixture inventory, and unresolved source descriptors. Accepted only the seven-test, six-fixture synthetic safety slice. All production validation, source admission, evidence, policy, review, geoprivacy, proof, release, correction, rollback, promotion, and publication behavior remains outside scope or NEEDS VERIFICATION.
+**2026-08-14** — Verified the Directory Rules lane placement, current fail-closed Fauna policy scaffolds, permissive occurrence-schema scaffolds, bounded fixture inventory, and unresolved source descriptors. Accepted only the eight-test, seven-fixture synthetic safety slice. All production validation, source admission, evidence, policy, review, geoprivacy, proof, release, correction, rollback, promotion, and publication behavior remains outside scope or NEEDS VERIFICATION.
 
 [↑ Back to top](#top)
