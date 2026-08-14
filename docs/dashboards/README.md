@@ -1,62 +1,85 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid-pending>
+doc_id: kfm://doc/dashboards-readme
 title: Dashboards — Human-facing dashboard specifications and indicator catalogs
-type: standard
-version: v0.1
-status: draft
-owners: <dashboards-stewards>  # PROPOSED placeholder; resolve before review (see §FAQ)
+type: documentation-lane-readme
+version: v1.0
+status: "repository-grounded; active-path; placement-hold; runtime-needs-verification"
+owners:
+  - "@bartytime4life"
+owner_status: "CONFIRMED GitHub review route through the repository default CODEOWNERS rule; dashboard, observability, domain, and independent-review stewardship assignments remain NEEDS VERIFICATION"
 created: 2026-05-20
-updated: 2026-05-20
-policy_label: public
+updated: 2026-08-14
+policy_label: repository-facing
+truth_posture: cite-or-abstain
+owning_root: docs/
+responsibility: "Define the human-readable dashboard-specification lane, its current repository inventory, trust boundaries, authoring contract, validation expectations, placement hold, and relationships to runtime, evidence, policy, and release authorities."
+current_path: docs/dashboards/README.md
+placement_status: "CONFIRMED existing path under canonical docs/ root; HOLD as an unadmitted direct-child lane in the adopted Directory Rules v2 canonical docs map"
+runtime_status: "NEEDS VERIFICATION — specification presence is not running-dashboard evidence"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: dc30e1d38f9a4ecf45fd589d388886fc872dd189
+  target_prior_blob: 3749fc0099443c3c8b024357e0f1694253ff735e
+  docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  dashboard_catalog_blob: 30b9d35ede3410a8d2f946279891ae5ec2482a62
+  indicator_catalog_blob: 4fe3d6be5b0b6ba6359a301942c01d713c8e970f
+  governance_tree: 448e5614c90534266064dee9a218519876ca8b1c
+  operational_tree: c24b6e74e62d0c895282a2e1d9defbe62750f62c
+  domain_tree: f27f67d3d13b1082a8edd06d464a36c116130805
+  observability_tree: d330bc33e5f94dd54f4d5487fe3ed30ac088f7c7
 related:
-  - docs/doctrine/directory-rules.md            # §6.1 (placement authority)
-  - docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md   # Ch. 24.11 (Master Governance Health Indicators)
-  - docs/dashboards/INDICATOR_CATALOG.md        # mirror of Atlas §24.11
-  - docs/dashboards/DASHBOARD_CATALOG.md        # index of all dashboard specs in this lane
-  - docs/dashboards/governance/README.md        # per-category governance-health specs (5)
-  - docs/dashboards/operational/README.md       # per-card operational specs (4)
-  - docs/dashboards/domain/README.md            # per-domain dashboard specs (13)
-  - docs/dashboards/observability/README.md     # per-card observability-substrate specs (1)
-  - docs/registers/DRIFT_REGISTER.md            # placement drift entry will live here
-  - docs/registers/VERIFICATION_BACKLOG.md      # VB-11-08 (governance health instrumentation)
-  - docs/reports/README.md                      # neighbor: generated review/release reports (read-only)
-  - docs/architecture/README.md                 # apps/review-console, apps/governed-api wiring
-tags: [kfm, docs, dashboards, observability, indicators, governance]
+  - docs/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/dashboards/DASHBOARD_CATALOG.md
+  - docs/dashboards/INDICATOR_CATALOG.md
+  - docs/dashboards/governance/README.md
+  - docs/dashboards/operational/README.md
+  - docs/dashboards/domain/README.md
+  - docs/dashboards/observability/README.md
+  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - apps/review-console/README.md
+  - control_plane/root_registry.yaml
+  - data/receipts/generated/README.md
+tags: [kfm, docs, dashboards, specifications, governance-health, operational-health, domain-health, observability, cite-or-abstain]
 notes:
-  - "Placement under docs/dashboards/ is PROPOSED — not in Directory Rules §6.1 canonical tree."
-  - "Subfolder of docs/ is illustrative-not-exhaustive per §6.1 v1.1 note, but a drift entry SHOULD be opened."
-  - "Mounted repo state UNKNOWN; all path/owner/badge target claims are PROPOSED unless verified."
+  - "v1.0 is a same-path repository reconciliation. It replaces the 2026-05 evidence boundary with a pinned current-tree inventory and adopted Directory Rules v2 posture."
+  - "The current dashboards subtree contains 34 specification files and seven lane/catalog navigation files, for 41 Markdown files total at the pinned base."
+  - "Specification-file presence is CONFIRMED; running dashboards, telemetry production, query execution, metric computation, alerting, and deployed review-console integration remain NEEDS VERIFICATION."
+  - "The dashboards lane reports posture. It does not create evidence, policy, review, release, correction, rollback, or publication authority."
+  - "This documentation-only update does not settle the placement hold, migrate the lane, resolve duplicate observability filenames, or alter runtime behavior."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Dashboards · `docs/dashboards/`
 
-> Human-facing specifications, ownership records, and indicator catalogs for KFM's
-> governance and operational dashboards — not the running dashboards themselves.
+> Human-facing specifications, catalogs, ownership expectations, and trust-boundary guidance for KFM dashboard surfaces. **This lane specifies and indexes; it does not run dashboards or create truth.**
 
-<!-- Badge row: minimum 3, placeholders allowed -->
-![Authority](https://img.shields.io/badge/authority-PROPOSED-orange)
-![Status](https://img.shields.io/badge/status-draft-lightgrey)
-![Truth posture](https://img.shields.io/badge/truth-cite--or--abstain-blue)
-![Policy label](https://img.shields.io/badge/policy-public-brightgreen)
-![Placement](https://img.shields.io/badge/placement-NEEDS%20VERIFICATION-yellow)
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
-![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--20-informational)
-
-**Status:** draft · **Owners:** `<dashboards-stewards>` (PROPOSED placeholder) · **Last reviewed:** 2026-05-20
-
----
+<p>
+  <img alt="Path: confirmed" src="https://img.shields.io/badge/path-CONFIRMED-1f6feb">
+  <img alt="Placement: hold" src="https://img.shields.io/badge/placement-HOLD-b42318">
+  <img alt="Specifications: 34 confirmed" src="https://img.shields.io/badge/specifications-34%20CONFIRMED-1a7f37">
+  <img alt="Runtime: needs verification" src="https://img.shields.io/badge/runtime-NEEDS%20VERIFICATION-d4a72c">
+  <img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-8250df">
+  <img alt="Publication: none" src="https://img.shields.io/badge/publication-none-6e7781">
+</p>
 
 > [!IMPORTANT]
-> **Placement drift notice (PROPOSED).** `docs/dashboards/` is **not currently listed**
-> in the Directory Rules §6.1 canonical `docs/` tree. The §6.1 list is **illustrative,
-> not exhaustive** (v1.1 note), so this folder is not *forbidden* — but a drift entry in
-> [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) SHOULD be opened,
-> and an ADR (per Directory Rules §17, "new compatibility root, new anti-pattern, new
-> placement example") may be required if this folder hardens into a stable home. Until
-> resolved, every path under `docs/dashboards/` is **PROPOSED** and **NEEDS VERIFICATION**
-> against mounted repo state. See [Open questions](#11-task-list--open-questions).
+> **Existence, placement, specification, implementation, and publication are separate states.** The path and its current file inventory are **CONFIRMED** at the pinned repository snapshot. The parent `docs/` responsibility root is canonical under accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md). The nested `docs/dashboards/` lane is not listed in the adopted Directory Rules v2 canonical direct-child map, so its long-term placement remains **HOLD** rather than silently canonicalized.
 
----
+> [!CAUTION]
+> **A dashboard is a downstream carrier.** A green panel, trend line, SLO, trace, metric, log, report, badge, or screenshot does not substitute for an `EvidenceBundle`, validator result, `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, correction path, rollback target, or an authorized release decision.
+
+> [!NOTE]
+> This same-path documentation update preserves the existing lane while its disposition is reviewed. It does not authorize a new documentation root, move files, create runtime code, activate telemetry, release data, deploy a dashboard, or publish KFM knowledge.
 
 ## Quick jump
 
@@ -64,13 +87,14 @@ notes:
 - [2. Repo fit](#2-repo-fit)
 - [3. Inputs](#3-inputs)
 - [4. Exclusions](#4-exclusions-what-does-not-belong-here)
-- [5. README contract (§15)](#5-readme-contract-directory-rules-15)
-- [6. Directory tree (PROPOSED)](#6-directory-tree-proposed)
+- [5. README contract](#5-readme-contract-directory-rules-15)
+- [6. Current directory map](#6-directory-tree-proposed)
 - [7. Architecture diagram](#7-architecture-diagram)
 - [8. Dashboard catalog](#8-dashboard-catalog)
-- [9. Indicator catalog (Atlas v1.1 Ch. 24.11)](#9-indicator-catalog-atlas-v11-ch-2411)
-- [10. Quickstart — authoring a dashboard spec](#10-quickstart--authoring-a-dashboard-spec)
-- [11. Task list & open questions](#11-task-list--open-questions)
+- [9. Indicator catalog](#9-indicator-catalog-atlas-v11-ch-2411)
+- [10. Quickstart](#10-quickstart--authoring-a-dashboard-spec)
+- [Validation and acceptance](#validation-and-acceptance)
+- [11. Task list and open questions](#11-task-list--open-questions)
 - [12. FAQ](#12-faq)
 - [13. Related docs](#13-related-docs)
 - [14. Appendix](#14-appendix)
@@ -79,556 +103,401 @@ notes:
 
 ## 1. Scope
 
-`docs/dashboards/` is a **documentation surface** that records:
+`docs/dashboards/` is an existing human-documentation lane for four related specification classes:
 
-1. **Dashboard specifications** — what each KFM dashboard is *for*, what it shows, what
-   evidence and receipts it reads, what posture is "healthy," and who owns it.
-2. **Indicator catalogs** — a human-readable mirror of the **Master Governance Health
-   Indicators** (Atlas v1.1 Ch. 24.11; CONFIRMED doctrine), with each indicator's
-   measurement, healthy posture, owning steward, and receipt sources.
-3. **Ownership and review burden** — which steward role owns each dashboard, who reviews
-   changes to the spec, and where the running implementation lives.
-4. **Links to running implementations** — pointers (not embeds) to where each dashboard
-   actually runs (e.g., `apps/review-console/`, an OpenTelemetry-backed surface, an
-   external Grafana, a steward console).
+1. **Governance-health specifications** — how stewards should inspect evidence integrity, release/correction/rollback posture, sensitivity and rights, AI surfaces, and documentation drift.
+2. **Operational specifications** — how maintainers should inspect feed freshness, SLOs, geospatial quality, and artifact reproducibility.
+3. **Domain specifications** — domain-facing roll-ups that preserve the owning domain's evidence, sensitivity, source-role, release, and correction boundaries.
+4. **Observability specifications** — telemetry substrate and internal system-health views, including traces, metrics, logs, lineage signals, service health, and validator-orchestrator health.
 
-It is **not** a place to store the running dashboards, telemetry data, generated metric
-snapshots, evidence bundles, or release decisions. (PROPOSED scope; see §4.)
+The lane also contains two indexes:
 
-[↑ back to top](#dashboards--docsdashboards)
+- [`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md) — current repository inventory and cross-lane spec index.
+- [`INDICATOR_CATALOG.md`](INDICATOR_CATALOG.md) — human-readable governance-health indicator mirror and dashboard mapping.
+
+### Current inventory
+
+The inventory below is **CONFIRMED** from the four complete subtree listings at the pinned base. Counts exclude category READMEs and the two catalogs unless stated otherwise.
+
+| Category | Current child lane | Specification files | Current evidence posture |
+|---|---|---:|---|
+| Governance | [`governance/`](governance/) | 5 | File presence **CONFIRMED**; runtime **NEEDS VERIFICATION** |
+| Operational | [`operational/`](operational/) | 4 | File presence **CONFIRMED**; runtime **NEEDS VERIFICATION** |
+| Domain | [`domain/`](domain/) | 14 | Thirteen top-level domain specs plus one air sub-spec; runtime **NEEDS VERIFICATION** |
+| Observability | [`observability/`](observability/) | 11 | File presence **CONFIRMED**; naming conflict and runtime remain unresolved |
+| **Total** | Four child lanes | **34** | Specification presence only |
+
+Together with this README, two catalogs, and four category READMEs, the subtree contains **41 Markdown files** at the evidence snapshot.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 2. Repo fit
 
-| Direction | Folder / object | Relationship | Status |
-|---|---|---|---|
-| **Doctrine** | `docs/doctrine/directory-rules.md` | Governs placement of this folder. `docs/dashboards/` is not yet listed in §6.1; §6.1's "illustrative, not exhaustive" note is the only basis. | CONFIRMED rule, PROPOSED placement |
-| **Indicator source** | Atlas v1.1 Ch. 24.11 — Master Governance Health Indicators | Five-category indicator set; this folder mirrors it human-readably and adds dashboard mappings. | CONFIRMED doctrine |
-| **Atlas idea cards** | `KFM-P11-FEAT-0002`, `KFM-P30-FEAT-0001`, `KFM-P31-FEAT-0015/16/17`, `KFM-P8-PROG-0026` | PROPOSED dashboards / observability stack that this folder documents. | PROPOSED |
-| **Running surfaces** | `apps/review-console/`, `apps/governed-api/`, OpenTelemetry stack (Tempo + Mimir + Loki) | Where dashboards documented here actually execute. This folder describes; those folders run. | CONFIRMED doctrine (apps/review-console), PROPOSED (stack) |
-| **Registers** | `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md` | Track open dashboards questions, placement drift, and `VB-11-08` (governance health instrumentation). | CONFIRMED canonical homes; entries PROPOSED |
-| **Neighbor** | `docs/reports/` | Holds **generated** review/release **reports** (read-only). Distinct from `docs/dashboards/` (live-indicator specs). Some overlap; an ADR may merge or split. | CONFIRMED canonical (reports); overlap PROPOSED |
-| **Neighbor** | `docs/runbooks/` | Operates the systems whose health these dashboards visualize. | CONFIRMED canonical |
-| **Neighbor** | `control_plane/` | Machine-readable governance registers; some indicators may have a machine-readable mirror there. | CONFIRMED canonical |
+### 2.1 Authority and placement
 
-[↑ back to top](#dashboards--docsdashboards)
+| Surface | Current role | Status | Consequence |
+|---|---|---|---|
+| [`docs/`](../README.md) | Canonical human-readable governance and explanation root | **CONFIRMED** under accepted ADR-0029 | Dashboard specifications inherit the `docs/` trust and exposure boundary. |
+| [`docs/dashboards/`](./) | Existing nested lane for dashboard specifications and catalogs | **CONFIRMED path / HOLD placement** | Preserve the existing path; do not treat presence as admission to the canonical direct-child map. |
+| [`control_plane/`](../../control_plane/README.md) | Machine-readable governance projections and indexes | **CONFIRMED root** | A future machine dashboard registry belongs there only if governed and derived; this README cannot create it. |
+| [`apps/review-console/`](../../apps/review-console/README.md) | Proposed role-gated steward review application boundary | **CONFIRMED README / runtime NEEDS VERIFICATION** | Specs may point to this app, but they must not claim routes, panels, or deployed behavior without evidence. |
+| External observability tooling | Collectors, stores, panels, queries, and alerts | **UNKNOWN / implementation-specific** | Runtime artifacts do not belong in `docs/`; credentials and private endpoints are never documented here. |
+
+Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). Those rules define `docs/` as the human explanation surface and require a `BOUNDARY_COMPACT` README where a nested lane changes ownership, exposure, mutation, or authority. They do **not** automatically admit every current direct child as canonical.
+
+### 2.2 Current maturity model
+
+| Level | Meaning | Dashboard-lane posture |
+|---|---|---|
+| **Tracked** | Path, indexes, category lanes, and spec files exist | **CONFIRMED** |
+| **Documented** | Lane boundaries and spec intent are written | **CONFIRMED**, with stale and conflicting statements being reconciled here |
+| **Indexed** | Specs are represented in the current dashboard catalog | **CONFIRMED for 34 rows as stated by the catalog; machine parity check NEEDS VERIFICATION** |
+| **Implemented** | Queries, panels, adapters, access controls, and stores exist | **NEEDS VERIFICATION** |
+| **Observed** | Current telemetry or records feed a running surface | **UNKNOWN / NEEDS VERIFICATION** |
+| **Enforced** | Validators or policy fail closed on dashboard contracts | **NEEDS VERIFICATION** |
+| **Released** | A governed public or steward release exists with correction and rollback support | **UNKNOWN; no release is asserted by this README** |
+
+[↑ Back to top](#top)
 
 ---
 
 ## 3. Inputs
 
-What materials become content under `docs/dashboards/`:
+A dashboard specification may describe how a running surface consumes or summarizes:
 
-- **Master Governance Health Indicators** (Atlas v1.1 Ch. 24.11, CONFIRMED doctrine):
-  Evidence/source integrity · Release/correction/rollback · Sensitivity/rights · AI
-  surface health · Documentation/drift.
-- **Receipts and decision records** that dashboards consume (CONFIRMED doctrine; mounted
-  presence NEEDS VERIFICATION): `ValidationReport`, `ReviewRecord`, `PolicyDecision`,
-  `ReleaseManifest`, `CorrectionNotice`, `RollbackCard`, `AIReceipt`, `RedactionReceipt`,
-  `RepresentationReceipt`.
-- **Source descriptors** and freshness cadence metadata (from `connectors/`, `data/registry/`).
-- **CI / pipeline observability** — OpenTelemetry Collector → Tempo (traces) + Mimir
-  (metrics) + Loki (logs) per `KFM-P8-PROG-0026` (PROPOSED implementation).
-- **Negative-state vocabulary** (`MISSING_EVIDENCE`, `SOURCE_STALE`, `DENIED_BY_POLICY`,
-  `RELEASE_WITHDRAWN`, etc.) — surfaced by dashboards rather than hidden.
+- `ValidationReport`, `ReviewRecord`, `PolicyDecision`, `ReleaseManifest`, `CorrectionNotice`, `WithdrawalNotice`, `RollbackCard`, `AIReceipt`, `RedactionReceipt`, `RepresentationReceipt`, and related governed records **when those families and instances are verified**;
+- source identity, role, cadence, freshness, and stale-state metadata from governed registries;
+- bounded telemetry signals such as trace coverage, run duration, exit-code distribution, service latency, and contract-health outcomes;
+- finite negative states such as `MISSING_EVIDENCE`, `SOURCE_STALE`, `DENIED_BY_POLICY`, `RELEASE_WITHDRAWN`, `RUNTIME_ERROR`, and `REVIEW_PENDING` when defined by the owning runtime or contract;
+- current repository and CI signals when the spec clearly distinguishes repository health from KFM truth or release state.
 
-[↑ back to top](#dashboards--docsdashboards)
+Inputs remain owned by their source families. This lane records presentation and review intent; it does not store, rewrite, approve, or promote the underlying records.
+
+[↑ Back to top](#top)
 
 ---
 
-## 4. Exclusions — what does **not** belong here
+## 4. Exclusions — what does not belong here
+
+| Prohibited content or responsibility | Owning home or disposition | Why |
+|---|---|---|
+| Running dashboard code, panel JSON, queries, adapters, or UI state | `apps/`, `packages/`, `runtime/`, `infra/`, or an externally governed observability repository selected by execution role | Implementation is not documentation. |
+| Telemetry series, traces, logs, profiles, or alert history | Governed runtime/observability storage | `docs/` is public repository-facing and not an operational datastore. |
+| Generated review or release reports | The verified report lane or external generated artifact store | Reports are outputs; specs describe recurring surfaces. |
+| Machine-readable governance registers | `control_plane/` | A prose catalog is not a machine authority. |
+| Semantic contracts, machine schemas, or policy rule source | `contracts/`, `schemas/`, `policy/` | Meaning, shape, and admissibility remain separate. |
+| Receipts, proofs, EvidenceBundles, catalog records, or lifecycle data | The correct `data/` accountability or lifecycle lane | Dashboards report on trust objects; they do not host them. |
+| Promotion, release, correction, withdrawal, rollback, or signature decisions | `release/` | A dashboard cannot authorize the transition it visualizes. |
+| Secrets, credentials, private endpoints, signed URLs, or protected payloads | Never committed; use governed secret and access systems | Public documentation is an exposure boundary. |
+| Exact sensitive locations, living-person private data, genomic material, restricted archaeology, rare-species locations, or critical-infrastructure detail | Redact, generalize, quarantine, stage, delay, abstain, or deny according to policy | A chart, tooltip, label, log line, or metric dimension can create a side channel. |
 
 > [!WARNING]
-> Anti-patterns to avoid. Placement collapse here would create parallel authority for
-> trust-bearing surfaces — exactly what Directory Rules §13 forbids.
+> Client-side hiding, aggregation labels, dashboard permissions, or a private-looking panel are not substitutes for upstream policy and public-safe transformation.
 
-| Do **not** place here | Where it belongs instead | Rule basis |
-|---|---|---|
-| Running dashboard code, queries, panels, JSON exports | `apps/review-console/`, `apps/governed-api/`, `packages/ui/`, or external observability tooling | Directory Rules §7.1 |
-| Telemetry data, metric series, log archives, traces | OpenTelemetry stack (Tempo/Mimir/Loki) per `KFM-P8-PROG-0026`; not in `docs/` | Atlas KFM-P8-PROG-0026 |
-| Generated review/release reports (read-only) | `docs/reports/` | Directory Rules §6.1 |
-| Machine-readable registers, deprecation maps, status ledgers | `control_plane/` | Directory Rules §6.2 |
-| Receipts, proofs, evidence bundles, release manifests | `data/receipts/`, `data/proofs/`, `release/` | Directory Rules §13.2 |
-| Schemas for dashboard payloads / telemetry envelopes | `schemas/contracts/v1/...` (per ADR-0001) | Directory Rules §6.4 |
-| Policy logic for dashboard access control | `policy/` | Directory Rules §6.5 |
-| Sensitive operational secrets, credentials, tokens | Not in repo; see `configs/` (templates only) and `infra/` | Directory Rules §10.3 |
-| Domain folders at this level (e.g., `docs/dashboards/hydrology/`) without a per-domain README and explicit owner | Either a flat catalog file or a properly-contracted subfolder (see §6) | Directory Rules §12 |
-
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
 
 ---
 
-## 5. README contract (Directory Rules §15)
+<a id="5-readme-contract-directory-rules-15"></a>
 
-CONFIRMED contract; PROPOSED values until verified in mounted repo.
+## 5. README contract (Directory Rules v2 §16)
 
-| Field | Value |
+This lane uses the adopted `BOUNDARY_COMPACT` profile.
+
+| Required field | Current contract |
 |---|---|
-| **Purpose** | PROPOSED — Human-facing dashboard specifications and governance-health-indicator catalogs that describe what KFM dashboards exist, what they measure, who owns them, and where they run. |
-| **Authority level** | PROPOSED — `docs/` subfolder; **not yet listed** in Directory Rules §6.1 canonical tree. Class: **documentation root for dashboard specifications** (PROPOSED). |
-| **Status** | PROPOSED — Folder placement and contents are PROPOSED; mounted-repo presence NEEDS VERIFICATION. |
-| **What belongs here** | Dashboard specifications (one Markdown per dashboard or family); indicator catalogs mirroring Atlas v1.1 Ch. 24.11; ownership records; pointers to running implementations; this README; cross-links to relevant registers, runbooks, ADRs. |
-| **What does NOT belong here** | See §4 — running dashboards, telemetry data, generated reports, machine registers, receipts/proofs/release decisions, schemas, policy logic, secrets. |
-| **Inputs** | Atlas v1.1 Ch. 24.11; receipts (`ValidationReport`, `ReviewRecord`, `ReleaseManifest`, `AIReceipt`, etc.); source descriptors; observability stack outputs (PROPOSED — `KFM-P8-PROG-0026`); negative-state vocabulary (Unified Doctrine §19). |
-| **Outputs** | Reviewable dashboard specs; an indicator catalog stewards and authors can cite; review-burden / ownership table; pointers consumed by `docs/runbooks/` and `apps/review-console/` authors. |
-| **Validation** | Link check; README-contract check (Directory Rules §15); spec-per-dashboard presence check; indicator-coverage check vs. Atlas v1.1 Ch. 24.11; placeholder-owner scan (no anonymous specs at v1). |
-| **Review burden** | `<dashboards-stewards>` (PROPOSED placeholder) + docs steward + the subsystem steward whose domain the dashboard measures (e.g., AI surface steward for Focus Mode dashboards; release steward for release-health dashboards; sensitivity reviewer for sensitive-lane dashboards). |
-| **Related folders** | `docs/registers/`, `docs/reports/`, `docs/runbooks/`, `docs/architecture/`, `apps/review-console/`, `apps/governed-api/`, `control_plane/`. |
-| **ADRs** | PROPOSED — open one ADR (e.g., `ADR-####-dashboards-folder.md`) to either canonicalize `docs/dashboards/` in Directory Rules §6.1 or merge its scope into `docs/reports/` / `control_plane/`. Cross-reference Atlas v1.1 Ch. 24.12 `ADR-S-08`. |
-| **Last reviewed** | 2026-05-20 (PROPOSED — this draft). |
+| **Purpose and inherited parent** | Human-readable dashboard specifications and indexes under the canonical `docs/` explanation root. |
+| **Local owner and scope** | GitHub review currently routes to `@bartytime4life`; dashboard, observability, domain, release, policy, and independent-review stewardship remain **NEEDS VERIFICATION**. Scope is `docs/dashboards/` only. |
+| **Belongs / prohibited** | Sections [1](#1-scope) and [4](#4-exclusions-what-does-not-belong-here) are normative for this README's documentation boundary. |
+| **Inputs / outputs** | Inputs are references to governed records and telemetry contracts. Outputs are Markdown specifications, two human indexes, and ownership/review guidance. |
+| **Exposure** | Repository-facing; no secrets, restricted payloads, unsafe precision, or private operational details. |
+| **Mutation and retention** | Reviewed, versioned Git history. Current files remain editable documents; generated or mirrored derivatives must declare their source and edit policy. |
+| **Validation** | Metadata, one-H1, heading/anchor, link, inventory/catalog parity, sensitive-content, generated-receipt, and diff-hygiene checks. Runtime checks are separate. |
+| **Related authorities** | `docs/`, contracts, schemas, policy, tests, data accountability lanes, release, runtime/app surfaces, and category READMEs. |
+| **Status and open verification** | Existing path and inventory **CONFIRMED**; placement **HOLD**; runtime, telemetry, enforcement, and release **NEEDS VERIFICATION** or **UNKNOWN**. |
 
-[↑ back to top](#dashboards--docsdashboards)
+A child category README owns deeper lane detail. This parent shows only direct children, as required by Directory Rules v2.
+
+[↑ Back to top](#top)
 
 ---
 
-## 6. Directory tree (PROPOSED)
+<a id="6-directory-tree-proposed"></a>
 
-> [!NOTE]
-> This tree is **PROPOSED**, not observed. Each `.md` file is a planned dashboard spec
-> derived from a corresponding Atlas idea card. Files MUST NOT be created until placement
-> is confirmed by ADR or §6.1 update — but the planned layout is documented here so
-> stewards and reviewers can comment before files land.
+## 6. Current directory map
+
+The direct-child map below is **CONFIRMED** from the pinned repository tree. Counts summarize deeper specs without duplicating child-README inventories.
 
 ```text
 docs/dashboards/
-├── README.md                                # this file (PROPOSED authored)
-├── INDICATOR_CATALOG.md                     # PROPOSED — mirror of Atlas v1.1 Ch. 24.11
-├── DASHBOARD_CATALOG.md                     # PROPOSED — index of all dashboard specs
-│
-├── governance/                              # PROPOSED — governance-health dashboards
-│   ├── README.md                            # folder-level scope, template, OPEN-DASH-G-*
-│   ├── EVIDENCE_INTEGRITY.md                # Atlas v1.1 §24.11.1
-│   ├── RELEASE_CORRECTION_ROLLBACK.md       # Atlas v1.1 §24.11.2
-│   ├── SENSITIVITY_RIGHTS.md                # Atlas v1.1 §24.11.3
-│   ├── AI_SURFACE_HEALTH.md                 # Atlas v1.1 §24.11.4
-│   └── DOCUMENTATION_DRIFT.md               # Atlas v1.1 §24.11.5
-│
-├── operational/                             # PROPOSED — feed / artifact / QC dashboards
-│   ├── README.md                            # folder-level scope, card-driven inventory, OPEN-DASH-O-*
-│   ├── SLO_LIVE_FEEDS.md                    # KFM-P11-FEAT-0002 (Standards-first SLO dashboard)
-│   ├── REALTIME_FEED_FRESHNESS.md           # KFM-P31-FEAT-0015 (Realtime Feed Freshness Monitor)
-│   ├── COG_ZARR_REPRODUCIBILITY.md          # KFM-P31-FEAT-0016 (COG/Zarr Reproducibility)
-│   └── GEOSPATIAL_QC_PANEL.md               # KFM-P31-FEAT-0017 (Quick Geospatial QC Panel)
-│
-├── domain/                                  # PROPOSED — domain-specific dashboards
-│   ├── README.md                            # folder-level scope, per-domain inventory, OPEN-DASH-01..08
-│   ├── hydrology.md                         # Atlas Ch. 4
-│   ├── soil.md                              # Atlas Ch. 5
-│   ├── habitat.md                           # Atlas Ch. 6
-│   ├── fauna.md                             # Atlas Ch. 7 (T4 defaults)
-│   ├── flora.md                             # Atlas Ch. 8 (T4 defaults, poaching-vulnerable taxa)
-│   ├── agriculture.md                       # Atlas Ch. 9
-│   ├── geology.md                           # Atlas Ch. 10
-│   ├── atmosphere.md                        # Atlas Ch. 11 (AI-surface emphasis)
-│   ├── hazards.md                           # Atlas Ch. 12 (alert-authority denial emphasis)
-│   ├── roads-rail-trade.md                  # Atlas Ch. 13
-│   ├── settlements-infrastructure.md        # Atlas Ch. 14 (critical-asset T4)
-│   ├── archaeology.md                       # Atlas Ch. 15 (T4 defaults, sovereignty)
-│   ├── people-dna-land.md                   # Atlas Ch. 16 (living-person T4, DNA T4, AI-surface)
-│   └── air/
-│       └── PM_SENSOR_CALIBRATION_REVIEW.md  # KFM-P30-FEAT-0001 (PM Sensor Calibration Review)
-│
-└── observability/                           # PROPOSED — CI / pipeline observability
-    ├── README.md                            # folder-level scope, substrate-vs-application guard, OPEN-DASH-OBS-*
-    └── OPENTELEMETRY_STACK.md               # KFM-P8-PROG-0026 (OTEL + Tempo + Mimir + Loki)
+├── README.md                    # this boundary contract
+├── DASHBOARD_CATALOG.md         # current cross-lane specification index
+├── INDICATOR_CATALOG.md         # governance-health indicator mirror
+├── governance/                  # README + 5 governance-health specs
+├── operational/                 # README + 4 feed/artifact/QC specs
+├── domain/                      # README + 14 domain and air specs
+└── observability/               # README + 11 telemetry/system-health specs
 ```
 
-**Naming convention (PROPOSED).** Follow `docs/standards/` precedent
-(Directory Rules §6.1.a): `UPPERCASE_WITH_UNDERSCORES.md` for spec files, lowercase
-hyphen/underscore-free subfolder names. An ADR may freeze this; until then, treat as
-PROPOSED.
+### Current conflict to preserve
 
-**Subfolder pattern (PROPOSED, OPEN).** Two patterns are in play across the wider
-`docs/` tree (Directory Rules §6.1.b OPEN-DR-02): domain-segment subfolders vs. flat
-with prefix. This tree uses **category-segment subfolders** (`governance/`,
-`operational/`, `domain/`, `observability/`) because dashboard cardinality is likely to
-remain modest per category. Consistency across `docs/dashboards/`, `docs/runbooks/`,
-and `docs/standards/` is an open question worth pinning in one ADR.
+`observability/` contains both `OPENTELEMETRY_STACK.md` and `opentelemetry-stack.md`. Their simultaneous presence is **CONFIRMED**; their identity, precedence, consumer set, and migration disposition are **NEEDS VERIFICATION**. Do not delete, merge, rename, or declare either canonical from this README.
 
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
 
 ---
 
 ## 7. Architecture diagram
 
-CONFIRMED relationships use solid arrows; PROPOSED relationships use dashed arrows.
-Diagram shows **what dashboards read, what they document, and where they run** — not the
-running implementations themselves.
+Solid arrows show current documentation relationships. Dashed arrows show implementation relationships that require separate evidence.
 
 ```mermaid
 flowchart LR
-  subgraph DOCS["docs/ — human-facing control plane"]
-    DASH["docs/dashboards/ — THIS FOLDER<br/>(specs, catalogs, ownership)<br/>PROPOSED placement"]
-    REG[("docs/registers/<br/>DRIFT_REGISTER<br/>VERIFICATION_BACKLOG")]
-    REP["docs/reports/<br/>(generated read-only)"]
-    RUN["docs/runbooks/<br/>(operate the systems)"]
-    ARCH["docs/architecture/<br/>(system context)"]
-    ATL["docs/atlases/<br/>Ch. 24.11 (CONFIRMED doctrine)"]
-  end
+  ATLAS["Atlas and source lineage"] --> IC["INDICATOR_CATALOG.md\n23 indicator mirror"]
+  TREE["Current repository tree"] --> DC["DASHBOARD_CATALOG.md\n34 spec index"]
+  IC --> ROOT["docs/dashboards/README.md\nboundary contract"]
+  DC --> ROOT
+  ROOT --> GOV["governance/ specs"]
+  ROOT --> OPS["operational/ specs"]
+  ROOT --> DOM["domain/ specs"]
+  ROOT --> OBS["observability/ specs"]
 
-  subgraph RECEIPTS["data/ — receipts & proof (CONFIRMED doctrine)"]
-    VR[ValidationReport]
-    RR[ReviewRecord]
-    PD[PolicyDecision]
-    RM[ReleaseManifest]
-    CN[CorrectionNotice]
-    AIR[AIReceipt]
-    REDR[RedactionReceipt]
-  end
+  RECORDS["Evidence · receipts · policy · review · release records"] -. "reported by" .-> RUNTIME["running dashboard surface\nNEEDS VERIFICATION"]
+  TELEMETRY["traces · metrics · logs · lineage signals"] -. "carried by" .-> RUNTIME
+  ROOT -. "documents intent and links" .-> RUNTIME
+  RUNTIME -. "does not authorize" .-> RELEASE["governed release / correction / rollback"]
 
-  subgraph APPS["apps/ — running surfaces"]
-    RC["apps/review-console/<br/>(steward dashboards)"]
-    GA["apps/governed-api/<br/>(envelope outcomes)"]
-  end
-
-  subgraph OBS["observability stack — PROPOSED<br/>KFM-P8-PROG-0026"]
-    OTEL[OpenTelemetry Collector]
-    TEMPO[Tempo · traces]
-    MIMIR[Mimir · metrics]
-    LOKI[Loki · logs]
-  end
-
-  ATL -- defines indicators --> DASH
-  DASH -- references --> RECEIPTS
-  DASH -- describes / points to --> APPS
-  DASH -- describes / points to --> OBS
-  DASH -- files placement drift to --> REG
-  DASH -- distinct from --> REP
-  DASH -- links operations to --> RUN
-  ARCH -. wires .-> APPS
-  RECEIPTS -. emit data into .-> OBS
-  RECEIPTS -. surfaced by .-> RC
-
-  classDef proposed fill:#bf8700,stroke:#5c4400,color:#fff;
-  classDef canonical fill:#1f6feb,stroke:#0a2e6b,color:#fff;
-  classDef reg fill:#cf222e,stroke:#82071e,color:#fff;
-  class DASH,OBS proposed;
-  class RECEIPTS,APPS,ATL,REP,RUN,ARCH canonical;
-  class REG reg;
+  classDef docs fill:#ddf4ff,stroke:#0969da,color:#24292f;
+  classDef runtime fill:#fff8c5,stroke:#9a6700,color:#24292f;
+  classDef trust fill:#ffebe9,stroke:#cf222e,color:#24292f;
+  class ROOT,IC,DC,GOV,OPS,DOM,OBS docs;
+  class RUNTIME,TELEMETRY runtime;
+  class RECORDS,RELEASE trust;
 ```
 
-[↑ back to top](#dashboards--docsdashboards)
+A specification can define the intended panel, indicator, source record, negative state, owner, and response path. Only implementation evidence can establish that those behaviors run.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 8. Dashboard catalog
 
-> [!IMPORTANT]
-> **Canonical index:** [`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md). The table below is a per-category roll-up for orientation only; row-level truth (file paths, owners, source cards, status) lives in `DASHBOARD_CATALOG.md` and the per-folder READMEs. If this table and the catalog disagree, the catalog wins; log the divergence in `docs/registers/DRIFT_REGISTER.md`.
+[`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md) is the current repository index for specification files in this lane. It records 34 specs and keeps file presence separate from running-surface status.
 
-| Category | Folder | Folder README | Spec count | Source-of-truth |
-|---|---|---|---|---|
-| Governance | [`governance/`](governance/) | [`governance/README.md`](governance/README.md) | 5 (one per Atlas v1.1 §24.11 category) | Atlas §24.11 (CONFIRMED doctrine) + `INDICATOR_CATALOG.md` mirror |
-| Operational | [`operational/`](operational/) | [`operational/README.md`](operational/README.md) | 4 (card-driven: `KFM-P11-FEAT-0002`, `KFM-P31-FEAT-0015/16/17`) | Atlas idea-cards corpus |
-| Domain | [`domain/`](domain/) | [`domain/README.md`](domain/README.md) | 13 per-domain specs (Atlas v1.0 Ch. 4–16) + 1 air sub-card (`KFM-P30-FEAT-0001`) | Per-domain dossiers (`docs/domains/<domain>/`); Atlas §24.11 wins on indicator conflicts |
-| Observability | [`observability/`](observability/) | [`observability/README.md`](observability/README.md) | 1 (`KFM-P8-PROG-0026` — OTEL + Tempo + Mimir + Loki) | Atlas idea-cards corpus |
+| Category | Category contract | Current specs | Inventory posture |
+|---|---|---:|---|
+| Governance | [`governance/README.md`](governance/README.md) | 5 | **CONFIRMED** files |
+| Operational | [`operational/README.md`](operational/README.md) | 4 | **CONFIRMED** files |
+| Domain | [`domain/README.md`](domain/README.md) | 14 | **CONFIRMED** files |
+| Observability | [`observability/README.md`](observability/README.md) | 11 | **CONFIRMED** files; duplicate-name conflict open |
 
-> [!NOTE]
-> **Status posture.** All specs in the table above exist as authored files (24 total as of edition v0.1). They are PROPOSED designs, **not** claims of running surfaces. A spec moves from PROPOSED to a verified status only when mounted-repo evidence confirms a running implementation; see `DASHBOARD_CATALOG.md` §6 lifecycle states.
+### Catalog rules
 
-[↑ back to top](#dashboards--docsdashboards)
+- Every dashboard spec should appear in the catalog and its nearest category README.
+- A catalog row confirms an indexed specification, not a running panel or released capability.
+- `implementation_status` may become `CONFIRMED` only with pinned implementation plus representative test, workflow, emitted telemetry, dashboard artifact, or runtime evidence appropriate to the claim.
+- Missing or extra rows are catalog drift; do not silently delete files to make the count match.
+- The catalog cannot resolve the parent lane's placement hold or the observability filename conflict by declaration.
+
+[↑ Back to top](#top)
 
 ---
 
-## 9. Indicator catalog (Atlas v1.1 Ch. 24.11)
+<a id="9-indicator-catalog-atlas-v11-ch-2411"></a>
 
-CONFIRMED doctrine (PROPOSED healthy postures, per Atlas v1.1). Each indicator is
-**reported, not enforced** — enforcement is the validator's job (Atlas v1.1 §24.11
-preamble). Owning steward is **PROPOSED** until reconciled with `docs/governance/`.
+## 9. Indicator catalog
 
-<details>
-<summary><strong>9.1 — Evidence and source integrity</strong> (5 indicators)</summary>
+[`INDICATOR_CATALOG.md`](INDICATOR_CATALOG.md) mirrors **23 governance-health indicators** in five categories. It is an authoring and review aid, not doctrine, policy, metric storage, or enforcement.
 
-| Indicator | Measures | Healthy posture (PROPOSED) | Owning steward (PROPOSED) |
-|---|---|---|---|
-| EvidenceRef resolution rate | % of public-surface EvidenceRefs that resolve to an EvidenceBundle on demand. | > 99.9% over trailing release window. | Release steward |
-| Cite-or-abstain compliance | % of Focus Mode answers with non-empty, resolving evidence citations. | 100% (any miss is a defect). | AI surface steward |
-| Source-role distribution drift | Distribution of admitted source roles over time per domain. | No silent shift without documented ADR or steward note. | Source steward |
-| Stale source rate | % of admitted sources past their freshness cadence. | Stewards dispositioned (refresh / supersede / mark stale) within tolerance. | Source steward |
-| Quarantine throughput | % of admitted records that quarantine + clearance rate. | Visible, with cause distribution; sustained backlog is a defect. | Source steward |
-
-</details>
-
-<details>
-<summary><strong>9.2 — Release, correction, rollback</strong> (5 indicators)</summary>
-
-| Indicator | Measures | Healthy posture (PROPOSED) | Owning steward (PROPOSED) |
-|---|---|---|---|
-| Release with rollback target | % of PUBLISHED releases naming a valid rollback target. | 100%. | Release steward |
-| Correction lead time | Median time from defect detection to CorrectionNotice. | Visibly tracked; trend not regressing. | Correction reviewer |
-| Derivative-invalidation coverage | % of corrections naming and invalidating downstream derivatives. | Approaches 100% as coverage matures. | Correction reviewer |
-| Rollback rehearsal rate | Rehearsed rollbacks per release window. | Non-zero; periodic, scheduled. | Release steward |
-| Supersession lineage gap | Supersessions without a forward link. | Zero. | Docs steward |
-
-</details>
-
-<details>
-<summary><strong>9.3 — Sensitivity and rights</strong> (5 indicators)</summary>
-
-| Indicator | Measures | Healthy posture (PROPOSED) | Owning steward (PROPOSED) |
-|---|---|---|---|
-| Sensitive-lane fail-closed rate | % of unauthorized sensitive-lane requests that DENY at the first gate. | 100% at first gate. | Sensitivity reviewer |
-| RedactionReceipt coverage | % of public-safe transformations emitting a RedactionReceipt. | 100% for sensitive lanes. | Sensitivity reviewer |
-| Review-aged-out incidence | Sensitive-lane claims past their review cadence. | Visibly tracked; trend not regressing. | Sensitivity reviewer |
-| Rights-change response time | Median time from rights-change detection to tier reassignment. | Within stated tolerance per source family. | Rights-holder representative |
-| Sensitive-content side-channel audit | Frequency of automated checks for label / popup / AI-text leaks. | Periodic; documented. | Sensitivity reviewer |
-
-</details>
-
-<details>
-<summary><strong>9.4 — AI surface health</strong> (4 indicators)</summary>
-
-| Indicator | Measures | Healthy posture (PROPOSED) | Owning steward (PROPOSED) |
-|---|---|---|---|
-| AIReceipt presence rate | % of Focus Mode answers with an AIReceipt. | 100%. | AI surface steward |
-| ABSTAIN rate by template | How often each Focus Mode template abstains. | Visibly tracked; very low suggests over-fitting; very high suggests evidence gaps. | AI surface steward |
-| DENY reason distribution | Reason codes returned by Focus Mode denials. | Stable; large new-reason spikes investigated. | AI surface steward |
-| Synthetic-claim incidence | % of audited AI answers flagged for presenting synthetic content as observed. | Approaches zero; never silently. | AI surface steward |
-
-</details>
-
-<details>
-<summary><strong>9.5 — Documentation and drift</strong> (4 indicators)</summary>
-
-| Indicator | Measures | Healthy posture (PROPOSED) | Owning steward (PROPOSED) |
-|---|---|---|---|
-| ADR completeness | % of structural moves with an accepted ADR. | 100% for Directory Rules §2.4 cases. | Docs steward |
-| Drift register size | Open entries in `docs/registers/DRIFT_REGISTER.md`. | Visibly tracked; aged entries investigated. | Docs steward |
-| Per-root README presence | % of canonical roots with a current README declaring authority class. | 100%. | Docs steward |
-| Atlas / supplement lineage clarity | Each Atlas/supplement carries a current supersession entry. | 100%. | Docs steward |
-
-</details>
+| Indicator family | Rows | Example focus |
+|---|---:|---|
+| Evidence and source integrity | 5 | EvidenceRef resolution, cite-or-abstain compliance, source-role and stale-source posture |
+| Release, correction, and rollback | 5 | Rollback-target coverage, correction timing, derivative invalidation, supersession lineage |
+| Sensitivity and rights | 5 | Fail-closed behavior, redaction coverage, rights-change response, side-channel review |
+| AI surface health | 4 | AIReceipt presence, ABSTAIN/DENY distributions, synthetic-claim audit |
+| Documentation and drift | 4 | ADR completeness, drift backlog, README coverage, lineage clarity |
+| **Total** | **23** | Reported posture only |
 
 > [!TIP]
-> **Non-collapse rule** (Atlas v1.1 CONFIRMED): nothing in this folder lets summaries,
-> tables, registers, or dashboards substitute for evidence, policy, review state, source
-> authority, or release state. Dashboards **report**; the validator **enforces**; the
-> EvidenceBundle **proves**.
+> **Non-collapse rule:** the dashboard reports; the owning validator or policy enforces; the governing records and EvidenceBundles carry support; the authorized release process decides publication.
 
-[↑ back to top](#dashboards--docsdashboards)
+If the indicator mirror disagrees with its upstream atlas or another accepted authority, record the discrepancy and reconcile through the owning documentation/governance process. Do not let a mirror silently amend doctrine.
+
+[↑ Back to top](#top)
 
 ---
+
+<a id="10-quickstart--authoring-a-dashboard-spec"></a>
 
 ## 10. Quickstart — authoring a dashboard spec
 
-PROPOSED workflow. A dashboard spec is a Markdown file that **describes** a dashboard;
-it does not implement it.
+1. **Pin the repository state.** Record the base commit, target lane, current catalog row set, and any overlapping pull request.
+2. **Read the boundary.** Read this README, the category README, [`docs/README.md`](../README.md), accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), and the adopted [Directory Rules](../doctrine/directory-rules.md).
+3. **Use an existing category.** Add to `governance/`, `operational/`, `domain/`, or `observability/` only when its category contract fits. A new category or direct child requires placement review before creation.
+4. **Name the source and limits.** Identify the indicator, source card, contract, runtime anchor, or repository tool that motivates the spec. Mark unsupported implementation claims `NEEDS VERIFICATION` or `UNKNOWN`.
+5. **Keep one responsibility.** Describe the human-facing dashboard contract. Put code, schema, policy, telemetry storage, trust objects, and release decisions in their owning roots.
+6. **Define finite states.** Include normal, stale, missing, denied, withdrawn, review-pending, and runtime-error behavior where relevant. Do not convert absence into a healthy zero.
+7. **Protect sensitive dimensions.** Prohibit raw labels, exact coordinates, identifiers, log content, or query dimensions that can reconstruct restricted information.
+8. **Update the indexes.** Add or reconcile the row in [`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md), the nearest category README, and [`INDICATOR_CATALOG.md`](INDICATOR_CATALOG.md) only when indicator coverage changes.
+9. **Validate the documentation packet.** Check metadata, one H1, anchors, links, tree/catalog parity, sensitive content, diff hygiene, and the generated receipt.
+10. **Stop at reviewable repository state.** A specification pull request does not deploy, release, publish, or approve a dashboard.
 
-1. **Confirm placement.** Re-read Directory Rules §6.1 and this README's drift notice.
-   If `docs/dashboards/` is still PROPOSED, open or update a `DRIFT_REGISTER.md` entry
-   first; do not silently establish the folder.
-2. **Pick the category.** `governance/`, `operational/`, `domain/<domain>/`, or
-   `observability/`. If none fits cleanly, raise the question in §11.
-3. **Cite the source card.** Identify the Atlas idea card (e.g., `KFM-P11-FEAT-0002`)
-   or Atlas v1.1 §24.11 row this dashboard reflects. If neither exists, the dashboard
-   is premature — file it as an idea first.
-4. **Apply the doc template** (Atlas `KFM-P7-PROG-0008` — CONFIRMED):
-   - **META block** — KFM Meta Block v2 at the top.
-   - **BADGES block** — deterministic badges only (status, authority, last reviewed).
-   - **DESCRIPTION block** — what the dashboard documents and why it exists.
-   - **FILES block** — `path`, `role`, `spec_hash` (PROPOSED; pending JCS+SHA-256
-     computation), and pointers to running surfaces.
-   - **ACCEPTANCE block** — what tests/fixtures/gates determine "correct enough to
-     publish" (e.g., link-check, indicator-coverage check, owner assigned).
-5. **Apply badge family** (Atlas `KFM-P3-FEAT-0005` — CONFIRMED): truth · gate ·
-   freshness · source-role badges. **Do not edit truth badges by hand**; they URL-encode
-   `≠` and are generated from structured outcomes.
-6. **Name the owner.** No anonymous dashboard specs at v1. Use a placeholder role
-   (e.g., `<release-steward>`) and resolve before review.
-7. **Mark every claim.** CONFIRMED · INFERRED · PROPOSED · UNKNOWN · NEEDS VERIFICATION ·
-   EXTERNAL. Mounted-repo claims default to NEEDS VERIFICATION in this docs-only
-   environment.
-8. **Cross-reference.** Link to:
-   - The Atlas indicator (§24.11.x) or atlas idea card.
-   - The receipt types the dashboard reads.
-   - The running implementation surface (`apps/review-console/...`,
-     `apps/governed-api/...`, OpenTelemetry stack).
-   - Any related runbook in `docs/runbooks/`.
-9. **Open the PR.** Cite Directory Rules §15 (README contract) and §6.1 (placement),
-   note the drift-register entry, and request `docs steward` + the relevant domain
-   steward as reviewers.
-
-> [!CAUTION]
-> A dashboard spec is **not** a substitute for the receipts the dashboard reads. If a
-> dashboard "shows" cite-or-abstain compliance, the underlying `AIReceipt` records are
-> still the canonical evidence. Dashboards make posture **visible**; they do not make
-> it **true**.
-
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
 
 ---
 
+## Validation and acceptance
+
+### Documentation checks
+
+For this lane, a focused change should verify:
+
+- one `KFM_META_BLOCK_V2` and one H1 per changed document;
+- balanced Markdown fences, HTML blocks, tables, and Mermaid fences;
+- valid heading hierarchy and preserved legacy anchors where headings changed;
+- all added repository-relative links and case-sensitive paths;
+- direct-child tree counts against the pinned repository tree;
+- catalog and category-README coverage for added or removed specs;
+- no placeholder claims presented as current runtime behavior;
+- no secrets, restricted payloads, unsafe precision, or sensitive side channels;
+- final newline and diff hygiene;
+- generated-receipt schema and artifact-hash integrity.
+
+Useful repository checks include:
+
+```bash
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json --repo-root .
+
+git diff --check
+```
+
+Run broader repository-native validation when dependencies are available and the changed-area workflow requires it. Report hosted checks separately from local authoring checks.
+
+### Acceptance interpretation
+
+| Criterion | Passing evidence |
+|---|---|
+| Same-path modernization | Only this README and its generated receipt change unless a direct dependency is explicitly admitted. |
+| Accurate current inventory | Four subtree counts reconcile to 34 specs and seven navigation/catalog Markdown files. |
+| Placement truth | Existing path is confirmed; canonical nested-lane status remains `HOLD`. |
+| Trust boundary | No runtime, evidence, policy, release, or publication authority is transferred into docs. |
+| Runtime claims | No running-dashboard claim is upgraded without implementation evidence. |
+| Reversibility | Previous README blob and a focused revert remain sufficient rollback targets. |
+
+[↑ Back to top](#top)
+
+---
+
+<a id="11-task-list--open-questions"></a>
+
 ## 11. Task list & open questions
 
-PROPOSED backlog. Items should mirror to `docs/registers/VERIFICATION_BACKLOG.md` once
-this folder's placement is settled.
+- [ ] **DASH-OQ-01 — Placement disposition.** Decide whether `docs/dashboards/` should become an admitted canonical docs lane, remain a bounded current-path exception, migrate into an existing canonical lane, or be split by responsibility. This README records `HOLD`; it does not decide.
+- [ ] **DASH-OQ-02 — Observability duplicate identity.** Reconcile `observability/OPENTELEMETRY_STACK.md` and `observability/opentelemetry-stack.md` only after comparing content, IDs, inbound links, writers, consumers, and migration requirements.
+- [ ] **DASH-OQ-03 — Steward assignments.** Establish dashboard, observability, category, domain, policy, release, and independent-review roles beyond the confirmed GitHub routing identity.
+- [ ] **DASH-OQ-04 — Runtime mapping.** Verify which specifications correspond to code, queries, panels, telemetry stores, alert rules, review-console features, or deployed surfaces.
+- [ ] **DASH-OQ-05 — Catalog parity enforcement.** Add or identify a repository-owned check that compares the complete subtree with `DASHBOARD_CATALOG.md` and rejects missing, duplicate, or unclassified specs without treating the catalog as runtime authority.
+- [ ] **DASH-OQ-06 — Indicator lineage.** Verify the operative atlas/source identity for the 23-row mirror and establish a bounded mirror-synchronization process.
+- [ ] **DASH-OQ-07 — Negative-state vocabulary.** Reconcile reason codes and UI labels with the owning contracts, schemas, policy, Explorer, Review Console, and runtime envelopes.
+- [ ] **DASH-OQ-08 — Sensitive telemetry profile.** Define and test cardinality, label, coordinate, identifier, prompt, and log-redaction rules before production telemetry can feed dashboards.
+- [ ] **DASH-OQ-09 — Review and correction workflow.** Define who investigates a bad signal, how false positives are corrected, how dashboard definitions are versioned, and how withdrawn releases propagate to panels and caches.
 
-- [ ] **DASH-OQ-01 — Placement ADR.** Decide whether `docs/dashboards/` is canonicalized
-  in Directory Rules §6.1, merged into `docs/reports/`, or moved entirely under
-  `control_plane/dashboards/`. (PROPOSED; cross-reference Atlas v1.1 Ch. 24.12 `ADR-S-08`.)
-- [ ] **DASH-OQ-02 — Subfolder vs. flat.** Confirm category subfolders
-  (`governance/`, `operational/`, `domain/<domain>/`, `observability/`) vs. a flat layout.
-  Parallels Directory Rules §6.1.b OPEN-DR-02 (runbooks). One cross-cutting ADR may
-  cover all three.
-- [ ] **DASH-OQ-03 — Spec filename convention.** UPPERCASE_WITH_UNDERSCORES vs.
-  Title-Case vs. lowercase-with-hyphens. Aligns with §6.1.a OPEN-DR-04
-  (standards-file naming irregularity).
-- [ ] **DASH-OQ-04 — Owners roster.** Replace `<dashboards-stewards>` placeholder with
-  a real role assignment. Pending Atlas v1.1 §24.7 (Reviewer Role and
-  Separation-of-Duties Matrix) reconciliation with `docs/governance/`.
-- [ ] **DASH-OQ-05 — `VB-11-08` linkage.** Atlas v1.1 Appendix G `VB-11-08` says
-  governance health indicators must be "instrumented or owned by a steward"; resolve
-  the **dashboard** half here once the folder is canonical.
-- [ ] **DASH-OQ-06 — Overlap with `docs/reports/`.** Per Directory Rules §6.1,
-  `docs/reports/` holds generated review/release **reports** (read-only). Confirm that
-  *dashboard specs* are a distinct artifact class, not just live versions of those
-  reports. NEEDS VERIFICATION against mounted repo and prior intent.
-- [ ] **DASH-OQ-07 — `control_plane/` mirror.** Decide whether each dashboard spec
-  should have a machine-readable mirror under `control_plane/registries/` (PROPOSED).
-- [ ] **DASH-OQ-08 — CI checks.** Define link check, indicator-coverage check (every
-  Atlas v1.1 §24.11 row is covered), owner-presence check, and truth-label scan.
-  Wire to `tools/validators/` orchestrator (`validate_all.py`, per Directory Rules
-  §7.5.a OPEN-DR-03).
-- [ ] **DASH-OQ-09 — Negative-state vocabulary.** Confirm dashboards surface the
-  Unified Doctrine §19 negative states (`MISSING_EVIDENCE`, `SOURCE_STALE`,
-  `DENIED_BY_POLICY`, `RELEASE_WITHDRAWN`, `RUNTIME_ERROR`, `REVIEW_PENDING`, etc.)
-  consistently with `apps/explorer-web/` and `apps/review-console/`.
-
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
 
 ---
 
 ## 12. FAQ
 
-**Q. Why does `docs/dashboards/` exist if `docs/reports/` already exists?**
-A (PROPOSED). `docs/reports/` is for **generated** review/release reports (read-only);
-`docs/dashboards/` is for **specifications** of live, recurring observability surfaces —
-what they should show, what receipts they read, who owns them, what "healthy" looks like.
-The two are complementary. DASH-OQ-06 tracks whether they should be merged.
+### Why keep dashboard specifications separate from generated reports?
 
-**Q. Are running dashboards stored here?**
-A. **No.** Running dashboards belong in `apps/review-console/` (steward / reviewer
-surface) or in an external observability stack (Tempo + Mimir + Loki per
-`KFM-P8-PROG-0026`, PROPOSED). This folder describes them.
+The current lane describes recurring surfaces, inputs, owners, finite states, and healthy posture. Generated reports are point-in-time outputs. Their final placement and relationship remain subject to the dashboard lane's placement disposition; this README does not create a new report authority.
 
-**Q. Can a dashboard spec be the source of truth for an indicator's healthy posture?**
-A. **No.** Atlas v1.1 Ch. 24.11 is the doctrine; this folder mirrors it human-readably
-with dashboard mappings. If the two disagree, the Atlas wins, and the discrepancy goes
-into the drift register.
+### Are running dashboards stored here?
 
-**Q. Who owns `docs/dashboards/`?**
-A (PROPOSED placeholder). `<dashboards-stewards>` — to be resolved as part of Atlas v1.1
-§24.7 reviewer-role reconciliation. In the meantime, individual specs SHOULD name a
-concrete owning role (release steward, AI surface steward, etc.) per §10 step 6.
+No. Running code, queries, dashboards-as-code, collector configuration, telemetry stores, and alerting belong in execution or infrastructure surfaces selected by responsibility. This lane may link to them after verification.
 
-**Q. Why are most of the rows in §8 (Dashboard catalog) marked PROPOSED?**
-A. Each Atlas card carries its own self-check that ends with `UNKNOWN: Repository
-implementation status remains unverified`. The dashboards documented here are PROPOSED
-designs in the corpus. Until mounted-repo evidence confirms a running implementation,
-the spec for it remains PROPOSED too. This is per Directory Rules §17 and Atlas v1.1
-CONFIRMED non-collapse rule.
+### Does a green dashboard prove KFM truth or release readiness?
 
-**Q. What if I want to add a dashboard for a domain that isn't in the proposed tree?**
-A. Use `domain/<domain>/<NAME>.md` (PROPOSED pattern). Confirm the `<domain>` name
-matches Directory Rules §6.1 `docs/domains/` (hydrology, soil, fauna, flora, habitat,
-geology, atmosphere, roads-rail-trade, settlements-infrastructure, archaeology, hazards,
-agriculture, people-dna-land). Do **not** invent new domain names here.
+No. It is one review signal. Evidence, policy, validation, review, release, correction, and rollback remain independently governed.
 
-[↑ back to top](#dashboards--docsdashboards)
+### Is `docs/dashboards/` canonical?
+
+The path is **CONFIRMED** and the parent `docs/` root is canonical. The nested lane is omitted from the adopted canonical direct-child map, so this README records placement as **HOLD**. Presence alone does not settle admission.
+
+### Who owns this lane?
+
+`@bartytime4life` is the confirmed GitHub review route through the default CODEOWNERS rule. A complete dashboard and observability stewardship assignment, including independent review where risk warrants it, remains **NEEDS VERIFICATION**.
+
+### May a new domain or category be invented here?
+
+No. Use registered domain and category identities already recognized by the repository. A new category, scope, or authority boundary requires evidence and placement review; it is not created by adding a Markdown file.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 13. Related docs
 
-| Topic | Path | Status of link target |
-|---|---|---|
-| Placement authority | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | CONFIRMED authored; mounted-repo presence NEEDS VERIFICATION |
-| Master Governance Health Indicators (CONFIRMED doctrine) | `docs/atlases/Kansas_Frontier_Matrix_-_Domains_v1_1.md` (Ch. 24.11) | CONFIRMED in attached corpus |
-| Drift register | [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | PROPOSED — canonical home named in §6.1; presence NEEDS VERIFICATION |
-| Verification backlog | [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | PROPOSED — canonical home named in §6.1; presence NEEDS VERIFICATION |
-| Generated review/release reports | [`docs/reports/`](../reports/) (README PROPOSED) | PROPOSED — canonical home; folder README NEEDS VERIFICATION |
-| Operational runbooks (operate what dashboards visualize) | [`docs/runbooks/`](../runbooks/) | CONFIRMED canonical; subfolder convention OPEN per §6.1.b OPEN-DR-02 |
-| Architecture (`apps/review-console/`, governed-API wiring) | [`docs/architecture/`](../architecture/) | CONFIRMED in §6.1 |
-| Doctrine — negative-state vocabulary | `kfm_unified_doctrine_synthesis.md` §19 | CONFIRMED in attached corpus |
-| Doctrine — separation of duties (reviewer roles) | `kfm_unified_doctrine_synthesis.md` §31; Atlas v1.1 §24.7 | CONFIRMED in attached corpus |
-| Doctrine — receipt catalog | Atlas v1.1 §24.2 | CONFIRMED in attached corpus |
-| Doc template (META / BADGES / DESCRIPTION / FILES / ACCEPTANCE) | Atlas `KFM-P7-PROG-0008` | CONFIRMED in attached corpus |
-| Badge family (truth · gate · freshness · source-role) | Atlas `KFM-P3-FEAT-0005` | CONFIRMED in attached corpus |
-| Open ADR backlog | Atlas v1.1 §24.12 (15 ADR-S items) | CONFIRMED in attached corpus |
+| Surface | Relationship |
+|---|---|
+| [`docs/README.md`](../README.md) | Parent human-documentation authority and exposure contract |
+| [`Directory Rules v2`](../doctrine/directory-rules.md) | Adopted placement and README-profile law through ADR-0029 |
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted adoption decision and migration boundary |
+| [`Dashboard Catalog`](DASHBOARD_CATALOG.md) | Current cross-lane specification index |
+| [`Indicator Catalog`](INDICATOR_CATALOG.md) | Current 23-row governance-health mirror |
+| [`Governance lane`](governance/README.md) | Governance-health specification contract |
+| [`Operational lane`](operational/README.md) | Feed, artifact, and geospatial-QC specification contract |
+| [`Domain lane`](domain/README.md) | Per-domain dashboard specification contract |
+| [`Observability lane`](observability/README.md) | Telemetry substrate and system-health specification contract |
+| [`Domains Culmination Atlas v1.1`](../atlases/KFM_Domains_Culmination_Atlas_v1_1.md) | Current repository atlas path referenced by the indicator lineage; authority and mirror sync still require verification |
+| [`Drift Register`](../registers/DRIFT_REGISTER.md) | Human-readable placement and authority drift tracking |
+| [`Verification Backlog`](../registers/VERIFICATION_BACKLOG.md) | Concrete unresolved checks |
+| [`Review Console README`](../../apps/review-console/README.md) | Proposed role-gated review application boundary; runtime remains bounded |
+| [`Root Registry`](../../control_plane/root_registry.yaml) | Machine projection of adopted top-level root classes; does not admit nested dashboard placement |
+| [`Generated receipts`](../../data/receipts/generated/README.md) | AI-authored work provenance and validation guidance |
 
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
 
 ---
 
 ## 14. Appendix
 
-<details>
-<summary><strong>A — Source idea cards referenced in this README</strong></summary>
+### A. Evidence ledger
 
-| Stable ID | Title | Class | Status | Carry-forward |
-|---|---|---|---|---|
-| `KFM-P11-FEAT-0002` | Standards-first SLO dashboard for live feeds | feature | active | EXPANDED |
-| `KFM-P30-FEAT-0001` | PM Sensor Calibration Review Dashboard | feature | active | UNCHANGED |
-| `KFM-P31-FEAT-0015` | Realtime Feed Freshness Monitor | feature | active | UNCHANGED |
-| `KFM-P31-FEAT-0016` | COG/Zarr Reproducibility Dashboard | feature | active | UNCHANGED |
-| `KFM-P31-FEAT-0017` | Quick Geospatial QC Panel | feature | active | UNCHANGED |
-| `KFM-P8-PROG-0026` | OpenTelemetry CI observability stack | programming | active | UNCHANGED |
-| `KFM-P7-PROG-0008` | Repo doc template (META / BADGES / DESCRIPTION / FILES / ACCEPTANCE) | programming | active | UNCHANGED |
-| `KFM-P3-FEAT-0005` | Badge Family for Trust, Gate, Freshness, Source-Role | feature | active | UNCHANGED |
-
-All cards carry: `CONFIRMED: Required schema fields are present.` ·
-`CONFIRMED: Narrative claims use explicit truth labels.` ·
-`UNKNOWN: Repository implementation status remains unverified.`
-
-</details>
-
-<details>
-<summary><strong>B — Cross-references to Directory Rules</strong></summary>
-
-| Rule | Section | Used here for |
+| Evidence | What it establishes | What it does not establish |
 |---|---|---|
-| Placement authority | §2.1, §3 | Justifying why `docs/dashboards/` is PROPOSED, not canonical. |
-| `docs/` tree (illustrative not exhaustive) | §6.1, §6.1.a, §6.1.b | Basis for category subfolders and naming convention parallels. |
-| Compatibility/canonical class | §5, §8 | Authority-level field in §5 README contract. |
-| README contract | §15 | §5 table in this file. |
-| Anti-patterns (placement) | §13 | §4 Exclusions; specifically §13.2 (artifacts/proofs/release split). |
-| Drift handling | §2.5 | Drift notice at top of file; DASH-OQ-01. |
-| ADR triggers | §2.4, §17 | DASH-OQ-01, §5 ADRs row. |
-| Path validation checklist | §16 | §10 Quickstart step 1. |
+| Target README prior blob | Stable prior bytes and rollback target | Current correctness or canonical placement |
+| Four dashboard subtree SHAs | Exact current paths and spec counts at the base | Runtime behavior, telemetry emission, or catalog parity after the base |
+| `DASHBOARD_CATALOG.md` | Current repository inventory claim and spec metadata | Running dashboards or release status |
+| `INDICATOR_CATALOG.md` | Current 23-row human mirror | Enforcement or adopted threshold policy |
+| Accepted ADR-0029 and Directory Rules blob | Current placement authority and README profiles | Automatic admission of `docs/dashboards/` |
+| `docs/README.md` | Parent root contract and current/noncanonical lane posture | A nested-lane disposition |
+| CODEOWNERS | GitHub review routing to `@bartytime4life` | Stewardship assignment, approval, independent review, or release authority |
 
-</details>
+### B. No-loss reconciliation
 
-<details>
-<summary><strong>C — Document discipline self-check</strong></summary>
+This modernization preserves the prior document's substantive duties:
 
-- CONFIRMED: This README applies the §15 README contract (Purpose, Authority, Status,
-  What belongs, What does NOT belong, Inputs, Outputs, Validation, Review burden,
-  Related folders, ADRs, Last reviewed).
-- CONFIRMED: KFM Meta Block v2 is present at top of file with placeholder doc_id.
-- CONFIRMED: Truth labels (CONFIRMED · INFERRED · PROPOSED · UNKNOWN · NEEDS
-  VERIFICATION · EXTERNAL) are applied where confidence materially matters.
-- CONFIRMED: All path claims and mounted-repo claims are marked PROPOSED or NEEDS
-  VERIFICATION.
-- CONFIRMED: KFM terminology (EvidenceBundle, EvidenceRef, AIReceipt, RAW →
-  WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED, etc.) is preserved
-  verbatim.
-- PROPOSED: Owner roles, badge endpoints, ADR numbers, dashboard `spec_hash` values
-  are placeholders pending review.
-- UNKNOWN: Repository implementation status remains unverified in this docs-only
-  session.
+- dashboard specifications remain separate from running implementations;
+- indicator catalogs remain separate from enforcement;
+- governance, operational, domain, and observability categories remain visible;
+- evidence, receipts, policy, review, release, correction, and rollback stay outside docs authority;
+- sensitive material remains fail closed;
+- the authoring workflow, validation burden, open questions, FAQ, and related-doc navigation remain present;
+- stable legacy section anchors are retained for the README-contract, directory-tree, indicator-catalog, and open-question sections.
 
-</details>
+It removes or corrects stale claims that the repository was not mounted, that the directory tree was merely proposed, that only 24 specs existed, that Directory Rules v1 governed placement, and that the old atlas filename was current.
+
+### C. Rollback
+
+Before merge, close the draft pull request and delete its scoped branch through normal repository controls. After an authorized merge, revert the focused documentation and generated-receipt commit, restore prior README blob `3749fc0099443c3c8b024357e0f1694253ff735e`, and rerun the same documentation and receipt checks. No runtime, telemetry store, policy, lifecycle data, release, deployment, cache, or public artifact requires reversal because this change alters documentation and provenance only.
 
 ---
 
-**Related docs:** [doctrine/directory-rules.md](../doctrine/directory-rules.md) ·
-[atlases/ — Atlas v1.1 Ch. 24.11](../atlases/) ·
-[registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md) ·
-[registers/VERIFICATION_BACKLOG.md](../registers/VERIFICATION_BACKLOG.md) ·
-[reports/](../reports/) · [runbooks/](../runbooks/)
+**Current edition:** v1.0 · **Evidence review:** 2026-08-14 · **GitHub review route:** `@bartytime4life` · **Placement:** `HOLD` · **Runtime:** `NEEDS VERIFICATION`
 
-**Last updated:** 2026-05-20 · **Edition:** v0.1 (draft) · **Owners:**
-`<dashboards-stewards>` (PROPOSED placeholder)
-
-[↑ back to top](#dashboards--docsdashboards)
+[↑ Back to top](#top)
