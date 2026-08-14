@@ -1,9 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/adr-0020-abstain-is-a-first-class-decision
-title: ADR-0020 — Abstain Is a First-Class Decision
+title: "ADR-0020 — Abstain Is a First-Class Decision"
 type: adr
 adr_id: ADR-0020
-version: v1.2
+version: v1.3
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -21,48 +21,45 @@ reviewers_required:
   - Telemetry and privacy reviewer
   - Validation and CI stewards
   - Docs steward
-created: 2026-05-09
-updated: 2026-07-24
+created: "2026-05-09"
+updated: "2026-08-14"
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed first-class ABSTAIN semantics and their separation from answer, denial, error, lifecycle, review, receipt, and release states."
 current_path: docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 93ed9f61d0be8a5e656a9be81c12e01549736e99
-  target_prior_blob: 87957312e453b226615351b1e4550606fdaa7652
-  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
-  adr_readme_blob: f1b5d34a53b6c717832d587de54989ce8192bcaa
-  directory_rules_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  decision_envelope_contract_blob: b5120a208910f5e2907874b03af1fc8c7f43363d
-  decision_envelope_schema_blob: 349782c8760f77e432ed1e9239d5ddc2ffe1f9b8
-  policy_decision_contract_blob: ebfe97f98263e6309db6d2772cb2c5e548819650
-  policy_decision_schema_blob: 1472d26a42c73f17545b4464a275412ffa1d098e
-  runtime_response_schema_blob: 5105d419432a27176a8ee10870d75400cfa2ab8c
-  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
-  run_receipt_schema_blob: 80d13bcb750d56c769da2f8871242388f7f50a69
-  promotion_decision_schema_blob: a2d087a46772cf60e4b9dfb394892690e8a88b31
+  base_commit: 103323d7d2916c650e8e9829dd1073ee474d61f0
+  target_prior_blob: 8d5ec63b658a1194d2c11359cecb77e7857a9471
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  runtime_response_contract_blob: 97ff95ba5527968f3db70cd710682176444e4cde
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
+  finite_envelope_proof_blob: 70ca80226bf06c3b28b59096e3812312a00c03b6
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  mock_adapter_proof_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
   governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
-  governed_api_boundary_test_blob: d84ccd2a93bdf786e8fca11ee596dcc47e543fc2
+  runtime_policy_readme_blob: 80b63e7651429903385066b53c7fb41af3cd1298
+  runtime_policy_abstain_blob: 9c66097140933eba5aa7011653da12488035ad99
   policy_gate_register_blob: 10e66eb9d587797a3f12e2aaac00fb4e60ec7fa2
-  runtime_policy_blob: b9bfee731553c504b514f07a6862ef3e68328f02
-  focus_mock_workflow_blob: aa97ee5ad099d1e10922d037061abde17ceb3a93
-  runtime_response_validator_blob: 11ddc64c4299d103b0eef383c2f7bdd3bb12f1f9
-  runtime_response_valid_abstain_blob: 87a405408dc8d5ec0d6c789a9584e0a6b62b3c59
-  runtime_response_valid_answer_blob: 9d70fe89627260f0c185ac492341e269fff4d108
-  runtime_proof_placeholder_blob: ee28fd9bb6eebee6453d8d8e432d3a0e92bfdd23
+  explorer_governed_client_blob: 21f6e4d1225ab0427ecb689d6782f4b56fc25ea2
 inspection_boundary: >
-  Current-session GitHub reads, bounded repository search, the ADR inventory and operating
-  contract, Directory Rules, CODEOWNERS, runtime and policy semantic contracts and schemas,
-  the release PromotionDecision schema, AIReceipt and RunReceipt schemas, governed API
-  scaffold and boundary tests, the policy-gate register, runtime policy stub, generic runtime
-  envelope fixtures and validator, and Focus mock workflow source. No deployed policy
-  evaluator, evidence resolver, citation service, receipt store, telemetry backend, public
-  client, production ruleset, release environment, or live governed request was exercised.
+  Current-session GitHub reads over the exact target, canonical ADR inventory,
+  accepted Directory Rules decision and adopted doctrine, adjacent finite-envelope ADR,
+  runtime and policy semantic contracts and schemas, deterministic envelope builder,
+  four-outcome fixtures and proof suites, MockAdapter, Governed API scaffold and route
+  registry, runtime policy boundary, policy-gate register, Explorer Evidence Drawer and
+  Focus composed-claim parsers/tests, and Focus mock workflow. No deployed policy
+  evaluator, live EvidenceBundle resolver, citation service, receipt store, telemetry
+  backend, production public client, production ruleset, release environment, or live
+  governed request was exercised.
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -74,63 +71,73 @@ related:
   - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
-  - docs/architecture/directory-rules.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
   - contracts/policy/policy_decision.md
   - contracts/runtime/decision_envelope.md
   - contracts/runtime/runtime_response_envelope.md
   - contracts/runtime/ai_receipt.md
   - contracts/runtime/run_receipt.md
   - contracts/release/promotion_decision.md
+  - contracts/ui/focus_response.md
   - schemas/contracts/v1/policy/policy_decision.schema.json
   - schemas/contracts/v1/runtime/decision_envelope.schema.json
   - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - schemas/contracts/v1/runtime/ai_receipt.schema.json
   - schemas/contracts/v1/runtime/run_receipt.schema.json
   - schemas/contracts/v1/release/promotion_decision.schema.json
+  - packages/envelopes/src/envelopes/runtime_response.py
+  - runtime/model_adapters/MockAdapter.py
   - apps/governed-api/src/governed_api/stub.py
-  - apps/governed-api/tests/test_boundary_guards.py
+  - apps/governed-api/src/governed_api/routes/registry.py
+  - apps/explorer-web/src/adapters/GovernedClient.ts
+  - apps/explorer-web/src/features/focus_panel/parsers.ts
+  - apps/explorer-web/tests/evidence-drawer.test.ts
+  - apps/explorer-web/tests/focus-composed-claim.test.ts
   - control_plane/policy_gate_register.yaml
   - policy/runtime/README.md
+  - policy/runtime/abstain_on_missing_evidence.rego
   - fixtures/contracts/v1/runtime/runtime_response_envelope/
+  - fixtures/ui/evidence_drawer_payload/
+  - fixtures/ui/focus_composed_claim_projection/
   - tools/validators/validate_runtime_response_envelope.py
   - tests/runtime_proof/test_envelope_finite_outcomes.py
+  - tests/runtime_proof/test_mock_adapter_finite_outcomes.py
   - .github/workflows/focus-mock-test.yml
-tags: [kfm, adr, abstain, finite-outcomes, cite-or-abstain, decision-envelope, policy-decision, runtime-response-envelope, evidence, policy, trust-membrane, fail-closed]
+tags: [kfm, adr, abstain, finite-outcomes, cite-or-abstain, decision-envelope, policy-decision, runtime-response-envelope, evidence-drawer, focus-mode, evidence, policy, trust-membrane, fail-closed]
 notes:
-  - "v1.2 is a same-path repository-grounded modernization. It preserves status proposed and does not accept ADR-0020."
-  - "The repository confirms finite ANSWER/ABSTAIN/DENY/ERROR enums for PolicyDecision, DecisionEnvelope, RuntimeResponseEnvelope, and AIReceipt, but not for every status-bearing object."
-  - "RunReceipt currently uses SUCCESS/PARTIAL/FAIL and PromotionDecision uses APPROVE/DENY/ABSTAIN; these vocabularies remain separate from finite runtime/policy decision outcomes."
-  - "The Governed API currently emits deterministic capability-family ABSTAIN/NOT_IMPLEMENTED scaffolds; this proves a bounded fail-closed shape, not complete abstention semantics."
-  - "The policy-gate register is present, PROPOSED, and empty; no accepted canonical reason-code registry is established."
-  - "Generic RuntimeResponseEnvelope fixtures cover ANSWER and ABSTAIN shape, while the runtime behavioral test remains an assert-true placeholder and the Focus mock workflow records explicit holds."
+  - "v1.3 is a same-path documentation-only evidence refresh; source and effective decision status remain proposed."
+  - "Accepted ADR-0029 and docs/doctrine/directory-rules.md govern this same-path placement under docs/adr/."
+  - "RuntimeResponseEnvelope now has a closed four-outcome fixture family, ANSWER-only evidence and precision requirements, a deterministic candidate builder, and substantive no-network proof tests."
+  - "MockAdapter proves deterministic selection of prevalidated synthetic envelopes for all four outcomes; it does not decide which outcome is semantically correct."
+  - "Explorer Evidence Drawer and Focus composed-claim tests now prove bounded, fixture-only ABSTAIN rendering, stale/superseded history treatment, no-silent-fallback behavior, and no-leak negative copy."
+  - "Governed API routes remain capability-family ABSTAIN/NOT_IMPLEMENTED scaffolds; runtime policy remains non-enforcing, the policy-gate register remains empty, and no end-to-end governed decision engine is established."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0020 — Abstain Is a First-Class Decision
 
-> **Proposed decision.** KFM treats `ABSTAIN` as a normal, inspectable finite outcome whenever a governed policy or runtime decision cannot support a responsible answer but has not established an explicit prohibition and has not suffered a machinery failure. `ABSTAIN` preserves the cite-or-abstain posture without collapsing policy denial, runtime error, lifecycle state, review state, process status, or release authority into one ambiguous label.
+> **Proposed decision.** KFM treats `ABSTAIN` as a normal, inspectable finite outcome when a functioning governed decision path cannot support a responsible answer, no explicit prohibition controls, and no safe supported narrowing is available. `ABSTAIN` preserves cite-or-abstain without collapsing policy denial, machinery failure, lifecycle state, review state, process status, or release authority into one ambiguous label.
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0020-confirmed-0969da?style=flat-square)](#current-repository-evidence)
-[![Governed API: ABSTAIN scaffold](https://img.shields.io/badge/governed%20API-ABSTAIN%20scaffold-2da44e?style=flat-square)](#current-implementation-maturity)
-[![Reason register: empty](https://img.shields.io/badge/reason%20register-empty-b42318?style=flat-square)](#reason-codes-and-explanations)
-[![Runtime policy: stub](https://img.shields.io/badge/runtime%20policy-stub-6e7781?style=flat-square)](#current-implementation-maturity)
-[![Behavior proof: held](https://img.shields.io/badge/behavior%20proof-WORKFLOW__HOLD-b42318?style=flat-square)](#current-implementation-maturity)
+[![Directory Rules: accepted](https://img.shields.io/badge/Directory%20Rules-v2%20accepted-2da44e?style=flat-square)](#evidence-boundary)
+[![Finite envelope: four outcomes](https://img.shields.io/badge/finite%20envelope-four%20outcomes-2da44e?style=flat-square)](#current-repository-evidence)
+[![Explorer: fixture-only abstention](https://img.shields.io/badge/Explorer-fixture--only%20abstention-8250df?style=flat-square)](#current-repository-evidence)
+[![Runtime policy: unbound](https://img.shields.io/badge/runtime%20policy-unbound-b42318?style=flat-square)](#current-implementation-maturity)
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0020` to this exact file and records both source metadata and effective decision status as `proposed`. Editing this file, merging a pull request, validating an envelope, or passing CI does not accept the decision.
+> **Identity and placement are confirmed; acceptance is not.** The canonical ADR index assigns `ADR-0020` to this exact path with source and effective status `proposed`. Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the writable placement authority. Neither fact accepts this decision or turns a fixture, envelope, test, workflow, pull request, merge, deployment, or model output into evidence, policy, release, or publication authority.
 
 > [!CAUTION]
-> **Current `ABSTAIN` behavior is narrow scaffolding.** The Governed API returns deterministic `ABSTAIN` / `NOT_IMPLEMENTED` envelopes for three scaffolded routes. Runtime policy remains a greenfield stub, the canonical reason-code register is empty, and no repository evidence establishes evidence resolution, citation validation, complete receipt emission, public-client rendering, or end-to-end abstention behavior.
+> **The repository now proves more than shape, but less than a governed decision engine.** Four-outcome RuntimeResponseEnvelope fixtures, a deterministic candidate builder, a no-I/O MockAdapter selector, an Evidence Drawer projection, and a Focus composed-claim projection exercise bounded synthetic behavior. They do not resolve live evidence, execute accepted policy, validate live citations, persist accountability records, or serve a production request.
 
 > [!WARNING]
-> **The four finite outcomes are not the universal vocabulary of every KFM object.** `ANSWER | ABSTAIN | DENY | ERROR` applies to finite policy/runtime decision fields. Current `PromotionDecision` uses `APPROVE | DENY | ABSTAIN`; current `RunReceipt` uses `SUCCESS | PARTIAL | FAIL`; workflows use job conclusions and hold markers; review records and lifecycle states have their own controlled vocabularies. These axes must map explicitly and must not be silently collapsed.
+> **`ANSWER | ABSTAIN | DENY | ERROR` is not a universal KFM status vocabulary.** It applies only to designated finite policy/runtime decision fields. Promotion, process execution, review, workflow, lifecycle, release, correction, and operational states keep their own controlled vocabularies and require explicit, tested mappings.
 
-**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Outcome boundary](#finite-outcome-boundary) · [Abstain rules](#abstain-semantics) · [Reason codes](#reason-codes-and-explanations) · [Composition](#composition-and-narrowed-scope) · [Objects](#object-and-vocabulary-boundaries) · [Flow](#governed-decision-flow) · [Security](#security-privacy-and-safe-explanation) · [Receipts](#receipts-observability-and-correction) · [Authority](#authority-and-publication-boundary) · [Current evidence](#current-repository-evidence) · [Maturity](#current-implementation-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
+**Quick navigation:** [Status](#status) · [Evidence](#evidence-boundary) · [Context](#context) · [Decision](#decision) · [Outcome boundary](#finite-outcome-boundary) · [Abstain contract](#abstain-contract) · [Reasons](#reason-codes-and-explanations) · [Composition](#composition-and-narrowed-scope) · [Objects](#object-and-vocabulary-boundaries) · [Flow](#governed-decision-flow) · [Security](#security-privacy-and-safe-explanation) · [Receipts](#receipts-observability-and-correction) · [Authority](#authority-and-publication-boundary) · [Current evidence](#current-repository-evidence) · [Maturity](#current-implementation-maturity) · [Convergence](#implementation-and-convergence-plan) · [Acceptance](#acceptance-gates) · [Consequences](#consequences) · [Alternatives](#alternatives-considered) · [Risks](#risk-and-open-question-ledger) · [Rollback](#rollback-and-supersession) · [Verification](#verification-checklist) · [References](#references)
 
 ---
 
@@ -144,20 +151,22 @@ notes:
 | **Tracked path** | `docs/adr/ADR-0020-abstain-is-a-first-class-decision.md` |
 | **Source metadata** | `proposed` |
 | **Effective decision status** | `proposed` |
-| **Decision class** | Runtime/policy finite-outcome semantics, cite-or-abstain behavior, reason-code discipline, public explanation, receipt linkage, and safe composition |
-| **Current repository maturity** | Proposed contracts and shape validation plus a deterministic API ABSTAIN scaffold; runtime policy and behavioral proof held |
+| **Record edition** | `v1.3` — repository-evidence refresh; proposed decision preserved |
+| **Decision class** | Finite outcome semantics, cite-or-abstain behavior, safe explanations, composition, accountability linkage, and client trust-state handling |
+| **Current repository maturity** | Four-outcome shape and bounded synthetic behavior are proved; accepted decision logic, policy execution, live evidence/citation closure, persisted accountability, and production operation are not established |
 | **Implementation effect of this revision** | Documentation only |
 | **Publication effect** | None |
 | **Supersedes / superseded by** | None / none |
 
-### Acceptance versus implementation
+### Acceptance and implementation graduation are separate
 
-Two states remain independent:
+1. **ADR acceptance** would approve the finite-outcome boundary and normative abstention semantics in this record.
+2. **Contract graduation** would establish accepted object meanings, machine shapes, mappings, reason vocabularies, and compatibility rules.
+3. **Component graduation** may prove a bounded responsibility such as envelope construction, fixture selection, or client projection.
+4. **Governed runtime graduation** would require evidence resolution, policy execution, citation validation, deterministic outcome selection, response assembly, accountability linkage, correction, and rollback.
+5. **Public release** would require separate reviewed release evidence for the exact operation and client surface.
 
-1. **ADR acceptance** would approve the finite-outcome boundary and the normative `ABSTAIN` semantics described here.
-2. **Implementation graduation** would require accepted contracts and schemas, meaningful policy, a governed reason-code registry, deterministic outcome logic, evidence and citation integration, receipt linkage, UI behavior, telemetry, correction handling, negative tests, and observed fail-closed behavior.
-
-An accepted ADR without those implementation gates would be governing doctrine, not proof that runtime abstention is operational. Conversely, a schema enum, valid fixture, deterministic stub response, green workflow, or deployed endpoint cannot accept this ADR.
+A component can graduate without this ADR being accepted. This ADR could be accepted without a runtime being operational. A green check cannot collapse those transitions.
 
 [Back to top](#top)
 
@@ -167,51 +176,49 @@ An accepted ADR without those implementation gates would be governing doctrine, 
 
 ## Evidence boundary
 
-This revision is grounded in current repository bytes at `main@93ed9f61d0be8a5e656a9be81c12e01549736e99`.
+This revision is grounded in current repository bytes at `main@103323d7d2916c650e8e9829dd1073ee474d61f0`.
 
 ### Truth labels
 
 | Label | Meaning in this ADR |
 |---|---|
-| **CONFIRMED** | Verified from current repository files, schemas, tests, workflow source, or exact readback |
-| **PROPOSED** | Decision, mapping, reason code, obligation, path role, migration, or implementation target not accepted or operationally proved |
-| **NEEDS VERIFICATION** | Checkable state not verified strongly enough to act as fact |
-| **UNKNOWN** | Not resolved by the inspected surfaces |
-| **CONFLICTED** | Tracked surfaces make incompatible claims requiring reviewed resolution |
-| **HELD** | Current automation intentionally blocks graduation while preserving visible readiness checks |
+| **CONFIRMED** | Verified from the pinned repository tree, exact tracked bytes, contracts, schemas, fixtures, tests, workflows, or current-session readback |
+| **PROPOSED** | Decision, mapping, reason code, obligation, behavior, or implementation target not accepted or proved operational |
+| **NEEDS VERIFICATION** | A bounded check remains before reliance |
+| **UNKNOWN** | The inspected evidence cannot support a stronger statement |
+| **HELD** | Current automation or documentation deliberately preserves a non-operational boundary |
+
+### Placement basis
+
+This is a same-path update to an existing numbered ADR under `docs/adr/`. Accepted ADR-0029 adopts the exact Directory Rules v2 bytes at `docs/doctrine/directory-rules.md`; those rules place human decision records under `docs/` and preserve contracts, schemas, policy, fixtures, validators, runtime code, receipts, release objects, and published data as separate responsibilities. No path, status, supersession, or authority transition is introduced here, so the canonical ADR index does not require a row change.
 
 ### Inspected surfaces
 
-- canonical ADR inventory and ADR operating contract;
-- Directory Rules and CODEOWNERS;
-- this ADR’s prior bytes;
-- `PolicyDecision` contract and schema;
-- `DecisionEnvelope` contract and schema;
-- `RuntimeResponseEnvelope` schema and generic fixtures;
-- `AIReceipt` and `RunReceipt` schemas;
-- release `PromotionDecision` schema;
-- Governed API ABSTAIN scaffold and boundary tests;
-- `control_plane/policy_gate_register.yaml`;
-- runtime policy README;
-- runtime envelope validator;
-- runtime-proof placeholder test;
+- the exact target and canonical ADR inventory;
+- accepted ADR-0029 and adopted Directory Rules;
+- adjacent ADR-0019 finite-envelope evidence;
+- `PolicyDecision`, `DecisionEnvelope`, `RuntimeResponseEnvelope`, `AIReceipt`, `RunReceipt`, and `PromotionDecision` contracts/schemas;
+- the deterministic RuntimeResponseEnvelope candidate builder;
+- four-outcome RuntimeResponseEnvelope fixtures, validator, and no-network proof;
+- deterministic no-I/O MockAdapter implementation and proof;
+- Governed API WSGI scaffold, route registry, and ABSTAIN factory;
+- runtime policy README and missing-evidence Rego stub;
+- the empty policy-gate register;
+- Explorer GovernedClient, Evidence Drawer tests, Focus composed-claim parser, and Focus tests;
 - Focus mock readiness workflow.
 
-### What this evidence cannot prove
-
-This revision does not prove:
+### What this evidence does not prove
 
 - ADR-0020 is accepted;
-- runtime policy is executable;
-- evidence references resolve;
-- citation validation is implemented;
-- an `ANSWER`, `DENY`, or `ERROR` runtime path is implemented;
-- ABSTAIN reason codes are canonical or complete;
-- every public-trust ABSTAIN emits a persisted receipt;
-- public clients distinguish all finite outcomes correctly;
-- telemetry counts outcomes or reason codes;
-- rulesets require the relevant checks;
-- a release, deployment, or publication occurred.
+- a runtime policy bundle is accepted or executed;
+- live EvidenceRefs resolve to admissible EvidenceBundles;
+- live citation validation is implemented;
+- the Governed API selects outcomes semantically;
+- all clients consume one accepted response contract;
+- every consequential outcome links to an accepted persisted accountability record;
+- operational telemetry counts outcomes or reasons safely;
+- branch rules require the relevant checks;
+- any release, deployment, or publication occurred.
 
 [Back to top](#top)
 
@@ -221,32 +228,17 @@ This revision does not prove:
 
 ## Context
 
-KFM’s durable truth posture is **cite-or-abstain**. A governed system should decline to make a consequential claim when the required support cannot be resolved, rather than filling the gap with plausible text, a stale layer, a default value, a silent cache result, or a confidence score.
+KFM's durable truth posture is **cite-or-abstain**. A consequential claim should not be completed from plausible language, a stale layer, an unresolved citation, an unreviewed source, a hidden default, a silent cache fallback, or model confidence when the required support cannot be established.
 
-That principle fails if every negative state is called “error,” if policy denial is disguised as uncertainty, or if a missing citation produces a blank `200 OK`. It also fails when the four runtime decision outcomes are applied indiscriminately to unrelated object families.
+That posture requires more than adding `ABSTAIN` to an enum. The system must preserve five distinctions:
 
-The architectural problem has five parts:
+1. **Insufficient or unresolved support** is not an explicit prohibition.
+2. **Explicit prohibition** is not a machinery failure.
+3. **Machinery failure** is not evidence uncertainty.
+4. **Loading, pending review, quarantine, workflow hold, process failure, and release state** are separate axes.
+5. **A bounded client projection** is not the policy/evidence authority that selected the outcome.
 
-1. **Evidence insufficiency must remain distinct from policy prohibition.**
-2. **Policy prohibition must remain distinct from machinery failure.**
-3. **Operational, review, lifecycle, release, and receipt states must remain separate axes.**
-4. **Public explanations must be useful without leaking protected details.**
-5. **A shape-valid enum is not behavioral proof.**
-
-### Current repository signals
-
-The repository now contains meaningful but incomplete pieces:
-
-- `PolicyDecision` and `DecisionEnvelope` have proposed, schema-paired finite outcome contracts.
-- `RuntimeResponseEnvelope` has a closed proposed schema and generic valid fixtures for `ANSWER` and `ABSTAIN`.
-- The Governed API emits deterministic capability-family `ABSTAIN / NOT_IMPLEMENTED` scaffolds.
-- `AIReceipt` has a proposed schema that carries a finite outcome and accountability references.
-- The policy-gate register exists but has no entries.
-- Runtime policy is a greenfield stub.
-- The runtime finite-outcome behavior test is an `assert True` placeholder.
-- The Focus mock workflow explicitly reports `WORKFLOW_HOLD`.
-
-These surfaces establish a contract and readiness baseline. They do not establish a complete decision engine, reason-code system, receipt path, UI contract, telemetry pipeline, or public trust behavior.
+The repository has advanced since v1.2. RuntimeResponseEnvelope now has all four synthetic outcomes, an `ANSWER`-only precision/evidence rule, a deterministic builder, and substantive proof tests. MockAdapter proves deterministic fixture selection. Explorer tests prove fixture-only abstention for stale, superseded, missing-scope, and unresolved-dependency cases while denying or erroring through fixed no-leak copy. Those gains sharpen this ADR's evidence base without proving an accepted or deployed end-to-end decision path.
 
 [Back to top](#top)
 
@@ -256,73 +248,71 @@ These surfaces establish a contract and readiness baseline. They do not establis
 
 ## Decision
 
-KFM proposes the following architecture-wide rules.
+If accepted, KFM SHALL apply the following architecture-wide rules to designated finite policy/runtime decision fields.
 
-### D1 — `ABSTAIN` is a first-class finite policy/runtime outcome
+### D1 — `ABSTAIN` is a first-class outcome
 
-`ABSTAIN` is a normal decision result, not a hidden exception, degraded success, pending status, or generic error. A caller must be able to render, log, test, count, and correct it without inventing an answer.
+`ABSTAIN` is a normal, inspectable decision result—not a hidden exception, degraded success, loading state, pending review, generic error, or empty answer. A governed caller must be able to render, test, count, correct, and supersede it without inventing a claim.
 
-### D2 — The finite outcome set is closed for designated decision fields
+### D2 — The finite set is closed where the contract says it is finite
 
-Fields explicitly defined as finite policy/runtime outcomes use exactly:
+Designated fields use exactly:
 
 ```text
 ANSWER | ABSTAIN | DENY | ERROR
 ```
 
-Adding `PENDING`, `PARTIAL`, `DEFERRED`, `REVIEW`, `UNKNOWN`, `HOLD`, `QUARANTINE`, or provider-specific values to such a field requires a reviewed contract/schema/ADR change.
+Provider-specific, UI, workflow, lifecycle, process, review, release, and operational values must not be injected into those fields. Adding another finite outcome requires a reviewed contract/schema change and, when it changes this decision, an ADR update or successor.
 
-This rule does not rename:
+### D3 — `ABSTAIN` requires a functioning decision path
 
-- `PromotionDecision.decision`;
-- `RunReceipt.outcome`;
-- workflow conclusions;
-- review outcomes;
-- lifecycle phases;
-- operational states;
-- release states;
-- correction or withdrawal states.
+Return `ABSTAIN` only when:
 
-### D3 — `ABSTAIN` is used only when the evaluator is functioning and support is unresolved or insufficient
-
-A finite decision returns `ABSTAIN` when:
-
-- the operation is within the decision surface’s scope;
-- the evaluator can run;
-- no explicit policy rule has prohibited the operation;
-- required evidence, citation, source authority, freshness, scope, corroboration, or review support is unresolved or insufficient;
+- the requested operation is in scope;
+- required validation and evaluation machinery can produce a trustworthy decision;
+- no explicit policy, rights, sensitivity, consent, access, role, release, or governance prohibition controls;
+- required evidence, citation, source authority, freshness, scope, corroboration, correction, or review support is unresolved or insufficient; and
 - no safe, supported narrowed-scope `ANSWER` is available.
 
 ### D4 — `DENY` and `ERROR` remain distinct
 
-- `DENY` means an explicit policy, rights, sensitivity, consent, role, access, release, or governance rule blocks the requested operation.
-- `ERROR` means the decision machinery, contract validation, integrity check, dependency, or evaluator could not produce a trustworthy governed decision.
+- `DENY` means a governing rule explicitly blocks the requested operation.
+- `ERROR` means the decision path cannot complete safely or deterministically because shape, integrity, evaluator, dependency, configuration, or process machinery failed.
 
 ### D5 — `ANSWER` requires affirmative support
 
-`ANSWER` is not the default left after other branches fail. It requires the evidence, policy, citation, freshness, correction, release, and obligation support appropriate to the surface.
+`ANSWER` is not the branch left after other outcomes are excluded. It requires the evidence, policy, citation, precision, freshness, correction, review, release, and obligation support appropriate to the operation. Under the current RuntimeResponseEnvelope schema, `ANSWER` also requires at least one EvidenceRef and `precision_actually_used`; non-`ANSWER` outcomes forbid that precision object.
 
-### D6 — Negative outcomes carry safe, inspectable support
+### D6 — Negative outcomes carry safe inspectable support
 
-`ABSTAIN`, `DENY`, and `ERROR` must include stable reason information and safe explanation appropriate to the caller. Any required obligations, evidence handles, correction state, or receipt linkage must be explicit rather than inferred from prose.
+`ABSTAIN`, `DENY`, and `ERROR` must carry stable reason information and a caller-appropriate explanation. Required obligations, evidence handles, correction state, retry/review posture, and accountability links must be explicit in the owning contract or referenced objects—not inferred from fluent prose.
 
-### D7 — Public clients receive governed envelopes only
+### D7 — Composition is declared, not guessed
 
-Browsers, map shells, review tools, exports, and AI-assisted surfaces receive finite outcomes through the governed API or another accepted trust-membrane interface. They do not infer a decision from internal stores, provider responses, model text, workflow logs, or file placement.
+Each composed operation must declare whether subdecisions are conjunctive, disjunctive, advisory, independent, or item-scoped. No universal severity arithmetic may silently replace operation semantics. A top-level response must not hide abstained or denied items behind `ANSWER`.
+
+### D8 — Public clients receive governed projections only
+
+Browsers, map shells, review tools, exports, and AI-assisted surfaces receive finite outcomes through the Governed API or another accepted trust-membrane interface. They do not infer outcomes from internal stores, provider responses, raw model text, workflow logs, file paths, or test fixtures.
+
+### D9 — Outcomes are append-only and correctable
+
+A later `ANSWER`, `DENY`, or `ERROR` does not rewrite a prior `ABSTAIN`. New decisions reference prior identity and correction/supersession lineage. Historical receipts and projections remain auditable under their retention and sensitivity rules.
 
 ### Non-goals
 
 This ADR does not:
 
-- accept its own decision;
-- define every reason code;
-- define a universal status vocabulary for all KFM objects;
-- make a `DecisionEnvelope` a `PolicyDecision`, `PromotionDecision`, receipt, review, or release object;
-- require that every internal non-consequential function create a persisted receipt;
-- authorize model or provider use;
-- authorize public rendering;
-- resolve every schema overlap or compatibility alias;
-- replace domain-specific rights, sensitivity, consent, release, or correction rules.
+- accept itself;
+- define one universal status vocabulary for all KFM objects;
+- make DecisionEnvelope, PolicyDecision, RuntimeResponseEnvelope, AIReceipt, RunReceipt, or PromotionDecision interchangeable;
+- populate the reason-code register;
+- accept a policy bundle or evaluator;
+- make the MockAdapter semantic;
+- authorize a live model or provider;
+- require a persisted receipt for every non-consequential internal branch;
+- approve public rendering, release, deployment, or publication;
+- replace domain-specific evidence, rights, sensitivity, consent, correction, or rollback rules.
 
 [Back to top](#top)
 
@@ -332,94 +322,95 @@ This ADR does not:
 
 ## Finite outcome boundary
 
-### Canonical decision semantics
+### Canonical semantics
 
 | Outcome | Use when | Must not be used as |
 |---|---|---|
-| `ANSWER` | The requested operation may proceed under the applicable evidence, policy, citation, freshness, correction, release, and obligation requirements. | “Best guess,” low-confidence fallback, partial result with hidden scope reduction, or default success |
-| `ABSTAIN` | The evaluator ran, no explicit prohibition controls, but required support is unresolved or insufficient and no responsible narrowed answer is available. | Machinery failure, explicit policy denial, pending workflow state, review status, quarantine state, or empty success |
+| `ANSWER` | The requested operation is affirmatively supported under all applicable evidence, policy, citation, precision, freshness, correction, review, release, and obligation requirements. | Best guess, low-confidence fallback, hidden scope reduction, process success, or default allow |
+| `ABSTAIN` | The decision path functioned, no explicit prohibition controls, but required support is unresolved or insufficient and no responsible narrowed answer exists. | Machinery failure, explicit policy denial, loading, pending review, quarantine, workflow hold, or blank success |
 | `DENY` | A policy, rights, sensitivity, consent, access, role, release, or governance rule explicitly blocks the operation. | Missing evidence, transient runtime outage, or generic validation failure |
-| `ERROR` | The governed decision path cannot be trusted or completed because of shape, integrity, evaluator, dependency, configuration, or process failure. | Evidence uncertainty, policy denial, or a way to avoid recording ABSTAIN |
+| `ERROR` | The governed path cannot complete safely or deterministically because required machinery, shape, integrity, dependency, or configuration failed. | Evidence uncertainty, policy denial, or a way to suppress abstention metrics |
 
-### Deterministic classification order
+### Proposed deterministic classification order
 
-For a decision that requires all evaluated supports, the proposed order is:
+For a conjunctive decision surface:
 
-1. **Can the decision machinery produce a trustworthy result?**  
-   If no, return `ERROR`.
-2. **Does an explicit policy or governance rule block the requested operation?**  
-   If yes, return `DENY`.
-3. **Can required evidence, citations, source authority, freshness, scope, and review support be resolved?**  
-   If no, return `ABSTAIN`.
-4. **Can every mandatory obligation be satisfied?**  
-   If no, return the outcome required by the applicable policy contract—normally `DENY` for a prohibited operation or `ABSTAIN` when review/support is unresolved.
-5. **Otherwise**, return `ANSWER`.
+1. Validate the request, contract, and required evaluation inputs. Untrustworthy machinery or invalid required shape yields `ERROR`.
+2. Evaluate explicit policy/governance prohibitions. A controlling prohibition yields `DENY`; evaluator failure yields `ERROR`.
+3. Resolve required evidence, citation, authority, freshness, correction, scope, and review support. Unresolved support yields `ABSTAIN`; resolver/integrity failure yields `ERROR`.
+4. Apply allowed narrowing, redaction, or generalization. If no supported safe scope remains, yield `ABSTAIN` unless policy explicitly denies the operation.
+5. Check mandatory obligations. Explicitly prohibited execution yields `DENY`; unresolved support/review yields `ABSTAIN`; machinery failure yields `ERROR`.
+6. Only then may the operation yield `ANSWER`.
 
-This order is a proposed contract rule. It is not established as executable repository behavior.
+This ordering is proposed architecture, not current end-to-end executable behavior.
 
-### Why `NOT_IMPLEMENTED` currently maps to `ABSTAIN`
+### Why the Governed API scaffold uses `ABSTAIN / NOT_IMPLEMENTED`
 
-The current Governed API scaffold returns:
-
-```text
-outcome = ABSTAIN
-reason_code = NOT_IMPLEMENTED
-policy_family = capability
-```
-
-That is a bounded design choice for the scaffold: the route exists as a capability surface, but the capability is not implemented, no protected payload is exposed, and the response refuses to fabricate a result. This does not mean every unimplemented dependency should map to `ABSTAIN`. A required evaluator failing during an otherwise active operation may be `ERROR`.
+The current three-route scaffold exposes bounded capability surfaces but no authoritative response content. Returning `ABSTAIN` avoids fabricated answers and protected payload exposure. It does not establish that every missing implementation is evidentiary abstention: a required component failing inside an otherwise active governed path may be `ERROR`, and a disabled capability may be `DENY` when an accepted policy says so.
 
 [Back to top](#top)
 
 ---
 
-<a id="abstain-semantics"></a>
+<a id="abstain-contract"></a>
 
-## `ABSTAIN` semantics
+## `ABSTAIN` contract
 
 ### Required posture
 
-An `ABSTAIN` decision should make the following visible where the governing contract permits:
+An accepted `ABSTAIN` profile should make these concerns inspectable where policy permits:
 
 | Concern | Requirement |
 |---|---|
-| Decision identity | Stable `decision_id` or response identity |
-| Outcome | Exact value `ABSTAIN` |
-| Policy family | The family whose decision was requested |
-| Primary reason | Stable `reason_code` when the envelope supports it |
-| Additional reasons | Safe, machine-usable reason list |
-| Evaluated time | Timestamp that is not rewritten to disguise staleness |
-| Evidence posture | Refs attempted, refs unresolved, or an empty set when no evidence lookup was performed |
-| Obligations | Safe downstream duties such as narrow scope, await review, refresh, or display notice |
-| Freshness/correction | Client-facing envelope state when material |
-| Next responsible action | Structured next step when an accepted contract supports it |
-| Receipt link | AIReceipt, RunReceipt, or decision/validation record link when the event class requires one |
+| Identity | Stable decision or response identifier |
+| Outcome | Exact finite value `ABSTAIN` |
+| Scope | Requested scope and any attempted supported scope |
+| Policy family | The decision family evaluated |
+| Primary reason | Stable machine code under an accepted vocabulary |
+| Safe explanation | Public/restricted text selected by caller and sensitivity class |
+| Evaluated time | Immutable evaluation timestamp |
+| Evidence posture | Attempted, stale, conflicted, superseded, or unresolved refs where safe |
+| Obligations / next action | Narrow scope, refresh, await review, inspect gap, or another governed step |
+| Freshness / correction | Client-visible state when material |
+| Accountability | Decision, validation, AIReceipt, RunReceipt, or trace link when the event class requires it |
 
-### Current schema limits
+### Suitable abstention triggers
 
-Current repository schemas do **not** fully enforce this target:
+- no admissible evidence for the requested scope;
+- EvidenceRef cannot resolve to an admissible bundle;
+- evidence is stale and policy does not permit a stale qualified answer;
+- evidence is materially conflicted;
+- source authority or source role is unresolved;
+- citation support is unresolved but citation machinery is functioning;
+- required claim dependency or alternative group is unresolved;
+- the requested scope is too broad and no safe supported narrower answer can be produced;
+- required review support remains unresolved and policy does not explicitly prohibit the operation;
+- an explicitly scaffolded capability refuses to fabricate a response.
 
-- `DecisionEnvelope` requires `decision_id`, `outcome`, `policy_family`, `reasons`, `obligations`, and `evaluated_at`; `reason_code` and `evidence_refs` are optional.
-- `RuntimeResponseEnvelope` requires one `reason_code`, evidence refs, policy state, freshness, and correction state, but has no `reasons[]`, `obligations[]`, `next_step`, or receipt reference.
-- `AIReceipt` records adapter/model and digest/policy/citation references but has no public explanation fields.
-- `RunReceipt` uses process outcomes and is not an ABSTAIN envelope.
+### Not abstention
 
-Those differences are not silently normalized here. A future contract/schema convergence change must decide whether to add fields, link objects, or preserve the separation through explicit identifiers.
+- invalid or contradictory required envelope shape: `ERROR`;
+- policy evaluator, evidence resolver, citation validator, or required dependency failure: `ERROR`;
+- explicit rights, sensitivity, consent, access, release, or governance prohibition: `DENY`;
+- UI loading, retry, or transport pending: UI/transport state;
+- lifecycle `QUARANTINE`: lifecycle state;
+- workflow `WORKFLOW_HOLD`: readiness state;
+- process `PARTIAL` or `FAIL`: process outcome;
+- human review `PENDING`: review state, which may inform but does not equal finite outcome;
+- low model confidence without evidence analysis: neither evidence nor a valid outcome selector.
 
 ### Forbidden behavior
 
-An `ABSTAIN` must not trigger:
+An `ABSTAIN` must never trigger:
 
-- fluent completion around unresolved evidence;
-- unmarked cached or stale fallback;
-- a blank or ambiguous success response;
-- automatic exposure of internal diagnostic detail;
-- substitution of model confidence for evidence;
-- substitution of a map, tile, screenshot, graph edge, summary, or index for the abstained claim;
-- silent conversion to `ANSWER` for UI convenience;
-- silent conversion to `ERROR` to reduce abstention metrics;
-- silent conversion to `DENY` merely because support is missing;
-- mutation or deletion of prior decision or receipt history.
+- generated completion around unresolved support;
+- hidden stale or cached fallback;
+- blank `200 OK` success;
+- automatic provider switching that bypasses policy or evidence scope;
+- substitution of a map, tile, graph, score, screenshot, index, summary, or receipt for the abstained claim;
+- exposure of protected reason detail or private diagnostics;
+- silent conversion to `ANSWER`, `DENY`, or `ERROR` for UI or metric convenience;
+- mutation or deletion of earlier decision and receipt history.
 
 [Back to top](#top)
 
@@ -431,71 +422,60 @@ An `ABSTAIN` must not trigger:
 
 ### Current repository state
 
-`control_plane/policy_gate_register.yaml` is present, marked `PROPOSED`, and has:
+The machine policy-gate register is `PROPOSED` and still has `entries: []`. No accepted repository-wide reason-code authority is established. Current strings are local implementation evidence:
 
-```yaml
-entries: []
-```
-
-Therefore:
-
-- no repository-wide reason-code vocabulary is established by the register;
-- existing strings such as `NOT_IMPLEMENTED` are observed implementation values, not automatically canonical;
-- the old ADR’s detailed failure-state table is retained below as a **proposed seed vocabulary**, not a confirmed registry.
-
-### Proposed reason families
-
-| Proposed reason | Default finite outcome | Boundary |
+| Surface | Observed local examples | Safe interpretation |
 |---|---|---|
-| `NO_EVIDENCE` | `ABSTAIN` | No admissible evidence is available for the requested scope |
-| `EVIDENCE_UNRESOLVED` | `ABSTAIN` | Required EvidenceRef cannot resolve |
-| `EVIDENCE_STALE` | `ABSTAIN` | No policy-acceptable fresh support exists |
-| `EVIDENCE_CONFLICTED` | `ABSTAIN` | Conflicting support prevents a responsible answer |
-| `SOURCE_AUTHORITY_UNRESOLVED` | `ABSTAIN` | Source-role or authority support is unresolved |
-| `SCOPE_TOO_BROAD` | `ABSTAIN` | Request must be narrowed before it can be cited |
-| `REVIEW_REQUIRED` | `ABSTAIN` | Required review support is not yet resolved, where policy does not already deny |
-| `NOT_IMPLEMENTED` | `ABSTAIN` for an explicitly scaffolded capability; otherwise context-dependent | Capability surface intentionally refuses unsupported operation |
-| `RIGHTS_BLOCKED` | `DENY` | Rights policy explicitly prohibits the operation |
-| `SENSITIVITY_BLOCKED` | `DENY` | Sensitivity policy explicitly prohibits requested precision or exposure |
-| `CONSENT_BLOCKED` | `DENY` | Consent policy explicitly prohibits the operation |
-| `RELEASE_STATE_BLOCKED` | `DENY` | Requested material is not released for the surface |
-| `ACCESS_BLOCKED` | `DENY` | Caller, role, audience, or export policy blocks access |
-| `POLICY_EVALUATOR_ERROR` | `ERROR` | Policy machinery cannot produce a trustworthy decision |
-| `SCHEMA_INVALID` | `ERROR` | Required decision or response shape is invalid |
-| `INTEGRITY_FAILURE` | `ERROR` | Digest, signature, canonicalization, or reference-integrity failure |
-| `CITATION_VALIDATOR_ERROR` | `ERROR` | Citation machinery cannot run reliably |
-| `RUNTIME_DEPENDENCY_ERROR` | `ERROR` | Required runtime dependency fails |
-| `CITATION_UNRESOLVED` | `ABSTAIN` | Citation support is missing or unresolved without integrity evidence |
-| `SAFE_SCOPE_APPLIED` | `ANSWER` with an explicit narrowed scope | A policy-safe, cited generalized answer is available |
+| Governed API scaffold | `NOT_IMPLEMENTED` | Capability scaffold refuses unsupported behavior |
+| Evidence Drawer projection | `MISSING_EVIDENCE`, `STALE_EVIDENCE`, `CITATION_UNRESOLVED`, `POLICY_DENIED`, `RIGHTS_UNRESOLVED`, `SENSITIVE_DETAIL_RESTRICTED`, `UPSTREAM_ERROR`, and historical-state codes | Bounded browser projection vocabulary, not central policy authority |
+| Focus composed-claim projection | `REQUIRED_DEPENDENCY_UNRESOLVED`, `ALTERNATIVE_GROUP_UNRESOLVED`, `POLICY_DENIED`, `UPSTREAM_ERROR` | Bounded composition vocabulary, not a universal runtime register |
+| RuntimeResponseEnvelope fixtures | fixture-specific reason strings | Shape/proof material only |
 
-### Public and internal explanation split
+### Proposed normalized reason families
 
-Reason handling should distinguish:
+| Proposed family | Default finite outcome | Boundary |
+|---|---|---|
+| `NO_EVIDENCE` / `MISSING_EVIDENCE` | `ABSTAIN` | No admissible support exists for the requested scope |
+| `EVIDENCE_UNRESOLVED` | `ABSTAIN` | Required ref cannot resolve while resolver functions |
+| `EVIDENCE_STALE` / `STALE_EVIDENCE` | `ABSTAIN` | No policy-acceptable fresh support or qualified stale answer exists |
+| `EVIDENCE_CONFLICTED` | `ABSTAIN` | Material conflict prevents a responsible claim |
+| `SOURCE_AUTHORITY_UNRESOLVED` | `ABSTAIN` | Source role/authority remains unresolved |
+| `CITATION_UNRESOLVED` | `ABSTAIN` | Citation support is unresolved while validation machinery functions |
+| `REQUIRED_DEPENDENCY_UNRESOLVED` | `ABSTAIN` | A required composed-claim dependency is unresolved |
+| `ALTERNATIVE_GROUP_UNRESOLVED` | `ABSTAIN` | No allowed alternative support group closes |
+| `SCOPE_TOO_BROAD` | `ABSTAIN` | Requested scope cannot be supported safely |
+| `REVIEW_REQUIRED` | `ABSTAIN` when review support is unresolved; `DENY` when policy forbids proceeding | Policy-specific mapping required |
+| `NOT_IMPLEMENTED` | `ABSTAIN` for a declared scaffold; otherwise context-dependent | Not a universal missing-capability rule |
+| `POLICY_DENIED`, `RIGHTS_BLOCKED`, `SENSITIVITY_BLOCKED`, `CONSENT_BLOCKED`, `ACCESS_BLOCKED`, `RELEASE_STATE_BLOCKED` | `DENY` | Explicit governing prohibition |
+| `SCHEMA_INVALID`, `INTEGRITY_FAILURE`, `POLICY_EVALUATOR_ERROR`, `CITATION_VALIDATOR_ERROR`, `RUNTIME_DEPENDENCY_ERROR`, `UPSTREAM_ERROR` | `ERROR` | Required machinery or integrity path failed |
+| `SAFE_SCOPE_APPLIED` | `ANSWER` with explicit narrowed scope | Supported generalization/redaction/narrowing succeeded |
 
-- **stable machine code** for contracts, tests, metrics, and correction;
-- **safe public explanation** that avoids protected details;
-- **restricted steward detail** stored only where policy permits;
-- **next action** such as narrow scope, refresh, inspect evidence gap, or await review.
+Aliases are illustrative until a reviewed register selects identifiers. Do not silently merge local codes or repurpose an existing code to change its outcome meaning.
 
-A public reason must not expose exact sensitive locations, private person data, DNA/genomic details, confidential source terms, credentials, raw prompt content, hidden policy input, exploit details, or private model reasoning.
+### Explanation layers
 
-### Register discipline
+A governed reason model should separate:
 
-A future accepted register should define, for each reason code:
+1. **stable machine code** for contracts, tests, metrics, and correction;
+2. **safe public explanation** that does not reveal protected facts;
+3. **restricted steward detail** stored only where policy permits;
+4. **next responsible action** such as narrowing, refresh, review, or evidence-gap inspection;
+5. **retryability and supersession state** for deterministic clients.
 
-- identifier;
-- description;
-- default finite outcome;
-- allowed policy families;
-- public explanation template;
-- restricted detail class;
-- expected obligations;
-- retryability;
-- correction and supersession rules;
-- owner and review date;
-- deprecation aliases.
+A public explanation must not expose precise protected locations, private-person or genomic facts, confidential source terms, credentials, raw prompts, hidden policy input, exploit detail, provider payloads, stack traces, or private model reasoning.
 
-Reason codes should be appended or superseded, not silently repurposed.
+### Future register minimum
+
+Each accepted reason entry should define:
+
+- identifier and aliases;
+- description and owning decision family;
+- default outcome and allowed overrides;
+- allowed policy families and surfaces;
+- public explanation template and restricted-detail class;
+- obligations and next actions;
+- retryability, freshness, correction, and supersession behavior;
+- owner, review date, version, deprecation, and compatibility tests.
 
 [Back to top](#top)
 
@@ -507,35 +487,34 @@ Reason codes should be appended or superseded, not silently repurposed.
 
 ### No universal severity arithmetic
 
-The prior ADR proposed:
+A single formula such as `ERROR > DENY > ABSTAIN > ANSWER` is not a universal composition contract. It can lose whether a failure is item-local, advisory, recoverable through an allowed alternative, or controlling for the requested operation.
 
-```text
-ERROR > DENY > ABSTAIN > ANSWER
-```
+Every composed decision must declare:
 
-as a universal max-severity function. Current repository evidence does not establish that function in policy, contracts, schemas, or tests. It is too coarse for every composition context.
-
-A composed decision must declare:
-
-- whether subdecisions are conjunctive, disjunctive, advisory, or independent;
-- which failures invalidate the whole operation;
+- subdecision relation: conjunctive, disjunctive, alternative-group, advisory, independent, or item-scoped;
+- which machinery failures invalidate the aggregate;
 - which policy denial controls;
-- whether a safe narrower operation is permitted;
-- whether partial results are represented as separate scoped answers or withheld.
+- which dependencies are mandatory or optional;
+- whether supported narrowing is allowed;
+- how omissions and per-item outcomes appear to the caller.
 
-### Proposed conjunctive composition
+### Conjunctive composition
 
-For an operation that requires every support:
+For an operation requiring every dependency:
 
-1. any machinery failure that prevents a trustworthy aggregate decision produces `ERROR`;
-2. otherwise, any explicit policy prohibition for the requested operation produces `DENY`;
-3. otherwise, any unresolved required support produces `ABSTAIN`;
-4. otherwise, all obligations are evaluated;
-5. only then may the aggregate outcome be `ANSWER`.
+1. a failure preventing trustworthy aggregate evaluation yields `ERROR`;
+2. otherwise, a controlling explicit prohibition yields `DENY`;
+3. otherwise, unresolved mandatory support yields `ABSTAIN`;
+4. otherwise, obligations are evaluated;
+5. only complete affirmative support yields `ANSWER`.
+
+### Alternative groups
+
+A disjunctive or alternative-group profile may `ANSWER` when one accepted support path closes and the contract permits it. It must still expose unavailable optional roles or limitations. If no allowed alternative closes, return `ABSTAIN`; if policy blocks every alternative, return `DENY`; if the composition machinery fails, return `ERROR`.
 
 ### Narrowed-scope `ANSWER`
 
-When policy permits a cited answer at a safer or smaller scope:
+When policy permits a cited answer at a smaller or safer scope:
 
 ```text
 outcome = ANSWER
@@ -543,16 +522,11 @@ requested_scope != answered_scope
 reason_code = SAFE_SCOPE_APPLIED
 ```
 
-The response must make the scope change and any generalization/redaction obligations visible.
-
-A system must not call a response “partial” and leave the supported scope implicit. Either:
-
-- produce one or more explicit, independently supported `ANSWER` scopes; or
-- return `ABSTAIN` for the unsupported requested scope.
+The response must expose the scope change, limitations, evidence, precision actually used, and transformation/generalization receipts required by the owning contract. Unsupported requested scope is not hidden behind “partial.” Either emit explicit independently supported answer scopes or abstain for the unsupported request.
 
 ### Mixed collections
 
-A collection response may carry per-item outcomes only if its contract defines them. A top-level `ANSWER` must not hide denied or abstained items without a manifest of omissions and reasons.
+Per-item outcomes require an explicit collection contract. A top-level `ANSWER` must not hide denied, abstained, superseded, or omitted items. The response needs an omission/outcome manifest safe for the caller.
 
 [Back to top](#top)
 
@@ -562,34 +536,34 @@ A collection response may carry per-item outcomes only if its contract defines t
 
 ## Object and vocabulary boundaries
 
-| Surface | Current vocabulary | Role | Must not be treated as |
+| Surface | Current vocabulary | Current evidence | Must not become |
 |---|---|---|---|
-| `PolicyDecision.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | One policy evaluation result | Runtime response, release decision, or receipt |
-| `DecisionEnvelope.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Runtime-facing decision carrier | Full client response or policy execution |
-| `RuntimeResponseEnvelope.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Governed API/client-facing finite response posture | Evidence closure, model truth, or release approval |
-| `AIReceipt.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | AI run accountability metadata | User response, evidence, or policy decision |
-| `PromotionDecision.decision` | `APPROVE | DENY | ABSTAIN` | Governed lifecycle/release readiness decision | Runtime answer or PolicyDecision |
-| `RunReceipt.outcome` | `SUCCESS | PARTIAL | FAIL` | Process execution result | Policy or runtime finite decision |
-| Workflow conclusion | GitHub job/run status | Automation execution result | Policy result, review record, or release approval |
-| Workflow hold marker | `WORKFLOW_HOLD`, `WORKFLOW_SKIPPED_EXPLICIT` | Explicit readiness boundary | Failed policy decision or runtime response |
-| Operational state | e.g. normal/degraded/escalate/quarantine, where defined | Routing and operating posture | Finite outcome |
-| Review state | Review-lane vocabulary | Human/steward workflow state | Runtime finite outcome |
+| `PolicyDecision.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Proposed semantic contract/schema | Runtime response, release decision, or executable policy |
+| `DecisionEnvelope.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Proposed semantic contract/schema; compatibility alias remains | Policy execution or complete client response |
+| `RuntimeResponseEnvelope.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Closed schema, four synthetic fixtures, validator/proof, candidate builder | Evidence closure, truth, policy evaluation, or release approval |
+| `AIReceipt.outcome` | `ANSWER | ABSTAIN | DENY | ERROR` | Proposed accountability contract/schema/validator | User answer, evidence, or policy decision |
+| MockAdapter scenario envelope | Same four outcomes | Deterministic no-I/O selector over prevalidated fixtures | Semantic outcome selector or provider integration |
+| Evidence Drawer / Focus projection | Same four outcomes plus local reason/closure vocabularies | Fixture-only parsers and UI tests | Canonical runtime/policy authority |
+| `PromotionDecision.decision` | `APPROVE | DENY | ABSTAIN` | Separate release/promotion vocabulary | Runtime answer or process outcome |
+| `RunReceipt.outcome` | `SUCCESS | PARTIAL | FAIL` | Separate process vocabulary | Policy or runtime decision |
+| Workflow conclusion / hold | GitHub conclusion; `WORKFLOW_HOLD`, `WORKFLOW_SKIPPED_EXPLICIT` | Automation/readiness state | Policy decision, response, review, or release |
+| Review state | Review-family vocabulary | Human/steward state | Finite runtime outcome |
 | Lifecycle state | RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, PUBLISHED | Governed data state | Runtime decision |
+| Correction/release state | Object-specific vocabulary | Separate accountability axis | Evidence outcome |
 
-### Mapping requirements
+### Mapping contract
 
-Any adapter between vocabularies must document:
+Every adapter between vocabularies must document and test:
 
-- source object and field;
-- source value;
-- target object and field;
-- target value;
-- reason and obligation mapping;
-- loss of information;
-- correction and replay behavior;
-- tests for every mapped value.
+- source object/field/value;
+- target object/field/value;
+- preserved reason and obligations;
+- information loss;
+- caller/sensitivity class;
+- correction, supersession, replay, and rollback behavior;
+- every source value and all invalid combinations.
 
-No mapping may infer `ANSWER` from process `SUCCESS`, release `APPROVE`, a green workflow, or a published-looking path without all applicable governed checks.
+No mapping may infer `ANSWER` from process `SUCCESS`, release `APPROVE`, a green workflow, a merged pull request, a released-looking path, or a model response.
 
 [Back to top](#top)
 
@@ -603,37 +577,38 @@ No mapping may infer `ANSWER` from process `SUCCESS`, release `APPROVE`, a green
 flowchart TD
   R["Request / operation context"] --> V["Validate contract and required inputs"]
   V -->|cannot validate safely| ER["ERROR"]
-  V --> P["Evaluate policy / rights / sensitivity / consent / release state"]
+  V --> P["Evaluate policy / rights / sensitivity / consent / release"]
   P -->|explicit block| DN["DENY"]
   P -->|evaluator failure| ER
-  P --> E["Resolve evidence, citations, source authority, freshness, and correction state"]
-  E -->|required support unresolved| AB["ABSTAIN"]
-  E -->|integrity machinery failure| ER
-  E --> N["Apply allowed narrowing, redaction, or generalization"]
-  N -->|no responsible supported scope| AB
+  P --> E["Resolve evidence, citations, source role, freshness, correction, and scope"]
+  E -->|support unresolved| AB["ABSTAIN"]
+  E -->|resolver or integrity failure| ER
+  E --> N["Apply permitted narrowing / redaction / generalization"]
+  N -->|no supported safe scope| AB
   N --> O["Check mandatory obligations"]
   O -->|explicitly prohibited| DN
   O -->|support or review unresolved| AB
   O -->|machinery failure| ER
   O --> AN["ANSWER"]
-  AB --> G["Assemble governed explanation and envelope"]
+  AB --> G["Assemble safe governed envelope / projection"]
   DN --> G
   ER --> G
   AN --> G
-  G --> T["Emit/link required receipt and telemetry"]
-  T --> C["Governed client rendering"]
+  G --> A["Link required accountability and correction state"]
+  A --> C["Governed client renders only permitted content"]
 ```
 
 ### Flow constraints
 
-- Evidence retrieval precedes consequential answer generation.
-- Policy evaluation is explicit; missing policy support does not default to allow.
-- A model may assist interpretation only after the governed context is bounded.
-- Citation validation and post-policy checks remain required where the surface uses generated synthesis.
-- The client renders only the governed envelope and its permitted payload.
-- No flow edge writes publication state merely because it returns `ANSWER`.
+- Consequential answer generation follows evidence retrieval and policy checks.
+- Missing policy support never defaults to allow.
+- AI remains downstream of bounded evidence and policy context.
+- Citation validation is mandatory where generated synthesis depends on citations.
+- Clients render only the accepted governed envelope/projection and permitted payload.
+- No outcome changes lifecycle or publication state by itself.
+- Every narrowing/generalization that supports an answer remains traceable to its evidence and transform records.
 
-The diagram is a proposed architecture. Current repository evidence establishes only selected contracts, shape validation, API ABSTAIN scaffolding, and readiness holds.
+The diagram is proposed architecture. Current evidence proves selected local components, not the composed production flow.
 
 [Back to top](#top)
 
@@ -645,38 +620,31 @@ The diagram is a proposed architecture. Current repository evidence establishes 
 
 ### Fail closed without leaking
 
-Negative outcomes must not reveal the protected content they are withholding.
-
 | Risk | Required posture |
 |---|---|
-| Sensitive exact location | Public explanation says precision is restricted; do not include coordinates or reverse-engineerable hints |
-| Living-person or DNA/genomic material | Explain that policy blocks or support is unavailable without revealing attributes, relationships, identifiers, or inferred status |
-| Rights or source terms | Provide safe category and steward route; do not expose confidential terms or credentials |
-| Access denial | Do not reveal whether a protected record exists unless policy allows that disclosure |
-| Integrity failure | Return a safe error class; retain detailed diagnostics in restricted logs |
-| Prompt injection | Treat source content as data, not instruction; do not echo malicious content as explanation |
-| Model or provider failure | Do not expose provider secrets, raw payloads, stack traces, tokens, or model internals |
-| Chain-of-thought | Never store or expose private reasoning traces as an abstention explanation or receipt field |
-
-### Unresolved handles
-
-Preserve unresolved handles only when safe and useful:
-
-- stable EvidenceRef or source identifiers may be retained in restricted receipts;
-- public envelopes should expose only handles allowed by policy;
-- private object existence, precise locations, consent state, and source restrictions may require redaction or omission;
-- omission itself must not be interpreted as no evidence exists.
+| Sensitive exact location | Explain that precision is restricted; expose no coordinates or reverse-engineerable hint |
+| Living-person or DNA/genomic material | Do not reveal attributes, relationships, identifiers, inferred status, or existence where policy forbids it |
+| Rights or confidential terms | Expose a safe category and steward path, not credentials or protected contract detail |
+| Access denial | Do not disclose protected-record existence unless policy permits |
+| Integrity/evaluator failure | Return a fixed public error class; retain bounded diagnostics in restricted logs |
+| Prompt injection | Treat source and user content as data; never echo malicious instructions as reason text |
+| Provider/runtime failure | Expose no secrets, raw payloads, tokens, stack traces, or model internals |
+| Private reasoning | Never store or expose chain-of-thought as an explanation, receipt, or diagnostic |
+| Historical negative state | Keep audit visibility without resolving it as current claim support |
 
 ### Client behavior
 
 A client receiving `ABSTAIN` should:
 
-- show a distinct, non-error abstention state;
-- present the safe reason;
-- show a next step when available;
+- render a distinct non-error non-answer state;
+- show fixed or template-bound safe reason text;
+- expose allowed evidence/history and limitations without converting them into current support;
+- offer a governed next step where defined;
 - preserve requested and answered scope;
-- avoid retries that bypass policy or rate limits;
-- never substitute another provider, stale payload, hidden source, or generated summary automatically.
+- avoid retries or alternate providers that bypass policy, evidence scope, or rate limits;
+- never substitute stale content, hidden sources, generated summaries, or raw model/provider output.
+
+Current Explorer tests prove portions of this posture for bounded fixture-only Evidence Drawer and Focus projections. Production client coverage remains unverified.
 
 [Back to top](#top)
 
@@ -686,57 +654,41 @@ A client receiving `ABSTAIN` should:
 
 ## Receipts, observability, and correction
 
-### Receipt boundary
+### Object separation
 
-A finite decision and a receipt are different objects.
-
-- `DecisionEnvelope` or `PolicyDecision` records the decision.
+- `PolicyDecision` or `DecisionEnvelope` records decision posture.
 - `RuntimeResponseEnvelope` carries client-facing response posture.
-- `AIReceipt` records accountability for AI-mediated execution.
-- `RunReceipt` records process execution using its own outcome vocabulary.
-- Release decisions, correction records, and rollback records remain under their own contracts.
+- `AIReceipt` records AI-mediated accountability.
+- `RunReceipt` records process execution under its separate vocabulary.
+- validation reports, review records, promotion decisions, release manifests, correction notices, and rollback records remain distinct.
 
-### Proposed receipt policy
+### Proposed accountability mapping
 
-| Event | Proposed accountability record |
+| Event | Accountability posture |
 |---|---|
-| AI-mediated `ABSTAIN` after a model/adapter run | `AIReceipt` linked to the decision and citation-validation result |
-| AI request blocked before model invocation | Policy/DecisionEnvelope record; AIReceipt only if the accepted contract defines pre-invocation attempts as AI runs |
-| Non-AI governed decision | Decision/validation record plus RunReceipt where a process run occurred |
-| Public response assembly | RuntimeResponseEnvelope plus trace link to applicable decision/receipt objects |
-| Correction or withdrawal of prior response lineage | New correction/withdrawal record and new decision; do not mutate historical receipts |
+| AI-mediated abstention after an adapter/model run | AIReceipt plus decision/citation references under the accepted contract |
+| Request blocked before model invocation | Decision/policy trace; do not fabricate an AI run |
+| Non-AI governed decision | Decision/validation record and RunReceipt only when a process run occurred |
+| Public response assembly | RuntimeResponseEnvelope plus trace links to applicable decisions and accountability records |
+| Later recovery, correction, withdrawal, or supersession | New decision and correction/withdrawal lineage; retain prior event immutably |
 
-The repository does not currently establish complete receipt persistence or these linkage rules. They remain proposed.
+The repository proves local validators and fixtures for several objects, not complete persistence or linkage.
 
 ### Observability target
 
-Outcome telemetry should support:
+Privacy-reviewed outcome telemetry should support:
 
-- counts by surface, domain, policy family, and outcome;
-- ABSTAIN counts by reason code;
-- time-to-resolution where a steward action is expected;
-- repeated unresolved evidence/source/citation clusters;
-- transition counts from ABSTAIN to later ANSWER, DENY, or ERROR;
-- policy and schema version;
-- safe latency and dependency state;
+- counts by surface, domain, policy family, outcome, and reason family;
+- time-to-resolution for abstentions requiring steward work;
+- repeated evidence/source/citation gap clusters;
+- transitions from `ABSTAIN` to later `ANSWER`, `DENY`, or `ERROR`;
+- contract, schema, policy, and implementation versions;
+- safe dependency latency and failure state;
 - correction and supersession linkage.
 
-### Privacy controls
+It must not record raw prompts, provider payloads, private reasoning, full EvidenceBundles, exact sensitive locations, protected personal/genomic facts, credentials, confidential policy inputs, or joinable explanation details that re-identify protected subjects.
 
-Telemetry must not capture:
-
-- raw prompts or provider payloads;
-- private chain-of-thought;
-- full EvidenceBundles;
-- exact sensitive locations;
-- protected person or DNA data;
-- source credentials;
-- confidential policy inputs;
-- public explanations that can be joined to re-identify protected subjects.
-
-### Current observability state
-
-No current-session evidence establishes an operational ABSTAIN dashboard, reason-code metrics, alert thresholds, or persistent receipt store. Those remain `UNKNOWN` or `NEEDS VERIFICATION`.
+No operational ABSTAIN dashboard, reason metrics, alert thresholds, or persistent receipt store was exercised in this review.
 
 [Back to top](#top)
 
@@ -746,33 +698,31 @@ No current-session evidence establishes an operational ABSTAIN dashboard, reason
 
 ## Authority and publication boundary
 
-| Responsibility | Authority home | Effect of this ADR |
+| Responsibility | Authority surface | Effect of this ADR |
 |---|---|---|
-| Architecture decision | `docs/adr/` | Records the proposed decision only |
-| Semantic outcome meaning | `contracts/policy/`, `contracts/runtime/`, affected object-family contracts | Must align after acceptance |
-| Machine shape | `schemas/contracts/v1/` | Must enforce accepted fields and enums |
-| Executable allow/deny/abstain rules | `policy/` | Not implemented by this ADR |
-| Runtime decision code | governed API/runtime/package implementation roots | Not implemented by this ADR |
-| Evidence closure | evidence resolver and EvidenceBundle authority | Not supplied by an envelope |
-| Citation validation | accepted citation-validation implementation | Not supplied by generated prose |
-| Fixtures and tests | `fixtures/`, `tests/` | Must prove positive and negative behavior |
-| Validators | `tools/validators/` | Check shape and invariants; do not decide truth |
-| Receipts and proofs | governed data receipt/proof roots | Not created by this ADR |
-| Release decisions and publication | `release/` and governed publication flows | Never granted by an `ANSWER` alone |
-| Public rendering | governed API and accepted clients | Must obey envelope and obligations |
+| Architecture decision | `docs/adr/` | Records a proposed decision only |
+| Semantic object meaning | `contracts/policy/`, `contracts/runtime/`, `contracts/ui/`, release contracts | Must align through separate reviewed changes |
+| Machine shape | `schemas/contracts/v1/` | Enforces accepted fields and invariants; does not decide truth |
+| Executable admissibility | `policy/` and an accepted policy runtime | Not implemented or accepted here |
+| Runtime composition | Governed API/runtime/packages | Not implemented here |
+| Evidence closure | EvidenceRef/EvidenceBundle authority and resolver | Not supplied by an envelope or projection |
+| Citation validation | Accepted citation implementation | Not supplied by prose or a citation-shaped string |
+| Client projection | Governed API and accepted UI adapters/components | Must remain downstream of authority |
+| Accountability | Receipt, validation, review, proof, correction, and trace families | Not created by this ADR |
+| Release/publication | `release/` and governed publication flows | Never granted by `ANSWER`, a test, or a merge |
 
 ### Invariants
 
-1. `ABSTAIN` does not publish.
-2. `ANSWER` does not publish by itself.
-3. An envelope does not create evidence.
-4. A reason code does not resolve evidence.
-5. A receipt records an event; it does not make the event correct.
-6. A green workflow does not become a policy decision.
-7. A path named `published` does not substitute for release authority.
-8. A client cannot bypass governed interfaces because a provider is reachable.
-9. Generated language never outranks EvidenceBundle support.
-10. Correction and rollback remain visible and append-only.
+1. `ABSTAIN`, `DENY`, `ERROR`, and `ANSWER` do not publish.
+2. An envelope or client projection does not create evidence.
+3. A reason code does not resolve evidence or execute policy.
+4. A receipt records an event; it does not make the event correct.
+5. A green workflow does not become a policy decision, review, or release.
+6. A published-looking path does not substitute for ReleaseManifest and rollback authority.
+7. Public clients do not bypass governed interfaces because a provider or internal store is reachable.
+8. Generated language never outranks EvidenceBundle support.
+9. Corrections and supersessions append lineage rather than rewriting history.
+10. Promotion is a governed state transition, not a file move or finite runtime outcome.
 
 [Back to top](#top)
 
@@ -782,39 +732,37 @@ No current-session evidence establishes an operational ABSTAIN dashboard, reason
 
 ## Current repository evidence
 
-| Surface | Status | Safe conclusion |
+| Surface | Current status | Safe conclusion |
 |---|---:|---|
-| ADR identity and index row | **CONFIRMED** | ADR-0020 exists at this exact path and remains proposed |
-| `PolicyDecision` contract/schema | **CONFIRMED PROPOSED** | Closed finite outcome shape exists |
-| `DecisionEnvelope` contract/schema | **CONFIRMED PROPOSED** | Closed finite outcome runtime decision shape exists |
-| `RuntimeResponseEnvelope` schema | **CONFIRMED PROPOSED** | Closed client-facing shape exists with finite outcome and state fields |
-| RuntimeResponseEnvelope valid fixtures | **CONFIRMED narrow** | Observed valid cases cover `ABSTAIN` and `ANSWER`; not all outcomes |
-| RuntimeResponseEnvelope validator | **CONFIRMED generic shape runner** | Validates selected fixtures against the schema; does not prove semantics |
-| Runtime finite-outcome behavior test | **CONFIRMED placeholder** | Contains one `assert True`; no behavioral outcome proof |
-| Governed API ABSTAIN scaffold | **CONFIRMED executable** | Emits deterministic capability-family `ABSTAIN / NOT_IMPLEMENTED` objects |
-| Governed API boundary tests | **CONFIRMED bounded** | Check route manifest, method handling, selected forbidden imports, and internal-path literals |
-| Runtime policy | **CONFIRMED stub** | No accepted runtime decision policy is established |
-| Policy-gate register | **CONFIRMED empty / PROPOSED** | No canonical reason-code entries exist |
-| AIReceipt schema | **CONFIRMED PROPOSED** | Finite outcome and accountability fields exist; persistence unproved |
-| RunReceipt schema | **CONFIRMED PROPOSED** | Uses `SUCCESS | PARTIAL | FAIL`, not the runtime finite-decision vocabulary |
-| PromotionDecision schema | **CONFIRMED PROPOSED** | Uses `APPROVE | DENY | ABSTAIN`, not the runtime finite-decision vocabulary |
-| Focus mock workflow | **CONFIRMED explicit HOLD** | Performs readiness checks; runs no mock Focus request or model |
-| UI outcome rendering | **NEEDS VERIFICATION** | No complete public-client ABSTAIN/DENY/ERROR behavior was established |
-| Reason-code telemetry | **UNKNOWN** | No operational metrics backend or dashboard was exercised |
-| Receipt persistence | **UNKNOWN** | No persisted ABSTAIN receipt flow was exercised |
-| Release/publication | **NOT ESTABLISHED** | No outcome or envelope authorizes publication |
+| ADR identity and canonical index | **CONFIRMED** | Exact path exists; source and effective status remain proposed |
+| Directory Rules | **CONFIRMED accepted through ADR-0029** | Same-path `docs/adr/` placement is governed; no status transition follows |
+| `PolicyDecision` contract/schema | **CONFIRMED PROPOSED** | Four-outcome semantic/shape surface exists; accepted evaluator and full semantic proof remain absent |
+| `DecisionEnvelope` contract/schema | **CONFIRMED PROPOSED** | Four-outcome decision carrier exists; compatibility and validator convergence remain open |
+| RuntimeResponseEnvelope schema | **CONFIRMED closed / PROPOSED** | All four outcomes are allowed; `ANSWER` requires evidence and precision; negative outcomes forbid precision |
+| RuntimeResponseEnvelope valid fixtures | **CONFIRMED all four** | Synthetic `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` shape examples exist |
+| Runtime envelope validator and proof | **CONFIRMED substantive, no-network** | Checks closed shape, four outcomes, aliasing, negative fixtures, precision, and wiring; does not select semantic outcome |
+| Deterministic candidate builder | **CONFIRMED bounded** | Builds locally checked candidates from explicit authority-bearing inputs; does not resolve/evaluate them |
+| MockAdapter and proof | **CONFIRMED deterministic no-I/O selector** | Requires all four prevalidated scenarios, isolates copies, and fails closed; not a semantic adapter or provider runtime |
+| Governed API | **CONFIRMED three-route ABSTAIN scaffold** | `/bootstrap`, `/layers`, and `/evidence` return `ABSTAIN / NOT_IMPLEMENTED`; no evidence/policy/citation composition |
+| Runtime policy boundary | **CONFIRMED unbound/non-enforcing** | Missing-evidence and related Rego modules are stubs; no accepted evaluator or outcome mapping |
+| Policy-gate register | **CONFIRMED empty / PROPOSED** | No accepted central gate/reason registry exists |
+| Explorer GovernedClient | **CONFIRMED fixture-only parser** | Bounded local outcome/reason/trust vocabularies and no-network/no-lifecycle-store boundary exist |
+| Evidence Drawer tests | **CONFIRMED fixture-only behavior** | Stale and superseded evidence abstain; denial/error use fixed no-leak copy; invalid payloads fail closed |
+| Focus composed-claim tests | **CONFIRMED fixture-only behavior** | Supported/qualified answers, unresolved-dependency abstention, policy denial, scope failure, and resolver error are distinguished |
+| UI FocusResponse contract/schema | **CONFIRMED contract / permissive schema stub** | Presentation intent exists; accepted complete UI response shape remains unproved |
+| Focus mock workflow | **CONFIRMED split posture** | Finite envelope/MockAdapter proof runs; mock Focus runtime remains an explicit hold |
+| Receipt persistence and outcome telemetry | **UNKNOWN / NOT ESTABLISHED** | No operational store, dashboard, retention, or correction propagation was exercised |
+| Release/publication | **NOT ESTABLISHED** | No outcome, projection, fixture, or workflow authorizes release |
 
-### Material corrections from v1.1
+### Material corrections from v1.2
 
-- Closes the stale claim that ADR numbering and repository paths are unknown.
-- Limits the four-outcome rule to designated policy/runtime decision fields.
-- Separates `RunReceipt` and `PromotionDecision` vocabularies.
-- Reclassifies the reason-code table as a proposed seed because the register is empty.
-- Records that the current API ABSTAIN is a capability scaffold, not complete evidence behavior.
-- Records generic fixture coverage as `ANSWER` plus `ABSTAIN`, not all four outcomes.
-- Records the behavior test and runtime policy as scaffolds.
-- Downgrades universal receipt, metrics, next-step, UI, and composition claims to proposed acceptance gates.
-- Preserves cite-or-abstain, no-silent-fallback, safe narrowing, and public trust-membrane intent.
+- RuntimeResponseEnvelope valid fixtures now cover all four outcomes, not only `ANSWER` and `ABSTAIN`.
+- The runtime finite-outcome suite is substantive rather than an `assert True` placeholder.
+- An ANSWER-only evidence and precision invariant is schema- and proof-backed.
+- MockAdapter now supplies deterministic no-I/O four-outcome fixture selection.
+- Explorer Evidence Drawer and Focus composed-claim tests now prove bounded fixture-only negative-state behavior and no-leak copy.
+- Focus mock automation now separates working finite-envelope proof from a still-held mock runtime.
+- Runtime policy, reason-code authority, Governed API semantic outcome selection, receipt persistence, telemetry, live evidence/citation resolution, and production operation remain held or unverified.
 
 [Back to top](#top)
 
@@ -824,32 +772,20 @@ No current-session evidence establishes an operational ABSTAIN dashboard, reason
 
 ## Current implementation maturity
 
-### Maturity ladder
-
 | Level | Description | Current evidence |
 |---|---|---|
-| **M0 — vocabulary proposed** | ADR and contract prose name the finite outcomes | **CONFIRMED** |
-| **M1 — shape bounded** | Schemas and generic fixtures enforce finite values | **PARTIALLY CONFIRMED** |
-| **M2 — deterministic decision behavior** | Executable policy/decision logic covers all outcomes and boundaries | **NOT ESTABLISHED** |
-| **M3 — governed response assembly** | Runtime emits complete client envelope with evidence, policy, freshness, correction, and receipt links | **NOT ESTABLISHED** |
-| **M4 — client and telemetry enforcement** | Clients render outcomes distinctly; metrics and alerts are operational | **NOT ESTABLISHED** |
-| **M5 — reviewed production operation** | Rulesets, incident response, correction, replay, and public evidence are verified | **UNKNOWN** |
+| **M0 — vocabulary** | Contracts/ADR name finite outcomes | **CONFIRMED PROPOSED** |
+| **M1 — shape** | Closed schemas, aliases, positive/negative fixtures, validators | **CONFIRMED for RuntimeResponseEnvelope; partial across adjacent objects** |
+| **M2 — bounded components** | Deterministic construction, selection, and fixture-only client interpretation | **PARTIALLY CONFIRMED** — builder, MockAdapter, Evidence Drawer, Focus projections |
+| **M3 — semantic orchestration** | Evidence/policy/citation inputs deterministically select and assemble outcomes | **NOT ESTABLISHED** |
+| **M4 — governed runtime/client** | Accepted API route, production clients, persisted accountability, telemetry, correction | **NOT ESTABLISHED** |
+| **M5 — reviewed operation** | Ruleset coupling, incident handling, replay, rollback, public evidence | **UNKNOWN** |
 
 ### Present safe claim
 
-The current repository supports this statement:
+> KFM has a closed four-outcome RuntimeResponseEnvelope profile with substantive no-network proof, deterministic synthetic fixture selection/construction, and bounded fixture-only Explorer projections that distinguish abstention, denial, error, stale support, superseded history, and unresolved dependencies. The repository does not yet establish accepted semantic outcome selection, active runtime policy, live evidence/citation closure, complete Governed API response assembly, persistent accountability, telemetry, or production release.
 
-> KFM has proposed, schema-paired finite decision and response-envelope surfaces; a deterministic Governed API scaffold demonstrates a fail-closed `ABSTAIN / NOT_IMPLEMENTED` response; automation explicitly holds runtime graduation while policy, all-outcome behavior, receipts, evidence/citation integration, and public clients remain unestablished.
-
-It does not support:
-
-- “ABSTAIN is enforced everywhere”;
-- “all KFM statuses use the four outcomes”;
-- “every ABSTAIN writes a receipt”;
-- “the reason-code register is canonical and populated”;
-- “all four outcomes have behavioral tests”;
-- “the UI renders abstention correctly”;
-- “green focus-mock-test proves governed AI.”
+The evidence does not support “ABSTAIN is enforced everywhere,” “the UI is production-ready,” “all objects use the four outcomes,” “every abstention writes a receipt,” or “green Focus checks prove governed AI.”
 
 [Back to top](#top)
 
@@ -859,80 +795,67 @@ It does not support:
 
 ## Implementation and convergence plan
 
-### Phase 0 — preserve the hold
+### Phase 0 — preserve fail-closed behavior
 
-Keep the current ABSTAIN scaffold and workflow holds until accepted behavioral evidence exists. Do not replace them with optimistic `ANSWER` behavior.
+Keep explicit `NOT_IMPLEMENTED` abstention, fixed no-leak negative copy, and workflow holds until reviewed semantic orchestration exists. Do not replace them with optimistic answer paths.
 
-### Phase 1 — decide object ownership and mappings
+### Phase 1 — decide object ownership and mapping
 
-- confirm `PolicyDecision`, `DecisionEnvelope`, and `RuntimeResponseEnvelope` roles;
-- decide whether compatibility field `DecisionEnvelope.decision` remains;
-- define explicit mappings to `PromotionDecision` and `RunReceipt`;
-- record object identifiers and trace links;
-- reconcile any competing Focus-local envelope schema.
+- ratify the roles of PolicyDecision, DecisionEnvelope, RuntimeResponseEnvelope, AIReceipt, RunReceipt, PromotionDecision, FocusResponse, and client-local projections;
+- decide compatibility alias/deprecation rules;
+- define explicit mappings without converting process/release/workflow success into `ANSWER`;
+- document trace identifiers and correction relationships.
 
 ### Phase 2 — establish reason-code authority
 
-- populate a reviewed reason-code register;
-- define default outcomes and allowed policy families;
-- separate safe public explanations from restricted details;
-- define deprecation and alias rules;
-- add register validation and negative tests.
+- select the machine register home under accepted Directory Rules;
+- populate reviewed codes, aliases, outcomes, policy families, explanation classes, obligations, retryability, ownership, and deprecation;
+- validate the register and all local projections against approved subsets;
+- add negative tests for repurposed, unknown, and leaking reason codes.
 
 ### Phase 3 — converge contracts and schemas
 
-- decide which ABSTAIN fields belong in each object;
-- add or link `next_step`, receipt reference, attempted evidence, freshness, correction, and obligations where required;
-- prevent conflicting `outcome` and compatibility `decision` fields;
-- version breaking changes;
-- add valid and invalid fixtures.
+- define which object owns primary code, reasons, obligations, attempted evidence, next action, freshness, correction, scope, and accountability refs;
+- prohibit conflicting compatibility fields;
+- version breaking changes and provide migration fixtures;
+- close the permissive FocusResponse schema or explicitly retire it in favor of a view-only profile;
+- preserve separate process, promotion, review, lifecycle, and release vocabularies.
 
-### Phase 4 — implement deterministic policy/runtime decisions
+### Phase 4 — implement a no-network semantic decision slice
 
-Build a no-network decision engine or reference evaluator that proves:
+Prove deterministic selection for:
 
 - supported `ANSWER`;
 - unresolved-support `ABSTAIN`;
-- explicit-policy `DENY`;
-- machinery-failure `ERROR`;
-- safe narrowed-scope `ANSWER`;
-- obligation failure;
-- sensitive-detail-safe explanations;
-- correction and stale-state behavior.
+- stale/conflicted/source-role/citation abstention;
+- explicit rights/sensitivity/access `DENY`;
+- schema/evaluator/resolver `ERROR`;
+- allowed narrowed-scope `ANSWER` with evidence and precision disclosure;
+- correction/supersession behavior;
+- composition profiles and mandatory obligations.
 
-### Phase 5 — complete runtime response assembly
+### Phase 5 — assemble one governed API response
 
-The governed API should:
+For one synthetic operation, compose validated request, evidence resolution, policy decision, citation result, freshness/correction state, DecisionEnvelope, applicable accountability records, and RuntimeResponseEnvelope. Keep it no-network and unreleased until review closes.
 
-- evaluate explicit inputs;
-- resolve evidence and citations;
-- call policy;
-- produce a DecisionEnvelope/PolicyDecision;
-- assemble a complete RuntimeResponseEnvelope;
-- link applicable AIReceipt/RunReceipt/validation records;
-- never expose internal stores or raw model/provider responses.
+### Phase 6 — converge clients and accessibility
 
-### Phase 6 — wire clients and accessibility
+- bind one accepted API response profile to Evidence Drawer and Focus UI;
+- preserve distinct `ABSTAIN`, `DENY`, `ERROR`, loading, stale, and corrected states;
+- provide safe accessible copy and next actions;
+- test keyboard, screen-reader, export/share, map, correction, and no-internal-store behavior;
+- prevent local projection vocabularies from becoming parallel authority.
 
-- render `ABSTAIN` distinctly from `DENY`, `ERROR`, and loading;
-- display safe reason and next action;
-- preserve scope and correction state;
-- support keyboard and assistive technology;
-- test export, map, Evidence Drawer, Focus Mode, story, and review surfaces;
-- forbid silent stale/default fallback.
+### Phase 7 — accountability, telemetry, correction, and rollback
 
-### Phase 7 — telemetry and incident operation
+- persist or link accepted decision/accountability records where significance requires;
+- add privacy-reviewed aggregate metrics;
+- test repeated gap routing, correction, supersession, withdrawal, cache invalidation, provider/evaluator deactivation, and replay;
+- verify restricted details do not appear in public responses, logs, metrics, or receipts.
 
-- count outcomes and reason codes safely;
-- define alerts for repeated unresolved support;
-- verify redaction and retention;
-- test incident deactivation;
-- test correction/withdrawal propagation;
-- verify no confidential information appears in logs or metrics.
+### Phase 8 — explicit governance transition
 
-### Phase 8 — review and acceptance
-
-Only after the applicable acceptance gates close should maintainers consider an explicit reviewed ADR status transition and update the canonical index in the same change.
+Only after applicable acceptance gates close should maintainers consider a reviewed ADR status change and synchronize the canonical index in the same pull request. Acceptance still would not authorize release of a particular runtime surface.
 
 [Back to top](#top)
 
@@ -946,61 +869,57 @@ ADR-0020 should remain `proposed` until equivalent evidence closes every applica
 
 ### Governance and ownership
 
-- [ ] Named architecture, runtime, policy, evidence, citation, UI, telemetry, contracts, schemas, validation, and docs owners are accepted.
+- [ ] Named architecture, runtime, policy, evidence, citation, UI, telemetry, contracts, schemas, validation, correction, and docs owners are accepted.
 - [ ] Required-review and branch/ruleset behavior is verified.
-- [ ] ADR and index carry matching reviewed status.
-- [ ] Reason-code ownership and deprecation process are accepted.
+- [ ] ADR and canonical index carry the same reviewed status.
+- [ ] Reason-code ownership, compatibility, and deprecation process are accepted.
 
 ### Contract and schema
 
-- [ ] PolicyDecision, DecisionEnvelope, RuntimeResponseEnvelope, AIReceipt, RunReceipt, and PromotionDecision mappings are documented.
-- [ ] Finite-outcome fields reject non-canonical values.
-- [ ] Compatibility fields cannot contradict canonical outcomes.
-- [ ] ABSTAIN-required fields and links are machine-checkable where intended.
-- [ ] Breaking changes are versioned with migration fixtures.
-- [ ] No parallel canonical schema or contract home remains unresolved.
+- [ ] Finite-outcome fields reject non-canonical values and contradictory aliases.
+- [ ] PolicyDecision, DecisionEnvelope, RuntimeResponseEnvelope, AIReceipt, RunReceipt, PromotionDecision, and Focus/client mappings are documented and tested.
+- [ ] Required abstention reason, explanation, scope, evidence posture, obligations, correction, and accountability links are machine-checkable where intended.
+- [ ] Breaking changes are versioned with positive, negative, and migration fixtures.
+- [ ] No parallel canonical response or reason vocabulary remains unresolved.
 
 ### Policy and reason codes
 
-- [ ] Runtime policy is executable and fail-closed.
+- [ ] Runtime policy is executable, accepted, versioned, and fail-closed.
 - [ ] Reason-code register is populated and validated.
-- [ ] Each reason defines outcome, policy family, public explanation, obligations, retryability, and owner.
-- [ ] Explicit denial is not misclassified as abstention.
-- [ ] Machinery failure is not misclassified as abstention.
+- [ ] Each code defines outcome, policy family, public/restricted explanation, obligations, retryability, correction, owner, and deprecation.
+- [ ] Explicit prohibition cannot be misclassified as abstention.
+- [ ] Machinery failure cannot be misclassified as abstention.
 - [ ] Missing support cannot become answer by default.
 
 ### Behavioral proof
 
-- [ ] Deterministic fixtures cover `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
-- [ ] Boundary fixtures cover evidence missing, stale, conflicted, source unresolved, policy block, sensitive denial, evaluator failure, schema failure, and safe narrowing.
-- [ ] Negative fixtures prove no silent fallback.
-- [ ] Composition tests cover conjunctive and mixed-scope behavior.
-- [ ] Runtime proof tests are substantive, not assert-true placeholders.
-- [ ] Tests run without network by default.
-
-### Receipts and observability
-
-- [ ] Applicable ABSTAIN events link or emit accepted accountability records.
-- [ ] Receipt and envelope identifiers are traceable without exposing protected content.
-- [ ] Historical decisions and receipts are append-only and correctable.
-- [ ] Outcome/reason telemetry is privacy-reviewed.
-- [ ] Alerting and backlog thresholds are documented and tested.
+- [ ] No-network semantic fixtures cover `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
+- [ ] Boundary fixtures cover missing, stale, conflicted, superseded, unresolved source role, unresolved citation, policy block, sensitive denial, invalid shape, evaluator failure, dependency failure, and safe narrowing.
+- [ ] Composition tests cover conjunctive, alternative-group, optional-role, and mixed-collection behavior.
+- [ ] Negative tests prove no silent stale/provider/default fallback and no reason leakage.
+- [ ] Component tests are distinguished from end-to-end orchestration proof.
 
 ### Governed API and clients
 
-- [ ] Governed API emits the accepted complete response envelope.
-- [ ] No public client calls model/provider or internal stores directly.
-- [ ] UI surfaces distinguish `ABSTAIN`, `DENY`, `ERROR`, and loading.
-- [ ] Safe explanation and next-step behavior is accessible.
-- [ ] Freshness, correction, withdrawal, and narrowed scope are visible.
-- [ ] Public responses never reveal protected reason detail.
+- [ ] One accepted Governed API route emits the complete reviewed response profile.
+- [ ] No public client reads provider/model or canonical/internal lifecycle stores directly.
+- [ ] Evidence Drawer, Focus Mode, map, review, export, and story surfaces preserve all applicable finite and negative states.
+- [ ] Safe explanations, next steps, scope changes, freshness, correction, and withdrawal are accessible.
+- [ ] Local projection vocabularies are generated from or validated against accepted authority.
+
+### Accountability and observability
+
+- [ ] Applicable outcomes link to accepted decision/receipt/validation/correction records.
+- [ ] Historical decisions are append-only and supersedable.
+- [ ] Outcome and reason telemetry is privacy-reviewed, versioned, and tested.
+- [ ] Alerts and gap-routing thresholds are documented without incentivizing misclassification.
 
 ### Release and rollback
 
-- [ ] `ANSWER` cannot bypass release/publication gates.
-- [ ] Provider/runtime failure returns a safe envelope.
+- [ ] `ANSWER` cannot bypass evidence, review, release, correction, or rollback gates.
+- [ ] Provider/evaluator failure returns a safe governed envelope.
 - [ ] Correction and withdrawal invalidate affected derivatives and caches.
-- [ ] Rollback/deactivation preserves envelope compatibility.
+- [ ] Rollback/deactivation preserves contract compatibility and historical lineage.
 - [ ] No acceptance check itself publishes data.
 
 [Back to top](#top)
@@ -1013,28 +932,26 @@ ADR-0020 should remain `proposed` until equivalent evidence closes every applica
 
 ### Positive
 
-- Evidence insufficiency becomes visible without being mislabeled as system failure.
-- Explicit policy denial stays distinct from uncertainty.
-- Clients can present trustworthy negative states.
+- Evidence insufficiency becomes visible without masquerading as system failure.
+- Explicit prohibition remains distinguishable from uncertainty.
+- Clients can present safe, accessible negative states without inventing claims.
 - Generated language cannot silently fill evidence gaps.
-- Reason codes make repeated support gaps inspectable.
-- Provider and runtime failures remain auditable.
-- Object-family vocabularies stay separated instead of collapsing into one “status.”
+- Reason and dependency codes make recurring support gaps inspectable.
 - Corrections and later recovery can reference the original abstention.
+- Separate vocabularies preserve object-family responsibilities.
 
 ### Costs
 
-- Contracts and schemas need convergence work.
+- Contracts, schemas, policy, adapters, clients, and local vocabularies need convergence.
 - Reason-code governance becomes a maintained control surface.
 - UI design must support a non-error non-answer state.
-- Receipt and telemetry paths add operational burden.
-- Outcome classification requires negative tests and domain review.
+- Accountability, correction, and telemetry add operational burden.
+- Outcome classification needs negative tests and domain/sensitivity review.
 - Safe explanations require redaction and privacy discipline.
-- Legacy statuses need explicit mapping rather than cosmetic renaming.
 
 ### Tradeoff
 
-KFM accepts additional implementation and review cost in exchange for reducing unsupported claims, hidden denial, ambiguous errors, and public trust drift.
+KFM accepts additional implementation and review cost to reduce unsupported claims, hidden denial, ambiguous errors, silent fallback, and public trust drift.
 
 [Back to top](#top)
 
@@ -1046,16 +963,17 @@ KFM accepts additional implementation and review cost in exchange for reducing u
 
 | Alternative | Disposition |
 |---|---|
-| Treat `ABSTAIN` as `ERROR` | Rejected: evidence insufficiency and machinery failure have different remedies and trust meaning |
-| Treat missing support as `DENY` | Rejected: lack of support is not always an explicit prohibition |
-| Use one universal status vocabulary for every object | Rejected: process, release, review, lifecycle, workflow, and runtime objects have different responsibilities |
-| Permit free-text finite statuses | Rejected: prevents deterministic clients, tests, and audit |
-| Allow low-confidence or stale fallback | Rejected: violates cite-or-abstain unless the narrowed/stale posture is explicitly policy-passed and disclosed |
-| Require a persisted receipt for every internal branch | Rejected as overbroad: accountability requirements should be event- and materiality-aware |
-| Use a universal severity max for every composition | Rejected as overbroad: composition depends on operation semantics and must be declared |
-| Keep ABSTAIN only for AI surfaces | Rejected: access, render, capability, consent, sensitivity, and other governed runtime decisions also need an unresolved-support outcome |
-| Make UI loading or pending equivalent to ABSTAIN | Rejected: transport/UI activity state is not a governed decision |
-| Let provider-specific errors define public outcomes | Rejected: provider details remain behind governed normalization |
+| Treat `ABSTAIN` as `ERROR` | Rejected: evidence insufficiency and machinery failure require different remedies and communicate different trust states |
+| Treat missing support as `DENY` | Rejected: lack of support is not necessarily an explicit prohibition |
+| Use one universal status vocabulary | Rejected: decision, process, workflow, review, lifecycle, release, and correction objects have different responsibilities |
+| Permit free-text finite outcomes | Rejected: prevents deterministic contracts, clients, metrics, and tests |
+| Allow low-confidence or stale fallback | Rejected unless policy explicitly permits a cited qualified/narrowed answer and the posture is visible |
+| Require a persisted receipt for every internal branch | Rejected as overbroad; accountability is event- and materiality-aware |
+| Use a universal severity maximum for composition | Rejected: composition semantics and controlling dependencies must be declared |
+| Keep abstention only for AI | Rejected: access, render, capability, sensitivity, evidence, and other governed decisions also need unresolved-support behavior |
+| Treat loading/pending as abstention | Rejected: UI/transport state is not a governed decision |
+| Let provider errors define public outcomes | Rejected: provider details remain behind governed normalization |
+| Let fixture-local UI reason sets become canonical | Rejected: projections must remain subordinate to accepted contracts/policy/registers |
 
 [Back to top](#top)
 
@@ -1067,22 +985,24 @@ KFM accepts additional implementation and review cost in exchange for reducing u
 
 | ID | Status | Question or risk | Safe interim posture |
 |---|---|---|---|
-| `ABST-01` | **OPEN** | Which file is the accepted canonical reason-code register? | Do not call the current empty register canonical for runtime reasons |
-| `ABST-02` | **OPEN** | Should `reason_code` be required in DecisionEnvelope? | Require non-empty `reasons[]`; preserve observed primary code where available |
-| `ABST-03` | **OPEN** | Where do `next_step` and attempted evidence handles belong? | Do not invent fields in instances; use linked records until contracts converge |
-| `ABST-04` | **OPEN** | When is an AIReceipt required if a request is blocked before model invocation? | Do not fabricate an AI run; record the governing decision and trace |
-| `ABST-05` | **OPEN** | How should compatibility `decision` and canonical `outcome` coexist? | When both exist, require equality; plan deprecation deliberately |
-| `ABST-06` | **OPEN** | Which composition profiles are canonical? | Use explicit per-operation composition; do not apply universal max severity |
-| `ABST-07` | **OPEN** | Which unresolved review states map to ABSTAIN versus DENY? | Follow the applicable policy: unresolved support normally abstains; explicit prohibition denies |
-| `ABST-08` | **OPEN** | How are safe narrowed-scope answers represented? | Expose requested and answered scopes plus transform obligations |
-| `ABST-09` | **OPEN** | What telemetry is safe for sensitive domains? | Aggregate and redact; do not record protected facts |
-| `ABST-10` | **OPEN** | What is the recovery/correction contract for a later ANSWER? | Append new decision and link supersession; never mutate the prior event |
-| `ABST-11` | **RISK** | Current API scaffold can be mistaken for full abstention implementation | Keep explicit NOT_IMPLEMENTED and documentation holds |
-| `ABST-12` | **RISK** | Generic fixtures can be mistaken for behavior proof | Keep runtime-proof and workflow graduation gates explicit |
-| `ABST-13` | **RISK** | Empty reason register encourages ad hoc strings | Block “canonical reason” claims until register governance lands |
-| `ABST-14` | **RISK** | Outcome metrics can incentivize misclassification | Audit outcome shifts and pair counts with reason/quality review |
-| `ABST-15` | **NEEDS VERIFICATION** | Public client rendering and accessibility | Require client-specific fixtures and tests before acceptance |
-| `ABST-16` | **NEEDS VERIFICATION** | Receipt persistence, retention, and erasure/correction behavior | Exercise accepted receipt store and policy before claims |
+| `ABST-01` | **OPEN** | Which accepted machine register owns reason codes? | Keep current local sets explicitly profile-scoped; do not call them canonical |
+| `ABST-02` | **OPEN** | Should DecisionEnvelope require a primary reason code? | Preserve non-empty reasons and observed code where available; do not invent fields |
+| `ABST-03` | **OPEN** | Which object owns next action, attempted evidence, scope, and accountability links? | Use existing linked records until contracts converge |
+| `ABST-04` | **OPEN** | When is AIReceipt required before model invocation? | Do not fabricate an AI run; record policy/decision trace only |
+| `ABST-05` | **OPEN** | How should compatibility `decision` and canonical `outcome` coexist? | Require equality when both exist; plan deprecation explicitly |
+| `ABST-06` | **OPEN** | Which composition profiles are canonical? | Declare per-operation composition; do not apply universal max severity |
+| `ABST-07` | **OPEN** | When does pending review mean abstain versus deny? | Follow accepted policy: unresolved support normally abstains; explicit prohibition denies |
+| `ABST-08` | **OPEN** | How are narrowed answers represented across runtime and UI? | Expose requested/answered scope, limitations, evidence, precision, and transforms |
+| `ABST-09` | **OPEN** | How do local Explorer reason sets converge without breaking fixtures? | Add a versioned adapter/register crosswalk and compatibility tests |
+| `ABST-10` | **OPEN** | What recovery contract links later answers to prior abstentions? | Append a new decision and explicit supersession/correction relation |
+| `ABST-11` | **RISK** | Governed API scaffold can be mistaken for semantic implementation | Keep `NOT_IMPLEMENTED`, synthetic boundaries, and maturity holds visible |
+| `ABST-12` | **RISK** | Component proofs can be mistaken for end-to-end behavior | Name each proof's responsibility and non-effects in docs/workflows/tests |
+| `ABST-13` | **RISK** | Empty central register encourages ad hoc codes | Block canonical claims and validate profile-scoped codes locally |
+| `ABST-14` | **RISK** | Outcome metrics can incentivize reclassification | Audit outcome shifts with reason and quality review, not count targets |
+| `ABST-15` | **NEEDS VERIFICATION** | Production client accessibility and no-leak behavior | Require exact-route, exact-head client tests before reliance |
+| `ABST-16` | **NEEDS VERIFICATION** | Accountability persistence, retention, correction, and deletion | Exercise an accepted store and policy before making operational claims |
+| `ABST-17` | **RISK** | Permissive FocusResponse schema can drift from bounded implementation | Close, alias, or explicitly classify it before public contract reliance |
+| `ABST-18` | **UNKNOWN** | Required-check coupling and production rollback behavior | Verify GitHub rulesets and a governed rollback drill separately |
 
 [Back to top](#top)
 
@@ -1094,43 +1014,35 @@ KFM accepts additional implementation and review cost in exchange for reducing u
 
 ### Documentation rollback
 
-This revision is documentation-only. Roll back by reverting its commit or restoring the prior target blob recorded in the metadata block. That changes no runtime decision, envelope, receipt, policy, release, or public state.
+Before merge, close the draft pull request and abandon the feature branch. After merge, revert the documentation commits or restore prior blob `8d5ec63b658a1194d2c11359cecb77e7857a9471` through a reviewed pull request. This changes no runtime outcome, contract, schema, policy, receipt, release, or public state.
 
 ### Decision supersession
 
-If ADR-0020 is later accepted and then replaced:
+If ADR-0020 is later accepted and replaced:
 
 1. author a successor ADR;
-2. record reciprocal supersession links;
-3. retain this record;
-4. version affected contracts and schemas;
-5. preserve historical decisions and receipts;
-6. provide explicit outcome/reason migrations;
-7. update the canonical ADR index;
-8. test old and new client compatibility;
-9. verify telemetry and correction continuity.
+2. record reciprocal supersession in both ADRs and the canonical index;
+3. retain this historical record;
+4. version affected contracts, schemas, policies, reason registers, and adapters;
+5. preserve historical decisions, receipts, corrections, and metrics under policy;
+6. publish explicit value/reason migration rules;
+7. test old/new client compatibility and rollback;
+8. verify correction and telemetry continuity.
 
-### Runtime rollback
+### Runtime rollback target
 
-A safe runtime rollback should:
+A safe implementation rollback should:
 
 ```text
-active decision implementation
-  -> disable affected evaluator/provider/path
-  -> preserve governed API
-  -> return safe ABSTAIN, DENY, or ERROR according to the remaining trustworthy state
-  -> preserve historical decision/receipt identifiers
+active decision path
+  -> disable affected evaluator/provider/route
+  -> preserve the Governed API trust membrane
+  -> return the finite outcome supported by remaining trustworthy state
+  -> preserve historical decision/accountability identity
   -> require reviewed reactivation
 ```
 
-Rollback must not:
-
-- default to `ANSWER`;
-- expose raw provider or internal errors;
-- silently change outcome semantics;
-- delete historical abstentions;
-- remove reason-code aliases without migration;
-- bypass release/correction controls.
+Rollback must never default to `ANSWER`, expose provider/internal diagnostics, silently change outcome semantics, delete historical abstentions, remove reason aliases without migration, or bypass release/correction controls.
 
 [Back to top](#top)
 
@@ -1140,36 +1052,35 @@ Rollback must not:
 
 ## Verification checklist
 
-| Check | Result |
+| Check | Result at `main@103323d7d2916c650e8e9829dd1073ee474d61f0` |
 |---|---|
-| ADR identity and exact path | **CONFIRMED** |
-| Source metadata | **CONFIRMED proposed** |
-| Effective decision status | **CONFIRMED proposed** |
-| Same-path documentation update | **PASS** |
-| Directory Rules responsibility | **CONFIRMED** — `docs/adr/` owns the decision record |
+| ADR identity, exact path, and index row | **CONFIRMED** |
+| Source and effective decision status | **CONFIRMED proposed** |
+| Same-path Directory Rules placement | **CONFIRMED** |
+| Required metadata `owning_root` / `responsibility` | **UPDATED in this revision** |
+| Supersession metadata | **NORMALIZED to empty collections** |
 | PolicyDecision finite enum | **CONFIRMED PROPOSED** |
 | DecisionEnvelope finite enum | **CONFIRMED PROPOSED** |
-| RuntimeResponseEnvelope finite enum | **CONFIRMED PROPOSED** |
-| AIReceipt finite enum | **CONFIRMED PROPOSED** |
-| PromotionDecision separate enum | **CONFIRMED PROPOSED** |
-| RunReceipt separate enum | **CONFIRMED PROPOSED** |
-| Governed API ABSTAIN scaffold | **CONFIRMED executable** |
-| Governed API full evidence/policy/citation path | **NOT ESTABLISHED** |
-| Runtime policy | **CONFIRMED greenfield stub** |
-| Reason-code register | **CONFIRMED empty / PROPOSED** |
-| Generic RuntimeResponseEnvelope validator | **CONFIRMED** |
-| Generic valid outcome fixtures | **CONFIRMED ANSWER and ABSTAIN** |
-| DENY and ERROR valid behavior fixtures | **NOT ESTABLISHED in observed generic valid set** |
-| Runtime behavior test | **CONFIRMED assert-true placeholder** |
-| Focus mock workflow | **CONFIRMED explicit HOLD** |
-| Receipt persistence | **NOT ESTABLISHED** |
-| UI rendering and accessibility | **NEEDS VERIFICATION** |
-| Outcome telemetry | **UNKNOWN** |
-| Local ADR validator and repository tests for this edit | **NOT RUN** |
-| Pull-request automation | **PENDING after PR creation** |
+| RuntimeResponseEnvelope finite enum and closed shape | **CONFIRMED PROPOSED** |
+| RuntimeResponseEnvelope four valid outcomes | **CONFIRMED** |
+| ANSWER evidence/precision and negative-outcome precision boundary | **CONFIRMED schema/proof** |
+| Deterministic runtime candidate builder | **CONFIRMED bounded** |
+| MockAdapter four-outcome deterministic selector | **CONFIRMED bounded** |
+| Governed API ABSTAIN scaffold | **CONFIRMED executable scaffold** |
+| Accepted semantic outcome selector | **NOT ESTABLISHED** |
+| Runtime policy evaluator/bundle | **NOT ESTABLISHED** |
+| Central reason-code register | **CONFIRMED empty / PROPOSED** |
+| Evidence Drawer fixture-only abstention/no-leak tests | **CONFIRMED** |
+| Focus composed-claim fixture-only abstention/no-leak tests | **CONFIRMED** |
+| Complete accepted FocusResponse schema | **NOT ESTABLISHED** |
+| Live evidence/citation resolution | **NOT ESTABLISHED** |
+| Accountability persistence | **NOT ESTABLISHED** |
+| Outcome telemetry/dashboard | **UNKNOWN** |
+| Production client and rollback drill | **UNKNOWN** |
 | Release or publication | **NOT CLAIMED** |
+| Changed-document hosted validation | **PENDING until branch/PR checks complete** |
 
-Remote repository reads establish exact bytes, contract shapes, and declared workflow behavior. They do not substitute for running policy, evidence, citation, receipt, UI, telemetry, correction, release, or production systems.
+Remote file reads and hosted checks can prove tracked shape, deterministic synthetic behavior, and validation results. They cannot substitute for accepted policy, live evidence, authenticated review, release, deployment, or public operation.
 
 [Back to top](#top)
 
@@ -1179,64 +1090,64 @@ Remote repository reads establish exact bytes, contract shapes, and declared wor
 
 ## References
 
-### Governing and adjacent ADRs
+### Governing and adjacent decisions
 
-- [`docs/adr/README.md`](./README.md)
-- [`docs/adr/INDEX.md`](./INDEX.md)
-- [`ADR-0004 — Governed API Trust Membrane`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md)
-- [`ADR-0008 — Ollama Subordinate to Governed API`](./ADR-0008-ollama-subordinate-to-governed-api.md)
-- [`ADR-0010 — Deny by Default for Sensitive Domains`](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md)
-- [`ADR-0016 — Telemetry Redaction Posture`](./ADR-0016-telemetry-redaction-posture.md)
-- [`ADR-0018 — Promotion Gate Sequence`](./ADR-0018-promotion-gate-sequence.md)
-- [`ADR-0019 — AI Adapter Contract and Finite Envelopes`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md)
-- [`ADR-0021 — Structured Quarantine Exit Paths`](./ADR-0021-quarantine-has-structured-exit-paths.md)
-- [`ADR-0025 — Public Client Never Reads Canonical/Internal Stores`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
-- [`Directory Rules`](../architecture/directory-rules.md)
+- [ADR operating contract](./README.md)
+- [Canonical ADR index](./INDEX.md)
+- [ADR-0004 — Governed API trust membrane](./ADR-0004-apps-governed-api-is-the-trust-membrane.md)
+- [ADR-0008 — Ollama subordinate to Governed API](./ADR-0008-ollama-subordinate-to-governed-api.md)
+- [ADR-0010 — Sensitive domains default deny](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md)
+- [ADR-0016 — Telemetry redaction posture](./ADR-0016-telemetry-redaction-posture.md)
+- [ADR-0018 — Promotion gate sequence](./ADR-0018-promotion-gate-sequence.md)
+- [ADR-0019 — AI adapter contract and finite envelopes](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md)
+- [ADR-0021 — Structured quarantine exit paths](./ADR-0021-quarantine-has-structured-exit-paths.md)
+- [ADR-0025 — Public clients avoid canonical/internal stores](./ADR-0025-public-client-never-reads-canonical-internal-stores.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Adopted Directory Rules](../doctrine/directory-rules.md)
 
-### Contracts and schemas
+### Contracts, schemas, and bounded implementations
 
-- [`PolicyDecision` contract](../../contracts/policy/policy_decision.md)
-- [`PolicyDecision` schema](../../schemas/contracts/v1/policy/policy_decision.schema.json)
-- [`DecisionEnvelope` contract](../../contracts/runtime/decision_envelope.md)
-- [`DecisionEnvelope` schema](../../schemas/contracts/v1/runtime/decision_envelope.schema.json)
-- [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md)
-- [`RuntimeResponseEnvelope` schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json)
-- [`AIReceipt` contract](../../contracts/runtime/ai_receipt.md)
-- [`AIReceipt` schema](../../schemas/contracts/v1/runtime/ai_receipt.schema.json)
-- [`RunReceipt` contract](../../contracts/runtime/run_receipt.md)
-- [`RunReceipt` schema](../../schemas/contracts/v1/runtime/run_receipt.schema.json)
-- [`PromotionDecision` contract](../../contracts/release/promotion_decision.md)
-- [`PromotionDecision` schema](../../schemas/contracts/v1/release/promotion_decision.schema.json)
+- [PolicyDecision contract](../../contracts/policy/policy_decision.md)
+- [DecisionEnvelope contract](../../contracts/runtime/decision_envelope.md)
+- [RuntimeResponseEnvelope contract](../../contracts/runtime/runtime_response_envelope.md)
+- [RuntimeResponseEnvelope schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json)
+- [UI FocusResponse contract](../../contracts/ui/focus_response.md)
+- [RuntimeResponseEnvelope candidate builder](../../packages/envelopes/src/envelopes/runtime_response.py)
+- [MockAdapter](../../runtime/model_adapters/MockAdapter.py)
+- [Governed API ABSTAIN scaffold](../../apps/governed-api/src/governed_api/stub.py)
+- [Governed API route registry](../../apps/governed-api/src/governed_api/routes/registry.py)
+- [Explorer governed projection adapter](../../apps/explorer-web/src/adapters/GovernedClient.ts)
+- [Explorer Focus composed-claim parser](../../apps/explorer-web/src/features/focus_panel/parsers.ts)
+- [Runtime policy boundary](../../policy/runtime/README.md)
+- [Policy-gate register](../../control_plane/policy_gate_register.yaml)
 
-### Current implementation and validation evidence
+### Fixtures, tests, and workflows
 
-- [`Governed API ABSTAIN scaffold`](../../apps/governed-api/src/governed_api/stub.py)
-- [`Governed API boundary tests`](../../apps/governed-api/tests/test_boundary_guards.py)
-- [`Policy-gate register`](../../control_plane/policy_gate_register.yaml)
-- [`Runtime policy stub`](../../policy/runtime/README.md)
-- [`RuntimeResponseEnvelope fixtures`](../../fixtures/contracts/v1/runtime/runtime_response_envelope/)
-- [`RuntimeResponseEnvelope validator`](../../tools/validators/validate_runtime_response_envelope.py)
-- [`Runtime finite-outcome placeholder`](../../tests/runtime_proof/test_envelope_finite_outcomes.py)
-- [`Focus mock readiness workflow`](../../.github/workflows/focus-mock-test.yml)
+- [RuntimeResponseEnvelope fixtures](../../fixtures/contracts/v1/runtime/runtime_response_envelope/)
+- [RuntimeResponseEnvelope validator](../../tools/validators/validate_runtime_response_envelope.py)
+- [Finite-envelope proof](../../tests/runtime_proof/test_envelope_finite_outcomes.py)
+- [MockAdapter proof](../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py)
+- [Evidence Drawer tests](../../apps/explorer-web/tests/evidence-drawer.test.ts)
+- [Focus composed-claim tests](../../apps/explorer-web/tests/focus-composed-claim.test.ts)
+- [Focus mock workflow](../../.github/workflows/focus-mock-test.yml)
 
 ---
 
 ## Last reviewed
 
-**2026-07-24** — repository-grounded review against `main@93ed9f61d0be8a5e656a9be81c12e01549736e99`.
+**2026-08-14** — repository-grounded review against `main@103323d7d2916c650e8e9829dd1073ee474d61f0`.
 
 Review again when:
 
 - this ADR changes status;
-- the reason-code register gains entries or moves;
-- PolicyDecision, DecisionEnvelope, or RuntimeResponseEnvelope changes shape;
-- the compatibility `decision` field is removed or constrained;
-- a deterministic policy/runtime evaluator lands;
-- DENY and ERROR runtime fixtures/tests land;
-- receipt persistence and trace linkage land;
-- public clients implement finite-outcome rendering;
-- outcome telemetry becomes operational;
-- correction or supersession behavior changes;
+- the reason-code register gains entries, moves, or becomes generated;
+- PolicyDecision, DecisionEnvelope, RuntimeResponseEnvelope, AIReceipt, RunReceipt, PromotionDecision, or FocusResponse changes shape;
+- compatibility aliases are removed or constrained;
+- accepted runtime policy/evidence/citation orchestration lands;
+- an actual Governed API finite-outcome route replaces scaffolding;
+- Explorer projections bind to an accepted runtime profile;
+- accountability persistence or outcome telemetry becomes operational;
+- correction, supersession, withdrawal, or rollback behavior changes;
 - rulesets or required checks change;
 - six months pass without review.
 
