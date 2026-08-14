@@ -1,254 +1,448 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/encyclopedia-readme
-title: KFM Domain & Capability Encyclopedia — README
-type: standard
-version: v1.1
-status: draft
-owners: Docs steward (OWNER_TBD); Domain stewards (OWNER_TBD per chapter)
+title: docs/encyclopedia/ — Planning Scaffold Boundary
+type: readme
+version: v2.0
+status: draft; repository-grounded; scaffold-boundary; placement-hold; non-authoritative; no-publication
+owners:
+  - "@bartytime4life via the default CODEOWNERS route"
+reviewers_required:
+  - Documentation owner
+  - Architecture and directory-governance reviewer
+  - Owner of any destination lane affected by a future migration
+  - Relevant domain steward before substantive domain content is admitted
 created: 2026-05-09
-updated: 2026-05-15
-policy_label: public
+updated: 2026-08-14
+policy_label: public; planning-reference; scaffold; cite-or-abstain; no-sensitive-detail
+owning_root: docs/
+responsibility: >-
+  Explain the current docs/encyclopedia scaffold, route readers to the current
+  planning and doctrine encyclopedia surfaces, prevent placeholders from being
+  mistaken for authority, and define the evidence, decision, validation, migration,
+  correction, and rollback boundaries for this held lane.
+authority_class: planning-scaffold-boundary
+placement_outcome: HOLD
+canonical_relationship: >-
+  The tracked folder exists, but no accepted decision reviewed in this update admits
+  docs/encyclopedia/ as a canonical docs/ lane. docs/KFM-encyclopedia.md is the
+  current repository-grounded planning index; docs/doctrine/encyclopedia.md is the
+  distinct doctrine-vocabulary surface.
+truth_posture: >-
+  CONFIRMED current path, seven direct children, seventeen chapter files, sixteen
+  generic placeholder chapters, one bounded settlements/infrastructure scaffold,
+  accepted Directory Rules v2, the default CODEOWNERS route, and the distinct
+  planning-index and doctrine-vocabulary surfaces / CONFLICTED current folder
+  presence with the adopted docs/ direct-child map and overlapping encyclopedia
+  surfaces / UNKNOWN the source PDF's exact repository carrier, external consumers,
+  independent stewardship, and final disposition / NEEDS VERIFICATION an accepted
+  placement, migration, mirror, generation, or retirement decision; complete inbound
+  reference closure; exact-head hosted checks; and any substantive chapter admission.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  visibility: public
+  base_ref: main
+  base_commit: dc30e1d38f9a4ecf45fd589d388886fc872dd189
+  target_prior_blob: 5eb6f0b10a6e1c16434d3b30c2d38a24eb618408
+  direct_child_count: 7
+  chapter_file_count: 17
+  generic_placeholder_chapter_count: 16
+  scoped_scaffold_chapter_count: 1
+  changelog_blob: d3d065eb6bc4d93590369f6be4948392781731e6
+  index_blob: fa6833280ae520190d06a4485f6cfb1c4d517d52
+  manuscript_placeholder_blob: 17c1fb979a11970359dbceb40e75cebf3d360f48
+  chapters_tree: 28b053a9ff7c77d243e4225f9571e168b9dccc9a
+  assets_tree: d564d0bc3dd917926892c55e3706cc116d5b165e
+  lineage_tree: d564d0bc3dd917926892c55e3706cc116d5b165e
+  planning_index_blob: 7a2a66a42033f80c291a7176e3ca586ea0576b18
+  doctrine_encyclopedia_blob: a5c8f452ca02cc63770b973bf47bd7c1f286a3fa
+  docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >-
+  Current-session GitHub reads against the exact main commit covering this complete
+  README, the full direct-child tree, the complete chapter filename/size tree,
+  representative and search-confirmed placeholder content, the settlements/
+  infrastructure scaffold, the current planning index, the doctrine encyclopedia,
+  the docs root README, accepted ADR-0029, adopted Directory Rules v2, CODEOWNERS,
+  document-registry posture, and documentation workflow presence. No mounted
+  checkout, local documentation test, hosted exact-head run, source PDF repository
+  carrier, external-consumer inventory, accepted lane-admission decision, migration,
+  deletion, release, deployment, or publication was exercised.
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/architecture/system-context.md
-  - docs/architecture/governed-api.md
-  - docs/domains/README.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/registers/DRIFT_REGISTER.md
-tags: [kfm, encyclopedia, synthesis, planning-manuscript, cross-domain]
+  - ../KFM-encyclopedia.md
+  - ../README.md
+  - ../doctrine/encyclopedia.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../adr/INDEX.md
+  - ../domains/README.md
+  - ../atlases/README.md
+  - ../registers/DRIFT_REGISTER.md
+  - ../registers/VERIFICATION_BACKLOG.md
+  - ../../control_plane/document_registry.yaml
+  - ../../.github/CODEOWNERS
+  - ../../.github/workflows/docs-meta-block.yml
+  - ../../.github/workflows/link-check.yml
+  - ../../.github/workflows/docs-stale-scan.yml
+tags: [kfm, encyclopedia, planning, scaffold, documentation, directory-governance, hold, migration, evidence]
 notes:
-  - "Folder docs/encyclopedia/ remains PROPOSED until Directory Rules §17 sign-off or relocation is recorded."
-  - "Encyclopedia is synthesis, not doctrine — supersedes no source doctrine, source report, contract, schema, policy, or release rule."
-  - "All implementation-shaped paths, API paths, workflows, owners, and tooling names are PROPOSED or NEEDS VERIFICATION until mounted-repo evidence verifies them."
-  - "v1.1 clarifies evidence boundary, placement basis, accepted content, exclusions, validation, review burden, and rollback posture."
+  - "v2.0 is a same-path repository-grounded boundary correction. It changes one explanatory README and does not admit, populate, move, rename, delete, publish, or promote any encyclopedia artifact."
+  - "The previous no-repository and proposed-tree claims are stale: the folder and scaffolds are tracked on current main."
+  - "Tracked presence is not placement authority. The adopted docs/ direct-child map does not list encyclopedia/, so the lane remains on HOLD pending a governed disposition."
+  - "The current planning index is docs/KFM-encyclopedia.md. The doctrine-vocabulary surface is docs/doctrine/encyclopedia.md. This README must not compete with either."
+  - "All legacy README anchors are retained so existing inbound fragment links remain stable."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="kfm-domain--capability-encyclopedia"></a>
 
 # KFM Domain & Capability Encyclopedia
 
-> **A consolidated, cross-domain reference view of KFM domains, features, actions, viewing modes, knowledge objects, governed functions, and programmable possibilities — synthesized from supplied doctrine and domain reports.**
+> **One-line purpose.** `docs/encyclopedia/` is a tracked planning scaffold whose current responsibility is to preserve a reviewable boundary around placeholder material—not to become a second encyclopedia authority, a domain implementation home, or a publication surface.
 
-This folder hosts the **Domain & Capability Encyclopedia**, a synthesis manuscript that converts KFM doctrine and per-domain reports into a single product, architecture, and implementation reference. It is a **planning artifact**, not a source of authority. Doctrine, contracts, schemas, policy, source registries, release objects, and mounted-repo evidence still own truth; the encyclopedia organizes and indexes what they say.
-
----
-
-## Status, owners, and quick jumps
-
-| Field | Value |
-|---|---|
-| **Folder status** | `experimental` — `docs/encyclopedia/` is **PROPOSED**, not yet accepted as a canonical `docs/` lane. |
-| **Document status** | `draft` — encyclopedia v0.1 is a planning manuscript; this README is an orientation and governance-fit file. |
-| **Owners** | Docs steward (`OWNER_TBD`); per-chapter domain stewards (`OWNER_TBD` — see [Review burden](#review-burden)). |
-| **Authority class** | **Synthesis / reference**, not doctrine. Supersedes nothing. |
-| **Truth posture** | CONFIRMED doctrine where cited from governing documents; PROPOSED placement and file plan; UNKNOWN implementation depth without mounted-repo evidence. |
-| **Last reviewed** | `2026-05-15` |
-
-<!-- Badges below are intentionally non-clickable placeholders. Replace with real linked badges only after CI, release, policy, and documentation tooling targets are verified. -->
-
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Folder](https://img.shields.io/badge/folder-PROPOSED-yellow)
-![Authority](https://img.shields.io/badge/authority-synthesis-lightgrey)
-![License](https://img.shields.io/badge/license-NEEDS_VERIFICATION-lightgrey)
-![Doctrine](https://img.shields.io/badge/doctrine-not--this--folder-blue)
-
-**Quick jumps:** [Scope](#scope) · [Evidence boundary](#evidence-boundary) · [Repo fit](#repo-fit) · [What belongs here](#what-belongs-here) · [Exclusions](#exclusions) · [Directory tree](#directory-tree-proposed) · [Encyclopedia structure](#encyclopedia-structure) · [Domain coverage](#domain-coverage) · [Quickstart](#quickstart) · [Diagram](#how-this-folder-relates-to-the-rest-of-docs) · [Validation](#validation) · [Review burden](#review-burden) · [Related folders](#related-folders) · [Open questions](#open-questions) · [Task list](#task-list--definition-of-done-for-the-encyclopedia-folder) · [FAQ](#faq) · [Rollback](#rollback-and-correction)
+[![status: repository-grounded scaffold](https://img.shields.io/badge/status-repository--grounded%20scaffold-f59e0b?style=flat-square)](#status--authority)
+[![path: confirmed](https://img.shields.io/badge/path-confirmed-2da44e?style=flat-square)](#repo-fit)
+[![placement: HOLD](https://img.shields.io/badge/placement-HOLD-b42318?style=flat-square)](#repo-fit)
+[![direct children: 7](https://img.shields.io/badge/direct%20children-7-0969da?style=flat-square)](#directory-tree-proposed)
+[![chapter files: 17](https://img.shields.io/badge/chapter%20files-17-0969da?style=flat-square)](#directory-tree-proposed)
+[![publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#outputs)
 
 > [!IMPORTANT]
-> The encyclopedia **does not** define new policy, schemas, contracts, source authority, release rules, or implementation state. When the encyclopedia and an authoritative document disagree, the authoritative source wins. Open a [`DRIFT_REGISTER`](../registers/DRIFT_REGISTER.md) entry rather than treating the encyclopedia as canon.
+> **The folder exists; its authority does not follow from that fact.** Current repository evidence confirms `docs/encyclopedia/`, its placeholder files, and its chapter scaffold. Accepted Directory Rules v2 and the current `docs/` root contract do not list `encyclopedia/` as a canonical direct-child lane. The safe placement result is therefore **HOLD** until an accepted decision classifies the lane, its single writer, its source artifact, and its migration or retention path.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+> [!CAUTION]
+> **Use the current repository surfaces for orientation.** [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md) is the repository-grounded planning index for the source manuscript. [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md) is the separate doctrine-vocabulary surface. This README and its placeholders must not silently compete with either surface.
+
+> [!WARNING]
+> A placeholder, chapter filename, directory tree, source manuscript, map, diagram, badge, generated summary, pull request, or green documentation check does not establish doctrine, source authority, evidence closure, policy approval, review, promotion, release, implementation maturity, or KFM publication.
+
+**Quick navigation:** [Status](#status--authority) · [Scope](#scope) · [Evidence](#evidence-boundary) · [Repo fit](#repo-fit) · [Allowed material](#what-belongs-here) · [Exclusions](#exclusions) · [Current tree](#directory-tree-proposed) · [Source structure](#encyclopedia-structure) · [Domain coverage](#domain-coverage) · [Docs relationships](#how-this-folder-relates-to-the-rest-of-docs) · [Quickstart](#quickstart) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Open questions](#open-questions) · [Definition of done](#task-list--definition-of-done-for-the-encyclopedia-folder) · [FAQ](#faq) · [Rollback](#rollback-and-correction) · [Last reviewed](#last-reviewed)
 
 ---
+
+<a id="status--authority"></a>
+
+## Status & Authority
+
+| Field | Current bounded result |
+|---|---|
+| **Tracked path** | `docs/encyclopedia/README.md` — **CONFIRMED** at `main@dc30e1d38f9a4ecf45fd589d388886fc872dd189` |
+| **Owning responsibility root** | `docs/` — human-readable governance and explanation |
+| **Current lane class** | Present planning scaffold; not admitted as a canonical direct-child lane in the inspected `docs/` root contract |
+| **Finite placement result** | `HOLD` — classification and disposition require a governed decision |
+| **This README's authority** | Explanatory boundary and navigation only |
+| **Current planning encyclopedia index** | [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md) |
+| **Current doctrine vocabulary surface** | [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md) |
+| **Exact source PDF repository carrier** | `UNKNOWN` — the planning index records the source artifact, but no exact canonical repository path was verified |
+| **Tracked scaffold** | Seven direct children; seventeen chapter files; sixteen generic chapter placeholders; one bounded settlements/infrastructure scaffold |
+| **Current review route** | Default [`.github/CODEOWNERS`](../../.github/CODEOWNERS) route to `@bartytime4life`; independent documentation stewardship remains `NEEDS VERIFICATION` |
+| **Effect of this revision** | Same-path documentation correction only |
+| **Release/publication effect** | None |
+
+### Four states that must remain separate
+
+1. **Source-manuscript lineage** records what the supplied planning manuscript covered.
+2. **Repository scaffold presence** proves that placeholder paths exist.
+3. **Placement authority** decides whether this folder may become a canonical or compatibility lane.
+4. **Substantive implementation or publication** requires evidence from the owning contracts, schemas, policy, tests, release records, and governed runtime.
+
+No state implies the next. In particular, a tracked scaffold does not authorize authors to fill every placeholder, and a completed manuscript does not prove that any described capability is implemented.
+
+[Back to top](#top)
+
+---
+
+<a id="scope"></a>
 
 ## Scope
 
-The encyclopedia consolidates the supplied KFM corpus — including Directory Rules, the Greenfield Plan, Pipeline Manual, MapLibre operating doctrine, Governed AI material, and per-domain dossiers — into a single cross-domain atlas. Its purpose is to make the design space **legible at one glance** so contributors can locate domains, capabilities, objects, viewing modes, AI behaviors, sensitivity rules, and verification gaps without re-reading the entire corpus.
+This README explains the current boundary around the tracked `docs/encyclopedia/` scaffold.
 
-Encyclopedia content is intentionally:
+**In scope**
 
-- **Cross-domain** — every named KFM domain and cross-domain system uses the same chapter shape.
-- **Implementation-aware, not implementation-claiming** — paths, routes, endpoints, package choices, owners, workflow names, and CI checks remain **PROPOSED** or **NEEDS VERIFICATION** until mounted-repo evidence verifies them.
-- **Reversible** — encyclopedia versions, supersession, relocation, corrections, and removals must be recorded explicitly.
-- **Navigation-first** — this folder points readers to authority; it does not absorb authority into itself.
+- the exact tracked path and current child inventory;
+- the distinction among the planning index, doctrine encyclopedia, and this scaffold;
+- the adopted Directory Rules and `docs/` root-placement boundary;
+- what maintainers may safely change while disposition is unresolved;
+- the source manuscript's sixteen-section outline as lineage;
+- placeholder, duplication, numbering, provenance, and migration risks;
+- review, validation, correction, rollback, and re-review expectations.
 
-It is intentionally **not**:
+**Out of scope**
 
-- A doctrine source. Doctrine belongs in [`docs/doctrine/`](../doctrine/).
-- A schema or contract registry. Machine shapes and object semantics belong in [`schemas/`](../../schemas/) and [`contracts/`](../../contracts/).
-- A policy or release ruleset. Admissibility and release posture belong in [`policy/`](../../policy/) and [`release/`](../../release/).
-- A per-domain implementation home. Domain depth belongs in [`docs/domains/<domain>/`](../domains/).
-- A public proof surface. Receipts, proofs, manifests, validation reports, correction notices, and rollback targets belong in their owning roots.
+- accepting `docs/encyclopedia/` as a canonical lane;
+- selecting a single-file or chaptered encyclopedia authoring system;
+- copying the source PDF into the repository;
+- populating the sixteen generic chapter placeholders;
+- converting the settlements/infrastructure scaffold into domain authority;
+- moving, renaming, deleting, mirroring, or generating scaffold files;
+- changing the planning index or doctrine encyclopedia;
+- changing contracts, schemas, policy, sources, data, receipts, proofs, releases, applications, or runtime behavior;
+- releasing, deploying, promoting, or publishing anything.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+The source manuscript remains useful planning lineage. Its broad domain, feature, action, viewing-mode, governance, and validation coverage does not resolve the repository's current single-writer and placement questions.
+
+[Back to top](#top)
 
 ---
+
+<a id="evidence-boundary"></a>
 
 ## Evidence boundary
 
-> [!NOTE]
-> This README states KFM doctrine where supported by supplied project sources. Current implementation depth remains **UNKNOWN** where repo files, tests, workflows, dashboards, logs, release manifests, or emitted artifacts have not been inspected.
+This revision replaces the previous document-only and no-repository posture with current, commit-pinned repository evidence.
 
-| Evidence class | Status | How this README uses it | What it cannot prove |
-|---|---|---|---|
-| Existing README text | CONFIRMED baseline | Preserves role, anchors, voice, accepted content, exclusions, and task list. | Does not prove that `docs/encyclopedia/` exists or is accepted in the mounted repo. |
-| Directory Rules doctrine | CONFIRMED doctrine | Governs placement, root responsibility, schema-home caution, README expectations, and change discipline. | Does not prove current mounted-repo conformance. |
-| KFM domain and architecture dossiers | LINEAGE / PROPOSED design input | Provides the encyclopedia's source corpus and domain list. | Does not prove present code, routes, schemas, tests, or releases. |
-| Current repo evidence | UNKNOWN | All implementation-shaped claims remain bounded. | No implementation maturity, branch, workflow, package manager, or runtime behavior is asserted here. |
+| Surface inspected | CONFIRMED current evidence | Safe conclusion |
+|---|---|---|
+| This README | Tracked at the target path with prior blob `5eb6f0b10a6e1c16434d3b30c2d38a24eb618408` | Same-path modernization is available; prior text is not current authority |
+| Direct-child tree | Seven direct children are tracked | The folder exists; presence alone does not admit the lane |
+| Top-level scaffold files | `CHANGELOG.md`, `INDEX.md`, and `encyclopedia.md` each contain only a heading and `Status: PROPOSED placeholder.` | They are placeholders, not indexes, changelogs, or manuscripts in a substantive sense |
+| Chapter tree | Seventeen Markdown files are tracked | The tree is a scaffold, not a completed chaptered encyclopedia |
+| Generic chapter files | Search-confirmed `Status: PROPOSED placeholder.` in the sixteen structural files from `01-cover.md` through `16-appendices.md` | The source outline has path-shaped stubs only |
+| Settlements/infrastructure chapter | `11-settlements-infrastructure.md` is a bounded scaffold sourced from a domain expansion backlog | It is not domain-reviewed authority and creates a duplicate `11-` ordinal |
+| Assets and lineage | Each directory contains only `.gitkeep` | No encyclopedia-specific asset or lineage package is established |
+| Planning index | [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md) is a repository-grounded planning index | Readers should start there for manuscript orientation |
+| Doctrine encyclopedia | [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md) is the distinct vocabulary surface | This scaffold must not redefine KFM terms |
+| `docs/` root contract | [`docs/README.md`](../README.md) lists the adopted canonical direct-child lanes and omits `encyclopedia/` | The current lane requires classification; omission is not deletion authority |
+| Directory governance | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact [`Directory Rules v2`](../doctrine/directory-rules.md) bytes | Placement changes must follow adopted authority and migration discipline |
+| Review routing | Default CODEOWNERS route is `@bartytime4life` | Review routing exists; completed or independent review is not implied |
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+### Evidence not established
+
+This update did not establish:
+
+- the exact repository carrier for the 82-page source PDF described by the planning index;
+- an accepted lane-admission, compatibility, mirror, generation, migration, or retirement decision;
+- a complete inbound-reference or external-consumer inventory;
+- a single canonical encyclopedia authoring source;
+- a generated relationship among `docs/KFM-encyclopedia.md`, the source PDF, `docs/encyclopedia/encyclopedia.md`, or `chapters/`;
+- independent documentation, domain, policy, or release stewardship;
+- hosted exact-head check results for the future branch;
+- implementation, release, deployment, or publication of any capability described in the source manuscript.
+
+[Back to top](#top)
 
 ---
+
+<a id="repo-fit"></a>
 
 ## Repo fit
 
-`docs/encyclopedia/` is a **PROPOSED** directory inside `docs/`, KFM's human-facing control plane. It is **upstream of nothing** and **downstream of everything that defines truth**: doctrine, contracts, schemas, policy, source registries, release manifests, and domain dossiers all flow into it; nothing flows out as binding governance.
+The artifact's responsibility signature is:
 
-| Direction | Flow | Notes |
-|---|---|---|
-| **Authority into encyclopedia** | [`docs/doctrine/`](../doctrine/), [`docs/architecture/`](../architecture/), [`docs/domains/`](../domains/), [`docs/sources/`](../sources/), [`docs/standards/`](../standards/), [`contracts/`](../../contracts/), [`schemas/`](../../schemas/), [`policy/`](../../policy/), [`release/`](../../release/), [`data/registry/`](../../data/registry/) | These define truth. The encyclopedia paraphrases, indexes, and cross-links them. |
-| **Sibling governance surfaces** | [`docs/registers/`](../registers/), [`docs/archive/`](../archive/), [`docs/reports/`](../reports/) | Registers track governance state; archive preserves lineage; reports capture generated review/release outputs. |
-| **Downstream readers** | New contributors, domain stewards, reviewers, planning conversations | Use the encyclopedia to orient; cite the upstream source for binding decisions. |
+| Axis | Current classification |
+|---|---|
+| `artifact_kind` | Human-readable directory boundary and planning-scaffold orientation |
+| `authority_owner` | Documentation explanation only |
+| `lifecycle_stage` | Not a lifecycle data object |
+| `execution_role` | None |
+| `scope_kind` | Cross-domain planning scaffold |
+| `exposure` | Public repository-facing documentation |
+| `mutability` | Reviewed, versioned replacement |
+| `retention` | Durable while consumers or an unresolved disposition require the path |
+| `physical_storage` | Git |
 
-> [!NOTE]
-> **Placement basis.** The encyclopedia is genuinely cross-domain, so it belongs under a responsibility root rather than as a repo-root domain folder. The proposed home is `docs/encyclopedia/` because the artifact is human-facing synthesis. Because `encyclopedia/` is not yet listed as an accepted `docs/` lane, the path stays **PROPOSED** until Directory Rules change discipline is satisfied or the content is relocated to an accepted lane.
+Accepted Directory Rules place human-readable explanation under `docs/`, so this README's responsibility root is correct. The unresolved question is the **child-lane identity**. The current [`docs/README.md`](../README.md) canonical map lists `adr/`, `architecture/`, `archive/`, `atlases/`, `doctrine/`, `domains/`, `registers/`, `runbooks/`, `security/`, `sources/`, and `standards/`; it does not admit `encyclopedia/`.
 
-Placement decision summary:
+That creates a bounded tension:
 
-| Placement question | Current answer | Status |
-|---|---|---|
-| Is `docs/encyclopedia/` the proposed home? | Yes, because this is a human-facing cross-domain synthesis artifact. | PROPOSED |
-| Is it a new repo root? | No. It is a proposed child under `docs/`. | CONFIRMED design intent; repo state UNKNOWN |
-| Does this create schema, contract, policy, source, release, proof, or receipt authority? | No. Those homes remain separate. | CONFIRMED by this README's exclusions |
-| Does accepting the lane require an ADR? | Not unless the change also amends a canonical root, schema-home rule, lifecycle phase, or parallel authority home. Directory Rules §17-style PR + reviewer sign-off is the proposed path for a new placement example. | NEEDS VERIFICATION in mounted repo |
-| What if reviewers reject this lane? | Relocate to [`docs/archive/exploratory/`](../archive/) or [`docs/reports/`](../reports/) with a migration note and link-preserving redirect if the repo supports one. | PROPOSED |
+- **CONFIRMED implementation fact:** `docs/encyclopedia/` exists.
+- **CONFIRMED placement authority:** the adopted canonical map omits it.
+- **CONFLICTED relationship:** current presence overlaps with [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md), [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md), and atlas/domain documentation.
+- **Placement outcome:** `HOLD`, not silent acceptance and not automatic deletion.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+### What HOLD means here
+
+While this lane is held:
+
+- preserve the path and existing history;
+- correct false boundary claims and broken navigation;
+- inventory consumers, unique material, and provenance;
+- do not add substantive encyclopedia content;
+- do not make placeholders look accepted through badges, polish, or volume;
+- do not delete or migrate files without a separate, reviewable disposition packet;
+- do not use this README revision as the authority for a later structural change in the same change set.
+
+### Bounded disposition options
+
+The following are options for a later decision, not decisions made here:
+
+| Option | Required evidence before implementation |
+|---|---|
+| **Retire the scaffold lane** and keep `docs/KFM-encyclopedia.md` as the planning index | Unique-content inventory, inbound-link closure, source-provenance map, deletion/retirement record, and rollback target |
+| **Admit `docs/encyclopedia/`** as a canonical or compatibility lane | Accepted placement decision, lane contract, single-writer model, generation/mirror rules, ownership, validation, and migration plan |
+| **Migrate unique material** into an accepted lane such as `docs/atlases/` or another approved destination | Object-by-object classification, destination-owner review, stable identity/link handling, migration receipt, and rollback |
+| **Keep a minimal tombstone or redirect** | Verified consumers, explicit canonical target, read-only contract, sunset criteria, and no dual-write path |
+
+This same-path README update chooses none of these options.
+
+[Back to top](#top)
 
 ---
+
+<a id="what-belongs-here"></a>
 
 ## What belongs here
 
-This folder accepts a small, controlled set of artifact classes:
+Until the placement HOLD is resolved, admissible changes are intentionally narrow:
 
-- **The encyclopedia manuscript itself**, versioned and in repo-native Markdown form — for example, `encyclopedia.md` or chaptered `01-cover.md` … `16-appendices.md`. Form is **PROPOSED** until reviewers and tooling decide between single-file and chaptered layouts.
-- **A versioned changelog**, for example `CHANGELOG.md`, recording supersession, additions, removals, material corrections, and relocation decisions.
-- **An index/table of contents**, for example `INDEX.md` or this README's [Encyclopedia structure](#encyclopedia-structure), pointing to canonical doctrine and per-domain dossiers for each topic.
-- **Encyclopedia-scoped diagrams and figures**, under `assets/`, only when they explain synthesis or navigation. Asset placement remains **NEEDS VERIFICATION** until reviewer sign-off confirms whether figures belong here or in a shared UI/brand asset root.
-- **Lineage notes**, under `lineage/`, describing which supplied source documents each chapter draws from and mirroring the manuscript source ledger.
+- this boundary README and corrections to it;
+- consumer and inbound-link inventories;
+- source-provenance and content-identity notes;
+- migration, retirement, mirror, or admission decision packets clearly labeled as proposals;
+- read-only redirect or tombstone material only after an accepted disposition authorizes it;
+- minimal link repairs needed to keep current consumers functioning;
+- explicit records of unresolved duplication, numbering, or authority drift.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+Substantive encyclopedia chapters, matrices, policy summaries, domain implementations, examples, diagrams, and generated manuscript copies do **not** become admissible merely because a placeholder path exists.
+
+> [!TIP]
+> A missing planning topic should be repaired in the current owning surface first. Update doctrine in the owning doctrine file, domain guidance in [`docs/domains/`](../domains/README.md), and the repository-grounded planning crosswalk in [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md). Reflect material into this scaffold only after its role is accepted.
+
+[Back to top](#top)
 
 ---
+
+<a id="exclusions"></a>
 
 ## Exclusions
 
-The following do **not** belong here and have governed homes elsewhere:
-
-| Do **not** put here | Put it in | Why |
+| Do not place or define here | Owning surface | Boundary reason |
 |---|---|---|
-| New doctrine, invariants, operating laws | [`docs/doctrine/`](../doctrine/) | Doctrine is authority, not synthesis. |
-| ADRs amending Directory Rules, schema-home, lifecycle, or trust membrane | [`docs/adr/`](../adr/) | ADRs record accepted decisions; the encyclopedia narrates outcomes. |
-| Per-domain implementation plans, deep dives, dossier prose | [`docs/domains/<domain>/`](../domains/) | Domain depth lives in domain folders. |
-| Object meaning and contract semantics | [`contracts/`](../../contracts/) | Contracts own object meaning. |
-| Machine-checkable shapes (JSON Schema, JSON-LD) | [`schemas/contracts/v1/...`](../../schemas/) unless an accepted ADR says otherwise | Schema home remains governed outside the encyclopedia. |
-| Allow / deny / restrict / abstain rules | [`policy/`](../../policy/) | Policy is admissibility, not narrative. |
-| Source descriptors and source authority | [`docs/sources/`](../sources/), [`data/registry/`](../../data/registry/) | Source identity and rights have dedicated registries. |
-| Release manifests, rollback cards, correction notices | [`release/`](../../release/) | Release decisions are governed objects. |
-| Receipts, proofs, run records | [`data/receipts/`](../../data/receipts/), [`data/proofs/`](../../data/proofs/) | Trust-bearing artifacts have their own homes. |
-| Build outputs or QA artifacts | [`artifacts/`](../../artifacts/) only if the mounted repo keeps it as a compatibility root; otherwise use the owning data/release root | Compatibility roots must not become parallel trust homes. |
-| Generated dashboards or operational reports | [`docs/reports/`](../reports/) | Generated, read-only reporting belongs elsewhere. |
-| Idea capture, intake notes, exploratory drafts | [`docs/intake/`](../intake/), [`docs/archive/exploratory/`](../archive/) | Intake and exploration have dedicated lanes. |
-| Drift, contradiction, deprecation, verification backlog entries | [`docs/registers/`](../registers/) | Registers track governance state. |
+| KFM-wide doctrine or canonical vocabulary | [`docs/doctrine/`](../doctrine/README.md) | Doctrine owns operating meaning |
+| Architecture decisions | [`docs/adr/`](../adr/INDEX.md) | ADRs record accepted and proposed decisions |
+| Per-domain authoritative guidance | [`docs/domains/`](../domains/README.md) | Domains own their bounded language and risk posture |
+| Curated atlas collections | [`docs/atlases/`](../atlases/README.md) | Atlas carriers have an accepted documentation lane |
+| Semantic object or interface meaning | [`contracts/`](../../contracts/README.md) | Contracts define meaning |
+| Machine-valid shape | [`schemas/`](../../schemas/README.md) | Schemas define shape |
+| Allow, deny, restrict, redact, or abstain rules | [`policy/`](../../policy/README.md) | Policy decides admissibility |
+| Source identity, rights, or activation state | [`docs/sources/`](../sources/README.md) and `data/registry/` | Source authority has dedicated homes |
+| Receipts and proofs | `data/receipts/` and `data/proofs/` | Process memory and proof remain distinct |
+| Release decisions, manifests, corrections, withdrawals, or rollback cards | [`release/`](../../release/README.md) | Release governance is not planning prose |
+| Released public-safe carriers | `data/published/` | Published data requires governed release |
+| Runtime, API, renderer, or AI implementation | `apps/`, `packages/`, `runtime/`, and related execution roots | Executable behavior must live with its owner |
+| A second copy of the source manuscript or PDF | No destination selected | Provenance, canonicality, and single-writer rules are unresolved |
+| Sensitive exact locations or private details | No public documentation surface | Rights and sensitivity uncertainty fail closed |
 
 > [!WARNING]
-> If a chapter feels like it should *become* policy, contract, schema, source registry, doctrine, proof, or release material, promote it out of the encyclopedia. Do not harden authority inside this folder.
+> Do not “complete” a scaffold by copying narrative from a planning PDF into paths that look authoritative. Content migration must preserve source identity, status, rights, citations, unique wording, current corrections, and one writable owner.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+[Back to top](#top)
 
 ---
 
-## Directory tree (PROPOSED)
+<a id="directory-tree-proposed"></a>
 
-> [!NOTE]
-> The tree below is **PROPOSED** for review. The exact split between a single manuscript file and chaptered files is unresolved; both are admissible and the choice should follow whichever pattern adjacent docs already use.
+## Directory tree — current repository evidence
+
+The prior README labeled this structure as proposed. The structure is now **CONFIRMED present** at the evidence checkpoint; its long-term authority and disposition remain unresolved.
 
 ```text
-docs/
-└── encyclopedia/
-    ├── README.md                      # this file — orientation, scope, exclusions, governance fit
-    ├── encyclopedia.md                # PROPOSED — single-file manuscript; mutually exclusive with full chapter split
-    ├── CHANGELOG.md                   # PROPOSED — versioned supersession and amendment log
-    ├── INDEX.md                       # PROPOSED — TOC linking upstream authority for each topic
-    ├── chapters/                      # PROPOSED ALT — chaptered layout if manuscript is split
-    │   ├── 01-cover.md
-    │   ├── 02-executive-summary.md
-    │   ├── 03-source-ledger.md
-    │   ├── 04-operating-law.md
-    │   ├── 05-master-domain-atlas.md
-    │   ├── 06-cross-domain-capability-taxonomy.md
-    │   ├── 07-domain-chapters.md
-    │   ├── 08-cross-domain-systems.md
-    │   ├── 09-master-feature-matrix.md
-    │   ├── 10-master-action-matrix.md
-    │   ├── 11-master-viewing-mode-atlas.md
-    │   ├── 12-programming-possibilities-backlog.md
-    │   ├── 13-sensitive-deny-by-default-register.md
-    │   ├── 14-implementation-roadmap.md
-    │   ├── 15-validation-and-acceptance-plan.md
-    │   └── 16-appendices.md
-    ├── assets/                        # PROPOSED — encyclopedia-only diagrams/figures
-    │   └── .gitkeep
-    └── lineage/                       # PROPOSED — source-ledger pointers and supersession notes
-        └── .gitkeep
+docs/encyclopedia/
+├── README.md
+├── CHANGELOG.md                       # placeholder only
+├── INDEX.md                           # placeholder only
+├── encyclopedia.md                    # placeholder only
+├── assets/
+│   └── .gitkeep
+├── lineage/
+│   └── .gitkeep
+└── chapters/
+    ├── 01-cover.md                    # generic placeholder
+    ├── 02-executive-summary.md        # generic placeholder
+    ├── 03-source-ledger.md            # generic placeholder
+    ├── 04-operating-law.md            # generic placeholder
+    ├── 05-master-domain-atlas.md      # generic placeholder
+    ├── 06-cross-domain-capability-taxonomy.md
+    ├── 07-domain-chapters.md
+    ├── 08-cross-domain-systems.md
+    ├── 09-master-feature-matrix.md
+    ├── 10-master-action-matrix.md
+    ├── 11-master-viewing-mode-atlas.md
+    ├── 11-settlements-infrastructure.md  # separate bounded scaffold
+    ├── 12-programming-possibilities-backlog.md
+    ├── 13-sensitive-deny-by-default-register.md
+    ├── 14-implementation-roadmap.md
+    ├── 15-validation-and-acceptance-plan.md
+    └── 16-appendices.md
 ```
 
-Tree constraints:
+### Current file-state register
 
-- Choose **either** `encyclopedia.md` **or** a fully chaptered layout as the manuscript source of truth; do not maintain divergent copies.
-- Keep `README.md`, `INDEX.md`, and `CHANGELOG.md` small enough to review without re-reading the whole manuscript.
-- Do not place schemas, contracts, policies, receipts, proofs, release manifests, or source descriptors under this tree.
+| Surface | Count | Current content state | Authority effect |
+|---|---:|---|---|
+| Boundary README | 1 | Substantive but stale before this revision | Explains only |
+| Top-level placeholder files | 3 | Heading plus `Status: PROPOSED placeholder.` | None |
+| Generic structural chapter placeholders | 16 | Heading plus `Status: PROPOSED placeholder.` | None |
+| Scoped chapter scaffold | 1 | Settlements/infrastructure pointer to a domain expansion backlog | None |
+| Asset directory | 1 | `.gitkeep` only | None |
+| Lineage directory | 1 | `.gitkeep` only | None |
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+### Numbering and identity drift
+
+`chapters/` contains both `11-master-viewing-mode-atlas.md` and `11-settlements-infrastructure.md`. The duplicate ordinal is not harmless if a later generator, table of contents, sorter, or stable-ID scheme assumes one chapter per number. Do not renumber either file in this README-only change. A future disposition must identify consumers and preserve stable links before any rename.
+
+### Single-writer rule
+
+The current tree exposes two possible manuscript shapes at once:
+
+- `encyclopedia.md` as a single-file source; and
+- `chapters/` as a split source.
+
+Neither contains the manuscript. No generator or synchronization relationship was verified. A later implementation must select exactly one writable source—or a documented external source plus generated mirrors—and prove that all other copies are read-only derivatives.
+
+[Back to top](#top)
 
 ---
 
-## Encyclopedia structure
+<a id="encyclopedia-structure"></a>
 
-The manuscript follows a fixed 16-section structure. Every chapter and matrix uses CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION labels for content, and ANSWER / ABSTAIN / DENY / ERROR for AI/runtime behaviors.
+## Encyclopedia structure — source-manuscript lineage
 
-| § | Section | What it provides | Authoritative upstream |
+The source planning manuscript uses a sixteen-section structure. The current chapter filenames preserve that outline as path-shaped lineage, but the files do not contain the manuscript.
+
+| § | Source-manuscript section | Current scaffold path | Current state |
 |---:|---|---|---|
-| 1 | Cover Page | Version, date, source boundary, truth posture, evidence limits | This README + manuscript metadata |
-| 2 | Executive Summary | What KFM is and is not; what is CONFIRMED / PROPOSED / UNKNOWN | [`docs/doctrine/`](../doctrine/) |
-| 3 | Source Ledger and Evidence Method | Per-source ID table, method, source-status limits | [`docs/sources/`](../sources/), [`docs/standards/`](../standards/), [`data/registry/`](../../data/registry/) |
-| 4 | KFM Operating Law | Inspectable claim, evidence hierarchy, lifecycle law, trust membrane, publication gate, AI boundary, map-renderer boundary, sensitivity posture | [`docs/doctrine/`](../doctrine/) |
-| 5 | Master Domain Atlas | Per-domain purpose, boundary, source families, object families, map products, first credible thin slice | [`docs/domains/`](../domains/) |
-| 6 | Cross-Domain Capability Taxonomy | Programmable behaviors, primary objects, governance rules | [`contracts/`](../../contracts/), [`policy/`](../../policy/) |
-| 7 | Domain Chapters | A–N chapter structure per domain | [`docs/domains/<domain>/`](../domains/) |
-| 8 | Cross-Domain Systems Chapters | MapLibre shell, Evidence Drawer, Focus Mode, search/graph, catalog/proof, review console, public/restricted surfaces | [`docs/architecture/`](../architecture/) |
-| 9 | Master Feature Matrix | Domain × feature/support matrix | [`contracts/`](../../contracts/), [`policy/`](../../policy/), [`release/`](../../release/) |
-| 10 | Master Action Matrix | User actions × outcomes × governance rules | [`docs/governance/`](../governance/), [`policy/`](../../policy/) |
-| 11 | Master Viewing Mode Atlas | Map and viewing modes per domain; renderer boundary | [`docs/architecture/`](../architecture/) |
-| 12 | Programming Possibilities Backlog | PROPOSED features, validators, APIs, fixtures, thin slices | [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) |
-| 13 | Sensitive / Deny-by-Default Register | Classes that fail closed: rare species, archaeology, infrastructure precision, living-person, DNA, private landowner data, unknown rights | [`policy/`](../../policy/), [`docs/security/`](../security/) |
-| 14 | Implementation Roadmap | PROPOSED phasing for thin slices and matrix-wide capabilities | [`docs/architecture/`](../architecture/) |
-| 15 | Validation and Acceptance Plan | What proves a slice is real: manifests, tests, drills, EvidenceBundle closure | [`tests/`](../../tests/), [`docs/runbooks/`](../runbooks/) |
-| 16 | Appendices and Self-Check | Glossary, domain object index, source family index, AI prompt index, policy gate index, open questions, verification backlog, supersession notes | [`docs/registers/`](../registers/) |
+| 1 | Cover Page | `chapters/01-cover.md` | Placeholder |
+| 2 | Executive Summary | `chapters/02-executive-summary.md` | Placeholder |
+| 3 | Source Ledger and Evidence Method | `chapters/03-source-ledger.md` | Placeholder |
+| 4 | KFM Operating Law | `chapters/04-operating-law.md` | Placeholder; must never become competing doctrine |
+| 5 | Master Domain Atlas | `chapters/05-master-domain-atlas.md` | Placeholder |
+| 6 | Cross-Domain Capability Taxonomy | `chapters/06-cross-domain-capability-taxonomy.md` | Placeholder |
+| 7 | Domain Chapters | `chapters/07-domain-chapters.md` | Placeholder |
+| 8 | Cross-Domain Systems Chapters | `chapters/08-cross-domain-systems.md` | Placeholder |
+| 9 | Master Feature Matrix | `chapters/09-master-feature-matrix.md` | Placeholder |
+| 10 | Master Action Matrix | `chapters/10-master-action-matrix.md` | Placeholder |
+| 11 | Master Viewing Mode Atlas | `chapters/11-master-viewing-mode-atlas.md` | Placeholder |
+| 12 | Programming Possibilities Backlog | `chapters/12-programming-possibilities-backlog.md` | Placeholder |
+| 13 | Sensitive / Deny-by-Default Register | `chapters/13-sensitive-deny-by-default-register.md` | Placeholder; policy remains external |
+| 14 | Implementation Roadmap | `chapters/14-implementation-roadmap.md` | Placeholder |
+| 15 | Validation and Acceptance Plan | `chapters/15-validation-and-acceptance-plan.md` | Placeholder |
+| 16 | Appendices and Self-Check | `chapters/16-appendices.md` | Placeholder |
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+The extra `11-settlements-infrastructure.md` file is not part of this sixteen-section outline. It is a later bounded scaffold created from a domain backlog reference. Its presence must be reconciled separately rather than silently folded into the manuscript.
+
+### Truth labels and runtime outcomes
+
+Any future encyclopedia content must preserve two distinct vocabularies:
+
+- **Truth labels:** `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`, with refinements such as `CONFLICTED`, `STALE`, or `LINEAGE` where supported.
+- **Finite outward outcomes:** `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` for runtime or policy-facing surfaces.
+
+A planning chapter may describe these terms. It cannot execute them or promote its own prose into evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="domain-coverage"></a>
 
 ## Domain coverage
 
-Encyclopedia chapters 5 and 7 provide one entry per **named KFM domain**. The list below mirrors the manuscript and supplied per-domain dossiers. Domain existence in the mounted repo remains **NEEDS VERIFICATION** until [`docs/domains/`](../domains/) is inspected.
+The source manuscript covers sixteen named domain or cross-domain areas:
 
-<details>
-<summary><strong>Sixteen named KFM domains (click to expand)</strong></summary>
-
-1. Spatial Foundation, Cartography, Reference Systems
+1. Spatial Foundation, Cartography, and Reference Systems
 2. Hydrology
 3. Soil
 4. Habitat
@@ -265,282 +459,416 @@ Encyclopedia chapters 5 and 7 provide one entry per **named KFM domain**. The li
 15. Frontier Demography, Economy, Settlement, Land, and Time Matrix
 16. Planetary, 3D, Digital Twin, and Synthetic Spatial Systems
 
-Each domain's authoritative home is [`docs/domains/<domain>/`](../domains/). The encyclopedia paraphrases and cross-links; it does not replace those pages.
+This list is **source-manuscript coverage**, not a current implementation inventory and not a permission matrix. Current human domain guidance belongs under [`docs/domains/`](../domains/README.md). Contracts, schemas, policy, source descriptors, fixtures, validators, release records, and public products remain in their owning responsibility roots.
 
-</details>
+For sensitive domains—especially rare species, archaeology, infrastructure, living-person material, genomics, land/title, cultural or sovereign material, and precise locations—unknown authority, rights, or sensitivity must remain redacted, generalized, staged, delayed, quarantined, denied, or absent from public documentation.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+[Back to top](#top)
 
 ---
+
+<a id="how-this-folder-relates-to-the-rest-of-docs"></a>
 
 ## How this folder relates to the rest of `docs/`
 
 ```mermaid
-flowchart LR
-    subgraph DOC[docs/]
-        DOCT[doctrine<br/>authority]
-        ARCH[architecture<br/>system shape]
-        ADR[adr<br/>accepted decisions]
-        DOM[domains<br/>per-domain authority]
-        SRC[sources<br/>source descriptors]
-        STD[standards<br/>external standards]
-        REG[registers<br/>governance state]
-        ENC[encyclopedia<br/>SYNTHESIS]
-        REP[reports<br/>generated]
-        ARC[archive<br/>lineage]
-    end
+flowchart TD
+    DIR["Accepted Directory Rules v2"] --> DOCS["docs/ root contract"]
+    DOCS --> DOCT["docs/doctrine/encyclopedia.md<br/>doctrine vocabulary"]
+    DOCS --> PLAN["docs/KFM-encyclopedia.md<br/>planning index"]
+    DOCS --> DOM["docs/domains/<br/>domain guidance"]
+    DOCS --> ATL["docs/atlases/<br/>curated atlas lane"]
 
-    subgraph TRUST[Trust and implementation roots]
-        CON[contracts]
-        SCH[schemas]
-        POL[policy]
-        REL[release]
-        DAT[data]
-        TST[tests / fixtures]
-    end
+    SRC["Source planning manuscript<br/>exact repo carrier UNKNOWN"] --> PLAN
+    PLAN --> HOLD["docs/encyclopedia/<br/>tracked scaffold · HOLD"]
+    DOCT -. vocabulary constraints .-> HOLD
+    DOM -. domain authority remains external .-> HOLD
+    ATL -. possible future destination only after decision .-> HOLD
 
-    DOCT --> ENC
-    ARCH --> ENC
-    ADR --> ENC
-    DOM --> ENC
-    SRC --> ENC
-    STD --> ENC
-    CON --> ENC
-    SCH --> ENC
-    POL --> ENC
-    REL --> ENC
-    DAT --> ENC
-    TST --> ENC
+    HOLD -. drift / verification .-> REG["docs/registers/"]
+    HOLD -. no authority output .-> NONE["No contract · schema · policy · release · publication"]
 
-    ENC -. cross-links .-> DOCT
-    ENC -. cross-links .-> DOM
-    ENC -. verification gaps .-> REG
-
-    classDef synth fill:#fff7d6,stroke:#b8860b,color:#5b3a00
-    classDef truth fill:#e8f4ff,stroke:#1f6feb,color:#0a2540
-    class ENC synth
-    class DOCT,ARCH,ADR,DOM,SRC,STD,CON,SCH,POL,REL,DAT,TST truth
+    classDef authority fill:#e8f4ff,stroke:#1f6feb,color:#0a2540
+    classDef planning fill:#fff7d6,stroke:#b8860b,color:#5b3a00
+    classDef hold fill:#ffebe9,stroke:#cf222e,color:#82071e
+    class DIR,DOCS,DOCT,DOM,ATL authority
+    class SRC,PLAN planning
+    class HOLD hold
 ```
 
-> [!NOTE]
-> Arrows point **from** authority **into** the encyclopedia: the encyclopedia consumes truth; it does not produce truth. Dotted edges back out are navigation and backlog surfaces only.
+The diagram is explanatory. It does not choose a destination for the scaffold or assert that `docs/atlases/` is the correct migration target.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+### Navigation rule
+
+- Use the [Doctrine Encyclopedia](../doctrine/encyclopedia.md) for term meaning and doctrine cross-references.
+- Use the [KFM Encyclopedia planning index](../KFM-encyclopedia.md) for the source manuscript's current repository-grounded crosswalk.
+- Use [Domain documentation](../domains/README.md) for domain-specific language, risks, and current bounded status.
+- Use [Accepted ADRs](../adr/INDEX.md) and owning roots for decisions and implementation truth.
+- Use this folder only for scaffold-boundary, disposition, provenance, and migration work until the HOLD is resolved.
+
+[Back to top](#top)
 
 ---
+
+<a id="quickstart"></a>
 
 ## Quickstart
 
-For readers approaching KFM for the first time, or contributors planning a slice:
+### Reader
 
-1. **Read the status block first** — confirm that the folder is still PROPOSED and that implementation depth remains UNKNOWN until repo evidence verifies it.
-2. **Start with the executive summary** — open the manuscript and read §2 to understand what is CONFIRMED, PROPOSED, and UNKNOWN.
-3. **Locate your domain** — use [Domain coverage](#domain-coverage), then jump to the relevant §7 chapter and the canonical [`docs/domains/<domain>/`](../domains/) page.
-4. **Identify the thin slice** — each domain chapter should end with a first credible thin-slice specification; treat it as planning guidance until tests, fixtures, and manifests prove it.
-5. **Cross-check operating law** — confirm the slice respects the lifecycle invariant, trust membrane, cite-or-abstain posture, and deny-by-default sensitivity posture.
-6. **Move verification work to the register** — anything PROPOSED, UNKNOWN, or NEEDS VERIFICATION that a slice depends on belongs in [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md), not as an unsupported assertion in the encyclopedia.
+1. Start with [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md).
+2. Resolve terminology through [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md).
+3. Follow links to the owning domain, contract, schema, policy, source, test, or release surface.
+4. Treat any manuscript-shaped implementation claim as planning until current repository evidence proves it.
+5. Return to this README only to understand the held scaffold and its disposition risks.
 
-> [!TIP]
-> If a topic is missing from the encyclopedia, **do not invent it here**. Add it to the upstream authoritative source first, then reflect the resolved decision into the encyclopedia in the next manuscript revision.
+### Contributor
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+1. Confirm the task is boundary, provenance, consumer-inventory, or migration work.
+2. Pin current main, the target blob, adopted Directory Rules, and any accepted decision governing the proposed change.
+3. Search for equivalent content in the planning index, doctrine encyclopedia, domains, and atlases.
+4. Do not populate placeholders or add assets merely to make the tree look complete.
+5. Preserve stable paths and anchors until consumer closure is proven.
+6. Run applicable metadata, link, staleness, graph, and changed-area checks.
+7. Keep structural changes in a separate reviewable packet from the decision that authorizes them.
+
+### Reviewer
+
+Ask:
+
+- Does the change narrow or expand this lane's authority?
+- Does it create a second writable encyclopedia source?
+- Does it copy source text without provenance or correction lineage?
+- Does it move domain, policy, contract, schema, source, receipt, proof, or release authority into docs?
+- Does it expose sensitive content?
+- Does it preserve inbound links and rollback?
+- Is the asserted placement supported by an accepted decision rather than by this README itself?
+
+[Back to top](#top)
 
 ---
+
+<a id="inputs"></a>
 
 ## Inputs
 
-The encyclopedia draws from the supplied KFM corpus reflected in the manuscript's source ledger:
+This boundary README may consume:
 
-- **KFM doctrine**: Directory Rules, lifecycle law, truth posture, trust membrane, and related governance docs.
-- **Build and pipeline material**: Greenfield Plan, Pipeline Living Implementation Manual, and implementation/reference lineage.
-- **UI / AI**: MapLibre Operating Architecture, Whole UI + Governed AI Expansion, Governed AI source-ledger reports, and local-runtime guidance.
-- **Per-domain dossiers**: Hydrology, Soil, Habitat, Fauna, Flora, Agriculture, Geology, Atmosphere/Air, Hazards, Roads/Rail/Trade, Settlements/Infrastructure, Archaeology, People/Genealogy/DNA/Land.
-- **External standards and source families**: OpenAPI, JSON Schema, DCAT, PROV-O, STAC, GeoParquet, PMTiles, MapLibre GL JS, USGS / FEMA / NOAA / EPA / USFWS / GBIF / iNaturalist / NatureServe / Census / GNIS / 3DEP / 3D Tiles.
+- current repository tree, bytes, history, references, and documentation workflows;
+- accepted Directory Rules and ADRs;
+- the current planning index and doctrine encyclopedia;
+- source-manuscript identity and lineage recorded by the planning index;
+- domain, atlas, register, and root README contracts;
+- explicit consumer, provenance, migration, correction, or rollback evidence;
+- authoritative external standards only when a current placement or rights question actually depends on them.
 
-External standards, package versions, source terms, endpoint behavior, and profile pinning are **NEEDS VERIFICATION** before operational use. The full source ledger lives in encyclopedia §3.
+Inputs remain at their own authority rank. A planning PDF does not become doctrine because this README cites it. A repository path does not become canonical because it exists. A validator does not create an accepted decision.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+[Back to top](#top)
 
 ---
+
+<a id="outputs"></a>
 
 ## Outputs
 
-The encyclopedia emits **reference content only** — no governed trust objects:
+While the lane remains on HOLD, this folder may emit only human-readable, non-authoritative scaffold-governance material such as:
 
-- Markdown chapters and matrices.
-- Encyclopedia-scoped diagrams and figures under [`assets/`](#directory-tree-proposed) (PROPOSED).
-- Cross-links into doctrine, domain pages, contracts, schemas, policy, release, and registers.
-- Verification items for [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) when gaps are identified.
+- this boundary README;
+- consumer and link inventories;
+- provenance and content-identity notes;
+- proposed disposition or migration plans;
+- explicit drift and verification references;
+- an authorized read-only redirect or tombstone after a separate decision.
 
-It explicitly does **not** emit `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, `RunReceipt`, `ValidationReport`, `EvidenceBundle`, `DecisionEnvelope`, or any other trust-bearing object. Those are produced by their respective owning roots.
+It does **not** emit or own:
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+- canonical doctrine or domain authority;
+- `SourceDescriptor`, `EvidenceRef`, or `EvidenceBundle`;
+- contracts, schemas, or policy;
+- `RunReceipt`, proof, review record, or promotion decision;
+- release manifest, correction notice, withdrawal notice, or rollback card;
+- public-safe data carrier;
+- API, MapLibre, AI, or runtime behavior;
+- KFM release or publication.
+
+[Back to top](#top)
 
 ---
+
+<a id="validation"></a>
 
 ## Validation
 
-Validation here is editorial and link-integrity, not policy enforcement. The checks below are **PROPOSED** until repo CI confirms workflow names and tools.
+Documentation checks provide repository-quality evidence. They do not accept the lane, resolve the source manuscript, approve sensitive content, or establish release/publication.
 
-| Check | Purpose | Implementer / evidence needed |
-|---|---|---|
-| Markdown lint | Style consistency and closed fences | Repo lint workflow (`WORKFLOW_TBD`) |
-| Link check | Broken relative links to doctrine, domains, contracts, schemas, policy, release, and registers | Doc CI workflow (`WORKFLOW_TBD`) |
-| Heading-anchor stability | Preserve stable anchors across revisions | Editorial review + changelog |
-| Truth-label audit | Every implementation-shaped claim carries CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION | Editorial review + reviewer checklist |
-| Authority-cross-link audit | Each chapter points to upstream authority | Docs steward review |
-| Supersession check | Manuscript version and `CHANGELOG.md` updated when content materially changes | Docs steward review |
-| Sensitive-content check | No exact rare-species, archaeology, sensitive infrastructure, living-person, DNA, or rights-uncertain detail appears here as public material | Policy/steward review |
+| Check | Repository surface | What it can establish | What it cannot establish |
+|---|---|---|---|
+| Metadata and document-registry comparison | [`docs-meta-block.yml`](../../.github/workflows/docs-meta-block.yml) | Parseable metadata and bounded registry delta | Authority, adoption, review, or publication |
+| Relative link and reference-style checks | [`link-check.yml`](../../.github/workflows/link-check.yml) | Covered repository-relative link integrity | External availability, semantic correctness, or consumer closure |
+| Staleness scan | [`docs-stale-scan.yml`](../../.github/workflows/docs-stale-scan.yml) | Configured stale markers and metadata findings | Current implementation or source truth |
+| Markdown source checks | Repository-native validators and changed-area jobs | Fences, headings, tables, anchors, and formatting under covered rules | Hosted rendering parity or architecture truth |
+| Topology and documentation graph checks | Applicable repository guardrails | Known path/identifier drift against current baselines | Acceptance of a new lane or migration |
+| Sensitive-content review | Human/policy review | Bounded absence or approved transformation of risky detail | Rights or sensitivity clearance outside its evidence scope |
 
-> [!IMPORTANT]
-> The encyclopedia **never** asserts validation, enforcement, release maturity, or runtime behavior on behalf of other systems. If a chapter says “this is enforced,” that statement requires evidence from a test, workflow, release manifest, or emitted artifact; otherwise it MUST be labeled PROPOSED.
+### Required source-level checks for this README revision
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+- UTF-8 with final newline;
+- one H1;
+- balanced fenced blocks;
+- unique explicit anchors;
+- all legacy anchors retained;
+- internal fragment targets present;
+- relative links point to tracked current paths or are explicitly labeled unresolved;
+- metadata parses;
+- no placeholder owner is converted into a verified reviewer;
+- no claim of hosted checks before those checks complete.
+
+### Negative checks
+
+Hold or reject a later change that would:
+
+- populate a placeholder before a placement and single-writer decision;
+- create or edit a second manuscript copy without generation rules;
+- treat a planning outline as doctrine;
+- absorb domain, contract, schema, policy, source, receipt, proof, or release authority;
+- introduce sensitive details without qualified review;
+- rename or delete paths without consumer closure and rollback;
+- use a proposed decision edited in the same packet to authorize structural work;
+- report a documentation check as release or publication proof.
+
+[Back to top](#top)
 
 ---
+
+<a id="review-burden"></a>
 
 ## Review burden
 
-| Change type | Reviewers required |
+| Change class | Minimum review posture |
 |---|---|
-| Editorial fixes: typos, link repair, anchor preservation | Docs steward (`OWNER_TBD`) |
-| Adding or revising a domain chapter (§7) | Docs steward + relevant domain steward (`OWNER_TBD per domain`) |
-| Adding or revising operating law (§4) or sensitivity register (§13) | Docs steward + doctrine/policy owner; content must mirror, not replace, [`docs/doctrine/`](../doctrine/) and [`policy/`](../../policy/) |
-| Adding or revising matrices (§6, §9, §10, §11) | Docs steward + at least one architecture or domain steward |
-| Accepting `docs/encyclopedia/` as a canonical `docs/` lane | Docs steward + Directory Rules reviewer sign-off; ADR only if the change alters a canonical root, schema-home rule, lifecycle phase, or parallel authority home |
-| Relocating this content to another lane | Docs steward + owner of destination lane; migration note and backlink/redirect plan recommended |
+| Typo, wording correction, or link repair with no changed meaning | Current documentation review route |
+| Evidence refresh or scaffold inventory update | Documentation owner plus reviewer of the affected source |
+| Provenance or source-artifact identity change | Documentation owner plus source/provenance reviewer |
+| Domain-specific content admission | Documentation owner plus relevant domain steward |
+| Sensitive-domain material | Relevant policy/sensitivity authority and domain steward |
+| Lane admission, compatibility classification, migration, rename, split, merge, or retirement | Accepted decision as required by Directory Rules; documentation and destination-root owners; independent review proportionate to authority impact |
+| Deletion of a scaffold path | Consumer closure, provenance preservation, migration/retirement record, and rollback evidence |
 
-**CODEOWNERS reference:** `CODEOWNERS_PATH_TBD` — placeholder until [`.github/CODEOWNERS`](../../.github/CODEOWNERS) or root `CODEOWNERS` is verified for this path. **NEEDS VERIFICATION.**
+**Current executable review route:** [`.github/CODEOWNERS`](../../.github/CODEOWNERS) falls back to `@bartytime4life` for this path. That route requests review; it is not a `ReviewRecord`, independent approval, stewardship assignment, release decision, or publication authority.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+[Back to top](#top)
 
 ---
+
+<a id="related-folders"></a>
 
 ## Related folders
 
-| Folder | Why it matters here |
+| Surface | Relationship |
 |---|---|
-| [`docs/doctrine/`](../doctrine/) | Authority for invariants the encyclopedia narrates. |
-| [`docs/architecture/`](../architecture/) | Authority for system shape, governed API, map shell, and deployment topology. |
-| [`docs/adr/`](../adr/) | Records decisions the encyclopedia must reflect, never anticipate. |
-| [`docs/domains/`](../domains/) | Per-domain authoritative pages; encyclopedia §7 cross-links into here. |
-| [`docs/sources/`](../sources/), [`docs/standards/`](../standards/) | Source families and external standards referenced by §3. |
-| [`docs/registers/`](../registers/) | Verification backlog, drift, contradiction, deprecation, and open-decision registers. |
-| [`docs/runbooks/`](../runbooks/) | Operational procedures referenced by validation/acceptance plan §15. |
-| [`contracts/`](../../contracts/), [`schemas/`](../../schemas/), [`policy/`](../../policy/), [`release/`](../../release/) | Authoritative homes for object meaning, machine shapes, policy gates, and release decisions indexed by the encyclopedia. |
-| [`tests/`](../../tests/), [`fixtures/`](../../fixtures/) | Where first credible thin slices become enforceable proof. |
-| [`data/receipts/`](../../data/receipts/), [`data/proofs/`](../../data/proofs/), [`data/registry/`](../../data/registry/) | Trust-bearing runtime/source artifacts that the encyclopedia may describe but must not own. |
+| [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md) | Current repository-grounded planning index and source-manuscript crosswalk |
+| [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md) | Distinct doctrine-vocabulary and concept-index surface |
+| [`docs/README.md`](../README.md) | Current `docs/` root contract and canonical direct-child map |
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Adopted placement standard through ADR-0029 |
+| [`docs/adr/`](../adr/INDEX.md) | Decision records; no encyclopedia-lane admission decision was identified in this review |
+| [`docs/domains/`](../domains/README.md) | Current human domain guidance |
+| [`docs/atlases/`](../atlases/README.md) | Accepted curated atlas documentation lane; not selected here as a migration target |
+| [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) | Human-readable drift record |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) | Human-readable unresolved verification work |
+| [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml) | Proposed machine document registry; currently sparse and not authority-creating |
+| [`contracts/`](../../contracts/README.md), [`schemas/`](../../schemas/README.md), [`policy/`](../../policy/README.md) | Owning semantic, shape, and admissibility roots |
+| [`release/`](../../release/README.md) | Release decision plane; this folder has no release effect |
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+[Back to top](#top)
 
 ---
+
+<a id="adrs"></a>
 
 ## ADRs
 
-No folder-specific ADR is currently identified for `docs/encyclopedia/`. Accepting this lane should be treated as a placement decision under Directory Rules change discipline unless it also changes a canonical root, schema-home rule, lifecycle phase, or parallel authority home.
+[`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is accepted and adopts the exact Directory Rules v2 bytes. It controls the placement method and prevents current repository drift from becoming automatic precedent.
 
-An ADR would be required if the encyclopedia attempted to:
+No accepted ADR admitting, migrating, mirroring, generating, or retiring `docs/encyclopedia/` was identified in this review.
 
-- create a new canonical root,
-- change the schema-home rule,
-- split or merge lifecycle phases,
-- create a parallel home for schemas, contracts, policy, sources, registries, releases, proofs, or receipts,
-- reverse an accepted Directory Rules placement decision.
+A later change must determine its decision class before implementation:
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+- A boundary-only correction can use routine documentation review.
+- A root-internal lane refinement may be reviewable by the owning root if it creates no competing authority or compatibility contract.
+- A new canonical or compatibility classification, split, merge, rename, or retirement may require an accepted ADR or another accepted decision packet under Directory Rules.
+- The decision and the structural implementation must remain separate when the implementation depends on the decision becoming effective.
+
+This README is not that decision.
+
+[Back to top](#top)
 
 ---
+
+<a id="open-questions"></a>
 
 ## Open questions
 
-| Question | Status | Disposition |
-|---|---|---|
-| Is `docs/encyclopedia/` accepted as a `docs/` lane? | NEEDS VERIFICATION | Resolve via reviewer sign-off or relocate to an accepted lane. |
-| Does the mounted repo already contain this folder? | UNKNOWN | Inspect repo tree before merging or relocating. |
-| Single-file manuscript or chaptered layout? | OPEN | Decide alongside neighboring docs' conventions; avoid maintaining divergent copies. |
-| Manuscript versioning cadence | NEEDS VERIFICATION | Tie to `CHANGELOG.md` and supersession entries; cadence to be set by docs steward. |
-| Asset hosting | NEEDS VERIFICATION | Resolve whether figures live under `assets/` here or under a shared UI/brand asset root. |
-| Authority-cross-link automation | NEEDS VERIFICATION | Confirm whether doc link-check workflow covers this folder. |
-| Steward assignment | UNKNOWN | Per-domain stewards must be named in [`docs/governance/`](../governance/) before §7 chapters are materially revised. |
-| Existing links into the previous README | UNKNOWN | Preserve headings; run link check before merge. |
+| ID | Question | Current status | Evidence needed |
+|---|---|---|---|
+| `ENC-HOLD-001` | What is the long-term disposition of `docs/encyclopedia/`? | `HOLD` | Accepted placement, migration, compatibility, or retirement decision |
+| `ENC-HOLD-002` | Which artifact is the one writable planning-encyclopedia source? | `CONFLICTED` | Source-provenance map, writer/generator contract, and consumer inventory |
+| `ENC-HOLD-003` | Where are the exact source PDF bytes governed in the repository, if anywhere? | `UNKNOWN` | Exact digest-to-path evidence or explicit external-storage record |
+| `ENC-HOLD-004` | Are `encyclopedia.md` or `chapters/` intended as generated mirrors? | `UNKNOWN` | Generator, source declaration, generated markers, and reproducible output evidence |
+| `ENC-HOLD-005` | Does any substantive unique material exist in the scaffold beyond the settlements pointer? | `NEEDS VERIFICATION` | Full content and history comparison against planning, doctrine, domain, and atlas surfaces |
+| `ENC-HOLD-006` | Which consumers depend on current file and fragment paths? | `NEEDS VERIFICATION` | Repository and external inbound-reference inventory |
+| `ENC-HOLD-007` | How should the duplicate `11-` chapter ordinal be resolved? | `HOLD` | Consumer and stable-identity analysis plus selected manuscript model |
+| `ENC-HOLD-008` | Is the settlements/infrastructure scaffold still needed after current domain documentation updates? | `NEEDS VERIFICATION` | Domain-owner review and source-backlog reconciliation |
+| `ENC-HOLD-009` | Who owns planning-encyclopedia stewardship and independent review? | `UNKNOWN` | Verified stewardship assignment |
+| `ENC-HOLD-010` | What rights and attribution apply to any future repository copy of the source manuscript or figures? | `NEEDS VERIFICATION` | Source rights, provenance, and redistribution review |
+| `ENC-HOLD-011` | Should current placeholders be retained, tombstoned, migrated, generated, or deleted? | `HOLD` | Accepted disposition plus rollback and correction plan |
+| `ENC-HOLD-012` | Are documentation workflows and required checks sufficient for a future structural change? | `NEEDS VERIFICATION` | Exact-head hosted results, ruleset coupling, and changed-area coverage |
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+Open questions belong in the owning register when they become repository-wide tracked work. This README keeps the local decision context visible; it does not silently create machine or governance state.
+
+[Back to top](#top)
+
+---
+
+<a id="task-list--definition-of-done-for-the-encyclopedia-folder"></a>
+
+## Task list — definition of done for the encyclopedia scaffold
+
+### Evidence and authority
+
+- [ ] Adopt or record one finite disposition: admit, migrate, mirror, tombstone, retire, or continue HOLD.
+- [ ] Identify the one writable source of planning-encyclopedia content.
+- [ ] Pin the source manuscript or external carrier by durable identity and provenance.
+- [ ] Verify the current planning index, doctrine encyclopedia, domain docs, and atlas relationships.
+- [ ] Assign verified stewardship and review routes appropriate to the selected disposition.
+
+### Content and identity
+
+- [ ] Classify every tracked scaffold file as unique content, redirect, generated mirror, migration source, tombstone, or deletion candidate.
+- [ ] Resolve the duplicate `11-` ordinal without breaking consumers.
+- [ ] Decide whether the settlements/infrastructure scaffold is retained, migrated, or retired with domain-owner review.
+- [ ] Preserve stable document IDs, paths, anchors, and source lineage where required.
+- [ ] Prohibit dual-write manuscript copies.
+
+### Migration and safety
+
+- [ ] Inventory repository and known external consumers.
+- [ ] Prepare link, identity, and redirect handling before any move or deletion.
+- [ ] Record a migration/retirement manifest and Git-recoverable rollback target.
+- [ ] Verify no contract, schema, policy, source, receipt, proof, release, or published authority moves into the scaffold.
+- [ ] Apply sensitive-content and rights review before importing any manuscript text or figures.
+
+### Validation
+
+- [ ] Run metadata, link, Markdown, staleness, graph, topology, and changed-area checks applicable to the final packet.
+- [ ] Verify exact-head hosted results and report inherited failures separately from introduced defects.
+- [ ] Update the `docs/` root map, document registry, and related navigation only after the disposition becomes effective.
+- [ ] Record correction and re-review triggers.
+
+Until these items close through a governed sequence, “definition of done” means the scaffold remains clearly bounded and non-authoritative—not that every placeholder is filled.
+
+[Back to top](#top)
 
 ---
 
-## Task list — definition of done for the encyclopedia folder
-
-- [ ] Folder accepted as a `docs/` lane or content relocated to an accepted lane.
-- [ ] Mounted-repo tree inspected; all path claims updated from PROPOSED to CONFIRMED or left explicitly PROPOSED.
-- [ ] Manuscript landed in repo-native Markdown form: single file **or** chaptered layout, not divergent copies.
-- [ ] `CHANGELOG.md` initialized and linked from this README.
-- [ ] `INDEX.md` initialized if the manuscript is chaptered or if link density makes it useful.
-- [ ] Authority cross-links resolve to existing files in [`docs/doctrine/`](../doctrine/), [`docs/architecture/`](../architecture/), [`docs/domains/`](../domains/), [`contracts/`](../../contracts/), [`schemas/`](../../schemas/), [`policy/`](../../policy/), and [`release/`](../../release/) or are labeled PROPOSED / NEEDS VERIFICATION.
-- [ ] All implementation-shaped claims labeled CONFIRMED / PROPOSED / UNKNOWN / NEEDS VERIFICATION.
-- [ ] All sensitive-domain content respects the deny-by-default register; no exact rare-species, archaeological, sensitive infrastructure, living-person, DNA, private landowner, or rights-uncertain detail is published here.
-- [ ] Verification items added to [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) for every material UNKNOWN / NEEDS VERIFICATION claim.
-- [ ] CODEOWNERS entry for this path confirmed or `CODEOWNERS_PATH_TBD` retained as a reviewable placeholder.
-- [ ] Last-reviewed date updated in this README and in the manuscript cover.
-
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
-
----
+<a id="faq"></a>
 
 ## FAQ
 
-**Is the encyclopedia authoritative?**
+### Is `docs/encyclopedia/` real?
 
-No. It is a synthesis manuscript. Authority lives in `docs/doctrine/`, `contracts/`, `schemas/`, `policy/`, `release/`, source registries, and per-domain pages. When in conflict, the authoritative source wins.
+Yes. The path and its tracked scaffold are confirmed on current main. Its **canonical or compatibility authority is not confirmed**.
 
-**Can I cite the encyclopedia as the basis for a PR?**
+### Is this the main KFM Encyclopedia?
 
-Cite the encyclopedia for **orientation**; cite the upstream authoritative source for **decisions**. PRs that change behavior, schemas, contracts, source treatment, release posture, or policy must cite the rule from the owning root, not the encyclopedia paraphrase.
+No. Start with [`docs/KFM-encyclopedia.md`](../KFM-encyclopedia.md) for the current planning index. Use [`docs/doctrine/encyclopedia.md`](../doctrine/encyclopedia.md) for doctrine vocabulary.
 
-**Why does every API path say “PROPOSED”?**
+### May I fill the chapter placeholders?
 
-Because no mounted repo evidence is available inside this README. Paths, route names, DTOs, package choices, workflow names, and CI behavior remain PROPOSED until a repo scan verifies them.
+Not while the lane is on HOLD. First resolve placement, provenance, single-writer, generation, ownership, rights, consumer, and validation questions.
 
-**What if a domain dossier and the encyclopedia disagree?**
+### Does the source manuscript prove the repository implements its features?
 
-Treat the dossier as the stronger domain-specific source unless a higher-authority doctrine, contract, schema, policy, ADR, or mounted-repo implementation record says otherwise. Open a [`DRIFT_REGISTER`](../registers/DRIFT_REGISTER.md) entry and revise the encyclopedia in the next manuscript version.
+No. The manuscript is planning lineage. Current implementation claims require current code, configuration, contract, schema, policy, fixture, test, workflow, artifact, log, or runtime evidence.
 
-**Is a single 80+ page manuscript file readable on GitHub?**
+### Why not delete the placeholders now?
 
-Maybe, but the chaptered layout under `chapters/` is the preferred fallback. Choose one manuscript source layout and record the decision in `CHANGELOG.md`.
+Deletion would be structural work. Consumer closure, unique-content and history review, provenance preservation, an accepted disposition, and rollback are not yet established.
 
-**Can the encyclopedia include examples?**
+### Why not declare the folder canonical because it exists?
 
-Yes, but examples must be labeled as illustrative unless backed by current repo evidence. Examples must not create new policy, contract, schema, release, or implementation claims.
+Accepted Directory Rules explicitly separate current repository convention from placement authority. Conflicting convention is drift to classify, not automatic precedent.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+### Can this folder contain examples?
+
+Only after its role is accepted and the examples are supported, rights-safe, sensitivity-safe, clearly labeled, and subordinate to owning authority. While held, add examples to the current owning surface instead.
+
+### Can a green documentation workflow resolve the HOLD?
+
+No. Workflows can validate covered source properties. They cannot accept a lane, appoint stewards, determine rights, approve migration, or publish.
+
+### What happens to the old anchors?
+
+This revision preserves the legacy README anchors. Any future rename or split must preserve or deliberately migrate them with consumer evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="rollback-and-correction"></a>
 
 ## Rollback and correction
 
-Rollback is required if this README or the encyclopedia folder:
+This README changes documentation only. It does not alter scaffold files, authority, source material, implementation, release, or public state.
 
-- weakens the trust membrane or cite-or-abstain posture,
-- creates parallel authority for schemas, contracts, policy, sources, registries, releases, receipts, or proofs,
-- publishes sensitive detail without policy support,
-- breaks stable anchors without a migration note,
-- claims implementation maturity without repo evidence,
-- conflicts with Directory Rules or an accepted ADR.
+Rollback target:
 
-Rollback target: restore the last accepted README version, revert any folder-placement change, and add a `DRIFT_REGISTER` or `CHANGELOG.md` entry describing why the rollback occurred. If this folder is rejected as a lane, relocate content to the accepted destination and preserve backlinks where the repo supports them.
+```text
+docs/encyclopedia/README.md
+blob: 5eb6f0b10a6e1c16434d3b30c2d38a24eb618408
+base: dc30e1d38f9a4ecf45fd589d388886fc872dd189
+```
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+Revert or correct this README when it:
+
+- misstates the current tree or source identity;
+- narrows or expands an accepted placement decision incorrectly;
+- directs readers to a stale canonical surface;
+- implies that placeholders are authoritative;
+- creates a second writable encyclopedia source;
+- leaks sensitive or rights-uncertain material;
+- breaks stable anchors;
+- claims review, validation, release, or publication without evidence.
+
+A future structural rollback must also restore paths, aliases, generated relationships, consumer links, and source lineage affected by that structural change. Git history alone is recoverability evidence, not a complete correction plan for external consumers.
+
+[Back to top](#top)
 
 ---
 
+<a id="last-reviewed"></a>
+
 ## Last reviewed
 
-`2026-05-15` — v1.1 Markdown update pass. Re-review when:
+**2026-08-14** against:
 
-- The manuscript lands in repo-native Markdown form, or
-- Directory Rules are amended to include or exclude `encyclopedia/`, or
-- Domain stewards are assigned in [`docs/governance/`](../governance/), or
-- The mounted repo proves different path conventions, or
-- Six months elapse since the last review.
+- `main@dc30e1d38f9a4ecf45fd589d388886fc872dd189`;
+- target prior blob `5eb6f0b10a6e1c16434d3b30c2d38a24eb618408`;
+- planning index blob `7a2a66a42033f80c291a7176e3ca586ea0576b18`;
+- doctrine encyclopedia blob `a5c8f452ca02cc63770b973bf47bd7c1f286a3fa`;
+- adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`;
+- accepted ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9`;
+- docs root README blob `1f8bac189dac1d01c1185e8b4fb8e25efd11d09f`;
+- CODEOWNERS blob `dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61`.
 
-[↑ Back to top](#kfm-domain--capability-encyclopedia)
+Re-review when:
+
+- a lane-admission, migration, compatibility, generation, tombstone, or retirement decision is accepted;
+- the source manuscript obtains a verified repository or external-storage carrier;
+- `docs/KFM-encyclopedia.md`, the Doctrine Encyclopedia, the docs root map, or Directory Rules changes materially;
+- any scaffold file gains substantive content;
+- a consumer, rights, sensitivity, provenance, or stable-identity issue is discovered;
+- CODEOWNERS or independent stewardship changes;
+- six months elapse without a disposition review.
+
+[Back to top](#top)
