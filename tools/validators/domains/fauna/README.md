@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-domains-fauna-readme
 title: tools/validators/domains/fauna README
 type: README
-version: v0.4.1
+version: v0.4.0
 status: draft; three bounded executable slices confirmed; production authority held
 owner: TODO-tooling-qa-owner-plus-fauna-steward-plus-sensitive-species-reviewer-plus-geoprivacy-reviewer-plus-policy-steward-plus-evidence-steward
 created: 2026-07-07
-updated: 2026-08-14
+updated: 2026-08-11
 policy_label: repository-facing; per-domain-validator-index; fauna; sensitive-species; geoprivacy; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: Index bounded Fauna validator implementations and proposed child lanes while preserving source, evidence, policy, sensitivity, proof, release, correction, rollback, and public-surface authority in their owning roots.
@@ -79,13 +79,13 @@ The lane owns executable checks and their local documentation only. Fauna meanin
 
 | Surface | Status | Exact scope |
 |---|---|---|
-| `validate_public_safe_fixture.py` | **CONFIRMED bounded executable** | Standard-library hygiene validator for closed synthetic, location-withheld, no-network, unreleased fixtures. Its sensitive-withheld profile requires a synthetic redaction-receipt ref, matching geoprivacy state, and an explicit withholding caveat. It is not real occurrence validation. |
+| `validate_public_safe_fixture.py` | **CONFIRMED bounded executable** | Standard-library hygiene validator for closed synthetic, location-withheld, no-network, unreleased fixtures. It is not real occurrence validation. |
 | `tools/validators/fauna/README.md` and `tools/validators/fauna/source_role/README.md` | **CONFIRMED routing documentation** | Broad Fauna and source-role routing surfaces; they do not replace this per-domain executable home. |
 | [`occurrence/validate_occurrence_evidence.py`](occurrence/validate_occurrence_evidence.py) | **CONFIRMED bounded executable** | Draft closed `OccurrenceEvidence` schema and semantic validation, deterministic identity, role/basis anti-collapse, rights/provenance, sensitivity/geometry consistency, and exact fixture replay. |
 | [`occurrence/README.md`](occurrence/README.md) | **CONFIRMED child-lane documentation** | Exact CLI, input/output, findings, tests, CI, receipt, trust boundary, maintenance, and rollback for the occurrence profile. |
 | [`tiles/validate_tile_field_allowlist.py`](tiles/validate_tile_field_allowlist.py) | **CONFIRMED bounded executable** | Inactive field-name-only comparison of synthetic encoded properties, a candidate `LayerManifest` allowlist, and the Fauna policy profile; no tile-byte inspection or production approval. |
 | [`tiles/README.md`](tiles/README.md) | **CONFIRMED child-lane documentation** | Exact fixture-only CLI, trust boundary, activation hold, and rollback for the tile field allowlist profile. |
-| `tests/domains/fauna/test_fauna_smoke.py` | **CONFIRMED fixture-hygiene suite** | Eight deterministic tests for the synthetic public-safe fixture profile, including the sensitive-withheld transform-disclosure case. |
+| `tests/domains/fauna/test_fauna_smoke.py` | **CONFIRMED fixture-hygiene suite** | Seven deterministic tests for the older synthetic public-safe fixture profile. |
 | `tests/domains/fauna/test_occurrence_evidence.py` | **CONFIRMED occurrence suite** | Eight deterministic no-network tests for the draft occurrence profile. |
 | `tests/domains/fauna/test_tile_field_allowlist.py` | **CONFIRMED tile-field suite** | Deterministic no-network policy, manifest-relation, deny-pattern, authority, and exact fixture-replay tests. |
 | `.github/workflows/domain-fauna.yml` | **CONFIRMED bounded workflow** | Runs the older synthetic fixture-safety suite and keeps proof/release jobs held. |
@@ -99,7 +99,7 @@ Do not collapse the three executables. Fixture hygiene answers whether a synthet
 
 ## Accepted bounded executable: synthetic fixture hygiene
 
-`validate_public_safe_fixture.py` accepts only candidates that are explicitly synthetic, fixture-only, source-role `synthetic`, rights-scoped to fixture use, location-withheld, no-network, unreleased, and promotion-ineligible. The sensitive-withheld variant additionally requires a `fixture:receipt:redaction:fauna:` reference, the fixture-only withheld-transform geoprivacy state, and an exact public caveat that says precision is withheld. The referenced string is not a receipt instance and the validator does not resolve it.
+`validate_public_safe_fixture.py` accepts only candidates that are explicitly synthetic, fixture-only, source-role `synthetic`, rights-scoped to fixture use, location-withheld, no-network, unreleased, and promotion-ineligible.
 
 It fails closed on:
 
@@ -111,7 +111,6 @@ It fails closed on:
 - cyclic, deeper-than-64-level, or more-than-4,096-node in-memory structures;
 - fixture files larger than 1,000,000 bytes, integer tokens over 512 digits, or JSON values that cannot be parsed safely; and
 - unsupported synthetic identifier shapes.
-- a sensitive-withheld fixture missing its synthetic redaction-receipt reference, matching geoprivacy state, or explicit withholding caveat; and
 
 Structural cycle, depth, or node-limit findings stop further field inspection so malformed in-memory candidates cannot force unbounded secondary findings. Findings identify bounded paths and codes without printing protected values.
 
@@ -316,22 +315,21 @@ These remain `NEEDS VERIFICATION` or `UNKNOWN`; this index does not guess them.
 
 ## Correction and rollback
 
-Before merge, close the draft pull request and abandon its feature branch. After an authorized merge, revert the focused commit or make a transparent forward-fix PR; that removes the added fixture and restores the prior validator, tests, workflow summary, and lane documentation. Do not rewrite shared history.
+Before merge, close the draft pull request and abandon its feature branch. After an authorized merge, revert this documentation/index synchronization and the dedicated workflow receipt pointer, or make a transparent forward-fix PR. Do not rewrite historical generated receipts or shared history.
 
-No live source, lifecycle record, proof, policy decision, API route, UI component, release, deployment, cache, or public artifact is changed by this fixture-only validation slice.
+No live source, lifecycle record, proof, policy decision, API route, UI component, release, deployment, cache, or public artifact is changed by this documentation slice.
 
 ## Last reviewed
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-14 |
-| Evidence snapshot | `main@160709b7986b0c89fce3d6d10ccd04be27f04992` |
+| Last reviewed | 2026-08-08 |
+| Evidence snapshot | `main@3f4e3ff133c6ea78ba1ca9f784b26b97a56b344f` |
 | Review state | Current repository bytes reconciled; human review remains pending on the draft documentation pull request. |
 | Current bounded scope | Synthetic fixture hygiene plus draft `OccurrenceEvidence` conformance; production source, policy, proof, release, and public use remain held. |
 
 ## Changelog
 
-- **v0.4.1 — 2026-08-14:** extends the fixture-hygiene slice with one synthetic sensitive-withheld case and requires its synthetic redaction-receipt ref, matching geoprivacy state, explicit withholding caveat, and held release/promotion posture; production authority remains held.
 - **v0.3.0 — 2026-08-08:** indexes the merged draft `OccurrenceEvidence` validator alongside the older synthetic fixture-safety executable; preserves exact fixture-hygiene guardrails and finding families; adds current commands, workflows, child-lane maturity, authority boundaries, maintenance, and rollback.
 - **v0.2.1 — 2026-07-25:** hardened the synthetic public-safe fixture validator and documented its bounded scope.
 - **v0.2.0 — 2026-07-24:** recorded the accepted fixture-safety executable and held production authority.
