@@ -1,0 +1,250 @@
+{
+  "receipt_id": "genrec-schemas-maplibre-readme-3835cc4e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "schemas/maplibre/README.md"
+  ],
+  "artifact_hashes": {
+    "schemas/maplibre/README.md": "sha256:3835cc4e603cc2491c4ef546d517c5d2d7107dd1db4840fd9900569c3a3a51bc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:748b1116b3ac1047e6420efa1b3759a758fd03fa48b623d1bbee16c91aa5451d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "exact remote Git tree and file inspection",
+      "current-main GitHub Actions run and log inspection",
+      "local apply_patch candidate authoring",
+      "repository-native metadata and freshness validation",
+      "remote exact-tree local-link resolution",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "PDF text extraction and page rendering for architecture-lineage inspection",
+      "static MapLibre schema, workflow, validator, test, package, and adapter reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3835cc4e603cc2491c4ef546d517c5d2d7107dd1db4840fd9900569c3a3a51bc",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90",
+      "sha256:5148c85acaef7f299864df5b1804eb07498cb81ab4c4bcc39a9625287ee2817b",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md",
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "repo:commit@98b28dc94057e29b7f79cedfd07fa81045d9f666",
+      "repo:tree@531fe76a0bf5c081e594d0099b90bd4b9a0bec64",
+      "repo:tree/schemas/maplibre@3fcb458b7542c97bf962293b13d7fe57200d245f",
+      "repo:schemas/maplibre/README.md@68d152a17e12d29aa573056ff9e7997fcd1f63dc",
+      "repo:schemas/maplibre/*.schema.json@511e7f34ca84390fd5d000326ab33c46c3050fc4",
+      "repo:schemas/README.md@ce53d0ddb998ddcb8208d0367c90f9c25e31a8ad",
+      "repo:schemas/contracts/v1/map/README.md@945118eec8ec9f4c36549fe7a6fbcdf18bc09f41",
+      "repo:schemas/contracts/v1/layers/README.md@a37a1426a1c13a50c2ee854b9935136c96564ab1",
+      "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/architecture/directory-rules.md@18653c00ba193a4afaa3e07a0924452807fb98ef",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b",
+      "repo:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@3c520ea8f2f8bcb3d478329a87d98b135ea335fd",
+      "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@f2737900569447e8e20c8ce12b275167724b0cc5",
+      "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:.github/workflows/maplibre-perf-governance.yml@306040e1c9283be5a95de76c09d205a58038f380",
+      "repo:.github/workflows/schema-validation.yml@0e1562f539323daa401184738a0c490b51e2999b",
+      "repo:.github/workflows/validator-suite.yml@dca889a3135b408767ff6cf21b7ce6eedfcc4781",
+      "repo:apps/explorer-web/src/adapters/MapLibreAdapter.ts@663ba0f7a05498948f67d644387c73ab19d5c16c",
+      "repo:packages/maplibre/src/index.ts@91664eb00583f9e3d0405eb7954fefa9a48f4ee9",
+      "repo:packages/maplibre/package.json@b0582955feeb51016327113692fa5c98ecad8816",
+      "repo:configs/maplibre/perf-envelope.v1.json@2833f99b5316df91e71c0f8913bb06d70917abcf",
+      "repo:actions/run/31654973078",
+      "repo:actions/job/94307343990",
+      "repo:actions/run/30958539690",
+      "repo:actions/run/31758530911",
+      "repo:actions/run/31758530894"
+    ]
+  },
+  "truth_labels": {
+    "schemas/maplibre/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, repository tree, target tree, target blob and history, open pull requests, candidate branch name, and the absence of target overlap before authoring."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "Read the complete v0.2 target and preserved its purpose, status, boundaries, inventory, placeholder analysis, object-family caution, compatibility and consumer rules, validation, workflow holds, migration, review, open questions, evidence, and correction posture in corrected form."
+    },
+    {
+      "gate": "accepted-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "Used accepted ADR-0029 and the exact adopted Directory Rules bytes for responsibility and placement; kept ADR-0001 and implementation-facing MapLibre ADRs proposed and the root registry a non-authoritative machine projection."
+    },
+    {
+      "gate": "exact-target-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Confirmed exactly nine direct tracked files: this README plus eight named JSON schemas; no nested target directory exists at the pinned tree."
+    },
+    {
+      "gate": "complete-placeholder-byte-reconciliation",
+      "outcome": "PASS",
+      "reason": "Opened all eight schemas and confirmed each shares blob 511e7f34ca84390fd5d000326ab33c46c3050fc4: a three-key Draft 2020-12 accept-any-object placeholder without identity or meaningful field constraints."
+    },
+    {
+      "gate": "adjacent-versioned-family-review",
+      "outcome": "PASS",
+      "reason": "Inspected the map and layers family indexes and representative map manifests; documented mixed maturity and refused to assign all eight cross-cutting performance, receipt, proof, release, correction, failure, and rollback objects to one family."
+    },
+    {
+      "gate": "implementation-boundary-review",
+      "outcome": "PASS",
+      "reason": "Inspected the placeholder MapLibre adapter and package, concrete performance-envelope configuration, schema wrappers, held broader verifiers, narrow negative tests, separate source-metadata and v6-readiness validators, and trust-shaped scripts without claiming runtime maturity."
+    },
+    {
+      "gate": "current-hosted-evidence",
+      "outcome": "PASS",
+      "reason": "Inspected the latest applicable main MapLibre performance run and job logs: the run concluded success while explicitly recording skipped stages and WORKFLOW_HOLD. Also reconciled the separate source-metadata success and the current-main schema-validation and validator-suite topology failures without claiming remediation."
+    },
+    {
+      "gate": "attached-architecture-lineage",
+      "outcome": "PASS",
+      "reason": "Extracted and visually inspected relevant pages from the supplied MapLibre operating manual and component atlas and reconciled three supplied Markdown architecture references. Treated all as architecture lineage only, never as repository implementation, acceptance, runtime, or release proof."
+    },
+    {
+      "gate": "metadata-validation",
+      "outcome": "PASS",
+      "reason": "Repository-native required-profile metadata validation passed with report digest sha256:a56a2164fa5549ebefcd704f97fcb40c60903d15bfb24a6e0a3b0372e732350a."
+    },
+    {
+      "gate": "freshness-validation",
+      "outcome": "PASS",
+      "reason": "Repository-native bounded-required stale scan passed at 2026-08-13 with report digest sha256:dec81a0197e823d5df9ba39002c25a1c2c3420905b08fdec4193880879d4d4de."
+    },
+    {
+      "gate": "remote-local-link-resolution",
+      "outcome": "PASS",
+      "reason": "Resolved all 25 relative Markdown links against the exact pinned remote tree; all 17 unique repository targets exist. The one GitHub Actions URL remains an external evidence link."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Confirmed one H1 outside fences, 51 unique headings, no heading-level jumps, balanced fences, 19 resolvable internal fragments, no trailing whitespace, and complete metadata delimiters."
+    },
+    {
+      "gate": "pandoc-gfm-parse",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed the complete artifact as GitHub-Flavored Markdown without error."
+    },
+    {
+      "gate": "generated-receipt-json-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Parsed the receipt with the standard JSON parser and independently recomputed the declared README SHA-256; the artifact path and hash match the local candidate bytes."
+    },
+    {
+      "gate": "repository-native-generated-receipt-schema-validation",
+      "outcome": "SKIPPED",
+      "reason": "The surviving sparse local environment does not provide the pinned jsonschema runtime required by tools/validators/validate_generated_receipt.py. The receipt follows contract version 3.0.0 and the checked-in schema shape, but full schema and cross-field execution remains required in pull-request CI."
+    },
+    {
+      "gate": "repository-native-link-and-graph-on-pr",
+      "outcome": "SKIPPED",
+      "reason": "The surviving local validation copy is intentionally sparse after automated worktree pruning and lacks several exact remote targets. Native link and graph checks would report local materialization misses; exact remote-tree resolution passed, and full-repository pull-request checks remain required."
+    },
+    {
+      "gate": "no-loss-reconciliation",
+      "outcome": "PASS",
+      "reason": "The explicit no-loss ledger maps every v0.2 concern to v0.3 while correcting the obsolete placement conflict after accepted ADR-0029 and adding exact hosted-run evidence."
+    },
+    {
+      "gate": "scope-and-non-effects",
+      "outcome": "PASS",
+      "reason": "The proposed scope is one README plus this generated receipt. No schema, contract, fixture, validator, test, workflow, package, adapter, API, runtime, artifact, evidence, policy, release, publication, repository setting, or authority state is changed."
+    }
+  ],
+  "policy_decisions": [
+    "schemas/maplibre/README.md",
+    "schemas/README.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "schemas-maplibre-v0.2-baseline",
+      "validated": true,
+      "evidence_ref": "repo:schemas/maplibre/README.md@68d152a17e12d29aa573056ff9e7997fcd1f63dc"
+    },
+    {
+      "id": "current-maplibre-schema-tree",
+      "validated": true,
+      "evidence_ref": "repo:tree/schemas/maplibre@3fcb458b7542c97bf962293b13d7fe57200d245f"
+    },
+    {
+      "id": "shared-placeholder-schema-bytes",
+      "validated": true,
+      "evidence_ref": "repo:schemas/maplibre/*.schema.json@511e7f34ca84390fd5d000326ab33c46c3050fc4"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "accepted-directory-governance-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b"
+    },
+    {
+      "id": "schemas-root-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/README.md@ce53d0ddb998ddcb8208d0367c90f9c25e31a8ad"
+    },
+    {
+      "id": "maplibre-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/maplibre-perf-governance.yml@306040e1c9283be5a95de76c09d205a58038f380"
+    },
+    {
+      "id": "latest-applicable-maplibre-readiness-run",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31654973078"
+    },
+    {
+      "id": "maplibre-placeholder-adapter",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/MapLibreAdapter.ts@663ba0f7a05498948f67d644387c73ab19d5c16c"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T01:01:38Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The receipt is emitted before pull-request creation so the first reviewable branch head contains the complete declared scope. It preserves the hold on all schema-family assignments, semantic contracts, consumers, migrations, workflow maturity, runtime claims, evidence authority, promotion, release, correction, rollback, deployment, and publication, and it discloses current-main repository-topology failures without claiming remediation."
+}
