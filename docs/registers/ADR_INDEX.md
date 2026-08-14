@@ -2,7 +2,7 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.4
+version: v1.5
 status: draft; repository-grounded
 owners:
   - Docs steward
@@ -24,7 +24,7 @@ related:
 tags: [kfm, registers, adr, pointer, governance]
 notes:
   - "This file is a non-duplicating human cross-register pointer; numbered ADRs are indexed only in docs/adr/INDEX.md."
-  - "The canonical per-record inventory lives only in docs/adr/INDEX.md."
+  - "ADR-0035 raises the inventory to 35 records while remaining proposed; this summary creates no decision authority."
 [/KFM_META_BLOCK_V2] -->
 
 # ADR Index Cross-Register
@@ -46,8 +46,9 @@ This register connects the human register lane to the canonical Architecture Dec
 | Register lane | `docs/registers/` |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
-| Current numbered inventory | 34 tracked records, `ADR-0001` through `ADR-0034` |
-| Current effective decision status | ADR-0029 `accepted`; 33 numbered records remain `proposed` |
+| Current numbered inventory | 35 tracked records, `ADR-0001` through `ADR-0035` |
+| Current effective decision status | ADR-0029 `accepted`; 34 numbered records remain `proposed` |
+| Current unassigned scaffolds | 12, unchanged by the ADR-0035 packet |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
 | Authority limit | Inventory and routing only; never decision acceptance, policy, release, promotion, or publication authority |
@@ -94,9 +95,10 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the remaining 33 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
+- Human status review for the remaining 34 proposed numbered ADRs and later independent review of ADR-0029's disclosed bootstrap exception.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
-- Domain-local versus repository-wide ADR placement reconciliation.
+- Acceptance or rejection of proposed ADR-0035 before repository-wide numbering and pointer-only domain-index guidance becomes binding.
+- Disposition of the 12 unassigned scaffolds through separately reviewed numbering, merge, lineage-retention, retirement, or hold packets.
 - Review of proposed ADR-0011 before any `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
