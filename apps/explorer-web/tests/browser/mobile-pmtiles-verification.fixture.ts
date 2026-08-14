@@ -1,5 +1,6 @@
 import fixtureSuite from "../../../../fixtures/pmtiles/mobile_verification/cases.json";
 import {
+  canonicalJsonSha256,
   decodeMobilePmtilesArchive,
   verifyMobilePmtilesFixture,
   type MobilePmtilesRenderAdapter,
@@ -13,6 +14,7 @@ declare global {
     __kfmMobilePmtilesVerification?: Readonly<{
       runValid: () => Promise<MobilePmtilesVerificationResult>;
       runTampered: () => Promise<MobilePmtilesVerificationResult>;
+      runSignatureMismatch: () => Promise<MobilePmtilesVerificationResult>;
       getLastResult: () => MobilePmtilesVerificationResult | null;
     }>;
   }
@@ -31,6 +33,9 @@ const verifyButton = requireElement<HTMLButtonElement>(
 );
 const tamperedButton = requireElement<HTMLButtonElement>(
   "#verify-tampered-pmtiles",
+);
+const signatureMismatchButton = requireElement<HTMLButtonElement>(
+  "#verify-signature-mismatch",
 );
 const status = requireElement<HTMLElement>("#mobile-pmtiles-status");
 const canvas = requireElement<HTMLCanvasElement>("#mobile-pmtiles-canvas");
@@ -95,6 +100,7 @@ function renderResult(result: MobilePmtilesVerificationResult): void {
 async function run(bundle: FixtureBundle): Promise<MobilePmtilesVerificationResult> {
   verifyButton.disabled = true;
   tamperedButton.disabled = true;
+  signatureMismatchButton.disabled = true;
   status.textContent = "Verifying synthetic PMTiles fixture...";
   try {
     const result = await verifyMobilePmtilesFixture(bundle, renderTile);
@@ -107,6 +113,7 @@ async function run(bundle: FixtureBundle): Promise<MobilePmtilesVerificationResu
   } finally {
     verifyButton.disabled = false;
     tamperedButton.disabled = false;
+    signatureMismatchButton.disabled = false;
   }
 }
 
@@ -123,15 +130,27 @@ async function runTampered(): Promise<MobilePmtilesVerificationResult> {
   return run(bundle);
 }
 
+async function runSignatureMismatch(): Promise<MobilePmtilesVerificationResult> {
+  const bundle = clone(fixtureSuite.base);
+  bundle.pmsig.signature = "DEVELOPMENT_PLACEHOLDER_CORRUPTED";
+  bundle.sidecar_digests.pmsig_sha256 =
+    await canonicalJsonSha256(bundle.pmsig);
+  return run(bundle);
+}
+
 verifyButton.addEventListener("click", () => {
   void runValid();
 });
 tamperedButton.addEventListener("click", () => {
   void runTampered();
 });
+signatureMismatchButton.addEventListener("click", () => {
+  void runSignatureMismatch();
+});
 
 window.__kfmMobilePmtilesVerification = Object.freeze({
   runValid,
   runTampered,
+  runSignatureMismatch,
   getLastResult: () => lastResult,
 });

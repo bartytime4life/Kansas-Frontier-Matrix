@@ -139,6 +139,15 @@
       "mutation": "PMSIG_SUBJECT_MISMATCH"
     },
     {
+      "case_id": "signature-carrier-mismatch",
+      "expected_code": "MOBILE_PMTILES_SIGNATURE_HOLD_INVALID",
+      "expected_findings": [
+        "MOBILE_PMTILES_SIGNATURE_HOLD_INVALID"
+      ],
+      "expected_outcome": "DENY",
+      "mutation": "PMSIG_SIGNATURE_CARRIER_MISMATCH"
+    },
+    {
       "case_id": "range-out-of-bounds",
       "expected_code": "MOBILE_PMTILES_RANGE_OUT_OF_BOUNDS",
       "expected_findings": [

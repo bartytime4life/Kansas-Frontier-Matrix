@@ -24,7 +24,7 @@ class PMTilesMobileVerificationFixtureTests(unittest.TestCase):
 
     def test_declared_fixture_polarity_is_exact(self) -> None:
         results = validate_fixture_suite(self.fixture)
-        self.assertEqual(len(results), 8)
+        self.assertEqual(len(results), 9)
         self.assertTrue(all(result["matches_expected"] for result in results))
         self.assertEqual(
             [result["case_id"] for result in results],
@@ -47,6 +47,18 @@ class PMTilesMobileVerificationFixtureTests(unittest.TestCase):
         )
         self.assertEqual(base["maplibre_boot_state"], "HOLD")
         self.assertTrue(all(value is False for value in base["authority"].values()))
+
+    def test_signature_carrier_mismatch_has_a_distinct_fail_closed_result(self) -> None:
+        base = self.fixture["base"]
+        candidate = apply_mutation(base, "PMSIG_SIGNATURE_CARRIER_MISMATCH")
+        self.assertNotEqual(
+            candidate["sidecar_digests"]["pmsig_sha256"],
+            base["sidecar_digests"]["pmsig_sha256"],
+        )
+        self.assertEqual(
+            [finding.code for finding in validate_bundle(candidate)],
+            ["MOBILE_PMTILES_SIGNATURE_HOLD_INVALID"],
+        )
 
     def test_cli_fixture_mode_and_argument_contract(self) -> None:
         self.assertEqual(main(["--fixtures"]), 0)

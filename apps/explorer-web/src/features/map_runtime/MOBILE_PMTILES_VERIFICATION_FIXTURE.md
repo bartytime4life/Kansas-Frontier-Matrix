@@ -13,7 +13,9 @@ The app-local module
 `mobile_pmtiles_verification.ts` accepts an already-bounded fixture packet and
 an injected tile-render adapter. It performs no transport and does not import a
 renderer. The browser fixture supplies a PNG decoder/canvas adapter and proves
-one positive render plus one fail-closed archive-tamper case.
+one positive render plus fail-closed archive-tamper and signature-carrier
+cases. The latter clears previously rendered pixels and shows the finite denied
+state without claiming cryptographic verification.
 
 | Surface | Status |
 |---|---|
@@ -21,6 +23,7 @@ one positive render plus one fail-closed archive-tamper case.
 | Archive SHA-256 and PMIDX Merkle binding | `CONFIRMED` by synthetic tests |
 | JSON sidecar digests | `CONFIRMED` by synthetic tests |
 | PMSIG subject binding | `CONFIRMED` structurally; cryptography remains `HOLD` |
+| PMSIG development carrier mismatch | `CONFIRMED` fail-closed; cryptography remains `HOLD` |
 | RunReceipt subject binding | `CONFIRMED` structurally |
 | Tile range and tile digest | `CONFIRMED` by synthetic tests |
 | PNG decode and canvas render | `CONFIRMED` in mobile-emulated browser test |

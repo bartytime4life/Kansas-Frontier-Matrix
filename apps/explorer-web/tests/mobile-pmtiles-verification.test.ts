@@ -52,6 +52,13 @@ async function mutateFixture(
     return bundle;
   }
 
+  if (mutation === "PMSIG_SIGNATURE_CARRIER_MISMATCH") {
+    bundle.pmsig.signature = "DEVELOPMENT_PLACEHOLDER_CORRUPTED";
+    bundle.sidecar_digests.pmsig_sha256 =
+      await canonicalJsonSha256(bundle.pmsig);
+    return bundle;
+  }
+
   if (mutation === "RANGE_OUT_OF_BOUNDS") {
     const archive = decodeMobilePmtilesArchive(bundle.archive_base64);
     if (archive === null) throw new Error("fixture archive is invalid");

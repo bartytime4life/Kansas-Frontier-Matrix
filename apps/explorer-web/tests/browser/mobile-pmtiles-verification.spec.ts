@@ -108,4 +108,52 @@ test.describe("synthetic mobile PMTiles verification", () => {
       maplibreBootState: "HOLD",
     });
   });
+
+  test("renders a denied state and clears content on signature mismatch", async ({
+    page,
+  }) => {
+    await page.goto("/tests/browser/mobile-pmtiles-verification.html");
+    await page.getByRole("button", {
+      name: "Verify and render synthetic tile",
+    }).click();
+    await expect(page.getByRole("status")).toHaveText(
+      "PASS / MOBILE_PMTILES_VERIFY_DECODE_RENDER_PASS",
+    );
+
+    await page.getByRole("button", { name: "Verify signature mismatch" }).click();
+
+    await expect(page.getByRole("status")).toHaveText(
+      "DENY / MOBILE_PMTILES_SIGNATURE_HOLD_INVALID",
+    );
+    await expect(page.getByRole("status")).toHaveAttribute(
+      "data-maplibre-boot-state",
+      "HOLD",
+    );
+    await expect(page.getByRole("status")).toHaveAttribute(
+      "data-authority",
+      "NONE",
+    );
+
+    const probe = await page.evaluate(() => {
+      const canvas = document.querySelector<HTMLCanvasElement>(
+        "#mobile-pmtiles-canvas",
+      );
+      const context = canvas?.getContext("2d", { willReadFrequently: true });
+      return {
+        pixel:
+          context === null || context === undefined
+            ? null
+            : Array.from(context.getImageData(0, 0, 1, 1).data),
+        result:
+          (window as MobileVerificationWindow).__kfmMobilePmtilesVerification?.getLastResult() ?? null,
+      };
+    });
+    expect(probe.pixel).toEqual([0, 0, 0, 0]);
+    expect(probe.result).toMatchObject({
+      outcome: "DENY",
+      code: "MOBILE_PMTILES_SIGNATURE_HOLD_INVALID",
+      authority: "NONE",
+      maplibreBootState: "HOLD",
+    });
+  });
 });
