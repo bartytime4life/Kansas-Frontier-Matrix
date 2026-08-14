@@ -5,7 +5,7 @@ type: standard
 version: v1.2-draft
 status: draft; PROPOSED; partial-implementation-confirmed
 owner: TODO-pmtiles-steward
-created: NEEDS_VERIFICATION
+created: 2026-05-19
 updated: 2026-08-14
 policy_label: internal-governance; derived-artifact; release-gated; no-public-authority
 owning_root: docs/
