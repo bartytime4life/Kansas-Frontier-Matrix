@@ -17,16 +17,27 @@ PROBES = {
 }
 
 
-def write_repo(root: Path, *, version: str | None = "6.0.0", source: str = "export const ok = true;\n", probes: dict[str, str] | None = None) -> None:
+def write_repo(
+    root: Path,
+    *,
+    version: str | None = "6.0.0",
+    explorer_version: str | None = None,
+    source: str = "export const ok = true;\n",
+    probes: dict[str, str] | None = None,
+) -> None:
     root.joinpath("apps/explorer-web/src").mkdir(parents=True)
     root.joinpath("packages/maplibre/src").mkdir(parents=True)
     root.joinpath("configs/maplibre").mkdir(parents=True)
     root_manifest = {"name": "root", "private": True}
     explorer = {"name": "explorer-web", "type": "module", "dependencies": {}}
+    package = {"name": "@kfm/maplibre", "private": True, "version": "0.0.0", "dependencies": {}}
     if version is not None:
-        explorer["dependencies"]["maplibre-gl"] = version
+        package["dependencies"]["maplibre-gl"] = version
+    if explorer_version is not None:
+        explorer["dependencies"]["maplibre-gl"] = explorer_version
     root.joinpath("package.json").write_text(json.dumps(root_manifest))
     root.joinpath("apps/explorer-web/package.json").write_text(json.dumps(explorer))
+    root.joinpath("packages/maplibre/package.json").write_text(json.dumps(package))
     root.joinpath("apps/explorer-web/tsconfig.json").write_text(json.dumps({"compilerOptions": {"target": "ES2022"}}))
     root.joinpath("apps/explorer-web/src/app.ts").write_text(source)
     root.joinpath("packages/maplibre/src/adapter.ts").write_text('import maplibregl from "maplibre-gl";\nexport default maplibregl;\n')
@@ -34,13 +45,39 @@ def write_repo(root: Path, *, version: str | None = "6.0.0", source: str = "expo
 
 
 class MapLibreV6ReadinessTests(unittest.TestCase):
-    def test_ready_repository_requires_exact_v6_and_all_probes(self) -> None:
+    def test_ready_repository_accepts_exact_v6_from_package_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             write_repo(root)
             result = scan_repository(root)
             self.assertEqual(result.outcome, Outcome.READY)
             self.assertEqual(result.reasons, ())
+            self.assertEqual(result.selected_version, "6.0.0")
+
+    def test_package_and_explorer_version_conflict_is_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root, explorer_version="5.5.0")
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.HOLD)
+            self.assertIn("MAPLIBRE_DEPENDENCY_CONFLICT", result.reasons)
+
+    def test_explorer_manifest_version_remains_supported(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root, version=None, explorer_version="6.0.0")
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.READY)
+            self.assertEqual(result.selected_version, "6.0.0")
+
+    def test_unreadable_present_package_manifest_is_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root)
+            root.joinpath("packages/maplibre/package.json").write_text("{")
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.ERROR)
+            self.assertIn("JSON_UNREADABLE", result.reasons)
 
     def test_missing_dependency_is_hold_not_false_ready(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
