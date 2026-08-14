@@ -3,13 +3,13 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-domains-hydrology-readme
 title: schemas/contracts/v1/domains/hydrology/ — Hydrology Domain Schema Index
-version: v2
+version: v2.1
 status: draft; mixed implementation posture
 policy_label: public
 owners:
   - <schema-steward>
   - <hydrology-domain-steward>
-updated: 2026-08-02
+updated: 2026-08-14
 tags: [kfm, schemas, contracts, hydrology, json-schema, aquifer-observation, aquifer-context-link, nhdplus, crosswalk]
 [/KFM_META_BLOCK_V2] -->
 
@@ -28,6 +28,10 @@ The lane contains a mix of closed bounded schemas, shared-schema aliases,
 minimal or permissive scaffolds, and support schemas without same-name
 Hydrology contract children. Callers must inspect the individual schema and
 must not describe the whole lane as schema-complete.
+
+The Hydrology `EvidenceDrawerPayload` file is a compatibility projection only:
+it references the closed shared UI profile and defines no Hydrology-owned
+fields, semantic contract, validator, policy, or release authority.
 
 The `AquiferObservation` decision adopts a separated pair:
 
@@ -60,7 +64,6 @@ contract in `contracts/domains/hydrology/`:
 
 - `catalog_matrix.schema.json`
 - `correction_notice.schema.json`
-- `evidence_drawer_payload.schema.json`
 - `hydro-crosswalk-manifest.schema.json`
 - `layer_manifest.schema.json`
 - `promotion_decision.schema.json`
@@ -70,6 +73,12 @@ contract in `contracts/domains/hydrology/`:
 
 Their placement and pairing remain separate review work. This index does not
 promote them or create parallel semantic authority.
+
+`evidence_drawer_payload.schema.json` is excluded from that unresolved list:
+it is now an explicit, field-free `$ref` projection to
+`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`, whose semantic
+contract, validator, fixtures, policy boundary, and shared renderer remain the
+cross-cutting owners.
 
 ## Aquifer pair dependencies
 
