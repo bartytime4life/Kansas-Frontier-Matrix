@@ -571,7 +571,7 @@ state, manifest, correction, and rollback behavior.
 ### Digest rule
 
 The proposed profile computes SHA-256 over UTF-8 JSON after removing the
- top-level `integrity` member, sorting keys, omitting insignificant whitespace,
+top-level `integrity` member, sorting keys, omitting insignificant whitespace,
 and enabling ASCII escaping. The stored value uses `sha256:<lowercase-hex>`.
 
 This is a profile-specific rule, not a repository-wide hash-policy decision for
@@ -592,7 +592,7 @@ all object families.
 | **Readiness** | `APPROVE_READY`, `BLOCKED` | Whether the bounded packet may proceed to accountable decision processing |
 | **PromotionDecision** | `APPROVE`, `DENY`, `ABSTAIN` | Separately governed release-transition decision |
 | **DecisionEnvelope** | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Policy/runtime public or internal response vocabulary |
-| **Receipt transition declaration** | `applied: true | false` | Declared lifecycle effect, not proof by itself |
+| **Receipt transition declaration** | `applied: true / false` | Declared lifecycle effect, not proof by itself |
 | **CI status** | GitHub job/check state plus documented holds | Execution state, not a gate or release decision |
 
 ### Deterministic mappings
