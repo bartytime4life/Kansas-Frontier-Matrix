@@ -13,7 +13,7 @@ from unittest import mock
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[4]
-MODULE_PATH = ROOT / "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py"
+MODULE_PATH = ROOT / "tools/validators/validate_geology_pipeline_specification_assessment.py"
 SPEC = importlib.util.spec_from_file_location("geology_pipeline_specification_assessment_validator", MODULE_PATH)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)

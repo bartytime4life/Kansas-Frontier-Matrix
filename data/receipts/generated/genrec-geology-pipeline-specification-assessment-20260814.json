@@ -8,16 +8,16 @@
     "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json",
     "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json",
     "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py",
-    "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py"
+    "tools/validators/validate_geology_pipeline_specification_assessment.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/geology-pipeline-specification-assessment.yml": "sha256:49fdb56a61086cf5f5130e455f168b38da0ac4b4eba15d4f12415dabbc729b2e",
+    ".github/workflows/geology-pipeline-specification-assessment.yml": "sha256:477c42f337d32b4908aaf3e05959ca654712435bd6f6fb66f62ab5ace4d1cd9b",
     "contracts/domains/geology/geology_pipeline_specification_assessment.md": "sha256:bf2c2a9829eab547a45477b747ad5aeba6a316f7aa6d6c7a9b3117d05cda69dd",
-    "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md": "sha256:9462c8757f49a7ed61fcfb0e51b6e9b569ff2d9bb7542e381c61ad85a2cf21be",
+    "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md": "sha256:748001c072368bd699cd0e3992d223d0a28f3b4a423ab91d84d1364ff5cd447f",
     "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json": "sha256:0909ab2c3ad636be12db61313cdeb084dd285b70473c9c10494884e8a3468e1a",
     "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json": "sha256:367acea4df49aabea04bd4fdb9a373e25560cf6798c5b31b8bfe0bb420948fcf",
-    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "sha256:d961703afc5a29cd0e5fc89a91cdba6611104525f9b287654319ecffb43a370a",
-    "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py": "sha256:0606230ed20be2a08f9c87ea561d8e1919ecc3c0e34b75c64626190f2d86f716"
+    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "sha256:323bdf68cde3897ec4e4820d22817eeda35a53e6eefbb4d350979d462a83659b",
+    "tools/validators/validate_geology_pipeline_specification_assessment.py": "sha256:d4947359ce25992409b634b817ab92ab61f2a5b5e3f387837a9bc0a5f7fd4785"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -51,11 +51,12 @@
       "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=next-smallest-safe-increment",
       "attachment://Domain-Driven%20Design%20Reference.pdf#pattern=bounded-context",
       "attachment://Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf#section=finite-outcomes-and-no-autopublish",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/bedrock_units.spec.yaml",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/docs/domains/geology/OBJECT_FAMILIES.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/docs/doctrine/directory-rules.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/ingest.yaml"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/bedrock_units.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/docs/domains/geology/OBJECT_FAMILIES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/ingest.yaml",
+      "github-actions://bartytime4life/Kansas-Frontier-Matrix/runs/31811107221#domain-geology-inventory-conflict"
     ]
   },
   "truth_labels": {
@@ -65,7 +66,7 @@
     "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json": "CONFIRMED",
     "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json": "PROPOSED",
     "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "CONFIRMED",
-    "tools/validators/domains/geology/validate_geology_pipeline_specification_assessment.py": "CONFIRMED"
+    "tools/validators/validate_geology_pipeline_specification_assessment.py": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -83,12 +84,12 @@
     {
       "gate": "focused-unittest-suite",
       "outcome": "PASS",
-      "reason": "Nine deterministic focused tests passed."
+      "reason": "Nine deterministic tests passed before the path-only inventory repair; validator semantics are unchanged and corrected exact-head hosted replay remains pending."
     },
     {
       "gate": "exact-fixture-replay",
       "outcome": "PASS",
-      "reason": "Thirty exact synthetic PASS, ABSTAIN, DENY, and ERROR cases matched expected findings."
+      "reason": "Thirty exact synthetic PASS, ABSTAIN, DENY, and ERROR cases matched before the path-only inventory repair; corrected exact-head hosted replay remains pending."
     },
     {
       "gate": "no-network-boundary",
@@ -99,19 +100,24 @@
       "outcome": "PASS"
     },
     {
+      "gate": "domain-geology-inventory-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The introduced exact-head failure was classified and the candidate validator moved to the top-level bounded-entry-point lane; hosted replay is pending."
+    },
+    {
       "gate": "aggregate-repository-validation",
       "outcome": "SKIPPED",
-      "reason": "No mounted repository checkout was available; the complete additive packet was validated locally and repository-wide integration remains a hosted exact-head gate."
+      "reason": "Repository-wide integration remains a hosted exact-head gate."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending until the draft pull request exists and hosted checks complete."
+      "reason": "Pending after the inventory-reconciliation commit."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Pending after repository publication."
+      "reason": "Pending."
     }
   ],
   "policy_decisions": [
@@ -136,22 +142,27 @@
     {
       "id": "current-geology-spec-boundary",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/README.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/README.md"
     },
     {
       "id": "current-bedrock-placeholder",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/bedrock_units.spec.yaml"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/bedrock_units.spec.yaml"
     },
     {
       "id": "current-geology-object-families",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/docs/domains/geology/OBJECT_FAMILIES.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/docs/domains/geology/OBJECT_FAMILIES.md"
     },
     {
       "id": "current-geology-empty-stage-scaffold",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/94d11cbb12d65d14643a13a25b9b20f06bad7839/pipeline_specs/geology/ingest.yaml"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff/pipeline_specs/geology/ingest.yaml"
+    },
+    {
+      "id": "domain-geology-inventory-failure",
+      "validated": true,
+      "evidence_ref": "github-actions://bartytime4life/Kansas-Frontier-Matrix/runs/31811107221"
     }
   ],
   "human_review": {
@@ -163,7 +174,7 @@
   "created_at": "2026-08-14T14:12:05Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector and local artifact runtime",
   "links": {
-    "pr_number": null,
+    "pr_number": 2784,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
