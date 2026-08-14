@@ -1,15 +1,11 @@
 # Temporary, read-only diagnostic used to identify exact current-main integrity drift.
-# This workflow will be removed before the corrective pull request is finalized.
+# This workflow is isolated to the diagnostic branch and will not be merged again.
 name: ci-integrity-diagnostic
 
 "on":
-  pull_request:
-    paths:
-      - ".github/workflows/ci-integrity-diagnostic.yml"
-      - "tools/validators/directory_governance/**"
-      - "data/receipts/generated/**"
-      - "docs/adr/**"
-      - "docs/governed-ai/**"
+  push:
+    branches:
+      - agent/restore-main-integrity-20260814
   workflow_dispatch:
 
 permissions:
@@ -95,7 +91,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ci-integrity-diagnostic
+          name: ci-integrity-diagnostic-branch
           path: ${{ runner.temp }}/kfm-ci-integrity
           retention-days: 3
           if-no-files-found: error
