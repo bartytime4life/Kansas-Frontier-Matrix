@@ -1,235 +1,301 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://adr/ADR-0032
-title: Keep attested compute decision-gated and simulation-only by default
+doc_id: kfm://doc/adr-0032-attested-compute-boundary
+title: "ADR-0032 — Keep Attested Compute Decision-Gated and Simulation-Only by Default"
 type: adr
-version: v1
+adr_id: ADR-0032
+version: v1.1
 status: proposed
-owners: ["Architecture steward", "Security steward", "Privacy steward", "Data steward"]
+effective_decision_status: proposed
+owners:
+  - "NEEDS VERIFICATION — architecture decision owner"
+  - "NEEDS VERIFICATION — security and confidential-computing steward"
+  - "NEEDS VERIFICATION — privacy, consent, and disclosure-control steward"
+  - "NEEDS VERIFICATION — data, evidence, policy, and release stewards"
+owner_status: "CODEOWNERS supplies a repository review route; accepted stewardship, threat-model authority, independent review, real-workload approval, and release authority remain unverified"
+reviewers_required:
+  - Architecture steward
+  - Docs steward
+  - Security and confidential-computing steward
+  - Privacy, consent, and disclosure-control steward
+  - Data, evidence, and source steward
+  - Policy steward
+  - Contracts and schemas stewards
+  - Validation and CI steward
+  - Release, correction, and rollback steward
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-14
 policy_label: public
+truth_posture: cite-or-abstain
+responsibility_root: docs/
 owning_root: docs/
-responsibility: proposed cross-component architecture boundary for attested-compute necessity, simulation, and real-TEE deferral without runtime or release authority
-truth_posture: CONFIRMED repository and governed-intake evidence / PROPOSED decision and finite routing outcomes / UNKNOWN need for real TEE / NEEDS VERIFICATION external standards, providers, threats, trust roots, and workloads
-related:
-  - "docs/doctrine/directory-rules.md"
-  - "docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md"
-  - "docs/adr/ADR-0018-promotion-gate-sequence.md"
-  - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-  - "docs/intake/exploratory/new-ideas-5-19-26-source-map.md"
-  - "docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md"
-tags: [adr, kfm, attestation, confidential-computing, privacy, security, governance]
+responsibility: "Record the proposed necessity gate that keeps attested-compute work synthetic-only and non-authoritative until a separately reviewed real-workload decision closes threat, authority, verifier, disclosure, release, correction, and rollback obligations."
+current_path: docs/adr/ADR-0032-attested-compute-boundary.md
 supersedes: []
 superseded_by: []
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: b7352aba93f7298bdd5a6ee6fd8de475b05c9e42
+  target_prior_blob: dd4bbdff5f5c7c5ae62d46221267b58218f29d27
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_readme_blob: 793015c38f4066c2c23753d4e3dd26bcc890279d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  source_map_blob: 30f3b6aec046cadc0df87e41e028adfe5ceb5855
+  assessment_contract_blob: ed4d5046f2eab11b8aec03c6428536fdfc91607a
+  assessment_schema_blob: 418de89ae02fed1a5f1a2b0b410054a794c225dc
+  assessment_fixture_blob: 3283af5189a38bcc7cdbdb6f846f21f9fd7a6967
+  assessment_validator_blob: 6f0299c13971ad7b20e093291647ded66b82abcb
+  assessment_tests_blob: 7b4717a6e87add0f7d44148417eceea0b81c45f7
+  assessment_workflow_blob: c4a528a7f3146d9b2ff4ebc5e0c3610de06c8a55
+  assessment_receipt_blob: 034e6ed79a728f7c04a67ee51c4d6af13d2d7da2
+  implementation_pr: 2519
+  implementation_merge: 1bb91ae8de2313dbebfe84fc5d986df64f0d7169
+  last_observed_green_run: 31455932316
+  latest_observed_profile_run: 31654971857
+related:
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - docs/intake/exploratory/new-ideas-5-19-26-attested-compute-boundary-source-map.md
+  - contracts/governance/attested_compute_boundary_assessment.md
+  - schemas/contracts/v1/governance/attested_compute_boundary_assessment.schema.json
+  - fixtures/contracts/v1/governance/attested_compute_boundary_assessment/cases.json
+  - tools/validators/governance/validate_attested_compute_boundary_assessment.py
+  - tests/validators/governance/test_validate_attested_compute_boundary_assessment.py
+  - .github/workflows/attested-compute-boundary-assessment.yml
+  - data/receipts/generated/genrec-new-ideas-5-19-26-attested-compute-boundary-20260810.json
+tags: [kfm, adr, attestation, confidential-computing, tre, tee, simulation-only, no-network, privacy, security, governance, fail-closed]
 notes:
-  - "PROPOSED: this record authorizes no real data, compute, credentials, cloud selection, trust-root enrollment, external verification, release, deployment, or publication."
+  - "v1.1 is a same-path repository-evidence reconciliation. It preserves source and effective status proposed and grants no compute or release authority."
+  - "ADR-0029 separately accepted Directory Rules v2, confirming docs/adr/ placement without accepting ADR-0032."
+  - "A proposed-inactive assessment packet now implements the bounded routing vocabulary with a closed schema, 18 exact fixtures, deterministic validator, 10 focused tests, read-only CI, and an authoring receipt."
+  - "The latest observed profile run passed functional validation and failed only historical receipt byte closure after PR #2657 changed the workflow installation command."
 [/KFM_META_BLOCK_V2] -->
 
-# ADR-0032: Keep attested compute decision-gated and simulation-only by default
+<a id="top"></a>
 
-KFM should remain in `NO_TRE` posture unless a named problem is shown not to be solvable by existing quarantine, policy, evidence, review, transformation, and release controls. If a later review establishes that gap, the only next step authorized by this proposed decision is a separately reviewed, no-data, no-network `SIMULATED_ASSESSMENT`; real trusted-execution-environment selection and execution remain deferred.
+# ADR-0032 — Keep Attested Compute Decision-Gated and Simulation-Only by Default
 
-| Field | Value |
+> **Proposed decision.** Default attested-compute proposals to `NO_TRE` until a named residual control gap is demonstrated. Permit only a separately reviewed, no-data, no-network `SIMULATED_ASSESSMENT`. Keep real trusted-execution-environment work at `DEFER_REAL_TEE`; unresolved external attestation is `DENY_UNVERIFIED_ATTESTATION`.
+
+[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#status)
+[![Bounded profile: implemented](https://img.shields.io/badge/bounded%20profile-implemented-0969da?style=flat-square)](#bounded-profile)
+[![Real TEE: deferred](https://img.shields.io/badge/real%20TEE-DEFERRED-b42318?style=flat-square)](#real-tee-gates)
+[![Receipt closure: hold](https://img.shields.io/badge/receipt%20closure-HOLD-b42318?style=flat-square)](#workflow-evidence)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-boundary)
+
+> [!IMPORTANT]
+> **Decision status, bounded implementation, and operational authority are separate.** ADR-0032 remains `proposed`. A validator `PASS`, workflow result, receipt, merge, or this documentation update cannot accept the ADR or authorize compute.
+
+> [!CAUTION]
+> **`SIMULATED_ASSESSMENT` is declaration review—not simulated confidential computing.** The profile performs no compute, verifies no external attestation, resolves no references, authenticates no workload, and processes no real or sensitive input.
+
+> [!WARNING]
+> **Attestation cannot supply missing authority.** Runtime measurement cannot establish source admissibility, lawful purpose, consent, evidence sufficiency, disclosure safety, reviewer approval, release fitness, or publication authority.
+
+**Quick navigation:** [Status](#status) · [Evidence](#evidence) · [Decision](#decision) · [Profile](#bounded-profile) · [Authority](#authority-boundary) · [Gates](#current-gates) · [Real TEE](#real-tee-gates) · [Risks](#risks) · [Rollback](#migration-and-rollback) · [Verification](#verification) · [References](#references)
+
+---
+
+<a id="status"></a>
+
+## Status
+
+| Field | Current value |
 |---|---|
-| **ID** | ADR-0032 |
-| **Status** | proposed |
-| **Date** | 2026-08-09 |
-| **Deciders** | Architecture steward · Security steward · Privacy steward · Data steward |
-| **Consulted** | Evidence · policy · source · legal/privacy · release · correction/rollback stewards |
-| **Informed** | Connector · pipeline · infrastructure · governed-API · domain maintainers |
-| **Supersedes** | — |
-| **Superseded by** | — |
-| **Directory Rules trigger** | `n/a — non-structural cross-component decision`; invariant-preserving boundary under §§3, 4, and 6 |
-| **Primary responsibility root** | `docs/` |
-| **Migration required** | no |
-| **Rollback required** | yes, documentation-only |
-| **Truth posture** | CONFIRMED repository boundary gap / PROPOSED decision / UNKNOWN real TEE need |
+| **ADR ID** | `ADR-0032` — unique in [`INDEX.md`](./INDEX.md) |
+| **Source / effective status** | `proposed` / `proposed` |
+| **Record edition** | `v1.1` — evidence reconciliation; decision unchanged |
+| **Decision class** | Cross-component necessity, trust, privacy, and release boundary |
+| **Current implementation posture** | Proposed-inactive, fixture-only decision profile implemented; no real TEE runtime |
+| **Publication effect** | None |
+| **Supersedes / superseded by** | None / none |
 
----
+ADR acceptance would approve the boundary. Real TEE admission would remain a later, separately reviewed decision with its own implementation and release evidence.
 
-## 1. Context
+<a id="evidence"></a>
 
-The governed source map for *New Ideas 5-19-26* identifies attested compute-to-data as a decision candidate, not an implementation-ready capability. It finds adjacent quarantine, policy, sensitivity, receipt, review, promotion, release, correction, and rollback surfaces, but no repository-wide trusted-execution-environment runtime or real attestation authority. Its highest-confidence next action is a decision-only boundary packet before any implementation.
+## Evidence Boundary
 
-The motivating document combines consumer DNA, consent, provider access, confidential-computing concepts, attestation, and output review. These are distinct responsibilities. A successful runtime attestation can support a bounded execution claim; it cannot establish source admissibility, lawful purpose, consent validity, EvidenceBundle closure, disclosure safety, review approval, or public-release fitness.
+**CONFIRMED at the pinned snapshot:** accepted ADR-0029 governs placement; the ADR index keeps ADR-0032 proposed; PR #2519 added the bounded assessment contract, schema, fixtures, validator, tests, workflow, source map, and receipt. The schema fixes all data, credential, provider/TEE, key, external-verification, compute, release, deployment, and publication effects false.
 
-### 1.1 Decision drivers
+**UNKNOWN:** whether KFM has a real workload whose residual problem cannot be solved by quarantine, access control, transformation, policy, evidence, review, and release controls.
 
-- **Prove necessity before adding machinery.** Existing deny-by-default and lifecycle controls may already solve the actual problem.
-- **Keep attestation evidence bounded.** Runtime identity and measurement evidence must not be promoted into truth, rights, privacy, or release authority.
-- **Avoid provider lock-in before a trust model exists.** Selecting a cloud, enclave, verifier, trust root, key service, or SDK would prematurely create operational and security commitments.
-- **Preserve separation of duties.** Workload execution, policy evaluation, disclosure review, release approval, and publication cannot collapse into one attested step.
-- **Keep experimentation harmless and reproducible.** A synthetic assessment can test object boundaries without processing data or contacting a verifier.
+**NEEDS VERIFICATION before real design:** workload and data owners, lawful purpose, rights and consent, threat model, alternatives and proportionality, verifier/trust-root model, freshness and replay, revocation and compromise, key lifecycle, input/egress controls, side channels, disclosure review, incident response, dependent-output invalidation, and release/rollback ownership.
 
-### 1.2 Evidence boundary
+### Evidence maturity
 
-- **CONFIRMED:** the repository contains deny-by-default doctrine, quarantine and promotion gates, policy/evidence/review/release families, and a source map that classifies TRE as a decision candidate.
-- **CONFIRMED:** no repository-wide real TEE runtime or attestation authority was found by the source-map review at its pinned main revision; this ADR does not extend that claim beyond that review.
-- **PROPOSED:** use the finite outcomes in this record to route any future attested-compute proposal.
-- **UNKNOWN:** whether a real KFM workload exists whose requirements cannot be met by current controls.
-- **NEEDS VERIFICATION:** threat model, data owner, lawful purpose, trust roots, verifier portability, revocation, key rotation, egress controls, disclosure mechanism, and residual risk before any real design.
-
-### 1.3 Out of scope
-
-This ADR does not select a provider, TEE, cloud, cryptographic library, attestation format, trust root, key-management system, workload, dataset, privacy mechanism, or deployment path. It does not authorize source access, credentials, network calls, real compute, sensitive inputs, output release, or publication.
-
----
-
-## 2. Decision
-
-> **Decision:** Default every attested-compute proposal to `NO_TRE`. Permit a transition to a no-data, no-network `SIMULATED_ASSESSMENT` only after reviewers document a concrete control gap. Keep real TEE design at `DEFER_REAL_TEE`, and return `DENY_UNVERIFIED_ATTESTATION` whenever a claim relies on unresolved measurement, trust-root, verifier, revocation, or workload identity.
-
-### 2.1 Finite decision outcomes
-
-| Outcome | Meaning | Permitted effect |
-|---|---|---|
-| `NO_TRE` | Existing KFM controls address the named problem, or no unmet problem has been established. | Close or narrow the proposal; make no implementation change. |
-| `SIMULATED_ASSESSMENT` | A specific gap is documented and a bounded object/transition exercise could reduce uncertainty. | Draft a separate contract, schema, synthetic fixtures, validator, tests, and authoring receipt; all authority effects remain false. |
-| `DEFER_REAL_TEE` | Simulation may be useful, but evidence is insufficient to select or run a real TEE. | Record verification work; no provider, credential, key, trust root, network, or runtime activation. |
-| `DENY_UNVERIFIED_ATTESTATION` | A proposal treats unverified or incomplete attestation as authority for data use, disclosure, release, or publication. | Fail closed with explicit reasons; do not process or release data. |
-
-These outcomes are proposal-routing vocabulary. They do not replace the canonical policy or public-answer envelopes owned elsewhere.
-
-### 2.2 Entry evidence for a simulated assessment
-
-Before reviewers may select `SIMULATED_ASSESSMENT`, the proposal **MUST** identify:
-
-1. one named KFM problem and affected responsibility owners;
-2. the existing controls considered and the precise residual gap;
-3. the claim a runtime attestation could and could not support;
-4. fixed-false authority effects for data access, execution, approval, release, deployment, and publication;
-5. a no-data, no-network synthetic fixture plan; and
-6. correction and rollback behavior if an attestation claim or verifier profile is later invalidated.
-
-### 2.3 Required separation
-
-Any later assessment **MUST** keep these objects or decisions distinct:
-
-- workload identity and version;
-- input identity, authority, rights, consent, and sensitivity;
-- attestation evidence and verifier profile;
-- execution/process receipt;
-- policy obligations and decision;
-- output transformation and disclosure review;
-- evidence support and reviewer decision;
-- release approval, correction, withdrawal, and rollback.
-
-No attestation result may fill missing authority in another lane.
-
-### 2.4 Placement basis
-
-| Question | Answer |
+| Level | Current posture |
 |---|---|
-| **Primary responsibility** | Cross-component architecture decision and authority boundary |
-| **Owning root** | `docs/adr/` |
-| **Domain segment** | `n/a — cross-domain`, with heightened People/DNA sensitivity relevance |
-| **Lifecycle phase** | `n/a`; no data object is created by this record |
-| **Directory Rules basis** | §§3, 4, and 6: preserve lifecycle, responsibility roots, governed interfaces, and policy-aware defaults |
-| **Parallel authority risk** | Mitigated by forbidding this ADR and any simulation from replacing contracts, schemas, policy, evidence, receipts, or release objects |
-
-### 2.5 Conformance language
-
-- **MUST** default to `NO_TRE` until a concrete residual gap is evidenced.
-- **MUST NOT** use attestation as proof of source rights, consent, truth, evidence sufficiency, disclosure safety, review, or release.
-- **MUST NOT** select or contact a real provider or verifier under this decision.
-- **SHOULD** prefer existing quarantine, transformation, policy, review, and release controls where they meet the need.
-- **MAY** propose a separately reviewed synthetic assessment only with all entry evidence above.
+| Proposed decision identity and placement | **CONFIRMED** |
+| Synthetic declaration contract and closed machine shape | **CONFIRMED present; proposed-inactive** |
+| Deterministic fixture validation | **CONFIRMED bounded implementation** |
+| External attestation verification | **ABSENT / denied by v1 profile** |
+| Real workload, data, provider, key, verifier, or TEE runtime | **UNKNOWN / not authorized** |
+| Release or public operation | **NONE** |
 
 ---
 
-## 3. Consequences
+<a id="decision"></a>
 
-### 3.1 Positive
+## Decision
 
-- Avoids premature infrastructure, credential, trust-root, and provider commitments.
-- Makes the burden of proof for confidential-computing complexity explicit.
-- Keeps runtime evidence subordinate to source, evidence, policy, privacy, review, and release governance.
-- Provides a safe next step if an actual gap is established.
-
-### 3.2 Negative
-
-- KFM gains no immediate confidential-computing capability.
-- A potentially useful real workload remains blocked until multiple owners supply evidence and accept the design.
-- The finite outcomes add vocabulary that must stay confined to this proposal-routing boundary.
-
-### 3.3 Accepted tradeoffs
-
-The project accepts slower adoption of attested compute in exchange for clearer authority, reduced sensitive-data risk, portability, and reversible change. Simulation can test the boundary, but it cannot stand in for a real security or privacy evaluation.
-
-### 3.4 Affected surfaces
-
-| Surface | Impact |
-|---|---|
-| ADRs | Adds this proposed, non-binding decision record and index row. |
-| Contracts, schemas, policy | Not changed; any simulated profile requires a separate reviewed PR. |
-| Fixtures, tests, tools | Not changed; no simulation is authorized by file presence alone. |
-| Data and registries | Not changed; no source, dataset, trust root, or provider is admitted. |
-| Infrastructure and runtime | Not changed; no service, credential, network, verifier, or execution path is created. |
-| Release and public clients | Not changed; all release, deployment, and publication effects remain false. |
-
----
-
-## 4. Alternatives considered
-
-### 4.1 Select a real TEE provider now
-
-- **Summary:** Choose a cloud or enclave technology and build a proof of concept.
-- **Why rejected:** No accepted workload, threat model, data authority, trust-root model, verifier profile, or disclosure plan establishes the need or makes provider selection responsible.
-
-### 4.2 Treat attestation as an extension of the generic run receipt
-
-- **Summary:** Add measurements to an existing execution receipt and infer a broader trusted result.
-- **Why rejected:** A process receipt and attestation evidence cannot acquire policy, privacy, evidence, review, or release authority. This would hide the unresolved trust and revocation model.
-
-### 4.3 Implement differential privacy inside a TEE
-
-- **Summary:** Combine attested execution with a fixed privacy mechanism or budget.
-- **Why rejected:** Attestation and statistical disclosure control answer different questions. Dataset adjacency, composition, budget ownership, utility, and residual disclosure risk remain undefined.
-
-### 4.4 Status quo without an explicit decision boundary
-
-- **Summary:** Leave the idea only in exploratory intake.
-- **Why rejected:** The source contains implementation-shaped guidance. An explicit proposed boundary prevents that material from being mistaken for authority while preserving a reversible evaluation path.
-
----
-
-## 5. Evidence and references
-
-- `docs/intake/exploratory/new-ideas-5-19-26-source-map.md` — complete-source triage, repository overlap, TRE decision candidate, and recommended bounded action.
-- `docs/doctrine/directory-rules.md` — responsibility roots, lifecycle law, governed interfaces, policy-aware defaults, evidence, and reversible change.
-- `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` — accepted directory-governance authority.
-- `docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md` — proposed sensitive-domain boundary; file presence is not acceptance.
-- `docs/adr/ADR-0018-promotion-gate-sequence.md` — proposed gate ordering and unresolved attestation trust-root work; file presence is not acceptance.
-- `docs/domains/people-dna-land/SCOPE_AND_BOUNDARY.md` — human/DNA sensitivity and scope boundary.
-
-No external TEE, attestation, cryptographic, privacy, legal, provider, or benchmark claim is adopted by this ADR. Those facts remain `NEEDS VERIFICATION` against primary authority if a real design is later proposed.
-
----
-
-## 6. Migration plan
-
-Not applicable — this is a non-structural proposed decision. It moves no files, creates no compatibility surface, changes no schema home, and activates no runtime. If accepted, subsequent implementation remains a separate decision and change set.
-
----
-
-## 7. Rollback plan
-
-Before merge, close the draft pull request and delete only its branch if desired. After merge, reject or supersede the ADR through normal ADR governance and update `docs/adr/INDEX.md` in the same reviewed change. No data, runtime state, credential, or release artifact requires rollback because this record creates none.
-
----
-
-## 8. Open questions
-
-- Which named KFM problem, if any, cannot be addressed with current quarantine, transformation, access-control, policy, review, and release surfaces?
-- Who owns the threat model and the decision that confidential computing is proportionate to that problem?
-- What portable evidence model could represent measurement, endorsement, verifier, trust-root, freshness, and revocation without binding KFM to one provider?
-- What disclosure review remains necessary after a workload executes as attested?
-- What correction and rollback obligations apply when a measurement, trust root, verifier, or workload is later compromised or revoked?
-
----
-
-## 9. Change history
-
-| Date | Status | Change | PR |
+| Posture | Derived condition | Local validator result | Authority effect |
 |---|---|---|---|
-| 2026-08-09 | proposed | Initial decision-only boundary mined from the governed *New Ideas 5-19-26* source map. | pending |
+| `NO_TRE` | Existing controls were reviewed and no residual problem remains | `PASS` | Close or narrow proposal only |
+| `SIMULATED_ASSESSMENT` | Named residual gap, reviewed controls, complete synthetic declarations, and pinned no-data/no-network plan | `PASS` | Continue human review only |
+| `DEFER_REAL_TEE` | Problem, controls, declarations, or real-TEE request remain unresolved | `ABSTAIN` | Record verification work only |
+| `DENY_UNVERIFIED_ATTESTATION` | An unresolved external attestation claim is asserted | `DENY` | Fail closed |
+| Assessment or schema failure | Input is invalid or assessment state is erroneous | `ERROR` | Remediate; no fallback allow |
+
+These are governance-profile outcomes, not `PolicyDecision`, `RuntimeResponseEnvelope`, `PromotionDecision`, `ReviewRecord`, or release outcomes.
+
+### Conformance
+
+- **MUST** default to `NO_TRE` until a residual control gap is evidenced.
+- **MUST NOT** treat attestation as source, rights, purpose, consent, truth, privacy, review, release, or publication authority.
+- **MUST NOT** select or contact a provider, verifier, trust root, key service, or real TEE under this decision.
+- **MUST NOT** process real or sensitive data under the bounded profile.
+- **MAY** review synthetic declarations only after all entry conditions are satisfied.
+
+---
+
+<a id="bounded-profile"></a>
+
+## Bounded Profile
+
+`AttestedComputeBoundaryAssessmentCandidate` separates ten responsibility seams: workload identity; input authority; attestation evidence; execution receipt; policy obligations; disclosure review; output transformation; evidence/reviewer decision; release approval; and rollback. Local `RESOLVED` means declaration completeness only—not authentication or approval.
+
+The packet includes a semantic contract, closed Draft 2020-12 schema, 18 exact fixtures, deterministic validator, 10 focused tests, read-only workflow, source map, and generated authoring receipt. It performs no external verification or runtime execution.
+
+> [!NOTE]
+> The schema requires ten seams. One companion contract sentence and the workflow summary still say “eight.” This ADR records that wording drift; it does not silently rewrite companion artifacts or their historical receipt.
+
+<a id="workflow-evidence"></a>
+
+### Workflow Evidence
+
+- Run `31455932316` was fully green after PR #2519 merged.
+- Run `31654971857` again passed compilation, all 10 focused tests, and all 18 exact fixtures.
+- That later run failed only generated-receipt byte replay because PR #2657 changed the workflow dependency-install command without rebinding the historical receipt.
+
+**Classification:** profile logic is not shown failing; current byte-binding closure is `HOLD` until the receipt is legitimately rebound and hosted validation is green.
+
+---
+
+<a id="authority-boundary"></a>
+
+## Authority Boundary
+
+A profile `PASS` proves only local declaration coherence for the checked revision. It does not prove necessity, authenticity, confidentiality, side-channel resistance, privacy, lawful use, evidence closure, disclosure safety, reviewer approval, release fitness, or public safety.
+
+The owning root remains `docs/adr/` because this file records a human architecture decision. Contracts own meaning, schemas own shape, fixtures/tests/validators own bounded conformance, workflows own read-only orchestration, and receipts own authoring accountability. No TEE, key, verifier, runtime, data, policy, release, or publication root is created.
+
+---
+
+<a id="current-gates"></a>
+
+## Current Gates
+
+| Gate | State |
+|---|---|
+| ADR identity and Directory Rules placement | `PASS` |
+| ADR acceptance and accountable named owners | `HOLD` |
+| Bounded profile shape, fixtures, validator, and tests | `PASS` at observed heads |
+| Generated-receipt exact byte closure | `HOLD` |
+| Real workload necessity and threat model | `UNKNOWN` |
+| Provider, verifier, trust root, key, and external attestation | `DENY` under v1 profile |
+| Real/sensitive input and compute | `DENY` |
+| Release, deployment, publication, and public use | `DENY` |
+
+Before proposed becomes accepted, reviewers must approve the `NO_TRE` default, finite routing, ten-seam separation, unsupported-authority list, invalidation/rollback rule, and explicit non-effects without claiming operational TEE maturity.
+
+<a id="real-tee-gates"></a>
+
+## Real TEE Admission Gates
+
+A later real design requires a new decision packet—not incremental drift from the fixture profile. At minimum it must close:
+
+1. named workload, data owner, lawful purpose, rights/consent, and residual problem;
+2. threat model, alternatives, proportionality, accepted risks, and domain sensitivity review;
+3. provider-neutral workload, measurement, endorsement, verifier, trust-root, freshness, replay, revocation, portability, and compromise model;
+4. credentials, key lifecycle, input, network, egress, output, disclosure, logging, and side-channel controls;
+5. execution receipts separated from policy, evidence/review, release, correction, withdrawal, and rollback;
+6. synthetic negative fixtures, no-secret CI, verifier-failure tests, rollback drills, and incident response; and
+7. governed release and dependent-output invalidation evidence.
+
+Until then, use `DEFER_REAL_TEE` or `DENY_UNVERIFIED_ATTESTATION`.
+
+---
+
+<a id="risks"></a>
+
+## Risks and Alternatives
+
+| Risk / alternative | Disposition |
+|---|---|
+| Attestation overclaim | Deny; enumerate unsupported authorities |
+| Provider lock-in | Defer selection until a portable trust model exists |
+| Synthetic profile mistaken for security proof | Preserve fixed-false non-effects and explicit wording |
+| Sensitive fixtures or logs | Synthetic-only; no identifiers, payloads, coordinates, or secrets |
+| Revocation/freshness failure | Fail closed and invalidate dependents |
+| Select a provider now | Rejected: no accepted workload or trust model |
+| Extend a generic run receipt | Rejected: receipts cannot acquire privacy or release authority |
+| Permanently forbid evaluation | Rejected: a real evidenced gap may justify a later decision |
+
+---
+
+<a id="migration-and-rollback"></a>
+
+## Migration and Rollback
+
+This update modifies one ADR in place. It changes no status, index row, contract, schema, fixture, validator, workflow, receipt, runtime, data, or release surface.
+
+Before merge, close the draft pull request and abandon its branch. After a docs-only merge, revert the documentation commit. The PR #2519 packet is separate and requires its own reviewed revert or supersession. No operational TEE, credential, sensitive-data copy, release, deployment, or public artifact exists to unwind.
+
+---
+
+<a id="verification"></a>
+
+## Verification
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+python -m unittest tests.validators.governance.test_validate_attested_compute_boundary_assessment --verbose
+python tools/validators/governance/validate_attested_compute_boundary_assessment.py --fixtures
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-new-ideas-5-19-26-attested-compute-boundary-20260810.json \
+  --repo-root .
+```
+
+Expected bounded evidence: one proposed ADR identity; all four postures covered; 10 focused tests; 18 exact cases; deterministic identity; no network; fixed-false authority effects. Receipt replay remains expected to fail until exact workflow bytes are legitimately rebound.
+
+---
+
+<a id="references"></a>
+
+## References
+
+- [`docs/adr/README.md`](./README.md) and [`docs/adr/INDEX.md`](./INDEX.md)
+- [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md)
+- [`ADR-0010`](./ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md), [`ADR-0018`](./ADR-0018-promotion-gate-sequence.md), and [`ADR-0024`](./ADR-0024-steward-separation-of-duties-for-release.md)
+- [Attested-compute source map](../intake/exploratory/new-ideas-5-19-26-attested-compute-boundary-source-map.md)
+- [Contract](../../contracts/governance/attested_compute_boundary_assessment.md), [schema](../../schemas/contracts/v1/governance/attested_compute_boundary_assessment.schema.json), [fixtures](../../fixtures/contracts/v1/governance/attested_compute_boundary_assessment/cases.json), [validator](../../tools/validators/governance/validate_attested_compute_boundary_assessment.py), [tests](../../tests/validators/governance/test_validate_attested_compute_boundary_assessment.py), [workflow](../../.github/workflows/attested-compute-boundary-assessment.yml), and [receipt](../../data/receipts/generated/genrec-new-ideas-5-19-26-attested-compute-boundary-20260810.json)
+
+No external TEE, cryptographic, privacy, legal, provider, benchmark, or standards claim is adopted here. Those remain `NEEDS VERIFICATION` against primary authority if a real design is proposed.
+
+## Change History
+
+| Date | Edition / status | Change | PR |
+|---|---|---|---|
+| 2026-08-09 | `v1` / proposed | Initial decision-only boundary | #2408 |
+| 2026-08-14 | `v1.1` / proposed | Reconciles bounded implementation, hosted evidence, receipt and wording drift, gates, risks, verification, and rollback without granting authority | pending |
+
+[Back to top](#top)
