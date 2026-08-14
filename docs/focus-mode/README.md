@@ -538,6 +538,27 @@ The code receives an **injected governed resolver**. It does not authenticate li
 
 ---
 
+<a id="current-implementation-maturity"></a>
+
+## Current implementation maturity
+
+| Surface | Current bounded status | Safe conclusion |
+|---|---:|---|
+| Explorer composed-claim projection | **CONFIRMED implemented** | Strict no-network browser projection and synthetic unit tests exist; transport and trust decisions remain injected/upstream |
+| Focus Panel release integration | **NOT ESTABLISHED** | The projection does not prove an authenticated Focus API, EvidenceBundle resolver, policy evaluator, model adapter, or release service |
+| Finite runtime envelope | **CONFIRMED bounded fixture proof** | Canonical four-outcome shape and MockAdapter behavior are tested separately from operational Focus readiness |
+| Focus mock runtime | **WORKFLOW HOLD** | The workflow intentionally reports static/mock readiness limits and emits no runtime envelope, receipt, proof, or release |
+| Focus policy | **PROPOSED inactive** | Request/response and requirement Rego files are scaffolds without accepted evaluator/bundle/consumer wiring |
+| Focus contracts and schemas | **MIXED / CONFLICTED** | Semantic lanes and permissive scaffolds exist; family ownership and machine shape remain unresolved |
+| County/state documentation | **CONFIRMED mixed corpus** | Indexes, templates, plans, and state doctrine exist; presence does not establish control-plane acceptance or release |
+| Focus release, correction, rollback | **NOT VERIFIED / HOLD** | No authenticated Focus release packet, public parity proof, correction propagation, or rollback drill was exercised |
+
+Repository bytes and tests show meaningful implementation progress beyond the prior v0.3 README. They do not justify upgrading the subsystem to operational, released, deployed, or public.
+
+[Back to top](#top)
+
+---
+
 <a id="13-per-area-lane-required-files"></a>
 
 ## 13. Required support packet, not a magic file list
