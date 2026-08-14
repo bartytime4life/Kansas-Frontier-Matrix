@@ -748,7 +748,12 @@ No migration occurs in this update. A future implementation should use small, de
 ```bash
 python tools/validators/validate_adr_index.py
 python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
-python tools/docs/meta_block.py --check docs/adr/ADR-NNNN-connectors-domain-segment.md
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --registry control_plane/document_registry.yaml \
+  --format markdown \
+  README.md docs tools/validators/docs
 ```
 
 Use repository-native documentation graph, stale-scan, link, and accessibility checks when triggered by the pull request. Command names remain subordinate to current workflow source.
