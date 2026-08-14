@@ -13,7 +13,7 @@
   "artifact_hashes": {
     ".github/workflows/geology-subsurface-public-geometry-assessment.yml": "sha256:d4842ba9785a1c330749ca7035915127c980b8030f8c676f017ab4cfec0afd85",
     "contracts/domains/geology/subsurface_public_geometry_assessment.md": "sha256:c324c7a9d1713fef1b0e442cfafe901968f37c77e17a42d59e95fd08c30d64d8",
-    "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "sha256:3b37ba27a75406870ebd879a68a4265e006e21b53bab3be759e9024e1794e4da",
+    "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "sha256:6e9b7cc47919db7ccd17ff022ee91189dd22dde449bf6d9faa6de767840414fb",
     "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json": "sha256:15e28a843628bb5a08d22685f8967e3d182f12415bbe4bef963dc93e80b999bd",
     "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json": "sha256:276cbda5389886c1f0128d86485e536c8f1a5953fc4dd21c349193d9afc79632",
     "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "sha256:6f6126da59d01dbd713db5a7d89c2f67dbb971e8af86dfb087bdcd3235886986",
@@ -45,21 +45,21 @@
     ],
     "evidence_refs": [
       "attachment://KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf#section=public-safe-geometry-and-redaction-plan",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/domains/geology/BoreholeReference.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/domains/geology/WellLogReference.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/schemas/contracts/v1/domains/geology/borehole_reference.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/schemas/contracts/v1/domains/geology/well_log_reference.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/evidence/geometry_quality_scope_assessment.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/tools/validators/validate_geology_pipeline_specification_assessment.py"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/domains/geology/BoreholeReference.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/domains/geology/WellLogReference.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/schemas/contracts/v1/domains/geology/borehole_reference.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/schemas/contracts/v1/domains/geology/well_log_reference.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/evidence/geometry_quality_scope_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/tools/validators/validate_geology_pipeline_specification_assessment.py"
     ]
   },
   "truth_labels": {
     ".github/workflows/geology-subsurface-public-geometry-assessment.yml": "PROPOSED",
     "contracts/domains/geology/subsurface_public_geometry_assessment.md": "PROPOSED",
     "docs/intake/exploratory/geology-subsurface-public-geometry-assessment-source-map.md": "PROPOSED",
-    "fixtures/contracts/v1/domains/geolology/subsurface_public_geometry_assessment/cases.json": "CONFIRMED",
-    "schemas/contracts/v1/domains/geolology/subsurface_public_geometry_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/geology/subsurface_public_geometry_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json": "PROPOSED",
     "tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py": "CONFIRMED",
     "tools/validators/validate_geology_subsurface_public_geometry_assessment.py": "CONFIRMED"
   },
@@ -97,7 +97,7 @@
     {
       "gate": "current-main-baseline",
       "outcome": "FAIL",
-      "reason": "Current main has one pre-existing docs-meta-block failure from the latest ADR documentation merge; this packet does not modify the failing ADR, meta-block validator, or workflow."
+      "reason": "Current main has one pre-existing telemetry-policy failure from the latest ADR documentation merge; this packet does not modify the failing ADR, telemetry policy validator, or workflow."
     },
     {
       "gate": "aggregate-repository-validation",
@@ -127,22 +127,22 @@
     {
       "id": "borehole-reference-contract",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/domains/geology/BoreholeReference.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/domains/geology/BoreholeReference.md"
     },
     {
       "id": "well-log-reference-contract",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/domains/geology/WellLogReference.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/domains/geology/WellLogReference.md"
     },
     {
       "id": "geometry-quality-scope-assessment",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/contracts/evidence/geometry_quality_scope_assessment.md"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/contracts/evidence/geometry_quality_scope_assessment.md"
     },
     {
       "id": "shared-redaction-receipt-profile",
       "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/64adadbc0ca9ac829ad96b5ef8a3b27aa51aaaf1/schemas/contracts/v1/receipts/redaction_receipt.schema.json"
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6f095e3c999c9edbfbf3762d7399aac066a08d73/schemas/contracts/v1/receipts/redaction_receipt.schema.json"
     }
   ],
   "human_review": {
