@@ -1,426 +1,491 @@
-# `docs/registers/` — Documentation Registers
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/docs-registers-readme
+title: docs/registers/ — Human-Readable Governance Register Lane
+type: readme/boundary-readme
+version: v1.0
+status: "active; repository-grounded; mixed-maturity"
+owners:
+  - "@bartytime4life"
+created: 2026-05-08
+updated: 2026-08-14
+policy_label: repository-facing
+owning_root: docs/
+responsibility: "Define the human-readable governance-register lane, inventory its current direct children, bound their authority, and route machine-readable projections to control_plane/."
+truth_posture: "CONFIRMED current path, direct-child inventory, CODEOWNERS route, adopted Directory Rules v2, ADR-0029, and observed register or counterpart presence / PARTIAL mixed register maturity, semantic review, and human-machine parity / NEEDS VERIFICATION accountable stewardship beyond CODEOWNERS, consumer closure, and disposition of duplicate or scaffold register names"
+evidence_snapshot: "main@2b3f608b9d09cc0c317e7e64a6451da61efd27a1; prior target blob 6db7fd35778048412c57dad6556f9fe536d3f661; Directory Rules blob fd49a0b83e55cef52c1124281f093e263526898d; docs root README blob 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f; CODEOWNERS blob dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+related:
+  - docs/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/INDEX.md
+  - control_plane/README.md
+  - docs/registers/ADR_INDEX.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - .github/CODEOWNERS
+notes:
+  - "Same-path documentation modernization; no register entry, machine projection, ADR status, policy, release state, lifecycle state, or publication state is changed."
+  - "Current path presence is implementation evidence, not automatic semantic or governance authority for every child."
+[/KFM_META_BLOCK_V2] -->
 
-> The human-readable register lane for the Kansas Frontier Matrix: ranked authority, lineage classification, drift tracking, verification queues, and cross-lane object maps. Markdown registers live here; their machine-readable counterparts live in [`control_plane/`](../../control_plane/).
+<a id="top"></a>
 
-<!-- Badges (Shields.io) — placeholders until owners and CI gates are wired -->
-![Status: experimental](https://img.shields.io/badge/status-experimental-orange)
-![Authority: canonical](https://img.shields.io/badge/authority-canonical-blue)
-![Lane: docs%2Fregisters](https://img.shields.io/badge/lane-docs%2Fregisters-informational)
-![Pair: control__plane](https://img.shields.io/badge/pair-control__plane-lightgrey)
-![Format: Markdown](https://img.shields.io/badge/format-markdown-success)
-![Doctrine: directory--rules-%C2%A76.1-blueviolet](https://img.shields.io/badge/doctrine-directory--rules%20%C2%A76.1-blueviolet)
+# `docs/registers/` — Human-Readable Governance Register Lane
 
-| Field | Value |
-|---|---|
-| **Status** | `experimental` — directory and member files are **PROPOSED** until verified against mounted-repo evidence |
-| **Authority class** | **Canonical** within `docs/` (Directory Rules §6.1) |
-| **Owners** | _Docs steward_ + _control-plane steward_ — confirm in `CODEOWNERS` _(placeholder)_ |
-| **Pair (machine register lane)** | [`control_plane/`](../../control_plane/) |
-| **Schema home rule** | `schemas/contracts/v1/...` per **ADR-0001** (binds entries that point at schemas) |
-| **Last reviewed** | `YYYY-MM-DD` _(placeholder — set on first land)_ |
-
-**Quick jump:**
-[1. Scope](#1-scope) ·
-[2. Repo fit](#2-repo-fit) ·
-[3. Inputs](#3-accepted-inputs) ·
-[4. Exclusions](#4-exclusions) ·
-[5. Directory tree](#5-directory-tree-proposed) ·
-[6. Register catalog](#6-register-catalog) ·
-[7. Diagram](#7-how-this-lane-connects) ·
-[8. Naming convention](#8-naming-convention) ·
-[9. Lifecycle](#9-lifecycle-of-a-register-entry) ·
-[10. Validation & rollback](#10-validation--rollback) ·
-[11. Quickstart](#11-quickstart) ·
-[12. FAQ](#12-faq) ·
-[Appendix](#appendix)
-
----
-
-## 1. Scope
-
-`docs/registers/` is one of the lanes inside the **human-facing control plane** (`docs/`). It holds the **explanatory, prose-friendly** registers that a reviewer, steward, or contributor reads to understand:
-
-- **Who outranks whom** when sources of truth disagree (authority).
-- **What is canonical, lineage, exploratory, generated, or deprecated** (lineage classification).
-- **Where doctrine, code, paths, schemas, or policies are drifting** apart (drift).
-- **What still needs verification** before a claim can be treated as fact (backlog).
-- **How object families relate across domains** (cross-lane map).
+`docs/registers/` is KFM's repository-facing lane for human-readable governance registers, cross-register pointers, drift records, verification queues, and explanatory views of machine governance projections.
 
 > [!IMPORTANT]
-> `docs/registers/` does **not** publish data, define object meaning, define machine shape, or decide admissibility. Those responsibilities belong to `data/`, `contracts/`, `schemas/`, and `policy/` respectively. Collapsing those boundaries is a Directory Rules violation.
+> **A register records or explains authority; it does not manufacture authority.** A path, row, badge, digest, workflow result, receipt, pull request, or merged commit does not by itself establish source truth, policy approval, review, release, promotion, or publication.
 
-The four-layer separation is doctrinal:
+> [!WARNING]
+> **This lane has mixed maturity.** The directory and all 17 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
 
-> `docs/` **explains** · `control_plane/` **indexes** · `contracts/` **defines meaning** · `schemas/` **defines shape**
-
-— and they MUST NOT collapse into one another.
-
----
-
-## 2. Repo fit
-
-| Direction | Lane | Relationship |
-|---|---|---|
-| **Upstream** (authority) | [`docs/doctrine/`](../doctrine/) | Doctrine sets the rules that registers operationalize |
-| **Sibling (machine pair)** | [`control_plane/`](../../control_plane/) | YAML registers; same governance domain, machine-readable form |
-| **Sibling (intake)** | [`docs/intake/`](../intake/) | New ideas, supersession logs, deprecation indices feed register entries |
-| **Sibling (decisions)** | [`docs/adr/`](../adr/) | ADRs are the authority that approves or amends register categories |
-| **Sibling (history)** | [`docs/archive/`](../archive/) | Lineage and superseded register revisions go here |
-| **Downstream consumers** | Domain dossiers, runbooks, validators, CI link-check, reviewers, release gates | Cite register rows; expect them to resolve |
-
-Per **Directory Rules §6.1**, the register lane is enumerated as part of `docs/`:
-
-> `registers/  # AUTHORITY_LADDER, CANONICAL_LINEAGE_EXPLORATORY, DRIFT_REGISTER, VERIFICATION_BACKLOG, OBJECT_FAMILY_MAP`
-
-That five-file list is the **doctrinal baseline**. Additional register files are admissible when an ADR or domain blueprint establishes the new category and an owner.
+**Quick navigation:** [Purpose](#purpose) · [Authority and status](#authority-and-status) · [Belongs and prohibited](#belongs-and-prohibited) · [Inputs and outputs](#inputs-and-outputs) · [Exposure and retention](#exposure-and-retention) · [Current inventory](#current-inventory) · [Human-machine pairings](#human-machine-pairings) · [Operating contract](#operating-contract) · [Validation](#validation) · [Ownership](#ownership-and-review) · [Change protocol](#change-protocol) · [Correction and rollback](#correction-and-rollback) · [Open verification](#open-verification) · [Status](#status-summary)
 
 ---
 
-## 3. Accepted inputs
+<a id="purpose"></a>
 
-Files that belong in `docs/registers/`:
+## Purpose
 
-- **Markdown register documents** intended for human reading and review.
-- **Tabular register rows** with at minimum: `id`, `path`, `status`, `owner`, `version` (where applicable), `validation method`, and `supersession link`.
-- **Cross-lane indexes** that point into `contracts/`, `schemas/`, `policy/`, `data/registry/`, `release/`, and domain dossiers — but do not redefine those objects.
-- **Drift entries** that surface conflicts between doctrine, repo, schema, or policy without silently absorbing them as authority.
-- **Verification backlog items** with a defined verification step and a default outcome until verified.
+This boundary README has four responsibilities:
+
+1. Define what a human-readable governance register is and what it is not.
+2. Record the current direct-child inventory without turning an illustrative tree into repository fact.
+3. Explain how human register documents relate to machine projections under [`control_plane/`](../../control_plane/README.md).
+4. Keep incomplete, stale, conflicting, duplicate, or unverified register states visible until the owning authority resolves them.
+
+The lane inherits the [`docs/` root contract](../README.md). Under the adopted [Directory Rules v2](../doctrine/directory-rules.md), `docs/` owns human-readable governance and explanation, while `control_plane/` owns machine-readable projections of adopted governance.
+
+The durable pattern is:
+
+```text
+adopted doctrine or decision
+        │
+        ├──> docs/registers/        # human explanation, inventory, rationale, review view
+        │
+        └──> control_plane/         # machine-readable projection or crosswalk
+                    │
+                    └──> validators and bounded consumers
+```
+
+Neither branch may silently redefine the source authority it references.
+
+[Back to top](#top)
 
 ---
 
-## 4. Exclusions
+<a id="authority-and-status"></a>
 
-Files that **do not** belong here, with the correct home:
+## Authority and status
 
-| What | Where it goes | Why |
-|---|---|---|
-| Machine-readable register data (`*.yaml`, `*.json`) | [`control_plane/`](../../control_plane/) | Machine vs human plane separation |
-| Object-family meaning (Markdown that defines fields/invariants) | [`contracts/`](../../contracts/) | Meaning is `contracts/`'s responsibility |
-| Machine-checkable shape | [`schemas/contracts/v1/...`](../../schemas/) | Default schema home per ADR-0001 |
-| Admissibility / allow-deny-restrict-abstain | [`policy/`](../../policy/) | Policy is the canonical singular |
-| Source identity, rights, sensitivity records | [`data/registry/`](../../data/) and [`policy/sensitivity/`](../../policy/) | Source identity is data-plane, not docs-plane |
-| Doctrine itself (authority-ladder, truth-posture, lifecycle-law, directory-rules) | [`docs/doctrine/`](../doctrine/) | Doctrine is the authority registers serve, not a register |
-| Architecture decisions | [`docs/adr/`](../adr/) | ADRs are decisions; registers reflect their effect |
-| New ideas / proposed sources | [`docs/intake/`](../intake/) | Intake is the proposal lane |
-| Generated review/release reports | [`docs/reports/`](../reports/) | Reports are read-only outputs, not living registers |
+| Field | Current bounded result |
+|---|---|
+| Owning root | `docs/` — human-readable governance and explanation |
+| Local lane | `docs/registers/` — human-readable governance registers and cross-register views |
+| Directory Rules outcome | `PLACE` for this same-path boundary README |
+| Governing decision | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes |
+| Current path state | **CONFIRMED** — the lane and 17 direct-child files exist on the evidence snapshot |
+| Content maturity | **PARTIAL / MIXED** — repository-grounded pointers, active historical logs, substantial drafts, sparse machine counterparts, and proposed scaffolds coexist |
+| Review route | `@bartytime4life` through [`.github/CODEOWNERS`](../../.github/CODEOWNERS) |
+| Public effect | Repository-facing documentation only; no normal public-data or runtime API |
+| Machine authority | None; machine projections remain under `control_plane/` and are bounded by their own contracts, schemas, evidence, and status |
+| Release effect | None |
+
+### Four states that must remain separate
+
+Do not compress register status into one badge or one word:
+
+| Axis | Question |
+|---|---|
+| Path state | Does the file exist at the checked revision? |
+| Document state | What status does the file's own metadata or header claim? |
+| Content maturity | Is the body a placeholder, draft, partial inventory, repository-grounded pointer, or reviewed operational register? |
+| Consumer readiness | Does a validated machine projection or downstream consumer rely on it, and at what bounded scope? |
+
+A confirmed path can still contain proposed or stale content. A populated register can still be non-authoritative. A green validator can still prove only syntax or a narrow contract.
+
+[Back to top](#top)
+
+---
+
+<a id="belongs-and-prohibited"></a>
+
+## What belongs here and what is prohibited
+
+### Belongs here
+
+A file belongs in this lane when its primary responsibility is human-readable governance registration or navigation, including:
+
+- authority and decision-inventory pointers;
+- drift, contradiction, deprecation, and verification views;
+- human explanations of domain-lane, source-authority, object-family, policy-gate, or release-state projections;
+- stable crosswalks that point to contracts, schemas, policy, evidence, lifecycle, or release objects without copying their authority;
+- current and historical register entries whose evidence, owner, status, and resolution path remain inspectable.
+
+### Prohibited authority collapse
+
+| Material or decision | Owning authority |
+|---|---|
+| Machine governance register or projection | [`control_plane/`](../../control_plane/README.md) |
+| Object or interface meaning | [`contracts/`](../../contracts/README.md) |
+| Machine-valid shape | [`schemas/`](../../schemas/README.md) |
+| Admissibility, sensitivity, allow/deny/hold/abstain logic | [`policy/`](../../policy/README.md) |
+| Source identity or lifecycle data instance | `data/registry/` or the correct `data/` lifecycle lane |
+| Receipt or proof | `data/receipts/` or `data/proofs/` |
+| Release decision, manifest, correction notice, withdrawal, or rollback card | [`release/`](../../release/README.md) |
+| Executable validator, generator, migration, or operator | `tools/`, `pipelines/`, `migrations/`, or another execution root selected by role |
+| Public API, UI, or runtime response | Governed application and released public-safe artifact surfaces |
 
 > [!CAUTION]
-> Do not create a parallel register surface (e.g., a competing `registry/` root, or a per-domain `*/registers/` subtree that mirrors `docs/registers/`). Per Directory Rules §2.4, parallel homes for registers require an **ADR** before landing.
+> Do not copy an authority object into a Markdown register for convenience. Link to its canonical identity and record only the human context needed for review. A duplicated writable table creates drift even when both copies are individually accurate.
 
-[Back to top ↑](#docsregisters--documentation-registers)
-
----
-
-## 5. Directory tree (PROPOSED)
-
-Status of the **rules** below: derived from doctrine.
-Status of the **specific files** below: **PROPOSED** until verified against a mounted repo.
-
-```
-docs/registers/
-├── README.md                                # this file
-├── AUTHORITY_LADDER.md                      # ranked authority across doctrine, repo, sources, runtime
-├── CANONICAL_LINEAGE_EXPLORATORY.md         # canon vs lineage vs exploratory vs generated vs deprecated
-├── DRIFT_REGISTER.md                        # doctrine ↔ repo / schema / path / policy drift
-├── VERIFICATION_BACKLOG.md                  # checkable items not yet checked strongly enough to act as fact
-└── OBJECT_FAMILY_MAP.md                     # cross-lane object family map
-```
-
-**Optional extension files** (introduced per domain dossier; **PROPOSED / NEEDS VERIFICATION** until ADR-approved):
-
-<details>
-<summary>Domain-dossier proposed extensions (click to expand)</summary>
-
-> These are **lineage proposals** drawn from in-project domain blueprints. None override the doctrinal baseline. Each requires an ADR or steward decision before landing as a new register category, **and** must not duplicate something `control_plane/` already indexes.
-
-```
-docs/registers/
-├── SOURCE_FAMILY_INDEX.md                   # admitted / candidate / restricted / rejected source families
-├── SCHEMA_REGISTRY_INDEX.md                 # schema homes, versions, owners, spec_hash rules
-├── VALIDATOR_REGISTRY.md                    # deterministic validators + ValidationReport contracts
-├── POLICY_REGISTRY.md                       # policy modules and outcome mappings
-├── DATA_LIFECYCLE_INDEX.md                  # raw / work / quarantine / processed / catalog / triplet / published
-├── ARTIFACT_FLOW_INDEX.md                   # source edge → release manifest → Evidence Drawer
-├── LAYER_REGISTER.md                        # public layer manifests and MapLibre delivery surfaces
-├── RECEIPT_AND_PROOF_REGISTER.md            # receipt/proof object families and storage rules
-├── CATALOG_OBJECT_REGISTER.md               # STAC / DCAT / PROV / catalog matrix and closure
-└── CHANGELOG_OR_EVOLUTION_LOG.md            # evolution log for this lane
-```
-
-</details>
+[Back to top](#top)
 
 ---
 
-## 6. Register catalog
+<a id="inputs-and-outputs"></a>
 
-The doctrinal baseline (Directory Rules §6.1):
+## Inputs, outputs, and permitted writers
 
-| File | Purpose | Authority class | Status | Owner _(placeholder)_ |
-|---|---|---|---|---|
-| [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md) | Ranked order for resolving authority across doctrine, repo evidence, generated outputs, external sources, and steward decisions. | Canonical | **PROPOSED** | Docs steward |
-| [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md) | Classifies materials as **canon**, **lineage**, **exploratory**, **generated**, or **deprecated**. | Canonical | **PROPOSED** | Docs steward + subsystem owner |
-| [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md) | Records doctrine ↔ repo / path / schema / policy drift, owner decisions, and resolution path. | Canonical | **PROPOSED** | Docs steward + subsystem owner |
-| [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | Checkable items not yet verified strongly enough to act as fact, with default outcome until verified. | Canonical | **PROPOSED** | Docs steward + subsystem owner |
-| [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md) | Cross-lane object family map: which contracts, schemas, policies, and data lanes touch each family. | Canonical | **PROPOSED** | Docs steward + contracts steward |
+### Inputs
 
-> [!NOTE]
-> Every link above resolves to a file that does not yet exist in this session's evidence. Status remains `PROPOSED` until either (a) the repository is mounted and the file is observed, or (b) the file is created in a PR that satisfies the rules in §9.
+Register documents may consume:
 
----
+- adopted doctrine and accepted ADRs;
+- current repository paths and digests;
+- contracts, schemas, policy, source descriptors, evidence, receipts, proofs, and release records;
+- tests, workflow outcomes, runtime observations, or generated reports tied to an exact revision;
+- bounded lineage documents when they are clearly labeled as lineage or proposal evidence;
+- steward-reviewed classifications and correction records.
 
-## 7. How this lane connects
+An input does not gain authority merely because a register cites it.
 
-> Diagram intent: show how `docs/registers/` operationalizes doctrine, pairs with the machine register lane, and feeds review and CI surfaces. Diagram is doctrine-grounded; specific paths remain PROPOSED until repo-verified.
+### Outputs
 
-```mermaid
-flowchart LR
-  subgraph DOC["docs/ — human-facing control plane"]
-    direction TB
-    DOCT["doctrine/<br/>authority-ladder · truth-posture<br/>directory-rules · lifecycle-law"]
-    REG["registers/<br/>AUTHORITY_LADDER · CANONICAL_LINEAGE_EXPLORATORY<br/>DRIFT_REGISTER · VERIFICATION_BACKLOG<br/>OBJECT_FAMILY_MAP"]
-    INT["intake/<br/>IDEA_INTAKE · NEW_IDEAS_INDEX"]
-    ADR["adr/<br/>ADR-0001-schema-home, ..."]
-    ARC["archive/<br/>lineage · superseded · deprecated"]
-  end
+This lane produces human-readable:
 
-  CP["control_plane/<br/>(machine-readable YAML registers)"]
-  CONT["contracts/<br/>(object meaning)"]
-  SCH["schemas/<br/>(machine shape — schemas/contracts/v1/...)"]
-  POL["policy/<br/>(admissibility & release)"]
-  DAT["data/<br/>(lifecycle data & emitted proof)"]
+- inventories and pointers;
+- rationale and scope boundaries;
+- status, drift, contradiction, deprecation, or verification entries;
+- update, correction, supersession, and review guidance;
+- links to machine projections and their actual owning authorities.
 
-  DOCT -- "rules registers operationalize" --> REG
-  INT  -- "promotes verified ideas into" --> REG
-  ADR  -- "approves new register categories" --> REG
-  REG  -- "supersession routes to" --> ARC
+A Markdown output may inform a machine projection. It must not self-authorize that projection or substitute for its validation.
 
-  REG  <-- "human ↔ machine crosswalk" --> CP
-  REG  -- "indexes (does not redefine)" --> CONT
-  REG  -- "indexes (does not redefine)" --> SCH
-  REG  -- "indexes (does not redefine)" --> POL
-  REG  -- "indexes (does not redefine)" --> DAT
+### Permitted writers
 
-  classDef doc fill:#eef6ff,stroke:#3b82f6,color:#1e3a8a;
-  classDef machine fill:#f5f3ff,stroke:#8b5cf6,color:#4c1d95;
-  classDef other fill:#f8fafc,stroke:#64748b,color:#0f172a;
-  class DOCT,REG,INT,ADR,ARC doc;
-  class CP machine;
-  class CONT,SCH,POL,DAT other;
-```
+Normal writes are reviewed feature-branch changes by maintainers or authorized automation. Writers must preserve:
 
-[Back to top ↑](#docsregisters--documentation-registers)
+- stable `doc_id` values where present;
+- entry IDs and supersession lineage;
+- evidence locators and exact revision boundaries;
+- unresolved uncertainty and negative states;
+- paired human-machine relationships when they are real;
+- the distinction between review routing and completed review.
+
+[Back to top](#top)
 
 ---
 
-## 8. Naming convention
+<a id="exposure-and-retention"></a>
 
-> [!IMPORTANT]
-> Naming convention has visible drift across project sources. Do not silently pick one. Until an ADR resolves the question, follow the doctrine baseline below and record exceptions in [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md).
+## Exposure, mutability, retention, and storage
 
-| Convention | Form | Source | Use for |
-|---|---|---|---|
-| **Doctrine baseline** | `ALL_CAPS_SNAKE_CASE.md` | Directory Rules §6.1; People/DNA/Land blueprint; UI/Governed AI report | Canonical registers in this directory |
-| **Lineage / drift** | `kebab-case.md` (e.g., `domain-file-index.md`, `lineage-register.md`) | Settlements/Infrastructure plan; some domain dossiers | **Lineage** — record drift; do not adopt without ADR |
-| **Subdirectories** | _(none by default)_ | Doctrine | Flat layout; only nest by ADR |
+| Property | Lane rule |
+|---|---|
+| Exposure | Repository-facing; assume public readability in a public repository |
+| Sensitive material | Do not include secrets, restricted payloads, private personal data, protected exact locations, or sensitive denial details that create exposure |
+| Normal public-client use | None; public clients use governed APIs and released artifacts, not raw governance registers |
+| Physical storage | Versioned Git Markdown |
+| Mutability | Reviewed versioned replacement; append-only behavior only where the specific register contract requires it |
+| Retention | Durable governance and decision context; superseded material remains recoverable and linked |
+| Generation | Generated or mirrored register views must identify their source, generator, digest, and edit rule |
+| Deletion | Requires identity, inbound-reference, counterpart, consumer, correction, and rollback review appropriate to the file's role |
 
-**Required minimum row contents** for any register file in this lane (per Agriculture dossier; consistent with doctrine):
+CODEOWNERS routes review requests; it does not prove review, independent approval, policy acceptance, release authority, or separation of duties.
 
-`id`, `path`, `status`, `owner`, `version`, `validation method`, `supersession link`
-
----
-
-## 9. Lifecycle of a register entry
-
-```mermaid
-flowchart LR
-  A["Idea or drift observation"]:::note --> B["Open intake or drift entry<br/>(docs/intake or DRIFT_REGISTER)"]:::flow
-  B --> C{"New register category?"}:::decision
-  C -- "Yes" --> D["ADR<br/>(docs/adr)"]:::flow
-  C -- "No"  --> E["Add row to existing register"]:::flow
-  D --> E
-  E --> F["PR review<br/>docs steward + subsystem owner"]:::flow
-  F --> G{"Validation passes?<br/>(link check · references resolve · row schema)"}:::decision
-  G -- "No"  --> E
-  G -- "Yes" --> H["Land row · status: review|published"]:::flow
-  H --> I{"Superseded?"}:::decision
-  I -- "Yes" --> J["Mark row superseded<br/>preserve lineage; link successor<br/>copy to docs/archive if needed"]:::flow
-  I -- "No"  --> K["Keep current"]:::flow
-
-  classDef flow fill:#ecfeff,stroke:#0891b2,color:#0c4a6e;
-  classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f;
-  classDef note fill:#f1f5f9,stroke:#64748b,color:#0f172a;
-```
-
-**Rules of motion** (PROPOSED until repo-verified):
-
-1. **No silent rename.** Renaming a register file requires a supersession link and a row in the affected register's history.
-2. **No silent removal.** Removed rows are marked `superseded` with a forward link, not deleted, until they age out per archive policy.
-3. **No parallel register.** A second register on the same topic requires an ADR (Directory Rules §2.4 #5).
-4. **Drift before doctrine.** When the repo contradicts the rules, open a `DRIFT_REGISTER.md` row first; do not absorb the drift as new authority.
+[Back to top](#top)
 
 ---
 
-## 10. Validation & rollback
+<a id="current-inventory"></a>
 
-| Concern | Default expectation | Status |
-|---|---|---|
-| **Markdown lint / front matter** | All register files lint clean; required fields present | **PROPOSED** — wire to CI |
-| **Link resolution** | Every register row resolves to an existing or PROPOSED file | **PROPOSED** — `docs link check` |
-| **Row schema** | Every row has `id`, `path`, `status`, `owner`, `version` (where applicable), `validation method`, `supersession link` | **PROPOSED** — register-lint validator |
-| **Crosswalk to `control_plane/`** | Each Markdown register that has a YAML pair must point at it; YAML pair must point back | **PROPOSED** |
-| **Authority compliance** | No register entry creates a new canonical or compatibility root without ADR | **CONFIRMED rule** (Directory Rules §2.4) |
-| **Schema-home compliance** | Entries pointing at schemas use `schemas/contracts/v1/...` per ADR-0001 | **CONFIRMED rule** |
+## Current direct-child inventory
 
-**Rollback path:**
-
-> [!TIP]
-> Per Directory Rules §2.5, the rollback for a register-level change is to **revert the PR and preserve the prior row as `superseded`**. Removal from the visible register does not erase the reason for the change.
-
-1. Revert the offending PR.
-2. Mark the affected row `status: superseded` with a forward link if a successor exists.
-3. If the change introduced a category that should not have landed, open a follow-up ADR explaining the reversal.
-4. Update [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md) and [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) so the removal does not erase _why_ the change was attempted.
-
----
-
-## 11. Quickstart
-
-### A. Add a row to an existing register
-
-```bash
-# 1. Pick the register; check existing IDs to avoid collisions
-$ ls docs/registers/
-
-# 2. Edit the file; preserve table shape
-$ ${EDITOR:-vi} docs/registers/DRIFT_REGISTER.md
-
-# 3. Validate locally (PROPOSED — wire when CI lands)
-$ python tools/ci/check_registers.py        # NEEDS VERIFICATION (path TBD)
-$ markdownlint docs/registers/
-
-# 4. Open a PR; cite Directory Rules §6.1
-```
-
-### B. Open a drift entry
+The tree below is verified from `main@2b3f608b9d09cc0c317e7e64a6451da61efd27a1`. It shows this directory and direct children only, as required by Directory Rules. Comments describe bounded current maturity; they do not promote a child.
 
 ```text
-- id: DRIFT-YYYYMMDD-NN
-  observed_in: <path or doc>
-  conflicts_with: <doctrine ref, e.g., directory-rules.md §6.1>
-  default_until_resolved: <PROPOSED / CONFLICTED / ABSTAIN>
-  proposed_resolution: <ADR / migration / steward decision>
-  owner: <steward>
-  status: open | accepted | resolved | rejected
+docs/registers/
+├── ADR_INDEX.md                         # repository-grounded pointer to docs/adr/INDEX.md
+├── AUTHORITY_LADDER.md                  # proposed human parity scaffold; machine rungs are empty
+├── CANONICAL_LINEAGE_EXPLORATORY.md     # proposed, intentionally empty entry scaffold
+├── CONTINUITY_INVENTORY.md              # domain-derived proposed scaffold
+├── CONTRADICTION.md                     # substantial draft human register; machine entries are empty
+├── DEPRECATION.md                       # substantial draft explainer; machine entries are empty
+├── DOCUMENT_REGISTRY.md                 # substantial draft companion; machine registry is sparse
+├── DOMAIN_LANE.md                       # substantial draft; machine projection is populated but partial
+├── DRIFT_REGISTER.md                    # dated human drift log; no direct machine pair is verified
+├── OBJECT_FAMILY.md                     # substantial draft human object-family register
+├── OBJECT_FAMILY_MAP.md                 # proposed naming-parity scaffold for OBJECT_FAMILY.md
+├── POLICY_GATE.md                       # substantial draft; machine entries are empty
+├── README.md                            # this boundary contract
+├── RELEASE_REGISTER.md                  # domain-derived proposed scaffold
+├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
+├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
+└── VERIFICATION_BACKLOG.md              # dated human backlog; machine entries are empty
 ```
 
-### C. File a verification task
+### Maturity groups
 
-```text
-- id: VERIFY-YYYYMMDD-NN
-  claim: <what would become a fact if verified>
-  default_until_verified: <UNKNOWN / NEEDS VERIFICATION>
-  verification_step: <command / inspection / runbook ref>
-  owner: <steward>
-  blocks: <release stage or doc, if any>
-```
-
-> [!NOTE]
-> Snippets above are **illustrative**. Final row formats are governed by the per-register file (which carries the canonical row schema for that register) and by the register-lint validator once it lands.
-
-[Back to top ↑](#docsregisters--documentation-registers)
-
----
-
-## 12. FAQ
-
-**Q: When does a register go in `docs/registers/` versus `control_plane/`?**
-If a human reviewer needs prose, examples, and links to act on it → `docs/registers/`. If a validator, CI step, or runtime check consumes it as data → `control_plane/`. Many topics warrant both, paired with a crosswalk.
-
-**Q: Is `docs/registers/` itself authority?**
-Within `docs/`, yes — it is canonical (Directory Rules §6.1). But it is not the **root** of authority; doctrine in `docs/doctrine/` outranks it. Registers operationalize doctrine; they do not replace it.
-
-**Q: Why are most files marked PROPOSED?**
-Because the repository is not mounted in this session and these doctrinal lists come from in-project planning artifacts. Per the KFM evidence rule, planning artifacts are **lineage**, not proof of repo state. Once a file lands and is observed in a mounted repo, status moves to `review` or `published`.
-
-**Q: Can a domain create its own register here?**
-A domain may **add rows** to existing registers. A new register **file** that establishes a new authority category requires an ADR (Directory Rules §2.4 #5). Domains MAY keep domain-internal indexes inside `docs/domains/<name>/`, but those are not authority and may not duplicate this lane.
-
-**Q: Why ALL_CAPS_SNAKE_CASE for register files?**
-That form matches the doctrine baseline in Directory Rules §6.1 and the People/DNA/Land and UI/Governed AI blueprints. Some domain dossiers use kebab-case. The drift is real and tracked in §8; resolve via ADR before adopting kebab-case here.
-
-**Q: How does this relate to `docs/intake/`?**
-`docs/intake/` is where ideas, supersession logs, and deprecation indices originate. Once an item is verified and accepted, it produces or updates a row in `docs/registers/`. Intake is upstream; registers are the steady state.
-
-**Q: What if a register entry conflicts with the mounted repo?**
-Open a row in [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md). Do not silently rewrite the register to match the repo (Directory Rules §2.5).
-
----
-
-## Appendix
-
-<details>
-<summary><strong>A.1 — Lineage register inventory observed across in-project sources</strong></summary>
-
-The table below catalogs **every** `docs/registers/*.md` filename observed in attached project documents. All rows are **PROPOSED / NEEDS VERIFICATION**. Multiple naming conventions are present and intentional drift is recorded — do not silently consolidate.
-
-| Filename (as observed) | Source dossier | Convention | Notes |
-|---|---|---|---|
-| `AUTHORITY_LADDER.md` | Directory Rules §6.1; People/DNA/Land; UI/Governed AI | ALL_CAPS | **Doctrine baseline** |
-| `CANONICAL_LINEAGE_EXPLORATORY.md` | Directory Rules §6.1; People/DNA/Land; UI/Governed AI | ALL_CAPS | **Doctrine baseline** |
-| `DRIFT_REGISTER.md` | Directory Rules §6.1; UI/Governed AI; Atmosphere | ALL_CAPS | **Doctrine baseline** |
-| `VERIFICATION_BACKLOG.md` | Directory Rules §6.1; UI/Governed AI; Atmosphere | ALL_CAPS | **Doctrine baseline** |
-| `OBJECT_FAMILY_MAP.md` | Directory Rules §6.1; People/DNA/Land | ALL_CAPS | **Doctrine baseline** |
-| `SOURCE_FAMILY_INDEX.md` | People/DNA/Land | ALL_CAPS | Lineage proposal — overlaps `control_plane/source_authority_register.yaml` |
-| `SCHEMA_REGISTRY_INDEX.md` | People/DNA/Land | ALL_CAPS | Lineage proposal — bound by ADR-0001 |
-| `VALIDATOR_REGISTRY.md` | People/DNA/Land | ALL_CAPS | Lineage proposal |
-| `POLICY_REGISTRY.md` | People/DNA/Land | ALL_CAPS | Lineage proposal — overlaps `control_plane/policy_gate_register.yaml` |
-| `DATA_LIFECYCLE_INDEX.md` | People/DNA/Land | ALL_CAPS | Lineage proposal |
-| `ARTIFACT_FLOW_INDEX.md` | People/DNA/Land | ALL_CAPS | Lineage proposal |
-| `CHANGELOG_OR_EVOLUTION_LOG.md` | People/DNA/Land | ALL_CAPS | Lineage proposal |
-| `SCHEMA_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage; possibly duplicates `SCHEMA_REGISTRY_INDEX.md` |
-| `SOURCE_DESCRIPTOR_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage |
-| `DATASET_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage |
-| `LAYER_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage |
-| `RECEIPT_AND_PROOF_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage |
-| `CATALOG_OBJECT_REGISTER.md` | Agriculture dossier | ALL_CAPS | Lineage |
-| `domain-file-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** — record in `DRIFT_REGISTER.md` |
-| `correction-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-| `lineage-register.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-| `layer-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-| `run-receipt-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-| `evidence-bundle-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-| `release-manifest-index.md` | Settlements/Infrastructure plan | kebab-case | **Drift** |
-
-> Convention drift between ALL_CAPS_SNAKE_CASE and kebab-case is unresolved. Until an ADR adjudicates, the doctrine baseline (ALL_CAPS) is preferred for new files; kebab-case files (when observed in a mounted repo) are recorded as lineage in `DRIFT_REGISTER.md` rather than adopted as new authority.
-
-</details>
-
-<details>
-<summary><strong>A.2 — Open verification items for this README</strong></summary>
-
-| Item | Status | Action when repo is mounted |
+| Group | Current members | What the group proves |
 |---|---|---|
-| Existence of `docs/registers/` directory | **UNKNOWN** | Confirm presence; if absent, this README defines the create plan |
-| Existence of each baseline file (§6) | **UNKNOWN** | Confirm or mark `MISSING_NEEDS_CREATE` |
-| Owner identities for `CODEOWNERS` | **PROPOSED** | Resolve with docs steward |
-| CI hook for register-lint | **PROPOSED** | Replace placeholder commands in §11 with real workflow paths |
-| Adoption of ADR-0001 schema-home rule by entries that reference schemas | **CONFIRMED rule, NEEDS VERIFICATION in entries** | Sweep on first land |
-| Naming-convention ADR | **PROPOSED** | Open ADR; until then, doctrine baseline applies |
-| Crosswalk file/format between `docs/registers/*.md` and `control_plane/*.yaml` | **PROPOSED** | Define in ADR or in a `CROSSWALK.md` pair file |
+| Repository-grounded cross-register pointer | [`ADR_INDEX.md`](./ADR_INDEX.md) | Current path, canonical target, summary, and validator relationship are documented against repository evidence |
+| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | Historical observations and open checks exist; completeness and machine parity are not implied |
+| Small proposed scaffolds | [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md), [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md), [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md), [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md), [`RELEASE_REGISTER.md`](./RELEASE_REGISTER.md) | A named path and limited intent exist; operational maturity is not established |
+| Substantial draft narrative registers | [`CONTRADICTION.md`](./CONTRADICTION.md), [`DEPRECATION.md`](./DEPRECATION.md), [`DOCUMENT_REGISTRY.md`](./DOCUMENT_REGISTRY.md), [`DOMAIN_LANE.md`](./DOMAIN_LANE.md), [`OBJECT_FAMILY.md`](./OBJECT_FAMILY.md), [`POLICY_GATE.md`](./POLICY_GATE.md), [`RELEASE_STATE.md`](./RELEASE_STATE.md), [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | Detailed prose exists; current semantics, ownership, machine parity, and consumer readiness remain file-specific |
 
-</details>
+This README does not resolve the duplicate or overlapping roles visible in the inventory. Those are governance and convergence questions, not editorial cleanup opportunities.
 
-<details>
-<summary><strong>A.3 — References (in-project)</strong></summary>
+[Back to top](#top)
 
-- `docs/doctrine/directory-rules.md` — canonical placement rules; §6.1 enumerates this lane.
-- KFM People, Genealogy-DNA, and Land Ownership Architecture blueprint — §8 and Appendix A enumerate the extension list.
-- KFM Whole-UI + Governed AI Expansion Report — Appendix A and B reference the doctrine baseline.
-- KFM Agriculture Domain Implementation Dossier — proposes `SCHEMA_REGISTER`, `SOURCE_DESCRIPTOR_REGISTER`, `DATASET_REGISTER`, `LAYER_REGISTER`, `RECEIPT_AND_PROOF_REGISTER`, `CATALOG_OBJECT_REGISTER`.
-- KFM Atmosphere/Air Architecture Report — Appendix I update triggers reference `DRIFT_REGISTER.md` and `VERIFICATION_BACKLOG.md`.
-- KFM Settlements/Infrastructure Extended Pro Plan — uses kebab-case naming; treat as drift.
-- KFM Hydrology Extended Pro Reference Report — file/folder reference register pattern.
+---
 
-</details>
+<a id="human-machine-pairings"></a>
 
-[Back to top ↑](#docsregisters--documentation-registers)
+## Human and machine pairings
+
+A human register and a machine projection are related surfaces, not interchangeable copies. The relationship must be explicit and evidence-backed.
+
+| Human surface | Machine or canonical counterpart | Current bounded relationship |
+|---|---|---|
+| [`ADR_INDEX.md`](./ADR_INDEX.md) | [`docs/adr/INDEX.md`](../adr/INDEX.md) | Human cross-register pointer to the canonical human ADR inventory; it intentionally does not duplicate the record table |
+| [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md) | [`control_plane/authority_ladder.yaml`](../../control_plane/authority_ladder.yaml) | Both are proposed; the machine `rungs` list is empty |
+| [`CONTRADICTION.md`](./CONTRADICTION.md) | [`control_plane/contradiction_register.yaml`](../../control_plane/contradiction_register.yaml) | Human draft exists; machine `entries` list is empty |
+| [`DEPRECATION.md`](./DEPRECATION.md) | [`control_plane/deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Human draft exists; machine `entries` list is empty |
+| [`DOCUMENT_REGISTRY.md`](./DOCUMENT_REGISTRY.md) | [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml) | Human draft exists; machine register contains a sparse current body |
+| [`DOMAIN_LANE.md`](./DOMAIN_LANE.md) | [`control_plane/domain_lane_register.yaml`](../../control_plane/domain_lane_register.yaml) | Machine projection is populated and explicitly partial/non-authoritative |
+| [`OBJECT_FAMILY.md`](./OBJECT_FAMILY.md) and [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md) | [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) | One substantial human draft and one naming-parity scaffold point toward one partial machine projection; canonical human naming remains unresolved |
+| [`POLICY_GATE.md`](./POLICY_GATE.md) | [`control_plane/policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) | Human draft exists; machine `entries` list is empty |
+| [`RELEASE_STATE.md`](./RELEASE_STATE.md) | [`control_plane/release_state_register.yaml`](../../control_plane/release_state_register.yaml) | Human draft exists; machine `entries` list is empty |
+| [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Human draft exists; machine `entries` list is empty |
+| [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine `entries` list is empty |
+
+No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, or `RELEASE_REGISTER.md` on the evidence snapshot. Do not invent one from naming symmetry.
+
+### Conflict rule
+
+When paired surfaces disagree:
+
+1. identify the exact claim and revision on each side;
+2. identify the authority that owns that claim;
+3. preserve both observations without silently choosing a winner;
+4. fail closed for consumers that require the unresolved field;
+5. route correction through the owning document, contract, schema, policy, register, or ADR;
+6. update crosswalks only after the source correction is reviewed.
+
+“Machine wins” and “Markdown wins” are both unsafe blanket rules. Authority depends on the question being answered.
+
+[Back to top](#top)
+
+---
+
+<a id="operating-contract"></a>
+
+## Register operating contract
+
+### Minimum entry expectations
+
+Each register defines its own schema. Where applicable, an entry should expose enough information to be reviewed and corrected:
+
+- stable entry ID;
+- subject or governed path;
+- claim or classification;
+- truth/status label;
+- evidence and exact revision;
+- authority owner and review route;
+- validation or verification method;
+- default behavior while unresolved;
+- related ADR, contract, schema, policy, source, release, correction, or rollback reference;
+- supersession or closure state.
+
+A universal row shape is not assumed. A drift entry, ADR pointer, source-authority row, and release-state row do not necessarily share one semantic contract.
+
+### Non-effects
+
+A register entry does not, by itself:
+
+- accept or supersede an ADR;
+- activate or approve a source;
+- establish evidence closure;
+- approve rights, sensitivity, or public use;
+- pass policy;
+- promote lifecycle state;
+- approve a release;
+- correct, withdraw, or roll back a published artifact;
+- authorize a public route;
+- prove runtime behavior.
+
+### Negative-state handling
+
+Use finite, visible states such as `PROPOSED`, `UNKNOWN`, `NEEDS_VERIFICATION`, `CONFLICTED`, `HOLD`, `DEPRECATED`, `SUPERSEDED`, or a register-specific closed vocabulary. Do not replace an unresolved state with persuasive prose.
+
+[Back to top](#top)
+
+---
+
+<a id="validation"></a>
+
+## Validation
+
+Validation must match the claim being made.
+
+| Change type | Minimum changed-area evidence |
+|---|---|
+| This boundary README | Metadata-block validation, Markdown structure, links/fragments, documentation graph/build, stale-reference scan, accessibility, and repository-topology checks |
+| Human register body | The README checks plus the register's entry/ID/status/lineage rules |
+| Machine counterpart | YAML/JSON parsing, duplicate-key checks, meta-contract or dedicated schema validation, negative fixtures, and parity/crosswalk checks |
+| ADR pointer or summary | Canonical ADR-index validator and its focused tests |
+| Authority, path, or register-family change | Directory Rules classification, accepted-decision check when triggered, migration/compatibility evidence, and rollback plan |
+| Public or release-significant register use | Evidence, policy, review, release, correction, and rollback checks appropriate to consequence |
+
+Current repository controls include:
+
+- [`.github/workflows/docs-control-plane.yml`](../../.github/workflows/docs-control-plane.yml) for control-plane YAML, required register meta-contract, and ADR-index coherence;
+- the documentation metadata, build, graph, stale, link, and accessibility workflows;
+- dedicated object-family and directory-governance validation surfaces.
+
+A green workflow proves only the revision and profile it executed. It does not make a register complete, authoritative, adopted, enforced at runtime, released, or published.
+
+[Back to top](#top)
+
+---
+
+<a id="ownership-and-review"></a>
+
+## Ownership and review
+
+**Confirmed GitHub review route:** `@bartytime4life` for `/docs/registers/` through [CODEOWNERS](../../.github/CODEOWNERS).
+
+CODEOWNERS is routing, not stewardship proof. The role labels retained inside older register files—such as “docs steward,” “source steward,” “release authority,” or “subsystem owner”—are not verified GitHub identities unless separately assigned and evidenced.
+
+Escalate rather than guess when a register change would:
+
+- amend doctrine or contradict an accepted ADR;
+- add, split, merge, rename, or retire an authority-bearing register family;
+- change a machine projection's semantics or consumer contract;
+- expose sensitive content;
+- alter policy, source, evidence, release, correction, or rollback meaning;
+- remove or redirect a path with unresolved consumers.
+
+[Back to top](#top)
+
+---
+
+<a id="change-protocol"></a>
+
+## Change protocol
+
+### Update an existing register
+
+1. Read the complete current register and its counterpart, if one exists.
+2. Identify the exact claim owner and evidence revision.
+3. Preserve stable entry and document identity.
+4. Make the smallest coherent correction or addition.
+5. Update the machine projection only when the relationship requires it; do not edit a projection merely for textual symmetry.
+6. Run the register-specific and documentation checks.
+7. Record unresolved parity or consumer questions rather than guessing.
+
+### Add a new human register
+
+A new file inside this existing lane is not automatically an ADR-class change. First determine whether it:
+
+- provides a non-duplicating human view inside the existing `docs/` authority boundary;
+- creates a new authority owner, closed vocabulary, root, lifecycle phase, or parallel writable source;
+- duplicates an existing register that should instead be linked or extended;
+- requires a verified machine counterpart or can remain human-only.
+
+Routine same-boundary additions may proceed with root-owner review. Authority-owner changes, parallel homes, structural migrations, or Directory Rules amendments require the applicable accepted decision first.
+
+### Rename, merge, or retire
+
+Do not perform naming cleanup by inspection alone. Inventory:
+
+- stable document and entry IDs;
+- inbound links and fragment consumers;
+- machine crosswalks;
+- generators and validators;
+- external or historical references;
+- canonical writer and compatibility mode;
+- correction and rollback behavior.
+
+The unresolved `OBJECT_FAMILY.md` / `OBJECT_FAMILY_MAP.md` and `RELEASE_REGISTER.md` / `RELEASE_STATE.md` pairs are examples where a migration decision must precede deletion or consolidation.
+
+[Back to top](#top)
+
+---
+
+<a id="correction-and-rollback"></a>
+
+## Correction, supersession, and rollback
+
+### Content correction
+
+Correct the owning register and preserve:
+
+- the prior claim or entry identity;
+- the evidence that made correction necessary;
+- the replacement or supersession link;
+- any paired machine projection update;
+- downstream correction obligations.
+
+Do not rewrite historical observations to make the past appear consistent with the present.
+
+### Rollback of this README change
+
+This file is documentation-only. Rollback is:
+
+1. revert the commit that changed `docs/registers/README.md`, or restore prior blob `6db7fd35778048412c57dad6556f9fe536d3f661`;
+2. rerun the changed-area documentation checks;
+3. preserve any later register or counterpart changes independently—this README must not roll them back by implication.
+
+No lifecycle data, register entry, machine projection, policy decision, release object, deployment, or published artifact is changed by this README.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification"></a>
+
+## Open verification backlog
+
+| ID | Question | Current posture | Smallest resolving evidence |
+|---|---|---|---|
+| `REG-README-001` | Which human name should survive for the object-family register: `OBJECT_FAMILY.md` or `OBJECT_FAMILY_MAP.md`? | `HOLD` — both paths exist; do not delete or promote one by prose | Accepted naming/migration decision, consumer inventory, parity check, rollback |
+| `REG-README-002` | Is `RELEASE_REGISTER.md` a distinct register or an obsolete scaffold overlapping `RELEASE_STATE.md`? | `NEEDS_VERIFICATION` | Domain consumer review, release-family ownership decision, inbound-link inventory |
+| `REG-README-003` | Does `CONTINUITY_INVENTORY.md` belong globally or only in its originating domain lane? | `NEEDS_VERIFICATION` | Responsibility-signature review and current consumer inventory |
+| `REG-README-004` | Which substantial May 2026 drafts remain semantically current after adopted Directory Rules v2 and later repository changes? | `NEEDS_VERIFICATION` | File-by-file evidence refresh against current doctrine, counterparts, contracts, schemas, policy, and consumers |
+| `REG-README-005` | Which machine registers should be populated, remain intentionally empty, or be retired? | `NEEDS_VERIFICATION` | Owning-authority decision, schema/contract, representative entries, negative tests, consumer evidence |
+| `REG-README-006` | Should `DRIFT_REGISTER.md` receive a direct machine projection? | `UNKNOWN` | Consumer need, authority owner, non-duplication review, schema and correction behavior |
+| `REG-README-007` | Who holds accountable register stewardship beyond the current CODEOWNERS route? | `NEEDS_VERIFICATION` | Reviewed stewardship assignment and repository identity |
+| `REG-README-008` | Are all current register paths represented accurately in the document registry and documentation graph? | `NEEDS_VERIFICATION` | Current metadata workbench output, review-only registry delta, graph/link checks |
+
+These items are documentation and governance work. None authorizes source activation, policy change, release, deployment, promotion, or publication.
+
+[Back to top](#top)
+
+---
+
+<a id="status-summary"></a>
+
+## Status summary
+
+**CONFIRMED:** `docs/registers/` is the adopted human-readable register lane under `docs/`; 17 direct-child files exist on the evidence snapshot; CODEOWNERS routes review to `@bartytime4life`; current human and machine surfaces have been inspected for this README update.
+
+**PARTIAL / MIXED:** register maturity, metadata quality, semantic currency, human-machine parity, and consumer readiness vary by file.
+
+**NEEDS VERIFICATION:** accountable stewardship beyond CODEOWNERS, current semantic review of older drafts, disposition of duplicate/scaffold names, complete machine projection population, and exhaustive consumer closure.
+
+**NON-EFFECT:** this README defines and documents the lane. It does not create or modify register entries, machine projections, contracts, schemas, policy, evidence, lifecycle data, release state, correction state, runtime behavior, deployment, or publication.
+
+[Back to top](#top)
