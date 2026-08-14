@@ -7,8 +7,9 @@ name: ci-integrity-diagnostic
     paths:
       - ".github/workflows/ci-integrity-diagnostic.yml"
       - "tools/validators/directory_governance/**"
-      - "data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"
-      - "docs/governed-ai/README.md"
+      - "data/receipts/generated/**"
+      - "docs/adr/**"
+      - "docs/governed-ai/**"
   workflow_dispatch:
 
 permissions:
@@ -29,16 +30,17 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Capture topology and receipt diagnostics
+      - name: Capture topology, receipt, and source evidence
         env:
           KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONHASHSEED: "0"
           TZ: UTC
         run: |
-          set -u
+          set -euo pipefail
           out="${RUNNER_TEMP}/kfm-ci-integrity"
-          mkdir -p "${out}"
+          src="${out}/source-files"
+          mkdir -p "${src}"
 
           git rev-parse HEAD > "${out}/current-head.txt"
           cp tools/validators/directory_governance/repository_topology_baseline.json \
@@ -46,79 +48,48 @@ jobs:
 
           set +e
           python3 tools/validators/directory_governance/validate_repository_topology.py \
-            --repo-root . \
-            --format json \
+            --repo-root . --format json \
             > "${out}/repository-topology-report.json" \
             2> "${out}/repository-topology-report.stderr.txt"
           printf '%s\n' "$?" > "${out}/repository-topology-report.exit.txt"
-
           python3 tools/validators/directory_governance/validate_repository_topology.py \
-            --repo-root . \
-            --emit-baseline \
+            --repo-root . --emit-baseline \
             > "${out}/repository-topology-candidate.json" \
             2> "${out}/repository-topology-candidate.stderr.txt"
           printf '%s\n' "$?" > "${out}/repository-topology-candidate.exit.txt"
           set -e
 
-          sha256sum \
-            .github/workflows/release-dry-run.yml \
-            Makefile \
-            tests/release/README.md \
-            tests/release/launch/README.md \
-            fixtures/control_plane/generated_receipt/valid.json \
-            fixtures/control_plane/generated_receipt/invalid.json \
-            > "${out}/publication-deny-artifact-sha256.txt"
-
-          git ls-files -s -- \
-            .github/workflows/release-dry-run.yml \
-            Makefile \
-            tests/release/README.md \
-            tests/release/launch/README.md \
-            fixtures/control_plane/generated_receipt/valid.json \
-            fixtures/control_plane/generated_receipt/invalid.json \
-            > "${out}/publication-deny-artifact-git-blobs.txt"
-
-          python3 - "${out}" <<'PY'
-          import json
-          import pathlib
-          import sys
-
-          out = pathlib.Path(sys.argv[1])
-          summary = {"status": "candidate_unavailable"}
-          try:
-              current = json.loads((out / "repository-topology-baseline-current.json").read_text())
-              candidate = json.loads((out / "repository-topology-candidate.json").read_text())
-          except Exception as exc:
-              summary["error"] = type(exc).__name__
-          else:
-              current_by_identity = {
-                  (entry["rule_id"], entry["subject"]): entry
-                  for entry in current["entries"]
-              }
-              candidate_by_identity = {
-                  (entry["rule_id"], entry["subject"]): entry
-                  for entry in candidate["entries"]
-              }
-              added = sorted(set(candidate_by_identity) - set(current_by_identity))
-              removed = sorted(set(current_by_identity) - set(candidate_by_identity))
-              changed = sorted(
-                  identity
-                  for identity in set(current_by_identity) & set(candidate_by_identity)
-                  if current_by_identity[identity]["fingerprint"]
-                  != candidate_by_identity[identity]["fingerprint"]
-              )
-              summary = {
-                  "status": "ok",
-                  "current_entry_count": len(current_by_identity),
-                  "candidate_entry_count": len(candidate_by_identity),
-                  "added_identities": [list(item) for item in added],
-                  "removed_identities": [list(item) for item in removed],
-                  "changed_identities": [list(item) for item in changed],
-              }
-          (out / "repository-topology-delta-summary.json").write_text(
-              json.dumps(summary, indent=2, sort_keys=True) + "\n"
+          paths=(
+            ".github/workflows/release-dry-run.yml"
+            "Makefile"
+            "tests/release/README.md"
+            "tests/release/launch/README.md"
+            "fixtures/control_plane/generated_receipt/valid.json"
+            "fixtures/control_plane/generated_receipt/invalid.json"
+            "data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"
+            "docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md"
+            "docs/adr/INDEX.md"
+            "docs/adr/README.md"
+            "docs/domains/README.md"
+            "docs/doctrine/README.md"
+            "data/receipts/generated/genrec-adr-0035-repository-wide-adr-identity-numbering-86fb7b02.json"
+            "docs/governed-ai/README.md"
+            "docs/governed-ai/.gitkeep"
           )
-          PY
+
+          : > "${out}/target-artifact-status.tsv"
+          for path in "${paths[@]}"; do
+            if [[ -f "${path}" ]]; then
+              digest="$(sha256sum "${path}" | awk '{print $1}')"
+              blob="$(git ls-files -s -- "${path}" | awk '{print $2}')"
+              printf 'PRESENT\t%s\t%s\t%s\n' "${path}" "${digest}" "${blob}" \
+                >> "${out}/target-artifact-status.tsv"
+              cp --parents "${path}" "${src}"
+            else
+              printf 'MISSING\t%s\t-\t-\n' "${path}" \
+                >> "${out}/target-artifact-status.tsv"
+            fi
+          done
 
       - name: Retain exact diagnostic evidence
         if: always()
