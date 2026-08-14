@@ -60,12 +60,12 @@
     {
       "gate": "current-main-baseline",
       "outcome": "PASS",
-      "reason": "Verified main at 8bda119d223573a58035bd0ce420066c0f961640; 103 visible main check runs were completed with no failure, cancellation, queued, or in-progress result. Pull-request-only ratchets were not part of that visible baseline and later exposed inherited repository-topology drift."
+      "reason": "Verified main at 8bda119d223573a58035bd0ce420066c0f961640; 103 visible main check runs were completed with no failure, cancellation, queued, or in-progress result. Pull-request-only ratchets were not part of that visible baseline and later exposed inherited repository-topology and receipt-binding drift."
     },
     {
       "gate": "overlap-reconciliation",
       "outcome": "PASS",
-      "reason": "No open pull request owned the AIReceipt candidate-builder change at selection time; current schema, contract, validator, fixtures, exports, tests, and recent related pull requests were inspected."
+      "reason": "No open pull request owned the AIReceipt candidate-builder change at selection time; current schema, contract, validator, fixtures, package conventions, tests, and recent related pull requests were inspected."
     },
     {
       "gate": "focused-unit-tests",
@@ -85,22 +85,22 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "This generated receipt binds the final module and focused test bytes with SHA-256."
+      "reason": "This generated receipt binds the final module and focused test bytes with SHA-256; both bindings recomputed exactly."
     },
     {
       "gate": "repository-wide-ratchets",
-      "outcome": "SKIPPED",
-      "reason": "A full repository checkout was not mounted locally; hosted exact-head checks and repository-native ratchets run after the draft pull request opens."
+      "outcome": "FAIL",
+      "reason": "Hosted validator-suite and schema-validation each failed only the pull-request repository-topology ratchet: 90 of 91 validator profiles passed, while the topology baseline reported inherited/stale findings for path-grammar:uppercase, scaffold-only-leaf-directories, and a removed focus-modes doc-id baseline entry. This pull request adds only lowercase files in existing roots and does not create or remove scaffold-only directories or document IDs."
     },
     {
       "gate": "hosted-exact-head-ci",
-      "outcome": "SKIPPED",
-      "reason": "A first draft-PR run exposed two existing generated-receipt bindings invalidated by the package-root export and an inherited repository-topology baseline drift. The export was removed to preserve existing bindings; hosted CI reruns on the corrected head."
+      "outcome": "FAIL",
+      "reason": "At corrected head f78063a263db5c11da8cdf744724c80ff100379d, all workflows completed and three failed: validator-suite and schema-validation on inherited repository-topology baseline drift, plus release-dry-run because the existing genrec-publication-deny-dry-run-20260809 receipt no longer matches current Makefile bytes. The stale Makefile binding predates this branch; the branch does not modify Makefile. The earlier map-context/release receipt failures caused by changing packages/envelopes/src/envelopes/__init__.py were corrected by restoring that file byte-for-byte. No focused AIReceipt candidate test failed."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending on the draft pull request."
+      "reason": "Human review remains pending on draft pull request 2857."
     }
   ],
   "policy_decisions": [
@@ -131,6 +131,11 @@
       "id": "envelope-package-boundary",
       "validated": true,
       "evidence_ref": "repo:packages/envelopes/src/envelopes/runtime_response.py@8bda119d223573a58035bd0ce420066c0f961640"
+    },
+    {
+      "id": "inherited-publication-deny-receipt-drift",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-publication-deny-dry-run-20260809.json@8bda119d223573a58035bd0ce420066c0f961640"
     }
   ],
   "human_review": {
@@ -146,5 +151,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "prompt_or_contract is the SHA-256 of the exact campaign summary: \"Implement the strongest verified unimplemented KFM ideas from connected Drive and attached sources as small dependency-closed draft PRs; preserve Directory Rules, evidence, policy, validation, correction, rollback, and no publication.\" The change adds a deterministic, side-effect-minimal AIReceipt candidate helper at envelopes.ai_receipt only; it does not alter package-root exports or invalidate existing authoring receipts. It does not call a model, compute digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen public access. The generated receipt is process memory and is not proof, review approval, release authority, or publication authority. The first hosted draft-PR run proved that changing the shared package __init__.py invalidated older legitimate authoring receipts; the corrected slice restores that file byte-for-byte and keeps the helper importable from envelopes.ai_receipt."
+  "notes": "prompt_or_contract is the SHA-256 of the exact campaign summary: \"Implement the strongest verified unimplemented KFM ideas from connected Drive and attached sources as small dependency-closed draft PRs; preserve Directory Rules, evidence, policy, validation, correction, rollback, and no publication.\" The change adds a deterministic, side-effect-minimal AIReceipt candidate helper at envelopes.ai_receipt only; it does not alter package-root exports or invalidate existing authoring receipts. It does not call a model, compute digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen public access. The generated receipt is process memory and is not proof, review approval, release authority, or publication authority. The first hosted draft-PR run proved that changing the shared package __init__.py invalidated older legitimate authoring receipts; the corrected slice restores that file byte-for-byte and keeps the helper importable from envelopes.ai_receipt. The remaining exact-head failures are classified as inherited and are intentionally not repaired in this independently reviewable slice."
 }
