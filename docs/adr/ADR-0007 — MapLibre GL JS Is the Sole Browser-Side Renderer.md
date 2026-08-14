@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0007-maplibre-sole-browser-renderer
 title: "ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer"
 type: adr
 adr_id: ADR-0007
-version: v1.1
+version: v1.2
 status: legacy-proposed
 effective_decision_status: proposed
 owners:
@@ -15,32 +15,49 @@ reviewers_required:
   - Explorer Web subsystem owner
   - Docs steward
 created: 2026-05-10
-updated: 2026-07-23
+updated: 2026-08-13
 policy_label: public
 truth_posture: cite-or-abstain
+owning_root: docs/
 responsibility_root: docs/
 current_path: "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+responsibility: "Record the proposed browser renderer-family decision, its admission and exception boundaries, acceptance evidence, migration obligations, and rollback without granting implementation, release, or publication authority."
 supersedes:
   - "KFM-P2-FEAT-0012 — proposed dual-renderer planning posture; non-ADR lineage only"
 superseded_by: null
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 9ab50d9a94e36320b12b1deb9035ea5a3d315815
-  target_prior_blob: c753f09db18e12081f99405b42cd79ebb89d0ac3
-  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  base_commit: 59143eaeb7b92884b5f97621a15ef04a30a8da8e
+  base_tree: 4d278ccf65877884071495238d4e8de008f61c17
+  docs_adr_tree: 3942461775b80b959e2b2fb2ff749dad003eafa2
+  target_prior_blob: d1efbbec4b245037f884d2b614f6d6693d7162cb
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_readme_blob: b497be1714b88550d2f1eb151bc20a6351e99dec
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: 3ba5f902ffe20a65a259cb0a7dab07f1725d204b
   adr_0006_blob: 2e40267d80a474dc53ceda81e5bbf9fce3939149
   maplibre_architecture_blob: ff4b4754e5dc7beae22620ee669d3fdc240c44d7
-  packages_root_blob: 154e1c9a8b841397bceb52e6b4933b241906ab9a
+  packages_root_blob: 7b672f4d834b648f4b30ce7e2e9a5e214efa2c71
   package_readme_blob: 3ba48e7d61b013a659ed51b9336eee788d06b8f2
   package_metadata_blob: b0582955feeb51016327113692fa5c98ecad8816
   package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
-  root_package_blob: 62f45306aef7376a2d68042b0c9e7f556edf0e78
+  app_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
+  app_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  root_package_blob: 5cba790c88c40b885cc65fe2d585f3205aa1ef9d
+  pnpm_lock_blob: 69a45e6aaca1ea6521e01ff274e4f1b3e1bf3975
   smoke_harness_blob: 699dd4cf42d355dd2ed7620852b7fd1f3000bbe2
   app_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
-  maplibre_workflow_blob: bfb36a84ba72bec68d964976dc7964cde7f5d603
-  external_research_checked: 2026-07-23
+  maplibre_workflow_blob: 306040e1c9283be5a95de76c09d205a58038f380
+  schemas_maplibre_readme_blob: 9560ed016077964b56988d7fb4c02fe34e42fb28
+  briefing_campaign_blob: 7a73f5ad044a4e496d8e897b160e9b5c79e1dd94
+  v6_readiness_validator_blob: 88bc8bcfb894eaa7871e53d130a93a2e0258be49
+  v6_readiness_test_blob: 2e0b6a4b9fe237e13bde9a09f057bcdb6a03a066
+  v6_readiness_fixture_blob: 1bf82ae6c8966be3b1baf01620bf8f4deb7be95b
+  latest_applicable_maplibre_run_head: 9205823798b19f37ba7c4dc2761850584948b027
+  latest_applicable_maplibre_run: "31759518767 — success with explicit WORKFLOW_HOLD"
+  latest_applicable_maplibre_job: "94642665467"
+  external_research_checked: 2026-08-13
   upstream_maplibre_latest_release: v6.0.0
   upstream_maplibre_latest_release_date: 2026-07-22
 related:
@@ -48,6 +65,7 @@ related:
   - docs/adr/INDEX.md
   - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/maplibre.md
   - docs/architecture/map-shell.md
@@ -56,17 +74,26 @@ related:
   - packages/maplibre/README.md
   - packages/maplibre/package.json
   - packages/maplibre/src/index.ts
+  - apps/explorer-web/src/adapters/MapLibreAdapter.ts
+  - apps/explorer-web/package.json
+  - pnpm-lock.yaml
   - scripts/maplibre-smoke-perf.mjs
+  - schemas/maplibre/README.md
   - tests/policy/test_explorer_web_adapter_boundary.py
+  - tests/maplibre/test_validate_v6_readiness.py
+  - fixtures/maplibre/v6_readiness/cases.json
+  - tools/validators/maplibre/validate_v6_readiness.py
   - .github/workflows/maplibre-perf-governance.yml
-tags: [kfm, adr, maplibre, browser-renderer, renderer-boundary, plugin-admission, 3d, globe, terrain, supply-chain, no-parallel-authority]
+  - .github/workflows/briefing-implementation-campaign.yml
+tags: [kfm, adr, maplibre, browser-renderer, renderer-boundary, plugin-admission, v6-readiness, workflow-hold, 3d, globe, terrain, supply-chain, no-parallel-authority]
 notes:
-  - "v1.1 is a same-path, documentation-only, repository-grounded modernization; it does not accept the ADR or change runtime behavior."
-  - "ADR-0007 numbering and the exact tracked path are confirmed by docs/adr/INDEX.md; source metadata remains legacy-proposed and effective decision status remains proposed."
-  - "The current repository contains a private @kfm/maplibre 0.0.0 scaffold with a placeholder export, not a functioning renderer adapter or an accepted MapLibre version."
-  - "Current upstream MapLibre GL JS is v6.0.0, while the repository smoke harness still loads v5.5.0 from a public CDN; this is version and acquisition drift, not an implementation decision."
-  - "packages/cesium/ and packages/maplibre-runtime/ were absent at checked main paths; absence does not prove repository-wide conformance or acceptance."
-  - "The previously referenced docs/architecture/maplibre-3d.md path was absent at the checked main ref; docs/architecture/maplibre.md currently overstates the sole-renderer posture relative to this proposed ADR."
+  - "v1.2 is a same-path, documentation-only, repository-grounded reconciliation; it does not accept ADR-0007, admit a dependency or plugin, or change runtime behavior."
+  - "ADR-0029 is accepted and adopts Directory Rules v2; ADR-0007 remains legacy-proposed and effectively proposed among the other 33 proposed numbered records."
+  - "The private @kfm/maplibre 0.0.0 package, its placeholder export, and the comment-only Explorer adapter remain dependency-free and non-functional even though the pnpm workspace and Explorer build/test scripts now exist."
+  - "The deterministic v6-readiness lane is implemented and fixture-tested, but the current-tree scan returns HOLD because MapLibre is unpinned and all six browser probes remain NOT_RUN."
+  - "The latest applicable MapLibre performance job concluded success while explicitly recording WORKFLOW_HOLD; it ran no dependency install, browser, server, receipt, proof, release, correction, rollback, or artifact-upload stage."
+  - "Current upstream MapLibre GL JS remains v6.0.0, while the smoke harness still loads v5.5.0 from a public CDN; this is version and acquisition drift, not an implementation decision."
+  - "packages/cesium/, packages/maplibre-runtime/, docs/architecture/maplibre-3d.md, and configs/maplibre/v6-probe-results.json were absent at the pinned tree; bounded absence is not acceptance or complete conformance."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -76,12 +103,12 @@ notes:
 > **Proposed decision.** KFM will use MapLibre GL JS as its default and sole browser-side renderer family. Native MapLibre capabilities and explicitly admitted plugins or custom-layer integrations may operate behind the governed MapLibre adapter seam. A second peer renderer requires a separately accepted, scoped exception ADR with dependency, policy, evidence, release, correction, and rollback treatment.
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1)
-[![Repository: scaffold](https://img.shields.io/badge/repository-renderer__scaffold-6e7781?style=flat-square)](#22-current-repository-evidence)
+[![Repository: scaffold + hold](https://img.shields.io/badge/repository-scaffold_%2B_readiness__hold-6e7781?style=flat-square)](#22-current-repository-evidence)
 [![Upstream: v6.0.0](https://img.shields.io/badge/upstream-MapLibre%20v6.0.0-1f6feb?style=flat-square)](#23-current-upstream-snapshot)
-[![Enforcement: incomplete](https://img.shields.io/badge/enforcement-incomplete-b42318?style=flat-square)](#81-current-enforcement-snapshot)
+[![Enforcement: bounded](https://img.shields.io/badge/enforcement-bounded_%2B_incomplete-b42318?style=flat-square)](#81-current-enforcement-snapshot)
 
 > [!IMPORTANT]
-> **Repository configuration is not reviewed decision authority.** The tree contains MapLibre-oriented doctrine, a private package scaffold, an app-local boundary test, a CDN-based performance harness, and a readiness workflow. Those surfaces neither accept this ADR nor prove that a sole-renderer architecture, plugin admission system, package dependency boundary, or released browser runtime is implemented.
+> **Repository configuration is not reviewed decision authority.** The tree contains MapLibre-oriented doctrine, a dependency-free package scaffold, a comment-only Explorer adapter, bounded import and v6-readiness checks, a live-CDN performance harness, eight permissive performance schemas, and workflows that intentionally hold runtime claims. Those surfaces neither accept this ADR nor prove a sole-renderer implementation, admitted plugin set, functioning adapter, browser execution, release, or publication.
 
 **Quick navigation:** [Status](#1) · [Context](#2) · [Decision](#3) · [Evidence](#4) · [Directory Rules](#5) · [Consequences](#6) · [Alternatives](#7) · [Validation](#8) · [Rollback](#9) · [Open work](#10) · [Migration](#11) · [Truth summary](#12) · [No-loss ledger](#appendix-a--no-loss-modernization-ledger)
 
@@ -98,9 +125,9 @@ notes:
 | **ADR ID** | `ADR-0007` — unique and confirmed in the canonical human [`INDEX.md`](./INDEX.md) |
 | **Tracked path** | `docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md` |
 | **Source metadata** | `legacy-proposed` |
-| **Effective decision status** | `proposed` — the repository index explicitly states that no numbered ADR is accepted at its recorded snapshot |
+| **Effective decision status** | `proposed` — the current index has 34 numbered records; ADR-0029 alone is accepted and the other 33, including ADR-0007, remain proposed |
 | **Created** | 2026-05-10 |
-| **Updated** | 2026-07-23 |
+| **Updated** | 2026-08-13 |
 | **Decision scope** | Browser-side renderer-family selection and additional-renderer exception governance |
 | **Related seam decision** | [`ADR-0006`](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — where renderer dependencies may be acquired or imported |
 | **Publication effect** | None. A Markdown edit, package scaffold, test, performance run, pull request, or upstream release does not publish KFM data or accept this ADR. |
@@ -113,11 +140,15 @@ notes:
 | Sole-renderer decision | **PROPOSED** | The record exists but is not accepted. |
 | Current renderer package | **CONFIRMED scaffold** | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) declares private package `@kfm/maplibre` version `0.0.0`. |
 | Package implementation | **NOT ESTABLISHED** | [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) exports only `placeholder = true`. |
-| Package-home doctrine | **CONFLICTED** | Current implementation evidence uses `packages/maplibre/`; Directory Rules proposes `packages/maplibre-runtime/`. Do not create both as active peers. |
+| Explorer adapter | **CONFIRMED placeholder** | [`MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) contains one boundary comment and no implementation. |
+| Package-home decision | **OPEN / lineage conflicted** | The repository uses `packages/maplibre/`; supplied design lineage proposes `packages/maplibre-runtime/`. Accepted Directory Rules select `packages/` as the responsibility root but do not select this product-lane name. Do not create both as active peers. |
+| Workspace/toolchain | **CONFIRMED bounded** | Root `package.json` pins `pnpm@11.17.0`, Node 22, and `apps/*`/`packages/*`; a workspace lock exists. Root aggregate lint/test/build fail closed with `WORKFLOW_HOLD`. Explorer has real Vite, TypeScript, Vitest, and Playwright scripts but no MapLibre dependency. |
 | MapLibre version decision | **UNRESOLVED** | The repository does not pin MapLibre in the package scaffold. The root smoke harness loads `5.5.0`, while upstream released `6.0.0` on 2026-07-22. |
 | Cesium package at checked path | **ABSENT AT CHECKED PATH** | `packages/cesium/` was not found on `main`; this is not a complete import/dependency inventory. |
-| Renderer-family enforcement | **PARTIAL / INCOMPLETE** | Existing testing is app-local and import-text based; no repository-wide peer-renderer validator is established. |
-| Current released browser runtime | **UNKNOWN** | No accepted package pin, lockfile, build output, deployed app, released layer flow, or production log proves browser runtime behavior. |
+| v6 readiness classifier | **CONFIRMED executable / current HOLD** | The deterministic validator, five fixture cases, seven unit tests, and campaign wiring exist. The current-tree scan returns `HOLD` with `MAPLIBRE_DEPENDENCY_UNPINNED` and `RUNTIME_PROBES_PENDING`; all six browser probes are `NOT_RUN`. |
+| Performance-governance workflow | **SUCCESS + EXPLICIT HOLD** | Latest applicable reviewed run `31759518767`, job `94642665467`, passed static and negative checks while recording `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`. No dependency install or browser run occurred. |
+| Renderer-family enforcement | **PARTIAL / INCOMPLETE** | The v6 classifier scans the Explorer and package source boundaries for direct `maplibre-gl` imports and internal `map.transform` use. It is not a complete peer-renderer, dynamic-acquisition, plugin, generated-output, or release inventory. |
+| Current released browser runtime | **NOT ESTABLISHED** | No accepted MapLibre pin, functional adapter, browser-probe record, build output, released layer flow, deployed app, or production trace proves runtime behavior. |
 
 ### 1.3 Acceptance gates
 
@@ -127,12 +158,12 @@ ADR-0007 SHOULD NOT move to `accepted` until equivalent evidence closes every ap
 |---|---|---|
 | **A — Decision and index coherence** | Reviewed status transition in this ADR and matching canonical ADR index entry | Remain `proposed` |
 | **B — Renderer vocabulary** | A reviewed definition of `renderer`, `plugin`, `custom-layer integration`, `protocol`, and `peer renderer` | Treat ambiguous technologies as unadmitted |
-| **C — One physical adapter home** | Resolution of `packages/maplibre/` versus `packages/maplibre-runtime/`, with migration and compatibility posture | Do not create a second active package |
-| **D — Version and distribution decision** | Accepted MapLibre major/version range, package manager, lockfile, ESM/CSP/worker strategy, browser support matrix, and rollback | Do not claim buildability or support |
+| **C — One physical adapter home** | Resolution of current `packages/maplibre/` versus supplied-lineage `packages/maplibre-runtime/`, including API identity, consumers, migration, compatibility, and rollback | Do not create a second active package |
+| **D — Version and distribution decision** | Accepted exact initial MapLibre pin and update policy, pinned workspace manager/lock closure, ESM/CSP/worker strategy, browser support matrix, and rollback | Keep the readiness outcome on hold; do not claim buildability or support |
 | **E — Complete dependency inventory** | Recursive inventory of package manifests, imports, dynamic acquisition, workers, CDN scripts, globals, plugins, custom layers, examples, and tests | Treat sole-renderer conformance as unproven |
 | **F — Plugin and integration admission** | Per-dependency license, provenance, version, supply-chain, capability, policy, test, and removal evidence | DENY plugin/integration use |
-| **G — Structural enforcement** | Repository-wide deterministic validator, positive/negative fixtures, tests, and CI invocation | Direct review remains insufficient |
-| **H — Governed runtime proof** | At least one consumer builds through the accepted adapter and demonstrates released-input, negative-state, evidence, policy, correction, and rollback behavior | Hold operational acceptance |
+| **G — Structural enforcement** | Expansion beyond the bounded v6 classifier to a repository-wide renderer/acquisition validator, positive/negative fixtures, tests, and CI invocation | Direct review and bounded scanning remain insufficient |
+| **H — Governed runtime proof** | Reviewed six-probe record plus at least one consumer that builds through the accepted adapter and demonstrates released-input, negative-state, evidence, policy, correction, and rollback behavior | Hold operational acceptance |
 | **I — Documentation reconciliation** | Architecture lane, package docs, ADR-0006, test docs, and drift/backlog records agree with the accepted status and physical package home | Keep conflicting docs visibly proposed |
 | **J — Human review** | Required reviewers approve and acceptance evidence is recorded | Remain `proposed` |
 
@@ -165,23 +196,29 @@ The prior revision treated most implementation details as unknown. Current evide
 
 | Surface | Confirmed state | Boundary |
 |---|---|---|
-| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0007 is indexed at the exact current filename; effective status `proposed`, source metadata `legacy-proposed` | Inventory is not acceptance |
+| [`docs/adr/INDEX.md`](./INDEX.md) | ADR-0007 is indexed at the exact current filename; effective status `proposed`, source metadata `legacy-proposed`; ADR-0029 alone is accepted among 34 numbered records | Inventory is not acceptance; the adjacent ADR README still carries stale 30-record counts |
+| [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md) | Adopt the exact Directory Rules v2 bytes and confirm `packages/` as the shared-implementation responsibility root | Do not select MapLibre, accept ADR-0007, or name a MapLibre child package |
 | [`ADR-0006`](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Repository-grounded proposed import/acquisition seam | Does not choose or implement the renderer family |
-| [`packages/README.md`](../../packages/README.md) | Confirms `packages/maplibre/` scaffold and checked absence of `packages/cesium/` and `packages/maplibre-runtime/`; records path conflict | Bounded inventory, not exhaustive conformance |
+| [`packages/README.md`](../../packages/README.md) | Confirms 21 direct package lanes, the `packages/maplibre/` scaffold, adopted package-root authority, workspace lock posture, and unresolved MapLibre naming/adapter/consumer decisions | Bounded inventory, not exhaustive conformance or an alternate child-name decision |
 | [`packages/maplibre/README.md`](../../packages/maplibre/README.md) | Describes a private scaffold, unresolved dependency/API/distribution posture, and no functioning adapter | Documentation is not implementation |
 | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) | `@kfm/maplibre`, private, `0.0.0`; no dependencies or scripts | No accepted MapLibre pin or build |
 | [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) | Placeholder export only | No renderer implementation |
-| [`package.json`](../../package.json) | Root lint/test/build are `echo TODO`; MapLibre performance commands live at repository root | Command presence is not package or release proof |
+| [`MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment, with no imports, types, exports, initialization, or adapter behavior | No Explorer renderer implementation |
+| [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) | Real Vite/TypeScript/Vitest/Playwright scripts and pinned development dependencies; no `maplibre-gl` dependency | App toolchain presence is not a renderer consumer |
+| [`package.json`](../../package.json) and [`pnpm-lock.yaml`](../../pnpm-lock.yaml) | Root pins pnpm and Node, declares app/package workspaces, carries MapLibre QA commands, and fails generic lint/test/build closed with `WORKFLOW_HOLD` | Lock and command presence are dependency-state evidence only; no MapLibre install or aggregate build proof |
 | [`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Loads `maplibre-gl@5.5.0` from UNPKG and uses the global runtime | Known test-harness divergence from the proposed package seam and current upstream v6 |
-| [`test_explorer_web_adapter_boundary.py`](../../tests/policy/test_explorer_web_adapter_boundary.py) | Scans Explorer Web only and permits MapLibre/Cesium imports anywhere under app-local `adapters/` | Does not enforce a sole renderer or package-only seam repo-wide |
-| [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | No-network syntax/negative checks plus an explicit HOLD on browser performance, proof, release, correction, and rollback claims | Not a renderer-family conformance gate |
+| [`test_explorer_web_adapter_boundary.py`](../../tests/policy/test_explorer_web_adapter_boundary.py) | Scans Explorer Web import lines and permits MapLibre/Cesium imports anywhere under app-local `adapters/` | Does not enforce a package-only seam, dynamic acquisition, or sole renderer repo-wide |
+| [`validate_v6_readiness.py`](../../tools/validators/maplibre/validate_v6_readiness.py), [fixtures](../../fixtures/maplibre/v6_readiness/cases.json), and [tests](../../tests/maplibre/test_validate_v6_readiness.py) | Deterministically classify exact-v6 pinning, ESM/ES2022 posture, direct import boundary, internal `map.transform` use, six finite probe states, and forbidden authority declarations | Current scan is `HOLD`; synthetic `READY` is fixture evidence, not current runtime proof |
+| [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) | Runs seven readiness unit tests, five synthetic fixture cases, and asserts the current repository exits `3` with dependency-unpinned and probes-pending reasons | No live dependency upgrade, browser probe, release, deployment, or publication |
+| [`schemas/maplibre/README.md`](../../schemas/maplibre/README.md) | Records eight identical accept-any-object performance-schema placeholders and a held migration/readiness boundary | Schema syntax and filenames do not implement renderer governance or trust objects |
+| [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | No-network syntax/negative/readiness-inventory checks plus an explicit HOLD on browser performance, proof, release, correction, rollback, and artifact claims | Latest applicable job success is not a renderer-family conformance or release gate |
 | [`docs/architecture/maplibre.md`](../architecture/maplibre.md) | Declares MapLibre sole renderer and Cesium retired while this ADR remains proposed; references missing `docs/architecture/maplibre-3d.md` | **CONFLICTED documentation posture** requiring reconciliation, not silent promotion |
 
 ### 2.3 Current upstream snapshot
 
 Current external research changes the baseline’s version framing:
 
-- MapLibre GL JS **v6.0.0** is the latest upstream release as of 2026-07-23 and was released on 2026-07-22.
+- MapLibre GL JS **v6.0.0** remains the latest upstream release as of the 2026-08-13 review and was released on 2026-07-22.
 - v6 is **ESM-only**, removes the v5 UMD and separate CSP bundles, requires WebGL2, changes import and worker-handling expectations, and carries other breaking API changes.
 - The official MapLibre examples still demonstrate terrain, globe, custom layers, three.js models, and a 3D Tiles custom-layer integration.
 - The official plugins page lists integrations for deck.gl, three.js, LiDAR, COG, PMTiles, vector-text protocols, contours, and other extensions.
@@ -199,6 +236,7 @@ These facts support the availability of capability families. They do **not** est
 | **Custom-layer integration** | A library such as three.js or Babylon.js hosted inside MapLibre’s custom-layer lifecycle. |
 | **Peer renderer** | A browser rendering SDK with its own primary map/scene lifecycle, camera, event, source/layer model, or public rendering authority parallel to MapLibre. |
 | **Admitted renderer set** | MapLibre plus explicitly approved plugins and custom-layer integrations. A documentation mention is not admission. |
+| **Readiness outcome** | The v6 classifier’s finite `READY`, `HOLD`, or `ERROR` result for its declared inputs. It is validation evidence, not ADR acceptance, plugin admission, release approval, or publication authority. |
 
 ### 2.5 Scope
 
@@ -282,7 +320,7 @@ An implementation decision MUST separately record:
 - license and supply-chain evidence;
 - public-network and self-hosting posture.
 
-The current repository does not satisfy that burden. The package scaffold has no dependency pin, while the smoke harness still acquires v5.5.0 from a public CDN and upstream has released v6.0.0.
+The current repository does not satisfy that burden. Its deterministic readiness classifier confirms ESM module posture and TypeScript `ES2022`, but the package scaffold has no dependency pin, the smoke harness still acquires v5.5.0 from a public CDN, and the six required v6 browser probes are `NOT_RUN`. The computed result is therefore `HOLD`, not `READY`. Neither a future `READY` classifier result nor an exact version pin would accept this ADR by itself.
 
 ### 3.4 Admitted plugins and custom-layer integrations
 
@@ -340,19 +378,24 @@ Until a dependency or peer renderer is admitted:
 Repository evidence supports only the bounded implementation conclusions in §2.2:
 
 - the ADR number/path and proposed status are confirmed;
+- ADR-0029 alone is accepted and adopts Directory Rules v2 without selecting a renderer or MapLibre child-package name;
 - a private MapLibre package scaffold exists;
-- the scaffold has no renderer dependency or functional adapter;
+- the scaffold and comment-only Explorer adapter have no renderer dependency or functional behavior;
+- the root pnpm workspace, lockfile, and Explorer build/test toolchain now exist, while generic root lint/test/build remain explicit holds;
 - the checked Cesium and `maplibre-runtime` package paths are absent;
 - a root CDN harness uses MapLibre 5.5.0;
 - an app-local import test mentions MapLibre and Cesium;
-- a readiness workflow explicitly holds browser-runtime and trust-object claims;
+- a deterministic v6-readiness classifier, fixture pack, seven unit tests, and workflow lane exist;
+- the current-tree readiness result is `HOLD` because MapLibre is unpinned and the six required browser probes are not recorded;
+- eight MapLibre performance schemas remain identical accept-any-object placeholders;
+- the latest applicable MapLibre workflow job passed bounded checks while explicitly holding browser-runtime and trust-object claims;
 - the architecture lane currently overstates the renderer decision relative to the canonical ADR index.
 
-No inspected repository artifact proves a complete renderer inventory, accepted version, admitted plugin set, buildable package, consumer migration, released browser runtime, or production sole-renderer behavior.
+No inspected repository artifact proves a complete renderer inventory, accepted version, admitted plugin set, functional package/adapter, browser execution, consumer migration, released runtime, or production sole-renderer behavior. A synthetic `READY` fixture proves classifier polarity only.
 
 ### 4.2 Attached doctrine and lineage
 
-The attached KFM corpus supports the governing posture that:
+The supplied KFM corpus supports the governing posture that:
 
 - renderers are downstream carriers, not truth authorities;
 - public clients use governed APIs and released artifacts;
@@ -361,7 +404,17 @@ The attached KFM corpus supports the governing posture that:
 - plugins and additional runtimes require policy, supply-chain, validation, review, release, correction, and rollback;
 - the prior dual-renderer idea is lineage that may be superseded by a reviewed ADR rather than deleted.
 
-The corpus does not prove current repository implementation or acceptance.
+For this revision, the directly reconciled supplied artifacts were:
+
+| Supplied artifact | SHA-256 | Use in this ADR |
+|---|---|---|
+| `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` | `77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36` | Renderer-as-downstream-carrier, governed UI/API boundary, dependency/plugin review, finite negative states, and runtime acceptance gates |
+| `Master MapLibre Components-Functions-Features.pdf` | `309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90` | 2D-first and conditional 3D/globe lineage, renderer interoperability burden, evidence/proof/release separation |
+| `maplibre3d.md` | `5148c85acaef7f299864df5b1804eb07498cb81ab4c4bcc39a9625287ee2817b` | Proposed sole-renderer recommendation, plugin/custom-layer admission, 2.5D/3D labels, and the `maplibre-runtime` naming proposal |
+| `Unified Implementation Architecture Build Manual.md` | `e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1` | Responsibility roots, trust membrane, lifecycle, review, and rollback boundaries |
+| `Repository Structure Guiding Document.md` | `afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a` | Placement, package-root, no-parallel-authority, scripts/tooling, and migration guidance |
+
+These are design and lineage evidence. They do not prove current repository implementation, current upstream facts, ADR acceptance, runtime behavior, or release. In particular, the supplied `maplibre3d.md` proposes `packages/maplibre-runtime/`; accepted Directory Rules do not make that child name canonical.
 
 ### 4.3 Authoritative external evidence
 
@@ -440,16 +493,18 @@ The target path is confirmed by the canonical ADR index; this revision does not 
 
 ### 5.3 Current path conflict
 
-Directory Rules propose `packages/maplibre-runtime/`, while the repository contains `packages/maplibre/`. That conflict is not resolved by this ADR and MUST NOT be “fixed” by creating a second active package.
+The repository contains `packages/maplibre/`. Supplied architecture lineage proposes `packages/maplibre-runtime/`. Accepted Directory Rules establish `packages/` as the reusable-implementation root and explicitly leave renderer selection to architecture decisions; they do **not** choose either child name. The unresolved naming/API/consumer question MUST NOT be “fixed” by creating a second active package.
 
 Resolution requires a reviewed migration or a later placement decision that:
 
-- selects one canonical implementation home;
+- selects one canonical implementation home and public package/API identity;
 - inventories consumers and backlinks;
 - records compatibility treatment;
 - prevents independent evolution;
 - updates tests/workflows/docs atomically;
 - preserves rollback.
+
+Until that review, the current `packages/maplibre/` path is the only tracked implementation candidate, while `packages/maplibre-runtime/` remains design lineage and an absent proposed alternative—not a second authority.
 
 ### 5.4 No new authority roots
 
@@ -520,6 +575,7 @@ This ADR never relaxes:
 | **G — Accept the ADR immediately because no Cesium package was found** | Rejected | Absence at checked paths is bounded evidence, not acceptance, complete inventory, runtime proof, or policy enforcement. |
 | **H — Defer all documentation until a functional package exists** | Rejected | The decision and acceptance gates should guide implementation, but documentation must remain visibly proposed. |
 | **I — Select a permanent MapLibre major in this ADR** | Rejected | Renderer-family selection should outlive one upstream major; version adoption belongs to implementation/package governance. |
+| **J — Treat a future v6-readiness `READY` result as ADR acceptance** | Rejected | The classifier evaluates finite technical inputs; it cannot supply decision review, plugin admission, governed runtime proof, or an ADR/index status transition. |
 
 [Back to top](#top)
 
@@ -533,14 +589,17 @@ This ADR never relaxes:
 
 | Surface | Confirmed state | Boundary |
 |---|---|---|
-| ADR index validator | Canonical ADR inventory and status normalization exist | Does not accept the ADR |
+| ADR index validator | Canonical 34-record inventory and status normalization pass on the pinned tree; ADR-0029 alone is accepted | Does not accept or implement ADR-0007; ADR README counts remain stale adjacent documentation |
 | ADR-0006 | Proposed import/acquisition seam with repository evidence | Does not establish a functional renderer or sole-renderer rule |
 | Explorer Web boundary test | Scans app source and confines “maplibre”/“cesium” import lines to app-local adapters | Does not scan packages, scripts, workers, HTML/CDN, manifests, globals, or peer SDKs |
-| Package manifests | MapLibre scaffold has no dependencies; root package has performance tooling dependencies only | No accepted renderer dependency or lockfile |
+| v6 readiness classifier | Scans root/Explorer manifests, TS posture, Explorer and package sources, direct `maplibre-gl` imports, internal `map.transform`, and six finite browser-probe fields | Current result is `HOLD`; source scope and finite markers are not a complete peer-renderer or acquisition inventory |
+| v6 readiness fixtures/tests | Five synthetic fixture cases and seven deterministic unit tests exercise `READY`, `HOLD`, `ERROR`, exact-version, direct-import, internal-API, probe, and authority-boundary polarity | Synthetic `READY` does not mean the repository or any browser is ready |
+| Package manifests and lock | Workspace lock exists; MapLibre package is dependency-free; Explorer has tooling dependencies but no MapLibre dependency | No accepted or installed renderer dependency and no functional adapter |
 | Smoke harness | Direct CDN acquisition of MapLibre 5.5.0 | Known version/acquisition divergence |
-| MapLibre readiness workflow | Static syntax/negative checks and explicit HOLD | No browser performance, proof, release, correction, or renderer-family conformance |
+| MapLibre performance workflow | Latest applicable run `31759518767` succeeded; logs record dependency-free package, live-CDN smoke, eight permissive schemas, placeholder verifiers, unsigned attestation, skipped runtime/trust stages, and `WORKFLOW_HOLD` | No dependency install, browser/server run, screenshot, receipt, attestation, proof, release, correction, rollback, failure bundle, or upload was produced |
+| Briefing campaign | Executes readiness unit tests/fixtures and asserts the current `HOLD` reasons and exit `3` | No live dependency upgrade or browser probe |
 | Architecture lane | States sole renderer and Cesium retired | Conflicts with proposed ADR status and missing companion path |
-| Cesium checked package path | Not found | Not a complete repository inventory |
+| Checked alternative paths | `packages/cesium/`, `packages/maplibre-runtime/`, `docs/architecture/maplibre-3d.md`, and the v6 probe-results manifest are absent | Bounded absence is not a complete repository/branch/release inventory |
 
 ### 8.2 Required validation classes before acceptance
 
@@ -557,7 +616,9 @@ This ADR never relaxes:
 
 ### 8.3 Proposed checks
 
-The following names are **PROPOSED** until an existing equivalent is found or the path is reviewed under Directory Rules:
+The implemented `tools/validators/maplibre/validate_v6_readiness.py` lane is the current finite version/readiness classifier. Reuse or deliberately extend it where its contract fits; do not relabel its bounded source scan as full renderer-family enforcement.
+
+The following additional names are **PROPOSED** until an existing equivalent is found or the path is reviewed under Directory Rules:
 
 - `tools/validators/validate_renderer_family_boundary.*`
 - `tests/governance/test_renderer_family_boundary.*`
@@ -576,9 +637,26 @@ python tools/validators/validate_adr_index.py
 python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
 python -m pytest tests/policy/test_explorer_web_adapter_boundary.py -q
 node --check scripts/maplibre-smoke-perf.mjs
+python -m unittest discover \
+  --start-directory tests/maplibre \
+  --pattern 'test_validate_v6_readiness.py' \
+  --verbose
+python tools/validators/maplibre/validate_v6_readiness.py --fixtures
 ```
 
-When the package and dependency strategy becomes real, add repository-native locked install, build, typecheck, unit, browser, and no-network commands. Do not invent them while root scripts remain placeholders.
+The current-tree readiness scan is expected to hold rather than pass:
+
+```bash
+set +e
+output="$(python tools/validators/maplibre/validate_v6_readiness.py --scan-root .)"
+code=$?
+set -e
+printf '%s\n' "$output"
+test "$code" -eq 3
+python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert value["reasons"] == ["MAPLIBRE_DEPENDENCY_UNPINNED", "RUNTIME_PROBES_PENDING"]' "$output"
+```
+
+When the package and dependency strategy becomes real, use the pinned workspace manager and add repository-native locked install, package/consumer build, typecheck, unit, browser, CSP/worker, accessibility, and no-network commands. Root generic scripts currently fail closed with `WORKFLOW_HOLD`; do not report them as implemented aggregate checks.
 
 ### 8.5 Reviewer checklist
 
@@ -606,9 +684,9 @@ When the package and dependency strategy becomes real, add repository-native loc
 
 If this modernization is inaccurate, restore prior blob:
 
-`c753f09db18e12081f99405b42cd79ebb89d0ac3`
+`d1efbbec4b245037f884d2b614f6d6693d7162cb`
 
-or revert the eventual implementation commit. The ADR remains in history; do not delete it.
+or revert the eventual documentation commit and its paired generated receipt. Blob `c753f09db18e12081f99405b42cd79ebb89d0ac3` remains earlier pre-v1.1 lineage, not the immediate rollback target. The ADR remains in history; do not delete it.
 
 ### 9.2 Rollback before acceptance
 
@@ -660,17 +738,17 @@ Runtime rollback, if implementation later exists, must be governed through packa
 
 The ADR number and tracked path are no longer open questions. Current open work is implementation, versioning, documentation reconciliation, and acceptance.
 
-### OQ-A7-01 — Physical package home (`CONFLICTED`)
+### OQ-A7-01 — Physical package home (`OPEN / LINEAGE CONFLICT`)
 
-Which path becomes the accepted adapter package: current `packages/maplibre/` or proposed `packages/maplibre-runtime/`? Resolve through one reviewed migration; do not create both as independent authorities.
+Which path and public package/API identity become the accepted adapter boundary: current `packages/maplibre/` or supplied-lineage `packages/maplibre-runtime/`? Accepted Directory Rules choose `packages/` as the responsibility root but do not answer this child-name question. Resolve through one reviewed migration; do not create both as independent authorities.
 
 ### OQ-A7-02 — Accepted MapLibre version (`NEEDS VERIFICATION`)
 
-Upstream is now v6.0.0, the root harness still loads v5.5.0, and the package scaffold pins nothing. Decide version range, lockfile, ESM/CSP/worker strategy, browser/WebGL2 support, plugin compatibility, migration tests, and rollback.
+Upstream remains v6.0.0, the root harness loads v5.5.0, and the package scaffold pins nothing. The readiness classifier therefore returns `MAPLIBRE_DEPENDENCY_UNPINNED`. Decide an exact initial pin and update policy, ESM/CSP/worker strategy, browser/WebGL2 support, plugin compatibility, migration tests, and rollback.
 
 ### OQ-A7-03 — Complete renderer/dependency inventory (`NEEDS VERIFICATION`)
 
-Bounded search and checked paths do not establish a recursive inventory. Scan all manifests, source files, workers, HTML templates, scripts, examples, test harnesses, generated assets, CDN references, globals, and branches relevant to release.
+The v6 classifier scans bounded root/Explorer manifests and Explorer/package source files for `maplibre-gl` imports and internal transform access. It does not establish a recursive renderer-family inventory. Expand or pair it with reviewed scanning of all manifests, source files, workers, HTML templates, scripts, examples, test harnesses, generated assets, CDN references, globals, peer SDK identifiers, and release-relevant branches.
 
 ### OQ-A7-04 — Companion architecture document (`CONFLICTED`)
 
@@ -678,11 +756,11 @@ Bounded search and checked paths do not establish a recursive inventory. Scan al
 
 ### OQ-A7-05 — Plugin and custom-layer admission contract (`OPEN`)
 
-Define the finite object and status vocabulary for plugin/integration admission, including source, version, license, role, capabilities, policy effects, tests, review date, and removal path.
+Define the finite object and status vocabulary for plugin/integration admission, including source, exact version, license, role, capabilities, CSP/network/worker effects, policy effects, tests, review date, and removal path. The current eight `schemas/maplibre/` files are performance placeholders and do not provide this contract.
 
 ### OQ-A7-06 — Test-only runtime acquisition (`OPEN`)
 
-Determine whether the root CDN smoke harness is migrated behind the adapter, replaced with a locked local package path, or retained as a tightly bounded test exception. The current v5.5.0 global runtime must not be mistaken for the accepted package or current upstream.
+Determine whether the root CDN smoke harness is migrated behind the adapter, replaced with a locked local package path, or retained as a tightly bounded test exception. The performance workflow currently guards this exact live-CDN posture and holds browser execution; that guard is not approval. The v5.5.0 global runtime must not be mistaken for the accepted package or current upstream.
 
 ### OQ-A7-07 — Peer-renderer classifier (`OPEN`)
 
@@ -699,6 +777,14 @@ This ADR governs the browser. Decide separately whether MapLibre Native shares o
 ### OQ-A7-10 — Subsurface volumetric representation (`UNKNOWN`)
 
 No production-quality KFM browser implementation is established. Keep reality-boundary labels and do not infer physical truth from 2.5D or scene reconstruction.
+
+### OQ-A7-11 — Browser-probe evidence and transition (`HOLD`)
+
+`configs/maplibre/v6-probe-results.json` is absent, so all six required probes are `NOT_RUN`. Define who may produce and review that record; how browser, OS/GPU, WebGL2-failure, CSP/worker, style-spec, GeoJSON, query, pixel-diff, artifact, and reproducibility context is bound; and which decision can transition a result from `HOLD` to implementation readiness. A classifier outcome must not accept this ADR or authorize release.
+
+### OQ-A7-12 — Adjacent documentation drift (`OPEN`)
+
+Reconcile the stale 30-record status in `docs/adr/README.md`, the pre-readiness snapshot in `tests/maplibre/README.md`, and the architecture lane’s accepted-sounding sole-renderer claim without coupling those independent corrections to ADR-0007 acceptance.
 
 Track implementation questions in [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) and confirmed structural/documentation conflicts in [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md).
 
@@ -717,15 +803,16 @@ The migration is staged. This documentation-only revision performs none of the i
 | 1 | Preserve ADR-0007 as proposed and reconcile its evidence snapshot | No status promotion by documentation edit |
 | 2 | Inventory renderer and integration dependencies repo-wide | Machine-readable current-state report with bounded exclusions |
 | 3 | Resolve `packages/maplibre/` versus `packages/maplibre-runtime/` | One canonical home, compatibility/migration map, rollback |
-| 4 | Decide the accepted MapLibre version and package strategy | Lockfile, ESM/worker/CSP/browser posture, build and rollback |
-| 5 | Define renderer/plugin vocabulary and admission record | Finite statuses and reason codes |
-| 6 | Classify current dependencies, scripts, examples, docs, and tests | Canonical, admitted, test-only exception, transitional, deprecated, conflicting |
-| 7 | Implement or complete ADR-0006 adapter seam | KFM-owned port/types; no raw renderer leakage |
-| 8 | Migrate at least one real consumer | Build/test through accepted adapter only |
-| 9 | Add structural validator and positive/negative tests | Deterministic repository-wide enforcement |
-| 10 | Reconcile architecture/package/test/workflow docs | No proposed decision stated as accepted |
-| 11 | Prove a governed runtime slice | Released input, evidence lookup, finite policy state, correction, rollback |
-| 12 | Review ADR-0007 for acceptance | ADR and index transition together with human evidence |
+| 4 | Decide the accepted MapLibre version and package strategy | Exact initial pin, lock closure, ESM/worker/CSP/browser posture, build and rollback |
+| 5 | Execute and review the six v6 browser probes | Bound probe-results record with reproducible environment and finite outcomes; no synthetic substitution |
+| 6 | Define renderer/plugin vocabulary and admission record | Finite statuses and reason codes; no reuse of permissive performance placeholders |
+| 7 | Classify current dependencies, scripts, examples, docs, and tests | Canonical, admitted, test-only exception, transitional, deprecated, conflicting |
+| 8 | Implement or complete ADR-0006 adapter seam | KFM-owned port/types; no raw renderer leakage |
+| 9 | Migrate at least one real consumer | Locked build/test through accepted adapter only |
+| 10 | Expand structural validator and positive/negative tests | Deterministic repository-wide peer-renderer and acquisition enforcement |
+| 11 | Reconcile architecture/package/schema/test/workflow docs | No proposed decision stated as accepted; no held lane described as operational |
+| 12 | Prove a governed runtime slice | Released input, evidence lookup, finite policy state, correction, rollback |
+| 13 | Review ADR-0007 for acceptance | ADR and index transition together with human evidence |
 
 Every migration step is reversible, and no step treats generated output, successful rendering, or a passing import test as release or truth authority.
 
@@ -740,14 +827,20 @@ Every migration step is reversible, and no step treats generated output, success
 | Claim | Status |
 |---|---|
 | ADR-0007 number and exact path | **CONFIRMED** |
-| Effective decision status | **CONFIRMED `proposed`** |
+| Effective decision status | **CONFIRMED `proposed`; ADR-0029 alone is accepted among 34 numbered records** |
 | Current `@kfm/maplibre` package scaffold | **CONFIRMED** |
-| Functional adapter or accepted consumer | **NOT ESTABLISHED / UNKNOWN** |
+| Functional package adapter or accepted consumer | **CONFIRMED absent from inspected package/Explorer surfaces; repository-wide operational state NOT ESTABLISHED** |
+| Workspace manager and lockfile | **CONFIRMED pnpm 11.17.0 / Node 22 workspace; dependency state only** |
 | `packages/cesium/` at checked path | **CONFIRMED absent at checked path** |
 | Complete absence of Cesium or peer renderer references | **UNKNOWN** |
 | Current upstream MapLibre release v6.0.0 on 2026-07-22 | **CONFIRMED external fact** |
 | Accepted KFM MapLibre version | **UNKNOWN / NEEDS VERIFICATION** |
 | Current harness acquisition of MapLibre 5.5.0 | **CONFIRMED repository evidence** |
+| Executable v6-readiness classifier, fixtures, tests, and workflow lane | **CONFIRMED bounded implementation** |
+| Current-tree v6-readiness outcome | **CONFIRMED `HOLD`: dependency unpinned; six browser probes pending** |
+| Synthetic fixture `READY` outcome | **CONFIRMED classifier test only; not current readiness** |
+| Latest applicable MapLibre performance job | **CONFIRMED `success` plus explicit `WORKFLOW_HOLD`; runtime/trust stages skipped** |
+| Eight MapLibre performance schemas | **CONFIRMED identical accept-any-object placeholders** |
 | Complete renderer-family enforcement | **NOT ESTABLISHED** |
 | MapLibre capability families in upstream docs/examples | **CONFIRMED external capability evidence** |
 | KFM plugin admission, performance fitness, accessibility, public safety, or release readiness | **PROPOSED / UNKNOWN** |
@@ -755,7 +848,7 @@ Every migration step is reversible, and no step treats generated output, success
 | This revision accepts or publishes anything | **False** |
 
 > [!CAUTION]
-> **A sole-renderer policy is not proof of a renderer.** Until the package, dependency, adapter, consumer, validation, policy, and release gates are real, ADR-0007 remains a proposed governance decision over a scaffolded implementation surface.
+> **A sole-renderer policy and a readiness classifier are not proof of a renderer.** Until the package, dependency, adapter, consumer, browser probes, admission, policy, and release gates are real, ADR-0007 remains a proposed governance decision over a scaffolded and explicitly held implementation surface.
 
 [Back to top](#top)
 
@@ -766,6 +859,7 @@ Every migration step is reversible, and no step treats generated output, success
 ### Repository evidence
 
 - [Canonical ADR index](./INDEX.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](./ADR-0029-adopt-directory-governance-standard-v2.md)
 - [ADR-0006 — MapLibre import/acquisition boundary](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
 - [Directory Rules](../doctrine/directory-rules.md)
 - [MapLibre architecture lane](../architecture/maplibre.md)
@@ -775,10 +869,18 @@ Every migration step is reversible, and no step treats generated output, success
 - [MapLibre package boundary](../../packages/maplibre/README.md)
 - [MapLibre package metadata](../../packages/maplibre/package.json)
 - [MapLibre placeholder entry point](../../packages/maplibre/src/index.ts)
+- [Explorer MapLibre adapter placeholder](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
+- [Explorer package metadata](../../apps/explorer-web/package.json)
 - [Root package commands](../../package.json)
+- [Workspace lockfile](../../pnpm-lock.yaml)
 - [MapLibre smoke harness](../../scripts/maplibre-smoke-perf.mjs)
+- [MapLibre performance-schema compatibility boundary](../../schemas/maplibre/README.md)
 - [Explorer Web adapter-boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
-- [MapLibre readiness workflow](../../.github/workflows/maplibre-perf-governance.yml)
+- [MapLibre performance-governance workflow](../../.github/workflows/maplibre-perf-governance.yml)
+- [MapLibre v6 readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py)
+- [MapLibre v6 readiness fixtures](../../fixtures/maplibre/v6_readiness/cases.json)
+- [MapLibre v6 readiness tests](../../tests/maplibre/test_validate_v6_readiness.py)
+- [Briefing implementation campaign](../../.github/workflows/briefing-implementation-campaign.yml)
 - [MapLibre test-lane README](../../tests/maplibre/README.md)
 
 ### Authoritative external sources
@@ -792,6 +894,28 @@ Every migration step is reversible, and no step treats generated output, success
 
 The external links document upstream capabilities and migration facts. They are not KFM dependency approval, plugin admission, or release evidence.
 
+### Pinned repository evidence ledger
+
+| Evidence | Identity | Bounded use |
+|---|---|---|
+| Default branch and tree | `59143eaeb7b92884b5f97621a15ef04a30a8da8e` / `4d278ccf65877884071495238d4e8de008f61c17` | Repository snapshot for this revision |
+| Immediate prior ADR-0007 bytes | `d1efbbec4b245037f884d2b614f6d6693d7162cb` | No-loss baseline and document rollback target |
+| Canonical ADR index | `938c5894c36b99e14810918e2c550ab0e92d53b1` | 34-record identity/status inventory |
+| ADR README | `b497be1714b88550d2f1eb151bc20a6351e99dec` | Adjacent stale 30-record summary; not a competing index |
+| ADR-0029 / adopted Directory Rules | `3ba5f902ffe20a65a259cb0a7dab07f1725d204b` / `fd49a0b83e55cef52c1124281f093e263526898d` | Accepted responsibility-root and placement authority |
+| ADR-0006 | `2e40267d80a474dc53ceda81e5bbf9fce3939149` | Proposed import/acquisition-seam lineage |
+| Packages root / MapLibre package docs | `7b672f4d834b648f4b30ce7e2e9a5e214efa2c71` / `3ba48e7d61b013a659ed51b9336eee788d06b8f2` | Current package-root posture and renderer-lane scaffold description |
+| MapLibre manifest / entry | `b0582955feeb51016327113692fa5c98ecad8816` / `91664eb00583f9e3d0405eb7954fefa9a48f4ee9` | Dependency-free private package and placeholder export |
+| Explorer adapter / package | `663ba0f7a05498948f67d644387c73ab19d5c16c` / `ddd201b74a06001d84a14bf54ac62a6cc3607a29` | Comment-only adapter and non-renderer app toolchain |
+| Root package / workspace lock | `5cba790c88c40b885cc65fe2d585f3205aa1ef9d` / `69a45e6aaca1ea6521e01ff274e4f1b3e1bf3975` | Workspace/tooling dependency state; no MapLibre runtime pin |
+| Smoke harness | `699dd4cf42d355dd2ed7620852b7fd1f3000bbe2` | Live-CDN MapLibre 5.5.0 acquisition evidence |
+| Performance workflow / schema boundary | `306040e1c9283be5a95de76c09d205a58038f380` / `9560ed016077964b56988d7fb4c02fe34e42fb28` | Static/negative checks, eight placeholders, and explicit hold |
+| Latest applicable MapLibre run / job | Head `9205823798b19f37ba7c4dc2761850584948b027`; run `31759518767`; job `94642665467` | Success plus explicit skip/hold on the PR #2753 head later merged to main; not a release receipt |
+| v6 validator / tests / fixtures / campaign | `88bc8bcfb894eaa7871e53d130a93a2e0258be49` / `2e0b6a4b9fe237e13bde9a09f057bcdb6a03a066` / `1bf82ae6c8966be3b1baf01620bf8f4deb7be95b` / `7a73f5ad044a4e496d8e897b160e9b5c79e1dd94` | Bounded readiness classifier, polarity evidence, and current-hold assertion |
+| MapLibre architecture lane | `ff4b4754e5dc7beae22620ee669d3fdc240c44d7` | Current accepted-sounding documentation conflict and missing companion link |
+
+Counts, hashes, paths, run results, and absences are snapshot evidence. They do not establish acceptance, exhaustive repository history, browser behavior, or public release.
+
 ---
 
 <a id="appendix-a--no-loss-modernization-ledger"></a>
@@ -799,27 +923,33 @@ The external links document upstream capabilities and migration facts. They are 
 <details>
 <summary><strong>Appendix A — No-loss modernization ledger</strong></summary>
 
-| Baseline element | v1.1 disposition |
+| v1.1 element | v1.2 disposition |
 |---|---|
 | ADR identity, H1, `ADR-0007`, and exact tracked filename | Preserved |
+| `legacy-proposed` source status and effective `proposed` decision | Preserved; reconciled with the 34-record index and ADR-0029 as the sole accepted decision |
 | Proposed sole-renderer decision | Preserved and made version-independent |
 | Prior dual-renderer lineage / `KFM-P2-FEAT-0012` | Preserved as non-ADR lineage; no claim that repository register updates are complete |
 | MapLibre capability matrix | Preserved, reorganized, and truth-bounded as upstream capability evidence rather than KFM admission |
 | Plugin admission concept | Preserved and expanded into a finite evidence burden |
 | Default-deny on peer renderers | Preserved and clarified |
 | Exception-ADR path | Preserved and expanded |
-| Directory Rules rationale | Preserved and reconciled with current path evidence |
+| Directory Rules rationale | Preserved and corrected: adopted v2 governs the `packages/` responsibility root but does not select a MapLibre child-package name |
 | Positive and negative consequences | Preserved and updated for v6/version drift |
-| Alternatives A–E | Preserved in substance; expanded to nine alternatives |
+| Alternatives A–I | Preserved in substance; expanded with the rejection of readiness-as-acceptance |
 | Contract/schema/policy/validator/build test ideas | Preserved as proposed validation classes and paths |
 | Additive exception and full-supersession rollback | Preserved |
 | OQ-A7 numbering conflict | Closed using canonical ADR index evidence |
 | Plugin licensing, pre-existing artifacts, subsurface, Category W, receipt-shape questions | Preserved and reorganized into current open questions |
-| Migration plan | Preserved and grounded in current package/version/documentation conflicts |
+| Migration plan | Preserved and expanded for the implemented readiness classifier, six browser probes, exact initial version pin, and held workflow posture |
 | Truth-label summary | Preserved and made repository-specific |
 | Badge strip | Reduced to four evidence-bearing orientation badges; no CI badge claim |
 | Placeholder owner/spec hash | Replaced with visible `OWNER_TBD` and no invented hash |
-| Missing `maplibre-3d.md` reference | Preserved as a documented conflict, not silently treated as present |
+| Missing `maplibre-3d.md` reference | Preserved as a documented conflict; the supplied same-topic Markdown is treated as design lineage, not a tracked repository file |
+| v1.1 package/root command snapshot | Corrected for current pnpm workspace lock, fail-closed root commands, and real Explorer toolchain while retaining the dependency-free renderer package |
+| v1.1 partial enforcement snapshot | Expanded with the executable v6-readiness validator, five fixture cases, seven unit tests, campaign wiring, bounded scan scope, and current `HOLD` result |
+| v1.1 generic workflow hold | Reconciled with latest applicable hosted run `31759518767` / job `94642665467`: success plus explicit hold and no runtime/trust execution |
+| Immediate document rollback | Corrected from pre-v1.1 blob `c753f09d…` to immediate prior v1.1 blob `d1efbbec…`; older lineage retained |
+| Repository/source evidence basis | Repinned to `main@59143eae…`; added exact current blobs, adopted authority, supplied-reference hashes, and evidence limits |
 
 </details>
 
@@ -828,21 +958,21 @@ The external links document upstream capabilities and migration facts. They are 
 <details>
 <summary><strong>Appendix B — Before/after upgrade matrix</strong></summary>
 
-| Area | Before | After |
+| Area | v1.1 | v1.2 |
 |---|---|---|
-| ADR slot/path | Marked as needing live-set verification | Confirmed through canonical index |
-| Repository posture | Broadly unknown | Package scaffold, placeholder implementation, root harness, partial test, readiness workflow, and documentation conflict are pinned |
-| Upstream version | Framed around MapLibre 5.x | Current v6.0.0 and v5-to-v6 migration pressure recorded; KFM pin remains unresolved |
-| Renderer decision | Conflated capability availability with sufficiency | Separates renderer-family selection, upstream capability, KFM admission, and implementation proof |
-| Plugin model | Named plugin set with illustrative future paths | Admission record burden, classifier, expiry, removal, network, accessibility, supply-chain, and negative tests |
-| Package placement | Assumed `packages/maplibre-runtime/` | Records conflict with current `packages/maplibre/`; forbids active siblings |
-| Enforcement | Mostly proposed per-file checks | Adds complete acquisition/dependency inventory and repository-wide classifier expectations |
-| Companion docs | Assumed `maplibre-3d.md` exists | Records missing path and overstatement in current lane entry point |
-| Rollback | General additive exception | Exact prior blob plus pre-acceptance, exception, full-reversal, and runtime rollback |
-| Presentation | Ten badges, stale placeholder CI badge | Four bounded badges, stable quick navigation, alerts, tables, and appendices |
+| ADR/index status | Correctly proposed, but described a snapshot with no accepted numbered ADRs | Confirms 34 records, ADR-0029 alone accepted, and ADR-0007 still proposed; records stale adjacent README counts |
+| Repository posture | Package scaffold, placeholder entry, CDN harness, app-local test, older readiness workflow | Adds comment-only app adapter, pnpm lock/toolchain, eight schema placeholders, current workflows, and exact held job evidence |
+| v6 readiness | Migration pressure described as an acceptance requirement | Executable classifier, five fixtures, seven unit tests, workflow assertion, six probe fields, and current `HOLD` are distinguished from browser proof |
+| Renderer implementation | Non-functional scaffold | Still non-functional; stronger tooling/readiness evidence is not laundered into implementation |
+| Package placement | Stated that Directory Rules proposed `packages/maplibre-runtime/` | Corrects authority: accepted Rules choose `packages/`; supplied design lineage proposes `maplibre-runtime`; current candidate remains `maplibre` |
+| Enforcement | App-local import test and workflow hold | Bounded v6 import/internal-API classifier plus explicit statement of what still lacks repository-wide coverage |
+| Workflow evidence | Static workflow description | Exact applicable run/job conclusion and skipped-stage/hold boundary |
+| Supplied references | Generic corpus statement | Five named, hash-bound design references with explicit non-proof boundary |
+| Open work | Ten implementation questions | Twelve finite questions, including browser-probe governance and adjacent documentation drift |
+| Rollback | Pointed to the pre-v1.1 blob | Points to immediate prior v1.1 bytes and keeps older lineage visible |
 
 </details>
 
 ---
 
-_Last updated 2026-07-23 · Source metadata: `legacy-proposed` · Effective decision status: `proposed` · Implementation maturity: renderer scaffold / enforcement incomplete · [Back to top](#top)_
+_Last updated 2026-08-13 · Document version: v1.2 · Source metadata: `legacy-proposed` · Effective decision status: `proposed` · Implementation maturity: renderer scaffold / bounded readiness controls / explicit hold · [Back to top](#top)_
