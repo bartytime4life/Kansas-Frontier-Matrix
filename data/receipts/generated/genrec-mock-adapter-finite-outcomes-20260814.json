@@ -55,8 +55,8 @@
       "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/contracts/v1/runtime/runtime_response_envelope/@dd9ac61fae518f0b0947050fc1457e4fe199a589",
       "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/focus-mock-test.yml@dd9ac61fae518f0b0947050fc1457e4fe199a589",
       "source:KFM_Full_Atlas_seed_cards.md:KFM-TRIAD-012,KFM-CAND-0036:sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
-      "drive:1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs:sections-21.1-21.5",
-      "drive:1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM:sections-8-9",
+      "source:Kansas Frontier Matrix — AI Build Operating Contract.md:sections-21.1-21.5",
+      "source:Kansas Frontier Matrix — Connected-Dots Architecture Brief.md:sections-8-9",
       "source:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf:pages-13,22:sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
       "source:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md:MockAdapter-proof-and-ranked-pilots:sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
       "source:Unified-Implementation-Architecture-Build-Manual.md:phase-7-governed-ai-mockadapter:sha256:fec724a82755db691c06fd8f05af558d2187509165807c16f33ffa115549f2ff"
@@ -155,7 +155,7 @@
     {
       "id": "source:ai-build-mockadapter-first",
       "validated": true,
-      "evidence_ref": "drive:1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs:sections-21.1-21.5"
+      "evidence_ref": "source:Kansas Frontier Matrix — AI Build Operating Contract.md:sections-21.1-21.5"
     },
     {
       "id": "source:maplibre-minimum-ai-proof",
