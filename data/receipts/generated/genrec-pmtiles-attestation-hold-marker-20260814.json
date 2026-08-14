@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-pmtiles-attestation-hold-marker-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pmtiles-attestation.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-attestation.yml": "sha256:a1af858d2ad876ae2871123e8e5fd5462f03529dffb3a27ced60f131421992e3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:c0378901fdb6e9b56319b92a4fd836d300e14fa34978f4a4a618a356789db8a0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "attached source files read-only",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MAP-004-and-EXP-002",
+      "attachment:Unified Implementation Architecture Build Manual.md#12.3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/eb95930a784252be7a24cba425185ff26294e8bb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2781",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31810972082",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pmtiles-attestation.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "inherited-exact-head-failure-classification",
+      "outcome": "PASS",
+      "reason": "PR #2784 exact-head run 31810972082 reproduced the current-main PMTiles Attestation failure before tests: the workflow required obsolete prose while merged #2781 emits PMSIG_CRYPTOGRAPHIC_VERIFICATION_UNWIRED."
+    },
+    {
+      "gate": "workflow-maturity-preflight",
+      "outcome": "PASS",
+      "reason": "The workflow parses as YAML and all three maturity markers resolve in the current verifier, including PMSIG_CRYPTOGRAPHIC_VERIFICATION_UNWIRED."
+    },
+    {
+      "gate": "focused-pmtiles-tests",
+      "outcome": "PASS",
+      "reason": "All 27 PMTiles attestation bundle tests passed."
+    },
+    {
+      "gate": "repository-guardrails",
+      "outcome": "PASS",
+      "reason": "The validator registry, 19 workflow-security tests, 435-workflow drift ratchet, 24 topology tests, and topology drift ratchet passed with no new or stale drift."
+    },
+    {
+      "gate": "repository-contract-tests",
+      "outcome": "PASS",
+      "reason": "make test passed 471 tests and 29 subtests."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human semantic and security review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:pmtiles-attestation-inherited-failure",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31810972082"
+    },
+    {
+      "id": "repository:finite-cryptographic-hold",
+      "validated": true,
+      "evidence_ref": "github:tools/attest/verify_cose.py@eb95930a784252be7a24cba425185ff26294e8bb"
+    },
+    {
+      "id": "attachment:pmtiles-fail-closed-proposal",
+      "validated": true,
+      "evidence_ref": "attachment:Unified Implementation Architecture Build Manual.md#12.3"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T14:47:07Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring receipt for a one-line workflow compatibility repair. The change aligns the attestation maturity preflight with the finite fail-closed code introduced by merged PR #2781. It does not change the verifier, fixture semantics, cryptographic maturity, key trust, policy, lifecycle, release, deployment, publication, or public-use authority."
+}
