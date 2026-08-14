@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-topology-receipt-integrity-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/receipts/generated/genrec-directory-root-registry-20260807.json",
+    "data/receipts/generated/genrec-domain-lane-register-20260807.json",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json"
+  ],
+  "artifact_hashes": {
+    "data/receipts/generated/genrec-directory-root-registry-20260807.json": "sha256:d88369e4e1012be29b02637fee02c733a9b15ece3b2412c1663dffefe942cab4",
+    "data/receipts/generated/genrec-domain-lane-register-20260807.json": "sha256:a030f5aa6342b03336eb3ad1d66669ce5cf3d154047897b1c0463cc85e9f6cb1",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json": "sha256:feec95e274d3ba599d4511046ff42d21ddae322f7f7d545bcf3e75209cc09883"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#19.4-ratcheted-conformance-page-25",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8012092365c420fc29a28f2eee57d9b9e75d37f9",
+      "repo:docs/doctrine/directory-rules.md@8012092365c420fc29a28f2eee57d9b9e75d37f9",
+      "repo:data/receipts/generated/README.md@8012092365c420fc29a28f2eee57d9b9e75d37f9",
+      "github-actions:directory-root-registry/run/31768679063",
+      "github-actions:domain-lane-register/run/31768679182",
+      "github-actions:cross-domain-seam-register/run/31768679025"
+    ]
+  },
+  "truth_labels": {
+    "data/receipts/generated/genrec-directory-root-registry-20260807.json": "PROPOSED",
+    "data/receipts/generated/genrec-domain-lane-register-20260807.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-directory-governance-tests",
+      "outcome": "PASS",
+      "reason": "Forty deterministic root-registry, domain-lane, and cross-domain-seam tests passed in the repository-declared Python environment."
+    },
+    {
+      "gate": "generated-receipt-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The repaired root-registry, domain-lane, and cross-domain-seam receipts each bind the current artifact bytes."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "Twenty-four tests passed and the live scan reported 13,397 tracked paths, 138 baselined warnings, and no invariant, new-drift, or stale-baseline findings."
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "Nineteen tests passed and all 431 workflows passed the repository security profile."
+    },
+    {
+      "gate": "adr-index-coherence",
+      "outcome": "PASS",
+      "reason": "The ADR index remained coherent with 34 numbered records and 12 unassigned scaffolds."
+    },
+    {
+      "gate": "schema-validator-aggregate",
+      "outcome": "PASS",
+      "reason": "All ten validators selected by the repository full profile passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8012092365c420fc29a28f2eee57d9b9e75d37f9"
+    },
+    {
+      "id": "generated-receipt-boundary",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/README.md@8012092365c420fc29a28f2eee57d9b9e75d37f9"
+    },
+    {
+      "id": "failed-exact-head-jobs",
+      "validated": true,
+      "evidence_ref": "github-actions:runs/31768679063,31768679182,31768679025"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T04:24:30Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Repairs three exact-head governance-CI failures exposed by the externally merged topology-ratchet PR. The packet restores current byte bindings and the reviewed negative-fixture vector only; it creates no root, domain, join, source, lifecycle, release, deployment, promotion, or publication authority."
+}
