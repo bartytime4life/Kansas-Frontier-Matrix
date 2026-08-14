@@ -2,14 +2,14 @@
 doc_id: kfm://doc/adr-0021
 title: ADR-0021 — Quarantine has structured exit paths
 type: standard
-version: v1.2
+version: v1.3
 status: proposed
 owners:
   - architecture-steward # PROPOSED
   - data-steward # PROPOSED
   - policy-steward # PROPOSED
 created: 2026-05-09
-updated: 2026-07-24
+updated: 2026-08-13
 policy_label: public
 canonical_path: docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md
 path_status: CONFIRMED
@@ -30,12 +30,17 @@ related:
   - contracts/correction/correction_notice.md
   - contracts/release/rollback_card.md
   - docs/runbooks/QUARANTINE_HANDLING.md
+  - data/quarantine/README.md
+  - apps/workers/src/quarantine_review_worker/README.md
+  - tools/validators/lifecycle/README.md
+  - .github/CODEOWNERS
 tags: [kfm, adr, quarantine, lifecycle, governance, promotion, rollback]
 notes:
   - Operationalizes the quarantine lane inside the lifecycle invariant.
   - Codifies five structured quarantine exits as a proposed governed-transition contract.
   - v1.1 fixed metadata-comment safety, path wording, E3/E5 state-machine ambiguity, and evidence boundaries.
   - v1.2 confirms same-path repository identity, repairs related references, aligns current contract vocabulary, and surfaces implementation conflicts without changing decision status.
+  - v1.3 refreshes the evidence snapshot, records the placeholder-only review worker and unresolved object/receipt-family conflicts, and adds explicit acceptance gates without changing decision status.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,39 +55,42 @@ notes:
 | **ID** | `ADR-0021` |
 | **Source status** | `proposed` |
 | **Effective decision status** | `proposed` — confirmed by the [canonical ADR index](./INDEX.md#numbered-records) |
-| **Version** | `v1.2` |
+| **Version** | `v1.3` |
 | **Created** | 2026-05-09 |
-| **Updated** | 2026-07-24 |
+| **Updated** | 2026-08-13 |
 | **Canonical path** | `docs/adr/ADR-0021-quarantine-has-structured-exit-paths.md` |
-| **Path evidence** | **CONFIRMED** at `main@fa74cbdc60e1f925d9f7e22024078386bd82e47d` and indexed as `ADR-0021` |
-| **Implementation posture** | **PROPOSED**; the exact quarantine-case schema, exit validator, and exit policy named below were not present at the pinned base |
+| **Path evidence** | **CONFIRMED** at `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb` and indexed as `ADR-0021` |
+| **Implementation posture** | **PROPOSED**; no accepted or executable five-exit case schema, validator, policy binding, or worker implementation was verified; the worker lane contains documentation plus a comment-only Python placeholder |
 | **Supersedes / superseded by** | — / — |
 | **Directory Rules relationship** | Does not amend the rules; applies the canonical `docs/adr/` and `data/quarantine/` responsibilities |
-| **Proposed owners** | Architecture steward · Data steward · Policy steward |
-| **Proposed review route** | Architecture steward + Policy steward + at least one affected domain steward |
+| **Proposed accountable roles** | Architecture steward · Data steward · Policy steward — **NEEDS VERIFICATION** as assigned identities |
+| **Verified GitHub review route** | `@bartytime4life` via [`.github/CODEOWNERS`](../../.github/CODEOWNERS); routing only, not review or acceptance evidence |
+| **Proposed decision review** | Architecture steward + Policy steward + at least one affected domain steward |
 | **Lifecycle invariant touched** | RAW → WORK / **QUARANTINE** → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
 
 > [!IMPORTANT]
 > This file records a **proposed** architecture decision. Repository presence, an indexed path, a pull request, a passing documentation check, or a merge does not accept the decision, implement the five exits, authorize release, or make any artifact KFM `PUBLISHED`.
 
-**Quick navigation:** [Status and evidence](#status-and-evidence-boundary) · [Context](#1-context) · [Decision](#2-decision) · [Exit catalog](#exit-catalog) · [State machine](#4-state-machine) · [Required artifacts](#5-required-receipts-and-artifacts) · [Consequences](#6-consequences) · [Alternatives](#7-alternatives-considered) · [Validation](#8-validation-and-enforcement) · [Rollback](#9-rollback-path-for-this-adr) · [Open questions](#10-open-questions) · [References](#11-related-adrs-and-doctrine) · [Quick reference](#quick-reference) · [History](#13-revision-history)
+**Quick navigation:** [Status and evidence](#status-and-evidence-boundary) · [Context](#1-context) · [Decision](#2-decision) · [Non-goals](#22-non-goals) · [Exit catalog](#exit-catalog) · [State machine](#4-state-machine) · [Required artifacts](#5-required-receipts-and-artifacts) · [Consequences](#6-consequences) · [Alternatives](#7-alternatives-considered) · [Validation](#8-validation-and-enforcement) · [Rollback](#9-rollback-path-for-this-adr) · [Open questions](#10-open-questions) · [References](#11-related-adrs-and-doctrine) · [Quick reference](#quick-reference) · [History](#13-revision-history)
 
 ---
 
 ## Status and evidence boundary
 
-The modernization baseline is pinned to `main@fa74cbdc60e1f925d9f7e22024078386bd82e47d`. The table separates repository evidence from the future state this ADR proposes.
+The modernization baseline is pinned to `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`. The table separates repository evidence from the future state this ADR proposes.
 
 | Surface | CONFIRMED at the pinned base | What remains PROPOSED or NEEDS VERIFICATION |
 | --- | --- | --- |
-| Identity and placement | [`INDEX.md`](./INDEX.md#numbered-records) maps `ADR-0021` to this exact file; [Directory Rules](../doctrine/directory-rules.md) place ADRs under `docs/adr/` | Decision acceptance, owner approval, and implementation |
+| Identity and placement | [`INDEX.md`](./INDEX.md#numbered-records) maps `ADR-0021` to this exact file; accepted [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) makes [Directory Rules](../doctrine/directory-rules.md) the writable placement authority | Decision acceptance and implementation |
+| Review and accountability | [`.github/CODEOWNERS`](../../.github/CODEOWNERS) routes `docs/adr/` review to `@bartytime4life` | Human review, ADR acceptance, independent stewardship, and the proposed accountable-role assignments |
 | Lifecycle boundary | [`data/quarantine/README.md`](../../data/quarantine/README.md) is the canonical lane contract and allows governed return, advance, restriction, or denial; [Lifecycle Law](../doctrine/lifecycle-law.md) preserves the trust membrane | A closed five-exit machine and end-to-end enforcement |
 | Current decision vocabularies | The proposed [`DecisionEnvelope`](../../contracts/runtime/decision_envelope.md) and schema use `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; the proposed [`PromotionDecision`](../../contracts/release/promotion_decision.md) and schema use `APPROVE`, `DENY`, and `ABSTAIN` | Acceptance, runtime wiring, and cross-object composition |
-| Operational companions | The [quarantine runbook](../runbooks/QUARANTINE_HANDLING.md) and [review-worker boundary](../../apps/workers/src/quarantine_review_worker/README.md) exist as draft/proposed documentation | Worker source, queue contracts, exit execution, receipts, fixtures, tests, deployment, and observed runs |
-| Exit enforcement | Exact reads for `schemas/contracts/v1/governance/quarantine_case_record.schema.json` and `policy/governance/quarantine_exits.rego` returned not found; repository search found `validate_quarantine_exit.py` only in this ADR | Schema, validator, policy, fixtures, CI enforcement, and emitted proof |
+| Operational companions | The [quarantine runbook](../runbooks/QUARANTINE_HANDLING.md), [canonical lane README](../../data/quarantine/README.md), and [review-worker boundary](../../apps/workers/src/quarantine_review_worker/README.md) exist; `main.py` is a one-line, comment-only placeholder | Accepted queue/job contracts, exit execution, receipt writers, fixtures, tests, deployment, observed runs, and an authorized review binding |
+| Exit enforcement | Exact reads for `schemas/contracts/v1/governance/quarantine_case_record.schema.json`, `policy/governance/quarantine_exits.rego`, and `tools/validators/lifecycle/validate_quarantine_exit.py` returned not found; bounded search found only documentation references | Schema, semantic contract, validator, policy, fixtures, CI enforcement, and emitted proof |
+| Validator routing | The [lifecycle validator README](../../tools/validators/lifecycle/README.md) names future quarantine signals, including `QUARANTINE_EXIT_UNSUPPORTED`, while marking executable transition tests and CI wiring incomplete | An implemented validator, accepted outcome mapping, deterministic fixtures, and exact-head CI evidence |
 
 > [!WARNING]
-> The current quarantine runbook clears remediated material back to `WORK` and separately describes retirement or escalation. This ADR additionally proposes E2–E5 as a closed exit grammar. Until an accepted decision, aligned schema, runbook revision, validators, fixtures, policy, and tests resolve that difference, the five exits are **PROPOSED**, not current executable behavior.
+> Current surfaces are related but not identical: the lane README permits governed return, advance, restriction, denial, or continued hold; the runbook clears standard cases to `WORK` and separately describes retirement or escalation; the worker README records a `QuarantineRecord` versus `quarantine_case_record` naming conflict. Until an accepted decision and aligned contract, schema, runbook, policy, validators, fixtures, tests, and review bindings resolve those differences, the five exits are **PROPOSED**, not current executable behavior.
 
 ---
 
@@ -99,11 +107,12 @@ The KFM lifecycle invariant — **RAW → WORK / QUARANTINE → PROCESSED → CA
 
 Repository and project doctrine provide the basis for this proposal:
 
-- **KFM Build Companion §9** supplies the quarantine triggers, minimum case-record concepts, and candidate exit set. **CONFIRMED doctrine; repository implementation UNKNOWN**.
-- **[Directory Rules](../doctrine/directory-rules.md)** define `data/quarantine/` as a lifecycle lane and forbid parallel homes for proofs, receipts, releases, and rollbacks without an ADR. **CONFIRMED placement doctrine**.
+- **KFM Build Companion §9**, cited by the prior edition, supplied the initial quarantine triggers, minimum case-record concepts, and candidate exit set. Its source binding is **NEEDS VERIFICATION** in current repository evidence and is treated as design lineage, not implementation or acceptance authority.
+- **Accepted [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md)** makes the **[Directory Rules](../doctrine/directory-rules.md)** the writable placement authority. The rules separate human decisions in `docs/`, lifecycle instances in `data/`, semantic meaning in `contracts/`, machine shape in `schemas/`, admissibility in `policy/`, validators in `tools/`, and release/correction decisions in `release/`. **CONFIRMED authority and placement boundary**.
 - **[`DecisionEnvelope`](../../contracts/runtime/decision_envelope.md)** and its [paired schema](../../schemas/contracts/v1/runtime/decision_envelope.schema.json) define the current proposed runtime vocabulary `ANSWER | ABSTAIN | DENY | ERROR`. **CONFIRMED repository shape; contract status PROPOSED**.
 - **[`PromotionDecision`](../../contracts/release/promotion_decision.md)** and its [paired schema](../../schemas/contracts/v1/release/promotion_decision.schema.json) define the current proposed transition vocabulary `APPROVE | DENY | ABSTAIN`. **CONFIRMED repository shape; contract status PROPOSED**.
 - **[`PolicyDecision`](../../contracts/policy/policy_decision.md)** and its [paired schema](../../schemas/contracts/v1/policy/policy_decision.schema.json) use `ANSWER | ABSTAIN | DENY | ERROR` with reasons and obligations. **CONFIRMED repository shape; contract status PROPOSED**.
+- The [`quarantine_review_worker`](../../apps/workers/src/quarantine_review_worker/README.md) lane contains an extensive boundary README and a [comment-only `main.py`](../../apps/workers/src/quarantine_review_worker/main.py); no import, queue, schedule, review binding, lifecycle mutator, receipt writer, or deployment is established by those files. **CONFIRMED repository shape; runtime UNKNOWN**.
 
 What remains missing is an accepted decision and an enforceable quarantine-exit contract that closes the exit set, names the evidence required for each transition, and forbids every unrecorded alternative.
 
@@ -135,6 +144,17 @@ The RFC 2119 terms below describe the proposed accepted state; they are not clai
 - A connector, watcher, or model adapter **MUST NOT** be the actor that promotes a quarantined artifact. Watchers may detect, record, and request review; they do not publish.
 - A correction or rollback exit (E5) **MUST NOT** delete prior receipts, proofs, `EvidenceBundle`s, release manifests, or catalog records. It must link prior and successor state through accepted correction and supersession artifacts.
 - A safer derivative exit (E3) **MUST NOT** imply that the derivative is evidence-equivalent to the original. Public surfaces must disclose the transform and its bounds without exposing restricted detail.
+
+### 2.2 Non-goals
+
+This proposal does not:
+
+- accept itself, change the canonical index status, or turn repository presence into decision authority;
+- settle the current `QuarantineRecord` versus `quarantine_case_record` name, exact schema home, field set, identifier grammar, or compatibility plan;
+- make the lane README, runbook, review-worker placeholder, lifecycle-validator signals, or illustrative JSON executable;
+- authorize a connector, watcher, worker, model adapter, validator, reviewer, or file operation to promote or publish;
+- define retention periods, service-level objectives, queue semantics, reviewer assignments, or deployment topology; or
+- permit direct `QUARANTINE → PUBLISHED` movement or bypass any evidence, policy, review, catalog, release, correction, or rollback gate.
 
 ---
 
@@ -206,7 +226,7 @@ Each exit is documented with its **allowed-when** rule, the decision vocabulary 
 
 ## 4. State machine
 
-The five exits collapse cleanly into a state machine. Quarantine is the only state with five outbound exit classes; every public-facing transition still uses its own validation, catalog, policy, review, and release gates.
+The proposed exits can be represented as the target state machine below. This diagram is decision design, not a current executable graph. Every public-facing transition still depends on its own validation, evidence, catalog, policy, review, release, correction, and rollback gates.
 
 ```mermaid
 stateDiagram-v2
@@ -250,9 +270,12 @@ If accepted, each exit MUST emit the artifacts named below. Receipts and proofs 
 
 Every emission MUST carry a stable join key (`decision_id`, `case_id`, or a successor accepted by schema ADR) so audit replays can reconstruct the chain across receipts, policy decisions, release artifacts, and public DTOs.
 
+> [!WARNING]
+> The current runbook requires a `RunReceipt` for standard clearance and retirement, while this ADR proposes `TransformReceipt`, `ValidationReport`, and exit-specific families. That is an unresolved object-family mapping, not a synonym. Acceptance requires an explicit mapping or a revised artifact matrix; implementers must not choose by filename resemblance.
+
 ### 5.1 Quarantine case-record minimum content
 
-The quarantine case record is the proposed structural anchor for every exit. If this ADR is accepted, its schema MUST cover at least the semantics below and closure MUST append or update auditable state rather than erase the open-case history.
+The quarantine case record is the proposed structural anchor for every exit. Current repository documentation uses both `QuarantineRecord` and `quarantine_case_record`; neither name is accepted machine authority. If this ADR is accepted, the chosen contract and schema MUST cover at least the semantics below and closure MUST append or update auditable state rather than erase the open-case history.
 
 > [!NOTE]
 > The JSON below is an illustrative target shape. No matching repository schema exists at the pinned base, so field names and enum placement are not current machine authority.
@@ -368,19 +391,35 @@ After acceptance and schema publication, changing this enum would require a supe
 
 ## 8. Validation and enforcement
 
-This ADR becomes enforceable only when the required artifacts exist and pass. The repository-grounded status below is pinned to `main@fa74cbdc60e1f925d9f7e22024078386bd82e47d`.
+This ADR becomes enforceable only when the required artifacts exist and pass. The repository-grounded status below is pinned to `main@160938b3f4717b6f2551b3430ab5c08f9b33cecb`.
 
 | Enforcement surface | Required check | Repository-grounded status |
 | --- | --- | --- |
-| Schema | A quarantine-case schema requires one of the five closure reasons, closure time, stable join references, and exit-specific evidence. | **CONFIRMED absent at the named path / PROPOSED** |
-| Validator | `validate_quarantine_exit.py` (or an accepted equivalent) fails any closure missing the required evidence for its declared exit. | **CONFIRMED not found outside this ADR / PROPOSED** |
-| Policy | Quarantine-exit policy rejects non-canonical exits, missing evidence, and public reads from quarantine. | **CONFIRMED absent at the named path / PROPOSED** |
-| Worker or pipeline | A bounded worker may prepare review candidates and receipts but cannot decide, promote, publish, or mutate lifecycle state independently. | [Boundary README present](../../apps/workers/src/quarantine_review_worker/README.md); source and runtime **NEEDS VERIFICATION** |
-| Tests and fixtures | At least one positive case per exit plus negative cases for missing evidence, path-only moves, undisclosed transforms, stale references, and false verification. | **CONFIRMED not found for this five-exit contract / PROPOSED** |
+| Schema | A quarantine-case schema requires one of the five closure reasons, closure time, stable join references, and exit-specific evidence. | Named schema path not found; `QuarantineRecord` / `quarantine_case_record` identity remains **CONFLICTED / PROPOSED** |
+| Validator | `validate_quarantine_exit.py` (or an accepted equivalent) fails any closure missing the required evidence for its declared exit. | No executable file at the proposed path; lifecycle-validator signals and other matches are documentation only |
+| Policy | Quarantine-exit policy rejects non-canonical exits, missing evidence, and public reads from quarantine. | Named policy path not found; no accepted five-exit policy binding verified |
+| Worker or pipeline | A bounded worker may prepare review candidates and receipts but cannot decide, promote, publish, or mutate lifecycle state independently. | Boundary README plus comment-only `main.py`; tracked lane implementation **CONFIRMED placeholder-only**, external runtime `UNKNOWN` |
+| Tests and fixtures | At least one positive case per exit plus negative cases for missing evidence, path-only moves, undisclosed transforms, stale references, and false verification. | Bounded search found no executable five-exit fixture/test family; **PROPOSED** |
 | Documentation CI | ADR index validation checks unique IDs and filename/H1/index coherence. | [Workflow present](../../.github/workflows/docs-control-plane.yml); it does **not** enforce quarantine behavior |
 
 > [!IMPORTANT]
 > No `verified: true` boolean may be trusted on a quarantine exit unless the validator named above emits PASS for that case. Verification is an emitted result, not a hand-written assertion.
+
+### 8.1 Acceptance gates
+
+A status transition from `proposed` to `accepted` requires all applicable gates below to close in one reviewed, dependency-aware decision packet or in an explicitly ordered adoption sequence:
+
+- [ ] The ADR and [`INDEX.md`](./INDEX.md#numbered-records) carry matching reviewed status; no README, receipt, check, merge, or machine projection promotes the decision independently.
+- [ ] The canonical lane README, quarantine runbook, and worker boundary use one compatible exit grammar or explicitly documented adapters without collapsing lifecycle, review, policy, receipt, and release decisions.
+- [ ] One semantic contract and one versioned schema resolve the `QuarantineRecord` / `quarantine_case_record` identity, fields, join keys, closure enum, compatibility, and supersession rules.
+- [ ] Executable policy and validator paths enforce the five exits, required artifacts, fail-closed behavior, and the prohibition on public reads or path-only promotion.
+- [ ] Deterministic positive fixtures cover E1–E5; negative fixtures cover missing evidence, missing review, invalid receipt family, undisclosed derivative transforms, stale/superseded references, public-path leakage, and direct file moves.
+- [ ] Receipt-family mapping reconciles the runbook's `RunReceipt` with this ADR's `TransformReceipt`, `ValidationReport`, and exit-specific emissions.
+- [ ] Review authority, separation of duties, sensitive-domain escalation, and correction/rollback responsibilities are assigned to verified identities or accepted role bindings.
+- [ ] E5 is rehearsed against synthetic release state, preserving prior objects and proving correction, alias withdrawal, cache invalidation, supersession, and rollback linkage.
+- [ ] Repository-native documentation, schema, policy, validator, fixture, and exact-head hosted checks pass for the final adoption bytes.
+
+Until those gates close, documentation checks may validate structure and status coherence only. They do not make the proposed state machine executable.
 
 ---
 
@@ -400,10 +439,11 @@ This ADR itself can be rolled back — but the change is governed.
 
 - **OPEN.** Should the five `closure_reason` values be frozen exactly as `returned_to_work | promoted_to_processed | safer_derivative_released | deny_public_use | withdraw_correct_release`? The exact quarantine-case schema is absent, so this remains a proposed enum.
 - **OPEN.** Should E3 (safer derivative) require a `ReviewRecord` for **every** domain, or only for sensitivity-bearing domains (archaeology, fauna sensitive species, infrastructure, cultural material, living-person data)? Default in this ADR: required for all; a domain-specific carve-out would need its own ADR.
-- **NEEDS VERIFICATION.** Whether the exact schema home should be `schemas/contracts/v1/governance/`, `schemas/contracts/v1/quarantine/`, or another accepted subfolder under the confirmed `schemas/contracts/v1/` root.
+- **CONFLICTED / NEEDS VERIFICATION.** Whether the object family is named `QuarantineRecord` or `quarantine_case_record`, and whether its exact schema home is `schemas/contracts/v1/governance/`, `schemas/contracts/v1/quarantine/`, or another accepted family under `schemas/contracts/v1/`.
 - **CONFIRMED path presence / NEEDS VERIFICATION behavior.** [`release/correction_notices/`](../../release/correction_notices/) and [`release/rollback_cards/`](../../release/rollback_cards/) exist at the pinned base. Their runtime writers, review bindings, schema completeness, emitted objects, and rollback execution remain unverified.
 - **OPEN.** Reviewer-queue routing: which `required_review` value drives the SLA clock? This ADR does not specify SLAs; a separate ops ADR is anticipated.
 - **CONFIRMED local shape / NEEDS VERIFICATION end to end.** The proposed `PolicyDecision` and `DecisionEnvelope` schemas require `decision_id`; `PromotionDecision` uses `id` and `EvidenceBundle` uses `bundle_id`. A cross-object quarantine join contract is not yet verified.
+- **CONFLICTED / NEEDS VERIFICATION.** Whether `RunReceipt` is an umbrella record, a separate clearance receipt, or must compose with the proposed `TransformReceipt` and exit-specific receipt families.
 - **OPEN.** Whether E4 terminal denials should keep the case physically under `data/quarantine/` indefinitely, or move to a restricted denial archive after a closed-case retention policy is accepted.
 
 ---
@@ -429,7 +469,10 @@ Every numbered ADR below remains effectively `proposed` in the canonical index. 
 | [`EvidenceBundle`](../../contracts/evidence/evidence_bundle.md) + [schema](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | PROPOSED contract/schema | Evidence closure; current schema has no `limitations`, `excluded_evidence`, or supersession fields. |
 | [`CorrectionNotice`](../../contracts/correction/correction_notice.md) and [`RollbackCard`](../../contracts/release/rollback_card.md) | PROPOSED contracts | Correction explanation and rollback target remain distinct from execution proof. |
 | [Quarantine lane README](../../data/quarantine/README.md) | Repository-grounded draft | Confirms the canonical lane and broad governed exit posture, not the closed five-exit implementation. |
-| [Quarantine handling runbook](../runbooks/QUARANTINE_HANDLING.md) | Draft | Operational companion that currently clears remediated cases to WORK; requires reconciliation if this ADR is accepted. |
+| [Quarantine handling runbook](../runbooks/QUARANTINE_HANDLING.md) | Draft | Operational companion that clears standard remediated cases to WORK and requires `RunReceipt`; its object and exit vocabularies require reconciliation before acceptance. |
+| [Quarantine review worker](../../apps/workers/src/quarantine_review_worker/README.md) | Repository-grounded placeholder-only boundary | Records the inert comment-only implementation, unbound review flow, object-name conflict, and related-but-not-identical exit surfaces. |
+| [Lifecycle validator lane](../../tools/validators/lifecycle/README.md) | Documentation-only routing boundary | Names future lifecycle/quarantine signals but does not establish an executable exit validator or CI enforcement. |
+| [`.github/CODEOWNERS`](../../.github/CODEOWNERS) | CONFIRMED review routing | Routes `docs/adr/` to `@bartytime4life`; it does not prove review, acceptance, separation of duties, or implementation. |
 
 ---
 
@@ -475,6 +518,7 @@ QUARANTINE
 | Version | Date | Change | Decision effect |
 | --- | --- | --- | --- |
 | `v1.1` | 2026-05-15 | Clarified metadata safety, path wording, E3/E5 state-machine intent, and evidence boundaries. | None; remained `proposed`. |
-| `v1.2` | 2026-07-24 | Confirmed same-path repository identity; repaired references and removed the unverified badge strip; aligned current proposed contract vocabularies; removed unsupported EvidenceBundle field claims; recorded runbook and enforcement gaps. | None; remains `proposed`. |
+| `v1.2` | 2026-07-24 | Confirmed same-path repository identity; repaired references and removed the unverified badge strip; aligned current proposed contract vocabularies; removed unsupported EvidenceBundle field claims; recorded runbook and enforcement gaps. | None; remained `proposed`. |
+| `v1.3` | 2026-08-13 | Refreshed the evidence snapshot; recorded the placeholder-only review worker, case-name and receipt-family conflicts, effective review routing, explicit non-goals, and acceptance gates. | None; remains `proposed`. |
 
 <p align="right"><a href="#top">Back to top</a></p>
