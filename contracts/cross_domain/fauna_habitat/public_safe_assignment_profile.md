@@ -96,4 +96,4 @@ This profile does not:
 
 ## Acceptance and rollback
 
-Acceptance requires the ten-case fixture matrix, pair-specific tests, generic join-assessment regression tests, generated-receipt integrity, and the path-scoped workflow to pass at the exact PR head. Rollback is a single-commit revert of this profile, validator, fixtures, tests, workflow, receipt, and README update. Existing generic join assessment behavior remains unchanged.
+Acceptance requires the ten-case fixture matrix, pair-specific tests, generic join-assessment regression tests, generated-receipt integrity, and the path-scoped workflow to pass at the exact PR head. Rollback is a single-commit revert of this profile, validator, fixtures, tests, workflow, and receipt. Existing generic join assessment behavior remains unchanged.

@@ -29,4 +29,4 @@ The path-scoped workflow also runs the generic join fixture/test suite so pair-s
 
 ## Rollback
 
-Revert the bounded commit that introduces this directory and its paired contract, fixtures, tests, workflow, receipt, and test README update. No data, source, proof, release, or publication state is mutated.
+Revert the bounded commit that introduces this directory and its paired contract, fixtures, tests, workflow, and receipt. No data, source, proof, release, or publication state is mutated.
