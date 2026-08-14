@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-ai-receipt-candidate-builder-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/envelopes/src/envelopes/ai_receipt.py",
+    "packages/envelopes/src/envelopes/__init__.py",
+    "tests/packages/envelopes/test_ai_receipt_candidate.py"
+  ],
+  "artifact_hashes": {
+    "packages/envelopes/src/envelopes/ai_receipt.py": "sha256:2c18d207dbf4c956547ca6d90f54b4957ca894e5b5a917f82d873f8d947a03a5",
+    "packages/envelopes/src/envelopes/__init__.py": "sha256:0ebb7f121eec970ed14613314a6b86e36d93687db2f033aedb0db144529edb6c",
+    "tests/packages/envelopes/test_ai_receipt_candidate.py": "sha256:5aca3b6efb23a18b748ab3d255499ef64778274da2751e8c99374c6aa8e6ea86"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro"
+  },
+  "prompt_or_contract": "sha256:b9aeb6e7c840f6abb44956b71eac4c08cacc702eedbf5c06a37ffc74063bb073",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "attached-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+      "sha256:9a95ab510bd984c257a8c578f8646993c7fe55d76f7d3c5f60d8bb9ad04ec3a2",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:1eb07fe8cceed546a1d26bdca8b542f8d96a197d799e66a3b47c75102f40d76b",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM Unified Doctrine Synthesis.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#21.1-21.5",
+      "attachment:KFM_Full_Atlas_seed_cards.md#Evidence-Subordinate-AI-Implementation-Surface",
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#Appendix-I-page-20",
+      "attachment:KFM Unified Doctrine Synthesis.md#12-AIReceipt",
+      "repo:main@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:schemas/contracts/v1/runtime/ai_receipt.schema.json@8bda119d223573a58035bd0ce420066c0f961640",
+      "repo:tools/validators/validate_ai_receipt.py@8bda119d223573a58035bd0ce420066c0f961640"
+    ]
+  },
+  "truth_labels": {
+    "packages/envelopes/src/envelopes/ai_receipt.py": "PROPOSED",
+    "packages/envelopes/src/envelopes/__init__.py": "PROPOSED",
+    "tests/packages/envelopes/test_ai_receipt_candidate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-baseline",
+      "outcome": "PASS",
+      "reason": "Verified main at 8bda119d223573a58035bd0ce420066c0f961640; 103 visible check runs were completed with no failure, cancellation, queued, or in-progress result."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request owned the AIReceipt candidate-builder change at selection time; current schema, contract, validator, fixtures, exports, tests, and recent related pull requests were inspected."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "PYTHONPATH=packages/envelopes/src python -m pytest -q tests/packages/envelopes/test_ai_receipt_candidate.py passed 18 tests locally with no network access."
+    },
+    {
+      "gate": "schema-validator-integration",
+      "outcome": "PASS",
+      "reason": "Every finite outcome passed the current AIReceipt JSON Schema; a generated candidate also passed the current repository AIReceipt validator in the focused test."
+    },
+    {
+      "gate": "compile-and-json-syntax",
+      "outcome": "PASS",
+      "reason": "The new module and focused test compiled, and the current paired schema parsed as JSON."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "This generated receipt binds the final module, package export, and focused test bytes with SHA-256."
+    },
+    {
+      "gate": "repository-wide-ratchets",
+      "outcome": "SKIPPED",
+      "reason": "A full repository checkout was not mounted locally; hosted exact-head checks and repository-native ratchets run after the draft pull request opens."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8bda119d223573a58035bd0ce420066c0f961640"
+    },
+    {
+      "id": "governed-ai-mockadapter-first",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#21.1-21.5"
+    },
+    {
+      "id": "ai-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/ai_receipt.schema.json@8bda119d223573a58035bd0ce420066c0f961640"
+    },
+    {
+      "id": "ai-receipt-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_ai_receipt.py@8bda119d223573a58035bd0ce420066c0f961640"
+    },
+    {
+      "id": "envelope-package-boundary",
+      "validated": true,
+      "evidence_ref": "repo:packages/envelopes/src/envelopes/runtime_response.py@8bda119d223573a58035bd0ce420066c0f961640"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T23:00:41Z",
+  "emitter": "OpenAI ChatGPT via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "prompt_or_contract is the SHA-256 of the exact campaign summary: \"Implement the strongest verified unimplemented KFM ideas from connected Drive and attached sources as small dependency-closed draft PRs; preserve Directory Rules, evidence, policy, validation, correction, rollback, and no publication.\" The change adds a deterministic, side-effect-minimal AIReceipt candidate helper only. It does not call a model, compute digests, resolve evidence, evaluate policy, validate citations, persist receipts, authorize answers, promote lifecycle state, release, publish, or widen public access. The generated receipt is process memory and is not proof, review approval, release authority, or publication authority."
+}
