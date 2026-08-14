@@ -95,3 +95,4 @@ jobs:
           path: ${{ runner.temp }}/kfm-ci-integrity
           retention-days: 3
           if-no-files-found: error
+          include-hidden-files: true
