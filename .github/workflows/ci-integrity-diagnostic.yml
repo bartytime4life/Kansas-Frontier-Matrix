@@ -1,0 +1,130 @@
+# Temporary, read-only diagnostic used to identify exact current-main integrity drift.
+# This workflow will be removed before the corrective pull request is finalized.
+name: ci-integrity-diagnostic
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/ci-integrity-diagnostic.yml"
+      - "tools/validators/directory_governance/**"
+      - "data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"
+      - "docs/governed-ai/README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-integrity-diagnostic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    name: capture
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Capture topology and receipt diagnostics
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+          TZ: UTC
+        run: |
+          set -u
+          out="${RUNNER_TEMP}/kfm-ci-integrity"
+          mkdir -p "${out}"
+
+          git rev-parse HEAD > "${out}/current-head.txt"
+          cp tools/validators/directory_governance/repository_topology_baseline.json \
+            "${out}/repository-topology-baseline-current.json"
+
+          set +e
+          python3 tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --format json \
+            > "${out}/repository-topology-report.json" \
+            2> "${out}/repository-topology-report.stderr.txt"
+          printf '%s\n' "$?" > "${out}/repository-topology-report.exit.txt"
+
+          python3 tools/validators/directory_governance/validate_repository_topology.py \
+            --repo-root . \
+            --emit-baseline \
+            > "${out}/repository-topology-candidate.json" \
+            2> "${out}/repository-topology-candidate.stderr.txt"
+          printf '%s\n' "$?" > "${out}/repository-topology-candidate.exit.txt"
+          set -e
+
+          sha256sum \
+            .github/workflows/release-dry-run.yml \
+            Makefile \
+            tests/release/README.md \
+            tests/release/launch/README.md \
+            fixtures/control_plane/generated_receipt/valid.json \
+            fixtures/control_plane/generated_receipt/invalid.json \
+            > "${out}/publication-deny-artifact-sha256.txt"
+
+          git ls-files -s -- \
+            .github/workflows/release-dry-run.yml \
+            Makefile \
+            tests/release/README.md \
+            tests/release/launch/README.md \
+            fixtures/control_plane/generated_receipt/valid.json \
+            fixtures/control_plane/generated_receipt/invalid.json \
+            > "${out}/publication-deny-artifact-git-blobs.txt"
+
+          python3 - "${out}" <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          out = pathlib.Path(sys.argv[1])
+          summary = {"status": "candidate_unavailable"}
+          try:
+              current = json.loads((out / "repository-topology-baseline-current.json").read_text())
+              candidate = json.loads((out / "repository-topology-candidate.json").read_text())
+          except Exception as exc:
+              summary["error"] = type(exc).__name__
+          else:
+              current_by_identity = {
+                  (entry["rule_id"], entry["subject"]): entry
+                  for entry in current["entries"]
+              }
+              candidate_by_identity = {
+                  (entry["rule_id"], entry["subject"]): entry
+                  for entry in candidate["entries"]
+              }
+              added = sorted(set(candidate_by_identity) - set(current_by_identity))
+              removed = sorted(set(current_by_identity) - set(candidate_by_identity))
+              changed = sorted(
+                  identity
+                  for identity in set(current_by_identity) & set(candidate_by_identity)
+                  if current_by_identity[identity]["fingerprint"]
+                  != candidate_by_identity[identity]["fingerprint"]
+              )
+              summary = {
+                  "status": "ok",
+                  "current_entry_count": len(current_by_identity),
+                  "candidate_entry_count": len(candidate_by_identity),
+                  "added_identities": [list(item) for item in added],
+                  "removed_identities": [list(item) for item in removed],
+                  "changed_identities": [list(item) for item in changed],
+              }
+          (out / "repository-topology-delta-summary.json").write_text(
+              json.dumps(summary, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Retain exact diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ci-integrity-diagnostic
+          path: ${{ runner.temp }}/kfm-ci-integrity
+          retention-days: 3
+          if-no-files-found: error
