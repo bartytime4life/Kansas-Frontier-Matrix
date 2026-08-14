@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0008-ollama-subordinate-to-governed-api
 title: "ADR-0008 — Ollama and Local AI Runtimes Are Subordinate to the Governed API"
 type: adr
 adr_id: ADR-0008
-version: v1.2
+version: v1.3
 status: draft
 effective_decision_status: proposed
 owners:
@@ -16,45 +16,52 @@ reviewers_required:
   - Evidence / citation reviewer
   - Docs steward
 created: 2026-05-10
-updated: 2026-07-23
+updated: 2026-08-14
 policy_label: public
 truth_posture: cite-or-abstain
-responsibility_root: docs/
+owning_root: docs/
+responsibility: "Records the proposed placement, authority, exposure, validation, receipt, activation, and rollback rules that keep Ollama and other local AI runtimes subordinate to the Governed API."
 current_path: docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: e2466421ced8e41430737d4e7d51f19e3ab61d9f
-  target_prior_blob: 9dcaef6cffafb4b44a9740cab5ba3811305b1983
-  adr_index_blob: cf08fae322ac53426f7394d97897fdb942253049
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+  base_commit: eb95930a784252be7a24cba425185ff26294e8bb
+  verification_commit: cbf3656da9cb092d6a0f2382fb80ac13e3f217ac
+  target_prior_blob: 387b1a1969b2af77b325d2cacd35c19ab13f63f8
+  adr_index_blob: 938c5894c36b99e14810918e2c550ab0e92d53b1
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  adr_0004_blob: 11b86c462d474385befba0fb2115af9885f592af
-  adr_0019_blob: db55defa15fa709b20c613cf595adc334fe785ba
-  governed_api_readme_blob: 4f21150852f133ba919b11f4f8792185fa870dae
+  adr_0004_blob: f2737900569447e8e20c8ce12b275167724b0cc5
+  adr_0019_blob: c0bc41cc11b40b1ee87a838a3e80024a2da56c04
   governed_api_main_blob: bcc8d3a0ddba4b225e962b594d548819df0cbb71
   governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
   governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
-  governed_api_route_test_blob: 6474cef4f7378515ab673c288fc9daea19e388a9
-  governed_api_boundary_test_blob: d84ccd2a93bdf786e8fca11ee596dcc47e543fc2
-  api_workflow_blob: 5ec0ff53cc874935ed8ef5de791b70a52635ef33
-  makefile_blob: 51537af34ee065c2de571134688415042b83b22a
+  api_workflow_blob: 84ba16a3c36a1d58b2f6f1059a31ed6354063357
+  api_verification_run: 31809767303
   runtime_ollama_readme_blob: b0708364fa002760383882f18843e31c6c4209c7
-  model_adapters_readme_blob: 16456452e03884dabb24c670c41c9e359f679769
-  adapter_contract_note_blob: e371e5ca008ecbd0775bea9c2a31ef76131e7575
   ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
-  mock_adapter_blob: 2a7b6533c9f073495f868aded9b213a38efe7526
-  env_example_blob: 50e972a4c5c009ed89097753932fc328039c1aec
-  runtime_response_contract_blob: b81d67dccdd8470e066ab8247eb93c5df67a6679
-  runtime_response_schema_blob: 5105d419432a27176a8ee10870d75400cfa2ab8c
-  runtime_response_validator_blob: 11ddc64c4299d103b0eef383c2f7bdd3bb12f1f9
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  mock_adapter_proof_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
+  env_example_blob: 5af73215557f4af432157409ff89ab17088d0953
+  runtime_response_contract_blob: 97ff95ba5527968f3db70cd710682176444e4cde
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
+  finite_envelope_proof_blob: 70ca80226bf06c3b28b59096e3812312a00c03b6
+  ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
   ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
-  policy_runtime_blob: b9bfee731553c504b514f07a6862ef3e68328f02
-  focus_mock_workflow_blob: aa97ee5ad099d1e10922d037061abde17ceb3a93
-  finite_envelope_placeholder_test_blob: ee28fd9bb6eebee6453d8d8e432d3a0e92bfdd23
-  ollama_integration_doc_blob: 39cd49270781d9d5237d98264ccd3502e28f6790
+  ai_receipt_validator_blob: eb80e77aed15f478c32215c8f773f308a87a092a
+  ai_receipt_validator_test_blob: f35514538205fbac359520327e7519b3a851cea8
+  policy_runtime_readme_blob: 80b63e7651429903385066b53c7fb41af3cd1298
+  policy_abstain_rego_blob: 9c66097140933eba5aa7011653da12488035ad99
+  policy_deny_public_rego_blob: 8d46a90088c046c102b991904e56ecf32d8ae7d3
+  policy_evidence_required_rego_blob: 297bd7999bf19c4029bf92df6f1c2f07477c787d
+  policy_run_receipt_rego_blob: 5fa096c9d65183b0b3333e05434bbf6f2ab9c0b7
+  focus_mock_workflow_blob: fbd56c7cda991ff8f3b804cc0c278e62daaa7abf
+  focus_mock_verification_run: 31809767441
+  policy_verification_run: 31809767223
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -62,6 +69,7 @@ related:
   - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
@@ -74,21 +82,27 @@ related:
   - runtime/ollama/README.md
   - runtime/model_adapters/README.md
   - runtime/model_adapters/AdapterContract.md
+  - packages/envelopes/src/envelopes/runtime_response.py
   - contracts/runtime/runtime_response_envelope.md
   - contracts/runtime/ai_receipt.md
   - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - schemas/contracts/v1/runtime/ai_receipt.schema.json
   - policy/runtime/README.md
+  - tools/validators/validate_ai_receipt.py
+  - tests/runtime_proof/test_mock_adapter_finite_outcomes.py
+  - tests/runtime_proof/test_envelope_finite_outcomes.py
   - .github/workflows/api-test.yml
   - .github/workflows/focus-mock-test.yml
 tags: [kfm, adr, ollama, local-ai, governed-api, governed-ai, runtime, model-adapter, finite-outcomes, ai-receipt, citation-validation, trust-membrane, no-direct-model-client]
 notes:
-  - "v1.2 is a same-path, documentation-only, repository-grounded modernization; it does not accept the ADR, activate Ollama, or change runtime behavior."
-  - "ADR-0008 numbering and tracked path are confirmed by docs/adr/INDEX.md; source metadata remains draft and effective decision status remains proposed."
-  - "The repository now contains a minimal executable Governed API that returns deterministic ABSTAIN / NOT_IMPLEMENTED envelopes for three GET routes; this is fail-closed scaffolding, not a complete governed-AI path."
-  - "runtime/model_adapters/OllamaAdapter.py and MockAdapter.py remain one-line placeholders; policy/runtime/ remains a greenfield stub; the Focus mock workflow records an explicit readiness HOLD."
-  - "RuntimeResponseEnvelope and AIReceipt contracts/schemas exist at PROPOSED status, but no live model invocation, evidence resolution, citation validation, policy execution, receipt persistence, or production isolation is established."
-  - "A bounded repository search did not surface an implemented direct Ollama client outside the documented runtime boundary; repository-wide static and dependency enforcement remains incomplete."
+  - "v1.3 is a same-path, documentation-only, repository-grounded reconciliation; it does not accept the ADR, activate Ollama, approve a provider/model, or change runtime behavior."
+  - "ADR-0008 remains source status draft and effective decision status proposed in docs/adr/INDEX.md."
+  - "The Governed API verification workflow passed at ancestor commit cbf3656da9cb092d6a0f2382fb80ac13e3f217ac, and no cited ADR/runtime/API/policy/envelope/receipt evidence path changed through the pinned base, but the application remains three deterministic ABSTAIN / NOT_IMPLEMENTED routes with no model route."
+  - "MockAdapter.py is now an executable deterministic, no-I/O selector for prevalidated synthetic scenario envelopes, and repository-owned tests cover all four finite outcomes and fail-closed selection errors; it is not a semantic outcome decider, evidence/policy engine, provider runtime, or receipt emitter."
+  - "OllamaAdapter.py remains a one-line placeholder. Runtime policy documentation is substantive, but the four Rego files remain proposed, non-enforcing scaffolds."
+  - "RuntimeResponseEnvelope builder and proof tests are substantive, but the proposed contract text and proposed schema diverge over precision disclosure; governed route integration remains on HOLD."
+  - "The AIReceipt validator proves local schema/consistency behavior only; no model invocation, runtime receipt emission/persistence, evidence resolution, citation validation, provider admission, production isolation, release, or publication is established."
+  - "Bounded exact-snapshot searches did not surface a direct public Ollama client or executable KFM_MODEL_RUNTIME loader; repository-wide static, dependency, configuration, generated-asset, and deployment enforcement remains incomplete."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -98,16 +112,17 @@ notes:
 > **Proposed decision.** Ollama and every other local AI runtime remain replaceable, internal interpretation providers behind KFM's governed API. They may receive only bounded, policy-safe context assembled through governed interfaces; they may never become a public client contract, evidence authority, policy authority, release authority, lifecycle store, or direct path to canonical/internal data.
 
 [![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1-status--authority)
-[![Governed API: ABSTAIN scaffold](https://img.shields.io/badge/governed%20API-3%20ABSTAIN%20routes-2da44e?style=flat-square)](#22-current-repository-evidence)
+[![Governed API: supporting CI pass](https://img.shields.io/badge/governed%20API-supporting%20CI%20pass-2da44e?style=flat-square)](#22-current-repository-evidence)
+[![MockAdapter: bounded proof](https://img.shields.io/badge/MockAdapter-bounded%20proof-2da44e?style=flat-square)](#22-current-repository-evidence)
 [![Ollama adapter: placeholder](https://img.shields.io/badge/OllamaAdapter-placeholder-6e7781?style=flat-square)](#22-current-repository-evidence)
-[![Runtime policy: stub](https://img.shields.io/badge/runtime%20policy-stub-b42318?style=flat-square)](#22-current-repository-evidence)
+[![Runtime policy: non-enforcing](https://img.shields.io/badge/runtime%20policy-non--enforcing-b42318?style=flat-square)](#22-current-repository-evidence)
 [![Public model access: denied](https://img.shields.io/badge/public%20model%20access-denied-b42318?style=flat-square)](#32-public-path-must-not)
 
 > [!IMPORTANT]
-> **Repository configuration is not reviewed decision authority.** The repository contains the canonical runtime lanes, proposed contracts and schemas, a bounded Governed API scaffold, selected structural tests, and command-bearing CI. Those surfaces do not accept this ADR, implement a model adapter, authorize a model or provider, prove policy/evidence/citation closure, establish receipt persistence, or make any AI-assisted response releasable.
+> **Repository implementation is not reviewed decision authority.** The repository now contains bounded executable mock/envelope proofs, a local AIReceipt validator, and passing exact-head API/Focus runs at the recorded verification commit in addition to the fail-closed Governed API scaffold. Those surfaces do not accept this ADR, implement or activate Ollama, admit a provider/model, establish an accepted adapter contract, prove policy/evidence/citation closure, persist runtime receipts, or make any AI-assisted response releasable.
 
 > [!CAUTION]
-> **Fail-closed scaffolding is not an AI integration.** The current Governed API returns `ABSTAIN` / `NOT_IMPLEMENTED`; `OllamaAdapter.py` and `MockAdapter.py` are one-line placeholders; runtime policy is a stub; and the mock-Focus workflow is an explicit readiness hold. No route may graduate to `ANSWER` merely because an envelope schema, fixture, validator, smoke test, or workflow is green.
+> **Bounded proof is not an AI integration.** The current Governed API still returns `ABSTAIN` / `NOT_IMPLEMENTED`; `OllamaAdapter.py` is still a one-line placeholder; `MockAdapter.py` only selects prevalidated synthetic envelopes; runtime Rego remains non-enforcing; and the mock-Focus workflow still records `WORKFLOW_HOLD`. No route may graduate to `ANSWER` merely because a selector, schema, fixture, validator, shape test, smoke test, or workflow is green.
 
 **Quick navigation:** [Status](#1-status--authority) · [Context](#2-context) · [Decision](#3-decision) · [Architecture](#4-architecture-diagram) · [Surfaces](#5-affected-paths) · [Consequences](#6-consequences) · [Alternatives](#7-alternatives-considered) · [Migration](#8-migration-plan) · [Rollback](#9-rollback-plan) · [Validation](#10-validation-and-enforcement) · [Related](#11-related-adrs-and-docs) · [Open work](#12-open-questions--needs-verification) · [Glossary](#13-glossary) · [No-loss ledger](#appendix-a--no-loss-modernization-ledger)
 
@@ -124,7 +139,7 @@ notes:
 | **Source metadata** | `draft` |
 | **Effective decision status** | `proposed` — not binding as an accepted ADR until the record and index carry matching reviewed `accepted` status |
 | **Created** | 2026-05-10 |
-| **Updated** | 2026-07-23 |
+| **Updated** | 2026-08-14 |
 | **Tracked path** | `docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md` |
 | **Decision class** | Runtime placement, public exposure boundary, provider subordination, finite outcomes, evidence/policy/citation gates, receipts, and reversible deactivation |
 | **Primary related decisions** | [`ADR-0004`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) — public dynamic trust boundary; [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) — provider-neutral adapter and finite-envelope proposal |
@@ -135,21 +150,22 @@ notes:
 
 | Concern | Status | Safe conclusion |
 |---|---|---|
-| ADR identity and path | **CONFIRMED** | The exact record is indexed as ADR-0008; the prior path/number uncertainty is closed. |
-| Decision authority | **PROPOSED** | The record is present but not accepted. |
+| ADR identity and path | **CONFIRMED** | The exact record is indexed as ADR-0008; source status remains `draft` and effective decision status remains `proposed`. |
+| Governing directory doctrine | **ACCEPTED separately** | ADR-0029 accepted Directory Rules v2. That placement authority does not accept ADR-0008 or activate a runtime. |
 | Governed API application | **CONFIRMED minimal executable scaffold** | A small WSGI app registers `/bootstrap`, `/layers`, and `/evidence`; every route returns deterministic `ABSTAIN` / `NOT_IMPLEMENTED`. |
-| Governed API tests | **CONFIRMED bounded structural tests** | Tests cover route manifest, `404`, `405`, selected forbidden imports/internal path literals, and current ABSTAIN shape. They do not prove auth, policy, evidence resolution, citation validation, model use, or deployed isolation. |
-| API CI | **CONFIRMED command-bearing workflow** | `.github/workflows/api-test.yml` runs the smoke suite and focused ABSTAIN contract check. No workflow result is asserted by this document. |
-| Ollama runtime lane | **CONFIRMED documentation lane** | `runtime/ollama/README.md` exists and describes loopback-only, mock-first, governed integration. |
+| Governed API tests and verification CI | **CONFIRMED bounded pass** | Run `31809767303` passed both API jobs at verification commit `cbf3656da9cb092d6a0f2382fb80ac13e3f217ac`; the cited API surfaces are unchanged at the pinned base. Scope remains route/shape and selected source-boundary checks—not auth, evidence, policy, citation, model use, receipt emission, deployment, release, or publication. |
+| Ollama runtime lane | **CONFIRMED documentation lane** | `runtime/ollama/README.md` describes loopback-only, mock-first governed integration; it does not prove a daemon, installed model, adapter, or admitted profile. |
 | Ollama adapter | **CONFIRMED placeholder** | `runtime/model_adapters/OllamaAdapter.py` contains one comment and no executable adapter. |
-| Mock adapter | **CONFIRMED placeholder** | `runtime/model_adapters/MockAdapter.py` contains one comment and no executable deterministic adapter. |
-| Default runtime configuration | **CONFIRMED safe example** | `.env.example` selects `KFM_MODEL_RUNTIME=mock` and documents `OLLAMA_HOST=http://127.0.0.1:11434`; this neither starts nor approves Ollama. |
-| RuntimeResponseEnvelope | **CONFIRMED contract/schema/fixtures/validator surfaces; PROPOSED status** | Machine shape and selected fixture coverage exist. The current Governed API scaffold validates a DecisionEnvelope-shaped subset rather than emitting the complete client-facing RuntimeResponseEnvelope. |
-| AIReceipt | **CONFIRMED contract/schema family; PROPOSED status** | The schema requires adapter/model and digest/policy/citation/outcome fields. No invocation or persisted receipt is proven. |
-| Runtime policy | **CONFIRMED stub** | `policy/runtime/README.md` contains only a greenfield-bundle marker; no accepted runtime policy execution is established. |
-| Mock Focus lane | **CONFIRMED readiness hold** | The workflow checks placeholders and explicit absence of executable mock-Focus behavior; it does not run a model or emit a runtime envelope. |
-| Direct public Ollama client | **Not surfaced in bounded repository searches** | This is not proof of repository-wide absence. Current enforcement is incomplete and does not cover every language, dynamic import, URL acquisition, generated file, or deployment config. |
-| Installed daemon/models/version | **UNKNOWN** | No current daemon, model inventory, digest, rights review, runtime log, deployment, or health evidence was used. |
+| Mock adapter | **CONFIRMED bounded executable selector** | `MockAdapter.py` deterministically deep-copies prevalidated synthetic scenario envelopes for exactly four outcomes and performs no I/O. It does not interpret requests, choose semantic outcomes, validate evidence/policy/citations, call a model, or emit a receipt. |
+| Mock adapter proof | **CONFIRMED substantive tests** | `test_mock_adapter_finite_outcomes.py` covers all four outcomes, deterministic isolation, configuration failure, unknown-scenario failure, and an import-based no-I/O boundary. It is not provider or governed-route integration proof. |
+| Default runtime configuration | **CONFIRMED safe example** | `.env.example` selects `KFM_MODEL_RUNTIME=mock` and documents `OLLAMA_HOST=http://127.0.0.1:11434`; no executable runtime loader or activation is established. |
+| RuntimeResponseEnvelope implementation | **CONFIRMED bounded candidate builder and shape proof; PROPOSED semantics** | The builder enforces four outcomes and answer-specific evidence/precision constraints; tests prove closed shape and fixture polarity. It does not resolve evidence, evaluate policy, calculate freshness/precision, authorize `ANSWER`, or integrate with the current Governed API routes. |
+| RuntimeResponseEnvelope contract alignment | **HOLD — DRIFT** | The proposed schema/builder require answer precision disclosure, while the proposed v0.3 contract text does not document that field. Contract/schema convergence is required before governed integration. |
+| AIReceipt | **CONFIRMED proposed contract/schema plus local validator** | The validator checks local schema and bounded consistency, and its tests cover fixture polarity and fail-closed file cases. No runtime emission, persistence, evidence resolution, policy/citation approval, model admission, release, or publication is proven. |
+| Runtime policy | **CONFIRMED non-enforcing scaffold** | Documentation is substantive, but the four Rego files contain defaults/comments without accepted enforcing rule bodies, bundle/evaluator binding, or runtime consumers. |
+| Mock Focus lane | **CONFIRMED bounded proof plus explicit HOLD** | Run `31809767441` passed at the verification commit; its mock-Focus job records `WORKFLOW_HOLD`, while its finite-envelope job runs the bounded selector/shape tests. No Focus runtime or provider executed. |
+| Direct public Ollama client | **Not surfaced in bounded exact-snapshot searches** | This is not proof of repository-wide absence. Current enforcement does not cover every language, dynamic import, endpoint acquisition, generated file, dependency, or deployment configuration. |
+| Installed daemon/models/version and deployed isolation | **UNKNOWN** | No current daemon, model inventory/digest, rights review, runtime log, deployment, port exposure, health evidence, or activation record was used. |
 
 ### 1.3 Acceptance gates
 
@@ -159,8 +175,8 @@ ADR-0008 SHOULD remain `proposed` until equivalent evidence closes every applica
 |---|---|---|
 | **A — Decision coherence** | ADR-0004, ADR-0008, ADR-0019, and the ADR index agree on public boundary, provider-neutral adapter, finite outcomes, and status | Keep all decisions proposed; do not infer acceptance from implementation scaffolds |
 | **B — Canonical semantic boundary** | Accepted provider-neutral adapter contract under the proper contract authority, with no competing runtime-note authority | Do not activate a provider |
-| **C — Deterministic MockAdapter** | Executable no-network adapter, valid/invalid fixtures, all finite outcomes, and consumer tests | Ollama remains disabled/deferred |
-| **D — Evidence and policy closure** | EvidenceRef resolution, EvidenceBundle support, policy precheck/postcheck, rights/sensitivity handling, citation validation, and negative-path tests | `ABSTAIN`, `DENY`, or `ERROR`; never model invocation by default |
+| **C — Deterministic MockAdapter** | Executable no-I/O adapter behind the accepted semantic contract, complete valid/invalid scenarios, all finite outcomes, and governed-consumer tests | Current selector/shape proof is partial only; Ollama remains disabled/deferred |
+| **D — Evidence and policy closure** | EvidenceRef resolution, EvidenceBundle support, enforcing policy precheck/postcheck, rights/sensitivity handling, citation validation, and negative-path tests | Current non-enforcing Rego scaffold does not close the gate; `ABSTAIN`, `DENY`, or `ERROR` |
 | **E — Receipt closure** | Schema-valid AIReceipt or accepted equivalent joined to request, policy, evidence/citation, model identity, input/output digests, and outcome without private reasoning | Block answer/release use |
 | **F — Provider/model admission** | Reviewed provider profile, model identity/digest, license/terms, capability scope, resource limits, network/tool permissions, and rollback/kill switch | Provider/model remains unadmitted |
 | **G — Adapter implementation** | Tested Ollama adapter behind the accepted contract; provider substitution does not change public semantics | Keep `KFM_MODEL_RUNTIME=mock` or disabled |
@@ -189,28 +205,26 @@ That path omits or weakens evidence resolution, policy, rights/sensitivity, cita
 
 ### 2.2 Current repository evidence
 
-The prior revision treated almost every path and implementation claim as unknown. Current evidence supports a sharper distinction.
+The pinned 2026-08-14 base, checked against an ancestor verification snapshot with no changes to cited evidence paths, supports a sharper split between bounded executable proof and missing governed-runtime closure.
 
 | Surface | Verified state at the pinned snapshot | What it proves — and does not prove |
 |---|---|---|
 | [`INDEX.md`](./INDEX.md) | ADR-0008 is the unique tracked record; effective status `proposed`, source metadata `draft` | Identity and conservative status normalization; not acceptance |
-| [`ADR-0004`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Repository-grounded proposed decision; documents current WSGI/ABSTAIN scaffold | Related boundary and implementation snapshot; not accepted authority |
-| [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Proposed provider-neutral adapter/finite-envelope decision | Design relationship; not accepted adapter contract or live provider authorization |
-| [`apps/governed-api/main.py`](../../apps/governed-api/src/governed_api/main.py) | WSGI dispatch for registered GET routes | Executable minimal dispatch; not model integration, auth, evidence, policy, or release |
-| [`routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly three routes: `/bootstrap`, `/layers`, `/evidence` | Current route manifest; no `/focus` or model route is implemented |
-| [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | Deterministic `ABSTAIN` / `NOT_IMPLEMENTED` objects with empty evidence refs | Fail-closed scaffold; not client-facing RuntimeResponseEnvelope integration |
-| [`test_abstain_routes.py`](../../apps/governed-api/tests/test_abstain_routes.py) | Iterates all routes and checks current negative shape | Current scaffold contract; not full evidence/policy/citation flow |
-| [`test_boundary_guards.py`](../../apps/governed-api/tests/test_boundary_guards.py) | Checks selected import prefixes and internal path literals in the app | Bounded structural enforcement; not repository-wide information-flow proof |
-| [`Makefile`](../../Makefile) | Command-bearing API tests and import check; several broader gates remain TODO readiness markers | Local orchestration surface; not release approval |
-| [`api-test.yml`](../../.github/workflows/api-test.yml) | Runs smoke and focused ABSTAIN checks with read-only contents permission | CI orchestration; no run result or complete trust proof inferred here |
-| [`runtime/ollama/README.md`](../../runtime/ollama/README.md) | Evidence-grounded provider-specific lane README | Placement and admission guidance; not daemon or adapter implementation |
-| [`OllamaAdapter.py`](../../runtime/model_adapters/OllamaAdapter.py) | One-line placeholder | File presence only |
-| [`MockAdapter.py`](../../runtime/model_adapters/MockAdapter.py) | One-line placeholder | File presence only |
-| [`.env.example`](../../.env.example) | Mock selected by default; Ollama host is loopback | Safe example posture; not activation, secret, or deployment proof |
-| [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md) and [schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Closed proposed shape with finite outcomes and evidence/policy/freshness/correction fields | Machine/semantic proposal and fixture-test surface; not API integration |
-| [`AIReceipt` schema](../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | Proposed closed shape with adapter/model, digests, policy/citation refs, and outcome | Proposed accountability shape; not emitted receipt or complete evidence linkage |
-| [`policy/runtime/README.md`](../../policy/runtime/README.md) | Greenfield bundle stub | No operational runtime policy |
-| [`focus-mock-test.yml`](../../.github/workflows/focus-mock-test.yml) | Explicit readiness checks and HOLD posture; requires placeholders to remain placeholders | Accurate maturity sentinel; not executable mock Focus behavior |
+| [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../doctrine/directory-rules.md) | ADR-0029 is accepted and adopts Directory Rules v2 exactly | Root/placement governance; not runtime/provider approval |
+| [`ADR-0004`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Current proposed boundary record documents the three-route WSGI/ABSTAIN scaffold and contract drift | Related boundary snapshot; not accepted authority |
+| [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Proposed provider-neutral adapter/finite-envelope decision with a stale placeholder-era repository snapshot | Design relationship only; not current implementation evidence, accepted adapter semantics, or provider authorization |
+| [`apps/governed-api/main.py`](../../apps/governed-api/src/governed_api/main.py), [`routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py), and [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | WSGI dispatch for exactly `/bootstrap`, `/layers`, and `/evidence`; deterministic `ABSTAIN` / `NOT_IMPLEMENTED` objects | Executable fail-closed dispatch; no model/Focus route, auth, evidence resolution, policy, citation, complete RuntimeResponseEnvelope, receipt, or release integration |
+| Governed API tests and [`api-test.yml`](../../.github/workflows/api-test.yml) | Route/shape and selected source-boundary tests; verification run `31809767303` passed both jobs | Bounded current scaffold signal; not a complete trust, deployment, or publication proof |
+| [`runtime/ollama/README.md`](../../runtime/ollama/README.md) and [`OllamaAdapter.py`](../../runtime/model_adapters/OllamaAdapter.py) | Provider-specific guidance plus a one-line adapter placeholder | Intended placement/admission posture and file presence only |
+| [`MockAdapter.py`](../../runtime/model_adapters/MockAdapter.py) | Deterministic no-I/O selector for a complete map of prevalidated synthetic scenario envelopes; closed outcomes `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Executable selection/deep-copy behavior; no request interpretation, semantic outcome choice, evidence/policy/citation work, model invocation, or receipt emission |
+| [`test_mock_adapter_finite_outcomes.py`](../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py) | Covers all outcomes, isolated copies, incomplete configuration, unknown scenario, and forbidden I/O/dynamic-execution imports | Substantive bounded selector proof; not adapter-contract or governed-consumer integration |
+| [`.env.example`](../../.env.example) | Mock selected by default; Ollama host is loopback; public clients are warned away from direct access | Safe example posture; not loader, activation, secret, daemon, or deployment proof |
+| [`runtime_response.py`](../../packages/envelopes/src/envelopes/runtime_response.py) and [finite-envelope proof](../../tests/runtime_proof/test_envelope_finite_outcomes.py) | Bounded candidate builder plus standard-library tests for closed outcomes, Focus alias, fixture polarity, and answer-specific evidence/precision constraints | Substantive construction and machine-shape proof; no evidence resolution, policy decision, freshness/precision calculation, `ANSWER` authorization, runtime, or public client |
+| [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md) and [schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Both remain proposed; schema/builder require answer precision disclosure while the v0.3 contract text does not document it | Explicit contract/schema drift; governed integration remains on HOLD |
+| [`AIReceipt` contract](../../contracts/runtime/ai_receipt.md), [schema](../../schemas/contracts/v1/runtime/ai_receipt.schema.json), and [validator](../../tools/validators/validate_ai_receipt.py) | Proposed object family plus deterministic local schema/consistency validation and fail-closed tests | Candidate-file validation only; no runtime receipt emission/persistence or authority creation |
+| [`policy/runtime/README.md`](../../policy/runtime/README.md) and four Rego files | Detailed boundary documentation; three files default `deny := false`, one defaults `allow := false`, and operative rule bodies are absent/commented | Proposed non-enforcing scaffold; no accepted evaluator/bundle binding, consumer, or runtime enforcement |
+| [`focus-mock-test.yml`](../../.github/workflows/focus-mock-test.yml) | Verification run `31809767441` passed; finite-envelope job runs both substantive proof modules; mock-Focus job records `WORKFLOW_HOLD` | Bounded selector/shape readiness proof; no Focus payload, runtime command, provider, receipt, release, or publication |
+| Bounded exact-snapshot searches for `ollama`, `11434`, and `KFM_MODEL_RUNTIME` | No executable public Ollama client or runtime loader surfaced; matches were dominated by docs/config/workflow/test surfaces | Useful bounded negative evidence; not repository-wide static/dependency/configuration/deployment proof |
 
 ### 2.3 Relationship to adjacent ADRs
 
@@ -218,7 +232,7 @@ The prior revision treated almost every path and implementation claim as unknown
 |---|---|---|
 | **ADR-0004** | Which dynamic app is the normal public trust boundary? | Ollama/local runtimes may be reached only through that boundary and never become a peer public API. |
 | **ADR-0008** | How are local providers placed, constrained, exposed, audited, and deactivated? | Provider-specific subordination, no-direct-client/no-direct-store rules, admission gates, security and rollback. |
-| **ADR-0019** | What provider-neutral adapter and finite-envelope contract should AI runtimes conform to? | ADR-0008 consumes that accepted contract when available; it must not invent a competing adapter contract. |
+| **ADR-0019** | What provider-neutral adapter and finite-envelope contract should AI runtimes conform to? | ADR-0008 consumes an accepted contract when available; ADR-0019's stale placeholder-era snapshot must not override current repository evidence or create a competing contract. |
 | **ADR-0020** | Why is abstention a first-class decision? | ADR-0008 applies abstention before and after model execution when evidence or policy support is insufficient. |
 | **ADR-0025** | Why may public clients not read canonical/internal stores? | ADR-0008 extends that rule to model context assembly and runtime-provider access. |
 
@@ -334,14 +348,19 @@ Current repository evidence supports this split:
 
 | Object / concern | Current authority surface | Current status |
 |---|---|---|
-| `RuntimeResponseEnvelope` meaning | [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md) | Draft / PROPOSED |
-| `RuntimeResponseEnvelope` shape | [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | PROPOSED; fixtures and validator present |
-| `DecisionEnvelope` meaning/shape | `contracts/runtime/decision_envelope.md` + paired runtime schema | Draft / PROPOSED; used as current scaffold subset |
+| `RuntimeResponseEnvelope` meaning | [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md) | v0.3 draft / PROPOSED; does not currently document schema-required answer precision disclosure |
+| `RuntimeResponseEnvelope` shape | [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | PROPOSED; closed four outcomes; `ANSWER` requires evidence and precision; non-`ANSWER` forbids precision |
+| `RuntimeResponseEnvelope` candidate construction | [`packages/envelopes/src/envelopes/runtime_response.py`](../../packages/envelopes/src/envelopes/runtime_response.py) | Bounded executable builder; validates shape only and explicitly creates no evidence/policy/release authority |
+| `DecisionEnvelope` meaning/shape | `contracts/runtime/decision_envelope.md` + paired runtime schema | Draft / PROPOSED; used as current Governed API scaffold subset |
 | `AIReceipt` meaning/shape | [`contracts/runtime/ai_receipt.md`](../../contracts/runtime/ai_receipt.md) + paired runtime schema | Draft / PROPOSED |
-| `FocusRequest` / `FocusResponse` | `contracts/ui/` plus `schemas/contracts/v1/focus/` | Contracts exist; schemas remain open PROPOSED scaffolds in current readiness checks |
+| `AIReceipt` local validation | [`tools/validators/validate_ai_receipt.py`](../../tools/validators/validate_ai_receipt.py) | Executable schema/consistency validator; no evidence resolution, policy/citation approval, runtime emission, release, or publication authority |
+| `FocusRequest` / `FocusResponse` | `contracts/ui/` plus `schemas/contracts/v1/focus/` | Contracts exist; verification workflow confirms open PROPOSED schemas and `WORKFLOW_HOLD` |
 | Provider-neutral adapter note | [`runtime/model_adapters/AdapterContract.md`](../../runtime/model_adapters/AdapterContract.md) | Descriptive, non-canonical, and partially stale |
 | Canonical adapter semantic contract | Accepted `contracts/runtime/` surface | **NOT ESTABLISHED** |
-| Runtime admissibility | [`policy/runtime/`](../../policy/runtime/) | Stub / not established |
+| Runtime admissibility | [`policy/runtime/`](../../policy/runtime/) | Detailed documentation plus proposed non-enforcing Rego scaffolds; accepted evaluator/bundle/runtime binding **NOT ESTABLISHED** |
+
+> [!IMPORTANT]
+> **Contract/schema drift is a HOLD, not an implementation choice.** The proposed RuntimeResponseEnvelope schema and builder require answer precision disclosure, while the proposed v0.3 contract text does not document it. The semantic contract and machine shape must converge through reviewed contract/schema work before a governed route, MockAdapter consumer, or OllamaAdapter may rely on that field.
 
 This ADR defines the dependency and authority boundary. It MUST NOT duplicate full object fields, create a second adapter contract under `runtime/`, or treat a descriptive README/note as accepted semantic authority. When a machine shape, contract, implementation, or policy conflicts, record the conflict and resolve it through the appropriate contract/schema/policy/ADR process before adding a parallel definition.
 
@@ -355,15 +374,15 @@ This ADR defines the dependency and authority boundary. It MUST NOT duplicate fu
 The diagram separates **confirmed current scaffolding** from **deferred governed-AI behavior**. It is not a deployment claim.
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph CLIENTS["Public and semi-public clients"]
     WEB["Explorer Web / embeds / external clients"]
   end
 
   subgraph CURRENT["Confirmed current Governed API scaffold"]
     WSGI["WSGI app"]
-    ROUTES["GET /bootstrap<br/>GET /layers<br/>GET /evidence"]
-    STUB["ABSTAIN · NOT_IMPLEMENTED<br/>empty evidence_refs"]
+    ROUTES["GET bootstrap, layers, evidence"]
+    STUB["ABSTAIN · NOT_IMPLEMENTED"]
     API_TEST["bounded route and boundary tests"]
   end
 
@@ -372,11 +391,11 @@ flowchart LR
     POLICY["policy precheck / postcheck"]
     EVIDENCE["EvidenceRef → EvidenceBundle"]
     ADAPTER["accepted provider-neutral ModelAdapter"]
-    MOCK["MockAdapter<br/>current file: placeholder"]
-    OLLAMA["OllamaAdapter<br/>current file: placeholder"]
+    MOCK["MockAdapter · bounded no-I/O selector"]
+    OLLAMA["OllamaAdapter · placeholder"]
     CITE["citation validation"]
     RECEIPT["AIReceipt / audit join"]
-    RESPONSE["RuntimeResponseEnvelope<br/>ANSWER · ABSTAIN · DENY · ERROR"]
+    RESPONSE["RuntimeResponseEnvelope · four outcomes"]
   end
 
   WEB --> WSGI --> ROUTES --> STUB
@@ -393,7 +412,7 @@ flowchart LR
   OLLAMA -. "DENY direct store reads" .-> EVIDENCE
 ```
 
-The dotted `future accepted integration` edge is intentionally not implemented by the current three-route scaffold. The direct client-to-provider and provider-to-store paths remain denied.
+The dotted `future accepted integration` edge is intentionally not implemented by the current three-route scaffold. The current MockAdapter proves deterministic synthetic envelope selection only; its position in the deferred path does not mean that a governed consumer, semantic adapter contract, evidence/policy/citation flow, or receipt join exists. The direct client-to-provider and provider-to-store paths remain denied.
 
 ---
 
@@ -407,25 +426,25 @@ Directory Rules basis: `docs/` records the decision; `apps/` owns deployable tru
 | `apps/governed-api/` | Sole normal dynamic public path for model-mediated behavior | **CONFIRMED minimal WSGI/ABSTAIN scaffold; no model route** |
 | `apps/explorer-web/` | Public map/UI consumer | **CONFIRMED root; direct-model inventory remains bounded** |
 | `runtime/ollama/` | Provider-specific Ollama operational lane | **CONFIRMED README; live implementation UNKNOWN** |
-| `runtime/model_adapters/` | Provider-neutral adapter lane | **CONFIRMED documentation lane; executable adapters are placeholders** |
+| `runtime/model_adapters/` | Provider-neutral adapter lane | **CONFIRMED documentation lane plus bounded MockAdapter selector; canonical semantic contract and governed consumer remain absent** |
 | `runtime/model_adapters/OllamaAdapter.py` | Future Ollama adapter implementation | **CONFIRMED one-line placeholder** |
-| `runtime/model_adapters/MockAdapter.py` | Future deterministic adapter | **CONFIRMED one-line placeholder** |
-| `runtime/mock/` and `runtime/model_adapters/mock/` | Mock runtime / adapter child lanes | **CONFIRMED documentation-only or placeholder lanes; ownership convergence required** |
-| `runtime/envelopes/` | Envelope implementation helpers | **CONFIRMED documentation surface; implementation maturity UNKNOWN** |
+| `runtime/model_adapters/MockAdapter.py` | Deterministic pre-provider proof surface | **CONFIRMED bounded no-I/O scenario selector; not semantic outcome logic or runtime integration** |
+| `runtime/mock/` and `runtime/model_adapters/mock/` | Mock runtime / adapter child lanes | **CONFIRMED documentation lanes; ownership convergence with the executable selector remains required** |
+| `runtime/envelopes/` and `packages/envelopes/` | Envelope implementation lanes | **Runtime lane remains descriptive; package candidate builder and finite-shape tests are substantive but non-authoritative** |
 | `runtime/service_configs/` and `configs/` | Non-secret runtime/profile configuration | **CONFIRMED/documented surfaces; accepted model profile UNKNOWN** |
 | `.env.example` | Safe developer template | **CONFIRMED mock default and loopback host; not activation proof** |
 | `contracts/runtime/` | Semantic runtime object meaning | **CONFIRMED multiple draft/PROPOSED contracts** |
-| `schemas/contracts/v1/runtime/` | Runtime machine shapes | **CONFIRMED proposed schemas and fixture/validator references** |
+| `schemas/contracts/v1/runtime/` | Runtime machine shapes | **CONFIRMED proposed schemas and fixture/validator surfaces; RuntimeResponseEnvelope precision drift remains a HOLD** |
 | `contracts/ui/focus_request.md`, `contracts/ui/focus_response.md` | Focus request/response meaning | **CONFIRMED; machine schemas remain open scaffolds** |
 | `schemas/contracts/v1/focus/` | Focus machine shapes | **CONFIRMED open PROPOSED scaffolds in current readiness checks** |
-| `policy/runtime/` | Runtime allow/deny/restrict/abstain policy | **CONFIRMED stub; no policy execution established** |
+| `policy/runtime/` | Runtime allow/deny/restrict/abstain policy | **CONFIRMED detailed documentation plus non-enforcing Rego scaffolds; no accepted evaluator/bundle/runtime binding** |
 | `policy/focus/` | Focus-specific policy stubs | **CONFIRMED scaffolds in readiness workflow; no accepted rules established** |
-| `fixtures/contracts/v1/runtime/` | Schema fixtures | **CONFIRMED selected valid/invalid examples; shape proof only** |
+| `fixtures/contracts/v1/runtime/` | Schema fixtures | **CONFIRMED valid/invalid RuntimeResponseEnvelope and AIReceipt fixture families; shape/local-consistency proof only** |
 | `apps/governed-api/tests/` | App-local route/boundary tests | **CONFIRMED bounded executable tests** |
-| `tests/runtime_proof/` | Runtime finite-outcome proof lane | **CONFIRMED placeholder test surface; substantive proof not established** |
+| `tests/runtime_proof/` | Runtime finite-outcome proof lane | **CONFIRMED substantive MockAdapter selector and RuntimeResponseEnvelope shape tests; no live runtime or governed consumer** |
 | `tools/validators/validate_runtime_response_envelope.py` | Reusable schema fixture validator | **CONFIRMED wrapper implementation** |
-| `.github/workflows/api-test.yml` | API smoke/envelope CI | **CONFIRMED command-bearing workflow; run result not asserted** |
-| `.github/workflows/focus-mock-test.yml` | Mock/Focus readiness sentinel | **CONFIRMED explicit HOLD; no model invocation** |
+| `.github/workflows/api-test.yml` | API smoke/envelope CI | **CONFIRMED verification run `31809767303` passed; cited API surfaces are unchanged at the pinned base; bounded scaffold signal only** |
+| `.github/workflows/focus-mock-test.yml` | Mock/Focus readiness and finite-shape proof | **CONFIRMED verification run `31809767441` passed; cited Focus/mock surfaces are unchanged at the pinned base; mock-Focus remains explicit HOLD and no model invoked** |
 | `infra/reverse_proxy/`, `infra/firewall/`, `infra/vpn/`, `infra/hardening/` | Exposure and isolation controls | **Documentation/path presence varies; operational config and deployed effect NEED VERIFICATION** |
 | `data/receipts/ai/` or accepted receipt lane | AIReceipt instances | **PROPOSED / NEEDS VERIFICATION; no persisted model receipt established** |
 | `data/proofs/citation_validation/` or accepted proof lane | Citation validation reports | **PROPOSED / NEEDS VERIFICATION** |
@@ -443,7 +462,7 @@ No new path is created by this ADR update. A future implementation change must r
 - **The trust membrane remains explicit.** Generated language cannot become a peer public truth path.
 - **Provider choice stays internal.** Mock, Ollama, hosted, or future adapters may change without changing public KFM semantics.
 - **Fail-closed delivery is testable.** `ABSTAIN`, `DENY`, and `ERROR` remain first-class instead of being hidden in free text.
-- **No-network proof becomes possible.** Deterministic mock behavior can exercise requests, policy/evidence gaps, citation failures, envelopes, and receipts without live model access.
+- **No-I/O proof has a bounded foundation.** The deterministic selector and envelope tests now exercise finite synthetic outcomes without live model, file, tool, or network access; governed consumer, policy/evidence/citation, and receipt behavior remains future work.
 - **Security review has a crisp boundary.** Public endpoint exposure, direct store access, unbounded tools/network, and raw output are reviewable violations.
 - **Audit and correction improve.** Digests, adapter/model identity, policy/citation references, and finite outcomes provide a reconstructable path without storing private reasoning.
 - **Model and provider rollback can be additive.** Disable or replace the provider behind the adapter while retaining the public envelope contract.
@@ -468,7 +487,7 @@ No new path is created by this ADR update. A future implementation change must r
 | Unadmitted model or license/terms drift | High | Model profile registry, digest/version/rights review, activation decision |
 | Receipt contains sensitive prompts or private reasoning | High | Digest/reference-only posture; retention/redaction review; safe diagnostics |
 | Policy/citation service failure falls open | High | `ERROR`/`ABSTAIN`/`DENY`; circuit breaker; fail-closed integration tests |
-| Runtime policy remains a stub while provider activates | Critical | Gate F/G; provider activation denied until policy tests pass |
+| Runtime policy remains non-enforcing while provider activates | Critical | Provider activation denied until accepted rules, evaluator/bundle binding, consumer integration, and negative tests pass |
 | Current boundary test misses dynamic/config acquisition | Medium | AST/dependency/config/infra scans plus representative negative fixtures |
 | Multiple mock/runtime lanes diverge | Medium | One accepted implementation owner; compatibility/migration note |
 | Provider swap changes public semantics | High | Contract tests against all admitted adapters and fixed RuntimeResponseEnvelope behavior |
@@ -500,16 +519,16 @@ This ADR codifies an existing trust invariant. Migration is an inspection, conve
 ### 8.1 Smallest sound sequence
 
 1. **Record the pinned inventory.** Preserve the current target blob and repository evidence snapshot; keep ADR status `proposed`.
-2. **Reconcile adjacent ADRs and docs.** Align ADR-0004, ADR-0008, ADR-0019, governed-AI architecture docs, runtime READMEs, and the ADR index without promoting any decision by documentation alone.
-3. **Accept or define the provider-neutral semantic contract.** Move canonical adapter meaning to the proper `contracts/runtime/` surface; keep runtime notes descriptive.
-4. **Resolve Focus request/response shapes.** Replace open Focus schema scaffolds only through reviewed contract/schema/fixture work; do not duplicate RuntimeResponseEnvelope.
-5. **Implement deterministic MockAdapter first.** Cover `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; prohibit network/file/tool access; add valid/invalid fixtures and no-network consumer tests.
+2. **Reconcile adjacent ADRs and docs.** Align ADR-0004, ADR-0008, ADR-0019, governed-AI architecture docs, runtime READMEs, and the ADR index without promoting any decision by documentation alone. Treat ADR-0019's placeholder-era snapshot as stale implementation evidence.
+3. **Accept or define the provider-neutral semantic contract.** Move canonical adapter meaning to the proper `contracts/runtime/` surface; keep runtime notes and current selector implementation subordinate.
+4. **Resolve response-contract drift and Focus shapes.** Reconcile RuntimeResponseEnvelope precision semantics across contract, schema, fixtures, builder, and consumers. Graduate open Focus schemas only through reviewed contract/schema/fixture work; do not duplicate the runtime envelope.
+5. **Integrate the bounded MockAdapter proof.** Preserve its deterministic no-I/O selection and four-outcome tests, then connect it only behind the accepted semantic contract with governed-consumer and invalid-input tests. Do not let the selector decide policy, evidence, citations, release, or publication.
 6. **Implement governed context assembly.** Validate request/caller; resolve EvidenceRef to EvidenceBundle; enforce release/review/freshness/correction and rights/sensitivity; bound context.
-7. **Implement policy and citation gates.** Replace runtime/focus stubs with accepted rules and negative tests; fail closed on unavailable dependencies.
-8. **Close receipt behavior.** Emit schema-valid AIReceipt or accepted equivalent for all finite outcomes; store only safe references/digests; test correction/retention behavior.
-9. **Add repository-wide anti-bypass enforcement.** Inspect imports, dynamic acquisition, URLs, config, browser bundles, examples, scripts, generated assets, and infra—not just governed-api Python imports.
+7. **Implement enforcing policy and citation gates.** Replace the current non-enforcing runtime/Focus Rego scaffolds with accepted rules, evaluator/bundle binding, consumers, and negative tests; fail closed on unavailable dependencies.
+8. **Close receipt behavior.** Emit schema-valid AIReceipt or accepted equivalent for all finite outcomes; store only safe references/digests; join it to the request and applicable decisions; test correction/retention behavior. The current local validator is necessary but insufficient.
+9. **Add repository-wide anti-bypass enforcement.** Inspect imports, dynamic acquisition, URLs, config, browser bundles, dependencies, examples, scripts, generated assets, and infra—not just Governed API Python imports.
 10. **Admit a provider/model profile.** Verify current provider/model/version, digest, license/terms, capability scope, resource limits, tools/network, security posture, and rollback.
-11. **Implement OllamaAdapter behind the same contract.** Contract tests must pass unchanged when switching from MockAdapter.
+11. **Implement OllamaAdapter behind the same contract.** Contract tests must pass unchanged when switching from MockAdapter; no public/provider wire format may leak.
 12. **Wire one bounded governed route.** Add the smallest evidence-backed route only after all earlier gates pass; preserve finite outcomes and no direct client/provider coupling.
 13. **Harden operations.** Loopback/private binding, secrets, logs, timeouts, request limits, circuit breaker, health/readiness, kill switch, incident and restore drills.
 14. **Prove correction and rollback.** Disable Ollama or revert model profile without changing public contracts; invalidate unsafe cached outputs; preserve receipt/correction lineage.
@@ -537,7 +556,7 @@ This ADR does not move or alter RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLE
 This documentation revision is reversible by restoring prior target blob:
 
 ```text
-9dcaef6cffafb4b44a9740cab5ba3811305b1983
+387b1a1969b2af77b325d2cacd35c19ab13f63f8
 ```
 
 A future committed update can also be reverted through the normal commit/PR path. Restoring the prior Markdown does not alter runtime behavior.
@@ -576,16 +595,16 @@ If superseded:
 
 ### 10.1 Current confirmed validation surfaces
 
-| Surface | Confirmed source behavior | Boundary |
+| Surface | Confirmed source / supporting verification behavior | Boundary |
 |---|---|---|
-| `make governed-api-smoke` | Runs app-local Governed API tests | Test command presence; not a current run result |
-| `make governed-api-verify` | Runs tests then fails on selected direct `maplibre`, `cesium`, or `ollama` imports in Governed API Python | App-local/import-prefix boundary only |
-| `test_abstain_routes.py` | Requires every registered route to return deterministic `ABSTAIN` / `NOT_IMPLEMENTED` and a DecisionEnvelope subset | Current scaffold only |
-| `test_boundary_guards.py` | Checks exact route set, `404`, `405`, selected import prefixes, and internal-store path literals | Selected source-level controls only |
-| `api-test.yml` | Runs smoke and focused ABSTAIN test under read-only workflow permissions | CI orchestration; no run result asserted |
-| RuntimeResponseEnvelope schema/fixtures/validator | Checks closed proposed shape and selected valid/invalid examples | Shape proof only |
-| `focus-mock-test.yml` | Verifies placeholder/readiness conditions and records explicit HOLD | Readiness sentinel, not executable mock/runtime proof |
-| `test_envelope_finite_outcomes.py` | Contains a placeholder `assert True` test | No substantive finite-outcome runtime proof |
+| Governed API tests and `api-test.yml` | `make governed-api-smoke` plus the focused ABSTAIN route test; verification run `31809767303` passed both jobs | Current three-route scaffold and selected source-boundary signal only; no model, evidence, policy, citation, receipt, deployment, release, or publication proof |
+| `test_mock_adapter_finite_outcomes.py` | Standard-library tests cover four synthetic outcomes, isolated copies, incomplete configuration, unknown scenario, and forbidden I/O/dynamic-execution imports | Bounded selector proof; no semantic decision, provider, governed route, or accepted contract |
+| `test_envelope_finite_outcomes.py` | Standard-library tests cover closed outcomes, Focus alias, fixture polarity, invalid fixtures, answer precision/evidence constraints, and validator wiring | Machine-shape proof; no evidence resolution, policy evaluation, precision calculation, or `ANSWER` authorization |
+| RuntimeResponseEnvelope schema validator family | Validates the proposed schema and fixture family | Shape proof only; contract text still drifts from schema-required precision disclosure |
+| `validate_ai_receipt.py` and validator tests | Local schema/consistency checks, fixture polarity, blank/ref/digest/file failure cases | Candidate-file validation only; no evidence/policy/citation resolution, model approval, runtime emission/persistence, release, or publication |
+| `focus-mock-test.yml` | Verification run `31809767441` passed both jobs; runs the two substantive proof modules and records `WORKFLOW_HOLD` for mock Focus | Readiness/shape signal; no Focus runtime payload/command, provider, or public client |
+| Runtime Rego files and policy workflow | Proposed defaults/comments remain non-enforcing; verification run `31809767223` succeeded as a syntax/scaffold signal only | No accepted policy semantics, evaluator/bundle binding, consumer, or runtime enforcement |
+| Bounded code searches | No executable public Ollama client or `KFM_MODEL_RUNTIME` loader surfaced at the pinned base | Bounded negative evidence only; no repository-wide or deployed anti-bypass proof |
 
 ### 10.2 Required test matrix before provider activation
 
@@ -639,11 +658,12 @@ make governed-api-smoke
 make governed-api-verify
 make boundary-guards
 python -m pytest apps/governed-api/tests/test_abstain_routes.py -q --strict-config --strict-markers
-python -m pytest tests/schemas/test_common_contracts.py -q --strict-config --strict-markers
-python tools/validators/validate_runtime_response_envelope.py
+python -m unittest tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose
+python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
+python tools/validators/validate_ai_receipt.py --fixtures
 ```
 
-No command result is claimed by this locally prepared documentation artifact.
+Supporting workflow results cited in this ADR are exact-head evidence from verification commit `cbf3656da9cb092d6a0f2382fb80ac13e3f217ac`. A repository compare through pinned base `eb95930a784252be7a24cba425185ff26294e8bb` changed no cited ADR/runtime/API/policy/envelope/receipt evidence path. These results do not predict a future revision's checks or confer decision, runtime, release, or publication authority.
 
 ---
 
@@ -651,28 +671,27 @@ No command result is claimed by this locally prepared documentation artifact.
 
 | Reference | Why it matters | Current status note |
 |---|---|---|
-| [`INDEX.md`](./INDEX.md) | Canonical human inventory and effective-status normalization | ADR-0008 confirmed; effective status proposed |
-| [`ADR-0004`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Defines the proposed dynamic public trust boundary and current ABSTAIN scaffold | Draft / proposed; repository-grounded |
-| [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Defines the proposed provider-neutral adapter and finite outcomes | Draft / proposed; still carries stale repo-unknown framing |
+| [`INDEX.md`](./INDEX.md) | Canonical human inventory and effective-status normalization | ADR-0008 confirmed; source draft, effective proposed |
+| [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) | Accepts Directory Rules v2 exactly | Accepted; placement authority only |
+| [`ADR-0004`](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Defines the proposed dynamic public trust boundary and current ABSTAIN scaffold | Draft / proposed; current repository-grounded snapshot |
+| [`ADR-0019`](./ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Defines the proposed provider-neutral adapter and finite outcomes | Draft / proposed; implementation snapshot is stale and must not override current evidence |
 | [`ADR-0020`](./ADR-0020-abstain-is-a-first-class-decision.md) | Governs abstention as a first-class public result | Effective status proposed |
 | [`ADR-0025`](./ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Prevents public/client and model-context store bypass | Effective status proposed |
-| [Directory Rules](../doctrine/directory-rules.md) | Placement, authority roots, runtime/infra/config rules, no parallel authority | Governing doctrine; implementation may drift |
+| [Directory Rules](../doctrine/directory-rules.md) | Accepted placement, authority-root, runtime/infra/config, and no-parallel-authority rules | v2 accepted through ADR-0029; implementation conformance remains separately testable |
 | [Trust membrane](../doctrine/trust-membrane.md) | Evidence/policy/release boundary the ADR protects | Document present; implementation proof separate |
 | [Truth posture](../doctrine/truth-posture.md) | Cite-or-abstain and explicit uncertainty | Document present |
 | [Authority ladder](../doctrine/authority-ladder.md) | Evidence and policy outrank generated language | Document present |
 | [AI as assistant](../doctrine/ai-as-assistant.md) | AI is interpretive and subordinate | Document present |
-| [Ollama integration architecture](../architecture/governed-ai/OLLAMA_INTEGRATION.md) | Detailed deferred provider-integration sequence | Present; stale repo-evidence boundary needs reconciliation |
-| [Mock-first architecture](../architecture/governed-ai/MOCK_FIRST.md) | Deterministic provider-neutral sequencing | Present; executable proof remains incomplete |
-| [`apps/governed-api/README.md`](../../apps/governed-api/README.md) | Deployable trust-boundary contract | Present; README lags some current executable scaffold evidence |
-| [`runtime/ollama/README.md`](../../runtime/ollama/README.md) | Provider-specific lane contract | Present and repository-grounded; scaffold-only |
-| [`runtime/model_adapters/README.md`](../../runtime/model_adapters/README.md) | Provider-neutral lane contract | Present; executable adapters unknown/placeholders |
+| [Ollama integration architecture](../architecture/governed-ai/OLLAMA_INTEGRATION.md) | Detailed deferred provider-integration sequence | Present; later reconciliation must preserve current bounded-proof/missing-runtime split |
+| [Mock-first architecture](../architecture/governed-ai/MOCK_FIRST.md) | Deterministic provider-neutral sequencing | Present; bounded selector/shape proof now exists, governed integration does not |
+| [`apps/governed-api/README.md`](../../apps/governed-api/README.md) | Deployable trust-boundary contract | Present; executable scope remains three ABSTAIN routes |
+| [`runtime/ollama/README.md`](../../runtime/ollama/README.md) | Provider-specific lane contract | Present and repository-grounded; no adapter/daemon/profile proof |
+| [`runtime/model_adapters/README.md`](../../runtime/model_adapters/README.md) | Provider-neutral lane contract | Present; current MockAdapter is bounded selector, OllamaAdapter is placeholder |
 | [`AdapterContract.md`](../../runtime/model_adapters/AdapterContract.md) | Descriptive adapter note | Non-canonical and partly stale; not semantic authority |
-| [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md) | Public governed response meaning | Draft / proposed; schema-paired |
-| [`AIReceipt` contract](../../contracts/runtime/ai_receipt.md) | Model-mediated audit meaning | Draft / proposed; schema-paired |
-| [`api-test.yml`](../../.github/workflows/api-test.yml) | Current bounded API CI | Command-bearing; current run result not asserted |
-| [`focus-mock-test.yml`](../../.github/workflows/focus-mock-test.yml) | Mock/Focus readiness sentinel | Explicit HOLD; not a runtime test |
-
----
+| [`RuntimeResponseEnvelope` contract](../../contracts/runtime/runtime_response_envelope.md) | Public governed response meaning | Draft / proposed; precision drift against schema/builder is a HOLD |
+| [`AIReceipt` contract](../../contracts/runtime/ai_receipt.md) | Model-mediated audit meaning | Draft / proposed; local validator exists, runtime emission/persistence does not |
+| [`api-test.yml`](../../.github/workflows/api-test.yml) | Current bounded API CI | Verification run passed; cited workflow/source unchanged at the pinned base; test signal only |
+| [`focus-mock-test.yml`](../../.github/workflows/focus-mock-test.yml) | Mock/Focus readiness and finite-shape proof | Verification run passed; cited workflow/source unchanged at the pinned base; mock-Focus remains explicit HOLD |
 
 ## 12. Open Questions / NEEDS VERIFICATION
 
@@ -680,19 +699,19 @@ No command result is claimed by this locally prepared documentation artifact.
 |---|---|---|
 | OQ-08-01 | What reviewed semantic contract is canonical for `ModelAdapterRequest` / `ModelAdapterResponse`? | **NEEDS VERIFICATION.** Current runtime note is non-canonical; ADR-0019 remains proposed. |
 | OQ-08-02 | How will FocusRequest/FocusResponse schemas graduate from open scaffolds without duplicating runtime envelopes? | **OPEN.** Contract/schema crosswalk required. |
-| OQ-08-03 | Should AIReceipt gain explicit evidence-bundle, prompt-template, model-digest, runtime-parameter, timing, and release/correction references, or link to companion receipts? | **OPEN.** Current schema is narrower than the original ADR prose. |
+| OQ-08-03 | Should AIReceipt gain explicit evidence-bundle, prompt-template, model-digest, runtime-parameter, timing, and release/correction references, or link to companion receipts? | **OPEN.** Current schema is narrower than the original ADR prose; the local validator intentionally does not resolve those authorities. |
 | OQ-08-04 | Where do accepted model/provider profiles and allowlists live—`configs/`, `runtime/service_configs/`, `policy/`, or a control-plane register? | **NEEDS VERIFICATION / ADR or root-contract decision may be needed.** |
 | OQ-08-05 | Which model/version/digest/license/quantization profile is admissible for the first local provider test? | **UNKNOWN.** Requires current authoritative review; not decided here. |
 | OQ-08-06 | Are embeddings part of the same adapter contract, a separate capability, or out of the first slice? | **OPEN.** Avoid hidden provider coupling and vector-store authority. |
 | OQ-08-07 | Are streaming responses allowed; how do provisional chunks avoid appearing authoritative before final envelope validation? | **OPEN.** Needs a typed streaming/event contract or buffering rule. |
 | OQ-08-08 | Which tools/network/file capabilities, if any, may an admitted local runtime use? | **OPEN / default deny.** Policy and sandbox profile required. |
-| OQ-08-09 | Where are AIReceipt instances persisted, retained, redacted, corrected, and joined to release/correction records? | **NEEDS VERIFICATION.** No persisted model receipt was established. |
+| OQ-08-09 | Where are AIReceipt instances emitted, persisted, retained, redacted, corrected, and joined to requests and release/correction records? | **NEEDS VERIFICATION.** Validator presence is not runtime emission or persistence. |
 | OQ-08-10 | What repository-wide validator covers imports, dynamic imports, endpoint strings, browser bundles, config, workers, examples, and infra? | **OPEN.** Current Governed API check is app-local and syntax-prefix limited. |
 | OQ-08-11 | Which infra configurations and deployed controls prove the Ollama port is not publicly reachable? | **UNKNOWN.** README/path presence is not deployed isolation. |
 | OQ-08-12 | What accepted runbooks govern install/pull, benchmark, activation, incident response, kill switch, restore, and model/profile rollback? | **NEEDS VERIFICATION.** |
 | OQ-08-13 | How are source corrections, evidence withdrawal, and model-output cache invalidation propagated? | **OPEN.** Must preserve correction-first doctrine. |
 | OQ-08-14 | Do `runtime/mock/` and `runtime/model_adapters/mock/` need consolidation, or do they have a reviewed non-overlapping responsibility split? | **CONFLICTED / NEEDS VERIFICATION.** Do not create duplicate executable behavior. |
-| OQ-08-15 | Which checks are required branch protections, and have the relevant workflow runs passed on the eventual implementation revision? | **UNKNOWN.** Workflow source is not branch-protection or pass evidence. |
+| OQ-08-15 | Which checks are required branch protections, and have they passed on the eventual implementation revision? | **PARTIAL / UNKNOWN.** Pinned API and Focus runs passed, but branch-protection requirements and future implementation-revision results are not established. |
 | OQ-08-16 | When is ADR-0008 ready to move from `draft`/`proposed` to accepted? | **OPEN.** Requires gates A–J and human review; implementation alone cannot self-accept. |
 
 These items belong in the accepted verification/control-plane registers when the update is implemented remotely. This documentation artifact does not create or close those register entries.
@@ -707,8 +726,8 @@ These items belong in the accepted verification/control-plane registers when the
 | **Local AI runtime** | A model execution service hosted locally or privately, such as Ollama; never public truth or public contract authority. |
 | **Provider-neutral adapter** | Stable internal interface insulating governed behavior from one provider's API and wire format. |
 | **OllamaAdapter** | Proposed provider implementation of the accepted adapter contract; current repository file is a placeholder. |
-| **MockAdapter** | Deterministic no-network adapter required before live provider admission; current repository file is a placeholder. |
-| **RuntimeResponseEnvelope** | Proposed client-facing finite response object with `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, EvidenceRefs, policy, freshness, and correction state. |
+| **MockAdapter** | Current deterministic no-I/O selector for prevalidated synthetic scenario envelopes. It is bounded proof required before live provider admission, not a semantic outcome decider, model runtime, or governed consumer. |
+| **RuntimeResponseEnvelope** | Proposed client-facing finite response object with `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; current builder/tests prove bounded construction and shape, while semantic contract/schema precision drift remains unresolved. |
 | **DecisionEnvelope** | Finite decision posture currently used as a subset shape by the ABSTAIN scaffold; distinct from the complete client-facing RuntimeResponseEnvelope. |
 | **AIReceipt** | Proposed audit record for model-mediated processing; process memory, not evidence or release authority. |
 | **EvidenceRef / EvidenceBundle** | Pointer and resolved support object for consequential claims; evidence outranks generated language. |
@@ -723,59 +742,55 @@ These items belong in the accepted verification/control-plane registers when the
 
 ## Appendix A — No-loss modernization ledger
 
-The prior file contained 449 lines at blob `9dcaef6cffafb4b44a9740cab5ba3811305b1983`. The table records disposition of every major baseline responsibility.
+The v1.2 file contained 785 lines at blob `387b1a1969b2af77b325d2cacd35c19ab13f63f8`. This v1.3 reconciliation preserves the stable decision, H1, explicit top anchor, numbered sections, and conservative status while updating stale implementation evidence.
 
-| Baseline material | v1.2 disposition |
+| v1.2 material | v1.3 disposition |
 |---|---|
-| KFM Meta Block, identity, H1, creation date, policy label | **Preserved and expanded** with ADR type, effective status, current path, evidence snapshot, related surfaces, and verified uncertainty |
-| Decision that local runtimes are interpretive, subordinate, finite-outcome, and non-public | **Preserved as the headline decision** and strengthened with current evidence |
-| Status/authority table | **Preserved in §1**; stale repo-unknown claims replaced with confirmed/proposed/unknown split |
+| KFM Meta Block, identity, H1, creation date, policy label | **Preserved and corrected** with required `owning_root`, `responsibility`, list-valued supersession metadata, and a current evidence snapshot |
+| Decision that local runtimes are interpretive, subordinate, finite-outcome, and non-public | **Preserved unchanged in substance** |
+| Status/authority and acceptance gates | **Preserved in §1**; current bounded proofs, accepted Directory Rules, contract drift, and remaining HOLDs added |
 | Context and local-convenience failure mode | **Preserved in §2.1** |
-| Placement rules for runtime/ollama, model_adapters, mock, envelopes, configs | **Preserved in §3.1**; current lane/file maturity added |
-| No-direct-public-client / no model-port exposure | **Preserved in §3.2**; stale Cesium-path assumption removed and rule made renderer-independent |
-| Evidence/policy/release authority ordering and finite outcomes | **Preserved in §3.3** |
-| No direct lifecycle/canonical reads, no generated truth, no chain-of-thought persistence | **Preserved and expanded in §3.4** with untrusted-content and capability rules |
-| AIReceipt field intent | **Preserved in §3.5**, separated into schema-confirmed fields and proposed extensions to avoid overclaiming |
-| Admin/developer direct access exception | **Preserved in §3.6** with kill-switch and retention constraints |
-| Schema/contract split | **Preserved in §3.8**; corrected to current contract/schema evidence and Focus/adapter gaps |
-| Architecture diagram | **Replaced with a more accurate current-vs-deferred diagram**; denied direct paths retained |
-| Affected paths | **Preserved in §5** and converted from structural-only proposals to a repository-grounded status matrix |
-| Positive and negative consequences | **Preserved in §6.1–§6.2** |
-| Violation risks | **Preserved and expanded into §6.3 risk register** |
-| Alternatives A1–A7 | **Preserved in §7**; A8–A10 added for current scaffold/sequencing/admin posture |
-| Migration phases | **Preserved in §8** and updated from initial inspection to current evidence-grounded implementation sequence |
-| Rollback/supersession | **Preserved in §9**; exact prior document blob and provider kill-switch added |
-| Validation acceptance gates, tests, review checklist | **Preserved and materially expanded in §10** with current confirmed checks versus missing proof |
-| Related docs/ADRs | **Preserved in §11** with repaired/current paths and status notes |
-| Open questions | **Preserved and narrowed in §12** to current implementation, authority, policy, receipt, streaming, profile, infra, and review gaps |
-| Glossary | **Preserved and expanded in §13** |
-| Back-to-top navigation | **Preserved through explicit top anchor and quick navigation** |
+| Current repository evidence | **Reconciled in §2.2**: MockAdapter and finite-envelope tests are substantive; Ollama remains placeholder; policy remains non-enforcing |
+| Placement and no-direct-public-client rules | **Preserved in §3.1–§3.2** |
+| Evidence/policy/release ordering and finite outcomes | **Preserved in §3.3** |
+| No direct store reads, generated truth, or chain-of-thought persistence | **Preserved in §3.4** |
+| AIReceipt field intent and admin/developer exception | **Preserved in §3.5–§3.6**; local validator distinguished from runtime emission/persistence |
+| Provider/version non-decisions | **Preserved in §3.7** |
+| Schema/contract split | **Reconciled in §3.8** with explicit RuntimeResponseEnvelope precision-drift HOLD |
+| Architecture diagram | **Preserved in §4**; MockAdapter relabeled as bounded selector, not integrated runtime |
+| Affected paths | **Preserved in §5** and updated to current file/test/workflow maturity |
+| Consequences, risks, and alternatives | **Preserved in §6–§7**; non-enforcing policy wording corrected |
+| Migration phases | **Preserved in §8** and reordered around contract convergence, bounded MockAdapter integration, enforcing policy, receipts, and provider admission |
+| Rollback/supersession | **Preserved in §9** with current prior-document blob |
+| Validation gates, tests, checklist, and commands | **Preserved in §10** with bounded verification results and substantive proof/validator commands |
+| Related ADRs/docs and open questions | **Preserved in §11–§12** with ADR-0029, stale ADR-0019 evidence, receipt-validator scope, and CI uncertainty made explicit |
+| Glossary and back-to-top navigation | **Preserved in §13 and the explicit `#top` anchor** |
 
 ## Appendix B — Before / after modernization matrix
 
-| Area | Prior posture | v1.2 posture |
+| Area | v1.2 posture | v1.3 posture |
 |---|---|---|
-| ADR identity | Correct ID but path/slot still framed as needing verification | Exact slot/path confirmed through canonical index |
-| Repository depth | Blanket UNKNOWN | Bounded inventory: minimal Governed API exists; contracts/schemas/tests/workflows partially exist; model/policy integration does not |
-| Public trust path | Proposed only | ADR-0004 and minimal WSGI scaffold confirmed; decision still proposed |
-| Runtime lanes | Proposed path names | Runtime/Ollama/model-adapter lanes confirmed; executable adapters are placeholders |
-| Default runtime | Unspecified | `.env.example` confirmed `mock`; no activation inferred |
-| Finite outcomes | Doctrinal requirement | RuntimeResponseEnvelope and DecisionEnvelope schema surfaces confirmed; API integration gap explicit |
-| Receipts | Broad proposed field table | Current AIReceipt schema distinguished from proposed extension fields |
-| Policy | Proposed path | Current `policy/runtime/` stub confirmed; activation blocker explicit |
-| Tests | Proposed families | Current API tests and workflows identified; focus/mock and runtime proof gaps exposed |
-| Direct-client enforcement | Broad intended rule | Current app-local checks documented; repository-wide/dynamic/config gap explicit |
-| Security | General deny-by-default | Model profile, tools/network, prompt injection, loopback/private exposure, logs, circuit breaker, and kill switch made acceptance gates |
-| Rollback | Successor ADR and future rollback target | Exact document blob plus runtime/provider rollback sequence |
-| Companion docs | Links included but many stale | Current relationships/statuses identified; reconciliation backlog visible |
+| ADR identity/status | Exact slot/path confirmed; draft/proposed | Preserved; no promotion |
+| Directory governance | Doctrine present but acceptance not recorded here | Directory Rules v2 acceptance recorded through ADR-0029; runtime decision still proposed |
+| Governed API | Minimal three-route ABSTAIN scaffold; workflow result not asserted | Same scaffold; verification API jobs passed and cited surfaces remained unchanged through the pinned base, with bounded scope explicit |
+| Ollama adapter | One-line placeholder | Unchanged one-line placeholder |
+| MockAdapter | One-line placeholder | Deterministic no-I/O synthetic scenario selector with four-outcome and fail-closed tests |
+| Finite envelopes | Proposed schema/fixtures; placeholder runtime-proof test | Bounded builder and substantive shape/fixture tests; no semantic outcome authority or governed integration |
+| Contract alignment | Contract/schema surfaces treated as paired | Precision-disclosure drift between proposed contract and schema/builder is an explicit HOLD |
+| Receipts | Proposed contract/schema; no invocation or persistence | Local schema/consistency validator and tests confirmed; runtime emission/persistence still absent |
+| Runtime policy | README described as a stub | Documentation is substantive; four Rego files remain proposed and non-enforcing |
+| Focus mock workflow | Placeholder/readiness HOLD | Verification workflow passed bounded proof; cited surfaces remained unchanged through the pinned base; mock-Focus job still records `WORKFLOW_HOLD` |
+| Direct-client enforcement | App-local checks and bounded search | Bounded exact-snapshot searches refreshed; repository-wide/deployed enforcement still incomplete |
+| Provider activation | Unapproved/unknown | Still unapproved/unknown; no daemon, model profile, rights, isolation, or kill-switch drill evidence |
+| Rollback | Historical pre-v1.2 blob | Exact v1.2 prior blob `387b1a1969b2af77b325d2cacd35c19ab13f63f8` |
 
 ## Appendix C — Evidence boundary
 
-**CONFIRMED at the pinned repository snapshot:** files, blobs, source shapes, route inventory, current placeholders, current schemas/contracts, selected fixtures/validators/tests, workflow definitions, and CODEOWNERS routing listed in the metadata evidence snapshot.
+**CONFIRMED at the pinned repository snapshot:** files, blobs, source shapes, route inventory, Ollama placeholder, bounded MockAdapter selector, envelope builder, selected fixtures/validators/tests, non-enforcing Rego scaffolds, supporting API/Focus verification results, and CODEOWNERS routing listed in the metadata evidence snapshot.
 
-**PROPOSED:** acceptance gates, provider/model admission profile, runtime behavior beyond the current ABSTAIN scaffold, repository-wide anti-bypass validator, policy/citation/evidence integration, receipt persistence, infra hardening implementation, runbooks, and ADR acceptance.
+**PROPOSED:** acceptance gates, canonical adapter semantics, contract/schema convergence, provider/model admission profile, runtime behavior beyond the current ABSTAIN scaffold, repository-wide anti-bypass validator, enforcing policy/citation/evidence integration, receipt emission/persistence, infra hardening implementation, runbooks, and ADR acceptance.
 
-**UNKNOWN / NEEDS VERIFICATION:** installed Ollama/provider versions, model inventory and rights, deployed network exposure, runtime logs, current workflow outcomes for a future implementation revision, branch-protection requirements, actual public clients, operational evidence/citation/policy behavior, receipt storage, and production release state.
+**UNKNOWN / NEEDS VERIFICATION:** installed Ollama/provider versions, model inventory and rights, deployed network exposure, runtime logs, branch-protection requirements and future implementation-revision outcomes, complete public-client inventory, operational evidence/citation/policy behavior, receipt storage, and production release state.
 
 ---
 

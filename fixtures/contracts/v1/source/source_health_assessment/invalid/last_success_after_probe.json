@@ -1,0 +1,13 @@
+{
+  "assessment_id": "kfm:source-health:demo.future-success",
+  "source_id": "source:demo",
+  "probed_at": "2026-08-08T00:00:00Z",
+  "last_success_at": "2026-08-08T01:00:00Z",
+  "freshness_deadline": "2026-08-09T00:00:00Z",
+  "result_class": "SUCCESS",
+  "health_outcome": "HEALTHY",
+  "material_change": false,
+  "reasons": [
+    "WITHIN_FRESHNESS"
+  ]
+}
