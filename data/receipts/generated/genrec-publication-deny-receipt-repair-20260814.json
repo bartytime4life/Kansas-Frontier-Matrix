@@ -6,7 +6,7 @@
     "data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json"
   ],
   "artifact_hashes": {
-    ".github/workflows/release-dry-run.yml": "sha256:f58b91a39f8ad7476022641a4981f0fa86e4561582c0cb80426c7dbc4448a5ec",
+    ".github/workflows/release-dry-run.yml": "sha256:bda5b06ab1669d75aff401bca25244947899d98edc01fc6e92f9e3eb36da76dd",
     "data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json": "sha256:8b586b3a67291c5cc6589a8cac2b875827adcfa063432521fa2066da104e3d5d"
   },
   "model_identity": {
@@ -71,7 +71,7 @@
     {
       "gate": "local-yaml-json-and-hash-checks",
       "outcome": "PASS",
-      "reason": "The reconstructed workflow, both JSON receipts, and all declared SHA-256 bindings were checked before branch creation."
+      "reason": "The reconstructed workflow, both JSON receipts, and all declared SHA-256 bindings were checked before draft pull-request creation."
     },
     {
       "gate": "hosted-exact-head-release-dry-run",
