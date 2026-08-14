@@ -15,7 +15,8 @@ created: 2026-08-08
 updated: 2026-08-14
 policy_label: public
 truth_posture: cite-or-abstain
-responsibility_root: docs/
+owning_root: docs/
+responsibility: "Record the proposed ownership and placement split for watcher registries, declarative specifications, shared and domain executable orchestration, connectors, helpers, candidate outputs, migration, and rollback without granting source activation, execution, lifecycle-write, release, notification, publication, deployment, or repository-settings authority."
 current_path: docs/adr/ADR-0031-shared-watcher-ownership-and-placement.md
 supersedes: []
 superseded_by: []
