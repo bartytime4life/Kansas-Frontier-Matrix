@@ -117,8 +117,6 @@ notes:
 
 ---
 
-<a id="1-purpose"></a>
-
 ## 1. Purpose
 
 This README is the entry point for the repository's human-facing governance lane. It helps maintainers answer four questions without turning prose into enforcement:
@@ -161,8 +159,6 @@ source or change candidate
 
 ---
 
-<a id="2-authority-level-and-status"></a>
-
 ## 2. Authority level and status
 
 Authority depends on the question. One document does not control every layer.
@@ -194,8 +190,6 @@ Authority depends on the question. One document does not control every layer.
 [Back to top](#top)
 
 ---
-
-<a id="3-scope-and-repo-fit"></a>
 
 ## 3. Scope and repo fit
 
@@ -231,8 +225,6 @@ A review may support a promotion decision. It cannot turn a file move, commit, w
 [Back to top](#top)
 
 ---
-
-<a id="4-role-topology-diagram"></a>
 
 ## 4. Role topology (diagram)
 
@@ -270,8 +262,6 @@ The detailed charter and matrix are maintained in [`STEWARD_CHARTERS.md`](./STEW
 
 ---
 
-<a id="5-what-belongs-here"></a>
-
 ## 5. What belongs here
 
 This folder may contain human-facing guidance whose primary responsibility is governance participation:
@@ -297,8 +287,6 @@ Every document should state:
 [Back to top](#top)
 
 ---
-
-<a id="6-what-does-not-belong-here"></a>
 
 ## 6. What does NOT belong here
 
@@ -358,8 +346,6 @@ docs/governance/
 
 ---
 
-<a id="8-the-eight-roles"></a>
-
 ## 8. The eight roles
 
 The following role vocabulary is carried by the current governance documents and ADR-0024. The role scopes remain **proposed** until accepted and bound to verified assignments.
@@ -386,8 +372,6 @@ The following role vocabulary is carried by the current governance documents and
 
 ---
 
-<a id="9-separation-of-duties-matrix"></a>
-
 ## 9. Separation-of-duties matrix
 
 The matrix below distinguishes the proposed governance posture from current proof.
@@ -410,7 +394,7 @@ The matrix below distinguishes the proposed governance posture from current proo
 
 ---
 
-<a id="10-maturity-progression--when-separation-tightens"></a>
+<a id="10-maturity-progression"></a>
 
 ## 10. Maturity progression — when separation tightens
 
@@ -444,8 +428,6 @@ The dedicated workflows are narrow and path-filtered. They do not run merely bec
 [Back to top](#top)
 
 ---
-
-<a id="11-validation"></a>
 
 ## 11. Validation
 
@@ -491,8 +473,6 @@ Repository-hosted documentation checks may run on a pull request. A green result
 
 ---
 
-<a id="12-review-burden-and-codeowners"></a>
-
 ## 12. Review burden and CODEOWNERS
 
 ### Current repository controls
@@ -526,8 +506,6 @@ A later change that accepts ADR-0024, changes role authority, weakens a fail-clo
 
 ---
 
-<a id="13-anti-patterns"></a>
-
 ## 13. Anti-patterns
 
 - **Treating documentation as enforcement.** Human guidance does not authenticate actors, evaluate policy, or block a release.
@@ -546,8 +524,6 @@ A later change that accepts ADR-0024, changes role authority, weakens a fail-clo
 [Back to top](#top)
 
 ---
-
-<a id="14-related-folders-and-docs"></a>
 
 ## 14. Related folders and docs
 
@@ -595,8 +571,6 @@ Only ADR-0029 is accepted in the inspected numbered ADR corpus. This README cann
 [Back to top](#top)
 
 ---
-
-<a id="16-faq"></a>
 
 ## 16. FAQ
 
