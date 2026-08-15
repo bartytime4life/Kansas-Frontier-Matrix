@@ -12,7 +12,7 @@ from typing import Any, Mapping, Sequence
 
 from jsonschema import Draft202012Validator
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json"
 PROFILE = "kfm.western-kansas-observation-assessment.v1"
