@@ -34,6 +34,7 @@
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
+      "western-kansas-observation-assessment",
       "workflow-security",
       "repository-topology"
     ]
@@ -293,6 +294,26 @@
         "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
         "packages/hashing/**",
         "pyproject.toml"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "western-kansas-observation-assessment",
+      "description": "Validate the inactive synthetic western Kansas hydrology observation assessment case matrix without source activation or publication authority.",
+      "script": "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+      "args": [
+        "--cases"
+      ],
+      "path_globs": [
+        ".github/workflows/western-kansas-observation-assessment.yml",
+        "contracts/domains/hydrology/western_kansas_observation_assessment.md",
+        "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json",
+        "fixtures/domains/hydrology/western_kansas_observation_assessment/**",
+        "tests/validators/test_western_kansas_observation_assessment.py",
+        "tests/validators/test_western_kansas_observation_assessment_registry.py",
+        "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+        "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
