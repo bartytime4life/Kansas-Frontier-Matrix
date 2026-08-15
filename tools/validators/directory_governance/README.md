@@ -56,6 +56,6 @@ python tools/validators/directory_governance/validate_repository_topology.py --f
 python tools/validators/directory_governance/render_repository_topology_diagnostics.py
 python -m unittest discover \
   --start-directory tests/validators/directory_governance \
-  --pattern 'test_*repository_topology*.py' \
+  --pattern 'test_validate_*topology.py' \
   --verbose
 ```
