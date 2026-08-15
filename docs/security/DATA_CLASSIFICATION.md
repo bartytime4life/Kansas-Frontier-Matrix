@@ -13,7 +13,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - docs/security/THREAT_MODEL.md
-  - docs/security/EXPOSURE_POSTURE.md
+  - docs/security/EXPOSURE_PLAN.md
   - docs/security/INCIDENT_RESPONSE.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/CONSENT_TOKENS.md
@@ -89,7 +89,7 @@ Classification in Kansas Frontier Matrix is the per-record answer to three opera
 **What this document is not:**
 
 - It is not the threat model — see `docs/security/THREAT_MODEL.md` *(PROPOSED path)*.
-- It is not the exposure posture — see `docs/security/EXPOSURE_POSTURE.md` *(PROPOSED path)*.
+- It is not the exposure posture — see `docs/security/EXPOSURE_PLAN.md` *(current tracked path; document remains draft)*.
 - It is not the policy engine itself — see `policy/` and `schemas/contracts/v1/policy/`.
 - It does not decide individual cases — that is the PDP at runtime and the steward at review.
 
@@ -450,7 +450,7 @@ For the full risk register, see `KFM_Domains_Culmination_Atlas_v1_1.pdf` §24.10
 - `docs/doctrine/truth-posture.md` — cite-or-abstain
 - `docs/doctrine/directory-rules.md` — placement authority for every path quoted here
 - `docs/security/THREAT_MODEL.md` *(TODO — does not yet exist)*
-- `docs/security/EXPOSURE_POSTURE.md` *(TODO — does not yet exist)*
+- `docs/security/EXPOSURE_PLAN.md` *(current tracked path; document remains draft)*
 - `docs/security/INCIDENT_RESPONSE.md` *(TODO — does not yet exist)*
 - `docs/standards/SENSITIVITY_RUBRIC.md` *(PROPOSED, C6-01 expansion direction)*
 - `docs/standards/CONSENT_TOKENS.md` *(PROPOSED, C6-07 expansion direction)*
