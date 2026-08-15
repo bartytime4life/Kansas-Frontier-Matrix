@@ -12,8 +12,8 @@
     ".github/workflows/contract-object-map-lifecycle.yml": "sha256:6b263bfcfd99a7a23c5cbf3672cb465f79e8d9bbaa2a1c426b6dcb0b5be48292",
     "contracts/OBJECT_MAP.md": "sha256:8a27c7f07811b616a8395686e356d471141ba18d20a7dd8ad16d2be8359b2f1b",
     "docs/intake/exploratory/resource-lifecycle-object-map-source-map.md": "sha256:07f5fdcf7e063151485bb0b7fda55b5527669fb22534cfcc1aacbf0dcdf08ec0",
-    "tests/docs/test_contract_object_map_lifecycle.py": "sha256:9c2e589f07821f74fa96cc21ffa15f5dd51f5b6c2f1669db1790ddaed821f606",
-    "tools/validators/docs/validate_contract_object_map_lifecycle.py": "sha256:977ea04833291f2f11e420ed72ac019969e4a2846d1678b2e78d8f3c163fa810"
+    "tests/docs/test_contract_object_map_lifecycle.py": "sha256:ae3065d249e0b534c30b40c6a595e39bbe4e0b83acf52048030ed0edd11bddfe",
+    "tools/validators/docs/validate_contract_object_map_lifecycle.py": "sha256:4977818016d6a794ea128467c166a5b18cce2c3a17f1f1286dff2c511ea71825"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -65,14 +65,14 @@
   },
   "validation_gates": [
     {"gate": "python-syntax-compilation", "outcome": "PASS"},
-    {"gate": "focused-and-adjacent-pytest-suite", "outcome": "PASS", "reason": "14 deterministic object-map and governed-API tests passed."},
+    {"gate": "focused-and-adjacent-pytest-suite", "outcome": "PASS", "reason": "15 deterministic object-map and governed-API tests passed on PR #2871 exact-head validation before receipt replay."},
     {"gate": "route-registry-parity-and-finite-stub-behavior", "outcome": "PASS"},
     {"gate": "adjacent-object-family-register-validation", "outcome": "PASS"},
     {"gate": "documentation-metadata-validation", "outcome": "PASS", "reason": "Both bounded metadata blocks passed the required profile."},
     {"gate": "workflow-yaml-parse", "outcome": "PASS"},
     {"gate": "no-network-boundary", "outcome": "PASS"},
-    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
-    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "SKIPPED", "reason": "Receipt hashes regenerated after PR #2871 changed the validator and focused test; replay is pending on the updated exact head."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Updated exact-head CI is pending after receipt regeneration."},
     {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
   ],
   "policy_decisions": [
@@ -97,9 +97,9 @@
   "created_at": "2026-08-10T15:28:04Z",
   "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 2871,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Documentation-and-validation-only EXP-012 slice derived after current-main collision review. It extends the canonical Contract Object Map, preserves the partial machine object-family register, and records only the three finite ABSTAIN route stubs present on the evidence pin. It performs no source admission, lifecycle mutation, resource publication, HTTP or authorization design, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
+  "notes": "Originally emitted for the EXP-012 documentation-and-validation slice, then hash-regenerated on PR #2871 after the governed API scaffold moved to RuntimeResponseEnvelope and the bounded route-parity validator/test were aligned to that current response shape. This receipt remains process memory, not proof or release authority. The slice performs no source admission, lifecycle mutation, resource publication, HTTP or authorization design, evidence resolution, policy evaluation, review approval, release, deployment, publication, or public-use authorization."
 }
