@@ -139,7 +139,7 @@ Wiki pages use KFM's core truth labels:
 
 `docs/wiki/README.md` governs the source packet and is intentionally excluded from the native-wiki page allowlist unless a later reviewed decision changes that boundary.
 
-## Editing workflow
+## Editing contract
 
 1. **Inspect authority.** Read the canonical source for every material claim and pin current implementation claims to a known repository revision.
 2. **Edit the source packet.** Start in `docs/wiki/` on a focused feature branch; do not use the native wiki as the normal authoring surface.
@@ -208,7 +208,7 @@ pwsh -File tools/docs/wiki/sync_kfm_github_wiki.ps1 `
 
 Nothing in this directory automatically initializes, synchronizes, or publishes the native wiki.
 
-## Correction and rollback
+## Publication and rollback
 
 Follow [`Wiki-Maintenance.md`](Wiki-Maintenance.md) for the full procedure.
 
