@@ -10,7 +10,7 @@ authority: orientation-only; current repository evidence, adopted KFM authority,
 source_path: docs/wiki/Project-Status.md
 owning_root: docs/
 responsibility: evidence-bounded reader snapshot of repository, validation, runtime, release, deployment, and native-wiki maturity
-evidence_snapshot: main@35a6237f2f29e680bafe9af16f71e28fc585a735
+evidence_snapshot: main@09a04dffa385a29f8b1b32562a89c025b1eed37a
 prior_blob: 4b7ac87e42902bb28e0531ba5491ac7477fb26bb
 publication_effect: none until separately synchronized to the native GitHub Wiki; no KFM data publication effect
 -->
@@ -25,15 +25,15 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 <p align="center"><strong>An evidence-pinned view of what KFM currently contains, what has bounded executable proof, what remains held, and what has not been established.</strong></p>
 
-[![Checkpoint](https://img.shields.io/badge/checkpoint-35a6237f2f29-0969da?style=flat-square)](#evidence-checkpoint)
+[![Checkpoint](https://img.shields.io/badge/checkpoint-09a04dffa385-0969da?style=flat-square)](#evidence-checkpoint)
 [![Posture](https://img.shields.io/badge/maturity-mixed-f59e0b?style=flat-square)](#status-by-responsibility-plane)
-[![Exact-head CI](https://img.shields.io/badge/exact--head%20CI-44%20success%20%7C%203%20failure%20%7C%201%20skipped%20%7C%201%20queued-d4a72c?style=flat-square)](#exact-head-validation-snapshot)
+[![Exact-head CI](https://img.shields.io/badge/exact--head%20CI-41%20success%20%7C%202%20failure%20%7C%201%20skipped-d4a72c?style=flat-square)](#exact-head-validation-snapshot)
 [![Operational release](https://img.shields.io/badge/operational%20release-held-b42318?style=flat-square)](#release-publication-and-deployment)
 [![Deployment](https://img.shields.io/badge/current%20deployment-UNKNOWN-6e7781?style=flat-square)](#release-publication-and-deployment)
 [![Native wiki](https://img.shields.io/badge/native%20wiki-NEEDS%20VERIFICATION-6e7781?style=flat-square)](#native-github-wiki)
 
 > [!IMPORTANT]
-> **This page is a snapshot, not a live dashboard and not an authority surface.** It was reconciled against `main@35a6237f2f29e680bafe9af16f71e28fc585a735` on 2026-08-15. Re-check current `main`, open pull requests, workflow runs, release records, deployment status, emitted artifacts, and native-wiki readback before acting on any status.
+> **This page is a snapshot, not a live dashboard and not an authority surface.** It was reconciled against `main@09a04dffa385a29f8b1b32562a89c025b1eed37a` on 2026-08-15. Re-check current `main`, open pull requests, workflow runs, release records, deployment status, emitted artifacts, and native-wiki readback before acting on any status.
 
 > [!CAUTION]
 > **Presence, validation, integration, release, deployment, and publication are different states.** A path, schema, fixture, test, workflow, receipt, pull request, merge, GitHub deployment record, badge, or wiki update does not by itself prove an operational service or KFM publication.
@@ -48,8 +48,8 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 |---|---|
 | Repository | [`bartytime4life/Kansas-Frontier-Matrix`](https://github.com/bartytime4life/Kansas-Frontier-Matrix), public |
 | Default branch | `main` |
-| Inspected revision | [`35a6237f2f29e680bafe9af16f71e28fc585a735`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/35a6237f2f29e680bafe9af16f71e28fc585a735) |
-| Revision event | Merge of PR #2905, a western-Kansas hydrology observation-assessment slice |
+| Inspected revision | [`09a04dffa385a29f8b1b32562a89c025b1eed37a`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/09a04dffa385a29f8b1b32562a89c025b1eed37a) |
+| Revision event | Merge of PR #2909, a bounded fix preserving the strict Hydrology domain inventory for the western-Kansas observation-assessment profile |
 | Checked | 2026-08-15 |
 | Target history | This page had not changed since the source-managed wiki foundation was added on 2026-08-07 |
 | Open target overlap | No open pull request referencing `docs/wiki/Project-Status.md` was found during preflight |
@@ -60,7 +60,7 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 The checkpoint intentionally distinguishes current tracked bytes from runtime behavior. Historical or proposal documents may explain intent, but they do not upgrade a current implementation claim without repository, test, artifact, release, or runtime evidence at a known revision.
 
 > [!NOTE]
-> During authoring, `main` advanced by ten commits from the initial preflight. The final snapshot was refreshed rather than silently based on the older head; the intervening changes registered DatasetVersion in aggregate validation and added a western-Kansas hydrology observation-assessment slice.
+> During authoring, `main` advanced twice. The final checkpoint was refreshed to include DatasetVersion aggregate registration, the western-Kansas hydrology observation-assessment slice, and PR #2909's strict domain-inventory correction. The target page remained unchanged throughout the refreshes.
 
 [Back to top](#top)
 
@@ -76,7 +76,7 @@ The checkpoint intentionally distinguishes current tracked bytes from runtime be
 | Explorer Web | **BOUNDED EXECUTABLE PROOF** | Static Vite shell, strict Evidence Drawer projection, finite outcomes, no-leak behavior, keyboard focus handling, and synthetic tests | Live governed API transport, functional production map, live data, direct model use, deployment, or publication |
 | Governed API | **BOUNDED STUB API** | WSGI application and three registered `GET` routes (`/bootstrap`, `/layers`, `/evidence`) returning finite abstention envelopes; source and tests are present | Production authorization, live evidence resolution, policy execution, complete route families, deployment, or public availability |
 | Contracts, schemas, fixtures, validators | **SUBSTANTIAL / fixture-first** | Versioned schema surface, registry-driven validation, focused object-family slices, and fail-closed tests exist | Complete object-family coverage, accepted status for every proposed ADR/profile, or universal operational enforcement |
-| Exact-head GitHub Actions | **MIXED / one queued** | 49 push-triggered runs were returned for the checkpoint: 44 success, 3 failure, 1 skipped, 1 queued | A complete final run set, a fully green main revision, or proof that every successful workflow is a required release gate |
+| Exact-head GitHub Actions | **MIXED / completed snapshot** | 44 push-triggered runs were returned for the checkpoint: 41 success, 2 failure, 1 skipped, with no queued or in-progress runs | A fully green main revision or proof that every successful workflow is a required release gate |
 | Release governance | **FIXTURE-FIRST / OPERATIONAL HOLD** | Release decision root, bounded manifests/decisions/gates/rollback profiles, and dry-run-oriented checks exist | Authenticated release authority, operational candidate assembly, promotion execution, rollback execution, or public release |
 | GitHub Releases | **NONE RETURNED** | The repository Releases API returned no releases at the checkpoint | Absence of every possible external artifact or historical distribution |
 | Current deployment | **UNKNOWN** | Historical `stage` deployment records exist; the latest inspected historical status was failure | A current, healthy, supported, public or production KFM deployment |
@@ -137,28 +137,25 @@ For current behavior, repository implementation and observed outputs outrank des
 
 ## Exact-head validation snapshot
 
-GitHub returned **49 workflow runs** for the checkpoint revision. One remained queued at the final source snapshot:
+GitHub returned **44 completed workflow runs** for the checkpoint revision:
 
 | Conclusion | Count | Interpretation |
 |---|---:|---|
-| Success | 44 | Each completed run passed its declared scope |
-| Failure | 3 | Current `main` is not fully green |
+| Success | 41 | Each completed run passed its declared scope |
+| Failure | 2 | Current `main` is not fully green |
 | Skipped | 1 | APIsec was skipped; a skipped run is not a pass |
-| Queued | 1 | `pmtiles-delta-manifest` had not started; no conclusion was available |
-| Total | 49 | Push-triggered exact-head workflow records returned by the API |
+| Total | 44 | Push-triggered exact-head workflow records returned by the API; no queued or in-progress runs remained |
 
 ### Current red stages
 
 | Workflow | Exact-head result | Failing stage | Important bounded detail |
 |---|---:|---|---|
-| [`domain-hydrology`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31900752617) | **FAILURE** | `Evaluate Hydrology validation readiness` | Bounded Hydrology schema validation was skipped; separate proof-hold and release-dry-run-hold jobs succeeded |
-| [`schema-validation`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31900752673) | **FAILURE** | `Validate configured aggregate fixture families` | Schema inventory and the focused DatasetVersion/aggregate-selection regression passed first; repository-owned schema/contract tests were then skipped |
-| [`validator-suite`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31900752526) | **FAILURE** | `Enforce repository workflow and topology ratchets` | Later aggregate-validator and generated-receipt stages were skipped |
+| [`schema-validation`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31901395007) | **FAILURE** | `Validate configured aggregate fixture families` | Schema inventory and the focused DatasetVersion/aggregate-selection regression passed first; repository-owned schema/contract tests were then skipped |
+| [`validator-suite`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31901395035) | **FAILURE** | `Enforce repository workflow and topology ratchets` | Later aggregate-validator and generated-receipt stages were skipped |
 | `validator-suite / ensure-fail-closed` | **SUCCESS** | Reviewed invalid `EvidenceBundle` rejection canary passed | Proves that bounded negative case only |
-| [`pmtiles-delta-manifest`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/31900752558) | **QUEUED** | No job conclusion yet | Re-check before treating the 49-run set as final |
 
 > [!WARNING]
-> **Do not summarize this checkpoint as either “CI is green” or “the project is broken.”** Forty-four runs passed, three workflows failed at named stages, one run was skipped, and one remained queued. Open pull requests may already target part of the residue, but proposed remediation is not current `main` until merged and rechecked.
+> **Do not summarize this checkpoint as either “CI is green” or “the project is broken.”** Forty-one runs passed, two workflows failed at named stages, and one run was skipped. The `domain-hydrology` workflow returned success after PR #2909; open pull requests may already target the remaining residue, but proposed remediation is not current `main` until merged and rechecked.
 
 See [Development and Validation](Development-and-Validation.md) for interpreting checks and the repository [Actions page](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions) for current results.
 
@@ -289,7 +286,7 @@ The GitHub Releases API returned **no releases** at the checkpoint. That is a na
 
 ### Deployment
 
-GitHub exposes historical `stage` deployment records from December 2025. The newest historical record inspected was tied to an older commit and had a **failure** status. No current production deployment, current stage health, public endpoint, environment version, access policy, runtime log, service-level objective, or rollback readiness was established for `main@35a6237f2f29e680bafe9af16f71e28fc585a735`.
+GitHub exposes historical `stage` deployment records from December 2025. The newest historical record inspected was tied to an older commit and had a **failure** status. No current production deployment, current stage health, public endpoint, environment version, access policy, runtime log, service-level objective, or rollback readiness was established for `main@09a04dffa385a29f8b1b32562a89c025b1eed37a`.
 
 Therefore the safe current statement is:
 
@@ -364,7 +361,7 @@ These are verification boundaries, not a dismissal of the substantial repository
 
 ## Highest-value verification priorities
 
-1. **Restore a green or intentionally explained main baseline.** Resolve the Hydrology readiness failure, aggregate fixture-family failure, and repository topology-ratchet failure without weakening validation.
+1. **Restore a green or intentionally explained main baseline.** Resolve the aggregate fixture-family failure and repository topology-ratchet failure without weakening validation.
 2. **Prove one complete trust path.** Select one public-safe claim and demonstrate source admission through `EvidenceBundle`, policy, review, release, governed API, Explorer display, correction, and rollback.
 3. **Inventory actual published carriers.** Recursively classify `data/published/`, identify writers/consumers, and bind every public-safe carrier to evidence, release, correction, and rollback records.
 4. **Verify current deployment state.** Record environment, commit, service URL, access policy, health, logs, ownership, and rollback for any claimed service.
