@@ -8,7 +8,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-MODULE_PATH = Path(__file__).resolve().parents[2] / "tools/validators/validate_all.py"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+MODULE_PATH = REPO_ROOT / "tools/validators/validate_all.py"
 SPEC = importlib.util.spec_from_file_location("kfm_validator_orchestrator", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 orchestrator = importlib.util.module_from_spec(SPEC)
@@ -147,6 +148,51 @@ class ValidatorOrchestratorTests(unittest.TestCase):
         self.assertEqual(report["selected_count"], 1)
         self.assertEqual(report["results"][0]["validator_id"], "beta-check")
         self.assertEqual(report["selection"]["mode"], "changed-area")
+
+    def test_live_registry_registers_dataset_version_without_broadening_profiles(self) -> None:
+        registry = orchestrator.load_registry(
+            REPO_ROOT / "tools/validators/validator_registry.json",
+            REPO_ROOT,
+        )
+        spec = registry.by_id["dataset-version"]
+
+        self.assertEqual(
+            spec.script,
+            "tools/validators/data/validate_dataset_version.py",
+        )
+        self.assertEqual(spec.args, ("--fixtures",))
+        self.assertIn("dataset-version", registry.profiles["full"])
+        self.assertNotIn("dataset-version", registry.profiles["focused"])
+        self.assertNotIn("dataset-version", registry.profiles["release-dry-run"])
+
+        representative_paths = (
+            ".github/workflows/dataset-version.yml",
+            "contracts/data/dataset_version.md",
+            "schemas/contracts/v1/data/dataset_version.schema.json",
+            "fixtures/contracts/v1/data/dataset_version/valid/valid_retrieval_snapshot.json",
+            "tests/validators/data/test_validate_dataset_version.py",
+            "tools/validators/data/validate_dataset_version.py",
+            "tools/validators/validate_dataset_version.py",
+        )
+        for path in representative_paths:
+            with self.subTest(path=path):
+                selected, mode = orchestrator.select_validators(
+                    registry,
+                    profile="changed-area",
+                    changed_paths=(path,),
+                )
+                self.assertEqual(mode, "changed-area")
+                self.assertIn(
+                    "dataset-version",
+                    {item.validator_id for item in selected},
+                )
+
+        from tools.validators._common import run_all as legacy_runner
+
+        self.assertIn(
+            "validate_dataset_version.py",
+            legacy_runner.RUNNER_VALIDATORS,
+        )
 
     def test_changed_area_without_match_abstains_without_false_pass_claim(self) -> None:
         entry = self._entry(

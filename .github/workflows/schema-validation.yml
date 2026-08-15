@@ -2,7 +2,7 @@
 #
 # Responsibility:
 #   Check repository schema JSON structure, canonical v1 schema identity, the
-#   eight configured aggregate-validator fixture families, and the executable
+#   nine configured aggregate-validator fixture families, and the executable
 #   schema/contract test lane without treating shape validity as truth.
 #
 # Trigger and trust boundary:
@@ -110,6 +110,10 @@ jobs:
                   Path("schemas/contracts/v1/data/layer_manifest.schema.json"),
                   Path("fixtures/data/layer_manifest"),
               ),
+              "validate_dataset_version.py": (
+                  Path("schemas/contracts/v1/data/dataset_version.schema.json"),
+                  Path("fixtures/contracts/v1/data/dataset_version"),
+              ),
               "validate_runtime_response_envelope.py": (
                   Path("schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"),
                   Path("fixtures/contracts/v1/runtime/runtime_response_envelope"),
@@ -136,9 +140,9 @@ jobs:
               "validate_layer_manifest.py": Path(
                   "tools/validators/data/validate_layer_manifest.py"
               ),
-          }
-          manifest_expectation_validators = {
-              "validate_layer_manifest.py",
+              "validate_dataset_version.py": Path(
+                  "tools/validators/data/validate_dataset_version.py"
+              ),
           }
 
           valid_total = 0
@@ -148,12 +152,18 @@ jobs:
                   filename, Path("tools/validators") / filename
               )
               assert validator_path.is_file(), f"configured validator is missing: {validator_path}"
+              compatibility_path = Path("tools/validators") / filename
+              assert compatibility_path.is_file(), (
+                  f"aggregate compatibility entry point is missing: "
+                  f"{compatibility_path}"
+              )
               assert schema_path.is_file(), f"configured schema is missing: {schema_path}"
               valid = sorted((fixture_root / "valid").glob("*.json"))
               invalid = sorted((fixture_root / "invalid").glob("*.json"))
               assert valid, f"configured valid fixture lane is empty: {fixture_root}"
               assert invalid, f"configured invalid fixture lane is empty: {fixture_root}"
-              if filename in manifest_expectation_validators:
+
+              if filename == "validate_layer_manifest.py":
                   expectation_manifest = (
                       fixture_root / "expected_findings_manifest.json"
                   )
@@ -182,6 +192,42 @@ jobs:
                       f"invalid fixture expectation coverage changed: "
                       f"{expectation_manifest}"
                   )
+              elif filename == "validate_dataset_version.py":
+                  expectation_manifest = (
+                      fixture_root / "invalid/expected_findings_manifest.json"
+                  )
+                  assert expectation_manifest.is_file(), (
+                      f"configured fixture expectation manifest is missing: "
+                      f"{expectation_manifest}"
+                  )
+                  invalid_expectations = json.loads(
+                      expectation_manifest.read_text(encoding="utf-8")
+                  )
+                  assert isinstance(invalid_expectations, dict), (
+                      f"fixture expectation manifest is not a mapping: "
+                      f"{expectation_manifest}"
+                  )
+                  expected_invalid_names = {
+                      path.name
+                      for path in invalid
+                      if path.name != expectation_manifest.name
+                  }
+                  assert set(invalid_expectations) == expected_invalid_names, (
+                      f"invalid fixture expectation coverage changed: "
+                      f"{expectation_manifest}"
+                  )
+                  assert all(
+                      isinstance(codes, list)
+                      and codes
+                      and all(isinstance(code, str) and code for code in codes)
+                      for codes in invalid_expectations.values()
+                  ), (
+                      f"DatasetVersion expectation codes must be non-empty string lists: "
+                      f"{expectation_manifest}"
+                  )
+                  invalid = [
+                      path for path in invalid if path.name != expectation_manifest.name
+                  ]
               else:
                   missing_expectations = [
                       path.as_posix()
@@ -237,6 +283,15 @@ jobs:
           print("BOUNDARY: schema validity proves tested machine shape only, not meaning, evidence, policy, rights, sensitivity, release, or publication authority.")
           PY
 
+      - name: Run focused DatasetVersion and aggregate-selection regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover             --start-directory tests/validators/data             --pattern 'test_validate_dataset_version.py'             --verbose
+          python -m unittest             tests.validators.test_validator_orchestrator.ValidatorOrchestratorTests.test_live_registry_registers_dataset_version_without_broadening_profiles             --verbose
+          python tools/validate_all.py --validate-registry
+          python tools/validate_all.py             --profile full             --validator dataset-version             --quiet
+
       - name: Validate configured aggregate fixture families
         shell: bash
         run: |
@@ -258,7 +313,7 @@ jobs:
             echo "### Schema validation"
             echo
             echo "- Parsed every JSON file under schemas, meta-schema checked every *.schema.json file, and required canonical v1 schemas to declare unique IDs."
-            echo "- Required non-empty valid and invalid fixture lanes plus reviewed rejection expectations for every aggregate validator, ran make schemas, and ran the repository-owned schema/contract tests."
+            echo "- Required non-empty valid and invalid fixture lanes plus reviewed rejection expectations for every aggregate validator, ran focused DatasetVersion tests and aggregate selection checks, ran make schemas, and ran the repository-owned schema/contract tests."
             echo "- Shared JSON Schema runner entries print EXPECTED_FAIL for expected schema rejection and reserve FAIL for harness or polarity errors; specialized validators retain their own diagnostics, and exit status plus pytest determine the job result."
             echo "- Result: ${{ job.status }}. This proves only the tested machine-shape behavior; it does not establish semantic truth, evidence closure, source authority, policy approval, rights or sensitivity clearance, release readiness, or publication authority."
             echo "- No schema, fixture, validation report, receipt, proof, policy decision, release record, lifecycle record, or published artifact was emitted."
