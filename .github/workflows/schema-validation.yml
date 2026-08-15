@@ -292,6 +292,14 @@ jobs:
           python tools/validate_all.py --validate-registry
           python tools/validate_all.py             --profile full             --validator dataset-version             --quiet
 
+      - name: Validate aggregate-registration authoring receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass7-layer-manifest-dataset-version-registration-20260815.json \
+            --repo-root .
+
       - name: Validate configured aggregate fixture families
         shell: bash
         run: |

@@ -1,7 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/layer-manifest.yml": "sha256:a7adeed47bf135fe9f49ea01e519ff830ce95d77c6cb45ab7bb7bccfec1f1763",
-    ".github/workflows/schema-validation.yml": "sha256:5c342d2e3ea5fce91a4fc4f703ffc27794d48d0eb7d3357dcb32abe28ed22c38",
+    ".github/workflows/schema-validation.yml": "sha256:b0f3acf23fcc3f1821ed798a833b4093068313164e407e41920f78283543e0e2",
     "tests/validators/test_validate_fixture_root_contract.py": "sha256:24da0d4c150175e7fa9b153ee7a5709ba61bf063766731eca014dde205d06ea3",
     "tests/validators/test_validator_orchestrator.py": "sha256:d67fbc17b6e09fe20ee7412690d532f365eda7fbc667794574c910f3ddccc532",
     "tools/validators/_fixture_root_contract_checks.py": "sha256:9220e7eb9790354e46c947b4f1821548f027e5d0e88147283a3c6b3f7ca4173f",
@@ -9,7 +8,6 @@
     "tools/validators/validator_registry.json": "sha256:52fdd5c62e16371307e4725ddfc5ae18c6610557788d3ecad945298f1eab22f8"
   },
   "artifact_paths": [
-    ".github/workflows/layer-manifest.yml",
     ".github/workflows/schema-validation.yml",
     "tests/validators/test_validate_fixture_root_contract.py",
     "tests/validators/test_validator_orchestrator.py",
@@ -29,13 +27,13 @@
       "validated": true
     },
     {
-      "evidence_ref": "repo:data/receipts/generated/genrec-pass7-layer-manifest-20260808.json@c969b8fcd657b14676320d808d234cadab0fcd4f",
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass7-layer-manifest-20260808.json@35a6237f2f29e680bafe9af16f71e28fc585a735",
       "id": "repository:historical-layer-manifest-receipt",
       "validated": true
     }
   ],
   "contract_version": "3.0.0",
-  "created_at": "2026-08-15T18:11:20Z",
+  "created_at": "2026-08-15T18:21:08Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "human_review": {
     "reviewer_ids": [],
@@ -49,9 +47,12 @@
       "repo:pull/2882",
       "repo:commit/66a6c4550ca2c62d50cf3b591c4e528f85d98b98",
       "repo:commit/c969b8fcd657b14676320d808d234cadab0fcd4f",
+      "repo:pull/2904",
+      "repo:commit/36567530c146976c7e5bb0f6d36d54171915fe58",
+      "repo:commit/35a6237f2f29e680bafe9af16f71e28fc585a735",
       "repo:tools/validators/validator_registry.json@c969b8fcd657b14676320d808d234cadab0fcd4f",
       "repo:.github/workflows/schema-validation.yml@c969b8fcd657b14676320d808d234cadab0fcd4f",
-      "repo:data/receipts/generated/genrec-pass7-layer-manifest-20260808.json@c969b8fcd657b14676320d808d234cadab0fcd4f"
+      "repo:data/receipts/generated/genrec-pass7-layer-manifest-20260808.json@35a6237f2f29e680bafe9af16f71e28fc585a735"
     ]
   },
   "links": {
@@ -64,7 +65,7 @@
     "provider": "OpenAI",
     "version": "2026-08-15"
   },
-  "notes": "Delta authoring receipt for the deferred DatasetVersion aggregate-registration closure. Historical DatasetVersion and LayerManifest receipts remain immutable; this receipt binds only the validator-registry entry, aggregate schema workflow coverage, compatibility entry point, finite fixture-root count advance, focused selection regression, and the LayerManifest workflow pointer needed to validate the new delta receipt. DatasetVersion remains draft/PROPOSED and fixture-only. No data registry, API, UI, AI, live-source, lifecycle-storage, release, deployment, or publication consumer is added, and the inherited repository-topology failure is intentionally unchanged.",
+  "notes": "Delta authoring receipt for the deferred DatasetVersion aggregate-registration closure and its post-merge receipt-boundary correction. PR #2904 registered DatasetVersion but temporarily displaced the LayerManifest workflow's historical receipt check. This packet restores the LayerManifest workflow byte-for-byte from the reviewed pre-merge base and validates this delta receipt in schema-validation, while retaining the validator-registry entry, aggregate schema coverage, compatibility entry point, finite fixture-root count advance, and focused selection regression. Historical DatasetVersion and LayerManifest receipts remain immutable. DatasetVersion remains draft/PROPOSED and fixture-only. No data registry, API, UI, AI, live-source, lifecycle-storage, release, deployment, or publication consumer is added, and the inherited repository-topology failure remains unchanged.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -80,7 +81,6 @@
   "prompt_or_contract": "sha256:f25eeaa88c23a2596334006beac877f5e1f17c71e823ff966e2003d115989d28",
   "receipt_id": "genrec-pass7-layer-manifest-dataset-version-registration-20260815",
   "truth_labels": {
-    ".github/workflows/layer-manifest.yml": "PROPOSED",
     ".github/workflows/schema-validation.yml": "PROPOSED",
     "tests/validators/test_validate_fixture_root_contract.py": "PROPOSED",
     "tests/validators/test_validator_orchestrator.py": "PROPOSED",
@@ -92,7 +92,12 @@
     {
       "gate": "deferred-integration-recheck",
       "outcome": "PASS",
-      "reason": "Current main c969b8fcd657b14676320d808d234cadab0fcd4f still omitted DatasetVersion from the validator registry and aggregate schema workflow; the eight commits after the original implementation base did not touch the deferred integration surfaces."
+      "reason": "The reviewed pre-integration base c969b8fcd657b14676320d808d234cadab0fcd4f omitted DatasetVersion from the validator registry and aggregate schema workflow; the eight intervening commits did not touch those surfaces. PR #2904 then merged the registration, and this correction changes only receipt-validation placement."
+    },
+    {
+      "gate": "historical-layer-manifest-receipt-boundary",
+      "outcome": "PASS",
+      "reason": "The LayerManifest workflow blob is restored to the exact reviewed pre-merge content, including validation of genrec-pass7-layer-manifest-20260808.json; the new delta receipt is validated by schema-validation instead."
     },
     {
       "gate": "registry-shape-and-selection-static-check",
@@ -107,7 +112,7 @@
     {
       "gate": "workflow-yaml-parse",
       "outcome": "PASS",
-      "reason": "The changed schema-validation and LayerManifest workflows parsed as YAML."
+      "reason": "The changed schema-validation workflow parsed as YAML."
     },
     {
       "gate": "focused-dataset-version-and-aggregate-execution",
