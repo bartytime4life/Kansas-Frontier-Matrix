@@ -8,6 +8,7 @@ from pathlib import Path
 from tools.validators.release.validate_geoparquet_2_rc_compatibility_assessment import (
     CASES_PATH,
     assess,
+    candidate_from_case,
     validate_cases,
 )
 
@@ -16,7 +17,10 @@ class GeoParquet2RcCompatibilityAssessmentTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         value = json.loads(Path(CASES_PATH).read_text(encoding="utf-8"))
-        cls.cases = {case["case_id"]: case["candidate"] for case in value["cases"]}
+        cls.cases = {
+            case["case_id"]: candidate_from_case(value["base_candidate"], case)
+            for case in value["cases"]
+        }
 
     def test_exact_fixture_matrix_passes(self) -> None:
         self.assertEqual(validate_cases(), 0)
