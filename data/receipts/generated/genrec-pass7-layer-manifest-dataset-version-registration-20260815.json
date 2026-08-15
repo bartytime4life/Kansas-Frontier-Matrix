@@ -1,7 +1,6 @@
 {
   "artifact_hashes": {
-    ".github/workflows/layer-manifest.yml": "sha256:a7adeed47bf135fe9f49ea01e519ff830ce95d77c6cb45ab7bb7bccfec1f1763",
-    ".github/workflows/schema-validation.yml": "sha256:5c342d2e3ea5fce91a4fc4f703ffc27794d48d0eb7d3357dcb32abe28ed22c38",
+    ".github/workflows/schema-validation.yml": "sha256:b0f3acf23fcc3f1821ed798a833b4093068313164e407e41920f78283543e0e2",
     "tests/validators/test_validate_fixture_root_contract.py": "sha256:24da0d4c150175e7fa9b153ee7a5709ba61bf063766731eca014dde205d06ea3",
     "tests/validators/test_validator_orchestrator.py": "sha256:d67fbc17b6e09fe20ee7412690d532f365eda7fbc667794574c910f3ddccc532",
     "tools/validators/_fixture_root_contract_checks.py": "sha256:9220e7eb9790354e46c947b4f1821548f027e5d0e88147283a3c6b3f7ca4173f",
@@ -9,7 +8,6 @@
     "tools/validators/validator_registry.json": "sha256:52fdd5c62e16371307e4725ddfc5ae18c6610557788d3ecad945298f1eab22f8"
   },
   "artifact_paths": [
-    ".github/workflows/layer-manifest.yml",
     ".github/workflows/schema-validation.yml",
     "tests/validators/test_validate_fixture_root_contract.py",
     "tests/validators/test_validator_orchestrator.py",
@@ -64,7 +62,7 @@
     "provider": "OpenAI",
     "version": "2026-08-15"
   },
-  "notes": "Delta authoring receipt for the deferred DatasetVersion aggregate-registration closure. Historical DatasetVersion and LayerManifest receipts remain immutable; this receipt binds only the validator-registry entry, aggregate schema workflow coverage, compatibility entry point, finite fixture-root count advance, focused selection regression, and the LayerManifest workflow pointer needed to validate the new delta receipt. DatasetVersion remains draft/PROPOSED and fixture-only. No data registry, API, UI, AI, live-source, lifecycle-storage, release, deployment, or publication consumer is added, and the inherited repository-topology failure is intentionally unchanged.",
+  "notes": "Delta authoring receipt for the deferred DatasetVersion aggregate-registration closure. Historical DatasetVersion and LayerManifest receipts and the LayerManifest workflow remain immutable; this receipt binds only the validator-registry entry, aggregate schema workflow coverage and receipt check, compatibility entry point, finite fixture-root count advance, and focused selection regression. DatasetVersion remains draft/PROPOSED and fixture-only. No data registry, API, UI, AI, live-source, lifecycle-storage, release, deployment, or publication consumer is added, and the inherited repository-topology failure is intentionally unchanged.",
   "override_record": null,
   "parameters": {
     "max_tokens": null,
@@ -80,7 +78,6 @@
   "prompt_or_contract": "sha256:f25eeaa88c23a2596334006beac877f5e1f17c71e823ff966e2003d115989d28",
   "receipt_id": "genrec-pass7-layer-manifest-dataset-version-registration-20260815",
   "truth_labels": {
-    ".github/workflows/layer-manifest.yml": "PROPOSED",
     ".github/workflows/schema-validation.yml": "PROPOSED",
     "tests/validators/test_validate_fixture_root_contract.py": "PROPOSED",
     "tests/validators/test_validator_orchestrator.py": "PROPOSED",
@@ -107,7 +104,7 @@
     {
       "gate": "workflow-yaml-parse",
       "outcome": "PASS",
-      "reason": "The changed schema-validation and LayerManifest workflows parsed as YAML."
+      "reason": "The changed schema-validation workflow parsed as YAML."
     },
     {
       "gate": "focused-dataset-version-and-aggregate-execution",
