@@ -35,6 +35,18 @@ CATALOG_VALIDATORS = {
     },
 }
 
+LEGACY_CORE_VALIDATOR_IDS = (
+    "source-descriptor",
+    "evidence-ref",
+    "evidence-bundle",
+    "layer-manifest",
+    "dataset-version",
+    "runtime-response-envelope",
+    "decision-envelope",
+    "run-receipt",
+    "ingest-receipt",
+)
+
 
 class CatalogValidatorRegistryConvergenceTests(unittest.TestCase):
     @classmethod
@@ -75,13 +87,28 @@ class CatalogValidatorRegistryConvergenceTests(unittest.TestCase):
                     {item.validator_id for item in selected},
                 )
 
-    def test_legacy_fixture_inventory_includes_catalog_validators(self) -> None:
+    def test_legacy_fixture_inventory_stays_core_while_full_keeps_catalog(self) -> None:
         from tools.validators._common import run_all as legacy_runner
 
-        expected_scripts = {
+        expected_legacy_scripts = [
+            Path(self.registry.by_id[validator_id].script).name
+            for validator_id in LEGACY_CORE_VALIDATOR_IDS
+        ]
+        catalog_scripts = {
             Path(details["script"]).name for details in CATALOG_VALIDATORS.values()
         }
-        self.assertTrue(expected_scripts.issubset(set(legacy_runner.RUNNER_VALIDATORS)))
+
+        self.assertEqual(
+            legacy_runner.LEGACY_CORE_VALIDATOR_IDS,
+            LEGACY_CORE_VALIDATOR_IDS,
+        )
+        self.assertEqual(legacy_runner.RUNNER_VALIDATORS, expected_legacy_scripts)
+        self.assertTrue(
+            set(CATALOG_VALIDATORS).issubset(self.registry.profiles["full"])
+        )
+        self.assertTrue(
+            catalog_scripts.isdisjoint(set(legacy_runner.RUNNER_VALIDATORS))
+        )
 
 
 if __name__ == "__main__":
