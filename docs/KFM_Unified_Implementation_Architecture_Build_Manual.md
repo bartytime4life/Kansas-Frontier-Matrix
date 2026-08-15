@@ -1,1707 +1,1666 @@
-# Kansas Frontier Matrix — Whole-System Build Reference
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/whole-system-reference
+title: Kansas Frontier Matrix — Whole-System Reference
+type: whole-system-reference
+version: 2026-08-15-convergence-draft
+status: PROPOSED_FOR_ADOPTION
+authority_class: proposed_human_readable_synthesis
+current_path: docs/KFM_Unified_Implementation_Architecture_Build_Manual.md
+owning_root: docs/
+base_repository: bartytime4life/Kansas-Frontier-Matrix
+base_commit: a768ed812df41e3466758b60af087129997fb337
+source_corpus_snapshot_date: 2026-08-15
+last_verified: 2026-08-15
+owner_review_route: "@bartytime4life"
+required_independent_review: NEEDS_VERIFICATION
+truth_posture: cite-or-abstain
+implementation_maturity_posture: evidence-separated-from-doctrine
+non_effects:
+  - does_not_activate_sources
+  - does_not_approve_policy
+  - does_not_release_or_publish
+  - does_not_deploy
+  - does_not_change_repository_settings
+  - does_not_supersede_accepted_adrs_contracts_schemas_policy_or_current_code
+[/KFM_META_BLOCK_V2] -->
 
-**Document type:** Markdown master build reference / implementation guide  
-**Prepared for:** KFM maintainers, domain-lane leads, source stewards, reviewers, data engineers, UI/API engineers, AI-runtime engineers, security reviewers, and release stewards  
-**Prepared:** 2026-05-20  
-**Truth posture:** CONFIRMED doctrine and source synthesis; PROPOSED implementation architecture; UNKNOWN live repository/runtime state unless a mounted checkout, CI result, release artifact, dashboard, or log proves it.  
-**Primary use:** Build the entire KFM system as a governed, evidence-first, map-first, time-aware spatial knowledge and publication system.
+<a id="top"></a>
 
----
+# Kansas Frontier Matrix — Whole-System Reference
 
-## 0. Executive determination
+> **PROPOSED FOR ADOPTION — WHOLE-SYSTEM REFERENCE**
+>
+> This is KFM's proposed canonical **human-readable synthesis**. It does not outrank accepted ADRs, semantic contracts, machine schemas, policy, current code/configuration, tests/workflows, generated receipts/proofs/manifests, or runtime evidence. It becomes authoritative only through a separate accepted adoption decision.
 
-KFM should be built as a **governed spatial evidence and publication system**, not as a map app, not as a generic data warehouse, not as an AI chat product, and not as a pile of domain datasets.
+## 0. Document Control and Authority
 
-The durable public unit of value is the **inspectable claim**: a statement or map-supported assertion whose evidence, source role, spatial scope, temporal scope, rights posture, sensitivity posture, review state, release state, correction lineage, and rollback target can be inspected.
-
-The practical build target is a system where:
-
-1. Sources are admitted through governed intake.
-2. Evidence is normalized into auditable bundles.
-3. Domain records and claims remain time-aware and source-role-aware.
-4. Policy, rights, sensitivity, and review gates run before public exposure.
-5. Publication is a state transition backed by receipts, proofs, manifests, signatures, and rollback.
-6. Public clients use governed APIs, released artifacts, catalog records, tile services, and EvidenceBundle resolution.
-7. MapLibre, tiles, PMTiles, COGs, GeoParquet, graphs, summaries, dashboards, scenes, and AI answers are downstream carriers, not sovereign truth.
-8. AI is interpretive only and always subordinate to evidence, policy, review, and release state.
-
-**Immediate build recommendation:** start with a small proof-bearing slice, not broad implementation. The safest first slice remains **public-safe hydrology or ecology/landcover**, because it can exercise source descriptors, geometry, time, catalog closure, MapLibre rendering, Evidence Drawer, finite AI outcomes, validation, release, and rollback without living-person, DNA, archaeology, rare-species exact-location, or critical-infrastructure exposure.
-
----
-
-## 1. Evidence basis and source posture
-
-### 1.1 Source classes used
-
-| Source class | Status in this reference | How to use it |
-|---|---:|---|
-| KFM doctrine and build plans | CONFIRMED as doctrine | Treat as governing intent unless live repo evidence or later accepted ADR supersedes it. |
-| Directory Rules | CONFIRMED placement doctrine | Controls proposed file homes and responsibility roots. |
-| KFM domain-lane reports | CONFIRMED lineage / PROPOSED design | Use for domain object families, risks, validators, fixtures, and policies; not proof of current implementation. |
-| KFM implementation reference | LINEAGE / NEEDS VERIFICATION | Reports prior public repo observations; re-scan the live repo before treating as current. |
-| New Ideas packets and Pass atlases | EXPLORATORY / PROPOSED backlog | Convert into SourceIntakeRecords, ADRs, fixtures, or validators before implementation. |
-| GIS/software/security references | REFERENCE | Use for craft and patterns; they do not override KFM doctrine. |
-| Official external standards/docs | NEEDS VERIFICATION before pinning | Use as current technical anchors; recheck before version locks, API calls, or release claims. |
-
-### 1.2 Key attached source ledger
-
-| ID | Source | Use in this reference | Status |
-|---|---|---|---|
-| SRC-DIR | `Directory Rules.pdf` | Responsibility-root file placement, schema-home convention, lifecycle roots, no parallel authority. | CONFIRMED doctrine |
-| SRC-GREEN | `Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf` | Greenfield build principles, inspectable claim, pre-RAW events, PromotionReceipt, RunReceipt, Merkle manifest, STAC profile. | CONFIRMED doctrine / PROPOSED-to-create |
-| SRC-PIPE | `Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf` | Canonical lifecycle, query-save-validate-compile-review-promote-recompile loop, control-plane object families. | CONFIRMED doctrine / PROPOSED implementation |
-| SRC-MAP | `KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf` | MapLibre renderer boundary, governed shell, Evidence Drawer, Focus Mode, map manifest object family. | CONFIRMED doctrine / PROPOSED implementation |
-| SRC-GAI | `KFM_Governed_AI_Extended_Pro_Source_Ledger_PDF_Only_Architecture_Report_2026-04-20.pdf` | Provider-neutral AI adapter, MockAdapter first, citation validation, finite outcomes, AIReceipt. | CONFIRMED design scan / PROPOSED implementation |
-| SRC-ENCYC | `kfm_encyclopedia.pdf` | Domain and capability atlas, operating law, sensitivity posture, domain coverage. | CONFIRMED planning manuscript / PROPOSED implementation |
-| SRC-IMPLREF | `# Kansas Frontier Matrix Implementation Reference.pdf` | Prior public repo observation, schema-home ambiguity, hydrology/ecology maturity signal. | LINEAGE / NEEDS VERIFICATION |
-| SRC-P20 | `KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md` | Pass 20 category systems, expansion agenda, PMTiles/source-drift/CDL watchers. | CONFIRMED source synthesis / PROPOSED backlog |
-| SRC-P18 | `KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` | 14-category idea atlas, source admission, temporal modeling, evidence/proof, API, map, UI, planning themes. | CONFIRMED synthesis / PROPOSED ideas |
-| SRC-POSTGIS | `mastering-postgis-modern-ways-to-create-analyze-and-implement-spatial-data.pdf` | Spatial database mechanics: PostGIS import/export, spatial SQL, validation, topology, routing, web GIS. | REFERENCE; examples are version-sensitive |
-| SRC-SDL | `The Security Development Lifecycle.pdf` | Secure development lifecycle, security training, threat modeling, bug bar, secure coding/testing, final review, response. | REFERENCE; modernize with current NIST/OWASP |
-| SRC-SE | `Handbook-of-Software-Engineering-Methods-1774561674.pdf` | Requirements, project management, Agile, team communication, RACI, prototyping, inclusivity, refactoring. | REFERENCE |
-| SRC-DDD | `Domain-Driven Design Reference.pdf` | Bounded contexts, ubiquitous language, aggregates, repositories, context maps, published language. | REFERENCE |
-| SRC-TEMPORAL | `developing-time-oriented-database-applications-in-sql.pdf` | Valid time, transaction time, bitemporal records, temporal keys, tracking logs. | REFERENCE |
-| SRC-API | `Designing Great Web APIs.pdf` | API-as-contract, resource ontology, lifecycle, documentation/prototyping. | REFERENCE |
-
-### 1.3 External standards anchors checked for this reference
-
-These are not KFM implementation proof. They are current technical anchors to recheck before version pins, release decisions, or source activation.
-
-| Area | External anchor | Build relevance |
+| Field | Current value | Evidence / boundary |
 |---|---|---|
-| Secure software | NIST SP 800-218 SSDF and current SP 800-218 revision work | Secure software practices, CI gates, vulnerability response, attestable development. |
-| AI risk | NIST AI RMF 1.0 and NIST generative-AI SSDF profile | Govern/Map/Measure/Manage posture for AI adapters and Focus Mode. |
-| Web/API security | OWASP API Security Top 10 and ASVS | API abuse cases, verification requirements, access control, authentication, authorization, input validation. |
-| Spatial database | PostGIS official docs | PostgreSQL/PostGIS as canonical spatial SQL layer. |
-| Map rendering | MapLibre GL JS and MapLibre Style Spec | 2D map shell and manifest-bound styles. |
-| Static tile artifacts | PMTiles documentation | Immutable public-safe tile bundles and range-request hosting. |
-| Raster artifacts | OGC Cloud Optimized GeoTIFF | Cloud-friendly large raster delivery. |
-| Vector/tabular artifacts | GeoParquet 1.1 | Spatial columnar interchange and processed/published vector artifacts. |
-| Catalog | OGC STAC, W3C DCAT v3, W3C PROV-O | Catalog closure, discovery, provenance, release mapping. |
+| Document ID | `kfm://doc/whole-system-reference` | Stable identifier introduced for this same-path convergence; adoption remains **PROPOSED**. |
+| Source path | `docs/KFM_Unified_Implementation_Architecture_Build_Manual.md` | Existing whole-system document updated **in place**; no sibling master document created. |
+| Status | **PROPOSED FOR ADOPTION — WHOLE-SYSTEM REFERENCE** | No accepted ADR currently designates this file as whole-system authority. |
+| Authority class | Proposed human-readable synthesis | Subordinate to accepted ADRs, contracts, schemas, policy, repository evidence, tests, workflows, and release records. |
+| Repository base | `bartytime4life/Kansas-Frontier-Matrix@a768ed812df41e3466758b60af087129997fb337` | Immutable current-main snapshot used for this convergence. |
+| Default branch | `main` | Repository metadata at the snapshot. |
+| Directory authority | Directory Rules v2 exact bytes at `docs/doctrine/directory-rules.md`, adopted by ADR-0029 | The rules file retains a historical `PROPOSED_FOR_ADOPTION` header; the accepted ADR establishes actual adoption state. [R-DIR] [R-ADR29] |
+| Owners / review route | `@bartytime4life` | Current CODEOWNERS review routing; independent domain/security/release stewardship is **NEEDS VERIFICATION**. [R-CODEOWNERS] |
+| Required reviewers | **NEEDS VERIFICATION** beyond current CODEOWNERS routing | Branch-protection and required-code-owner enforcement were inaccessible to the connector in this run. |
+| Adoption state | Not adopted | Requires a separate human/governance decision that explicitly designates this path and records its supersession role. |
+| Supersedes | Prior contents at this same path only as a documentation revision | No accepted document-authority supersession is asserted. |
+| Generated projections | None verified as a generated projection of this Markdown | A future site/PDF projection must identify this Markdown as its source and remain non-authoritative. |
+| Source snapshot | 2026-08-15 | Repository, Drive, attached corpus, and primary external references reconciled. |
+| Stale-state rule | Reverify before relying on “current” claims after material changes to main, adopted ADRs, root registries, major contracts/schemas/policy, or deployment evidence | Current-state statements are commit-pinned. |
+| Review cadence | **NEEDS VERIFICATION** | Proposed trigger-based review is safer than inventing a calendar cadence. |
+| Correction method | Same-path correction PR with evidence, change log, and affected-link validation | Do not create a competing “fixed/final/v2” document. |
+| Rollback method | Revert this documentation commit and any directly coupled navigation/receipt edit | Does not roll back system behavior, release state, or data. |
 
----
+**Non-effects.** This document does not activate a source, authorize live network access, approve policy, alter sensitivity classifications, release or publish data, deploy services, change repository settings, synchronize the native GitHub Wiki, authenticate reviewers, or supersede accepted ADRs/contracts/schemas/policy.
 
-## 2. Truth labels and finite outcomes
-
-### 2.1 Truth labels
+### Truth-label key
 
 | Label | Meaning |
 |---|---|
-| CONFIRMED | Verified from attached doctrine, current-session file evidence, generated artifacts, current repo scan, tests, logs, dashboards, or authoritative external source. |
-| PROPOSED | A design, path, schema, contract, workflow, validator, test, file, or recommendation not yet verified as implemented. |
-| UNKNOWN | Not verified strongly enough to act as fact. |
-| NEEDS VERIFICATION | Checkable before implementation, source activation, public release, package pinning, or operational use. |
-| DENY | System/policy outcome: do not expose, publish, execute, or admit. |
-| ABSTAIN | Evidence-bounded outcome: do not answer or claim because support is missing/stale/conflicted/out of scope. |
-| ERROR | Operational failure requiring remediation; never fallback to unsafe allow. |
+| `CONFIRMED` | Verified in this build from current repository evidence, a supplied source, generated artifact, or authoritative primary source. |
+| `PROPOSED` | Design, recommendation, target, path interpretation, or future state not proven as implemented/adopted. |
+| `UNKNOWN` | Insufficient evidence. |
+| `NEEDS VERIFICATION` | Checkable, but not verified strongly enough to act as fact. |
+| Qualifiers | `CONFLICTED`, `SUPERSEDED`, `STALE`, `INFERRED`, `NARROWED`, and `PARTIAL` refine a core label. |
 
-### 2.2 Runtime outcomes
+### Implementation-maturity key
 
-KFM runtime surfaces should converge on four finite outcomes:
+| Maturity | Meaning |
+|---|---|
+| `IMPLEMENTED` | Current repository evidence plus appropriate executable/consumption evidence supports the capability. |
+| `IMPLEMENTED_WITH_LIMITATIONS` | Working bounded surface exists, but important scope/operational constraints remain. |
+| `PARTIAL` | Some dependency-closed parts exist; end-to-end capability is not established. |
+| `DRAFT` | Repository artifact exists but remains proposal/draft or is not adopted. |
+| `FIXTURE_ONLY` | Demonstrated only with deterministic/synthetic fixtures. |
+| `PROPOSED` | Design exists without implementation proof. |
+| `DEPRECATED` | Retained for compatibility/migration; not for new canonical writes. |
+| `ABSENT` | Verified missing at the inspected scope. |
+| `NOT_INSPECTED` | No sufficient inspection was performed. |
+| `UNKNOWN` | Evidence does not support a maturity classification. |
 
-| Outcome | Meaning | Examples |
-|---|---|---|
-| ANSWER | Evidence exists, is released, policy-safe, citation-valid, and in scope. | Focus Mode returns a bounded, cited explanation. |
-| ABSTAIN | Evidence is missing, stale, conflicted, unresolved, unsupported for requested time/space, or scope is too broad. | Drawer says “No citable released evidence for this claim.” |
-| DENY | Policy blocks exposure because rights, sensitivity, living-person data, DNA, precise rare-species location, archaeology, infrastructure, or source terms are unsafe/unclear. | Exact site geometry withheld; public layer generalized. |
-| ERROR | Tool, policy engine, ledger, validator, adapter, resolver, or runtime failed. | Citation validator unavailable; model adapter offline. |
+### Source IDs used throughout
 
----
+Repository citations use commit-pinned sources. Attached/Drive sources are lineage or design evidence unless explicitly adopted. External references provide current technical language, not KFM authority.
 
-## 3. KFM operating law
+- **R-DIR** — [Directory Rules v2](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/docs/doctrine/directory-rules.md)
+- **R-ADR29** — [ADR-0029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- **R-ADRINDEX** — [ADR index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/docs/adr/INDEX.md)
+- **R-ROOTREG** — [root registry](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/control_plane/root_registry.yaml)
+- **R-DOMREG** — [domain-lane register](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/control_plane/domain_lane_register.yaml)
+- **R-OBJREG** — [object-family register](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/control_plane/object_family_register.yaml)
+- **R-CODEOWNERS** — [CODEOWNERS](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/.github/CODEOWNERS)
+- **R-README** — [repository README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/README.md)
+- **R-CONTRIB** — [CONTRIBUTING](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/CONTRIBUTING.md)
+- **R-MAKE** — [Makefile](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/Makefile)
+- **R-PYPROJECT** — [pyproject.toml](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/pyproject.toml)
+- **R-PACKAGE** — [root package.json](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/package.json)
+- **R-DATA** — [data root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/data/README.md)
+- **R-CONTRACTS** — [contracts root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/contracts/README.md)
+- **R-SCHEMAS** — [schemas root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/schemas/README.md)
+- **R-POLICY** — [policy root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/policy/README.md)
+- **R-RELEASE** — [release root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/release/README.md)
+- **R-RUNTIME** — [runtime root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/runtime/README.md)
+- **R-SECURITY** — [security guidance index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/docs/security/README.md)
+- **R-DOMAINS** — [domain documentation index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/docs/domains/README.md)
+- **R-EXPLORER** — [Explorer Web README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/apps/explorer-web/README.md)
+- **R-GAPI** — [Governed API README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/apps/governed-api/README.md)
+- **R-GAPI-MAIN** — [Governed API WSGI entrypoint](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/apps/governed-api/src/governed_api/main.py)
+- **R-GAPI-REG** — [Governed API route registry](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/apps/governed-api/src/governed_api/routes/registry.py)
+- **R-CLI** — [CLI README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/apps/cli/README.md)
+- **R-GENREC** — [generated-receipt README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/data/receipts/generated/README.md)
+- **R-GENREC-SCHEMA** — [GENERATED_RECEIPT schema](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a768ed812df41e3466758b60af087129997fb337/schemas/contracts/v1/receipts/generated_receipt.schema.json)
 
-| Law | Build rule | Failure behavior |
-|---|---|---|
-| Inspectable claim | Public value is a claim whose evidence, source role, scope, policy, review, release, correction, and rollback can be inspected. | ABSTAIN or DENY if the claim cannot be inspected. |
-| Evidence hierarchy | EvidenceBundle and SourceDescriptor outrank map pixels, tiles, graph edges, search indexes, summaries, and generated language. | Generated or rendered-only claims cannot publish. |
-| Lifecycle law | `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. | DENY promotion if lifecycle closure is missing. |
-| Promotion law | Promotion is a governed state transition, not a file move. | DENY path-only publication. |
-| Directory law | File location encodes owner, governance, lifecycle, and responsibility root. | Open drift entry or ADR; do not create parallel authority. |
-| Trust membrane | Public clients use governed APIs and released artifacts, not canonical/internal stores. | DENY public raw/canonical access. |
-| Cite-or-abstain | Consequential statements cite admissible evidence or abstain. | ABSTAIN on missing/invalid citations. |
-| Policy-aware release | Rights, source terms, sensitivity, review, and release state gate exposure. | DENY when uncertain in sensitive areas. |
-| Map renderer boundary | MapLibre and other renderers are downstream of trust. | DENY renderer-as-truth. |
-| AI boundary | AI is interpretive, provider-neutral, evidence-bounded, policy-checked, and citation-validated. | ABSTAIN/DENY/ERROR; never raw model fallback. |
-| Watcher boundary | Watchers propose work; they do not publish. | DENY direct watcher-to-main or watcher-to-published. |
-| Reversibility | Every material release has correction, withdrawal, rollback, and cache invalidation paths. | Hold release until rollback target exists. |
-
----
-
-## 4. Whole-system architecture at a glance
-
-```text
-External sources / archives / APIs / field capture / uploads
-        |
-        v
-PRE-RAW EVENT LAYER
-(event_envelope -> prefilter_output -> event_run_receipt)
-        |
-        v
-RAW ---------------> QUARANTINE
- |                       ^
- | validation/schema     | unresolved rights, source drift,
- v                       | sensitivity, over-precise geometry
-WORK --------------------+
- |
- | normalization, identity, crosswalks, temporalization,
- | geometry transforms, source-role mapping
- v
-PROCESSED
- |
- | evidence resolution, domain records, claims, graph projections
- v
-CATALOG / TRIPLET
-(STAC/DCAT/PROV, CatalogMatrix, relationship projections)
- |
- | promotion gates, policy, review, proof closure,
- | receipts, signatures, manifests, rollback target
- v
-PUBLISHED
-(api_payloads, layers, pmtiles, geoparquet, reports, stories)
-        |
-        v
-GOVERNED API / TILE SERVICES / CATALOG ENDPOINTS
-        |
-        v
-MAPLIBRE SHELL + EVIDENCE DRAWER + REVIEW + EXPORT + FOCUS MODE
-```
-
-### 4.1 Responsibility planes
-
-| Plane | Owns | Must not own |
-|---|---|---|
-| Source plane | Source descriptors, source terms, retrieval metadata, update cadence, authority role. | Publication decisions. |
-| Evidence plane | EvidenceRef, EvidenceBundle, citations, source-role mapping, evidence closure. | Styling or UI behavior. |
-| Domain plane | Domain records, temporal assertions, measurements, observation facts, crosswalks. | Public exposure without policy/release. |
-| Policy plane | Rights, sensitivity, access class, steward review, public-safe transform. | Canonical truth. |
-| Validation plane | Schema checks, contract checks, policy checks, topology checks, citation checks, catalog closure checks. | Replacing review. |
-| Publication plane | Release manifests, proof packs, PromotionDecisions, rollback cards, correction notices. | Raw/source intake. |
-| Delivery plane | Governed APIs, TileJSON, PMTiles, COG, GeoParquet, STAC/DCAT/PROV endpoints, cache. | Canonical stores. |
-| UI/AI plane | Trust-visible exploration, Drawer, Focus Mode, review console, exports, finite outcomes. | Truth authority. |
+[Back to top](#top)
 
 ---
 
-## 5. Proposed repository architecture
+## Table of Contents
 
-**Directory Rules basis:** root folders are responsibility roots, not topic buckets. Domain depth lives under responsibility roots such as `docs/domains/`, `schemas/contracts/v1/domains/`, `policy/domains/`, `tests/domains/`, and `data/<lifecycle>/<domain>/`.
+0. [Document Control and Authority](#0-document-control-and-authority)  
+1. [Executive Summary](#1-executive-summary)  
+2. [Audience and Reading Paths](#2-audience-and-reading-paths)  
+3. [Evidence Basis and Authority Model](#3-evidence-basis-and-authority-model)  
+4. [Purpose, Scope, Principles, and Non-Goals](#4-purpose-scope-principles-and-non-goals)  
+5. [Current-State Repository and Capability Snapshot](#5-current-state-repository-and-capability-snapshot)  
+6. [Target Whole-System Architecture](#6-target-whole-system-architecture)  
+7. [Repository and Directory Architecture](#7-repository-and-directory-architecture)  
+8. [Ubiquitous Language, Bounded Contexts, and Core Object Families](#8-ubiquitous-language-bounded-contexts-and-core-object-families)  
+9. [Identity, Time, Geography, Scale, and Uncertainty](#9-identity-time-geography-scale-and-uncertainty)  
+10. [Data Lifecycle, Storage, and Processing](#10-data-lifecycle-storage-and-processing)  
+11. [Source Admission, Connectors, and Watchers](#11-source-admission-connectors-and-watchers)  
+12. [Evidence, Provenance, Catalog, Receipts, and Proof](#12-evidence-provenance-catalog-receipts-and-proof)  
+13. [Promotion, Release, Publication, Correction, and Rollback](#13-promotion-release-publication-correction-and-rollback)  
+14. [Domain Atlas](#14-domain-atlas)  
+15. [Cross-Domain Relations and Anti-Collapse Rules](#15-cross-domain-relations-and-anti-collapse-rules)  
+16. [Applications, Packages, Services, and Workers](#16-applications-packages-services-and-workers)  
+17. [API and CLI Reference](#17-api-and-cli-reference)  
+18. [MapLibre, Maps, Tiles, and Governed UI](#18-maplibre-maps-tiles-and-governed-ui)  
+19. [Governed AI](#19-governed-ai)  
+20. [Feature and Capability Catalog](#20-feature-and-capability-catalog)  
+21. [Security, Privacy, Rights, and Sensitivity](#21-security-privacy-rights-and-sensitivity)  
+22. [Governance and Decision Rights](#22-governance-and-decision-rights)  
+23. [Developer Build, Installation, and Contribution Guide](#23-developer-build-installation-and-contribution-guide)  
+24. [Pipeline and Data Engineering Guide](#24-pipeline-and-data-engineering-guide)  
+25. [Testing, Validation, and Quality Assurance](#25-testing-validation-and-quality-assurance)  
+26. [CI/CD, Repository Controls, Release, and Deployment](#26-cicd-repository-controls-release-and-deployment)  
+27. [Runtime, Infrastructure, and Operations](#27-runtime-infrastructure-and-operations)  
+28. [User and Operator Guides](#28-user-and-operator-guides)  
+29. [Accessibility, Performance, Reliability, and Compatibility](#29-accessibility-performance-reliability-and-compatibility)  
+30. [Current Gaps, Roadmap, and Dependency Order](#30-current-gaps-roadmap-and-dependency-order)  
+31. [Risks, Limitations, Assumptions, and Open Questions](#31-risks-limitations-assumptions-and-open-questions)  
+32. [Glossary and Acronyms](#32-glossary-and-acronyms)  
+33. [Embedded Appendices](#33-embedded-appendices)  
 
-All paths below are **PROPOSED** until verified in a mounted repo and accepted through ADRs/README conventions.
-
-```text
-.github/
-  workflows/
-apps/
-  api/
-  governed-api/
-  explorer-web/
-  review-console/
-  workers/
-connectors/
-  <source_family>/
-contracts/
-  api/
-  runtime/
-  README.md
-control_plane/
-  registers/
-  drift/
-  source_intake/
-data/
-  raw/
-  work/
-  quarantine/
-  processed/
-  catalog/
-    stac/
-    dcat/
-    prov/
-    domain/
-  triplets/
-  receipts/
-  proofs/
-  published/
-  rollback/
-  registry/
-    sources/
-    source_descriptors/
-    layers/
-    datasets/
-    rights/
-    sensitivity/
-docs/
-  doctrine/
-  adr/
-  architecture/
-  control-plane/
-  domains/
-  runbooks/
-  registers/
-  sources/
-  standards/
-fixtures/
-  public_safe/
-  invalid/
-infra/
-jsonschema/
-packages/
-  evidence/
-  policy/
-  catalog/
-  geospatial/
-  maplibre-runtime/
-  ai/
-pipeline_specs/
-pipelines/
-policy/
-  core/
-  sensitivity/
-  domains/
-  ai/
-  maplibre/
-  release/
-release/
-  candidates/
-  manifests/
-  promotion_decisions/
-  rollback_cards/
-  correction_notices/
-  withdrawal_notices/
-  signatures/
-runtime/
-schemas/
-  contracts/v1/
-    core/
-    sources/
-    evidence/
-    policy/
-    catalog/
-    promotion/
-    release/
-    maplibre/
-    runtime/
-    ai/
-    control_loop/
-    domains/
-scripts/
-styles/
-tests/
-  fixtures/
-  contract/
-  policy/
-  integration/
-  e2e/
-tools/
-  validators/
-  attest/
-  source_ledger/
-  catalog_matrix/
-  promotion_gate/
-  loop/
-ui/
-viewer_templates/   # compatibility only if current repo requires it
-web/                # compatibility only if current repo requires it
-```
-
-### 5.1 Path placement rules for new files
-
-| File type | Proposed home | Rationale |
-|---|---|---|
-| Human doctrine | `docs/doctrine/` | Governs system-wide truth posture. |
-| Architecture notes | `docs/architecture/` | System/subsystem design. |
-| Domain docs | `docs/domains/<domain>/` | Domain-specific operating manual. |
-| ADRs | `docs/adr/` | Governing decisions and tradeoffs. |
-| Machine schemas | `schemas/contracts/v1/<family>/` | Default schema-home convention. |
-| API contracts | `contracts/api/` or repo-native OpenAPI home | Interface promise to clients. |
-| Runtime envelopes | `schemas/contracts/v1/runtime/` | Machine-verifiable runtime output shape. |
-| Source descriptors | `data/registry/source_descriptors/` | Source identity, role, rights, cadence. |
-| Policy | `policy/<family>/` | Executable or declarative admissibility gates. |
-| Validators | `tools/validators/<family>/` | Deterministic checks; called by CI. |
-| Tests | `tests/<family>/` + `tests/fixtures/<family>/` | No-network fixtures and regression tests. |
-| Receipts | `data/receipts/<family>/` | Process memory. Not proof by itself. |
-| Proofs | `data/proofs/<family>/` | Evidence/proof closure. |
-| Release decisions | `release/` | Manifests, promotion decisions, rollback cards, correction notices. |
-| Published artifacts | `data/published/<family>/` | Public-safe outputs consumers read. |
+[Back to top](#top)
 
 ---
 
-## 6. Canonical lifecycle
+## 1. Executive Summary
 
-### 6.1 Lifecycle phases
+KFM is a **Kansas-first, map-first, time-aware, evidence-first spatial knowledge and publication system**. Its durable public value is the **inspectable claim**: a claim whose source role, evidence, place/time scope, policy posture, review state, release state, correction lineage, and rollback support can be inspected. **CONFIRMED doctrine / PARTIAL implementation.** [R-README] [R-DIR]
 
-| Phase | Allowed | Must not contain | Required metadata |
+KFM is **not** merely a map application, data warehouse, chatbot, alert authority, or collection of domain datasets. Maps, tiles, graphs, indexes, summaries, dashboards, scenes, exports, and AI responses are downstream carriers. Public clients should consume governed interfaces and released public-safe carriers rather than RAW, WORK, QUARANTINE, canonical/internal stores, or direct model runtimes. **CONFIRMED doctrine; multiple structural guards exist; operational deployment remains UNKNOWN.** [R-README] [R-RUNTIME] [R-DATA]
+
+### Current overall maturity
+
+| Area | Truth status | Maturity | Current evidence-bounded conclusion |
 |---|---|---|---|
-| Pre-RAW | Candidate event envelopes, source-change events, watcher events, upload notices. | Normalized data, public artifacts. | `event_id`, source hint, actor/tool, timestamp, policy precheck, EventRunReceipt. |
-| RAW | Immutable source-edge captures. | Public clients, AI context, UI layers, normalized records. | Retrieval time, URL/source, checksum, headers, license snapshot/contact, SourceDescriptor. |
-| WORK | Normalized intermediates, candidate assertions, extracted geometries, georeferencing work. | Public API/UI, release aliases. | RunReceipt, transform receipt, candidate IDs, validation status. |
-| QUARANTINE | Failed validation, unresolved rights/sensitivity, schema drift, over-precise geometry, source conflicts. | Promotion candidates unless remediated. | Quarantine reason, remediation owner, obligations, source refs. |
-| PROCESSED | Validated canonical records not yet public. | Assumption of release/public status. | Deterministic IDs, valid/transaction/source/retrieval time, schema hash, validation report. |
-| CATALOG | STAC/DCAT/PROV/domain catalog records. | Uncited claims or unclosed identifiers. | CatalogMatrix, digest, source refs, release refs. |
-| TRIPLET | Relationship projections and graph-compatible triples. | Canonical replacement semantics. | Projection manifest, source objects, rebuild recipe. |
-| PUBLISHED | Released public-safe artifacts only. | RAW/WORK/QUARANTINE/exact restricted geometry. | ReleaseManifest, PromotionDecision, proof pack, rollback target. |
-| RECEIPTS | Process memory: ingest, validation, pipeline, AI, release. | Proof of release by themselves. | Inputs, outputs, tool versions, policy refs, spec_hash. |
-| PROOFS | EvidenceBundle, ProofPack, validation report, citation validation. | Process-only receipts without release context. | Evidence closure, citation support, integrity. |
-| ROLLBACK | Rollback cards, alias revert receipts, cache invalidation records. | Deleting prior meanings. | Prior release ID, replacement release ID, invalidation target. |
-| REGISTRY | Append-only sources, layers, datasets, rights, sensitivity, crosswalks. | Canonical domain truth. | Versioned entries, authority role, status, caveats. |
+| Directory governance | `CONFIRMED` | `IMPLEMENTED_WITH_LIMITATIONS` | ADR-0029 is accepted and adopts exact Directory Rules v2 bytes; machine projections and topology ratchets exist, but migration debt remains. [R-ADR29] [R-ROOTREG] |
+| Repository responsibility roots | `CONFIRMED` | `IMPLEMENTED_WITH_LIMITATIONS` | Canonical, compatibility, deprecated, conditional, and platform roots are projected; legacy drift is intentionally visible. [R-ROOTREG] |
+| Contracts and schemas | `CONFIRMED` | `PARTIAL` | Canonical semantic/machine-shape roots exist with extensive artifacts and validation; schema subhome ADRs remain proposed and compatibility drift remains. [R-CONTRACTS] [R-SCHEMAS] |
+| Policy | `CONFIRMED` | `PARTIAL / FIXTURE_ONLY` | Canonical policy root and bounded Rego profiles exist; no accepted repository-wide evaluator or production PolicyDecision flow is proved. [R-POLICY] |
+| Release | `CONFIRMED` | `FIXTURE_ONLY / HOLD` | Release object shapes and promotion-gate fixtures exist; authenticated operational release/promotion/rollback and public parity are not proved. [R-RELEASE] |
+| Governed API | `CONFIRMED` | `IMPLEMENTED_WITH_LIMITATIONS` | Three GET routes exist and deliberately return finite scaffold envelopes; unknown routes/methods return finite errors. No production deployment is proved. [R-GAPI-MAIN] [R-GAPI-REG] |
+| Explorer Web | `CONFIRMED` | `PARTIAL / FIXTURE_ONLY` | Vite/TypeScript shell and bounded trust-visible slices exist; live map transport, production API binding, public deployment, and full route tree are not established. [R-EXPLORER] |
+| MapLibre proof/tooling | `CONFIRMED` | `PARTIAL` | Build/performance/proof commands exist; a production released map is not established. [R-MAKE] |
+| AI runtime | `CONFIRMED surfaces` | `PARTIAL / UNKNOWN execution` | Provider-neutral runtime documentation/contracts/mocks exist; direct public runtime is denied; production model execution and evidence/citation closure are not established. [R-RUNTIME] |
+| Domain lanes | `CONFIRMED registry` | `MIXED / NEEDS VERIFICATION` | 13 registered domain lanes exist in a proposed machine projection; lane implementation maturity is intentionally not inferred. [R-DOMREG] [R-DOMAINS] |
+| Operations/deployment | `UNKNOWN` | `UNKNOWN` | Configuration/infrastructure/runtime artifacts exist, but deployment, production storage, DNS/TLS, backups, dashboards, and public serving were not verified. |
 
-### 6.2 Promotion gates A–G
+### Most important current surfaces
 
-The exact gate letters can be finalized by ADR, but the build should preserve this minimum gate sequence:
+- Accepted Directory Rules v2 through ADR-0029 and active root/domain governance projections.
+- Canonical semantic-contract, machine-schema, policy, lifecycle-data, release, runtime, test, fixture, validator, and app roots.
+- Three bounded Governed API GET routes: `/bootstrap`, `/layers`, and `/evidence`, each currently fail-safe scaffolding.
+- Explorer Web trust-visible UI work, Evidence Drawer-oriented slices, and MapLibre performance/proof tooling.
+- Registry-driven validation, workflow-security and repository-topology ratchets, boundary guards, publication-denial/release fixture checks, and generated AI-work receipts.
+- Thirteen registered domain lanes with substantive human-readable lane READMEs.
 
-| Gate | Purpose | Required proof |
-|---|---|---|
-| A. Source identity | SourceDescriptor exists; source role and authority class known. | SourceDescriptor validation report. |
-| B. Rights and terms | License/terms/contact/attribution obligations resolved. | RightsReviewRecord. |
-| C. Sensitivity | Living-person, DNA, archaeology, rare species, infrastructure, cultural sensitivity, private land, or sovereignty risks resolved. | PolicyDecision and transform receipts. |
-| D. Schema/contract | Artifacts match schemas and API contracts. | SchemaValidationReport. |
-| E. Evidence closure | EvidenceRef resolves to EvidenceBundle; citations valid. | EvidenceBundle + CitationValidationReport. |
-| F. Catalog/provenance | STAC/DCAT/PROV and CatalogMatrix closed. | CatalogMatrixReport. |
-| G. Review/release/rollback | PromotionDecision, release manifest, proof pack, rollback target, correction path. | PromotionReceipt + ReleaseManifest + RollbackCard. |
+### Most important incomplete or unresolved surfaces
+
+- No adopted decision designates this whole-system document as canonical authority.
+- No accepted general policy evaluation and authenticated PolicyDecision consumption are proved.
+- Operational release, deployment, publication, cache invalidation, correction propagation, and rollback execution are not proved end to end.
+- Domain/source stewardship and independent review remain mostly unassigned or unverified.
+- Current public map, public search, live-source ingestion, and direct EvidenceBundle-backed user flows are not established as deployed.
+- Schema subhome authority and several compatibility/migration paths remain unresolved.
+- Branch protection and required-check configuration could not be read through the connector.
+
+### Recommended reading paths
+
+Maintainers should read §§0–7, 10–13, 22–27 first. Domain stewards should add §§8–15 and Appendix G. UI/API/AI engineers should focus on §§16–20. Security/release reviewers should focus on §§12–13 and §§21–27. Public/research users should start with §§1, 2, 18, 20, and 28.
+
+[Back to top](#top)
 
 ---
 
-## 7. Core object families
+## 2. Audience and Reading Paths
 
-### 7.1 Object map
+| Audience | Start here | Primary questions |
+|---|---|---|
+| Public user | §§1, 18, 20, 28 | What can I inspect now? What do trust/stale/deny/correction states mean? |
+| Researcher / analyst | §§3, 9, 12, 14, 17, 28 | What is authoritative, how do place/time/source roles work, and how should outputs be cited? |
+| Developer | §§5–8, 16–17, 23–26 | Where does code belong, what builds, what contracts apply, and which checks must run? |
+| Domain maintainer | §§8–15, 24–25, Appendix G | What does my lane own, which source roles are valid, and how does the lane join shared trust objects? |
+| Source steward | §§3, 10–12, 21–22, 24 | What can be admitted, under which rights/currentness/sensitivity conditions? |
+| Evidence reviewer | §§8, 9, 12, 13, 25 | Does a claim close to admissible evidence and provenance? |
+| Policy/sensitivity reviewer | §§10–13, 21–22 | What must fail closed and what transformations are permitted? |
+| Security reviewer | §§16–21, 25–27, Appendix J | Where are the trust boundaries and current enforcement gaps? |
+| Release steward | §§12–13, 22, 25–27 | What evidence, review, manifest, rollback, and correction objects are required? |
+| Operator | §§23–29 | How are validation, runtime, deployment, health, incidents, and rollback handled? |
+| AI builder | §§8, 12, 19, 21, 23, 25 | What may a model do, and what evidence/policy path constrains it? |
+| Project decision-maker | §§1, 3, 5–6, 20, 30–31 | What is implemented, what is proposed, and which decisions block safe progress? |
 
-| Object family | Purpose | Canonical stage | Public exposure |
+[Back to top](#top)
+
+---
+
+## 3. Evidence Basis and Authority Model
+
+### 3.1 Authority by question
+
+| Question | Primary authority | Secondary evidence |
+|---|---|---|
+| What exists now? | Pinned repository tree and current bytes | Current tests/workflows/manifests tied to the same revision |
+| What works now? | Implementation plus representative test/run/runtime evidence | Current docs describing the exact implementation |
+| Where does a file belong? | Accepted Directory Rules and accepted ADRs | Root registry and per-root README contracts |
+| What does an object mean? | Semantic contract | Machine schema, policy, implementation |
+| What machine shape is valid? | Machine schema | Fixtures/validators/tests |
+| May an operation or claim be exposed? | Policy + source/evidence/review/release context | Runtime enforcement and tests |
+| Is something released/published? | Release decision plus public-safe carrier and current delivery evidence | Manifests, proofs, receipts, runtime/public verification |
+| What should exist next? | Current user scope + adopted governance + evidence-backed gap | Proposal corpus and primary technical references |
+
+### 3.2 Source classes
+
+1. **Current repository evidence** — highest authority for current implementation claims.
+2. **Accepted ADRs and adopted doctrine** — decision/operating-law authority.
+3. **Current contracts, schemas, policy, tests, workflows, manifests, and root READMEs** — responsibility-specific current evidence.
+4. **Drive and attached KFM doctrine/lineage** — design, rationale, historical decisions, and proposal pressure; never current implementation proof by repetition.
+5. **General technical references** — background language only.
+6. **Primary external standards/tool documentation** — current technical facts and vocabulary, not KFM authority.
+
+### 3.3 Current-session limitations
+
+- No local repository clone could be created because the execution container had no DNS access to GitHub; repository reads and writes therefore use the GitHub connector.
+- Branch-protection details were not accessible through the integration and remain `UNKNOWN / NEEDS VERIFICATION`.
+- No production runtime, database, object store, DNS, TLS endpoint, dashboard, private secret store, or deployment environment was inspected.
+- Google Drive search was broad; only selected high-signal documents were opened in depth. Search result dates are not treated as authority.
+- Attached documents were read as supplied evidence; older “no mounted repo” statements remain valid for their authoring runs but are superseded for current-state claims by this repository inspection.
+
+### 3.4 Baseline CI evidence
+
+At exact `main@a768ed812df41e3466758b60af087129997fb337`, the `validator-suite` push run failed in its `run-validators` job at the guardrail-attribution test; the fail-closed canary job passed. A separate open **draft** PR (#2937) already owns the focused repair. This documentation work does not duplicate or modify that repair. Later validation failures skipped by the baseline job must not be misclassified as either passing or failing.
+
+[Back to top](#top)
+
+---
+
+## 4. Purpose, Scope, Principles, and Non-Goals
+
+### Mission
+
+KFM exists to make Kansas-centered spatial knowledge **traceable, reviewable, useful, correctable, and reversible across place and time**. It connects sources to claims through explicit evidence, identity, policy, validation, release, and correction controls.
+
+### Core invariants
+
+1. `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`.
+2. Publication is a governed transition, not a path, commit, merge, badge, GitHub release, or UI toggle.
+3. Public clients use governed interfaces and released public-safe carriers.
+4. Canonical/internal stores are not normal public paths.
+5. Consequential `EvidenceRef` values should resolve to `EvidenceBundle`.
+6. Cite-or-abstain is the default truth posture.
+7. Unknown rights, sensitivity, source role, or review state fails closed where risk matters.
+8. Deterministic identity and replay are preferred where practical.
+9. Watchers/drift detectors propose work; they do not publish.
+10. Receipts, proofs, catalogs, registries, manifests, reviews, decisions, corrections, rollback records, and published carriers remain distinct families.
+11. Maps, tiles, graphs, indexes, scenes, dashboards, screenshots, summaries, and AI answers are downstream carriers.
+12. AI is interpretive and subordinate to evidence, policy, review, and release state.
+13. Corrections, withdrawal, supersession, invalidation, and rollback are first-class.
+14. File placement encodes responsibility and authority.
+15. Domains normally appear as lanes under responsibility roots.
+16. Higher-consequence release requires proportionate review; separation of duties remains a maturity target where not yet enforced.
+
+### Non-goals
+
+KFM is not an emergency-alert authority, a source-license bypass, a substitute for tribal/cultural/legal review, a direct browser-to-model architecture, a client-side redaction system, an ungoverned scraper, a single-confidence-score truth engine, or a mechanism for turning generated prose into evidence.
+
+Documentation is part of the control plane because it records meaning, placement, procedures, limits, and verification state. Documentation still cannot replace code, policy, review, or runtime proof.
+
+[Back to top](#top)
+
+---
+
+## 5. Current-State Repository and Capability Snapshot
+
+### 5.1 Repository snapshot
+
+**CONFIRMED at `a768ed812df41e3466758b60af087129997fb337`.** The active responsibility-root model includes canonical roots for applications, configuration, connectors, contracts, control-plane projections, data, docs, examples, fixtures, infrastructure, migrations, packages, pipeline specs/pipelines, policy, release, runtime, schemas, scripts, tests, and tools; `.github/` is platform integration. `artifacts/` is compatibility/temporary output, `catalog/` is deprecated/frozen containment, and `src/` is conditional/unresolved. [R-ROOTREG]
+
+```text
+repository root
+├── .github/                platform integration
+├── apps/                   deployable applications
+├── configs/                non-secret configuration
+├── connectors/             source-specific intake implementation
+├── contracts/              semantic meaning
+├── control_plane/          machine projections of governance
+├── data/                   lifecycle/accountability instances
+├── docs/                   human-readable doctrine/decisions/guidance
+├── examples/               runnable public-safe demonstrations
+├── fixtures/               reusable synthetic/golden inputs
+├── infra/                  deployment/network/exposure implementation
+├── migrations/             governed migrations and rollback definitions
+├── packages/               reusable non-deployable libraries
+├── pipeline_specs/         declarative run graphs/configuration
+├── pipelines/              executable lifecycle transforms
+├── policy/                 admissibility rules
+├── release/                release/correction/rollback decisions
+├── runtime/                internal runtime composition/adapters
+├── schemas/                machine-checkable shapes
+├── scripts/                thin helpers
+├── tests/                  executable conformance evidence
+└── tools/                  validators/builders/inspectors/operators
+```
+
+### 5.2 App inventory
+
+| App | Current state | Maturity | Evidence-bounded use |
 |---|---|---|---|
-| SourceDescriptor | Defines source identity, role, rights, access, update cadence, authority. | Registry / RAW | Only safe metadata. |
-| SourceIntakeRecord | Records admission decision for a new source or idea packet. | Pre-RAW / Registry | Administrative. |
-| EventEnvelope | Captures a watcher/upload/source-change event before RAW. | Pre-RAW | No public exposure. |
-| EventRunReceipt | Signed pre-RAW admission receipt. | Pre-RAW / Receipts | Administrative/proof. |
-| RunReceipt | Pins a pipeline/tool action to inputs, outputs, policy, hashes, tool versions. | Receipts | May be referenced in proof. |
-| AIReceipt | Records model/tool invocation metadata, not hidden reasoning. | Receipts | Administrative/proof; no private reasoning. |
-| EvidenceRef | Small pointer to evidence requiring resolution. | Evidence | Public if released and safe. |
-| EvidenceBundle | Resolved, policy-safe evidence context. | Proofs / Published API | Yes, where public-safe. |
-| ClaimRecord | A claim with spatial/temporal scope and evidence support. | Processed / Catalog | Yes after release. |
-| DecisionEnvelope | Runtime/policy decision payload with finite outcome. | Runtime / Policy | Yes where safe. |
-| PolicyDecision | Allow/deny/abstain/error result with reasons. | Policy / Receipts | Summary visible; sensitive reasons may be redacted. |
-| ValidationReport | Machine result of schema, geometry, catalog, citation, policy checks. | Proofs / QA | Summary visible. |
-| CitationValidationReport | Proves citations resolve to EvidenceBundle/source ledger. | Proofs | Public-safe report. |
-| CatalogMatrix | Ties release objects across STAC, DCAT, PROV, digests, assets. | Catalog / Proofs | Yes. |
-| TripletManifest | Declares graph/triplet projections and rebuild recipe. | Triplets | Public if released. |
-| LayerManifest | Governs map layer identity, evidence, geometry, time, trust badges. | Map delivery | Yes. |
-| StyleManifest | Governs style JSON, sprite/glyph hashes, meaning changes, accessibility. | Map delivery | Yes. |
-| TileArtifactManifest | Governs MVT/PMTiles/COG/GeoParquet artifact identity and hashes. | Map delivery | Yes. |
-| MapReleaseManifest | Binds released layers, styles, tile artifacts, proof pack, rollback. | Release / Published | Yes. |
-| PromotionReceipt | Auditable state-transition record with all promotion gates. | Release / Receipts | Summary yes. |
-| ProofPack | Release-significant evidence/proof collection. | Proofs / Release | Public-safe subset. |
-| RollbackCard | How to restore prior public state and invalidate caches. | Release / Rollback | Yes. |
-| CorrectionNotice | Public correction or supersession notice. | Release / Published | Yes. |
-| RecompileManifest | Deterministic inputs/outputs for recompiled docs/indexes/artifacts. | Control loop | Administrative/proof. |
+| `apps/explorer-web/` | Vite/TypeScript shell with bounded fixture-first trust/UI slices | `PARTIAL / FIXTURE_ONLY` | Developer/review shell; public deployment not proved. [R-EXPLORER] |
+| `apps/governed-api/` | WSGI scaffold with finite envelopes and tests | `IMPLEMENTED_WITH_LIMITATIONS` | GET `/bootstrap`, `/layers`, `/evidence`; scaffold responses; local serving at 127.0.0.1:8000 by default. [R-GAPI-MAIN] |
+| `apps/cli/` | Documentation/package skeleton; command implementation not established | `DRAFT / PARTIAL` | Operator CLI target architecture; do not advertise commands not present. [R-CLI] |
+| `apps/admin/` | Path present | `NEEDS VERIFICATION` | Restricted admin responsibility; implementation not inspected in this build. |
+| `apps/review-console/` | Path present | `NEEDS VERIFICATION` | Steward/review surface; implementation not inspected in depth. |
+| `apps/workers/` | Path present | `NEEDS VERIFICATION` | Background/deployable worker boundary; exact worker inventory not documented here. |
 
-### 7.2 Deterministic identity
+### 5.3 Trust-root inventory
 
-Use deterministic IDs wherever practical. Suggested pattern:
-
-```text
-<namespace>:<object_family>:<stable_key>:<version_or_hash>
-```
-
-Examples:
-
-```text
-source:usgs:wbd:huc12:v2026-verified
-bundle:hydrology:huc12:sha256-...
-layer:hydrology:huc12_public:v1
-release:map:hydrology_huc12:2026-05-20
-claim:frontier:county_year:ks_1870:sha256-...
-```
-
-Required identity inputs:
-
-- Source ID and authority role.
-- Domain object family.
-- Spatial reference and geometry fingerprint when geometry matters.
-- Valid time, source time, retrieval time, release time where material.
-- Canonicalized payload hash.
-- Schema version.
-- Transform/policy version where output is derived or public-safe.
-
-### 7.3 Hashing discipline
-
-| Hash | Purpose |
-|---|---|
-| `content_hash` | Hash of bytes or canonical JSON body. |
-| `spec_hash` | Hash of canonical run/config/schema/policy body used to produce output. |
-| `geometry_hash` | Hash of normalized geometry with CRS and precision rules. |
-| `style_hash` | Hash of style JSON and dependent sprites/glyphs where meaningful. |
-| `artifact_hash` | Hash of PMTiles/COG/GeoParquet/report/export. |
-| `merkle_root` | Tamper-evident release file set root. |
-
-Hash algorithms should be selected by ADR. SHA-256 is safe as a universal baseline; BLAKE3 can be used for high-speed artifacts such as PMTiles sidecars if the project accepts the dependency and policy posture.
-
----
-
-## 8. Source intake and watchers
-
-### 8.1 Source admission flow
-
-```text
-Source candidate
-  -> SourceIntakeRecord
-  -> rights/sensitivity/source-role review
-  -> SourceDescriptor
-  -> pre-RAW event policy
-  -> raw capture with retrieval metadata
-  -> validation and normalization
-```
-
-### 8.2 SourceDescriptor minimum fields
-
-```json
-{
-  "schema": "kfm.source_descriptor.v1",
-  "source_id": "source:agency:dataset:version",
-  "source_name": "Human readable source name",
-  "source_family": "hydrology | ecology | archives | ...",
-  "source_role": "authoritative | governing | observational | derived | corroborative | contextual | exploratory | lineage",
-  "authority_scope": "what this source can support",
-  "cannot_prove": "what this source must not be used to claim",
-  "rights": {
-    "license": "NOASSERTION | ...",
-    "terms_url": "...",
-    "attribution_required": true,
-    "public_release_allowed": false
-  },
-  "sensitivity": {
-    "default_access": "public | staged | steward_only | restricted | denied",
-    "exact_geometry_allowed_public": false,
-    "review_required": true
-  },
-  "update": {
-    "cadence": "weekly | monthly | annual | event-driven | unknown",
-    "watcher_allowed": true,
-    "materiality_rule_id": "policy://sources/materiality/v1"
-  },
-  "verification": {
-    "last_verified": null,
-    "verified_by": null,
-    "status": "NEEDS_VERIFICATION"
-  }
-}
-```
-
-### 8.3 Watcher rule
-
-Watchers may:
-
-- Probe source availability and headers.
-- Compare ETag/Last-Modified/checksum/material metrics.
-- Emit EventEnvelope and PROPOSED_WORK_RECORD.
-- Open a reviewed PR or review packet.
-- Attach RunReceipt and validation summaries.
-
-Watchers must not:
-
-- Commit directly to main.
-- Move data to PUBLISHED.
-- Rebuild public artifacts without gates.
-- Treat source changes as truth changes without materiality checks.
-- Publish AI-generated interpretation.
-
-### 8.4 Material-change sidecars
-
-Use sidecars for high-churn sources such as CDL, PLANTS, air/smoke, hydrology, and map artifacts.
-
-```json
-{
-  "schema": "kfm.source_watch_sidecar.v1",
-  "source_id": "source:usda:cdl:2025:ks",
-  "source_url": "...",
-  "etag": "...",
-  "last_modified": "...",
-  "observed_at": "2026-05-20T00:00:00Z",
-  "materiality_metrics": {
-    "county_fips": "20091",
-    "class_histogram_ha": {},
-    "relative_pct_threshold": 2.0,
-    "absolute_hectares_min": 250
-  },
-  "spec_hash": "sha256:...",
-  "decision": "NO_CHANGE | PROPOSED_WORK_RECORD | QUARANTINE | ERROR"
-}
-```
-
----
-
-## 9. Data architecture
-
-### 9.1 Canonical storage recommendation
-
-| Store | Role | Notes |
+| Root | Current posture | Important limitation |
 |---|---|---|
-| PostgreSQL + PostGIS | Canonical relational/spatial store for processed records, geometry, relationships, temporal tables, crosswalks. | Use stable schemas, deterministic IDs, access roles, migrations, and row-level policies where needed. |
-| Object storage / filesystem | RAW captures, published artifacts, PMTiles, COGs, GeoParquet, receipts, proofs. | Immutable by release ID; no in-place public overwrites. |
-| GeoParquet | Processed/published vector-tabular artifacts. | Good for reproducible spatial columnar output and downstream analytics. |
-| PMTiles | Public-safe tiled map bundles. | Versioned filenames, range/CORS validation, sidecars, hashes, release manifests. |
-| COG | Public-safe or restricted large raster artifacts. | Use manifest-bound access and source/rights checks. |
-| STAC/DCAT/PROV | Catalog closure and metadata/provenance. | Derived emissions from receipts/proofs/decisions, not hand-authored release truth. |
-| Graph/triplestore/Neo4j/etc. | Relationship projection / triplet layer. | Derived projection only; does not replace canonical domain records. |
-| Vector index/search | Retrieval acceleration. | Rebuildable derivative; never root truth. |
+| `contracts/` | Canonical semantic-meaning root | Some inherited machine-schema drift remains under contracts; subhome ADRs proposed. |
+| `schemas/` | Canonical machine-shape root; JSON Schema 2020-12 | Compatibility lanes remain; schema validity is not truth or permission. |
+| `policy/` | Canonical admissibility root | Repository-wide active evaluator and production consumers not proved. |
+| `data/` | Canonical lifecycle/accountability root | Internal lanes are not public; compatibility/migration children remain. |
+| `release/` | Canonical append-only release-decision plane | Operational release/promotion/rollback execution is held/unproved. |
+| `runtime/` | Canonical internal adapter/composition root | Production model/provider behavior and deployment unproved. |
+| `tests/`, `fixtures/`, `tools/` | Executable/synthetic/tooling evidence roots | A green bounded check proves only its declared scope. |
 
-### 9.2 Spatial SQL and PostGIS
+### 5.4 Domain inventory
 
-PostGIS should be the spatial SQL workhorse for:
+The current machine projection contains **13 registered lanes**: agriculture, archaeology, atmosphere, fauna, flora, geology, habitat, hazards, hydrology, people-dna-land, roads-rail-trade, settlements-infrastructure, and soil. The projection is itself `PROPOSED / machine_projection_only`; it does not assign stewards or prove implementation. [R-DOMREG]
 
-- CRS-aware geometry storage.
-- Geometry validation and repair workflows.
-- Spatial joins and overlays.
-- Buffering, clipping, intersections, nearest-feature queries.
-- Raster/vector conversion where appropriate.
-- Topology-aware workflows for boundaries and networks.
-- pgRouting-style graph analysis where needed.
-- Dynamic tile-serving mediation when public static artifacts are insufficient.
+Spatial foundation, frontier-matrix analytics, planetary/3D, remote sensing/field capture, Briefing-to-System integration, and Focus Modes are cross-cutting capability families in the corpus and/or repository—not automatically additional canonical domains.
 
-KFM-specific constraints:
+### 5.5 Current baseline failures and active work
 
-- Never expose PostGIS directly to public clients.
-- Separate canonical spatial records from public-safe generalized/transformed geometry.
-- Record geometry transforms as receipts.
-- Version geography and crosswalks explicitly.
-- Use database privileges so RAW/WORK/QUARANTINE and restricted exact geometries cannot be accessed by normal UI/API roles.
+- `validator-suite` fails on exact main at the focused guardrail-attribution test.
+- Draft PR #2937 is the current focused repair owner.
+- This documentation PR must therefore classify the baseline validator-suite failure as **inherited** unless its own changes introduce a distinct failure.
+- Branch protection and required checks remain `NEEDS VERIFICATION` because the integration cannot read protection settings.
 
-### 9.3 Temporal and bitemporal posture
-
-KFM must not collapse time into one timestamp.
-
-Minimum temporal axes:
-
-| Axis | Meaning |
-|---|---|
-| valid_time | When the claim or domain condition is true in the world. |
-| observed_time | When a measurement/observation occurred. |
-| source_publication_time | When the source published the information. |
-| retrieval_time | When KFM acquired it. |
-| processing_time | When KFM transformed it. |
-| transaction_time | When KFM recorded/changed the internal fact. |
-| release_time | When KFM released it publicly/semi-publicly. |
-| correction_time | When a correction/withdrawal/supersession occurred. |
-
-Design implication: important tables should support valid-time and transaction-time semantics where historical reconstruction matters.
+[Back to top](#top)
 
 ---
 
-## 10. Domain-lane architecture
+## 6. Target Whole-System Architecture
 
-Every domain lane should share a common packet:
+> **Diagram source note: SYNTHESIS.** The responsibilities are derived from accepted KFM doctrine plus current repository boundaries; the end-to-end operational closure is a target where current runtime/release evidence is incomplete.
 
 ```text
-docs/domains/<domain>/README.md
-docs/domains/<domain>/ARCHITECTURE.md
-docs/domains/<domain>/SOURCE_ROLE_MATRIX.md
-docs/domains/<domain>/SENSITIVITY_POLICY.md
-docs/domains/<domain>/VALIDATION_PLAN.md
-docs/domains/<domain>/RELEASE_AND_ROLLBACK.md
-schemas/contracts/v1/domains/<domain>/*.schema.json
-policy/domains/<domain>/*.rego or repo-native policy
-connectors/<domain_or_source_family>/
-pipelines/<domain>/
-tools/validators/<domain>/
-tests/fixtures/<domain>/{valid,invalid,public_safe,deny}/
-data/registry/source_descriptors/<domain>/
-data/processed/<domain>/
-data/catalog/{stac,dcat,prov}/<domain>/
-data/published/<domain>/
-release/manifests/<domain>/
+SOURCE SYSTEMS / ARCHIVES / FIELD CAPTURE
+        |
+        v
+source identity + rights + source role + activation decision
+        |
+        v
+PRE-RAW / ADMISSION  ---- unsafe / unresolved ----> QUARANTINE
+        |
+        v
+RAW capture / immutable locator / retrieval receipt
+        |
+        v
+WORK normalization / identity / time / geometry / crosswalk
+        |
+        +---- invalid / conflicted / over-precise ----> QUARANTINE
+        v
+PROCESSED validated domain records
+        |
+        v
+EVIDENCE + CATALOG + optional TRIPLET projections
+        |
+        v
+POLICY + REVIEW + VALIDATION + PROOF + PROMOTION DECISION
+        |
+        v
+RELEASE MANIFEST + PUBLIC-SAFE CARRIERS + ROLLBACK TARGET
+        |
+        v
+PUBLISHED / RELEASED DELIVERY
+        |
+        +--> governed API
+        +--> tiles / PMTiles / COG / GeoParquet / catalog
+        +--> Explorer Web / Evidence Drawer / Focus Mode
+        +--> exports / stories / analyst surfaces
+        |
+        v
+CORRECTION / WITHDRAWAL / SUPERSESSION / INVALIDATION / ROLLBACK
 ```
 
-### 10.1 Domain-lane minimum contract
+### Trust boundaries
 
-| Required item | Purpose |
-|---|---|
-| Domain README | Plain-language boundary and status. |
-| Source role matrix | Defines what each source can and cannot prove. |
-| Object-family schema list | Names records, claims, observations, source descriptors, evidence bundles. |
-| Sensitivity policy | Public/staged/restricted/deny defaults. |
-| Temporal model | Valid/source/retrieval/release/correction time rules. |
-| Geometry policy | Exact/generalized/redacted/public-safe rules. |
-| Validator list | Deterministic checks and fail-closed behavior. |
-| Public layer plan | LayerManifest, StyleManifest, TileArtifactManifest. |
-| Evidence Drawer payload | User-facing explanation shape. |
-| Focus Mode scope | Allowed questions and abstain/deny cases. |
-| Release/rollback plan | Promotion gates and reversion path. |
+- **External boundary:** source material is untrusted until identity/role/rights/sensitivity checks.
+- **Lifecycle boundary:** internal stages do not imply public eligibility.
+- **Policy/release membrane:** validation success cannot substitute for policy/review/release.
+- **Public delivery boundary:** only released/public-safe carriers and governed API responses are normal public inputs.
+- **AI boundary:** model/runtime execution occurs behind governed application controls; model text is never evidence authority.
+- **Correction boundary:** public carriers, caches, search/indexes, map state, and AI context must be invalidatable/rebuildable from corrected governed state.
 
-### 10.2 Hydrology
+### Current versus target
 
-**Role:** first proof lane candidate.  
-**Coverage:** HUCs, watersheds, streams, flowlines, gauges, water observations, flood hazard context, hydrographs, source crosswalks.  
-**First slice:** HUC12 public-safe fixture + SourceDescriptor + EvidenceBundle + LayerManifest + MapReleaseManifest dry run.  
-**Key sources to model:** WBD/HUC, USGS Water Data, NHDPlus HR/3DHP direction, FEMA NFHL, 3DEP.  
-**Risks:** outdated NHD terms, regulatory versus observed flood confusion, station provisional data, stale time series, watershed boundary versioning.  
-**Public posture:** public-safe geometry generally possible, but cite source, time, and regulatory/observational distinction.
-
-### 10.3 Soil
-
-**Coverage:** SSURGO/gSSURGO/SDA, soil map units, components, horizons, properties, interpretations, soil moisture context.  
-**Risks:** treating map unit as exact ground truth; mixing static soil survey with dynamic moisture; ignoring scale/interpretation caveats.  
-**Public posture:** public-safe map layers generally possible with scale/fitness-for-use notes.
-
-### 10.4 Habitat
-
-**Coverage:** habitat patches, ecological systems, suitability, connectivity, restoration, habitat-fauna joins.  
-**Risks:** model surfaces as truth; public exact geometry for sensitive habitats; stale landcover.  
-**Public posture:** generalized and evidence-bounded; suitability outputs are interpretive derivatives.
-
-### 10.5 Fauna
-
-**Coverage:** taxonomy, occurrence evidence, range, seasonal range, monitoring, corridors, assemblages, invasive species, disease/mortality.  
-**Risks:** sensitive species exact locations, nest/den/roost/hibernacula/spawning exposure, aggregator authority confusion, record-level rights.  
-**Public posture:** exact sensitive occurrence locations denied by default; public derivatives generalized/redacted with transform receipts.
-
-### 10.6 Flora
-
-**Coverage:** taxonomic identity, plant occurrences/specimens, rare plants, vegetation communities, invasive plants, phenology, remote-sensing vegetation indices.  
-**Risks:** rare plant exact locations, community-science quality, herbarium record rights, model/observation confusion.  
-**Public posture:** rare exact locations fail closed; generalized public layers with steward review.
-
-### 10.7 Agriculture and landcover
-
-**Coverage:** cropland, CDL, PLANTS, crop history, landcover change, crop stress, irrigation context, field/county summaries.  
-**Risks:** noisy annual changes, source-drift false positives, private land inference, over-precise field-level claims.  
-**Public posture:** county/generalized products first; material-change watchers propose work only.
-
-### 10.8 Geology and natural resources
-
-**Coverage:** bedrock/surficial geology, stratigraphy, lithology, age, structures, geomorphology, well/core/geophysics/geochemistry, mineral/resource occurrences and estimates.  
-**Risks:** conflating physical geology with permits/leases/titles; public exact resource location sensitivity; model uncertainty.  
-**Public posture:** public-safe generalized layers; estimates and interpretations clearly labeled.
-
-### 10.9 Atmosphere and air
-
-**Coverage:** air quality, weather observations, smoke, aerosols, climate normals/projections, remote-sensing atmospheric products.  
-**Risks:** observed vs modeled vs regulatory vs operational products; emergency-use confusion; freshness and latency.  
-**Public posture:** not an alert system; public layers must show source time, freshness, knowledge character, and not-for-life-safety boundary.
-
-### 10.10 Hazards
-
-**Coverage:** historical events, disaster declarations, regulatory hazard areas, operational context, observations, remote-sensing detections, modeled hazards, resilience context.  
-**Risks:** becoming an emergency alert system; mixing operational warnings with historical/regulatory/model data; stale warnings; life-safety instructions.  
-**Public posture:** not for emergency response; direct users to official alerting and source guidance.
-
-### 10.11 Roads, rail, and trade routes
-
-**Coverage:** modern roads, rail corridors, historic trails, ferries/crossings, depots, yards, trade/mobility corridors, restrictions, graph projections.  
-**Risks:** conflating alignment, ownership, operator, legal status, and route claim; false precision for historic/Indigenous/cultural corridors.  
-**Public posture:** historic and cultural routes generalized unless reviewed evidence supports precision; graph projections derived only.
-
-### 10.12 Settlements, cities, and infrastructure
-
-**Coverage:** municipalities, census places, townsites, ghost towns, forts, depots, missions, reservation communities, infrastructure assets, service areas, operators, dependencies.  
-**Risks:** critical infrastructure exposure, private landowner sensitivity, condition/security misuse, confusing legal city with census/historic place.  
-**Public posture:** staged/generalized for sensitive assets; legal and historical identity clearly separated.
-
-### 10.13 Archaeology
-
-**Coverage:** archaeological sites, surveys, remote-sensing anomalies, LiDAR candidates, cultural resources, stratigraphy, 3D/site models, steward review.  
-**Risks:** looting, exact site exposure, burial/human remains, sacred places, cultural sensitivity, private land, remote-sensing false positives.  
-**Public posture:** exact archaeological site locations denied by default; public output uses reviewed generalized/suppressed geometry and transform receipts.
-
-### 10.14 People, genealogy, DNA, and land ownership
-
-**Coverage:** person assertions, genealogy, family relationships, DNA/genomics, land ownership assertions, parcels, deeds, assessor/tax context, temporal land tenure.  
-**Risks:** living-person data, DNA/genomic sensitivity, relationship hypotheses as truth, assessor/tax rows as title truth, parcel geometry as legal boundary proof.  
-**Public posture:** living-person and DNA-derived outputs denied/restricted by default. Land ownership is temporal evidence-bound assertion, not a map label alone.
-
-### 10.15 Frontier demography/economy flagship panel
-
-**Coverage:** county-year frontier panel with population, economy, agriculture, access, geography versions, frontier definitions.  
-**First objects:** `FrontierDefinition`, `GeographyVersion`, `PopulationObservation`, `EconomicObservation`, `AgricultureObservation`, `AccessObservation`.  
-**Risks:** building flagship analysis before source/geography/version proof; flattening uncertainty; treating counties as stable over time.  
-**Public posture:** after proof lane, release as versioned analytical layer with evidence-backed definitions and explicit uncertainty.
-
----
-
-## 11. Evidence and claim model
-
-### 11.1 Claim lifecycle
-
-```text
-Candidate claim
-  -> source/evidence support attached
-  -> spatial and temporal scope declared
-  -> source role checked
-  -> policy/sensitivity checked
-  -> validation report passes
-  -> review state recorded
-  -> release manifest binds claim to proof
-  -> public API/UI exports claim with citations and correction state
-```
-
-### 11.2 ClaimRecord sketch
-
-```json
-{
-  "schema": "kfm.claim_record.v1",
-  "claim_id": "claim:hydrology:huc12:...",
-  "claim_text": "A bounded public-safe claim.",
-  "domain": "hydrology",
-  "object_refs": ["domain_object_id"],
-  "spatial_scope": {
-    "geometry_ref": "geom:...",
-    "crs": "EPSG:4326",
-    "precision_policy": "public_exact_or_generalized"
-  },
-  "temporal_scope": {
-    "valid_time": "2024-01-01/..",
-    "source_time": "2024-01-01",
-    "release_time": "2026-05-20"
-  },
-  "evidence_refs": ["eref:..."],
-  "source_roles": ["authoritative_context"],
-  "policy_decision_id": "policy_decision:...",
-  "review_state": "draft | reviewed | published | withdrawn",
-  "release_id": "release:...",
-  "correction_state": "current | corrected | superseded | withdrawn"
-}
-```
-
-### 11.3 EvidenceBundle sketch
-
-```json
-{
-  "schema": "kfm.evidence_bundle.v1",
-  "bundle_id": "bundle:hydrology:huc12:...",
-  "evidence_refs": [
-    {
-      "evidence_ref_id": "eref:001",
-      "source_id": "source:usgs:wbd:huc12",
-      "source_role": "authoritative_context",
-      "citation": "...",
-      "retrieval_receipt_id": "receipt:ingest:...",
-      "supports": ["claim:..."]
-    }
-  ],
-  "rights": {
-    "public_release_allowed": true,
-    "attribution": "required"
-  },
-  "sensitivity": {
-    "public_safe": true,
-    "exact_geometry_allowed": true
-  },
-  "validation": {
-    "schema_report_id": "validation:...",
-    "citation_report_id": "citation:..."
-  }
-}
-```
-
----
-
-## 12. Catalog, triplet, proof, and release architecture
-
-### 12.1 Catalog closure
-
-KFM should emit STAC, DCAT, and PROV records as **derived catalog artifacts** from release candidates, not as manually authored substitute truth.
-
-| Catalog object | Purpose |
-|---|---|
-| STAC Item/Collection | Spatial-temporal asset metadata for COG, PMTiles, GeoParquet, reports, outputs. |
-| DCAT Dataset/Distribution | Web catalog interoperability and dataset/service descriptions. |
-| PROV Entity/Activity/Agent | Provenance graph for source, transformation, validation, release. |
-| CatalogMatrix | KFM closure report that binds STAC/DCAT/PROV/digests/release IDs/proof packs. |
-
-### 12.2 CatalogMatrix sketch
-
-```json
-{
-  "schema": "kfm.catalog_matrix.v1",
-  "release_id": "release:map:hydrology_huc12:2026-05-20",
-  "assets": [
-    {
-      "asset_id": "tileartifact:huc12_pmtiles:v1",
-      "artifact_type": "pmtiles",
-      "artifact_hash": "sha256:...",
-      "stac_ref": "stac:item:...",
-      "dcat_ref": "dcat:distribution:...",
-      "prov_entity_ref": "prov:entity:...",
-      "evidence_bundle_id": "bundle:...",
-      "policy_decision_id": "policy:..."
-    }
-  ],
-  "closure_status": "closed | open | failed",
-  "validation_report_id": "validation:catalog_matrix:..."
-}
-```
-
-### 12.3 PMTiles attestation sidecar
-
-For public PMTiles, use a signed sidecar pattern:
-
-```json
-{
-  "schema_version": "v1",
-  "pmtiles_filename": "hydrology_huc12_public_v1.pmtiles",
-  "spec_hash": "sha256:...",
-  "root_hash": "sha256:...",
-  "size_bytes": 123456,
-  "byte_ranges_manifest": [
-    {
-      "z": 8,
-      "x": 42,
-      "y": 96,
-      "start": 1000,
-      "end": 2000,
-      "range_hash": "sha256:...",
-      "proof_ref": "..."
-    }
-  ],
-  "attestations": {
-    "build_id": "run:...",
-    "source_ledger_ref": "source:...",
-    "run_receipt_ref": "receipt:...",
-    "license_notes": []
-  }
-}
-```
-
-Fail closed if:
-
-- `root_hash` missing.
-- `spec_hash` missing.
-- signature missing or invalid.
-- byte-range manifest malformed.
-- sensitive layer lacks public-safe policy.
-- release manifest lacks rollback target.
-
----
-
-## 13. Governed API architecture
-
-### 13.1 API principles
-
-1. API responses are contracts, not incidental JSON.
-2. Public APIs never expose RAW, WORK, QUARANTINE, unpublished candidates, private source folders, or canonical stores directly.
-3. Every consequential response has a release state and evidence policy.
-4. Negative outcomes are first-class payloads.
-5. Request scope must carry map context, time context, user role, and release ID where relevant.
-6. API docs must include examples for ANSWER, ABSTAIN, DENY, and ERROR.
-
-### 13.2 Proposed API resource families
-
-| Resource | Purpose |
-|---|---|
-| `/api/catalog` | Public catalog discovery over released records. |
-| `/api/layers` | LayerManifest discovery. |
-| `/api/releases/{release_id}` | Release manifest and rollback/correction state. |
-| `/api/evidence/{bundle_id}` | EvidenceBundle resolution where public-safe. |
-| `/api/claims/{claim_id}` | Inspectable claim view. |
-| `/api/map/resolve-feature` | Feature click -> governed evidence resolution. |
-| `/api/map/context` | MapContextEnvelope creation. |
-| `/api/focus/query` | Evidence-bounded AI request. |
-| `/api/review/*` | Role-gated review/steward actions. |
-| `/api/export/*` | Export artifacts with citations/release metadata. |
-| `/api/health/public` | Public health without internals. |
-| `/api/admin/*` | Authenticated administrative diagnostics. |
-
-### 13.3 Feature-click request and response
-
-```json
-{
-  "schema": "kfm.map.feature_click_request.v1",
-  "layer_id": "hydrology.huc12.public.v1",
-  "feature_id": "huc12:...",
-  "release_id": "release:...",
-  "active_time": "2026-05-20/..",
-  "viewport": {"bbox": [-102, 37, -94, 40], "crs": "EPSG:4326"},
-  "user_role": "public"
-}
-```
-
-```json
-{
-  "schema": "kfm.ui.evidence_drawer_payload.v1",
-  "outcome": "ANSWER",
-  "selection_id": "sel:...",
-  "candidate_feature": {"layer_id": "hydrology.huc12.public.v1", "feature_id": "huc12:..."},
-  "claim_summary": "Public-safe hydrologic unit summary.",
-  "evidence_bundle_id": "bundle:...",
-  "citations": [{"evidence_ref_id": "eref:001", "source_role": "authoritative_context"}],
-  "time_scope": {"valid_time": "...", "release_time": "..."},
-  "policy_badges": ["public_safe", "released", "citable"],
-  "withheld_counts": {"sensitive_features": 0},
-  "correction_state": "current"
-}
-```
-
----
-
-## 14. MapLibre and UI architecture
-
-### 14.1 Renderer rule
-
-MapLibre should be the first disciplined 2D renderer and interaction runtime. It may render released artifacts, expose candidate feature IDs, track camera/time state, and drive users to governed APIs. It must not act as truth store, policy engine, publication authority, citation authority, review authority, or AI authority.
-
-### 14.2 Shell surfaces
-
-| Surface | Role | Trust requirement |
+| Capability | Current | Target |
 |---|---|---|
-| Explore | Navigate layers, time, feature selection, trust cues. | Selection resolves through governed API. |
-| Evidence Drawer | Shows evidence refs, source roles, citations, rights, sensitivity, review, release, correction. | Every consequential claim resolves to EvidenceBundle. |
-| Dossier | Durable object/claim view. | Evidence and time continuity visible. |
-| Story | Map-anchored narrative. | Cannot detach from evidence/citation/correction lineage. |
-| Compare | Side-by-side releases/times/sources. | Each side has independent release/evidence context. |
-| Focus Mode | Evidence-bounded AI. | Finite outcomes; no raw model output. |
-| Review | Role-gated steward/reviewer shell. | Review state changes logged and separate from public behavior. |
-| Export | Exported artifacts. | Trust metadata, citations, release ID, correction state travel with output. |
-| Diagnostics | Authorized manifest/runtime inspection. | Not a public raw/canonical backdoor. |
+| Governed API | Three finite scaffold GET routes | Evidence/release-aware versioned resource families with authorization, pagination/filtering where needed |
+| Explorer | Fixture-first trust slices, no established live map transport | Released-layer map shell, time controls, Evidence Drawer, Focus Mode, export/review states |
+| Policy | Bounded inactive profiles, structural guards | Accepted evaluator/bundle selection, authenticated PolicyDecision flow, operation-specific obligations |
+| Release | Fixture-first manifest/promotion/rollback shapes | Authenticated promotion, immutable release assembly, signatures/attestations as adopted, correction/invalidation/rollback drills |
+| Domain lanes | 13 registered documentation identities, mixed implementation | Consistent source/evidence/policy/lifecycle/release packet per mature lane |
+| AI | Runtime/adapters/contracts partially present | Provider-neutral, evidence-resolving, policy-checked, citation-validated finite outcomes with receipts |
+| Operations | Repo configuration and runbooks exist | Verified environments, observability, backup/recovery, capacity, incident and rollback evidence |
 
-### 14.3 Trust-visible negative states
-
-The UI must distinguish:
-
-- `MISSING_EVIDENCE`
-- `SOURCE_STALE`
-- `DENIED_BY_POLICY`
-- `GENERALIZED_GEOMETRY`
-- `RESTRICTED_ACCESS`
-- `CONFLICTED_SUPPORT`
-- `CITATION_FAILED`
-- `RELEASE_WITHDRAWN`
-- `RUNTIME_ERROR`
-- `RIGHTS_UNKNOWN`
-- `SENSITIVE_LOCATION_BLOCKED`
-
-### 14.4 LayerManifest sketch
-
-```json
-{
-  "schema": "kfm.map.layer_manifest.v1",
-  "layer_id": "hydrology.huc12.public.v1",
-  "domain": "hydrology",
-  "release_id": "release:map:hydrology_huc12:2026-05-20",
-  "artifact_refs": ["tileartifact:huc12_pmtiles:v1"],
-  "evidence_policy": {
-    "requires_evidence_bundle": true,
-    "supports_popup_claims": false,
-    "drawer_payload_contract": "kfm.ui.evidence_drawer_payload.v1"
-  },
-  "geometry_policy": {
-    "public_precision": "exact_or_generalized_by_policy",
-    "sensitive_exact_geometry_allowed": false,
-    "withheld_accounting_required": true
-  },
-  "time_model": ["valid_time", "source_publication_time", "release_time", "stale_time"],
-  "trust_badges": ["released", "citable", "public_safe"],
-  "stale_policy": {"mode": "visible_badge_and_focus_abstain"}
-}
-```
-
-### 14.5 StyleManifest sketch
-
-```json
-{
-  "schema": "kfm.map.style_manifest.v1",
-  "style_id": "kfm_public_default_style_v1",
-  "style_spec_version": 8,
-  "style_json_hash": "sha256:...",
-  "sprite_hash": "sha256:...",
-  "glyph_hash": "sha256:...",
-  "font_policy": "pinned_or_local_reviewed",
-  "bound_layer_ids": ["hydrology.huc12.public.v1"],
-  "meaning_change_requires_release": true,
-  "accessibility_notes": ["contrast_checked", "non_color_trust_cues_required"]
-}
-```
+[Back to top](#top)
 
 ---
 
-## 15. Governed AI and Focus Mode
+## 7. Repository and Directory Architecture
 
-### 15.1 AI rule
+### 7.1 Directory law
 
-AI may interpret released, policy-safe evidence. It may not decide truth, read canonical stores directly, bypass policy, publish uncited answers, or expose chain-of-thought/private reasoning.
+Accepted Directory Rules v2 make **responsibility** the primary placement key. A root is not a topic bucket. Domain and geographic concerns normally appear as lanes inside the root that owns the artifact type. [R-DIR] [R-ADR29]
 
-### 15.2 Adapter order
+### 7.2 Canonical root responsibility matrix
 
-| Adapter | Role | Build phase |
-|---|---|---|
-| MockAdapter | Deterministic fixture adapter; no network/model. | First implementation. |
-| NullAdapter | Explicit disabled/offline adapter returning ABSTAIN/ERROR. | With MockAdapter. |
-| OllamaAdapter | Local/private runtime behind governed API only. | After contracts, policy, citation tests. |
-| OpenAICompatibleAdapter | Provider-compatible runtime behind same internal contract. | After adapter contract and external provider verification. |
+| Root | Owns | Must not own | Public exposure |
+|---|---|---|---|
+| `docs/` | Human doctrine, ADRs, architecture, runbooks, guidance | Schemas, policy rules, data/release instances | Mostly public documentation |
+| `control_plane/` | Machine projections/indexes of adopted governance | New governance authority | Internal |
+| `contracts/` | Semantic meaning/invariants/promises | Machine schemas, policy, instances | Public docs |
+| `schemas/` | Machine-checkable shapes | Semantic meaning, policy, data | Public artifacts |
+| `policy/` | Allow/deny/hold/restrict/abstain rules | Evidence/data/release instances | Internal |
+| `tests/` | Executable conformance evidence | Canonical data instances | Public/synthetic |
+| `fixtures/` | Reusable synthetic valid/invalid/golden cases | Sensitive real data | Public/synthetic |
+| `tools/` | Repo-wide validators/builders/operators | Deployable apps or policy authority | Internal |
+| `apps/` | Deployable service/user boundaries | Shared semantic authority | Mixed |
+| `packages/` | Reusable libraries | Deployable service ownership | Internal |
+| `connectors/` | Source-specific fetch/admission implementation | Publication | Internal |
+| `pipelines/` | Executable lifecycle transformations | Release decisions | Internal |
+| `pipeline_specs/` | Declarative pipeline graphs/config | Runtime execution itself | Internal |
+| `data/` | Lifecycle/accountability instances | Policy/schema/semantic authority | Mixed; internal by default |
+| `release/` | Release/correction/withdrawal/rollback decisions | Published payloads, policy source | Internal/audit |
+| `runtime/` | Internal provider/runtime composition | Public API, release authority | Internal |
+| `infra/` | Deployment/network/exposure/provisioning implementation | Application/domain semantics | Internal |
+| `configs/` | Non-secret defaults/templates | Secrets | Internal |
+| `migrations/` | Versioned migration and rollback definitions | Ordinary runtime state | Internal |
+| `examples/` | Runnable public-safe examples | Unreleased real data | Public |
+| `scripts/` | Thin non-authoritative helpers | Long-lived trust authority | Internal |
 
-### 15.3 Focus Mode flow
+### 7.3 Compatibility and drift
+
+- `artifacts/` is temporary/generated compatibility output and may not acquire receipts/proofs/release/data authority.
+- top-level `catalog/` is deprecated containment; new canonical catalog instances belong under the accepted `data/` model.
+- `src/` remains a conditional facade candidate, not an independent authority.
+- legacy architecture Directory Rules path is read-only compatibility during ADR-0029 migration.
+- current direct-child and nested drift is a migration problem, not permission to create parallel homes.
+
+### 7.4 Dependency direction
+
+Implementation should depend on stable semantics and machine contracts, not the reverse. Public surfaces depend on governed/released interfaces. Derived carriers remain rebuildable. A package may implement shared behavior, but it does not acquire policy/evidence/release authority.
+
+[Back to top](#top)
+
+---
+
+## 8. Ubiquitous Language, Bounded Contexts, and Core Object Families
+
+KFM's domain model is intentionally split: a source is not evidence; evidence is not a policy decision; a receipt is not proof; a proof is not release; a catalog record is not publication; a representation is not reality; an AI answer is not source truth.
+
+### 8.1 Core terms
+
+| Term | KFM meaning |
+|---|---|
+| Entity | A thing with stable identity in a bounded context. |
+| Observation | A source/method/time/place-bounded measurement or report. |
+| Assertion / claim | A proposition whose support and scope must be inspectable. |
+| Source | External or internal origin with explicit role, rights, identity, cadence, and limitations. |
+| Evidence | Admissible support for a claim; not equivalent to raw source bytes. |
+| Dataset version | Reproducible version identity for a dataset or logical snapshot. |
+| Geometry version | Versioned spatial representation with CRS/datum/scale/validity. |
+| Policy decision | Operation-specific admissibility result with reasons/obligations. |
+| Validation result | Bounded evidence that an instance/process met declared checks. |
+| Receipt | Process memory: what ran, with which inputs/results. |
+| Proof | Closure evidence for a declared proposition/gate; distinct from receipt. |
+| Catalog record | Discoverability/projection metadata, not sovereign truth. |
+| Release | Governed decision state plus immutable/identifiable public-safe carrier set. |
+| Correction | Explicit amendment that preserves lineage. |
+| Rollback | Controlled restoration to a prior governed state. |
+| Representation | Map/tile/scene/export/summary carrier with explicit reality/evidence limits. |
+| AI interpretation | Generated explanation/proposal subordinate to evidence and policy. |
+
+### 8.2 Object-family crosswalk
+
+| Object family | Repository evidence | Current maturity | Required relationship |
+|---|---|---|---|
+| `SourceDescriptor` | Contracts/schemas/source registries appear across repo | `PARTIAL` | Defines source role/rights/cadence before live activation. |
+| `SourceActivationDecision` | Corpus + source governance surfaces | `PROPOSED / NEEDS VERIFICATION` | Must not be inferred from connector presence. |
+| `DatasetVersion` | Contract/schema work exists in repo lineage | `PARTIAL / NEEDS VERIFICATION current consumer closure` | Binds source version, schema, hashes, scope. |
+| `EventEnvelope` | Pre-RAW/event proposals and some schemas | `PARTIAL / PROPOSED` | Admission signal only; not public truth. |
+| `BriefingSignal` | Briefing integration design; repo adoption not established | `PROPOSED` | Internal discovery/control-plane object. |
+| `TemporalAuthorityEnvelope` | Briefing integration design | `PROPOSED` | Shared metadata envelope; not domain replacement. |
+| `EvidenceRef` | Core doctrine and repo evidence family | `PARTIAL` | Stable pointer/locator with scope. |
+| `EvidenceBundle` | Core doctrine, validators, canary tests | `PARTIAL` | Resolved support for consequential claims. |
+| `PolicyDecision` | Contracts/schemas/policy language | `PARTIAL / no general active evaluator` | Operation-specific admissibility, reasons, obligations. |
+| `DecisionEnvelope` | Object-family register | `PARTIAL` | Runtime finite decision transport; subordinate to policy/evidence. |
+| `RuntimeResponseEnvelope` | Object-family register + Governed API | `IMPLEMENTED_WITH_LIMITATIONS` | Finite API response envelope. |
+| `RunReceipt` | Object-family register | `PARTIAL` | Process provenance, not proof. |
+| `TransformReceipt` | Corpus + receipt lanes | `PARTIAL / NEEDS VERIFICATION` | Records transformation inputs/spec/output. |
+| `AIReceipt` | Object-family register + runtime contract/schema | `PARTIAL` | Model/runtime provenance; no truth authority. |
+| `PromotionDecision` | Release fixtures/tests | `FIXTURE_ONLY / PROPOSED_INACTIVE` | Explicit governed transition decision. |
+| `PromotionReceipt` | Proposal corpus; A–G gate vocabulary exists | `PROPOSED / NEEDS VERIFICATION` | Auditable gate aggregation where adopted. |
+| `ProofPack` | Data/release/MapLibre proof lanes | `PARTIAL` | Proof closure separate from receipts and release decision. |
+| `LayerManifest` | Map/UI corpus and repository artifacts | `PARTIAL` | Released layer identity, inputs, style/delivery/evidence policy. |
+| `TileArtifactManifest` | Map delivery proposal/current tooling | `PARTIAL / PROPOSED` | Digest/format/hosting metadata for tile carrier. |
+| `ReleaseManifest` | Release schema/fixtures | `FIXTURE_ONLY / PROPOSED_INACTIVE strict profile` | Released carrier set and rollback/correction refs. |
+| `RollbackCard` | Release schema/fixtures | `FIXTURE_ONLY` | Bounded rollback target and prerequisites. |
+| `CorrectionNotice` / `WithdrawalNotice` | Release/docs corpus | `PARTIAL / NEEDS VERIFICATION` | First-class correction/withdrawal lineage. |
+| `RepresentationReceipt` | 3D/map corpus | `PROPOSED / PARTIAL` | Records derived representation/reality boundary. |
+| `RealityBoundaryNote` | Planetary/3D corpus | `PROPOSED` | Explicitly separates reconstruction/model from observation. |
+| `GENERATED_RECEIPT` | Schema, validator, populated lane, PR template | `IMPLEMENTED_WITH_LIMITATIONS` | AI-authored artifact provenance; human review stays separate. [R-GENREC] |
+
+The current machine object-family register is intentionally partial and covers six runtime families only; do not treat it as an exhaustive registry. [R-OBJREG]
+
+[Back to top](#top)
+
+---
+
+## 9. Identity, Time, Geography, Scale, and Uncertainty
+
+### Identity
+
+KFM prefers stable source-native identifiers where available, deterministic derived IDs where practical, canonical serialization for hashes where contractually defined, and explicit version IDs for mutable datasets/geometry. A digest proves bytes, not semantics or rights.
+
+### Time model
+
+Keep distinct when material:
+
+- source valid time;
+- observation time;
+- issue/publication time from source;
+- retrieval time;
+- processing/transform time;
+- KFM review/release time;
+- correction/withdrawal time;
+- transaction/system time for bitemporal uses.
+
+A stale source is not equivalent to false data. A corrected source is not equivalent to deleting history.
+
+### Geography
+
+Every spatially consequential object should carry or resolve:
+
+- geometry/feature identity;
+- geometry version/vintage;
+- CRS and datum;
+- source scale/resolution and fitness-for-use;
+- spatial scope/bbox/administrative or natural-unit context;
+- public-safe transform/generalization status where applicable.
+
+### Scale and uncertainty
+
+KFM must not hide:
+
+- source scale mismatch;
+- interpolation/model uncertainty;
+- map generalization;
+- confidence vs quality vs source authority;
+- observed vs interpreted vs modeled status;
+- exact vs generalized geometry;
+- historical vs current boundaries.
+
+[Back to top](#top)
+
+---
+
+## 10. Data Lifecycle, Storage, and Processing
+
+### 10.1 Lifecycle transitions
+
+| Stage | Entry criteria | Allowed producers | Required checks | Failure outcome | Public visibility |
+|---|---|---|---|---|---|
+| Pre-RAW/admission | Identified candidate event/source and governing intake context | Watcher, connector preflight, steward/manual intake | Source identity, role, terms/rights, sensitivity precheck | HOLD/QUARANTINE/DENY | None |
+| RAW | Admitted capture or immutable locator with source provenance | Connector/intake system | Retrieval integrity, source descriptor linkage, receipt | QUARANTINE/ERROR | None |
+| WORK | Candidate transform/normalization | Pipelines/tools | Schema evolution, identity, time, geometry, source-role rules | QUARANTINE/HOLD | None |
+| QUARANTINE | Any unresolved safety/quality/rights/evidence state | Any upstream gate | Review and reason codes; no silent promotion | Retain/deny/correct | None |
+| PROCESSED | Domain-shape and bounded validations pass | Pipelines | Contract/schema/domain checks, receipts | HOLD/ERROR | Internal |
+| CATALOG/TRIPLET | Validated records can be projected/discovered | Catalog/graph emitters | Provenance/evidence references, projection consistency | HOLD/ERROR | Governed/internal unless released |
+| PUBLISHED | Explicit release decision for public/semi-public scope | Release process only | Evidence, policy, review, proof, manifest, correction/rollback | DENY/HOLD/ERROR | Through governed/released delivery |
+
+### 10.2 Logical home versus physical bytes
+
+Directory authority identifies the **logical KFM home**. Large payloads may physically live in object storage, databases, registries, or caches; their identity/manifest/provenance still resolves to the logical lifecycle and governance model. Do not commit sensitive or massive bytes merely because `data/` is the logical owner.
+
+### 10.3 Mutability
+
+- RAW captures and audit receipts should be immutable or append-only where contractually appropriate.
+- WORK can be mutable by controlled process.
+- QUARANTINE retains reason/lineage.
+- PROCESSED artifacts should be versioned/reproducible.
+- Catalog/graph projections are rebuildable and should not overwrite canonical evidence.
+- PUBLISHED carriers are immutable/versioned; correction creates new lineage rather than silent mutation.
+
+[Back to top](#top)
+
+---
+
+## 11. Source Admission, Connectors, and Watchers
+
+### 11.1 Source-admission model
+
+A source must be classified before live use by:
+
+- issuing organization/system and stable identity;
+- source role (`authoritative`, `regulatory`, `observational`, `modeled`, `aggregator`, `contextual`, etc.);
+- rights/license/terms/attribution/caching/redistribution constraints;
+- access method and credentials boundary;
+- update cadence/currentness and change signals;
+- spatial/temporal/scale scope;
+- sensitivity and public-safe transform requirements;
+- expected identifiers/schema;
+- failure and correction behavior;
+- activation/review state.
+
+Unknown rights or sensitivity does not mean “probably public”: it means hold/quarantine/deny at the applicable risk level.
+
+### 11.2 Connector boundary
+
+`connectors/` owns source-specific retrieval/admission implementation. A connector may fetch and emit intake artifacts/receipts; it must not publish, create release authority, or let source response shape silently become canonical domain semantics.
+
+Default CI should remain no-network and fixture-driven. Live probes belong in explicitly governed/manual/scheduled contexts with credentials, rate limits, terms, and failure handling.
+
+### 11.3 Watchers
+
+Watchers detect candidate material change. Useful signals include:
+
+- ETag / Last-Modified / content length when trustworthy;
+- source version IDs or item IDs;
+- schema/field drift;
+- checksums/digests;
+- status/currentness changes;
+- bounded domain materiality.
+
+A watcher output is a **candidate**, not a publication. Repeated text or recurring AI summaries never upgrade authority.
+
+### 11.4 Current source/connector maturity
+
+The repository contains many connector/source lanes, but this document does not claim they are all live or admitted. Source activation must be proved per source. The Drive/attached source corpus provides candidate source families (e.g., soil, geology, habitat, atmosphere), but current connector implementation and rights are resolved only from repository/source-specific evidence.
+
+[Back to top](#top)
+
+---
+
+## 12. Evidence, Provenance, Catalog, Receipts, and Proof
+
+### 12.1 Evidence resolution
+
+Preferred consequential-claim path:
 
 ```text
-User question + MapContextEnvelope
-  -> policy precheck
-  -> EvidenceRef -> EvidenceBundle resolver
-  -> provider-neutral ModelAdapter
-  -> structured output
-  -> CitationValidator
-  -> policy postcheck
-  -> RuntimeResponseEnvelope
-  -> AIReceipt + RunReceipt
-  -> UI finite outcome
-```
-
-### 15.4 RuntimeResponseEnvelope sketch
-
-```json
-{
-  "schema": "kfm.runtime.response_envelope.v1",
-  "request_id": "focus_req:...",
-  "outcome": "ANSWER | ABSTAIN | DENY | ERROR",
-  "answer": "Bounded cited answer only when outcome is ANSWER.",
-  "citations": ["eref:001"],
-  "abstain_reason": null,
-  "denial_reason": null,
-  "error_code": null,
-  "policy_decision_id": "policy:...",
-  "citation_validation_report_id": "citation:...",
-  "ai_receipt_id": "receipt:ai:...",
-  "release_id": "release:...",
-  "visible_limitations": ["Only released public-safe evidence used."]
-}
-```
-
-### 15.5 AI hard denials
-
-Deny or error when:
-
-- Browser calls model runtime directly.
-- Context includes RAW/WORK/QUARANTINE/private/canonical direct access.
-- Evidence is not published/cataloged/proof-backed.
-- Sensitive precise geometry would leak.
-- Rights are unknown.
-- Citation validator fails.
-- Source ledger is missing.
-- Policy engine unavailable.
-- Model output includes uncited consequential claims.
-
----
-
-## 16. Security architecture
-
-### 16.1 Security posture
-
-KFM should combine KFM doctrine, SDL-style lifecycle discipline, NIST SSDF, OWASP verification practices, and least-privilege operations.
-
-| Security area | Build requirement |
-|---|---|
-| Training | Developers/reviewers understand KFM trust law, source sensitivity, secure coding, threat modeling, and release gates. |
-| Threat modeling | Model trust boundaries for source intake, API, map shell, AI runtime, proof stores, admin routes, and connectors. |
-| Bug bar | Define security/privacy bug classes and severity before implementation. |
-| Secure coding | Avoid unsafe APIs, injection patterns, unbounded resource use, insecure deserialization, weak crypto, secrets in logs. |
-| Secure testing | Static analysis, dependency scanning, unit tests, fuzzing for parsers/connectors, policy tests, red-team style misuse fixtures. |
-| Final review | Require final security/release review before publishing public surfaces. |
-| Response | Maintain vulnerability response runbook, owners, supported components, rollback strategy, communications. |
-
-### 16.2 Trust boundaries to threat model
-
-| Boundary | Threats |
-|---|---|
-| External source -> pre-RAW | malicious content, source spoofing, license ambiguity, schema drift, huge payloads. |
-| RAW -> WORK | parser bugs, injection, geospatial topology failures, unbounded processing. |
-| WORK -> PROCESSED | false identity merging, temporal collapse, lost provenance. |
-| PROCESSED -> PUBLISHED | policy bypass, sensitivity leak, uncited claims, stale data. |
-| API -> client | broken object-level authorization, excessive data exposure, rate/resource abuse. |
-| Map client -> API | feature ID tampering, bbox scraping, hidden sensitive geometry inference. |
-| UI -> AI runtime | prompt injection, source leakage, direct model access, uncited answer. |
-| Admin/review routes | privilege escalation, audit bypass, unauthorized promotion. |
-| Artifact hosting | in-place overwrite, stale CDN, missing signatures, range request issues. |
-
-### 16.3 Deployment rules
-
-- Deny by default.
-- Public routes go through governed API only.
-- Admin/debug/proof/source-ledger/model-health routes require authentication and authorization.
-- No direct public traffic to local model runtimes.
-- Do not expose Ollama or equivalent model APIs directly.
-- Use TLS, rate limits, request size limits, audit logging, and safe CORS/CSP.
-- Never commit secrets.
-- Logs include request IDs, policy decisions, adapter metadata, citation report IDs, and receipt IDs; logs exclude secrets, private reasoning, raw sensitive evidence, and unrestricted source dumps.
-- Published artifacts are immutable by release ID.
-
----
-
-## 17. Validation, testing, and CI
-
-CI should be thin orchestration that calls repo-native tools. The validators are the trust membrane.
-
-### 17.1 Required checks
-
-| Check | Purpose |
-|---|---|
-| schema validation | All JSON Schemas and fixtures pass. |
-| API contract tests | OpenAPI/runtime envelopes match examples. |
-| policy tests | Allow/deny/abstain/error fixtures pass. |
-| source-ledger tests | Source IDs, aliases, authority roles, unresolved refs checked. |
-| source-rights tests | Unknown rights block public release. |
-| sensitivity tests | Rare species/archaeology/DNA/infrastructure exact exposure denied. |
-| geometry tests | CRS, topology, precision, simplification, withheld accounting. |
-| temporal tests | Valid/source/retrieval/release/correction time preserved. |
-| evidence tests | EvidenceRef resolves to EvidenceBundle. |
-| citation tests | Claims cite valid evidence/source records. |
-| catalog matrix tests | STAC/DCAT/PROV/digest/release closure. |
-| promotion gate tests | PromotionReceipt complete; release denied on missing gates. |
-| PMTiles/COG tests | Hash, sidecar, signature, Range/CORS, media type. |
-| no-public-raw-path | Public API/UI cannot reference RAW/WORK/QUARANTINE. |
-| no-direct-model-client | UI/browser cannot call model runtime directly. |
-| accessibility tests | Drawer, keyboard navigation, non-color trust cues, contrast. |
-| E2E smoke | Click -> API resolve -> Drawer -> Focus finite outcome -> receipt. |
-| rollback test | Previous release manifest can be restored and caches invalidated. |
-
-### 17.2 Suggested CI command matrix
-
-```text
-make validate-schemas
-make validate-source-ledger
-make validate-policy
-make validate-catalog-matrix
-make validate-citations
-make test-unit
-make test-integration
-make test-e2e-public-safe
-make check-no-public-raw-path
-make check-no-direct-model-client
-make check-accessibility
-make build-release-dry-run
-make rollback-dry-run
-```
-
-### 17.3 Fixtures to create first
-
-| Fixture | Expected outcome |
-|---|---|
-| public-safe hydrology HUC12 EvidenceBundle | ANSWER |
-| missing EvidenceBundle | ABSTAIN |
-| stale source | ABSTAIN |
-| unknown rights | DENY |
-| sensitive exact geometry | DENY |
-| unpublished candidate | DENY |
-| invalid citation | ABSTAIN or ERROR |
-| policy engine unavailable | ERROR/DENY |
-| bad PMTiles hash | DENY publication |
-| missing rollback target | DENY promotion |
-
----
-
-## 18. Query-save-recompile control loop
-
-### 18.1 Loop purpose
-
-The loop should improve KFM documentation, registries, schemas, indexes, catalogs, fixtures, and derived artifacts without autonomous publication.
-
-```text
-query -> save -> validate -> compile -> review -> promote -> recompile
-```
-
-### 18.2 Loop object families
-
-| Object | Purpose |
-|---|---|
-| QueryRunRecord | Saved query/work session metadata without private chain-of-thought. |
-| EvidenceResolutionRecord | What evidence was retrieved/resolved. |
-| CandidateDelta | Proposed doc/schema/policy/source/test changes. |
-| RecompileManifest | Inputs/outputs/hashes for derived rebuild. |
-| LoopValidationReport | Schema/policy/source coverage results. |
-| LoopDecision | Review/promotion/deny decision. |
-| LoopRollbackReference | How to undo the loop output. |
-
-### 18.3 Loop policies
-
-- No autopublish.
-- No generated text as root truth.
-- No private chain-of-thought storage.
-- No raw public path.
-- Evidence closure required before promotion.
-- Human/steward review required for sensitive or release-significant material.
-
----
-
-## 19. Implementation roadmap
-
-### Phase 0 — Live repo conformance and ADR baseline
-
-**Goal:** establish current implementation truth before adding files.
-
-Tasks:
-
-1. Run `git status`, branch, commit, tree inventory.
-2. Inspect root directories and package markers.
-3. Locate schema home, contracts home, policy tooling, app/API/UI framework, tests, CI workflows.
-4. Compare with Directory Rules.
-5. Open drift entries where repo and doctrine diverge.
-6. Accept/update ADRs for schema home, source ledger, map shell, AI adapter, release/proof homes.
-
-Exit criteria:
-
-- `docs/registers/DRIFT_REGISTER.md` updated or confirmed clean.
-- Schema-home ADR accepted or verified current.
-- No new parallel authority roots introduced.
-
-### Phase 1 — Governance skeleton
-
-Deliver:
-
-- Directory doctrine in repo.
-- Source ledger skeleton.
-- Authority register.
-- Policy register.
-- Validator register.
-- Release register.
-- Initial core schemas.
-- No-network fixtures.
-
-Exit criteria:
-
-- Schemas validate.
-- Source ledger validates.
-- Policy default deny works.
-- Documentation links pass.
-
-### Phase 2 — Evidence and receipt core
-
-Deliver:
-
-- SourceDescriptor schema.
-- EvidenceRef and EvidenceBundle schemas.
-- RunReceipt and ValidationReport schemas.
-- CitationValidationReport schema.
-- Deterministic ID/hash helper.
-
-Exit criteria:
-
-- Public-safe evidence fixture resolves.
-- Missing/stale/conflicted evidence abstains.
-- Unresolved source denies/abstains.
-
-### Phase 3 — First domain proof slice
-
-Recommended: hydrology HUC12 or ecology/landcover county sidecar.
-
-Deliver:
-
-- Domain README and architecture.
-- SourceDescriptor.
-- Processed fixture.
-- EvidenceBundle.
-- LayerManifest.
-- StyleManifest.
-- TileArtifactManifest or GeoJSON fixture.
-- MapReleaseManifest dry run.
-
-Exit criteria:
-
-- E2E: click feature -> evidence drawer -> finite Focus response -> receipt.
-- No live connectors required.
-
-### Phase 4 — Catalog closure
-
-Deliver:
-
-- STAC/DCAT/PROV profile.
-- CatalogMatrix validator.
-- Release manifest binds catalog records.
-
-Exit criteria:
-
-- Catalog closure validates.
-- Human-authored catalog records cannot bypass release logic.
-
-### Phase 5 — Policy and sensitivity hardening
-
-Deliver:
-
-- Rights policy.
-- Sensitivity policy.
-- Domain deny fixtures.
-- Withheld accounting.
-- Public-safe geometry transform receipts.
-
-Exit criteria:
-
-- Sensitive exact geometry denied.
-- Unknown rights denied.
-- Redaction/generalization recorded.
-
-### Phase 6 — Map shell
-
-Deliver:
-
-- MapLibre shell with manifest-driven layer catalog.
-- Evidence Drawer.
-- Negative-state badges.
-- Time scope propagation.
-- Accessibility baseline.
-
-Exit criteria:
-
-- No raw/canonical direct access.
-- Layer toggle denied if unreleased.
-- Drawer validates evidence.
-
-### Phase 7 — Governed AI MockAdapter
-
-Deliver:
-
-- ModelAdapter contract.
-- MockAdapter.
-- RuntimeResponseEnvelope.
-- AIReceipt.
-- Citation validation.
-- Focus Mode UI fixture.
-
-Exit criteria:
-
-- ANSWER, ABSTAIN, DENY, ERROR fixtures pass.
-- No direct browser/model access.
-
-### Phase 8 — Release and rollback dry run
-
-Deliver:
-
-- PromotionReceipt.
-- ProofPack.
-- ReleaseManifest.
-- RollbackCard.
-- CorrectionNotice fixture.
-- Cache invalidation proof.
-
-Exit criteria:
-
-- Release candidate can publish dry-run and roll back dry-run.
-
-### Phase 9 — Live connector pilot
-
-Deliver:
-
-- One source connector with rights verified.
-- Source watcher.
-- No-publication default.
-- Material-change sidecar.
-
-Exit criteria:
-
-- Connector can ingest to RAW/WORK only.
-- Watcher emits proposed work, not publication.
-
-### Phase 10 — Broaden domain lanes
-
-Order recommendation:
-
-1. Hydrology.
-2. Soil / agriculture / landcover.
-3. Habitat + fauna + flora public-safe derivatives.
-4. Atmosphere + hazards with not-emergency-alert boundary.
-5. Roads/rail/trade + settlements/infrastructure.
-6. Geology/natural resources.
-7. Archaeology with steward controls.
-8. People/genealogy/DNA/land ownership with living-person/DNA restrictions.
-9. Frontier demography/economy panel.
-
----
-
-## 20. First PR package
-
-The first PR should be small, reversible, and no-network.
-
-### 20.1 Files
-
-```text
-docs/doctrine/directory-rules.md
-docs/doctrine/truth-posture.md
-docs/doctrine/lifecycle-law.md
-docs/doctrine/trust-membrane.md
-docs/adr/ADR-0001-schema-home.md
-docs/registers/SOURCE_LEDGER.md
-docs/registers/DRIFT_REGISTER.md
-docs/registers/VALIDATOR_REGISTER.md
-schemas/contracts/v1/core/source_descriptor.schema.json
-schemas/contracts/v1/evidence/evidence_ref.schema.json
-schemas/contracts/v1/evidence/evidence_bundle.schema.json
-schemas/contracts/v1/receipts/run_receipt.schema.json
-schemas/contracts/v1/policy/policy_decision.schema.json
-schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
-policy/core/default_deny.rego
-tools/validators/schema_validate.py
-tools/validators/source_ledger_validate.py
-tests/fixtures/core/valid/source_descriptor.public_safe.json
-tests/fixtures/core/invalid/source_descriptor.unknown_rights.json
-tests/fixtures/evidence/valid/evidence_bundle.public_safe.json
-tests/fixtures/runtime/answer.json
-tests/fixtures/runtime/abstain_missing_evidence.json
-tests/fixtures/runtime/deny_sensitive.json
-tests/fixtures/runtime/error_policy_unavailable.json
-```
-
-### 20.2 Acceptance criteria
-
-- No live connectors.
-- No model calls.
-- No public release.
-- All fixtures validate.
-- Default-deny policy works.
-- Source ledger has at least one public-safe synthetic or published source entry.
-- Runtime outcomes are finite.
-- All paths conform to Directory Rules or have ADR/drift note.
-
----
-
-## 21. Anti-pattern register
-
-| Anti-pattern | Required response |
-|---|---|
-| Treating map layer as truth | DENY; require EvidenceBundle. |
-| Treating tiles/COGs/PMTiles as proof | DENY; require manifest/evidence/proof closure. |
-| Publishing via file move | DENY; promotion is state transition. |
-| Watcher commits to main | DENY; watcher opens PR/review packet. |
-| AI answers from rendered map properties only | ABSTAIN/DENY; rendered features are candidates. |
-| Direct browser access to model runtime | DENY. |
-| Direct public access to canonical/PostGIS/RAW/WORK/QUARANTINE | DENY. |
-| Unknown rights public release | DENY/ABSTAIN. |
-| Style-only sensitive geometry hiding | DENY; transform/redact/generalize before release. |
-| Catalog record manually authored as release truth | DENY; catalog is derived from receipts/proofs/decision. |
-| Graph projection replaces canonical truth | DENY. |
-| Assessor parcel treated as title proof | ABSTAIN/DENY depending claim. |
-| DNA/living-person data published by default | DENY. |
-| Archaeological exact site public by default | DENY. |
-| Hazard lane used as emergency alerting | DENY; point to official sources. |
-| MLT/3D/native/mobile declared production before parity proof | NEEDS VERIFICATION. |
-| Package pin based on stale docs | NEEDS VERIFICATION. |
-| Security review left until after release | DENY release. |
-
----
-
-## 22. Governance roles
-
-| Role | Responsibility |
-|---|---|
-| Docs steward | Directory doctrine, documentation authority, ADR hygiene, source ledger readability. |
-| Source steward | Source descriptors, rights, terms, update cadence, source role. |
-| Domain lead | Domain object model, source-role matrix, validators, domain fixtures. |
-| Policy steward | Sensitivity, rights, access, default-deny policy, policy tests. |
-| Evidence steward | EvidenceBundle contracts, citation validation, proof closure. |
-| Data engineer | Ingest, normalization, PostGIS, GeoParquet/PMTiles/COG pipeline. |
-| API engineer | Governed API contracts, authorization, runtime envelopes. |
-| UI/map engineer | MapLibre shell, layer manifests, Drawer, trust-visible states. |
-| AI/runtime engineer | Adapter contract, MockAdapter, model runtime isolation, AIReceipt. |
-| Security reviewer | Threat model, secure coding/testing, dependency review, response plan. |
-| Release steward | Promotion gates, release manifests, proof packs, rollback/correction. |
-| Reviewer/steward | Human review for sensitive, cultural, living-person, rights, release-significant changes. |
-
-Use RACI matrices for each PR wave.
-
----
-
-## 23. Runbooks to create
-
-| Runbook | Purpose |
-|---|---|
-| Source intake | Admit/deny/quarantine new source. |
-| Source watcher | Configure material-change watcher safely. |
-| Rights review | Resolve license/terms/attribution/public release posture. |
-| Sensitivity review | Handle rare species, archaeology, living person, DNA, infrastructure, cultural sensitivity. |
-| Evidence resolution | Resolve EvidenceRef to EvidenceBundle. |
-| Citation validation | Validate claim support. |
-| Domain release | Promote domain layer/report/story. |
-| PMTiles publication | Build, attest, host, verify Range/CORS, rollback. |
-| COG publication | Build, verify, catalog, release. |
-| AI Focus Mode | Add model adapter or prompt safely. |
-| Security incident | Triage vulnerability, assign owner, patch, communicate. |
-| Correction/withdrawal | Issue correction notice, supersede claim, invalidate cache, rollback. |
-| Repo drift | Record and resolve path/schema/policy drift. |
-
----
-
-## 24. Acceptance checklist for “whole system ready for first public proof”
-
-KFM is not ready for a public proof release until:
-
-- [ ] Directory Rules accepted or reconciled through ADR.
-- [ ] Schema-home ADR accepted.
-- [ ] Source ledger exists and validates.
-- [ ] Source authority and source-role matrix exists for proof domain.
-- [ ] Rights and sensitivity policies exist with deny fixtures.
-- [ ] EvidenceRef resolves to EvidenceBundle.
-- [ ] Citation validator passes and fails correctly.
-- [ ] CatalogMatrix closes STAC/DCAT/PROV/digest/release refs.
-- [ ] PromotionReceipt has all required gates.
-- [ ] ReleaseManifest has rollback target.
-- [ ] Public API cannot access RAW/WORK/QUARANTINE/canonical stores.
-- [ ] MapLibre layer is manifest-bound.
-- [ ] Evidence Drawer shows source/evidence/policy/release/correction.
-- [ ] Focus Mode uses MockAdapter or governed adapter only.
-- [ ] Focus Mode returns ANSWER/ABSTAIN/DENY/ERROR only.
-- [ ] No direct model runtime access from browser/client.
-- [ ] UI shows negative trust states.
-- [ ] Accessibility smoke passes.
-- [ ] Security threat model complete for proof slice.
-- [ ] Release dry run passes.
-- [ ] Rollback dry run passes.
-
----
-
-## 25. Open verification backlog
-
-| Item | Status | Verification action |
-|---|---|---|
-| Current live repo topology | UNKNOWN | Mount repo; run tree/package/workflow/schema-policy scan. |
-| `contracts/` vs `schemas/` authority | NEEDS VERIFICATION | Inspect ADR-0001 and current schema homes. |
-| Package manager and UI framework | UNKNOWN | Inspect package files and app tree. |
-| Policy engine | UNKNOWN | Inspect OPA/Conftest/Rego or repo-native equivalent. |
-| Existing proof/receipt/release artifacts | UNKNOWN | Inspect `data/receipts`, `data/proofs`, `release`, generated outputs. |
-| MapLibre version and lockfile | NEEDS VERIFICATION | Inspect lockfile and official MapLibre releases before pinning. |
-| PostGIS/PostgreSQL version | NEEDS VERIFICATION | Inspect database/runtime configuration. |
-| PMTiles/COG hosting headers | NEEDS VERIFICATION | Test Range/CORS/cache behavior in target hosting. |
-| Source rights for live connectors | NEEDS VERIFICATION | Verify official terms and record SourceDescriptor. |
-| Steward review requirements | NEEDS VERIFICATION | Identify responsible stewards for archaeology, cultural, DNA, rare species, infrastructure. |
-| Branch protections and release approvals | UNKNOWN | Inspect platform settings. |
-| Security response ownership | UNKNOWN | Assign response owners and supported component inventory. |
-| AI runtime exposure | NEEDS VERIFICATION | Inspect deployment/proxy/firewall; ensure private binding. |
-
----
-
-## 26. Build sequence summary
-
-```text
-0. Verify live repo and accept path/schema ADRs.
-1. Add governance skeleton and source ledger.
-2. Add core schemas, receipts, evidence, policy decisions.
-3. Add first public-safe hydrology/ecology fixture.
-4. Add catalog closure and release dry run.
-5. Add MapLibre shell + Drawer from manifests.
-6. Add Focus Mode with MockAdapter and finite outcomes.
-7. Add rollback/correction dry run.
-8. Add first live connector only after rights/source/security verification.
-9. Broaden domain lanes in dependency order.
-10. Build frontier demography/economy panel after geography/source proof.
-```
-
----
-
-## 27. Source-aware notes for implementation teams
-
-### 27.1 Engineers
-
-Build adapters and validators first. Do not make the first public artifact depend on live external services, a model runtime, or a broad UI.
-
-### 27.2 Domain leads
-
-Your first deliverable is not a dataset. It is a domain contract packet: source-role matrix, object families, sensitivity policy, validators, fixtures, public-safe layer plan, and release/rollback plan.
-
-### 27.3 UI/map team
-
-The map shell is part of the trust system. Popups must not turn feature properties into authoritative claims. The Drawer is the trust object; Focus Mode is evidence-bounded interpretation.
-
-### 27.4 AI team
-
-Start with MockAdapter. Add real providers only after schema, policy, source ledger, citation, and finite-outcome tests pass. Do not persist hidden chain-of-thought. Do not expose local model APIs to clients.
-
-### 27.5 Release/security team
-
-Treat public release like a security-sensitive event. Require proofs, rollback, signatures where appropriate, policy decisions, and response owners.
-
----
-
-## 28. Glossary
-
-| Term | Meaning |
-|---|---|
-| Inspectable claim | Public/semi-public assertion reconstructable to evidence, scope, policy, review, release, correction, and rollback. |
-| EvidenceRef | Pointer to evidence that must resolve before use. |
-| EvidenceBundle | Resolved evidence context that outranks maps, summaries, and generated text. |
-| SourceDescriptor | Source identity, role, authority, rights, access, cadence, caveats. |
-| RunReceipt | Process memory for a tool/pipeline action. |
-| AIReceipt | Process memory for AI/model/tool invocation metadata. |
-| ProofPack | Release-significant proof bundle. |
-| CatalogMatrix | Closure report tying STAC/DCAT/PROV/digests/assets/release IDs. |
-| PromotionReceipt | Auditable record of promotion gates and outcome. |
-| ReleaseManifest | Bindings for released artifacts, proof packs, rollback, correction. |
-| RollbackCard | Instructions and evidence for reverting public state. |
-| MapReleaseManifest | Release manifest for map layers/styles/tile artifacts. |
-| LayerManifest | Governs map layer identity, evidence, time, geometry, trust badges. |
-| StyleManifest | Governs map style identity, hashes, accessibility, meaning changes. |
-| Focus Mode | Evidence-bounded AI interaction inside governed shell. |
-| Trust membrane | Boundary preventing raw/internal/unreviewed truth from leaking into public surfaces. |
-| Public-safe | Released, rights-cleared, sensitivity-reviewed, citable, reviewable, rollback-capable. |
-| Quarantine | Safe holding area for failed validation, unresolved rights/sensitivity, schema drift, over-precise geometry. |
-
----
-
-## 29. Appendix A — Minimal no-network proof slice
-
-```text
-SourceDescriptor(public-safe synthetic hydrology)
-  -> RAW fixture metadata only
-  -> PROCESSED HUC12 fixture
+claim / feature / answer
+  -> EvidenceRef
   -> EvidenceBundle
-  -> LayerManifest
-  -> StyleManifest
-  -> TileArtifactManifest or GeoJSON fixture
-  -> CatalogMatrix dry run
-  -> PromotionReceipt dry run
-  -> MapReleaseManifest dry run
-  -> MapLibre click fixture
-  -> EvidenceDrawerPayload
-  -> FocusModeRequest
-  -> MockAdapter response
-  -> CitationValidationReport
-  -> RuntimeResponseEnvelope
-  -> AIReceipt + RunReceipt
-  -> rollback target
+  -> source identity + role + locator + scope
+  -> provenance + integrity
+  -> policy/review/release context
+  -> citation presented to user/reviewer
 ```
 
-Expected tests:
+If the resolver cannot produce admissible support, return a finite negative state (`ABSTAIN`, `DENY`, `HOLD`, or `ERROR`) rather than substitute map properties or generated language.
 
-- ANSWER on valid public-safe fixture.
-- ABSTAIN on missing EvidenceBundle.
-- DENY on sensitive exact geometry.
-- DENY on unknown rights.
-- ERROR on policy engine unavailable.
-- DENY release on missing rollback.
-- DENY UI direct model call.
-- DENY public raw path.
+### 12.2 Anti-collapse matrix
+
+| Object | Records | Does not prove |
+|---|---|---|
+| Receipt | What process ran, inputs/spec/results | Claim truth, review, release |
+| Proof | Closure for a declared proof proposition | Policy permission unless explicitly included |
+| Catalog record | Discoverability/projection metadata | Source truth or release |
+| Manifest | Enumerated versioned objects/carriers | Human approval by itself |
+| Policy decision | Admissibility under an evaluated context | Evidence truth |
+| Review record | Human/steward decision state | Machine shape/integrity |
+| Release decision | Governed transition | Public reachability by itself |
+| Published carrier | Delivery bytes | Currentness/correction unless linked |
+| AI receipt | Model execution provenance | Truth or hidden reasoning |
+
+### 12.3 Catalog standards
+
+KFM corpus uses STAC/DCAT/PROV as interoperability patterns. Current external anchors (accessed 2026-08-15) are OGC STAC Community Standard 1.1.0, W3C DCAT 3 Recommendation (2024-08-22), and W3C PROV-O Recommendation. Adoption of a **KFM profile** remains a KFM decision; the standards do not create repository authority.
+
+### 12.4 Derived indexes
+
+Search indexes, vector indexes, graph/triplet projections, map tiles, and caches must be rebuildable from governed source/evidence/release state. They must preserve correction and withdrawal handling and cannot become a hidden truth store.
+
+[Back to top](#top)
 
 ---
 
-## 30. Appendix B — Recommended ADR queue
+## 13. Promotion, Release, Publication, Correction, and Rollback
 
-| ADR | Decision |
+### 13.1 Promotion posture
+
+Current repository evidence supports an **A–G promotion-gate fixture vocabulary** and bounded promotion/review validators, but not authenticated operational promotion. [R-RELEASE] [R-MAKE]
+
+Do not assume older A–F or expanded gate sets are current authority. The safe current statement is: **A–G exists as bounded fixture/test semantics; operational gate authority remains unproved.**
+
+### 13.2 Required release chain
+
+```text
+candidate
+ -> schema/contract validation
+ -> pinned inputs and reproducibility
+ -> tests/quality checks
+ -> source/evidence closure
+ -> policy/rights/sensitivity decision
+ -> integrity/signature/attestation checks where adopted
+ -> human/steward review where required
+ -> PromotionDecision / release decision
+ -> ReleaseManifest + public-safe carrier set
+ -> rollback/correction/invalidation target
+ -> governed delivery
+```
+
+### 13.3 Current release maturity
+
+`release/` has fixture-first schemas/validators/tests for ReleaseManifest, PromotionDecision, promotion gates, RollbackCard, and related profiles. This is meaningful implementation evidence, but it is not an operational release system. The general policy evaluator, authenticated reviewers, signing custody, production assembly, live alias mutation, deployment, correction propagation, and rollback application remain held/unknown. [R-RELEASE]
+
+### 13.4 Publication is separate
+
+- Merge ≠ release.
+- GitHub release page ≠ KFM publication.
+- File under `data/published/` ≠ publication by placement.
+- Deployment ≠ publication unless a release decision and public-safe carrier are actually exposed through the governed delivery path.
+- A workflow or badge ≠ approval.
+
+### 13.5 Correction and rollback
+
+Every material public release should define:
+
+- prior release identity;
+- correction/withdrawal/supersession trigger;
+- affected claims and carriers;
+- invalidation plan for APIs, tiles, caches, indexes, exports, stories, and AI context;
+- rollback target;
+- replay/rebuild verification;
+- public correction visibility appropriate to significance.
+
+[Back to top](#top)
+
+---
+
+## 14. Domain Atlas
+
+### 14.1 Canonical-domain determination
+
+**CONFIRMED repository projection / PROPOSED authority status.** The current machine projection contains 13 domain lanes and explicitly excludes `matrix`, `scene`, and `spatial` from domain status. The register itself is `PROPOSED / machine_projection_only`; it cannot create or remove domains. [R-DOMREG]
+
+The registered lanes are: agriculture, archaeology, atmosphere, fauna, flora, geology, habitat, hazards, hydrology, people-dna-land, roads-rail-trade, settlements-infrastructure, and soil. The current domain README confirms substantive lane documentation but explicitly refuses to infer implementation maturity. [R-DOMAINS]
+
+### 14.2 Required domain template
+
+Every lane is documented and reviewed against the same 22 questions:
+
+1. purpose/bounded context; 2. owned concepts; 3. exclusions; 4. current repo implementation; 5. target architecture; 6. entities/value objects/observations/claims/relations; 7. source roles; 8. spatial model; 9. temporal model; 10. identity/versioning; 11. lifecycle/pipeline; 12. evidence/provenance; 13. policy/rights/sensitivity/public-safe transforms; 14. contracts/schemas/fixtures/validators/tests; 15. API/map/UI/export/AI behavior; 16. implemented features; 17. proposed features; 18. anti-collapse rules; 19. operations; 20. maturity; 21. verification backlog; 22. smallest governed next step.
+
+### 14.3 Agriculture
+
+| Field | Result |
 |---|---|
-| ADR-0001 | Schema home and contracts/schema split. |
-| ADR-0002 | Source ledger and authority register. |
-| ADR-0003 | Lifecycle roots and release/proof/receipt homes. |
-| ADR-0004 | Deterministic ID and hash policy. |
-| ADR-0005 | EvidenceBundle and CitationValidationReport contract. |
-| ADR-0006 | Policy engine and default-deny posture. |
-| ADR-0007 | CatalogMatrix / STAC / DCAT / PROV closure. |
-| ADR-0008 | MapLibre default 2D shell and renderer boundary. |
-| ADR-0009 | PMTiles/COG/GeoParquet artifact policy. |
-| ADR-0010 | AI ModelAdapter contract and MockAdapter-first rule. |
-| ADR-0011 | Query-save-recompile control loop. |
-| ADR-0012 | Sensitive geometry transform and withheld accounting. |
-| ADR-0013 | Domain-lane packet standard. |
-| ADR-0014 | Release, correction, withdrawal, rollback model. |
-| ADR-0015 | Security threat model and response process. |
+| Purpose/ownership | Agricultural observations, statistics, field/county representations and derived indicators. |
+| Must not absorb | Soil truth, hydrology measurements, land/title, weather observations, or policy authority. |
+| Current implementation | Registered lane and substantive docs are **CONFIRMED**; end-to-end public product is **NEEDS VERIFICATION**. |
+| Sources | NASS/CDL and related candidates are design pressure only until source-specific admission/rights/currentness are verified. |
+| Spatial/time/identity | Source-native geography and IDs; vintage/observation/release time remain distinct. |
+| Lifecycle/evidence | Source capture -> normalized observations -> evidence -> catalog/released derivatives. |
+| Sensitivity | Register projects T0, but that is not adopted universal sensitivity policy; private-field/source terms may raise risk. |
+| Anti-collapse | Remote-sensing classification ≠ observed management; modeled suitability ≠ measured yield. |
+| Smallest next step | One no-network, source-specific observation-to-released-carrier proof slice. |
+
+### 14.4 Archaeology
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Archaeological/cultural-heritage assertions, records, research context, controlled public representations. |
+| Must not absorb | Tribal/cultural authority, private-land authority, exact sensitive locations as public truth, or reconstruction as observation. |
+| Current implementation | Registered lane/substantive docs confirmed; live sensitive source activation/public release not inferred. |
+| Sources | Government, tribal, archival and scholarly sources require case-specific authority/rights. |
+| Spatial/time/identity | Exact internal geometry may be restricted; generalized/denied public geometry; site IDs must not leak protected identity. |
+| Lifecycle/evidence | Admission -> quarantine/review -> restricted evidence -> public-safe derivative after explicit approval. |
+| Sensitivity | T4 is projected, not universally adopted policy. Treat exact sites/sacred knowledge as fail-closed. |
+| Anti-collapse | Observed site ≠ candidate ≠ inference ≠ reconstruction. |
+| Smallest next step | Synthetic-only sensitivity/generalization proof with no real protected coordinates. |
+
+### 14.5 Atmosphere
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Weather/air observations, classifications, modeled/forecast products with explicit roles. |
+| Must not absorb | Emergency alert or health-directive authority; forecast/model as observation. |
+| Current implementation | Registered lane with repository validators/history; live ingestion/deployment unproved. |
+| Time | Observed, issued, valid, retrieved and stale times are first-class. |
+| Identity | Station/product/model-run identity; model cycles versioned. |
+| Evidence | Values tie to source/product/run and exact time scope. |
+| Sensitivity | Usually low, but operational-alert posture requires non-authority disclaimer and stale handling. |
+| Anti-collapse | Observation ≠ forecast ≠ model ≠ warning. |
+| Smallest next step | No-network observation profile with stale/missing-source negative cases. |
+
+### 14.6 Fauna
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Taxa, occurrence evidence, ranges and public-safe biodiversity derivatives. |
+| Must not absorb | Exact sensitive occurrences as public truth; habitat suitability as occurrence. |
+| Current implementation | Registered lane/substantive docs; end-to-end release unproved. |
+| Spatial | Exact occurrence may be restricted; public geometry generalized before rendering. |
+| Identity | Source-native occurrence/taxon IDs with governed reconciliation. |
+| Evidence | Occurrence/range/model support types remain explicit. |
+| Sensitivity | T4 projected; rare-species geoprivacy requires fail-closed review. |
+| Anti-collapse | Occurrence ≠ range ≠ habitat ≠ modeled suitability. |
+| Smallest next step | Synthetic occurrence EvidenceBundle -> generalized carrier -> deny exact-location proof. |
+
+### 14.7 Flora
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Plant taxonomy, specimen/occurrence evidence, phenology and invasive/rare-plant context. |
+| Must not absorb | Rare exact locations as public truth; modeled habitat as specimen evidence. |
+| Current implementation | Registered lane/substantive docs; operational public product unproved. |
+| Source/spatial | Herbaria/agency/community sources require role/rights; rare coordinates can be generalized/denied. |
+| Time/identity | Collection/observation/publication/retrieval/correction; specimen/taxon/source IDs. |
+| Sensitivity | T4 projected; rarity may require stricter release. |
+| Anti-collapse | Specimen ≠ occurrence ≠ inferred range ≠ suitability. |
+| Smallest next step | Synthetic specimen/occurrence packet with generalization and abstention. |
+
+### 14.8 Geology
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Bedrock/surficial geology, stratigraphy, structures, subsurface references and resource context. |
+| Must not absorb | Hydrology measurement truth, regulatory/lease status as physical geology, estimate as observed deposit. |
+| Current implementation | Registered lane/substantive docs; live public geology product not proved. |
+| Source role | KGS/USGS/regulatory/legacy sources remain distinct; caveats/scale retained. |
+| Spatial/time | Map scale/vintage essential; borehole/resource precision can require controls. |
+| Anti-collapse | Observed ≠ interpreted ≠ modeled; occurrence ≠ deposit ≠ estimate ≠ production/regulatory status. |
+| Smallest next step | One public geologic-map fixture slice with source scale/evidence visible. |
+
+### 14.9 Habitat
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Habitat classes/patches, connectivity, restoration context and modeled suitability when labeled. |
+| Must not absorb | Species occurrence, ownership, or remote-sensing classification as unquestioned ground truth. |
+| Current implementation | Registered lane and habitat validation/design work; public product unproved. |
+| Source/spatial/time | Land-cover/ecology sources retain method/scale; classification/model vintage visible. |
+| Sensitivity | T0 projected, but joins to T4 biodiversity can create derived sensitivity. |
+| Anti-collapse | Habitat ≠ occurrence ≠ modeled suitability; land cover ≠ habitat without accepted mapping. |
+| Smallest next step | Classification EvidenceBundle -> layer manifest -> Explorer fixture proof. |
+
+### 14.10 Hazards
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Hazard observations/events/classifications/context and public-safety posture. |
+| Must not absorb | Emergency warning authority or guaranteed current status. |
+| Current implementation | `make hazards-validate` is a bounded synthetic USDM materiality surface; no operational hazard product is proved. |
+| Time | Issue/valid/expiry/observation/retrieval/rescission/correction all matter. |
+| Evidence | Official source snapshot and time scope; missing rows cannot imply “clear”. |
+| Anti-collapse | Advisory ≠ observation ≠ forecast ≠ impact model; KFM ≠ alert authority. |
+| Smallest next step | Official-source fixture profile with update/rescind/false-clear negatives. |
+
+### 14.11 Hydrology
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Hydrologic units, waterways, gauges/observations and watershed relations. |
+| Must not absorb | Water rights/title, warnings or model outputs as measurements. |
+| Current implementation | Rich docs/contracts/fixtures lineage; `make proof-slice` remains a readiness stub, so no current end-to-end proof is claimed. |
+| Identity | HUC/native station/reach IDs and governed crosswalks. |
+| Evidence | Observations and unit context close through EvidenceBundle. |
+| Anti-collapse | Gauge observation ≠ modeled flow ≠ watershed classification ≠ warning. |
+| Smallest next step | Implement the currently stubbed no-network HUC/gauge evidence-to-layer proof with release-denial negatives. |
+
+### 14.12 People, DNA & Land
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Evidence-backed assertions about people/genealogy/historical records/land relations under privacy/consent controls. |
+| Must not absorb | Living-person dossiering, inferred kinship as fact, DNA exposure, title/legal authority. |
+| Current implementation | Registered lane/substantive docs/policy/schema surfaces; no real person/genomic public release claimed. |
+| Model | Assertion-first; conflicting assertions can coexist until resolved. |
+| Spatial/identity | Public IDs/geometry must not enable re-identification or private-location reconstruction. |
+| Sensitivity | T4 projected; living-person, genomic and private-land concerns fail closed. |
+| Anti-collapse | Assertion ≠ fact; biological ≠ legal relationship; land record ≠ definitive title; DNA inference ≠ identity. |
+| Smallest next step | Synthetic assertions only until qualified privacy/legal/domain authority and consent/revocation/correction rules exist. |
+
+### 14.13 Roads, Rail & Trade
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Modern/historic routes, depots/crossings, network and trade context. |
+| Must not absorb | Sensitive infrastructure operations; historic route as current passability. |
+| Current implementation | Registered lane/substantive docs; live routing/public network service unproved. |
+| Time/identity | Historic/current validity and route/segment/facility IDs. |
+| Evidence | Feature source/vintage visible; network/accessibility inference is derivative. |
+| Anti-collapse | Historic ≠ current; designation ≠ physical passability; modeled accessibility ≠ observed travel. |
+| Smallest next step | Fixture-first historic/current route parity plus public-safe map carrier. |
+
+### 14.14 Settlements & Infrastructure
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Settlements/places, public service areas and public-safe infrastructure context. |
+| Must not absorb | Critical operational details, private utility data, guaranteed current service state. |
+| Current implementation | Registered lane/substantive docs; end-to-end public infrastructure product unproved. |
+| Spatial | Place/service geometry; harmful precision transformed before public release. |
+| Sensitivity | T0 projected, but critical-infrastructure detail can require restriction. |
+| Anti-collapse | Physical asset ≠ service status ≠ administrative jurisdiction ≠ modeled access. |
+| Smallest next step | Public settlement/service-area fixture slice with exact-infrastructure deny tests. |
+
+### 14.15 Soil
+
+| Field | Result |
+|---|---|
+| Purpose/ownership | Soil survey/map units, horizons/properties, interpretations, station moisture and gridded/satellite support as distinct roles. |
+| Must not absorb | Static survey, station reading, grid derivative and satellite estimate into one authority. |
+| Current implementation | Registered/substantive soil lane; attached soil report is proposal-era and cannot prove current implementation. |
+| Source role | SSURGO/SDA/gSSURGO, stations and satellite products require separate SourceDescriptors/support types. |
+| Spatial/time | Map polygons/grids/stations/profiles; survey version vs observation/retrieval/interpretation time. |
+| Evidence | Support type/source role/quality/limitations remain explicit. |
+| Anti-collapse | Static survey ≠ station measurement ≠ gridded derivative ≠ satellite retrieval. |
+| Smallest next step | One SSURGO/SDA public-safe fixture plus station record with anti-collapse tests. |
+
+### 14.16 Cross-cutting lanes that are not currently registered domains
+
+| Capability family | Current status | Treatment |
+|---|---|---|
+| Spatial foundation / geography / cartography / time | `CONFIRMED cross-cutting need / NOT REGISTERED AS DOMAIN` | Shared kernel/representation discipline; do not create a root/domain without accepted decision. |
+| Frontier Matrix / demography / economy / access | `PROPOSED / PARTIAL cross-domain analytical product` | Versioned definitions/observations compose several domains; `matrix` is explicitly excluded from domain registry. |
+| Planetary / 3D / digital twin / synthetic | `PROPOSED / CONFLICTED cross-cutting surface` | Current corpus contains 3D architecture; current register excludes `scene`; keep as governed representation. |
+| Remote sensing / field capture | `CROSS-CUTTING` | Capture/analysis across domains; source role/evidentiary humility required. |
+| Briefing-to-System integration | `PROPOSED cross-cutting control-plane capability` | Generated briefing prose is discovery input, not evidence/release authority. |
+| Focus Modes | `CROSS-CUTTING compositional proof slice` | Area/scope composition across responsibility roots, not domain/root. |
+
+[Back to top](#top)
 
 ---
 
-## 31. Appendix C — External reference links
+## 15. Cross-Domain Relations and Anti-Collapse Rules
 
-Recheck before pinning versions or activating live integrations.
+Shared trust objects—identity, source, evidence, policy, receipts, release, correction, runtime envelopes—remain shared by responsibility, while domain semantics remain domain-owned.
 
-- NIST SP 800-218 SSDF: https://csrc.nist.gov/pubs/sp/800/218/final
-- NIST SSDF project / revision information: https://csrc.nist.gov/projects/ssdf
-- NIST AI RMF: https://www.nist.gov/itl/ai-risk-management-framework
-- NIST SP 800-218A: https://csrc.nist.gov/news/2024/nist-publishes-sp-800-218a
-- OWASP API Security Project: https://owasp.org/www-project-api-security/
-- OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/
-- PostGIS: https://postgis.net/
-- MapLibre GL JS docs: https://www.maplibre.org/maplibre-gl-js/docs/
-- MapLibre Style Spec: https://www.maplibre.org/maplibre-style-spec/
-- PMTiles docs: https://docs.protomaps.com/pmtiles/
-- GeoParquet 1.1: https://geoparquet.org/releases/v1.1.0/
-- OGC STAC: https://www.ogc.org/standards/stac/
-- W3C DCAT v3: https://www.w3.org/TR/vocab-dcat-3/
-- W3C PROV-O: https://www.w3.org/TR/prov-o/
-- OGC Cloud Optimized GeoTIFF: https://www.ogc.org/standards/ogc-cloud-optimized-geotiff/
+| Relation | Owning meaning | Cross-domain rule |
+|---|---|---|
+| source supports claim | Evidence/source | Other domains may cite after evidence resolution. |
+| soil parent material relates geology | Soil/geology seam | Link without making soil a geology authority. |
+| habitat supports fauna context | Habitat/fauna seam | Never infer occurrence from habitat alone. |
+| hydrostratigraphy informs hydrology | Geology/hydrology seam | Context cannot overwrite measured hydrology. |
+| infrastructure intersects hazards | Infrastructure/hazards seam | Exposure model is not event observation. |
+| land/ownership relates people/place | People-DNA-land seam | Bounded record is not definitive legal title without proper authority. |
+| remote sensing classifies land/habitat/agriculture | Capture/analysis seam | Keep method/model/uncertainty visible. |
+
+**Anti-collapse language:** observed ≠ interpreted ≠ modeled ≠ synthetic; current ≠ historical; physical reality ≠ administrative/legal status; exact ≠ generalized; authoritative ≠ aggregator/contextual; canonical evidence ≠ derivative carrier; 2D/2.5D/3D ≠ reality; confidence ≠ authority.
+
+[Back to top](#top)
 
 ---
 
-## 32. Final build doctrine in one paragraph
+## 16. Applications, Packages, Services, and Workers
 
-Build KFM as a governed transformation system: sources become evidence, evidence becomes claims, claims become reviewed release candidates, release candidates become public-safe artifacts, artifacts become map/API/UI/AI experiences, and every step remains inspectable, policy-aware, reversible, and bounded by source authority. Any component that cannot show its evidence, policy posture, release state, correction path, and rollback target is not ready to speak as KFM.
+| Surface | Purpose/audience | Entry/technology | Trust boundary | Build/test | Maturity |
+|---|---|---|---|---|---|
+| Governed API | Public/internal finite response membrane | Python WSGI | No renderer/model imports; public application boundary | `make governed-api-smoke`, `make governed-api-verify` | `IMPLEMENTED_WITH_LIMITATIONS` |
+| Explorer Web | Map-first/UI proof shell | Vite + TypeScript; Node 22.13.x; pnpm | Must not read internal stores directly | Explorer build, Vitest, Playwright | `PARTIAL / FIXTURE_ONLY` |
+| CLI | Operator surface target | Python-package skeleton/readmes | Restricted; never public release shortcut | implementation commands unestablished | `DRAFT / PARTIAL` |
+| Review console | Reviewer surface | path present | restricted | not inspected | `NEEDS VERIFICATION` |
+| Admin | Admin surface | path present | not normal public path | not inspected | `NEEDS VERIFICATION` |
+| Workers | Background work | path present | watcher/worker non-publisher | not inspected | `NEEDS VERIFICATION` |
+
+Root JavaScript workspace includes `apps/*` and `packages/*`. Reusable non-deployable behavior belongs in `packages/`; deployable boundaries remain under `apps/`.
+
+[Back to top](#top)
+
+---
+
+## 17. API and CLI Reference
+
+### 17.1 Verified Governed API routes
+
+At the base SHA, the WSGI app accepts GET for registered routes, returns 405 finite error envelopes for other methods on registered paths, and 404 finite error envelopes for unknown paths. [R-GAPI-MAIN] [R-GAPI-REG]
+
+| Method | Route | Current result | Maturity |
+|---|---|---|---|
+| GET | `/bootstrap` | finite `ABSTAIN` scaffold | `IMPLEMENTED_WITH_LIMITATIONS` |
+| GET | `/layers` | finite `ABSTAIN` scaffold | `IMPLEMENTED_WITH_LIMITATIONS` |
+| GET | `/evidence` | finite `ABSTAIN` scaffold | `IMPLEMENTED_WITH_LIMITATIONS` |
+| non-GET | registered route | HTTP 405 + finite error envelope | implemented scaffold |
+| GET/other | unknown route | HTTP 404 + finite error envelope | implemented scaffold |
+
+**Do not invent:** authentication, authorization, pagination, spatial/temporal query grammar, rate limits, CORS, cache policy, version prefixes, production hostnames, SLAs, or real EvidenceBundle transport. Local source defaults to `127.0.0.1:8000`, which is not deployment evidence.
+
+### 17.2 CLI
+
+CLI documentation describes intended command families, but runnable commands/entrypoints were not established. Use the repository `Makefile` as the current verified operator command definition surface.
+
+[Back to top](#top)
+
+---
+
+## 18. MapLibre, Maps, Tiles, and Governed UI
+
+MapLibre is a **downstream renderer and interaction runtime**, never evidence/policy/release/citation authority. Explorer documentation remains fixture-first and explicitly does not prove a production live map. [R-EXPLORER]
+
+### Current partial surfaces
+
+- Vite/TypeScript Explorer shell.
+- Bounded projections and trust-state components.
+- Evidence Drawer-oriented parsing/component tests.
+- Synthetic MapLibre/PMTiles proof slices.
+- Map performance/governance/proof commands in the Makefile.
+- Vitest/Playwright build and browser tooling.
+
+### Target governed flow
+
+```text
+released layer/manifest
+ -> renderer
+ -> selected feature candidate
+ -> governed API lookup
+ -> EvidenceRef / EvidenceBundle
+ -> policy/release/correction state
+ -> Evidence Drawer
+ -> optional bounded Focus Mode AI
+ -> export/story with release/citation context
+```
+
+### Trust-visible states
+
+UI should represent `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, stale/expired, corrected/superseded/withdrawn, generalized/redacted, source-role/evidence availability and release state. Sensitive geometry must be transformed before delivery, not hidden client-side.
+
+### 2D/3D
+
+The corpus contains historical dual-renderer language and a later proposal for MapLibre-only 3D. No accepted renderer ADR was verified. Current safe rule: 3D is conditional representation; preserve evidence parity, public-safety transforms and Reality Boundary semantics.
+
+[Back to top](#top)
+
+---
+
+## 19. Governed AI
+
+AI may summarize resolved evidence, explain released claims, propose searches/map actions, draft work, classify candidates and emit AI-work receipts. It may **not** substitute for evidence; decide rights/sensitivity/consent/release; expose direct public model access; reconstruct denied sensitive detail; or self-publish.
+
+### Preferred runtime sequence
+
+```text
+scope request
+ -> resolve release/public context
+ -> retrieve EvidenceRefs
+ -> resolve EvidenceBundle
+ -> policy/sensitivity pre-check
+ -> bounded context
+ -> model adapter
+ -> citation/claim validation + post-check
+ -> RuntimeResponseEnvelope
+ -> ANSWER | ABSTAIN | DENY | ERROR
+ -> AIReceipt / permitted audit record
+```
+
+Provider-neutral runtime lanes, finite envelopes, AIReceipt shapes and mocks exist. Production provider execution, accepted prompt authority, complete citation resolver/policy consumption and a deployed AI endpoint are not established. Private chain-of-thought is not an auditable proof object.
+
+Evaluation should cover finite outcome, evidence/citations, source-role fidelity, place/time scope, prompt injection, sensitive-data leakage, correction awareness and safe map-action proposals.
+
+[Back to top](#top)
+
+---
+
+## 20. Feature and Capability Catalog
+
+| Feature | Audience | Status | Current evidence | Input -> output | Limitation / next step |
+|---|---|---|---|---|---|
+| Directory governance | maintainers | `IMPLEMENTED_WITH_LIMITATIONS` | ADR-0029, Directory Rules, root registry | path metadata -> finite placement | migration debt remains |
+| Root registry | tooling | `IMPLEMENTED` as projection | R-ROOTREG | doctrine -> machine projection | not authority itself |
+| Domain register | domain/tooling | `PARTIAL / PROPOSED` | R-DOMREG | current lane identities -> projection | stewards/sensitivity unratified |
+| Contracts | engineers | `PARTIAL` | R-CONTRACTS | semantics -> implementation promises | mixed maturity |
+| Schemas | engineers/validators | `PARTIAL` | R-SCHEMAS | JSON -> validity | compatibility debt |
+| Validator orchestrator | maintainers | `IMPLEMENTED_WITH_LIMITATIONS` | R-MAKE | validator profiles -> finite results | base CI currently blocked by inherited test |
+| Workflow-security ratchet | security/CI | `IMPLEMENTED_WITH_LIMITATIONS` | R-MAKE | workflow files -> findings | required-check coupling unverified |
+| Topology ratchet | governance/CI | `IMPLEMENTED_WITH_LIMITATIONS` | R-MAKE/ADR29 | tree -> findings | inherited baseline remains |
+| GENERATED_RECEIPT | AI governance | `IMPLEMENTED_WITH_LIMITATIONS` | R-GENREC/schema | artifact bytes -> provenance receipt | receipt cannot authenticate review |
+| Governed API | API users | `IMPLEMENTED_WITH_LIMITATIONS` | R-GAPI-MAIN/REG | request -> finite scaffold envelope | no real resource service |
+| Explorer Web | UI | `PARTIAL / FIXTURE_ONLY` | R-EXPLORER | fixtures/projections -> browser UI | no established production live map |
+| Evidence Drawer | UI/evidence | `PARTIAL / FIXTURE_ONLY` | Explorer docs/tests | evidence projection -> drawer | live governed transport unproved |
+| Focus Mode | UI/AI | `PROPOSED / PARTIAL` | corpus/repo lanes | scope+evidence -> bounded view | route/production integration unproved |
+| MapLibre performance/proof | map QA | `PARTIAL` | R-MAKE | browser/map test -> artifacts/proof | no public-release proof |
+| Evidence resolver | evidence | `PARTIAL / FIXTURE_ONLY` | R-MAKE | fixtures -> validation | live store/resolution unproved |
+| Promotion gates | release | `FIXTURE_ONLY` | R-MAKE/R-RELEASE | synthetic candidate -> gate result | no authenticated transition |
+| ReleaseManifest/RollbackCard | release | `FIXTURE_ONLY / PROPOSED_INACTIVE` | R-RELEASE | fixtures -> records | no production application |
+| Rego release profile | policy | `FIXTURE_ONLY / PROPOSED_INACTIVE` | R-POLICY | bounded input -> allow/deny/reasons | no general evaluator |
+| Hazards materiality | domain | `IMPLEMENTED_WITH_LIMITATIONS` | R-MAKE | synthetic USDM -> validation | no live/public alert authority |
+| Watchers/material change | source ops | `PARTIAL / MIXED` | tools/connectors/corpus | source state -> candidate/receipt | per-source admission required |
+| Catalog/STAC/DCAT/PROV | data/catalog | `PARTIAL / NEEDS VERIFICATION` | repo + standards | governed data/release -> projection | KFM profile authority unresolved |
+| Public publication | public | `UNKNOWN / HOLD` | no deployment evidence | release -> public carrier | do not claim production readiness |
+| Full governed AI | public/research | `PARTIAL / UNKNOWN execution` | runtime contracts/docs | evidence/context -> finite answer | no deployed endpoint proved |
+
+[Back to top](#top)
+
+---
+
+## 21. Security, Privacy, Rights, and Sensitivity
+
+KFM's primary security boundary is the **trust membrane** from untrusted/source/internal material to released public-safe outputs. Security includes identity/access, source rights, harmful precision, integrity, workflow safety, supply chain, AI exfiltration, correction and rollback.
+
+| Threat/control | Current evidence | Gap / target |
+|---|---|---|
+| Authentication | not established for public runtime | define only for real protected route |
+| Authorization | policy root/profiles | accepted evaluator + runtime binding |
+| Least privilege | workflow-security ratchet/read-only patterns | verify deployed identities and branch/ruleset permissions |
+| Secrets | security guidance prohibits repo secrets | secret-store/deployment integration not inspected |
+| TLS/network | infra responsibility exists | actual DNS/TLS/proxy/VPN unverified |
+| CORS/CSP | not verified | configure/test at deployed boundaries |
+| Input validation | schemas/contracts/boundary guards | extend per live route/source |
+| XSS/output encoding | browser framework/tests exist | verify all source/user rendered content |
+| CSRF | no authenticated mutation route proved | reassess when state-changing endpoints exist |
+| SSRF | connector risk surface | source allowlists, URL validation, egress control |
+| SQL injection | deployed DB-backed query not established | parameterized query layer when introduced |
+| Path traversal | tools/source-processing risk | canonical path validation and negative tests |
+| Unsafe deserialization | JSON/YAML ingestion risk | safe parsers, closed schemas, size/depth budgets |
+| Supply chain | locks/ratchets/checksum-pinned bounded OPA profile | verify all actions/images/packages; SBOM/attestation where adopted |
+| GitHub Actions | workflow-security validation exists | required settings inaccessible in this run |
+| Logging/audit | receipts/audit doctrine | production redaction/retention unverified |
+| Rate limiting/DoS | parser/validator budgets, perf tooling | endpoint/runtime capacity and abuse control unverified |
+| AI prompt injection/exfiltration | untrusted-content/evidence-first doctrine | runtime enforcement/evals incomplete |
+| Tile/map leakage | pre-render transform doctrine | prove public-artifact/server-side enforcement |
+| Sensitive errors | denial reasons must not leak protected facts | outward reason-code tests needed |
+
+Fail closed for unresolved living-person data, DNA/genomics, rare species/plants, archaeology/sacred sites, critical infrastructure, private wells/private-land joins, title/ownership assertions and source-restricted archives. Use synthetic fixtures in public CI. Client-only filtering is not a security boundary.
+
+Current external references: NIST SSDF SP 800-218 v1.1, NIST AI RMF 1.0 / GenAI Profile, OWASP API Security Top 10 2023. They are references, not KFM adoption decisions.
+
+[Back to top](#top)
+
+---
+
+## 22. Governance and Decision Rights
+
+### Authority hierarchy
+
+1. platform/safety and current explicit project task authority;
+2. accepted KFM decisions/ADRs;
+3. adopted Directory Rules for placement;
+4. contracts for meaning, schemas for shape, policy for admissibility;
+5. current implementation/test/runtime evidence for current behavior;
+6. root/lane READMEs as guidance;
+7. Drive/attached proposals and lineage;
+8. primary external references for non-KFM technical facts;
+9. memory never counts as evidence.
+
+ADR-0029 is the verified accepted numbered ADR for Directory Rules v2. Other numbered ADRs remain proposed unless their own current evidence establishes acceptance. CODEOWNERS routes to `@bartytime4life`; it does not prove independent review or separation of duties.
+
+| Operation | Required authority |
+|---|---|
+| normal docs | docs ownership + evidence |
+| root/placement change | Directory Rules + ADR process |
+| object meaning | contract review + dependency impact |
+| machine shape | schema compatibility/migration review |
+| admissibility | policy + source/evidence/sensitivity context |
+| source activation | source rights/currentness/sensitivity + activation authority |
+| promotion/release | evidence + policy + validation + authorized review + release decision |
+| correction/withdrawal | correction authority + release/evidence lineage |
+| rollback | authorized release/ops decision + rollback target |
+| deployment | environment/ops authority; separate from release/publication |
+| publication | release/public-delivery authority |
+| adopt this document | explicit governance decision naming path and scope |
+
+[Back to top](#top)
+
+---
+
+## 23. Developer Build, Installation, and Contribution Guide
+
+### Prerequisites
+
+| Requirement | Current declaration | Status |
+|---|---|---|
+| Python | `>=3.11` | source verified |
+| Node | `>=22.13 <23` | source verified |
+| pnpm | `11.17.0` | source verified |
+| Git | contribution workflow | source verified |
+| Network | default tests should prefer fixtures/no network | doctrine/current patterns |
+
+The execution container could not clone GitHub because DNS resolution failed, so local commands were not falsely labeled executed.
+
+### Current repository-native commands
+
+| Command | Purpose / classification |
+|---|---|
+| `make validate` | aggregate schemas + schema/contract tests; source-defined |
+| `make schemas` | compatibility aggregate validator runner |
+| `make test` | `pytest tests/schemas tests/contracts -q` |
+| `make validator-list` / `validator-full` / `validator-focused` | registry profiles |
+| `make validator-registry-check` | validate validator registry |
+| `make workflow-security` | workflow-security ratchet |
+| `make repository-topology` | topology ratchet |
+| `make repository-guardrails` | aggregate registry/workflow/topology |
+| `make hazards-validate` | bounded synthetic hazards materiality |
+| `make governed-api-dev` | start local API; not executed here |
+| `make governed-api-smoke` / `governed-api-verify` | API tests/boundary import guard |
+| `make boundary-guards` / `deny-test` | trust-boundary negatives |
+| `make ui-build` | Explorer build |
+| `make maplibre-perf` / `maplibre-govern` / `maplibre-proof` | map performance/governance/proof |
+| `make publish-check` | fixture-first review/promotion-gate checks; no release effect |
+| `make release-dry-run` | current Makefile invokes dry-run script + unittest; source-defined, not executed here |
+| `make evidence-resolver` / `evidence-resolver-deny` | fixture evidence profiles |
+| `make policy` | readiness stub; **not** a working policy evaluator |
+| `make fixtures` | readiness stub; **not** a fixture generator claim |
+| `make proof-slice` | readiness stub; **not** a hydrology proof |
+| `make catalog` | readiness stub; **not** catalog implementation |
+
+### Contribution sequence
+
+Record base SHA; inspect Directory Rules/ADR/root README and overlaps; create a feature branch; implement smallest dependency-closed change; use synthetic fixtures; run changed-area checks; emit GENERATED_RECEIPT for AI-authored work; push/open a **draft PR**; classify inherited vs introduced failures; do not merge/release/deploy/publish from the implementation task.
+
+[Back to top](#top)
+
+---
+
+## 24. Pipeline and Data Engineering Guide
+
+Pipeline specs declare graphs/inputs/outputs; pipelines transform lifecycle material; connectors fetch/admit sources; validators prove bounded conformance; release decisions remain separate.
+
+```text
+source candidate
+ -> admit/hold/deny
+ -> capture
+ -> normalize
+ -> identify/crosswalk
+ -> temporalize
+ -> validate geometry and semantics
+ -> bind evidence
+ -> apply policy/sensitivity
+ -> processed artifact + receipts
+ -> catalog/triplet projection
+ -> proof/release candidate
+ -> review/promote
+ -> released carrier
+ -> public-boundary validation
+```
+
+A governed query-save-recompile loop may retrieve evidence, save candidate deltas/validation results, compile derivatives, request review, and recompile after authorized promotion. Automation may propose; it cannot self-promote.
+
+Requirements: idempotency, deterministic identity, source-native IDs, explicit versions, no-network default tests, parser budgets, quarantine, geometry/CRS/time checks, source roles, evidence closure, finite reason codes, replay/rebuild and correction/reprocessing.
+
+[Back to top](#top)
+
+---
+
+## 25. Testing, Validation, and Quality Assurance
+
+| Concern | Current evidence | Mature proof needed |
+|---|---|---|
+| schemas/contracts | schema tree, aggregate runners/tests | complete valid/invalid fixtures and compatibility |
+| source admission | mixed source/connector validators | per-source rights/currentness/identity negatives |
+| identity/time | object/domain validators | replay/collision/stale/correction/bitemporal cases |
+| geometry | geospatial/domain validators | CRS/datum/invalid/scale/generalization cases |
+| evidence | resolver + fail-closed canary | live/released resolver and citation negatives |
+| policy | bounded Rego/profile tests | accepted evaluator/runtime binding |
+| catalog | partial tools/docs | STAC/DCAT/PROV closure + correction parity |
+| release | fixture profiles | real candidate assembly + authenticated review |
+| promotion | A–G fixture tests | operational transition + rollback negatives |
+| security | workflow/topology/boundary/deny tests | deployed threat-control evidence |
+| MapLibre | build/perf/proof tools | released-layer parity + accessibility/perf budgets |
+| AI | contracts/mocks/envelopes | citations/policy/prompt-injection/sensitive/correction evals |
+| rollback | shapes/fixtures | executed drill + cache/index/API parity |
+| docs | meta/link/path workflows | same-revision citation/link/anchor checks |
+
+Exact-main `validator-suite` is **red** at guardrail attribution; downstream checks in that run were skipped. Draft PR #2937 owns the focused repair. This documentation change must not hide that baseline.
+
+Changed-area documentation validation should include UTF-8/Markdown structure, heading hierarchy, duplicate headings, anchors/internal links, repo paths, source citations, no unresolved placeholders, no sensitive data, no current-state claims supported only by plans, no public internal/model path, and generated-receipt validation.
+
+[Back to top](#top)
+
+---
+
+## 26. CI/CD, Repository Controls, Release, and Deployment
+
+Workflow presence is not required-check or production evidence. Exact-main validator-suite shows fail-closed canary PASS and validator job FAIL at attribution. Branch-protection details were inaccessible (`403`) and remain `NEEDS VERIFICATION`.
+
+Design rules: least privilege; stable check names; no persisted credentials for untrusted checkout where avoidable; no secret use on untrusted forks; dependency/action/image pinning; no masking governing failures; explicit network use; generated-artifact authority boundaries; workflows orchestrate validators but do not become policy/release authority.
+
+### State separation
+
+1. CI validates candidate code/artifacts.
+2. Repository review authorizes a code/doc change.
+3. KFM promotion/release authorizes a governed product/data release.
+4. Deployment places software/carriers in an environment.
+5. Publication exposes a governed release to its intended audience.
+6. Correction/rollback reverses public state independently of Git history.
+
+No evidence in this build supports calling KFM fully production-deployed or fully published.
+
+[Back to top](#top)
+
+---
+
+## 27. Runtime, Infrastructure, and Operations
+
+`runtime/` is canonical internal composition; `infra/` owns deployment/network/exposure implementation. Production deployment was not inspected.
+
+| Concern | Current evidence | Required mature state |
+|---|---|---|
+| containers/orchestration | repo infra/config present but not inspected deeply | versioned images, health, least privilege, reproducible deploy |
+| databases/spatial DB | corpus proposes roles; deployed DB unverified | migrations/backups/read-write roles/spatial health |
+| object storage | logical-vs-physical doctrine | versioning/retention/integrity/restore |
+| graph/search | derived projections discussed | rebuildable/correction-aware |
+| tile serving | map tooling exists | range/cache correctness + manifest closure |
+| proxy/network | infra responsibility | TLS/headers/ingress-egress/rate limits |
+| secrets | guidance exists | approved secret store/rotation/incident handling |
+| backups/DR | unverified | RPO/RTO + restore drills |
+| logs | receipts/audit doctrine | structured/redacted retention/correlation/access |
+| metrics/traces | perf/workflow metrics | service/source/release health dashboards |
+| source health | watcher concepts | stale propagation and steward workflow |
+| cache invalidation | first-class doctrine | corrections invalidate tiles/API/search/AI caches |
+| incident response | security + runbook docs with drift | one approved command surface + synthetic drill |
+| rollback | release fixtures | executed drill + public parity |
+
+KFM operational incident response is not a public emergency service. Public docs must not expose sensitive security details.
+
+[Back to top](#top)
+
+---
+
+## 28. User and Operator Guides
+
+**Current-state warning:** repository evidence proves a fixture-first Explorer, not a deployed production public map. Public procedures below are **target experience** unless a deployed endpoint is separately verified.
+
+### Public user
+
+Choose a released layer/Focus Mode; set supported place/time; select a feature; inspect Evidence Drawer source/evidence/scope/release/correction; treat ABSTAIN/DENY/stale/generalized/corrected states as meaningful; use Focus Mode only for bounded evidence-backed interpretation; export only with release/citation context; use a verified correction channel when one exists.
+
+### Researcher/analyst
+
+Resolve source role; record release/version/time/geography; preserve uncertainty/scale; use released APIs/exports instead of internal stores; cite source/evidence and KFM release when available; never reverse-engineer exact sensitive locations from generalized outputs.
+
+### Reviewer/steward
+
+Confirm identity/source role/rights/currentness; resolve EvidenceRefs; inspect validation; apply sensitivity/policy; review public-safe transforms; check proof/manifest/correction/rollback; approve/hold/deny via authorized mechanism; keep protected reasons internal.
+
+### Developer
+
+Follow §23/CONTRIBUTING; use existing roots; pair meaning/shape/fixtures/tests only as needed; no-network fixtures; governed API/released projections for public features; generated receipts for AI work; draft PR default.
+
+### Operator
+
+Verify deployed revision/config; check health/freshness/release/correction; never use merge as deployment/publication truth; fail safely; use approved rollback; verify post-rollback API/map/cache/index parity.
+
+### Security/policy reviewer
+
+Review exposure/harmful precision/source rights; verify transform before render; confirm no direct internal/model path; inspect secrets/logging/errors; validate correction/incident escalation.
+
+[Back to top](#top)
+
+---
+
+## 29. Accessibility, Performance, Reliability, and Compatibility
+
+Accessibility targets: keyboard operation, visible/restored focus, screen-reader landmarks/names, non-color trust states, contrast, reduced motion, text equivalents, accessible tables/diagrams, programmatic error/deny/abstain announcements. Complete conformance is `NEEDS VERIFICATION`.
+
+Map performance tooling exists. Performance claims must bind exact build, browser/device, artifact versions, scenario, budgets, thresholds and proof/receipt. A fast unsafe/uncited map is failure.
+
+Reliability: bounded retries, idempotent intake, visible stale state, no false-clear on outage, rebuildable derivatives, finite partial failures, correction-aware caches, deterministic negatives.
+
+Compatibility roots/aliases must remain mirror/frozen with canonical targets; breaking contract/schema/API changes need migration, compatibility tests and rollback.
+
+[Back to top](#top)
+
+---
+
+## 30. Current Gaps, Roadmap, and Dependency Order
+
+| ID | Priority | Gap | Smallest sound next step | Acceptance / rollback |
+|---|---|---|---|---|
+| RM-P0-001 | P0 | exact-main validator-suite failure; #2937 owns repair | finish focused repair without workflow semantic change | hosted exact-head progresses past attribution; revert repair |
+| RM-P0-002 | P0 | required checks/branch protection inaccessible | evidence-only settings reconciliation | current ruleset/check list; no settings mutation in this PR |
+| RM-P0-003 | P0 | general policy evaluator/runtime binding unproved | one bounded accepted operation profile + adapter | deterministic positives/negatives; disable profile |
+| RM-P0-004 | P0 | operational release/review/rollback held | one synthetic authenticated release dry run without publication | decisions/manifests/rollback/correction; reset synthetic state |
+| RM-P0-005 | P0 | sensitive reviewer/source-rights authority unresolved | ratify roles/admission requirements before T4 live data | deny unknown rights; revoke/hold activation |
+| RM-P1-001 | P1 | whole-system docs fragmented | review/adopt this same-path synthesis | accepted decision/source ledger; revert adoption/doc |
+| RM-P1-002 | P1 | Governed API remains scaffold | implement one read-only released fixture resource family | finite contract/schema/tests; remove route/adapter |
+| RM-P1-003 | P1 | Explorer lacks established governed transport | connect RM-P1-002 to one Evidence Drawer flow | browser tests/no internal paths; restore fixture adapter |
+| RM-P1-004 | P1 | hydrology proof-slice target is stub | implement one no-network hydrology proof slice | actual proof artifact + release negatives; revert slice |
+| RM-P1-005 | P1 | object-family registry partial | expand only from verified current families | registry validator/tests; revert entries |
+| RM-P2-001 | P2 | catalog profile convergence partial | decide/validate KFM STAC/DCAT/PROV mapping | metadata parity/correction; regenerate prior profile |
+| RM-P2-002 | P2 | uneven domain maturity | graduate one proof slice per lane | source->evidence->policy->carrier; withdraw slice |
+| RM-P2-003 | P2 | observability/deployment unverified | environment inventory + health/log/restore packet | exact revision/endpoints/restore evidence; rollback config |
+| RM-P2-004 | P2 | accessibility incomplete | keyboard/screen-reader/negative-state tests | explicit browser assertions; revert fix |
+| RM-P3-001 | P3 | 3D breadth | admit only bounded representation use case | evidence parity/Reality Boundary/perf/sensitivity; disable |
+| RM-P3-002 | P3 | ML/analytics breadth | method-governed derivative | provenance/uncertainty/reproducibility; remove derivative |
+| RM-P3-003 | P3 | broader source ecosystem | add one source at a time | rights/currentness/fixture/non-publisher proof; deactivate |
+
+[Back to top](#top)
+
+---
+
+## 31. Risks, Limitations, Assumptions, and Open Questions
+
+| ID | Status | Risk / question | Next check |
+|---|---|---|---|
+| RISK-AUTH-001 | `CONFIRMED` | this document is not adopted authority | separate adoption decision |
+| RISK-AUTH-002 | `NEEDS VERIFICATION` | only one verified review identity; independent stewardship unproved | assignments/required approvals |
+| RISK-DIR-001 | `CONFIRMED` | legacy/compatibility path debt remains | topology ratchet/migrations |
+| RISK-SCHEMA-001 | `CONFLICTED / PARTIAL` | schemas root is accepted but subhome ADR remains proposed | decide/document configured subhome |
+| RISK-POL-001 | `CONFIRMED gap` | no accepted general evaluator | bounded evaluator proof |
+| RISK-REL-001 | `CONFIRMED gap` | fixture release can be mistaken for operational release | synthetic authenticated dry run |
+| RISK-SRC-001 | `ONGOING` | candidate source terms/cadence are volatile | per-source official review |
+| RISK-SENS-001 | `HIGH` | joins/errors/client filters can leak T4-like detail | server transforms + negative tests + qualified review |
+| RISK-OPS-001 | `UNKNOWN` | deployment/backups/observability/DR unverified | environment evidence packet |
+| RISK-CI-001 | `CONFIRMED` | exact-main validator-suite red | follow #2937 without bypass |
+| RISK-AI-001 | `PARTIAL` | fluent output can outrun evidence/policy | resolver + policy + citations + evals |
+| RISK-MAP-001 | `PARTIAL` | renderer data can leak or be mistaken for truth | released public artifact + Drawer parity |
+| RISK-DOC-001 | `ONGOING` | large synthesis can become stale | trigger re-verification on material changes |
+| RISK-SINGLE-001 | `NEEDS VERIFICATION` | single owner route creates continuity/SoD risk | establish steward roles |
+| OPEN-API-001 | `UNKNOWN` | future API auth/version/query grammar | first real resource + threat model |
+| OPEN-DEPLOY-001 | `UNKNOWN` | actual deployed environments/services | deployment inspection |
+| OPEN-PUBLIC-001 | `UNKNOWN` | has any product completed governed publication? | immutable release + public carrier readback |
+| OPEN-PROV-001 | `CONFLICTED` | canonical KFM semantic PROV profile | current ADR/standards convergence |
+| OPEN-HASH-001 | `NEEDS VERIFICATION` | object-family hash/canonicalization differs | contract/policy per family |
+| OPEN-SENS-001 | `NEEDS VERIFICATION` | T0–T4 projection not universal adopted policy | domain-specific policy ratification |
+| OPEN-DOC-001 | `PROPOSED` | who adopts/maintains this synthesis? | owner/review/adoption decision |
+
+[Back to top](#top)
+
+---
+
+## 32. Glossary and Acronyms
+
+| Term | KFM meaning |
+|---|---|
+| ADR | Architecture Decision Record; only accepted decisions have decision authority. |
+| ABSTAIN | Insufficient admissible support to answer/claim. |
+| AIReceipt | Model/runtime provenance, not evidence truth. |
+| CATALOG | Discoverability/projection stage; not publication by itself. |
+| COG | Cloud Optimized GeoTIFF; raster carrier when admitted. |
+| CRS | Coordinate Reference System. |
+| DCAT | W3C Data Catalog Vocabulary. |
+| DENY | Policy/safety outcome prohibiting operation/exposure. |
+| EvidenceBundle | Resolved evidence support package. |
+| EvidenceRef | Stable evidence pointer requiring resolution. |
+| Focus Mode | Cross-cutting area/scope proof/interpretation experience, not domain root. |
+| GeoParquet | Columnar geospatial interchange carrier. |
+| KFM | Kansas Frontier Matrix. |
+| MapLibre | Renderer/runtime downstream of trust. |
+| MVT | Vector tile encoding. |
+| PMTiles | Single-file tiled archive; delivery carrier. |
+| PROV-O | W3C provenance ontology. |
+| PromotionDecision | Governed transition decision; shape alone is not authenticated authority. |
+| ProofPack | Proof-closure artifact family. |
+| QUARANTINE | Held lifecycle state for unresolved quality/rights/sensitivity/policy. |
+| RAW | Admitted source capture/locator before normalization. |
+| ReleaseManifest | Released-carrier inventory requiring actual release context. |
+| RuntimeResponseEnvelope | Finite API/runtime response transport. |
+| SSDF | NIST Secure Software Development Framework. |
+| STAC | SpatioTemporal Asset Catalog standard family. |
+| T0–T4 | Proposed sensitivity-tier vocabulary, not universally adopted by appearance alone. |
+| TRIPLET | Graph/relation projection, not sovereign truth. |
+| WORK | Candidate normalization/analysis stage, never normal public path. |
+
+[Back to top](#top)
+
+---
+
+## 33. Embedded Appendices
+
+### Appendix A — Source Ledger
+
+#### Repository evidence
+
+This convergence inspected **35 material repository files/trees/runs/PR surfaces**, including: root README/metadata/tree; Directory Rules + accepted ADR-0029 + ADR index; root/domain/object registers; CODEOWNERS/CONTRIBUTING/Makefile/package manifests; contracts/schemas/policy/data/release/runtime/security/domain root docs; Explorer/Governed API/CLI; Governed API route code; generated-receipt lane/schema; exact-main validator-suite run; and draft repair PR #2937.
+
+#### Attached files
+
+The conversation contained **29 attachment entries / 28 unique files**: **25 KFM-specific** and **3 general references** (`AI Concepts Using Python`, `Domain-Driven Design Reference`, `GPT Markdown Prompt 4.0`). Material KFM sources include Soil and Geology architecture reports, MapLibre manual, Pipeline v0.3, Implementation Reference, Encyclopedia, Greenfield Plan, Master MapLibre atlas, Pass 18/20 atlases, consolidated domain atlas, MapLibre 3D proposal, Unified Build Manual, repository structure guides, doctrine syntheses, full-atlas seed cards, Connected-Dots brief, AI Build Contract, Markdown agent, Directory Governance Standard v2, Research/Verification Agenda, Briefing-to-System blueprint, and Living Compass.
+
+**Classification rule:** domain reports/greenfield/pass atlases are LINEAGE/PROPOSED; general books are REFERENCE; the attached Directory Standard supplies exact doctrine bytes but adoption comes from repo ADR-0029; older implementation references cannot prove current main.
+
+#### Google Drive
+
+Multiple broad/focused searches classified **20 high-signal Drive sources; 3 were opened/read in depth**. They include AI Build Contract, Data Intake guide, several Comprehensive System Documentation/master-reference manuals, Improvements/Idea Integration, Documentation Architecture Passes, architecture deepening/consolidation passes, technical blueprints, Implementation Reference variants, Replacement-Grade Master Manual, Connected-Dots brief, Research/Verification Report, Tooling Manual, Foundational Guide, Living Compass, Pass 21–32 atlases and MapLibre master variants. Modified date/title never establishes authority.
+
+#### External primary references (accessed 2026-08-15)
+
+- NIST SP 800-218 SSDF v1.1 — secure development reference.
+- NIST AI RMF 1.0 and NIST AI 600-1 GenAI Profile — AI-risk references.
+- OWASP API Security Top 10 2023 — API threat reference.
+- OGC STAC Community Standard 1.1.0 — spatiotemporal catalog reference.
+- W3C DCAT 3 Recommendation (2024-08-22) — catalog vocabulary.
+- W3C PROV-O Recommendation — provenance vocabulary.
+- MapLibre official docs — renderer technical reference.
+
+### Appendix B — Authority and Supersession Register
+
+| Artifact | Status | Result |
+|---|---|---|
+| `docs/doctrine/directory-rules.md` | embedded proposed label, exact bytes | **ADOPTED BY ADR-0029**; writable Directory Rules authority |
+| `docs/architecture/directory-rules.md` | legacy compatibility | read-only; retirement is separate migration |
+| ADR-0029 | accepted | placement/doctrine adoption authority |
+| other numbered ADRs | proposed unless individually proved otherwise | do not upgrade through synthesis |
+| this whole-system file | **PROPOSED FOR ADOPTION** | candidate human-readable synthesis only |
+| Drive “master/final/comprehensive” manuals | lineage/reference | titles do not grant authority |
+| domain/pass PDFs | lineage/proposal | design pressure, not implementation |
+| technical books | reference | no KFM authority |
+
+### Appendix C — Repository and Responsibility-Root Inventory
+
+Platform: `.github/`. Canonical: `apps/`, `configs/`, `connectors/`, `contracts/`, `control_plane/`, `data/`, `docs/`, `examples/`, `fixtures/`, `infra/`, `migrations/`, `packages/`, `pipeline_specs/`, `pipelines/`, `policy/`, `release/`, `runtime/`, `schemas/`, `scripts/`, `tests/`, `tools/`. Compatibility: `artifacts/`. Deprecated: `catalog/`. Conditional: `src/`. Current presence is not permission for new noncanonical writes.
+
+### Appendix D — Current Capability and Feature Matrix
+
+- Implemented with limitations: Directory governance, root registry, generated receipts, finite Governed API scaffold, selected boundary/validator tooling.
+- Partial: Explorer, schemas/contracts, evidence resolver, runtime adapters, domain lanes, MapLibre proof tooling.
+- Fixture-only/proposed inactive: release strict profiles, promotion gates, rollback card, selected Rego profile.
+- Proposed cross-cutting: BriefingSignal, TemporalAuthorityEnvelope, full Focus Mode, broad 3D/digital twin.
+- Unknown/held: production publication, active general policy evaluator, deployed public AI, complete operations/DR.
+
+### Appendix E — Core Object-Family Registry
+
+The §8 crosswalk is a human synthesis, not a replacement machine registry. Before adopting a new family, verify semantic contract, schema, identity, producer/consumer, policy, fixtures/tests, versioning, correction and release impact.
+
+### Appendix F — Contract / Schema / Policy / Fixture / Validator Crosswalk
+
+| Layer | Canonical root | Acceptance evidence |
+|---|---|---|
+| Meaning | `contracts/` | semantic contract + semantic tests |
+| Shape | `schemas/` | Draft 2020-12 schema + valid/invalid fixtures |
+| Admissibility | `policy/` | exact input profile + reasons + policy tests |
+| Examples | `fixtures/` | synthetic positive/negative/golden |
+| Enforcement | `tools/validators/`, `tests/` | deterministic execution + negatives |
+| Instances | `data/` | identity/provenance/receipt/policy/release context |
+| Release | `release/` | authenticated decision, manifest, correction/rollback refs |
+
+### Appendix G — Domain and Source Matrix
+
+| Domain | Registered | Projected baseline | Key source-role separation |
+|---|---:|---:|---|
+| Agriculture | yes | T0 | statistics/classification/remote sensing |
+| Archaeology | yes | T4 | protected/tribal/archival/research |
+| Atmosphere | yes | T0 | observation/model/forecast/advisory |
+| Fauna | yes | T4 | occurrence/range/model |
+| Flora | yes | T4 | specimen/occurrence/range |
+| Geology | yes | T0 | observed/interpreted/modeled/regulatory |
+| Habitat | yes | T0 | habitat/classification/suitability |
+| Hazards | yes | T0 | event/advisory/model; non-alert authority |
+| Hydrology | yes | T0 | unit/observation/model/warning |
+| People, DNA & Land | yes | T4 | assertion/evidence/consent/legal-source roles |
+| Roads, Rail & Trade | yes | T0 | historic/current/administrative/network |
+| Settlements & Infrastructure | yes | T0 | settlement/service/asset/admin |
+| Soil | yes | T0 | survey/station/grid/satellite |
+
+These tiers are proposed registry metadata, not adopted universal policy.
+
+### Appendix H — API, CLI, UI, and Application Inventory
+
+Governed API: Python WSGI and three current scaffold GET routes. Explorer: Vite/TypeScript partial fixture-first. CLI: docs/package skeleton, commands unverified. Review/admin/workers: paths present, not inspected in depth. MapLibre: Explorer/tool integration partial. Governed AI: runtime/contracts/mocks partial/execution unverified.
+
+### Appendix I — Workflow, Test, and Required-Check Matrix
+
+| Family | Base status | Required-check status |
+|---|---|---|
+| validator fail-closed canary | PASS | UNKNOWN |
+| validator run-validators | FAIL at attribution | UNKNOWN |
+| validator registry/security/topology/aggregate | SKIPPED after earlier failure | UNKNOWN |
+| schema/contracts/Explorer/release profiles | not rerun in this doc task | UNKNOWN |
+
+Branch protection could not be read.
+
+### Appendix J — Security Control and Threat Matrix
+
+| Threat | Control posture | Maturity |
+|---|---|---|
+| public internal-store bypass | governed API + boundary rules | partial |
+| direct browser-model | runtime/API separation/import guards | partial |
+| sensitive location leak | pre-render transform/generalization | domain-dependent |
+| source-role confusion | SourceDescriptor/EvidenceBundle | partial |
+| unknown rights | quarantine/deny | per-source verification |
+| workflow privilege escalation | least privilege + workflow ratchet | implemented with limitations |
+| supply-chain substitution | locks/pins/checksums where adopted | mixed |
+| prompt injection | untrusted-content/evidence-policy flow | partial/proposed runtime |
+| stale false-clear | finite stale/unknown + source health | partial |
+| review spoofing | authenticated review/separation | gap |
+| release spoofing | release decision plane/manifests | fixture-only |
+| correction/cache drift | invalidation/replay | operational gap |
+
+### Appendix K — Release / Correction / Withdrawal / Rollback Matrix
+
+Candidate->review requires validation/evidence/policy/review. Review->release requires promotion/release decisions, manifest/proof/rollback. Release->publication additionally needs governed public delivery. Correction/withdrawal require new lineage plus invalidation. Rollback requires target, authorization and public parity verification. Current operational maturity is fixture-first/unknown.
+
+### Appendix L — Drift and Contradiction Register
+
+| ID | Conflict | Current bounded resolution |
+|---|---|---|
+| DRIFT-001 | Directory source label proposed vs accepted ADR | ADR-0029 controls adoption; bytes remain unchanged |
+| DRIFT-002 | legacy architecture Directory Rules path | read-only compatibility |
+| DRIFT-003 | schema subhome ADR vs configured structure | `schemas/` root accepted; narrower ADR proposed |
+| DRIFT-004 | policy canonical vs compatibility paths | singular `policy/` placement accepted; migrate object-by-object |
+| DRIFT-005 | top-level `catalog/` vs `data/catalog/` | top-level deprecated/frozen |
+| DRIFT-006 | artifacts trust-like historical content | compatibility root cannot become authority |
+| DRIFT-007 | triplet naming variants | use accepted data model/migrate with identity parity |
+| DRIFT-008 | release README dry-run wording vs current Makefile real invocation | current code wins; doc follow-up required |
+| DRIFT-009 | A–F/A–G/expanded promotion vocabularies | current repo proves bounded A–G fixture semantics only |
+| DRIFT-010 | dual-renderer vs MapLibre-only 3D proposals | no accepted renderer ADR verified |
+| DRIFT-011 | T0–T4 in domain register | projection metadata, not universal adopted policy |
+| DRIFT-012 | many Drive master/final manuals | lineage only; this PR converges existing repo path |
+
+### Appendix M — Verification Backlog
+
+VB-001 required checks/rulesets; VB-002 deployments/public endpoints; VB-003 active policy evaluator; VB-004 first actual governed release; VB-005 correction/rollback drill; VB-006 source activation matrix; VB-007 independent stewardship; VB-008 full object-family registry; VB-009 API auth/query/version contract; VB-010 Explorer live transport; VB-011 accessibility; VB-012 production observability/backups/DR; VB-013 provenance profile authority; VB-014 this document's adoption; VB-015 current source rights for first live candidates.
+
+### Appendix N — Verified Command Reference
+
+`make validate`, `schemas`, `test`, validator profiles/registry, workflow-security, repository-topology, governed API, boundary guards, UI build, MapLibre perf/govern/proof, publish-check, release-dry-run, evidence-resolver and hazards validation are **present in current source**. They were not locally executed because clone/DNS failed. The exact-main validator-suite hosted run is separately known to fail at attribution. Readiness stubs (`make policy`, `make fixtures`, `make proof-slice`, `make catalog`) are not implementation evidence.
+
+### Appendix O — Document Changelog and Adoption Checklist
+
+**2026-08-15 convergence draft:** updated the existing same-path Whole-System Build Reference; pinned current main; reconciled ADR-0029; separated truth/maturity; added root/domain/object/app/API/policy/release/runtime/security current evidence; recorded exact-main CI failure and active repair boundary; incorporated Drive/attachments as lineage; added external primary references; preserved non-release/no-wiki boundaries.
+
+Adoption checklist:
+
+- [ ] Human reviewer verifies source ledger/current-state claims.
+- [ ] Recheck current main for material drift.
+- [ ] Documentation links/anchors/path references pass repository-native checks.
+- [ ] No sensitive/internal-only material or harmful precision is exposed.
+- [ ] No proposed ADR/design is represented as accepted/implemented.
+- [ ] Owner/reviewer roles and stale/review triggers are decided.
+- [ ] Supersession relationship to other human master manuals is decided.
+- [ ] Generated projections are source-bound and non-authoritative.
+- [ ] An accepted ADR or equivalent decision explicitly designates this path as canonical human-readable synthesis.
+- [ ] Rollback to pre-adoption revision is recorded.
+
+**Exact adoption step:** accept a governance decision that pins this path and reviewed digest, names its authority as the canonical *human-readable synthesis only*, records owner/review/stale/correction/supersession rules, and explicitly keeps ADRs/contracts/schemas/policy/current implementation/runtime/release evidence higher authority for their respective questions.
+
+[Back to top](#top)
