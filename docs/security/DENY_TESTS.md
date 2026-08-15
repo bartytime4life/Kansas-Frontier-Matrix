@@ -15,7 +15,7 @@ related: [
   docs/doctrine/directory-rules.md,
   docs/architecture/governed-api.md,
   docs/security/THREAT_MODEL.md,
-  docs/security/EXPOSURE_POSTURE.md,
+  docs/security/EXPOSURE_PLAN.md,
   docs/security/INCIDENT_RESPONSE.md,
   docs/runbooks/POLICY_VALIDATION.md,
   policy/README.md,
@@ -580,7 +580,7 @@ A new deny test is acceptable when **every** box can be checked:
 - [docs/doctrine/directory-rules.md](../doctrine/directory-rules.md) — placement authority
 - [docs/architecture/governed-api.md](../architecture/governed-api.md) *(PROPOSED — finite-outcome envelopes)*
 - [docs/security/THREAT_MODEL.md](./THREAT_MODEL.md) *(PROPOSED — sibling, may not yet exist)*
-- `docs/security/EXPOSURE_POSTURE.md` *(PROPOSED — path absent at the checked revision)*
+- [docs/security/EXPOSURE_PLAN.md](./EXPOSURE_PLAN.md) — current tracked exposure guidance; document remains draft.
 - [docs/security/INCIDENT_RESPONSE.md](./INCIDENT_RESPONSE.md) *(PROPOSED — sibling, may not yet exist)*
 - `docs/runbooks/POLICY_VALIDATION.md` *(PROPOSED — path absent at the checked revision)*
 - [policy/README.md](../../policy/README.md) *(PROPOSED)*
@@ -655,7 +655,7 @@ Each entry `SHOULD` be accompanied by:
 | Bundle pinning mechanism (digest source of truth) | PROPOSED | Confirm `governance/policy-bundle.json` or equivalent (per C5-03). |
 | Fixture-lock format | PROPOSED | Confirm `fixtures.lock` or per-bundle digest manifest. |
 | CI workflow names for deny suites | CONFIRMED definition | `.github/workflows/deny-test.yml` defines workflow `deny-test` and three jobs; hosted required-check status remains `UNKNOWN`. |
-| Sibling `docs/security/` files referenced here | PARTIAL | `THREAT_MODEL.md` and `INCIDENT_RESPONSE.md` are present; `EXPOSURE_POSTURE.md` is absent at the checked revision. |
+| Sibling `docs/security/` files referenced here | PARTIAL | `THREAT_MODEL.md`, `EXPOSURE_PLAN.md`, and `INCIDENT_RESPONSE.md` are present at the checked revision. |
 | Sensitive-class enumeration parity | NEEDS VERIFICATION | Cross-check this file's §10 against `policy/sensitivity/` once present. |
 | In-cluster admission control parity (Gatekeeper-style) | PROPOSED | Verify whether Kubernetes admission is in scope for current deployment topology. |
 
@@ -664,6 +664,6 @@ Each entry `SHOULD` be accompanied by:
 ---
 
 <sub>
-**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api.md) · [Threat model](./THREAT_MODEL.md) · `Exposure posture (PROPOSED; path absent)` · [Incident response](./INCIDENT_RESPONSE.md)<br/>
+**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api.md) · [Threat model](./THREAT_MODEL.md) · [Exposure plan](./EXPOSURE_PLAN.md) · [Incident response](./INCIDENT_RESPONSE.md)<br/>
 **Last updated:** 2026-08-01 · **Version:** v1.1 (draft) · **Owners:** Docs / Security / Policy stewards *(TODO)* · [↑ Back to top](#kfm-deny-tests)
 </sub>

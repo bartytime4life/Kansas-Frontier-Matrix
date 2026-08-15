@@ -486,7 +486,7 @@ Items resolved against repo evidence should move from this list to a per-invaria
 - `docs/architecture/governed-api.md` — The trust membrane in executable form. *(PROPOSED.)*
 - `docs/security/THREAT_MODEL.md` — Threats whose mitigation depends on the invariants above. *(PROPOSED sibling.)*
 - `docs/security/INCIDENT_RESPONSE.md` — What to do when an invariant fails in production. *(PROPOSED sibling.)*
-- `docs/security/EXPOSURE_POSTURE.md` — Deny-by-default, least-privilege, audit-logging posture for exposed systems. *(PROPOSED sibling.)*
+- `docs/security/EXPOSURE_PLAN.md` — Deny-by-default, least-privilege, audit-logging posture for exposed systems. *(Current tracked sibling; document remains draft.)*
 - `docs/registers/DRIFT_REGISTER.md` — Where invariant violations are recorded for triage. *(PROPOSED.)*
 - `docs/registers/VERIFICATION_BACKLOG.md` — Where §16 items go. *(PROPOSED.)*
 - `docs/adr/ADR-0001-schema-home.md` — Schema-home decision underlying §8. *(Referenced by Directory Rules.)*

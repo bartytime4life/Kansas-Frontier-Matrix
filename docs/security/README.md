@@ -3,14 +3,14 @@ doc_id: kfm://doc/docs-security-readme
 title: docs/security/ — Security Guidance and Trust-Boundary Index
 type: readme
 subtype: sensitive-boundary-landing-page
-version: v1.1
-prior_version: v1
+version: v1.2
+prior_version: v1.1
 status: draft; repository-grounded; documentation-only; non-authoritative
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable security, policy, release, incident-response, and independent-review assignments"
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-08-15
 policy_label: repository-facing; mixed child sensitivity
 current_path: docs/security/README.md
 owning_root: docs/
@@ -23,8 +23,8 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3abe21f9285ed7d2f9f652a2672d8f669aa7e884
-  target_prior_blob: c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a
+  base_commit: dc5549980158a9df81d643e367dc9d861494f378
+  target_prior_blob: 2d51abaffbddc63f9d19fc36327c9677f03f5e81
   first_path_history_commit: 026b5baa7c1279ece55f9b1fa67c1770bfbddccd
   long_form_security_readme_commit: 1d31edda4e3f5b9143b37e5cb59920a24128f1c3
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -53,11 +53,11 @@ related:
   - docs/security/KEY_ROTATION.md
   - .github/CODEOWNERS
 notes:
-  - "v1.1 replaces an unmounted-repository proposal inventory with a current, exact nine-file lane index."
+  - "v1.2 records the evidence-backed convergence of proposal-era exposure references on the tracked EXPOSURE_PLAN.md path."
   - "The update records current file presence without upgrading any child document to adopted policy, validated control, rehearsed procedure, operational admission, release approval, or publication authority."
-  - "The current lane contains naming, ownership, metadata, and doctrine-versus-runbook drift that requires file-specific follow-up; this change does not rename, delete, consolidate, or silently choose winners."
+  - "The current lane retains incident-surface, ownership, metadata, and doctrine-versus-runbook drift that requires file-specific follow-up; this change does not rename, delete, consolidate, or silently choose an incident-response winner."
   - "The only verified GitHub review identity is @bartytime4life. CODEOWNERS routing is not proof of security stewardship, independent review, policy approval, or release authority."
-  - "This one-file documentation update changes no secret, vulnerability channel, policy rule, infrastructure posture, route, runtime behavior, validator, test, workflow, receipt family, release decision, deployment, promotion, publication, or repository setting."
+  - "This documentation-only reconciliation changes no secret, vulnerability channel, policy rule, infrastructure posture, route, runtime behavior, validator, test, workflow, receipt family, release decision, deployment, promotion, publication, or repository setting."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +71,7 @@ notes:
 [![Posture: fail closed](https://img.shields.io/badge/posture-fail--closed-b42318?style=flat-square)](#security-operating-posture)
 [![Disclosure: private first](https://img.shields.io/badge/disclosure-private%20first-b42318?style=flat-square)](../../SECURITY.md)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-negative-authority)
-[![Evidence review: 2026-08-14](https://img.shields.io/badge/evidence%20review-2026--08--14-0969da?style=flat-square)](#last-evidence-review-and-rollback)
+[![Evidence review: 2026-08-15](https://img.shields.io/badge/evidence%20review-2026--08--15-0969da?style=flat-square)](#last-evidence-review-and-rollback)
 
 > [!IMPORTANT]
 > **Security documentation is not a security decision.** A page, badge, checklist, threat table, test result, receipt, pull request, or merged commit cannot by itself create policy approval, source authority, evidence closure, access permission, operational admission, release state, or publication authority.
@@ -131,11 +131,11 @@ The lane is canonical **for human-readable security guidance and navigation only
 
 ## Status and evidence boundary
 
-The observations below are pinned to `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884`. They describe tracked repository bytes, not deployed controls, operational readiness, incident rehearsal, secret custody, or security assurance.
+The observations below are pinned to `main@dc5549980158a9df81d643e367dc9d861494f378`. They describe tracked repository bytes, not deployed controls, operational readiness, incident rehearsal, secret custody, or security assurance.
 
 | Surface | CONFIRMED observation | Bounded conclusion |
 |---|---|---|
-| This README | Prior blob `c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a`; current text still describes an unmounted repository | Same-path v1.1 reconciliation is warranted |
+| This README | Prior blob `2d51abaffbddc63f9d19fc36327c9677f03f5e81`; current text records the v1.1 repository-grounded inventory | Same-path v1.2 exposure-reference reconciliation is warranted |
 | Direct lane inventory | Nine Markdown files: this README plus eight guidance documents; no direct child directories | The current navigation surface is exactly known at the pinned revision |
 | Child maturity | Seven child documents still declare May 2026 draft/proposal-era metadata; `DENY_TESTS.md` has a later repository-grounded v1.1 update | File presence and useful guidance exist; lane-wide currency and operational admission do not |
 | Threat and exposure guidance | `THREAT_MODEL.md` and `EXPOSURE_PLAN.md` exist | Their existence does not prove controls or public exposure posture are deployed |
@@ -221,7 +221,7 @@ The table records each current child document's declared state. It does not prom
 | [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) | Detectable trust, lifecycle, evidence, identity, AI, sensitivity, and release invariants | `v1`, `draft`, updated 2026-05-13 | Useful invariant catalog; owner and several implementation references remain placeholders |
 | [`DATA_CLASSIFICATION.md`](./DATA_CLASSIFICATION.md) | Sensitivity 0–5, tiers T0–T4, rights, consent, transforms, release fields | `v0.1`, `draft`, updated 2026-05-13 | Consolidates vocabularies; ratification and current enforcement remain unproven |
 | [`DENY_TESTS.md`](./DENY_TESTS.md) | Fail-closed doctrine, deny catalog, fixture vocabulary, and test-authoring guidance | `v1.1`, draft with five bounded guards confirmed, updated 2026-08-01 | Most repository-grounded child; explicitly says broader coverage remains proposed |
-| [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) | What may cross public, semi-public, internal, and restricted boundaries | `v1`, `draft`, updated 2026-05-13 | Current filename differs from the `EXPOSURE_POSTURE.md` name used by several siblings |
+| [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) | What may cross public, semi-public, internal, and restricted boundaries | `v1`, `draft`, updated 2026-05-13 | Tracked identity and current consumers converge on this path; proposal-era sibling references were repaired in this focused update |
 | [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) | Security-incident doctrine, severity, containment, correction, withdrawal, rollback | `v0.1`, `draft`, updated 2026-05-13 | Must be distinguished from the operational runbook with the same basename |
 | [`KEY_ROTATION.md`](./KEY_ROTATION.md) | Signing, KMS, pseudonymisation, secret, and identity rotation/revocation | `v1`, `draft`, updated 2026-05-13 | Metadata still has a replace-at-merge ID; cadences and ownership remain proposed |
 | [`SECRETS.md`](./SECRETS.md) | Secret classes, allowed storage, OIDC-first posture, leak detection, rotation | `v0.1`, `draft`, updated 2026-05-13 | Doctrine is useful; actual store, owners, tools, and cadences remain unverified |
@@ -538,7 +538,7 @@ These findings are current documentation work, not permission for an unreviewed 
 | Finding | Status | Smallest governed disposition |
 |---|---|---|
 | Current README proposes lowercase files and directories that do not match the actual uppercase nine-file lane | **CONFIRMED stale** | Replace the index with the exact direct-child map; do not create proposal paths |
-| Actual file is `EXPOSURE_PLAN.md`, while several child metadata blocks and links name `EXPOSURE_POSTURE.md` | **CONFIRMED naming conflict** | Inventory all consumers, choose identity through file-specific review, then repair links or migrate with rollback |
+| Proposal-era siblings named an untracked `EXPOSURE_POSTURE` candidate while the tracked identity and current consumers use `EXPOSURE_PLAN.md` | **RESOLVED at reference level** | References now converge on `EXPOSURE_PLAN.md`; no alias, rename, deletion, or path migration was introduced |
 | `docs/security/INCIDENT_RESPONSE.md` and `docs/runbooks/INCIDENT_RESPONSE.md` share a basename and overlapping language | **CONFIRMED scope overlap** | Define doctrine/standard versus procedure boundaries before consolidation, rename, or retirement |
 | Most child docs still say their own current path or siblings are proposed/unverified | **CONFIRMED stale evidence language** | Reconcile each file against current repository evidence without upgrading behavior |
 | Placeholder owner roles remain across the lane; CODEOWNERS only verifies `@bartytime4life` | **CONFIRMED ownership gap** | Record accountable assignments through the owning governance process; do not invent teams |
@@ -573,7 +573,7 @@ These findings are current documentation work, not permission for an unreviewed 
 
 ### P1 — documentation and operational closure
 
-6. **CONFIRMED conflict — exposure identity.** Resolve `EXPOSURE_PLAN.md` versus `EXPOSURE_POSTURE.md` through a reference inventory and reversible identity decision.
+6. **RESOLVED — exposure identity.** Proposal-era sibling references now converge on `EXPOSURE_PLAN.md`; no compatibility alias or path migration was created.
 7. **CONFIRMED overlap — incident surfaces.** Define the relationship among root disclosure policy, security incident doctrine, and operational incident runbook.
 8. **NEEDS VERIFICATION — child metadata.** Reconcile placeholder IDs, owners, dates, paths, versions, review claims, and no-mounted-repository language in seven older child documents.
 9. **NEEDS VERIFICATION — deny coverage.** Crosswalk threats and security requirements to implemented policy, validator, fixture, test, workflow, telemetry, and release checks; keep uncovered cases explicit.
@@ -594,9 +594,9 @@ These findings are current documentation work, not permission for an unreviewed 
 
 | Evidence | Use in this edition | Limitation |
 |---|---|---|
-| `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884` | Pins target, lane inventory, child docs, disclosure entrypoint, Directory Rules, ADR, CODEOWNERS, and adjacent current paths | Commit bytes do not prove deployed controls or operational security |
+| `main@dc5549980158a9df81d643e367dc9d861494f378` | Pins target, lane inventory, child docs, disclosure entrypoint, Directory Rules, ADR, CODEOWNERS, and adjacent current paths | Commit bytes do not prove deployed controls or operational security |
 | Exact `docs/security/` contents response | Confirms nine direct Markdown files and no direct child directory | Presence does not prove quality, enforcement, use, or approval |
-| Complete prior README | Identifies stale proposal tree, placeholder owners, unmounted-repository claims, and intended lane scope | Prior prose is not current implementation evidence |
+| Complete prior README | Identifies the prior v1.1 lane inventory, unresolved exposure naming drift, and intended lane scope | Prior prose is not current implementation evidence |
 | Eight child documents | Supports bounded focus, version, status, date, and drift findings | Not a complete line-by-line audit of every child |
 | Root `SECURITY.md` | Confirms private-first public disclosure posture and the unverified contact gap | Does not prove GitHub private reporting is enabled or monitored |
 | Operational incident runbook | Confirms a separate runbook surface | Does not prove rehearsal, staffing, or current procedure validity |
@@ -627,7 +627,7 @@ This edition does not assume:
 
 ## Last evidence review and rollback
 
-**2026-08-14** — v1.1 same-path repository-grounded reconciliation against `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884`.
+**2026-08-15** — v1.2 same-path exposure-reference reconciliation against `main@dc5549980158a9df81d643e367dc9d861494f378`.
 
 Re-review this README when:
 
@@ -642,6 +642,7 @@ Re-review this README when:
 
 | Edition | Date | Change | Effect |
 |---|---|---|---|
+| **v1.2** | 2026-08-15 | Reconciled proposal-era exposure references with the tracked `EXPOSURE_PLAN.md` identity and retained the separate incident-surface decision as unresolved. | Documentation only; no path migration, security control, or operational state change |
 | **v1.1** | 2026-08-14 | Replaced proposal-only/unmounted-repository framing with the exact lane inventory, current entrypoint map, authority separation, maturity states, risk-based guidance, drift register, verification backlog, evidence limits, and rollback. | Documentation only; no security control or operational state change |
 | **v1** | 2026-05-10 | Long-form security-lane proposal, future tree, posture guidance, and README contract. | Historical documentation state |
 | **Initial path** | 2026-05-08 | Earliest path history returned for `docs/security/README.md`. | Origin details beyond path history remain bounded |
@@ -652,9 +653,9 @@ Restore the prior file blob:
 
 ```text
 path: docs/security/README.md
-prior_blob: c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a
+prior_blob: 2d51abaffbddc63f9d19fc36327c9677f03f5e81
 ```
 
-or revert the focused content commit created by this change. That restores the v1 documentation snapshot. It does not revoke credentials, close a vulnerability, contain an incident, reverse a disclosure, alter policy, restore a deployment, invalidate a release, roll back data, or change repository settings.
+or revert the focused content commit created by this change. That restores the v1.1 documentation snapshot. It does not revoke credentials, close a vulnerability, contain an incident, reverse a disclosure, alter policy, restore a deployment, invalidate a release, roll back data, or change repository settings.
 
 [Back to top](#top)
