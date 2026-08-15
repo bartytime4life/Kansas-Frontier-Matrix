@@ -1,522 +1,660 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-security-readme
-title: docs/security/ — Security Doctrine, Threat Model, and Incident Response
-type: standard
-version: v1
-status: draft
-owners: <docs-steward>, <security-owner>
-created: 2026-05-10
-updated: 2026-05-10
-policy_label: public
+title: docs/security/ — Security Guidance and Trust-Boundary Index
+type: readme
+subtype: sensitive-boundary-landing-page
+version: v1.1
+prior_version: v1
+status: draft; repository-grounded; documentation-only; non-authoritative
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable security, policy, release, incident-response, and independent-review assignments"
+created: 2026-05-08
+updated: 2026-08-14
+policy_label: repository-facing; mixed child sensitivity
+current_path: docs/security/README.md
+owning_root: docs/
+responsibility: "Orient readers to KFM security guidance, disclose the current document inventory and maturity, preserve fail-closed trust boundaries, and route enforcement, operational response, evidence, and release work to their owning responsibility roots."
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory security-documentation index
+authority_rank: subordinate to accepted doctrine and ADRs, contracts, schemas, policy, implementation, evidence, review, release, correction, and rollback authorities
+canonical_relationship: same-path update; no sibling authority created
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 3ea2ab5701074168b0dab32e94dccae8dbcc0d4f
+  target_prior_blob: c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a
+  first_path_history_commit: 026b5baa7c1279ece55f9b1fa67c1770bfbddccd
+  long_form_security_readme_commit: 1d31edda4e3f5b9143b37e5cb59920a24128f1c3
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_adoption_adr_status: accepted
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  inventory:
+    direct_markdown_files_including_this_readme: 9
+    direct_child_guidance_files: 8
+    direct_child_directories: 0
+    current_repo_grounded_child_docs: 1
+    older_draft_child_docs_requiring_file_specific_reconciliation: 7
 related:
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/lifecycle-law.md
+  - docs/README.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
-  - docs/runbooks/
-  - docs/governance/
-  - policy/
-  - infra/
-  - apps/governed-api/
-  - release/signatures/
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - SECURITY.md
-tags: [kfm, security, governance, docs, readme, doctrine]
+  - docs/runbooks/README.md
+  - docs/runbooks/INCIDENT_RESPONSE.md
+  - docs/security/THREAT_MODEL.md
+  - docs/security/EXPOSURE_PLAN.md
+  - docs/security/INCIDENT_RESPONSE.md
+  - docs/security/DATA_CLASSIFICATION.md
+  - docs/security/DENY_TESTS.md
+  - docs/security/AUDIT_INVARIANTS.md
+  - docs/security/SECRETS.md
+  - docs/security/KEY_ROTATION.md
+  - .github/CODEOWNERS
 notes:
-  - Authority of this README is PROPOSED until verified against mounted-repo evidence.
-  - Doctrine claims derived from directory-rules.md §6.1, §7.1, §9.2, §10.2, §10.3, §13.5, §15, §19.
-  - Path-presence and CODEOWNERS claims are PROPOSED / NEEDS VERIFICATION.
-  - Repo workspace was unmounted at creation; no implementation-shape claims made without doctrinal grounding.
+  - "v1.1 replaces an unmounted-repository proposal inventory with a current, exact nine-file lane index."
+  - "The update records current file presence without upgrading any child document to adopted policy, validated control, rehearsed procedure, operational admission, release approval, or publication authority."
+  - "The current lane contains naming, ownership, metadata, and doctrine-versus-runbook drift that requires file-specific follow-up; this change does not rename, delete, consolidate, or silently choose winners."
+  - "The only verified GitHub review identity is @bartytime4life. CODEOWNERS routing is not proof of security stewardship, independent review, policy approval, or release authority."
+  - "This one-file documentation update changes no secret, vulnerability channel, policy rule, infrastructure posture, route, runtime behavior, validator, test, workflow, receipt family, release decision, deployment, promotion, publication, or repository setting."
 [/KFM_META_BLOCK_V2] -->
 
-# `docs/security/` — Security Doctrine, Threat Model, and Incident Response
+<a id="top"></a>
 
-> **The security home for KFM doctrine: what we defend, where the trust membrane runs, how exposure is bounded, and how incidents are recognized, contained, and reversed.**
+# `docs/security/` — Security Guidance and Trust-Boundary Index
 
-[![Status: PROPOSED](https://img.shields.io/badge/status-PROPOSED-blue)](#status)
-[![Authority: Canonical (under `docs/`)](https://img.shields.io/badge/authority-canonical%20(under%20docs%2F)-1f6feb)](#authority-level)
-[![Lane: Governance](https://img.shields.io/badge/lane-governance-6e7681)](#repo-fit)
-[![Posture: Deny-by-default · Fail-closed](https://img.shields.io/badge/posture-deny--by--default%20%C2%B7%20fail--closed-c93c37)](#core-postures)
-[![Review: Docs steward + Security owner](https://img.shields.io/badge/review-docs%20steward%20%2B%20security%20owner-yellow)](#review-burden)
-[![Last reviewed: <!-- TBD --> ](https://img.shields.io/badge/last%20reviewed-TBD-lightgrey)](#last-reviewed)
+> **Human-readable security guidance for KFM's trust membrane, sensitive-data posture, exposure boundaries, negative tests, secrets, key lifecycle, audit invariants, and incident-response doctrine.** This lane explains what must be protected and how security concerns connect; it does not grant access, decide policy, prove enforcement, approve release, or publish anything.
 
-> **NOTE** — Badge link targets are placeholders. Replace with workflow / status endpoints once `tools/` and `.github/workflows/` evidence is verified. All path-presence claims in this README are **PROPOSED** until checked against mounted-repo evidence (see [§ Open verification](#open-verification)).
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-evidence-boundary)
+[![Direct guidance files: 8](https://img.shields.io/badge/direct%20guidance%20files-8-0969da?style=flat-square)](#direct-child-map)
+[![Posture: fail closed](https://img.shields.io/badge/posture-fail--closed-b42318?style=flat-square)](#security-operating-posture)
+[![Disclosure: private first](https://img.shields.io/badge/disclosure-private%20first-b42318?style=flat-square)](../../SECURITY.md)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-negative-authority)
+[![Evidence review: 2026-08-14](https://img.shields.io/badge/evidence%20review-2026--08--14-0969da?style=flat-square)](#last-evidence-review-and-rollback)
 
----
+> [!IMPORTANT]
+> **Security documentation is not a security decision.** A page, badge, checklist, threat table, test result, receipt, pull request, or merged commit cannot by itself create policy approval, source authority, evidence closure, access permission, operational admission, release state, or publication authority.
 
-## Quick jump
+> [!CAUTION]
+> **Do not disclose security-sensitive details publicly.** Use the private-first process in the repository-root [`SECURITY.md`](../../SECURITY.md). The exact operational private contact remains `NEEDS VERIFICATION`; never substitute a placeholder address, public issue, pull-request comment, screenshot, or log dump.
 
-[Purpose](#purpose) ·
-[Repo fit](#repo-fit) ·
-[Authority level](#authority-level) ·
-[Status](#status) ·
-[What belongs here](#what-belongs-here) ·
-[What does NOT belong here](#what-does-not-belong-here) ·
-[Inputs](#inputs) ·
-[Outputs](#outputs) ·
-[Validation](#validation) ·
-[Review burden](#review-burden) ·
-[Related folders](#related-folders) ·
-[ADRs](#adrs) ·
-[Directory tree](#directory-tree-proposed) ·
-[Diagram](#diagram) ·
-[Doctrine alignment](#doctrine-alignment) ·
-[Task list](#task-list) ·
-[FAQ](#faq) ·
-[Last reviewed](#last-reviewed) ·
-[Appendix](#appendix)
+> [!WARNING]
+> **KFM is not an emergency-alert or life-safety authority.** Security guidance protects the KFM system and its trust path. It must not be presented as public hazard response, emergency instruction, or authorization to act on real-world conditions.
+
+**Quick navigation:** [Purpose](#purpose-and-inherited-authority) · [Authority](#authority-and-negative-authority) · [Status](#status-and-evidence-boundary) · [Map](#direct-child-map) · [Start here](#start-here) · [Inventory](#current-document-inventory) · [Posture](#security-operating-posture) · [Threats](#security-review-lenses) · [Belongs](#what-belongs-here) · [Prohibited](#what-does-not-belong-here) · [Flow](#inputs-outputs-and-permitted-writers) · [Exposure](#exposure-sensitivity-and-public-safety) · [Storage](#mutability-retention-and-sensitive-working-material) · [Validation](#validation-and-negative-checks) · [Review](#ownership-review-and-escalation) · [Adjacent roots](#adjacent-responsibility-roots) · [Drift](#known-drift-and-conflicts) · [Backlog](#open-verification-backlog) · [Evidence](#evidence-basis-and-limitations) · [Rollback](#last-evidence-review-and-rollback)
 
 ---
 
-## Status & Authority
+## Purpose and inherited authority
 
-| Field | Value |
+`docs/security/` is the security-guidance lane inside KFM's human-readable [`docs/`](../README.md) responsibility root. It helps maintainers, reviewers, operators, researchers, and security reporters understand:
+
+- which trust and exposure risks KFM is designed to refuse;
+- how sensitive data, harmful precision, rights, consent, source role, and public delivery intersect;
+- which documentation applies to threats, exposure, classification, deny tests, audit invariants, secrets, key rotation, and incident response;
+- where enforceable rules, executable controls, evidence, receipts, proofs, release decisions, and operational procedures actually belong; and
+- what remains draft, unverified, conflicted, or held.
+
+Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). Those rules list `docs/security/` as the direct `docs/` child for threat, incident, and exposure guidance. Under the adopted README profiles, this lane is a sensitive boundary and therefore uses the `BOUNDARY_COMPACT` contract.
+
+This README inherits the `docs/` authority boundary. It does not create a security root, policy root, evidence store, incident system, release family, or operational secret store.
+
+[Back to top](#top)
+
+---
+
+## Authority and negative authority
+
+The lane is canonical **for human-readable security guidance and navigation only**. It is subordinate to the authority that owns each underlying decision or behavior.
+
+| Concern | Owning authority | Role of `docs/security/` |
+|---|---|---|
+| Placement and documentation boundary | Accepted Directory Rules and the parent `docs/` contract | Explain the security-guidance lane and surface drift |
+| Security object or interface meaning | `contracts/` | Cite semantics; do not redefine them |
+| Machine-valid object shape | `schemas/` | Cite fields and versions; do not host schema authority |
+| Allow, deny, hold, restrict, redact, or abstain | `policy/` plus governed review | Explain posture and expected outcomes |
+| Runtime ingress, egress, authorization, and service behavior | Owning `apps/`, `runtime/`, `packages/`, and `infra/` surfaces | Name the boundary and required evidence; do not claim deployment |
+| Tests, validators, scanners, and workflow gates | `tests/`, `tools/validators/`, and `.github/workflows/` | Explain expected proof and interpret bounded results |
+| Evidence, receipts, proofs, and source identity | Governed `data/` accountability and registry families | Reference records; do not manufacture or approve them |
+| Release, correction, withdrawal, and rollback | `release/` and linked accountability objects | Explain required handling; do not authorize it |
+| Public vulnerability reporting | Repository-root [`SECURITY.md`](../../SECURITY.md) | Provide long-form context without inventing a contact |
+| Operational incident procedure | [`docs/runbooks/`](../runbooks/README.md) | Provide security doctrine and hand off execution |
+| This README | Human navigation and current-state disclosure | No access, policy, operational, release, or publication authority |
+
+> [!IMPORTANT]
+> **A missing security prerequisite is not permission.** Unresolved identity, rights, sensitivity, source role, evidence, policy, review, integrity, release state, correction path, rollback target, or private reporting channel remains `HOLD`, `ABSTAIN`, `DENY`, `ERROR`, or `NEEDS VERIFICATION` according to the owning contract.
+
+[Back to top](#top)
+
+---
+
+## Status and evidence boundary
+
+The observations below are pinned to `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f`. They describe tracked repository bytes, not deployed controls, operational readiness, incident rehearsal, secret custody, or security assurance.
+
+| Surface | CONFIRMED observation | Bounded conclusion |
+|---|---|---|
+| This README | Prior blob `c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a`; current text still describes an unmounted repository | Same-path v1.1 reconciliation is warranted |
+| Direct lane inventory | Nine Markdown files: this README plus eight guidance documents; no direct child directories | The current navigation surface is exactly known at the pinned revision |
+| Child maturity | Seven child documents still declare May 2026 draft/proposal-era metadata; `DENY_TESTS.md` has a later repository-grounded v1.1 update | File presence and useful guidance exist; lane-wide currency and operational admission do not |
+| Threat and exposure guidance | `THREAT_MODEL.md` and `EXPOSURE_PLAN.md` exist | Their existence does not prove controls or public exposure posture are deployed |
+| Incident guidance | Security doctrine and an operational runbook both exist in different lanes | Their boundary needs explicit reconciliation before consolidation or retirement |
+| Disclosure entrypoint | Root `SECURITY.md` exists and requires private-first reporting | The actual private contact/channel remains `NEEDS VERIFICATION` |
+| Review routing | CODEOWNERS defaults repository review to `@bartytime4life`; no separate `docs/security/` rule exists | One GitHub route is verified; qualified security stewardship and independent review are not |
+| Deny-test implementation | `DENY_TESTS.md` reports five bounded structural/scaffold guards at its own pinned revision | Broader deny catalog and runtime/policy enforcement remain partial or proposed |
+| Child identifiers and ownership | Several documents contain placeholder owners, IDs, paths, cadences, or no-mounted-repository language | Metadata cleanup requires file-specific evidence and should not be silently mass-edited |
+| Runtime, infra, policy, signing, secret store, drills, incidents, releases, deployment, publication | Not established by this index | `UNKNOWN` unless proven by owning surfaces and exact-revision evidence |
+
+### State separation
+
+Do not collapse these independent states:
+
+| Axis | Example |
 |---|---|
-| **Document type** | Per-root README (§15 README contract, Directory Rules) |
-| **Authority of this README** | **PROPOSED** — sits under `docs/`; specific subpath presence not yet verified against mounted repo. |
-| **Owning responsibility root** | `docs/` (human-facing control plane) |
-| **Subpath role** | `docs/security/` — threat model, exposure posture, incident response (Directory Rules §6.1) |
-| **Class** | Canonical (under `docs/`) — not a compatibility root |
-| **Lifecycle phase** | n/a (governance doctrine, not lifecycle data) |
-| **Owners** | `<security-owner>` and `<docs-steward>` — fill from CODEOWNERS |
-| **Reviewers required** | Docs steward + named security owner; ADR required for changes that bend an invariant (§ADRs) |
-| **Supersedes** | None yet — this is the initial README for `docs/security/`. |
-| **Related doctrine** | `docs/doctrine/trust-membrane.md`, `docs/doctrine/truth-posture.md`, `docs/doctrine/lifecycle-law.md`, `docs/doctrine/directory-rules.md`, `docs/architecture/governed-api.md`, `docs/runbooks/`, `docs/governance/` |
+| File presence | Markdown exists at a path |
+| Documentation maturity | Draft, reconciled, stale, conflicted, superseded, or current at a pinned revision |
+| Control implementation | Policy, runtime, infra, validator, workflow, or secret-store behavior exists |
+| Negative-path proof | A named unsafe case is rejected with a stable reason |
+| Operational rehearsal | An approved synthetic or restricted drill was executed and recorded |
+| Review state | Authorized review is complete for a named scope |
+| Operational admission | A control or procedure is approved for a named environment and actor class |
+| Incident state | Detection, containment, correction, withdrawal, recovery, and closure are recorded |
+| Release state | A specific immutable release is approved with correction and rollback support |
+| Publication state | A public-safe carrier is actually exposed through governed delivery |
+
+A green security-related check proves only its declared assertion and revision. It does not prove the whole security posture.
+
+[Back to top](#top)
 
 ---
 
-## Purpose
+## Direct-child map
 
-`docs/security/` is the **human-facing security control plane** for Kansas Frontier Matrix. It explains how KFM is defended, what postures apply by default, where the trust membrane runs, how secrets and exposure are bounded, and how incidents are recognized, contained, recorded, and reversed.
+Directory Rules require this README to show only the directory it governs and its direct children.
 
-Three responsibilities, named directly by Directory Rules §6.1:
-
-1. **Threat model** — what we defend against and what is explicitly out of scope.
-2. **Exposure posture** — deny-by-default, least privilege, no direct model endpoint exposure, no raw-data exposure, audit logs (Directory Rules §10.2).
-3. **Incident response** — how an incident is recognized, declared, contained, communicated, post-mortemed, and tied to a corrective change with a rollback path.
-
-`docs/security/` **explains**. Enforcement lives elsewhere: `policy/` decides admissibility, `infra/` carries posture, `apps/governed-api/` is the executable trust membrane, `release/signatures/` and `data/proofs/` carry verifiable proof. This README is the orientation document for those connections.
-
----
-
-## Repo fit
-
-```
-Kansas-Frontier-Matrix/
-└── docs/
-    ├── doctrine/        ← invariants & laws (truth, trust, lifecycle, directory)
-    ├── architecture/    ← system context, governed-api, map-shell, …
-    ├── security/  ◀──── you are here
-    ├── runbooks/        ← ops procedures, rollback drills, secret-rotation runbook
-    ├── governance/      ← roles, review burden, separation of duties
-    ├── registers/       ← AUTHORITY_LADDER, DRIFT_REGISTER, VERIFICATION_BACKLOG, …
-    └── adr/             ← Architecture Decision Records
+```text
+docs/security/
+├── README.md                 # lane boundary, navigation, evidence limits, and backlog
+├── AUDIT_INVARIANTS.md       # auditable trust and governance invariants
+├── DATA_CLASSIFICATION.md    # sensitivity, audience tier, rights, and release crosswalk
+├── DENY_TESTS.md             # negative-path doctrine, catalog, and bounded current guards
+├── EXPOSURE_PLAN.md          # public, semi-public, internal, and restricted exposure posture
+├── INCIDENT_RESPONSE.md      # security-incident doctrine and correction/rollback expectations
+├── KEY_ROTATION.md           # cryptographic identity, custody, rotation, and revocation policy
+├── SECRETS.md                # secret classes, storage boundaries, rotation, and leak handling
+└── THREAT_MODEL.md           # threat families, guardrails, residual risks, and detection lenses
 ```
 
-**Upstream (inputs to this folder):**
-`docs/doctrine/`, `docs/architecture/`, ADRs, drift register, verification backlog, runbooks, governance roles, sensitivity / rights policy under `policy/sensitivity/` and `policy/rights/`, and CI-hardening evidence under `tools/` and `.github/workflows/`.
+No direct child directory exists at the pinned revision. A future `assets/`, `drills/`, or other child is not current merely because an older proposal named it.
 
-**Downstream (consumers of this folder):**
-PR reviewers, on-call responders, ADR authors, release stewards, the `SECURITY.md` advisory at repo root, and external researchers reading the public threat model.
-
-> **IMPORTANT** — `docs/security/` is **not** a policy authority. It does not allow, deny, restrict, or abstain on anything. Those decisions live in `policy/`. If a rule is enforceable, it MUST also live in `policy/` and `tests/`.
+[Back to top](#top)
 
 ---
 
-## Authority level
+## Start here
 
-**Canonical (under `docs/`).** Not a compatibility root. The folder is canonical *within* `docs/` as the security-doctrine lane. It does not override `policy/`, `infra/`, `tools/`, `release/`, or `apps/governed-api/`; it explains how they collectively keep KFM safe and reversible.
+| Need | Current entry point | Boundary |
+|---|---|---|
+| Report a vulnerability privately | Root [`SECURITY.md`](../../SECURITY.md) | Do not expose details publicly; exact contact remains unverified |
+| Understand this lane | [`README.md`](./README.md) | Navigation and current-state disclosure only |
+| Review threat families | [`THREAT_MODEL.md`](./THREAT_MODEL.md) | Threat guidance is not exploit evidence or risk acceptance |
+| Review public exposure rules | [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) | Exposure guidance is not deployed infra or policy proof |
+| Classify sensitivity, audience, and rights | [`DATA_CLASSIFICATION.md`](./DATA_CLASSIFICATION.md) | Classification guidance does not make a release admissible |
+| Review fail-closed test intent | [`DENY_TESTS.md`](./DENY_TESTS.md) | Five bounded guards do not prove complete deny coverage |
+| Audit trust invariants | [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) | Invariant catalog is not an audit result |
+| Handle secrets | [`SECRETS.md`](./SECRETS.md) | Never commit secret values or invent a deployed secret store |
+| Review key lifecycle | [`KEY_ROTATION.md`](./KEY_ROTATION.md) | Cadence, custody, and operational tooling require verification |
+| Understand incident doctrine | [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) | Doctrine and standard; not the operational command surface |
+| Execute incident response | Runbook [`INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md) | Restricted procedure; does not create life-safety authority |
 
-Per Directory Rules §13.5 ("Documentation as truth"): `docs/` explains; `docs/` does not decide alone. A page in `docs/security/` cannot be cited as the canonical decision for an admissibility, release, or enforcement question — that requires an ADR or a `control_plane/` register and the corresponding `policy/` rule.
+[Back to top](#top)
 
 ---
 
-## Status
+## Current document inventory
 
-**PROPOSED.**
+The table records each current child document's declared state. It does not promote or approve any document.
 
-- The **rule** that `docs/security/` is a canonical lane under `docs/` is **CONFIRMED** by Directory Rules §6.1.
-- The **presence** of `docs/security/` and every file path proposed below is **PROPOSED** / **NEEDS VERIFICATION** until inspected in the mounted repository (see [Open verification](#open-verification)).
-- Move to `CONFIRMED` once: (a) the folder exists with this README, (b) the canonical threat model, exposure posture, and incident response pages are present, and (c) CODEOWNERS lists a security owner.
+| Document | Primary focus | Declared edition/state | Current evidence note |
+|---|---|---|---|
+| [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) | Detectable trust, lifecycle, evidence, identity, AI, sensitivity, and release invariants | `v1`, `draft`, updated 2026-05-13 | Useful invariant catalog; owner and several implementation references remain placeholders |
+| [`DATA_CLASSIFICATION.md`](./DATA_CLASSIFICATION.md) | Sensitivity 0–5, tiers T0–T4, rights, consent, transforms, release fields | `v0.1`, `draft`, updated 2026-05-13 | Consolidates vocabularies; ratification and current enforcement remain unproven |
+| [`DENY_TESTS.md`](./DENY_TESTS.md) | Fail-closed doctrine, deny catalog, fixture vocabulary, and test-authoring guidance | `v1.1`, draft with five bounded guards confirmed, updated 2026-08-01 | Most repository-grounded child; explicitly says broader coverage remains proposed |
+| [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) | What may cross public, semi-public, internal, and restricted boundaries | `v1`, `draft`, updated 2026-05-13 | Current filename differs from the `EXPOSURE_POSTURE.md` name used by several siblings |
+| [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) | Security-incident doctrine, severity, containment, correction, withdrawal, rollback | `v0.1`, `draft`, updated 2026-05-13 | Must be distinguished from the operational runbook with the same basename |
+| [`KEY_ROTATION.md`](./KEY_ROTATION.md) | Signing, KMS, pseudonymisation, secret, and identity rotation/revocation | `v1`, `draft`, updated 2026-05-13 | Metadata still has a replace-at-merge ID; cadences and ownership remain proposed |
+| [`SECRETS.md`](./SECRETS.md) | Secret classes, allowed storage, OIDC-first posture, leak detection, rotation | `v0.1`, `draft`, updated 2026-05-13 | Doctrine is useful; actual store, owners, tools, and cadences remain unverified |
+| [`THREAT_MODEL.md`](./THREAT_MODEL.md) | Threat families, security guardrails, forbidden public behaviors, residual risk | `v0.1`, `draft`, updated 2026-05-13 | Still describes current sibling paths and implementation as proposed |
+
+### Reading rule
+
+Treat a child document as:
+
+- **guidance** when it explains doctrine or expected security behavior;
+- **repository evidence** only for the exact tracked bytes and revision inspected;
+- **implementation evidence** only when supported by owning code, configuration, tests, workflows, logs, or emitted artifacts;
+- **operational evidence** only when tied to a named environment, actor, event, and immutable record; and
+- **release evidence** only when the owning release and accountability objects support that conclusion.
+
+[Back to top](#top)
+
+---
+
+## Security operating posture
+
+This lane inherits KFM's broader trust posture and applies it under adversarial or failure conditions.
+
+| Posture | Security meaning | Failure behavior |
+|---|---|---|
+| **Deny by default** | No public access, source activation, sensitive release, admin privilege, or trust transition exists without explicit admissibility | `DENY` or `HOLD` |
+| **Least privilege** | People, apps, workers, connectors, workflows, and credentials receive only the capability required for a named task | Remove or narrow capability; escalate unexplained privilege |
+| **Fail closed** | Missing evidence, policy, identity, integrity, rights, review, release, or rollback support cannot silently become allow | `ABSTAIN`, `DENY`, `ERROR`, or quarantine |
+| **Private first** | Security-sensitive reports and reproduction details avoid public issues, comments, screenshots, and logs | Stop public disclosure; move to a verified private path |
+| **Auditability** | Consequential security actions must leave bounded, reviewable process memory in the owning receipt, proof, incident, or release family | Treat missing records as an unresolved control gap |
+| **Separation of duties** | Authoring, policy-significant review, release approval, incident command, and correction authority are not silently collapsed | Require the review appropriate to significance |
+| **Reversibility** | Exposure, release, key, policy, and operational changes name correction, withdrawal, rollback, or forward-fix handling | Hold changes without a safe recovery path |
+| **Cite or abstain** | Security claims about behavior or protection require current evidence | Mark `UNKNOWN` or `NEEDS VERIFICATION` rather than implying assurance |
+
+These are operating constraints, not claims that every enforcement point is implemented.
+
+[Back to top](#top)
+
+---
+
+## Security review lenses
+
+Use the detailed child documents for analysis. This index supplies a bounded routing map.
+
+| Review lens | Questions | Primary guidance |
+|---|---|---|
+| Trust-membrane bypass | Can a public or ordinary client reach RAW, WORK, QUARANTINE, canonical/internal stores, unpublished candidates, or direct model output? | [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md), [`DENY_TESTS.md`](./DENY_TESTS.md) |
+| Sensitive data and harmful precision | Could exact location, identity linkage, inference, reconstruction, or metadata expose protected ecology, archaeology, infrastructure, living persons, DNA/genomics, land, or cultural material? | [`DATA_CLASSIFICATION.md`](./DATA_CLASSIFICATION.md), [`THREAT_MODEL.md`](./THREAT_MODEL.md) |
+| Source and connector integrity | Can spoofing, mirror poisoning, schema drift, rights drift, stale status, or source-role collapse reach stronger lifecycle states? | [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) |
+| Policy and release bypass | Can an artifact be exposed without required policy, evidence, review, release, correction, or rollback support? | [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md), [`DENY_TESTS.md`](./DENY_TESTS.md), [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) |
+| Secrets and signing identities | Are secrets excluded from Git, clients, logs, fixtures, receipts, screenshots, and generated artifacts? Are custody and rotation bounded? | [`SECRETS.md`](./SECRETS.md), [`KEY_ROTATION.md`](./KEY_ROTATION.md) |
+| CI and supply chain | Are dependencies, workflows, identities, artifacts, receipts, and signatures pinned and verifiable for the asserted scope? | [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`KEY_ROTATION.md`](./KEY_ROTATION.md) |
+| Governed AI | Can prompt injection, retrieval poisoning, direct model access, uncited generation, prompt leakage, or unsupported map action bypass evidence and policy? | [`THREAT_MODEL.md`](./THREAT_MODEL.md), architecture and policy owners |
+| Telemetry and logs | Can prompts, raw evidence, restricted coordinates, secrets, or sensitive reasons leak through observability? | [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md), [`SECRETS.md`](./SECRETS.md) |
+| Incident and correction | Can the system contain exposure, preserve evidence, correct or withdraw affected releases, invalidate caches, and restore a safe state? | [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md), runbook [`INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md) |
+| Admin and reviewer paths | Can a restricted convenience surface become the normal public path or silently combine author, approver, publisher, and incident roles? | [`THREAT_MODEL.md`](./THREAT_MODEL.md), [`AUDIT_INVARIANTS.md`](./AUDIT_INVARIANTS.md) |
+
+[Back to top](#top)
 
 ---
 
 ## What belongs here
 
-Files in `docs/security/` are **human-facing security explanation**. Accepted content:
+Content belongs in `docs/security/` when its primary responsibility is **human-readable security guidance** and it does not take over an enforcement, evidence, operational, or release authority.
 
-- **Threat model.** A named, scoped enumeration of what KFM defends against, with adversary classes, attack surfaces, and explicit out-of-scope items. Tied to specific KFM surfaces — public web reads, the governed API, connectors, pipelines, the catalog, the trust membrane, AI runtime, the admin surface.
-- **Exposure posture.** How the local-and-exposed deployment is bounded: deny-by-default, least privilege, no direct model endpoint exposure, no raw-data exposure, audit logging. Explanatory companion to `infra/` (Directory Rules §10.2).
-- **Trust-membrane security guidance.** How `apps/governed-api/`, finite-outcome `RuntimeResponseEnvelope` (ANSWER · ABSTAIN · DENY · ERROR), `EvidenceBundle`, and integrity headers protect public consumers. *Companion to `docs/doctrine/trust-membrane.md`, not a replacement.*
-- **Supply-chain and integrity guidance.** Sigstore / DSSE / Rekor expectations for `release/signatures/`, SBOM/SLSA references, CI-hardening expectations (pinned action SHAs, OIDC subject restrictions, scoped secrets). *Companion to `tools/` and `.github/workflows/` evidence.*
-- **Secret handling.** Where secrets live, where they MUST NOT live (`configs/` is not a secret store — Directory Rules §10.3), rotation expectations, what to do on suspected exposure.
-- **Sensitivity and rights interaction.** How the sensitivity rubric and rights gates intersect with security exposure (precise location, living-person data, archaeology, infrastructure). *Cross-references `policy/sensitivity/`, `policy/rights/`, and the rights doctrine; does not duplicate them.*
-- **Incident response.** Recognition, declaration, severity classes, containment, public communication discipline, post-mortem template, and the path from incident → correction notice → rollback card → ADR.
-- **Reporting channel.** How an internal or external reporter contacts KFM. Coordinated disclosure window. References to repo-root `SECURITY.md`.
-- **Drills.** Tabletop exercises, redacted incident archive, rollback-drill links into `docs/runbooks/`.
+Appropriate content includes:
 
-Accepted file types: `*.md`, `*.mmd`/Mermaid embedded in Markdown, illustrative diagrams under `assets/` if needed.
+- threat models and residual-risk registers that avoid live exploit details;
+- public, semi-public, internal, and restricted exposure guidance;
+- sensitivity, rights, consent, precision, and classification crosswalks;
+- deny-test doctrine and interpretation of bounded negative-path evidence;
+- auditable invariant catalogs;
+- secret-handling and cryptographic-identity guidance;
+- incident-response doctrine, severity semantics, correction expectations, and handoff boundaries;
+- redacted, approved learning material after an incident when publication is safe; and
+- navigation between root disclosure policy, runbooks, policy, implementation, evidence, and release surfaces.
 
----
+A security document should identify its scope, evidence revision, owner or unresolved owner, sensitivity, non-effects, validation, correction path, and review trigger.
 
-## What does NOT belong here
-
-The "do-not list" is as important as the "do list" (Directory Rules §15).
-
-- **No enforcement code, no policy bundles, no schemas.** Policy lives in `policy/` (Rego/OPA, sensitivity, rights, runtime, promotion, release); schemas live in `schemas/contracts/v1/...` (ADR-0001).
-- **No infrastructure manifests, host configs, firewall rules, reverse-proxy or VPN config.** Those belong in `infra/` (Directory Rules §10.2).
-- **No real secrets, tokens, certificates, private keys, `.env` files.** If a real secret appears here, treat it as a **security incident**: rotate, audit, and open a runbook entry in `docs/runbooks/` (Directory Rules §10.3).
-- **No release decisions, release manifests, promotion decisions, rollback cards, correction notices, withdrawal notices.** Those live in `release/`.
-- **No signed artifacts, evidence bundles, proof packs, integrity bundles, AI receipts, run receipts.** Those live in `release/signatures/`, `data/proofs/`, `data/receipts/`.
-- **No active incident records or live triage notes containing personal data, internal IPs, or unredacted source data.** Active triage uses the incident channel referenced from `docs/runbooks/`; post-incident, only redacted post-mortems land here.
-- **No vulnerability working-data, raw scan output, exploit payloads, or reproduction recipes for unfixed issues.** Coordinated disclosure: keep until remediated and approved for publication.
-- **No connector source-specific fetch code, allowlist data, or per-source secrets.** Connector posture stays in `connectors/` with source descriptors.
-- **No "convenience" docs that just rename concepts from `docs/doctrine/`.** Cross-reference; do not duplicate.
+[Back to top](#top)
 
 ---
 
-## Inputs
+## What does not belong here
 
-| From | What flows in | Why |
-|---|---|---|
-| `docs/doctrine/trust-membrane.md`, `truth-posture.md`, `lifecycle-law.md`, `directory-rules.md` | Invariants this folder must explain consistently | Doctrine is the upstream source of truth. |
-| `docs/architecture/governed-api.md`, `system-context.md`, `deployment-topology.md` | The surfaces this folder threat-models | You can only defend what you can name. |
-| `policy/sensitivity/`, `policy/rights/`, `policy/runtime/`, `policy/release/` | Admissibility and gating rules referenced by the threat model | Security guidance must match what is enforceable. |
-| `infra/` (`docker/`, `reverse_proxy/`, `vpn/`, `firewall/`, `hardening/`) | The deployed posture this folder describes | Exposure posture is operational, not aspirational. |
-| `tools/`, `.github/workflows/` | CI-hardening evidence, signature/SBOM workflows | Supply-chain guidance must reflect actual CI. |
-| `release/signatures/`, `data/proofs/`, `data/receipts/` | What "verifiable" looks like in practice | Integrity claims must point at real artifacts. |
-| `docs/registers/DRIFT_REGISTER.md`, `VERIFICATION_BACKLOG.md` | Known gaps, contradictions, drift | Honest incompleteness over polish. |
+> [!WARNING]
+> **Do not use a public documentation lane as a vulnerability workbench, secret store, policy engine, or incident command system.**
 
----
+The following do not belong here as canonical writable authority:
 
-## Outputs
-
-| To | What this folder emits or supports | How it shows up |
-|---|---|---|
-| `SECURITY.md` (repo root) | Public-facing reporting channel, coordinated-disclosure policy, scope | Short root file links into `docs/security/` for the full text. |
-| PR reviewers | A reusable security checklist for PRs touching `apps/`, `infra/`, `connectors/`, `policy/`, `release/`, `configs/` | Linked from `docs/governance/` and CODEOWNERS. |
-| On-call responders | An incident playbook with recognition criteria, containment steps, communication template, and rollback hooks | Referenced from `docs/runbooks/`. |
-| Release stewards | Threat-model context for promotion-gate sign-off | Cited in `docs/runbooks/` and ADRs. |
-| External researchers | A public threat model and disclosure policy | Linked from project README and `SECURITY.md`. |
-| ADR authors | A baseline of named threats and postures to argue against | Cited in ADRs that change exposure surface. |
-
----
-
-## Core postures
-
-The four postures `docs/security/` MUST explain and keep aligned across all surfaces:
-
-| Posture | What it means | Where enforced |
-|---|---|---|
-| **Deny-by-default** | Nothing is reachable unless an explicit, reviewed rule allows it. | `infra/` exposure config; `apps/governed-api/` route registration; `policy/runtime/`. |
-| **Least privilege** | No app, worker, connector, CI job, or person holds more access than its role requires. | `infra/hardening/`, CI OIDC subject restrictions, CODEOWNERS, `apps/admin/` constraints. |
-| **Fail-closed** | When evidence, policy, identity, or integrity cannot be established, the surface returns DENY or ABSTAIN — never a guess. | `apps/governed-api/` `RuntimeResponseEnvelope`; `policy/runtime/`; promotion gates. |
-| **Auditability** | Every consequential action emits a receipt or decision that can be replayed and inspected. | `data/receipts/`, `data/proofs/`, `release/`, append-only audit ledger. |
-
-> **WARNING** — A "convenience" deviation from any of the four (a wide-open admin shortcut, a fail-open path, an unaudited worker write to `data/published/`) is a doctrinal violation under Directory Rules §13.5 and §7.1. Document, justify, constrain, and keep it out of the normal public path — or do not ship it.
-
----
-
-## Validation
-
-How `docs/security/` is checked (rather than how policy is enforced — that's `policy/` and `tests/`):
-
-- **Link discipline.** Internal links resolve; doctrine cross-references match `docs/doctrine/` files; no broken anchors.
-- **Posture consistency.** Claims here MUST NOT contradict `docs/doctrine/`, `policy/`, or `infra/`. Conflicts open an entry in `docs/registers/DRIFT_REGISTER.md`.
-- **Reporting channel reachability.** The disclosure channel named in `SECURITY.md` and here is the same channel and is currently monitored.
-- **Drill currency.** Tabletop / rollback drills referenced from `docs/runbooks/` have been exercised within the documented window.
-- **CODEOWNERS coverage.** `docs/security/**` is covered by CODEOWNERS with at least one security owner.
-- **README-contract conformance (§15).** This README contains every required section.
-
-> **PROPOSED** — A `tools/validators/docs/security_doc_lint.<ext>` could enforce link discipline, required-section presence, and posture-table parity with doctrine. *Validator name and location are illustrative; create per Directory Rules §7.5 if adopted.*
-
----
-
-## Review burden
-
-| Change | Who reviews | Gate |
-|---|---|---|
-| Typo, link fix, clarification | Docs steward | Routine PR |
-| New page, restructure, table changes | Docs steward + security owner | PR with rationale |
-| Threat-model scope change, new adversary class, new public-disclosure language | Docs steward + security owner + one architecture owner | PR + advisory to release steward |
-| Change that **bends an invariant** (e.g., proposes a normal public path that bypasses the trust membrane, or weakens fail-closed) | Docs steward + security owner + ADR | **ADR required** (Directory Rules §2.4 / §17) |
-| Change to the reporting channel, coordinated-disclosure window, or severity rubric | Docs steward + security owner + governance owner | PR + update to `SECURITY.md` and `docs/governance/` |
-
-CODEOWNERS entry (PROPOSED): `docs/security/   @kfm/docs-steward @kfm/security-owner` — verify the team handles match your CODEOWNERS file.
-
----
-
-## Related folders
-
-| Folder | Relationship |
+| Artifact or responsibility | Owning family |
 |---|---|
-| `docs/doctrine/` | Upstream invariants. `docs/security/` explains how they hold under adversarial pressure. |
-| `docs/architecture/governed-api.md` | The executable trust membrane. Threat-modeled here. |
-| `docs/runbooks/` | Operational procedures, rollback drills, secret-rotation, incident playbook. |
-| `docs/governance/` | Roles, review burden, separation of duties — names the people in the incident path. |
-| `docs/registers/` | DRIFT_REGISTER, VERIFICATION_BACKLOG, CONTRADICTION_REGISTER referenced from open items here. |
-| `docs/adr/` | ADRs that change exposure surface, fail-closed posture, or the trust membrane. |
-| `policy/` | Where the enforceable rules live. Security guidance references; policy enforces. |
-| `infra/` | Deployed posture. Directory Rules §10.2: deny-by-default, least privilege, audit. |
-| `apps/governed-api/` | Public trust path; finite-outcome envelopes. |
-| `apps/admin/` | Restricted admin; explicitly **not** the normal public path (Directory Rules §7.1). |
-| `release/` | Signatures, manifests, rollback cards, correction notices — the verifiable side of "we said this, we can prove it, we can take it back". |
-| `data/receipts/`, `data/proofs/` | Append-only process memory and proof closure. |
-| `connectors/` | Source-edge surfaces. Threat-model adversary classes for source spoofing, mirror poisoning, license drift. |
-| Root `SECURITY.md` | Public advisory pointer; this folder is its long form. |
+| Real secrets, private keys, tokens, credentials, signed URLs, secret-store handles that create access, or production configuration values | External secret store and owning runtime/infra process; never public docs |
+| Unfixed exploit payloads, weaponized reproduction steps, exact internal topology, private logs, active triage transcripts, or unredacted incident evidence | Restricted incident and security handling selected by the authorized owner |
+| Enforceable allow/deny/redaction/access/release rules | `policy/` |
+| Machine schemas and semantic contracts | `schemas/` and `contracts/` |
+| Firewalls, reverse proxies, VPNs, identity providers, host hardening, deployment manifests, or network policy | `infra/` and owning deployment surfaces |
+| Runtime authorization, public routes, model adapters, or application logic | Owning `apps/`, `runtime/`, and `packages/` |
+| Validators, scanners, test implementations, and workflow source | `tools/validators/`, `tests/`, and `.github/workflows/` |
+| RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLETS, or PUBLISHED instances | Governed `data/` lanes |
+| Receipts, proofs, source-registry instances, review records, or evidence bundles | Their governed `data/` accountability and identity families |
+| Release manifests, promotion decisions, correction notices, withdrawal notices, rollback cards, or signing outputs | `release/` and linked accountability families |
+| Operational incident command, live response coordination, or public emergency guidance | Authorized private incident process and `docs/runbooks/`; KFM is not a life-safety authority |
+| Placeholder reporting addresses presented as operational | Nowhere; keep the channel `NEEDS VERIFICATION` until configured |
+
+Public documentation may explain that a protected control or denial exists without revealing the payload, secret, exact coordinate, exploit path, or sensitive reason that would defeat the control.
+
+[Back to top](#top)
 
 ---
 
-## ADRs
+## Inputs, outputs, and permitted writers
 
-ADRs related to security and the trust membrane belong in `docs/adr/`. PROPOSED candidates (none yet verified):
+### Inputs
 
-- **ADR-XXXX — Coordinated disclosure policy and reporting channel.** *PROPOSED.*
-- **ADR-XXXX — Fail-closed posture across the governed API.** *PROPOSED.*
-- **ADR-XXXX — Supply-chain integrity: Sigstore + DSSE + Rekor for release signatures.** *PROPOSED.*
-- **ADR-XXXX — Admin-surface exposure constraints (`apps/admin/` is not the normal public path).** *PROPOSED.*
-- **ADR-XXXX — Secret-handling and rotation policy; `configs/` is not a secret store.** *PROPOSED.*
+Security guidance may consume:
 
-> **NOTE** — These are placeholders for the verification backlog, not claims that the ADRs exist. ADR-0001 (schema home) is already cited in Directory Rules §0; security ADRs are not yet enumerated in attached doctrine.
+- accepted doctrine and ADRs;
+- exact repository code, configuration, policy, tests, workflows, manifests, and generated artifacts;
+- current threat, incident, drill, correction, withdrawal, and rollback evidence when access and sensitivity permit;
+- official standards or maintainer guidance when a current external fact is required;
+- redacted findings from reviews, incidents, and security testing; and
+- open drift and verification records.
+
+An input does not gain authority merely because a security document cites it.
+
+### Outputs
+
+This lane produces human guidance, indexes, threat and exposure models, classification references, negative-test catalogs, secret/key guidance, incident doctrine, review checklists, and redacted learning artifacts. It does not emit policy decisions, executable controls, evidence, receipts, proofs, releases, or public data.
+
+### Permitted writers
+
+Normal writers are reviewed repository changes made on feature branches by maintainers or authorized automation. Writers must:
+
+1. keep sensitive working material out of public Git history;
+2. preserve stable document identity and current truth labels;
+3. cite exact repository evidence for implementation claims;
+4. avoid copying secrets, private reports, or active incident details into generated prompts or receipts;
+5. update affected guidance when a material security behavior changes; and
+6. stop at reviewable repository state unless a separate authority governs a later operational or release transition.
+
+AI-assisted security documentation remains interpretive and review-pending. Its generated receipt, prose, or pull request is not human approval.
+
+[Back to top](#top)
 
 ---
 
-## Directory tree (PROPOSED)
+## Exposure, sensitivity, and public safety
 
-```
-docs/security/
-├── README.md                      # this file
-├── threat-model.md                # adversary classes, surfaces, out-of-scope items
-├── exposure-posture.md            # deny-by-default, least privilege, audit; companion to infra/
-├── trust-membrane-security.md     # security view of apps/governed-api/ and finite-outcome envelopes
-├── supply-chain.md                # Sigstore / DSSE / Rekor / SBOM / SLSA; CI-hardening reference
-├── secrets.md                     # where secrets live, where they MUST NOT live, rotation, exposure response
-├── sensitivity-and-rights.md      # how security interacts with sensitivity rubric and rights gates
-├── incident-response.md           # recognition → containment → comms → post-mortem → correction
-├── disclosure.md                  # coordinated disclosure policy; reporting channel; safe-harbor
-├── drills/                        # tabletop exercises and redacted post-mortems
-│   └── README.md
-└── assets/                        # diagrams referenced from the pages above
-    └── .gitkeep
-```
+`docs/security/` is repository-facing and may be publicly readable. Treat every committed byte, filename, link target, example, image, table, diagram, commit message, pull-request body, and generated receipt as potentially public.
 
-> **NEEDS VERIFICATION** — Every path above is PROPOSED until the repo is mounted. None of these files exist by virtue of being listed here.
+### Public-safe content
+
+Appropriate public content can include:
+
+- high-level threat families and defensive expectations;
+- private-first disclosure instructions without unverified contact details;
+- denial and redaction principles;
+- synthetic examples that cannot reconstruct protected data;
+- bounded test and validation descriptions;
+- public-safe correction and rollback guidance; and
+- clear evidence limitations.
+
+### Content requiring restriction, redaction, or abstention
+
+Prefer restricted handling, redaction, generalization, delayed publication, or denial for:
+
+- active vulnerabilities and exploit chains;
+- credentials, secrets, internal endpoints, or signer/private-key material;
+- exact sensitive locations or reconstruction clues;
+- living-person, DNA/genomic, genealogy, private-land, or consent-sensitive data;
+- cultural, tribal, sacred, burial, archaeology, or sovereignty-sensitive material;
+- critical infrastructure or operationally sensitive facility detail;
+- source-restricted content and private reports;
+- unredacted telemetry, logs, prompts, evidence payloads, or incident artifacts; and
+- security reasons whose disclosure would reveal the protected fact.
+
+When the correct classification is unclear, do not publish the detail merely to make documentation complete.
+
+[Back to top](#top)
 
 ---
 
-## Diagram
+## Mutability, retention, and sensitive working material
 
-How the security docs fit into the governance landscape. The arrows are **"explains / references,"** not "controls / decides."
+| Property | Rule |
+|---|---|
+| Physical storage | Reviewed Git content for public-safe guidance; restricted operational evidence stays in its authorized system |
+| Mutability | Versioned replacement with Git history; append-only chronology where an incident or decision record requires it |
+| Stable identity | Preserve `doc_id`, path identity, anchors, and explicit supersession unless a reviewed migration says otherwise |
+| Generated content | Edit the canonical source and regenerate; never hand-edit a verified mirror |
+| Active vulnerability material | Keep out of public Git until remediated and approved for disclosure |
+| Incident evidence | Preserve according to incident, privacy, legal, rights, and retention authority; public docs receive only approved redacted derivatives |
+| Secret exposure | Revoke/rotate first, preserve minimal evidence safely, then correct public history through the authorized response |
+| Deletion | Requires identity, inbound-reference, sensitivity, retention, correction, and rollback review |
+| Documentation correction | Correct inaccurate guidance in place, retain decision lineage, and update the generated receipt for AI-authored changes |
 
-```mermaid
-flowchart LR
-  subgraph DOCS["docs/  (human-facing control plane)"]
-    DOCT["doctrine/"]
-    ARCH["architecture/"]
-    SEC["security/  ◀ this folder"]
-    RUN["runbooks/"]
-    GOV["governance/"]
-    REG["registers/"]
-    ADR["adr/"]
-  end
+A Git revert can reverse public documentation bytes. It cannot un-disclose a secret, exact location, or exploit detail already copied elsewhere. Sensitive-content prevention therefore outranks later cleanup.
 
-  subgraph ENFORCE["Enforcement & operations"]
-    POL["policy/"]
-    INF["infra/"]
-    API["apps/governed-api/"]
-    ADM["apps/admin/"]
-    REL["release/"]
-    DATA["data/receipts · data/proofs"]
-  end
+[Back to top](#top)
 
-  DOCT -- invariants --> SEC
-  ARCH -- surfaces --> SEC
-  SEC -- threat-model & posture --> POL
-  SEC -- posture & exposure --> INF
-  SEC -- trust-membrane view --> API
-  SEC -- admin constraints --> ADM
-  SEC -- integrity expectations --> REL
-  SEC -- audit expectations --> DATA
-  SEC -- incident path --> RUN
-  SEC -- people & duties --> GOV
-  SEC -- gaps & drift --> REG
-  SEC -- bend-an-invariant --> ADR
+---
+
+## Validation and negative checks
+
+Documentation validation proves only the asserted document properties. Security assurance requires evidence from the owning implementation and operational surfaces.
+
+### Documentation checks for this lane
+
+- one valid `KFM_META_BLOCK_V2` and one H1;
+- exact direct-child map and working local links;
+- stable top anchor and resolvable internal fragments;
+- no stale unmounted-repository claims presented as current;
+- no invented owner, private contact, secret store, incident record, deployment, policy approval, drill, or release;
+- no secret-like values, private keys, raw credentials, exact protected coordinates, live exploit payloads, or unredacted incident details;
+- explicit separation among guidance, policy, implementation, tests, evidence, runbooks, and release authority;
+- public-safe language and final newline; and
+- generated-receipt shape and artifact digest integrity for AI-authored changes.
+
+### Security evidence checks by owning surface
+
+| Assertion | Minimum evidence before claiming it |
+|---|---|
+| “Public clients cannot reach internal stores” | Route/import scans plus representative negative tests at an exact revision |
+| “A policy denies this case” | Current policy source, matching input, decision output, and test |
+| “Secrets are not committed” | Current scanner/configuration evidence and bounded repository scan; not prose alone |
+| “A workflow is supply-chain hardened” | Exact workflow, pinned dependencies/actions, permissions, identity constraints, and hosted result |
+| “A release is signed and verifiable” | Immutable artifact, digest, signature/attestation, verifier result, identity, and release record |
+| “Incident response is operational” | Named owners/channels, approved procedure, rehearsal or incident record, and correction/rollback evidence |
+| “Deny coverage is complete” | Enumerated threat/requirement matrix with positive and negative coverage; five bounded guards are not completion |
+| “Data classification is enforced” | Contract/schema fields, policy decisions, lifecycle propagation, fixtures, tests, and public-render checks |
+
+### Applicable repository-native checks
+
+At the time this change is proposed, relevant hosted checks include documentation metadata, document graph, stale scan, links, docs build, security scanning, validator-suite, deny-test, policy-test, telemetry-policy, release dry-run, and changed-area controls. Their conclusions must be read at the exact head; an inherited failure stays visible and is not relabeled success.
+
+```bash
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json \
+  --repo-root .
+
+git diff --check
 ```
 
-> Diagram reflects relationships named in Directory Rules §6.1, §7.1, §10.2, §13.5 and the trust-membrane category in the components dossier. **PROPOSED** for visual layout; relationships are CONFIRMED by doctrine.
+The commands above are repository entry points to verify in a mounted checkout. Listing them here is not a claim that they ran in this authoring session.
+
+[Back to top](#top)
 
 ---
 
-## Doctrine alignment
+## Ownership, review, and escalation
 
-Quick traceback from each canonical posture to where it is grounded.
+### Verified routing
 
-| Posture / claim | Source |
+Current CODEOWNERS evidence establishes one GitHub review route: `@bartytime4life`. It does not establish professional qualifications, independent review, incident command, security authority, policy authority, release authority, or separation of duties.
+
+### Review burden
+
+| Change | Minimum review posture |
 |---|---|
-| `docs/security/` owns threat model, exposure posture, incident response | Directory Rules §6.1 — `docs/` canonical tree |
-| Deny-by-default, least privilege, no direct model endpoint, no raw-data exposure, audit logs | Directory Rules §10.2 — `infra/` |
-| Trust membrane is `apps/governed-api/`; public clients use it, not canonical/internal stores | Directory Rules §7.1, §13.5; KFM core invariants |
-| Finite outcomes: ANSWER · ABSTAIN · DENY · ERROR (`RuntimeResponseEnvelope`) | Directory Rules §19 (glossary); §7.1 |
-| `apps/admin/` MUST NOT be the normal public path | Directory Rules §7.1 |
-| `configs/` MUST NOT store real secrets; exposure → runbook + rotation + audit | Directory Rules §10.3 |
-| Release signatures live in `release/signatures/` (DSSE / Sigstore) | Directory Rules §9.2 |
-| Watcher-as-non-publisher (workers emit receipts/candidates only) | Directory Rules §13.5; KFM core invariants |
-| Append-only audit ledger of receipts | KFM components dossier (Pass 10, "C1-06 Immutable, Append-Only Audit Ledger of Receipts") |
-| CI hardening: pinned action SHAs, OIDC subject restrictions, scoped secrets | KFM components dossier (Pass 11, "K.4 CI Hardening") |
-| Integrity headers, Sigstore/DSSE, Rekor in the trust membrane | KFM components dossier (Pass 11, "Category F — Trust Membrane") |
-| Fail-closed at public exposure; problems live at the edge, not in the membrane | KFM components dossier (Pass 11, §12.5 and fail-closed discussion) |
-| Sensitivity rubric (0–5) and redaction profiles | KFM components dossier (Pass 10, sensitivity rubric) |
+| Typo, link, or bounded factual correction | Documentation review |
+| Inventory, evidence snapshot, or maturity classification | Documentation review plus source verification |
+| Threat family, sensitive category, disclosure posture, or security outcome vocabulary | Security and affected policy/domain review |
+| Reporting channel or vulnerability handling | Verified security/repository owner; root `SECURITY.md` must remain synchronized |
+| Secret/key custody or rotation guidance | Security, infra/runtime, and release/signing owners |
+| Incident severity, containment, correction, withdrawal, or rollback doctrine | Security, operations/runbook, policy, and release owners |
+| Normal public-path, access, policy, lifecycle, or release-boundary change | Accepted ADR or other governing decision plus implementation evidence |
+| Policy-significant release or sensitive-data exception | Review appropriate to consequence; independent review when required |
+
+### Escalation
+
+Escalate rather than improvise when:
+
+- a vulnerability report lacks a verified private channel;
+- a document contains a real secret, exact protected location, or active exploit detail;
+- docs and implementation disagree about an exposure boundary;
+- policy, source rights, sensitivity, identity, or release state is unclear;
+- a public path appears to bypass the governed API or released artifacts;
+- an incident requires correction, withdrawal, cache invalidation, or rollback; or
+- one person or automation path is implicitly acting as author, approver, publisher, and incident authority.
+
+[Back to top](#top)
 
 ---
 
-## Task list
+## Adjacent responsibility roots
 
-Minimum bar for `docs/security/` to be **CONFIRMED**.
-
-- [ ] `docs/security/README.md` (this file) merged
-- [ ] `threat-model.md` drafted, listing adversary classes per surface and explicit out-of-scope items
-- [ ] `exposure-posture.md` mirrors actual `infra/` posture; gaps logged in `docs/registers/DRIFT_REGISTER.md`
-- [ ] `trust-membrane-security.md` cross-linked with `docs/doctrine/trust-membrane.md` and `docs/architecture/governed-api.md`
-- [ ] `supply-chain.md` names which workflows are pinned, where SBOM lives, and how signatures are verified
-- [ ] `secrets.md` confirms `configs/` is not a secret store and names the actual secret store
-- [ ] `sensitivity-and-rights.md` cross-links `policy/sensitivity/` and `policy/rights/`
-- [ ] `incident-response.md` names severities, the comms template, and the bridge to `release/correction_notices/` and `release/rollback_cards/`
-- [ ] `disclosure.md` matches root `SECURITY.md`; reporting channel verified reachable
-- [ ] CODEOWNERS covers `docs/security/**` with a security owner
-- [ ] At least one tabletop drill referenced and dated under `drills/`
-- [ ] Open items moved from this README into `docs/registers/VERIFICATION_BACKLOG.md`
-
-**Definition of Done.** All boxes checked, no entry for `docs/security/` in `DRIFT_REGISTER.md`, security owner sign-off recorded in PR.
-
----
-
-## FAQ
-
-<details>
-<summary><b>Why is this folder under <code>docs/</code> and not at repo root?</b></summary>
-
-Because security explanation is human-facing doctrine. Per Directory Rules §6.1, `docs/` is the canonical human-facing control plane, and `security/` is listed inside it. A root `security/` would be a **drift candidate** (§3 "no root-level domain folders"). Enforcement and posture live in `policy/` and `infra/` — those *are* canonical roots.
-
-</details>
-
-<details>
-<summary><b>What's the difference between this folder and the root <code>SECURITY.md</code>?</b></summary>
-
-`SECURITY.md` is the short, public-facing advisory (reporting channel, scope, coordinated-disclosure window). `docs/security/` is the long-form, internally-cited body the advisory points to. Treat `SECURITY.md` as the front door and this folder as the building.
-
-</details>
-
-<details>
-<summary><b>Where does the actual policy live?</b></summary>
-
-In `policy/` (Directory Rules §6.5). Sensitivity rules in `policy/sensitivity/`, rights in `policy/rights/`, runtime gates in `policy/runtime/`, promotion gates in `policy/promotion/`, release gates in `policy/release/`. This folder explains and references; `policy/` decides.
-
-</details>
-
-<details>
-<summary><b>Can I file a vulnerability here?</b></summary>
-
-No. Use the channel named in `SECURITY.md` and `docs/security/disclosure.md`. Public issues for un-remediated vulnerabilities violate coordinated-disclosure discipline.
-
-</details>
-
-<details>
-<summary><b>Where do incident records go?</b></summary>
-
-Active triage uses the operational channel referenced in `docs/runbooks/`, not this folder. Once an incident is closed and approved for publication, a **redacted** post-mortem lands in `docs/security/drills/` or as a referenced ADR. Receipts and signatures from the incident live in `data/receipts/` and `release/`.
-
-</details>
-
-<details>
-<summary><b>Why so many "PROPOSED" labels?</b></summary>
-
-Because the repository was not mounted when this README was written; Directory Rules require that paths and presence claims be checked against actual repo evidence before being labeled CONFIRMED. The **doctrine** the README is built from is CONFIRMED; the **implementation** of `docs/security/` is PROPOSED until inspected.
-
-</details>
-
----
-
-## Open verification
-
-Items to verify against the mounted repository before this README can move from PROPOSED to CONFIRMED. Open them into `docs/registers/VERIFICATION_BACKLOG.md`.
-
-1. Does `docs/security/` exist? Does any of the listed substructure already exist?
-2. Does root `SECURITY.md` exist? Does it reference `docs/security/`?
-3. Does CODEOWNERS cover `docs/security/**` with a named security owner?
-4. Does `docs/doctrine/trust-membrane.md` exist (the page this folder must stay aligned with)?
-5. Does `apps/governed-api/` exist; does it return `RuntimeResponseEnvelope` with the finite outcomes named here?
-6. Does `policy/` exist (singular, canonical) and not `policies/`? Drift if both.
-7. Does `release/signatures/` exist with Sigstore/DSSE artifacts referenced?
-8. Are `.github/workflows/` action versions pinned to SHAs? Is OIDC subject-restricted?
-9. Is the secret store named and referenced from `docs/security/secrets.md`?
-10. Has a tabletop drill been run and dated under `drills/` within the policy window?
-
----
-
-## Last reviewed
-
-| Field | Value |
+| Surface | Relationship to this lane |
 |---|---|
-| **Created** | `<!-- TBD: ISO date when this README first lands -->` |
-| **Last reviewed** | `<!-- TBD: ISO date of most recent review -->` |
-| **Review cadence** | Every 6 months, or on any change to `docs/doctrine/trust-membrane.md`, `apps/governed-api/`, `infra/`, or `policy/` posture |
-| **Reviewers (last)** | `<docs-steward>`, `<security-owner>` |
+| [`docs/doctrine/`](../doctrine/) | Stable trust and lifecycle law that security guidance must not contradict |
+| [`docs/adr/`](../adr/) | Accepted decisions that alter security architecture, exposure, or placement |
+| [`docs/runbooks/`](../runbooks/README.md) | Human-executable operational procedures, including incident response |
+| Root [`SECURITY.md`](../../SECURITY.md) | Public vulnerability-disclosure front door |
+| [`.github/CODEOWNERS`](../../.github/CODEOWNERS) | GitHub review routing, not proof of review or authority |
+| [`policy/`](../../policy/README.md) | Enforceable admissibility and finite security decisions |
+| [`infra/`](../../infra/README.md) | Deployment, exposure, network, identity, and hardening implementation |
+| [`apps/governed-api/`](../../apps/governed-api/) | Normal executable public trust path when current implementation supports it |
+| `runtime/` and `packages/` | Provider/adaptor composition and reusable trust logic |
+| `tests/`, `fixtures/`, and `tools/validators/` | Positive/negative enforcement evidence and reusable validation |
+| [`data/`](../../data/README.md) | Lifecycle, registry, receipt, proof, and published instance families |
+| [`release/`](../../release/README.md) | Release, correction, withdrawal, rollback, and signing decision plane |
+| `artifacts/qa/` or hosted CI storage | Rebuildable scan/report output only; not security truth or release proof |
+
+A reference from this README does not activate, adopt, or validate the adjacent surface.
+
+[Back to top](#top)
 
 ---
 
-## Appendix
+## Known drift and conflicts
 
-<details>
-<summary><b>A. README §15 contract — section coverage check</b></summary>
+These findings are current documentation work, not permission for an unreviewed rename or deletion.
 
-| §15 section | This README |
-|---|---|
-| Purpose | [Purpose](#purpose) |
-| Authority level | [Authority level](#authority-level) |
-| Status | [Status](#status) |
-| What belongs here | [What belongs here](#what-belongs-here) |
-| What does NOT belong here | [What does NOT belong here](#what-does-not-belong-here) |
-| Inputs | [Inputs](#inputs) |
-| Outputs | [Outputs](#outputs) |
-| Validation | [Validation](#validation) |
-| Review burden | [Review burden](#review-burden) |
-| Related folders | [Related folders](#related-folders) |
-| ADRs | [ADRs](#adrs) |
-| Last reviewed | [Last reviewed](#last-reviewed) |
+| Finding | Status | Smallest governed disposition |
+|---|---|---|
+| Current README proposes lowercase files and directories that do not match the actual uppercase nine-file lane | **CONFIRMED stale** | Replace the index with the exact direct-child map; do not create proposal paths |
+| Actual file is `EXPOSURE_PLAN.md`, while several child metadata blocks and links name `EXPOSURE_POSTURE.md` | **CONFIRMED naming conflict** | Inventory all consumers, choose identity through file-specific review, then repair links or migrate with rollback |
+| `docs/security/INCIDENT_RESPONSE.md` and `docs/runbooks/INCIDENT_RESPONSE.md` share a basename and overlapping language | **CONFIRMED scope overlap** | Define doctrine/standard versus procedure boundaries before consolidation, rename, or retirement |
+| Most child docs still say their own current path or siblings are proposed/unverified | **CONFIRMED stale evidence language** | Reconcile each file against current repository evidence without upgrading behavior |
+| Placeholder owner roles remain across the lane; CODEOWNERS only verifies `@bartytime4life` | **CONFIRMED ownership gap** | Record accountable assignments through the owning governance process; do not invent teams |
+| `KEY_ROTATION.md` retains a replace-at-merge document ID and proposed cadences | **CONFIRMED metadata/decision gap** | Recover stable identity and ratify or narrow cadence claims before operational use |
+| Root `SECURITY.md` requires private-first reporting but has no verified operational contact | **CONFIRMED P0 gap** | Configure and verify a private channel, then synchronize both surfaces |
+| Child docs name policies, standards, runbooks, signatures, stores, and tools not proven current in this review | **NEEDS VERIFICATION** | Verify exact paths and implementation before converting prose to current fact |
+| Broad security controls, negative tests, drills, incident automation, signing, and release integrity are not proven by this lane | **UNKNOWN** | Inspect owning code/config/tests/workflows/artifacts and record bounded results |
 
-</details>
+### Safe cleanup sequence
 
-<details>
-<summary><b>B. PR security checklist (illustrative — not yet wired into CI)</b></summary>
+1. Freeze the current lane, inbound references, child identities, and exact digests.
+2. Classify each conflict as stale prose, broken link, alias, overlap, missing authority, or implementation gap.
+3. Decide identity and ownership before any move or rename.
+4. Repair references and add negative guards before retiring an old name.
+5. Validate documentation, policy, implementation, fixtures, tests, workflows, incident/release consumers, and rollback.
+6. Prove zero writers and zero consumers before deletion.
+7. Preserve correction and supersession history.
 
-For PRs touching `apps/`, `apps/admin/`, `apps/governed-api/`, `infra/`, `connectors/`, `policy/`, `release/`, `configs/`, or `runtime/`:
+[Back to top](#top)
 
-- [ ] No new public route bypasses `apps/governed-api/`.
-- [ ] No new fail-open path. Fail-closed by default; ABSTAIN/DENY are returned with reason.
-- [ ] No new admin shortcut on the normal public path. `apps/admin/` constraints documented.
-- [ ] No new secret in `configs/`, in source, in fixtures, in logs, or in receipts.
-- [ ] No connector writes to `data/processed/`, `data/catalog/`, or `data/published/`.
-- [ ] No worker writes to `data/published/` or `data/catalog/` (watcher-as-non-publisher).
-- [ ] Receipts and proofs land in `data/receipts/` / `data/proofs/`, not `artifacts/`.
-- [ ] If exposure surface changes, ADR cited and threat model updated.
-- [ ] If audit-relevant behavior changes, runbook updated.
-- [ ] If posture-relevant invariant bends, ADR cited (Directory Rules §2.4).
+---
 
-</details>
+## Open verification backlog
 
-<details>
-<summary><b>C. Glossary pointers (defined in <code>docs/doctrine/</code>)</b></summary>
+### P0 — reporting, authority, and unsafe exposure
 
-- **Trust membrane** — the boundary preventing raw / unreviewed / model-generated / internal state from becoming public truth; executable form is `apps/governed-api/`.
-- **Cite-or-abstain** — default truth posture; without resolvable evidence, return ABSTAIN.
-- **EvidenceBundle / EvidenceRef** — resolved support package and reference for claims; `data/proofs/` + `packages/evidence-resolver/`.
-- **RuntimeResponseEnvelope** — finite-outcome wrapper (ANSWER · ABSTAIN · DENY · ERROR).
-- **Watcher-as-non-publisher** — workers emit receipts and candidate decisions; they never publish or mutate canonical records.
-- **Promotion** — governed state transition between lifecycle phases. Not a file move.
-- **Fail-closed** — when prerequisites cannot be established, the surface denies/abstains rather than guesses.
+1. **NEEDS VERIFICATION — private vulnerability channel.** Configure and test at least one private reporting path, then update root `SECURITY.md` and relevant security guidance together.
+2. **NEEDS VERIFICATION — accountable roles.** Identify security, policy, incident, infra/runtime, release, correction, and independent-review owners without treating CODEOWNERS routing as proof.
+3. **NEEDS VERIFICATION — trust-membrane implementation.** Reconcile public routes, internal-store denial, direct-model denial, authn/authz, admin boundaries, and error behavior at a pinned revision.
+4. **NEEDS VERIFICATION — sensitive-data enforcement.** Verify classification fields, deny-by-default policy, transforms, reason exposure, and public-render tests for every high-risk domain.
+5. **NEEDS VERIFICATION — secrets and signing.** Inventory actual secret stores, credential paths, workflow identities, key custody, signatures, rotation/revocation, leak scanning, and recovery.
 
-Authoritative definitions live in `docs/doctrine/` and `contracts/`. This list is a pointer only.
+### P1 — documentation and operational closure
 
-</details>
+6. **CONFIRMED conflict — exposure identity.** Resolve `EXPOSURE_PLAN.md` versus `EXPOSURE_POSTURE.md` through a reference inventory and reversible identity decision.
+7. **CONFIRMED overlap — incident surfaces.** Define the relationship among root disclosure policy, security incident doctrine, and operational incident runbook.
+8. **NEEDS VERIFICATION — child metadata.** Reconcile placeholder IDs, owners, dates, paths, versions, review claims, and no-mounted-repository language in seven older child documents.
+9. **NEEDS VERIFICATION — deny coverage.** Crosswalk threats and security requirements to implemented policy, validator, fixture, test, workflow, telemetry, and release checks; keep uncovered cases explicit.
+10. **NEEDS VERIFICATION — drills and evidence.** Determine which incident, secret-leak, key-rotation, rollback, withdrawal, and correction drills have approved, exact-version records.
 
-[Back to top ⤴](#docssecurity--security-doctrine-threat-model-and-incident-response)
+### P2 — maturity and maintainability
+
+11. **PROPOSED — security documentation registry.** Consider a machine-readable current-document map only after consumers, schema, authority, generation, and correction ownership are defined.
+12. **PROPOSED — metadata and link convergence.** Repair stale sibling names and cross-root references in dependency-closed batches rather than one broad search-and-replace.
+13. **NEEDS VERIFICATION — retention and disclosure.** Define public, internal, restricted, and incident-evidence retention, redaction, legal/rights review, and approved postmortem publication.
+14. **UNKNOWN — operational admission.** Determine which security controls and procedures, if any, are approved for real environments and actor classes rather than merely tracked.
+
+[Back to top](#top)
+
+---
+
+## Evidence basis and limitations
+
+| Evidence | Use in this edition | Limitation |
+|---|---|---|
+| `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f` | Pins target, lane inventory, child docs, disclosure entrypoint, Directory Rules, ADR, CODEOWNERS, and adjacent current paths | Commit bytes do not prove deployed controls or operational security |
+| Exact `docs/security/` contents response | Confirms nine direct Markdown files and no direct child directory | Presence does not prove quality, enforcement, use, or approval |
+| Complete prior README | Identifies stale proposal tree, placeholder owners, unmounted-repository claims, and intended lane scope | Prior prose is not current implementation evidence |
+| Eight child documents | Supports bounded focus, version, status, date, and drift findings | Not a complete line-by-line audit of every child |
+| Root `SECURITY.md` | Confirms private-first public disclosure posture and the unverified contact gap | Does not prove GitHub private reporting is enabled or monitored |
+| Operational incident runbook | Confirms a separate runbook surface | Does not prove rehearsal, staffing, or current procedure validity |
+| Accepted ADR-0029 and adopted Directory Rules | Establish placement, README profile, direct-child map, compatibility, migration, and rollback rules | Do not validate security behavior |
+| Current CODEOWNERS | Establishes `@bartytime4life` as the sole verified GitHub review route | Does not establish review completion, qualification, independence, or security/release authority |
+| Generated-receipt schema and validator | Establish current authoring-provenance shape and offline digest check | A valid receipt is process memory, not approval or security proof |
+
+### Assumptions deliberately not made
+
+This edition does not assume:
+
+- the repository has a verified private vulnerability contact;
+- GitHub private vulnerability reporting is enabled or monitored;
+- a draft child document is adopted policy;
+- a named security control is implemented because documentation describes it;
+- five structural deny guards equal complete fail-closed coverage;
+- an incident or key-rotation drill has occurred;
+- a secret store, signer, KMS, OIDC trust, SBOM, SLSA, Sigstore, DSSE, or Rekor integration is operational;
+- public routes, direct-model denial, or internal-store guards are complete;
+- a green workflow proves security, policy, release, or publication;
+- CODEOWNERS proves qualified or independent review;
+- a generated receipt proves truth, security, human approval, or release readiness; or
+- reverting Markdown reverses a real-world disclosure.
+
+[Back to top](#top)
+
+---
+
+## Last evidence review and rollback
+
+**2026-08-14** — v1.1 same-path repository-grounded reconciliation against `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f`.
+
+Re-review this README when:
+
+- a direct child is added, moved, renamed, superseded, or retired;
+- the private vulnerability channel or root `SECURITY.md` changes;
+- CODEOWNERS or accountable security/release/incident assignments change;
+- accepted doctrine, an ADR, or policy changes security placement or outcomes;
+- public routes, model access, admin access, secrets, signing, telemetry, or exposure posture changes;
+- a security incident, correction, withdrawal, rollback, or disclosure reveals a guidance gap;
+- deny-test or security-validation coverage changes materially; or
+- an evidence-review maximum interval selected by the owning security governance arrives.
+
+| Edition | Date | Change | Effect |
+|---|---|---|---|
+| **v1.1** | 2026-08-14 | Replaced proposal-only/unmounted-repository framing with the exact lane inventory, current entrypoint map, authority separation, maturity states, risk-based guidance, drift register, verification backlog, evidence limits, and rollback. | Documentation only; no security control or operational state change |
+| **v1** | 2026-05-10 | Long-form security-lane proposal, future tree, posture guidance, and README contract. | Historical documentation state |
+| **Initial path** | 2026-05-08 | Earliest path history returned for `docs/security/README.md`. | Origin details beyond path history remain bounded |
+
+### Documentation rollback
+
+Restore the prior file blob:
+
+```text
+path: docs/security/README.md
+prior_blob: c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a
+```
+
+or revert the focused content commit created by this change. That restores the v1 documentation snapshot. It does not revoke credentials, close a vulnerability, contain an incident, reverse a disclosure, alter policy, restore a deployment, invalidate a release, roll back data, or change repository settings.
+
+[Back to top](#top)
