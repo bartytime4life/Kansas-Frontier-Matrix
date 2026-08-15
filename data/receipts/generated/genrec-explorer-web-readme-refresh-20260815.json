@@ -5,7 +5,7 @@
     "apps/explorer-web/README.md"
   ],
   "artifact_hashes": {
-    "apps/explorer-web/README.md": "sha256:df0dab54abc35713200bd21730335bc9107a9d1a8c007cc1b43575cd8c54fbb1"
+    "apps/explorer-web/README.md": "sha256:4371dba46a80de8acccead3153fc5d8d079504f767f7db12c51b2fbeeb5af035"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -22,7 +22,7 @@
       "GitHub connector",
       "local deterministic hashing",
       "local Markdown structure validation",
-      "local JSON Schema validation"
+      "local receipt-shape validation"
     ]
   },
   "inputs": {
@@ -85,7 +85,7 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "The receipt binds the final README UTF-8 bytes with a full SHA-256 digest."
+      "reason": "The receipt binds the final connector-readback README bytes with SHA-256 digest 4371dba46a80de8acccead3153fc5d8d079504f767f7db12c51b2fbeeb5af035; the digest was independently reconciled to Git blob f8f37ed6e396a19ca080ea29b41920afdf03a94b."
     },
     {
       "gate": "git-diff-check",
