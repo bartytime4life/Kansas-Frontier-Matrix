@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-EXPECTED_FIXTURE_VALIDATORS = 8
+EXPECTED_FIXTURE_VALIDATORS = 9
 NON_FIXTURE_VALIDATORS = frozenset({"repository-topology", "workflow-security"})
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
 EXPECTED_ROOT: dict[str, object] = {

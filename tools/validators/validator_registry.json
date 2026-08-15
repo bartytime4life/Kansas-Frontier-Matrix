@@ -21,6 +21,7 @@
       "evidence-ref",
       "evidence-bundle",
       "layer-manifest",
+      "dataset-version",
       "runtime-response-envelope",
       "decision-envelope",
       "run-receipt",
@@ -102,6 +103,27 @@
         "fixtures/data/layer_manifest/**",
         "tests/validators/test_validate_layer_manifest.py",
         "tools/validators/data/**"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "dataset-version",
+      "description": "Validate proposed DatasetVersion fixture polarity and bounded identity, lifecycle, and lineage semantics.",
+      "script": "tools/validators/data/validate_dataset_version.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/dataset-version.yml",
+        "contracts/data/dataset_version.md",
+        "schemas/contracts/v1/data/dataset_version.schema.json",
+        "fixtures/contracts/v1/data/dataset_version/**",
+        "tests/validators/data/test_validate_dataset_version.py",
+        "tools/validators/data/validate_dataset_version.py",
+        "tools/validators/validate_dataset_version.py",
+        "docs/intake/exploratory/dataset-version-source-reconciliation.md",
+        "data/receipts/generated/genrec-dataset-version-20260815.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
