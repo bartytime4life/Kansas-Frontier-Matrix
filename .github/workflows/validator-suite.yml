@@ -91,6 +91,10 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
+      - name: Test validator-suite guardrail attribution
+        shell: bash
+        run: python -m unittest tests.validators.governance.test_validator_suite_guardrail_attribution --verbose
+
       - name: Validate canonical validator registry
         shell: bash
         run: |
