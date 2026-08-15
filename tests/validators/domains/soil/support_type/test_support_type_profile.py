@@ -36,6 +36,29 @@ class SoilSupportTypeProfileTests(unittest.TestCase):
             FIXTURE_ROOT / "valid/station_soil_moisture.json"
         )
 
+    def test_persisted_valid_fixtures_cover_every_support_type_once(self) -> None:
+        expected = {
+            rule["support_type"]
+            for rule in self.profile["support_types"]
+        }
+        fixtures = sorted((FIXTURE_ROOT / "valid").glob("*.json"))
+        observed: dict[str, str] = {}
+
+        for path in fixtures:
+            candidate = _load(path)
+            support_type = candidate["support_type"]
+            self.assertNotIn(
+                support_type,
+                observed,
+                f"duplicate positive fixture for {support_type}",
+            )
+            result = validate_file(path)
+            self.assertTrue(result.ok, (path.name, result.findings))
+            observed[support_type] = path.name
+
+        self.assertEqual(set(observed), expected)
+        self.assertEqual(len(fixtures), len(expected))
+
     def test_every_declared_support_type_accepts_a_minimal_candidate(self) -> None:
         rules = self.profile["support_types"]
         self.assertEqual(len(rules), 8)
