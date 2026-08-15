@@ -1,0 +1,45 @@
+name: agriculture-evidence-bundle-convergence
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/contracts/v1/evidence/evidence_bundle.schema.json'
+      - 'schemas/contracts/v1/domains/agriculture/evidence_bundle.schema.json'
+      - 'fixtures/contracts/v1/evidence/evidence_bundle/**'
+      - 'tools/validators/validate_agriculture_evidence_bundle_projection.py'
+      - 'tests/validators/domains/agriculture/test_evidence_bundle_schema_convergence.py'
+      - '.github/workflows/agriculture-evidence-bundle-convergence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: '1'
+  PYTHONHASHSEED: '0'
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Install repository validation dependencies
+        run: python -m pip install --disable-pip-version-check -e .
+      - name: Compile focused validator and tests
+        run: >-
+          python -m py_compile
+          tools/validators/validate_agriculture_evidence_bundle_projection.py
+          tests/validators/domains/agriculture/test_evidence_bundle_schema_convergence.py
+      - name: Run deterministic convergence tests
+        run: >-
+          python -m unittest -q
+          tests.validators.domains.agriculture.test_evidence_bundle_schema_convergence
+      - name: Validate shared fixtures through the Agriculture projection
+        run: python tools/validators/validate_agriculture_evidence_bundle_projection.py --fixtures
