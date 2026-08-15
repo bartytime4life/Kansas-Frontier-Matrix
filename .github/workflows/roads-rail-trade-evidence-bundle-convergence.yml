@@ -39,7 +39,9 @@ jobs:
           tests/validators/domains/roads-rail-trade/test_evidence_bundle_schema_convergence.py
       - name: Run deterministic convergence tests
         run: >-
-          python -m unittest -q
-          tests.validators.domains.roads-rail-trade.test_evidence_bundle_schema_convergence
+          python -m unittest discover
+          --start-directory tests/validators/domains/roads-rail-trade
+          --pattern 'test_evidence_bundle_schema_convergence.py'
+          --verbose
       - name: Validate shared fixtures through the Roads/Rail/Trade projection
         run: python tools/validators/validate_roads_rail_trade_evidence_bundle_projection.py --fixtures
