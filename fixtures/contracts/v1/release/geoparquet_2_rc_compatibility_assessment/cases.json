@@ -1,0 +1,210 @@
+{
+  "base_candidate": {
+    "profile": "kfm.geoparquet-2-rc-compatibility-assessment.v1",
+    "candidate_version": "2.0.0-rc.1",
+    "declared_default": "1.1.0",
+    "release_kind": "RELEASE_CANDIDATE",
+    "upstream_commit": "0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa",
+    "format_expectations": {
+      "logical_type": "GEOMETRY",
+      "physical_type": "BYTE_ARRAY",
+      "encoding": "WKB",
+      "root_geometry": true,
+      "parquet_crs_source_of_truth": true,
+      "geo_metadata_crs_inline_projjson": true,
+      "crs_semantically_equivalent": true,
+      "parquet_native_spatial_statistics": true,
+      "covering_bbox_column_required": false,
+      "legacy_1_1_fixtures_preserved": true
+    },
+    "engine_checks": {
+      "GDAL": {
+        "tool_version": "synthetic-pin-1",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "native_geometry_write": "PASS",
+        "native_geometry_read": "PASS",
+        "row_group_spatial_statistics": "PASS",
+        "evidence_ref": "fixture:gdal"
+      },
+      "DUCKDB": {
+        "tool_version": "synthetic-pin-1",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "native_geometry_read": "PASS",
+        "row_group_spatial_pruning": "PASS",
+        "evidence_ref": "fixture:duckdb"
+      },
+      "SEDONA": {
+        "tool_version": "synthetic-pin-1",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "workflow_round_trip": "PASS",
+        "row_group_spatial_pruning": "PASS",
+        "evidence_ref": "fixture:sedona"
+      }
+    },
+    "governance": {
+      "default_changed": false,
+      "adoption_authorized": false,
+      "migration_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "outcome": "READY"
+  },
+  "cases": [
+    {
+      "case_id": "hold_byte_probes_pending",
+      "all_probe_status": "NOT_RUN",
+      "overrides": {
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "BYTE_PROBES_PENDING"
+        ]
+      }
+    },
+    {
+      "case_id": "ready_synthetic_packet",
+      "expected": {
+        "outcome": "READY",
+        "reason_codes": []
+      }
+    },
+    {
+      "case_id": "hold_probe_failure",
+      "overrides": {
+        "engine_checks": {
+          "DUCKDB": {
+            "row_group_spatial_pruning": "FAIL"
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "BYTE_PROBE_FAILED"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_tool_unpinned",
+      "overrides": {
+        "engine_checks": {
+          "GDAL": {
+            "pinned": false
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "TOOL_VERSION_NOT_PINNED"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_warning_only",
+      "overrides": {
+        "engine_checks": {
+          "SEDONA": {
+            "unsupported_assumption_behavior": "WARN"
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "UNSUPPORTED_ASSUMPTION_NOT_FAIL_CLOSED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_default_changed",
+      "overrides": {
+        "declared_default": "2.0.0-rc.1",
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "DECLARED_DEFAULT_CHANGED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_covering_assumption",
+      "overrides": {
+        "format_expectations": {
+          "covering_bbox_column_required": true
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GEOPARQUET_1X_COVERING_ASSUMPTION_CONFLICT"
+        ]
+      }
+    },
+    {
+      "case_id": "error_crs_conflict",
+      "overrides": {
+        "format_expectations": {
+          "crs_semantically_equivalent": false
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GEOPARQUET_CRS_EQUIVALENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_governance",
+      "overrides": {
+        "governance": {
+          "adoption_authorized": true
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GOVERNANCE_BOUNDARY_VIOLATION"
+        ]
+      }
+    },
+    {
+      "case_id": "error_declared_outcome_mismatch",
+      "all_probe_status": "NOT_RUN",
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "BYTE_PROBES_PENDING",
+          "DECLARED_OUTCOME_MISMATCH"
+        ]
+      }
+    }
+  ]
+}
