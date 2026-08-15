@@ -14,7 +14,7 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/doctrine/directory-rules.md
   - docs/security/THREAT_MODEL.md
-  - docs/security/EXPOSURE_POSTURE.md
+  - docs/security/EXPOSURE_PLAN.md
   - docs/governance/ROLES.md
   - docs/runbooks/
   - release/correction_notices/
@@ -383,7 +383,7 @@ PROPOSED — verify each path on first link-check pass. Several siblings may not
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law and the `docs/security/` charter.
 - [`docs/security/THREAT_MODEL.md`](./THREAT_MODEL.md) — system-level threat model. *(TODO — stub if absent.)*
-- [`docs/security/EXPOSURE_POSTURE.md`](./EXPOSURE_POSTURE.md) — deny-by-default and least-privilege posture. *(TODO.)*
+- [`docs/security/EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) — deny-by-default and least-privilege posture. *(TODO.)*
 - [`docs/governance/ROLES.md`](../governance/ROLES.md) — role definitions and separation-of-duties matrix. *(TODO.)*
 - [`docs/runbooks/`](../runbooks/) — operational runbooks (rollback drills, validation runs, secret rotation).
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift entries that may originate from incident postmortems.
