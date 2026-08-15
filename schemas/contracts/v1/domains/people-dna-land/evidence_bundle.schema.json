@@ -1,32 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/domains/people-dna-land/evidence_bundle.schema.json",
-  "title": "evidence_bundle",
-  "type": "object",
-  "description": "KFM v1 contract schema stub for evidence_bundle. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "title": "People/DNA/Land EvidenceBundle projection",
+  "description": "PROPOSED People/DNA/Land-domain projection of the shared EvidenceBundle shape. This schema creates no independent evidence semantics, living-person or genomic release authority, consent authority, land-title authority, release authority, or publication authority.",
+  "$ref": "../../evidence/evidence_bundle.schema.json",
   "x-kfm": {
-    "contract_doc": "contracts/domains/people-dna-land/evidence_bundle.md",
-    "fixtures_root": "fixtures/domains/people-dna-land/evidence_bundle/",
-    "validator": "tools/validators/domains/people-dna-land/validate_evidence_bundle.py",
-    "policy": "policy/domains/people-dna-land/",
-    "status": "PROPOSED"
-  },
-  "properties": {
-    "spec_hash": {
-      "type": "string",
-      "description": "Deterministic content hash."
-    },
-    "id": {
-      "type": "string",
-      "description": "Canonical identifier."
-    },
-    "version": {
-      "type": "string",
-      "description": "Contract or object version."
-    }
-  },
-  "required": [
-    "id"
-  ],
-  "additionalProperties": true
+    "status": "PROPOSED",
+    "authority": "projection",
+    "canonical_semantics": "contracts/evidence/evidence_bundle.md",
+    "canonical_shape": "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+    "fixtures_root": "fixtures/contracts/v1/evidence/evidence_bundle/",
+    "validator": "tools/validators/validate_people_dna_land_evidence_bundle_projection.py",
+    "policy": "policy/evidence/ and policy/domains/people-dna-land/",
+    "domain_scope": "people-dna-land",
+    "independent_fields": "DENY",
+    "public_release_authority": false,
+    "living_person_or_genomic_release_authority": false
+  }
 }
