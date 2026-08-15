@@ -1,14 +1,4 @@
-from pathlib import Path
-import sys
+# geology :: validate_evidence_bundle — greenfield placeholder
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-
-from tools.validators._common.jsonschema_runner import run
-
-
-SCHEMA = Path("schemas/contracts/v1/domains/geology/evidence_bundle.schema.json")
-FIXTURES = Path("fixtures/contracts/v1/evidence/evidence_bundle")
-
-
-if __name__ == "__main__":
-    raise SystemExit(run(SCHEMA, FIXTURES, sys.argv[1:]))
+def main():
+    raise NotImplementedError

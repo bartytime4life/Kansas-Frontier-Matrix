@@ -1,7 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.kfm.local/contracts/v1/domains/geology/evidence_bundle.schema.json",
-  "title": "geology_evidence_bundle_projection",
+  "title": "Geology EvidenceBundle projection",
+  "description": "PROPOSED Geology-domain projection of the shared EvidenceBundle shape. This schema does not create independent evidence semantics, policy clearance, release authority, or publication authority.",
   "$ref": "../../evidence/evidence_bundle.schema.json",
   "x-kfm": {
     "status": "PROPOSED",
@@ -9,7 +10,7 @@
     "canonical_semantics": "contracts/evidence/evidence_bundle.md",
     "canonical_shape": "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
     "fixtures_root": "fixtures/contracts/v1/evidence/evidence_bundle/",
-    "validator": "tools/validators/domains/geology/validate_evidence_bundle.py",
+    "validator": "tools/validators/validate_geology_evidence_bundle_projection.py",
     "policy": "policy/evidence/ and policy/domains/geology/",
     "domain_scope": "geology",
     "independent_fields": "DENY",
