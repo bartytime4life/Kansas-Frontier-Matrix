@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks-validator-orchestrator
 title: Validator Orchestrator Runbook
 type: runbook
-version: v1.1
+version: v1.2
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-08-08
@@ -10,7 +10,7 @@ updated: 2026-08-15
 policy_label: internal
 owning_root: docs/
 responsibility: Operate the bounded registry-driven validator orchestrator without treating a validation result as evidence, policy, review, release, or publication authority.
-truth_posture: CONFIRMED current command and registry contract on this branch; hosted CI remains NEEDS VERIFICATION until the pull-request checks complete.
+truth_posture: CONFIRMED current command, registry contract, and historical schema-runner boundary on this branch; hosted CI remains NEEDS VERIFICATION until the pull-request checks complete.
 related:
   - ../../tools/validate_all.py
   - ../../tools/validators/validate_all.py
@@ -22,6 +22,7 @@ related:
   - ../../tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py
   - ../../tests/validators/test_validator_orchestrator.py
   - ../../tests/validators/test_catalog_validator_registry_convergence.py
+  - ../../tests/validators/test_legacy_schema_runner_scope.py
   - ../doctrine/directory-rules.md
   - ../dashboards/observability/validator-orchestrator-health.md
 notes:
@@ -29,6 +30,7 @@ notes:
   - "This runbook implements the bounded orchestrator direction associated with KFM-P5-PROG-0009 and the Pass 6 validator-report expansions."
   - "The orchestrator runs repository-owned validators without a shell, forces no-network test posture, and emits finite machine-readable outcomes."
   - "Catalog closure registration coordinates four existing fixture-only validators; it does not accept ADR-0022 or create catalog, evidence, review, release, promotion, publication, or public-use authority."
+  - "The historical make schemas compatibility runner explicitly selects the nine reviewed schema fixture families; canonical full remains broader and retains catalog and repository guardrail validators."
   - "A green orchestrator report proves only the selected checks completed successfully for the declared profile."
 [/KFM_META_BLOCK_V2] -->
 
@@ -184,10 +186,17 @@ python -m unittest discover \
   --pattern 'test_catalog_validator_registry_convergence.py' \
   --verbose
 
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_legacy_schema_runner_scope.py' \
+  --verbose
+
 python tools/validate_all.py --validate-registry
 python tools/validate_all.py --profile release-dry-run
 python tools/validate_all.py --profile full
 ```
+
+### Historical `make schemas` compatibility boundary
 
 The existing compatibility surface remains available:
 
@@ -195,7 +204,15 @@ The existing compatibility surface remains available:
 python tools/validators/_common/run_all.py
 ```
 
-It delegates to the canonical full profile and retains `RUNNER_VALIDATORS` for the existing `validator-suite` workflow. New callers should use `tools/validate_all.py`.
+That command is the implementation behind `make schemas`. It uses the canonical orchestrator engine but explicitly requests the nine reviewed legacy schema-fixture validator IDs represented by `RUNNER_VALIDATORS`. It does **not** run catalog-closure validators, `workflow-security`, or `repository-topology` merely because those checks belong to the broader canonical `full` profile.
+
+This separation is intentional:
+
+- `make schemas` and `schema-validation` retain their historical schema/fixture responsibility;
+- `python tools/validate_all.py --profile full` remains the complete registered aggregate and still includes catalog plus repository guardrails;
+- `make repository-guardrails` remains the dedicated workflow-security and repository-topology enforcement surface.
+
+New callers should use `tools/validate_all.py` and choose the profile or explicit validators appropriate to their responsibility. Do not use `make schemas` as an alias for the complete validator registry.
 
 ## Failure handling
 
@@ -207,4 +224,4 @@ It delegates to the canonical full profile and retains `RUNNER_VALIDATORS` for t
 
 ## Rollback
 
-Revert the campaign commit to restore the previous registry profile membership and runbook. Do not delete historical CI logs or reports. No catalog records, generated receipts, schemas, contracts, policies, release objects, or published artifacts are changed by this registration slice.
+Revert the compatibility-scope change to restore the previous behavior in which the historical wrapper executed the canonical full profile. The registry, child validators, contracts, schemas, policies, catalog records, generated receipts, release objects, and published artifacts are not changed by this boundary correction.
