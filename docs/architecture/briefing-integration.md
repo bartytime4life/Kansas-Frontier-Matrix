@@ -2,8 +2,8 @@
 doc_id: kfm://doc/docs-architecture-briefing-integration
 title: Briefing-to-System Integration Architecture
 type: architecture; implementation-guide
-version: v0.6.0
-status: proposed; bounded no-network foundations reconciled through source and evidence candidate assessments
+version: v0.7.0
+status: proposed; bounded foundations reconciled through authenticated read-only GitHub issue observation
 owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewards · Source/evidence/policy/release stewards
 created: 2026-07-29
 updated: 2026-08-14
@@ -17,6 +17,10 @@ related:
   - ../../contracts/governance/issue_inventory_projection.md
   - ../../schemas/contracts/v1/governance/issue_inventory_projection.schema.json
   - ../../tools/validators/governance/validate_issue_inventory_projection.py
+  - ../../contracts/governance/github_issue_inventory_read.md
+  - ../../schemas/contracts/v1/governance/github_issue_inventory_read.schema.json
+  - ../../tools/validators/governance/validate_github_issue_inventory_read.py
+  - ../../tools/probes/github_issue_inventory_read.py
   - ../../contracts/common/temporal_authority_envelope.md
   - ../../schemas/contracts/v1/common/temporal_authority_envelope.schema.json
   - ../../contracts/source/official_source_snapshot_candidate.md
@@ -25,11 +29,12 @@ related:
   - ../../contracts/evidence/evidence_binding_chain_assessment.md
   - ../../examples/briefing_integration/README.md
   - ../../.github/workflows/briefing-integration.yml
-tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
+  - ../../.github/workflows/github-issue-inventory-read.yml
+tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, github-read, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
 notes:
-  - "v0.6 reconciles the central architecture with later landed fixture-only source-snapshot, lineage, obligation-propagation, and evidence-binding assessment packets."
-  - "The added packets remain candidate/assessment surfaces; none creates source activation, EvidenceBundle closure, policy, review, release, or publication authority."
-  - "Authenticated live GitHub reads, live source access, and public products remain separately reviewed future stages."
+  - "v0.7 corrects the prior future-stage claim: the repository already contains a separately bounded authenticated read-only GitHub issue-observation profile, probe, validator, fixtures/tests, and workflow."
+  - "GitHubIssueInventoryRead remains PROPOSED_INACTIVE and creates no repository mutation, evidence, policy, review, release, publication, or public-use authority."
+  - "Live source access, authoritative source/evidence/policy resolution, and public products remain separately reviewed future stages."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,6 +55,7 @@ Daily briefing
   -> deterministic identity and event clustering
   -> explainable materiality and declared finite routing
   -> validated local IssueInventoryProjection when an existing issue is claimed
+  -> optional separately invoked authenticated GitHubIssueInventoryRead observation
   -> open-target binding or fail-closed HOLD
   -> official-source snapshot or explicit unresolved state
   -> object-family classification
@@ -61,14 +67,15 @@ Daily briefing
   -> governed public-safe product
 ```
 
-No direct path exists from briefing prose, a score, a candidate issue number, or
-a proposed issue operation to evidence, PUBLISHED state, public truth, or a
-public map/API/AI answer.
+No direct path exists from briefing prose, a score, a candidate issue number, a
+fixture projection, or a live-read observation to evidence, PUBLISHED state,
+public truth, repository mutation, or a public map/API/AI answer.
 
 ## Current bounded foundations
 
-The current implementation remains deterministic, no-network, and file-backed.
-The repository now contains these bounded foundations:
+The repository now contains deterministic fixture-backed foundations plus one
+separately invoked authenticated read-only GitHub observation profile. The
+bounded foundations are:
 
 1. `BriefingSignal` semantic and machine shape;
 2. `TemporalAuthorityEnvelope` metadata profile;
@@ -78,23 +85,32 @@ The repository now contains these bounded foundations:
    finite declared issue routing;
 5. a fixture-backed `IssueInventoryProjection` that independently checks whether
    a declared existing-issue target is present and open;
-6. `OfficialSourceSnapshotCandidate`, which models an immutable source-snapshot
+6. `GitHubIssueInventoryRead`, a separate `PROPOSED_INACTIVE` authenticated,
+   read-only observation profile with repository/ref binding, freshness,
+   rate-limit posture, deterministic response binding, and fixed false
+   authority/mutation/public-use flags;
+7. `OfficialSourceSnapshotCandidate`, which models an immutable source-snapshot
    candidate without activating or fetching a live source;
-7. `OfficialSourceSnapshotLineageAssessment`, which tests correction,
+8. `OfficialSourceSnapshotLineageAssessment`, which tests correction,
    supersession, conflict, and lineage declarations for snapshot candidates;
-8. `EvidenceBindingChainAssessment`, which proves only synthetic reference
+9. `EvidenceBindingChainAssessment`, which proves only synthetic reference
    closure from one `SourceArtifact` through parse output and `EvidenceRef` to a
    field binding; and
-9. `SourceObligationPropagationAssessment`, which checks that declared
+10. `SourceObligationPropagationAssessment`, which checks that declared
    attribution and use obligations are not dropped across synthetic derivative,
    catalog-candidate, and export-candidate carriers.
 
-These foundations consume repository fixtures and checked-in examples only.
-They do not establish current external source state, read live GitHub state,
-write GitHub issues, activate sources, authenticate an `EvidenceBundle`, decide
-rights or policy, approve review, mutate lifecycle state, release, deploy,
-publish, or authorize public use. A `PASS` on any candidate or assessment means
-only that its declared repository-local contract and validation boundary closed.
+The fixture-backed foundations consume repository fixtures and checked-in
+examples only. The GitHub read profile may make authenticated GET-only calls
+only when explicitly invoked with a read credential; it minimizes returned
+issue state and fails closed on authentication, binding, freshness, malformed
+responses, or unusable rate-limit posture.
+
+None of these foundations writes GitHub issues, activates sources,
+authenticates an `EvidenceBundle`, decides rights or policy, approves review,
+mutates lifecycle state, releases, deploys, publishes, or authorizes public use.
+A `PASS` on a candidate/assessment or a `FRESH` GitHub read means only that the
+named bounded contract closed under its declared conditions.
 
 ## Independent state machines
 
@@ -114,9 +130,11 @@ Defined by each native domain contract. Examples include `scheduled`,
 
 ### Repository issue state
 
-The fixture profile recognizes only `OPEN` and `CLOSED`. That local state is not
-a replacement for live GitHub evidence, rulesets, permissions, review state,
-merge state, or repository authorization.
+The deterministic fixture profile recognizes only `OPEN` and `CLOSED`.
+`GitHubIssueInventoryRead` can separately observe minimized live issue state for
+one bound repository/default-branch context when explicitly invoked, but that
+observation is not evidence, ruleset/permission authority, review state, merge
+state, or repository mutation authorization.
 
 A transition in one state machine never implies a transition in another. `P0`
 is a review priority, not a lifecycle or authority state. An open issue is not
@@ -227,7 +245,7 @@ else
   -> NO_ACTION with exact reason
 ```
 
-A declared existing-issue match now passes through a second deterministic gate:
+A declared existing-issue match passes through a deterministic gate:
 
 ```text
 no IssueInventoryProjection
@@ -241,6 +259,11 @@ more than one declared target open
 exactly one declared target open and none missing
   -> UPDATE_EXISTING_ISSUE / ISSUE_INVENTORY_OPEN_TARGET
 ```
+
+The fixture projection remains the deterministic contract-test input. A
+separately invoked `GitHubIssueInventoryRead` may provide a fresh minimized
+repository-state observation for higher-level verification, but it does not by
+itself authorize routing mutation or replace the deterministic fixture profile.
 
 The output remains a proposed operation only. It always carries:
 
@@ -276,6 +299,31 @@ fail closed.
 The fixture is not current GitHub evidence. It contains no title, body, comment,
 label, assignee, reviewer, permission, mergeability, ruleset, or branch state.
 
+## GitHubIssueInventoryRead boundary
+
+`GitHubIssueInventoryRead` is a separate authenticated read-only profile, not a
+replacement for the fixture contract. Its current contract requires:
+
+- `GET` only;
+- credential from `KFM_GITHUB_READ_TOKEN` or `GITHUB_TOKEN`, never serialized or
+  logged;
+- binding to repository identity, numeric repository ID, default branch, and
+  default-branch head SHA;
+- unique sorted positive issue numbers;
+- issue-only minimized rows containing `number`, `state`, and `updated_at`;
+- rejection of pull-request objects returned through the Issues API;
+- explicit `retrieved_at` / `stale_at` freshness;
+- recorded rate-limit state when supplied;
+- deterministic response digest and receipt ID; and
+- fixed false mutation, authority, evidence, release, publication, and public-use
+  flags.
+
+Its finite outcomes are `FRESH`, `STALE`, `HOLD_AUTH`, `HOLD_RATE_LIMIT`,
+`HOLD_BINDING`, and `ERROR`. `FRESH` proves only the bounded observation at the
+recorded time. It does not prove issue content correctness or grant any write,
+merge, source, evidence, policy, review, release, deployment, or publication
+authority.
+
 ## Shared temporal-authority foundation
 
 `TemporalAuthorityEnvelope` binds stable object identity, exact revision
@@ -310,8 +358,8 @@ The candidate records only the official source announcement, scheduled times,
 venue text, conducting agencies, topics, and unresolved venue/regional
 geometries. The occurrence and outcomes remain unverified. It declares existing
 issue `#1647`. With the synthetic `open-target` projection, the dry run binds
-that route to the one open target. Without a projection, it now holds rather
-than trusting the candidate-supplied issue number.
+that route to the one open target. Without a projection, it holds rather than
+trusting the candidate-supplied issue number.
 
 ### GMD action-plan index example
 
@@ -335,9 +383,14 @@ The read-only `briefing-integration` workflow:
 8. preserves TemporalAuthorityEnvelope regression coverage; and
 9. preserves water-planning anti-collapse and RAC-registry checks.
 
-A green workflow proves only the declared fixture behavior. It is not evidence,
-live issue state, issue authorization, policy, review, proof, release,
-deployment, publication, or public truth.
+The separate `github-issue-inventory-read` workflow covers the authenticated
+read-only profile independently of the deterministic briefing fixture flow. Its
+presence does not make every briefing run a live GitHub read and does not grant
+write permission.
+
+A green workflow proves only the declared checked behavior. It is not evidence,
+issue-mutation authorization, policy, review, proof, release, deployment,
+publication, or public truth.
 
 ## Failure posture
 
@@ -354,6 +407,11 @@ deployment, publication, or public truth.
 | More than one declared target is open | `HOLD_FOR_DEPENDENCY`. |
 | Projection shape, count, time, digest, or ID is invalid | Fail the dry run. |
 | Projection claims live verification, authority, or mutation | Reject projection. |
+| Live-read credential/authentication is unresolved | `HOLD_AUTH`. |
+| Live-read repository/ref binding is unresolved | `HOLD_BINDING`. |
+| Live-read rate-limit posture is unusable | `HOLD_RATE_LIMIT`. |
+| Live-read freshness expires | `STALE`. |
+| Live-read response is malformed or includes a pull-request object | `ERROR`. |
 | Unsafe route | `REJECT_UNSAFE`; no issue mutation. |
 | Missing dependency | `HOLD_FOR_DEPENDENCY`; no issue mutation. |
 | Official support unresolved for corrective route | `NO_ACTION` with explicit reason. |
@@ -363,43 +421,46 @@ deployment, publication, or public truth.
 
 ## Next implementation stages
 
-The first official-source snapshot candidate, snapshot-lineage assessment,
-domain-native advisory/condition profiles, and bounded evidence/obligation
-assessments have now landed as inactive fixture-first packets. The remaining
-stages are narrower and require stronger evidence or authorization:
+The official-source snapshot candidate, snapshot-lineage assessment,
+domain-native advisory/condition profiles, bounded evidence/obligation
+assessments, and separately bounded authenticated read-only GitHub issue
+observation have landed. The remaining stages require stronger evidence or
+explicit authorization:
 
-1. add a separately reviewed, authenticated read-only GitHub projection adapter
-   with retrieval receipts and stale-state handling; preserve the fixture-backed
-   `IssueInventoryProjection` as the deterministic contract test;
-2. resolve candidate source/evidence assessments against actual
+1. resolve candidate source/evidence assessments against actual
    `SourceDescriptor`, rights, sensitivity, evidence, policy, and review state
    only in separately authorized source/evidence slices;
-3. add live source access only after source admission, rights, sensitivity,
-   retrieval receipt, correction, and rollback gates are verified; and
+2. add live source access only after source admission, rights, sensitivity,
+   retrieval receipt, correction, and rollback gates are verified;
+3. connect bounded evidence resolution to governed runtime/API behavior only
+   after policy, review, release, citation, correction, and precision obligations
+   are explicit and fail-closed; and
 4. add public products only after evidence, policy, review, release, correction,
    and rollback close.
 
 No remaining stage is authorized by this document merely because its precursor
-fixture packet exists.
+fixture packet or read-only observation profile exists.
 
 ## Non-goals
 
-- no live web connector;
+- no automatic or live-by-default GitHub read in briefing evaluation;
 - no scheduler;
-- no live GitHub read;
 - no GitHub issue-writing automation;
 - no repository self-authorization;
-- no source activation or EvidenceBundle construction;
+- no source activation or authoritative EvidenceBundle construction;
+- no live source access by this architecture slice;
 - no global temporal-vocabulary decision;
-- no public API, map, search, graph, Focus Mode, or AI route;
+- no public API, map, search, graph, Focus Mode, or AI route from briefing state;
 - no policy, review, promotion, release, deployment, or publication;
-- no claim that priority or projected issue state proves urgency or truth.
+- no claim that priority, fixture projection, or live-read issue state proves
+  urgency, truth, or mutation permission.
 
 ## Rollback
 
-Before merge, close the draft and abandon the branch. After merge, revert the
-bounded integration commit through review. A future live adapter does not
-rewrite fixture history. No external event, issue, source, evidence, lifecycle,
-release, cache, deployment, or public state is created by this slice.
+Before merge, close the draft and abandon the branch. After merge, revert this
+documentation correction through review. The correction does not rewrite fixture
+history and does not change the behavior or activation status of the existing
+GitHub read profile. No external event, issue mutation, source, evidence,
+lifecycle, release, cache, deployment, or public state is created by this slice.
 
 [Back to top](#top)
