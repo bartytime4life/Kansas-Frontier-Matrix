@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
-"""Evaluate MapLibre GL JS v6 readiness without installing or running MapLibre.
+"""Evaluate the MapLibre GL JS 6.3 readiness candidate without installing MapLibre.
 
 The validator combines bounded repository inspection with an optional committed
-probe-results record. It can prove dependency pinning, ESM/ES2022 posture,
-import-boundary hygiene, absence of known internal API use, and whether the
-required browser probes were recorded. It cannot prove rendering equivalence,
-WebGL2 availability, CSP behavior, or query parity unless those external probes
-have been executed and their finite results are supplied.
+probe-results record. It can prove exact dependency selection, ESM/ES2022
+posture, import-boundary hygiene, absence of known internal API use, and whether
+the required KFM browser/runtime probes were recorded. It cannot prove rendering
+equivalence, WebGL2 availability, CSP behavior, tile-query safety, resource
+reclamation, terrain behavior, Evidence Drawer stability, or headless parity
+unless those probes have actually been executed and supplied.
 
-Dependency detection considers the root and Explorer manifests plus the
-repository-present ``packages/maplibre/package.json`` manifest. The package
-manifest is optional because this readiness classifier does not select or
-accept a package-ownership architecture; when present, however, it must be
-readable and participate in conflict detection.
+A ``READY`` result is eligibility evidence for human review of the exact 6.3.0
+candidate. It does not authorize dependency admission, upgrade, release,
+deployment, publication, or public use.
 """
 from __future__ import annotations
 
@@ -24,7 +23,8 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-PROFILE = "kfm-maplibre-v6-readiness-v1"
+PROFILE = "kfm-maplibre-v6-3-readiness-v2"
+TARGET_VERSION = "6.3.0"
 PROBE_NAMES = (
     "webgl2_failure_handling",
     "worker_csp_loading",
@@ -32,6 +32,12 @@ PROBE_NAMES = (
     "geojson_set_data",
     "query_rendered_features",
     "visual_pixel_diff",
+    "image_source_texture_reclamation",
+    "query_rendered_features_tile_churn",
+    "pmtiles_vector_tile_loading",
+    "terrain_dem_regression",
+    "evidence_drawer_selection_stability",
+    "headless_render_parity",
 )
 SOURCE_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".ts", ".tsx"})
 MAX_SOURCE_FILES = 1000
@@ -61,6 +67,7 @@ class ReadinessResult:
             "probes": dict(sorted(self.probes.items())),
             "reasons": list(self.reasons),
             "selected_version": self.selected_version,
+            "target_version": TARGET_VERSION,
             "typescript_target": self.typescript_target,
         }
 
@@ -95,6 +102,21 @@ def _dependency_version(manifest: Mapping[str, Any]) -> str | None:
 def _major(version: str) -> int | None:
     match = re.fullmatch(r"([0-9]+)\.([0-9]+)\.([0-9]+)", version)
     return int(match.group(1)) if match else None
+
+
+def _version_reasons(version: str | None) -> list[str]:
+    if version is None:
+        return ["MAPLIBRE_V6_3_EXACT_VERSION_REQUIRED"]
+    major = _major(version)
+    if major is None:
+        return ["MAPLIBRE_VERSION_NOT_EXACT"]
+    if major < 6:
+        return ["MAPLIBRE_V6_NOT_SELECTED"]
+    if major > 6:
+        return ["MAPLIBRE_MAJOR_UNREVIEWED"]
+    if version != TARGET_VERSION:
+        return ["MAPLIBRE_V6_3_CANDIDATE_NOT_SELECTED"]
+    return []
 
 
 def _source_files(root: Path) -> tuple[list[Path], bool]:
@@ -188,13 +210,7 @@ def scan_repository(root: Path) -> ReadinessResult:
         reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
     else:
         selected_version = versions[0]
-        major = _major(selected_version)
-        if major is None:
-            reasons.append("MAPLIBRE_VERSION_NOT_EXACT")
-        elif major < 6:
-            reasons.append("MAPLIBRE_V6_NOT_SELECTED")
-        elif major > 6:
-            reasons.append("MAPLIBRE_MAJOR_UNREVIEWED")
+        reasons.extend(_version_reasons(selected_version))
 
     module_mode = explorer_manifest.get("type") if isinstance(explorer_manifest.get("type"), str) else None
     if module_mode != "module":
@@ -215,14 +231,12 @@ def scan_repository(root: Path) -> ReadinessResult:
     probes, probe_error = _probe_results(root)
     if probe_error:
         return ReadinessResult(Outcome.ERROR, (probe_error,), selected_version, module_mode, target, probes)
-    failed = [name for name, status in probes.items() if status == "FAIL"]
-    pending = [name for name, status in probes.items() if status == "NOT_RUN"]
-    if failed:
+    if any(status == "FAIL" for status in probes.values()):
         reasons.append("RUNTIME_PROBE_FAILED")
-    if pending:
+    if any(status == "NOT_RUN" for status in probes.values()):
         reasons.append("RUNTIME_PROBES_PENDING")
 
-    outcome = Outcome.READY if not reasons and _major(selected_version or "") == 6 else Outcome.HOLD
+    outcome = Outcome.READY if not reasons and selected_version == TARGET_VERSION else Outcome.HOLD
     return ReadinessResult(outcome, tuple(sorted(set(reasons))), selected_version, module_mode, target, probes)
 
 
@@ -233,17 +247,7 @@ def evaluate_manifest(value: Mapping[str, Any]) -> ReadinessResult:
     version = value.get("selected_version") if isinstance(value.get("selected_version"), str) else None
     module_mode = value.get("module_mode") if isinstance(value.get("module_mode"), str) else None
     target = value.get("typescript_target") if isinstance(value.get("typescript_target"), str) else None
-    probes_value = value.get("probes")
-    if not isinstance(probes_value, Mapping):
-        return ReadinessResult(Outcome.ERROR, ("PROBES_INVALID",), version, module_mode, target, {})
-    probes: dict[str, str] = {}
-    for name in PROBE_NAMES:
-        status = probes_value.get(name)
-        if status not in {"PASS", "FAIL", "NOT_RUN"}:
-            return ReadinessResult(Outcome.ERROR, ("PROBES_INVALID",), version, module_mode, target, {})
-        probes[name] = str(status)
-    if _major(version or "") != 6:
-        reasons.append("MAPLIBRE_V6_EXACT_VERSION_REQUIRED")
+    reasons.extend(_version_reasons(version))
     if module_mode != "module":
         reasons.append("ESM_MODE_REQUIRED")
     if target != "ES2022":
@@ -253,17 +257,30 @@ def evaluate_manifest(value: Mapping[str, Any]) -> ReadinessResult:
     violations = value.get("direct_import_boundary_violations")
     if not isinstance(violations, list) or violations:
         reasons.append("MAPLIBRE_IMPORT_BOUNDARY_VIOLATION")
+
+    probes_value = value.get("probes")
+    if not isinstance(probes_value, Mapping):
+        return ReadinessResult(Outcome.ERROR, ("PROBES_INVALID",), version, module_mode, target, {})
+    probes: dict[str, str] = {}
+    for name in PROBE_NAMES:
+        status = probes_value.get(name)
+        if status not in {"PASS", "FAIL", "NOT_RUN"}:
+            return ReadinessResult(Outcome.ERROR, ("PROBES_INVALID",), version, module_mode, target, {})
+        probes[name] = str(status)
     if any(status == "FAIL" for status in probes.values()):
         reasons.append("RUNTIME_PROBE_FAILED")
     if any(status == "NOT_RUN" for status in probes.values()):
         reasons.append("RUNTIME_PROBES_PENDING")
-    computed = Outcome.READY if not reasons else Outcome.HOLD
-    declared = value.get("outcome")
-    if declared != computed:
+
+    computed = Outcome.READY if not reasons and version == TARGET_VERSION else Outcome.HOLD
+    if value.get("outcome") != computed:
         reasons.append("DECLARED_OUTCOME_MISMATCH")
         computed = Outcome.ERROR
     governance = value.get("governance")
-    if not isinstance(governance, Mapping) or any(governance.get(key) is not False for key in ("authority_created", "upgrade_authorized", "release_authorized", "publication_authorized")):
+    if not isinstance(governance, Mapping) or any(
+        governance.get(key) is not False
+        for key in ("authority_created", "upgrade_authorized", "release_authorized", "publication_authorized")
+    ):
         reasons.append("GOVERNANCE_BOUNDARY_VIOLATION")
         computed = Outcome.ERROR
     return ReadinessResult(computed, tuple(sorted(set(reasons))), version, module_mode, target, probes)
@@ -287,14 +304,22 @@ def validate_fixtures() -> int:
     for entry in valid_cases:
         candidate = entry.get("candidate") if isinstance(entry, Mapping) else None
         name = str(entry.get("name", "valid")) if isinstance(entry, Mapping) else "valid"
-        result = ReadinessResult(Outcome.ERROR, ("ROOT_INVALID",), None, None, None, {}) if not isinstance(candidate, Mapping) else evaluate_manifest(candidate)
+        result = (
+            ReadinessResult(Outcome.ERROR, ("ROOT_INVALID",), None, None, None, {})
+            if not isinstance(candidate, Mapping)
+            else evaluate_manifest(candidate)
+        )
         print(json.dumps({"file": name, **result.to_dict()}, sort_keys=True, separators=(",", ":")))
         failed = failed or result.outcome == Outcome.ERROR
     for entry in invalid_cases:
         candidate = entry.get("candidate") if isinstance(entry, Mapping) else None
         name = str(entry.get("name", "invalid")) if isinstance(entry, Mapping) else "invalid"
         expected = sorted(str(code) for code in entry.get("expected", [])) if isinstance(entry, Mapping) else []
-        result = ReadinessResult(Outcome.ERROR, ("ROOT_INVALID",), None, None, None, {}) if not isinstance(candidate, Mapping) else evaluate_manifest(candidate)
+        result = (
+            ReadinessResult(Outcome.ERROR, ("ROOT_INVALID",), None, None, None, {})
+            if not isinstance(candidate, Mapping)
+            else evaluate_manifest(candidate)
+        )
         print(json.dumps({"file": name, **result.to_dict()}, sort_keys=True, separators=(",", ":")))
         failed = failed or sorted(result.reasons) != expected
     return 1 if failed else 0
@@ -316,7 +341,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         assert args.manifest is not None
         value, error = _load_json(args.manifest)
-        result = ReadinessResult(Outcome.ERROR, (error or "ROOT_INVALID",), None, None, None, {}) if value is None else evaluate_manifest(value)
+        result = (
+            ReadinessResult(Outcome.ERROR, (error or "ROOT_INVALID",), None, None, None, {})
+            if value is None
+            else evaluate_manifest(value)
+        )
     print(json.dumps(result.to_dict(), sort_keys=True, separators=(",", ":")))
     return 0 if result.outcome == Outcome.READY else (3 if result.outcome == Outcome.HOLD else 1)
 
