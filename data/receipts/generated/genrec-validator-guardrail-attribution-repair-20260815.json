@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-validator-guardrail-attribution-repair-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:94a91bc2309a9d5ec3b424b290beb9638d3cbc087e4f532c84815b4d18c2365f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:ef24d518369cefe4ee012a93ad95a3e25f4b87cf3600891037dd9f105397267b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "file_search"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a768ed812df41e3466758b60af087129997fb337",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31912280521",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f3da1f98a4e9acd768fad67b2f608cf1544761c1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/eca24ca3fd66188c54bd7c29a8f5aea5f21bf8e8",
+      ".github/workflows/validator-suite.yml",
+      "tests/validators/governance/test_validator_suite_guardrail_attribution.py",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, open pull requests, recent commits, accepted Directory Rules, and the exact failing workflow step were inspected."
+    },
+    {
+      "gate": "failure-attribution",
+      "outcome": "PASS",
+      "reason": "The guardrail regression counted command mentions across the entire workflow, including the step summary, instead of within each named step block."
+    },
+    {
+      "gate": "artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "The replacement test bytes are bound by SHA-256 in this receipt."
+    },
+    {
+      "gate": "local-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available in the connector session."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch creation, pull-request creation, and GitHub Actions execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "exact-main-validator-suite-31912280521",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31912280521"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-15T22:49:46Z",
+  "emitter": "OpenAI GPT-5.6 Pro via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Provenance only. This receipt is not evidence authority, policy approval, review approval, release approval, promotion, deployment, or publication. KFM source-corpus implementation campaign slice 1; repair validator-suite guardrail-attribution regression; base a768ed812df41e3466758b60af087129997fb337; draft PR only; no merge, release, deployment, publication, source activation, settings, or access changes."
+}
