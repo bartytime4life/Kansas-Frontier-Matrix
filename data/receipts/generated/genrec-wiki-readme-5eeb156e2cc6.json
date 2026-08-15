@@ -1,0 +1,132 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/README.md": "sha256:5eeb156e2cc6eb96aaf9d2fb451341634ebd3af88a7530cb9aafdc5f17af145d"
+  },
+  "artifact_paths": [
+    "docs/wiki/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "KFM-wiki-source-readme-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/Wiki-Maintenance.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "KFM-wiki-maintenance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/docs/wiki/README.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "KFM-wiki-sync-helper-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "KFM-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T04:11:37Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/README.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:docs/wiki/Wiki-Maintenance.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:docs/wiki/_Sidebar.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:tools/docs/wiki/README.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:docs/doctrine/directory-rules.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:data/receipts/generated/README.md@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@cbee7add137b9738b3d123b17d41ac3d44d9745b",
+      "user-request:sha256:3bb9334ce209d92a8844cf47b8fcad3cd2f45d346f442177a0ad9779ad404a04"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-14"
+  },
+  "notes": "Authoring provenance for the in-place polish of docs/wiki/README.md. The change improves reader routing, groups the verified page inventory, clarifies the source/projection authority boundary, aligns dry-run and explicit publish examples with tools/docs/wiki/sync_kfm_github_wiki.ps1, and preserves the existing Purpose, Authority boundary, Page inventory, Editing contract, Validation, Native wiki projection, and Publication and rollback anchors where present. No native-wiki initialization, synchronization, push, release, deployment, or data publication occurred. The receipt excludes itself from artifact hashes. Base main was cbee7add137b9738b3d123b17d41ac3d44d9745b.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:3bb9334ce209d92a8844cf47b8fcad3cd2f45d346f442177a0ad9779ad404a04",
+  "receipt_id": "genrec-wiki-readme-5eeb156e2cc6",
+  "truth_labels": {
+    "docs/wiki/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-authority-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, adopted Directory Rules, accepted ADR-0029, wiki maintenance contract, sync-helper contract, receipt schema, and current main SHA were inspected."
+    },
+    {
+      "gate": "page-inventory-and-local-link-closure",
+      "outcome": "PASS",
+      "reason": "The README inventory and audience routes reference the current docs/wiki page set and verified repository paths."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The authored source has one H1, balanced code fences, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "sync-helper-command-alignment",
+      "outcome": "PASS",
+      "reason": "Dry-run and explicit -Publish examples match the verified PowerShell helper contract and preserve the separate-publication boundary."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The public documentation change contains no credentials, private payloads, restricted evidence, living-person data, genomic data, or protected precise locations."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned validator will run after this receipt is committed; schema and artifact-hash fields were prepared against the inspected schema."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed action and is outside this source-only change."
+    }
+  ]
+}
