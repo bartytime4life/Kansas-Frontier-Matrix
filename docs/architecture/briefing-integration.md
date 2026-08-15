@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-architecture-briefing-integration
 title: Briefing-to-System Integration Architecture
 type: architecture; implementation-guide
-version: v0.5.0
-status: proposed; five bounded no-network foundations
+version: v0.6.0
+status: proposed; bounded no-network foundations reconciled through source and evidence candidate assessments
 owners: OWNER_TBD — Architecture steward · Governance steward · Domain stewards · Source/evidence/policy/release stewards
 created: 2026-07-29
-updated: 2026-08-06
+updated: 2026-08-14
 policy_label: public; architecture; briefing-integration; no-public-authority
 related:
   - ../../contracts/governance/briefing_signal.md
@@ -19,13 +19,17 @@ related:
   - ../../tools/validators/governance/validate_issue_inventory_projection.py
   - ../../contracts/common/temporal_authority_envelope.md
   - ../../schemas/contracts/v1/common/temporal_authority_envelope.schema.json
+  - ../../contracts/source/official_source_snapshot_candidate.md
+  - ../../contracts/source/official_source_snapshot_lineage_assessment.md
+  - ../../contracts/source/source_obligation_propagation_assessment.md
+  - ../../contracts/evidence/evidence_binding_chain_assessment.md
   - ../../examples/briefing_integration/README.md
   - ../../.github/workflows/briefing-integration.yml
-tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, temporal-authority, water-planning, evidence-first]
+tags: [kfm, architecture, briefing, identity, deduplication, materiality, routing, issue-inventory, temporal-authority, source-snapshot, evidence-binding, water-planning, evidence-first]
 notes:
-  - "v0.5 adds a deterministic read-only issue inventory projection before any live GitHub read."
-  - "Candidate-supplied matched issue IDs no longer suffice for the routing dry run to retain UPDATE_EXISTING_ISSUE."
-  - "The projection remains fixture-only and creates no live-state, repository, issue-mutation, policy, review, release, or publication authority."
+  - "v0.6 reconciles the central architecture with later landed fixture-only source-snapshot, lineage, obligation-propagation, and evidence-binding assessment packets."
+  - "The added packets remain candidate/assessment surfaces; none creates source activation, EvidenceBundle closure, policy, review, release, or publication authority."
+  - "Authenticated live GitHub reads, live source access, and public products remain separately reviewed future stages."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -63,21 +67,34 @@ public map/API/AI answer.
 
 ## Current bounded foundations
 
-The current implementation remains deterministic, no-network, and file-backed:
+The current implementation remains deterministic, no-network, and file-backed.
+The repository now contains these bounded foundations:
 
 1. `BriefingSignal` semantic and machine shape;
 2. `TemporalAuthorityEnvelope` metadata profile;
 3. deterministic daily identity, durable event clustering, replay/collision
    detection, and deduplication dry run;
 4. explainable materiality, exact priority reasons, mandatory overrides, and
-   finite declared issue routing; and
+   finite declared issue routing;
 5. a fixture-backed `IssueInventoryProjection` that independently checks whether
-   a declared existing-issue target is present and open.
+   a declared existing-issue target is present and open;
+6. `OfficialSourceSnapshotCandidate`, which models an immutable source-snapshot
+   candidate without activating or fetching a live source;
+7. `OfficialSourceSnapshotLineageAssessment`, which tests correction,
+   supersession, conflict, and lineage declarations for snapshot candidates;
+8. `EvidenceBindingChainAssessment`, which proves only synthetic reference
+   closure from one `SourceArtifact` through parse output and `EvidenceRef` to a
+   field binding; and
+9. `SourceObligationPropagationAssessment`, which checks that declared
+   attribution and use obligations are not dropped across synthetic derivative,
+   catalog-candidate, and export-candidate carriers.
 
-These foundations read repository fixtures and examples only. They do not fetch
-sources, read live GitHub state, write GitHub issues, create evidence, evaluate
-policy, approve review, mutate lifecycle state, release, deploy, publish, or
-authorize public use.
+These foundations consume repository fixtures and checked-in examples only.
+They do not establish current external source state, read live GitHub state,
+write GitHub issues, activate sources, authenticate an `EvidenceBundle`, decide
+rights or policy, approve review, mutate lifecycle state, release, deploy,
+publish, or authorize public use. A `PASS` on any candidate or assessment means
+only that its declared repository-local contract and validation boundary closed.
 
 ## Independent state machines
 
@@ -346,18 +363,24 @@ deployment, publication, or public truth.
 
 ## Next implementation stages
 
-1. Define an immutable official-source snapshot candidate adapter that emits no
-   EvidenceBundle and performs no source activation.
-2. Add conflict/correction/supersession fixture profiles for volatile facts.
-3. Add a separately reviewed, authenticated read-only GitHub projection adapter
-   with retrieval receipts and stale-state handling; preserve this fixture
-   profile as the deterministic contract test.
-4. Add domain-native advisory and condition envelopes without replacing native
-   contracts.
-5. Add live source access only after SourceDescriptor, rights, sensitivity,
-   retrieval receipt, and rollback gates are verified.
-6. Add public products only after evidence, policy, review, release, correction,
+The first official-source snapshot candidate, snapshot-lineage assessment,
+domain-native advisory/condition profiles, and bounded evidence/obligation
+assessments have now landed as inactive fixture-first packets. The remaining
+stages are narrower and require stronger evidence or authorization:
+
+1. add a separately reviewed, authenticated read-only GitHub projection adapter
+   with retrieval receipts and stale-state handling; preserve the fixture-backed
+   `IssueInventoryProjection` as the deterministic contract test;
+2. resolve candidate source/evidence assessments against actual
+   `SourceDescriptor`, rights, sensitivity, evidence, policy, and review state
+   only in separately authorized source/evidence slices;
+3. add live source access only after source admission, rights, sensitivity,
+   retrieval receipt, correction, and rollback gates are verified; and
+4. add public products only after evidence, policy, review, release, correction,
    and rollback close.
+
+No remaining stage is authorized by this document merely because its precursor
+fixture packet exists.
 
 ## Non-goals
 
