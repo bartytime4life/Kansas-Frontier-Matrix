@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -160,14 +161,39 @@ def assess(candidate: Any) -> Assessment:
     return Assessment(outcome, tuple(reasons))
 
 
+def _deep_update(target: dict[str, Any], overrides: Mapping[str, Any]) -> None:
+    for key, value in overrides.items():
+        current = target.get(key)
+        if isinstance(current, dict) and isinstance(value, Mapping):
+            _deep_update(current, value)
+        else:
+            target[key] = copy.deepcopy(value)
+
+
+def candidate_from_case(base_candidate: Mapping[str, Any], case: Mapping[str, Any]) -> dict[str, Any]:
+    candidate = copy.deepcopy(dict(base_candidate))
+    all_status = case.get("all_probe_status")
+    if all_status is not None:
+        for engine in candidate.get("engine_checks", {}).values():
+            if isinstance(engine, dict):
+                for key in list(engine):
+                    if key in STATUS_KEYS:
+                        engine[key] = all_status
+    overrides = case.get("overrides", {})
+    if isinstance(overrides, Mapping):
+        _deep_update(candidate, overrides)
+    return candidate
+
+
 def validate_cases() -> int:
     try:
         value = _load_json(CASES_PATH)
     except (OSError, UnicodeError, json.JSONDecodeError):
         print(json.dumps({"outcome": "ERROR", "reason_codes": ["CASES_UNAVAILABLE"]}, sort_keys=True))
         return 1
+    base_candidate = value.get("base_candidate") if isinstance(value, Mapping) else None
     cases = value.get("cases") if isinstance(value, Mapping) else None
-    if not isinstance(cases, list) or not cases:
+    if not isinstance(base_candidate, Mapping) or not isinstance(cases, list) or not cases:
         print(json.dumps({"outcome": "ERROR", "reason_codes": ["CASES_INVALID"]}, sort_keys=True))
         return 1
     failed = False
@@ -180,7 +206,7 @@ def validate_cases() -> int:
         if case_id in seen:
             failed = True
         seen.add(case_id)
-        actual = assess(case.get("candidate"))
+        actual = assess(candidate_from_case(base_candidate, case))
         expected = case.get("expected")
         comparable = {"outcome": actual.outcome, "reason_codes": list(actual.reason_codes)}
         if comparable != expected:
