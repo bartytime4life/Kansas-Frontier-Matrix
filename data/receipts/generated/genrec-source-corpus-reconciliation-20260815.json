@@ -2,10 +2,10 @@
   "receipt_id": "genrec-source-corpus-reconciliation-20260815",
   "contract_version": "3.0.0",
   "artifact_paths": [
-    "docs/registers/SOURCE_CORPUS_RECONCILIATION_2026-08-15.md"
+    "docs/registers/source-corpus-reconciliation-2026-08-15.md"
   ],
   "artifact_hashes": {
-    "docs/registers/SOURCE_CORPUS_RECONCILIATION_2026-08-15.md": "sha256:e202e6f64af8adcccb6dea3a74cb4e9c3c6eb43b5f3d243283a25d65220605bb"
+    "docs/registers/source-corpus-reconciliation-2026-08-15.md": "sha256:e202e6f64af8adcccb6dea3a74cb4e9c3c6eb43b5f3d243283a25d65220605bb"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -55,7 +55,7 @@
     ]
   },
   "truth_labels": {
-    "docs/registers/SOURCE_CORPUS_RECONCILIATION_2026-08-15.md": "PROPOSED"
+    "docs/registers/source-corpus-reconciliation-2026-08-15.md": "PROPOSED"
   },
   "validation_gates": [
     {
