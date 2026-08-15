@@ -2,6 +2,14 @@ import json
 from wsgiref.simple_server import make_server
 
 from governed_api.routes.registry import ROUTES
+from governed_api.stub import make_error_envelope
+
+
+def _json_response(start_response, status: str, payload: dict):
+    body = json.dumps(payload).encode("utf-8")
+    headers = [("Content-Type", "application/json"), ("Content-Length", str(len(body)))]
+    start_response(status, headers)
+    return [body]
 
 
 def app(environ, start_response):
@@ -9,20 +17,20 @@ def app(environ, start_response):
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":
-        body = b'{"detail":"Method Not Allowed"}'
-        start_response("405 Method Not Allowed", [("Content-Type", "application/json"), ("Content-Length", str(len(body)))])
-        return [body]
+        return _json_response(
+            start_response,
+            "405 Method Not Allowed",
+            make_error_envelope("method-not-allowed"),
+        )
 
     if method == "GET" and path in ROUTES:
-        payload = ROUTES[path]()
-        body = json.dumps(payload).encode("utf-8")
-        headers = [("Content-Type", "application/json"), ("Content-Length", str(len(body)))]
-        start_response("200 OK", headers)
-        return [body]
+        return _json_response(start_response, "200 OK", ROUTES[path]())
 
-    body = b'{"detail":"Not Found"}'
-    start_response("404 Not Found", [("Content-Type", "application/json"), ("Content-Length", str(len(body)))])
-    return [body]
+    return _json_response(
+        start_response,
+        "404 Not Found",
+        make_error_envelope("route-not-found"),
+    )
 
 
 def serve(host: str = "127.0.0.1", port: int = 8000) -> None:
