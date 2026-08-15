@@ -159,6 +159,22 @@ describe("Explorer Story Player governed projection", () => {
     }
   });
 
+  it("rejects closed-profile drift without reflecting untrusted content", () => {
+    const candidate = cloneBase();
+    candidate.body = "UNTRUSTED_STORY_BODY_CANARY_8d31";
+
+    const result = resolveStoryPlayer(candidate);
+    expect(result).toMatchObject({
+      outcome: "ERROR",
+      code: "INVALID_PAYLOAD",
+      nodes: [],
+      canPlay: false,
+    });
+    expect(JSON.stringify(result)).not.toContain(
+      "UNTRUSTED_STORY_BODY_CANARY_8d31",
+    );
+  });
+
   it("rejects duplicate or unsorted constituents", () => {
     const duplicate = cloneBase();
     duplicate.constituents[1].node_ref = duplicate.constituents[0].node_ref;
