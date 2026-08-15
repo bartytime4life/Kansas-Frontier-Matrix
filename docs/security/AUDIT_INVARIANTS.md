@@ -205,7 +205,7 @@ Missing any of these means the transition fails closed and the prior state is pr
 |---|---|
 | No public RAW path | Renderer-boundary tests; route map; layer manifest resolver |
 | No direct model client | Governed API + `ModelAdapter` boundary; no browser-to-model route |
-| No canonical/internal client fetch | MapLibre adapter; explorer-web reads via `apps/governed-api/` only |
+| No canonical/internal client fetch | MapLibre adapter; explorer-web reads via `apps/governed-api/` |
 | No unreleased tile load | `LayerManifest`/`MapReleaseManifest` resolver; release-state-tagged tiles |
 | No sensitive geometry hidden only by style | Tile-time transformation; restricted tier; deny gate |
 | No popup as Evidence Drawer substitute | Material claims require `EvidenceDrawerPayload` + bundle resolution |
