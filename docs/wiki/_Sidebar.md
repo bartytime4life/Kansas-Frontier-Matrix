@@ -1,27 +1,44 @@
-<!-- Derived navigation source. Canonical repository authority outranks wiki prose. -->
+<!--
+KFM_WIKI_SOURCE
+page_id: _Sidebar
+title: Kansas Frontier Matrix Wiki Navigation
+status: PROPOSED wiki source; review required
+updated: 2026-08-14
+authority: navigation-only; canonical repository evidence and adopted KFM authority outrank this page
+source_path: docs/wiki/_Sidebar.md
+publication_effect: none until separately synchronized to the native GitHub Wiki
+-->
 
 **Kansas Frontier Matrix**
 
-- [Home](Home.md)
-- [Getting Started](Getting-Started.md)
-- [Project Status](Project-Status.md)
+*Governed spatial evidence for Kansas. Orientation only—repository evidence and adopted authority win.*
 
-**System**
+**Start here**
 
-- [Architecture](Architecture.md)
-- [Repository Map](Repository-Map.md)
-- [Governance and Evidence](Governance-and-Evidence.md)
-- [Data Lifecycle](Data-Lifecycle.md)
+- [Home](Home.md) — project purpose and public entry point
+- [Getting Started](Getting-Started.md) — first reading and contribution paths
+- [Project Status](Project-Status.md) — evidence-bounded implementation snapshot
 
-**Knowledge and Experience**
+**Understand the system**
 
-- [Domains](Domains.md)
-- [Map, UI, and AI](Map-UI-and-AI.md)
-- [Security and Sensitivity](Security-and-Sensitivity.md)
+- [Architecture](Architecture.md) — operating model and trust membrane
+- [Repository Map](Repository-Map.md) — responsibility roots and placement
+- [Governance and Evidence](Governance-and-Evidence.md) — cite-or-abstain, review, and correction
+- [Data Lifecycle](Data-Lifecycle.md) — Pre-RAW through governed publication
 
-**Build and Maintain**
+**Explore knowledge and experience**
 
-- [Development and Validation](Development-and-Validation.md)
-- [Contributing](Contributing.md)
-- [Glossary](Glossary.md)
-- [Wiki Maintenance](Wiki-Maintenance.md)
+- [Domains](Domains.md) — Kansas knowledge lanes and cross-domain seams
+- [Map, UI, and AI](Map-UI-and-AI.md) — MapLibre, Evidence Drawer, and Focus Mode
+- [Security and Sensitivity](Security-and-Sensitivity.md) — fail-closed public-safety posture
+
+**Build and maintain**
+
+- [Development and Validation](Development-and-Validation.md) — environment, tests, and CI
+- [Contributing](Contributing.md) — branches, pull requests, review, and rollback
+- [Glossary](Glossary.md) — shared KFM vocabulary
+- [Wiki Maintenance](Wiki-Maintenance.md) — source, synchronization, correction, and drift
+
+---
+
+[Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) · [Documentation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/docs) · [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md)
