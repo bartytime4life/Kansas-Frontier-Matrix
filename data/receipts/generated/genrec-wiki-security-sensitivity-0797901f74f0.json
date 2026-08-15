@@ -1,0 +1,187 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Security-and-Sensitivity.md": "sha256:0797901f74f012788a6f642d5530c7bbd6267b57a6cd316db61a5cb648b55acb"
+  },
+  "artifact_paths": [
+    "docs/wiki/Security-and-Sensitivity.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/Security-and-Sensitivity.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-security-sensitivity-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-source-set-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:SECURITY.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-security-disclosure-entrypoint",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/security/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-security-guidance-index",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/security/THREAT_MODEL.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-threat-model",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/security/EXPOSURE_PLAN.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-exposure-plan",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/security/DATA_CLASSIFICATION.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-data-classification",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/security/DENY_TESTS.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-deny-tests",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/sensitivity.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-sensitivity-doctrine",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:policy/sensitivity/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-sensitivity-policy-boundary",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "ADR-0010",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T05:57:40Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/Security-and-Sensitivity.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/Architecture.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/Governance-and-Evidence.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/Map-UI-and-AI.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/Project-Status.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:SECURITY.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/security/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/security/THREAT_MODEL.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/security/EXPOSURE_PLAN.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/security/DATA_CLASSIFICATION.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/security/DENY_TESTS.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/doctrine/sensitivity.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:policy/sensitivity/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/doctrine/directory-rules.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc5549980158a9df81d643e367dc9d861494f378",
+      "user-request:sha256:6f1fc2d58643c462d64dd13ad1742beb84b3e605bda4332af6dc9f766e16d0de"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-15"
+  },
+  "notes": "Authoring provenance for the same-path modernization and polish of docs/wiki/Security-and-Sensitivity.md. The update preserves the existing page identity while adding a clearer security-versus-sensitivity model, fail-closed handling matrix, public trust membrane, transform-before-delivery guidance, inference and side-channel review, finite public outcomes, private-first vulnerability reporting, correction and rollback flow, repository-grounded implementation checkpoint, anti-patterns, reader routes, and rollback guidance. No native-wiki synchronization, contract/schema/policy mutation, runtime change, source activation, release, deployment, promotion, publication, or repository-setting change occurred. The receipt excludes itself from artifact hashes. Base main was dc5549980158a9df81d643e367dc9d861494f378.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:6f1fc2d58643c462d64dd13ad1742beb84b3e605bda4332af6dc9f766e16d0de",
+  "receipt_id": "genrec-wiki-security-sensitivity-0797901f74f0",
+  "truth_labels": {
+    "docs/wiki/Security-and-Sensitivity.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, parent wiki contract, current main SHA, target history, open-PR overlap, accepted ADR-0029, adopted Directory Rules, security lane inventory, security policy, threat model, exposure plan, data classification, deny-test guide, sensitivity doctrine, sensitivity-policy boundary, and ADR-0010 were inspected before authoring."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The authored source has one H1, no heading-level skips, balanced fenced blocks, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "wiki-link-and-anchor-closure",
+      "outcome": "PASS",
+      "reason": "All authored internal anchors resolve, every relative wiki-page link targets an inspected page, and repository links use current tracked paths."
+    },
+    {
+      "gate": "security-and-sensitivity-boundary",
+      "outcome": "PASS",
+      "reason": "The page separates security, sensitivity, rights, evidence, policy, review, lifecycle, release, and incident state; it contains no credentials, exploit detail, protected coordinates, living-person records, genomic material, restricted payloads, or unsafe public-path instructions."
+    },
+    {
+      "gate": "repository-claim-bounding",
+      "outcome": "PASS",
+      "reason": "Current implementation statements are pinned to repository evidence and explicitly separate documented source, bounded structural checks, evaluator binding, deployment, release integration, publication, and native-wiki synchronization."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The final UTF-8 page bytes hash to sha256:0797901f74f012788a6f642d5530c7bbd6267b57a6cd316db61a5cb648b55acb, matching artifact_hashes."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned validator will run after the receipt is committed; the receipt was prepared against the inspected generated-receipt schema."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed operation and is outside this source-only change."
+    }
+  ]
+}
