@@ -52,7 +52,7 @@ def _assert_safe_error_envelope(payload: dict, expected_id: str) -> None:
     assert_jsonschema_subset(payload, schema)
 
 
-def test_unknown_route_returns_finite_404_error() -> None:
+def test_unknown_route_returns_404() -> None:
     fixed_time = "2026-05-09T00:00:00+00:00"
     previous = os.environ.get("GOVERNED_API_ISSUED_AT")
     os.environ["GOVERNED_API_ISSUED_AT"] = fixed_time
@@ -68,7 +68,7 @@ def test_unknown_route_returns_finite_404_error() -> None:
             os.environ["GOVERNED_API_ISSUED_AT"] = previous
 
 
-def test_non_get_methods_return_finite_405_errors() -> None:
+def test_non_get_methods_rejected_for_scaffolded_routes() -> None:
     fixed_time = "2026-05-09T00:00:00+00:00"
     previous = os.environ.get("GOVERNED_API_ISSUED_AT")
     os.environ["GOVERNED_API_ISSUED_AT"] = fixed_time
