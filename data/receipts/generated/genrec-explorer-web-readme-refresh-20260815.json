@@ -58,6 +58,11 @@
       "reason": "Immediately before branch creation, main was confirmed at 35a6237f2f29e680bafe9af16f71e28fc585a735."
     },
     {
+      "gate": "pre-pr-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Before draft-PR creation, main advanced to 09a04dffa385a29f8b1b32562a89c025b1eed37a through unrelated hydrology changes; the target README blob remained 3d7944fcd31b7edeabca5b793eb7b88e12563f56, the branch was merged forward without force, and the final diff remained limited to the README plus its generated receipt."
+    },
+    {
       "gate": "overlap-reconciliation",
       "outcome": "PASS",
       "reason": "Current open-pull-request searches for explorer-web and the exact README path returned no overlapping pull request."
