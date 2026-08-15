@@ -9,7 +9,7 @@ created: 2026-05-13
 updated: 2026-05-13
 policy_label: public (governance doctrine; describes posture, not exploits)
 related:
-  - docs/security/EXPOSURE_POSTURE.md
+  - docs/security/EXPOSURE_PLAN.md
   - docs/security/INCIDENT_RESPONSE.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
@@ -91,7 +91,7 @@ This document is the **threat-posture surface** of KFM doctrine. It names the ri
 | Sibling | Concern | Status |
 |---|---|---|
 | `docs/security/THREAT_MODEL.md` *(this doc)* | What KFM is built to refuse, and the guardrails that refuse it. | **PROPOSED** — drafted here; exact filename not verified against mounted repo. |
-| `docs/security/EXPOSURE_POSTURE.md` | Public/semi-public surface inventory; deny-by-default, secrets, and audit posture. | **PROPOSED — NEEDS VERIFICATION** that the path exists. |
+| `docs/security/EXPOSURE_PLAN.md` | Public/semi-public surface inventory; deny-by-default, secrets, and audit posture. | **CONFIRMED tracked path; document remains draft.** |
 | `docs/security/INCIDENT_RESPONSE.md` | Detection → triage → containment → rollback → correction loop for trust-relevant incidents. | **PROPOSED — NEEDS VERIFICATION** that the path exists. |
 
 > [!NOTE]
@@ -194,7 +194,7 @@ The full actor matrix lives in the encyclopedia’s `Master Action Matrix`; this
 
 This document is **not** scoped to:
 
-- Specific package CVEs, dependency licenses, host hardening, model runtime settings, reverse-proxy rules, branch protections, signing-key custody, storage-bucket policy, source credentials, SSO / role mapping, audit retention, or backup / restore behavior. These are **NEEDS VERIFICATION** operational facts and belong in `EXPOSURE_POSTURE.md` and `docs/runbooks/` once those exist. `[UNIFIED]`
+- Specific package CVEs, dependency licenses, host hardening, model runtime settings, reverse-proxy rules, branch protections, signing-key custody, storage-bucket policy, source credentials, SSO / role mapping, audit retention, or backup / restore behavior. These are **NEEDS VERIFICATION** operational facts and belong in `EXPOSURE_PLAN.md` and `docs/runbooks/`; the facts themselves remain NEEDS VERIFICATION. `[UNIFIED]`
 - Life-safety, emergency-alert, or instruction-authority use cases. **KFM MUST NOT be used as an alert / instruction authority**; that boundary holds at T4 forever. `[DOM-HAZ]` `[ENCY]`
 - Threat modeling of *external* systems KFM cites. KFM evaluates source role, rights, sensitivity, and freshness; it does not assume responsibility for upstream-system security.
 
@@ -410,7 +410,7 @@ The following are explicitly **NEEDS VERIFICATION** in current KFM doctrine and 
 - Audit retention windows.
 - Backup / restore behavior.
 
-These belong in `docs/security/EXPOSURE_POSTURE.md` and `docs/runbooks/` once verified. *[PROPOSED placement.]* `[DIRRULES]`
+These belong in `docs/security/EXPOSURE_PLAN.md` and `docs/runbooks/` when verified. *[PROPOSED placement.]* `[DIRRULES]`
 
 [Back to top ↑](#table-of-contents)
 
@@ -544,7 +544,7 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 
 | # | Item | What would settle it | Status |
 |:--:|---|---|---|
-| VB-TM-01 | Sibling docs `EXPOSURE_POSTURE.md` and `INCIDENT_RESPONSE.md` exist at `docs/security/`. | Mounted repo tree. | **NEEDS VERIFICATION** |
+| VB-TM-01 | Sibling docs `EXPOSURE_PLAN.md` and `INCIDENT_RESPONSE.md` exist at `docs/security/`. | Current repository tree. | **CONFIRMED path presence; document maturity and incident boundary remain separate questions.** |
 | VB-TM-02 | Sensitivity tier scheme (T0–T4) adopted as canonical (ADR-S-05). | ADR text + policy bundle. | **PROPOSED / NEEDS VERIFICATION** |
 | VB-TM-03 | Cross-lane join policy ADR drafted (ADR-S-14). | ADR text. | **PROPOSED / NEEDS VERIFICATION** |
 | VB-TM-04 | Reviewer separation-of-duties enforcement threshold (ADR-S-09). | ADR + tooling reference. | **PROPOSED / NEEDS VERIFICATION** |
@@ -575,7 +575,7 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — repo-state verification queue. *(PROPOSED path.)*
 - [`docs/adr/`](../adr/) — ADR index including the open ADRs cited above (ADR-S-05 … ADR-S-15). *(PROPOSED path.)*
 - [`docs/runbooks/`](../runbooks/) — operational runbooks (rotation, rollback drills, validation runs). *(PROPOSED path.)*
-- [`docs/security/EXPOSURE_POSTURE.md`](./EXPOSURE_POSTURE.md) — public/semi-public surface posture. *(PROPOSED — NEEDS VERIFICATION.)*
+- [`docs/security/EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) — public/semi-public surface posture. *(Current tracked path; document remains draft.)*
 - [`docs/security/INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) — detection → containment → rollback → correction loop. *(PROPOSED — NEEDS VERIFICATION.)*
 
 [Back to top ↑](#table-of-contents)
@@ -642,7 +642,7 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 
 ---
 
-> **Related** · [`directory-rules.md`](../doctrine/directory-rules.md) · [`trust-membrane.md`](../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`EXPOSURE_POSTURE.md`](./EXPOSURE_POSTURE.md) *(PROPOSED)* · [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) *(PROPOSED)*
+> **Related** · [`directory-rules.md`](../doctrine/directory-rules.md) · [`trust-membrane.md`](../doctrine/trust-membrane.md) · [`lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) *(current tracked path; document remains draft)* · [`INCIDENT_RESPONSE.md`](./INCIDENT_RESPONSE.md) *(PROPOSED)*
 >
 > **Last updated** · 2026-05-13 · **Status** · draft · **Version** · v0.1
 >
