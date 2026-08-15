@@ -91,13 +91,25 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Enforce repository workflow and topology ratchets
+      - name: Validate canonical validator registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          make validator-registry-check
+
+      - name: Enforce workflow-security ratchet
+        shell: bash
+        run: |
+          set -euo pipefail
+          make workflow-security
+
+      - name: Enforce repository-topology ratchet
         shell: bash
         env:
           KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD^' }}
         run: |
           set -euo pipefail
-          make repository-guardrails
+          make repository-topology
 
       - name: Require a non-vacuous aggregate validator inventory
         shell: bash
@@ -191,7 +203,7 @@ jobs:
             echo "- Generated-receipt commands: focused no-network unittest suite plus \`python tools/validators/validate_generated_receipt.py --fixtures\`."
             echo "- Material-change commands: focused no-network unittest suite plus \`python tools/validators/validate_material_change_assessment.py --fixtures\`."
             echo "- Aggregate command: \`make schemas\`."
-            echo "- Repository guardrail command: \`make repository-guardrails\` (twenty workflow-security rules plus twenty directory-topology rules)."
+            echo "- Repository guardrails run as three separately attributable fail-closed steps: \`make validator-registry-check\`, \`make workflow-security\`, then \`make repository-topology\`."
             echo "- Inherited violations are exact reviewed baselines: new drift and stale baseline entries fail; a pass does not resolve the inherited backlog."
             echo "- Shared JSON Schema runner fixture mode requires sorted, nonempty valid and invalid lanes; expected schema rejection is distinct from harness or polarity failure."
             echo "- The aggregate runner inventory must be non-empty, unique, fixture-mode wired, and resolve to repository validator scripts."
