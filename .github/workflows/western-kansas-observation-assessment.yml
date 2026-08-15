@@ -7,9 +7,9 @@ name: western-kansas-observation-assessment
       - "contracts/domains/hydrology/western_kansas_observation_assessment.md"
       - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
-      - "tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py"
-      - "tests/domains/hydrology/test_western_kansas_observation_assessment.py"
-      - "data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json"
+      - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
   push:
     branches: [main]
     paths:
@@ -17,9 +17,9 @@ name: western-kansas-observation-assessment
       - "contracts/domains/hydrology/western_kansas_observation_assessment.md"
       - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
-      - "tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py"
-      - "tests/domains/hydrology/test_western_kansas_observation_assessment.py"
-      - "data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json"
+      - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
   workflow_dispatch:
 
 permissions:
@@ -55,13 +55,13 @@ jobs:
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
       - name: Run focused tests
-        run: python -m pytest -q tests/domains/hydrology/test_western_kansas_observation_assessment.py
+        run: python -m pytest -q tests/validators/test_western_kansas_observation_assessment.py
       - name: Run exact synthetic case polarity
-        run: python tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py --cases
+        run: python tools/validators/evidence/validate_western_kansas_observation_assessment.py --cases
       - name: Verify generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json \
+            data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
