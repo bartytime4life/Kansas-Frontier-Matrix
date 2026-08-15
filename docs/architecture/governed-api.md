@@ -2,544 +2,237 @@
 doc_id: kfm://doc/architecture-governed-api
 title: Governed API — Architecture
 type: standard
-version: v1
+version: v2
 status: draft
 owners: API steward + Security steward (TODO confirm)
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-14
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the governed API architecture boundary and verified current scaffold state without creating contract, policy, release, deployment, or publication authority."
+truth_posture: cite-or-abstain
 related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
+  - docs/doctrine/directory-rules.md
   - docs/architecture/README.md
-  - docs/architecture/system-context.md
-  - docs/architecture/map-shell.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/governed-ai/README.md
-  - contracts/OBJECT_MAP.md
+  - contracts/runtime/runtime_response_envelope.md
   - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - apps/governed-api/README.md
-tags: [kfm, architecture, governed-api, trust-membrane, finite-outcomes]
+  - apps/governed-api/src/governed_api/stub.py
+  - apps/governed-api/src/governed_api/routes/
+  - apps/governed-api/tests/test_abstain_routes.py
+  - packages/evidence-resolver/README.md
+  - .github/workflows/api-test.yml
+tags: [kfm, architecture, governed-api, trust-membrane, runtime-response-envelope, finite-outcomes]
 notes:
-  - Implementation-shaped claims are PROPOSED until the live repo is inspected.
-  - Schema, route, and package paths track Directory Rules defaults; ADR may amend.
+  - "v2 reconciles the architecture guide with current repository evidence through main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f."
+  - "Current executable behavior remains a fail-closed scaffold: three GET routes emit schema-aligned ABSTAIN / NOT_IMPLEMENTED RuntimeResponseEnvelope shapes."
+  - "No ANSWER path, evidence lookup, policy evaluation, release binding, production deployment, or public publication authority is claimed."
 [/KFM_META_BLOCK_V2] -->
 
 # Governed API — Architecture
 
-> The trust membrane in executable form. The single public trust path for KFM clients.
+> The governed API is KFM's public trust membrane. Current repository evidence proves only a bounded fail-closed scaffold, not a complete public service.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![authority](https://img.shields.io/badge/authority-canonical-blue)
-![truth](https://img.shields.io/badge/truth-doctrine_CONFIRMED_·_impl_PROPOSED-lightgrey)
-![policy](https://img.shields.io/badge/policy_label-public-green)
-![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%2FQUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%2FTRIPLET%E2%86%92PUBLISHED-blue)
-![rollback](https://img.shields.io/badge/rollback-supported-success)
+## 1. Authority and current-state posture
 
-**Status:** draft · **Owners:** API steward + Security steward *(TODO confirm CODEOWNERS)* · **Last updated:** 2026-05-14
+The doctrinal boundary is stable: ordinary public clients must use governed interfaces rather than canonical stores, lifecycle internals, model runtimes, graph/vector stores, or unpublished candidates.
 
-> [!IMPORTANT]
-> KFM doctrine on the governed API (purpose, finite-outcome contract, trust-membrane rules) is **CONFIRMED** across the attached corpus. Specific repository artifacts (route files, framework choice, route prefixes, schema files, validators, workflows) are **PROPOSED / NEEDS VERIFICATION** until the live repo is inspected.
+Current implementation claims in this document are limited to repository evidence inspected at `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f`.
 
----
+### CONFIRMED current implementation
 
-## Quick jump
+The repository currently contains:
 
-- [1. Purpose](#1-purpose)
-- [2. Position in the system](#2-position-in-the-system)
-- [3. Doctrinal invariants](#3-doctrinal-invariants)
-- [4. The finite-outcome contract](#4-the-finite-outcome-contract)
-- [5. Endpoint catalogue (PROPOSED)](#5-endpoint-catalogue-proposed)
-- [6. Request → response flow](#6-request--response-flow)
-- [7. Trust-membrane rules (deny-by-default)](#7-trust-membrane-rules-deny-by-default)
-- [8. Internal layering and adapter boundary](#8-internal-layering-and-adapter-boundary)
-- [9. Contracts, schemas, policy, tests](#9-contracts-schemas-policy-tests)
-- [10. Validators, observability, and proof](#10-validators-observability-and-proof)
-- [11. Operational posture](#11-operational-posture)
-- [12. Related docs and ADRs](#12-related-docs-and-adrs)
-- [Appendix A — Outcome semantics reference](#appendix-a--outcome-semantics-reference)
-- [Appendix B — Anti-patterns](#appendix-b--anti-patterns)
-- [Appendix C — Open questions](#appendix-c--open-questions)
+- `apps/governed-api/` as the deployable application responsibility root;
+- a standard-library WSGI entry point in `apps/governed-api/src/governed_api/main.py`;
+- three registered GET scaffold routes under `apps/governed-api/src/governed_api/routes/`:
+  - `/bootstrap`;
+  - `/layers`;
+  - `/evidence`;
+- `apps/governed-api/src/governed_api/stub.py`, which emits a `RuntimeResponseEnvelope`-shaped negative result;
+- `contracts/runtime/runtime_response_envelope.md` and `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` as the semantic/machine-shape family consumed by that scaffold;
+- focused governed-api tests, including `apps/governed-api/tests/test_abstain_routes.py`;
+- `.github/workflows/api-test.yml` as the repository-native CI surface for the app; and
+- a separate internal `packages/evidence-resolver/` candidate implementation that is not yet a public governed-api answer path.
 
----
-
-## 1. Purpose
-
-The **Governed API** is the single public trust path for KFM. It is the executable form of the *trust membrane* described in `docs/doctrine/trust-membrane.md` and Directory Rules §7.1: the boundary that prevents raw, unreviewed, model-generated, or internal state from becoming public truth.
-
-Every public KFM client — the map shell, Evidence Drawer, Focus Mode, Story player, review console, export surface — reaches KFM data **through this API and only through this API**. Clients never read `data/raw/`, `data/work/`, `data/quarantine/`, canonical stores, graph stores, object stores, vector indexes, model runtimes, or unpublished candidates. Those are inside the membrane; the API is the membrane.
-
-**In one sentence:** the Governed API turns KFM's canonical, evidence-bound, policy-aware, release-state-aware truth objects into finite-outcome envelopes that public surfaces can render without leaking the unreleased layer beneath.
-
-> [!NOTE]
-> "Governed API" is doctrine, not framework. It is **what** the public boundary returns and **what** it refuses to return. The framework, language, and exact route file layout in `apps/governed-api/` are PROPOSED until verified against the mounted repo.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 2. Position in the system
-
-The KFM trust spine has five cooperating planes. The Governed API plane is downstream of admission, lifecycle, evidence/catalog/proof — and upstream of every public client. It does not own canonical truth; it **gates access to released truth** and enforces finite outcomes.
-
-```mermaid
-flowchart LR
-  classDef canonical fill:#0b3d91,stroke:#0b3d91,color:#fff
-  classDef governed  fill:#1e7f4a,stroke:#1e7f4a,color:#fff
-  classDef client    fill:#444,stroke:#444,color:#fff
-  classDef denied    fill:#b03030,stroke:#b03030,color:#fff,stroke-dasharray:4 3
-
-  subgraph Inside["Inside the trust membrane (private)"]
-    direction LR
-    RAW[("data/raw/")]:::canonical
-    WQ[("data/work/<br/>data/quarantine/")]:::canonical
-    PROC[("data/processed/")]:::canonical
-    CAT[("data/catalog/<br/>data/triplets/")]:::canonical
-    PUB[("data/published/")]:::canonical
-    PROOF[("data/proofs/<br/>EvidenceBundles")]:::canonical
-    REL[("release/<br/>ReleaseManifest · RollbackCard")]:::canonical
-    POL[("policy/<br/>PolicyDecision")]:::canonical
-    RUNTIME[("runtime/<br/>adapters")]:::canonical
-  end
-
-  API{{"apps/governed-api/<br/>Trust membrane<br/>RuntimeResponseEnvelope"}}:::governed
-
-  subgraph Clients["Public clients (outside the membrane)"]
-    direction TB
-    EW["apps/explorer-web/<br/>(Map shell + Evidence Drawer + Focus)"]:::client
-    RC["apps/review-console/<br/>(steward, read-only)"]:::client
-    EXP["Export / Story / Embed"]:::client
-  end
-
-  RAW -.->|never directly| EW
-  WQ  -.->|never directly| EW
-
-  PUB --> API
-  PROOF --> API
-  REL --> API
-  POL --> API
-  CAT --> API
-  RUNTIME --> API
-
-  API -->|ANSWER / ABSTAIN / DENY / ERROR| EW
-  API -->|ANSWER / ABSTAIN / DENY / ERROR| RC
-  API -->|ANSWER / ABSTAIN / DENY / ERROR| EXP
-
-  X1[("Direct DB · raw bucket · model client")]:::denied
-  EW -.->|BLOCKED| X1
-```
-
-| Plane | Role relative to the API |
-|---|---|
-| Governance / control plane | Defines what the API may expose: authority ladder, doctrine, registers. |
-| Lifecycle / data plane | Produces released artifacts the API references; never exposed directly. |
-| Evidence / catalog / proof plane | Supplies `EvidenceBundle`, `ReleaseManifest`, `RollbackCard` for resolution. |
-| **Governed service / API plane** | **This document.** Enforces finite outcomes, policy, citation, release state. |
-| User interaction plane | Public clients (`apps/explorer-web/`, `apps/review-console/`, etc.). Read-only consumers of API envelopes. |
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 3. Doctrinal invariants
-
-> [!IMPORTANT]
-> These are non-negotiable. Bending an invariant requires an ADR (Directory Rules §2.4) and an entry in `docs/registers/DRIFT_REGISTER.md` if the live repo already conflicts.
-
-1. **Cite-or-abstain.** No consequential claim leaves the API without a resolvable `EvidenceRef` chain to an `EvidenceBundle`, or the response is `ABSTAIN`.
-2. **Lifecycle integrity.** Public responses derive only from `data/published/` (with `ReleaseManifest`) and the proof / receipt objects that support it. RAW, WORK, QUARANTINE, PROCESSED, and unpublished CATALOG/TRIPLET are never exposed.
-3. **Finite outcomes only.** Every response is a `RuntimeResponseEnvelope` whose `outcome` is one of `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. No silent fallthrough, no partial truths, no implicit nulls.
-4. **Policy at the boundary.** A `PolicyDecision` (`allow` / `deny` / `restrict` / `hold` / `abstain`) is evaluated before any answer is emitted. Sensitive lanes default to `DENY`.
-5. **Deny-by-default exposure.** Unmarked surfaces are not public. The API exposes only what an explicit released artifact + policy decision + release state authorize.
-6. **No direct model client.** Focus Mode and any other AI surface go *through* the API. Browsers never call a model provider directly; the API's adapter does, with policy gates and an `AIReceipt`.
-7. **Promotion is governed.** Releasing a layer or claim is a state transition recorded in `ReleaseManifest`, not a file move. The API surface reflects release state; it cannot create it.
-8. **Audit-grade traceability.** Every emitted envelope carries (or references) the `EvidenceRef`s, `PolicyDecision`, and `ReleaseManifest` that justified it, and a rollback target exists.
-9. **Admin shortcuts are not public paths.** `apps/admin/` may exist for operations; it MUST NOT become the normal public path (Directory Rules §7.1).
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 4. The finite-outcome contract
-
-Every endpoint returns a `RuntimeResponseEnvelope`. Its `outcome` is one of four values; semantics are fixed.
-
-| Outcome | When it is returned | Required artifacts | Public-surface effect |
-|---|---|---|---|
-| **`ANSWER`** | Evidence sufficient · policy permits · release state allows · review state (if required) recorded. | `EvidenceBundle` resolved; `PolicyDecision = allow`; `ReleaseManifest` applies. | Substantive payload with citations and drawer-renderable evidence. |
-| **`ABSTAIN`** | Evidence insufficient, unresolvable, stale-without-released-alternative, or AI surface cannot cite. | `AIReceipt` (where AI is involved) with reason; no claim emitted. | Non-substantive note + reason. Never an invented answer. |
-| **`DENY`** | Policy, rights, sensitivity, or release state forbids the answer. Sensitive lanes default here. | `PolicyDecision = deny` + `reason_code`; receipt records denial. | Denial with reason; may offer a non-restricted alternative surface. |
-| **`ERROR`** | The API cannot evaluate — missing schema, malformed input, contract violation, infrastructure failure. | Error envelope with diagnostic code. **No claim leakage.** | Finite, actionable error. Never silent fallthrough into another lane. |
-
-> [!NOTE]
-> Validator-class outcomes `PASS` / `FAIL` (per `ValidationReport`) and the promotion-class outcome `HOLD` exist inside the membrane but are **not** values of the public `RuntimeResponseEnvelope.outcome`. They feed into whether an `ANSWER` is permitted, but the public API surface narrows to the four values above.
-
-**Envelope sketch (PROPOSED — exact schema lives at `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`):**
-
-```json
-{
-  "object_type": "RuntimeResponseEnvelope",
-  "schema_version": "v1",
-  "outcome": "ANSWER",
-  "evidence_refs": ["kfm://evidence/<bundle_id>"],
-  "policy_decision": {
-    "decision": "allow",
-    "reason_code": null,
-    "policy_ref": "kfm://policy/<bundle>"
-  },
-  "release_ref": "kfm://release/<manifest_id>",
-  "citation_validation": {
-    "all_resolved": true,
-    "report_ref": "kfm://proof/<citation_report_id>"
-  },
-  "payload": { "...": "endpoint-specific" },
-  "trace": { "request_id": "...", "spec_hash": "b3:..." }
-}
-```
-
-For `ABSTAIN`, `DENY`, `ERROR`: `payload` is omitted or replaced by a reason envelope; `evidence_refs` is empty or partial; the responsible receipt (`AIReceipt`, `PolicyDecision`, error diagnostic) is the substantive content.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 5. Endpoint catalogue (PROPOSED)
-
-> [!WARNING]
-> Endpoint paths, verbs, prefixes, and route file locations are **PROPOSED** consolidations of doctrine across the KFM corpus. Final route shape requires (a) confirming the framework and route convention in the mounted repo, and (b) — if `apps/governed_api/` or `packages/api/` is used instead of `apps/governed-api/` — an ADR per Directory Rules §2.4(5). See [§12](#12-related-docs-and-adrs).
-
-| Surface | Method · Route | Purpose | Permitted outcomes | Status |
-|---|---|---|---|---|
-| Bootstrap | `GET /api/v1/runtime/bootstrap` | Initial shell config, access posture, feature flags, default time context, layer catalog summary. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Layer catalog | `GET /api/v1/layers` | Released layer descriptors only. | `ANSWER` · `ABSTAIN` · `ERROR` | PROPOSED |
-| Layer descriptor | `GET /api/v1/layers/{layer_id}` | Layer descriptor and trust metadata. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Layer manifest | `GET /api/v1/layers/{layer_id}/manifest` | Release / proof / asset integrity metadata. | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| Evidence bundle | `GET /api/v1/evidence/{bundle_id}` | Resolve `EvidenceBundle` for drawer display. | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| Claim resolution | `POST /api/v1/claims/resolve` | Resolve a clicked feature to claim + drawer payload. | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| Focus query | `POST /api/v1/focus/query` | Bounded synthesis through governed model adapter. | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| Story manifest | `GET /api/v1/stories/{story_id}` | `StoryManifest` and node continuity. | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | PROPOSED |
-| Review queue | `GET /api/v1/review/queue` | Read-only steward queue. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Review decision | `POST /api/v1/review/{queue}/{id}/decision` | Steward decision record. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Correction submit | `POST /api/v1/corrections` | `CorrectionNoticeCandidate`. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Export request | `POST /api/v1/export` | Governed export with citations / redactions. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-| Telemetry | `POST /api/v1/telemetry` | Safe UI telemetry envelope. | `ANSWER` · `DENY` · `ERROR` | PROPOSED |
-
-**Audience class.** Each route is classified as one of `public` · `partner` · `steward` · `internal` · `denied`. Audience class is part of the route's design-time contract, not an implicit deployment assumption. Restricted classes (`steward`, `internal`) require role-gated authorization and are audited; they MUST NOT be reachable by an unauthenticated public client.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 6. Request → response flow
-
-A typical map-feature click — the canonical case — flows as follows. All other endpoints follow the same pattern with different resolution steps.
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant U as Public client (map shell)
-  participant API as apps/governed-api/
-  participant POL as policy/<br/>(PolicyDecision)
-  participant EVR as packages/evidence-resolver/
-  participant REL as release/<br/>(ReleaseManifest)
-  participant ADP as runtime/<br/>adapter (e.g. model)
-  participant LOG as data/receipts/
-
-  U->>API: POST /api/v1/claims/resolve { feature_id, time }
-  API->>API: schema-validate request
-  API->>POL: evaluate(feature, audience, sensitivity, release_state)
-  alt PolicyDecision == deny
-    POL-->>API: deny + reason_code
-    API->>LOG: emit PolicyDecision receipt
-    API-->>U: RuntimeResponseEnvelope{ outcome: DENY }
-  else allow
-    POL-->>API: allow
-    API->>REL: lookup ReleaseManifest for layer
-    REL-->>API: release_ref or none
-    alt no released manifest
-      API-->>U: RuntimeResponseEnvelope{ outcome: ABSTAIN }
-    else released
-      API->>EVR: resolve(EvidenceRef[]) → EvidenceBundle
-      EVR-->>API: EvidenceBundle or unresolved
-      alt evidence unresolved
-        API->>LOG: emit AIReceipt/AbstainReason
-        API-->>U: RuntimeResponseEnvelope{ outcome: ABSTAIN }
-      else resolved
-        opt Focus / AI synthesis requested
-          API->>ADP: governed adapter call (no raw evidence to model)
-          ADP-->>API: bounded synthesis + AIReceipt
-          API->>API: citation_validation (all refs resolve?)
-        end
-        API->>LOG: emit receipts (PolicyDecision, AIReceipt, citation report)
-        API-->>U: RuntimeResponseEnvelope{ outcome: ANSWER }
-      end
-    end
-  end
-```
-
-Three guarantees this flow enforces:
-
-- **Policy precedes resolution.** A `DENY` never touches evidence or model runtime, preventing side-channel leakage through retrieval.
-- **Resolution precedes synthesis.** Focus Mode and any AI adapter receive *resolved evidence references*, not raw stores. The adapter cannot "search the lake."
-- **Citation validation precedes `ANSWER`.** If any cited `EvidenceRef` fails to resolve to an admissible `EvidenceBundle`, the outcome falls to `ABSTAIN`, not `ANSWER` with an invalid citation.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 7. Trust-membrane rules (deny-by-default)
-
-The governed API is defined as much by what it refuses as by what it returns. The following rules are doctrinal across the KFM corpus and are enforced by policy gates, schema validation, and runtime checks.
-
-| # | Rule | Reason | Enforcement surface |
-|---|---|---|---|
-| 1 | No public read of `RAW` / `WORK` / `QUARANTINE` / unpublished candidates / canonical stores. | Lifecycle integrity; promotion gates not yet passed. | API + policy gate; layer manifest resolver. |
-| 2 | No direct model client from browser or map shell. | AI is interpretive and evidence-subordinate; runs through governed adapter only. | Runtime adapter port; browser CSP / network policy. |
-| 3 | No unreleased tile / layer load. | Layer toggle is not publication; only `ReleaseManifest`-backed layers are public. | Layer descriptor / manifest endpoint. |
-| 4 | No sensitive geometry hidden only by style. | Geoprivacy requires transformation and `RedactionReceipt`, not a CSS hack. | Sensitivity policy + redaction receipt validator. |
-| 5 | No popup as Evidence Drawer substitute. | Popups summarize; consequential claims need the drawer payload and citation validation. | Drawer payload schema; UI policy. |
-| 6 | No `ANSWER` from rendered features alone. | Rendered features are candidates; evidence carries truth support. | Claims resolver + citation validator. |
-| 7 | No uncited export, screenshot, or Story snapshot. | Exports must preserve citation and release context. | Export endpoint + `StorySnapshot` / `ExportReceipt`. |
-| 8 | No raw evidence, prompts, secrets, or restricted coordinates in telemetry. | Telemetry must not become a side channel. | Telemetry schema + policy; redaction at boundary. |
-| 9 | Admin shortcuts MUST NOT be the normal public path. | Public traffic uses the governed surface; admin is justified, constrained, audited. | Network policy + deny-by-default infra. |
-
-> [!CAUTION]
-> A "small exception" to any of these rules is the most common way a trust membrane silently rots. The correct response to a hard case is a `DENY` outcome plus an ADR — not a one-off bypass.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 8. Internal layering and adapter boundary
-
-The API is **internally** organized as thin, governance-aware layers. None of these layers is a public surface; only the outermost envelope is.
-
-```mermaid
-flowchart TB
-  classDef api fill:#1e7f4a,stroke:#1e7f4a,color:#fff
-  classDef inside fill:#0b3d91,stroke:#0b3d91,color:#fff
-
-  IN["Inbound request (validated against request schema)"]:::api
-  ROUTE["Route handler<br/>(thin; declares finite outcomes it can emit)"]:::api
-  POL["Policy evaluator<br/>(PolicyDecision)"]:::api
-  RES["Evidence resolver<br/>(EvidenceRef → EvidenceBundle)"]:::api
-  REL["Release gate<br/>(ReleaseManifest required)"]:::api
-  ADP["Adapter port<br/>(model · graph · vector · tile)"]:::api
-  CIT["Citation validator"]:::api
-  ENV["Envelope assembler<br/>(RuntimeResponseEnvelope)"]:::api
-
-  CANON["runtime/ adapters → canonical stores"]:::inside
-
-  IN --> ROUTE --> POL --> REL --> RES
-  RES --> ADP
-  ADP --> CIT
-  CIT --> ENV
-  ADP -. only path to .-> CANON
-```
-
-**Adapters live behind the API, not in front of it.** Directory Rules names `runtime/` as the home for "adapters and harnesses behind the governed API. Never a public surface." This is the *anti-corruption layer* between KFM's released truth objects and any external provider (model, tile, vector store). External providers see only what the adapter passes; the API sees only what the adapter returns, shaped to KFM contracts.
-
-> [!TIP]
-> When in doubt about whether something belongs in `apps/governed-api/` or `runtime/`: if it speaks HTTP outward, it's the API. If it speaks a provider protocol inward, it's a runtime adapter. The API never embeds provider SDKs at the route level.
-
-[⬆ Back to top](#governed-api--architecture)
-
----
-
-## 9. Contracts, schemas, policy, tests
-
-The governed API is the *executable* expression of object meaning defined in `contracts/`, shape defined in `schemas/`, and admissibility decided in `policy/`. The split is doctrinal: meaning, shape, and decision do not collapse into one another.
-
-> [!NOTE]
-> Schema home defaults to `schemas/contracts/v1/...` per ADR-0001 (Directory Rules §0). Below paths are **PROPOSED** consolidations; final paths verify against the mounted repo and may require an ADR if they diverge.
-
-| Object family | Contract meaning lives in… | Schema (shape) lives in… | Policy lives in… | Fixtures live in… |
-|---|---|---|---|---|
-| `RuntimeResponseEnvelope` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `policy/runtime/` | `tests/fixtures/runtime/` |
-| `DecisionEnvelope` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | `policy/runtime/` | `tests/fixtures/runtime/` |
-| `LayerDescriptor` / `LayerManifest` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/layers/*.schema.json` | `policy/ui/` · `policy/release/` | `tests/fixtures/layers/` |
-| `EvidenceBundle` / `EvidenceRef` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | `policy/evidence/` | `tests/fixtures/evidence/` |
-| Focus request / response | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/focus/{focus_request,focus_response}.schema.json` | `policy/focus/` | `tests/fixtures/focus/` |
-| `CitationValidationReport` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/focus/citation_validation_report.schema.json` | `policy/focus/` | `tests/fixtures/focus/` |
-| `ReviewRecord` / `CorrectionNotice` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/review/*.schema.json` | `policy/review/` | `tests/fixtures/review/` |
-| `SourceDescriptor` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/source/source_descriptor.schema.json` | `policy/sources/` | `tests/fixtures/sources/` |
-| `TelemetryEvent` | `contracts/OBJECT_MAP.md` | `schemas/contracts/v1/telemetry/ui_event.schema.json` | `policy/telemetry/` | `tests/fixtures/telemetry/` |
-
-**Test homes** (Directory Rules §6.6, PROPOSED layout):
+The scaffold response contains the ten unconditional runtime-envelope fields required by the current schema:
 
 ```text
-tests/
-├── api/             # endpoint-level integration tests
-├── contracts/       # contract/object-meaning tests
-├── schemas/         # schema validation tests
-├── policy/          # PolicyDecision tests (positive + negative)
-├── validators/      # validator-level unit tests
-├── runtime_proof/   # finite-outcome and abstain proofs
-└── e2e/             # cross-surface smoke (with governed API)
+id
+spec_hash
+version
+issued_at
+outcome
+reason_code
+evidence_refs
+policy_state
+freshness
+correction_state
 ```
 
-[⬆ Back to top](#governed-api--architecture)
+For the three existing scaffold routes, the current finite outcome is:
 
----
+```text
+outcome     = ABSTAIN
+reason_code = NOT_IMPLEMENTED
+evidence_refs = []
+```
 
-## 10. Validators, observability, and proof
+That is intentionally non-substantive and fail-closed.
 
-The governed API is **proof-bearing** by design. Every consequential response leaves a trail.
+### UNKNOWN / not established by current evidence
 
-| Emitted artifact | What it proves | Lives in (PROPOSED) |
-|---|---|---|
-| `PolicyDecision` receipt | The allow / deny / restrict / hold decision was evaluated against current policy. | `data/receipts/` |
-| `AIReceipt` | When AI synthesis ran: adapter, inputs (refs only), outcome, citation validation. | `data/receipts/ai/` |
-| `CitationValidationReport` | Every cited `EvidenceRef` resolved to an admissible `EvidenceBundle` (or the response abstained). | `data/proofs/` |
-| `ValidationReport` | Schema and contract checks for inbound request and outbound payload passed. | `data/receipts/` |
-| `TelemetryEvent` | Safe UI event recorded without leaking raw evidence, prompts, secrets, or restricted coordinates. | `data/receipts/telemetry/` |
-| `RuntimeResponseEnvelope` (the response itself) | The finite outcome, with `evidence_refs`, `policy_decision`, `release_ref`, `trace`. | Emitted to client; trace mirrored to receipts. |
+This document does not claim that the repository currently has:
 
-**Negative-state proof.** Per Directory Rules §6.6 the test tree includes a `runtime_proof/` subtree dedicated to finite-outcome and abstain proof. The API is not considered correct until it can produce `ABSTAIN`, `DENY`, and `ERROR` outcomes on fixtures designed to require them. An API that can only produce `ANSWER` is mis-classified as healthy.
+- a production deployment of the governed API;
+- authenticated public or partner traffic;
+- an `ANSWER` route;
+- live EvidenceRef-to-EvidenceBundle lookup from the API;
+- policy, rights, sensitivity, role, or release evaluation in the scaffold routes;
+- correction/rollback resolution in runtime requests;
+- governed AI/model execution through this app;
+- a live layer catalog backed by released artifacts;
+- public telemetry ingestion;
+- review/correction/export route implementations; or
+- operational logs, dashboards, SLOs, or production runbooks proving live service maturity.
 
-> [!IMPORTANT]
-> A green CI on `ANSWER` fixtures alone is not evidence of governance. The trust membrane is verified by the rejection paths: deny-on-sensitive-geometry, abstain-on-unresolvable-evidence, error-on-contract-violation. These cases are required tests, not nice-to-have.
+Those remain **NEEDS VERIFICATION** or future implementation work.
 
-[⬆ Back to top](#governed-api--architecture)
+## 2. Trust-membrane invariants
 
----
+The following remain the governing architecture rules:
 
-## 11. Operational posture
+1. **Public clients use governed interfaces.** They do not read `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, canonical stores, or provider runtimes directly.
+2. **Finite outcomes only.** Public trust-bearing responses use `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` rather than silent partial success.
+3. **Cite-or-abstain.** Claim-bearing `ANSWER` behavior requires resolvable evidence support; missing or insufficient support yields `ABSTAIN`.
+4. **Policy before exposure.** Rights, sensitivity, access, review, freshness, and release state must be evaluated before substantive disclosure.
+5. **EvidenceBundle outranks generated language.** AI or other generated output is interpretive and never becomes root truth.
+6. **Promotion remains separate.** The API may reflect release state but cannot create publication authority by serving a response.
+7. **No direct runtime shortcut.** Browser or map clients do not call model/provider adapters directly.
+8. **Safe failure.** Errors and denials do not expose internal paths, secrets, raw evidence, restricted coordinates, or adapter internals.
+9. **Receipts are not proofs.** Process provenance does not substitute for evidence, review, policy, release, or publication authority.
 
-### 11.1 Deployment placement
+## 3. Current request path
 
-| Question | PROPOSED answer | Status |
-|---|---|---|
-| Where does the API live in the repo? | `apps/governed-api/` (Directory Rules §7.1 canonical). | CONFIRMED doctrine · PROPOSED implementation |
-| What if the live repo uses `apps/governed_api/` or `packages/api/`? | Adapt the path and record an ADR (Directory Rules §2.4(5)); preserve the boundary either way. | NEEDS VERIFICATION |
-| Where do adapters live? | `runtime/` (canonical per Directory Rules). | CONFIRMED doctrine · PROPOSED implementation |
-| Where does the public web client live? | `apps/explorer-web/` (canonical; `ui/` and `web/` are compatibility roots). | CONFIRMED doctrine · PROPOSED implementation |
+The implemented scaffold is intentionally narrow:
 
-### 11.2 Rollback and continuity
+```text
+GET /bootstrap | /layers | /evidence
+        |
+        v
+route registry
+        |
+        v
+make_abstain_envelope(...)
+        |
+        v
+RuntimeResponseEnvelope-shaped
+ABSTAIN / NOT_IMPLEMENTED
+```
 
-- **Feature flags** gate every new route until contracts, fixtures, policy, and validators are in place. Default off.
-- **Schema deprecation** uses additive evolution; breaking changes require ADR + migration manifest (Directory Rules §14).
-- **Rollback target** for any released layer or claim is recorded in the originating `ReleaseManifest` and concretized in `release/rollback_cards/`. The API surfaces the *current* release state; rollback is a release-plane action, not an API-plane edit.
-- **Revert PR** is the unit of recovery: a failing API change is rolled back by reverting the PR plus disabling the feature flag.
+No evidence resolver, policy runtime, release lookup, provider adapter, or canonical store is called by this scaffold path.
 
-### 11.3 Security and policy boundary (summary)
+That negative behavior is useful: it demonstrates the client-facing envelope family without fabricating implementation maturity.
 
-- Deny by default: public UI uses governed APIs and released payloads only.
-- No browser access to canonical stores, model runtimes, vector indexes, graph stores, credentials, or internal service handles.
-- No raw prompt or evidence content in telemetry; redactions enforced at the boundary.
-- Sensitive lanes (archaeology, fauna, flora, people / DNA, infrastructure) default to `DENY` unless an explicit policy + redaction receipt allows otherwise.
-- Admin endpoints, if present, are separately documented, constrained, and audited; they are never advertised on the public surface.
+## 4. RuntimeResponseEnvelope boundary
 
-[⬆ Back to top](#governed-api--architecture)
+The current schema defines exactly four top-level outcomes:
 
----
-
-## 12. Related docs and ADRs
-
-| Relation | Document |
+| Outcome | Architecture meaning |
 |---|---|
-| Doctrine | `docs/doctrine/trust-membrane.md` *(TODO confirm path)* |
-| Doctrine | `docs/doctrine/authority-ladder.md` *(TODO confirm path)* |
-| Doctrine (placement law) | `docs/doctrine/directory-rules.md` (mounted as `directory-rules.md`) |
-| Architecture index | `docs/architecture/README.md` *(PROPOSED)* |
-| Sibling | `docs/architecture/system-context.md` *(PROPOSED)* |
-| Sibling | `docs/architecture/map-shell.md` *(PROPOSED)* |
-| Sibling | `docs/architecture/contract-schema-policy-split.md` *(PROPOSED)* |
-| Subsystem | `docs/architecture/governed-ai/README.md` *(PROPOSED)* |
-| Subsystem | `docs/architecture/governed-ai/ROUTE_MAP.md` *(PROPOSED)* |
-| Subsystem | `docs/architecture/review/README.md` *(PROPOSED)* |
-| Subsystem | `docs/architecture/story/README.md` *(PROPOSED)* |
-| Object map | `contracts/OBJECT_MAP.md` *(PROPOSED)* |
-| Public app boundary | `apps/governed-api/README.md` *(PROPOSED)* |
-| Runbook | `docs/runbooks/governed_ai_VALIDATION.md` *(PROPOSED)* |
-| Runbook | `docs/runbooks/governed_ai_ROLLBACK.md` *(PROPOSED)* |
-| Register | `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)* |
-| Register | `docs/registers/DRIFT_REGISTER.md` *(PROPOSED)* |
+| `ANSWER` | A substantive response may be emitted only after the required evidence, policy, precision, release, review, freshness, and correction obligations close. |
+| `ABSTAIN` | The system cannot support a substantive answer at the required trust level. |
+| `DENY` | Policy, rights, sensitivity, role, exposure, or release posture forbids disclosure. |
+| `ERROR` | Contract, validation, adapter, or infrastructure failure prevents a reliable response. |
 
-**ADRs that may apply** *(TODO link once recorded)*:
+The schema currently requires `precision_actually_used` only for `ANSWER`, and requires at least one evidence reference for that outcome. Negative outcomes must not carry `precision_actually_used`.
 
-- ADR-0001 — Schema home (`schemas/contracts/v1/...`).
-- ADR-`apps/governed-api` vs `apps/governed_api` vs `packages/api` boundary (PROPOSED, pending repo verification — Directory Rules §15 open-questions item).
-- ADR-`policy/<subsystem>` layout for runtime / focus / evidence / review (PROPOSED).
-- ADR-Focus model adapter boundary (PROPOSED).
-- ADR-Story Node 3D admission boundary (PROPOSED).
+The present scaffold therefore correctly omits precision and evidence references while returning `ABSTAIN`.
 
-[⬆ Back to top](#governed-api--architecture)
+## 5. Evidence resolver relationship
 
----
+`packages/evidence-resolver/` is a separate reusable internal lane. Its implemented profile is explicitly non-authoritative and non-deployable. It evaluates caller-supplied candidate objects without network/store access and returns candidate statuses that must not be confused with public runtime authority.
 
-## Appendix A — Outcome semantics reference
+Its runtime projection deliberately maps:
 
-<details>
-<summary><strong>Expand: extended outcome × surface table</strong></summary>
+```text
+RESOLVED   -> CONTINUE_GOVERNED_CHECKS
+UNRESOLVED -> ABSTAIN
+DENIED     -> DENY
+ERROR      -> ERROR
+```
 
-| Surface | Returned outcomes | Forbidden behavior |
-|---|---|---|
-| Source summary resolver | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning raw source bytes; returning quarantined source as `ANSWER`. |
-| Domain feature / detail lookup | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning an unreleased candidate as `ANSWER`; exposing internal store identifiers. |
-| Layer descriptor resolver | `ANSWER` · `DENY` · `ERROR` | Returning a layer that lacks a `ReleaseManifest`. |
-| Layer manifest resolver | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Serving WORK or CATALOG layers to public clients. |
-| Evidence bundle resolver | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning a bundle whose `EvidenceRef`s do not all resolve. |
-| Focus Mode (`/focus/query`) | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning an answer without `AIReceipt`; citing unresolved references. |
-| Story manifest | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` | Returning a story whose nodes reference unreleased layers without redaction. |
-| Review (steward, read-only) | `ANSWER` · `DENY` · `ERROR` | Exposing the queue to unauthenticated public clients. |
-| Correction submit | `ANSWER` (i.e. `ACCEPTED`) · `DENY` · `ERROR` | Silently accepting a correction without `CorrectionNoticeCandidate` shape. |
-| Export | `ANSWER` · `DENY` · `ERROR` | Producing an export without citations, redactions, and release refs. |
-| Telemetry | `ANSWER` · `DENY` · `ERROR` | Accepting events containing raw evidence, prompts, secrets, or restricted coordinates. |
+A resolver `RESOLVED` candidate is **not** a public `ANSWER`. Remaining governed checks include evidence authority, rights, sensitivity, policy, review, release, citation, and correction.
 
-</details>
+Accordingly, wiring the resolver directly to `/evidence` as an `ANSWER` shortcut would violate the current package boundary and KFM doctrine.
 
-[⬆ Back to top](#governed-api--architecture)
+## 6. Directory Rules basis
 
----
+Accepted ADR-0029 adopts `docs/doctrine/directory-rules.md` as the directory-governance authority.
 
-## Appendix B — Anti-patterns
+The current placement follows those responsibility boundaries:
 
-<details>
-<summary><strong>Expand: trust-membrane anti-patterns and counter-rules</strong></summary>
+| Concern | Owning root |
+|---|---|
+| deployable governed API | `apps/governed-api/` |
+| reusable evidence-resolution implementation | `packages/evidence-resolver/` |
+| runtime object semantics | `contracts/runtime/` |
+| machine-readable runtime shape | `schemas/contracts/v1/runtime/` |
+| admissibility rules | `policy/` |
+| provider/runtime adapters | `runtime/` |
+| evidence/proof and lifecycle artifacts | `data/` |
+| release/correction/rollback authority | `release/` |
+| repository-native validation | `tests/`, `tools/`, `.github/workflows/` |
 
-| Anti-pattern | What goes wrong | Where it is denied |
-|---|---|---|
-| Public client reads RAW / WORK / QUARANTINE directly. | Membrane bypassed; promotion gates skipped. | API + layer manifest resolver. |
-| Map shell consumes canonical / internal store directly. | Renderer becomes the public surface and inherits no governance. | MapLibre shell wiring; layer registry. |
-| AI returns uncited language. | Generated text substitutes for evidence; cite-or-abstain broken. | Focus Mode; AI surface steward; citation validator. |
-| AI answers from RAW rather than `EvidenceBundle`. | AI becomes its own truth source. | Governed AI runtime; `AIReceipt` evaluator. |
-| Sensitive content released without redaction. | `RedactionReceipt` missing; rights / sovereignty violation. | Release queue; sensitivity reviewer. |
-| Aggregate cited as per-place observation. | Source-role collapse; matrix-cell semantics violated. | Validator; Focus Mode citation evaluator. |
-| Synthetic surface without `RealityBoundaryNote`. | Reconstruction read as observation. | Scene admission gate; representation receipt validator. |
-| KFM used as alert / instruction authority. | Out-of-scope use of governed evidence as life-safety guidance. | Hazards / Air / Hydrology surfaces. |
-| Release without `ReleaseManifest` or rollback target. | Public surface cannot be rolled back. | Release queue; release authority. |
-| AI generation routed through admin shortcut. | Admin bypass becomes a normal-path public route. | Trust-membrane audit; infra. |
-| Documenting a change instead of validating it. | Docs do not substitute for validators, fixtures, or schemas. | Directory Rules §17; PR review. |
+No public client should bypass `apps/governed-api/` to consume one of those internal roots directly.
 
-</details>
+## 7. Next dependency-closed implementation stages
 
-[⬆ Back to top](#governed-api--architecture)
+The next implementation work should remain small and separately reviewable. Current evidence supports this ordering:
 
----
+1. **Negative-outcome expansion.** Add deterministic `DENY` and `ERROR` scaffold cases only when a current contract/fixture/acceptance boundary clearly owns those inputs and outcomes.
+2. **Evidence-route candidate integration.** Introduce a request contract and fixture-only governed-api adapter to the evidence-resolver candidate lane, preserving `RESOLVED -> CONTINUE_GOVERNED_CHECKS` rather than promoting it to `ANSWER`.
+3. **Policy/runtime gate integration.** Add an explicit caller-supplied or fixture-backed policy decision boundary before substantive output.
+4. **Release/correction binding.** Require release/correction state where the payload depends on released artifacts.
+5. **First `ANSWER` vertical slice.** Only after evidence, policy, citation, release, review, precision, freshness, correction, and rollback obligations have objective fixtures and tests.
+6. **Public UI transport.** Connect Explorer or other clients only after the governed-api route is demonstrably safe and release-backed.
 
-## Appendix C — Open questions
+Each stage must preserve deny-by-default behavior and must not activate sources, publish data, or widen access implicitly.
 
-<details>
-<summary><strong>Expand: items tracked in <code>docs/registers/VERIFICATION_BACKLOG.md</code> (PROPOSED)</strong></summary>
+## 8. Explicit non-goals of the current scaffold
 
-- **NEEDS VERIFICATION** — Whether the live repo uses `apps/governed-api/`, `apps/governed_api/`, or `packages/api/` (Directory Rules §18 open-question item).
-- **NEEDS VERIFICATION** — Whether `policy/` or `policies/` is canonical in the live repo (Directory Rules default: `policy/`).
-- **NEEDS VERIFICATION** — Whether `schemas/contracts/v1/` is the live schema home or whether `contracts/` carries machine schemas (Directory Rules default: `schemas/contracts/v1/` per ADR-0001).
-- **NEEDS VERIFICATION** — Backend framework choice (TypeScript / Python / other) and route file convention.
-- **NEEDS VERIFICATION** — Whether `GraphQL` co-exists with REST; if so, treat as adapter, not as a replacement of the governed REST envelope.
-- **OPEN** — Whether `release/manifests/` or per-layer manifests under `data/published/` is the authoritative resolution target for layer-manifest endpoints (Directory Rules §18).
-- **OPEN** — Audience class enum: stabilize `public` · `partner` · `steward` · `internal` · `denied` as the canonical vocabulary, or revise.
-- **OPEN** — Whether `apps/admin/`, if it exists, exposes any read-only endpoints that the public surface might link to (default: no).
+The current implementation does not authorize:
 
-</details>
+- live source activation;
+- direct public lifecycle-store reads;
+- EvidenceBundle construction from unreviewed inputs;
+- AI or model-generated public answers;
+- policy bypass;
+- release creation or promotion;
+- publication;
+- repository mutation;
+- admin shortcuts as ordinary public paths; or
+- exposure of sensitive or rights-unclear material.
 
-[⬆ Back to top](#governed-api--architecture)
+## 9. Validation expectations
+
+For current scaffold changes, the minimum focused validation set is:
+
+```bash
+python -m pytest apps/governed-api/tests/test_abstain_routes.py -q --strict-config --strict-markers
+make governed-api-smoke
+```
+
+Relevant repository-wide ratchets should then be compared with untouched current main so inherited failures are not attributed to the branch.
+
+For any future substantive `ANSWER` path, focused validation must also prove evidence resolution, citation closure, policy decisions, release state, precision, correction/rollback handling, negative cases, and public-boundary non-leakage.
+
+## 10. Rollback
+
+A governed-api change should remain independently reversible. Before merge, close the draft PR. After merge, revert the specific change through the normal reviewed repository path. No API-plane code change alone may rewrite or bypass source, lifecycle, policy, evidence, review, or release history.
 
 ---
 
-### Last reviewed
-
-2026-05-14 · *Doctrine grounded in attached KFM corpus; repository implementation PROPOSED pending live-repo verification.*
-
-[⬆ Back to top](#governed-api--architecture)
+**Truth summary:** the trust-membrane doctrine is CONFIRMED; three schema-aligned `ABSTAIN / NOT_IMPLEMENTED` GET scaffold routes are CONFIRMED; the evidence-resolver candidate package is CONFIRMED internal/non-authoritative; substantive public answer behavior remains **NEEDS VERIFICATION / not implemented by the inspected scaffold**.

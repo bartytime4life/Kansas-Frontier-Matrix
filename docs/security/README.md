@@ -23,7 +23,7 @@ canonical_relationship: same-path update; no sibling authority created
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3ea2ab5701074168b0dab32e94dccae8dbcc0d4f
+  base_commit: 3abe21f9285ed7d2f9f652a2672d8f669aa7e884
   target_prior_blob: c4379f54f9f91b0d1d712cc3c569d2fe58a39f4a
   first_path_history_commit: 026b5baa7c1279ece55f9b1fa67c1770bfbddccd
   long_form_security_readme_commit: 1d31edda4e3f5b9143b37e5cb59920a24128f1c3
@@ -131,7 +131,7 @@ The lane is canonical **for human-readable security guidance and navigation only
 
 ## Status and evidence boundary
 
-The observations below are pinned to `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f`. They describe tracked repository bytes, not deployed controls, operational readiness, incident rehearsal, secret custody, or security assurance.
+The observations below are pinned to `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884`. They describe tracked repository bytes, not deployed controls, operational readiness, incident rehearsal, secret custody, or security assurance.
 
 | Surface | CONFIRMED observation | Bounded conclusion |
 |---|---|---|
@@ -594,7 +594,7 @@ These findings are current documentation work, not permission for an unreviewed 
 
 | Evidence | Use in this edition | Limitation |
 |---|---|---|
-| `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f` | Pins target, lane inventory, child docs, disclosure entrypoint, Directory Rules, ADR, CODEOWNERS, and adjacent current paths | Commit bytes do not prove deployed controls or operational security |
+| `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884` | Pins target, lane inventory, child docs, disclosure entrypoint, Directory Rules, ADR, CODEOWNERS, and adjacent current paths | Commit bytes do not prove deployed controls or operational security |
 | Exact `docs/security/` contents response | Confirms nine direct Markdown files and no direct child directory | Presence does not prove quality, enforcement, use, or approval |
 | Complete prior README | Identifies stale proposal tree, placeholder owners, unmounted-repository claims, and intended lane scope | Prior prose is not current implementation evidence |
 | Eight child documents | Supports bounded focus, version, status, date, and drift findings | Not a complete line-by-line audit of every child |
@@ -627,7 +627,7 @@ This edition does not assume:
 
 ## Last evidence review and rollback
 
-**2026-08-14** — v1.1 same-path repository-grounded reconciliation against `main@3ea2ab5701074168b0dab32e94dccae8dbcc0d4f`.
+**2026-08-14** — v1.1 same-path repository-grounded reconciliation against `main@3abe21f9285ed7d2f9f652a2672d8f669aa7e884`.
 
 Re-review this README when:
 

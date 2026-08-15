@@ -72,6 +72,17 @@ def test_non_abstaining_registered_handler_fails_closed() -> None:
     assert "ROUTE_NOT_ABSTAIN" in _codes(result)
 
 
+def test_runtime_response_envelope_abstain_does_not_require_decision_field() -> None:
+    routes, findings = validator._load_routes(REPO_ROOT)
+    assert not findings and routes is not None
+    runtime_envelope_routes = {
+        route: (lambda: {"outcome": "ABSTAIN"})
+        for route in routes
+    }
+    result = validator.validate_object_map(routes=runtime_envelope_routes)
+    assert result.ok, result.findings
+
+
 def test_cli_output_is_deterministic() -> None:
     command = [sys.executable, str(VALIDATOR_PATH), str(MAP_PATH), "--repo-root", str(REPO_ROOT)]
     environment = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "PYTHONHASHSEED": "0"}
