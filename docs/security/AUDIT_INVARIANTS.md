@@ -205,7 +205,7 @@ Missing any of these means the transition fails closed and the prior state is pr
 |---|---|
 | No public RAW path | Renderer-boundary tests; route map; layer manifest resolver |
 | No direct model client | Governed API + `ModelAdapter` boundary; no browser-to-model route |
-| No canonical/internal client fetch | MapLibre adapter; explorer-web reads via `apps/governed-api/` |
+| No canonical/internal client fetch | MapLibre adapter; explorer-web reads via `apps/governed-api/` only |
 | No unreleased tile load | `LayerManifest`/`MapReleaseManifest` resolver; release-state-tagged tiles |
 | No sensitive geometry hidden only by style | Tile-time transformation; restricted tier; deny gate |
 | No popup as Evidence Drawer substitute | Material claims require `EvidenceDrawerPayload` + bundle resolution |
@@ -486,7 +486,7 @@ Items resolved against repo evidence should move from this list to a per-invaria
 - `docs/architecture/governed-api.md` — The trust membrane in executable form. *(PROPOSED.)*
 - `docs/security/THREAT_MODEL.md` — Threats whose mitigation depends on the invariants above. *(PROPOSED sibling.)*
 - `docs/security/INCIDENT_RESPONSE.md` — What to do when an invariant fails in production. *(PROPOSED sibling.)*
-- `docs/security/EXPOSURE_POSTURE.md` — Deny-by-default, least-privilege, audit-logging posture for exposed systems. *(PROPOSED sibling.)*
+- `docs/security/EXPOSURE_PLAN.md` — Deny-by-default, least-privilege, audit-logging posture for exposed systems. *(Current tracked sibling; document remains draft.)*
 - `docs/registers/DRIFT_REGISTER.md` — Where invariant violations are recorded for triage. *(PROPOSED.)*
 - `docs/registers/VERIFICATION_BACKLOG.md` — Where §16 items go. *(PROPOSED.)*
 - `docs/adr/ADR-0001-schema-home.md` — Schema-home decision underlying §8. *(Referenced by Directory Rules.)*
