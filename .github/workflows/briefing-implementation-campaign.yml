@@ -1,4 +1,4 @@
-# Validate the bounded August 6 briefing implementation campaign.
+# Validate the bounded August 6 briefing implementation campaign and current MapLibre candidate.
 name: briefing-implementation-campaign
 
 "on":
@@ -19,6 +19,7 @@ name: briefing-implementation-campaign
       - "fixtures/domains/hazards/usdm_materiality/**"
       - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
       - "data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json"
+      - "data/receipts/generated/genrec-maplibre-v6-3-readiness-current-binding-20260815.json"
   push:
     branches: [main]
     paths:
@@ -37,6 +38,7 @@ name: briefing-implementation-campaign
       - "fixtures/domains/hazards/usdm_materiality/**"
       - "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json"
       - "data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json"
+      - "data/receipts/generated/genrec-maplibre-v6-3-readiness-current-binding-20260815.json"
   workflow_dispatch:
 
 permissions:
@@ -87,7 +89,7 @@ jobs:
           python tools/validators/validate_trace_temporal_closure.py --fixtures
           python tools/validators/maplibre/validate_v6_readiness.py --fixtures
           python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
-      - name: Confirm current MapLibre posture remains an explicit hold
+      - name: Confirm current MapLibre 6.3 candidate posture remains an explicit hold
         run: |
           set -euo pipefail
           set +e
@@ -96,12 +98,12 @@ jobs:
           set -e
           printf '%s\n' "$output"
           test "$code" -eq 3
-          python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert "MAPLIBRE_DEPENDENCY_UNPINNED" in value["reasons"]; assert "RUNTIME_PROBES_PENDING" in value["reasons"]' "$output"
-      - name: Verify current MapLibre readiness receipt integrity
+          python -c 'import json,sys; value=json.loads(sys.argv[1]); assert value["outcome"] == "HOLD"; assert value["target_version"] == "6.3.0"; assert "MAPLIBRE_DEPENDENCY_UNPINNED" in value["reasons"]; assert "RUNTIME_PROBES_PENDING" in value["reasons"]' "$output"
+      - name: Verify current MapLibre 6.3 readiness receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-maplibre-v6-readiness-current-binding-20260814.json \
+            data/receipts/generated/genrec-maplibre-v6-3-readiness-current-binding-20260815.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
@@ -110,6 +112,7 @@ jobs:
             echo "### Briefing implementation campaign"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: synthetic TemporalSlice SQL lookup, trace/receipt/evidence/TemporalSlice closure, MapLibre v6 readiness classification, and USDM material-change semantics."
+            echo "- Scope: synthetic TemporalSlice SQL lookup, trace/receipt/evidence/TemporalSlice closure, exact MapLibre 6.3.0 readiness classification, and USDM material-change semantics."
+            echo "- MapLibre probes: WebGL/CSP/style/GeoJSON/query/visual coverage plus image-source texture reclamation, tile-churn querying, PMTiles/vector loading, terrain/DEM behavior, Evidence Drawer selection stability, and headless parity."
             echo "- Boundary: no live source, dependency upgrade, production database, authenticated evidence, policy authority, release, deployment, publication, or public-use path is created."
           } >> "$GITHUB_STEP_SUMMARY"
