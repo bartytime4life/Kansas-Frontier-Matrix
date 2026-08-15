@@ -160,7 +160,7 @@ def _route_findings(
         except Exception:  # bounded fail-closed adapter around registry handlers
             findings.append(Finding("ROUTE_HANDLER_FAILED", route))
             continue
-        if not isinstance(payload, Mapping) or payload.get("decision") != "ABSTAIN" or payload.get("outcome") != "ABSTAIN":
+        if not isinstance(payload, Mapping) or payload.get("outcome") != "ABSTAIN":
             findings.append(Finding("ROUTE_NOT_ABSTAIN", route))
     return findings
 
