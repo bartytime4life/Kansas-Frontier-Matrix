@@ -8,8 +8,8 @@
   ],
   "artifact_hashes": {
     "apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md": "sha256:54d61d7ebfde45d23860e03ff786c895c5acc4fb7fb565e96c8afcf3c1744506",
-    "apps/explorer-web/src/features/story_player/index.tsx": "sha256:4359ed6cc915499cf9e6c6be971215c422451d8d4f75572ca9d7d6dd1ae80318",
-    "apps/explorer-web/tests/story-player.test.ts": "sha256:4d52bbfbfa37f700be36b2fd1fca4e9127c8daef81b48705e8e0ce29d95edc6d"
+    "apps/explorer-web/src/features/story_player/index.tsx": "sha256:0611f7c73da5d84d2d2d9ba430a09cfdca95d0afaa44e16ad8fa698b292ba3b8",
+    "apps/explorer-web/tests/story-player.test.ts": "sha256:0543f3b227d665ebade7dc7347e992959629fc4fad872be0d3551879d8266885"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -75,7 +75,7 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "This receipt binds all three AI-authored implementation/documentation artifacts with SHA-256 digests over the final authored text."
+      "reason": "This receipt binds all three AI-authored implementation/documentation artifacts with SHA-256 digests over the final authored text, including the closed-profile defensive validation revision."
     },
     {
       "gate": "hosted-exact-head-ui-build-and-test",
