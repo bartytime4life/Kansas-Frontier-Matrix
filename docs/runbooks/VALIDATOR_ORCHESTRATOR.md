@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks-validator-orchestrator
 title: Validator Orchestrator Runbook
 type: runbook
-version: v1.0
+version: v1.1
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-08-08
-updated: 2026-08-08
+updated: 2026-08-15
 policy_label: internal
 owning_root: docs/
 responsibility: Operate the bounded registry-driven validator orchestrator without treating a validation result as evidence, policy, review, release, or publication authority.
@@ -16,13 +16,19 @@ related:
   - ../../tools/validators/validate_all.py
   - ../../tools/validators/validator_registry.json
   - ../../tools/validators/_common/run_all.py
+  - ../../tools/validators/catalog_closure/validate_catalog_closure.py
+  - ../../tools/validators/validate_catalog_matrix_closure.py
+  - ../../tools/validators/validate_catalog_matrix_claim_closure.py
+  - ../../tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py
   - ../../tests/validators/test_validator_orchestrator.py
+  - ../../tests/validators/test_catalog_validator_registry_convergence.py
   - ../doctrine/directory-rules.md
   - ../dashboards/observability/validator-orchestrator-health.md
 notes:
   - "Directory Rules v2 DIR-EXEC-006 permits tools/validate_all.py as a thin repository entrypoint while implementation remains under tools/validators/."
   - "This runbook implements the bounded orchestrator direction associated with KFM-P5-PROG-0009 and the Pass 6 validator-report expansions."
   - "The orchestrator runs repository-owned validators without a shell, forces no-network test posture, and emits finite machine-readable outcomes."
+  - "Catalog closure registration coordinates four existing fixture-only validators; it does not accept ADR-0022 or create catalog, evidence, review, release, promotion, publication, or public-use authority."
   - "A green orchestrator report proves only the selected checks completed successfully for the declared profile."
 [/KFM_META_BLOCK_V2] -->
 
@@ -104,10 +110,23 @@ python tools/validate_all.py --profile full --include-timing
 |---|---|---|
 | `focused` | Small trust-spine subset declared in the registry. | Configuration error. |
 | `changed-area` | Every validator whose registered path glob matches at least one supplied changed path. | `ABSTAIN` with `NO_MATCHING_VALIDATORS`, exit `0`; this is not represented as a validator pass. |
-| `release-dry-run` | Release-adjacent evidence, decision, and receipt fixture validators. | Configuration error. |
+| `release-dry-run` | Release-adjacent evidence, decision, receipt, and bounded catalog-closure fixture validators. | Configuration error. |
 | `full` | Every registered validator exactly once, in registry order. | Configuration error. |
 
 The `full` profile means every validator in `validator_registry.json`; it does not claim every executable checker in the repository has been registered.
+
+### Registered catalog-closure validators
+
+The following existing, fixture-only validators are registered in `release-dry-run` and `full`. They are intentionally not added to `focused`, which remains the smaller trust-spine subset.
+
+| Validator ID | Bounded check | Non-effect of `PASS` |
+|---|---|---|
+| `catalog-closure-packet` | CatalogClosurePacket shape and internal STAC/DCAT/PROV readiness relationships. | Does not emit catalog records or authorize release. |
+| `catalog-matrix-closure` | CatalogMatrix identity, digest, release-reference, reference-hygiene, and decision alignment. | Does not accept ADR-0022 or create evidence, review, or publication authority. |
+| `catalog-matrix-claim-closure` | ClaimEnvelope-to-CatalogMatrix non-overstatement across evidence, source, policy, review, release, correction, rollback, and publication projection. | Does not resolve evidence, decide policy, approve review, promote, or publish. |
+| `catalog-distribution-mapping-profile` | STAC/DCAT/PROV carrier mapping and deterministic candidate identity. | Does not write catalogs, activate OCI/ORAS, or authorize public use. |
+
+Their path globs cover the existing contracts, schemas, fixtures, validators, focused tests, workflows, and source-reconciliation note that define each bounded profile. Generated authoring receipts remain outside this registration slice; receipt-integrity findings are not silently repaired or converted into catalog-validator outcomes.
 
 ## Finite outcomes and process exit codes
 
@@ -160,7 +179,13 @@ python -m unittest discover \
   --pattern 'test_validator_orchestrator.py' \
   --verbose
 
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_catalog_validator_registry_convergence.py' \
+  --verbose
+
 python tools/validate_all.py --validate-registry
+python tools/validate_all.py --profile release-dry-run
 python tools/validate_all.py --profile full
 ```
 
@@ -182,4 +207,4 @@ It delegates to the canonical full profile and retains `RUNNER_VALIDATORS` for t
 
 ## Rollback
 
-Revert the campaign commit to restore the previous `Makefile` aggregate runner and placeholder entrypoints. Do not delete historical CI logs or reports. The compatibility wrapper makes rollback independent of consumers that still import `RUNNER_VALIDATORS`.
+Revert the campaign commit to restore the previous registry profile membership and runbook. Do not delete historical CI logs or reports. No catalog records, generated receipts, schemas, contracts, policies, release objects, or published artifacts are changed by this registration slice.
