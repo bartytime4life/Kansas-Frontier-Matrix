@@ -14,7 +14,11 @@
       "layer-manifest",
       "decision-envelope",
       "run-receipt",
-      "ingest-receipt"
+      "ingest-receipt",
+      "catalog-closure-packet",
+      "catalog-matrix-closure",
+      "catalog-matrix-claim-closure",
+      "catalog-distribution-mapping-profile"
     ],
     "full": [
       "source-descriptor",
@@ -26,6 +30,10 @@
       "decision-envelope",
       "run-receipt",
       "ingest-receipt",
+      "catalog-closure-packet",
+      "catalog-matrix-closure",
+      "catalog-matrix-claim-closure",
+      "catalog-distribution-mapping-profile",
       "workflow-security",
       "repository-topology"
     ]
@@ -193,6 +201,98 @@
         "fixtures/contracts/v1/source/ingest_receipt/**",
         "tests/validators/test_validate_ingest_receipt.py",
         "tools/validators/validate_ingest_receipt.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "catalog-closure-packet",
+      "description": "Validate fixture-only CatalogClosurePacket readiness relationships without creating catalog or release authority.",
+      "script": "tools/validators/catalog_closure/validate_catalog_closure.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/catalog-closure-packet.yml",
+        "contracts/data/catalog_closure_packet.md",
+        "schemas/contracts/v1/data/catalog_closure_packet.schema.json",
+        "fixtures/data/catalog_closure_packet/**",
+        "tests/validators/test_validate_catalog_closure.py",
+        "tests/validators/test_catalog_validator_registry_convergence.py",
+        "tools/validators/catalog_closure/validate_catalog_closure.py",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "catalog-matrix-closure",
+      "description": "Validate fixture-only CatalogMatrix STAC/DCAT/PROV identity, digest, reference, and decision alignment.",
+      "script": "tools/validators/validate_catalog_matrix_closure.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/catalog-matrix-closure.yml",
+        "contracts/data/catalog_matrix_closure_profile.md",
+        "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json",
+        "fixtures/data/catalog_matrix/closure/**",
+        "tests/validators/test_validate_catalog_matrix_closure.py",
+        "tests/validators/test_catalog_validator_registry_convergence.py",
+        "tools/validators/validate_catalog_matrix_closure.py",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "catalog-matrix-claim-closure",
+      "description": "Validate fixture-only ClaimEnvelope-to-CatalogMatrix non-overstatement closure.",
+      "script": "tools/validators/validate_catalog_matrix_claim_closure.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/catalog-matrix-claim-closure.yml",
+        "contracts/data/catalog_matrix_claim_closure_profile.md",
+        "contracts/data/catalog_matrix_closure_profile.md",
+        "contracts/evidence/claim_envelope.md",
+        "schemas/contracts/v1/data/catalog_matrix_claim_closure_profile.schema.json",
+        "schemas/contracts/v1/data/catalog_matrix_closure_profile.schema.json",
+        "schemas/contracts/v1/evidence/claim_envelope.schema.json",
+        "fixtures/data/catalog_matrix/claim_closure/**",
+        "tests/validators/test_validate_catalog_matrix_claim_closure.py",
+        "tests/validators/test_catalog_validator_registry_convergence.py",
+        "tools/validators/_common/local_resolver.py",
+        "tools/validators/validate_catalog_matrix_claim_closure.py",
+        "tools/validators/validate_catalog_matrix_closure.py",
+        "tools/validators/validate_claim_envelope.py",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "catalog-distribution-mapping-profile",
+      "description": "Validate fixture-only STAC/DCAT/PROV carrier mapping and deterministic candidate identity.",
+      "script": "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/catalog-distribution-mapping-profile.yml",
+        "contracts/data/catalog_distribution_mapping_profile.md",
+        "contracts/data/catalog_matrix_closure_profile.md",
+        "contracts/data/catalog_trust_extension.md",
+        "schemas/contracts/v1/data/catalog_distribution_mapping_profile.schema.json",
+        "fixtures/contracts/v1/data/catalog_distribution_mapping_profile/**",
+        "tests/validators/catalog_closure/test_catalog_distribution_mapping_profile.py",
+        "tests/validators/test_catalog_validator_registry_convergence.py",
+        "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py",
+        "docs/intake/exploratory/catalog-distribution-mapping-profile-source-map.md",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+        "packages/hashing/**",
+        "pyproject.toml"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
