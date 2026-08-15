@@ -8,6 +8,9 @@ owners: API steward + Security steward (TODO confirm)
 created: 2026-05-14
 updated: 2026-08-14
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the governed API architecture boundary and verified current scaffold state without creating contract, policy, release, deployment, or publication authority."
+truth_posture: cite-or-abstain
 related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
