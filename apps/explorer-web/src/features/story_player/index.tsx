@@ -116,6 +116,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function hasOnlyKeys(
+  value: Record<string, unknown>,
+  required: readonly string[],
+  optional: readonly string[] = [],
+): boolean {
+  const allowed = new Set([...required, ...optional]);
+  return (
+    required.every((key) => Object.hasOwn(value, key)) &&
+    Object.keys(value).every((key) => allowed.has(key))
+  );
+}
+
 function isStringArray(value: unknown): value is string[] {
   return (
     Array.isArray(value) &&
@@ -125,7 +137,20 @@ function isStringArray(value: unknown): value is string[] {
 }
 
 function isTrustState(value: unknown): value is TrustState {
-  if (!isRecord(value)) return false;
+  if (
+    !isRecord(value) ||
+    !hasOnlyKeys(value, [
+      "rights",
+      "sensitivity",
+      "policy",
+      "review",
+      "release",
+      "freshness",
+      "correction",
+    ])
+  ) {
+    return false;
+  }
   return (
     RIGHTS.has(String(value.rights)) &&
     SENSITIVITY.has(String(value.sensitivity)) &&
@@ -138,7 +163,25 @@ function isTrustState(value: unknown): value is TrustState {
 }
 
 function isSupport(value: unknown): value is StorySupport {
-  if (!isRecord(value)) return false;
+  if (
+    !isRecord(value) ||
+    !hasOnlyKeys(
+      value,
+      [
+        "evidence_bundle_refs",
+        "citation_validation_refs",
+        "policy_decision_refs",
+        "release_refs",
+        "review_refs",
+        "correction_refs",
+      ],
+      ["rollback_ref"],
+    ) ||
+    (value.rollback_ref !== undefined &&
+      typeof value.rollback_ref !== "string")
+  ) {
+    return false;
+  }
   return [
     value.evidence_bundle_refs,
     value.citation_validation_refs,
@@ -150,7 +193,19 @@ function isSupport(value: unknown): value is StorySupport {
 }
 
 function isConstituent(value: unknown): value is StoryConstituent {
-  if (!isRecord(value)) return false;
+  if (
+    !isRecord(value) ||
+    !hasOnlyKeys(value, [
+      "node_ref",
+      "order_index",
+      "state",
+      "outcome",
+      "reason_code",
+      "trust_state",
+    ])
+  ) {
+    return false;
+  }
   return (
     typeof value.node_ref === "string" &&
     Number.isInteger(value.order_index) &&
@@ -163,14 +218,43 @@ function isConstituent(value: unknown): value is StoryConstituent {
 }
 
 function isStoryManifest(value: unknown): value is StoryManifest {
-  if (!isRecord(value)) return false;
+  if (
+    !isRecord(value) ||
+    !hasOnlyKeys(
+      value,
+      [
+        "profile",
+        "id",
+        "version",
+        "spec_hash",
+        "story_ref",
+        "title",
+        "accessibility_summary",
+        "state",
+        "outcome",
+        "reason_codes",
+        "limiting_node_refs",
+        "constituents",
+        "trust_state",
+        "support",
+        "caveats",
+        "authoritative",
+        "projection_only",
+      ],
+      ["supersession"],
+    )
+  ) {
+    return false;
+  }
   if (
     value.profile !== "kfm.ui.story-manifest.public-safe.v1" ||
     value.version !== "1.0.0" ||
     value.authoritative !== false ||
     value.projection_only !== true ||
     typeof value.id !== "string" ||
+    !/^kfm:story-manifest:[0-9a-f]{24}$/.test(value.id) ||
     typeof value.spec_hash !== "string" ||
+    !/^sha256:[0-9a-f]{64}$/.test(value.spec_hash) ||
     typeof value.story_ref !== "string" ||
     typeof value.title !== "string" ||
     typeof value.accessibility_summary !== "string" ||
@@ -205,6 +289,10 @@ function isStoryManifest(value: unknown): value is StoryManifest {
   if (value.supersession !== undefined) {
     if (
       !isRecord(value.supersession) ||
+      !hasOnlyKeys(value.supersession, [
+        "replacement_manifest_ref",
+        "public_note",
+      ]) ||
       typeof value.supersession.replacement_manifest_ref !== "string" ||
       typeof value.supersession.public_note !== "string"
     ) {
