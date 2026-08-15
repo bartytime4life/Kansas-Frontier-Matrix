@@ -5,7 +5,7 @@ import json
 import unittest
 from pathlib import Path
 
-from tools.validators.domains.hydrology.validate_western_kansas_observation_assessment import (
+from tools.validators.evidence.validate_western_kansas_observation_assessment import (
     CASES_PATH,
     assess,
     candidate_from_case,
