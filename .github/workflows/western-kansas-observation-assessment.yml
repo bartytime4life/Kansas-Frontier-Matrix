@@ -1,0 +1,75 @@
+name: western-kansas-observation-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/western-kansas-observation-assessment.yml"
+      - "contracts/domains/hydrology/western_kansas_observation_assessment.md"
+      - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
+      - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
+      - "tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py"
+      - "tests/domains/hydrology/test_western_kansas_observation_assessment.py"
+      - "data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/western-kansas-observation-assessment.yml"
+      - "contracts/domains/hydrology/western_kansas_observation_assessment.md"
+      - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
+      - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
+      - "tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py"
+      - "tests/domains/hydrology/test_western_kansas_observation_assessment.py"
+      - "data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: western-kansas-observation-assessment-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install declared test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Run focused tests
+        run: python -m pytest -q tests/domains/hydrology/test_western_kansas_observation_assessment.py
+      - name: Run exact synthetic case polarity
+        run: python tools/validators/domains/hydrology/validate_western_kansas_observation_assessment.py --cases
+      - name: Verify generated authoring receipt integrity
+        run: |
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-western-kansas-observation-assessment-20260815.json \
+            --repo-root .
+      - name: Record trust boundary
+        if: always()
+        run: |
+          {
+            echo "### Western Kansas observation assessment"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: synthetic observation, join, freshness, correction, material-change, and claim-boundary classification."
+            echo "- Boundary: no live source, connector, groundwater or crop-loss claim, emergency guidance, lifecycle write, release, deployment, or publication."
+          } >> "$GITHUB_STEP_SUMMARY"
