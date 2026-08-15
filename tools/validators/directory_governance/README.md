@@ -33,6 +33,14 @@ commit: waiver additions, waiver mutation, metadata changes, and deadline
 extensions fail. The current file is a one-time bootstrap from `main@c259404…`;
 future ordinary changes may only remove entries or shorten its deadline.
 
+`render_repository_topology_diagnostics.py` is a bounded diagnostic projection
+for failed ratchet runs. It preserves the ratchet exit code and reports only the
+failure disposition, rule id, subject, and fingerprint for new drift, invariant
+findings, baseline mismatches, and stale baseline entries. It intentionally does
+not emit evidence members or evidence digests, does not mutate the baseline, and
+does not create path authority. Output is deterministically sorted and bounded
+to 20 identities by default (maximum 50).
+
 Finite outcomes are `PASS`, `FAIL_NEW_DRIFT`, `FAIL_INVARIANT`, `HOLD_UNRESOLVED`, and `ERROR_VALIDATOR`.
 
 ## Boundary
@@ -45,6 +53,7 @@ A green validator result is conformance evidence for a projection. It does not c
 python tools/validators/directory_governance/validate_root_registry.py --fixtures
 python tools/validators/directory_governance/validate_root_registry.py
 python tools/validators/directory_governance/validate_repository_topology.py --format text
+python tools/validators/directory_governance/render_repository_topology_diagnostics.py
 python -m unittest discover \
   --start-directory tests/validators/directory_governance \
   --pattern 'test_validate_*topology.py' \
