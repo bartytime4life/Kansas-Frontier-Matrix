@@ -81,23 +81,25 @@ def _root_registry() -> dict[str, object]:
 def _validator_registry() -> dict[str, object]:
     ids = [f"validator-{index}" for index in range(9)]
     non_fixture_ids = ["repository-topology", "workflow-security"]
+    validators = [
+        {
+            "id": validator_id,
+            "script": f"tools/validators/validate_{index}.py",
+            "args": ["--cases"] if index == 8 else ["--fixtures"],
+        }
+        for index, validator_id in enumerate(ids)
+    ]
+    validators.extend(
+        {
+            "id": validator_id,
+            "script": f"tools/validators/validate_{validator_id}.py",
+            "args": [],
+        }
+        for validator_id in non_fixture_ids
+    )
     return {
         "profiles": {"full": [*ids, *non_fixture_ids]},
-        "validators": [
-            {
-                "id": validator_id,
-                "script": f"tools/validators/validate_{index}.py",
-                "args": ["--fixtures"],
-            }
-            for index, validator_id in enumerate(ids)
-        ] + [
-            {
-                "id": validator_id,
-                "script": f"tools/validators/validate_{validator_id}.py",
-                "args": [],
-            }
-            for validator_id in non_fixture_ids
-        ],
+        "validators": validators,
     }
 
 
@@ -134,7 +136,7 @@ class FixtureRootContractTests(unittest.TestCase):
     def codes(self) -> set[str]:
         return {finding.code for finding in validate_repository(self.root).findings}
 
-    def test_valid_contract_passes(self) -> None:
+    def test_valid_contract_passes_with_fixture_and_case_modes(self) -> None:
         result = validate_repository(self.root)
         self.assertTrue(result.ok, result.findings)
         self.assertEqual(result.outcome, "PASS")
@@ -170,12 +172,19 @@ class FixtureRootContractTests(unittest.TestCase):
         )
         self.assertIn("FIXTURES_TARGET_SEMANTICS_CHANGED", self.codes())
 
-    def test_aggregate_inventory_count_is_detected(self) -> None:
+    def test_aggregate_inventory_omission_is_detected(self) -> None:
         path = self.root / "tools/validators/validator_registry.json"
         payload = json.loads(path.read_text(encoding="utf-8"))
         payload["profiles"]["full"].pop()
         path.write_text(json.dumps(payload), encoding="utf-8")
         self.assertIn("AGGREGATE_PROFILE_COUNT_MISMATCH", self.codes())
+
+    def test_unknown_fixture_execution_mode_is_detected(self) -> None:
+        path = self.root / "tools/validators/validator_registry.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["validators"][0]["args"] = ["--unknown-mode"]
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        self.assertIn("FIXTURE_MODE_ARGUMENT_MISSING", self.codes())
 
 
 if __name__ == "__main__":

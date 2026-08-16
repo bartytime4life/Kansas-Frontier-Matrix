@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-EXPECTED_FIXTURE_VALIDATORS = 9
+FIXTURE_EXECUTION_ARGUMENTS = frozenset({"--fixtures", "--cases"})
 NON_FIXTURE_VALIDATORS = frozenset({"repository-topology", "workflow-security"})
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
 EXPECTED_ROOT: dict[str, object] = {
@@ -79,7 +79,12 @@ def aggregate(
         return 0, [("AGGREGATE_PROFILE_INVALID", "/validator_registry/profiles/full")]
 
     findings: list[tuple[str, str]] = []
-    if len(full) != EXPECTED_FIXTURE_VALIDATORS + len(NON_FIXTURE_VALIDATORS):
+    registry_ids = [
+        item.get("id")
+        for item in validators
+        if isinstance(item, Mapping) and isinstance(item.get("id"), str)
+    ]
+    if len(full) != len(registry_ids) or set(full) != set(registry_ids):
         findings.append(("AGGREGATE_PROFILE_COUNT_MISMATCH", "/validator_registry/profiles/full"))
     if len(full) != len(set(full)):
         findings.append(("AGGREGATE_PROFILE_DUPLICATE", "/validator_registry/profiles/full"))
@@ -95,11 +100,12 @@ def aggregate(
             findings.append(("AGGREGATE_VALIDATOR_MISSING", field))
             continue
         args, script = item.get("args"), item.get("script")
-        if not isinstance(args, list) or (
-            validator_id not in NON_FIXTURE_VALIDATORS and "--fixtures" not in args
-        ):
-            findings.append(("FIXTURE_MODE_ARGUMENT_MISSING", field))
-        if validator_id in NON_FIXTURE_VALIDATORS and args:
+        if validator_id not in NON_FIXTURE_VALIDATORS:
+            if not isinstance(args, list) or not any(
+                argument in FIXTURE_EXECUTION_ARGUMENTS for argument in args
+            ):
+                findings.append(("FIXTURE_MODE_ARGUMENT_MISSING", field))
+        elif args:
             findings.append(("NON_FIXTURE_ARGUMENTS_PRESENT", field))
         if not isinstance(script, str) or not (root / script).is_file():
             findings.append(("AGGREGATE_VALIDATOR_SCRIPT_MISSING", field))
