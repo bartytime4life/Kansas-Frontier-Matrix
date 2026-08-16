@@ -87,7 +87,7 @@ def _validator_registry() -> dict[str, object]:
             {
                 "id": validator_id,
                 "script": f"tools/validators/validate_{index}.py",
-                "args": ["--fixtures"],
+                "args": ["--cases"] if index == len(ids) - 1 else ["--fixtures"],
             }
             for index, validator_id in enumerate(ids)
         ] + [
