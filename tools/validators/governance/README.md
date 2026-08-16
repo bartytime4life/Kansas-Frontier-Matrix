@@ -136,6 +136,37 @@ The validator does not conduct research, authenticate evidence, update the human
 verification register, create a control-plane projection, make a steward or
 architecture decision, activate a source, or authorize public use.
 
+## TemporalAuthorityEnvelope conflict assessment
+
+### `assess_temporal_authority_envelope_conflict.py`
+
+Inventories the repository's unresolved, same-named
+`TemporalAuthorityEnvelope` contract/schema families without choosing a winner.
+The assessment:
+
+- requires the currently confirmed `common/` and `evidence/` contract, schema,
+  validator, fixture, test, and workflow surfaces;
+- rejects a missing family or a third same-named contract/schema/validator family
+  as `FAIL_INVARIANT`;
+- scans bounded UTF-8 tracked text for exact-path and name-only references;
+- classifies semantic, schema, workflow, receipt, runtime, lifecycle, release,
+  documentation, test, fixture, and tool references;
+- emits content digests, line numbers, counts, and value-minimized paths rather
+  than source excerpts;
+- returns `HOLD_UNRESOLVED` with exit `3` when the tracked-text inventory is
+  complete and the governance conflict remains unchanged;
+- returns `ERROR_VALIDATOR` with exit `2` rather than claiming completeness when
+  a candidate file cannot be evaluated safely; and
+- keeps every authority flag false.
+
+`HOLD_UNRESOLVED` is the expected healthy result until issue `#2930` and a
+reviewed architecture decision establish a migration, split, mirror, or continued
+hold. The report is a tracked-repository-text inventory only. It does not prove a
+complete runtime, database, external-storage, or generated-CI-artifact consumer
+graph; accept ADR-0014; select a canonical family; migrate consumers; create
+evidence or policy authority; or authorize release, deployment, publication, or
+access widening.
+
 ## Commands
 
 ```bash
@@ -167,8 +198,16 @@ PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   --cases
 
 PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/governance/assess_temporal_authority_envelope_conflict.py \
+  --format text
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
   python tools/validators/governance/validate_workflow_security.py --format text
 ```
+
+The conflict assessment intentionally exits `3` for `HOLD_UNRESOLVED`; callers
+must require that exact outcome rather than treating it as an error or a pass that
+creates authority.
 
 None of these tools fetches sources, reads live GitHub state, writes GitHub
 issues or control-plane registers, activates policy, or validates real-world truth.

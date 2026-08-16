@@ -1,0 +1,205 @@
+name: temporal-authority-envelope-conflict-assessment
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/temporal-authority-envelope-conflict-assessment.yml"
+      - ".github/workflows/briefing-integration.yml"
+      - ".github/workflows/temporal-authority-envelope.yml"
+      - ".github/workflows/temporal-uniqueness-assessment.yml"
+      - ".github/workflows/temporal-reference-integrity-assessment.yml"
+      - "contracts/common/temporal_authority_envelope.md"
+      - "contracts/evidence/temporal_authority_envelope.md"
+      - "schemas/contracts/v1/common/temporal_authority_envelope.schema.json"
+      - "schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json"
+      - "fixtures/contracts/v1/common/temporal_authority_envelope/**"
+      - "fixtures/contracts/v1/evidence/temporal_authority_envelope/**"
+      - "tools/validators/validate_temporal_authority_envelope.py"
+      - "tools/validators/evidence/validate_temporal_authority_envelope.py"
+      - "tests/validators/test_validate_temporal_authority_envelope.py"
+      - "tests/evidence/test_temporal_authority_envelope.py"
+      - "tools/validators/governance/assess_temporal_authority_envelope_conflict.py"
+      - "tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py"
+      - "tools/validators/governance/README.md"
+      - "docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "docs/architecture/briefing-integration.md"
+      - "docs/registers/VERIFICATION_BACKLOG.md"
+      - "docs/registers/source-corpus-reconciliation-2026-08-15.md"
+      - "docs/intake/exploratory/*temporal*"
+      - "contracts/common/advisory_event_envelope.md"
+      - "contracts/common/condition_relation.md"
+      - "contracts/common/modeled_surface.md"
+      - "contracts/common/forecast_product.md"
+      - "contracts/common/classification_release.md"
+      - "contracts/common/temporal_uniqueness_assessment.md"
+      - "contracts/common/temporal_reference_integrity_assessment.md"
+      - "contracts/governance/governance_event.md"
+      - "contracts/governance/program_outcome_chain.md"
+      - "schemas/contracts/v1/common/advisory_event_envelope.schema.json"
+      - "data/receipts/generated/genrec-*temporal*"
+      - "data/receipts/generated/genrec-advisory-event-envelope-*.json"
+      - "data/receipts/generated/genrec-condition-relation-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+
+jobs:
+  assess:
+    name: hold-unresolved-temporal-authority-conflict
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Run deterministic unit tests
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/governance/assess_temporal_authority_envelope_conflict.py \
+            tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py
+          python -m unittest \
+            tests.validators.governance.test_assess_temporal_authority_envelope_conflict \
+            --verbose
+      - name: Build the tracked-reference scan root
+        run: |
+          set -euo pipefail
+          python - "$RUNNER_TEMP/temporal-authority-envelope-reference-scan" <<'PY'
+          from pathlib import Path
+          import shutil
+          import subprocess
+          import sys
+
+          target = Path(sys.argv[1])
+          target.mkdir(parents=True, exist_ok=True)
+          command = [
+              "git",
+              "grep",
+              "-Ilz",
+              "-e",
+              "TemporalAuthorityEnvelope",
+              "-e",
+              "temporal_authority_envelope",
+              "--",
+          ]
+          result = subprocess.run(command, check=False, capture_output=True)
+          if result.returncode not in (0, 1):
+              raise SystemExit(result.returncode)
+          paths = {
+              Path(raw.decode("utf-8"))
+              for raw in result.stdout.split(b"\0")
+              if raw
+          }
+          paths.update(
+              {
+                  Path("docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md"),
+                  Path("docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"),
+                  Path("contracts/common/temporal_authority_envelope.md"),
+                  Path("schemas/contracts/v1/common/temporal_authority_envelope.schema.json"),
+                  Path("tools/validators/validate_temporal_authority_envelope.py"),
+                  Path("tests/validators/test_validate_temporal_authority_envelope.py"),
+                  Path(".github/workflows/briefing-integration.yml"),
+                  Path("contracts/evidence/temporal_authority_envelope.md"),
+                  Path("schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json"),
+                  Path("tools/validators/evidence/validate_temporal_authority_envelope.py"),
+                  Path("tests/evidence/test_temporal_authority_envelope.py"),
+                  Path(".github/workflows/temporal-authority-envelope.yml"),
+              }
+          )
+          for base, pattern in (
+              (Path("contracts"), "temporal_authority_envelope.md"),
+              (Path("schemas/contracts/v1"), "temporal_authority_envelope.schema.json"),
+              (Path("tools/validators"), "validate_temporal_authority_envelope.py"),
+          ):
+              if base.is_dir():
+                  paths.update(base.rglob(pattern))
+          for source in sorted(paths, key=lambda item: item.as_posix()):
+              if not source.is_file() or source.is_symlink():
+                  continue
+              destination = target / source
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, destination)
+          for relative in (
+              Path("fixtures/contracts/v1/common/temporal_authority_envelope"),
+              Path("fixtures/contracts/v1/evidence/temporal_authority_envelope"),
+          ):
+              shutil.copytree(relative, target / relative, dirs_exist_ok=True)
+          PY
+      - name: Require the explicit HOLD outcome
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/temporal-authority-envelope-conflict.json"
+          set +e
+          python tools/validators/governance/assess_temporal_authority_envelope_conflict.py \
+            --root "$RUNNER_TEMP/temporal-authority-envelope-reference-scan" \
+            --revision "$GITHUB_SHA" \
+            --format json > "$report"
+          status=$?
+          set -e
+          if [ "$status" -ne 3 ]; then
+            cat "$report"
+            if [ "$status" -eq 0 ]; then
+              exit 1
+            fi
+            exit "$status"
+          fi
+          python - "$report" <<'PY'
+          import json
+          import os
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          assert report["outcome"] == "HOLD_UNRESOLVED"
+          assert report["disposition"] == "HOLD"
+          assert report["revision"] == os.environ["GITHUB_SHA"]
+          assert report["scan_complete"] is True
+          assert report["findings"] == []
+          assert report["scan_gaps"] == []
+          assert report["inventory_scope"] == {
+              "database_records": False,
+              "external_object_storage": False,
+              "generated_ci_artifacts": False,
+              "runtime_observation": False,
+              "tracked_repository_text": True,
+          }
+          assert report["same_name_family_discovery"]["contracts"] == [
+              "contracts/common/temporal_authority_envelope.md",
+              "contracts/evidence/temporal_authority_envelope.md",
+          ]
+          assert report["same_name_family_discovery"]["schemas"] == [
+              "schemas/contracts/v1/common/temporal_authority_envelope.schema.json",
+              "schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json",
+          ]
+          assert report["same_name_family_discovery"]["validators"] == [
+              "tools/validators/evidence/validate_temporal_authority_envelope.py",
+              "tools/validators/validate_temporal_authority_envelope.py",
+          ]
+          assert all(value is False for value in report["authority"].values())
+          assert "KFM-TAE-TRACKED-TEXT-INVENTORY-COMPLETE" in report["reason_codes"]
+          assert "KFM-TAE-MIGRATION-NOT-AUTHORIZED" in report["reason_codes"]
+
+          counts = report["reference_counts"]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+              summary.write("### TemporalAuthorityEnvelope conflict assessment\n\n")
+              summary.write("- Outcome: `HOLD_UNRESOLVED` (expected, exit 3).\n")
+              summary.write(f"- Git-tracked reference files scanned: `{report['scanned_text_file_count']}`.\n")
+              summary.write(f"- Reference-bearing files inventoried: `{counts['reference_file_count']}`.\n")
+              summary.write(f"- Runtime/persisted/release references observed in tracked text: `{counts['critical_consumer_count']}`.\n")
+              summary.write("- Boundary: no canonical family selected; no ADR acceptance, migration, evidence, policy, review, release, deployment, publication, or access authority created.\n")
+              summary.write("- Selection: git-indexed text matching either envelope name, plus required family, governance, and fixture surfaces.\n")
+              summary.write("- Residual scope: runtime observation, databases, external object storage, binary files, and generated CI artifacts remain unverified.\n")
+          PY
