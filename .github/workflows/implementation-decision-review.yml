@@ -11,7 +11,7 @@ name: implementation-decision-review
       - "tools/validators/governance/README.md"
       - "tests/validators/governance/test_implementation_decision_record.py"
       - "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md"
-      - "data/receipts/generated/genrec-implementation-decision-review-20260806.json"
+      - "data/receipts/generated/genrec-implementation-decision-review-*.json"
   push:
     branches: [main]
     paths:
@@ -23,7 +23,7 @@ name: implementation-decision-review
       - "tools/validators/governance/README.md"
       - "tests/validators/governance/test_implementation_decision_record.py"
       - "docs/intake/exploratory/fluencyloop-implementation-decision-source-map.md"
-      - "data/receipts/generated/genrec-implementation-decision-review-20260806.json"
+      - "data/receipts/generated/genrec-implementation-decision-review-*.json"
   workflow_dispatch:
 
 permissions:
@@ -64,8 +64,8 @@ jobs:
         run: python -m pytest -q tests/validators/governance/test_implementation_decision_record.py
       - name: Run exact fixture polarity
         run: python tools/validators/governance/validate_implementation_decision_record.py --cases
-      - name: Verify generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-implementation-decision-review-20260806.json --repo-root .
+      - name: Verify current workflow receipt integrity
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-implementation-decision-review-current-binding-20260815.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
