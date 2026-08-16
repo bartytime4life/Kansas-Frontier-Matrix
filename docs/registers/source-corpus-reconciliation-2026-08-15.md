@@ -2,7 +2,7 @@
 doc_id: kfm://register/source-corpus-reconciliation-2026-08-15
 title: KFM Source-Corpus Reconciliation Ledger — 2026-08-15
 type: evidence-ledger
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; non-authoritative; issue-2874-tranche
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS; no independent corpus steward was verified"
 created: 2026-08-15
@@ -14,18 +14,19 @@ responsibility: >-
   proposals and exact current repository evidence without creating source,
   policy, lifecycle, release, or publication authority.
 truth_posture: >-
-  CONFIRMED current repository paths, baseline SHA, accepted Directory Rules,
-  inspected pull requests, issue state, and exact-head workflow stage /
-  PROPOSED rankings and next-slice recommendations / UNKNOWN uninspected
-  runtime, deployments, settings, source rights, and steward decisions /
-  NEEDS VERIFICATION hosted results for this draft branch and every deferred
-  authority-bearing candidate.
+  CONFIRMED current repository paths, exact refresh SHA, accepted Directory
+  Rules, pull-request state, recent merges, validator registry, and exact-head
+  workflow inventory / PROPOSED rankings and next-slice recommendations /
+  UNKNOWN uninspected runtime, deployments, repository settings, source rights,
+  signer trust, and steward decisions / NEEDS VERIFICATION hosted results for
+  this refresh branch and every deferred authority-bearing candidate.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 5971a181ed345e7de49cccf71611d51c0d54121a
-  exact_head_validator_suite_run: 31908776480
-  active_overlap_prs: [2923, 2924, 2927]
+  base_commit: f415b675e33b4a4f87f99fa3a87d779462cf66e5
+  exact_head_workflow_runs_returned: 43
+  exact_head_failed_runs_observed: 0
+  active_overlap_prs: []
 related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/README.md
@@ -36,8 +37,10 @@ related:
   - issues/2874
   - issues/2768
 notes:
+  - "This v1.1 refresh preserves the dated 2026-08-15 packet identity while updating repository-current classifications after merges #2923-#2940."
   - "This dated packet is subordinate to the canonical human verification backlog and issue #2874."
   - "It does not project accepted governance into control_plane/; that register remains separately governed."
+  - "The original generated receipt is retained as historical process memory; this refresh uses a successor current-binding receipt."
   - "No source file, Google Drive artifact, source endpoint, repository setting, lifecycle store, release, deployment, or publication surface is modified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -45,11 +48,12 @@ notes:
 
 # KFM Source-Corpus Reconciliation Ledger — 2026-08-15
 
-> **Campaign outcome:** one bounded governance/documentation slice is selected:
-> preserve the current source-to-repository reconciliation as a dated,
-> inspectable packet. No trust-bearing feature slice is selected while active
-> pull requests own overlapping EvidenceBundle work and the exact-main aggregate
-> validator still fails in the repository-topology ratchet.
+> **v1.1 refresh outcome:** the earlier ledger was materially stale after a rapid
+> sequence of merges. This refresh reconciles the same source corpus against
+> `main@f415b675e33b4a4f87f99fa3a87d779462cf66e5`, removes resolved overlap from
+> the active queue, and narrows the next implementation pressure to consumer
+> closure rather than recreating already-landed contracts, projections,
+> validators, or receipts.
 
 ## 1. Goal, authority, and evidence boundary
 
@@ -68,175 +72,189 @@ It is **not** a new source of truth. It is subordinate to:
 5. planning reports, atlases, manuals, seed cards, draft standards, and
    greenfield plans as proposal sources only.
 
-### Exact repository baseline
+### Exact repository refresh baseline
 
 | Field | CONFIRMED result |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Baseline | `main@5971a181ed345e7de49cccf71611d51c0d54121a` |
-| Baseline commit | Merge of PR `#2925`, People/DNA/Land EvidenceBundle projection |
+| Baseline | `main@f415b675e33b4a4f87f99fa3a87d779462cf66e5` |
+| Baseline commit | Merge of PR `#2940`, current directory-root-registry receipt binding |
 | Accepted placement authority | `ADR-0029` plus `docs/doctrine/directory-rules.md` |
 | Current human ledger | `docs/registers/VERIFICATION_BACKLOG.md` |
-| Current machine projection | `control_plane/verification_backlog.yaml`, still `entries: []` |
-| Exact-main inherited failure | `validator-suite` run `31908776480`, failing at `Enforce repository workflow and topology ratchets`; the fail-closed canary passed |
-| Open overlap | Draft PRs `#2923` (roads/rail/trade), `#2924` (settlements/infrastructure), and `#2927` (hazards) |
+| Campaign issue | `#2874`, currently open |
+| Open overlap immediately before refresh branch | None returned |
+| Exact-head Actions inventory | 43 runs returned for the exact SHA; no `conclusion=failure` entry was observed in that returned set |
+| Important limitation | A no-failure observation is not proof of branch-protection coupling, required checks, deployment health, source activation, or runtime correctness |
 | Runtime/deployment/source activation | `UNKNOWN`; not exercised |
 | Drive mutation | None |
 
 ### Directory Rules basis
 
 `docs/registers/` owns human-readable governance registers and dated
-verification views. This file records a current reconciliation packet; it does
-not redefine the canonical verification backlog, create a machine authority, or
-admit a new object family. `control_plane/` remains the home for machine
-projections of accepted governance, not for a self-authorizing copy of this
-draft.
+verification views. This file updates an existing register in place. It does not
+create a new authority family. `data/receipts/generated/` owns AI-authoring
+process memory; the historical v1.0 receipt is retained and a successor
+current-binding receipt is used for this refresh rather than rewriting history.
 
 ## 2. Source coverage and authority treatment
 
-| Source family | Representative source and locator | Treatment in this run |
+| Source family | Representative source and locator | Current treatment |
 |---|---|---|
-| Directory governance | *KFM Directory Governance Standard v2.0.0-draft.1*, cover and §§1–7 | The source's adoption proposal is **SUPERSEDED** by accepted ADR-0029; post-adoption topology convergence remains partial. |
-| Pipeline and trust spine | *Pipeline Living Implementation Manual v0.3*, pp. 3–7 and §§8, 16–17 | Proposal/lineage source. Existing query, evidence-resolution, change-proposal, and recompile families control implementation claims. |
-| Briefing integration | *Briefing-to-System Integration Architecture*, pp. 2–7 and §§3–11, 19, 27 | Proposal source. The repository already has a broad deterministic/read-only foundation; do not create a second family. |
-| Evidence and public claims | *Connected-Dots Architecture Brief* §§2–6; *Unified Doctrine Synthesis* §§3–13 | Doctrine synthesis. Shared EvidenceBundle and EvidenceRef repository surfaces control exact implementation. |
-| MapLibre/UI | *MapLibre Operating Architecture*, pp. 3–7 and §§5–8, 12–14 | Doctrine/proposal. Explorer Web remains a bounded downstream shell; no direct store or direct model path is admitted. |
-| Soil | *Soil Architecture Extended Pro*, pp. 4–8 and §§8–20 | Proposal/lineage. Current Soil contracts, profiles, fixtures, validators, tests, and workflows control exact support vocabulary. |
+| Directory governance | *KFM Directory Governance Standard v2.0.0-draft.1*, cover and §§1–7 | Its proposal label is **SUPERSEDED** by accepted ADR-0029; the adopted repository bytes control placement. |
+| Pipeline and trust spine | *Pipeline Living Implementation Manual v0.3*, pp. 3–7 and §§8, 16–17 | Proposal/lineage. Existing query, evidence-resolution, change-proposal, and recompile families control implementation claims. |
+| Briefing integration | *Briefing-to-System Integration Architecture*, pp. 2–7 and §§3–11, 19, 27 | Proposal source. Existing deterministic/read-only briefing families must be extended rather than duplicated. |
+| Evidence and public claims | *Connected-Dots Architecture Brief* §§2–6; *Unified Doctrine Synthesis* §§3–13 | Doctrine synthesis. Shared `EvidenceBundle`/`EvidenceRef` repository surfaces control exact implementation. |
+| MapLibre/UI | *MapLibre Operating Architecture*, pp. 3–7 and §§5–8, 12–14 | Doctrine/proposal. Current Explorer bridge evidence shows more implementation maturity than v1.0 recorded, while real renderer-to-bridge integration remains unproven. |
+| Soil | *Soil Architecture Extended Pro*, pp. 4–8 and §§8–20 | Proposal/lineage. Current Soil contracts/projections/fixtures/validators/tests control exact vocabulary. |
 | Geology/resources | *Geology & Natural Resources Architecture*, pp. 3–7 and §§7–18 | Proposal/lineage. Current shared projection and exact-location controls bound implementation. |
-| Map artifacts | *Master MapLibre Components-Functions-Features*, pp. 3–5 and tile/provenance chapters | Proposal backlog. Structural PMTiles/COG proof does not establish signer trust, policy approval, release, or publication. |
-| Whole-system/greenfield | *Definitive Greenfield Building Plan v1.1*, §§2, 7.29–7.33 | The empty-repository premise is **CONTRADICTED/SUPERSEDED** by current repository evidence; object-family ideas remain individually reconcilable. |
-| Atlases and seed cards | Pass 18, Pass 20, consolidated Domains Atlas, Encyclopedia, Full Atlas seed cards | High-recall proposal indexes. They do not prove current implementation or authorize paths. |
-| General references | *Domain-Driven Design Reference*; *AI Concepts Using Python* | Reference only. They support modeling/testing language but do not independently justify a KFM PR. |
-| Drive refinements | Newer KFM planning/build documents found by Drive search, including briefing and idea-integration material | Read-only corroboration. No Drive document was found that outranks accepted ADR-0029 or current repository behavior. |
+| Map artifacts | *Master MapLibre Components-Functions-Features*, pp. 3–5 and tile/provenance chapters | Proposal backlog. Structural PMTiles/COG checks do not establish signer trust, policy approval, release, or publication. |
+| Whole-system/greenfield | *Definitive Greenfield Building Plan v1.1*, §§2, 7.29–7.33 | Empty-repository premise is **CONTRADICTED/SUPERSEDED**; individual object-family ideas remain reconcilable. |
+| Atlases and seed cards | Pass 18, Pass 20, consolidated Domains Atlas, Encyclopedia, Full Atlas seed cards | High-recall proposal indexes only; they do not authorize paths or prove implementation. |
+| General references | *Domain-Driven Design Reference*; *AI Concepts Using Python* | Reference only; not standalone PR authority. |
+| Drive refinements | Newer KFM planning/build documents found by Drive search | Read-only corroboration; no Drive document found in the campaign outranks current accepted repository authority. |
 
 ## 3. Ranked candidate ledger
 
 Statuses apply only to the bounded outcome described in each row.
 
-| Rank / ID | Candidate and source location | Current repository evidence and status | Governing authority, owning root, dependencies | Rights, sensitivity, security, publication | Acceptance, disposition, and proposed PR boundary |
+| Rank / ID | Candidate and source location | Current repository evidence and status | Governing authority / owner / dependencies | Safety and publication impact | Disposition and smallest useful boundary |
 |---:|---|---|---|---|---|
-| 1 / `RC-001` | **Current source-corpus reconciliation packet.** User campaign contract; issue `#2874`; prior tranche in `docs/registers/VERIFICATION_BACKLOG.md`. | Prior ledger predates current domain projection merges, PR `#2926`, and current open overlap. **PARTIAL** before this packet. | ADR-0029; `docs/registers/` owns the human view. Depends on exact baseline, source locators, PR/issue overlap, and failure classification. | Repository-facing only; no sensitive payloads or live sources. No release/publication effect. | **SELECTED.** Add this dated packet plus one generated authoring receipt. Accept when final bytes are hash-bound, changed paths are exactly two, links/metadata are valid, and hosted results are read back. Rollback: revert the two-file packet. |
-| 2 / `RC-002` | **Repository-topology ratchet repair.** Directory Standard §§5–7; Research Agenda W02–W03. | Exact-main aggregate validator fails at the topology ratchet; focused domain workflows can still pass. **NEEDS VERIFICATION** at exact offending paths. | Accepted Directory Rules; likely `control_plane/`, `tools/validators/`, tests, and affected roots. Requires root-by-root ownership, consumer graph, migration/rollback, and no broad cleanup. | Potential authority and compatibility impact; no destructive move without ADR/migration proof. | **DEFER.** First capture exact validator output and isolate one monotonic violation reduction. One PR per independently reversible path family. |
-| 3 / `RC-003` | **Complete shared EvidenceBundle projection convergence.** Connected-Dots §§2–6; Pass 20 shared-kernel idea; domain atlas evidence sections. | Soil, Geology, Flora, Fauna, Habitat, Agriculture, Atmosphere, Archaeology, and People/DNA/Land bounded projections are on current main. Roads/Rail/Trade, Settlements/Infrastructure, and Hazards are owned by open draft PRs `#2923`, `#2924`, `#2927`. Broader resolver/authentication remains **PARTIAL**. | Shared contract/schema under evidence roots; domain schemas are projections; focused validators/tests/workflows. | Domain-specific sensitivity remains upstream. A schema-valid bundle is not authenticated evidence or release permission. | **DEFER/OVERLAP.** Do not duplicate active PRs. After their disposition, verify registry/consumer closure rather than creating another projection family. |
-| 4 / `RC-004` | **Source authority-resolution and snapshot-read profile.** Greenfield §7.29; Research Agenda W05; Pipeline source-registry sections. | SourceDescriptor/activation shapes exist. PR `#2926` adds a no-network Kansas transportation assessment profile but does not admit sources. **PARTIAL / BLOCKED**. | `contracts/source/`, `schemas/.../source/`, fixtures, validators, tests; source authority and policy decisions remain separate. | Rights, redistribution, sensitivity, precision, identity, and steward authority remain unresolved; live activation denied. | **DEFER.** Next slice may authenticate one read-only metadata snapshot with no lifecycle write, credential, or source activation. |
-| 5 / `RC-005` | **Briefing official-source snapshot verification.** Briefing architecture §§3–11, 19, 27. | BriefingSignal, TemporalAuthorityEnvelope, issue/read, source-snapshot candidate, evidence-chain, and obligation propagation already exist. **PARTIAL**. | Existing briefing contracts/schemas/fixtures/validators/tests/workflows. Depends on source admission and evidence resolution. | Generated briefing prose remains non-authoritative; no direct path to evidence, mutation, release, or public truth. | **PROPOSED HOLD.** One authenticated read-only source snapshot only after source authority and credential handling are closed. |
-| 6 / `RC-006` | **Governed Explorer client-to-Evidence Drawer interaction.** MapLibre manual §§5–8; Whole-System Build Reference UI plane. | Explorer Web has a fail-closed static entrypoint, bounded feature slices, payload schemas, and boundary tests, but no proven end-to-end public interaction. **PARTIAL**. | `apps/explorer-web/`, governed API contract, shared/domain EvidenceBundle projections, policy/citation finite outcomes, accessibility tests. | Must not expose internal stores, raw feature properties, denial reasons, or sensitive geometry. | **DEFER.** Select one already modeled public-safe domain only after EvidenceRef resolution and policy/citation behavior are executable. |
-| 7 / `RC-007` | **PromotionReceipt producer and ordered A–G readiness binding.** Greenfield §§2, 7.31; Research Agenda C-08. | Contract/schema/fixtures/validator/tests/workflow exist; policy/review are inactive or fixture-only. **PARTIAL / BLOCKED**. | Promotion and receipt families; legitimate producer; generated-receipt integrity; policy/review authority. | A passing fixture is not approval, transition, release, or publication. | **DEFER.** Repair only a verified producer binding or vocabulary conflict; do not create another gate family. |
-| 8 / `RC-008` | **CatalogMatrix aggregate registration.** Greenfield catalog closure; Master MapLibre catalog chapters. | Four bounded profiles exist; broad schema/generic entrypoint and aggregate registration remain incomplete. **PARTIAL / BLOCKED**. | Catalog contracts/schemas/validators, aggregate registry, STAC/DCAT/PROV parity, receipt integrity. | Catalog description is not proof, policy, review, release, or publication. | **DEFER.** First clear the exact topology/receipt blocker; then register existing profiles with focused aggregate-selection regression coverage. |
-| 9 / `RC-009` | **Governed query-save-recompile executor.** Pipeline v0.3 §§16–17. | QueryRunRecord, EvidenceResolutionRecord, AIChangeProposal, and inactive RecompileManifest exist; no authorized writer or reviewer. **PARTIAL / BLOCKED**. | Existing control-loop families; policy, review, destination authorization, correction, rollback, and write executor. | No private chain-of-thought; no autonomous canonical mutation or publication. | **REJECT FOR THIS CAMPAIGN.** Requires a separate authority decision and complete write/review/rollback contract. |
-| 10 / `RC-010` | **PMTiles/COG cryptographic trust and signer admission.** Greenfield §§7.30–7.32; Master MapLibre pp. 3–5. | Structural manifests, byte-range and shape-only carrier checks exist; admitted trust roots and cryptographic verification do not. **PARTIAL / BLOCKED**. | Release, proof, signing, policy, verifier authority, signer registry, correction, rollback. | Key/trust-root admission and release authorization are security-significant. | **DEFER TO DECISION PACKET.** No new structural fixture until signer/verifier authority is decided. |
-| 11 / `RC-011` | **Soil support-type and shared-evidence convergence.** Soil report §§8–20. | Shared EvidenceBundle projection and persisted one-positive-fixture-per-eight-support-types coverage are on current main. Bounded fixture claim **IMPLEMENTED**; live lane **PARTIAL**. | Current Soil contract/profile/schema/fixtures/validator/tests/workflow. | No live NRCS/Mesonet/NOAA/NASA activation; rights and publication remain held. | **NO NEW PR.** Next work requires a specific validator gap or admitted source, not more speculative fixtures. |
-| 12 / `RC-012` | **Geology anti-collapse and public-safe geometry.** Geology report §§7–18. | Shared EvidenceBundle projection and focused public-safe/role surfaces exist. Bounded shape claim **IMPLEMENTED**; end-to-end lane **PARTIAL / NEEDS VERIFICATION**. | Current geology schemas, policy, validators, tests, and docs. | Boreholes, wells, samples, resources, and sensitive exact locations remain fail-closed. | **DEFER.** Refresh one verified path/shape conflict only; no live source or public-location exposure. |
-| 13 / `RC-013` | **MapLibre-only browser renderer.** `maplibre3d.md` §§0–2. | MapLibre code and capability profiles exist; Cesium compatibility surfaces remain; the proposed renderer ADR is not accepted. **PARTIAL / NEEDS VERIFICATION**. | Accepted ADR required for dependency retirement; import/consumer/capability comparison and rollback. | Plugin supply chain, license, performance, and sensitive 3D geometry require review. | **HOLD.** Produce a current zero-consumer/capability decision packet before removing a renderer dependency. |
-| 14 / `RC-014` | **Live governed-AI provider.** MapLibre manual §§12–14; AI Build Contract §§20–23. | MockAdapter and finite response envelopes exist; live provider, effective policy/citation execution, and public route do not. **PARTIAL / BLOCKED**. | Evidence resolution, policy, citation, AIReceipt, adapter, telemetry, governed route. | Model output is never evidence or release authority; prompt/data exposure and source terms require review. | **REJECT FOR THIS CAMPAIGN.** Close evidence/policy/citation boundaries first; retain no-network MockAdapter. |
-| 15 / `RC-015` | **Greenfield root tree and broad scaffold expansion.** Greenfield Plan §§3–7. | Current repository is a large established monorepo with adopted Directory Rules and many existing families. Empty-start assumption **SUPERSEDED / CONTRADICTED**. | Current repository and accepted ADRs outrank the plan. | Broad scaffolding can create parallel authority and dead paths. | **REJECT.** Reconcile individual object-family gaps only; never copy the proposed tree wholesale. |
-| 16 / `RC-016` | **Generic DDD/AI-library modernization.** DDD Reference; *AI Concepts Using Python*. | No KFM-specific acceptance gap was established from these references alone. **UNKNOWN / REFERENCE ONLY**. | Must attach to a verified KFM contract, test, performance, or architecture need. | Generic model/ML work can create uncited derived claims or new dependencies. | **REJECT AS STANDALONE WORK.** Use only as supporting craft evidence inside a repository-grounded slice. |
+| 1 / `RC-001` | **Refresh this source-corpus reconciliation packet.** User campaign contract; issue `#2874`. | v1.0 was pinned to `5971a181...`, named three PRs as open, and predated merges #2923–#2940. **PARTIAL / STALE before this refresh.** | ADR-0029; `docs/registers/`; generated receipt support under `data/receipts/generated/`. | Repository-facing only; no source/data/publication effect. | **SELECTED.** In-place v1.1 refresh plus successor current-binding receipt. |
+| 2 / `RC-003` | **Shared EvidenceBundle convergence: move from projection creation to aggregate/consumer closure.** Connected-Dots §§2–6; Pass 20 evidence kernel; domain atlas. | Projection schemas are now present for Soil, Geology, Flora, Fauna, Habitat, Agriculture, Atmosphere, Archaeology, People/DNA/Land, Roads/Rail/Trade, Settlements/Infrastructure, and Hazards. Earlier overlap PRs #2923/#2924/#2927 are merged. **IMPLEMENTED for bounded projection convergence; broader resolution/consumer closure PARTIAL.** | Shared evidence contract/schema; domain projections; validators/tests; governed API/UI consumers. | Domain-specific sensitivity remains upstream; schema validity never grants truth or release permission. | **NEXT-CAMPAIGN CANDIDATE.** Verify aggregate projection conformance or one governed consumer seam; do not create another EvidenceBundle family. |
+| 3 / `RC-006` | **Real renderer-to-Evidence-Drawer bridge.** MapLibre manual §§5–8 and §16; Whole-System UI plane. | `apps/explorer-web/src/features/map_runtime/index.tsx` implements a renderer-neutral strict feature-selection bridge, injected governed resolver, Evidence Drawer finite outcomes, evidence-subset protection, and synthetic accessible fixture. `CLICK_EVIDENCE_BRIDGE.md` explicitly leaves real MapLibre event translation for later. **PARTIAL.** | Existing `apps/explorer-web/` Map Runtime boundary; accepted MapLibre adapter/port doctrine; governed resolver; Evidence Drawer. | Must not expose raw feature properties, stores, denial details, or sensitive geometry. | **HIGH-VALUE PROPOSED SLICE.** First verify actual `MapRuntimePort`/MapLibre adapter source and import boundary; if present, add only translation from renderer click to existing selection profile plus tests. |
+| 4 / `RC-008` | **Catalog closure aggregate registration.** Greenfield catalog closure; Master MapLibre catalog chapters. | Four bounded catalog validators are now registered in `release-dry-run` and `full` through merged #2929; compatibility regressions were repaired in #2931/#2935. **IMPLEMENTED for registry integration; broader catalog authority PARTIAL/BLOCKED.** | Existing catalog contracts/schemas/validators and orchestrator. | Validation is not catalog emission, proof, review, release, or publication. | **NO DUPLICATE PR.** Next work requires a concrete unregistered profile or consumer gap. |
+| 5 / `RC-004` | **Source authority-resolution and snapshot-read profile.** Greenfield §7.29; Research Agenda W05; Pipeline source sections. | Transportation no-network assessment exists and is now aggregate-registered through #2926/#2939; no source admission occurred. **PARTIAL / BLOCKED.** | Source contracts/schemas, rights/sensitivity/identity review, fixtures, validators. | Live activation remains denied while rights, redistribution, precision, identity, and steward authority are unresolved. | **DEFER.** Authenticated read-only metadata snapshot only after authority/rights evidence closes. |
+| 6 / `RC-005` | **Briefing official-source snapshot verification.** Briefing architecture §§3–11, 19, 27. | BriefingSignal/TemporalAuthorityEnvelope and read-only foundations exist. **PARTIAL.** | Existing briefing families; source admission; EvidenceRef resolution. | Generated prose remains discovery input only. | **HOLD** until one source can be authenticated read-only without widening source authority. |
+| 7 / `RC-002` | **Repository topology ratchet convergence.** Directory Standard §§5–7, 19; Research Agenda W02–W03. | #2933 removed one newly introduced uppercase path regression; #2934/#2936/#2937 improved failure attribution and diagnostics. Current exact-head run inventory returned no failure conclusion. **PARTIAL; CURRENT FAILURE NOT CONFIRMED at this refresh.** | Adopted Directory Rules; topology validator/baseline; root owners; migration/rollback evidence. | Structural moves can alter authority/compatibility. | **DEFER unless a current exact-head finding exists.** Never manufacture cleanup just because historical drift existed. |
+| 8 / `RC-007` | **PromotionReceipt producer and ordered readiness binding.** Greenfield §§2, 7.31; Research Agenda C-08. | Contract/schema/fixture/validator surfaces exist; legitimate policy/review producer authority remains incomplete. **PARTIAL / BLOCKED.** | Promotion/receipt families, policy/review authority, generated-receipt integrity. | Passing fixtures do not approve or release. | **DEFER** to a verified producer-binding gap. |
+| 9 / `RC-010` | **PMTiles/COG cryptographic trust and signer admission.** Greenfield §§7.30–7.32; Master MapLibre pp. 3–5. | Structural and carrier checks exist; admitted trust roots and cryptographic verification remain incomplete. **PARTIAL / BLOCKED.** | Release/proof/signing/verifier authority and rollback. | Security-significant trust-root admission. | **DEFER TO DECISION PACKET.** |
+| 10 / `RC-011` | **Soil support-type/shared evidence convergence.** Soil §§8–20. | Shared projection and one positive synthetic fixture per eight support types are present. **IMPLEMENTED for bounded fixture/projection claim; live lane PARTIAL.** | Current Soil surfaces. | Live NRCS/Mesonet/NOAA/NASA activation remains separate. | **NO NEW PR** without a specific current validator/source gap. |
+| 11 / `RC-012` | **Geology anti-collapse/public-safe geometry.** Geology §§7–18. | Shared projection and public-safe/role surfaces exist. **IMPLEMENTED for bounded shape claim; end-to-end lane PARTIAL.** | Current geology schema/policy/validators/tests. | Exact sensitive locations remain fail-closed. | **DEFER** until one current executable gap is proven. |
+| 12 / `RC-013` | **MapLibre-only browser renderer.** `maplibre3d.md` §§0–2. | MapLibre code/capability surfaces exist; source itself says renderer retirement is a proposed ADR. **NEEDS VERIFICATION / HOLD.** | Accepted ADR required before dependency retirement. | Plugin supply chain, licensing, performance, sensitive 3D geometry. | **HOLD.** Do not turn a proposal document into renderer-governance fact. |
+| 13 / `RC-009` | **Governed query-save-recompile writer.** Pipeline v0.3 §§16–17. | Read-only/control-loop object families exist; authorized writer/reviewer is not established. **PARTIAL / BLOCKED.** | Policy/review/destination authorization/correction/rollback. | Autonomous mutation/publication forbidden. | **REJECT FOR THIS CAMPAIGN.** |
+| 14 / `RC-014` | **Live governed-AI provider.** MapLibre manual §§12–14; AI Build Contract §§20–23. | Mock/finite response surfaces exist; live provider and full policy/citation/public-route closure are not proven. **PARTIAL / BLOCKED.** | Evidence resolution, policy, citation, AIReceipt, adapter, telemetry. | Model output never becomes evidence or release authority. | **REJECT FOR THIS CAMPAIGN.** |
+| 15 / `RC-015` | **Greenfield root tree/scaffold expansion.** Greenfield §§3–7. | Current repository is an established monorepo with accepted Directory Rules. **SUPERSEDED / CONTRADICTED.** | Current repository/ADRs outrank greenfield path proposals. | Broad scaffold can create parallel authority. | **REJECT.** |
+| 16 / `RC-016` | **Generic DDD/AI-library modernization.** DDD Reference; *AI Concepts Using Python*. | No KFM-specific acceptance gap follows from these references alone. **REFERENCE ONLY / UNKNOWN as implementation need.** | Must attach to a verified KFM requirement. | New dependencies/models can create unnecessary risk. | **REJECT AS STANDALONE WORK.** |
 
-## 4. Ideas already implemented, superseded, or contradicted
+## 4. Material implementation advances since v1.0
 
-### Implemented within bounded scopes
+**CONFIRMED from current repository/merged-PR evidence:**
 
-- Shared EvidenceBundle projection patterns are present for nine domain lanes on
-  the baseline; three more lanes are owned by current draft PRs.
-- Soil's eight declared support types each have a persisted positive synthetic
-  fixture under the existing inactive profile.
-- Briefing intake has deterministic, read-only, non-authoritative foundations.
-- Query/evidence/change/recompile object families exist in a no-write,
-  no-network posture.
-- Promotion, CatalogMatrix, PMTiles/COG, MapLibre, MockAdapter, and Explorer
-  surfaces have meaningful bounded fixtures or code, but not end-to-end
-  authority closure.
+- Roads/Rail/Trade, Settlements/Infrastructure, and Hazards joined the shared
+  EvidenceBundle projection pattern through merged #2923, #2924, and #2927.
+- The Kansas transportation geometry source assessment landed through #2926 and
+  was added to the aggregate validator registry through #2939.
+- Four bounded catalog-closure validators were added to aggregate orchestration
+  through #2929; later compatibility repairs preserved the legacy schema lane
+  without removing those canonical registrations.
+- Western Kansas hydrology observation assessment was aggregate-registered
+  through #2938.
+- Validator-suite guardrails now have separate attribution and bounded topology
+  diagnostics through #2934, #2936, and #2937.
+- The source-corpus register path itself was normalized through #2933.
+- The directory-root-registry current binding was repaired through #2940 while
+  retaining historical receipt lineage.
+- The Explorer map-runtime implementation is more mature than v1.0 recorded:
+  its renderer-neutral bridge already enforces strict selection shape, finite
+  Drawer outcomes, no-network/no-store behavior, and evidence-scope
+  non-expansion. Real MapLibre click translation remains the explicit next seam.
 
-### Superseded or contradicted
+## 5. Superseded, contradicted, or no-longer-actionable ideas
 
-- The Directory Standard PDF's `PROPOSED FOR ADOPTION` label is superseded by
+- The Directory Standard PDF's pre-adoption status label is superseded by
   accepted ADR-0029.
-- Greenfield documents' empty-repository assumption is contradicted by current
-  repository evidence.
-- Earlier repo snapshots and route/path claims are lineage only when they differ
-  from current main.
-- Proposals that create a second CandidateDelta, EvidenceBundle, gate family,
-  source registry, schema home, policy home, catalog home, or public-client
-  trust path are rejected unless an accepted migration decision explicitly
-  requires them.
+- The Greenfield Plan's empty-repository assumption is contradicted by the
+  current established monorepo.
+- The v1.0 statement that #2923/#2924/#2927 are open overlap is superseded; all
+  are merged and no open PR was returned at this refresh.
+- The v1.0 statement that four catalog validators lack aggregate registration is
+  superseded by #2929 and subsequent compatibility repairs.
+- The stale directory-root receipt defect is superseded by #2940.
+- Creating new domain-local EvidenceBundle shapes is no longer a viable backlog
+  item; the remaining work is resolution, authentication, aggregate conformance,
+  or governed consumer closure.
+- Generic references remain supporting craft sources rather than independent
+  implementation authority.
 
-## 5. Selection decision
+## 6. Selection decision for this continuation
 
-Only `RC-001` is implemented in this campaign.
+`RC-001` is selected as the first continuation slice because the existing
+register itself is now materially stale and issue #2874 requires a current
+repository-grounded ledger.
 
-The stop conditions for additional PRs are active:
+No trust-bearing second slice is opened from stale evidence. After this refresh
+is delivered as a draft PR and its exact-head checks are read back, the next
+highest-value candidate is `RC-006` **only if** current repository inspection
+confirms an existing MapLibre adapter/port implementation that can translate a
+real renderer click into the already-implemented strict selection profile
+without introducing a new authority home.
 
-- open PRs already own the remaining obvious domain projection gaps;
-- exact-main aggregate validation has an inherited topology failure whose exact
-  path set must be isolated before repair;
-- source activation, signer trust, live AI, writer authority, renderer
-  retirement, and public-client claim delivery require decisions or dependency
-  closure not established in this run;
-- creating a second ledger, object family, or authority home would weaken
-  governance.
+## 7. Validation and acceptance plan
 
-## 6. Validation and acceptance plan
+### Performed before the refresh branch
 
-### Performed in this connector session
-
-- refreshed `main` immediately before branch creation;
-- inspected accepted ADR-0029 and the adopted Directory Rules;
-- inspected the register lane contract, current verification backlog, machine
-  backlog projection, contribution rules, and generated-receipt schema;
-- searched open PRs, recent merged PRs, active issues, and issue `#2874`
-  checkpoints;
-- inspected exact-main workflow and job stages for the inherited validator
-  failure;
-- searched Drive for newer KFM material and treated it read-only;
-- checked that no open PR owns this new dated ledger path.
+- refreshed exact `main` to
+  `f415b675e33b4a4f87f99fa3a87d779462cf66e5`;
+- rechecked open pull requests: none returned;
+- confirmed issue `#2874` remains open;
+- inspected the current source-corpus ledger and historical receipt;
+- inspected the generated-receipt schema and current generated-receipt
+  validation behavior;
+- inspected the current aggregate validator registry;
+- inspected current domain EvidenceBundle projection presence;
+- inspected Explorer Map Runtime bridge documentation and source;
+- retrieved the exact-head Actions inventory: 43 runs returned and no
+  `conclusion=failure` entry observed;
+- preserved the distinction between workflow results and repository-setting or
+  runtime proof.
 
 ### Repository-native checks required on the branch
 
 ```bash
 python tools/validators/validate_docs_links.py \
-  docs/registers/SOURCE_CORPUS_RECONCILIATION_2026-08-15.md
+  docs/registers/source-corpus-reconciliation-2026-08-15.md
 python tools/validators/check_doc_metadata.py \
-  docs/registers/SOURCE_CORPUS_RECONCILIATION_2026-08-15.md
+  docs/registers/source-corpus-reconciliation-2026-08-15.md
 python tools/validators/check_docs_stale.py
 python tools/validators/validate_docs_graph.py
 python tools/validators/validate_generated_receipt.py \
-  data/receipts/generated/genrec-source-corpus-reconciliation-20260815.json \
+  data/receipts/generated/genrec-source-corpus-reconciliation-current-binding-20260815.json \
   --repo-root .
 git diff --check
 ```
 
-No local command result is claimed because no mounted checkout was available.
-Hosted exact-head results must be read back and classified separately.
+No local command result is claimed because the connector execution does not
+provide a mounted repository checkout. Hosted exact-head results must be read
+back and classified.
 
 ### Acceptance criteria
 
-1. Branch starts from the exact baseline in §1.
-2. Changed paths are exactly this packet and its generated receipt.
-3. The receipt hash matches the final Markdown bytes.
-4. No source, contract, schema, policy, workflow, lifecycle, release, runtime,
-   deployment, publication, or repository setting changes.
-5. The pull request remains draft.
-6. Introduced failures are zero or explicitly repaired; inherited topology
-   failures remain separately identified.
-7. Issue `#2874` remains open.
+1. Branch starts from the exact refresh baseline in §1.
+2. The existing register path is updated in place.
+3. The historical v1.0 generated receipt remains unchanged.
+4. A successor receipt binds the final v1.1 register bytes.
+5. No contract, schema, policy, workflow, source registry, lifecycle data,
+   application, release, deployment, publication, or repository setting changes.
+6. The pull request remains draft.
+7. Any exact-head failures are classified against the untouched baseline rather
+   than attributed automatically.
+8. Issue `#2874` remains open.
 
-## 7. Security, rights, sensitivity, and publication impact
+## 8. Security, rights, sensitivity, publication, rollback, and non-effects
 
-This packet contains repository metadata, proposal classifications, and public
-source-document locators only. It contains no credentials, private endpoint,
-restricted source payload, living-person record, DNA/genomic record, precise
-archaeological or rare-species location, infrastructure vulnerability, or
-private-land join.
+This refresh contains repository metadata, proposal classifications, and source
+locators only. It contains no credentials, private endpoint, restricted source
+payload, living-person record, DNA/genomic record, precise archaeological or
+rare-species location, infrastructure vulnerability, or private-land join.
 
 No source is admitted or activated. No lifecycle object is promoted. No release,
 deployment, publication, access widening, or public-client behavior is created.
 
-## 8. Rollback and non-effects
-
-Before merge, close the draft pull request and delete its task branch. After any
-separately authorized merge, revert the two-file packet. No data migration,
-source shutdown, cache invalidation, release withdrawal, deployment rollback,
-public correction, or Drive cleanup is required.
+Rollback is one bounded repository revert: restore the prior register bytes and
+remove the successor current-binding receipt. The historical receipt remains
+unchanged. No data migration, source shutdown, cache invalidation, release
+withdrawal, deployment rollback, public correction, or Drive cleanup is
+required.
 
 This packet does not close issue `#2874`, accept a proposed ADR, alter the
 canonical verification backlog, populate the machine backlog, authenticate
