@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/evidence-bundle-projection-aggregate.yml": "sha256:2d732786bea9317724ccf42aaaf3e420764b309839fcdfb809a72053f1f72946",
-    "tests/contracts/test_evidence_bundle_projection_aggregate.py": "sha256:07954ea200195744cde0e02fcd87c99dea1a8e32f2f9f142ca790243693e4ee6"
+    "tests/contracts/test_evidence_bundle_projection_aggregate.py": "sha256:2767ba1c976c25cc0be10c5431b22719e3ef08f3532f4916fada1444cfcf18b2"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -40,7 +40,9 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/2946",
       "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "docs/doctrine/directory-rules.md",
-      "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
+      "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
+      "contracts/domains/hydrology/evidence_bundle.md"
     ]
   },
   "truth_labels": {
@@ -54,14 +56,19 @@
       "reason": "Current main was refreshed after PR #2947 merged; active PRs #2948 and #2946 were inspected and are disjoint. Accepted Directory Rules, existing domain projection schemas, and exact-main workflow inventory were inspected."
     },
     {
+      "gate": "first-hosted-projection-scope-check",
+      "outcome": "FAIL_THEN_CORRECTED",
+      "reason": "Initial hosted run 31922208169 proved the first aggregate selector was too broad by including Hydrology's explicitly documented allOf runtime alias. The test was narrowed to schemas that self-declare x-kfm.authority=projection; the Hydrology alias was not rewritten or silently reclassified."
+    },
+    {
       "gate": "syntax-validation",
       "outcome": "PASS",
-      "reason": "The authored Python aggregate test parsed successfully before repository mutation; workflow structure follows the repository's pinned read-only EvidenceBundle convergence workflow pattern."
+      "reason": "The authored Python aggregate test parses successfully; workflow structure follows the repository's pinned read-only EvidenceBundle convergence workflow pattern."
     },
     {
       "gate": "artifact-hash-binding",
       "outcome": "PASS",
-      "reason": "The final authored test and workflow bytes are bound by SHA-256 in this receipt; remote Git blob identities match the prepared byte streams."
+      "reason": "The corrected aggregate test and workflow bytes are bound by SHA-256 in this receipt."
     },
     {
       "gate": "local-repository-validation",
@@ -69,9 +76,9 @@
       "reason": "No mounted repository checkout is available in connector execution."
     },
     {
-      "gate": "hosted-exact-head-validation",
-      "outcome": "SKIPPED",
-      "reason": "Pending draft pull-request creation and hosted execution."
+      "gate": "corrected-hosted-exact-head-validation",
+      "outcome": "PENDING",
+      "reason": "A new pull-request workflow run is expected from the corrected branch head."
     }
   ],
   "policy_decisions": [],
@@ -95,6 +102,11 @@
       "id": "baseline-b49f3627",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b49f3627355d68b8f1bafb1fca894d9063862c54"
+    },
+    {
+      "id": "hydrology-runtime-alias",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hydrology/evidence_bundle.md"
     }
   ],
   "human_review": {
@@ -106,7 +118,7 @@
   "created_at": "2026-08-16T02:32:00Z",
   "emitter": "OpenAI GPT-5.6 Sol via GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 2949,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
