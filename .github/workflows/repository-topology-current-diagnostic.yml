@@ -1,0 +1,52 @@
+name: repository-topology-current-diagnostic
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/repository-topology-current-diagnostic.yml"
+      - "tools/validators/directory_governance/**"
+      - "control_plane/**"
+      - "docs/doctrine/directory-rules.md"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  diagnose:
+    name: diagnose-current-repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run bounded topology diagnostic
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
+        run: |
+          set +e
+          output="$(python tools/validators/directory_governance/render_repository_topology_diagnostics.py 2>&1)"
+          status=$?
+          printf '%s\n' "$output"
+          summary="$(printf '%s\n' "$output" | grep -E '^(ERROR_VALIDATOR|FAIL_|STALE_BASELINE|PASS|HOLD_)' | head -20 | tr '\n' ';' | sed 's/;$//')"
+          if [ -z "$summary" ]; then
+            summary="repository-topology diagnostic returned exit ${status} without a bounded identity"
+          fi
+          if [ "$status" -ne 0 ]; then
+            echo "::error title=repository-topology bounded diagnostic::${summary}"
+          else
+            echo "::notice title=repository-topology bounded diagnostic::${summary}"
+          fi
+          exit "$status"
