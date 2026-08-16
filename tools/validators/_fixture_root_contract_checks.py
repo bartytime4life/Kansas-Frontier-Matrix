@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Mapping
 
-EXPECTED_FIXTURE_VALIDATORS = 15
+EXPECTED_FIXTURE_VALIDATORS = 16
 NON_FIXTURE_VALIDATORS = frozenset({"repository-topology", "workflow-security"})
 FIXTURE_MODE_ARGUMENTS = frozenset({"--fixtures", "--cases"})
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
