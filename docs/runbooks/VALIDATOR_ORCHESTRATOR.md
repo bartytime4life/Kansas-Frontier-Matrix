@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks-validator-orchestrator
 title: Validator Orchestrator Runbook
 type: runbook
-version: v1.2
+version: v1.3
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-08-08
@@ -20,6 +20,8 @@ related:
   - ../../tools/validators/validate_catalog_matrix_closure.py
   - ../../tools/validators/validate_catalog_matrix_claim_closure.py
   - ../../tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py
+  - ../../tools/validators/release/validate_release_manifest.py
+  - ../../tests/validators/test_validate_release_manifest.py
   - ../../tests/validators/test_validator_orchestrator.py
   - ../../tests/validators/test_catalog_validator_registry_convergence.py
   - ../../tests/validators/test_legacy_schema_runner_scope.py
@@ -30,6 +32,8 @@ notes:
   - "This runbook implements the bounded orchestrator direction associated with KFM-P5-PROG-0009 and the Pass 6 validator-report expansions."
   - "The orchestrator runs repository-owned validators without a shell, forces no-network test posture, and emits finite machine-readable outcomes."
   - "Catalog closure registration coordinates four existing fixture-only validators; it does not accept ADR-0022 or create catalog, evidence, review, release, promotion, publication, or public-use authority."
+  - "ReleaseManifest registration coordinates the existing PROPOSED_INACTIVE / FIXTURE_ONLY validator in release-dry-run and full; PASS remains non-authoritative."
+  - "Historical generated authoring receipts are immutable process-memory records and are validated against current bytes only when the receipt itself changes in the tested revision."
   - "The historical make schemas compatibility runner explicitly selects the nine reviewed schema fixture families; canonical full remains broader and retains catalog and repository guardrail validators."
   - "A green orchestrator report proves only the selected checks completed successfully for the declared profile."
 [/KFM_META_BLOCK_V2] -->
@@ -112,7 +116,7 @@ python tools/validate_all.py --profile full --include-timing
 |---|---|---|
 | `focused` | Small trust-spine subset declared in the registry. | Configuration error. |
 | `changed-area` | Every validator whose registered path glob matches at least one supplied changed path. | `ABSTAIN` with `NO_MATCHING_VALIDATORS`, exit `0`; this is not represented as a validator pass. |
-| `release-dry-run` | Release-adjacent evidence, decision, receipt, and bounded catalog-closure fixture validators. | Configuration error. |
+| `release-dry-run` | Release-adjacent evidence, decision, receipt, bounded catalog-closure, and ReleaseManifest fixture validators. | Configuration error. |
 | `full` | Every registered validator exactly once, in registry order. | Configuration error. |
 
 The `full` profile means every validator in `validator_registry.json`; it does not claim every executable checker in the repository has been registered.
@@ -128,7 +132,19 @@ The following existing, fixture-only validators are registered in `release-dry-r
 | `catalog-matrix-claim-closure` | ClaimEnvelope-to-CatalogMatrix non-overstatement across evidence, source, policy, review, release, correction, rollback, and publication projection. | Does not resolve evidence, decide policy, approve review, promote, or publish. |
 | `catalog-distribution-mapping-profile` | STAC/DCAT/PROV carrier mapping and deterministic candidate identity. | Does not write catalogs, activate OCI/ORAS, or authorize public use. |
 
-Their path globs cover the existing contracts, schemas, fixtures, validators, focused tests, workflows, and source-reconciliation note that define each bounded profile. Generated authoring receipts remain outside this registration slice; receipt-integrity findings are not silently repaired or converted into catalog-validator outcomes.
+Their path globs cover the existing contracts, schemas, fixtures, validators, focused tests, workflows, and source-reconciliation note that define each bounded profile.
+
+### Registered ReleaseManifest validator
+
+The existing `release-manifest` validator is registered in `release-dry-run` and `full`, but not `focused`. It validates the already-defined dual-profile `ReleaseManifest` fixture corpus: the legacy minimal branch plus the strict `PROPOSED_INACTIVE` / `FIXTURE_ONLY` candidate branch.
+
+| Validator ID | Bounded check | Non-effect of `PASS` |
+|---|---|---|
+| `release-manifest` | Local schema shape, deterministic identity, reference hygiene, lifecycle/release coherence, artifact metadata, rights/sensitivity posture, time ordering, and constant-false authority fields. | Does not resolve references, verify artifact bytes or signatures, execute policy, authenticate review, persist a release, promote lifecycle state, publish, or permit public use. |
+
+Its changed-area globs cover the existing contract, schema, fixtures, validator, focused tests, dedicated workflows, source-reconciliation note, hashing helper, operator runbook, and historical authoring-receipt family. Registration reuses those surfaces; it creates no new release object and changes no release semantics.
+
+Historical generated authoring receipts are process-memory records for the revision that emitted them. Workflows that verify these receipts should validate only receipt files changed by the tested revision rather than replaying an older receipt against later registry bytes.
 
 ## Finite outcomes and process exit codes
 
@@ -169,7 +185,8 @@ Raw child output is not copied into the JSON report. `--verbose` prints bounded 
 5. add the ID to one or more named profiles;
 6. keep `profiles.full` equal to the complete validator list, in the same order;
 7. add focused positive and negative orchestrator tests when registry semantics change;
-8. verify the child validator already has its own fixtures, tests, and authority boundary.
+8. verify the child validator already has its own fixtures, tests, and authority boundary;
+9. advance any explicit aggregate-count ratchet that intentionally tracks the registry.
 
 Do not register placeholder validators that intentionally raise `NotImplementedError`.
 
@@ -191,6 +208,8 @@ python -m unittest discover \
   --pattern 'test_legacy_schema_runner_scope.py' \
   --verbose
 
+python -m unittest tests.validators.test_validate_release_manifest --verbose
+python tools/validate_all.py --profile release-dry-run --validator release-manifest
 python tools/validate_all.py --validate-registry
 python tools/validate_all.py --profile release-dry-run
 python tools/validate_all.py --profile full
@@ -204,12 +223,12 @@ The existing compatibility surface remains available:
 python tools/validators/_common/run_all.py
 ```
 
-That command is the implementation behind `make schemas`. It uses the canonical orchestrator engine but explicitly requests the nine reviewed legacy schema-fixture validator IDs represented by `RUNNER_VALIDATORS`. It does **not** run catalog-closure validators, `workflow-security`, or `repository-topology` merely because those checks belong to the broader canonical `full` profile.
+That command is the implementation behind `make schemas`. It uses the canonical orchestrator engine but explicitly requests the nine reviewed legacy schema-fixture validator IDs represented by `RUNNER_VALIDATORS`. It does **not** run catalog-closure validators, `workflow-security`, `repository-topology`, or `release-manifest` merely because those checks belong to the broader canonical `full` profile.
 
 This separation is intentional:
 
 - `make schemas` and `schema-validation` retain their historical schema/fixture responsibility;
-- `python tools/validate_all.py --profile full` remains the complete registered aggregate and still includes catalog plus repository guardrails;
+- `python tools/validate_all.py --profile full` remains the complete registered aggregate and includes catalog closure, ReleaseManifest, and repository guardrails;
 - `make repository-guardrails` remains the dedicated workflow-security and repository-topology enforcement surface.
 
 New callers should use `tools/validate_all.py` and choose the profile or explicit validators appropriate to their responsibility. Do not use `make schemas` as an alias for the complete validator registry.
@@ -224,4 +243,4 @@ New callers should use `tools/validate_all.py` and choose the profile or explici
 
 ## Rollback
 
-Revert the compatibility-scope change to restore the previous behavior in which the historical wrapper executed the canonical full profile. The registry, child validators, contracts, schemas, policies, catalog records, generated receipts, release objects, and published artifacts are not changed by this boundary correction.
+To remove only the ReleaseManifest registration, revert the registry entry/profile memberships, the focused orchestrator regression, the fixture-root count advance, and this runbook delta. Revert the LayerManifest workflow receipt-handling adjustment separately if historical-receipt replay is intentionally restored. No ReleaseManifest contract, schema, fixture, published artifact, source activation, policy decision, or release state is changed by this registration slice.
