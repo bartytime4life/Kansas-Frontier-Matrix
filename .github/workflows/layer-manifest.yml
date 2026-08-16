@@ -69,10 +69,10 @@ jobs:
           python tools/validators/data/validate_layer_manifest.py --fixtures
           python tools/validate_all.py --validate-registry
           python tools/validate_all.py             --profile release-dry-run             --validator layer-manifest             --quiet
-      - name: Validate aggregate-registration authoring receipt
+      - name: Validate aggregate-registration current binding receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-pass7-layer-manifest-dataset-version-registration-20260815.json             --repo-root .
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-pass7-layer-manifest-current-binding-20260815.json             --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
