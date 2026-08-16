@@ -66,6 +66,7 @@ jobs:
 
           python - "$status" <<'PY'
           from pathlib import Path
+          import os
           import sys
 
           status = int(sys.argv[1])
@@ -85,7 +86,7 @@ jobs:
               f"validate_repository_topology.py,title=Repository topology diagnostic::{escaped}"
           )
 
-          with Path(sys.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
               handle.write("## Repository topology diagnostic\n\n")
               handle.write(f"Exit status: `{status}`\n\n")
               handle.write("```text\n")
