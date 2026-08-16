@@ -31,6 +31,65 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Localize bounded JSON scan failure
+        shell: bash
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import importlib.util
+          import json
+          import subprocess
+          from pathlib import Path
+
+          root = Path.cwd()
+          module_path = root / "tools/validators/directory_governance/validate_repository_topology.py"
+          spec = importlib.util.spec_from_file_location("kfm_topology_diagnostic", module_path)
+          assert spec is not None and spec.loader is not None
+          topology = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(topology)
+
+          tracked = subprocess.run(
+              ["git", "ls-files", "-z"],
+              cwd=root,
+              check=True,
+              stdout=subprocess.PIPE,
+          ).stdout.decode("utf-8").split("\0")
+          candidates = sorted(
+              path for path in tracked
+              if path.endswith(".schema.json")
+              and not path.startswith(("fixtures/", "tests/"))
+          )
+          candidates.extend(
+              path for path in (
+                  "control_plane/root_registry.yaml",
+                  "control_plane/path_alias_register.yaml",
+              )
+              if path not in candidates
+          )
+
+          failures = []
+          for relative in candidates:
+              path = root / relative
+              try:
+                  json.loads(
+                      path.read_text(encoding="utf-8"),
+                      object_pairs_hook=topology._unique_object,
+                      parse_constant=topology._nonfinite,
+                      parse_float=topology._finite_float,
+                  )
+              except Exception as exc:  # diagnostic projection only
+                  failures.append((relative, type(exc).__name__))
+
+          if failures:
+              for relative, error_type in failures[:20]:
+                  print(f"INVALID_SCAN_JSON path={relative} error={error_type}")
+              if len(failures) > 20:
+                  print(f"... {len(failures) - 20} additional invalid JSON candidates omitted")
+          else:
+              print("INVALID_SCAN_JSON none")
+          PY
+
       - name: Run bounded topology diagnostic
         shell: bash
         env:
