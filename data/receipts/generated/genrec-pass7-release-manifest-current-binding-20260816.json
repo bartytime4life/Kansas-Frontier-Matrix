@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-pass7-release-manifest-current-binding-20260816",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/release-manifest.yml",
+    "contracts/release/release_manifest.md",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md",
+    "fixtures/release/release_manifest/README.md",
+    "fixtures/release/release_manifest/cases.json",
+    "schemas/contracts/v1/release/release_manifest.schema.json",
+    "tests/validators/test_validate_release_manifest.py",
+    "tools/validators/release/validate_release_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:80fd6604cf14215d482c8d0afc5b77c7b775b3793d8ea8e0d44be0db9340f6d5",
+    ".github/workflows/release-manifest.yml": "sha256:a57b98e51d28c3b2fbe6155e78df6e82b7b3934fa359a77635e51b29e440a500",
+    "contracts/release/release_manifest.md": "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
+    "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
+    "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "sha256:c420281c843e88000eaf2dc1bf62cff1ab1bd2d2628bfac0e07c2705fb3bcfb6",
+    "tests/validators/test_validate_release_manifest.py": "sha256:4ec7c00a8bf2b8912693fa2ed44cc49c63297b270f0680be9f85b2ad2f3119a7",
+    "tools/validators/release/validate_release_manifest.py": "sha256:7206739f7f831e2682d1b0a4fe574f07f48e70f19bc632ec247c4884a7d4321f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-16"
+  },
+  "prompt_or_contract": "sha256:b22897bb5108148ca526afc7a4442306eaa5c9f119681d3f36ede4eb018485a8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native validation",
+      "hosted read-only SHA-256 probe"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@190a9ca6cae18a5be5ab8f90096432a858bc3f00",
+      "repo:pull/2970@fed0f4da1f0050ddf36edab2c5f2bf681919e7d9",
+      "actions:release-manifest/run/31928781042/job/95120395845",
+      "actions:release-manifest-binding-probe/run/31930226185/job/95123773772",
+      "repo:data/receipts/generated/genrec-pass7-release-manifest-20260808.json@190a9ca6cae18a5be5ab8f90096432a858bc3f00",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@190a9ca6cae18a5be5ab8f90096432a858bc3f00"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    ".github/workflows/release-manifest.yml": "CONFIRMED",
+    "contracts/release/release_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "PROPOSED",
+    "fixtures/release/release_manifest/README.md": "CONFIRMED",
+    "fixtures/release/release_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_manifest.py": "CONFIRMED",
+    "tools/validators/release/validate_release_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main-failure-classification",
+      "outcome": "PASS",
+      "reason": "Main ReleaseManifest run 31928781042 passed focused deterministic semantic validation and failed only generated authoring-receipt integrity after the release-dry-run workflow bytes changed."
+    },
+    {
+      "gate": "historical-lineage-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-08 ReleaseManifest receipt remains immutable as historical authoring lineage; this receipt is a separate current successor binding."
+    },
+    {
+      "gate": "current-byte-binding",
+      "outcome": "PASS",
+      "reason": "Read-only hosted probe run 31930226185 job 95123773772 computed exact SHA-256 digests for all nine final ReleaseManifest authored-surface files on the PR #2970 merge revision."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Existing workflow orchestration and generated-receipt responsibility roots are reused under accepted ADR-0029; no parallel authority root is introduced."
+    },
+    {
+      "gate": "no-authority-expansion",
+      "outcome": "PASS",
+      "reason": "This successor binding changes authoring process memory only and creates no evidence, proof, review approval, promotion, release, rollback execution, deployment, publication, or public-use authority."
+    },
+    {
+      "gate": "hosted-exact-head-release-manifest",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head Actions execution after this successor receipt is added and the temporary digest probe is removed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the cleanup pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "RELEASE-MANIFEST-MAIN-FAILURE",
+      "validated": true,
+      "evidence_ref": "actions:release-manifest/run/31928781042/job/95120395845"
+    },
+    {
+      "id": "RELEASE-MANIFEST-CURRENT-BINDING-PROBE",
+      "validated": true,
+      "evidence_ref": "actions:release-manifest-binding-probe/run/31930226185/job/95123773772"
+    },
+    {
+      "id": "HISTORICAL-RELEASE-MANIFEST-RECEIPT",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass7-release-manifest-20260808.json@190a9ca6cae18a5be5ab8f90096432a858bc3f00"
+    },
+    {
+      "id": "DIRECTORY-GOVERNANCE",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@190a9ca6cae18a5be5ab8f90096432a858bc3f00"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T06:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current successor binding for the fixture-only ReleaseManifest authored surface after the release-dry-run current-binding repair changed workflow bytes. The historical 2026-08-08 receipt remains immutable. The temporary digest probe used to compute this binding is removed by the same cleanup change. No release, promotion, publication, deployment, source activation, or access semantics are changed."
+}
