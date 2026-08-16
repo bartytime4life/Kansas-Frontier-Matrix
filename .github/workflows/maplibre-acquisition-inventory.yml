@@ -1,0 +1,80 @@
+name: maplibre-acquisition-inventory
+
+on:
+  pull_request:
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "runtime/**"
+      - "scripts/**"
+      - "tests/maplibre/**"
+      - "examples/**"
+      - "public/**"
+      - "package.json"
+      - "tools/validators/maplibre/assess_acquisition_inventory.py"
+      - ".github/workflows/maplibre-acquisition-inventory.yml"
+      - "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+      - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "runtime/**"
+      - "scripts/**"
+      - "tests/maplibre/**"
+      - "examples/**"
+      - "public/**"
+      - "package.json"
+      - "tools/validators/maplibre/assess_acquisition_inventory.py"
+      - ".github/workflows/maplibre-acquisition-inventory.yml"
+      - "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+      - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  KFM_NO_NETWORK: "1"
+
+jobs:
+  acquisition-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: "3.12"
+
+      - name: Run acquisition inventory tests
+        run: python -m unittest tests.maplibre.test_assess_acquisition_inventory --verbose
+
+      - name: Assess current renderer acquisition surfaces
+        shell: bash
+        run: |
+          set +e
+          python tools/validators/maplibre/assess_acquisition_inventory.py \
+            --repo-root . \
+            --summary > /tmp/maplibre-acquisition.json
+          code=$?
+          set -e
+          cat /tmp/maplibre-acquisition.json
+          if [[ "$code" -ne 0 && "$code" -ne 3 ]]; then
+            exit "$code"
+          fi
+
+      - name: Record bounded trust statement
+        shell: bash
+        run: |
+          {
+            echo "## MapLibre acquisition inventory"
+            echo
+            echo "This check is structural evidence only. PASS/HOLD does not accept ADR-0006 or ADR-0007, admit a dependency, select a renderer, authenticate evidence, execute policy, approve release, deploy, publish, or widen access."
+          } >> "$GITHUB_STEP_SUMMARY"
