@@ -34,8 +34,8 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - CONTRIBUTING.md
   - control_plane/verification_backlog.yaml
-  - issues/2874
-  - issues/2768
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768
 notes:
   - "This v1.1 refresh preserves the dated 2026-08-15 packet identity while updating repository-current classifications after merges #2923-#2940."
   - "This dated packet is subordinate to the canonical human verification backlog and issue #2874."
