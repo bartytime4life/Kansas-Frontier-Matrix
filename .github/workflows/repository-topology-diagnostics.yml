@@ -1,0 +1,97 @@
+# Temporary bounded diagnostic workflow for the current repository-topology failure.
+# This workflow is intentionally read-only and will be removed once the root cause is
+# fixed in this pull request. It converts the topology diagnostic into a GitHub check
+# annotation so the failure remains inspectable through the API and web UI.
+name: repository-topology-diagnostics
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/repository-topology-diagnostics.yml"
+      - ".github/workflows/validator-suite.yml"
+      - "contracts/**"
+      - "schemas/**"
+      - "fixtures/**"
+      - "tools/validators/directory_governance/**"
+      - "control_plane/root_registry.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-topology-diagnostics-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  diagnose:
+    name: diagnose-repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Diagnose repository-topology ratchet
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
+        run: |
+          set -uo pipefail
+          status=0
+          make repository-topology > /tmp/kfm-repository-topology.log 2>&1 || status=$?
+          cat /tmp/kfm-repository-topology.log
+
+          python - "$status" <<'PY'
+          from pathlib import Path
+          import os
+          import sys
+
+          status = int(sys.argv[1])
+          text = Path("/tmp/kfm-repository-topology.log").read_text(
+              encoding="utf-8", errors="replace"
+          ).strip()
+          summary = text if text else "repository-topology returned no diagnostic output"
+          summary = summary[:6000]
+          escaped = (
+              summary.replace("%", "%25")
+              .replace("\r", "%0D")
+              .replace("\n", "%0A")
+          )
+          level = "error" if status else "notice"
+          print(
+              f"::{level} file=tools/validators/directory_governance/"
+              f"validate_repository_topology.py,title=Repository topology diagnostic::{escaped}"
+          )
+
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+              handle.write("## Repository topology diagnostic\n\n")
+              handle.write(f"Exit status: `{status}`\n\n")
+              handle.write("```text\n")
+              handle.write(summary)
+              handle.write("\n```\n")
+          PY
+
+          exit "$status"
