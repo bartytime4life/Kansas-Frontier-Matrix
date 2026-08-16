@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Inventory MapLibre/browser-renderer acquisition surfaces without admitting a renderer.
+"""Inventory browser-renderer acquisition surfaces without admitting a renderer.
 
-This assessment is intentionally non-authoritative. It inventories repository-owned
-text and package manifests for renderer acquisition mechanisms so ADR-0006/0007 can
-be reviewed with concrete structural evidence. PASS means the scan completed with no
-unclassified renderer acquisition. HOLD means acquisition is present but architecture
-or admission remains unresolved. FAIL means a prohibited duplicate active package home
-or ambiguous acquisition was detected. ERROR means the scan could not complete safely.
+This assessment is intentionally non-authoritative. It inventories bounded executable,
+package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
+so ADR-0006/0007 can be reviewed with structural evidence. PASS means the scan completed
+with no renderer acquisition. HOLD means acquisition is present while architecture or
+admission remains unresolved. FAIL means parallel active MapLibre package homes surfaced.
+ERROR means the bounded scan could not complete safely.
 """
 from __future__ import annotations
 
@@ -16,28 +16,20 @@ import re
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 PROFILE = "kfm-maplibre-acquisition-inventory-v1"
-TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".md"})
-MANIFEST_NAMES = frozenset({"package.json"})
+TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"})
 MAX_FILES = 5000
-
-RENDERER_PACKAGES = (
-    "maplibre-gl",
-    "mapbox-gl",
-    "cesium",
-    "leaflet",
-    "ol",
-    "openlayers",
-)
+SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
+RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 
 PATTERNS = {
     "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
     "DYNAMIC_IMPORT": re.compile(r"\bimport\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "REQUIRE": re.compile(r"\brequire\s*\(\s*['\"]([^'\"]+)['\"]\s*\)"),
     "CDN_URL": re.compile(r"https?://[^\s'\"<>]*(?:maplibre|mapbox|cesium|leaflet|openlayers)[^\s'\"<>]*", re.I),
-    "GLOBAL_RUNTIME": re.compile(r"\b(?:maplibregl|mapboxgl|Cesium|L|ol)\b"),
+    "GLOBAL_RUNTIME": re.compile(r"\b(?:maplibregl|mapboxgl|Cesium)\b"),
     "PROTOCOL_REGISTRATION": re.compile(r"\baddProtocol\s*\("),
     "WORKER_ACQUISITION": re.compile(r"\bnew\s+Worker\s*\("),
 }
@@ -99,42 +91,42 @@ def _candidate_seam(path: str) -> bool:
 def _renderer_subject(value: str) -> str | None:
     lowered = value.lower()
     for package in RENDERER_PACKAGES:
-        if lowered == package or lowered.startswith(package + "/") or lowered.startswith("@" + package + "/"):
+        if lowered == package or lowered.startswith(package + "/"):
             return package
-    if "maplibre" in lowered:
-        return "maplibre"
-    if "mapbox" in lowered:
-        return "mapbox"
-    if "cesium" in lowered:
-        return "cesium"
-    if "leaflet" in lowered:
-        return "leaflet"
-    if "openlayers" in lowered:
-        return "openlayers"
+    for marker in ("maplibre", "mapbox", "cesium", "leaflet", "openlayers"):
+        if marker in lowered:
+            return marker
     return None
 
 
 def _iter_files(root: Path) -> tuple[list[Path], bool]:
     files: list[Path] = []
     ignored_parts = {".git", "node_modules", "dist", "build", ".next", "coverage"}
-    for path in sorted(root.rglob("*")):
-        if not path.is_file() or any(part in ignored_parts for part in path.parts):
+    root_manifest = root / "package.json"
+    if root_manifest.is_file():
+        files.append(root_manifest)
+    for root_name in SCAN_ROOTS:
+        base = root / root_name
+        if not base.is_dir():
             continue
-        if path.name in MANIFEST_NAMES or path.suffix.lower() in TEXT_SUFFIXES:
-            files.append(path)
-            if len(files) > MAX_FILES:
-                return files[:MAX_FILES], True
+        for path in sorted(base.rglob("*")):
+            if not path.is_file() or any(part in ignored_parts for part in path.parts):
+                continue
+            if path.name == "package.json" or path.suffix.lower() in TEXT_SUFFIXES:
+                files.append(path)
+                if len(files) > MAX_FILES:
+                    return files[:MAX_FILES], True
     return files, False
 
 
 def _scan_manifest(root: Path, path: Path) -> list[Finding]:
+    rel = path.relative_to(root).as_posix()
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError):
-        return [Finding("MANIFEST_UNREADABLE", path.relative_to(root).as_posix(), "package.json", False)]
+        return [Finding("MANIFEST_UNREADABLE", rel, "package.json", False)]
     if not isinstance(value, dict):
-        return [Finding("MANIFEST_UNREADABLE", path.relative_to(root).as_posix(), "package.json", False)]
-    rel = path.relative_to(root).as_posix()
+        return [Finding("MANIFEST_UNREADABLE", rel, "package.json", False)]
     findings: list[Finding] = []
     for section in ("dependencies", "devDependencies", "peerDependencies", "optionalDependencies"):
         deps = value.get(section)
@@ -148,11 +140,11 @@ def _scan_manifest(root: Path, path: Path) -> list[Finding]:
 
 
 def _scan_text(root: Path, path: Path) -> list[Finding]:
+    rel = path.relative_to(root).as_posix()
     try:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError):
-        return [Finding("TEXT_UNREADABLE", path.relative_to(root).as_posix(), path.name, False)]
-    rel = path.relative_to(root).as_posix()
+        return [Finding("TEXT_UNREADABLE", rel, path.name, False)]
     findings: list[Finding] = []
     for kind in ("STATIC_IMPORT", "DYNAMIC_IMPORT", "REQUIRE"):
         for match in PATTERNS[kind].finditer(text):
@@ -164,7 +156,8 @@ def _scan_text(root: Path, path: Path) -> list[Finding]:
             subject = _renderer_subject(match.group(0))
             if subject:
                 findings.append(Finding(kind, rel, subject, _candidate_seam(rel)))
-    if "maplibre" in text.lower() or "mapbox" in text.lower():
+    lower = text.lower()
+    if "maplibre" in lower or "mapbox" in lower:
         if PATTERNS["PROTOCOL_REGISTRATION"].search(text):
             findings.append(Finding("PROTOCOL_REGISTRATION", rel, "renderer-protocol", _candidate_seam(rel)))
         if PATTERNS["WORKER_ACQUISITION"].search(text):
@@ -178,7 +171,7 @@ def scan(root: Path) -> Result:
     files, truncated = _iter_files(root)
     findings: list[Finding] = []
     for path in files:
-        findings.extend(_scan_manifest(root, path) if path.name in MANIFEST_NAMES else _scan_text(root, path))
+        findings.extend(_scan_manifest(root, path) if path.name == "package.json" else _scan_text(root, path))
 
     unique = tuple(sorted(set(findings), key=lambda item: (item.path, item.kind, item.subject, item.candidate_seam)))
     reasons: set[str] = set()
