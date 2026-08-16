@@ -19,8 +19,9 @@ related:
   - ../../fixtures/contracts/v1/data/synthetic_release_catalog_closure_profile/
   - ../../tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py
   - ../../tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py
-  - ../../docs/adr/ADR-0011-receipts-proofs-manifests-catalog-separation.md
-  - ../../docs/adr/ADR-0015-prov-stac-dcat-profiles.md
+  - ../../docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md
+  - ../../docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md
+  - ../../docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
   - "Fixture-only additive profile. It composes existing release, evidence, policy, review, receipt, proof, correction, rollback, and catalog responsibilities without replacing them."
