@@ -25,6 +25,7 @@
       "source-descriptor",
       "evidence-ref",
       "evidence-bundle",
+      "citation-validation-report",
       "layer-manifest",
       "dataset-version",
       "runtime-response-envelope",
@@ -92,6 +93,28 @@
         "fixtures/contracts/v1/evidence/evidence_bundle/**",
         "tests/validators/test_validate_evidence_bundle.py",
         "tools/validators/validate_evidence_bundle.py"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "citation-validation-report",
+      "description": "Validate fixture-only CitationValidationReport declaration outcomes without resolving evidence or granting answer, release, or publication authority.",
+      "script": "tools/validators/citation/validate_citation_validation_report.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/citation-validation.yml",
+        "contracts/evidence/citation_validation_report.md",
+        "schemas/contracts/v1/evidence/citation_validation_report.schema.json",
+        "fixtures/contracts/v1/evidence/citation_validation_report/**",
+        "tests/validators/test_validate_citation_validation_report.py",
+        "tests/validators/test_citation_validation_report_registry.py",
+        "tools/validators/citation/validate_citation_validation_report.py",
+        "tools/validators/validate_citation_validation.py",
+        "docs/intake/exploratory/citation-validation-report-closure-source-map.md",
+        "data/receipts/generated/genrec-citation-validation-report-closure-20260810.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
