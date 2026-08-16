@@ -7,6 +7,7 @@ from typing import Any, Mapping
 
 EXPECTED_FIXTURE_VALIDATORS = 16
 NON_FIXTURE_VALIDATORS = frozenset({"repository-topology", "workflow-security"})
+FIXTURE_MODE_ARGUMENTS = frozenset({"--fixtures", "--cases"})
 EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
 EXPECTED_ROOT: dict[str, object] = {
     "root_id": "root.fixtures",
@@ -96,7 +97,8 @@ def aggregate(
             continue
         args, script = item.get("args"), item.get("script")
         if not isinstance(args, list) or (
-            validator_id not in NON_FIXTURE_VALIDATORS and "--fixtures" not in args
+            validator_id not in NON_FIXTURE_VALIDATORS
+            and not FIXTURE_MODE_ARGUMENTS.intersection(args)
         ):
             findings.append(("FIXTURE_MODE_ARGUMENT_MISSING", field))
         if validator_id in NON_FIXTURE_VALIDATORS and args:
