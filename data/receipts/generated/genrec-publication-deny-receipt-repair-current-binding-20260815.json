@@ -1,0 +1,102 @@
+{
+  "receipt_id": "genrec-publication-deny-receipt-repair-current-binding-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-binding-20260815.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:0f9c535ca85ab5e1c4209531ca4a631d53feb65513ae745c49f7f1b7eced9552",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-binding-20260815.json": "sha256:248c4086fd1999d00eff93b449205b7906823a0f56f41eb5d9fc41e3dcad4e35"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-16"
+  },
+  "prompt_or_contract": "sha256:510eb383c342f6e89b546d5a95f82fc2575f75044796cc9b2e131309f7244a96",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0c5151abc6108dc668cc863bd1303c91f20bcf68b9da4ca67247bf391ce858c4",
+      "sha256:0f9c535ca85ab5e1c4209531ca4a631d53feb65513ae745c49f7f1b7eced9552",
+      "sha256:248c4086fd1999d00eff93b449205b7906823a0f56f41eb5d9fc41e3dcad4e35"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@8a83530686c6df4752021377daf564758018d39c",
+      "actions:release-dry-run/run/31927628793/job/95117530165",
+      "repo:data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:docs/doctrine/directory-rules.md@8a83530686c6df4752021377daf564758018d39c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-binding-20260815.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-head-failure-classification",
+      "outcome": "PASS",
+      "reason": "Current main run 31927628793 isolates the defect to generated-receipt artifact integrity after the bounded dry-run behavior passes."
+    },
+    {
+      "gate": "smallest-reversible-change",
+      "outcome": "PASS",
+      "reason": "Historical receipts remain immutable; one current successor, one workflow-binding receipt, and the existing workflow target are changed as one dependency-closed packet."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": ".github/workflows owns CI orchestration and data/receipts/generated owns generated process memory under accepted ADR-0029."
+    },
+    {
+      "gate": "no-release-or-publication-effect",
+      "outcome": "PASS",
+      "reason": "The workflow remains read-only and synthetic; no candidate, decision, proof, release record, rollback action, deployment, or publication is created."
+    },
+    {
+      "gate": "hosted-exact-head-release-dry-run",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and exact-head Actions execution."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a83530686c6df4752021377daf564758018d39c"
+  ],
+  "citations": [
+    {
+      "id": "CURRENT-MAIN-RELEASE-DRY-RUN-FAILURE",
+      "validated": true,
+      "evidence_ref": "actions:release-dry-run/run/31927628793/job/95117530165"
+    },
+    {
+      "id": "DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@8a83530686c6df4752021377daf564758018d39c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T04:55:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance for the bounded release-dry-run current-binding repair. It preserves historical receipts and changes no validator semantics, source activation, release, deployment, publication, access, or repository settings."
+}
