@@ -1,0 +1,132 @@
+{
+  "profile": "kfm/synthetic-hydrology-governed-resolution/v1",
+  "record": {
+    "bundle": {
+      "bundle_id": "bundle:synthetic:hydrology:measurement-001",
+      "claim_scope": "hydrology:synthetic:flow-observation:site-001:2026-01-01",
+      "evidence_refs": [
+        {
+          "ref": "kfm://synthetic/hydrology/measurement-001",
+          "kind": "measurement"
+        }
+      ],
+      "source_records": [
+        "kfm://synthetic/source/hydrology-observation-001"
+      ],
+      "citations": [
+        "Synthetic hydrology fixture; no real source or observation"
+      ],
+      "rights": {
+        "license": "CC0-1.0"
+      },
+      "sensitivity": {
+        "level": "public",
+        "reason": "Synthetic fixture contains no real place, person, or measurement",
+        "applied_at": "2026-01-01T00:00:00Z"
+      },
+      "transforms": [],
+      "checksums": {
+        "synthetic-observation": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "spec_hash": {
+        "value": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    },
+    "content_digest": "sha256:0ea16aa10e53c881367be4556e000370bef3103174c28f9a68b763495d06ea92",
+    "expected_spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "trust": {
+      "profile": "kfm/synthetic-hydrology-governed-resolution/v1",
+      "schema_version": "1.0.0",
+      "source_ref": "kfm://synthetic/source/hydrology-observation-001",
+      "source_role": "observation",
+      "evidence_state": "ACTIVE",
+      "freshness": "current",
+      "current_head": true,
+      "correction_state": "ACTIVE",
+      "correction_ref": null,
+      "rights_posture": "ALLOW",
+      "policy_outcome": "ANSWER",
+      "policy_decision_ref": "policy:synthetic:hydrology-answer-001",
+      "review_decision": "approve",
+      "review_record_ref": "review:synthetic:hydrology-approve-001",
+      "release_profile_status": "PROPOSED_INACTIVE",
+      "execution_mode": "FIXTURE_ONLY",
+      "public_use_allowed": false,
+      "release_manifest_ref": "release-manifest:synthetic:hydrology-fixture-001"
+    },
+    "spatial": {
+      "scope_ref": "kfm://synthetic/hydrology/scope/huc12-102600120101",
+      "representation": "aggregate",
+      "resolution": "synthetic-huc12",
+      "accuracy": "fixture-only",
+      "generalization_applied": false
+    },
+    "temporal": {
+      "start": "2026-01-01T00:00:00Z",
+      "end": "2026-01-01T23:59:59Z",
+      "granularity": "day"
+    },
+    "attribute": {
+      "measure": "synthetic-streamflow-status",
+      "unit": "fixture-class",
+      "significant_precision": 0,
+      "classification_granularity": "synthetic-only"
+    },
+    "verification_history": {
+      "schema_version": "1.0.0",
+      "history_id": "kfm:verification-history:synthetic:hydrology-resolver-001",
+      "subject_ref": "kfm://synthetic/hydrology/measurement-001",
+      "profile_id": "kfm://profile/verification-state-replay/v1",
+      "events": [
+        {
+          "event_id": "evt:001",
+          "event_type": "VERIFIED",
+          "state": "ACTIVE",
+          "effective_at": "2026-01-01T00:00:00Z",
+          "recorded_at": "2026-01-01T00:00:00Z",
+          "reason_code": "SYNTHETIC_VERIFICATION",
+          "basis_refs": [
+            "kfm://synthetic/receipt/verification-001"
+          ]
+        }
+      ],
+      "spec_hash": "sha256:de510bea7bbe2995717230e07075d667267f83d348412455ee921ff57ec02d93"
+    },
+    "verification_effective_as_of": "2026-01-02T00:00:00Z",
+    "verification_recorded_as_of": "2026-01-02T00:00:00Z"
+  },
+  "request": {
+    "evidence_ref": {
+      "ref": "kfm://synthetic/hydrology/measurement-001",
+      "kind": "measurement",
+      "bundle_ref": "bundle:synthetic:hydrology:measurement-001"
+    },
+    "response_id": "resolver:synthetic:hydrology:001",
+    "issued_at": "2026-01-02T00:00:00Z",
+    "claim_scope": "hydrology:synthetic:flow-observation:site-001:2026-01-01",
+    "spatial_scope_ref": "kfm://synthetic/hydrology/scope/huc12-102600120101",
+    "temporal_start": "2026-01-01T06:00:00Z",
+    "temporal_end": "2026-01-01T18:00:00Z",
+    "expected_source_role": "observation",
+    "access_path": "GOVERNED_FIXTURE",
+    "consumer_class": "SYNTHETIC_TEST"
+  },
+  "expected": {
+    "supported": {
+      "outcome": "ANSWER",
+      "reason_code": "EVIDENCE_SUPPORTED"
+    },
+    "abstain": {
+      "outcome": "ABSTAIN",
+      "reason_code": "EVIDENCE_BUNDLE_NOT_FOUND"
+    },
+    "deny": {
+      "outcome": "DENY",
+      "reason_code": "DIRECT_STORE_ACCESS_DENIED"
+    },
+    "error": {
+      "outcome": "ERROR",
+      "reason_code": "EVIDENCE_BUNDLE_DIGEST_MISMATCH"
+    }
+  }
+}
