@@ -7,7 +7,7 @@ on:
       - "apps/explorer-web/src/features/evidence_drawer/index.tsx"
       - "schemas/contracts/v1/domains/roads-rail-trade/evidence_drawer_payload.schema.json"
       - "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json"
-      - "tests/validators/domains/roads_rail_trade/test_evidence_drawer_convergence.py"
+      - "tests/validators/domains/roads-rail-trade/test_evidence_drawer_convergence.py"
       - ".github/workflows/roads-rail-trade-evidence-drawer-convergence.yml"
   workflow_dispatch:
 
@@ -31,6 +31,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Compile focused test
-        run: python -m py_compile tests/validators/domains/roads_rail_trade/test_evidence_drawer_convergence.py
+        run: python -m py_compile tests/validators/domains/roads-rail-trade/test_evidence_drawer_convergence.py
       - name: Run deterministic convergence tests
-        run: python -m unittest -q tests.validators.domains.roads_rail_trade.test_evidence_drawer_convergence
+        run: python -m unittest discover -s tests/validators/domains/roads-rail-trade -p 'test_evidence_drawer_convergence.py' -q
