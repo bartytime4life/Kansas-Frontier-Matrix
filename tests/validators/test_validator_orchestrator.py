@@ -194,6 +194,74 @@ class ValidatorOrchestratorTests(unittest.TestCase):
             legacy_runner.RUNNER_VALIDATORS,
         )
 
+    def test_live_registry_registers_release_manifest_in_release_profiles(self) -> None:
+        registry = orchestrator.load_registry(
+            REPO_ROOT / "tools/validators/validator_registry.json",
+            REPO_ROOT,
+        )
+        spec = registry.by_id["release-manifest"]
+
+        self.assertEqual(
+            spec.script,
+            "tools/validators/release/validate_release_manifest.py",
+        )
+        self.assertEqual(spec.args, ("--fixtures",))
+        self.assertNotIn("release-manifest", registry.profiles["focused"])
+        self.assertIn("release-manifest", registry.profiles["release-dry-run"])
+        self.assertIn("release-manifest", registry.profiles["full"])
+        self.assertGreater(
+            registry.profiles["release-dry-run"].index("release-manifest"),
+            registry.profiles["release-dry-run"].index(
+                "catalog-distribution-mapping-profile"
+            ),
+        )
+        self.assertGreater(
+            registry.profiles["full"].index("release-manifest"),
+            registry.profiles["full"].index(
+                "catalog-distribution-mapping-profile"
+            ),
+        )
+
+        representative_paths = (
+            ".github/workflows/release-manifest.yml",
+            ".github/workflows/release-dry-run.yml",
+            "contracts/release/release_manifest.md",
+            "schemas/contracts/v1/release/release_manifest.schema.json",
+            "fixtures/release/release_manifest/cases.json",
+            "tests/validators/test_validate_release_manifest.py",
+            "tools/validators/release/validate_release_manifest.py",
+            "docs/intake/exploratory/pass7-release-manifest-profile.md",
+            "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+            "packages/hashing/src/hashing/__init__.py",
+            "data/receipts/generated/genrec-pass7-release-manifest-20260808.json",
+        )
+        for path in representative_paths:
+            with self.subTest(path=path):
+                selected, mode = orchestrator.select_validators(
+                    registry,
+                    profile="changed-area",
+                    changed_paths=(path,),
+                )
+                self.assertEqual(mode, "changed-area")
+                self.assertIn(
+                    "release-manifest",
+                    {item.validator_id for item in selected},
+                )
+
+        code, report = orchestrator.orchestrate(
+            registry,
+            repo_root=REPO_ROOT,
+            profile="release-dry-run",
+            requested_ids=("release-manifest",),
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(report["outcome"], "PASS")
+        self.assertEqual(report["selected_count"], 1)
+        self.assertEqual(
+            report["results"][0]["validator_id"],
+            "release-manifest",
+        )
+
     def test_changed_area_without_match_abstains_without_false_pass_claim(self) -> None:
         entry = self._entry(
             "alpha-check",
