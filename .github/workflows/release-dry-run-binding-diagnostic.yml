@@ -1,0 +1,33 @@
+name: release-dry-run-binding-diagnostic
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/release-dry-run-binding-diagnostic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compute-current-bindings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Emit bounded SHA-256 diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            Makefile \
+            tests/release/README.md \
+            tests/release/test_publication_deny_dry_run.py \
+            tools/release/README.md \
+            tools/release/release_dry_run.py \
+            .github/workflows/release-dry-run.yml \
+            data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json
