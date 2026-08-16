@@ -18,7 +18,8 @@
       "catalog-closure-packet",
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
-      "catalog-distribution-mapping-profile"
+      "catalog-distribution-mapping-profile",
+      "release-manifest"
     ],
     "full": [
       "source-descriptor",
@@ -34,6 +35,7 @@
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
+      "release-manifest",
       "western-kansas-observation-assessment",
       "kansas-transportation-geometry-source-assessment",
       "workflow-security",
@@ -295,6 +297,29 @@
         "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
         "packages/hashing/**",
         "pyproject.toml"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "release-manifest",
+      "description": "Validate legacy and fixture-only ReleaseManifest candidates without creating release or publication authority.",
+      "script": "tools/validators/release/validate_release_manifest.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/release-manifest.yml",
+        ".github/workflows/release-dry-run.yml",
+        "contracts/release/release_manifest.md",
+        "schemas/contracts/v1/release/release_manifest.schema.json",
+        "fixtures/release/release_manifest/**",
+        "tests/validators/test_validate_release_manifest.py",
+        "tools/validators/release/validate_release_manifest.py",
+        "docs/intake/exploratory/pass7-release-manifest-profile.md",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+        "packages/hashing/**",
+        "data/receipts/generated/genrec-pass7-release-manifest-*.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
