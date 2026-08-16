@@ -1,0 +1,115 @@
+{
+  "receipt_id": "genrec-publication-deny-dry-run-current-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/release/README.md",
+    "tests/release/test_publication_deny_dry_run.py",
+    "tools/release/README.md",
+    "tools/release/release_dry_run.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:0c5151abc6108dc668cc863bd1303c91f20bcf68b9da4ca67247bf391ce858c4",
+    "tests/release/README.md": "sha256:f69b064bad7093bafe7f5d8faa330f6c9d45f465e5c3b6a176d990ed8fe37476",
+    "tests/release/test_publication_deny_dry_run.py": "sha256:41ac054d5b92e03f5f7b4900ccaf6cfcc5f34a1722e559163661bd62b3b2be50",
+    "tools/release/README.md": "sha256:d3e3a6e38e889ed52c7b65dd73060cb3a893d871a4423141b903ce83481454a4",
+    "tools/release/release_dry_run.py": "sha256:1b6aa53ebdde595e64f042ec41b24752431d168ff46c9568d1ff28004b8f358b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:0b05a7dddd6d5d47b4bc7e332cc1fff94341b877dd704503fa443705144cf58c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "hosted deterministic SHA-256 diagnostic"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit/8a83530686c6df4752021377daf564758018d39c",
+      "repo:actions/run/31927628793",
+      "repo:data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:commit/07023d60f4730c9c25d9198c3c4c9715e92786b8",
+      "drive:KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15.docx#phase-8",
+      "drive:KFM Unified Doctrine Synthesis#published-and-gate-g"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "CONFIRMED",
+    "tests/release/README.md": "CONFIRMED",
+    "tests/release/test_publication_deny_dry_run.py": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED",
+    "tools/release/release_dry_run.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main-failure-classification",
+      "outcome": "PASS",
+      "reason": "Main release-dry-run run 31927628793 passed synthetic/no-write and publication-denial checks, then failed at the first current receipt with ARTIFACT_DIGEST_MISMATCH for artifact_paths/0."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-09 and 2026-08-14 receipts remain unchanged as historical process-memory lineage."
+    },
+    {
+      "gate": "current-five-file-digest-capture",
+      "outcome": "PASS",
+      "reason": "A temporary read-only hosted diagnostic on draft PR #2961 computed SHA-256 for the exact current five-file publication-denial implementation surface."
+    },
+    {
+      "gate": "hosted-final-release-dry-run",
+      "outcome": "SKIPPED",
+      "reason": "Pending final draft-PR exact-head execution after the workflow is repointed to this successor and its repair binding."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending review on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a83530686c6df4752021377daf564758018d39c"
+  ],
+  "citations": [
+    {
+      "id": "baseline-release-dry-run-failure",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31927628793"
+    },
+    {
+      "id": "historical-current-binding",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json@8a83530686c6df4752021377daf564758018d39c"
+    },
+    {
+      "id": "current-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/8a83530686c6df4752021377daf564758018d39c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T05:01:14Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 2961,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current process-memory successor for the publication-denial dry-run implementation after the Makefile topology command advanced. Historical receipts remain immutable. This receipt binds only the current five-file implementation surface and creates no proof, approval, promotion, release, deployment, publication, or public-use authority."
+}
