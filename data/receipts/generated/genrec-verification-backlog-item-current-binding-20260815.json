@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-verification-backlog-item-current-binding-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/governance-verification-backlog-item.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/governance-verification-backlog-item.yml": "sha256:237186f73e8d4586b7ea08906a7acc3c5b1bb2ea8c66c9537873dca23c007ef7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:7620c1da3a3b427e02e5f486d087a5973d8a7ee312dc64316021dc43dd3579a5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "repo:commit/8a83530686c6df4752021377daf564758018d39c",
+      "repo:actions/run/31927628834",
+      "repo:data/receipts/generated/genrec-verification-backlog-item-20260806.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:docs/registers/VERIFICATION_BACKLOG.md@8a83530686c6df4752021377daf564758018d39c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a83530686c6df4752021377daf564758018d39c",
+      "repo:docs/doctrine/directory-rules.md@8a83530686c6df4752021377daf564758018d39c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/governance-verification-backlog-item.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main-failure-classification",
+      "outcome": "PASS",
+      "reason": "Exact-main run 31927628834 passed 15 focused tests and all 11 READY/HOLD/ERROR fixture outcomes, then failed only because the historical authoring receipt no longer matched tools/validators/governance/README.md at artifact_paths/8."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-06 multi-artifact authoring receipt remains unchanged as historical process memory."
+    },
+    {
+      "gate": "current-workflow-binding",
+      "outcome": "PASS",
+      "reason": "This successor binds only the final workflow bytes; live repository tests and fixture replay continue to validate the current VerificationBacklogItem implementation surfaces."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request hosted execution."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending review on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a83530686c6df4752021377daf564758018d39c"
+  ],
+  "citations": [
+    {
+      "id": "kfm-research-verification-agenda",
+      "validated": true,
+      "evidence_ref": "KFM_Comprehensive_Research_and_Verification_Agenda.docx"
+    },
+    {
+      "id": "baseline-verification-backlog-failure",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31927628834"
+    },
+    {
+      "id": "historical-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-verification-backlog-item-20260806.json@8a83530686c6df4752021377daf564758018d39c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T05:20:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current binding for the fixture-only VerificationBacklogItem workflow. Historical authoring lineage remains immutable. This record creates no evidence authentication, live research, source activation, steward decision, register mutation, promotion, release, deployment, publication, or public-use authority."
+}
