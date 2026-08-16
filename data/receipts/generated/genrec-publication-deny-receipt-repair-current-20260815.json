@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-publication-deny-receipt-repair-current-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:4be1606b0353c93e2b65dc969a1bcc470bd871caaf3f629d44758cb7c44e86bd",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json": "sha256:194a7247fe0ccdc242ea5f82467e5815802550aaffd69159b1b81546b6779e52"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:0b05a7dddd6d5d47b4bc7e332cc1fff94341b877dd704503fa443705144cf58c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only)",
+      "hosted deterministic SHA-256 diagnostic"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:4be1606b0353c93e2b65dc969a1bcc470bd871caaf3f629d44758cb7c44e86bd",
+      "sha256:194a7247fe0ccdc242ea5f82467e5815802550aaffd69159b1b81546b6779e52"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit/8a83530686c6df4752021377daf564758018d39c",
+      "repo:actions/run/31927628793",
+      "repo:data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:pr/2961"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    "data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-failure-classification",
+      "outcome": "PASS",
+      "reason": "Exact-main run 31927628793 isolated the failure to the first current generated receipt after the no-write publication-denial implementation passed."
+    },
+    {
+      "gate": "successor-digest-capture",
+      "outcome": "PASS",
+      "reason": "Draft PR #2961 hosted diagnostics computed exact SHA-256 for the staged final workflow and the new current successor receipt."
+    },
+    {
+      "gate": "historical-lineage-preservation",
+      "outcome": "PASS",
+      "reason": "The historical 2026-08-09 and prior 2026-08-14 successor/repair receipts remain unchanged."
+    },
+    {
+      "gate": "hosted-final-release-dry-run",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head hosted validation after the final workflow bytes are committed and the temporary diagnostic workflow is removed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending review on draft PR #2961."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8a83530686c6df4752021377daf564758018d39c"
+  ],
+  "citations": [
+    {
+      "id": "baseline-release-dry-run-failure",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31927628793"
+    },
+    {
+      "id": "current-successor",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json@pr/2961"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T05:04:18Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 2961,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current repair binding for the publication-denial release-dry-run workflow after its prior current successor became stale when the Makefile topology command advanced. This record binds only the final workflow and the new current successor. It does not authenticate evidence, review, policy, promotion, release, rollback execution, deployment, publication, or public-use authority."
+}
