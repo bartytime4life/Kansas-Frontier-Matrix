@@ -74,13 +74,77 @@ jobs:
           python -m unittest \
             tests.validators.governance.test_assess_temporal_authority_envelope_conflict \
             --verbose
+      - name: Build the tracked-reference scan root
+        run: |
+          set -euo pipefail
+          python - "$RUNNER_TEMP/temporal-authority-envelope-reference-scan" <<'PY'
+          from pathlib import Path
+          import shutil
+          import subprocess
+          import sys
+
+          target = Path(sys.argv[1])
+          target.mkdir(parents=True, exist_ok=True)
+          command = [
+              "git",
+              "grep",
+              "-Ilz",
+              "-e",
+              "TemporalAuthorityEnvelope",
+              "-e",
+              "temporal_authority_envelope",
+              "--",
+          ]
+          result = subprocess.run(command, check=False, capture_output=True)
+          if result.returncode not in (0, 1):
+              raise SystemExit(result.returncode)
+          paths = {
+              Path(raw.decode("utf-8"))
+              for raw in result.stdout.split(b"\0")
+              if raw
+          }
+          paths.update(
+              {
+                  Path("docs/adr/ADR-0014-temporal-vocabulary--six-time-kinds-tracked.md"),
+                  Path("docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"),
+                  Path("contracts/common/temporal_authority_envelope.md"),
+                  Path("schemas/contracts/v1/common/temporal_authority_envelope.schema.json"),
+                  Path("tools/validators/validate_temporal_authority_envelope.py"),
+                  Path("tests/validators/test_validate_temporal_authority_envelope.py"),
+                  Path(".github/workflows/briefing-integration.yml"),
+                  Path("contracts/evidence/temporal_authority_envelope.md"),
+                  Path("schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json"),
+                  Path("tools/validators/evidence/validate_temporal_authority_envelope.py"),
+                  Path("tests/evidence/test_temporal_authority_envelope.py"),
+                  Path(".github/workflows/temporal-authority-envelope.yml"),
+              }
+          )
+          for base, pattern in (
+              (Path("contracts"), "temporal_authority_envelope.md"),
+              (Path("schemas/contracts/v1"), "temporal_authority_envelope.schema.json"),
+              (Path("tools/validators"), "validate_temporal_authority_envelope.py"),
+          ):
+              if base.is_dir():
+                  paths.update(base.rglob(pattern))
+          for source in sorted(paths, key=lambda item: item.as_posix()):
+              if not source.is_file() or source.is_symlink():
+                  continue
+              destination = target / source
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, destination)
+          for relative in (
+              Path("fixtures/contracts/v1/common/temporal_authority_envelope"),
+              Path("fixtures/contracts/v1/evidence/temporal_authority_envelope"),
+          ):
+              shutil.copytree(relative, target / relative, dirs_exist_ok=True)
+          PY
       - name: Require the explicit HOLD outcome
         run: |
           set -euo pipefail
           report="$RUNNER_TEMP/temporal-authority-envelope-conflict.json"
           set +e
           python tools/validators/governance/assess_temporal_authority_envelope_conflict.py \
-            --root . \
+            --root "$RUNNER_TEMP/temporal-authority-envelope-reference-scan" \
             --revision "$GITHUB_SHA" \
             --format json > "$report"
           status=$?
@@ -132,9 +196,10 @@ jobs:
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
               summary.write("### TemporalAuthorityEnvelope conflict assessment\n\n")
               summary.write("- Outcome: `HOLD_UNRESOLVED` (expected, exit 3).\n")
-              summary.write(f"- Tracked text files scanned: `{report['scanned_text_file_count']}`.\n")
+              summary.write(f"- Git-tracked reference files scanned: `{report['scanned_text_file_count']}`.\n")
               summary.write(f"- Reference-bearing files inventoried: `{counts['reference_file_count']}`.\n")
               summary.write(f"- Runtime/persisted/release references observed in tracked text: `{counts['critical_consumer_count']}`.\n")
               summary.write("- Boundary: no canonical family selected; no ADR acceptance, migration, evidence, policy, review, release, deployment, publication, or access authority created.\n")
-              summary.write("- Residual scope: runtime observation, databases, external object storage, and generated CI artifacts remain unverified.\n")
+              summary.write("- Selection: git-indexed text matching either envelope name, plus required family, governance, and fixture surfaces.\n")
+              summary.write("- Residual scope: runtime observation, databases, external object storage, binary files, and generated CI artifacts remain unverified.\n")
           PY
