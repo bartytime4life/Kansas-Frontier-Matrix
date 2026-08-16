@@ -1,0 +1,54 @@
+# Temporary branch-local diagnostic. Remove before review completion.
+name: release-manifest-binding-probe
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/release-manifest-binding-probe.yml"
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/release-dry-run.yml"
+      - "contracts/release/release_manifest.md"
+      - "docs/intake/exploratory/pass7-release-manifest-profile.md"
+      - "fixtures/release/release_manifest/**"
+      - "schemas/contracts/v1/release/release_manifest.schema.json"
+      - "tests/validators/test_validate_release_manifest.py"
+      - "tools/validators/release/validate_release_manifest.py"
+
+permissions:
+  contents: read
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out probed revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Emit exact ReleaseManifest authored-surface SHA-256 bindings
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            '.github/workflows/release-dry-run.yml'
+            '.github/workflows/release-manifest.yml'
+            'contracts/release/release_manifest.md'
+            'docs/intake/exploratory/pass7-release-manifest-profile.md'
+            'fixtures/release/release_manifest/README.md'
+            'fixtures/release/release_manifest/cases.json'
+            'schemas/contracts/v1/release/release_manifest.schema.json'
+            'tests/validators/test_validate_release_manifest.py'
+            'tools/validators/release/validate_release_manifest.py'
+          )
+          sha256sum "${files[@]}"
+          {
+            echo '### ReleaseManifest current binding probe'
+            echo
+            echo '```text'
+            sha256sum "${files[@]}"
+            echo '```'
+            echo
+            echo 'Diagnostic only: no receipt, release, publication, or lifecycle state was written.'
+          } >> "$GITHUB_STEP_SUMMARY"
