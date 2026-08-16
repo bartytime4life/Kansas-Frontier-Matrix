@@ -75,8 +75,8 @@ jobs:
               Path("fixtures/release/promotion_gate/valid/pass__complete_candidate.json"),
               Path("release/candidates/README.md"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
-              Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json"),
-              Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json"),
+              Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json"),
+              Path("data/receipts/generated/genrec-publication-deny-receipt-repair-current-20260815.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -121,9 +121,9 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json
+            data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json
+            data/receipts/generated/genrec-publication-deny-receipt-repair-current-20260815.json
 
       - name: Record candidate assembly outcome
         if: always()
