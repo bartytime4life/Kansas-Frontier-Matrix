@@ -18,7 +18,8 @@
       "catalog-closure-packet",
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
-      "catalog-distribution-mapping-profile"
+      "catalog-distribution-mapping-profile",
+      "release-manifest"
     ],
     "full": [
       "source-descriptor",
@@ -34,6 +35,7 @@
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
+      "release-manifest",
       "western-kansas-observation-assessment",
       "kansas-transportation-geometry-source-assessment",
       "workflow-security",
@@ -45,9 +47,7 @@
       "id": "source-descriptor",
       "description": "Validate SourceDescriptor fixture polarity and bounded semantics.",
       "script": "tools/validators/validate_source_descriptor.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/source/**",
         "schemas/contracts/v1/source/**",
@@ -64,9 +64,7 @@
       "id": "evidence-ref",
       "description": "Validate EvidenceRef fixture polarity and safe reference syntax.",
       "script": "tools/validators/validate_evidence_ref.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/evidence/evidence_ref.md",
         "schemas/contracts/v1/evidence/evidence_ref.schema.json",
@@ -81,9 +79,7 @@
       "id": "evidence-bundle",
       "description": "Validate EvidenceBundle fixture polarity and bounded evidence closure shape.",
       "script": "tools/validators/validate_evidence_bundle.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/evidence/evidence_bundle.md",
         "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
@@ -98,9 +94,7 @@
       "id": "layer-manifest",
       "description": "Validate legacy and fixture-only LayerManifest candidates without creating release authority.",
       "script": "tools/validators/data/validate_layer_manifest.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/layer-manifest.yml",
         "contracts/data/layer_manifest.md",
@@ -121,9 +115,7 @@
       "id": "dataset-version",
       "description": "Validate proposed DatasetVersion fixture polarity and bounded identity, lifecycle, and lineage semantics.",
       "script": "tools/validators/data/validate_dataset_version.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/dataset-version.yml",
         "contracts/data/dataset_version.md",
@@ -142,9 +134,7 @@
       "id": "runtime-response-envelope",
       "description": "Validate finite runtime response envelopes against synthetic fixtures.",
       "script": "tools/validators/validate_runtime_response_envelope.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/runtime/runtime_response_envelope.md",
         "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
@@ -159,9 +149,7 @@
       "id": "decision-envelope",
       "description": "Validate finite DecisionEnvelope records and negative-state non-disclosure.",
       "script": "tools/validators/validate_decision_envelope.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/runtime/decision_envelope.md",
         "contracts/runtime/decision_envelope/**",
@@ -177,9 +165,7 @@
       "id": "run-receipt",
       "description": "Validate RunReceipt fixture polarity and deterministic execution-memory shape.",
       "script": "tools/validators/validate_run_receipt.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/runtime/run_receipt.md",
         "schemas/contracts/v1/runtime/run_receipt.schema.json",
@@ -194,9 +180,7 @@
       "id": "ingest-receipt",
       "description": "Validate ingest receipt fixture polarity without granting source admission.",
       "script": "tools/validators/validate_ingest_receipt.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         "contracts/source/ingest_receipt.md",
         "schemas/contracts/v1/source/ingest_receipt.schema.json",
@@ -211,9 +195,7 @@
       "id": "catalog-closure-packet",
       "description": "Validate fixture-only CatalogClosurePacket readiness relationships without creating catalog or release authority.",
       "script": "tools/validators/catalog_closure/validate_catalog_closure.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/catalog-closure-packet.yml",
         "contracts/data/catalog_closure_packet.md",
@@ -231,9 +213,7 @@
       "id": "catalog-matrix-closure",
       "description": "Validate fixture-only CatalogMatrix STAC/DCAT/PROV identity, digest, reference, and decision alignment.",
       "script": "tools/validators/validate_catalog_matrix_closure.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/catalog-matrix-closure.yml",
         "contracts/data/catalog_matrix_closure_profile.md",
@@ -251,9 +231,7 @@
       "id": "catalog-matrix-claim-closure",
       "description": "Validate fixture-only ClaimEnvelope-to-CatalogMatrix non-overstatement closure.",
       "script": "tools/validators/validate_catalog_matrix_claim_closure.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/catalog-matrix-claim-closure.yml",
         "contracts/data/catalog_matrix_claim_closure_profile.md",
@@ -278,9 +256,7 @@
       "id": "catalog-distribution-mapping-profile",
       "description": "Validate fixture-only STAC/DCAT/PROV carrier mapping and deterministic candidate identity.",
       "script": "tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py",
-      "args": [
-        "--fixtures"
-      ],
+      "args": ["--fixtures"],
       "path_globs": [
         ".github/workflows/catalog-distribution-mapping-profile.yml",
         "contracts/data/catalog_distribution_mapping_profile.md",
@@ -300,12 +276,31 @@
       "artifact_refs": []
     },
     {
+      "id": "release-manifest",
+      "description": "Validate legacy and fixture-only ReleaseManifest candidates without creating release or publication authority.",
+      "script": "tools/validators/release/validate_release_manifest.py",
+      "args": ["--fixtures"],
+      "path_globs": [
+        ".github/workflows/release-manifest.yml",
+        ".github/workflows/release-dry-run.yml",
+        "contracts/release/release_manifest.md",
+        "schemas/contracts/v1/release/release_manifest.schema.json",
+        "fixtures/release/release_manifest/**",
+        "tests/validators/test_validate_release_manifest.py",
+        "tools/validators/release/validate_release_manifest.py",
+        "docs/intake/exploratory/pass7-release-manifest-profile.md",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+        "packages/hashing/**",
+        "data/receipts/generated/genrec-pass7-release-manifest-*.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
       "id": "western-kansas-observation-assessment",
       "description": "Validate the inactive synthetic western Kansas hydrology observation assessment case matrix without source activation or publication authority.",
       "script": "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
-      "args": [
-        "--cases"
-      ],
+      "args": ["--cases"],
       "path_globs": [
         ".github/workflows/western-kansas-observation-assessment.yml",
         "contracts/domains/hydrology/western_kansas_observation_assessment.md",
@@ -323,9 +318,7 @@
       "id": "kansas-transportation-geometry-source-assessment",
       "description": "Validate the inactive synthetic Kansas transportation geometry source assessment case matrix without source activation, road or crosswalk authority, or public-use authorization.",
       "script": "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py",
-      "args": [
-        "--cases"
-      ],
+      "args": ["--cases"],
       "path_globs": [
         ".github/workflows/kansas-transportation-geometry-source-assessment.yml",
         "contracts/source/kansas_transportation_geometry_source_assessment.md",
