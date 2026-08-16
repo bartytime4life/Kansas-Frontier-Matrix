@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-pass7-release-manifest-current-binding-20260816",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/release-manifest.yml",
+    "contracts/release/release_manifest.md",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md",
+    "fixtures/release/release_manifest/README.md",
+    "fixtures/release/release_manifest/cases.json",
+    "schemas/contracts/v1/release/release_manifest.schema.json",
+    "tests/validators/test_validate_release_manifest.py",
+    "tools/validators/release/validate_release_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:0f9c535ca85ab5e1c4209531ca4a631d53feb65513ae745c49f7f1b7eced9552",
+    ".github/workflows/release-manifest.yml": "sha256:a57b98e51d28c3b2fbe6155e78df6e82b7b3934fa359a77635e51b29e440a500",
+    "contracts/release/release_manifest.md": "sha256:4395db306dbd0760060daa19faf8bb1e33d0bd3f3a76f1aa84b2fe6ca1658f61",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "sha256:3157f514f85eecd599f802ea814ed43cd3b77a2c9262552607a69305d8af867d",
+    "fixtures/release/release_manifest/README.md": "sha256:ed80f981cbbd055d1677ebbb0a8ebd523fdbdcea5da8575187c55b78bb5b1a04",
+    "fixtures/release/release_manifest/cases.json": "sha256:0ee9b90fdfbf9627f80ff34c10fb0472fb5af73dc5bed357cf56698145834f58",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "sha256:c420281c843e88000eaf2dc1bf62cff1ab1bd2d2628bfac0e07c2705fb3bcfb6",
+    "tests/validators/test_validate_release_manifest.py": "sha256:4ec7c00a8bf2b8912693fa2ed44cc49c63297b270f0680be9f85b2ad2f3119a7",
+    "tools/validators/release/validate_release_manifest.py": "sha256:7206739f7f831e2682d1b0a4fe574f07f48e70f19bc632ec247c4884a7d4321f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-16"
+  },
+  "prompt_or_contract": "sha256:25fa8a8596c87577c5d09a97f52249bdf7a83a74ec2c4458f7dc787ee7f6d0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository-native validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@8a83530686c6df4752021377daf564758018d39c",
+      "repo:pull/2963@092a4d6fe03208e018f644fb87e215102f11532e",
+      "actions:release-manifest/run/31928148305/job/95118794330",
+      "repo:data/receipts/generated/genrec-pass7-release-manifest-20260808.json@8a83530686c6df4752021377daf564758018d39c",
+      "repo:docs/doctrine/directory-rules.md@8a83530686c6df4752021377daf564758018d39c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/release-manifest.yml": "PROPOSED",
+    "contracts/release/release_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass7-release-manifest-profile.md": "PROPOSED",
+    "fixtures/release/release_manifest/README.md": "CONFIRMED",
+    "fixtures/release/release_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/release/release_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_release_manifest.py": "CONFIRMED",
+    "tools/validators/release/validate_release_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-head-failure-classification",
+      "outcome": "PASS",
+      "reason": "PR #2963 exact-head release-manifest run 31928148305 passed deterministic ReleaseManifest tests and failed only generated-receipt integrity after the PR legitimately changed release-dry-run workflow bytes."
+    },
+    {
+      "gate": "historical-lineage-preservation",
+      "outcome": "PASS",
+      "reason": "The 2026-08-08 ReleaseManifest receipt remains unchanged as historical process memory; this successor binds the current authored surface."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing .github/workflows orchestration home and data/receipts/generated provenance home are reused under accepted ADR-0029."
+    },
+    {
+      "gate": "no-release-or-publication-effect",
+      "outcome": "PASS",
+      "reason": "The fixture-only workflow remains read-only and creates no candidate, decision, release, deployment, publication, or access authority."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending final pushed PR head after successor binding is installed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "PR2963-RELEASE-MANIFEST-FAILURE",
+      "validated": true,
+      "evidence_ref": "actions:release-manifest/run/31928148305/job/95118794330"
+    },
+    {
+      "id": "HISTORICAL-RELEASE-MANIFEST-RECEIPT",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass7-release-manifest-20260808.json@8a83530686c6df4752021377daf564758018d39c"
+    },
+    {
+      "id": "DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@8a83530686c6df4752021377daf564758018d39c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T05:46:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT",
+  "links": {
+    "pr_number": 2963,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Current successor binding for the fixture-only ReleaseManifest authored surface after PR #2963 legitimately changed release-dry-run workflow bytes. Historical receipt remains immutable. No release or publication semantics change."
+}
