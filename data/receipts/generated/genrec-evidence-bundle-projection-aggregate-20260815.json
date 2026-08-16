@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-evidence-bundle-projection-aggregate-20260815",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-bundle-projection-aggregate.yml",
+    "tests/contracts/test_evidence_bundle_projection_aggregate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-bundle-projection-aggregate.yml": "sha256:2d732786bea9317724ccf42aaaf3e420764b309839fcdfb809a72053f1f72946",
+    "tests/contracts/test_evidence_bundle_projection_aggregate.py": "sha256:07954ea200195744cde0e02fcd87c99dea1a8e32f2f9f142ca790243693e4ee6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-15"
+  },
+  "prompt_or_contract": "sha256:dcf03a4100406fa4bf7706b6dfde11b851817c5a71de0cba7ce31940c0ff5fe7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "file_search"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fe6c9809c6e2c82f409aee8fc41b8fbf86dfb794",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2943",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md",
+      "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-bundle-projection-aggregate.yml": "PROPOSED",
+    "tests/contracts/test_evidence_bundle_projection_aggregate.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, open pull requests, issue #2874, accepted Directory Rules, existing domain projection schemas, and exact-main workflow inventory were inspected."
+    },
+    {
+      "gate": "syntax-validation",
+      "outcome": "PASS",
+      "reason": "The authored Python aggregate test parses successfully; workflow structure follows the repository's pinned read-only EvidenceBundle convergence workflow pattern."
+    },
+    {
+      "gate": "artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "The final authored test and workflow bytes are bound by SHA-256 in this receipt."
+    },
+    {
+      "gate": "local-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in connector execution."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted execution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "issue-2874",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874"
+    },
+    {
+      "id": "baseline-fe6c9809",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/fe6c9809c6e2c82f409aee8fc41b8fbf86dfb794"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-16T02:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. This receipt is not evidence authority, policy approval, review approval, merge approval, promotion, release, deployment, publication, source activation, access widening, or repository-setting authority."
+}
