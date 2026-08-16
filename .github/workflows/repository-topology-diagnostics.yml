@@ -1,7 +1,7 @@
 # Temporary bounded diagnostic workflow for the current repository-topology failure.
 # This workflow is intentionally read-only and will be removed once the root cause is
-# fixed in this pull request. It converts the topology diagnostic into a GitHub check
-# annotation so the failure remains inspectable through the API and web UI.
+# fixed in this pull request. It emits the repository-owned monotonic baseline candidate
+# as an artifact before running the failing topology target.
 name: repository-topology-diagnostics
 
 "on":
@@ -53,6 +53,45 @@ jobs:
       - name: Install declared validator dependencies
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Emit repository-owned topology baseline candidate
+        shell: bash
+        run: |
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --emit-baseline > /tmp/repository_topology_baseline_candidate.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          current = json.loads(Path("tools/validators/directory_governance/repository_topology_baseline.json").read_text())
+          candidate = json.loads(Path("/tmp/repository_topology_baseline_candidate.json").read_text())
+          old = {item["identity"]: item for item in current["entries"]}
+          new = {item["identity"]: item for item in candidate["entries"]}
+          print("removed identities:")
+          for key in sorted(set(old) - set(new)):
+              print(f"  - {key}")
+          print("added identities:")
+          for key in sorted(set(new) - set(old)):
+              print(f"  + {key}")
+          print("changed evidence:")
+          for key in sorted(set(old) & set(new)):
+              if old[key].get("evidence") != new[key].get("evidence"):
+                  before = set(old[key].get("evidence", []))
+                  after = set(new[key].get("evidence", []))
+                  print(f"  * {key}: -{len(before - after)} +{len(after - before)}")
+                  for value in sorted(before - after):
+                      print(f"      - {value}")
+                  for value in sorted(after - before):
+                      print(f"      + {value}")
+          PY
+
+      - name: Upload bounded topology baseline candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: repository-topology-baseline-candidate
+          path: /tmp/repository_topology_baseline_candidate.json
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Diagnose repository-topology ratchet
         shell: bash
