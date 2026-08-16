@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import sys
 import unittest
+from contextlib import redirect_stdout
 from datetime import date
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -91,6 +94,47 @@ class RepositoryTopologyDiagnosticTests(unittest.TestCase):
             diagnostics.render_diagnostics({}, {}, max_items=0)
         with self.assertRaises(topology.TopologyError):
             diagnostics.render_diagnostics({}, {}, max_items=51)
+
+    def test_known_trusted_baseline_errors_have_stable_reason_codes(self) -> None:
+        cases = {
+            "trusted baseline ref cannot be resolved": "TRUSTED_REF_UNRESOLVED",
+            "trusted baseline is missing outside the governed bootstrap": "TRUSTED_BASELINE_MISSING",
+            "baseline transition adds waiver fingerprints": "BASELINE_WAIVER_ADDED",
+            "baseline transition extends expiry": "BASELINE_EXPIRY_EXTENDED",
+        }
+        for message, expected in cases.items():
+            with self.subTest(message=message):
+                self.assertEqual(
+                    expected,
+                    diagnostics.error_reason_code(
+                        topology.TopologyError(message), stage="trusted-baseline"
+                    ),
+                )
+
+    def test_unknown_error_text_is_not_exposed(self) -> None:
+        secret = "SECRET-UNTRUSTED-REF-OR-PATH"
+        output = io.StringIO()
+        with mock.patch.object(
+            diagnostics.topology,
+            "scan",
+            side_effect=topology.TopologyError(secret),
+        ):
+            with redirect_stdout(output):
+                code = diagnostics.main([])
+
+        self.assertEqual(2, code)
+        rendered = output.getvalue()
+        self.assertIn("ERROR_VALIDATOR: TopologyError reason=SCAN_ERROR", rendered)
+        self.assertNotIn(secret, rendered)
+
+    def test_unknown_trusted_error_uses_stage_reason_without_echoing_text(self) -> None:
+        secret = "SECRET-TRUSTED-BASELINE-DETAIL"
+        self.assertEqual(
+            "TRUSTED_BASELINE_ERROR",
+            diagnostics.error_reason_code(
+                topology.TopologyError(secret), stage="trusted-baseline"
+            ),
+        )
 
 
 if __name__ == "__main__":
