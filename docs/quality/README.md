@@ -5,7 +5,7 @@ type: README
 version: v1.0
 status: draft; repository-grounded; BOUNDARY_COMPACT; documentation-only; non-authoritative
 owner: NEEDS VERIFICATION — no independent quality steward or separation-of-duties assignment was verified for this lane
-created: NEEDS VERIFICATION — the file existed as a one-character placeholder at the inspected base
+created: 2026-08-16
 updated: 2026-08-16
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: repository-facing; public-safe; quality-guidance; non-publisher
@@ -22,6 +22,7 @@ evidence_snapshot:
   direct_child_files: 2
   open_pull_requests_at_preflight: 0
 notes:
+  - "The created date records this first substantive boundary README; the placeholder file's original creation date was not verified."
   - "Accepted ADR-0029 adopts the exact current Directory Rules v2 bytes; this same-path documentation change uses the existing docs/ authority boundary."
   - "The parent docs README records quality as an existing child lane but does not make every observed child a new canonical direct-child category."
   - "This document changes no contract, schema, policy, validator, test, workflow, runtime, receipt, proof, release, deployment, promotion, publication, or repository setting."
