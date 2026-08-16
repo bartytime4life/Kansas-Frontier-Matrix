@@ -7,12 +7,12 @@ status: "active; repository-grounded; mixed-maturity"
 owners:
   - "@bartytime4life"
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-08-15
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the human-readable governance-register lane, inventory its current direct children, bound their authority, and route machine-readable projections to control_plane/."
 truth_posture: "CONFIRMED current path, direct-child inventory, CODEOWNERS route, adopted Directory Rules v2, ADR-0029, and observed register or counterpart presence / PARTIAL mixed register maturity, semantic review, and human-machine parity / NEEDS VERIFICATION accountable stewardship beyond CODEOWNERS, consumer closure, and disposition of duplicate or scaffold register names"
-evidence_snapshot: "main@2b3f608b9d09cc0c317e7e64a6451da61efd27a1; prior target blob 6db7fd35778048412c57dad6556f9fe536d3f661; Directory Rules blob fd49a0b83e55cef52c1124281f093e263526898d; docs root README blob 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f; CODEOWNERS blob dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+evidence_snapshot: "main@8a83530686c6df4752021377daf564758018d39c; prior target blob ba20cb18b2035125c88a4a4cc6167c0246228cba; Directory Rules blob fd49a0b83e55cef52c1124281f093e263526898d"
 related:
   - docs/README.md
   - docs/doctrine/directory-rules.md
@@ -22,9 +22,10 @@ related:
   - docs/registers/ADR_INDEX.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/source-corpus-reconciliation-2026-08-15.md
   - .github/CODEOWNERS
 notes:
-  - "Same-path documentation modernization; no register entry, machine projection, ADR status, policy, release state, lifecycle state, or publication state is changed."
+  - "Same-path documentation inventory refresh; no register entry, machine projection, ADR status, policy, release state, lifecycle state, or publication state is changed."
   - "Current path presence is implementation evidence, not automatic semantic or governance authority for every child."
 [/KFM_META_BLOCK_V2] -->
 
@@ -38,7 +39,7 @@ notes:
 > **A register records or explains authority; it does not manufacture authority.** A path, row, badge, digest, workflow result, receipt, pull request, or merged commit does not by itself establish source truth, policy approval, review, release, promotion, or publication.
 
 > [!WARNING]
-> **This lane has mixed maturity.** The directory and all 17 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
+> **This lane has mixed maturity.** The directory and all 18 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority and status](#authority-and-status) · [Belongs and prohibited](#belongs-and-prohibited) · [Inputs and outputs](#inputs-and-outputs) · [Exposure and retention](#exposure-and-retention) · [Current inventory](#current-inventory) · [Human-machine pairings](#human-machine-pairings) · [Operating contract](#operating-contract) · [Validation](#validation) · [Ownership](#ownership-and-review) · [Change protocol](#change-protocol) · [Correction and rollback](#correction-and-rollback) · [Open verification](#open-verification) · [Status](#status-summary)
 
@@ -85,7 +86,7 @@ Neither branch may silently redefine the source authority it references.
 | Local lane | `docs/registers/` — human-readable governance registers and cross-register views |
 | Directory Rules outcome | `PLACE` for this same-path boundary README |
 | Governing decision | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes |
-| Current path state | **CONFIRMED** — the lane and 17 direct-child files exist on the evidence snapshot |
+| Current path state | **CONFIRMED** — the lane and 18 direct-child files exist on the evidence snapshot |
 | Content maturity | **PARTIAL / MIXED** — repository-grounded pointers, active historical logs, substantial drafts, sparse machine counterparts, and proposed scaffolds coexist |
 | Review route | `@bartytime4life` through [`.github/CODEOWNERS`](../../.github/CODEOWNERS) |
 | Public effect | Repository-facing documentation only; no normal public-data or runtime API |
@@ -213,7 +214,7 @@ CODEOWNERS routes review requests; it does not prove review, independent approva
 
 ## Current direct-child inventory
 
-The tree below is verified from `main@2b3f608b9d09cc0c317e7e64a6451da61efd27a1`. It shows this directory and direct children only, as required by Directory Rules. Comments describe bounded current maturity; they do not promote a child.
+The tree below is verified from `main@8a83530686c6df4752021377daf564758018d39c`. It shows this directory and direct children only, as required by Directory Rules. Comments describe bounded current maturity; they do not promote a child.
 
 ```text
 docs/registers/
@@ -233,7 +234,8 @@ docs/registers/
 ├── RELEASE_REGISTER.md                  # domain-derived proposed scaffold
 ├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
 ├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
-└── VERIFICATION_BACKLOG.md              # dated human backlog; machine entries are empty
+├── VERIFICATION_BACKLOG.md              # dated human backlog; machine entries are empty
+└── source-corpus-reconciliation-2026-08-15.md # dated repository-grounded source/proposal reconciliation ledger
 ```
 
 ### Maturity groups
@@ -241,7 +243,7 @@ docs/registers/
 | Group | Current members | What the group proves |
 |---|---|---|
 | Repository-grounded cross-register pointer | [`ADR_INDEX.md`](./ADR_INDEX.md) | Current path, canonical target, summary, and validator relationship are documented against repository evidence |
-| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | Historical observations and open checks exist; completeness and machine parity are not implied |
+| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md), [`source-corpus-reconciliation-2026-08-15.md`](./source-corpus-reconciliation-2026-08-15.md) | Historical observations, open checks, and a dated source/proposal reconciliation ledger exist; completeness and machine parity are not implied |
 | Small proposed scaffolds | [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md), [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md), [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md), [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md), [`RELEASE_REGISTER.md`](./RELEASE_REGISTER.md) | A named path and limited intent exist; operational maturity is not established |
 | Substantial draft narrative registers | [`CONTRADICTION.md`](./CONTRADICTION.md), [`DEPRECATION.md`](./DEPRECATION.md), [`DOCUMENT_REGISTRY.md`](./DOCUMENT_REGISTRY.md), [`DOMAIN_LANE.md`](./DOMAIN_LANE.md), [`OBJECT_FAMILY.md`](./OBJECT_FAMILY.md), [`POLICY_GATE.md`](./POLICY_GATE.md), [`RELEASE_STATE.md`](./RELEASE_STATE.md), [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | Detailed prose exists; current semantics, ownership, machine parity, and consumer readiness remain file-specific |
 
@@ -271,7 +273,7 @@ A human register and a machine projection are related surfaces, not interchangea
 | [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Human draft exists; machine `entries` list is empty |
 | [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine `entries` list is empty |
 
-No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, or `RELEASE_REGISTER.md` on the evidence snapshot. Do not invent one from naming symmetry.
+No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, or `source-corpus-reconciliation-2026-08-15.md` on the evidence snapshot. Do not invent one from naming symmetry.
 
 ### Conflict rule
 
@@ -445,7 +447,7 @@ Do not rewrite historical observations to make the past appear consistent with t
 
 This file is documentation-only. Rollback is:
 
-1. revert the commit that changed `docs/registers/README.md`, or restore prior blob `6db7fd35778048412c57dad6556f9fe536d3f661`;
+1. revert the commit that changed `docs/registers/README.md`, or restore prior blob `ba20cb18b2035125c88a4a4cc6167c0246228cba`;
 2. rerun the changed-area documentation checks;
 3. preserve any later register or counterpart changes independently—this README must not roll them back by implication.
 
@@ -480,7 +482,7 @@ These items are documentation and governance work. None authorizes source activa
 
 ## Status summary
 
-**CONFIRMED:** `docs/registers/` is the adopted human-readable register lane under `docs/`; 17 direct-child files exist on the evidence snapshot; CODEOWNERS routes review to `@bartytime4life`; current human and machine surfaces have been inspected for this README update.
+**CONFIRMED:** `docs/registers/` is the adopted human-readable register lane under `docs/`; 18 direct-child files exist on the evidence snapshot; CODEOWNERS routes review to `@bartytime4life`; current human and machine surfaces have been inspected for this README inventory refresh.
 
 **PARTIAL / MIXED:** register maturity, metadata quality, semantic currency, human-machine parity, and consumer readiness vary by file.
 
