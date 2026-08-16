@@ -13,7 +13,7 @@ name: promotion-receipt
       - "fixtures/release/promotion_receipt/**"
       - "tools/validators/release/validate_promotion_receipt.py"
       - "tests/release/test_promotion_receipt.py"
-      - "data/receipts/generated/genrec-promotion-receipt-contract-20260805.json"
+      - "data/receipts/generated/genrec-promotion-receipt-*.json"
   push:
     branches:
       - main
@@ -24,7 +24,7 @@ name: promotion-receipt
       - "fixtures/release/promotion_receipt/**"
       - "tools/validators/release/validate_promotion_receipt.py"
       - "tests/release/test_promotion_receipt.py"
-      - "data/receipts/generated/genrec-promotion-receipt-contract-20260805.json"
+      - "data/receipts/generated/genrec-promotion-receipt-*.json"
   workflow_dispatch:
 
 permissions:
@@ -76,12 +76,12 @@ jobs:
           set -euo pipefail
           python -m unittest -q tests.release.test_promotion_receipt
 
-      - name: Verify AI-authored artifact receipt integrity
+      - name: Verify PromotionReceipt current-binding receipt integrity
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-promotion-receipt-contract-20260805.json \
+            data/receipts/generated/genrec-promotion-receipt-current-binding-20260815.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -92,6 +92,6 @@ jobs:
             echo "### PromotionReceipt contract"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- A pass proves the PROPOSED shape, synthetic fixture polarity, finite-outcome consistency, declared transition prerequisites, canonical receipt digest, and AI-authored artifact hash bindings."
+            echo "- A pass proves the PROPOSED shape, synthetic fixture polarity, finite-outcome consistency, declared transition prerequisites, canonical receipt digest, and current workflow-byte binding."
             echo "- It does not authenticate evidence, policy, review, attestations, or actor authority and does not emit a PromotionDecision, release manifest, operational receipt, release, deployment, publication, or public permission."
           } >> "$GITHUB_STEP_SUMMARY"
