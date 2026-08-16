@@ -42,7 +42,9 @@
       "docs/doctrine/directory-rules.md",
       "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
       "schemas/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
-      "contracts/domains/hydrology/evidence_bundle.md"
+      "contracts/domains/hydrology/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31922208169",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31922370482"
     ]
   },
   "truth_labels": {
@@ -63,7 +65,7 @@
     {
       "gate": "syntax-validation",
       "outcome": "PASS",
-      "reason": "The authored Python aggregate test parses successfully; workflow structure follows the repository's pinned read-only EvidenceBundle convergence workflow pattern."
+      "reason": "The corrected Python aggregate test compiled successfully in hosted Actions run 31922370482."
     },
     {
       "gate": "artifact-hash-binding",
@@ -77,8 +79,8 @@
     },
     {
       "gate": "corrected-hosted-exact-head-validation",
-      "outcome": "PENDING",
-      "reason": "A new pull-request workflow run is expected from the corrected branch head."
+      "outcome": "PASS",
+      "reason": "Hosted pull-request workflow run 31922370482 completed successfully: checkout, Python setup, py_compile, and aggregate EvidenceBundle projection invariant tests all passed."
     }
   ],
   "policy_decisions": [],
@@ -107,6 +109,11 @@
       "id": "hydrology-runtime-alias",
       "validated": true,
       "evidence_ref": "contracts/domains/hydrology/evidence_bundle.md"
+    },
+    {
+      "id": "hosted-corrected-run",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/31922370482"
     }
   ],
   "human_review": {
