@@ -4,6 +4,7 @@ name: release-dry-run-binding-diagnostic
   pull_request:
     paths:
       - ".github/workflows/release-dry-run-binding-diagnostic.yml"
+      - "data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json"
   workflow_dispatch:
 
 permissions:
@@ -19,15 +20,28 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Emit bounded SHA-256 diagnostics
+      - name: Emit current successor and staged final workflow bytes
         shell: bash
         run: |
           set -euo pipefail
-          sha256sum \
-            Makefile \
-            tests/release/README.md \
-            tests/release/test_publication_deny_dry_run.py \
-            tools/release/README.md \
-            tools/release/release_dry_run.py \
-            .github/workflows/release-dry-run.yml \
-            data/receipts/generated/genrec-publication-deny-dry-run-current-20260814.json
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import hashlib
+
+          workflow = Path(".github/workflows/release-dry-run.yml").read_text(encoding="utf-8")
+          workflow = workflow.replace(
+              "genrec-publication-deny-dry-run-current-20260814.json",
+              "genrec-publication-deny-dry-run-current-20260815.json",
+          ).replace(
+              "genrec-publication-deny-receipt-repair-20260814.json",
+              "genrec-publication-deny-receipt-repair-current-20260815.json",
+          )
+          payload = workflow.encode("utf-8")
+          successor = Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260815.json").read_bytes()
+          print("STAGED_WORKFLOW_SHA256=" + hashlib.sha256(payload).hexdigest())
+          print("SUCCESSOR_SHA256=" + hashlib.sha256(successor).hexdigest())
+          print("STAGED_WORKFLOW_BASE64_BEGIN")
+          print(base64.b64encode(payload).decode("ascii"))
+          print("STAGED_WORKFLOW_BASE64_END")
+          PY
