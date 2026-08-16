@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks-validator-orchestrator
 title: Validator Orchestrator Runbook
 type: runbook
-version: v1.2
+version: v1.3
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-08-08
@@ -20,6 +20,10 @@ related:
   - ../../tools/validators/validate_catalog_matrix_closure.py
   - ../../tools/validators/validate_catalog_matrix_claim_closure.py
   - ../../tools/validators/catalog_closure/validate_catalog_distribution_mapping_profile.py
+  - ../../tools/validators/release/validate_release_manifest.py
+  - ../../tools/validators/release/validate_release_proof_pack_closure.py
+  - ../../tests/validators/test_validate_release_manifest.py
+  - ../../tests/validators/test_validate_release_proof_pack_closure.py
   - ../../tests/validators/test_validator_orchestrator.py
   - ../../tests/validators/test_catalog_validator_registry_convergence.py
   - ../../tests/validators/test_legacy_schema_runner_scope.py
@@ -30,7 +34,8 @@ notes:
   - "This runbook implements the bounded orchestrator direction associated with KFM-P5-PROG-0009 and the Pass 6 validator-report expansions."
   - "The orchestrator runs repository-owned validators without a shell, forces no-network test posture, and emits finite machine-readable outcomes."
   - "Catalog closure registration coordinates four existing fixture-only validators; it does not accept ADR-0022 or create catalog, evidence, review, release, promotion, publication, or public-use authority."
-  - "The historical make schemas compatibility runner explicitly selects the nine reviewed schema fixture families; canonical full remains broader and retains catalog and repository guardrail validators."
+  - "ReleaseManifest and ReleaseProofPackClosure registration coordinates existing fixture-only release-support validators in release-dry-run and full; PASS remains non-authoritative."
+  - "The historical make schemas compatibility runner explicitly selects the nine reviewed schema fixture families; canonical full remains broader and retains catalog, release-support, and repository guardrail validators."
   - "A green orchestrator report proves only the selected checks completed successfully for the declared profile."
 [/KFM_META_BLOCK_V2] -->
 
@@ -112,7 +117,7 @@ python tools/validate_all.py --profile full --include-timing
 |---|---|---|
 | `focused` | Small trust-spine subset declared in the registry. | Configuration error. |
 | `changed-area` | Every validator whose registered path glob matches at least one supplied changed path. | `ABSTAIN` with `NO_MATCHING_VALIDATORS`, exit `0`; this is not represented as a validator pass. |
-| `release-dry-run` | Release-adjacent evidence, decision, receipt, and bounded catalog-closure fixture validators. | Configuration error. |
+| `release-dry-run` | Release-adjacent evidence, decision, receipt, bounded catalog-closure, ReleaseManifest, and release proof-pack closure fixture validators. | Configuration error. |
 | `full` | Every registered validator exactly once, in registry order. | Configuration error. |
 
 The `full` profile means every validator in `validator_registry.json`; it does not claim every executable checker in the repository has been registered.
@@ -129,6 +134,17 @@ The following existing, fixture-only validators are registered in `release-dry-r
 | `catalog-distribution-mapping-profile` | STAC/DCAT/PROV carrier mapping and deterministic candidate identity. | Does not write catalogs, activate OCI/ORAS, or authorize public use. |
 
 Their path globs cover the existing contracts, schemas, fixtures, validators, focused tests, workflows, and source-reconciliation note that define each bounded profile. Generated authoring receipts remain outside this registration slice; receipt-integrity findings are not silently repaired or converted into catalog-validator outcomes.
+
+### Registered release-support validators
+
+`release-manifest` and `release-proof-pack-closure` are existing fixture-only validators registered in `release-dry-run` and `full`, not `focused`. Registration coordinates already-defined bounded checks; it does not create a release object or change release semantics.
+
+| Validator ID | Bounded check | Non-effect of `PASS` |
+|---|---|---|
+| `release-manifest` | Local ReleaseManifest schema shape, deterministic identity, reference hygiene, lifecycle/release coherence, artifact metadata, rights/sensitivity posture, time ordering, and constant-false authority fields. | Does not resolve references, verify artifact bytes or signatures, execute policy, authenticate review, persist a release, promote lifecycle state, publish, or permit public use. |
+| `release-proof-pack-closure` | Synthetic ReleaseProofPackClosure completeness across release-manifest, receipt, proof, catalog, review, correction, and rollback references while requiring all authority/mutation flags to remain false. | Does not validate referenced truth, approve promotion, create a release, mutate lifecycle state, publish, or authorize public use. |
+
+The ReleaseProofPackClosure changed-area globs cover its existing contract, schema, fixtures, validator, focused test, dedicated workflow, source-reconciliation note, and this runbook. The profile is intentionally a structural closure check over synthetic references; a green result is not evidence that those references are authentic or approved.
 
 ## Finite outcomes and process exit codes
 
@@ -191,7 +207,11 @@ python -m unittest discover \
   --pattern 'test_legacy_schema_runner_scope.py' \
   --verbose
 
+python -m unittest tests.validators.test_validate_release_manifest --verbose
+python -m unittest tests.validators.test_validate_release_proof_pack_closure --verbose
 python tools/validate_all.py --validate-registry
+python tools/validate_all.py --profile release-dry-run --validator release-manifest
+python tools/validate_all.py --profile release-dry-run --validator release-proof-pack-closure
 python tools/validate_all.py --profile release-dry-run
 python tools/validate_all.py --profile full
 ```
@@ -204,12 +224,12 @@ The existing compatibility surface remains available:
 python tools/validators/_common/run_all.py
 ```
 
-That command is the implementation behind `make schemas`. It uses the canonical orchestrator engine but explicitly requests the nine reviewed legacy schema-fixture validator IDs represented by `RUNNER_VALIDATORS`. It does **not** run catalog-closure validators, `workflow-security`, or `repository-topology` merely because those checks belong to the broader canonical `full` profile.
+That command is the implementation behind `make schemas`. It uses the canonical orchestrator engine but explicitly requests the nine reviewed legacy schema-fixture validator IDs represented by `RUNNER_VALIDATORS`. It does **not** run catalog-closure validators, release-support validators, `workflow-security`, or `repository-topology` merely because those checks belong to the broader canonical `full` profile.
 
 This separation is intentional:
 
 - `make schemas` and `schema-validation` retain their historical schema/fixture responsibility;
-- `python tools/validate_all.py --profile full` remains the complete registered aggregate and still includes catalog plus repository guardrails;
+- `python tools/validate_all.py --profile full` remains the complete registered aggregate and includes catalog closure, release-support validation, and repository guardrails;
 - `make repository-guardrails` remains the dedicated workflow-security and repository-topology enforcement surface.
 
 New callers should use `tools/validate_all.py` and choose the profile or explicit validators appropriate to their responsibility. Do not use `make schemas` as an alias for the complete validator registry.
@@ -224,4 +244,4 @@ New callers should use `tools/validate_all.py` and choose the profile or explici
 
 ## Rollback
 
-Revert the compatibility-scope change to restore the previous behavior in which the historical wrapper executed the canonical full profile. The registry, child validators, contracts, schemas, policies, catalog records, generated receipts, release objects, and published artifacts are not changed by this boundary correction.
+To remove only ReleaseProofPackClosure orchestration, revert its registry entry/profile memberships, the focused registry regression, and this runbook delta. The existing ReleaseProofPackClosure contract, schema, fixtures, validator, workflow, source map, release objects, and published artifacts are not changed by that rollback.
