@@ -61,6 +61,9 @@ jobs:
       - name: Run bounded candidate profile
         run: make evidence-resolver
 
+      - name: Exercise fixture-to-runtime projection boundary
+        run: python -m unittest tests.packages.evidence_resolver.test_runtime_projection_fixtures --verbose
+
       - name: Record bounded authority
         if: always()
         shell: bash
@@ -71,6 +74,11 @@ jobs:
           This job executes the internal
           `kfm/evidence-ref-bundle-candidate/v1alpha1` profile over synthetic
           fixtures. `RESOLVED` is a non-authoritative candidate result only.
+
+          The fixture-to-runtime projection check additionally requires every
+          checked-in resolver outcome to remain non-renderable and prevents
+          `RESOLVED` from being interpreted as a public `ANSWER`; resolved
+          candidates must still carry the complete remaining governed-check set.
 
           No registry was queried, no evidence or policy was created, no claim
           scope was inferred, and no review, release, public response, or
