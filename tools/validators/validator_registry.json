@@ -35,6 +35,7 @@
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
       "western-kansas-observation-assessment",
+      "kansas-transportation-geometry-source-assessment",
       "workflow-security",
       "repository-topology"
     ]
@@ -314,6 +315,27 @@
         "tests/validators/test_western_kansas_observation_assessment_registry.py",
         "tools/validators/evidence/validate_western_kansas_observation_assessment.py",
         "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "kansas-transportation-geometry-source-assessment",
+      "description": "Validate the inactive synthetic Kansas transportation geometry source assessment case matrix without source activation, road or crosswalk authority, or public-use authorization.",
+      "script": "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py",
+      "args": [
+        "--cases"
+      ],
+      "path_globs": [
+        ".github/workflows/kansas-transportation-geometry-source-assessment.yml",
+        "contracts/source/kansas_transportation_geometry_source_assessment.md",
+        "docs/intake/exploratory/kansas-transportation-geometry-source-admission-assessment.md",
+        "schemas/contracts/v1/source/kansas_transportation_geometry_source_assessment.schema.json",
+        "fixtures/contracts/v1/source/kansas_transportation_geometry_source_assessment/**",
+        "tests/source/test_kansas_transportation_geometry_source_assessment.py",
+        "tests/validators/test_kansas_transportation_geometry_source_assessment_registry.py",
+        "tools/validators/source/validate_kansas_transportation_geometry_source_assessment.py",
+        "data/receipts/generated/genrec-kansas-transportation-geometry-source-assessment-20260815.json"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
