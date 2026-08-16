@@ -21,6 +21,29 @@ FAILURE_DISPOSITIONS = frozenset(
     {"ERROR_BASELINE_MISMATCH", "FAIL_INVARIANT", "FAIL_NEW_DRIFT"}
 )
 
+# Only stable, repository-authored messages are projected. Unknown exception
+# text is never echoed because it can contain refs, paths, or other untrusted
+# values. The stage fallback still makes hosted failures actionable without
+# widening the validator's output surface.
+ERROR_REASON_CODES = {
+    "trusted baseline ref is invalid": "TRUSTED_REF_INVALID",
+    "trusted baseline ref cannot be resolved": "TRUSTED_REF_UNRESOLVED",
+    "trusted baseline ref did not resolve to a commit": "TRUSTED_REF_NOT_COMMIT",
+    "trusted baseline is missing outside the governed bootstrap": "TRUSTED_BASELINE_MISSING",
+    "baseline transition adds waiver fingerprints": "BASELINE_WAIVER_ADDED",
+    "baseline transition does not strictly shrink evidence": "BASELINE_EVIDENCE_NOT_SHRUNK",
+    "baseline transition mutates a waiver entry": "BASELINE_WAIVER_MUTATED",
+    "baseline transition extends expiry": "BASELINE_EXPIRY_EXTENDED",
+    "baseline transition mutates protected metadata": "BASELINE_METADATA_MUTATED",
+    "baseline is missing or unsafe": "BASELINE_MISSING_OR_UNSAFE",
+}
+STAGE_REASON_CODES = {
+    "scan": "SCAN_ERROR",
+    "baseline": "BASELINE_LOAD_ERROR",
+    "trusted-baseline": "TRUSTED_BASELINE_ERROR",
+    "evaluate": "EVALUATE_ERROR",
+}
+
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -41,6 +64,14 @@ def _bounded_max(value: int) -> int:
             f"max-items must be between 1 and {MAX_ITEMS_LIMIT}"
         )
     return value
+
+
+def error_reason_code(exc: BaseException, *, stage: str) -> str:
+    if isinstance(exc, topology.TopologyError):
+        known = ERROR_REASON_CODES.get(str(exc))
+        if known is not None:
+            return known
+    return STAGE_REASON_CODES.get(stage, "VALIDATOR_ERROR")
 
 
 def render_diagnostics(
@@ -96,21 +127,28 @@ def render_diagnostics(
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    stage = "scan"
     try:
         max_items = _bounded_max(args.max_items)
         findings, tracked_count = topology.scan(args.repo_root)
+
+        stage = "baseline"
         if args.baseline.is_symlink() or not args.baseline.is_file():
             raise topology.TopologyError("baseline is missing or unsafe")
         baseline_data, baseline = topology._load_baseline_bytes(
             args.baseline.read_bytes(), label="current"
         )
+
         if args.trusted_baseline_ref:
+            stage = "trusted-baseline"
             topology.enforce_trusted_baseline(
                 args.repo_root.resolve(),
                 baseline_data,
                 baseline,
                 str(args.trusted_baseline_ref),
             )
+
+        stage = "evaluate"
         code, report = topology.evaluate(
             findings,
             tracked_count,
@@ -128,7 +166,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(line)
         return code
     except (OSError, UnicodeError, ValueError, topology.TopologyError) as exc:
-        print(f"ERROR_VALIDATOR: {type(exc).__name__}")
+        reason = error_reason_code(exc, stage=stage)
+        print(f"ERROR_VALIDATOR: {type(exc).__name__} reason={reason}")
         return 2
 
 
