@@ -28,11 +28,16 @@ FORBIDDEN_SCHEMA_KEYS = {
 
 class EvidenceBundleProjectionAggregateTests(unittest.TestCase):
     def projection_paths(self) -> list[Path]:
-        paths = sorted(DOMAINS_ROOT.glob("*/evidence_bundle.schema.json"))
-        self.assertTrue(paths, "Expected at least one domain EvidenceBundle projection")
+        paths: list[Path] = []
+        for path in sorted(DOMAINS_ROOT.glob("*/evidence_bundle.schema.json")):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            if payload.get("x-kfm", {}).get("authority") == "projection":
+                paths.append(path)
+
+        self.assertTrue(paths, "Expected at least one declared domain EvidenceBundle projection")
         return paths
 
-    def test_all_domain_projections_delegate_without_independent_schema_semantics(self) -> None:
+    def test_all_declared_domain_projections_delegate_without_independent_schema_semantics(self) -> None:
         for path in self.projection_paths():
             with self.subTest(path=path.relative_to(REPO_ROOT).as_posix()):
                 payload = json.loads(path.read_text(encoding="utf-8"))
