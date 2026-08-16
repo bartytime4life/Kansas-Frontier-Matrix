@@ -19,7 +19,8 @@
       "catalog-matrix-closure",
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
-      "release-manifest"
+      "release-manifest",
+      "release-proof-pack-closure"
     ],
     "full": [
       "source-descriptor",
@@ -37,6 +38,7 @@
       "catalog-matrix-claim-closure",
       "catalog-distribution-mapping-profile",
       "release-manifest",
+      "release-proof-pack-closure",
       "western-kansas-observation-assessment",
       "kansas-transportation-geometry-source-assessment",
       "workflow-security",
@@ -343,6 +345,26 @@
         "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
         "packages/hashing/**",
         "data/receipts/generated/genrec-pass7-release-manifest-*.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "release-proof-pack-closure",
+      "description": "Validate fixture-only ReleaseProofPackClosure completeness without creating promotion, release, mutation, or publication authority.",
+      "script": "tools/validators/release/validate_release_proof_pack_closure.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/release-proof-pack-closure.yml",
+        "contracts/release/release_proof_pack_closure.md",
+        "schemas/contracts/v1/release/release_proof_pack_closure.schema.json",
+        "fixtures/contracts/v1/release/release_proof_pack_closure/**",
+        "tests/validators/test_validate_release_proof_pack_closure.py",
+        "tools/validators/release/validate_release_proof_pack_closure.py",
+        "docs/intake/exploratory/pass9-release-proof-pack-closure-source-map.md",
+        "docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
