@@ -4,10 +4,12 @@ name: rollback-card
 "on":
   pull_request:
     paths:
+      - "contracts/release/rollback_card.md"
       - "schemas/contracts/v1/release/rollback_card.schema.json"
       - "fixtures/release/rollback_card/**"
       - "tools/validators/release/validate_rollback_card.py"
       - "tests/validators/test_validate_rollback_card.py"
+      - "data/receipts/generated/genrec-rollback-card-contract-*.json"
       - ".github/workflows/rollback-card.yml"
   workflow_dispatch:
 
@@ -56,6 +58,13 @@ jobs:
             --verbose
           python tools/validators/release/validate_rollback_card.py --fixtures
 
+      - name: Verify RollbackCard contract current-binding receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json \
+            --repo-root .
+
       - name: Record trust boundary
         if: always()
         run: |
@@ -63,7 +72,7 @@ jobs:
             echo "### RollbackCard candidate validation"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- No release, rollback executor, cache invalidator, or public endpoint was invoked."
-            echo "- A green result proves candidate shape, exact fixture polarity, and local consistency only."
+            echo "- A green result proves candidate shape, exact fixture polarity, local consistency, contract-to-profile documentation binding, and AI-authored artifact hash integrity only."
+            echo "- No release, rollback executor, cache invalidator, public endpoint, review authority, or policy authority was invoked."
             echo "- It does not execute rollback, authorize release mutation, erase history, or publish."
           } >> "$GITHUB_STEP_SUMMARY"
