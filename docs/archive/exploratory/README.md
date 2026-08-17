@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-archive-exploratory-readme
 title: docs/archive/exploratory — Exploratory Documentation Archive Boundary
 type: README
-version: v1.1
+version: v1.2
 status: active
 owners:
   - "@bartytime4life"
@@ -12,28 +12,28 @@ policy_label: repository-facing
 owning_root: docs/
 parent_boundary: docs/archive/README.md
 responsibility: "Define the documentation-only archive lane for closed, withdrawn, or never-promoted exploratory material without converting retained history into current authority."
-truth_posture: "CONFIRMED commit-pinned parent and child presence, three README-only child lanes, zero archived entries, active drafts child contract, two remaining draft-era child contracts, accepted Directory Rules v2, and proposed empty exploratory register / NEEDS VERIFICATION remaining child modernization, authoritative closure vocabularies, future entries, external consumers, independent stewardship, and dedicated archive-entry validation"
+truth_posture: "CONFIRMED commit-pinned parent and child presence, three README-only child lanes, zero archived entries, active drafts and idea-packets child contracts, one remaining draft-era withdrawn-adrs child contract, accepted Directory Rules v2, and proposed empty exploratory register / NEEDS VERIFICATION remaining withdrawn-adrs modernization, authoritative closure vocabularies, future entries, external consumers, independent stewardship, and dedicated archive-entry validation"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   reviewed_base_ref: main
-  reviewed_base_commit: 2bfd956d386152d149c654c40f600ba9132ff16b
-  branch_snapshot_commit: 87d26036cd18808f717d91f8de3b82ce01ddc1f6
-  target_prior_blob: f9dc6ad3c4f8ad432b208f5a78bdca58fc867b90
-  target_prior_size_bytes: 24422
+  reviewed_base_commit: 3e78d5970b071ac11e7f1bcbc024a4282b1bd518
+  branch_snapshot_commit: 5ad173b0a3767a2dcd7bed76b4fe6dad528aa2eb
+  target_prior_blob: 6f85fc72d4a4b0690b6b61745961a2ac559381d2
+  target_prior_size_bytes: 31203
   parent_archive_blob: 03b2d6984e3735247da8a3ee0bd1e0ffc09e7e24
-  exploratory_tree_sha: 2b132fd0047ecc0b5094b6eec0a75af415fc10a4
+  exploratory_tree_sha: e7f1437cba9abfdaebfd1e40d599866767af6a31
   drafts_tree_sha: 7bd03c94b9bb0ba46d4e46fe96d60836166d559a
   drafts_readme_blob: 4661b37ee9621783df7bb2a5a2ad12ea7db2e5fc
   drafts_readme_size_bytes: 38267
-  idea_packets_tree_sha: b2ee48dcfc46c0da4507a102a7f9332879de61e0
-  idea_packets_readme_blob: ab2db8a502ac5498c8b2ebab776e5fd8a55bc10b
+  idea_packets_tree_sha: c32050eb5973e52c8f4390eb6ac44b7787bc25cf
+  idea_packets_readme_blob: 8274b89ddd067a9f09af2c3b7e4f25b5cb5a2b29
   withdrawn_adrs_tree_sha: 0f31cbe74fdca0dbf32b0f37675500d987f47299
   withdrawn_adrs_readme_blob: 7363922a0d869fc805135aef8b2832a67644e94b
   exploratory_register_blob: d04304071eebf7746a113daa8e7c4ffd9d62d94a
   direct_child_lane_count: 3
   archived_entry_count: 0
-  active_child_contract_count: 1
-  draft_child_contract_count: 2
+  active_child_contract_count: 2
+  draft_child_contract_count: 1
   exploratory_register_status: PROPOSED
   exploratory_register_entry_count: 0
 related:
@@ -94,13 +94,13 @@ related:
 | Primary responsibility | Route retained human documentation that never became current authority into the correct exploratory child lane |
 | Current direct children | `drafts/`, `idea-packets/`, and `withdrawn-adrs/`, plus this README |
 | Current entry state | Each child contains its boundary README only; **zero archived exploratory entries are present** |
-| Child-contract state | `drafts/` is active and current for its bounded role; `idea-packets/` and `withdrawn-adrs/` retain draft-era metadata and planning language |
+| Child-contract state | `drafts/` and `idea-packets/` are active and current for their bounded roles; `withdrawn-adrs/` retains draft-era metadata and planning language |
 | Authority limit | Historical and design-lineage context only; never current doctrine, an accepted ADR, a contract, schema, policy decision, evidence object, release state, or implementation proof |
 | Review route | `@bartytime4life` through the repository's default [`CODEOWNERS`](../../../.github/CODEOWNERS) rule; routing is not review, approval, stewardship, or separation-of-duties proof |
 
 **CONFIRMED:** the lane, its three direct child directories, all four README files, and the zero-entry state exist in the reviewed repository state.
 
-**NEEDS VERIFICATION:** modernization of the two remaining draft-era child READMEs, final closure vocabulary for each child, future entry metadata, external consumers, independent stewardship, and dedicated archive-entry validation.
+**NEEDS VERIFICATION:** modernization of the remaining `withdrawn-adrs/` child README, authoritative closure vocabulary for each child, future entry metadata, external consumers, independent stewardship, and dedicated archive-entry validation.
 
 <a id="generated-child-lane-state"></a>
 
@@ -111,14 +111,14 @@ This table is a commit-pinned documentation projection, not a live registry or t
 | Child lane | Tree identity | README identity | Boundary status | Direct payload | Archived entries |
 |---|---|---|---|---:|---:|
 | `drafts/` | `7bd03c94b9bb0ba46d4e46fe96d60836166d559a` | `4661b37ee9621783df7bb2a5a2ad12ea7db2e5fc` | `active`, `v1.1` | `1` file | `0` |
-| `idea-packets/` | `b2ee48dcfc46c0da4507a102a7f9332879de61e0` | `ab2db8a502ac5498c8b2ebab776e5fd8a55bc10b` | draft-era contract | `1` file | `0` |
+| `idea-packets/` | `c32050eb5973e52c8f4390eb6ac44b7787bc25cf` | `8274b89ddd067a9f09af2c3b7e4f25b5cb5a2b29` | `active`, `v1.0` | `1` file | `0` |
 | `withdrawn-adrs/` | `0f31cbe74fdca0dbf32b0f37675500d987f47299` | `7363922a0d869fc805135aef8b2832a67644e94b` | draft-era contract | `1` file | `0` |
 
 | Aggregate observation | Generated value |
 |---|---:|
 | Exploratory child lanes | `3` |
-| Active child contracts | `1` |
-| Draft-era child contracts | `2` |
+| Active child contracts | `2` |
+| Draft-era child contracts | `1` |
 | Child lanes with retained entries | `0` |
 | Total retained exploratory entries | `0` |
 | Companion register posture | `PROPOSED` |
@@ -207,7 +207,7 @@ docs/archive/exploratory/
 ├── drafts/
 │   └── README.md              # active boundary; 0 retained entries
 ├── idea-packets/
-│   └── README.md              # draft-era boundary; 0 retained entries
+│   └── README.md              # active boundary; 0 retained entries
 └── withdrawn-adrs/
     └── README.md              # draft-era boundary; 0 retained entries
 ```
@@ -215,10 +215,10 @@ docs/archive/exploratory/
 | Child lane | Bounded role | Current evidence | Local contract |
 |---|---|---|---|
 | `drafts/` | Standalone exploratory documents that never became current authority | Directory and active README present; no archived entries | [`drafts/README.md`](drafts/README.md) |
-| `idea-packets/` | Closed documentation-intake packets retained as historical review context | Directory and draft-era README present; no archived entries | [`idea-packets/README.md`](idea-packets/README.md) |
+| `idea-packets/` | Closed documentation-intake packets retained as historical review context | Directory and active README present; no archived entries | [`idea-packets/README.md`](idea-packets/README.md) |
 | `withdrawn-adrs/` | Proposed ADR drafts voluntarily withdrawn before an acceptance or rejection decision | Directory and draft-era README present; no archived entries | [`withdrawn-adrs/README.md`](withdrawn-adrs/README.md) |
 
-Only `idea-packets/README.md` and `withdrawn-adrs/README.md` still contain broad draft-era planning and placeholder language. Their presence is implementation evidence; their unreviewed vocabularies, thresholds, record shapes, or lifecycle claims are not automatically adopted by this parent.
+Only `withdrawn-adrs/README.md` still contains broad draft-era planning and placeholder language. Its presence is implementation evidence; its unreviewed vocabularies, thresholds, record shapes, or lifecycle claims are not automatically adopted by this parent.
 
 <a id="6-lifecycle-intake--exploratory"></a>
 <a id="10-authoring-workflow"></a>
@@ -338,13 +338,13 @@ python tools/validators/docs/meta-block/check_meta_blocks.py \
   --registry control_plane/document_registry.yaml \
   --format text \
   docs/archive/exploratory/README.md \
-  docs/archive/exploratory/drafts/README.md
+  docs/archive/exploratory/idea-packets/README.md
 
 python tools/validators/docs/link-check/check_links.py \
   --repo-root . \
   --format text \
   docs/archive/exploratory/README.md \
-  docs/archive/exploratory/drafts/README.md
+  docs/archive/exploratory/idea-packets/README.md
 ```
 
 The repository's bounded documentation workflows may run these checks for changed Markdown. A passing result is documentation QA evidence only; it does not adopt a child contract, approve an archived idea, validate its source claims, or authorize implementation, release, or publication.
@@ -390,14 +390,14 @@ Escalate instead of guessing when a change would create, rename, merge, split, o
 |---|---|
 | Review date | `2026-08-17` |
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Reviewed base | `main@2bfd956d386152d149c654c40f600ba9132ff16b` |
-| Branch snapshot after leaf refresh | `87d26036cd18808f717d91f8de3b82ce01ddc1f6` |
-| Target prior blob | `f9dc6ad3c4f8ad432b208f5a78bdca58fc867b90` |
+| Reviewed base | `main@3e78d5970b071ac11e7f1bcbc024a4282b1bd518` |
+| Branch snapshot after leaf refresh | `5ad173b0a3767a2dcd7bed76b4fe6dad528aa2eb` |
+| Target prior blob | `6f85fc72d4a4b0690b6b61745961a2ac559381d2` |
 | Parent archive blob | `03b2d6984e3735247da8a3ee0bd1e0ffc09e7e24` |
-| Exploratory tree | `2b132fd0047ecc0b5094b6eec0a75af415fc10a4` |
+| Exploratory tree | `e7f1437cba9abfdaebfd1e40d599866767af6a31` |
 | Current direct children | `drafts/`, `idea-packets/`, `withdrawn-adrs/` |
 | Current child payload state | Each child contains `README.md` only; total archived entries: `0` |
-| Child contract state | `1` active (`drafts/`), `2` draft-era (`idea-packets/`, `withdrawn-adrs/`) |
+| Child contract state | `2` active (`drafts/`, `idea-packets/`), `1` draft-era (`withdrawn-adrs/`) |
 | Machine companion | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` at `d04304071eebf7746a113daa8e7c4ffd9d62d94a` — `PROPOSED`, `0` entries |
 | Placement authority | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`Directory Rules`](../../doctrine/directory-rules.md) |
 
@@ -447,7 +447,7 @@ No. This lane owns human documentation only. Trust objects and lifecycle instanc
 | [`docs/archive/lineage/README.md`](../lineage/README.md) | Historical predecessors and supersession context for material that was current authority |
 | [`docs/archive/deprecated/README.md`](../deprecated/README.md) | Explicit documentation deprecation, migration, sunset, and retirement dispositions |
 | [`docs/archive/exploratory/drafts/README.md`](drafts/README.md) | Active child contract for retired standalone drafts |
-| [`docs/archive/exploratory/idea-packets/README.md`](idea-packets/README.md) | Draft-era child contract for closed documentation-intake packets |
+| [`docs/archive/exploratory/idea-packets/README.md`](idea-packets/README.md) | Active child contract for closed documentation-intake packets |
 | [`docs/archive/exploratory/withdrawn-adrs/README.md`](withdrawn-adrs/README.md) | Draft-era child contract for voluntarily withdrawn proposed ADRs |
 | [`docs/intake/README.md`](../../intake/README.md) | Current documentation-intake lane; not source or data intake authority |
 | [`docs/intake/NEW_IDEAS_INDEX.md`](../../intake/NEW_IDEAS_INDEX.md) | Draft, intake-only packet index; not promotion authority |
@@ -460,9 +460,9 @@ No. This lane owns human documentation only. Trust objects and lifecycle instanc
 
 ## Status and rollback
 
-**CONFIRMED:** same-path parent correction; three direct child lanes; README-only zero-entry state; active `drafts/` boundary; two remaining draft-era child contracts; parent archive contract; accepted Directory Rules v2 authority; default CODEOWNERS route; proposed empty exploratory register; repository-native metadata and local-link validator entrypoints.
+**CONFIRMED:** same-path parent correction; three direct child lanes; README-only zero-entry state; active `drafts/` and `idea-packets/` boundaries; one remaining draft-era `withdrawn-adrs/` contract; parent archive contract; accepted Directory Rules v2 authority; default CODEOWNERS route; proposed empty exploratory register; repository-native metadata and local-link validator entrypoints.
 
-**NEEDS VERIFICATION:** modernization of `idea-packets/` and `withdrawn-adrs/`, authoritative child closure vocabularies and entry metadata, rejected-ADR disposition, first real archive entries, external consumers, independent stewardship, and dedicated archive-entry validation.
+**NEEDS VERIFICATION:** modernization of `withdrawn-adrs/`, authoritative child closure vocabularies and entry metadata, rejected-ADR disposition, first real archive entries, external consumers, independent stewardship, and dedicated archive-entry validation.
 
 Rollback this documentation-only update by closing the draft pull request and abandoning its branch before merge. After an authorized merge, revert the focused commits or apply a reviewed forward fix, regenerate the child-lane state, and rerun metadata, link, document-graph, stale-reference, and aggregate checks. No source, data, policy, runtime, release, deployment, or public-system rollback is required.
 
