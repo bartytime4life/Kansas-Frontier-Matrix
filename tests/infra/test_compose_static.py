@@ -19,10 +19,10 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
     def test_build_context_and_dockerfiles_resolve(self):
         contexts = re.findall(r"^\s+context:\s*(\S+)\s*$", self.text, re.MULTILINE)
         dockerfiles = re.findall(r"^\s+dockerfile:\s*(\S+)\s*$", self.text, re.MULTILINE)
-        self.assertEqual(contexts, ["..", ".."])
+        self.assertEqual(contexts, ["../docker", "../docker"])
         self.assertEqual(
             dockerfiles,
-            ["docker/Dockerfile.governed-api", "docker/Dockerfile.explorer-web"],
+            ["Dockerfile.governed-api", "Dockerfile.explorer-web"],
         )
         for context, dockerfile in zip(contexts, dockerfiles, strict=True):
             context_path = (self.compose_dir / context).resolve()
