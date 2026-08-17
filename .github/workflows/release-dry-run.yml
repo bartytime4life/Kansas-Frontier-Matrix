@@ -79,6 +79,7 @@ jobs:
               Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260814.json"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json"),
               Path("data/receipts/generated/genrec-publication-deny-receipt-repair-20260816.json"),
+              Path("data/receipts/generated/genrec-release-dry-run-rollback-card-presence-repair-20260816.json"),
           ]
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required release dry-run evidence is missing: {missing}"
@@ -109,7 +110,7 @@ jobs:
               "exist and no candidate packet payload is present."
           )
           print("CONFIRMED: the Make target invokes the bounded dry run and its no-write tests.")
-          print("CONFIRMED: historical authoring receipts are retained and the current successor binding is present.")
+          print("CONFIRMED: historical authoring receipts are retained and the current rollback-card-presence successor binding is present.")
           PY
 
       - name: Prove bounded publication-denial behavior
@@ -125,7 +126,7 @@ jobs:
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-publication-deny-receipt-repair-20260816.json
+            data/receipts/generated/genrec-release-dry-run-rollback-card-presence-repair-20260816.json
 
       - name: Record candidate assembly outcome
         if: always()
@@ -136,7 +137,7 @@ jobs:
             echo
             echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
             echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
-            echo "- The historical 2026-08-09 and 2026-08-14 authoring receipts remain immutable; the workflow validates a current successor binding for the unchanged helper/test surface plus the current Makefile, then validates the current repair receipt that binds this workflow to that successor."
+            echo "- The historical 2026-08-09, 2026-08-14, and earlier 2026-08-16 authoring receipts remain immutable; the workflow validates the current implementation successor, then validates the rollback-card-presence repair receipt that binds this workflow to that successor."
             echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
@@ -255,6 +256,7 @@ jobs:
           root_validator = Path("tools/validators/validate_rollback_card.py")
           declared_validator = Path("tools/validators/release/validate_rollback_card.py")
           rollback_helper = Path("tools/release/rollback_apply.py")
+          rehearsal_test = Path("tests/release/test_synthetic_rollback_rehearsal.py")
           fixture_root = Path("fixtures/release/rollback_card")
           required = [
               schema_path,
@@ -262,6 +264,7 @@ jobs:
               root_validator,
               declared_validator,
               rollback_helper,
+              rehearsal_test,
               Path("release/rollback_cards/README.md"),
               Path("release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"),
               Path("release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"),
@@ -301,9 +304,23 @@ jobs:
           assert 'raise NotImplementedError("Greenfield placeholder")' in (
               root_validator.read_text(encoding="utf-8")
           ), "the root rollback-card entrypoint is no longer the confirmed placeholder shim"
-          assert rollback_helper.read_text(encoding="utf-8").strip() == (
-              "# Apply a signed rollback_card — greenfield placeholder"
-          ), "rollback_apply.py changed; review its authority and tests before execution"
+
+          rollback_helper_text = rollback_helper.read_text(encoding="utf-8")
+          assert "greenfield placeholder" not in rollback_helper_text, (
+              "rollback_apply.py regressed to an unimplemented placeholder"
+          )
+          helper_markers = [
+              ".kfm-synthetic-rollback-rehearsal",
+              "NON_SYNTHETIC_INPUT_DENIED",
+              '"public_state_mutated": False',
+          ]
+          missing_helper_markers = [
+              marker for marker in helper_markers if marker not in rollback_helper_text
+          ]
+          assert not missing_helper_markers, (
+              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
+              f"{missing_helper_markers}"
+          )
 
           fixture_result = subprocess.run(
               [sys.executable, declared_validator.as_posix(), "--fixtures"],
@@ -314,6 +331,27 @@ jobs:
           assert fixture_result.returncode == 0, fixture_result.stdout + fixture_result.stderr
           assert '"outcome":"PASS"' in fixture_result.stdout
           assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
+
+          rehearsal_result = subprocess.run(
+              [
+                  sys.executable,
+                  "-m",
+                  "unittest",
+                  "-q",
+                  "tests.release.test_synthetic_rollback_rehearsal",
+              ],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          rehearsal_output = rehearsal_result.stdout + rehearsal_result.stderr
+          assert rehearsal_result.returncode == 0, rehearsal_output
+          assert "Ran 0 tests" not in rehearsal_output, (
+              "synthetic rollback rehearsal test profile is vacuous"
+          )
+          assert "Ran " in rehearsal_output and "OK" in rehearsal_output, (
+              "synthetic rollback rehearsal test result was not recognized"
+          )
 
           root_cards = sorted(Path("release/rollback_cards").glob("*.json"))
           assert [path.name for path in root_cards] == [
@@ -344,9 +382,10 @@ jobs:
 
           print("CONFIRMED: RollbackCard schema remains PROPOSED while pointing to a bounded local validator and fixture lane.")
           print("CONFIRMED: rollback-card valid/invalid fixtures passed the implemented bounded validator profile.")
+          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
+          print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
           print("CONFIRMED: two root JSON cards remain PROPOSED documentation placeholders without id.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback helper was executed.")
-          print("No rollback, release mutation, or publication authority was created.")
+          print("WORKFLOW_HOLD: no production rollback, release mutation, or publication authority was created.")
           PY
 
       - name: Record rollback-card outcome
@@ -356,9 +395,10 @@ jobs:
           {
             echo "### Rollback-card presence"
             echo
-            echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes without executing rollback."
-            echo "- The root validator entrypoint and rollback helper remain placeholders, so no rollback execution or release mutation authority is created here."
+            echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes."
+            echo "- The root validator entrypoint remains a placeholder shim, while rollback_apply.py is a marker-protected synthetic-only rehearsal verified through isolated temporary-root tests."
+            echo "- The helper denies non-synthetic inputs, incomplete invalidation sets, missing targets, digest mismatches, and missing markers without touching production state."
             echo "- The two root JSON cards remain PROPOSED documentation-inventory placeholders without the schema-required id; they are inventory evidence, not executable rollback authority."
-            echo "- Result: ${{ job.status }}. No rollback, mutation, release decision, or publication authority was created."
-            echo "- **NEEDS VERIFICATION:** documentation that describes this workflow or release tooling as TODO-only must be reconciled separately."
+            echo "- Result: ${{ job.status }}. No production rollback, mutation, release decision, or publication authority was created."
+            echo "- **WORKFLOW_HOLD:** the rehearsal does not authenticate actors, signatures, policy decisions, live releases, or external invalidations."
           } >> "$GITHUB_STEP_SUMMARY"
