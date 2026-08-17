@@ -12,25 +12,20 @@ from pathlib import Path
 from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-MODULE_PATH = (
-    REPO_ROOT
-    / "tools/validators/governance/assess_temporal_authority_envelope_conflict.py"
-)
-SPEC = importlib.util.spec_from_file_location(
-    "kfm_assess_temporal_authority_envelope_conflict", MODULE_PATH
-)
+MODULE_PATH = REPO_ROOT / "tools/validators/governance/assess_temporal_authority_envelope_conflict.py"
+SPEC = importlib.util.spec_from_file_location("kfm_assess_tae_split", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None
 module = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = module
 SPEC.loader.exec_module(module)
 
 
-class TemporalAuthorityEnvelopeConflictAssessmentTests(unittest.TestCase):
+class TemporalAuthorityEnvelopeSplitAssessmentTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        self._build_complete_conflict()
+        self._build_complete_split()
 
     def _write(self, relative: str, text: str = "placeholder\n") -> Path:
         path = self.root / relative
@@ -38,214 +33,121 @@ class TemporalAuthorityEnvelopeConflictAssessmentTests(unittest.TestCase):
         path.write_text(text, encoding="utf-8")
         return path
 
-    def _build_complete_conflict(self) -> None:
-        common_text = (
-            "# TemporalAuthorityEnvelope\n"
-            f"Schema: `{module.COMMON_SCHEMA}`\n"
-            "public_use_allowed = false\n"
-        )
-        evidence_text = (
-            "# TemporalAuthorityEnvelope\n"
-            f"Schema: `{module.EVIDENCE_SCHEMA}`\n"
-            "CURRENT | STALE | SUPERSEDED | WITHDRAWN | UNKNOWN\n"
-        )
-        file_contents = {
-            module.COMMON_CONTRACT: common_text,
-            module.COMMON_SCHEMA: json.dumps(
-                {
-                    "$id": module.COMMON_SCHEMA,
-                    "title": "TemporalAuthorityEnvelope",
-                    "type": "object",
-                },
-                sort_keys=True,
-            )
-            + "\n",
-            module.COMMON_VALIDATOR: f'SCHEMA = "{module.COMMON_SCHEMA}"\n',
-            module.COMMON_TEST: f'VALIDATOR = "{module.COMMON_VALIDATOR}"\n',
-            module.COMMON_WORKFLOW: f"run: python {module.COMMON_VALIDATOR}\n",
-            module.EVIDENCE_CONTRACT: evidence_text,
-            module.EVIDENCE_SCHEMA: json.dumps(
-                {
-                    "$id": module.EVIDENCE_SCHEMA,
-                    "title": "TemporalAuthorityEnvelope",
-                    "type": "object",
-                },
-                sort_keys=True,
-            )
-            + "\n",
-            module.EVIDENCE_VALIDATOR: f'SCHEMA = "{module.EVIDENCE_SCHEMA}"\n',
-            module.EVIDENCE_TEST: f'VALIDATOR = "{module.EVIDENCE_VALIDATOR}"\n',
-            module.EVIDENCE_WORKFLOW: f"run: python {module.EVIDENCE_VALIDATOR}\n",
-            module.ADR_0014: (
-                "status: proposed\n"
-                "TemporalAuthorityEnvelope parallel authority conflict remains unresolved.\n"
-            ),
-            module.ADR_0029: "status: accepted\nAdopts Directory Rules.\n",
+    def _schema(self, schema_id: str, title: str) -> str:
+        return json.dumps({
+            "$schema":"https://json-schema.org/draft/2020-12/schema",
+            "$id":schema_id,
+            "title":title,
+            "type":"object",
+            "additionalProperties":False,
+            "required":["value"],
+            "properties":{"value":{"type":"string"}},
+        }, sort_keys=True) + "\n"
+
+    def _build_complete_split(self) -> None:
+        common = self._schema(module.COMMON_SCHEMA_ID, "temporal_authority_envelope")
+        legacy = self._schema(module.LEGACY_SCHEMA_ID, "TemporalAuthorityEnvelope")
+        canonical_value = json.loads(legacy)
+        canonical_value["$id"] = module.CANONICAL_SCHEMA_ID
+        canonical_value["title"] = "EvidenceTemporalPostureAssessment"
+        canonical_value["description"] = "distinct evidence assessment"
+        canonical_value["x-kfm"] = {"legacy_compatibility_schema": module.LEGACY_SCHEMA}
+        canonical = json.dumps(canonical_value, sort_keys=True) + "\n"
+        files = {
+            module.ADR_0014: "status: proposed\nparallel conflict remains independent\n",
+            module.ADR_0029: "status: accepted\n",
+            module.COMMON_CONTRACT: "# TemporalAuthorityEnvelope\n",
+            module.COMMON_SCHEMA: common,
+            module.CANONICAL_CONTRACT: "# EvidenceTemporalPostureAssessment\nCompatibility split.\n",
+            module.CANONICAL_SCHEMA: canonical,
+            module.CANONICAL_VALIDATOR: "# EvidenceTemporalPostureAssessment\n",
+            module.CANONICAL_TEST: "# canonical test\n",
+            module.CANONICAL_WORKFLOW: "name: evidence-temporal-posture-assessment\n",
+            module.LEGACY_CONTRACT: "# Legacy TemporalAuthorityEnvelope compatibility alias\n",
+            module.LEGACY_SCHEMA: legacy,
+            module.LEGACY_VALIDATOR: "from validate_evidence_temporal_posture_assessment import validate_doc\nLEGACY_SCHEMA = 'legacy'\n",
+            module.LEGACY_TEST: "# legacy test\n",
+            module.LEGACY_WORKFLOW: "name: temporal-authority-envelope\n",
+            module.ADVISORY_SCHEMA: json.dumps({"properties":{"temporal_authority":{"$ref":module.COMMON_SCHEMA_ID}}}) + "\n",
+            module.PROGRAM_CONTRACT: f"Uses `{module.COMMON_CONTRACT}`.\n",
+            module.PROGRAM_MODEL: f'REF = "{module.PROGRAM_LEGACY_REFERENCE}"\n',
         }
-        for relative, text in file_contents.items():
+        for relative, text in files.items():
             self._write(relative, text)
-        for directories in module.REQUIRED_FIXTURE_DIRS.values():
-            for directory in directories:
-                self._write(f"{directory}/case.json", '{"fixture": true}\n')
+        for base in (module.CANONICAL_FIXTURES, module.LEGACY_FIXTURES):
+            self._write(f"{base}/valid/case.json", '{"value":"valid"}\n')
+            self._write(f"{base}/invalid/case.json", '{"value":"invalid"}\n')
 
-    def test_complete_scan_returns_explicit_hold_without_authority(self) -> None:
-        self._write(
-            "contracts/common/condition_relation.md",
-            f"Uses `{module.COMMON_CONTRACT}` and TemporalAuthorityEnvelope.\n",
-        )
+    def test_complete_split_returns_compatibility_hold(self) -> None:
         code, report = module.assess(self.root, revision="abc123")
-
         self.assertEqual(module.EXIT_HOLD, code)
-        self.assertEqual("HOLD_UNRESOLVED", report["outcome"])
-        self.assertEqual("HOLD", report["disposition"])
+        self.assertEqual("HOLD_COMPATIBILITY", report["outcome"])
+        self.assertEqual("SPLIT", report["disposition"])
         self.assertTrue(report["scan_complete"])
-        self.assertEqual("abc123", report["revision"])
-        self.assertFalse(any(report["authority"].values()))
         self.assertEqual([], report["findings"])
-        self.assertEqual([], report["scan_gaps"])
-        self.assertEqual(
-            [module.COMMON_CONTRACT, module.EVIDENCE_CONTRACT],
-            report["same_name_family_discovery"]["contracts"],
-        )
-        by_path = {item["path"]: item for item in report["reference_inventory"]}
-        consumer = by_path["contracts/common/condition_relation.md"]
-        self.assertEqual("semantic_consumer", consumer["classification"])
-        self.assertEqual("exact_path", consumer["reference_mode"])
-        self.assertEqual(["common"], consumer["families"])
-        self.assertIn("KFM-TAE-MIGRATION-NOT-AUTHORIZED", report["reason_codes"])
-        self.assertIn(
-            "KFM-TAE-TRACKED-TEXT-INVENTORY-COMPLETE", report["reason_codes"]
-        )
-        self.assertTrue(report["inventory_scope"]["tracked_repository_text"])
-        self.assertFalse(report["inventory_scope"]["runtime_observation"])
+        self.assertFalse(any(report["authority"].values()))
+        self.assertEqual("EvidenceTemporalPostureAssessment", json.loads((self.root / module.CANONICAL_SCHEMA).read_text())["title"])
+        self.assertEqual("legacy_compatibility", report["split_state"]["program_outcome_chain_reference"]["classification"])
+        self.assertFalse(report["split_state"]["program_outcome_chain_reference"]["conformance_inferred"])
+        self.assertIn("KFM-TAE-EXTERNAL-INVENTORY-REQUIRED-BEFORE-REMOVAL", report["reason_codes"])
 
-    def test_report_is_deterministic_and_value_minimized(self) -> None:
-        secret = "ghp_this_value_must_not_be_echoed"
-        self._write(
-            "docs/note.md",
-            f"{secret} TemporalAuthorityEnvelope {module.COMMON_CONTRACT}\n",
-        )
-        first_code, first = module.assess(self.root, revision="fixed")
-        second_code, second = module.assess(self.root, revision="fixed")
-
-        self.assertEqual(module.EXIT_HOLD, first_code)
-        self.assertEqual(first_code, second_code)
-        self.assertEqual(first, second)
-        serialized = json.dumps(first, sort_keys=True)
-        self.assertNotIn(secret, serialized)
-        self.assertRegex(first["report_sha256"], r"^sha256:[0-9a-f]{64}$")
-        self.assertEqual(first["report_sha256"], module._report_hash(first))
-
-    def test_missing_family_file_fails_invariant(self) -> None:
-        (self.root / module.EVIDENCE_SCHEMA).unlink()
+    def test_schema_or_fixture_divergence_fails_closed(self) -> None:
+        canonical = json.loads((self.root / module.CANONICAL_SCHEMA).read_text())
+        canonical["properties"]["new_field"] = {"type":"string"}
+        (self.root / module.CANONICAL_SCHEMA).write_text(json.dumps(canonical), encoding="utf-8")
         code, report = module.assess(self.root)
-
         self.assertEqual(module.EXIT_FAIL, code)
-        self.assertEqual("FAIL_INVARIANT", report["outcome"])
-        self.assertIn(
-            "KFM-TAE-CONFLICT-SHAPE-DRIFT",
-            report["reason_codes"],
-        )
-        self.assertTrue(
-            any(
-                finding["code"] == "KFM-TAE-FAMILY-001"
-                and finding["path"] == module.EVIDENCE_SCHEMA
-                for finding in report["findings"]
-            )
-        )
+        self.assertTrue(any(item["code"] == "KFM-TAE-COMPAT-002" for item in report["findings"]))
 
-    def test_third_same_named_family_fails_invariant(self) -> None:
-        self._write(
-            "contracts/runtime/temporal_authority_envelope.md",
-            "# TemporalAuthorityEnvelope\n",
-        )
-        self._write(
-            "schemas/contracts/v1/runtime/temporal_authority_envelope.schema.json",
-            '{"title": "TemporalAuthorityEnvelope"}\n',
-        )
-        self._write(
-            "tools/validators/runtime/validate_temporal_authority_envelope.py",
-            "# third validator\n",
-        )
+    def test_advisory_ref_cannot_move_to_evidence_assessment(self) -> None:
+        self._write(module.ADVISORY_SCHEMA, json.dumps({"properties":{"temporal_authority":{"$ref":module.CANONICAL_SCHEMA_ID}}}) + "\n")
         code, report = module.assess(self.root)
-
         self.assertEqual(module.EXIT_FAIL, code)
-        self.assertEqual("FAIL_INVARIANT", report["outcome"])
-        self.assertTrue(
-            any(finding["code"] == "KFM-TAE-FAMILY-005" for finding in report["findings"])
-        )
+        self.assertTrue(any(item["code"] == "KFM-TAE-ADVISORY-001" for item in report["findings"]))
 
-    def test_runtime_and_persisted_references_are_reported_not_authorized(self) -> None:
-        self._write(
-            "apps/governed-api/consumer.py",
-            f'COMMON_SCHEMA = "{module.COMMON_SCHEMA}"\n',
-        )
-        self._write(
-            "data/processed/example.json",
-            '{"object_type": "TemporalAuthorityEnvelope"}\n',
-        )
+    def test_unclassified_runtime_reference_fails_closed(self) -> None:
+        self._write("apps/example/consumer.py", 'REF = "kfm:temporal-authority:new-unqualified"\n')
         code, report = module.assess(self.root)
+        self.assertEqual(module.EXIT_FAIL, code)
+        self.assertEqual(["apps/example/consumer.py"], report["runtime_unresolved_reference_paths"])
 
-        self.assertEqual(module.EXIT_HOLD, code)
-        self.assertEqual(2, report["reference_counts"]["critical_consumer_count"])
-        self.assertEqual(
-            ["apps/governed-api/consumer.py", "data/processed/example.json"],
-            report["critical_consumer_paths"],
-        )
-        self.assertIn("KFM-TAE-CRITICAL-CONSUMER-PRESENT", report["reason_codes"])
-        self.assertFalse(report["authority"]["authorizes_migration"])
-
-    def test_name_only_reference_is_ambiguous(self) -> None:
+    def test_documentation_name_only_reference_is_held_not_authorized(self) -> None:
         self._write("docs/note.md", "TemporalAuthorityEnvelope remains under review.\n")
         code, report = module.assess(self.root)
-
         self.assertEqual(module.EXIT_HOLD, code)
-        self.assertIn("docs/note.md", report["ambiguous_reference_paths"])
-        entry = next(
-            item for item in report["reference_inventory"] if item["path"] == "docs/note.md"
-        )
-        self.assertEqual("name_only", entry["reference_mode"])
-        self.assertEqual(["ambiguous"], entry["families"])
+        self.assertIn("docs/note.md", report["unresolved_reference_paths"])
+        self.assertIn("KFM-TAE-UNRESOLVED-REFERENCES-HELD", report["reason_codes"])
 
-    def test_oversized_text_candidate_is_error_not_false_complete_scan(self) -> None:
-        with mock.patch.object(module, "MAX_TEXT_BYTES", 128):
-            self._write(
-                "docs/oversized.md",
-                "TemporalAuthorityEnvelope\n" + ("x" * 128) + "\n",
-            )
-            code, report = module.assess(self.root)
+    def test_missing_canonical_surface_fails_invariant(self) -> None:
+        (self.root / module.CANONICAL_SCHEMA).unlink()
+        code, report = module.assess(self.root)
+        self.assertEqual(module.EXIT_FAIL, code)
+        self.assertTrue(any(item["code"] == "KFM-TAE-FAMILY-001" for item in report["findings"]))
 
-        self.assertEqual(module.EXIT_ERROR, code)
-        self.assertEqual("ERROR_VALIDATOR", report["outcome"])
-        self.assertFalse(report["scan_complete"])
-        self.assertTrue(
-            any(gap["code"] == "KFM-TAE-SCAN-002" for gap in report["scan_gaps"])
-        )
+    def test_report_is_deterministic_and_value_minimized(self) -> None:
+        secret = "ghp_do_not_echo"
+        self._write("docs/secret.md", f"{secret} TemporalAuthorityEnvelope\n")
+        first_code, first = module.assess(self.root, revision="fixed")
+        second_code, second = module.assess(self.root, revision="fixed")
+        self.assertEqual(first_code, second_code)
+        self.assertEqual(first, second)
+        self.assertNotIn(secret, json.dumps(first, sort_keys=True))
+        self.assertEqual(first["report_sha256"], module._report_hash(first))
 
     def test_cli_emits_hold_json_and_exit_three(self) -> None:
         output = io.StringIO()
         with redirect_stdout(output):
-            code = module.main(
-                [
-                    "--root",
-                    str(self.root),
-                    "--revision",
-                    "deadbeef",
-                    "--format",
-                    "json",
-                ]
-            )
+            code = module.main(["--root", str(self.root), "--revision", "deadbeef", "--format", "json"])
         report = json.loads(output.getvalue())
-
         self.assertEqual(module.EXIT_HOLD, code)
-        self.assertEqual("HOLD_UNRESOLVED", report["outcome"])
+        self.assertEqual("HOLD_COMPATIBILITY", report["outcome"])
         self.assertEqual("deadbeef", report["revision"])
 
     def test_assessment_makes_no_network_call(self) -> None:
         with mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
             code, report = module.assess(self.root)
         self.assertEqual(module.EXIT_HOLD, code)
-        self.assertEqual("HOLD_UNRESOLVED", report["outcome"])
+        self.assertEqual("HOLD_COMPATIBILITY", report["outcome"])
 
 
 if __name__ == "__main__":
