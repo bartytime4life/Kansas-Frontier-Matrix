@@ -3,6 +3,26 @@
 # receipts, proofs, release material, or published artifacts.
 FROM python:3.11.15-slim-trixie@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
 
+# The pinned Debian base carries CVE-2026-53615 in the util-linux package family.
+# Upgrade only that family and fail closed if libblkid remains below Debian's fix.
+RUN set -eux; \
+    apt-get update; \
+    apt-get install --yes --no-install-recommends --only-upgrade \
+        bsdutils \
+        libblkid1 \
+        liblastlog2-2 \
+        libmount1 \
+        libsmartcols1 \
+        libuuid1 \
+        login \
+        mount \
+        util-linux; \
+    dpkg --compare-versions \
+        "$(dpkg-query --show --showformat='${Version}' libblkid1)" \
+        ge \
+        "2.41.5-0+deb13u1"; \
+    rm -rf /var/lib/apt/lists/*
+
 COPY governed-api-requirements.lock /tmp/governed-api-requirements.lock
 
 RUN set -eux; \
