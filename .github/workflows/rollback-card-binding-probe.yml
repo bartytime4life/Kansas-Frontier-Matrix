@@ -1,0 +1,44 @@
+name: rollback-card-binding-probe
+
+"on":
+  push:
+    paths:
+      - ".github/workflows/rollback-card-binding-probe.yml"
+      - ".github/workflows/release-dry-run.yml"
+      - ".github/workflows/release-manifest.yml"
+      - ".github/workflows/rollback-drill.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rollback-card-binding-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out inspected revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Emit exact dependency-closed binding digests
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum \
+            .github/workflows/release-dry-run.yml \
+            .github/workflows/release-manifest.yml \
+            .github/workflows/rollback-drill.yml \
+            contracts/release/release_manifest.md \
+            docs/intake/exploratory/pass7-release-manifest-profile.md \
+            fixtures/release/release_manifest/README.md \
+            fixtures/release/release_manifest/cases.json \
+            schemas/contracts/v1/release/release_manifest.schema.json \
+            tests/validators/test_validate_release_manifest.py \
+            tools/validators/release/validate_release_manifest.py \
+            data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json
