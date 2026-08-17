@@ -8,6 +8,7 @@ name: repository-topology-current-diagnostics
       - ".github/workflows/repository-topology-current-diagnostics.yml"
       - "apps/explorer-web/src/features/story_player/**"
       - "docs/adr/**"
+      - "docs/archive/exploratory/**"
       - "docs/security/**"
       - "tests/validators/directory_governance/**"
       - "tools/validators/directory_governance/**"
@@ -58,10 +59,85 @@ jobs:
         run: |
           set -uo pipefail
           status=0
-          python tools/validators/directory_governance/validate_repository_topology.py \
-            --format json \
-            --diagnose-transition-members \
-            2>&1 | tee /tmp/kfm-repository-topology-current-diagnostics.json || status=${PIPESTATUS[0]}
+          python - <<'PY' > /tmp/kfm-repository-topology-current-diagnostics.json || status=$?
+          from __future__ import annotations
+
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          from tools.validators.directory_governance.validate_repository_topology import (
+              BASELINE_REPOSITORY_PATH,
+              _load_baseline_bytes,
+              scan,
+          )
+
+          repo_root = Path(".").resolve()
+          findings, tracked_count = scan(repo_root)
+          trusted_ref = os.environ["KFM_TRUSTED_BASE_REF"]
+          trusted_sha = subprocess.run(
+              ["git", "rev-parse", "--verify", f"{trusted_ref}^{{commit}}"],
+              cwd=repo_root,
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout.strip()
+          trusted_raw = subprocess.run(
+              ["git", "show", f"{trusted_sha}:{BASELINE_REPOSITORY_PATH}"],
+              cwd=repo_root,
+              check=True,
+              capture_output=True,
+          ).stdout
+          _trusted_data, trusted_entries = _load_baseline_bytes(
+              trusted_raw,
+              label="trusted",
+          )
+
+          trusted_by_identity = {
+              (str(entry["rule_id"]), str(entry["subject"])): (fingerprint, entry)
+              for fingerprint, entry in trusted_entries.items()
+          }
+          current_by_identity = {
+              (finding.rule_id, finding.subject): finding for finding in findings
+          }
+
+          changed = []
+          for identity in sorted(set(trusted_by_identity) | set(current_by_identity)):
+              prior = trusted_by_identity.get(identity)
+              current = current_by_identity.get(identity)
+              prior_fingerprint = prior[0] if prior else None
+              current_fingerprint = current.fingerprint if current else None
+              if prior_fingerprint == current_fingerprint:
+                  continue
+              prior_members = set(prior[1]["evidence_members"]) if prior else set()
+              current_members = set(current.evidence_members) if current else set()
+              changed.append(
+                  {
+                      "additions": sorted(current_members - prior_members),
+                      "current_count": len(current_members),
+                      "current_fingerprint": current_fingerprint,
+                      "prior_count": len(prior_members),
+                      "prior_fingerprint": prior_fingerprint,
+                      "removals": sorted(prior_members - current_members),
+                      "rule_id": identity[0],
+                      "subject": identity[1],
+                  }
+              )
+
+          print(
+              json.dumps(
+                  {
+                      "changed_identities": changed,
+                      "tracked_path_count": tracked_count,
+                      "trusted_base": "[REDACTED]",
+                  },
+                  indent=2,
+                  sort_keys=True,
+              )
+          )
+          raise SystemExit(1 if changed else 0)
+          PY
 
           python - "$status" <<'PY'
           from pathlib import Path
