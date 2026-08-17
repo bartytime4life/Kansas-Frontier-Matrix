@@ -1,296 +1,375 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
-title: Archived Exploratory Material
-type: standard
-version: v1
-status: draft
-owners: <TODO: Docs Steward + Intake Owner>
+doc_id: kfm://doc/docs-archive-exploratory-readme
+title: docs/archive/exploratory — Exploratory Documentation Archive Boundary
+type: README
+version: v1.0
+status: active
+owners:
+  - "@bartytime4life"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-17
+policy_label: repository-facing
+owning_root: docs/
+parent_boundary: docs/archive/README.md
+responsibility: "Define the documentation-only archive lane for closed, withdrawn, or never-promoted exploratory material without converting retained history into current authority."
+truth_posture: "CONFIRMED current repository, parent archive contract, accepted Directory Rules v2, direct-child presence, and README-only child state / NEEDS VERIFICATION child-contract modernization, authoritative closure vocabularies, future entries, external consumers, and dedicated archive-entry validation"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 33c41a62845e2b10bc12969063e381ee74120f90
+  target_prior_blob: aa21df609917a002ceb141e03202302db52d813c
+  parent_readme_blob: 03b2d6984e3735247da8a3ee0bd1e0ffc09e7e24
 related:
+  - docs/README.md
   - docs/archive/README.md
   - docs/archive/lineage/README.md
   - docs/archive/deprecated/README.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/intake/IDEA_INTAKE.md
+  - docs/archive/exploratory/drafts/README.md
+  - docs/archive/exploratory/idea-packets/README.md
+  - docs/archive/exploratory/withdrawn-adrs/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/intake/README.md
   - docs/intake/NEW_IDEAS_INDEX.md
   - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
-tags: [kfm, archive, exploratory, intake, drafts, withdrawn-adrs, governance]
-notes:
-  - "Directory purpose is derived from docs/archive/README.md §6 and §8; NEEDS VERIFICATION against the live repository."
-  - "All paths below the directory tree are PROPOSED until inspected on disk."
+  - .github/CODEOWNERS
 [/KFM_META_BLOCK_V2] -->
 
-# 🧪 Archived Exploratory Material
+<a id="top"></a>
+<a id="-archived-exploratory-material"></a>
+<a id="archived-exploratory-material"></a>
 
-> The graveyard of **unpromoted ideas** — closed intake packets, never-promoted drafts, and withdrawn proposed-ADRs that did not pass KFM's promotion gates and are therefore not canon.
+# docs/archive/exploratory
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![type](https://img.shields.io/badge/type-archive-1F3A66)
-![bucket](https://img.shields.io/badge/bucket-exploratory-7c4a8d)
-![policy](https://img.shields.io/badge/policy_label-public-2E7D32)
-![invariant](https://img.shields.io/badge/closed-state-critical)
-![scope](https://img.shields.io/badge/scope-documentation-4A6FA5)
-![updated](https://img.shields.io/badge/updated-2026--05--25-lightgrey)
-
-**Status:** `draft` · **Owners:** `TODO — Docs Steward + Intake Owner` <sub>NEEDS VERIFICATION</sub> · **Last updated:** `2026-05-25`
+`docs/archive/exploratory/` is KFM's documentation-only archive lane for closed, withdrawn, or never-promoted exploratory material. It preserves design history without allowing retained proposals to masquerade as current doctrine, accepted decisions, implementation evidence, or release authority.
 
 > [!IMPORTANT]
-> Presence of an idea here is **not** evidence that the idea is wrong — only that it did not pass KFM's promotion gates and is therefore not current canon. Re-promotion requires a **new** intake entry, not direct edits here.
+> **Exploratory archive presence proves only that material was retained as history.** It does not prove the material is correct, incorrect, rejected by policy, accepted for future work, implemented, released, or safe for public use. Any renewed work must enter a current governed authoring or intake surface and establish its own evidence, ownership, validation, review, and rollback boundary.
 
----
+## Quick navigation
 
-## 📑 Contents
+- [Status, authority, and current state](#status-authority-and-current-state)
+- [Purpose and inherited boundary](#purpose-and-inherited-boundary)
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Direct-child map](#direct-child-map)
+- [Exploratory closure workflow](#exploratory-closure-workflow)
+- [Entry requirements and correction discipline](#entry-requirements-and-correction-discipline)
+- [Inputs, outputs, exposure, mutation, and retention](#inputs-outputs-exposure-mutation-and-retention)
+- [Validation, ownership, and review](#validation-ownership-and-review)
+- [Common decisions](#common-decisions)
+- [Related authorities](#related-authorities)
+- [Status and rollback](#status-and-rollback)
 
-1. [Scope](#1-scope)
-2. [Repo fit](#2-repo-fit)
-3. [Inputs — what belongs here](#3-inputs--what-belongs-here)
-4. [Exclusions — what does not](#4-exclusions--what-does-not)
-5. [Directory layout](#5-directory-layout)
-6. [Lifecycle (INTAKE → EXPLORATORY)](#6-lifecycle-intake--exploratory)
-7. [Immutability invariant](#7-immutability-invariant)
-8. [Subfolders](#8-subfolders)
-9. [Conventions](#9-conventions)
-10. [Authoring workflow](#10-authoring-workflow)
-11. [FAQ](#11-faq)
-12. [Related docs](#12-related-docs)
-13. [Last reviewed](#13-last-reviewed)
+<!-- Legacy inbound anchor aliases retained from the previous README. -->
+<a id="1-scope"></a>
+<a id="2-repo-fit"></a>
 
----
+## Status, authority, and current state
 
-## 1. Scope
+| Field | Current boundary |
+|---|---|
+| Path | `docs/archive/exploratory/` — **CONFIRMED present** on the reviewed `main` snapshot |
+| Owning root | [`docs/`](../../README.md), inherited through the [`docs/archive/`](../README.md) boundary |
+| Placement outcome | `PLACE` — same-path modernization of an existing boundary README; no move, rename, child creation, or authority change |
+| README profile | `BOUNDARY_COMPACT` under the adopted Directory Rules v2 |
+| Primary responsibility | Route retained human documentation that never became current authority into the correct exploratory child lane |
+| Current direct children | `drafts/`, `idea-packets/`, and `withdrawn-adrs/`, plus this README |
+| Current entry state | Each child currently contains only its own README; **no archived exploratory artifacts are present below these three lanes** |
+| Authority limit | Historical and design-lineage context only; never current doctrine, an accepted ADR, a contract, schema, policy decision, evidence object, release state, or implementation proof |
+| Review route | `@bartytime4life` through the repository's default [`CODEOWNERS`](../../../.github/CODEOWNERS) rule; routing is not review, approval, stewardship, or separation-of-duties proof |
 
-`docs/archive/exploratory/` is the canonical home for **closed exploratory material** in the KFM documentation tree. It exists so that ideas that never reached canon remain inspectable as lineage — the project can answer "did we ever consider X?" without exhuming git history.
+**CONFIRMED:** the lane, its three direct child directories, and all four README files exist in the reviewed repository state.
 
-Three categories of artifact land here:
+**NEEDS VERIFICATION:** modernization of the three child READMEs, the final closure vocabulary for each child, future entry metadata, external consumers, independent stewardship, and dedicated archive-entry validation.
 
-1. **Closed idea packets** — entries from `docs/intake/IDEA_INTAKE.md` (and `docs/intake/NEW_IDEAS_INDEX.md`) that were closed without promotion.
-2. **Never-promoted drafts** — architecture sketches, speculative dossiers, design experiments authored outside the intake pipeline but never adopted.
-3. **Withdrawn proposed-ADRs** — ADR drafts that reached proposed state but were withdrawn before acceptance.
+<a id="3-inputs--what-belongs-here"></a>
+
+## Purpose and inherited boundary
+
+This README refines the parent [`docs/archive/README.md`](../README.md) contract for one child lane. The parent establishes that archived documentation is retained, non-current, and non-authoritative. This lane narrows that rule to human-readable material that **never became current authority** or was voluntarily closed before an authority-bearing decision was reached.
+
+The lane helps reviewers answer:
+
+- What exploratory artifact was retained?
+- Which current or historical surface did it originate from?
+- Did it remain a standalone draft, become an intake packet, or reach a proposed ADR stage?
+- Why was it closed or withdrawn?
+- What current artifact, open question, or future intake record may reference it?
+- Which correction, exposure, retention, and rollback rules preserve the historical record safely?
+
+This directory is outside KFM's data lifecycle. Moving documentation here does not perform `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED`, admit a source, resolve an `EvidenceRef`, approve policy, release an artifact, deploy a system, or publish a claim.
+
+<a id="4-exclusions--what-does-not"></a>
+
+## What belongs here
+
+A human-readable artifact belongs under `docs/archive/exploratory/` only when all applicable conditions are supported:
+
+1. Its primary responsibility is documentation rather than executable behavior or a trust-object instance.
+2. It never became current doctrine, an accepted ADR, an authoritative contract or schema explanation, an active runbook, or another current writable documentation authority.
+3. Its active review or intake work is closed, withdrawn, or deliberately not advanced.
+4. Its exact identity and artifact form are known well enough to select one child lane.
+5. The closure or withdrawal reason is preserved at the level required to avoid misleading future readers.
+6. Retention does not expose secrets, private data, restricted source material, protected precise locations, or unresolved rights and sensitivity.
+7. No second writable copy of current material is created.
+
+Typical admitted material may include:
+
+- a substantive standalone design draft that was consciously retired without becoming current authority;
+- a closed documentation-intake packet that was not promoted to an owning authority surface;
+- a proposed ADR draft voluntarily withdrawn before acceptance or rejection;
+- small metadata, index, or navigation records required to preserve the exploratory disposition.
 
 > [!NOTE]
-> Directory presence and exact contents are **PROPOSED** per `docs/archive/README.md` §7. Treat every claim below as `NEEDS VERIFICATION` until inspected on disk.
+> A useful idea may still be archived here. Archive placement says the **historical artifact is closed**, not that the underlying question can never be revisited.
 
-[⬆ Back to top](#-archived-exploratory-material)
+## What does not belong here
 
----
+| Do not place here | Owning surface or action |
+|---|---|
+| Active drafts, open intake packets, or work still seeking a decision | Keep in the current authoring, intake, issue, branch, or review surface |
+| Current doctrine, architecture, ADRs, runbooks, standards, or domain guidance | Keep at the current writable documentation authority |
+| Previously current documentation retained as supersession history | [`../lineage/`](../lineage/README.md) when the governing transition selects lineage |
+| Documentation under an explicit deprecation, migration, sunset, or retirement disposition | [`../deprecated/`](../deprecated/README.md) when the governing transition selects that lane |
+| Rejected ADRs without a verified repository disposition | Return `HOLD`; this README does not invent a rejected-ADR home |
+| Semantic contracts, machine schemas, or policy source | `contracts/`, `schemas/`, or `policy/` |
+| Source descriptors, data instances, evidence, receipts, proofs, catalogs, or published carriers | Their governed `data/` family |
+| Release manifests, promotion decisions, correction notices, withdrawal notices, or rollback cards | `release/` |
+| Generated previews, lint output, coverage, or temporary QA artifacts | External CI artifacts or the governed generated-output lane |
+| Secrets, credentials, personal data, restricted content, or unsafe exact locations | Do not commit; use the applicable protected system and policy path |
 
-## 2. Repo fit
+Age, inactivity, a closed pull request, a failed experiment, or the word “draft” is not enough to establish exploratory archive placement.
 
-| Direction  | Surface                                                                  | Relationship                                                              | Status                 |
-|------------|--------------------------------------------------------------------------|---------------------------------------------------------------------------|------------------------|
-| Upstream   | `docs/intake/IDEA_INTAKE.md`                                             | Packets closed `not-promoted` land here.                                  | **PROPOSED**           |
-| Upstream   | `docs/intake/NEW_IDEAS_INDEX.md`                                         | The index records the closure decision; the body moves here.              | **PROPOSED**           |
-| Upstream   | `docs/adr/`                                                              | Proposed ADRs withdrawn before acceptance move to `withdrawn-adrs/`.      | **PROPOSED**           |
-| Sibling    | `docs/archive/lineage/`                                                  | Holds **predecessors of canon**, not unpromoted ideas. No cross-moves.    | **CONFIRMED — distinct** |
-| Sibling    | `docs/archive/deprecated/`                                               | Holds **sunset-dated** removals, not unpromoted ideas.                    | **CONFIRMED — distinct** |
-| Downstream | `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`                        | Classifies entries here as `exploratory` by relative path.                | **PROPOSED**           |
+<a id="5-directory-layout"></a>
+<a id="8-subfolders"></a>
 
-> [!WARNING]
-> Do **not** treat this folder as a parking lot for "looks half-baked." Open packets stay in `docs/intake/`. Drafts of *current* canonical docs stay in their canonical home with PR review. Only **closed** states land here.
+## Direct-child map
 
-[⬆ Back to top](#-archived-exploratory-material)
-
----
-
-## 3. Inputs — what belongs here
-
-A file belongs in `exploratory/` when **all** of the following are true:
-
-1. The subject is **not current canon** and was never promoted to canon.
-2. The intake decision (or the author's withdrawal) is **closed** — the packet, draft, or proposed-ADR is in a terminal state.
-3. A reason for non-promotion is recorded in front matter (`reason:` field) — rejected, deferred indefinitely, merged into a different concept, or author-withdrawn.
-4. The file has been classified in `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` as `exploratory`.
-
-| Artifact                                | Destination subfolder      | Trigger                                       |
-|-----------------------------------------|----------------------------|-----------------------------------------------|
-| Closed `IDEA_INTAKE` packet             | `idea-packets/`            | Index records closure without merge.          |
-| Never-promoted architecture sketch      | `drafts/`                  | Author or steward marks `closed-no-promote`.  |
-| Speculative dossier (not adopted)       | `drafts/`                  | Same as above.                                |
-| Withdrawn proposed-ADR                  | `withdrawn-adrs/`          | ADR transitions `proposed → withdrawn`.       |
-
----
-
-## 4. Exclusions — what does not
-
-| Do not place here                             | Where it goes instead                                          | Why                                                       |
-|-----------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------|
-| Open / in-progress idea packets               | `docs/intake/`                                                 | Open packets are part of the intake pipeline.             |
-| Predecessors of current canon                 | `docs/archive/lineage/`                                        | Those are supersession trails, not unpromoted ideas.      |
-| Docs scheduled for removal with sunset date   | `docs/archive/deprecated/`                                     | Deprecation is operational, not exploratory.              |
-| Drafts of *current* canonical docs            | Author in place under PR review                                | Drafts of canon are canon-in-progress, not exploratory.   |
-| Accepted ADRs                                 | `docs/adr/`                                                    | Only **withdrawn** proposed-ADRs land here.               |
-| Generated reports                             | `docs/reports/`                                                | Reports are current outputs, not exploratory.             |
-
-> [!CAUTION]
-> A "good idea we might revisit" still belongs here once its packet is **closed**. Re-opening is done by a **new** intake entry that may reference the archived packet; do not edit the archived packet to "reopen" it.
-
-[⬆ Back to top](#-archived-exploratory-material)
-
----
-
-## 5. Directory layout
-
-> [!WARNING]
-> The tree below is **PROPOSED** per `docs/archive/README.md` §7. Path presence is `NEEDS VERIFICATION` until inspected on disk.
+The current tree is verified from repository evidence and intentionally stops at the direct children plus their README-only state.
 
 ```text
 docs/archive/exploratory/
-├── README.md           # this file
-├── idea-packets/       # closed IDEA_INTAKE packets (PROPOSED)
-├── drafts/             # never-promoted drafts (PROPOSED)
-└── withdrawn-adrs/     # proposed-but-withdrawn ADRs (PROPOSED)
+├── README.md
+├── drafts/
+│   └── README.md
+├── idea-packets/
+│   └── README.md
+└── withdrawn-adrs/
+    └── README.md
 ```
 
----
+| Child lane | Bounded role | Current evidence | Local contract |
+|---|---|---|---|
+| `drafts/` | Standalone exploratory documents that never became current authority | Directory and README present; no archived entries | [`drafts/README.md`](drafts/README.md) |
+| `idea-packets/` | Closed documentation-intake packets retained as historical review context | Directory and README present; no archived entries | [`idea-packets/README.md`](idea-packets/README.md) |
+| `withdrawn-adrs/` | Proposed ADR drafts voluntarily withdrawn before an acceptance or rejection decision | Directory and README present; no archived entries | [`withdrawn-adrs/README.md`](withdrawn-adrs/README.md) |
 
-## 6. Lifecycle (INTAKE → EXPLORATORY)
+The child READMEs still contain draft-era planning and placeholder language. Their presence is implementation evidence; their unreviewed vocabularies, thresholds, record shapes, or lifecycle claims are not automatically adopted by this parent modernization.
 
-```mermaid
-flowchart LR
-    A["Open packet<br/>docs/intake/IDEA_INTAKE.md"]
-    B["Draft (sketch, dossier)<br/>any author location"]
-    C["Proposed ADR<br/>docs/adr/"]
+<a id="6-lifecycle-intake--exploratory"></a>
+<a id="10-authoring-workflow"></a>
 
-    A -->|"closed: not promoted"| EP["exploratory/idea-packets/"]
-    B -->|"closed: no promotion"| ED["exploratory/drafts/"]
-    C -->|"withdrawn"| EW["exploratory/withdrawn-adrs/"]
+## Exploratory closure workflow
 
-    EP --> R["docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md<br/>classifies entry"]
-    ED --> R
-    EW --> R
+Use the smallest transition that preserves identity, one-writer authority, historical meaning, and rollback:
 
-    classDef src fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
-    classDef arc fill:#ede7f6,stroke:#5e35b1,color:#311b92;
-    classDef reg fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
-    class A,B,C src;
-    class EP,ED,EW arc;
-    class R reg;
+1. **Resolve the artifact identity.** Record the exact path, document ID when one exists, current bytes, authoring form, and current authority state.
+2. **Separate active from closed work.** Do not archive an open draft, open intake packet, active ADR proposal, or current writable document.
+3. **Classify the disposition.** Determine whether the artifact is exploratory closure, lineage, deprecation, correction, withdrawal, or another state; return `HOLD` when the distinction is unresolved.
+4. **Select the child lane.** Route by verified artifact form—standalone draft, closed documentation-intake packet, or voluntarily withdrawn proposed ADR—not by topic, age, or convenience.
+5. **Preserve closure evidence.** Keep the reason, date, originating surface, relevant current or successor work, review route, and any sensitivity treatment needed to interpret the record.
+6. **Preserve compatibility and one writer.** Repair verified direct links and metadata without creating a second writable copy or silently rewriting the historical body.
+7. **Validate and review.** Run the changed-document metadata and local-link checks plus any artifact-specific authority, security, sensitivity, or migration checks.
+
+Finite outcomes:
+
+| Outcome | Meaning |
+|---|---|
+| `PLACE` | The exact identity, never-current status, closure evidence, child lane, exposure, and retention posture are sufficiently supported. |
+| `HOLD` | A required identity, authority decision, closure reason, child classification, consumer inventory, or rights/sensitivity review is missing. |
+| `REJECT` | The artifact remains active, was previously current authority, belongs to another responsibility root, would create a parallel writer, or cannot be retained safely. |
+| `ERROR` | The transition or its validation could not complete safely. |
+
+An exploratory archive transition is a documentation-state operation only. It does not promote, publish, release, deploy, or approve the archived content.
+
+<a id="7-immutability-invariant"></a>
+<a id="9-conventions"></a>
+
+## Entry requirements and correction discipline
+
+This parent README does not establish a universal archive-entry schema. Before an artifact is added, the reviewable transition should preserve enough information to establish:
+
+- exact path and stable document identity when available;
+- artifact form and selected child lane;
+- closure or withdrawal kind and bounded reason;
+- closure date and verified author/review route;
+- originating intake, ADR, branch, issue, or authoring surface when available;
+- related current work, successor, merged concept, or no-successor rationale;
+- exposure, rights, sensitivity, and any required redaction or generalization;
+- permitted mutation, retention, correction, and rollback method;
+- known links or consumers whose compatibility must be preserved.
+
+The proposed [`CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) may be used as a human review companion when an applicable entry exists. Its current `PROPOSED` status and empty entry set mean it is not independent placement or closure authority.
+
+### Historical-body rule
+
+Archived exploratory bodies are **read-mostly**, not silently rewritten:
+
+- preserve the original meaning, uncertainty, and historical status;
+- use a visible correction note, addendum, metadata fix, or successor link when later evidence changes the interpretation;
+- redact or replace unsafe material through a reviewed security, privacy, rights, or sensitivity correction when retention would cause harm;
+- create a new current intake record, ADR, or document when the idea is revived rather than editing the archive into current work;
+- never erase an inconvenient closure reason merely to improve presentation.
+
+<a id="inputs-outputs-exposure-mutation-and-retention"></a>
+
+## Inputs, outputs, exposure, mutation, and retention
+
+### Inputs
+
+- current documentation bytes, path, identity, and authority state;
+- the relevant intake, ADR, branch, issue, review, or closure evidence;
+- current parent and child archive contracts;
+- known links, fragments, navigation, and consumers;
+- rights, sensitivity, privacy, security, and exposure evidence;
+- correction and rollback requirements appropriate to significance.
+
+### Outputs
+
+- a retained human-readable exploratory artifact or bounded archive metadata/navigation update;
+- explicit closure, withdrawal, or never-promoted context;
+- repaired direct references where they are verified dependencies of the transition;
+- documentation QA evidence for the changed scope.
+
+The output is historical documentation. It is not a `SourceDescriptor`, `EvidenceBundle`, `PolicyDecision`, receipt, proof, release object, or publication record.
+
+### Exposure, mutation, and retention
+
+| Surface | Rule |
+|---|---|
+| This README | Versioned boundary contract; update when the lane responsibility, direct children, validation, or review route changes |
+| Child README | Versioned local contract; each child must remain consistent with this parent without expanding its authority |
+| Archived body | Read-mostly after closure; preserve historical meaning and use visible corrections or a new current artifact instead of silent rewriting |
+| Archive metadata and indexes | Versioned updates are permitted when they improve identity, navigation, correction, exposure, or successor links without changing the historical claim |
+| Public exposure | Repository-facing/public only when rights and sensitivity permit; otherwise deny retention here or retain an approved public-safe representation |
+| Physical storage | Tracked Git content unless an accepted transition establishes another governed store |
+| Retention | Durable while needed for anti-rediscovery, lineage, compatibility, auditability, or correction; deletion is a final reviewed step after exact identity, consumer, sensitivity, and rollback checks |
+| Rollback | Before merge, close the draft PR and abandon its branch. After merge, revert the focused commit or apply a reviewed forward fix without recreating two writable authorities. |
+
+<a id="11-faq"></a>
+<a id="12-related-docs"></a>
+<a id="13-last-reviewed"></a>
+
+## Validation, ownership, and review
+
+### Repository-native checks
+
+Run the smallest current check set that covers this README:
+
+```bash
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --registry control_plane/document_registry.yaml \
+  --format text \
+  docs/archive/exploratory/README.md
+
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/archive/exploratory/README.md
 ```
 
-> [!NOTE]
-> The trigger for `drafts/` placement is **NEEDS VERIFICATION** — the exact lifecycle gate for non-intake drafts is not formally specified. Until then, the docs steward determines closure.
+The repository's bounded documentation workflows may run these checks for changed Markdown. A passing result is documentation QA evidence only; it does not adopt a child contract, approve an archived idea, validate its source claims, or authorize implementation, release, or publication.
 
----
+### Negative checks
 
-## 7. Immutability invariant
+Hold or reject a change that would:
 
-Files in `exploratory/` are **append-only by closure** and **immutable in content**. The only edits permitted post-archival are:
+- make archived exploratory prose appear current or authoritative;
+- archive active work or previously current authority under the wrong child lane;
+- invent a rejected-ADR or universal closure vocabulary without a governing decision;
+- move or delete a document without the required identity, authority, consumer, and rollback evidence;
+- create a second writable doctrine, contract, schema, policy, evidence, registry, release, receipt, proof, or current-documentation home;
+- break a known stable path, fragment, or successor/reference link without bounded compatibility;
+- conceal uncertainty, a failed validation, closure context, correction lineage, or sensitivity concern;
+- retain secrets, private information, restricted source material, or harmful precision.
 
-- Adding or correcting the front-matter metadata block (per [§9](#9-conventions)).
-- Adding a back-link in metadata when a **new** intake entry references the closed packet.
+### Ownership and escalation
 
-Content edits — rewriting the body, "improving" the idea, removing claims — are **drift events** and require revert. If an exploratory artifact's body needs change, it is no longer archived: a new intake entry must be opened.
+[`CODEOWNERS`](../../../.github/CODEOWNERS) routes the default review to `@bartytime4life`. Additional review is required from the affected authority owner when an archive change alters doctrine or ADR history, security or sensitivity posture, public navigation, or a structural migration.
 
----
+Escalate instead of guessing when a change would create, rename, merge, split, or retire a child lane; decide the disposition of rejected ADRs; remove a stable or externally consumed path; change exposure of protected information; or contradict an accepted ADR or the parent archive contract.
 
-## 8. Subfolders
+### Last evidence review and triggers
 
-### `idea-packets/`
+| Field | Value |
+|---|---|
+| Review date | `2026-08-17` |
+| Repository | `bartytime4life/Kansas-Frontier-Matrix` |
+| Reviewed base | `main@33c41a62845e2b10bc12969063e381ee74120f90` |
+| Target prior blob | `aa21df609917a002ceb141e03202302db52d813c` |
+| Parent archive blob | `03b2d6984e3735247da8a3ee0bd1e0ffc09e7e24` |
+| Current direct children | `drafts/`, `idea-packets/`, `withdrawn-adrs/` |
+| Current child payload state | Each child contains `README.md` only |
+| Placement authority | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`Directory Rules`](../../doctrine/directory-rules.md) |
 
-Closed entries from `docs/intake/IDEA_INTAKE.md` (and the `NEW_IDEAS_INDEX`). Each packet retains its original filename; the index records the closure decision and points here.
+Re-review this boundary when:
 
-### `drafts/`
+- Directory Rules, ADR-0029, or the parent archive contract changes materially;
+- a child is added, removed, renamed, merged, split, or changes responsibility;
+- the first archived artifact is admitted to any child lane;
+- a child README is modernized or its closure vocabulary changes;
+- intake or ADR state vocabularies are adopted or superseded;
+- validation or CODEOWNERS coverage changes;
+- a correction, withdrawal, sensitive-data event, broken link, or rollback affects retained exploratory material;
+- evidence shows this README conflicts with repository behavior or a governing transition.
 
-Never-promoted drafts authored outside the intake pipeline — architecture sketches, speculative dossiers, design experiments. Closure is recorded in front matter; there is no central index, so the docs steward owns enumeration.
+## Common decisions
 
-### `withdrawn-adrs/`
+### Is every abandoned draft an archive candidate?
 
-ADR drafts that reached `proposed` state but were withdrawn before acceptance. Files retain their ADR number (e.g., `ADR-0042-...withdrawn.md`); the canonical `docs/adr/` index links here from the withdrawn entry.
+No. The artifact must be substantive enough to preserve, explicitly closed, safely retainable, and classifiable without creating a second writer. Trivial scratch notes may be deleted from an unmerged branch rather than admitted as durable history.
 
-[⬆ Back to top](#-archived-exploratory-material)
+### How is an archived idea revived?
 
----
+Open a new current intake record, ADR proposal, or documentation artifact that cites the archived item as history and explains what evidence or conditions changed. Do not mutate the archived body into active work.
 
-## 9. Conventions
+### Does “withdrawn” mean “rejected”?
 
-Every file in `docs/archive/exploratory/` MUST carry a front-matter block with these fields:
+No. This lane uses `withdrawn-adrs/` for voluntary author withdrawal before a terminal review decision. The repository disposition for formally rejected ADRs is not decided here and remains `HOLD` until governed evidence resolves it.
 
-```text
-archived_on:      YYYY-MM-DD
-archived_by:      <reviewer or team>
-predecessor_of:   "none — exploratory closure"
-supersession:     retirement
-adr_ref:          <ADR id, if structural>
-register_ref:     <line/anchor in docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md>
-reason:           <one or two sentences — rejected | deferred | merged-into-other | withdrawn>
-intake_ref:       <line/anchor in docs/intake/NEW_IDEAS_INDEX.md, if applicable>
-```
+### May current documentation cite an exploratory artifact?
 
-Additional rules:
+Yes, for historical context, prior alternatives, or lineage. The citation must identify the target as exploratory and must not rely on it as current authority or implementation proof.
 
-- **Filenames are not renamed** on archival, except to add a trailing `.withdrawn.md` for withdrawn ADRs to preserve the original ADR number.
-- **No cross-archive moves.** An idea here does not migrate to `lineage/` if later revived — a **new** intake entry must produce a **new** canon doc; the original packet stays here as the original closure.
-- **Two-level depth max** under any subfolder without an ADR.
+### May source data, evidence, or release objects be archived here?
 
----
+No. This lane owns human documentation only. Trust objects and lifecycle instances remain with their governed object families.
 
-## 10. Authoring workflow
+## Related authorities
 
-1. The intake owner (or ADR author) records the closure decision in the appropriate source surface (`NEW_IDEAS_INDEX.md` or the ADR index).
-2. The packet/draft/ADR is moved here with `git mv` — filename preserved.
-3. The front-matter block (per [§9](#9-conventions)) is added in the same PR.
-4. An entry is added to `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` classifying the file as `exploratory`.
-5. A docs steward reviews the closure metadata and merges.
+| Surface | Relationship |
+|---|---|
+| [`docs/archive/README.md`](../README.md) | Parent archive boundary and child-lane routing authority |
+| [`docs/archive/lineage/README.md`](../lineage/README.md) | Historical predecessors and supersession context for material that was current authority |
+| [`docs/archive/deprecated/README.md`](../deprecated/README.md) | Explicit documentation deprecation, migration, sunset, and retirement dispositions |
+| [`docs/intake/README.md`](../../intake/README.md) | Current documentation-intake lane; not source or data intake authority |
+| [`docs/intake/NEW_IDEAS_INDEX.md`](../../intake/NEW_IDEAS_INDEX.md) | Draft, intake-only packet index; not promotion authority |
+| [`CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) | Proposed human review register with no current entries |
+| [`Directory Rules`](../../doctrine/directory-rules.md) | Adopted responsibility-root, README-inheritance, placement, migration, and rollback law |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted decision adopting the exact Directory Rules v2 bytes |
+| [`CODEOWNERS`](../../../.github/CODEOWNERS) | Default GitHub review routing; not approval or stewardship proof |
+| [`meta-block` validator](../../../tools/validators/docs/meta-block/check_meta_blocks.py) | Bounded documentation metadata QA |
+| [`link-check` validator](../../../tools/validators/docs/link-check/README.md) | Deterministic, no-network local Markdown target and fragment QA |
 
-[⬆ Back to top](#-archived-exploratory-material)
+## Status and rollback
 
----
+**CONFIRMED:** same-path modernization target; lane and three direct children; README-only current child state; parent archive contract; accepted Directory Rules v2 authority; default CODEOWNERS route; repository-native metadata and local-link validator entrypoints.
 
-## 11. FAQ
+**NEEDS VERIFICATION:** child README modernization, authoritative child closure vocabularies and entry metadata, rejected-ADR disposition, first real archive entries, external consumers, independent stewardship, and dedicated archive-entry validation.
 
-<details>
-<summary><strong>An idea I archived here turned out to be relevant. Can I "promote" it?</strong></summary>
+Rollback this documentation-only update by closing the draft pull request and abandoning its branch before merge. After an authorized merge, revert the focused commit or apply a reviewed forward fix, then rerun the metadata and link checks. No source, data, policy, runtime, release, deployment, or public-system rollback is required.
 
-No — not by editing the archived file. Open a **new** intake entry, reference the archived packet by path, and let the new entry go through the normal promotion gates. The archived packet stays in place as the original closure record.
-
-</details>
-
-<details>
-<summary><strong>What is the difference between <code>exploratory/</code> and <code>lineage/</code>?</strong></summary>
-
-`lineage/` holds **predecessors of current canon** — material that *was* canon and was superseded. `exploratory/` holds material that **never reached canon** — closed packets, withdrawn proposals, unpromoted drafts. They never cross-move.
-
-</details>
-
-<details>
-<summary><strong>Where do <em>open</em> idea packets live?</strong></summary>
-
-In `docs/intake/`. Only **closed** packets land here.
-
-</details>
-
-<details>
-<summary><strong>Can I edit a withdrawn ADR to "fix a typo"?</strong></summary>
-
-Only inside the metadata block (per [§9](#9-conventions)). Body edits are drift events. If the ADR's content needs to change, it is no longer withdrawn — author a new proposed ADR.
-
-</details>
-
----
-
-## 12. Related docs
-
-- [`../README.md`](../README.md) — parent archive README and supersession rule
-- [`../lineage/README.md`](../lineage/README.md) — predecessors of canon
-- [`../deprecated/README.md`](../deprecated/README.md) — sunset-dated removals
-- [`../../intake/IDEA_INTAKE.md`](../../intake/IDEA_INTAKE.md) — source of `idea-packets/`
-- [`../../intake/NEW_IDEAS_INDEX.md`](../../intake/NEW_IDEAS_INDEX.md) — closure index
-- [`../../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) — classification register
-- [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — governs closure transitions
-- [`../../doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — why exploratory ≠ authoritative
-
----
-
-## 13. Last reviewed
-
-| Field          | Value        |
-|----------------|--------------|
-| Last reviewed  | 2026-05-25   |
-| Next review    | TODO         |
-| Reviewer       | TODO — Docs Steward |
-
-[⬆ Back to top](#-archived-exploratory-material)
+[Back to top](#top)
