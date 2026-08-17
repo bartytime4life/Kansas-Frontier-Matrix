@@ -44,10 +44,22 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 - Use `.dockerignore` to exclude local caches, raw data, generated outputs, credentials, and other non-image material.
 - Prefer non-root runtime users where practical.
 - Keep build-time dependencies separate from runtime image contents when practical.
+- Preserve digest-pinned base-image identity, checksum- or hash-locked dependency inputs, and explicit build context.
+- When a pinned base contains a fixed vulnerability with an available distribution package, use the smallest reviewed package-family refresh, assert the required fixed-version floor, and remove package-manager metadata afterward.
+- Do not weaken severity thresholds, ignore findings, add an exemption, or suppress scanner failure merely to restore a green workflow.
 - Document exposed ports, intended runtime user, expected entrypoint, and whether the image is internal-only or public-facing.
 - Keep internal stores, raw data paths, and direct model runtimes behind governed services.
 - Treat image tags as build identifiers, not release approval or publication state.
-- Do not treat a successful image build as validation of KFM truth, evidence, policy, release, publication, or governance behavior.
+- Treat every vulnerability scan as point-in-time evidence bound to the image bytes, scanner version, and vulnerability database used for that run.
+- Do not treat a successful image build or scan as validation of KFM truth, evidence, policy, release, publication, or governance behavior.
+
+## Confirmed review-image security posture
+
+The two checked-in Dockerfiles are payload-free security-review placeholders. They are built and scanned by [`security.yml`](../../.github/workflows/security.yml) from the `infra/docker` context with Trivy configured for OS and library vulnerabilities at `HIGH,CRITICAL`, `ignore-unfixed: true`, and fail-closed exit code `1`.
+
+Both digest-pinned Debian 13 base images previously carried `CVE-2026-53615` in the installed `util-linux` package family at version `2.41-5`. The bounded repair in PR #2986 preserved both base-image digests and all application dependency locks, upgraded only the nine already-installed affected packages, asserted `libblkid1 >= 2.41.5-0+deb13u1`, and removed apt metadata. It did not change the scanner policy, build context, runtime users, dependency manifests, or repository settings.
+
+This confirms a repository-owned final-image assembly correction for the affected OS package layer. It does not establish that future base images or vulnerability databases will remain finding-free, that these placeholders are production images, or that any image is released, deployed, published, or approved for public use.
 
 ## Expected Docker file families
 
@@ -78,19 +90,25 @@ Do not use this lane for secrets, credentials, tokens, private keys, production 
 
 ## Maintenance notes
 
-- Update this README when Dockerfiles, build templates, `.dockerignore` files, base images, build args, exposed ports, health checks, entrypoints, runtime users, scan requirements, SBOM steps, or image consumers are added.
-- Every checked-in Dockerfile should document intended environment, base image posture, build context, exposed ports, runtime user, secret handling, data-copy posture, and validation command.
+- Update this README when Dockerfiles, build templates, `.dockerignore` files, base images, build args, exposed ports, health checks, entrypoints, runtime users, package refreshes, scan requirements, SBOM steps, or image consumers are added.
+- Every checked-in Dockerfile should document intended environment, base image posture, build context, exposed ports, runtime user, secret handling, data-copy posture, package refresh rationale, and validation command.
 - Keep local-only convenience images visibly separate from production-like images.
+- Re-run the focused image scans after base-image, OS-package, lockfile, dependency, build-context, scanner-version, or vulnerability-database changes.
 - If a Dockerfile changes exposure, raw-data access, secret handling, model access, release behavior, or public-client routing, require maintainer review and steward review before relying on it.
 - If a Docker build accidentally includes raw data, secrets, direct model runtime, canonical stores, proof/receipt material, release material, or generated CI output as source content, revert or disable the image path and record the correction path.
 
 ## Verification status
 
-- Target README: replaced greenfield stub content.
-- Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both remain payload-free security-review placeholders. `Dockerfile.explorer-web` pins the Node 22.23.2 trixie-slim image by digest, installs npm 11.19.0 from a registry tarball bound by Docker `ADD --checksum`, installs the two security overrides with `npm ci` from a committed integrity lock, and ends as the non-root `node` user. `Dockerfile.governed-api` pins the Python 3.11.15 trixie-slim image by digest, installs `setuptools` 82.0.1 and `wheel` 0.46.3 from a hash-locked requirements file, and ends as UID/GID 10001. No `.dockerignore` was verified in this lane.
-- Exact child-lane inventory under `infra/docker/`: **CONFIRMED** `README.md`, both Dockerfiles, `governed-api-requirements.lock`, and the `explorer-web/` npm manifest and lockfile at the inspected revision.
+- Evidence snapshot: **CONFIRMED** against `main@33c41a62845e2b10bc12969063e381ee74120f90`, the merged PR #2986 repair, and current-main security run `31995417666`.
+- Target README: same-path evidence refresh; no placement, authority, runtime, release, deployment, publication, or repository-setting change.
+- Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both remain payload-free security-review placeholders. Both preserve their digest-pinned Debian 13 base images, upgrade only the affected installed `util-linux` package family to the fixed Debian security level, assert the `libblkid1` fixed-version floor, remove apt metadata, and end as non-root users.
+- Explorer dependency posture: **CONFIRMED** npm `11.19.0` remains checksum-bound; `brace-expansion` `5.0.9` and `ip-address` `10.3.1` remain installed from the committed integrity lock.
+- Governed API dependency posture: **CONFIRMED** `packaging` `26.3`, `wheel` `0.46.3`, and `setuptools` `82.0.1` remain installed from the hash-locked requirements file.
+- Exact child-lane inventory under `infra/docker/`: **CONFIRMED** `README.md`, both Dockerfiles, `governed-api-requirements.lock`, and the `explorer-web/` npm manifest and lockfile at the inspected revision. No `.dockerignore` was verified in this lane.
+- Security workflow: **CONFIRMED** current-main run `31995417666` passed repository scanning, both image builds, both governed-api and explorer-web Trivy container scans, OpenSSF Scorecard, and the aggregate `security-result`. Dependency review was correctly skipped for the push event.
+- Tests and validators: **CONFIRMED** the no-network Compose static suite checks context and Dockerfile resolution, loopback-only published ports, forbidden mount/privilege markers, and a final non-root `USER` in both Dockerfiles. The hosted `security` workflow independently supplies the current image-build and container-scan evidence.
 - Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
 - Compose sibling alignment: PARTIALLY VERIFIED against `infra/compose/README.md`.
 - Directory Rules alignment: PARTIALLY VERIFIED against `docs/doctrine/directory-rules.md`.
-- Runtime/service alignment: NEEDS VERIFICATION against app services, runtime adapters, configs, secrets handling, SBOM tooling, deployment targets, image tags, and registry targets.
-- Tests and validators: the no-network Compose static suite verifies path resolution, loopback-only published ports, forbidden mount/privilege markers, and a final non-root `USER` in both Dockerfiles. Local targeted execution passed. Image builds and Trivy repository/container scans remain **NEEDS VERIFICATION** until exact-head hosted checks complete.
+- Runtime/service alignment: NEEDS VERIFICATION against application startup, runtime adapters, configs, secret handling, SBOM generation, deployment targets, image tags, registry targets, release integration, and operational rollback.
+- Security non-effects: a passing scan is point-in-time review evidence only; it does not prove permanent vulnerability absence, runtime behavior, release eligibility, deployment approval, publication safety, or public availability.
