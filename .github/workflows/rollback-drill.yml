@@ -12,10 +12,10 @@
 #   access occurs.
 #
 # Inputs:
-#   Rollback pipeline/apply/audit placeholders, RollbackCard contracts and
-#   schemas, declared fixture and validator paths, placeholder rollback-card
-#   records, drill-test inventory, rollback data lanes, published alias
-#   inventory, policy routing, and the proposed alias ADR.
+#   Rollback pipeline/audit placeholders, the synthetic apply rehearsal,
+#   RollbackCard contracts and schemas, declared fixture and validator paths,
+#   placeholder rollback-card records, drill-test inventory, rollback data
+#   lanes, published alias inventory, policy routing, and the proposed alias ADR.
 #
 # Outputs and outcomes:
 #   Inspection output and job summaries only. Jobs confirm the bounded current
@@ -28,8 +28,8 @@
 #   `verify-published-aliases`; repository rules may refer to those check names.
 #
 # Rollback:
-#   Revert this file. Do not restore echo-only green jobs or invoke placeholder
-#   helpers as though they simulate a rollback or validate published aliases.
+#   Revert this file. Do not restore echo-only green jobs or invoke the bounded
+#   synthetic helper as though it authorizes production rollback or aliases.
 #
 # Placement:
 #   `.github/workflows/` owns CI orchestration. Rollback contracts, schemas,
@@ -107,11 +107,15 @@ jobs:
           release_fixture_root = Path("fixtures/release/rollback_card")
           rollback_pipeline_path = Path("pipelines/rollback/main.py")
           rollback_apply_path = Path("tools/release/rollback_apply.py")
+          rehearsal_test_path = Path(
+              "tests/release/test_synthetic_rollback_rehearsal.py"
+          )
           agriculture_drill_root = Path("tests/domains/agriculture/rollback_drill")
 
           required = [
               rollback_pipeline_path,
               rollback_apply_path,
+              rehearsal_test_path,
               generic_validator_path,
               release_validator_path,
               release_contract_path,
@@ -132,17 +136,29 @@ jobs:
           missing = [path.as_posix() for path in required if not path.is_file()]
           assert not missing, f"required rollback-drill evidence is missing: {missing}"
 
-          placeholders = {
-              rollback_pipeline_path: "# rollback stage — greenfield placeholder",
-              rollback_apply_path: "# Apply a signed rollback_card — greenfield placeholder",
-          }
-          for path, expected in placeholders.items():
-              actual = path.read_text(encoding="utf-8").strip()
-              assert actual == expected, (
-                  f"{path} has changed; wire its accepted interface, identity, target, "
-                  "signature/review, policy, receipt, invalidation, and no-write tests "
-                  "before retaining this readiness hold"
-              )
+          rollback_pipeline = rollback_pipeline_path.read_text(encoding="utf-8").strip()
+          assert rollback_pipeline == "# rollback stage — greenfield placeholder", (
+              "the production rollback pipeline changed; wire its accepted interface, "
+              "identity, target, signature/review, policy, receipt, invalidation, and "
+              "no-write tests before retaining this readiness hold"
+          )
+
+          rollback_apply = rollback_apply_path.read_text(encoding="utf-8")
+          assert "greenfield placeholder" not in rollback_apply, (
+              "rollback_apply.py regressed to an unimplemented placeholder"
+          )
+          helper_markers = [
+              ".kfm-synthetic-rollback-rehearsal",
+              "NON_SYNTHETIC_INPUT_DENIED",
+              '"public_state_mutated": False',
+          ]
+          missing_helper_markers = [
+              marker for marker in helper_markers if marker not in rollback_apply
+          ]
+          assert not missing_helper_markers, (
+              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
+              f"{missing_helper_markers}"
+          )
 
           generic_validator = generic_validator_path.read_text(encoding="utf-8")
           expected_validator = """def main():
@@ -210,6 +226,27 @@ jobs:
           assert '"outcome":"PASS"' in fixture_result.stdout
           assert "FIXTURE_POLARITY_ERROR" not in fixture_result.stdout
 
+          rehearsal_result = subprocess.run(
+              [
+                  sys.executable,
+                  "-m",
+                  "unittest",
+                  "-q",
+                  "tests.release.test_synthetic_rollback_rehearsal",
+              ],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          rehearsal_output = rehearsal_result.stdout + rehearsal_result.stderr
+          assert rehearsal_result.returncode == 0, rehearsal_output
+          assert "Ran 0 tests" not in rehearsal_output, (
+              "synthetic rollback rehearsal test profile is vacuous"
+          )
+          assert "Ran " in rehearsal_output and "OK" in rehearsal_output, (
+              "synthetic rollback rehearsal test result was not recognized"
+          )
+
           agriculture_schema = json.loads(
               agriculture_schema_path.read_text(encoding="utf-8")
           )
@@ -250,13 +287,15 @@ jobs:
                   "Placeholder created from the current docs/domains markdown inventory."
               ]
 
-          print("CONFIRMED: rollback pipeline, generic entrypoint, and apply helper remain placeholders.")
+          print("CONFIRMED: the production rollback pipeline and generic RollbackCard entrypoint remain placeholders.")
+          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
+          print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
           print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
           print("CONFIRMED: direct Agriculture drill inventory contains guidance only.")
           print(f"CONFIRMED: {len(card_paths)} root rollback-card JSON files remain non-conforming documentation placeholders.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: no rollback was simulated.")
-          print("WORKFLOW_HOLD: no accepted rollback engine, target selection, signature/review verification, invalidation execution, receipt flow, or published-alias mutation exists.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: no production rollback was simulated.")
+          print("WORKFLOW_HOLD: no accepted production rollback engine, target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation exists.")
           print("No rollback card, receipt, proof, signature, release transition, or publication authority was created.")
           PY
 
@@ -267,10 +306,10 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- The release RollbackCard profile is now closed and fixture-validated, while the generic entrypoint, rollback pipeline, and apply helper remain placeholders."
-            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no rollback engine, target selection, signature/review verification, invalidation execution, receipt flow, or published-alias mutation is accepted."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the generic entrypoint and production pipeline remain placeholders, while rollback_apply.py is a marker-protected synthetic-only rehearsal covered by non-vacuous isolated-root tests."
+            echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
             echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
-            echo "- Result: ${{ job.status }}. No rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
+            echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"
 
   verify-published-aliases:
