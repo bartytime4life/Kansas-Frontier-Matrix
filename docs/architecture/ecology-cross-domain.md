@@ -11,13 +11,14 @@ updated: 2026-08-18
 policy_label: public
 owning_root: docs/
 responsibility: Explain how ecology-shaped claims compose domain-owned evidence through bounded cross-domain seams without creating an Ecology domain, parallel truth authority, or public bypass.
-base_commit: 9cb437d803a431928d3b919d9a7814647f812583
+base_commit: 102312c852e46af0c1fa4a214d96538e2137884b
 prior_blob: d8eed34dac129fbe484a968b0649571b39ab6bc8
 directory_governance: ADR-0029 adopts docs/doctrine/directory-rules.md as the sole writable Directory Rules authority; this existing same-path page is retained as an umbrella architecture surface and does not register a seam.
 truth_posture: CONFIRMED current repository evidence; PROPOSED ecology composition architecture; UNKNOWN production enforcement unless explicitly identified below
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/architecture/domain-placement-law.md
   - docs/architecture/cross-lane-join-policy.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/architecture/TRUST_MEMBRANE.md
@@ -56,7 +57,7 @@ notes:
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@9cb437d803a431928d3b919d9a7814647f812583` |
+| **Evidence snapshot** | `main@102312c852e46af0c1fa4a214d96538e2137884b` |
 | **Architecture page** | **CONFIRMED** at this path; explanatory umbrella only |
 | **Directory authority** | **CONFIRMED / ACCEPTED:** [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../doctrine/directory-rules.md) |
 | **Ecology domain lane** | **Not present** in the current proposed machine projection; the projection itself does not create or remove domains |
@@ -101,6 +102,7 @@ The current path is retained because the user requested a same-path modernizatio
 | Surface | Confirmed state at the pinned snapshot | Safe interpretation |
 |---|---|---|
 | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Exact v2 bytes adopted by accepted ADR-0029 | Sole writable human Directory Rules authority |
+| [`docs/architecture/domain-placement-law.md`](./domain-placement-law.md) | Repository-grounded v2 guidance aligned to accepted Directory Rules | Current derived domain/cross-domain placement explanation; non-normative |
 | [`control_plane/domain_lane_register.yaml`](../../control_plane/domain_lane_register.yaml) | `PROPOSED`, machine-projection-only register with 13 domain entries; Ecology is absent | Corroborates the non-domain posture but cannot create or remove a domain |
 | [`control_plane/cross_domain_seam_register.yaml`](../../control_plane/cross_domain_seam_register.yaml) | `PROPOSED`, partial, navigational/review-only register; five seams; all `HOLD_UNRESOLVED`; no public joins | Helps route risk and review; does not authorize a relationship |
 | [`docs/architecture/cross-lane-join-policy.md`](./cross-lane-join-policy.md) | Repository-grounded architecture; fixture-first candidate assessment; policy inactive | Strongest current explanation of candidate, policy, evidence, and release separation |
@@ -617,7 +619,7 @@ A future implementation should choose **one** bounded seam and one public-safe s
 
 **Change class:** material same-path documentation modernization; no governance, policy, schema, runtime, release, or publication change.
 
-- Grounded the page in `main@9cb437d803a431928d3b919d9a7814647f812583` and recorded prior blob `d8eed34dac129fbe484a968b0649571b39ab6bc8`.
+- Grounded the page in `main@102312c852e46af0c1fa4a214d96538e2137884b`, refreshed against the newly merged Domain Placement Law v2 dependency, and recorded prior blob `d8eed34dac129fbe484a968b0649571b39ab6bc8`.
 - Replaced the obsolete architecture-path Directory Rules authority with accepted ADR-0029 and `docs/doctrine/directory-rules.md`.
 - Preserved the core non-domain and atomic-ownership model while changing the DDD analogy from an asserted Shared Kernel to a bounded Context Map unless a shared model is explicitly adopted.
 - Reframed Ecology as an umbrella over multiple registered seams rather than a single implicit Ecology join.
@@ -642,6 +644,7 @@ Initial cross-domain framing. It established the durable thesis that Ecology is 
 
 - [Directory Rules v2](../doctrine/directory-rules.md) — accepted placement authority
 - [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — adoption and compatibility migration decision
+- [Domain Placement Law v2](./domain-placement-law.md) — current derived placement guidance
 - [Cross-Lane Join Policy](./cross-lane-join-policy.md) — current candidate, policy, evidence, release, and public-boundary architecture
 - [Contract / Schema / Policy Split](./contract-schema-policy-split.md) — meaning, shape, admissibility, and enforceability separation
 - [Trust Membrane](./TRUST_MEMBRANE.md) — governed public-path boundary
