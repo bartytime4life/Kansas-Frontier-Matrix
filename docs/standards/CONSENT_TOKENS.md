@@ -1,616 +1,745 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/consent-tokens
-title: Consent Tokens
-type: standard
-version: v1
-status: draft
-owners: TBD (Docs steward + Security/Policy lead)
+title: Consent Tokens — Repository Boundary, Interoperability, and Graduation Standard
+type: standard; interoperability-reference; consent-boundary; security-and-privacy-guidance
+version: v2.0-draft
+status: draft; repository-grounded; upstream-currentness-refreshed; mixed-maturity; no-token-profile-adopted; no-runtime-authority; no-release; no-publication
+owners:
+  - "@bartytime4life — verified GitHub review route through CODEOWNERS"
+  - "NEEDS VERIFICATION — consent, privacy, security, identity, domain, policy, accessibility, release, correction, and independent-review stewards"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-18
+policy_label: public; standards-guidance; consent; privacy; security; no-credentials
+owning_root: docs/
+responsibility: >
+  Explain the human-readable boundary between a consent event, consent grant,
+  consent credential or token, status and withdrawal, KFM policy evaluation,
+  evidence support, release state, and public-safe projection without becoming
+  consent authority, semantic contract, machine schema, policy, issuer, verifier,
+  status service, release decision, or publication proof.
+truth_posture: >
+  CONFIRMED current repository placement, standards-lane role, parent consent-policy
+  documentation posture, scaffolded consent schemas, bounded synthetic
+  People-DNA-Land and Explorer projections, current PolicyDecision vocabulary,
+  and dated official upstream publication-state checks / PROPOSED KFM consent
+  object-family names, claims, profiles, verification order, propagation contract,
+  fixtures, validators, producer and consumer bindings, and graduation sequence /
+  UNKNOWN accepted KFM consent-token profile, qualified issuer and verifier trust
+  framework, production consent records, live status or revocation service, parent
+  consent-policy evaluator, runtime enforcement, propagation effectiveness, public
+  release integration, and operational custody.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 7ac9f151aacc03b03fd486a64b348743b7325a51
+  target_prior_blob: 954efe37bb02e88bae79008950fe6481c98ac58e
+  standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
+  contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  contract_schema_policy_split_blob: cd9aae5adf6aded8dc8671ec7c3a36ac85150830
+  policy_consent_readme_blob: 7dbae5ea1434ecf896176a891dadefea76913999
+  runtime_consent_grant_schema_blob: 90309adcbad648279959a7e236a5282c86705369
+  consent_family_readme_blob: f3df7888166287e4a86c3696204b64799b995eab
+  governance_consent_receipt_schema_blob: a178b7dd29506a0811ac8f00135d849427e698ca
+  consented_genealogy_overlay_contract_blob: d548e5eb93efe0b48accfa497de90dd924f753eb
+  consent_revocation_assessment_contract_blob: dbf1fdff6585f3db4213c17d8f18bfc81ecec04d
+  consent_card_projection_blob: 8f919bb124f21b432ccbceb0c4efc17ddd8b6ab1
+external_currentness_review:
+  access_date: 2026-08-18
+  scope: official issuers only; publication state and security guidance, not KFM adoption or implementation
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/standards/GA4GH_AAI.md            # PROPOSED — companion standard, NEEDS VERIFICATION
-  - docs/standards/SIGNING.md              # PROPOSED — cosign/DSSE
-  - docs/standards/DP_BUDGETS.md           # PROPOSED — differential-privacy budgets
-  - docs/policy/living_persons_geoprivacy.md  # PROPOSED — k-anonymity rule
-  - docs/runbooks/revocation.md            # PROPOSED — revocation playbook
-  - contracts/runtime/consent_token.md     # PROPOSED — meaning
-  - schemas/contracts/v1/runtime/consent_token.schema.json  # PROPOSED — shape (ADR-0001)
-  - policy/consent/                        # PROPOSED — admissibility
-tags: [kfm, standards, consent, privacy, policy-as-code, ga4gh]
+  - ./README.md
+  - ../doctrine/directory-rules.md
+  - ../doctrine/trust-membrane.md
+  - ../doctrine/lifecycle-law.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../architecture/contract-schema-policy-split.md
+  - ../focus-mode/CONSENT_PATTERN.md
+  - ./DUO_MAPPING.md
+  - ./REDACTION_PROFILES.md
+  - ./SENSITIVITY_RUBRIC.md
+  - ../security/DATA_CLASSIFICATION.md
+  - ../../policy/consent/README.md
+  - ../../contracts/policy/policy_decision.md
+  - ../../contracts/domains/people-dna-land/consented_genealogy_overlay.md
+  - ../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md
+  - ../../schemas/contracts/v1/runtime/consent_grant.schema.json
+  - ../../schemas/contracts/v1/consent/README.md
+  - ../../schemas/governance/consent_receipt.schema.json
+  - ../../apps/explorer-web/src/adapters/ConsentCardProjection.ts
 notes:
-  - All KFM-internal paths in this doc are PROPOSED per Directory Rules §0 until verified against mounted-repo evidence.
-  - This doc resolves a known doctrinal gap (C-Atlas Pass 10 §8.6 — "Fragmented Consent Vocabulary") by naming the canonical token surface.
+  - "Same-path standards-document modernization plus one generated-work receipt."
+  - "No consent profile, token format, claim namespace, issuer, verifier, trust registry, status service, policy rule, runtime route, source, release, or publication is adopted or activated by this revision."
+  - "The prior three-artifact distinction is retained but narrowed: repository evidence does not establish canonical ConsentToken, ConsentReceipt, or ConsentSidecar machine object families."
+  - "Existing inbound links remain valid through retained section headings and explicit compatibility anchors."
 [/KFM_META_BLOCK_V2] -->
 
-# Consent Tokens
+<a id="top"></a>
 
-> The canonical KFM standard for **short-lived, signed, machine-readable consent** that travels with sensitive data and is verified, fail-closed, at every render and publication boundary.
+# Consent Tokens — Repository Boundary, Interoperability, and Graduation Standard
 
-![status: draft](https://img.shields.io/badge/status-draft-yellow)
-![authority: standard](https://img.shields.io/badge/authority-standard-blue)
-![policy: cite--or--abstain](https://img.shields.io/badge/policy-cite--or--abstain-informational)
-![fail--mode: closed](https://img.shields.io/badge/fail--mode-closed-critical)
-![alignment: GA4GH--AAI](https://img.shields.io/badge/alignment-GA4GH--AAI-success)
-![signing: DSSE%20%2B%20cosign](https://img.shields.io/badge/signing-DSSE%20%2B%20cosign-lightgrey)
-![last reviewed: 2026--05--14](https://img.shields.io/badge/last%20reviewed-2026--05--14-blue)
+> **Purpose.** Explain how KFM may eventually represent and verify a bounded consent grant at a governed request boundary—without confusing a signed credential, status response, UI card, receipt, schema, policy result, or passing test with consent, evidence authority, lawful use, release approval, or publication.
 
-**Status:** draft · **Owners:** Docs steward + Security/Policy lead (TBD) · **Updated:** 2026-05-14
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@7ac9f151aacc03b03fd486a64b348743b7325a51` |
+| **Directory result** | `PLACE` at the existing `docs/standards/CONSENT_TOKENS.md` path. Accepted ADR-0029 and the standards-lane README assign human-readable standards guidance to `docs/standards/`. |
+| **Document authority** | Terminology, interoperability map, security baseline, negative-path matrix, and graduation gates only |
+| **Machine authority** | **NOT ESTABLISHED.** The inspected `consent_grant` and governance `consent_receipt` schemas are permissive scaffolds; `schemas/contracts/v1/consent/` is a compatibility placeholder. |
+| **Policy authority** | **NOT ESTABLISHED at the parent lane.** `policy/consent/` records no accepted parent rule, evaluator binding, or production `PolicyDecision`. |
+| **Executable proof** | Bounded synthetic People-DNA-Land consent/revocation profiles and a fixture-first Explorer Consent Card projection; none issues consent or proves production enforcement. |
+| **Upstream review** | Official IETF, W3C, and GA4GH sources checked on 2026-08-18. External publication state does not establish KFM adoption. |
+| **Release effect** | None. A consent credential may be necessary for an operation; it is never sufficient for evidence, rights, review, release, or publication. |
 
 > [!IMPORTANT]
-> **Doctrinal stance.** Consent does **not** publish data. A valid consent token is a *necessary* gate, never a *sufficient* one. Publication still requires evidence validation, policy review, sensitivity review, rights review, release promotion, correction lineage, and rollback target — exactly as **publication is a governed state transition, not a file move.**
+> **Consent is necessary only where the governing use requires it, and it is never sufficient.** A valid presentation does not establish truth, source rights, data quality, policy approval, review completion, release state, or publication authority.
+
+> [!CAUTION]
+> **An active credential is sensitive security material.** Bearer tokens, private claims, subject identifiers, selective-disclosure material, keys, status credentials, and introspection responses must not enter repository fixtures, public URLs, browser history, screenshots, logs, analytics, generated receipts, tiles, graph exports, public manifests, issues, or pull-request text.
+
+> [!WARNING]
+> **Withdrawal must propagate or the system must fail closed.** Expiry of one presentation is not withdrawal of the underlying grant. Production use remains `HOLD` until propagation is implemented and measured across reads, answers, exports, tiles, graphs, indexes, model context, and caches.
+
+<a id="-contents"></a>
+<a id="contents"></a>
+
+**Quick navigation:** [Role](#1-purpose--scope) · [Repository state](#2-where-this-sits-in-kfm) · [Object families](#3-three-artifacts-three-jobs) · [Profiles](#4-token-shape-jwt--ga4gh-passport) · [Claims](#5-claims-registry) · [Lifecycle](#6-lifecycle) · [Verification](#7-verification--fail-closed-posture) · [Withdrawal](#8-revocation-embargo--cache-invalidation) · [Caching](#9-caching-policy-for-introspection) · [Outcomes](#10-finite-outcomes) · [Integration](#11-integration-points) · [Validation](#12-validation--negative-path-fixtures) · [Anti-patterns](#13-anti-patterns) · [Open work](#14-open-questions--verification-backlog) · [Evidence](#15-related-docs) · [Appendix](#16-appendix)
 
 ---
 
-## 📑 Contents
-
-1. [Purpose & scope](#1-purpose--scope)
-2. [Where this sits in KFM](#2-where-this-sits-in-kfm)
-3. [Three artifacts, three jobs](#3-three-artifacts-three-jobs)
-4. [Token shape (JWT / GA4GH Passport)](#4-token-shape-jwt--ga4gh-passport)
-5. [Claims registry](#5-claims-registry)
-6. [Lifecycle](#6-lifecycle)
-7. [Verification & fail-closed posture](#7-verification--fail-closed-posture)
-8. [Revocation, embargo & cache invalidation](#8-revocation-embargo--cache-invalidation)
-9. [Caching policy for introspection](#9-caching-policy-for-introspection)
-10. [Finite outcomes](#10-finite-outcomes)
-11. [Integration points](#11-integration-points)
-12. [Validation & negative-path fixtures](#12-validation--negative-path-fixtures)
-13. [Anti-patterns](#13-anti-patterns)
-14. [Open questions & verification backlog](#14-open-questions--verification-backlog)
-15. [Related docs](#15-related-docs)
-16. [Appendix](#16-appendix)
-
----
+<a id="1-purpose--scope"></a>
 
 ## 1. Purpose & scope
 
-**CONFIRMED.** KFM treats consent as an **enforceable, machine-readable policy** rather than as static text. A consent token is the compact, signed envelope that carries that policy with the data and is checked on every render and every publication boundary by the Policy Decision Point (PDP). This document defines the canonical token surface, the claims it carries, how it is verified, how it is revoked, and how it composes with the rest of the trust spine (`EvidenceBundle`, `RunReceipt`, `ReleaseManifest`, `PromotionDecision`, `RollbackCard`).
+This page owns one responsibility: human-readable guidance for discussing consent credentials and their safe use at KFM boundaries.
 
-**Scope.** This standard governs the *token surface* and its verification rules. It does **not** govern:
+It explains:
 
-| Out of scope here | Lives in |
+- why a consent event, durable record, current grant, presentation credential, status observation, policy decision, release decision, and public projection are different objects;
+- which repository consent surfaces exist now and which remain scaffolded, synthetic, proposed, or unknown;
+- the minimum semantics and security controls a future profile would need;
+- how withdrawal, correction, cache invalidation, and rollback remain inspectable; and
+- what must be proven before operational use.
+
+It does **not** own:
+
+| Concern | Owning authority |
 |---|---|
-| Object meaning (`ConsentToken`, `ConsentReceipt`, `ConsentSidecar`) | `contracts/runtime/` *(PROPOSED)* |
-| Machine-checkable shape | `schemas/contracts/v1/runtime/` *(PROPOSED per ADR-0001)* |
-| Admissibility / allow-deny logic | `policy/consent/` *(PROPOSED)* |
-| k-anonymity & geoprivacy rules | `docs/policy/living_persons_geoprivacy.md` *(PROPOSED)* |
-| Differential-privacy budgets | `docs/standards/DP_BUDGETS.md` *(PROPOSED)* |
-| DSSE/cosign signing of receipts | `docs/standards/SIGNING.md` *(PROPOSED)* |
-| Revocation operational playbook | `docs/runbooks/revocation.md` *(PROPOSED)* |
+| Placement | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [`directory-rules.md`](../doctrine/directory-rules.md) |
+| Object meaning | A reviewed semantic contract under [`contracts/`](../../contracts/README.md) |
+| Machine shape | A reviewed schema under [`schemas/`](../../schemas/README.md) after the canonical family decision |
+| Allow, deny, restrict, or abstain | [`policy/`](../../policy/README.md), qualified review, and a governed `PolicyDecision` |
+| Consent capture or withdrawal | A governed controller/issuer workflow with authenticated authority and auditable custody |
+| Credential issuance or verification | An admitted issuer, verifier, trust registry, key lifecycle, and runtime contract |
+| Evidence support | `EvidenceRef`, `EvidenceBundle`, citations, and accepted resolver behavior |
+| Release, correction, and rollback | [`release/`](../../release/README.md) and the relevant accountability objects |
+| Public delivery | Governed APIs and released public-safe projections |
+| Conformance proof | Exact-revision contracts, schemas, policy, fixtures, validators, producer/consumer tests, runtime evidence, and drills |
 
-> [!NOTE]
-> This document closes a known gap. Pass 10 §8.6 ("Fragmented Consent Vocabulary") records that consent appears in multiple categories — JWT-format tokens (C6-07), GA4GH Passport claims (C9-04), MetaBlock v2 consent fields (C15-01), and default-deny (C15-03) — without a canonical reconciliation. This standard names the canonical KFM **ConsentToken** and defines how the other vocabularies normalize into it.
+[`CODEOWNERS`](../../.github/CODEOWNERS) provides the verified default GitHub review route to `@bartytime4life`. It does not prove qualification, independent review, consent authority, identity authority, legal approval, policy approval, release authority, or review completion.
+
+Material unresolved roles include consent/privacy, identity/authorization, security/cryptographic profile, domain, accessibility, policy/runtime, release/correction, legal or institutional authority, and independent review.
+
+### Truth labels
+
+| Label | Use in this page |
+|---|---|
+| `CONFIRMED` | Verified from repository bytes, accepted placement authority, exact official upstream pages, or current-session evidence |
+| `PROPOSED` | A KFM object name, field, profile, algorithm set, service, fixture, validator, workflow, or graduation sequence not established as current behavior |
+| `UNKNOWN` | Evidence cannot support a stronger current claim |
+| `NEEDS VERIFICATION` | A concrete repository, identity, rights, security, policy, implementation, or operational check can settle the question |
+| `CONFLICTED` | Current surfaces overlap or disagree in object identity, home, vocabulary, or authority |
+| `HOLD` | Do not adopt, issue, verify, activate, release, or publish until closure evidence exists |
+
+This page does not decide whether consent is the correct legal or ethical basis for a use, who may consent for another person or community, representative authority, retention periods, age thresholds, cryptographic profiles, or public release of sensitive data.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-where-this-sits-in-kfm"></a>
 
 ## 2. Where this sits in KFM
 
+### Current repository checkpoint
+
+| Surface | What current bytes establish | What they do **not** establish |
+|---|---|---|
+| [`CONSENT_TOKENS.md`](./CONSENT_TOKENS.md) | Existing standards-lane target | An accepted token profile or runtime verifier |
+| [`docs/standards/README.md`](./README.md) | Human-readable interoperability guidance, not contract/schema/policy/runtime/release authority | Adoption or conformance |
+| [`policy/consent/README.md`](../../policy/consent/README.md) | Documentation-only parent lane and bounded child/synthetic inventory | Accepted parent rule, evaluator, PDP binding, or production decision |
+| [`consent_grant.schema.json`](../../schemas/contracts/v1/runtime/consent_grant.schema.json) | Tracked runtime schema path | Field semantics or enforcement; it is a permissive empty scaffold |
+| [`schemas/contracts/v1/consent/README.md`](../../schemas/contracts/v1/consent/README.md) | Compatibility placeholder warning against duplicate schema authority | Canonical consent schema family |
+| [`consent_receipt.schema.json`](../../schemas/governance/consent_receipt.schema.json) | Tracked governance schema path | Usable receipt profile; it is a permissive empty scaffold |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Outward vocabulary `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `consent` is a policy family | Implemented consent evaluator |
+| [`ConsentedGenealogyOverlayCandidate`](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Synthetic restricted candidate profile with validation/tests | Real people, actual consent, source rights, release authority, or public use |
+| [`ConsentRevocationPropagationAssessment`](../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md) | Synthetic assessment over read/answer/export/tile/graph/index/cache targets | Withdrawal execution, cleanup, SLOs, or production propagation |
+| [`ConsentCardProjection.ts`](../../apps/explorer-web/src/adapters/ConsentCardProjection.ts) | Strict public-safe fixture projection with finite UI outcomes and no transport or policy execution | Consent capture, issuance, revocation, identity proof, or runtime authorization |
+
+**CONFIRMED:** KFM has useful synthetic and documentation-level consent building blocks, but they do not close a production consent credential path.
+
+**CONFIRMED:** bounded search did not establish a canonical `contracts/runtime/consent_token.md` plus `schemas/contracts/v1/runtime/consent_token.schema.json` pair.
+
+**CONFLICTED:** current materials use `ConsentToken`, `ConsentGrant`, `ConsentReceipt`, sidecar language, policy results, domain-specific candidates, and UI projections without one accepted shared object-family decision.
+
+**UNKNOWN:** any external deployed system, private service, institutional agreement, or non-repository credential flow.
+
+### Authority flow
+
 ```mermaid
 flowchart LR
-  subgraph Issuance
-    A[Subject / Holder]
-    B[ConsentReceipt<br/>Kantara-style]
-    C[ConsentToken<br/>JWT or GA4GH Passport]
-    D[ConsentVC<br/>Verifiable Credential]
-  end
-
-  subgraph Carriage
-    E[ConsentSidecar<br/>pointer-only metadata]
-    F[EvidenceBundle]
-    G[ReleaseManifest]
-  end
-
-  subgraph Verification
-    H[PDP<br/>Policy Decision Point]
-    I[Revocation endpoint<br/>RFC 7662 introspection]
-    J[Bitstring Status List<br/>W3C]
-  end
-
-  K{Finite outcome}
-
-  A --> B
-  B --> C
-  B --> D
-  C --> E
-  D --> E
-  E --> F
-  E --> G
-  F --> H
-  G --> H
-  H -->|introspect| I
-  H -->|status check| J
-  H --> K
-  K -->|ALLOW| L[Render / Publish]
-  K -->|DENY / ABSTAIN| M[Block]
-  K -->|ERROR| N[Quarantine]
+  A["Consent interaction"] --> B["Durable event / record"]
+  B --> C["Current grant projection"]
+  C --> D["Short-lived credential / token"]
+  D --> E["Governed verifier"]
+  E --> F["PolicyDecision"]
+  F --> G["Evidence / review / release gates"]
+  G --> H["Governed API"]
+  H --> I["UI / Map / Focus / Export"]
+  X["Withdrawal / correction / expiry"] --> C
+  X --> E
+  X --> G
+  X --> H
 ```
 
-> [!NOTE]
-> The PDP is the **only** component authorized to convert a token into a render or publish decision. Adapters, UIs, and clients MUST NOT short-circuit this path.
+A downstream carrier never acquires the authority of the underlying record. The verifier and policy decision remain subordinate to current status, evidence, rights, review, release, correction, and rollback state.
 
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="3-three-artifacts-three-jobs"></a>
 
 ## 3. Three artifacts, three jobs
 
-> [!CAUTION]
-> Confusing these three artifacts is the single most common modeling error in consent-aware systems. Keep them distinct in code, in storage, in receipts, and in policy.
+The former three-artifact separation remains useful but is not established as canonical. A production design must keep at least these responsibilities distinct:
 
-| Artifact | What it is | Holder | Signed by | Verified by | Travels with |
-|---|---|---|---|---|---|
-| **ConsentReceipt** *(CONFIRMED — corpus & Kantara pattern)* | Human- + machine-readable record of a specific consent event (purpose, scope, retention, revocation URI). | Issuer / controller (immutable store). | Issuer signing key, **wrapped in DSSE envelope**, cosign-attested. | Receipt verifier (DSSE + cosign). | Pointer only (`consent_receipt_pointer`). Never embedded in public tiles. |
-| **ConsentToken** *(this document)* | Short-lived, compact, signed bearer/holder credential carrying the *active* grant at request time (JWT or GA4GH Passport). | Subject (presented per request). | Issuer / AAI broker. | PDP (`verify_sig` + introspection). | Per request; never persisted in tiles or graph exports. |
-| **ConsentSidecar** *(PROPOSED schema)* | Minimal pointer-only metadata placed beside an `EvidenceBundle` or tile artifact — `consent_scope`, `retention`, `no_reidentification`, pointers to the Receipt and the Status List. | Pipeline (PROCESSED → CATALOG). | n/a (data, not credential). | Schema validator + PDP at render-time. | The EvidenceBundle / tile artifact. **No PII.** |
+| Object or projection | Primary job | Security posture | Current KFM status |
+|---|---|---|---|
+| **Consent event / durable record** | Preserve what was agreed, by whom or under what authority, for which purpose/scope, at which time, with which notice/version | Restricted; append-only lineage; retention-limited | `PROPOSED`; current receipt schema is empty |
+| **Consent grant** | Project the currently effective permission or prohibition for explicit operations/resources | Restricted; versioned; status-aware | `PROPOSED`; runtime schema is empty |
+| **Credential / presentation** | Carry a minimum, short-lived, verifier-bound proof or reference to a current grant | Secret/restricted; never public | `PROPOSED`; no canonical KFM profile |
+| **Status / withdrawal observation** | State whether a grant or credential is current, suspended, withdrawn, superseded, or unknown | Integrity-critical; privacy-minimized | `PROPOSED`; no live service established |
+| **Sidecar / public-safe projection** | Carry non-secret pointers and visible obligations beside a governed response or artifact | Public-safe only after policy/release review | `PROPOSED`; no canonical schema |
+| **Consent Card** | Explain a safe finite outcome and viewer controls without token material | Public-safe projection only | `CONFIRMED bounded fixture implementation` |
+| **PolicyDecision** | Normalize relevant policy facts into a finite decision | Authority-bearing decision, not consent itself | Contract present; evaluator `UNKNOWN` |
+| **Release/correction objects** | Approve, withdraw, correct, or roll back public state | Separate review/authority | Existing families; consent integration `UNKNOWN` |
 
-A separate but related construct, the **ConsentVC** (W3C Verifiable Credential, presented via SD-JWT or BBS-2023), is the *holder-controlled* form of the receipt's content; it lets the subject prove only the bits a verifier needs (selective disclosure). KFM treats VC presentations as one valid *path* to satisfy the ConsentToken gate, not as a replacement for it.
+Required anti-collapse rules:
 
-[Back to top ↑](#-contents)
+1. A consent event is not a credential.
+2. A credential is not the subject's identity or authority.
+3. Authentication is not consent.
+4. A signature proves integrity and key use, not understanding, voluntariness, legal capacity, representative authority, or current consent.
+5. Consent is not source rights, copyright permission, community or tribal authorization, institutional approval, or release approval unless the governing authority explicitly says so.
+6. A successful verifier result is not evidence support or factual truth.
+7. A UI card is a projection, not an evaluator.
+8. Expiry of a credential does not necessarily withdraw the grant; withdrawal must invalidate derived credentials and uses.
+9. A public-safe projection must never contain bearer credentials, disclosure salts, private claims, stable personal identifiers, or correlating status details.
+
+Subject, holder, consent actor, representative/delegate, controller/issuer, verifier, relying service, reviewer, and release authority must remain explicit and independently evidenced. Production issuance remains `HOLD` until their authority model is accepted.
+
+[Back to top](#top)
 
 ---
+
+<a id="4-token-shape-jwt--ga4gh-passport"></a>
 
 ## 4. Token shape (JWT / GA4GH Passport)
 
-**CONFIRMED.** KFM consent is expressed as a **short-lived signed token — a JWT or a GA4GH-style visa — carrying scopes, audience, expiry, `revocation_endpoint`, `consent_history_hash`, and a `redaction_profile` reference. The token travels with the data and is checked on every render** (corpus C6-07). The JWT shape maps directly to OAuth 2.0 token introspection (RFC 7662) and to the GA4GH AAI Passport model (CONFIRMED C9-04).
+KFM has **no adopted consent-token wire profile** in the inspected evidence. Candidate families are not an allowlist:
 
-Two interoperable wire forms are accepted:
+| Candidate family | Suitable boundary | Main risk | KFM posture |
+|---|---|---|---|
+| **Opaque OAuth token + introspection** | Tightly governed service-to-service use | Introspection availability/privacy, caching, audience/resource binding, replay | `PROPOSED` |
+| **Explicitly typed JWT** | Closed KFM profile with exact issuer/audience/type/algorithm/claims | Substitution, algorithm confusion, bearer replay, remote-key SSRF, claim over-trust | `PROPOSED` |
+| **W3C VC v2.0 presentation** | Holder-mediated ecosystem requiring the W3C model | Minimization, holder binding, status privacy, verifier trust, proof-format validation | `PROPOSED` |
+| **SD-JWT / SD-JWT+KB** | Selective disclosure with optional holder key binding | Linkability, salt entropy, always-disclosed metadata, replay, profile mismatch | `PROPOSED`; RFC 9901 alone is not a KFM profile |
+| **SD-JWT VC** | Credential profile built on SD-JWT | Current IETF document is an active Internet-Draft | `HOLD for production profile` |
+| **GA4GH Passport / Visa** | Federated biomedical/genomic research with GA4GH trust roles | Domain-specific broker/issuer/clearinghouse and controlled-access assumptions | `PROPOSED domain profile`; not generic default |
+| **Pointer-only public projection** | Released artifacts/UI needing visible obligations without credential material | Must be generated from a governed decision | `PROPOSED preferred public form` |
 
-| Form | Use when | Composition |
-|---|---|---|
-| **KFM JWT** | First-party KFM contexts, internal services, partners without GA4GH tooling. | Signed JWT (compact JWS). Header `alg` MUST be an asymmetric signing algorithm acceptable to the issuer's key policy (e.g., `EdDSA`, `ES256`). |
-| **GA4GH Passport visa** | Human-subject / genomic contexts, federated research, international partners. | OIDC-issued Passport carrying one or more Visa Assertions, each itself a JWT carrying DUO codes and consent context. |
+A future implementation must select **one exact profile for one exact boundary**. “Accept anything signed” is unsafe. Each admitted profile must pin:
 
-> [!NOTE]
-> The two forms share the same KFM claim surface (§5). A GA4GH Passport simply nests KFM's consent claims inside a Visa Assertion. The PDP MUST accept both and normalize them to a single internal `ConsentClaims` record before evaluating policy.
+- semantic object family, version, media type or `typ`;
+- issuer/verifier trust model and holder/sender binding;
+- allowed algorithms, key discovery, rotation, compromise, and remote-reference rules;
+- mutually exclusive validation rules;
+- audience, resource, client, operation, and purpose registries;
+- required and prohibited claims;
+- status/withdrawal mechanism and freshness;
+- maximum lifetime, replay defense, clock policy, and privacy/logging rules;
+- producer, verifier, policy, and negative-fixture revisions; and
+- deprecation, migration, correction, incident, and rollback path.
 
-<details>
-<summary><strong>Minimal example — KFM JWT payload (PROPOSED illustrative)</strong></summary>
+KFM must not store or transport active bearer credentials in `EvidenceBundle`, release manifests, public sidecars, tiles, graphs, indexes, logs, analytics, URLs, local storage, screenshots, or generated receipts. Public clients receive only a minimized governed projection.
 
-```json
-{
-  "iss": "https://issuer.example.kfm/",
-  "sub": "did:example:holder-pseudonym",
-  "aud": ["kfm://surface/governed-api", "kfm://surface/map-shell"],
-  "iat": 1747200000,
-  "exp": 1747203600,
-  "jti": "01J5Y8...AB",
-
-  "kfm:scope": ["genealogy.read", "tile.render.living-person"],
-  "kfm:purpose": ["research", "mapping"],
-  "kfm:no_reidentification": true,
-  "kfm:retention": "P1Y",
-  "kfm:redaction_profile": "profile:living-person:k10-cell500m",
-
-  "kfm:consent_history_hash": "sha256-...",
-  "kfm:revocation_endpoint": "https://issuer.example.kfm/oauth2/introspect",
-  "kfm:status_pointer": "https://status.example.kfm/bl/2026q2#42317",
-  "kfm:duo": ["DUO:0000007"]
-}
-```
-
-> Illustrative only. Field names beginning with `kfm:` are PROPOSED canonical. Values, including `jti`, timestamps, and hashes, are placeholders.
-
-</details>
-
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="5-claims-registry"></a>
 
 ## 5. Claims registry
 
-The claims below are the canonical KFM consent surface. **CONFIRMED** claims are required by corpus doctrine; **PROPOSED** claims are recommended additions that need schema-home confirmation (ADR-0001).
+Field names below are **PROPOSED semantics**, not a current schema or private-claim namespace.
 
-| Claim | Type | Req? | Source | Purpose |
-|---|---|---|---|---|
-| `iss` | URI | MUST | JWT (RFC 7519) — EXTERNAL | Token issuer identity. |
-| `sub` | string | MUST | JWT — EXTERNAL | Holder-bound pseudonymous subject. **MUST NOT** be a stable PII identifier. |
-| `aud` | string[] | MUST | JWT — EXTERNAL | Allowed audiences (e.g., `kfm://surface/governed-api`). |
-| `iat` | int | MUST | JWT — EXTERNAL | Issued-at, seconds since epoch. |
-| `exp` | int | MUST | JWT — EXTERNAL | Hard expiry. PDP MUST reject `now ≥ exp`. |
-| `jti` | string | MUST | JWT — EXTERNAL | Unique token ID, supports introspection and replay defense. |
-| `kfm:scope` | string[] | MUST | C6-07 (CONFIRMED) | Granted scopes (`genealogy.read`, `tile.render.living-person`, etc.). |
-| `kfm:purpose` | string[] | MUST | NewIdeas — CONFIRMED pattern | Purpose-limitation tags (`research`, `mapping`, …). |
-| `kfm:retention` | ISO-8601 duration | MUST | NewIdeas — CONFIRMED pattern | Retention window (`P1Y`, `P30D`). |
-| `kfm:no_reidentification` | bool | MUST | NewIdeas — CONFIRMED pattern | If false, render MUST be denied. |
-| `kfm:revocation_endpoint` | URI | MUST | C6-07 (CONFIRMED) | RFC 7662 OAuth 2.0 introspection URL. |
-| `kfm:consent_history_hash` | hash | MUST | C6-07 (CONFIRMED) | Pin to immutable consent-history ledger entry. |
-| `kfm:redaction_profile` | URI / name | SHOULD | C6-07 (CONFIRMED) | Named profile required at render (`profile:sinc-obscure-10km`, etc.). |
-| `kfm:status_pointer` | URI | SHOULD | NewIdeas — CONFIRMED pattern | W3C Bitstring Status List index for privacy-preserving revocation. |
-| `kfm:duo` | URI[] | SHOULD | C9-04 (CONFIRMED) | GA4GH Data Use Ontology codes. |
-| `kfm:embargo_until` | RFC 3339 | MAY | C6-08 (CONFIRMED) | Render denied while `now < embargo_until`. |
-| `kfm:k_anonymity` | object | MAY | C6-06 (CONFIRMED) | `{ k, cell_m, fallback }` for living-people overlays. |
-| `kfm:linked_evidence` | URI[] | MAY | C8-04 (CONFIRMED) | EvidenceRef list this grant pertains to. |
+### Durable grant semantics
 
-> [!NOTE]
-> KFM-specific claim names are **PROPOSED** as `kfm:`-prefixed to avoid collisions with IANA JWT claims. The exact spelling is **NEEDS VERIFICATION** until an ADR pins the namespace.
+| Semantic field | Purpose | Rule |
+|---|---|---|
+| `grant_id`, `grant_version` | Stable grant identity and revision | Must support correction/withdrawal lineage |
+| `subject_ref` | Pairwise or governed subject reference | No stable public PII identifier |
+| `consent_actor`, `authority_kind`, `delegation_ref` | Who acted and under what authority | Representative authority must be explicit, scoped, expiring, withdrawable |
+| `purposes[]` | Permitted purpose classes | Closed registry; request must be a subset |
+| `operations[]` | `READ`, `ANSWER`, `EXPORT`, `TILE`, `GRAPH`, `INDEX`, `MODEL_CONTEXT`, or accepted subset | No implication from generic scope |
+| `resource_refs[]` | Exact governed resource or family | Wildcards prohibited for sensitive uses unless explicitly modeled/reviewed |
+| `geography_scope`, `time_scope` | Spatial and temporal bounds | No scope expansion through centroids, joins, aggregation, or inference |
+| `retention_limit` | Maximum permitted retention | Distinct from credential lifetime and source retention |
+| `obligation_refs[]` | No re-identification, no redistribution, required redaction, audit, deletion, or other obligations | Must flow into `PolicyDecision` and consumers |
+| `notice_ref`, `terms_version` | Notice/terms shown at consent | Exact immutable version required |
+| `status`, `status_ref` | Current grant state and authoritative status source | Status outage fails closed |
+| `policy_refs[]` | Policy applicable at evaluation | Does not itself prove policy execution |
+| `evidence_refs[]` | Evidence relevant to the consent event or authority | Not support for unrelated factual claims |
+| `spec_hash`, `recorded_at`, `effective_at` | Deterministic identity/time | Canonicalization and hash policy require accepted contracts |
 
-[Back to top ↑](#-contents)
+### Presentation envelope
+
+A JWT/OAuth/VC-style profile may require `iss`, `sub`, `aud`, `iat`, `exp`, `jti`, `typ`, `client_id` or authorized party, `resource`, `scope` or structured authorization details, `grant_id`, `grant_version`, `status_ref`, holder/sender binding, and an explicit profile/version. Exact names and requiredness belong in the adopted profile.
+
+`scope` alone is insufficient. A request must remain within the intersection of authenticated caller, credential audience, resource, client, operation, purpose, geography, time, retention, grant status, policy, rights, sensitivity, review, and release state.
+
+Prohibited or strongly discouraged content includes names, addresses, precise personal locations, raw DNA/genomic material, complete genealogy graphs, health details, private-land identifiers, secrets, private key material, disclosure salts, long-lived correlators, unrestricted source paths, precise sensitive geometry, raw denial reasons, or private consent history.
+
+[Back to top](#top)
 
 ---
+
+<a id="6-lifecycle"></a>
 
 ## 6. Lifecycle
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant H as Subject / Holder
-    participant I as Issuer (AAI / KFM)
-    participant S as Immutable receipt store<br/>(OCI / versioned S3)
-    participant P as Pipeline<br/>(RAW→…→PUBLISHED)
-    participant V as PDP (verifier)
-    participant C as Public client
+Consent state and KFM lifecycle state are independent:
 
-    H->>I: Grant consent (purpose, scope, retention)
-    I->>S: Write DSSE-signed ConsentReceipt
-    I-->>H: Issue ConsentToken (JWT) / ConsentVC
-    P->>S: Resolve receipt → ConsentSidecar (pointers only)
-    P->>P: Attach sidecar to EvidenceBundle / tile<br/>(no PII embedded)
-    C->>V: Render request + ConsentToken
-    V->>I: Introspect (RFC 7662) — is jti revoked?
-    V->>S: Verify DSSE on receipt (cached)
-    V->>V: Evaluate OPA policy + redaction profile + k-anonymity
-    V-->>C: ALLOW / DENY / ABSTAIN / ERROR
+| Consent state | KFM consequence |
+|---|---|
+| `PROPOSED` | No higher-risk use; review required |
+| `ACTIVE` | May satisfy one gate for an in-scope operation; all other gates still apply |
+| `SUSPENDED` | Deny affected use until resolved |
+| `WITHDRAWN` | Deny new use; start governed propagation and accountability |
+| `EXPIRED` | Deny new use unless a distinct current grant exists |
+| `SUPERSEDED` | Resolve to successor only through explicit lineage |
+| `UNKNOWN` / status unavailable | Fail closed; never assume active |
+
+Proposed governed flow:
+
+```text
+explain notice + scope + consequences
+  -> authenticate actor and authority
+  -> record immutable consent event
+  -> derive versioned current grant
+  -> issue minimum short-lived credential where needed
+  -> verify credential + status + grant + request
+  -> evaluate independent rights/sensitivity/evidence/review/release policy
+  -> emit finite PolicyDecision
+  -> return only public-safe projection
+  -> record use without token/private-claim leakage
+  -> propagate withdrawal/correction and verify closure
 ```
 
-**Lifecycle invariants** *(CONFIRMED from corpus doctrine):*
+Consent issuance, policy evaluation, and publication must remain separate duties where consequence warrants it. A credential issuance is neither lifecycle promotion nor publication.
 
-- **Promotion is a governed state transition.** A token's existence never triggers a phase transition; it gates `render`/`publish` only.
-- **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.** Consent metadata is admitted at `RAW → WORK` (or sent to `QUARANTINE` if missing). Tokens are minted independently and consumed at `render` and at `release`.
-- **No PII in public artifacts.** Sidecars carry pointers; tokens carry pseudonyms. Tiles, vector indexes, story exports, and graph exports MUST NOT carry stable PII.
+Retention must distinguish credential lifetime, status cache, introspection result, consent event record, current grant, audit record, evidence data, and released derivative. “Keep forever” is not a default. Withdrawal does not justify erasing accountability, and accountability does not justify retaining sensitive bytes indefinitely.
 
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="7-verification--fail-closed-posture"></a>
 
 ## 7. Verification & fail-closed posture
 
-> [!WARNING]
-> **The PDP MUST fail closed.** This includes — explicitly — the case where the revocation endpoint is unreachable. **CONFIRMED** by corpus C6-07: *"the PDP introspects the token's revocation endpoint as part of every access decision and fails closed when introspection cannot be completed."*
+A verifier must apply a deterministic, ordered sequence and stop safely on failure:
 
-The verification sequence is fixed:
+1. Parse only the exact profile and enforce size/depth limits.
+2. Enforce explicit media type/`typ`, version, and mutually exclusive validation rules.
+3. Validate allowed algorithms; reject `none`, downgrade, confusion, or unexpected encryption/signature modes.
+4. Resolve issuer and key through the admitted trust registry; pin protocols/hosts and prevent SSRF.
+5. Validate signature/proof and key validity/rotation/compromise state.
+6. Validate issuer, audience, resource, client/authorized party, time, nonce, and replay state.
+7. Validate holder/sender binding where required.
+8. Resolve status or introspection through an authenticated, privacy-minimized, fail-closed channel.
+9. Resolve the exact current grant revision and lineage.
+10. Prove request purpose/operation/resource/geography/time/retention is a subset of the grant.
+11. Evaluate independent rights, sensitivity, evidence, review, release, correction, and rollback rules.
+12. Emit a closed `PolicyDecision` and a minimized public projection.
+13. Record audit data without credential/private-claim leakage.
 
-1. **Decode** the JWT / Passport. Reject if header `alg` not on the allowlist or `kid` not resolvable.
-2. **Verify signature** against issuer's published JWKS (with key-rotation tolerance window).
-3. **Check temporal claims.** `iat ≤ now < exp`. Reject otherwise.
-4. **Check audience.** The current surface URI MUST be in `aud`.
-5. **Introspect revocation.** Call `kfm:revocation_endpoint` (RFC 7662). Reject if `active == false`.
-6. **Check status list.** Resolve `kfm:status_pointer` (W3C Bitstring Status List). Reject if bit set.
-7. **Check scope.** Every required scope for this surface MUST appear in `kfm:scope`.
-8. **Check purpose-limitation.** The render purpose MUST be a subset of `kfm:purpose`.
-9. **Check retention.** `now < (iat + kfm:retention)`. Reject if elapsed.
-10. **Apply redaction profile** named by `kfm:redaction_profile` (and `kfm:k_anonymity` if present).
-11. **Emit `AIReceipt` / `RuntimeResponseEnvelope`** with the finite outcome.
+Request context must identify request/correlation ID, authenticated caller and role, client/audience, purpose, operation, exact resource/release, geography/time, requested fields/precision, retention, redaction/generalization profile, consent requirement, evidence refs, and correction/rollback context where material.
 
-<details>
-<summary><strong>Reference verifier pseudocode (illustrative)</strong></summary>
+Failure responses expose only safe reason families and correlation IDs. They must not echo credential bodies, issuer internals, subject identifiers, status indices, exact denied geometry, protected evidence, key IDs useful for probing, or policy internals.
 
-```text
-function verifyConsentToken(req):
-  tok = decodeJWT(req.token)
-  if not signatureValid(tok, issuerJWKS):       return DENY("bad_signature")
-  if not temporalValid(tok):                    return DENY("expired_or_not_yet_valid")
-  if req.surface not in tok.aud:                return DENY("audience_mismatch")
-  intro = introspect(tok.kfm_revocation_endpoint, tok.jti)
-  if intro is UNREACHABLE:                      return DENY("introspection_unreachable")  # fail-closed
-  if intro.active != true:                      return DENY("revoked")
-  if statusBitSet(tok.kfm_status_pointer):      return DENY("status_revoked")
-  if not scopeCovers(tok.kfm_scope, req.required_scope): return DENY("scope_mismatch")
-  if not purposeAllows(tok.kfm_purpose, req.purpose):    return DENY("purpose_mismatch")
-  if retentionElapsed(tok):                     return DENY("retention_elapsed")
-  obligations = redactionFor(tok.kfm_redaction_profile, tok.kfm_k_anonymity)
-  return ALLOW(obligations)
-```
+Never fallback to allow because introspection, status, trust registry, policy engine, clock, replay store, evidence resolver, release registry, or correction registry is unavailable.
 
-</details>
-
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="8-revocation-embargo--cache-invalidation"></a>
 
 ## 8. Revocation, embargo & cache invalidation
 
-**CONFIRMED** (C6-08): every published item exposes `revocation_endpoint`, `embargo_until`, and cache-invalidation hooks. On revocation, the system issues a signed **tombstone**, appends a new `spec_hash` and `RunReceipt` to the ledger, and triggers invalidation webhooks (PMTiles index bump, tile server purge).
+Keep these mechanisms distinct:
 
-| Trigger | Effect on token | Effect on cache | Effect on lineage |
-|---|---|---|---|
-| Subject revokes consent | `introspect.active = false`; status bit set | Invalidate downstream tiles, vector indexes, story exports | Emit tombstone; new `spec_hash`; correction lineage entry |
-| `exp` elapsed | Token naturally invalid; reissue or deny | Cached `ALLOW` decisions MUST honor cap on TTL (§9) | n/a |
-| `embargo_until > now` | Render denied regardless of token validity | Pre-embargo render outputs MUST NOT be served | n/a |
-| Vendor-distress event (C9-07) | Issuer policy may proactively flip status bits | Treat as mass revocation; bulk invalidation | New release manifest |
+| Mechanism | Effect |
+|---|---|
+| Credential revocation | Invalidates one credential/presentation |
+| Grant withdrawal | Ends or narrows underlying permission; invalidates derived credentials/uses |
+| Release withdrawal/correction | Changes KFM public state independently of consent |
+| Key compromise | Invalidates trust in signatures/credentials from an affected key or issuer window |
 
-> [!CAUTION]
-> A revocation that does not invalidate caches is incomplete. Stale tiles can leak retracted content. Test the invalidation pathway with a deliberate revocation fixture *before* relying on it in production.
+Withdrawal/correction assessment must cover every derivative target: `READ`, `ANSWER`, `EXPORT`, `TILE`, `GRAPH`, `INDEX`, `CACHE`, `MODEL_CONTEXT`, and `AUDIT`. Each target needs owner, closure condition, receipt/evidence, safe residual history, error/timeout posture, and rollback/correction path.
 
-**Tombstoning vs. erasure.** Tombstones satisfy *explainability and audit*. They do not, by themselves, satisfy right-to-be-forgotten / erasure obligations. The boundary between tombstone-sufficient and erasure-required is **OPEN** in the corpus and is tracked in `docs/runbooks/revocation.md` (PROPOSED). For Tribal data and applicable jurisdictions, default to the stricter standard.
+False-clear prevention:
 
-[Back to top ↑](#-contents)
+- missing inventory rows are not success;
+- skipped targets remain incomplete;
+- unavailable status is not active status;
+- a cache purge does not prove an export or copied artifact was withdrawn;
+- historical audit visibility must never reactivate current claim support; and
+- partial propagation keeps the overall result fail-closed.
+
+Embargo, delayed effectiveness, suspension, expiry, withdrawal, supersession, and release hold are separate states. Service-level objectives for status freshness and propagation remain **NEEDS VERIFICATION** and must be adopted per risk tier before production use.
+
+[Back to top](#top)
 
 ---
+
+<a id="9-caching-policy-for-introspection"></a>
 
 ## 9. Caching policy for introspection
 
-**Tension** *(CONFIRMED C6-07):* introspection latency is in the access path; caching is necessary, but caching revocation results extends the window in which a revoked token is honored.
+Default posture: no long-lived positive cache for sensitive operations. A cache entry must never outlive the earliest of credential expiry, grant expiry, status freshness limit, issuer/key validity, policy revision, resource release validity, correction/withdrawal signal, or adopted maximum TTL.
 
-**NEEDS VERIFICATION** — open question in the corpus: *"What is the cache TTL for revocation introspection results?"* This standard PROPOSES the following posture; the exact numbers are open and SHOULD be pinned per-domain by ADR.
+A safe cache key must bind at least credential or introspection-result identity, issuer/trust-registry revision, client/audience, resource/release, purpose, operation, geography/time or public-safe scope digest, holder/sender binding, grant revision, status revision, policy bundle revision, and redaction/obligation profile.
 
-| Outcome | PROPOSED default TTL | Rationale |
-|---|---|---|
-| `introspect.active = true` | **≤ 30 s** for sensitivity rank ≥ 3; **≤ 5 min** for rank ≤ 2 | Trades a small window of stale-allow for usable latency. |
-| `introspect.active = false` | **0 s — never cache positive-revocation results as allow.** Cache the *revoked* state aggressively (e.g., 5 min). | Revocation must propagate immediately; staleness only ever errs toward DENY. |
-| Introspection unreachable | **0 s — fail closed, no fallback cache.** | Per C6-07: "fails closed when introspection cannot be completed." |
-| Status-list fetch | TTL aligned with status-list publisher's `Cache-Control`, capped per profile. | W3C Bitstring Status Lists are designed for cacheable distribution. |
+Invalidation triggers include withdrawal, suspension, supersession, key compromise/rotation, trust-registry change, policy change, release withdrawal/correction, evidence correction, role change, identity/delegation change, redaction-profile change, incident response, and schema/profile deprecation.
 
-> [!IMPORTANT]
-> The cache **MUST NOT** convert an *unreachable* introspection result into an `ALLOW`. Negative-result caching (revoked-as-revoked) is encouraged. Positive-result caching is bounded.
+Cache values must be minimal, encrypted where required, non-public, excluded from logs/analytics, access-controlled, and observable without leaking subject or token data. Negative caching must be short and reason-aware. Stale-while-revalidate is prohibited where stale consent could expose protected data.
 
-The cache layer MUST log every cache hit that materially affected a decision, so audit can reconstruct what was enforced at any given moment.
-
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="10-finite-outcomes"></a>
 
 ## 10. Finite outcomes
 
-KFM finite-outcome vocabulary applies to consent decisions exactly as it does to every other governed surface:
+Current outward runtime vocabulary:
 
-| Outcome | When | Renderer behavior |
+| Outcome | Consent-boundary meaning | Public behavior |
 |---|---|---|
-| **ALLOW** | All verification steps pass, obligations satisfied. | Render / publish, with the obligations applied (e.g., k-anonymity, generalized geometry). |
-| **DENY** | Hard failure: bad signature, revoked, scope mismatch, retention elapsed, embargo not lifted, introspection unreachable. | Block; emit `AIReceipt` with `policy_decision = DENY` and a stable reason code. |
-| **ABSTAIN** | Required holder presentation missing or unresolvable; evidence closure unsatisfied. | Show stale-state / cite-or-abstain UI; do **not** silently downgrade redaction. |
-| **ERROR** | Signature parse error, malformed JWT, schema-invalid sidecar. | Quarantine; surface a non-private error code; never publish. |
+| `ANSWER` | Credential/grant and every independent gate support the exact operation | Return only the allowed public-safe projection with obligations/limitations |
+| `ABSTAIN` | Required support cannot be resolved strongly enough; no policy prohibition is asserted | Show safe insufficiency/hold state; no unsupported content |
+| `DENY` | Consent, rights, sensitivity, role, purpose, operation, resource, status, or release policy prohibits the request | Safe denial copy; no protected reason/evidence leakage |
+| `ERROR` | Malformed input, verifier/status/policy/evidence/runtime failure, or inconsistent state prevents safe evaluation | Safe operational failure; no fallback answer |
 
-> [!NOTE]
-> Renderers MUST emit an `AIReceipt` / `RuntimeResponseEnvelope` with `outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}` and a `policy_decision` field. **No public surface is permitted to bypass receipt emission.**
+Lower-level evaluators may use `ALLOW`, `HOLD`, `RESTRICT`, `CHALLENGE`, or profile-specific reason codes, but the governed boundary must normalize them explicitly to the current outward contract. This document does not amend that contract.
 
-[Back to top ↑](#-contents)
+Stable reason families should cover missing/unresolved consent, expired/withdrawn/suspended grant, untrusted issuer, invalid credential, audience/resource/purpose/operation mismatch, delegation/holder mismatch, stale status, rights/sensitivity/review/release holds, evidence/citation insufficiency, and upstream error. Exact registries require contract and policy review.
+
+`ANSWER` remains bounded: it never authorizes wider reuse, future purpose, extra precision, hidden fields, unreviewed export, downstream redistribution, model training, or a different release.
+
+[Back to top](#top)
 
 ---
+
+<a id="11-integration-points"></a>
 
 ## 11. Integration points
 
-```mermaid
-flowchart TB
-  subgraph Trust spine
-    EB[EvidenceBundle]
-    RR[RunReceipt]
-    RM[ReleaseManifest]
-    PD[PromotionDecision]
-    RC[RollbackCard]
-  end
+Meaning, shape, admissibility, and proof remain separate:
 
-  CS[ConsentSidecar] -.pointer-only.- EB
-  CS -.pointer-only.- RM
-  CR[ConsentReceipt<br/>DSSE-signed] -.pointed-to-by.- CS
-  CT[ConsentToken<br/>per-request] --> PDP[PDP / OPA]
-  PDP --> RR
-  PDP --> AIR[AIReceipt]
-  PDP --> RE[RuntimeResponseEnvelope]
-
-  RM --> RC
-  PD --> RM
-```
-
-| KFM surface | How consent tokens compose |
+| Layer | Owns |
 |---|---|
-| **EvidenceBundle** (C8-04, CONFIRMED) | Carries `consent_sidecar` pointer-only metadata; never embeds tokens or PII. |
-| **RunReceipt** (CONFIRMED) | `decision_log.policy_id = "gate.consent"`; records `jti` fingerprint and introspection outcome, not the token itself. |
-| **ReleaseManifest** (CONFIRMED) | `sensitivity`, `policy_label`, `rights_status` are evaluated alongside the consent gate. Consent does **not** publish — the release gate still runs. |
-| **PromotionDecision** (CONFIRMED) | Gate C (Policy Parity) and Gate D (Security / Sensitivity) include consent-related rules; identical OPA bundle digest in CI and runtime. |
-| **RollbackCard** (CONFIRMED) | Mass-revocation events trigger rollback to a prior `ReleaseManifest`; `RollbackCard.rollback_supported = true` is checked at release time. |
-| **Focus Mode (governed AI)** | A Focus Mode answer that touches consent-bound evidence MUST resolve every `EvidenceRef → EvidenceBundle` and re-verify the token against the surface `aud`. ABSTAIN when proof is missing. |
-| **MapLibre / tile runtime** | `VerifyReceipt.digest_verified` plus the consent gate together gate capability issuance. Public clients NEVER touch RAW / WORK / QUARANTINE. |
+| `contracts/` | Consent-event/grant/credential/status/projection semantics and invariants |
+| `schemas/` | Closed machine shapes after authority is decided |
+| `policy/` | Whether consent is required and whether the request is allowed, denied, held, restricted, or abstained |
+| `fixtures/` + `tests/` | Synthetic positive/negative behavior and enforcement proof |
+| runtime/packages/apps | Issuance, verification, projection, and user interaction behind governed interfaces |
+| `release/` and accountability objects | Release, correction, withdrawal, and rollback state |
 
-[Back to top ↑](#-contents)
+Evidence is independent: a valid consent credential does not prove the underlying claim. `EvidenceRef` must resolve to `EvidenceBundle` where claims depend on evidence, and denial/error responses must not leak protected evidence.
+
+Governed API requirements:
+
+- public clients never inspect raw tokens or call issuer/status services directly;
+- server-side verifier and policy layers own token handling;
+- request identity, purpose, operation, release, and obligations are explicit;
+- responses use the governed finite envelope;
+- public payloads contain only minimized projection state;
+- service logs/telemetry exclude credentials and private claims; and
+- correction/withdrawal and cache state are visible where material.
+
+The Explorer Consent Card may explain a governed projection and local viewer choice. It must not issue, revoke, introspect, parse canonical consent, or imply that hiding a layer locally withdraws subject consent.
+
+Focus Mode/AI may receive only a released, policy-filtered, evidence-bounded context. Credentials, private claims, protected denial reasons, and hidden reasoning stay out of prompts, receipts, vector indexes, graph stores, and public answers. Missing or withdrawn consent yields finite abstention/denial/error, never best-effort inference.
+
+Export, tile, graph, search, and cache consumers must preserve operation-specific obligations and respond to withdrawal/correction. Derived carriers never become authority merely because they are generated or cached.
+
+Consent does not replace source rights, sovereignty, tribal/community authority, cultural restrictions, institutional rules, privacy law, living-person safeguards, or release review. Where these are unclear, quarantine, redact, generalize, stage access, delay, abstain, or deny.
+
+[Back to top](#top)
 
 ---
+
+<a id="12-validation--negative-path-fixtures"></a>
 
 ## 12. Validation & negative-path fixtures
 
-> [!NOTE]
-> Per `directory-rules.md` §15 ("Required README Contract"), each consent-related folder MUST carry a README declaring inputs, outputs, and validation. Fixture homes below are **PROPOSED** until repo evidence is mounted.
+All default fixtures must be deterministic, synthetic, no-network, non-personal, and safe for public review.
 
-**Required gate suite** *(PROPOSED, names borrowed from corpus's CI gate recommendation):*
-
-| Gate | What it checks |
+| Case | Required result |
 |---|---|
-| `consent_signature_verify` | JWT signature against issuer JWKS; DSSE on linked receipt. |
-| `consent_status_verify` | Introspection + Bitstring Status List; fail-closed on unreachable. |
-| `consent_scope_match` | Surface's required scopes ⊆ `kfm:scope`. |
-| `consent_purpose_match` | Render purpose ⊆ `kfm:purpose`. |
-| `consent_retention_check` | `now < (iat + kfm:retention)`. |
-| `consent_no_pii_in_artifact` | No PII fields in published tiles, vector indexes, or graph exports. |
-| `consent_policy_gate` | OPA decision against `policy/consent/render.rego`. |
-| `consent_render_fail_closed` | Negative-path coverage. |
+| Valid exact-profile presentation, active grant, exact request, all independent gates pass | `ANSWER` with minimal projection only |
+| Missing credential where required | `ABSTAIN` or `DENY` per accepted policy |
+| Unknown issuer, unknown key, disallowed algorithm, invalid signature, wrong `typ` | `DENY` or safe `ERROR`; no claims trusted |
+| Expired/not-yet-valid token, wrong audience/resource/client/purpose/operation | `DENY` |
+| Replay/nonce failure, holder/sender mismatch | `DENY` and safe audit signal |
+| Status unavailable/stale, grant revision missing/conflicted | `ERROR` or `ABSTAIN`; never `ANSWER` |
+| Grant withdrawn/suspended/superseded without valid successor | `DENY` |
+| Rights/sensitivity/review/release/evidence gate fails despite active consent | Gate-specific `DENY`, `ABSTAIN`, or `ERROR` |
+| Hidden field, unknown claim, duplicate key, oversized input, non-finite/invalid data | Fail closed before policy evaluation |
+| Remote key/status reference to disallowed network target | `DENY`/`ERROR`; no request made |
+| Denial/error response contains credential, subject, status index, key material, protected geometry, or canary | Test failure |
+| Withdrawal propagation missing one target or timing out | Overall incomplete/fail-closed |
+| Cached positive result after withdrawal, policy change, key compromise, or release correction | Test failure |
+| UI receives raw token/private claim | Boundary test failure |
+| Model prompt or AIReceipt contains raw token/private claim | Boundary test failure |
 
-**Required negative fixtures** *(PROPOSED home: `tests/fixtures/consent/invalid/`):*
+Required proof layers before operational use:
 
-| Fixture | Expected outcome | What it proves |
-|---|---|---|
-| `revoked_credential.json` | DENY | Revocation honored end-to-end. |
-| `expired_retention.json` | DENY | Retention window enforced. |
-| `missing_dsse.json` | DENY | Receipt-signature absence is not lenient. |
-| `invalid_signature.json` | ERROR | Tamper detection. |
-| `scope_mismatch.json` | DENY | Scope is not silently expanded. |
-| `purpose_mismatch.json` | DENY | Purpose-limitation enforced. |
-| `audience_mismatch.json` | DENY | Token from another surface cannot be reused. |
-| `unreachable_introspection.json` | DENY | **Fail-closed verified.** |
-| `public_identifier_leak.json` | DENY | No PII in public artifacts. |
-| `stale_status_list.json` | DENY / ABSTAIN | Stale-state propagation enforced. |
-| `embargo_not_lifted.json` | DENY | Time-bound suppression enforced. |
-| `presentation_missing.json` | ABSTAIN | Cite-or-abstain posture preserved. |
+1. semantic contract review;
+2. closed machine schema;
+3. policy bundle and finite outcome mapping;
+4. deterministic issuer/verifier/status fixtures;
+5. parser/crypto/trust/status/grant/request tests;
+6. policy and independent evidence/release tests;
+7. producer/consumer contract tests;
+8. no-leak and SSRF/network boundary tests;
+9. withdrawal/correction/cache drills;
+10. UI/API/AI/export/tile/graph/index integration tests;
+11. security/privacy threat review and accessibility review;
+12. exact-head hosted CI plus human review.
 
-[Back to top ↑](#-contents)
+### Graduation gates
+
+| Gate | Required closure |
+|---|---|
+| G0 — authority | Accountable roles, accepted object-family decision, Directory Rules placement, ADR triggers closed |
+| G1 — use case | Narrow purpose, operation, resource, geography/time, threat model, non-goals |
+| G2 — profile | Exact wire profile, media type, claims, algorithms, trust/key/status model |
+| G3 — meaning/shape | Semantic contracts, closed schemas, compatibility/migration policy |
+| G4 — policy | Consent requirement, independent rights/sensitivity/evidence/review/release gates, finite mapping |
+| G5 — deterministic proof | Synthetic positive/negative fixtures, validators, tests, replay and no-leak checks |
+| G6 — runtime | Admitted issuer/verifier/status services, fail-closed network posture, observability |
+| G7 — propagation | Inventory closure, withdrawal/correction/cache drill, adopted SLOs |
+| G8 — consumers | API, UI, AI, export, tile, graph, index, cache behavior proven |
+| G9 — security/privacy | Threat model, key lifecycle, minimization, retention/disposal, incident response |
+| G10 — accessibility/explanation | Understandable notice, choices, limitations, negative states, non-color cues |
+| G11 — release | Review, manifest/candidate, correction and rollback targets; no token material in public artifacts |
+| G12 — operational review | Independent sign-off, exact-revision evidence, monitored rehearsal |
+
+**Current result: `HOLD`.** Documentation and synthetic slices do not close these gates.
+
+[Back to top](#top)
 
 ---
+
+<a id="13-anti-patterns"></a>
 
 ## 13. Anti-patterns
 
-> [!WARNING]
-> Each of the patterns below has been observed across consent-aware systems and is **expressly forbidden** in KFM.
+Do not:
 
-| Anti-pattern | Why it fails | Correct path |
-|---|---|---|
-| Embedding stable PII inside a tile, vector index, graph export, or story manifest. | Linkage attacks; revocation cannot reach already-published artifacts. | Pointers only; ConsentSidecar; `no_reidentification:true`. |
-| Treating an `ALLOW` from the PDP as a publication decision. | Consent ≠ publication. | Run the release gate (`ReleaseManifest` + `PromotionDecision`) afterward. |
-| Long TTL on positive introspection results (e.g., > 5 min for sensitive ranks). | Extends the revocation propagation window beyond policy. | §9 caps. |
-| Caching an *unreachable* introspection result as `ALLOW`. | Defeats fail-closed posture. | Cache only definite outcomes; unreachable → DENY. |
-| Conflating `ConsentToken` with `ConsentReceipt`. | The token is short-lived and bearer/holder-bound; the receipt is durable evidence. | Keep them separate in code, storage, and policy. |
-| AI-generated summaries that imply a consent state without a verified token. | Hallucinated consent. | The AI surface ABSTAINs when the consent gate cannot be re-verified. |
-| Using a stable `sub` that maps to a real-world identifier. | Re-identification risk. | Pseudonyms; pairwise DIDs; blinded status indexes. |
+- call this page the canonical runtime protocol;
+- treat a token as consent, identity, evidence, policy, rights, review, release, or publication;
+- accept several credential families through one permissive parser;
+- infer authorization from signature validity alone;
+- use long-lived bearer tokens or unbounded scopes;
+- place active credentials in URLs, browser storage, tiles, manifests, graphs, logs, analytics, screenshots, fixtures, issues, pull requests, prompts, or receipts;
+- use stable public personal identifiers when pairwise or minimized references suffice;
+- expose status indices or denial details that create correlation or probing risk;
+- cache positive status beyond the earliest governing expiry/change boundary;
+- treat status outage as active consent;
+- use UI-only hiding as revocation or public-safe transformation;
+- let a watcher, connector, UI, map renderer, model, or cache issue policy/release authority;
+- erase history silently or retain sensitive bytes indefinitely in the name of audit;
+- claim conformance from a schema or passing fixture without producer/consumer proof;
+- activate real personal/genomic data before authority, rights, security, propagation, and rollback close; or
+- publish because a pull request merged.
 
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="14-open-questions--verification-backlog"></a>
 
 ## 14. Open questions & verification backlog
 
-These items SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md` and resolved via ADR or follow-up doc.
+1. Which shared object families are accepted: consent event/record, grant, credential, status, sidecar/projection, and propagation assessment?
+2. Which paths are canonical, compatibility-only, domain-local, or to be migrated?
+3. Who may capture, issue, suspend, withdraw, correct, verify, review, and release?
+4. What proves identity, capacity, representative authority, delegation, voluntariness, comprehension, and notice version?
+5. When is consent the correct basis, and when do rights, law, sovereignty, community authority, contract, or institutional policy control instead?
+6. Which use case is first, and why is a credential necessary rather than a server-side grant reference?
+7. Which exact profile is first: opaque/introspected, typed JWT, W3C VC, SD-JWT, GA4GH Passport/Visa, or another reviewed format?
+8. Which algorithms, keys, issuers, verifiers, audiences, resources, clients, holder binding, and remote-reference rules are admitted?
+9. What are maximum credential lifetime, status freshness, clock skew, replay window, cache TTL, and propagation SLO by risk tier?
+10. What are the closed registries for purposes, operations, resources, obligations, redaction profiles, statuses, and reasons?
+11. How do partial withdrawal, supersession, delegation withdrawal, deceased subjects, minors, community or tribal authority, and legal holds work?
+12. How are exports and already released derivatives corrected, withdrawn, or retained for accountability?
+13. Which public fields can safely explain status without increasing linkability or disclosing protected reasons?
+14. How are contracts/schemas/profile versions migrated without accepting ambiguous legacy credentials?
+15. Which exact tests and observed operations close each graduation gate?
 
-- **NEEDS VERIFICATION:** Canonical TTL values for positive introspection results, per sensitivity rank. *(§9 PROPOSES defaults.)*
-- **NEEDS VERIFICATION:** Canonical `kfm:`-prefixed claim names and the JWT private-claim namespace.
-- **NEEDS VERIFICATION:** Whether `policy/consent/` or `policy/runtime/consent/` is the canonical OPA home, given Directory Rules §18 open items on `policy/` vs `policies/`.
-- **NEEDS VERIFICATION:** Default signing-algorithm allowlist; alignment with `docs/standards/SIGNING.md` and ADR-S-06.
-- **OPEN:** Per-domain `k_anonymity.k` defaults (corpus suggests `k=10`, but rural-density tuning is unresolved — C6-06).
-- **OPEN:** Boundary between tombstone-sufficient and erasure-required for personal data (C5-09 / C6-08).
-- **OPEN:** Should this document specify the audience-URI scheme (`kfm://surface/…`) or defer to `docs/architecture/governed-api.md`?
-- **PROPOSED ADR-class:** Reconcile fragmented consent vocabulary (C6-07 / C9-04 / C15-01 / C15-03) under a single canonical envelope — this document is a step toward that ADR, not the ADR itself.
+Until resolved by accountable authority and current evidence, these remain `NEEDS VERIFICATION` and production use remains `HOLD`.
 
-[Back to top ↑](#-contents)
+[Back to top](#top)
 
 ---
+
+<a id="15-related-docs"></a>
 
 ## 15. Related docs
 
-> Many of the links below are **PROPOSED** — they describe the doctrinal companions this standard expects to exist. Mark unresolved targets with `TODO` until the mounted-repo state is verified.
+### Repository evidence ledger
 
-- `docs/doctrine/directory-rules.md` — CONFIRMED. Governs the placement of this file and its companions.
-- `docs/doctrine/trust-membrane.md` — *PROPOSED.* Doctrinal anchor for fail-closed posture.
-- `docs/doctrine/lifecycle-law.md` — *PROPOSED.* RAW → … → PUBLISHED.
-- `docs/standards/GA4GH_AAI.md` — *PROPOSED.* Passport / Visa / DUO companion.
-- `docs/standards/SIGNING.md` — *PROPOSED.* cosign / Sigstore / DSSE.
-- `docs/standards/PROVENANCE.md` — *PROPOSED.* SLSA / in-toto.
-- `docs/standards/DP_BUDGETS.md` — *PROPOSED.* Differential privacy.
-- `docs/policy/living_persons_geoprivacy.md` — *PROPOSED.* k-anonymity grid + fallback mask.
-- `docs/runbooks/revocation.md` — *PROPOSED.* Revocation playbook; tombstone vs. erasure.
-- `contracts/runtime/consent_token.md` — *PROPOSED.* Object meaning.
-- `schemas/contracts/v1/runtime/consent_token.schema.json` — *PROPOSED per ADR-0001.* Object shape.
-- `policy/consent/` — *PROPOSED.* OPA bundle.
+| Surface | Role in this revision |
+|---|---|
+| [`docs/standards/README.md`](./README.md) | Standards-lane responsibility and non-authority boundary |
+| [`directory-rules.md`](../doctrine/directory-rules.md) and [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement authority |
+| [`contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) | Meaning/shape/admissibility split |
+| [`policy/consent/README.md`](../../policy/consent/README.md) | Current parent consent-policy posture |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Current finite outward vocabulary |
+| [`consent_grant.schema.json`](../../schemas/contracts/v1/runtime/consent_grant.schema.json) | Current permissive runtime scaffold |
+| [`schemas/contracts/v1/consent/README.md`](../../schemas/contracts/v1/consent/README.md) | Compatibility placeholder |
+| [`consent_receipt.schema.json`](../../schemas/governance/consent_receipt.schema.json) | Current permissive governance scaffold |
+| [`ConsentedGenealogyOverlayCandidate`](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Bounded synthetic domain proof |
+| [`ConsentRevocationPropagationAssessment`](../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md) | Bounded synthetic propagation assessment |
+| [`ConsentCardProjection.ts`](../../apps/explorer-web/src/adapters/ConsentCardProjection.ts) | Fixture-first UI projection boundary |
+| [`CONSENT_PATTERN.md`](../focus-mode/CONSENT_PATTERN.md) | Focus Mode consent planning context |
+| [`DUO_MAPPING.md`](./DUO_MAPPING.md) | External controlled-use term mapping context |
+| [`REDACTION_PROFILES.md`](./REDACTION_PROFILES.md), [`SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md), [`DATA_CLASSIFICATION.md`](../security/DATA_CLASSIFICATION.md) | Public-safe transformation and handling guidance |
 
-[Back to top ↑](#-contents)
+### Official upstream currentness ledger
+
+Checked on 2026-08-18 from official issuers:
+
+| Upstream source | Publication state used here | KFM consequence |
+|---|---|---|
+| [RFC 7519 — JWT](https://www.rfc-editor.org/info/rfc7519) | Standards Track RFC | Base syntax only; not KFM consent semantics |
+| [RFC 8725 — JWT BCP](https://www.rfc-editor.org/info/rfc8725) | BCP 225 | Algorithm, issuer/audience, explicit typing, validation separation, and remote-reference security |
+| [RFC 9700 — OAuth 2.0 Security BCP](https://www.rfc-editor.org/info/rfc9700) | BCP 240 | Security floor for an admitted OAuth-based profile |
+| [RFC 7662 — Token Introspection](https://www.rfc-editor.org/info/rfc7662) | Standards Track RFC | Candidate status mechanism; requires authorized, privacy-aware use |
+| [RFC 9396 — Rich Authorization Requests](https://www.rfc-editor.org/info/rfc9396) | Standards Track RFC | Candidate fine-grained authorization-details pattern |
+| [RFC 9901 — SD-JWT](https://www.rfc-editor.org/info/rfc9901) | Standards Track RFC | Stable base format; still needs a KFM application profile |
+| [W3C VC Data Model 2.0](https://www.w3.org/TR/vc-data-model-2.0/) | W3C Recommendation, 2025-05-15 | Candidate credential model; no KFM adoption |
+| [W3C Bitstring Status List v1.0](https://www.w3.org/TR/vc-bitstring-status-list/) | W3C Recommendation, 2025-05-15 | Candidate privacy-oriented status mechanism; no KFM adoption |
+| [IETF SD-JWT VC draft-16](https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/) | Active Internet-Draft, revision 2026-04-24 | `HOLD` production pinning without reviewed version/upgrade strategy |
+| [GA4GH AAI OIDC Profile](https://ga4gh.github.io/data-security/aai-openid-connect-profile) | GA4GH domain profile | Candidate biomedical authorization pattern; not generic default |
+| [GA4GH Passport v1.2.1](https://ga4gh.github.io/data-security/ga4gh-passport) | GA4GH Passport specification | Candidate Visa/Passport interop requiring exact trust roles/conformance |
+| [GA4GH DUO](https://github.com/EBISPOT/DUO) | External ontology project | Data-use term mapping; no consent, policy, or release authority |
+
+External standards define their own objects and conformance. KFM must not relabel local objects as conformant without exact tests, blend incompatible profiles into one parser, inherit GA4GH assumptions into unrelated lanes, cite drafts as stable, treat technical standards as legal approval, or trust external issuers automatically.
+
+[Back to top](#top)
 
 ---
+
+<a id="16-appendix"></a>
 
 ## 16. Appendix
 
-<details>
-<summary><strong>A. Cross-source citation map (corpus → this doc)</strong></summary>
+### Candidate normalized grant record
 
-| Corpus source | Anchors in this doc |
-|---|---|
-| Pass 10 §C6-07 *Compact Consent Tokens (JWT or GA4GH Visa)* | §4 token shape; §5 claims; §7 fail-closed posture; §9 caching |
-| Pass 10 §C6-08 *Revocation Endpoints, Embargo, Cache Invalidation* | §8 revocation; §10 outcomes |
-| Pass 10 §C6-06 *k-Anonymity for Living-People Overlays* | §5 `kfm:k_anonymity`; §11 redaction obligations |
-| Pass 10 §C6-01 *Sensitivity Rubric 0–5* | §5 `kfm:redaction_profile`; §9 TTL tiers |
-| Pass 10 §C9-04 *GA4GH AAI / Passports / DUO / MRCG* | §4 GA4GH form; §5 `kfm:duo` |
-| Pass 10 §C8-04 *Evidence-Bundle JSON-LD* | §11 EvidenceBundle integration |
-| Pass 10 §8.6 *Fragmented Consent Vocabulary (Gap)* | §1 purpose; §14 open questions |
-| Pass 10 §C5-03 *Policy Parity: CI = Runtime* | §11 PromotionDecision |
-| Pass 10 §C1-01 *Run Receipt* | §11 RunReceipt |
-| New Ideas (5-8-26): *Consent Governance Pattern* | §3 three-artifact split; §12 negative fixtures |
-| `directory-rules.md` §0, §6.1, §15, §18 | Meta block; placement; README contract; open backlog |
+Illustrative only; not a current schema, production record, or authorization:
 
-</details>
-
-<details>
-<summary><strong>B. External standards referenced (EXTERNAL, by name only)</strong></summary>
-
-The standards below are named by the KFM corpus as targets of conformance. This document does not re-specify them; it composes them.
-
-- **RFC 7519** — JSON Web Token (JWT). *(JWT shape per C6-07.)*
-- **RFC 7662** — OAuth 2.0 Token Introspection. *(Revocation endpoint per C6-07.)*
-- **GA4GH AAI / Passports / Visa Assertions** — Federated authorization. *(C9-04.)*
-- **GA4GH Data Use Ontology (DUO)** — Data-use vocabulary. *(C9-04.)*
-- **W3C Verifiable Credentials Data Model 2.0** — Holder-presented credentials.
-- **IETF SD-JWT VC** *(draft)* — Selective-disclosure JWTs.
-- **BBS-2023** — Selective-disclosure signatures.
-- **W3C Bitstring Status List** — Privacy-preserving credential status.
-- **Kantara Consent Receipt** — Receipt format pattern.
-- **DSSE** (Dead Simple Signing Envelope) — Receipt wrapping.
-- **Sigstore / cosign** — Keyless signing and transparency.
-- **NIST SP 800-226** — Differential privacy guidance. *(C9-05.)*
-- **EDPB Guidelines 01/2025** — Pseudonymisation. *(C9-05.)*
-
-> External specifications evolve; their current syntax and behavior MUST be re-checked at adoption time, not memorized.
-
-</details>
-
-<details>
-<summary><strong>C. Example OPA / Rego policy stub (illustrative)</strong></summary>
-
-```rego
-package policy.consent.render
-
-import data.common
-
-default decision = "DENY"
-default reason   = "deny_by_default"
-
-decision = "ALLOW" {
-  input.token.signature_valid
-  input.token.temporal_valid
-  input.token.audience_match
-  input.introspection.active
-  not input.status.revoked
-  input.scope_satisfied
-  input.purpose_satisfied
-  not input.retention_elapsed
-  input.claims["kfm:no_reidentification"] == true
-  not embargo_active
-}
-
-decision = "ERROR" {
-  input.token.parse_error
-}
-
-decision = "ABSTAIN" {
-  input.presentation_missing
-}
-
-embargo_active {
-  ts := time.parse_rfc3339_ns(input.claims["kfm:embargo_until"])
-  time.now_ns() < ts
+```json
+{
+  "object_type": "ConsentGrantCandidate",
+  "profile": "kfm.consent.grant.candidate.v1",
+  "grant_id": "consent-grant:synthetic:01",
+  "grant_version": "1.0.0",
+  "subject_ref": "subject:synthetic:pairwise-01",
+  "consent_actor": {
+    "actor_ref": "actor:synthetic:01",
+    "authority_kind": "SELF",
+    "delegation_ref": null
+  },
+  "purposes": ["RESEARCH"],
+  "operations": ["READ", "ANSWER"],
+  "resource_refs": ["resource:synthetic:released-evidence-family"],
+  "geography_scope": {
+    "kind": "GENERALIZED_AREA",
+    "area_ref": "area:synthetic:public-safe"
+  },
+  "time_scope": {
+    "valid_from": "2026-08-18T00:00:00Z",
+    "valid_until": "2026-09-18T00:00:00Z"
+  },
+  "retention_limit": "P30D",
+  "obligation_refs": [
+    "obligation:NO_REIDENTIFICATION",
+    "obligation:NO_REDISTRIBUTION"
+  ],
+  "notice_ref": "notice:synthetic:v1",
+  "status": "ACTIVE",
+  "status_ref": "status:synthetic:01",
+  "policy_refs": ["policy:consent:synthetic:v1"],
+  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
 }
 ```
 
-> Illustrative only. The canonical bundle lives under `policy/consent/` (PROPOSED) and MUST be pinned by OCI digest in both CI and the runtime PDP (C5-03 parity).
+### Candidate verifier pseudocode
 
-</details>
+```text
+parse exact profile
+  -> verify type, algorithm, signature, issuer, and key state
+  -> verify time, audience, resource, client, holder binding, and replay
+  -> resolve status fail closed
+  -> resolve exact current grant revision
+  -> prove request is a subset of the grant
+  -> evaluate independent rights, sensitivity, evidence, review, and release policy
+  -> emit minimized ANSWER / ABSTAIN / DENY / ERROR envelope
+```
 
-<details>
-<summary><strong>D. Glossary (KFM-specific terms, preserved exactly)</strong></summary>
+### Compatibility anchors
 
-- **EvidenceBundle** — Admissible evidence object resolved from EvidenceRef; outranks maps, tiles, and generated text.
-- **EvidenceRef** — Pointer/reference to evidence; must resolve to an EvidenceBundle when claims depend on evidence.
-- **RunReceipt** — Build/run receipt for pipeline or artifact generation: inputs, config / `spec_hash`, artifact digests, source head, tool versions, attestations.
-- **ReleaseManifest** — Canonical publication object binding artifacts, evidence refs, sensitivity, rights, rollback.
-- **PromotionDecision** — Promotion gate result with gate IDs, inputs, proofs, release target, rollback target.
-- **RollbackCard** — Pointer to previous release manifest / root hash / tile checksum set with rollback drill and correction lineage.
-- **spec_hash** — Deterministic content-addressed identity (JCS + SHA-256).
-- **Finite outcomes** — ALLOW / ANSWER / DENY / ABSTAIN / ERROR. Renderers and PDP MUST emit one of these.
+The legacy fragments `#1-purpose--scope` through `#16-appendix`, plus `#top` and `#-contents`, remain intentionally addressable.
 
-</details>
+### No-loss modernization ledger
 
----
+| Prior material | v2 disposition |
+|---|---|
+| Consent necessary, not sufficient | Retained and strengthened |
+| Three-artifact separation | Retained, broadened, and marked non-canonical |
+| JWT / GA4GH / VC options | Retained as candidate families; permissive multi-format acceptance rejected |
+| Claims registry | Expanded into durable-grant and presentation guidance |
+| Lifecycle | Expanded to independent consent and KFM lifecycle states |
+| Verification | Expanded to ordered checks and no-leak behavior |
+| Revocation/cache invalidation | Expanded to withdrawal propagation across derivative targets |
+| Finite outcomes | Reconciled with current `ANSWER / ABSTAIN / DENY / ERROR` vocabulary |
+| Integration | Grounded in current policy, schema, domain, and UI evidence |
+| Tests | Expanded into negative-path and graduation matrices |
+| External standards | Refreshed from official sources and separated from KFM adoption |
+| Canonical operational-protocol claim | Withdrawn as unsupported by current evidence |
+| Real-data examples | Excluded; synthetic only |
 
-### Related docs (footer)
+### Rollback
 
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) · [`docs/standards/GA4GH_AAI.md`](./GA4GH_AAI.md) *(PROPOSED)* · [`docs/standards/SIGNING.md`](./SIGNING.md) *(PROPOSED)* · [`docs/runbooks/revocation.md`](../runbooks/revocation.md) *(PROPOSED)*
+Before merge, close or abandon the draft pull request. After an authorized merge, revert the documentation and generated-receipt commits through the normal reviewed path, restore target blob `954efe37bb02e88bae79008950fe6481c98ac58e`, and rerun the same Markdown, link, metadata, receipt-schema, and repository checks.
 
-**Last reviewed:** 2026-05-14 · **Next review by:** 2026-11-14 *(6-month cadence; flag for review if exceeded)*
+No credential, grant, policy rule, source, runtime, cache, release, deployment, or public artifact is created by this documentation update; rollback requires no token revocation, data migration, cache purge, release withdrawal, or public correction.
 
-[Back to top ↑](#-contents)
+[Back to top](#top)
