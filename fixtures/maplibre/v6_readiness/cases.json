@@ -3,7 +3,8 @@
     {
       "name": "hold_pending_kfm_runtime_probes",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
         "selected_version": null,
         "module_mode": "module",
         "typescript_target": "ES2022",
@@ -35,8 +36,9 @@
     {
       "name": "hold_previous_v6_minor",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
-        "selected_version": "6.2.0",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+        "selected_version": "6.3.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -65,10 +67,11 @@
       }
     },
     {
-      "name": "ready_exact_6_3_candidate",
+      "name": "ready_exact_6_4_candidate",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
-        "selected_version": "6.3.0",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+        "selected_version": "6.4.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -101,7 +104,8 @@
     {
       "name": "invalid_declared_ready",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
         "selected_version": null,
         "module_mode": "module",
         "typescript_target": "ES2022",
@@ -131,15 +135,16 @@
       },
       "expected": [
         "DECLARED_OUTCOME_MISMATCH",
-        "MAPLIBRE_V6_3_EXACT_VERSION_REQUIRED",
+        "MAPLIBRE_TARGET_EXACT_VERSION_REQUIRED",
         "RUNTIME_PROBES_PENDING"
       ]
     },
     {
       "name": "invalid_governance",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
-        "selected_version": "6.3.0",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+        "selected_version": "6.4.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -173,8 +178,9 @@
     {
       "name": "invalid_import_boundary",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
-        "selected_version": "6.3.0",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+        "selected_version": "6.4.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -210,8 +216,9 @@
     {
       "name": "invalid_tile_churn_probe_failure",
       "candidate": {
-        "profile": "kfm-maplibre-v6-3-readiness-v2",
-        "selected_version": "6.3.0",
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+        "selected_version": "6.4.0",
         "module_mode": "module",
         "typescript_target": "ES2022",
         "internal_transform_access": false,
@@ -240,6 +247,42 @@
       },
       "expected": [
         "RUNTIME_PROBE_FAILED"
+      ]
+    },
+    {
+      "name": "invalid_upstream_tag_commit",
+      "candidate": {
+        "profile": "kfm-maplibre-v6-4-readiness-v3",
+        "upstream_tag_commit": "2ebfa18959ae7e737f14da4d565a6c56bb2a6d44",
+        "selected_version": "6.4.0",
+        "module_mode": "module",
+        "typescript_target": "ES2022",
+        "internal_transform_access": false,
+        "direct_import_boundary_violations": [],
+        "probes": {
+          "webgl2_failure_handling": "PASS",
+          "worker_csp_loading": "PASS",
+          "style_spec_v25": "PASS",
+          "geojson_set_data": "PASS",
+          "query_rendered_features": "PASS",
+          "visual_pixel_diff": "PASS",
+          "image_source_texture_reclamation": "PASS",
+          "query_rendered_features_tile_churn": "PASS",
+          "pmtiles_vector_tile_loading": "PASS",
+          "terrain_dem_regression": "PASS",
+          "evidence_drawer_selection_stability": "PASS",
+          "headless_render_parity": "PASS"
+        },
+        "outcome": "READY",
+        "governance": {
+          "authority_created": false,
+          "upgrade_authorized": false,
+          "release_authorized": false,
+          "publication_authorized": false
+        }
+      },
+      "expected": [
+        "UPSTREAM_TAG_COMMIT_MISMATCH"
       ]
     }
   ]
