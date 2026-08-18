@@ -1,588 +1,940 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/continuity-notes
-title: UI Continuity Notes — How KFM Preserves State, Narrative, Evidence, and Trust Across Surfaces
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + map/UI lead + governance lead>
+title: UI Continuity Notes — Current Architecture, Bounded Proof, and Graduation Gates
+type: architecture-reference
+version: v2.0.0-draft
+status: draft; repository-grounded; implementation-partial; no-live-continuity-runtime
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "UI, runtime, evidence, policy, release, accessibility, security, and independent-review stewardship NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-18
 policy_label: public
-related: [
-  docs/architecture/system-context.md,
-  docs/architecture/governed-api.md,
-  docs/architecture/map-shell.md,
-  docs/architecture/maplibre-3d.md,
-  docs/architecture/contract-schema-policy-split.md,
-  docs/standards/MAP_TRUST_STATES.md,
-  docs/standards/EVIDENCE_BUNDLE.md,
-  docs/standards/RELEASE_MANIFEST.md,
-  docs/standards/PROV/README.md,
-  docs/standards/DUO_PROFILE.md,
-  docs/doctrine/trust-membrane.md,
-  contracts/v1/runtime/,
-  schemas/contracts/v1/runtime/,
-  packages/maplibre-runtime/,
-  packages/ui/
-]
-tags: [kfm, architecture, ui, continuity, map-shell, focus-mode, story-node, evidence-drawer, governance]
-notes: [
-  "Architecture explainer for cross-surface UI continuity in KFM; complements (does not replace) per-component architecture docs.",
-  "Located under a PROPOSED docs/architecture/ui/ subfolder — see §2 and Appendix B for placement rationale; Directory Rules §6.1 currently shows docs/architecture/ as flat-file.",
-  "Does not redefine object meaning (contracts/), shape (schemas/), or rules (policy/); see §2."
-]
+owning_root: docs/
+responsibility: Explain how KFM should preserve truthful UI context across map, evidence, Focus, story, export, permalink, and release transitions while distinguishing current bounded proof from target architecture.
+truth_posture: cite-or-abstain
+current_path: docs/architecture/ui/CONTINUITY_NOTES.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 34d509c690649b284a7c0be739e3a5c8c85926ee
+  target_prior_blob: 375e3e7e902cee054badb68294a7fe43d5ccbaa6
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  map_context_contract_blob: c6367306f14f9da56b3e3cbe7fad9d5545a0cdbf
+  map_context_schema_blob: 6972d16341339c266499eca17dc2717b67778bed
+  map_context_validator_blob: 9ead8aed6fb0df2355cb1af573a069339b567b74
+  map_context_test_blob: 809cccdc31a428ab23097f956b6561c61dad9916
+  context_drawer_architecture_blob: 32a9d4da2d778014e88033ab205ba08491c43ca0
+  context_drawer_adapter_blob: fa2cc1781e7b21a63b3ee6bc6ce23f7e9c2c6350
+  context_drawer_test_blob: da17c6c63e21b7a095d4080cb9eb57480b4064ee
+  explorer_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  explorer_main_blob: 9c95ae67333b7cbf6bc88051fa5c76e4cd97efa4
+  explorer_shell_blob: 64c78c78820af33fb7a622094e4c0944ad9412f8
+  map_click_bridge_doc_blob: de7219fcb58d257d81a6e50c3d060c932c9c35f2
+  map_runtime_bridge_blob: 18d61ea0ef2fbe2fc2f3cc9d42291c101003037f
+  focus_composed_claim_fixture_doc_blob: e3ee9af088a86ba5ef02787672e7badf8bd9e727
+  focus_composed_claim_resolver_blob: 45aa4e7479a8c95138f98cc48c846f39a16aec2d
+  evidence_drawer_blob: 7746843c259594568fe75e975155a67eb8372e8f
+  story_current_implementation_blob: 7566f69f0a7ff87b461b54098fb00f0c41deed63
+  export_entry_blob: c1380189b0b7c48ee85bb4f9159c6a5c1e441b1b
+  maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
+  maplibre_package_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  ui_package_entry_blob: 2c9ea341d61bf4d1733b9982fda8a9b869a3a720
+related:
+  - ./README.md
+  - ./BOUNDARIES.md
+  - ./EVIDENCE_DRAWER.md
+  - ./FOCUS_FLOW.md
+  - ./STORY_PLAYER.md
+  - ./COMPARE_AND_EXPORT.md
+  - ./MAP_RUNTIME_BOUNDARY.md
+  - ./map-context-evidence-drawer-admission.md
+  - ../map-shell.md
+  - ../governed-api.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../../contracts/ui/map_context_envelope.md
+  - ../../../schemas/contracts/v1/ui/map_context_envelope.schema.json
+  - ../../../tools/validators/ui/validate_map_context_envelope.py
+  - ../../../tests/validators/test_validate_map_context_envelope.py
+  - ../../../packages/envelopes/src/envelopes/map_context_evidence_drawer.py
+  - ../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py
+  - ../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md
+  - ../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md
+tags: [kfm, architecture, ui, continuity, map-context, evidence-drawer, focus-mode, story-player, export, correction, trust-membrane]
+notes:
+  - "Same-path documentation modernization only. No contract, schema, policy, fixture, validator, app, package, workflow, source, evidence, release, deployment, or publication behavior changes."
+  - "The existing docs/architecture/ui/ lane is placement-safe under accepted ADR-0029 and adopted Directory Rules v2; the former proposed-subfolder warning is retired."
+  - "MapContextEnvelope is a short-lived, renderer-neutral released request-context projection. It is not a universal client-session object and intentionally excludes renderer-specific camera and feature payload state."
+  - "Current executable proof is bounded to fixture-first validation, one local context-to-Drawer admission helper, a renderer-neutral synthetic click bridge, a composed-claim Focus projection, the fail-closed Explorer shell, the Evidence Drawer projection, and a 2D-only Story Player consumer. These slices are not composed into one live public runtime."
 [/KFM_META_BLOCK_V2] -->
 
-# UI Continuity Notes
+<a id="top"></a>
 
-> How KFM preserves **state, narrative, evidence, citation, trust labels, time-slice, and session identity** as users move between the map shell, Story Nodes, Focus Mode, the Evidence Drawer, AI answers, exports, and across release boundaries.
+# UI Continuity Notes — Current Architecture, Bounded Proof, and Graduation Gates
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: architecture note](https://img.shields.io/badge/type-architecture--note-informational)](#)
-[![scope: UI continuity](https://img.shields.io/badge/scope-UI%20continuity-blueviolet)](#)
-[![governance: cite-or-abstain](https://img.shields.io/badge/governance-cite--or--abstain-9cf)](#)
-[![path: PROPOSED subfolder](https://img.shields.io/badge/path-PROPOSED%20subfolder-yellow)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> **Operating rule.** KFM UI continuity means that every transition preserves the truth-bearing bindings appropriate to that transition—released identity, evidence scope, finite outcome, time and area scope, limitations, correction state, and safe negative behavior—without turning browser state, a map renderer, a URL, an export, or generated language into authority.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + map/UI lead + governance lead_ | 2026-05-24 |
+![status](https://img.shields.io/badge/status-draft-orange)
+![evidence](https://img.shields.io/badge/repository--evidence-current%20snapshot-2ea44f)
+![implementation](https://img.shields.io/badge/implementation-bounded%20fixture%20proof-blue)
+![runtime](https://img.shields.io/badge/live%20continuity-not%20established-lightgrey)
+![trust](https://img.shields.io/badge/truth-cite--or--abstain-critical)
 
----
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
+| **Document role** | Cross-cutting UI architecture explanation; not contract, schema, policy, evidence, review, release, runtime, or publication authority |
+| **Placement** | Existing `docs/architecture/ui/` lane; confirmed by accepted ADR-0029 and the current UI architecture README |
+| **Current request-context object** | Proposed/inactive `MapContextEnvelope` contract plus closed schema, deterministic validator, fixtures, and focused tests |
+| **Current UI surface** | Fixed fail-closed Explorer shell plus fixture-driven, keyboard-operable Evidence Drawer; additional renderer-neutral click and composed-claim Focus slices exist but are not mounted by the inspected entrypoint |
+| **Current cross-object seam** | Deterministic no-network `MapContextEnvelope` → `EvidenceDrawerPayload` admission helper producing a non-authoritative `DecisionEnvelope` candidate |
+| **Current Story surface** | Bounded, public-safe, 2D-only Story Player consumer; no route, map, Evidence Drawer, Focus, or 3D integration proved |
+| **Current Export surface** | Placeholder entrypoint only |
+| **Map/renderer state** | A renderer-neutral synthetic click bridge exists, but the MapLibre adapter and package are placeholders and Explorer declares no renderer dependency |
+| **Live continuity** | No admitted renderer, live map producer, live governed transport, route composition, permalink codec, model execution, export pipeline, correction listener, deployment, or public operation is established |
 
-> [!NOTE]
-> These are **architecture notes**, not a contract. They describe how continuity *should* hold across KFM's UI surfaces and which objects carry the relevant state. Object meaning, machine shape, admissibility, and renderer implementation live in their canonical homes (`contracts/`, `schemas/`, `policy/`, `packages/`). The §2 Scope section names the boundaries.
+> [!IMPORTANT]
+> A passing fixture, validator, helper, build, or UI projection proves only its declared boundary. It does not prove that the Explorer invokes the helper, that evidence resolves, that policy ran, that release state is current, that a public route exists, or that KFM has published anything.
 
 ---
 
 ## Quick jump
 
+- [0. Current repository checkpoint](#0-current-repository-checkpoint)
 - [1. Purpose — what continuity means in KFM UI](#1-purpose--what-continuity-means-in-kfm-ui)
 - [2. Scope and repo fit](#2-scope-and-repo-fit)
-- [3. The seven axes of continuity](#3-the-seven-axes-of-continuity)
-- [4. MapContextEnvelope — the bounded-context primitive](#4-mapcontextenvelope--the-bounded-context-primitive)
-- [5. 2D ↔ 3D transitions — MapLibre and Story Nodes](#5-2d--3d-transitions--maplibre-and-story-nodes)
-- [6. Map ↔ Focus Mode ↔ AI continuity](#6-map--focus-mode--ai-continuity)
-- [7. Session, deep-link, and URL-state continuity](#7-session-deep-link-and-url-state-continuity)
+- [3. The seven continuity dimensions](#3-the-seven-axes-of-continuity)
+- [4. MapContextEnvelope — the current bounded-context primitive](#4-mapcontextenvelope--the-bounded-context-primitive)
+- [5. Map and renderer transitions](#5-2d--3d-transitions--maplibre-and-story-nodes)
+- [6. Map, Evidence Drawer, Focus Mode, and AI](#6-map--focus-mode--ai-continuity)
+- [7. Session, permalink, and URL-state continuity](#7-session-deep-link-and-url-state-continuity)
 - [8. Export, screenshot, and report continuity](#8-export-screenshot-and-report-continuity)
-- [9. Release-boundary continuity — rollback, correction, withdrawal](#9-release-boundary-continuity--rollback-correction-withdrawal)
-- [10. Anti-patterns — where continuity quietly breaks](#10-anti-patterns--where-continuity-quietly-breaks)
-- [11. Tensions and known limits](#11-tensions-and-known-limits)
+- [9. Release-boundary continuity](#9-release-boundary-continuity--rollback-correction-withdrawal)
+- [10. Anti-patterns](#10-anti-patterns--where-continuity-quietly-breaks)
+- [11. Validation, proof limits, and graduation gates](#11-tensions-and-known-limits)
 - [12. Open questions](#12-open-questions)
 - [13. Related docs](#13-related-docs)
 - [Appendix A — Continuity matrix](#appendix-a--continuity-matrix)
-- [Appendix B — Placement rationale (new subfolder)](#appendix-b--placement-rationale-new-subfolder)
+- [Appendix B — Placement resolution](#appendix-b--placement-rationale-new-subfolder)
+- [Appendix C — No-loss modernization ledger](#appendix-c--no-loss-modernization-ledger)
 
 ---
+
+<a id="0-current-repository-checkpoint"></a>
+
+## 0. Current repository checkpoint
+
+The original edition described a broad desired continuity model but was written before the current repository surfaces existed. The current tree now supports a narrower, more useful conclusion.
+
+### 0.1 Confirmed repository-present surfaces
+
+| Surface | What current bytes prove | What they do **not** prove |
+|---|---|---|
+| [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md) | A proposed semantic contract for immutable, renderer-neutral, released request context | A live producer, accepted public DTO, session store, evidence resolution, policy, release verification, or route |
+| [`map_context_envelope.schema.json`](../../../schemas/contracts/v1/ui/map_context_envelope.schema.json) | Closed JSON Schema profile with exact fields, finite filters, release/evidence references, and all-false governance declarations | That declared release or evidence references resolve or remain current |
+| [`validate_map_context_envelope.py`](../../../tools/validators/ui/validate_map_context_envelope.py) | Deterministic local validation, canonical unions, TTL and time ordering, bounded geography, internal-reference denial, and identity reproduction | Public runtime invocation or authoritative policy/evidence/release checks |
+| [`test_validate_map_context_envelope.py`](../../../tests/validators/test_validate_map_context_envelope.py) | Repository-present positive, schema-negative, semantic-negative, identity, no-network, duplicate-key, non-finite-number, and CLI test source over 16 declared cases | Current hosted execution for this documentation change until exact-head checks finish |
+| [`map-context-evidence-drawer-admission.md`](./map-context-evidence-drawer-admission.md) and its [helper](../../../packages/envelopes/src/envelopes/map_context_evidence_drawer.py) | A bounded anticorruption adapter that aligns one validated selected-feature context with one validated public-safe drawer projection and emits a `DecisionEnvelope` candidate | Evidence resolution, policy evaluation, authentic review/release state, public-use authorization, or Explorer/governed-API wiring |
+| [Admission helper tests](../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py) | Eight finite fixture outcomes, current `DecisionEnvelope` conformance, determinism, input immutability, no content leakage, safe ambiguity handling, and no-network replay are encoded in tests | A deployed runtime path |
+| [Explorer `main.ts`](../../../apps/explorer-web/src/main.ts) and [baseline shell](../../../apps/explorer-web/src/features/shell/index.tsx) | The current entrypoint mounts a fixed `ABSTAIN / NO_GOVERNED_RESPONSE` shell and the Evidence Drawer; supplied baseline input returns a fixed error | A map, route tree, API transport, released-layer flow, Focus request, story integration, export, or deployment |
+| [Map feature click bridge](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md) and [implementation](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict renderer-neutral selection parsing, injected governed resolution, evidence-subset enforcement, finite local failures, and an accessible synthetic click fixture | A MapLibre dependency, live map event, browser transport, EvidenceBundle resolution, policy evaluation, or shell integration |
+| [Focus composed-claim fixture](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md) and [resolver](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Strict app-local request/projection parsing, injected resolution, request/claim identity binding, evidence-subset enforcement, finite composed-claim outcomes, Evidence Drawer handoff, and no-network/no-model posture | A governed API route, model adapter, live evidence resolution, policy execution, release authorization, or shell integration |
+| [Evidence Drawer](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Strict finite projection, safe no-leak negative copy, evidence/citation/history display, keyboard open/close, Escape handling, and focus return | Live transport, EvidenceBundle resolution, policy execution, canonical payload adoption, or public operation |
+| [Story Player current implementation](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md) | One defensive, public-safe, 2D-only StoryManifest consumer with focused tests | Fetching, routes, map/time continuity, Evidence Drawer integration, 3D handoff, authoring, release, or publication |
+| [Export entrypoint](../../../apps/explorer-web/src/features/export/index.tsx) | A placeholder export only | Any export request, artifact, receipt, citation gate, download, or screenshot governance |
+| [MapLibre adapter](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) and [package entry](../../../packages/maplibre/src/index.ts) | A boundary comment and a placeholder package | An admitted renderer dependency, functional adapter, map canvas, plugin set, or browser runtime |
+| [UI package entry](../../../packages/ui/src/index.ts) | A placeholder package | A reusable component contract or continuity state store |
+
+### 0.2 Current maturity statement
+
+**CONFIRMED:** the repository contains useful fixture-first continuity building blocks.
+
+**CONFIRMED:** those blocks are deliberately non-authoritative. Some app-local slices compose synthetic selection, Focus, and Evidence Drawer behavior, but the inspected Explorer entrypoint does not compose them into a live map/Focus runtime.
+
+**UNKNOWN:** whether any external or deployed system supplies equivalent behavior outside the inspected repository surfaces.
+
+**PROPOSED:** the target architecture in later sections describes how the bounded pieces could become a governed end-to-end continuity flow. It is not a statement that the flow exists.
+
+[Back to top](#top)
+
+---
+
+<a id="1-purpose--what-continuity-means-in-kfm-ui"></a>
 
 ## 1. Purpose — what continuity means in KFM UI
 
-KFM is a map-first, time-aware, evidence-first system. A typical user session crosses many surfaces in minutes: a 2D map view, a popup, an Evidence Drawer, a Focus Mode question, an AI answer, a 3D Story Node, an export, a deep link shared with a colleague, a return visit the next day after a release has shipped. The user expects what they did, where they were, what they were looking at, and what they could trust to **survive every one of those transitions**.
+Continuity is the survival of **truthful context** across a change of surface.
 
-**Continuity** is the name for that survival. It is not one property — it is seven (§3) — and each is grounded in specific KFM doctrine, not in generic UX intuition:
+A user may move from an Explorer view to an Evidence Drawer, Focus request, story, comparison, export, shared link, or later release. KFM continuity is satisfied only when the next surface remains honest about:
 
-- CONFIRMED — *"Switching between 2D and 3D preserves the active layer set, the active filter set, and the active focus mode"* (KFM-P2-FEAT-0012).
-- CONFIRMED — *"The story flow returns from Cesium Scene back to MapLibre, preserving narrative continuity"* (ML-057-003).
-- CONFIRMED — *"Deep links round-trip to exact time slice"* (ML-S-017).
-- CONFIRMED — *"Exports and screenshots should preserve verification badge state and manifest ID"* (ML-061-141).
-- CONFIRMED — *"Evidence Drawer required on layers, popovers, and AI answers"* (KFM-P1-FEAT-0065).
-- CONFIRMED — *"`MapContextEnvelope` … camera, layers, feature IDs, temporal snapshot, release refs, evidence refs"* (Master MapLibre Object-Index).
+- which released layer or artifact is in scope;
+- which feature, geography, and time window are in scope;
+- which evidence references support the displayed projection;
+- which finite outcome applies;
+- which limitations, rights, sensitivity, freshness, review, release, and correction declarations apply;
+- what cannot be shown or answered;
+- which parts are browser-local interaction state rather than governed truth.
 
-These notes collect the doctrine into one cross-cutting view, naming where each kind of continuity is carried (`MapContextEnvelope`, `LayerManifest`, deep-link URL, `EvidenceRef`, `ReleaseManifest`), where it is most likely to break, and which sibling documents own the contract for each surface.
+Continuity is therefore broader than state synchronization.
 
-> [!IMPORTANT]
-> Continuity is not the same as **state synchronization**. State sync says "two views show the same camera"; continuity says "what you trusted in view A you can still trust in view B, and what you cited there you can still cite here, and what is denied there is denied here, and what was withdrawn there is withdrawn here." Continuity is governance-aware; state sync is not.
+| Concept | Question answered |
+|---|---|
+| **State synchronization** | Did two client views keep the same camera, panel, toggle, or cursor? |
+| **Request-context continuity** | Did the governed request retain the same released layer, selection, time, area, evidence, and release references? |
+| **Evidence continuity** | Did the downstream surface use the same admitted evidence scope and finite outcome, without inventing support? |
+| **Release continuity** | Is the surface honest about the release, correction, supersession, withdrawal, or rollback state it represents? |
+| **Narrative continuity** | Did a story or explanation preserve its position and support boundaries without turning narrative order into truth? |
 
-[Back to top](#quick-jump)
+> [!CAUTION]
+> Browser-local state can improve usability, but it cannot establish evidence, policy, review, release, or publication state. A camera position and a rendered feature are not evidence. A restored tab is not a release record. A permalink is not a policy decision.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-scope-and-repo-fit"></a>
 
 ## 2. Scope and repo fit
 
-### 2.1 What this document is
+### 2.1 Document authority
 
-| Aspect | Value | Label |
+This file is an architecture reference under the existing UI documentation lane. It explains responsibilities and graduation requirements. It does not define machine behavior.
+
+| Question | Controlling surface |
+|---|---|
+| Where this file belongs | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md), adopted [`directory-rules.md`](../../doctrine/directory-rules.md), and the current [`docs/architecture/ui/README.md`](./README.md) |
+| What `MapContextEnvelope` means | [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md) |
+| What fields it accepts | [`schemas/contracts/v1/ui/map_context_envelope.schema.json`](../../../schemas/contracts/v1/ui/map_context_envelope.schema.json) |
+| Whether a context is locally valid | The current validator and its fixtures/tests |
+| Whether evidence resolves | Evidence authority and governed resolver, not this file or the context validator |
+| Whether a claim may be shown | Applicable policy, review, release, correction, and runtime decision surfaces |
+| How Explorer behaves now | Pinned app code and tests |
+| Whether KFM is published | A governed release state and released artifact, never this document or a pull request |
+
+### 2.2 Correct current homes
+
+| Responsibility | Current home or boundary | Status |
 |---|---|---|
-| Document class | KFM architecture explainer (cross-cutting UI) | CONFIRMED per Directory Rules §6.1 (`docs/architecture/`) |
-| Proposed path | `docs/architecture/ui/CONTINUITY_NOTES.md` | **PROPOSED** — see §2.3 and Appendix B; `docs/architecture/ui/` is a new subfolder not yet in Directory Rules §6.1 |
-| Sibling architecture docs | `system-context.md`, `governed-api.md`, `map-shell.md`, `maplibre-3d.md`, `contract-schema-policy-split.md` | CONFIRMED per Directory Rules §6.1 (paths PROPOSED until mounted-repo verified) |
-| Sibling standards docs | `MAP_TRUST_STATES.md`, `EVIDENCE_BUNDLE.md`, `RELEASE_MANIFEST.md`, `PROV/`, `DUO_PROFILE.md` | CONFIRMED authored (prior session); mounted-repo presence NEEDS VERIFICATION |
-| Authority NOT held | Object meaning, machine shape, admissibility, renderer implementation, design tokens, tests | CONFIRMED (Directory Rules §6.1) |
+| UI architecture explanation | `docs/architecture/ui/` | Confirmed existing lane |
+| Deployable shell | `apps/explorer-web/` | Confirmed bounded app |
+| UI request semantics | `contracts/ui/` | Confirmed semantic-contract lane |
+| Machine shape | `schemas/contracts/v1/ui/` | Confirmed schema lane |
+| Shared envelope adapter | `packages/envelopes/` | Confirmed bounded helper |
+| Renderer package | `packages/maplibre/` | Confirmed placeholder; decision/runtime incomplete |
+| Shared UI package | `packages/ui/` | Confirmed placeholder |
+| Policy | `policy/` | Separate authority; no continuity rule is created here |
+| Evidence | Evidence contracts, resolver, bundles, and governed runtime | Separate authority |
+| Release/correction/rollback | `release/` and distinct lifecycle records | Separate authority |
+| Executable proof | `fixtures/`, `tests/`, and validators | Bounded proof only |
 
-### 2.2 What this document is NOT
+> [!IMPORTANT]
+> Older planning references to `contracts/v1/runtime/`, `packages/maplibre-runtime/`, or a proposed flat-file fallback are not current placement authority. Do not create a parallel package, contract, schema, policy, evidence, or release home from this document.
 
-| If the content is about… | …it lives at | …not here |
-|---|---|---|
-| What `MapContextEnvelope` **means** as an object | `contracts/v1/runtime/map_context_envelope.md` (PROPOSED home) | this doc |
-| The JSON Schema for `MapContextEnvelope` | `schemas/contracts/v1/runtime/map_context_envelope.schema.json` (PROPOSED home) | this doc |
-| The OPA rules that gate cross-surface transitions | `policy/render/` (PROPOSED home) | this doc |
-| MapLibre layer-style implementation | `packages/maplibre-runtime/` (PROPOSED home) | this doc |
-| React components for the shell, Drawer, Focus Mode | `packages/ui/` (PROPOSED home) | this doc |
-| Design tokens, colors, motion durations | `packages/ui/src/design-tokens/` or `docs/brand/` | this doc |
-| The Story Node contract | `contracts/v1/story_node/` (PROPOSED home) — see ML-059 series | this doc |
-| Trust-state vocabulary | `docs/standards/MAP_TRUST_STATES.md` | this doc |
-| Evidence-bundle external conformance | `docs/standards/EVIDENCE_BUNDLE.md` | this doc |
-| Release-manifest external conformance | `docs/standards/RELEASE_MANIFEST.md` | this doc |
+### 2.3 Non-effects
 
-### 2.3 Placement note — new subfolder
+This documentation-only update does not:
 
-Directory Rules §6.1 shows `docs/architecture/` as a flat-file folder (`system-context.md`, `governed-api.md`, `map-shell.md`, `maplibre-3d.md`, …). This document proposes a `docs/architecture/ui/` subfolder for UI-architecture cross-cutting notes. The rationale, alternative paths considered, and the resolution path live in **Appendix B**. The placement is PROPOSED until a Directory Rules update or ADR confirms it.
+- change `MapContextEnvelope` meaning or shape;
+- extend the envelope with camera, URL, story, Focus, or panel state;
+- accept a renderer ADR or add a renderer dependency;
+- wire the admission helper into Explorer or the governed API;
+- create an EvidenceBundle resolver, policy evaluator, Focus route, permalink service, export pipeline, correction listener, or cache invalidation path;
+- activate a source, promote lifecycle state, release, deploy, or publish.
 
-> [!NOTE]
-> Surfacing this as a divergence — rather than silently adopting it — is consistent with Directory Rules §13.5 (anti-patterns) and the discipline that "where a file lives encodes who owns it, what governance it answers to, and what lifecycle it belongs to." If the subfolder is rejected, the file flattens to `docs/architecture/UI_CONTINUITY_NOTES.md` with one redirect; no content is lost.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 3. The seven axes of continuity
+<a id="3-the-seven-axes-of-continuity"></a>
 
-Each axis names a thing that must survive a surface transition. The axes are orthogonal; a single transition (e.g., 2D map → 3D Story Node) crosses several at once. Section numbers below indicate where each axis is unpacked.
+## 3. The seven continuity dimensions
 
-| # | Axis | What must survive | Carrier object(s) | Section |
+The previous edition treated one proposed `MapContextEnvelope` as a universal carrier. Current repository evidence requires a stricter split. The seven dimensions remain useful, but each has a different owner and maturity.
+
+| # | Dimension | What must survive | Current carrier or evidence | Current status |
 |---|---|---|---|---|
-| 1 | **State continuity** | Active layer set, active filter set, active Focus Mode, camera state, time-slice. | `MapContextEnvelope`, `LayerManifest` refs | §4, §5 |
-| 2 | **Narrative continuity** | The Story Node's story flow — entry → 3D scene → return → next chapter — without losing the user's place. | Story Node refs in `MapContextEnvelope`; Story Node manifest | §5 |
-| 3 | **Evidence continuity** | `EvidenceRef` resolution is identical across surfaces; the Drawer resolves the same bundle from the map, the popup, the Focus Mode answer, and the AI panel. | `EvidenceRef` → `EvidenceBundle` | §6 |
-| 4 | **Citation continuity** | Every public claim carries citations across surfaces; exports preserve them. | `CitationValidationReport`, `EvidenceDrawerPayload` | §6, §8 |
-| 5 | **Trust-state continuity** | The `TrustVisibleState` label on a layer is identical in the map badge, popup, Drawer, export, API DTO, release manifest, and AI panel. | `TrustVisibleState` (see `MAP_TRUST_STATES.md`) | §6, §8, §9 |
-| 6 | **Time-slice continuity** | The active temporal snapshot persists across surface transitions and round-trips through deep links. | `MapContextEnvelope.time`, timeline state, deep-link URL params | §5, §7 |
-| 7 | **Session and release continuity** | A user returning hours, days, or releases later finds the same bound surface — or a clearly-visible delta (correction, withdrawal, rollback). | URL state, `ReleaseManifest.release_id`, `correction_lineage` | §7, §9 |
+| 1 | **View-state continuity** | Camera, viewport interaction, open panels, local toggles, keyboard focus, and other renderer/client state | No accepted durable view-state contract; some component-local behavior exists | **PARTIAL / target contract needed** |
+| 2 | **Request-context continuity** | Released layers, selected features, bounded filters, time window, area scope, evidence refs, release refs, caller role, and expiry | `MapContextEnvelope` | **BOUNDED fixture-first proof** |
+| 3 | **Evidence and citation continuity** | Downstream projection remains within the selected feature's admitted evidence set and shows only permitted citations | Evidence Drawer projection, context-admission helper, synthetic click bridge, and Focus composed-claim resolver | **BOUNDED app-local proof; no live resolver or route** |
+| 4 | **Finite-outcome and trust continuity** | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` remains compatible with declared policy/review/release/freshness/correction posture | Evidence Drawer, `DecisionEnvelope` candidate helper, synthetic click bridge, and Focus composed-claim projection | **BOUNDED projection proof** |
+| 5 | **Temporal and spatial continuity** | Ordered request time window and bounded viewport/geography survive a governed request transition | `MapContextEnvelope.time_window` and `area_scope` | **BOUNDED request-context proof** |
+| 6 | **Narrative continuity** | Story position, public-safe evidence/citation refs, limitations, and non-authoritative status remain visible | StoryManifest consumer slice | **2D-only bounded consumer; no map/route integration** |
+| 7 | **Session, export, and release continuity** | A durable link or outward artifact remains honest about release, correction, withdrawal, and rollback state | No live permalink/export/release listener; Drawer can render declared history fixtures | **TARGET / not established end to end** |
 
-> [!TIP]
-> If you're proposing a new UI surface, work through each of these seven before merging. A surface that satisfies six of seven is still a continuity bug.
+These dimensions must not be collapsed merely because one UI action touches several of them. In particular:
 
-[Back to top](#quick-jump)
+- `MapContextEnvelope` owns short-lived governed **request context**, not all browser state.
+- the Evidence Drawer owns a public-safe **projection**, not evidence authority;
+- the synthetic click bridge owns app-local selection scoping, not a map renderer or EvidenceBundle resolver;
+- the Focus composed-claim resolver owns request/projection subset checks, not model execution or claim authority;
+- the admission helper owns local cross-object consistency, not policy or release;
+- Story Player owns defensive playback projection, not source or narrative publication;
+- a future permalink or export object must have its own reviewed contract instead of silently expanding `MapContextEnvelope`.
+
+[Back to top](#top)
 
 ---
 
-## 4. MapContextEnvelope — the bounded-context primitive
+<a id="4-mapcontextenvelope--the-bounded-context-primitive"></a>
 
-CONFIRMED — Master MapLibre Object-Index: *"`MapContextEnvelope`: Bounded context carrying map camera, layer IDs, feature IDs, temporal snapshot, release refs and selected evidence refs."*
+## 4. `MapContextEnvelope` — the current bounded-context primitive
 
-`MapContextEnvelope` is the **single carrier** for axes 1, 2, 3, 6, and parts of 5 and 7. It is the bounded-context payload that travels between the map shell and every other UI surface; it is also the input to the governed API for Focus Mode, AI answers, and exports.
+The current semantic contract defines `MapContextEnvelope` as an immutable, renderer-neutral request-context projection. It carries stable KFM identifiers across the trust membrane without copying renderer objects, raw feature properties, or internal store references.
 
-### 4.1 What it carries
+### 4.1 Exact current field surface
 
-PROPOSED — implementation NEEDS VERIFICATION against `contracts/v1/runtime/map_context_envelope.md` (PROPOSED home).
+The closed schema requires these top-level fields:
 
-| Slot | Continuity axis | Notes |
+| Field | Current meaning |
+|---|---|
+| `object_type` | Constant `MapContextEnvelope` |
+| `schema_version` | Constant `1.0.0` |
+| `profile` | Constant `kfm.ui.map-context-envelope.v1` |
+| `envelope_id` | Deterministic ID derived from the identity digest |
+| `request_id` | Bounded request/audit reference |
+| `caller_role` | Finite caller role |
+| `assembled_at` | Canonical UTC assembly time |
+| `expires_at` | Canonical UTC expiry; maximum lifetime is 15 minutes |
+| `time_window` | Ordered UTC start and end |
+| `area_scope` | Ordered geographic viewport bounds or one geography reference |
+| `layers[]` | Canonical list of declared `PUBLISHED` layers with release refs, layer spec hashes, and evidence refs |
+| `selections[]` | Canonical selected feature/layer pairs with evidence refs |
+| `filters[]` | Renderer-neutral `EQ`, `IN`, or `BETWEEN` declarations with finite arity |
+| `evidence_refs[]` | Exact canonical union of layer and selection evidence refs |
+| `release_refs[]` | Exact canonical union of layer release refs |
+| `governance` | Closed set of declarations that all remain `false` |
+| `spec_hash` | RFC 8785 JCS + SHA-256 identity over the envelope excluding `envelope_id` and `spec_hash` |
+
+The envelope ID is the prefix `map-context-envelope:` plus the first 24 hexadecimal characters of the computed digest.
+
+### 4.2 Explicit exclusions
+
+The current schema deliberately does **not** admit:
+
+- MapLibre or other renderer objects;
+- `sourceLayer`, `queryRenderedFeatures`, `paint`, `layout`, style expressions, or feature-state;
+- raw feature-property payloads;
+- camera center, zoom, bearing, or pitch;
+- open panel state, keyboard focus, tab state, or local preferences;
+- Story Node or chapter state;
+- Focus session identity or question text;
+- URL parameter encoding;
+- resolved EvidenceBundle bytes;
+- a PolicyDecision, ReviewRecord, ReleaseManifest, CorrectionNotice, or RollbackCard;
+- proof-store, RAW, WORK, QUARANTINE, canonical, internal, or direct-model references.
+
+Those exclusions are a trust feature. They prevent a map/runtime implementation model from leaking into the published request language.
+
+### 4.3 What local validation proves
+
+The validator and tests establish a bounded local claim:
+
+```text
+fixture JSON
+  -> closed schema validation
+  -> canonical ordering and union checks
+  -> bounded time / area / filter checks
+  -> internal-reference denial
+  -> deterministic JCS + SHA-256 identity
+  -> PASS or finite findings
+```
+
+They do not verify that a declared release is current, that an EvidenceRef resolves, or that the caller is authenticated. Downstream services must re-check current evidence, policy, review, release, correction, and rollback state.
+
+### 4.4 Consequence for UI continuity
+
+`MapContextEnvelope` can safely anchor a **short-lived governed request**. It cannot by itself be:
+
+- a durable browser session;
+- a deep-link/permalink format;
+- a renderer-state snapshot;
+- an export receipt;
+- an evidence bundle;
+- an authorization token;
+- a public release record.
+
+A durable continuity design therefore needs composition, not uncontrolled field growth.
+
+[Back to top](#top)
+
+---
+
+<a id="5-2d--3d-transitions--maplibre-and-story-nodes"></a>
+
+## 5. Map and renderer transitions
+
+### 5.1 Current state
+
+The inspected Explorer package declares no MapLibre runtime dependency. `MapLibreAdapter.ts` contains only its import-boundary comment, `packages/maplibre/src/index.ts` exports a placeholder, and ADR-0007 remains proposed. The Story Player slice is explicitly 2D-only and not wired into the shell.
+
+A renderer-neutral synthetic click bridge does exist under `features/map_runtime/`. It models a rendered-feature selection with ordinary buttons, calls an injected resolver, enforces EvidenceRef subset boundaries, and opens the existing Evidence Drawer. Its own documentation and tests explicitly deny any MapLibre, network, source, policy, evidence-store, lifecycle-store, or model-runtime behavior.
+
+Therefore:
+
+- a fixture-first **selection-to-Drawer** bridge is established;
+- no functional renderer-backed 2D map transition is established;
+- no 2D-to-3D or 3D-to-2D handoff is established;
+- no renderer-specific continuity object is accepted;
+- no Cesium handoff is current repository behavior;
+- no map/time/story integration is proved by the Story Player consumer.
+
+### 5.2 Target transition obligations
+
+Any future renderer transition must preserve the governed parts of context while keeping renderer state in its own admitted boundary.
+
+| Transition concern | Required target behavior | Owning decision or contract |
 |---|---|---|
-| `camera` | State | Zoom, center, bearing, pitch — for 2D and 3D parity. |
-| `layers[]` | State | Active layer set with `LayerManifest` refs. |
-| `filters[]` | State | Active filter set per layer. |
-| `feature_ids[]` | State, evidence | Selected features; resolve to per-feature `EvidenceRef`s. |
-| `time` | Time-slice | ISO-8601 instant or interval; the temporal snapshot of the view. |
-| `time_window` | Time-slice | The wider time window the timeline is showing. |
-| `release_refs[]` | Session | The `ReleaseManifest` `release_id`(s) the layers are bound to. |
-| `evidence_refs[]` | Evidence | Selected `EvidenceRef`s for Focus Mode / Drawer. |
-| `focus_mode` | State, narrative | Whether a Focus Mode session is active and what its scope is. |
-| `story_node_ref` | Narrative | The current Story Node, if any (see §5). |
-| `policy_label` | Trust state | Aggregate policy posture for the bounded context. |
-| `trust_state_summary` | Trust state | Map of layer ID → `TrustVisibleState` (vocabulary from `MAP_TRUST_STATES.md` §4). |
+| Released layer identity | Preserve or explicitly map every admitted layer; unsupported layers remain visible as unsupported rather than silently disappearing | Layer/runtime contract |
+| Evidence scope | Preserve selected-feature evidence refs and re-resolve them through governed evidence handling | Evidence authority and admission boundary |
+| Time and area | Preserve ordered request scope or disclose any intentional narrowing | `MapContextEnvelope` plus runtime response |
+| Finite outcome | A denied, stale, withdrawn, or errored projection cannot become an apparent answer in another renderer | Runtime envelope and UI projection |
+| Camera/view state | Preserve only through a separately reviewed renderer-neutral view-state contract | **PROPOSED; not part of current `MapContextEnvelope`** |
+| Story position | Preserve through the accepted StoryManifest/StoryNode model and route integration | Story contracts and app feature |
+| Synthetic or reconstructed representation | Surface a reviewed reality/representation boundary where applicable | Representation policy/contract |
+| Additional renderer or plugin | Require accepted dependency, boundary, security, license, performance, accessibility, and rollback treatment | ADR and package/runtime governance |
 
-### 4.2 Where it travels
+> [!WARNING]
+> “Same visual result” is not enough. A renderer transition fails continuity when it changes evidence scope, hides a negative outcome, silently changes release, or exposes a detail that policy withheld—even when the pixels look correct.
+
+### 5.3 Story Player boundary
+
+The current Story Player consumer proves defensive handling of one public-safe StoryManifest projection. It does not prove:
+
+- a route;
+- a map;
+- StoryNode dereferencing;
+- Evidence Drawer handoff;
+- time or camera synchronization;
+- 3D rendering;
+- story authoring or publication.
+
+Those remain graduation work, not current behavior.
+
+[Back to top](#top)
+
+---
+
+<a id="6-map--focus-mode--ai-continuity"></a>
+
+## 6. Map, Evidence Drawer, Focus Mode, and AI continuity
+
+### 6.1 Current bounded seams
+
+The repository contains three related but distinct app/runtime-facing continuity slices. None is mounted as a live map/Focus route by the inspected Explorer entrypoint.
+
+1. A local `MapContextEnvelope` → `EvidenceDrawerPayload` admission helper emits a non-authoritative `DecisionEnvelope` candidate.
+2. A renderer-neutral synthetic map-click bridge scopes an injected resolution request and opens the Evidence Drawer.
+3. A fixture-first Focus composed-claim feature validates an allowlisted request/projection pair and hands support to the Evidence Drawer.
 
 ```mermaid
 flowchart LR
-  Shell[Map Shell<br/>MapLibre canvas] -->|envelope| Drawer[Evidence Drawer]
-  Shell -->|envelope| FM[Focus Mode]
-  Shell -->|envelope| Story[Story Node 3D]
-  Shell -->|envelope| Export[Export / Screenshot]
-  Shell -->|envelope as URL| URL[Deep link]
-  FM -->|envelope + scope| AI[AI answer panel]
-  Story -->|envelope after return| Shell
-  URL -->|envelope on load| Shell
+    MC["validated MapContextEnvelope"] --> AD["context-to-Drawer admission helper"]
+    DP["validated EvidenceDrawerPayload"] --> AD
+    AD --> DE["DecisionEnvelope candidate"]
 
-  Drawer -.resolves.-> EB[EvidenceBundle]
-  FM -.resolves.-> EB
-  AI -.resolves.-> EB
-  Export -.preserves.-> EB
+    SEL["synthetic renderer-neutral selection"] --> MB["app-local click bridge"]
+    MB --> DR["Evidence Drawer"]
 
-  style Shell fill:#d9eaff,stroke:#2c5282
-  style EB fill:#fff4cc,stroke:#b58900
+    FREQ["bounded composed-claim request"] --> FP["Focus projection resolver"]
+    FP --> FDR["Evidence Drawer handoff"]
+
+    DE -. "not shell-integrated" .-> HOLD["live runtime composition: HOLD"]
+    MB -. "no renderer or transport" .-> HOLD
+    FP -. "no model or transport" .-> HOLD
 ```
 
-PROPOSED — diagram reflects the envelope-as-bounded-context pattern from Master MapLibre Object-Index. Tooling and route names NEED VERIFICATION.
+The context-to-Drawer helper checks:
 
-### 4.3 Identity rule
+- expected object profiles;
+- context assembly/expiry ordering;
+- all-false context governance declarations;
+- caller-role boundaries, including explicit fixture-only `SYSTEM_TEST` opt-in;
+- exactly one selected feature;
+- selected layer identity, declared `PUBLISHED` state, and release binding;
+- selected evidence membership in context evidence;
+- drawer evidence scope for `ANSWER` and `ABSTAIN`;
+- finite outcome/reason/trust-state compatibility;
+- no evidence, citations, history, title, summary, limitations, or source-text leakage into `DENY` or `ERROR` candidates.
 
-PROPOSED. The envelope's identity for continuity purposes is the **JCS canonicalization** of its content, hashed with SHA-256 — the same `spec_hash` rule used by `EvidenceBundle` and `ReleaseManifest` (see `docs/standards/EVIDENCE_BUNDLE.md` §5 and `docs/standards/RELEASE_MANIFEST.md` §5). Two envelopes that produce the same `spec_hash` describe the same bounded context; deep links and Story Nodes use this identity to round-trip without drift.
+It emits an existing `DecisionEnvelope` candidate with `policy_family = "render"`. The candidate is not a PolicyDecision and creates no authority.
 
-[Back to top](#quick-jump)
+### 6.2 Synthetic map-click bridge
 
----
+The app-local bridge uses profile `kfm.explorer.map-feature-selection.v1`. It accepts only selection, layer, feature, and allowlisted evidence identity plus an injected resolver. It:
 
-## 5. 2D ↔ 3D transitions — MapLibre and Story Nodes
+- treats rendered feature properties as request scope, never evidence;
+- returns `ABSTAIN` when no governed evidence reference exists;
+- returns fixed safe `ERROR` states for malformed selection, resolver failure, or evidence outside selection scope;
+- preserves governed `DENY` behavior without reflecting restricted support;
+- mounts an accessible synthetic click fixture and opens the Evidence Drawer;
+- imports no renderer and performs no transport itself.
 
-CONFIRMED — KFM-P2-FEAT-0012:
+This is genuine continuity proof between a synthetic selection and the Drawer. It is not a `MapContextEnvelope` producer and does not prove a live map click.
 
-> *"Switching between 2D and 3D preserves the active layer set, the active filter set, and the active focus mode."*
+### 6.3 Evidence Drawer current behavior
 
-CONFIRMED — ML-057-003 / KFM-P27-FEAT-0002:
+The fixture-driven Evidence Drawer:
 
-> *"The story flow returns from Cesium Scene back to MapLibre, preserving narrative continuity."*
-> *"A 3D Story Node should transition from MapLibre 2D to Cesium 3D terrain and back while preserving narrative continuity and evidence constraints."*
+- accepts one strict browser projection profile;
+- resolves the projection into `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`;
+- uses fixed safe copy for negative states;
+- shows evidence references and citations only when allowed by its local projection rules;
+- shows declared source-role, policy, review, release, freshness, correction, negative-history, and correction-history labels;
+- opens and closes by keyboard, closes on Escape, and returns focus;
+- performs no network request, policy evaluation, source access, or lifecycle-store access.
 
-The 2D↔3D transition is the most demanding continuity surface in KFM because it crosses renderers (MapLibre ↔ Cesium per `docs/architecture/maplibre-3d.md`), composes axes 1, 2, 3, 5, and 6 simultaneously, and is where evidence-loss is most likely to slip past review.
+This is useful UI proof, not an authoritative resolver.
 
-### 5.1 The handoff contract
+### 6.4 Focus and AI current state
 
-PROPOSED. The 2D → 3D handoff MUST:
+`contracts/ui/focus_request.md` remains proposed, and its paired schema is described as a permissive stub.
 
-1. Serialize the active `MapContextEnvelope` (§4) and pass it to the 3D mode.
-2. Open the 3D mode with **the same** `time`, `time_window`, `layers[]` (mapped to 3D-capable equivalents), `filters[]`, `focus_mode`, and `story_node_ref`.
-3. Render a **`RealityBoundaryNote`** chip if the 3D scene includes synthetic terrain, reconstructed surfaces, or AI-drafted geometry (Atlas object-family `RealityBoundaryNote`).
-4. Preserve every layer's `TrustVisibleState` — a layer that is `stale` in 2D MUST be `stale` in 3D; a layer that is `denied` MUST be `denied`.
-5. Carry the `evidence_refs[]` forward so the 3D scene's Evidence Drawer resolves to the same bundles as the 2D view.
+Separately, the app contains a fixture-first composed-claim Focus feature. Its injected resolver path:
 
-The 3D → 2D return MUST:
+- validates a bounded question, request identity, claim identity, and allowlisted EvidenceRefs;
+- requires response request/claim identity to match;
+- rejects Focus or Drawer evidence outside request scope;
+- maps dependency closure `SUPPORTED` and `QUALIFIED` to `ANSWER`, while preserving `ABSTAIN`, `DENY`, and `ERROR`;
+- requires answer support/citations and a safe AIReceipt reference in its public-safe projection;
+- sanitizes negative Drawer inputs and exposes no hidden reasoning, provider trace, or raw prompt bundle;
+- performs no network, model, vector-store, graph-store, renderer, policy, source, or lifecycle-store access.
 
-1. Re-serialize the (possibly updated) envelope.
-2. Restore the 2D shell at the time-slice and camera the user **exited from**, not the one they entered with — unless the user explicitly requests "return to start" (PROPOSED affordance).
-3. Carry forward any user actions taken in 3D (layer toggles, time changes) so they are reflected in the 2D shell.
-4. Preserve the Story Node's "you have read N of M chapters" position if the transition was part of a Story Node flow.
+No live Focus route, model adapter, governed transport, authoritative EvidenceBundle resolution, policy execution, or shell composition is established by the inspected entrypoint.
 
-> [!WARNING]
-> A 3D scene that renders with a `verified` chip while its 2D counterpart is `stale` is a continuity violation. The trust-state aggregation rule from `MAP_TRUST_STATES.md` §6.2 (most-restrictive wins) applies across renderers.
+### 6.5 Target governed order
 
-### 5.2 Story Node manifest as the narrative carrier
+A future live flow must preserve this order:
 
-CONFIRMED — ML-059-013, ML-059-014: Story Nodes are "explainable links between datasets, scenes, maps, timeline frames and AI-generated insights, with spatial footprints, temporal coverage, provenance, citations and CARE flags." Story Node structures include `map_2d`, `scene_3d`, and `timeline_frame` asset links.
-
-The Story Node manifest is the narrative-axis carrier (axis 2). When the user is "inside a story," the envelope's `story_node_ref` tracks which node and which chapter; cross-renderer transitions check the Story Node manifest for chapter ordering and resume points.
-
-### 5.3 What 3D MUST NOT do
-
-CONFIRMED — ML-057-001 anti-pattern: *"Do not let 3D scene become canonical truth or bypass evidence drawer."* ML-057-004: *"Admit 3D Tiles only after release manifests and evidence context survive in 3D mode."*
-
-The 3D surface is a **carrier**, not a source. A 3D scene MUST NOT:
-
-- Be cited as evidence (it has none of its own; it shows others').
-- Bypass the Evidence Drawer (clicks resolve through the same Drawer pattern as 2D).
-- Render layers whose `TrustVisibleState` does not license 3D rendering (e.g., a `quarantined` layer MUST NOT cross into 3D even if a Cesium adapter could technically render it).
-
-[Back to top](#quick-jump)
-
----
-
-## 6. Map ↔ Focus Mode ↔ AI continuity
-
-CONFIRMED — KFM-P1-FEAT-0065:
-
-> *"Evidence Drawer or equivalent trust-visible payloads should be available wherever users encounter public claims, map features, layer states, or AI summaries."*
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §20:
-
-> *"AI may … summarize resolved evidence in plain language with citations. AI must not … invent support from map pixels, feature properties, vector search, or model memory."*
-
-Focus Mode and AI answer panels do not invent context — they **receive** a `MapContextEnvelope` and a `FocusModeRequest` and respond inside finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
-
-### 6.1 The three-step flow
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant U as User
-  participant S as Map Shell
-  participant F as Focus Mode
-  participant A as AI adapter
-  participant D as Evidence Drawer
-  U->>S: Click feature / ask question
-  S->>F: MapContextEnvelope + scope
-  F->>F: Resolve EvidenceRef → EvidenceBundle
-  F->>A: FocusModeRequest with bundle refs
-  A->>F: FocusModeResponse + AIReceipt
-  F->>D: EvidenceDrawerPayload (same refs)
-  D->>U: Resolved evidence + citations
-  Note over F,D: Drawer resolves the SAME bundles as Focus Mode and AI — evidence continuity (axis 3) holds.
+```text
+client-local view state
+  -> validated short-lived MapContextEnvelope
+  -> current release / correction / caller checks
+  -> EvidenceRef resolution to admissible EvidenceBundle
+  -> policy, sensitivity, rights, review, and citation checks
+  -> finite RuntimeResponseEnvelope
+  -> public-safe Evidence Drawer / Focus / AI projection
+  -> optional AIReceipt when model execution occurs
 ```
 
-PROPOSED — sequence diagram reflects KFM-P1-FEAT-0065, ML-059-013, ML-063-026, the kfm_unified_doctrine_synthesis.md §20 AI rules.
+The local admission helper and app-local projection slices may participate after their source objects are validated, but they cannot replace the governing checks.
 
-### 6.2 Continuity properties this flow guarantees
+| Outcome | UI continuity obligation |
+|---|---|
+| `ANSWER` | Show only bounded, current, released, reviewed, policy-allowed support and citations |
+| `ABSTAIN` | Preserve safe support references only where the governing profile permits; show why no answer is available |
+| `DENY` | Show a safe denial without restricted evidence, source text, coordinates, or internal reason detail |
+| `ERROR` | Show a safe operational failure; never downgrade to an answer or raw model fallback |
 
-| Property | Guarantee | Source |
-|---|---|---|
-| Same envelope across map / Focus Mode / AI | All three see the same `MapContextEnvelope` | §4 |
-| Same `EvidenceRef` set across surfaces | All three resolve through the bundle resolver | C8-04, `EVIDENCE_BUNDLE.md` §7 |
-| Same `TrustVisibleState` per cited layer | AI response qualifies on non-`verified` cites | `MAP_TRUST_STATES.md` §10 |
-| No silent AI escape hatch | Finite outcome envelope; ABSTAIN if any cite fails | `unified-doctrine §20`, `AIReceipt` |
-| Drawer payload is canonical | Badges click through to the Drawer; the Drawer is the citation surface, not the badge | `MAP_TRUST_STATES.md` §10 anti-patterns; ML-061-139 |
-
-> [!CAUTION]
-> An AI panel that produces an answer **before** the Focus Mode resolves the relevant `EvidenceBundle` is a continuity violation — and worse, it is the trust-membrane bypass `unified-doctrine §20` names: *"emit unclassified prose-only answers to public UI."* The order in §6.1 is non-negotiable: envelope → resolve → request → respond → drawer.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 7. Session, deep-link, and URL-state continuity
+<a id="7-session-deep-link-and-url-state-continuity"></a>
 
-CONFIRMED — ML-S-017: *"Deep links round-trip to exact time slice."*
+## 7. Session, permalink, and URL-state continuity
 
-A KFM URL is the **portable form** of a `MapContextEnvelope`. A user who copies a URL, pastes it into a colleague's chat, and asks "do you see what I see?" expects the answer to be yes — even if the release has since advanced, the colleague sees either the same release (CONFIRMED — release-binding rule from `RELEASE_MANIFEST.md` §1) or an unambiguous indication that the release has advanced (§9).
+### 7.1 Current state
 
-### 7.1 What the URL carries
+No current router, URL codec, permalink contract, short-link service, or round-trip test was verified for the Explorer entrypoint. The previous short-letter URL parameter proposal was design speculation and is not retained as repository fact.
 
-PROPOSED URL parameter contract — implementation NEEDS VERIFICATION against `packages/ui/src/router/`:
+The current `MapContextEnvelope` also cannot serve as a durable permalink by itself because:
 
-| URL param family | Maps to envelope slot | Notes |
-|---|---|---|
-| `c=` (camera) | `camera` | Zoom / lat / lng / bearing / pitch, compactly encoded. |
-| `l=` (layers) | `layers[]` | Active layer set. |
-| `f=` (filters) | `filters[]` | Active filter set per layer. |
-| `t=` (time) | `time` | ISO-8601 instant or interval; encodes the timeline state. |
-| `tw=` (time window) | `time_window` | The wider window the timeline is showing. |
-| `r=` (release) | `release_refs[]` | The `release_id` the URL is bound to. |
-| `fm=` (focus mode) | `focus_mode` | Focus Mode session ID, if any. |
-| `sn=` (story node) | `story_node_ref` | Story Node + chapter, if any. |
-| `feat=` (selected features) | `feature_ids[]` | Selected features. |
-| `ev=` (evidence selection) | `evidence_refs[]` | Currently-viewed `EvidenceRef`s. |
+- it expires within 15 minutes;
+- it excludes camera and client-session state;
+- it only declares release/evidence references and does not prove they resolve;
+- it is a request-context object, not a released permalink object;
+- its governance declarations explicitly create no public-use or release authority.
 
-### 7.2 The round-trip rule
+### 7.2 Target split
 
-A URL **MUST** round-trip:
+A sound permalink design should separate at least two objects:
 
-1. Open URL → render → serialize `MapContextEnvelope` → compute `spec_hash`.
-2. The `spec_hash` of the envelope produced from a URL MUST equal the `spec_hash` of the envelope that produced the URL.
+1. **Ephemeral governed request context** — current `MapContextEnvelope`, short-lived and revalidated.
+2. **Durable view/permalink state** — a separately reviewed object that records only public-safe client state and pins the released context required for replay.
 
-If the two `spec_hash` values differ, the URL is **lossy**, which is itself a continuity bug, not a design choice.
+A durable permalink object remains **PROPOSED**. Before it is created, Directory Rules, object-family ownership, contract/schema placement, sensitivity, identity, expiry, correction, and migration behavior must be decided.
 
-### 7.3 Session restoration
+### 7.3 Required properties for a future permalink
 
-A user returning after a closed-tab session MUST find the URL alone sufficient to restore their bounded context. KFM does not require server-side session state to recover a view — that's what the URL is for. Local session state (e.g., `sessionStorage` cache of resolved bundles) is permitted as an optimization but **MUST NOT** be required for correctness.
+- deterministic serialization and replay tests;
+- explicit versioning and migration;
+- release reference pinning or an explicit “follow latest” mode that cannot be mistaken for a pinned view;
+- visible treatment of superseded, withdrawn, corrected, or rolled-back releases;
+- no RAW, WORK, QUARANTINE, canonical, proof-store, direct-model, secret, token, or restricted coordinate content;
+- no EvidenceBundle bytes or sensitive source payloads in the URL;
+- safe maximum size and denial behavior;
+- URL-only restoration for correctness, with local storage used only as an optimization;
+- accessibility state where material, without leaking private preferences;
+- a new short-lived `MapContextEnvelope` assembled and validated when the durable link is opened.
 
-[Back to top](#quick-jump)
+### 7.4 Minimum negative tests
+
+| Case | Required result |
+|---|---|
+| Unknown permalink version | `ERROR` or safe migration hold |
+| Withdrawn pinned release | Safe withdrawal projection; no silent reanimation |
+| Restricted evidence or geometry embedded in link | `DENY` |
+| Missing release binding in pinned mode | `ABSTAIN` or `ERROR` |
+| Lossy encode/decode round trip | Test failure |
+| Expired derived `MapContextEnvelope` | Reassemble from authorized released state or `ABSTAIN`; never reuse silently |
+| Local storage missing | View still restores from the durable link or fails safely |
+
+[Back to top](#top)
 
 ---
+
+<a id="8-export-screenshot-and-report-continuity"></a>
 
 ## 8. Export, screenshot, and report continuity
 
-CONFIRMED — ML-061-141:
+### 8.1 Current state
 
-> *"Exports and screenshots should preserve verification badge state and manifest ID."*
+The current Explorer Export feature entry is a placeholder. No export request, governed API route, renderer capture, artifact builder, `ExportReceipt`, citation report, download, or release-bound output is proved.
 
-CONFIRMED — `MAP_TRUST_STATES.md` §7.4: *"A screenshot that drops trust state and ships a clean-looking map is an evidence-laundering operation. The export pipeline MUST refuse to produce one."*
+The presence of export architecture documentation does not change that conclusion.
 
-Exports are where continuity is most often quietly broken. A PNG looks clean; a colleague pastes it into a deck; nobody remembers that the layer was `stale` or that the `EvidenceBundle` is locked to release v3 which has since been superseded. KFM's posture is to **forbid** clean-looking exports.
+### 8.2 Target export posture
 
-### 8.1 Required export contents
+An outward artifact is a new trust surface. A screenshot, copied canvas, browser debug dump, ad hoc GeoJSON, generated report, or model narrative must not be represented as a governed KFM export merely because it originated in the UI.
 
-PROPOSED. Every export — PNG, PDF, JSON, GeoJSON, CSV with embedded geometry — MUST carry:
+A future governed export should carry or resolve, as appropriate:
 
-| Element | Required? | Where it lives in the export |
-|---|---|---|
-| Visible trust-state badge per layer | **Yes** | In the rendered image; not removable. |
-| Reason codes for non-verified states | **Yes** | Adjacent to or in tooltip near each badge. |
-| `ReleaseManifest.release_id` | **Yes** | Footer overlay; embedded in PDF metadata; in JSON header. |
-| Manifest `spec_hash` (truncated) | **Yes** | Footer overlay; readable but unobtrusive. |
-| `EvidenceBundle` pointers (URIs, not bytes) | **Yes** | Caption / footer / JSON. |
-| Timestamp of the snapshot (export instant) | **Yes** | Footer; ISO-8601. |
-| The user's URL at export time | SHOULD | Footer; lets the recipient open the same view. |
-| `RealityBoundaryNote` content, if any | **Yes** | Visible chip in the rendered image. |
-| `CitationValidationReport` summary | **Yes for atlas-class exports** | Adjacent panel or appendix in PDF; embedded in JSON. |
-
-### 8.2 The `StorySnapshot` / `ExportReceipt` family
-
-CONFIRMED — Atlas object-family table:
-
-> *"`StorySnapshot / ExportReceipt`: Records the evidence, redactions, and release state at the moment of a story / export / atlas snapshot. Required content: `snapshot_id, evidence_refs[], redactions[], release_refs[], rollback_target, time`."*
-
-An export is not a stateless rendering — it produces a `StorySnapshot` / `ExportReceipt` that records the bound state. This is what lets a colleague resolve the export's evidence months later, even after rollbacks, corrections, or withdrawals. Continuity here is **deferred-resolvable**: the bytes are static; the resolution is governed.
-
-[Back to top](#quick-jump)
-
----
-
-## 9. Release-boundary continuity — rollback, correction, withdrawal
-
-CONFIRMED — `docs/standards/RELEASE_MANIFEST.md` §10: release transitions issue cache invalidations, tombstones (for withdrawal), and correction-lineage links (for supersession). The UI MUST surface these transitions, not paper over them.
-
-### 9.1 What the UI does on a release transition
-
-| Transition | UI behavior |
+| Required concern | Target obligation |
 |---|---|
-| `current → superseded` | Existing deep links continue to resolve to the older release with a chip *"Release v(N−1) — newer release available"*. Map continues to render the old data with the badge, never silently fast-forwards. |
-| `current → withdrawn` | Layer fails to `withdrawn` per `MAP_TRUST_STATES.md` §4. No tile is rendered; a withdrawal chip and `CorrectionNotice` link surface in the Drawer. |
-| `current → (rollback)` | Map renders the rollback target release; users on a deep link to the failed release see a redirect chip and a "what changed" note. |
-| `withdrawn → (re-publish)` | Treated as a new release; the old withdrawn URL does NOT silently reanimate. Users following the old URL see the withdrawal chip and a link to the new release. |
+| Scope | Exact released layers, selected features, time, area, filters, and output mode |
+| Evidence | Evidence references for each claim-bearing item |
+| Citations | Validated citation set or explicit abstention |
+| Trust posture | Rights, sensitivity, review, release, freshness, correction, and transformation state |
+| Release identity | Release references for every included released carrier |
+| Redaction/generalization | Preserve all public-safe transformations; never reverse them client-side |
+| Correction/withdrawal | Record the state at export time and provide a resolution path for later correction |
+| Receipt | Emit the accepted receipt family once defined and implemented |
+| Rollback/correction | Point to the applicable release/correction lineage rather than inventing browser authority |
+| Accessibility | Non-color trust cues, readable metadata, keyboard path, and accessible document structure where applicable |
 
-> [!IMPORTANT]
-> Release continuity is **not** the property that a user always sees the latest release. It is the property that what a user is shown is **honest about which release it is**. A user looking at a stale or withdrawn view is fine — as long as the view says so.
+These are target obligations, not proof of current runtime behavior.
 
-### 9.2 Correction lineage is part of the Drawer
+### 8.3 Finite export outcomes
 
-CONFIRMED — `RELEASE_MANIFEST.md` §8 (`correction_lineage` slot); Atlas `CorrectionNotice` object.
+| Outcome | Artifact behavior |
+|---|---|
+| `ANSWER` | Emit only after all governing evidence, citation, rights, sensitivity, review, release, correction, and receipt requirements close |
+| `ABSTAIN` | Do not emit a claim-bearing artifact; explain the missing or stale support safely |
+| `DENY` | Do not emit restricted content or leak the denial basis |
+| `ERROR` | Do not emit partial output and do not fall back to direct canvas capture |
+| `HOLD`, where an accepted export contract uses it | Queue for steward review; do not download as a governed artifact |
 
-When a user opens the Evidence Drawer on a layer whose release has a non-empty `correction_lineage`, the Drawer surfaces:
+### 8.4 Snapshot identity
 
-1. *"This view is from release vN."*
-2. *"Release vN corrects vN−1; see CorrectionNotice."*
-3. A link to the prior release, if it is still resolvable (it is, by content-addressing rule).
-4. The summary of what changed (from the `CorrectionNotice.change_summary` field).
+The prior edition named `StorySnapshot / ExportReceipt` as though its runtime role were settled. Current repository evidence supports only a design need: a durable outward artifact requires a separate, accepted identity and receipt model. The exact object family, fields, home, retention, public visibility, and correction behavior remain **NEEDS VERIFICATION**.
 
-This is the visible analogue of the cite-or-abstain doctrine at release granularity: the user can always see *why* this view differs from what they saw last week.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
+
+<a id="9-release-boundary-continuity--rollback-correction-withdrawal"></a>
+
+## 9. Release-boundary continuity — correction, withdrawal, and rollback
+
+### 9.1 Current bounded proof
+
+The Evidence Drawer projection can display **declared** negative history and correction links from a validated fixture profile. The local adapter can reject trust-state combinations that do not match the finite outcome.
+
+That does not prove:
+
+- current release lookup;
+- authenticated correction or withdrawal records;
+- cache/CDN invalidation;
+- map-layer removal;
+- deep-link redirect behavior;
+- search/index propagation;
+- export correction;
+- AI-response invalidation;
+- public rollback.
+
+### 9.2 Target release behavior
+
+A live surface must independently resolve current release and correction state when a request or durable link is opened. It must not trust an old browser declaration merely because it was valid when assembled.
+
+| Transition | Target UI behavior |
+|---|---|
+| Current → superseded | Preserve the pinned older view only when policy permits, label it clearly, and offer the newer release without silently changing identity |
+| Current → corrected | Show the active correction lineage and bounded change summary from governed records |
+| Current → withdrawn or revoked | Stop current-claim rendering, show safe withdrawal/revocation state, and avoid leaking restricted reason detail |
+| Current → rollback target | Render only the release selected by governed rollback state; disclose the transition |
+| Withdrawn → later republished | Treat the later object as a new release; never silently reactivate the old identity |
+| Cache invalidation pending | Show a conservative unknown/stale state or withhold rendering according to policy |
+
+### 9.3 Continuity invariant
+
+Release continuity does not mean “always show latest.” It means:
+
+- the represented release is identifiable;
+- any transition is visible;
+- evidence and citation scope remain bound to that release;
+- corrected or withdrawn support is not silently treated as current;
+- the user can inspect the correction or rollback path at the level policy permits.
+
+[Back to top](#top)
+
+---
+
+<a id="10-anti-patterns--where-continuity-quietly-breaks"></a>
 
 ## 10. Anti-patterns — where continuity quietly breaks
 
-CONFIRMED — assembled from ML-061-141, ML-057-001 anti-pattern, ML-058-034, KFM-P2-FEAT-0012, `MAP_TRUST_STATES.md` §10, `kfm_unified_doctrine_synthesis.md` §19/§20.
-
-| Anti-pattern | Axis broken | Counter-rule |
+| Anti-pattern | Why it fails | Required correction |
 |---|---|---|
-| **3D scene renders a layer's `verified` chip while 2D shows `stale`.** | Trust state | Most-restrictive precedence wins across renderers (`MAP_TRUST_STATES.md` §6.2). |
-| **Deep link drops the time-slice param.** | Time, session | Round-trip rule (§7.2): URL → envelope → URL must be hash-stable. |
-| **Export ships without badge / manifest ID.** | Trust state, citation, session | Export pipeline refuses to produce a clean-looking export (§8). |
-| **Focus Mode answer arrives before `EvidenceBundle` resolves.** | Evidence | Order is non-negotiable: envelope → resolve → request → respond → drawer (§6.1). |
-| **AI panel cites a layer in a state it does not license.** | Evidence, trust state | AI MUST inspect `TrustVisibleState` and ABSTAIN or qualify (`MAP_TRUST_STATES.md` §10). |
-| **Story Node returns to a default 2D view instead of the user's exit point.** | Narrative, state | 3D → 2D return restores exit camera and exit time (§5.1). |
-| **Layer toggles in 3D do not propagate back to 2D on return.** | State, narrative | Envelope is updated on every action; return reads the updated envelope (§5.1). |
-| **Drawer in 3D shows different `EvidenceBundle` than 2D for the same feature.** | Evidence | The Drawer is a thin projection of the bundle; it does NOT have its own state. |
-| **Session-restoration depends on `localStorage` / cookies.** | Session | URL alone is sufficient; session storage is optimization only (§7.3). |
-| **`withdrawn` layer continues to render because tiles were cached.** | Trust state, release | Cache invalidation is REQUIRED on withdrawal (`RELEASE_MANIFEST.md` §10.2). |
-| **`current → superseded` is presented as a silent upgrade.** | Release, session | The chip "newer release available" is mandatory; users see the transition, not its absence (§9.1). |
-| **Two surfaces use different vocabularies for the same trust state ("stale" vs "out_of_date").** | Trust state | `MAP_TRUST_STATES.md` §4 vocabulary is shared across all surfaces. |
-| **AI summarizes pixels rather than `EvidenceBundle`.** | Evidence | `unified-doctrine §20`: AI summarizes resolved evidence, not rendered output. |
-| **Drawer collapses when the user opens Focus Mode, losing the user's place.** | Narrative, state | Focus Mode and Drawer are co-resident surfaces; both reflect the same envelope. |
-| **`RealityBoundaryNote` chip is shown in 2D but not in 3D for a synthetic-surface layer.** | Trust state, narrative | Reality boundaries propagate to every surface that renders the synthesizing carrier. |
+| Treating `MapContextEnvelope` as camera/session/URL state | Contradicts the closed current contract and renderer-neutral boundary | Keep client view state separate; propose a new reviewed object only when required |
+| Adding camera, Story, or Focus fields in this document | Documentation would become a parallel schema authority | Change contract/schema/fixtures/validator/tests through their owning roots |
+| Trusting `release_state: PUBLISHED` as current release proof | The envelope records a declaration, not release authentication | Re-resolve current release/correction state downstream |
+| Treating the admission helper's `ANSWER` candidate as policy approval | The helper checks local relationships only | Run authoritative evidence, policy, review, release, and citation checks |
+| Treating the synthetic click bridge as a live map | It deliberately uses ordinary buttons and imports no renderer | Admit the renderer and translate real events through the same bounded profile |
+| Treating the composed-claim projection as live AI | It uses an injected resolver and performs no model or transport work | Prove governed route, evidence closure, policy, citation, model adapter, and AIReceipt behavior |
+| Claiming live continuity because fixture tests exist | Tests are bounded to synthetic inputs and local helpers | Prove the connected runtime path and exact-head behavior |
+| Claiming map continuity from a comment-only adapter | No renderer dependency or functional map exists | Admit dependency and implement/test the governed adapter seam first |
+| Treating proposed ADR-0007 as accepted | Proposed text is not decision authority | Keep renderer claims proposed until an accepted decision and implementation evidence exist |
+| Claiming 3D handoff from the Story Player slice | The consumer is explicitly 2D-only and route-free | Add reviewed map/story/renderer integration with negative tests |
+| Claiming export governance from a placeholder entrypoint | No request, policy, artifact, or receipt path exists | Implement a governed export slice before stronger claims |
+| Putting EvidenceBundle bytes, tokens, or restricted coordinates in a URL | Creates leakage and bypasses access/revocation checks | Store only admitted public-safe identity and re-resolve through governed interfaces |
+| Depending on local storage for correctness | A cleared browser would lose the truthful context | Make durable link/state sufficient or fail safely |
+| Silently advancing a pinned link to latest release | Changes the claim without user-visible lineage | Preserve identity or explicitly label follow-latest semantics |
+| Showing different finite outcomes on two projections of the same request | Converts a boundary mismatch into persuasive UI | Fail closed and surface the mismatch |
+| Letting `DENY` or `ERROR` echo evidence or source content | Leaks protected or attacker-controlled material | Use fixed safe copy and empty support arrays |
+| Exporting a clean screenshot without governed metadata | Launders trust state through presentation | Deny or mark it as an ungoverned capture; use the governed export path |
+| Treating a green CI badge as deployed/public continuity | CI does not establish route, runtime, release, or publication state | Keep operational claims tied to deployment and release evidence |
 
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 11. Tensions and known limits
+<a id="11-tensions-and-known-limits"></a>
 
-| Tension | Source | KFM posture |
+## 11. Validation, proof limits, and graduation gates
+
+### 11.1 Repository-present validation inventory
+
+| Boundary | Repository-present evidence | Bounded conclusion |
 |---|---|---|
-| URL length grows with envelope complexity. | §7 | A long URL is permitted; if it exceeds practical limits, the UI may store the envelope server-side under a content-addressed key and use a short URL — but the round-trip rule still applies. |
-| 2D ↔ 3D layer parity is incomplete (some 2D layers do not map 1:1 to 3D). | KFM-P2-FEAT-0012 | The 2D → 3D handoff lists "unsupported in 3D" for any layer that has no 3D equivalent; those layers degrade rather than vanish, with an explicit chip. |
-| Story Node chapter ordering vs free navigation. | §5.2 | A Story Node SHOULD allow free navigation but SHOULD remember the user's chapter for "resume." |
-| Cesium rasterized fallback (ML-058-021) loses interactive evidence resolution. | ML-058-021 | When the path falls back to server-rasterized PMTiles, the Drawer still resolves on click, but feature-level interaction degrades; this is itself a continuity disclosure that needs a visible chip. |
-| Exports of consent-bearing content. | `DUO_PROFILE.md` §3.1 | Exports of layers with `ConsentSidecar`s pass through an additional consent check; certain DUO modifiers (e.g., `DUO:0000028` institution-specific) may forbid export entirely. |
-| URL-encoded envelope vs. server-stored short link. | §7, §11 | KFM remains transport-neutral; both are permitted as long as the round-trip rule holds. |
-| Cache invalidation across CDN regions has measurable propagation time. | C6-08 | Until invalidation completes, the trust state for affected layers should be `unknown` (per `MAP_TRUST_STATES.md` §4), not `verified`. |
-| AI responses can outlive the envelope they were grounded in. | §6 | `AIReceipt` records the envelope `spec_hash` at the time of answering; if a user opens an old AI response in a different envelope, the response is presented with a "computed against earlier context" chip. |
+| `MapContextEnvelope` shape and semantics | Closed schema, validator, fixtures, 16-case tests | Strong local fixture proof; no live producer/consumer |
+| Context → Drawer admission | Helper, eight-case fixture manifest, schema-conformance tests, no-network and no-leak tests | Strong local relationship proof; no authoritative decision or live wiring |
+| Explorer baseline shell | TypeScript source and app scripts | Safe fixed default; not a functional product |
+| Synthetic map-click bridge | Renderer-neutral selection parser/resolver, accessible fixture, unit/browser tests, and no-renderer/no-network boundary doc | Bounded selection-to-Drawer continuity; no live map or transport |
+| Focus composed-claim projection | Strict parsers/resolver/panel, fixtures, unit/browser proof surfaces, and Evidence Drawer handoff | Bounded app-local Focus continuity; no model, API route, or authoritative resolution |
+| Evidence Drawer | Strict projection parser/view model plus repository-present unit and browser test surfaces | Bounded fixture consumer with accessibility behavior |
+| Story Player | Current implementation note and focused test source | Bounded 2D public-safe consumer; no connected story flow |
+| Export | Placeholder entrypoint | No runtime proof |
+| MapLibre | Placeholder adapter/package and proposed ADR | No renderer runtime proof |
+| Accepted Focus request contract | Proposed contract and permissive schema stub | No accepted live request DTO or route proof |
+| Permalink/session | No verified codec or route | Not established |
+| Release propagation | Declared history display only | Not established end to end |
 
-[Back to top](#quick-jump)
+### 11.2 Required negative cases for any live continuity slice
+
+A live slice is incomplete unless tests cover at least:
+
+- expired context;
+- missing or multiple selections;
+- selection outside admitted layer;
+- evidence outside selected feature;
+- internal-store reference;
+- unpublished or unresolved release;
+- stale, superseded, corrected, withdrawn, and revoked support;
+- rights unresolved;
+- sensitive detail denied;
+- citation unresolved;
+- malformed finite outcome/trust combination;
+- `DENY`/`ERROR` leakage canary;
+- URL or durable-state version mismatch where applicable;
+- export attempted before closure where applicable;
+- no-network unit path;
+- deterministic replay and input immutability;
+- accessibility behavior for negative outcomes.
+
+### 11.3 Graduation gates
+
+The documentation may claim stronger continuity only after equivalent evidence closes each applicable gate.
+
+| Gate | Required evidence | Missing-gate posture |
+|---|---|---|
+| **G1 — Authority and object split** | Reviewed ownership for request context, client view state, permalink, Focus request, story, export, and release transitions | Keep target language proposed |
+| **G2 — Live context producer** | Explorer or an admitted client produces schema-valid `MapContextEnvelope` without renderer/internal leakage | No live map-context claim |
+| **G3 — Governed transport** | Authenticated/authorized route accepts the context and returns a validated finite envelope | No API continuity claim |
+| **G4 — Evidence closure** | EvidenceRefs resolve to admissible current EvidenceBundles for the selected feature | `ABSTAIN` |
+| **G5 — Policy/review/release closure** | Current rights, sensitivity, policy, review, release, correction, and rollback checks | `DENY`, `ABSTAIN`, or `ERROR` |
+| **G6 — UI composition** | Shell, synthetic click bridge, Drawer, Focus/story/export projections share one bounded request identity without parallel state authority | Existing isolated slices remain bounded; no live cross-surface claim |
+| **G7 — Durable-state replay** | Versioned permalink/view-state contract, deterministic round-trip, release transition behavior, and sensitivity tests | No permalink/session claim |
+| **G8 — Story/map continuity** | Route and map integration, time/selection/evidence preservation, accessibility, and negative cases | Keep Story continuity bounded to consumer proof |
+| **G9 — Export closure** | Governed request, artifact builder, citations, transformations, receipt, correction/rollback binding, and no-partial-output tests | Export remains placeholder |
+| **G10 — Renderer admission** | Accepted decision, pinned dependency, functional adapter, browser tests, performance/accessibility/security evidence, and rollback | No map/3D continuity claim |
+| **G11 — Correction propagation** | Release/correction events update API, UI, cache, search, permalink, export, story, and AI surfaces | No end-to-end release continuity claim |
+| **G12 — Operational proof** | Exact release/deployment evidence, telemetry, incident/correction runbook, rollback drill, and public-surface verification | Deployment/public operation remains unknown |
+
+### 11.4 Rollback for this document
+
+Before merge, close or abandon the draft pull request. After an authorized merge, revert the single documentation commit to restore prior blob `375e3e7e902cee054badb68294a7fe43d5ccbaa6`.
+
+No source deactivation, data migration, schema rollback, runtime restart, cache invalidation, release withdrawal, or public correction is required because this change edits documentation only.
+
+[Back to top](#top)
 
 ---
+
+<a id="12-open-questions"></a>
 
 ## 12. Open questions
 
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR, README rule, or mounted-repo evidence.
+1. **Durable view-state object:** Should camera, pitch, open panels, story position, and other public-safe client state live in one `ViewState`, `PermalinkState`, or another existing family?
+2. **MapContext stability:** Should the current short-lived request-only contract remain unchanged while durable state is modeled separately? The current evidence favors separation.
+3. **Live producer:** Which app module owns construction of validated `MapContextEnvelope` records, and how is it prevented from importing renderer-specific payloads?
+4. **Transport:** Which governed route accepts the envelope, and which contract owns the response?
+5. **Evidence resolver:** Which current repository authority resolves EvidenceRef to EvidenceBundle for UI requests?
+6. **Focus request:** When will the permissive FocusRequest schema be replaced by a closed request profile with fixtures, validator, and policy tests, and how will it relate to the current app-local composed-claim request profile?
+7. **Story integration:** Which accepted contract binds StoryManifest/StoryNode position to map context without extending `MapContextEnvelope` improperly?
+8. **Renderer decision:** What evidence is required to accept or revise ADR-0007 and admit the first functioning renderer dependency?
+9. **3D posture:** Is a separate 3D/representation object family required, and which sensitive-domain policies gate it?
+10. **Permalink release mode:** Must a link always pin a release, or may it explicitly opt into follow-latest behavior?
+11. **Export identity:** Which accepted object family owns export identity, receipt, citation report, transformation references, retention, and later correction?
+12. **Correction propagation:** Which runtime event or manifest transition invalidates contexts, links, caches, exports, stories, and AI responses?
+13. **Trust-state vocabulary:** Which contract, rather than an architecture note, owns the exact UI trust-state terms?
+14. **Accessibility continuity:** Which cross-surface focus, announcement, reduced-motion, and non-color requirements become executable acceptance tests?
+15. **Privacy and telemetry:** Which session/permalink/export fields are permitted to enter logs or telemetry?
+16. **Ownership:** Which named, accountable UI/runtime/evidence/policy/release/accessibility/security reviewers own these decisions? Do not infer people from role labels.
 
-1. **`docs/architecture/ui/` subfolder** — confirm via Directory Rules update or accept as a flat-file path `docs/architecture/UI_CONTINUITY_NOTES.md`. See §2.3 and Appendix B.
-2. **URL parameter encoding canonical form** — the §7.1 short-letter scheme is PROPOSED. A longer-key scheme (`camera=`, `time=`) is human-readable; the short-letter form is URL-length-efficient. NEEDS DECISION.
-3. **Server-side short-link encoding** — whether KFM publishes a short-link service backed by content-addressed envelope storage. NEEDS DECISION.
-4. **2D ↔ 3D layer parity matrix** — which 2D layers do and do not have 3D equivalents. NEEDS PER-DOMAIN INVENTORY.
-5. **Story Node "resume" durability** — server-side vs. URL-only. NEEDS DECISION.
-6. **AI receipt freshness window** — for how long does an `AIReceipt` remain "current" before it should be re-grounded? NEEDS DECISION; affects §6 and §11.
-7. **Cache-invalidation visibility window** — what `TrustVisibleState` to show during CDN propagation. PROPOSED `unknown` per §11; NEEDS VERIFICATION against `MAP_TRUST_STATES.md`.
-8. **Export receipts as canonical artifacts** — whether every export emits a `StorySnapshot` / `ExportReceipt` automatically. PROPOSED yes per §8.2; NEEDS DECISION.
-9. **Cross-tab session continuity** — should two tabs in the same browser share envelope state, or stay independent? PROPOSED independent; NEEDS DECISION.
-10. **Render-time consent verification latency budget** — affects per-frame revocation checks (ML-058-034). NEEDS DECISION.
-11. **`RealityBoundaryNote` propagation rule across renderers** — confirm the §10 anti-pattern entry as the canonical rule.
-12. **Trust-state vocabulary alignment with API DTOs** — affirm that `TrustVisibleState` in the API DTO matches the URL parameter set; cross-reference `MAP_TRUST_STATES.md` §8.
-
-[Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
+
+<a id="13-related-docs"></a>
 
 ## 13. Related docs
 
-PROPOSED links — verify all paths against mounted repo before publishing.
+### UI architecture
 
-- [`docs/architecture/system-context.md`](../system-context.md) — _PROPOSED placement._ KFM system context.
-- [`docs/architecture/governed-api.md`](../governed-api.md) — _PROPOSED placement._ The DTO contract that carries `MapContextEnvelope`.
-- [`docs/architecture/map-shell.md`](../map-shell.md) — _PROPOSED placement._ The shell that originates the envelope.
-- [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) — CONFIRMED authored (prior session); the renderer-decision doctrine these notes assume.
-- [`docs/architecture/contract-schema-policy-split.md`](../contract-schema-policy-split.md) — the rule that keeps these notes out of `contracts/`, `schemas/`, and `policy/`.
-- [`docs/standards/MAP_TRUST_STATES.md`](../../standards/MAP_TRUST_STATES.md) — the trust-state vocabulary that travels with the envelope.
-- [`docs/standards/EVIDENCE_BUNDLE.md`](../../standards/EVIDENCE_BUNDLE.md) — the bundle the Drawer resolves to; identity rule mirrored in §4.3.
-- [`docs/standards/RELEASE_MANIFEST.md`](../../standards/RELEASE_MANIFEST.md) — release-boundary continuity anchor.
-- [`docs/standards/PROV/README.md`](../../standards/PROV/README.md) — provenance the Drawer surfaces.
-- [`docs/standards/DUO_PROFILE.md`](../../standards/DUO_PROFILE.md) — consent gates on Focus Mode and exports.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — _PROPOSED placement._ The membrane the envelope crosses without leaking.
-- `contracts/v1/runtime/map_context_envelope.md` — _PROPOSED contract home._ Object meaning.
-- `schemas/contracts/v1/runtime/map_context_envelope.schema.json` — _PROPOSED schema home._ Machine shape.
-- `contracts/v1/story_node/` — _PROPOSED contract home._ Story Node object family (ML-059 series).
-- `packages/ui/src/router/` — _PROPOSED implementation home._ URL ↔ envelope serialization.
-- `packages/maplibre-runtime/` — _PROPOSED renderer home._
-- `packages/ui/` — _PROPOSED UI component home._
+- [UI architecture README](./README.md)
+- [UI boundaries](./BOUNDARIES.md)
+- [Evidence Drawer](./EVIDENCE_DRAWER.md)
+- [Focus flow](./FOCUS_FLOW.md)
+- [Story Player](./STORY_PLAYER.md)
+- [Compare and Export](./COMPARE_AND_EXPORT.md)
+- [Map runtime boundary](./MAP_RUNTIME_BOUNDARY.md)
+- [Map context to Evidence Drawer admission](./map-context-evidence-drawer-admission.md)
+- [Map shell](../map-shell.md)
+- [Governed API](../governed-api.md)
 
-[Back to top](#quick-jump)
+### Governing placement
+
+- [ADR-0029 — adopted Directory Rules v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Directory Rules](../../doctrine/directory-rules.md)
+
+### Current contracts and proof
+
+- [`MapContextEnvelope` semantic contract](../../../contracts/ui/map_context_envelope.md)
+- [`MapContextEnvelope` schema](../../../schemas/contracts/v1/ui/map_context_envelope.schema.json)
+- [`MapContextEnvelope` validator](../../../tools/validators/ui/validate_map_context_envelope.py)
+- [`MapContextEnvelope` focused tests](../../../tests/validators/test_validate_map_context_envelope.py)
+- [Context-to-Drawer adapter](../../../packages/envelopes/src/envelopes/map_context_evidence_drawer.py)
+- [Context-to-Drawer tests](../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py)
+- [UI FocusRequest contract](../../../contracts/ui/focus_request.md)
+
+### Current app/package surfaces
+
+- [Explorer entrypoint](../../../apps/explorer-web/src/main.ts)
+- [Explorer baseline shell](../../../apps/explorer-web/src/features/shell/index.tsx)
+- [Map feature click bridge](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md)
+- [Map feature click implementation](../../../apps/explorer-web/src/features/map_runtime/index.tsx)
+- [Focus composed-claim fixture](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md)
+- [Focus composed-claim resolver](../../../apps/explorer-web/src/features/focus_panel/resolver.ts)
+- [Evidence Drawer implementation](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
+- [Story Player current implementation](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md)
+- [Export placeholder](../../../apps/explorer-web/src/features/export/index.tsx)
+- [MapLibre adapter placeholder](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
+- [MapLibre package placeholder](../../../packages/maplibre/src/index.ts)
+- [UI package placeholder](../../../packages/ui/src/index.ts)
+
+[Back to top](#top)
 
 ---
 
-<details>
-<summary><strong>Appendix A — Continuity matrix</strong></summary>
+<a id="appendix-a--continuity-matrix"></a>
 
-A single table mapping each surface transition to the seven axes (§3). ✅ = the axis is preserved by the transition; ⚠️ = the axis requires explicit handling; ⛔ = the axis is lost without a documented mitigation.
+## Appendix A — Continuity matrix
 
-| Transition | 1 State | 2 Narrative | 3 Evidence | 4 Citation | 5 Trust | 6 Time | 7 Session |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Map ↔ Drawer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Map → Focus Mode | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Focus Mode → AI answer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Map 2D → 3D Story Node | ⚠️ (layer parity) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 3D Story Node → Map 2D | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Map → Export / Screenshot | ⛔ → ✅ via `StorySnapshot` | ⛔ → ✅ via `StorySnapshot` | ⛔ → ✅ via URIs in footer | ⛔ → ✅ required | ⛔ → ✅ required | ✅ | ✅ |
-| Map → Deep link → Map (new session) | ✅ | ✅ | ✅ | ✅ | ⚠️ (recompute) | ✅ | ⚠️ (release may differ; §9) |
-| Map at release vN → Map at release vN+1 (superseded) | ⚠️ (chip) | ⚠️ (chip) | ✅ | ✅ | ⚠️ (chip) | ✅ | ⚠️ (chip) |
-| Map → withdrawn release URL | ⛔ → withdrawn chip | ⛔ → withdrawn chip | ⛔ → withdrawn chip | ⛔ → CorrectionNotice link | ⛔ → withdrawn | ⛔ → withdrawn | ⚠️ (URL → redirect chip) |
-| Two tabs, same browser | open | open | ⚠️ (per-tab) | ⚠️ (per-tab) | ⚠️ (per-tab) | ⚠️ (per-tab) | ⚠️ (open question §12.9) |
+| Transition | Current proof | Missing closure | Safe current claim |
+|---|---|---|---|
+| Baseline shell → Evidence Drawer | Both are mounted by Explorer `main.ts`; Drawer handles fixture/no-response states | No map selection, live transport, resolver, policy, or release lookup | Bounded fixture-driven composition |
+| Validated context + validated Drawer payload → decision candidate | Deterministic eight-case helper and tests | No authoritative checks or runtime invocation | Bounded anticorruption adapter |
+| Synthetic selection → Evidence Drawer | Renderer-neutral click bridge and app tests | No MapLibre event, live transport, or EvidenceBundle resolver | Bounded app-local proof |
+| Map selection → `MapContextEnvelope` | Contract/schema/validator/tests exist | No live map or producer | Target only |
+| App-local composed claim → Focus projection/Drawer | Fixture-first resolver, finite projection, support subset checks, browser handoff | No live route, model, policy, or authoritative evidence resolution | Bounded app-local proof |
+| Map → accepted Focus request → runtime response | Proposed request semantics | Closed schema, route, evidence/policy/release integration, shell composition | Not established |
+| Focus response → AI projection | General finite-outcome doctrine and app-local projection patterns | Live AI adapter, evidence closure, citation validation, AIReceipt, route | Not established |
+| Story Player → map/Drawer/Focus | Defensive 2D StoryManifest consumer | Routes, StoryNode resolution, map/time state, Evidence Drawer, Focus, 3D | Consumer only |
+| Map/view → durable permalink | None verified | Durable state contract, codec, replay tests, release/correction semantics | Not established |
+| Map/view → export | Placeholder entrypoint | Governed request, policy, artifact, receipt, citations, correction/rollback | Not established |
+| Release correction → Drawer | Drawer can display declared correction history | Authentic current release/correction resolution and propagation | Fixture projection only |
+| Release withdrawal → map/cache/link/export/story/AI | No connected proof | Event propagation, invalidation, safe UI states, operational drill | Not established |
+| Renderer transition | Placeholder adapter/package | Accepted decision, dependency, adapter, browser tests, state contract | Not established |
 
-PROPOSED. The matrix is the working summary; each cell defers to the section that defines the rule.
+[Back to top](#top)
 
-</details>
+---
 
-<details>
-<summary><strong>Appendix B — Placement rationale (new subfolder)</strong></summary>
+<a id="appendix-b--placement-rationale-new-subfolder"></a>
 
-This document is placed at `docs/architecture/ui/CONTINUITY_NOTES.md`. Directory Rules §6.1 shows `docs/architecture/` as a flat-file folder with no `ui/` subfolder enumerated. The subfolder is therefore a **PROPOSED extension** of the existing `docs/architecture/` convention.
+## Appendix B — Placement resolution
 
-**Why a subfolder is reasonable here.** UI-architecture is a substantial cross-cutting concern in KFM — `map-shell.md`, `maplibre-3d.md`, and future docs on Evidence Drawer, Focus Mode, Story Nodes, AI panel architecture, export pipelines, accessibility architecture, and routing all share enough surface area that grouping them under `docs/architecture/ui/` would aid discoverability. The pattern parallels:
+The prior edition treated `docs/architecture/ui/` as a proposed new subfolder and suggested flattening this file to `docs/architecture/UI_CONTINUITY_NOTES.md` if the lane were rejected.
 
-- `docs/standards/PROV/` — subsidiary folder for a topic with multiple subordinate documents.
-- `docs/runbooks/fauna/` — domain-segment subfolder under a flat parent.
+That question is now resolved for this file:
 
-**Alternatives considered:**
+- `docs/architecture/ui/` exists and contains the UI architecture README plus focused sibling documents;
+- accepted ADR-0029 adopts Directory Rules v2;
+- the current UI architecture README identifies this folder as the existing UI architecture lane;
+- this change edits the tracked file in place and creates no root, subfolder, alias, or parallel authority.
 
-| Alternative | Verdict |
+**Current placement outcome:** `PLACE` at the existing path `docs/architecture/ui/CONTINUITY_NOTES.md`.
+
+The old flattening fallback is retained only as historical context and is not a current recommendation. Moving or renaming this file would require a separate, evidence-backed navigation/compatibility review.
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-c--no-loss-modernization-ledger"></a>
+
+## Appendix C — No-loss modernization ledger
+
+| Prior subject | Current disposition |
 |---|---|
-| Flatten to `docs/architecture/UI_CONTINUITY_NOTES.md` | Acceptable fallback. No content lost; one redirect on rename. |
-| Place under `docs/standards/` as a topical standards document | Wrong — these are architecture notes, not a conformance dossier. They describe how surfaces compose, not how external standards bind. |
-| Place under `docs/doctrine/` | Wrong — doctrine docs (`trust-membrane.md`, `lifecycle-law.md`) are invariants, not cross-cutting architecture explainers. |
-| Embed into `docs/architecture/map-shell.md` | Wrong — continuity is broader than the shell; it crosses renderers, AI, exports, and releases. |
-| Embed into `docs/architecture/maplibre-3d.md` | Wrong — 3D is one of many surfaces this doc traverses. |
-| Embed sections into each of the affected docs (shell, 3D, governed-api) | Wrong — the cross-cutting view is the document's whole purpose. |
-
-**Recommended resolution path.** Two options, in order of preference:
-
-1. **Update Directory Rules §6.1** to add `docs/architecture/ui/` as a permitted subfolder for UI-architecture cross-cutting docs. This is a §2.4-class question per Directory Rules (the v1.1 note language calls this kind of additive subfolder a candidate for incremental rule updates, not a hard ADR).
-2. **Flatten** to `docs/architecture/UI_CONTINUITY_NOTES.md` if the subfolder is rejected. A single rename and one inbound-link update is the entire migration cost.
-
-The current placement (subfolder) is chosen because it scales better: the architecture lane is likely to accumulate UI-cross-cutting documents over time, and flat-naming six or eight such docs in `docs/architecture/` mixes them with non-UI architecture (deployment, system-context, contract-schema-policy-split). Surfacing the placement as a question — rather than silently adopting it — is itself the Directory Rules discipline.
-
-</details>
+| Continuity definition | Retained and narrowed to truthful cross-surface binding |
+| Seven axes | Retained as seven dimensions with explicit ownership and maturity |
+| `MapContextEnvelope` | Retained, corrected to the current contract/schema fields and exclusions |
+| 2D/3D transition | Retained as target obligations; stale MapLibre↔Cesium implementation claims removed |
+| Focus/AI flow | Retained as target governed order; current composed-claim projection, synthetic click bridge, context helper, and no-live-route boundary added |
+| Deep-link URL proposal | Retained as design need; invented parameter grammar removed |
+| Export requirements | Retained as target obligations; placeholder current state made explicit |
+| Release/correction behavior | Retained as target behavior; declared-history fixture proof separated from live propagation |
+| Anti-patterns | Expanded with current repository-specific failure modes |
+| Continuity matrix | Replaced with current-proof/missing-closure/safe-claim matrix |
+| Proposed-subfolder appendix | Converted to a resolved same-path placement record |
+| Placeholder owners and CI claims | Replaced by verified review route and bounded validation posture |
+| Rollback | Replaced with exact prior blob and one-file revert path |
 
 ---
 
 ### Footer
 
-> **Document class:** Architecture explainer (cross-cutting UI) · **Scope:** How KFM preserves state, narrative, evidence, citation, trust labels, time-slice, and session identity across UI surfaces · **Authority NOT held:** object meaning, machine shape, admissibility, renderer implementation, design tokens, tests.
+> **Document class:** UI architecture reference · **Authority not held:** object meaning, machine shape, evidence, policy, review, release, correction, rollback, runtime, deployment, or publication.
 
-| | |
+| Field | Value |
 |---|---|
-| **Canonical homes** | Meaning → [`contracts/v1/runtime/`](../../../contracts/v1/runtime/) · Shape → [`schemas/contracts/v1/runtime/`](../../../schemas/contracts/v1/runtime/) · Renderer → [`packages/maplibre-runtime/`](../../../packages/maplibre-runtime/) · UI → [`packages/ui/`](../../../packages/ui/) |
-| **Sibling architecture** | [system-context.md](../system-context.md) · [governed-api.md](../governed-api.md) · [map-shell.md](../map-shell.md) · [maplibre-3d.md](../maplibre-3d.md) |
-| **Vocabulary anchor** | [MAP_TRUST_STATES.md](../../standards/MAP_TRUST_STATES.md) |
-| **Companion standards** | [EVIDENCE_BUNDLE.md](../../standards/EVIDENCE_BUNDLE.md) · [RELEASE_MANIFEST.md](../../standards/RELEASE_MANIFEST.md) · [PROV/](../../standards/PROV/README.md) · [DUO_PROFILE.md](../../standards/DUO_PROFILE.md) |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
+| **Path** | `docs/architecture/ui/CONTINUITY_NOTES.md` |
+| **Owning root** | `docs/` |
+| **Evidence snapshot** | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
+| **Prior blob / rollback target** | `375e3e7e902cee054badb68294a7fe43d5ccbaa6` |
+| **Review route** | `@bartytime4life`; specialist and independent stewardship remains `NEEDS VERIFICATION` |
+| **Publication effect** | None |
 
-[Back to top](#quick-jump)
+[Back to top](#top)
