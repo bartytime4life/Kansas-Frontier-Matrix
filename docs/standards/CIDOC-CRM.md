@@ -6,7 +6,7 @@ version: v2.0-draft
 status: "draft; repository-grounded; upstream-currentness-refreshed; no-adoption; no-conformance-proof; no-release; no-publication"
 owners:
   - "@bartytime4life — verified GitHub review route through CODEOWNERS"
-  - "NEEDS VERIFICATION — knowledge-graph, cultural-herititage, archival-description, domain, rights/sensitivity, and release stewards"
+  - "NEEDS VERIFICATION — knowledge-graph, cultural-heritage, archival-description, domain, rights/sensitivity, and release stewards"
 created: 2026-05-14
 updated: 2026-08-18
 policy_label: repository-facing
