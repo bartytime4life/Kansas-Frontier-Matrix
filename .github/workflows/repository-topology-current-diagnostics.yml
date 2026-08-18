@@ -1,0 +1,172 @@
+# Temporary read-only diagnostic for the current repository-topology transition.
+# Remove this workflow before the repair pull request leaves draft state.
+name: repository-topology-current-diagnostics
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/repository-topology-current-diagnostics.yml"
+      - "apps/explorer-web/src/features/story_player/**"
+      - "docs/adr/**"
+      - "docs/archive/exploratory/**"
+      - "docs/security/**"
+      - "tests/validators/directory_governance/**"
+      - "tools/validators/directory_governance/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-topology-current-diagnostics-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  diagnose:
+    name: diagnose-current-repository-topology
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Emit exact aggregate-member transition diagnostics
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
+        run: |
+          set -uo pipefail
+          status=0
+          python - <<'PY' > /tmp/kfm-repository-topology-current-diagnostics.json || status=$?
+          from __future__ import annotations
+
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          from tools.validators.directory_governance.validate_repository_topology import (
+              BASELINE_REPOSITORY_PATH,
+              _load_baseline_bytes,
+              scan,
+          )
+
+          repo_root = Path(".").resolve()
+          findings, tracked_count = scan(repo_root)
+          trusted_ref = os.environ["KFM_TRUSTED_BASE_REF"]
+          trusted_sha = subprocess.run(
+              ["git", "rev-parse", "--verify", f"{trusted_ref}^{{commit}}"],
+              cwd=repo_root,
+              check=True,
+              capture_output=True,
+              text=True,
+          ).stdout.strip()
+          trusted_raw = subprocess.run(
+              ["git", "show", f"{trusted_sha}:{BASELINE_REPOSITORY_PATH}"],
+              cwd=repo_root,
+              check=True,
+              capture_output=True,
+          ).stdout
+          _trusted_data, trusted_entries = _load_baseline_bytes(
+              trusted_raw,
+              label="trusted",
+          )
+
+          trusted_by_identity = {
+              (str(entry["rule_id"]), str(entry["subject"])): (fingerprint, entry)
+              for fingerprint, entry in trusted_entries.items()
+          }
+          current_by_identity = {
+              (finding.rule_id, finding.subject): finding for finding in findings
+          }
+
+          changed = []
+          for identity in sorted(set(trusted_by_identity) | set(current_by_identity)):
+              prior = trusted_by_identity.get(identity)
+              current = current_by_identity.get(identity)
+              prior_fingerprint = prior[0] if prior else None
+              current_fingerprint = current.fingerprint if current else None
+              if prior_fingerprint == current_fingerprint:
+                  continue
+              prior_members = set(prior[1]["evidence_members"]) if prior else set()
+              current_members = set(current.evidence_members) if current else set()
+              changed.append(
+                  {
+                      "additions": sorted(current_members - prior_members),
+                      "current_count": len(current_members),
+                      "current_fingerprint": current_fingerprint,
+                      "prior_count": len(prior_members),
+                      "prior_fingerprint": prior_fingerprint,
+                      "removals": sorted(prior_members - current_members),
+                      "rule_id": identity[0],
+                      "subject": identity[1],
+                  }
+              )
+
+          print(
+              json.dumps(
+                  {
+                      "changed_identities": changed,
+                      "tracked_path_count": tracked_count,
+                      "trusted_base": "[REDACTED]",
+                  },
+                  indent=2,
+                  sort_keys=True,
+              )
+          )
+          raise SystemExit(1 if changed else 0)
+          PY
+
+          python - "$status" <<'PY'
+          from pathlib import Path
+          import os
+          import sys
+
+          status = int(sys.argv[1])
+          text = Path(
+              "/tmp/kfm-repository-topology-current-diagnostics.json"
+          ).read_text(encoding="utf-8", errors="replace").strip()
+          summary = text if text else "repository-topology returned no diagnostic output"
+          summary = summary[:12000]
+          escaped = (
+              summary.replace("%", "%25")
+              .replace("\r", "%0D")
+              .replace("\n", "%0A")
+          )
+          level = "error" if status else "notice"
+          print(
+              f"::{level} file=tools/validators/directory_governance/"
+              f"validate_repository_topology.py,title=Current topology transition::{escaped}"
+          )
+
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a", encoding="utf-8") as handle:
+              handle.write("## Current repository-topology transition\n\n")
+              handle.write(f"Exit status: `{status}`\n\n")
+              handle.write("```json\n")
+              handle.write(summary)
+              handle.write("\n```\n")
+          PY
+
+          exit "$status"

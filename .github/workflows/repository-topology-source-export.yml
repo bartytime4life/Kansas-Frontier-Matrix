@@ -1,0 +1,99 @@
+# Temporary read-only source export for the bounded topology repair.
+# Remove this workflow before the repair pull request leaves draft state.
+name: repository-topology-source-export
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/repository-topology-source-export.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-topology-source-export-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  export:
+    name: export-bounded-topology-sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Assemble bounded source packet
+        shell: bash
+        run: |
+          set -euo pipefail
+          export_root="$RUNNER_TEMP/kfm-topology-source-export"
+          repository_root="$export_root/repository"
+          mkdir -p "$repository_root"
+
+          cat > "$export_root/reference-tokens.txt" <<'EOF'
+          CURRENT_IMPLEMENTATION.md
+          ROLLBACK_REHEARSAL.md
+          INCIDENT_RESPONSE_HANDOFF_DECISION.md
+          fixtures/release/rollback_rehearsal
+          EOF
+
+          : > "$export_root/references.txt"
+          while IFS= read -r token; do
+            printf '\n### %s\n' "$token" >> "$export_root/references.txt"
+            git grep -n -F -- "$token" >> "$export_root/references.txt" || true
+          done < "$export_root/reference-tokens.txt"
+
+          {
+            cat <<'EOF'
+          .github/workflows/rollback-rehearsal.yml
+          apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+          data/receipts/generated/genrec-incident-response-handoff-decision-20260815.json
+          data/receipts/generated/genrec-story-player-governed-projection-20260814.json
+          docs/adr/ADR-0035-repository-wide-adr-identity-numbering-and-domain-indexing.md
+          docs/adr/ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md
+          docs/runbooks/ROLLBACK_REHEARSAL.md
+          docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md
+          fixtures/release/README.md
+          fixtures/release/rollback_rehearsal/README.md
+          tests/release/test_synthetic_rollback_rehearsal.py
+          tests/validators/directory_governance/test_validate_repository_topology.py
+          tools/validate_adr_index.py
+          tools/validators/directory_governance/repository_topology_baseline.json
+          tools/validators/directory_governance/validate_repository_topology.py
+          EOF
+            while IFS= read -r token; do
+              git grep -l -F -- "$token" || true
+            done < "$export_root/reference-tokens.txt"
+          } | sed '/^[[:space:]]*$/d' | sort -u > "$export_root/paths.txt"
+
+          while IFS= read -r path; do
+            if [[ -f "$path" ]]; then
+              install -D -m 0644 "$path" "$repository_root/$path"
+            fi
+          done < "$export_root/paths.txt"
+
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --emit-baseline \
+            > "$export_root/current-observed-baseline.json"
+          git rev-parse HEAD > "$export_root/head-sha.txt"
+
+      - name: Upload bounded source packet
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: kfm-topology-source-export
+          path: ${{ runner.temp }}/kfm-topology-source-export
+          if-no-files-found: error
+          retention-days: 1

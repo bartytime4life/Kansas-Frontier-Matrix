@@ -1,0 +1,355 @@
+# One-shot branch-locked repair executor. The successful repair commit deletes this file.
+name: repository-topology-one-shot-repair
+
+"on":
+  push:
+    branches:
+      - agent/repair-current-topology-20260817
+    paths:
+      - .github/workflows/repository-topology-one-shot-repair.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repository-topology-one-shot-repair
+  cancel-in-progress: false
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  repair:
+    if: >-
+      github.repository == 'bartytime4life/Kansas-Frontier-Matrix' &&
+      github.ref == 'refs/heads/agent/repair-current-topology-20260817' &&
+      github.actor == 'bartytime4life'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact repair branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Verify exact branch parent and protected preimages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "76b644eae88e78725889ea7c9226758462273e1a"
+          test "$(git branch --show-current)" = "agent/repair-current-topology-20260817"
+          test -z "$(git status --porcelain)"
+          python - <<'PY'
+          from __future__ import annotations
+
+          import subprocess
+
+          expected = {
+              ".github/workflows/rollback-rehearsal.yml": "576a99ab9b23deb20cc2255eac6a388150226482",
+              "apps/explorer-web/README.md": "f8f37ed6e396a19ca080ea29b41920afdf03a94b",
+              "apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md": "7566f69f0a7ff87b461b54098fb00f0c41deed63",
+              "data/receipts/generated/genrec-explorer-web-readme-refresh-20260815.json": "6c133ffbffedb0a3680d6c12ac1905a37677424f",
+              "data/receipts/generated/genrec-incident-response-handoff-decision-20260815.json": "ea2543ee780e54f6bdb8f64f86335e03faa3d923",
+              "data/receipts/generated/genrec-story-player-governed-projection-20260814.json": "3d5b6ee9cecdaee803a6bab731f2d7eab11579da",
+              "docs/runbooks/ROLLBACK_REHEARSAL.md": "c65b2790a2796572498ff07d4d12c4f028eb50c6",
+              "docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md": "8da6c05f6763bfc2a1648e49ad28aa91232f892a",
+              "fixtures/release/rollback_rehearsal/README.md": "844523c3ace5000afd34613935cac2dcf7ca281e",
+              "tests/validators/directory_governance/test_validate_repository_topology.py": "66c362df7d93dcab5cfe104c626a5135a4dbdf99",
+              "tools/validators/directory_governance/repository_topology_baseline.json": "407787fff0c4e1a89dfed9d300ea39885dc92eeb",
+              "tools/validators/directory_governance/validate_repository_topology.py": "44f6ee4acc2bb28eb2c60b974a29659b9cf13c02",
+          }
+          for path, wanted in expected.items():
+              actual = subprocess.run(
+                  ["git", "hash-object", path],
+                  check=True,
+                  capture_output=True,
+                  text=True,
+              ).stdout.strip()
+              if actual != wanted:
+                  raise SystemExit(f"protected preimage changed: {path}")
+          PY
+
+      - name: Apply deterministic source-path and validator repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path(".")
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              if text.count(old) != 1:
+                  raise SystemExit(f"expected one {label} anchor, found {text.count(old)}")
+              return text.replace(old, new, 1)
+
+          def sha256(path: Path) -> str:
+              return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+          validator = root / "tools/validators/directory_governance/validate_repository_topology.py"
+          text = validator.read_text(encoding="utf-8")
+          constant = "DOC_ID_RE = re.compile(r'^\\s*doc_id:\\s*[\"\\\']?([^\"\\\'\\s]+)', re.MULTILINE)\n"
+          text = replace_once(
+              text,
+              constant,
+              constant
+              + "CANONICAL_ADR_FILENAME_RE = re.compile(\n"
+              + "    r\"^ADR-\\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\\.md$\"\n"
+              + ")\n",
+              "validator constant",
+          )
+          helper = (
+              "def _is_conventional_readme(path: str) -> bool:\n"
+              "    return PurePosixPath(path).name == \"README.md\"\n\n\n"
+          )
+          helper_replacement = (
+              helper
+              + "def _is_canonical_adr_path(path: str) -> bool:\n"
+              + "    parsed = PurePosixPath(path)\n"
+              + "    return (\n"
+              + "        parsed.parent.as_posix() == \"docs/adr\"\n"
+              + "        and CANONICAL_ADR_FILENAME_RE.fullmatch(parsed.name) is not None\n"
+              + "    )\n\n\n"
+          )
+          text = replace_once(text, helper, helper_replacement, "validator helper")
+          uppercase = (
+              "            if segment != \"README.md\" and any(\n"
+              "                character.isupper() for character in segment\n"
+              "            ):\n"
+              "                grammar_groups[\"uppercase\"].append(path)\n"
+          )
+          uppercase_replacement = (
+              "            if (\n"
+              "                segment != \"README.md\"\n"
+              "                and any(character.isupper() for character in segment)\n"
+              "                and not _is_canonical_adr_path(path)\n"
+              "            ):\n"
+              "                grammar_groups[\"uppercase\"].append(path)\n"
+          )
+          text = replace_once(text, uppercase, uppercase_replacement, "uppercase rule")
+          validator.write_text(text, encoding="utf-8")
+
+          test_path = root / "tests/validators/directory_governance/test_validate_repository_topology.py"
+          test_text = test_path.read_text(encoding="utf-8")
+          anchor = "    def test_nonconventional_uppercase_name_still_fails(self) -> None:\n"
+          new_test = '''    def test_canonical_direct_adr_filename_is_the_only_uppercase_exception(self) -> None:
+              paths = (
+                  "docs/adr/ADR-0035-repository-wide-identity.md",
+                  "docs/adr/ADR-35-malformed-identity.md",
+                  "docs/adr/nested/ADR-0036-nested-identity.md",
+              )
+              modes = {path: "100644" for path in paths}
+              blobs = {
+                  "control_plane/root_registry.yaml": json.dumps(
+                      {"roots": [{"path": "docs/", "status": "ACTIVE"}]}
+                  ).encode("utf-8")
+              }
+              object_ids = {path: "a" * 40 for path in paths}
+
+              findings = module._path_findings(paths, modes, object_ids, blobs)
+              uppercase = next(
+                  finding
+                  for finding in findings
+                  if (finding.rule_id, finding.subject)
+                  == ("KFM-TOPO-001", "path-grammar:uppercase")
+              )
+
+              self.assertEqual(
+                  (
+                      "docs/adr/ADR-35-malformed-identity.md",
+                      "docs/adr/nested/ADR-0036-nested-identity.md",
+                  ),
+                  uppercase.evidence_members,
+              )
+
+          '''
+          if test_text.count(anchor) != 1:
+              raise SystemExit("test insertion anchor changed")
+          test_path.write_text(test_text.replace(anchor, new_test + anchor, 1), encoding="utf-8")
+
+          renames = {
+              "apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md":
+                  "apps/explorer-web/src/features/story_player/current-implementation.md",
+              "docs/runbooks/ROLLBACK_REHEARSAL.md":
+                  "docs/runbooks/rollback-rehearsal.md",
+              "docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md":
+                  "docs/security/incident-response-handoff-decision.md",
+          }
+          for old_rel, new_rel in renames.items():
+              old_path = root / old_rel
+              new_path = root / new_rel
+              if not old_path.is_file() or new_path.exists():
+                  raise SystemExit(f"unsafe rename state: {old_rel}")
+              new_path.parent.mkdir(parents=True, exist_ok=True)
+              old_path.rename(new_path)
+
+          replacements = {
+              "apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md":
+                  "apps/explorer-web/src/features/story_player/current-implementation.md",
+              "./src/features/story_player/CURRENT_IMPLEMENTATION.md":
+                  "./src/features/story_player/current-implementation.md",
+              "docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md":
+                  "docs/security/incident-response-handoff-decision.md",
+          }
+          for rel in (
+              "apps/explorer-web/README.md",
+              "data/receipts/generated/genrec-explorer-web-readme-refresh-20260815.json",
+              "docs/security/incident-response-handoff-decision.md",
+          ):
+              path = root / rel
+              content = path.read_text(encoding="utf-8")
+              for before, after in replacements.items():
+                  content = content.replace(before, after)
+              path.write_text(content, encoding="utf-8")
+
+          rollback_workflow = root / ".github/workflows/rollback-rehearsal.yml"
+          workflow_text = rollback_workflow.read_text(encoding="utf-8")
+          if workflow_text.count('      - "fixtures/release/rollback_rehearsal/**"\n') != 2:
+              raise SystemExit("rollback fixture path-filter anchor changed")
+          workflow_text = workflow_text.replace(
+              '      - "fixtures/release/rollback_rehearsal/**"\n', ""
+          )
+          if workflow_text.count("docs/runbooks/ROLLBACK_REHEARSAL.md") != 2:
+              raise SystemExit("rollback runbook path-filter anchor changed")
+          workflow_text = workflow_text.replace(
+              "docs/runbooks/ROLLBACK_REHEARSAL.md",
+              "docs/runbooks/rollback-rehearsal.md",
+          )
+          rollback_workflow.write_text(workflow_text, encoding="utf-8")
+
+          runbook = root / "docs/runbooks/rollback-rehearsal.md"
+          runbook_text = runbook.read_text(encoding="utf-8")
+          old = '''Directory ownership follows the adopted responsibility roots: executable release tooling is
+          under `tools/release/`, proof of behavior under `tests/release/`, synthetic fixture guidance
+          under `fixtures/release/`, and this operator explanation under `docs/runbooks/`.
+          '''
+          new = '''Directory ownership follows the adopted responsibility roots: executable release tooling is
+          under `tools/release/`, proof of behavior under `tests/release/`, reusable release-fixture
+          guidance under `fixtures/release/`, and this operator explanation under `docs/runbooks/`.
+          This rehearsal has no static child fixture payload: the test creates both immutable synthetic
+          release directories, the current alias, fixed manifest and artifact digests, correction
+          lineage, and the complete cache/index invalidation set inside a temporary directory.
+          '''
+          runbook.write_text(replace_once(runbook_text, old, new, "runbook ownership"), encoding="utf-8")
+          child_readme = root / "fixtures/release/rollback_rehearsal/README.md"
+          child_readme.unlink()
+          child_readme.parent.rmdir()
+
+          explorer_receipt_path = root / "data/receipts/generated/genrec-explorer-web-readme-refresh-20260815.json"
+          explorer_receipt = json.loads(explorer_receipt_path.read_text(encoding="utf-8"))
+          explorer_receipt["artifact_hashes"]["apps/explorer-web/README.md"] = sha256(
+              root / "apps/explorer-web/README.md"
+          )
+          explorer_receipt_path.write_text(
+              json.dumps(explorer_receipt, indent=2) + "\n", encoding="utf-8"
+          )
+
+          story_receipt_path = root / "data/receipts/generated/genrec-story-player-governed-projection-20260814.json"
+          story_receipt = json.loads(story_receipt_path.read_text(encoding="utf-8"))
+          old_story = "apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md"
+          new_story = "apps/explorer-web/src/features/story_player/current-implementation.md"
+          story_receipt["artifact_paths"] = [
+              new_story if path == old_story else path
+              for path in story_receipt["artifact_paths"]
+          ]
+          story_receipt["artifact_hashes"][new_story] = story_receipt["artifact_hashes"].pop(old_story)
+          story_receipt["truth_labels"][new_story] = story_receipt["truth_labels"].pop(old_story)
+          story_receipt_path.write_text(
+              json.dumps(story_receipt, indent=2) + "\n", encoding="utf-8"
+          )
+
+          incident_receipt_path = root / "data/receipts/generated/genrec-incident-response-handoff-decision-20260815.json"
+          incident_receipt = json.loads(incident_receipt_path.read_text(encoding="utf-8"))
+          old_incident = "docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md"
+          new_incident = "docs/security/incident-response-handoff-decision.md"
+          incident_receipt["artifact_paths"] = [
+              new_incident if path == old_incident else path
+              for path in incident_receipt["artifact_paths"]
+          ]
+          incident_receipt["artifact_hashes"].pop(old_incident, None)
+          incident_receipt["artifact_hashes"][new_incident] = sha256(root / new_incident)
+          incident_receipt["truth_labels"][new_incident] = incident_receipt["truth_labels"].pop(old_incident)
+          incident_receipt_path.write_text(
+              json.dumps(incident_receipt, indent=2) + "\n", encoding="utf-8"
+          )
+
+          for temporary in (
+              ".github/workflows/repository-topology-current-diagnostics.yml",
+              ".github/workflows/repository-topology-one-shot-repair.yml",
+          ):
+              path = root / temporary
+              if not path.is_file():
+                  raise SystemExit(f"temporary workflow missing: {temporary}")
+              path.unlink()
+          PY
+
+      - name: Regenerate and prove the strict-shrink baseline
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: 808fdb5b61443e850cac840a594d558b92ec608d
+        run: |
+          set -euo pipefail
+          git add -A
+          python tools/validators/directory_governance/validate_repository_topology.py \
+            --emit-baseline > /tmp/repository_topology_baseline.json
+          mv /tmp/repository_topology_baseline.json \
+            tools/validators/directory_governance/repository_topology_baseline.json
+          git add tools/validators/directory_governance/repository_topology_baseline.json
+          python tools/validators/directory_governance/validate_repository_topology.py --format text
+
+      - name: Run focused no-network validation
+        shell: bash
+        env:
+          KFM_TRUSTED_BASE_REF: 808fdb5b61443e850cac840a594d558b92ec608d
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/validators/directory_governance/validate_repository_topology.py \
+            tests/validators/directory_governance/test_validate_repository_topology.py
+          python -m unittest discover \
+            --start-directory tests/validators/directory_governance \
+            --pattern 'test_validate_*topology.py' \
+            --verbose
+          make validator-registry-check
+          make workflow-security
+          python tools/validate_adr_index.py
+          git diff --cached --check
+          test ! -e apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+          test ! -e docs/runbooks/ROLLBACK_REHEARSAL.md
+          test ! -e docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md
+          test ! -e fixtures/release/rollback_rehearsal
+          ! git grep -n -F -- CURRENT_IMPLEMENTATION.md
+          ! git grep -n -F -- ROLLBACK_REHEARSAL.md
+          ! git grep -n -F -- INCIDENT_RESPONSE_HANDOFF_DECISION.md
+          ! git grep -n -F -- fixtures/release/rollback_rehearsal
+
+      - name: Commit and push the bounded repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Andy"
+          git config user.email "blackbart555@gmail.com"
+          git commit -m "fix(repo): reconcile topology transition"
+          git push origin HEAD:agent/repair-current-topology-20260817
