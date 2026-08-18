@@ -1,7 +1,7 @@
 # Temporary PR-locked reconstruction wrapper.
 #
 # The successful job materializes the reviewed documentation payload on the
-# independent `tmp/skeleton-map-output-20260818` branch. The output commit
+# independent `docs/refresh-skeleton-map-20260818` branch. The output commit
 # deletes this workflow and the payload chunks, so the resulting tree contains
 # only the intended documentation, receipt, and cleanup delta relative to main.
 name: one-shot-skeleton-map-refresh
@@ -42,7 +42,7 @@ jobs:
         shell: bash
         env:
           TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          OUTPUT_BRANCH: tmp/skeleton-map-output-20260818
+          OUTPUT_BRANCH: docs/refresh-skeleton-map-20260818
         run: |
           set -euo pipefail
 
