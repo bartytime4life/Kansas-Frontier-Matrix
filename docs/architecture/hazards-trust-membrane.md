@@ -17,7 +17,7 @@ current_path: docs/architecture/hazards-trust-membrane.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: d59b4bd403ff918fce1e839b1fcfd5e77592a7f4
+  base_commit: 109c8fd52ceaed9c6628f9364f88dc18449903e6
   prior_blob: 0d78b4fa0c080b8d7a2532c46ba46a51d9f326ed
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_decision: ADR-0029 accepted
@@ -68,7 +68,7 @@ notes:
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@d59b4bd403ff918fce1e839b1fcfd5e77592a7f4` |
+| **Evidence snapshot** | `main@109c8fd52ceaed9c6628f9364f88dc18449903e6` |
 | **Document role** | Cross-root architecture explanation under `docs/architecture/`; not doctrine, source admission, contract, schema, policy, evidence, review, release, runtime, or publication authority |
 | **Directory authority** | Directory Rules v2 is adopted through [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md); this existing path receives the same-path `PLACE` result |
 | **Hazards semantic surface** | Substantial draft domain and contract documentation exists; authority and implementation maturity vary by object family |
@@ -1086,7 +1086,7 @@ else:
 | **Document class** | Hazards-specific cross-cutting architecture explanation |
 | **Current implementation posture** | Selected synthetic validators are substantive; source, policy, evidence-resolution, public API, release, and publication closure remain inactive, absent, held, or unproved |
 | **Authority not held** | Alert, life-safety, health, engineering, regulatory, source, evidence, policy, review, release, runtime, or publication authority |
-| **Evidence snapshot** | `main@d59b4bd403ff918fce1e839b1fcfd5e77592a7f4` |
+| **Evidence snapshot** | `main@109c8fd52ceaed9c6628f9364f88dc18449903e6` |
 | **Prior blob / rollback target** | `0d78b4fa0c080b8d7a2532c46ba46a51d9f326ed` |
 | **Verified review route** | `@bartytime4life` through CODEOWNERS; specialist and independent review remain `NEEDS VERIFICATION` |
 | **Last updated** | 2026-08-18 |
