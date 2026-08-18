@@ -1,391 +1,565 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-contract-schema-policy-split
 title: Contract / Schema / Policy / Test Split
-type: standard
-version: v1
-status: draft
-owners: TODO — Architecture steward + Docs steward (see CODEOWNERS)
+type: architecture-standard
+version: v2.0
+status: draft; repository-grounded; explanatory; adopted-placement-aligned; mixed-maturity; non-authoritative
+owners: NEEDS VERIFICATION — CODEOWNERS routes /docs/ to @bartytime4life; no independently verified architecture, contract/schema, policy, or QA stewardship charter was established
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-18
+policy_label: public; architecture; responsibility-boundaries; cite-or-abstain; no-parallel-authority; non-release; non-publication
+current_path: docs/architecture/contract-schema-policy-split.md
+owning_root: docs/
+responsibility: explain how semantic meaning, machine shape, admissibility, reusable examples, executable tests, and repository validators compose without transferring authority among their owning roots
+truth_posture: cite-or-abstain; repository-current claims are pinned to the evidence snapshot; this page explains accepted placement and current implementation boundaries but does not create semantic, schema, policy, review, release, or publication authority
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: f287d7e1501229ebde23737aba98c07279684dbc
+  target_prior_blob: 101b921cf152f75da425ce61a0f00295334e58cb
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
+  schema_validation_workflow_blob: e04e69a04d9f8fb57f803a23e3a05e79f85cdc58
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
-  - docs/architecture/README.md
-  - docs/architecture/governed-api.md
-  - contracts/README.md
-  - schemas/README.md
-  - policy/README.md
-  - tests/README.md
-tags: [kfm, architecture, contracts, schemas, policy, tests, doctrine]
+  - ../doctrine/directory-rules.md
+  - ../doctrine/authority-ladder.md
+  - ../doctrine/truth-posture.md
+  - ../doctrine/trust-membrane.md
+  - ../doctrine/lifecycle-law.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../adr/ADR-0002-contracts-vs-schemas-split.md
+  - ./README.md
+  - ./governed-api.md
+  - ../../contracts/README.md
+  - ../../schemas/README.md
+  - ../../policy/README.md
+  - ../../fixtures/README.md
+  - ../../tests/README.md
+  - ../../tools/validators/README.md
+  - ../../control_plane/root_registry.yaml
+  - ../../tools/validators/validator_registry.json
+  - ../../.github/workflows/schema-validation.yml
+tags: [kfm, architecture, contracts, schemas, policy, fixtures, tests, validators, governance]
 notes:
-  - Companion doc to Directory Rules §§6.3-6.5; canonical home of the four-layer split explanation.
-  - PROPOSED status for any specific repo path until mounted-repo evidence verifies it.
+  - "v2.0 replaces the May 2026 proposal-only posture with a repository-grounded explanation pinned to current main."
+  - "Accepted ADR-0029, not proposed ADR-0001 or ADR-0002, supplies the binding top-level placement authority."
+  - "Root fixtures/ is the canonical reusable-fixture authority; tests/fixtures/ is bounded test-local support and must not become a second reusable-fixture authority."
+  - "Root-level jsonschema/ and policies/ were absent at the pinned base. This page does not authorize creating them."
+  - "This change updates explanatory Markdown only; it changes no contract, schema, policy rule, fixture, validator, test, workflow, lifecycle object, release state, runtime behavior, or publication state."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Contract / Schema / Policy / Test Split
 
-> The architecture rule that keeps **meaning**, **shape**, **admissibility**, and **proof** as four separate layers — never collapsed, never duplicated, never silently mirrored.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
+[![Placement: adopted](https://img.shields.io/badge/placement-adopted-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Schema route: schemas/contracts/v1](https://img.shields.io/badge/schema%20route-schemas%2Fcontracts%2Fv1-1f6feb?style=flat-square)](#9-adr-0001--the-schema-home-rule)
+[![ADR-0001: proposed](https://img.shields.io/badge/ADR--0001-proposed-d4a72c?style=flat-square)](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
+[![ADR-0002: proposed](https://img.shields.io/badge/ADR--0002-proposed-d4a72c?style=flat-square)](../adr/ADR-0002-contracts-vs-schemas-split.md)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
-[![Status: Draft](https://img.shields.io/badge/status-draft-orange)](#status)
-[![Authority: Doctrine](https://img.shields.io/badge/authority-doctrine-blue)](../doctrine/directory-rules.md)
-[![Schema Home: ADR-0001](https://img.shields.io/badge/schema--home-ADR--0001-green)](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
-[![Lifecycle: RAW → PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%20→%20WORK%2FQUARANTINE%20→%20PROCESSED%20→%20CATALOG%2FTRIPLET%20→%20PUBLISHED-lightgrey)](../doctrine/lifecycle-law.md)
-[![Last Updated](https://img.shields.io/badge/updated-2026--05--14-informational)](#last-updated)
+> **One-line rule.** Keep **meaning**, **machine shape**, **admissibility**, **reusable examples**, **executable assertions**, and **reusable validation logic** in their owning responsibility roots; connect them by explicit references, never by duplicated authority.
 
-| Status | Owners | Updated |
-|---|---|---|
-| `draft` (PROPOSED) | TODO — Architecture steward + Docs steward (see `CODEOWNERS`) | 2026-05-14 |
+> [!IMPORTANT]
+> This page is a cross-cutting **architecture explanation**. It does not define an object's meaning, make a schema canonical by prose, activate policy, approve review, promote lifecycle state, authorize release, or publish anything. Accepted Directory Rules and ADRs control placement; the owning roots control their artifacts; current code, tests, workflows, and emitted records control implementation claims.
+
+**Quick navigation:** [Purpose](#1-purpose) · [Four responsibilities](#2-the-four-layers-in-one-breath) · [Why the split exists](#3-why-the-split-exists) · [Contracts](#4-layer-1--contracts-meaning) · [Schemas](#5-layer-2--schemas-shape) · [Policy](#6-layer-3--policy-admissibility) · [Conformance](#7-layer-4--tests--fixtures-enforceability) · [Object-family flow](#8-how-an-object-family-flows-across-the-four-layers) · [Schema route](#9-adr-0001--the-schema-home-rule) · [Compatibility and drift](#10-compatibility-and-drift) · [Anti-patterns](#11-anti-patterns-and-their-counter-rules) · [Change planning](#12-change-planning-by-impact) · [Review checklist](#13-reviewer-checklist) · [Open verification](#14-open-questions--needs-verification) · [Matrix](#appendix-a--object-family--layer-reference-matrix) · [Glossary](#appendix-b--glossary)
 
 ---
 
-## Quick jump
+<a id="status"></a>
 
-- [1. Purpose](#1-purpose)
-- [2. The four layers, in one breath](#2-the-four-layers-in-one-breath)
-- [3. Why the split exists](#3-why-the-split-exists)
-- [4. Layer 1 — `contracts/` (meaning)](#4-layer-1--contracts-meaning)
-- [5. Layer 2 — `schemas/` (shape)](#5-layer-2--schemas-shape)
-- [6. Layer 3 — `policy/` (admissibility)](#6-layer-3--policy-admissibility)
-- [7. Layer 4 — `tests/` + `fixtures/` (enforceability)](#7-layer-4--tests--fixtures-enforceability)
-- [8. How an object family flows across the four layers](#8-how-an-object-family-flows-across-the-four-layers)
-- [9. ADR-0001 — the schema-home rule](#9-adr-0001--the-schema-home-rule)
-- [10. Compatibility roots: `jsonschema/`, `policies/`](#10-compatibility-roots-jsonschema-policies)
-- [11. Anti-patterns and their counter-rules](#11-anti-patterns-and-their-counter-rules)
-- [12. Reviewer checklist](#12-reviewer-checklist)
-- [13. Open questions / NEEDS VERIFICATION](#13-open-questions--needs-verification)
-- [Appendix A — Object family × layer reference matrix](#appendix-a--object-family--layer-reference-matrix)
-- [Appendix B — Glossary](#appendix-b--glossary)
-- [Related docs](#related-docs)
+## Current status and evidence boundary
+
+| Surface | Current repository-grounded result at `main@f287d7e…` | Claim limit |
+|---|---|---|
+| Accepted placement authority | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact bytes of [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). | Establishes responsibility-root placement; it does not validate every descendant or accept other ADRs. |
+| Root projection | [`control_plane/root_registry.yaml`](../../control_plane/root_registry.yaml) projects `contracts/`, `schemas/`, `policy/`, `fixtures/`, `tests/`, and `tools/` as canonical roots with distinct allowed artifact kinds. | Machine projection supports conformance checks; it cannot create or amend authority. |
+| Schema route | Directory Rules `DIR-AUTHROOT-001` makes `schemas/contracts/v1/<family>/` the default machine-schema route. | Does not make [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) accepted; that ADR remains proposed for dedicated routing, migration, and enforcement decisions. |
+| Coupling decision | [`ADR-0002`](../adr/ADR-0002-contracts-vs-schemas-split.md) is present with effective status `proposed`. | Its stricter readiness and cross-surface coupling rules are recommendations until accepted. |
+| Semantic root | [`contracts/`](../../contracts/README.md) exists and documents semantic authority plus known machine-schema drift. | Presence does not prove every contract is mature, paired, consumed, or correct. |
+| Machine-shape root | [`schemas/`](../../schemas/README.md) exists; `schemas/contracts/v1/` is a configured validation surface with compatibility debt. | Shape validity is not semantic truth, evidence closure, policy approval, or release readiness. |
+| Policy root | Singular [`policy/`](../../policy/README.md) exists and is the adopted policy-source root. | The current policy README records mixed maturity and no accepted repository-wide general evaluator. |
+| Reusable fixture root | [`fixtures/`](../../fixtures/README.md) exists and is the canonical reusable, synthetic, public-safe fixture root. | A fixture is an example carrier, not data, evidence, policy, proof, or release authority. |
+| Test root | [`tests/`](../../tests/README.md) exists and owns executable conformance evidence. | No complete repository-wide test suite is established by root presence or one green workflow. |
+| Validator implementation | [`tools/validators/`](../../tools/validators/README.md) exists; the current `full` registry profile lists 20 bounded checks. | Registry membership and validator success prove only the declared checked scope. |
+| Schema orchestration | [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) coordinates JSON parsing, meta-schema checks, nine configured aggregate fixture families, aggregate validators, and schema/contract tests. | Workflow definition is not exact-head execution evidence and emits no policy, proof, release, or publication authority. |
+| Root compatibility names | Root-level `jsonschema/` and `policies/` were absent at the pinned base. | Their absence does not close descendant drift; this document does not authorize creating either root. |
+| Public or release effect | None. | This page and its pull request are explanatory repository changes only. |
+
+### Truth labels used here
+
+- **CONFIRMED** — verified from the pinned repository, accepted decision, supplied file, workflow, or machine projection.
+- **PROPOSED** — recommended coupling, readiness, or future migration not accepted or implemented as a complete rule.
+- **UNKNOWN** — evidence does not establish the answer.
+- **NEEDS VERIFICATION** — a concrete repository, runtime, governance, or review check remains.
+
+<a id="authority-boundary"></a>
+
+### Authority boundary
+
+This document owns one responsibility: **explain how the roots compose**.
+
+| Question | Authority owner |
+|---|---|
+| What does the object or interface mean? | `contracts/` |
+| What machine shape is valid? | `schemas/` |
+| Under what conditions is an operation allowed, denied, held, restricted, or abstained? | `policy/` |
+| Which reusable examples represent positive, negative, stale, denied, abstaining, correction, or rollback cases? | `fixtures/` |
+| Can the declared behavior be exercised as an executable assertion? | `tests/` |
+| Where does reusable checker or validator implementation live? | `tools/validators/` |
+| Which check runs for a repository profile? | `tools/validators/validator_registry.json` and the invoking workflow or command |
+| Which source or evidence supports a factual claim? | Governed source, evidence, and proof authorities |
+| Which instance is in RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, or PUBLISHED state? | Governed `data/` instance planes |
+| Which release, correction, withdrawal, or rollback decision applies? | `release/` |
+| How do these surfaces fit together for readers? | This architecture page and the owning-root READMEs |
+
+> [!WARNING]
+> A lower layer may reference an upstream authority without owning it. A schema may reference a contract; a validator may load a schema; a policy rule may consume schema-shaped input; a test may invoke a validator. None of those relationships transfers the upstream authority.
 
 ---
 
 ## 1. Purpose
 
-KFM's trust spine depends on four different kinds of authority being kept **structurally distinct** in the repository:
+KFM's trust spine depends on separate answers to six questions:
 
-1. What an object **means**.
-2. What an object **looks like** to a machine.
-3. Whether an object is **allowed** through a gate.
-4. Whether those three rules are **enforceable** in practice.
+1. **Meaning** — What is the object, field, interface, or promise?
+2. **Shape** — Which machine representation is structurally valid?
+3. **Admissibility** — May this operation proceed for this actor, audience, source role, evidence state, rights posture, sensitivity, lifecycle state, review state, and release context?
+4. **Examples** — Which small, synthetic cases represent the boundary?
+5. **Proof** — Can executable assertions distinguish the intended positive and negative behavior?
+6. **Validation** — Can the same checker be reused by CI, pipelines, review tooling, and release-readiness checks without hiding authority inside test code?
 
-When these collapse into one folder — when a JSON Schema sits next to a prose contract, or a fixture doubles as a policy rule, or a doc page is cited as a release decision — the membrane between *intent* and *runtime* dissolves. Drift becomes invisible. Authority becomes ambient.
+The repository groups those six questions into four architectural responsibilities:
 
-This document is the **canonical explanation** of how KFM keeps those four authorities apart. It is the companion to [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) §§6.3–6.5, and it is referenced from `directory-rules.md` §0 as related doctrine.
+- **semantic meaning** in `contracts/`;
+- **machine shape** in `schemas/`;
+- **admissibility** in `policy/`;
+- **conformance** across `fixtures/`, `tests/`, and `tools/validators/`.
 
-> [!IMPORTANT]
-> The **rules** in this document are CONFIRMED from Directory Rules and the Unified Architecture Build Manual. The **specific repo paths** quoted are PROPOSED until verified against mounted-repo evidence per Directory Rules §0.
+This is a responsibility split, not a demand that every edit mechanically touches every root. A change must update every **applicable** authority surface and state why an adjacent surface is unaffected.
+
+> [!NOTE]
+> The canonical lifecycle is separate from this definition architecture:
+>
+> ```text
+> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+> ```
+>
+> Definitions live in the responsibility roots above. Governed instances move through lifecycle, evidence, accountability, and release planes. A contract, schema, policy source file, fixture, test, or validator is not promoted merely because it is committed.
+
+[Back to top](#top)
 
 ---
 
 ## 2. The four layers, in one breath
 
-| Layer | Folder | Owns | Format | Question it answers |
+| Responsibility | Canonical surface | Owns | Typical artifacts | Does not prove or decide |
 |---|---|---|---|---|
-| **Meaning** | `contracts/` | Object families, field intent, invariants, domain vocabulary, service commitments | Markdown (`.md`) | *What is this object, and what does each field promise?* |
-| **Shape** | `schemas/` | Machine-checkable structure, required fields, enums, types, versioning | JSON Schema (Draft 2020-12), JSON-LD context | *Does this instance have the right keys and types?* |
-| **Admissibility** | `policy/` | `ALLOW` / `DENY` / `RESTRICT` / `ABSTAIN` decisions; sensitivity classes; rights enforcement | Rego / OPA bundles (or equivalents) | *Given the rules in force, may this object pass this gate?* |
-| **Enforceability** | `tests/` + `fixtures/` | Deterministic proof — valid, invalid, denied, abstain, rollback fixtures; assertions | Fixture files + test code | *Can we prove, against examples, that the rules above actually hold?* |
+| **Meaning** | `contracts/` | Object-family vocabulary, field intent, invariants, exclusions, compatibility promises, interface semantics | Markdown contracts and family indexes | Machine validity, factual truth, admissibility, execution, review, release |
+| **Shape** | `schemas/` | Machine-checkable structure, references, required fields, enums, formats, versioned schema identity | JSON Schema Draft 2020-12 and other accepted machine-shape artifacts | Meaning, source authority, evidence sufficiency, rights, sensitivity, release |
+| **Admissibility** | `policy/` | Operation-specific allow, deny, hold, restrict, abstain, and obligation rules | Reviewed Rego/OPA-compatible or equivalent rule source and bundle definitions | Meaning, shape, factual truth, human review, promotion, publication |
+| **Conformance** | `fixtures/` + `tests/` + `tools/validators/` | Reusable examples, executable assertions, reusable fail-closed checkers, bounded diagnostics | Synthetic fixture families, test code, validators, registry entries | Semantic or policy authority, production parity, release approval, public truth |
 
-> [!NOTE]
-> A single object family (e.g. `EvidenceBundle`) lives in **all four** layers simultaneously: a contract in `contracts/evidence/`, a schema in `schemas/contracts/v1/evidence/`, policy in `policy/runtime/` or `policy/release/`, and fixtures in `tests/fixtures/evidence/`. None of the four substitutes for any other.
+### The proof surfaces are distinct
 
-[↑ Back to top](#quick-jump)
+| Surface | Primary role | Boundary |
+|---|---|---|
+| `fixtures/` | Reusable, synthetic, deterministic, public-safe inputs and expected outputs | Examples only; no executable assertion and no governed instance authority |
+| `tests/` | Authored executable assertions and integration/boundary checks | Proof for the checked scope only; no reusable-fixture or validator authority |
+| `tools/validators/` | Reusable checker implementation and deterministic diagnostics | Checks declared authorities; does not define them |
+| `.github/workflows/` | Orchestration of repository-owned commands | Runs checks; does not own validation semantics or grant release authority |
+
+> [!TIP]
+> A test should call a reusable validator when the same gate is needed outside that test. Production code, pipelines, or CI should not import test modules to obtain trust-bearing logic.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Why the split exists
 
-KFM core invariants require that promotion is a **governed state transition, not a file move**, and that **EvidenceRef should resolve to EvidenceBundle when claims depend on evidence**. Both of those invariants assume that *the meaning of an object*, *its shape*, *its admissibility*, and *the proof it survives a gate* can be inspected separately.
+The split makes drift inspectable and correction reversible.
 
-If the layers collapse:
-
-- **Meaning collapses into shape** → reviewers read JSON Schema to learn what a field *means*. Type annotations become folklore. Semantic invariants disappear.
-- **Shape collapses into admissibility** → a schema rejects a field that policy would have merely abstained on. The system loses its abstain/deny distinction and starts denying things it should have asked review about.
-- **Admissibility collapses into tests** → policy lives only in test code. There is no portable rule. CI passes, but no runtime gate is enforceable in production.
-- **Tests collapse into fixtures** → fixtures become the spec. There is no negative-state proof. `DENY` and `ABSTAIN` paths go unexercised.
-
-The split protects four properties simultaneously: **inspectability**, **portability**, **negative-state proof**, and **reversibility**. Lose any one, and the trust spine bends.
+| Collapse | Failure mode |
+|---|---|
+| Meaning into schema | Reviewers must infer field intent from types and enums; semantic limits become folklore. |
+| Shape into policy | Structural rejection is confused with admissibility, and `ERROR`, `DENY`, `HOLD`, or `ABSTAIN` lose their distinct meanings. |
+| Policy into schema | Rights, sensitivity, access, review, or release rules become static field constraints and cannot express operation-specific context. |
+| Policy into tests | Rules exist only in a test harness and cannot be evaluated consistently by a governed runtime or promotion gate. |
+| Validator into tests | Reusable gate logic is hidden in test code; pipelines and CI reimplement it or import the wrong authority. |
+| Tests into fixtures | Example bytes become an unwritten specification with no executable negative-state proof. |
+| Definition into instance | A receipt, proof, catalog record, or release object is mistaken for the normative definition of its family. |
+| Workflow into authority | A green job is treated as schema, policy, review, release, or publication approval. |
 
 ```mermaid
 flowchart LR
-  C["contracts/<br/><i>meaning</i><br/>Markdown"]
-  S["schemas/<br/><i>shape</i><br/>JSON Schema"]
-  P["policy/<br/><i>admissibility</i><br/>Rego / OPA"]
-  T["tests/ + fixtures/<br/><i>enforceability</i><br/>valid · invalid · denied · abstain"]
+  C["contracts/<br/><i>semantic meaning</i>"]
+  S["schemas/<br/><i>machine shape</i>"]
+  P["policy/<br/><i>admissibility</i>"]
+  F["fixtures/<br/><i>reusable examples</i>"]
+  T["tests/<br/><i>executable assertions</i>"]
+  V["tools/validators/<br/><i>reusable checkers</i>"]
+  W["workflows / commands<br/><i>orchestration</i>"]
 
-  C -- "defines vocabulary used by" --> S
-  S -- "validates instances admitted to" --> P
-  P -- "is proven enforceable by" --> T
-  T -- "regression-tests fixtures against" --> S
-  C -. "field intent informs gate logic in" .-> P
-
-  classDef can fill:#eef,stroke:#447,stroke-width:1px,color:#113;
-  class C,S,P,T can;
+  C -->|"field intent and invariants"| S
+  C -.->|"meaning informs"| P
+  S -->|"shapes policy input"| P
+  C --> F
+  S --> F
+  P -.->|"expected dispositions when applicable"| F
+  F --> T
+  V --> T
+  C --> V
+  S --> V
+  P -.-> V
+  V --> W
+  T --> W
 ```
 
-> [!TIP]
-> Read the arrows as **"depends on the truth of"** — `policy/` cannot decide on a shape it does not know, `tests/` cannot prove a rule that is not written, and `contracts/` is the human-readable anchor for all three.
+The arrows mean **depends on or checks**, not **owns**. The dependency must point toward the artifact's real authority rather than create a second writable copy.
 
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
 ## 4. Layer 1 — `contracts/` (meaning)
 
-`contracts/` owns the **semantic** layer. Files here are Markdown documents that describe **what an object means**, **what each field intends**, and **what invariants the object carries**. Executable validation does **not** live here.
+`contracts/` is the canonical semantic-meaning root.
 
-### 4.1 Layout
+### Owns
 
-```text
-contracts/
-├── README.md
-├── source/           # source_descriptor, ingest_receipt
-├── evidence/         # evidence_ref, evidence_bundle
-├── data/             # dataset_version, validation_report
-├── runtime/          # runtime_response_envelope, decision_envelope, run_receipt, ai_receipt
-├── release/          # release_manifest, promotion_decision, rollback_card
-├── correction/       # correction_notice
-├── governance/       # review_record
-└── domains/
-    ├── hydrology/   soil/   fauna/   …
-```
+- object-family and interface vocabulary;
+- field intent and invariants;
+- identity and relationship semantics;
+- allowed claim scope and explicit exclusions;
+- compatibility, deprecation, correction, and supersession promises;
+- references to applicable schemas, policy, fixtures, tests, validators, lifecycle records, and release objects.
 
-Status of the layout above: CONFIRMED from `directory-rules.md` §6.3. Status of the specific path's **presence in the current repo**: PROPOSED until verified.
+### Does not own
 
-### 4.2 What `contracts/` does
+- `.schema.json` machine definitions;
+- executable policy source;
+- reusable fixture payloads;
+- test or validator implementation;
+- source, evidence, receipt, proof, catalog, lifecycle, or release instances;
+- runtime, API, UI, map, or AI behavior.
 
-- Names every **object family** in KFM's published language (e.g. `EvidenceBundle`, `RunReceipt`, `PromotionDecision`, `RollbackCard`).
-- States **field intent** in human prose — what the field *means*, not just what type it is.
-- Records **invariants** the object must satisfy (e.g. "an `EvidenceRef` must resolve to an `EvidenceBundle`").
-- Anchors **domain vocabulary** used by the governed API surface (the *published language* in domain-driven terms).
+A semantic contract may describe `PolicyDecision`, `ReleaseManifest`, or `EvidenceBundle`. The topic name does not transfer those artifacts into `policy/`, `release/`, or `data/`; contracts still own only their **meaning**.
 
-### 4.3 What `contracts/` does **not** do
+### Current repository pressure
 
-- It does **not** validate instances. That is `schemas/`'s job.
-- It does **not** decide admissibility. That is `policy/`'s job.
-- It does **not** carry executable assertions. That is `tests/`'s job.
-- It does **not** host `.schema.json` files. Per ADR-0001 those live under `schemas/contracts/v1/...` (see §9).
+[`contracts/README.md`](../../contracts/README.md) records three inherited `.schema.json` placement violations under `contracts/`. They are **CONFIRMED drift**, not precedent. This architecture update:
 
-> [!WARNING]
-> A `.schema.json` file appearing under `contracts/<domain>/` is **lineage / CONFLICTED** per Directory Rules §6.4 and **MUST** be migrated to `schemas/contracts/v1/...` before any new schema lands. Maintaining divergent definitions in both `schemas/` and `contracts/` is explicitly forbidden.
+- freezes no path;
+- migrates no schema;
+- deletes no file;
+- authorizes no new schema write under `contracts/`.
 
-[↑ Back to top](#quick-jump)
+New machine-shape changes should use the adopted schema route unless an accepted ADR establishes a different profile.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Layer 2 — `schemas/` (shape)
 
-`schemas/` owns **machine-checkable shape**: required fields, enum values, formats, version constraints, and the structural surface validators can run against.
+`schemas/` is the canonical machine-shape root.
 
-### 5.1 Layout
+### Default route
+
+Accepted Directory Rules `DIR-AUTHROOT-001` establish:
 
 ```text
-schemas/
-├── README.md
-├── contracts/
-│   └── v1/
-│       ├── common/      source/      evidence/      data/
-│       ├── runtime/     policy/      release/       correction/
-│       └── domains/
-│           ├── hydrology/   soil/   fauna/   …
-└── tests/
-    ├── valid/
-    └── invalid/
+schemas/contracts/v1/<family>/
 ```
 
-CONFIRMED layout from `directory-rules.md` §6.4. PROPOSED for any specific repo path.
+as the default route for contract-backed machine schemas unless an accepted ADR establishes another versioned schema profile.
 
-### 5.2 The shape contract
+### Owns
 
-Schemas are **paired** with contracts. For every contract that describes an object family, there is at most one **canonical schema home** under `schemas/contracts/v1/<family>/<object>.schema.json`. Common object-family homes called out across the KFM corpus include:
+- JSON Schema and accepted equivalent machine-shape artifacts;
+- `$id`, `$ref`, composition, required fields, types, enums, formats, and shape-level constraints;
+- schema-family indexes and declared compatibility;
+- generated type/binding source declarations when the generated output names its schema source and regeneration process.
 
-| Object family | Proposed schema home (PROPOSED) |
-|---|---|
-| `SourceDescriptor` | `schemas/contracts/v1/source/source_descriptor.schema.json` |
-| `EvidenceBundle` | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` |
-| `ValidationReport` | `schemas/contracts/v1/data/validation_report.schema.json` |
-| `RunReceipt` | `schemas/contracts/v1/runtime/run_receipt.schema.json` |
-| `DecisionEnvelope` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` |
-| `RuntimeResponseEnvelope` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` |
-| `PolicyDecision` | `schemas/contracts/v1/policy/policy_decision.schema.json` |
-| `PromotionDecision` | `schemas/contracts/v1/release/promotion_decision.schema.json` |
-| `ReleaseManifest` | `schemas/contracts/v1/release/release_manifest.schema.json` |
-| `RollbackCard` (rollback target) | `schemas/contracts/v1/release/rollback_card.schema.json` |
-| `CorrectionNotice` | `schemas/contracts/v1/correction/correction_notice.schema.json` |
-| `ReviewRecord` | `schemas/contracts/v1/governance/review_record.schema.json` |
+### Does not own
 
-These paths are PROPOSED. Confirm against the current `schemas/contracts/v1/` tree in the mounted repo before treating any of them as authoritative.
+- field meaning or claim limits;
+- source authority or evidence sufficiency;
+- rights, sensitivity, access, consent, review, or release decisions;
+- factual truth or lifecycle promotion;
+- validator selection, runtime behavior, or public exposure.
 
-### 5.3 What `schemas/` does **not** do
+> [!IMPORTANT]
+> Schema validity is necessary for a shaped object and insufficient for a governed claim. A schema-valid payload may still be semantically wrong, unsupported, stale, source-role-confused, rights-uncleared, sensitive, policy-denied, unreviewed, unreleased, or unsafe for public use.
 
-- It does **not** explain what a field means. That is `contracts/`'s job.
-- It does **not** say *who* may publish an instance. That is `policy/`'s job.
-- A schema validation failure is a **shape** failure (`ERROR`), distinct from a policy denial (`DENY`) and from an evidence-shortage outcome (`ABSTAIN`). See [§6](#6-layer-3--policy-admissibility).
+### Current validation surface
 
-[↑ Back to top](#quick-jump)
+The current [`schema-validation` workflow](../../.github/workflows/schema-validation.yml):
+
+- parses JSON under `schemas/`;
+- meta-validates `*.schema.json`;
+- requires Draft 2020-12 and unique `$id` values for the configured v1 route;
+- requires nonempty valid and invalid lanes for nine aggregate fixture families;
+- runs aggregate validators and repository-owned schema/contract tests;
+- emits only logs and a job summary.
+
+It does **not** emit an authoritative `ValidationReport`, receipt, proof, policy decision, promotion decision, release record, or published artifact.
+
+### Compatibility debt inside `schemas/`
+
+Root-level lanes under `schemas/` may be compatibility, migration, vocabulary, or transitional surfaces. Their presence does not establish a second machine-shape authority. New fields must not evolve independently in a compatibility lane and the versioned family route.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Layer 3 — `policy/` (admissibility)
 
-`policy/` is the **canonical singular** form. (`policies/`, if it exists, is a compatibility mirror — see [§10](#10-compatibility-roots-jsonschema-policies).)
+Singular `policy/` is the adopted policy-source root.
 
-### 6.1 Layout
+### Owns
 
-```text
-policy/
-├── README.md
-├── bundles/         # Rego/OPA bundles or equivalents
-├── fixtures/        # policy fixtures distinct from tests/fixtures/
-├── tests/           # policy tests
-├── runtime/         # runtime gate policy (Focus Mode, evidence resolution, abstain)
-├── promotion/       # promotion gate policy
-├── sensitivity/     # sensitivity classes, redaction rules
-├── rights/          # rights status, license enforcement
-├── domains/
-│   ├── fauna/   archaeology/   people-dna-land/   …
-└── release/         # release-gate policy
-```
+- operation-specific admissibility rules;
+- rights, sensitivity, consent, access, render, export, AI, lifecycle, promotion, release, correction, and rollback policy source;
+- stable rule package names, entrypoints, reason codes, and obligations;
+- fail-closed behavior for missing, unknown, stale, conflicted, restricted, or untrusted context.
 
-CONFIRMED layout from `directory-rules.md` §6.5.
+### Does not own
 
-### 6.2 The four admissibility outcomes
+- semantic meaning;
+- machine shape;
+- source or evidence facts;
+- emitted policy-decision instances merely because their type contains “policy”;
+- human review, promotion, release, correction, rollback, or publication authority;
+- evaluator, adapter, CLI, server, or reusable runtime implementation.
 
-KFM's truth posture is **cite-or-abstain** by default. Policy decisions must therefore admit more than a binary. The outcome vocabulary used across KFM contracts is:
+A policy rule evaluates explicit, versioned inputs. It must not silently fetch missing facts, infer rights, invent evidence, downgrade sensitivity, or turn a passing validator into authorization.
 
-| Outcome | Meaning | Typical surface |
+### Keep outcome axes separate
+
+Different surfaces use different finite vocabularies. Do not flatten them into one ambiguous `status` field.
+
+| Axis | Example vocabulary | Owner |
 |---|---|---|
-| `ALLOW` / `ANSWER` | Evidence and rights support the answer; gate opens | Governed API, Focus Mode answer envelope |
-| `DENY` | A rule (rights, sensitivity, policy bundle, sensitive-geometry guard) refuses release | Promotion gate, public surface |
-| `ABSTAIN` | Insufficient admissible evidence; the system refuses to manufacture an answer | Focus Mode, evidence resolver |
-| `ERROR` | Shape, integrity, or process failure (distinct from a content denial) | Validator, schema check, runtime envelope |
+| Policy disposition | `ALLOW`, `DENY`, `HOLD`, `RESTRICT`, `ABSTAIN`, plus obligations or reasons as defined by the accepted policy contract | Policy contract, schema, and rule source |
+| Runtime response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Runtime response contract and governed implementation |
+| Validation execution | `PASS`, `FAIL`, `ERROR`, or a validator-specific expected-rejection marker | Validator contract and implementation |
+| Review state | `pending`, `approved`, `changes_requested`, `rejected`, or the accepted review vocabulary | Review contract and record |
+| Placement result | `PLACE`, `SPLIT`, `MIGRATE`, `MIRROR`, `HOLD`, `DENY` | Directory Rules |
+| Truth label | `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` | Evidence posture |
 
-> [!NOTE]
-> The `ALLOW` / `DENY` pair is the **policy-bundle** outcome (e.g. an OPA decision). The four-state vocabulary `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` is the **runtime envelope** outcome (e.g. a `ValidationReport` or governed-AI response). Both are intentional; they describe different gates.
+The accepted object-family contract controls the actual vocabulary. This table is a cross-axis warning, not a universal enum declaration.
 
-### 6.3 What `policy/` does **not** do
+### Current maturity boundary
 
-- It does **not** define field meanings (`contracts/`).
-- It does **not** define field types (`schemas/`).
-- It does **not** *prove* its rules; that is the role of `policy/tests/` and `tests/fixtures/` (see [§7](#7-layer-4--tests--fixtures-enforceability)).
-- It does **not** publish artifacts. The trust path for public release runs through `apps/governed-api/` and the release-gate policy under `policy/release/` — never directly from `policy/` into a canonical store.
+[`policy/README.md`](../../policy/README.md) records a broad but mixed-maturity tree, one bounded executable Rego profile, and no accepted repository-wide general evaluator or proven production decision flow. Policy path presence therefore does not prove active enforcement.
 
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
 ## 7. Layer 4 — `tests/` + `fixtures/` (enforceability)
 
-The fourth layer exists because **rules that are never exercised are not enforceable**. Every rule asserted in `contracts/`, `schemas/`, or `policy/` must be paired with **at least one fixture and at least one assertion that exercises the rule's negative state**.
+The conformance responsibility uses three roots with different owners.
 
-### 7.1 The fixture rule (PROPOSED)
+### 7.1 Reusable fixture authority
 
-Every major object family should have:
+Root [`fixtures/`](../../fixtures/README.md) owns reusable, synthetic, deterministic, public-safe fixture families.
 
-- at least **one valid fixture**,
-- at least **one invalid fixture** (shape failure → `ERROR`),
-- at least **one denied fixture** (policy refusal → `DENY`),
-- at least **one abstention fixture** (evidence shortage → `ABSTAIN`),
-- and at least **one rollback or correction fixture** (governance reversal).
+A good fixture declares:
 
-Status: PROPOSED per the Unified Architecture Build Manual §26 (Testing Strategy). Specific fixture inventories remain PROPOSED until verified against the mounted-repo tests tree.
+- the contract and schema it exercises;
+- whether it is valid, invalid, denied, restricted, abstaining, held, stale, erroneous, corrected, rolled back, or golden;
+- the expected result or reason code when stable;
+- the consumer test or validator;
+- its no-network, time, randomness, locale, rights, and sensitivity assumptions.
 
-### 7.2 Sensitive-lane fixtures
+`tests/fixtures/` is bounded **test-local support**, not a second repository-wide reusable-fixture authority. A test-local input may stay beside its test when it is not a shared fixture family. Shared or cross-consumer examples belong under root `fixtures/`.
 
-> [!CAUTION]
-> Sensitive lanes — archaeology, rare-species locations, living-person data, DNA / genomic material, critical infrastructure detail, exact geometry near sensitive sites — **MUST NOT** carry real exact values in their fixtures. Use public-safe transformed fixtures (generalized geometry, synthetic identifiers, redacted timestamps). The denial path is itself part of the contract and must be testable without reproducing the harm.
+### 7.2 Executable test authority
 
-### 7.3 The eight test classes (PROPOSED)
+Root [`tests/`](../../tests/README.md) owns authored executable assertions:
 
-From the Unified Architecture Build Manual §26, the test taxonomy the four-layer split is designed to support:
+- schema and contract checks;
+- validator polarity and diagnostic tests;
+- policy-boundary tests;
+- source, evidence, lifecycle, release, correction, rollback, API, runtime, map, and UI boundary tests;
+- integration and end-to-end checks where implemented.
 
-| Test class | Example assertion |
-|---|---|
-| **Schema test** | Required fields and `schema_version` are present |
-| **Contract test** | Object meaning matches vocabulary and lifecycle role |
-| **Source-role test** | A source is not used outside its declared authority role |
-| **Evidence test** | `EvidenceRef` resolves, **or** the answer abstains |
-| **Policy test** | Unknown rights or sensitivity → DENY (or hold for review) |
-| **Release test** | `ReleaseManifest` carries proof, correction path, rollback target |
-| **UI trust test** | Evidence Drawer renders state and negative outcomes (`DENY`, `ABSTAIN`, `ERROR`) |
-| **AI boundary test** | `MockAdapter` cannot answer without admissible evidence |
+A green test supports only its named assertion, fixture, command, and checked revision. It does not prove production parity, source authority, policy approval, human review, release, or publication.
 
-[↑ Back to top](#quick-jump)
+### 7.3 Reusable validator authority
+
+[`tools/validators/`](../../tools/validators/README.md) owns reusable repository checkers and deterministic diagnostics. A validator may:
+
+- load canonical contracts, schemas, rule inputs, and fixtures;
+- reject malformed, unsupported, stale, sensitive, or inconsistent candidates;
+- emit bounded result objects or diagnostics;
+- be reused by tests, CI, pipelines, review tooling, and release-readiness checks.
+
+A validator may not:
+
+- redefine the contract or schema it checks;
+- invent source or evidence support;
+- decide policy outside an accepted evaluator;
+- approve review, promotion, release, or publication;
+- mutate canonical stores as a side effect of ordinary validation.
+
+The current [`validator registry`](../../tools/validators/validator_registry.json) has a 20-entry `full` profile. That is **bounded configured coverage**, not complete proof that every schema, policy lane, object family, domain, runtime, or release path is validated.
+
+### 7.4 Applicability-aware fixture and test rule
+
+**CONFIRMED placement:** examples, tests, and validators have separate owning roots.
+
+**PROPOSED readiness rule:** a trust-bearing object-family change should include every applicable positive and negative case. Typical cases include:
+
+- valid acceptance;
+- invalid shape;
+- semantic invariant violation;
+- denied or restricted use;
+- evidence-bounded abstention;
+- stale, conflict, or hold behavior;
+- correction, withdrawal, supersession, or rollback;
+- deterministic identity and replay;
+- non-disclosure for negative outcomes.
+
+Not every family needs every case. A non-applicable surface requires an explicit rationale; silent omission must not masquerade as complete readiness.
+
+### 7.5 Sensitive fixtures
+
+Real or exact values from sensitive lanes must not be copied into repository fixtures. Use synthetic identifiers, generalized geometry, redacted timestamps, transformed examples, or denial-only cases. This includes living-person data, DNA/genomic material, rare-species locations, archaeology, critical infrastructure, private land/title, and comparable protected detail.
+
+[Back to top](#top)
 
 ---
 
 ## 8. How an object family flows across the four layers
 
-The canonical example is `EvidenceBundle`, since it is the object the cite-or-abstain rule depends on.
+The flow below uses the currently registered `EvidenceBundle` family as a concrete example.
 
 ```mermaid
 flowchart TD
-  A["contracts/evidence/evidence_bundle.md<br/><i>meaning: what an EvidenceBundle promises</i>"]
-  B["schemas/contracts/v1/evidence/evidence_bundle.schema.json<br/><i>shape: required fields, types, versions</i>"]
-  C["policy/release/evidence_release.rego<br/><i>admissibility: ALLOW / DENY / ABSTAIN at promotion</i>"]
-  D["tests/fixtures/evidence/{valid,invalid,denied,abstain,rollback}/*.json<br/><i>enforceability: regression proofs</i>"]
-  E["data/proofs/<br/><i>emitted instances (release-grade)</i>"]
-  F["release/<br/><i>PromotionDecision + RollbackCard tied to the bundle</i>"]
+  C["contracts/evidence/evidence_bundle.md<br/><i>meaning and invariants</i>"]
+  S["schemas/contracts/v1/evidence/evidence_bundle.schema.json<br/><i>machine shape</i>"]
+  P["policy/evidence/ and operation policy<br/><i>applicability and admissibility</i>"]
+  F["fixtures/contracts/v1/evidence/evidence_bundle/<br/><i>reusable synthetic cases</i>"]
+  V["tools/validators/validate_evidence_bundle.py<br/><i>reusable checker</i>"]
+  T["tests/validators/test_validate_evidence_bundle.py<br/><i>executable assertions</i>"]
+  R["tools/validators/validator_registry.json<br/><i>profile selection</i>"]
+  I["data/proofs/ or another governed instance lane<br/><i>actual instances</i>"]
+  D["release/<br/><i>release, correction, withdrawal, rollback decisions</i>"]
 
-  A --> B
-  B --> C
-  C --> D
-  D -. "regression-tests" .-> B
-  D -. "regression-tests" .-> C
-  B --> E
-  C --> F
-  E -. "audited at promotion by" .-> F
+  C --> S
+  C --> V
+  S --> V
+  P -.-> V
+  F --> V
+  V --> T
+  V --> R
+  S --> I
+  C --> I
+  P -.-> D
+  I --> D
+  T -. "supports bounded readiness; never authorizes" .-> D
 ```
 
-Read the diagram as the **build order** for any new governed object: meaning → shape → admissibility → fixtures → emitted instances → release decision. Skipping a step is how parallel authority homes are born.
+### Definition flow versus instance flow
+
+| Definition and conformance plane | Instance and decision plane |
+|---|---|
+| `contracts/`, `schemas/`, `policy/`, `fixtures/`, `tests/`, `tools/validators/` | `data/` lifecycle and accountability lanes, governed evidence/proof records, and `release/` decisions |
+| Defines and checks what could be valid or admissible | Records what source material, evidence, process, review, or release state actually exists |
+| Versioned through repository review | Governed by lifecycle, identity, evidence, policy, review, correction, and rollback |
+| Never becomes PUBLISHED by path | Promotion creates a governed released version or state |
 
 > [!IMPORTANT]
-> The lifecycle invariant runs **alongside** this four-layer flow, not through it. `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` is the journey an *instance* takes; the four-layer split is the journey a *definition* takes. Both must hold for an artifact to be publishable.
+> Build order is not publication order. Writing a contract, schema, policy rule, fixture, test, and validator can make a definition **reviewable**. It cannot make a real-world claim **true**, an instance **admissible**, or a carrier **published** without the separate evidence, review, release, correction, and rollback chain.
 
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
 ## 9. ADR-0001 — the schema-home rule
 
-The default machine-schema home is **`schemas/contracts/v1/...`**, per ADR-0001.
+### What is accepted
 
-| Rule | Statement |
+Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Rules v2 bytes. Those rules establish:
+
+| Rule | Adopted effect |
 |---|---|
-| **Default schema home** | `schemas/contracts/v1/<family>/<object>.schema.json` |
-| **Forbidden duplication** | A schema MUST NOT have divergent definitions in both `schemas/` and `contracts/` |
-| **Lineage / CONFLICTED** | A `.schema.json` under `contracts/<domain>/` is lineage and MUST be migrated to `schemas/contracts/v1/...` before any new schema lands in that family |
-| **Change discipline** | Changing the schema-home rule, creating a parallel schema/contract/policy/source/registry/release/proof/receipt home, or splitting a phase requires an **ADR** per Directory Rules §2.4 |
+| `DIR-AUTHROOT-001` | Machine schemas default to `schemas/contracts/v1/<family>/` unless an accepted ADR establishes another versioned schema profile. |
+| `DIR-AUTHROOT-002` | `contracts/` may contain semantic Markdown and interface specifications; a duplicated embedded schema must be generated from or reference the canonical schema. |
+| `DIR-AUTHROOT-003` | Policy rule source is singular under `policy/`; decision instances live with the governed process or release object they record. |
+| `DIR-AUTHROOT-004` | Generated language bindings are derived artifacts and must identify their schema source and regeneration command. |
+
+### What remains proposed
+
+[`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) remains `proposed`. It is the dedicated candidate decision for:
+
+- family routing below the adopted schema root;
+- compatibility classification;
+- migration and deprecation gates;
+- validator parity and acceptance evidence;
+- dedicated enforcement and rollback requirements.
+
+[`ADR-0002`](../adr/ADR-0002-contracts-vs-schemas-split.md) also remains effectively `proposed`. It is the candidate decision for stricter object-family coupling and readiness.
 
 > [!WARNING]
-> "Maintaining a temporary mirror" is **not** a workaround for ADR-0001. Mirrors are allowed only as part of an active migration declared in a migration manifest under `migrations/schema/`, with a recorded sunset date in `control_plane/deprecation_register.yaml`. A long-lived parallel home is drift, not a mirror.
+> Do not cite a proposed ADR as if it supplied accepted authority. Cite accepted ADR-0029 and Directory Rules for current placement; cite ADR-0001 or ADR-0002 only for their proposed dedicated decision packages.
 
-For the migration discipline see Directory Rules §14.2.
+### Authority-changing edits
 
-[↑ Back to top](#quick-jump)
+Changing an object family's authority owner, creating a parallel schema/contract/policy/fixture/release/proof home, or changing root/lifecycle authority requires the applicable accepted ADR and migration discipline. This architecture page cannot authorize that change.
+
+[Back to top](#top)
 
 ---
 
-## 10. Compatibility roots: `jsonschema/`, `policies/`
+<a id="10-compatibility-roots-jsonschema-policies"></a>
 
-Per Directory Rules §5 and §8, two compatibility roots can legitimately exist alongside the canonical layers:
+## 10. Compatibility and drift
 
-| Compatibility root | Canonical counterpart | Class |
+### Root-level compatibility names
+
+At the pinned base:
+
+- `jsonschema/` — **absent**;
+- `policies/` — **absent**.
+
+Do not create either root as a convenience alias. Under adopted Directory Rules, a new tracked compatibility root requires an accepted decision and explicit one-way mirror, consumer, generation, deprecation, and exit rules.
+
+### Current drift and mixed-maturity surfaces
+
+| Surface | Current posture | Required treatment |
 |---|---|---|
-| `jsonschema/` | `schemas/` | Mirror — README **MUST** declare class as `mirror` or `legacy` |
-| `policies/` (plural) | `policy/` (singular) | Mirror — README **MUST** declare class |
+| Three `.schema.json` files under `contracts/` recorded by `contracts/README.md` | `CONFIRMED` machine-shape placement drift | Hold new divergent writes; classify and migrate through reviewed, reversible work. |
+| Root-level compatibility or transitional lanes inside `schemas/` | `CONFIRMED` mixed-maturity debt | Do not evolve independently of the versioned family route; migrate object by object. |
+| `tests/fixtures/` | Existing test-local support lane | Keep local-only data local; move reusable multi-consumer fixtures to root `fixtures/` through bounded changes. |
+| Contract documents under names such as `contracts/policy/` or `contracts/schemas/` | Semantic documents whose topic is policy or schemas | Preserve semantic responsibility; folder words do not grant policy or schema authority. |
+| Schema documentation under `schemas/.../policy/` | Machine shape for policy-related objects | Preserve machine-shape responsibility; it is not executable policy source. |
+| Policy tests or policy-local synthetic cases | Owner-local checks where accepted by the policy lane | Do not substitute them for root reusable fixtures, repository tests, or the active evaluator. |
+| Generated or compatibility entrypoints | One-way derived or wrapper surfaces | Name the canonical source, forbid independent writes, and define retirement evidence. |
 
-Compatibility roots are **mirrors**, not authority. They exist for tooling or backward-compatibility reasons and **MUST NOT evolve independently** of the canonical layer. A change that lands in `jsonschema/` but not in `schemas/contracts/v1/` is divergence and opens a drift register entry.
+### Mirror rules
 
-> [!NOTE]
-> Whether either compatibility root actually exists in the current repo is **NEEDS VERIFICATION** per Directory Rules §18. Treat references to them in this doc as conditional on inspection.
+A legitimate mirror must be:
 
-[↑ Back to top](#quick-jump)
+1. required by a verified consumer;
+2. generated one way from one canonical source;
+3. read-only for normal contributors;
+4. digest- or parity-checked;
+5. named in a migration or compatibility record;
+6. assigned a sunset or exit condition;
+7. incapable of granting new authority.
+
+Without those conditions, return `HOLD` or `DENY` rather than create a second writable home.
+
+[Back to top](#top)
 
 ---
 
@@ -393,120 +567,197 @@ Compatibility roots are **mirrors**, not authority. They exist for tooling or ba
 
 | Anti-pattern | What goes wrong | Counter-rule |
 |---|---|---|
-| **Two parallel schema homes** | Schemas authored under both `schemas/` and `contracts/` (or `jsonschema/`) without an ADR; reviewers no longer know which version is authoritative | Single schema home (default `schemas/contracts/v1/…`); ADR-0001 governs migration |
-| **Schema mirror divergence** | `schemas/` and `contracts/` (or `policies/` and `policy/`) evolve separately | One is canonical, the other is a generated mirror or frozen legacy; raise an ADR if unclear |
-| **Schema authored alongside data file** | Schema and instance live in the same directory; reviewers drift | Shape under `schemas/`; meaning under `contracts/`; instance under `data/` |
-| **Compatibility root used as authority** | Files that should live in `schemas/` or `policy/` end up in `jsonschema/` or `policies/` and harden into authority | Compatibility roots are mirrors; per-root README must declare class |
-| **Test-only validator** | A validator lives only in a test file, not in `tools/validators/` | Extract validator to `tools/`; tests call into it |
-| **Fixture sprawl** | Fixtures duplicated across `tests/fixtures/`, `fixtures/`, and per-domain folders | Choose one authority (root `fixtures/` or `tests/fixtures/`); document the rule in both READMEs |
-| **Policy outcomes collapsed** | `ABSTAIN` rewritten as `DENY` (or vice versa) to simplify a path | Preserve the four-outcome vocabulary (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`) in runtime envelopes; the gate that loses `ABSTAIN` loses cite-or-abstain |
-| **Documentation as truth** | A `docs/` page is cited as the source of a canonical decision | Promote to ADR or `control_plane/` register. `docs/` explains; it doesn't decide alone |
+| **Schema as meaning** | Reviewers infer intent and claim limits from types and field names. | Put meaning and invariants in `contracts/`; schemas reference them. |
+| **Contract as validator** | Prose is presented as enforcement without executable coverage. | Add applicable schema, fixture, validator, and test support. |
+| **Policy by field name** | A field called `public` or `approved` is trusted without governed context. | Evaluate explicit policy input and bind the decision to policy identity/version. |
+| **Schema success as policy allow** | Structural validity becomes permission to expose or release. | Run separate policy, review, evidence, and release gates. |
+| **Test-only validator** | Gate logic is hidden in a test module and duplicated elsewhere. | Move reusable checker logic to `tools/validators/`; test the public checker interface. |
+| **Fixture as truth** | Synthetic or copied example bytes are treated as evidence or canonical data. | Keep fixtures synthetic, public-safe, and explicitly non-authoritative. |
+| **Fixture sprawl** | Reusable cases are duplicated across root and test-local lanes. | Root `fixtures/` owns shared cases; `tests/fixtures/` stays local to bounded tests. |
+| **Workflow as authority** | A green check is treated as review, release, or publication approval. | Workflows orchestrate owner-defined commands and report bounded outcomes only. |
+| **Proposed ADR as accepted law** | A design candidate is used to justify authority-changing work. | Use the canonical ADR index and accepted decisions; label proposals explicitly. |
+| **Compatibility by copy** | A temporary duplicate evolves into a second authority. | Require one-way generation, parity checks, migration record, and exit criteria. |
+| **Definition as instance** | A schema-shaped file under a proof or release path is assumed governed. | Validate identity, lifecycle, evidence, policy, review, and release closure separately. |
+| **One overloaded status** | Truth, policy, review, validation, placement, and runtime outcomes collapse. | Keep each state axis named, typed, and owned by its contract. |
+| **Documentation as decision** | This architecture page is cited to approve a migration or release. | Use an accepted ADR or the owning governed decision object. |
 
-[↑ Back to top](#quick-jump)
-
----
-
-## 12. Reviewer checklist
-
-For any PR that adds, moves, or renames a contract, schema, policy bundle, or fixture, work through this:
-
-- [ ] **Object family identified.** The change is associated with a known object family (e.g. `EvidenceBundle`, `RunReceipt`, `PromotionDecision`) or carries a contract-creating note.
-- [ ] **All four layers checked.** The PR touches the appropriate layer(s) and **does not** smuggle one layer's content into another.
-- [ ] **Schema home is canonical.** Any new `.schema.json` lives under `schemas/contracts/v1/...` per ADR-0001 (unless an accepted ADR amends).
-- [ ] **No parallel authority.** No new home is created for schemas, contracts, policy, sources, registries, releases, proofs, or receipts without ADR.
-- [ ] **Fixtures cover negative state.** Where applicable, valid · invalid · denied · abstain · rollback/correction fixtures all exist or are tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
-- [ ] **Compatibility mirror not divergent.** If `jsonschema/` or `policies/` is touched, the canonical counterpart is updated in the same PR.
-- [ ] **READMEs synced.** Affected folders meet the Required README Contract per Directory Rules §15.
-- [ ] **Rule cited in PR description.** The PR names the Directory Rules section that justifies the placement.
-
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## 13. Open questions / NEEDS VERIFICATION
+## 12. Change planning by impact
 
-These items are explicitly **not resolved** by this document and should be tracked in `docs/registers/VERIFICATION_BACKLOG.md`:
+A coherent change closes its **directly affected** surfaces, not every imaginable sibling.
 
-- **NEEDS VERIFICATION:** Whether the current mounted repo state actually has `contracts/`, `schemas/`, `policy/`, `tests/`, and `fixtures/` at the canonical layout shown in Directory Rules §§6.3–6.5. Per-root presence is PROPOSED until a directory-listing inspection confirms it.
-- **NEEDS VERIFICATION:** Whether `contracts/` or `schemas/contracts/v1/` is the live machine-schema authority in the current repo. Default per ADR-0001 is `schemas/contracts/v1/`; resolve by inspection.
-- **NEEDS VERIFICATION:** Whether `policies/` or `policy/` is canonical in the current repo. Default is `policy/`; resolve by inspection.
-- **NEEDS VERIFICATION:** Whether `jsonschema/` exists, and if so at what entrenchment level — affects migration scope.
-- **OPEN:** Whether `fixtures/` (repo root) or `tests/fixtures/` is the chosen authority for fixtures in the current repo. Directory Rules §13 names the duplication as drift but does not pick a winner; a one-line ADR is recommended to freeze it.
-- **OPEN:** Whether `tests/fixtures/` should be partitioned by domain, object family, or both, and where the per-family `README.md` should live.
-- **OPEN:** Whether `policy/fixtures/` (intentionally distinct from `tests/fixtures/` per §6.5) should mirror `policy/<subsystem>/` or `tests/fixtures/<subsystem>/`.
+| Change | Required impact analysis | Typical directly affected surfaces |
+|---|---|---|
+| Semantic meaning or invariant | Determine whether shape, policy, examples, validators, consumers, compatibility, and migration change. | Contract; schema/policy/fixtures/tests/validators when behavior changes |
+| Machine-shape change | Preserve contract meaning, versioning, fixtures, validator behavior, consumer compatibility, and rollback. | Schema, valid/invalid fixtures, validator, tests; contract if meaning changed |
+| Admissibility change | Bind operation, inputs, rule version, outcomes, obligations, negative cases, evaluator, and consumers. | Policy source; policy contract/schema if output shape changes; fixtures/tests/validator |
+| Fixture change | Preserve synthetic/public-safe posture, expected polarity, consumer binding, and hashes. | Fixture plus consuming test/validator; docs when local contract changes |
+| Validator change | Preserve authority inputs, deterministic diagnostics, side-effect boundary, registry selection, and tests. | `tools/validators/`, focused tests, registry/workflow only when routing changes |
+| Test change | Keep assertion scope explicit and avoid embedding reusable gate logic. | `tests/`; fixture or validator only when the test exposes a real gap |
+| Workflow change | Preserve least privilege, untrusted-code posture, stable names, repository-owned commands, and bounded outputs. | Workflow plus invoked command/validator/test documentation |
+| Authority or path migration | Freeze authority inputs, inventory producers/consumers, define compatibility, correction, and rollback. | Accepted ADR, migration record, aliases/parity checks, docs and affected roots |
+| Explanatory documentation change | Verify links and claims; do not imply implementation or authority changes. | `docs/` plus generated receipt for substantive AI-authored work |
 
-[↑ Back to top](#quick-jump)
+### Applicability record
+
+When a surface is not changed, record why:
+
+- **not applicable** — the change cannot affect that responsibility;
+- **unchanged after inspection** — the surface was checked and remains correct;
+- **deferred with a blocker** — required closure is known but cannot be completed safely;
+- **unknown** — evidence is insufficient; do not imply readiness.
+
+[Back to top](#top)
+
+---
+
+## 13. Reviewer checklist
+
+### Scope and authority
+
+- [ ] Base branch and immutable commit are recorded.
+- [ ] The object family, operation, and audience are explicit.
+- [ ] Accepted Directory Rules and applicable accepted ADRs were checked.
+- [ ] Proposed ADRs are labeled as proposals, not current authority.
+- [ ] No new root or parallel authority home is introduced without the required decision and migration plan.
+
+### Meaning and shape
+
+- [ ] Contract meaning, field intent, invariants, exclusions, and compatibility promises are clear.
+- [ ] Machine shape is under the adopted schema route or an accepted alternative.
+- [ ] A schema change does not silently change semantics.
+- [ ] `$id`, references, versioning, generated bindings, and consumer compatibility are reviewed where applicable.
+
+### Admissibility and evidence
+
+- [ ] Policy applicability is explicit.
+- [ ] Rights, sensitivity, consent, source role, evidence state, lifecycle state, review state, and release context fail closed where required.
+- [ ] Runtime, policy, validation, review, placement, and truth outcomes remain separate.
+- [ ] No policy result invents evidence, review, release, or factual truth.
+
+### Fixtures, tests, and validators
+
+- [ ] Reusable fixtures are under root `fixtures/`; test-local support remains local.
+- [ ] Fixtures are synthetic, deterministic, public-safe, and bound to a consumer.
+- [ ] Positive and applicable negative cases have explicit expected outcomes or reason codes.
+- [ ] Reusable validator logic is under `tools/validators/`, not hidden in tests.
+- [ ] Tests state what a pass proves and what it does not prove.
+- [ ] Network, time, randomness, locale, filesystem, and side-effect assumptions are controlled.
+
+### Delivery and rollback
+
+- [ ] Repository-native targeted validation was run or omissions are explicit.
+- [ ] Exact-head hosted checks are classified separately from local/source validation.
+- [ ] Generated receipt exists for substantive AI-authored work and remains pending human review.
+- [ ] Rollback restores the prior bytes and reruns the same validation.
+- [ ] No commit, pull request, workflow, or merge is described as release or publication.
+
+[Back to top](#top)
+
+---
+
+## 14. Open questions / NEEDS VERIFICATION
+
+The earlier version's root-existence questions are closed at the pinned base. Material gaps remain:
+
+- **NEEDS VERIFICATION — accountable stewardship:** CODEOWNERS and machine projections route review, but independently accepted contract/schema, policy, fixture/test, validator, and architecture steward roles are not established by this page.
+- **NEEDS VERIFICATION — complete object-family catalog:** the current object-family register is partial and navigational; a complete authoritative schema/contract/policy/fixture/test/validator crosswalk is not established.
+- **NEEDS VERIFICATION — policy activation:** a repository-wide accepted evaluator, active bundle selector, decision receipts, governed consumers, and production enforcement are not proved.
+- **NEEDS VERIFICATION — conformance coverage:** the 20-entry full validator profile is bounded configured coverage, not complete schema-tree, domain, app, policy, release, or runtime proof.
+- **NEEDS VERIFICATION — fixture locality:** each `tests/fixtures/` consumer should be classified as genuinely test-local or migrated to root `fixtures/` when shared.
+- **NEEDS VERIFICATION — compatibility retirement:** known contract/schema placement drift and transitional schema lanes need inventoried consumers, migration receipts, parity checks, and rollback before retirement.
+- **NEEDS VERIFICATION — branch controls:** workflow presence does not prove required-check coupling, branch protection, review separation, or exact-head success.
+- **NEEDS VERIFICATION — applicability policy:** ADR-0002's proposed applicability-aware readiness rule is not accepted as a repo-wide decision.
+- **UNKNOWN — production parity:** no documentation, fixture, test, validator, or workflow alone proves deployed behavior.
+
+Record newly confirmed placement conflicts in [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) and unresolved concrete checks in [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md). Do not expand this page into a substitute registry.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix A — Object family × layer reference matrix
 
-> The matrix below is a **PROPOSED** crosswalk drawn from the Unified Architecture Build Manual, the Whole-UI + Governed AI Expansion Report, and Master MapLibre Components. Every specific path is PROPOSED until verified.
+The matrix is a **current, bounded example**, not a complete registry. Paths are shown relative to their owning roots.
 
-<details>
-<summary><b>Click to expand the full object family × layer matrix</b></summary>
+| Object family | Meaning | Shape | Reusable fixtures | Validator / tests | Policy applicability |
+|---|---|---|---|---|---|
+| `SourceDescriptor` | `contracts/source/source_descriptor.md` | `schemas/contracts/v1/source/source_descriptor.schema.json` | `fixtures/contracts/v1/source/source_descriptor/` | `tools/validators/validate_source_descriptor.py`; focused validator tests | Rights, source role, activation, access, sensitivity |
+| `EvidenceRef` | `contracts/evidence/evidence_ref.md` | `schemas/contracts/v1/evidence/evidence_ref.schema.json` | `fixtures/contracts/v1/evidence/evidence_ref/` | `tools/validators/validate_evidence_ref.py`; focused validator tests | Resolution scope, disclosure, admissible evidence class |
+| `EvidenceBundle` | `contracts/evidence/evidence_bundle.md` | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | `fixtures/contracts/v1/evidence/evidence_bundle/` | `tools/validators/validate_evidence_bundle.py`; focused validator tests | Citation, rights, sensitivity, review, release, requested use |
+| `RuntimeResponseEnvelope` | `contracts/runtime/runtime_response_envelope.md` | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` | `fixtures/contracts/v1/runtime/runtime_response_envelope/` | `tools/validators/validate_runtime_response_envelope.py`; focused validator tests | Outward answer/abstain/deny/error projection and non-disclosure |
+| `DecisionEnvelope` | `contracts/runtime/decision_envelope.md` | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | `fixtures/contracts/v1/runtime/decision_envelope/` | `tools/validators/validate_decision_envelope.py`; focused validator tests | Decision provenance, obligations, audience-safe projection |
+| `RunReceipt` | `contracts/runtime/run_receipt.md` | `schemas/contracts/v1/runtime/run_receipt.schema.json` | `fixtures/contracts/v1/runtime/run_receipt/` | `tools/validators/validate_run_receipt.py`; focused validator tests | Target zone, source/evidence refs, policy binding, disclosure |
+| `ReleaseManifest` | `contracts/release/release_manifest.md` | `schemas/contracts/v1/release/release_manifest.schema.json` | `fixtures/release/release_manifest/` | `tools/validators/release/validate_release_manifest.py`; focused validator tests | Release, correction, withdrawal, rollback, public-safe exposure |
 
-| Object family | `contracts/` (meaning) | `schemas/contracts/v1/` (shape) | `policy/` (admissibility) | `tests/fixtures/` (proof) |
-|---|---|---|---|---|
-| `SourceDescriptor` | `contracts/source/source_descriptor.md` | `source/source_descriptor.schema.json` | `policy/rights/`, `policy/sensitivity/` | `tests/fixtures/sources/` |
-| `EvidenceRef` | `contracts/evidence/evidence_ref.md` | `evidence/evidence_ref.schema.json` | `policy/runtime/` (resolution rules) | `tests/fixtures/evidence/` |
-| `EvidenceBundle` | `contracts/evidence/evidence_bundle.md` | `evidence/evidence_bundle.schema.json` | `policy/release/`, `policy/runtime/` | `tests/fixtures/evidence/` |
-| `ValidationReport` | `contracts/data/validation_report.md` | `data/validation_report.schema.json` | `policy/runtime/` (outcome handling) | `tests/fixtures/data/` |
-| `RunReceipt` | `contracts/runtime/run_receipt.md` | `runtime/run_receipt.schema.json` | `policy/runtime/` | `tests/fixtures/runtime/` |
-| `DecisionEnvelope` | `contracts/runtime/decision_envelope.md` | `runtime/decision_envelope.schema.json` | `policy/runtime/` | `tests/fixtures/runtime/` |
-| `RuntimeResponseEnvelope` | `contracts/runtime/runtime_response_envelope.md` | `runtime/runtime_response_envelope.schema.json` | `policy/runtime/` | `tests/fixtures/runtime/` |
-| `PolicyDecision` | `contracts/runtime/policy_decision.md` | `policy/policy_decision.schema.json` | `policy/bundles/` | `tests/fixtures/policy/` |
-| `PromotionDecision` | `contracts/release/promotion_decision.md` | `release/promotion_decision.schema.json` | `policy/promotion/`, `policy/release/` | `tests/fixtures/release/` |
-| `ReleaseManifest` | `contracts/release/release_manifest.md` | `release/release_manifest.schema.json` | `policy/release/` | `tests/fixtures/release/` |
-| `RollbackCard` | `contracts/release/rollback_card.md` | `release/rollback_card.schema.json` | `policy/release/` (rollback eligibility) | `tests/fixtures/release/` |
-| `CorrectionNotice` | `contracts/correction/correction_notice.md` | `correction/correction_notice.schema.json` | `policy/release/` (correction lineage) | `tests/fixtures/correction/` |
-| `ReviewRecord` | `contracts/governance/review_record.md` | `governance/review_record.schema.json` | `policy/promotion/` (review state) | `tests/fixtures/review/` |
+> [!NOTE]
+> A row records known current relationships. It does not certify family maturity, policy activation, emitter binding, release readiness, or publication.
 
-</details>
-
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
 ## Appendix B — Glossary
 
-<details>
-<summary><b>Click to expand glossary of layer-relevant KFM terms</b></summary>
+- **Admissibility** — Whether a bounded operation may proceed under explicit policy, rights, sensitivity, consent, source, evidence, lifecycle, review, and release context.
+- **Authority owner** — The one responsibility allowed to define or mutate an artifact family.
+- **Compatibility surface** — A temporary, one-way, non-authoritative alias or derived copy required by a verified consumer and governed by migration and exit rules.
+- **Conformance** — Bounded executable support that a declared rule behaves as expected for the checked cases.
+- **Contract** — Human-readable semantic meaning, field intent, invariants, exclusions, and compatibility promises.
+- **Fixture** — Synthetic, deterministic, public-safe example input or expected output used by tests and validators.
+- **Machine shape** — Required fields, types, references, enums, formats, and structural constraints represented by a schema.
+- **Object family** — A named class of related KFM objects that shares semantic identity and may have schema, policy, fixture, test, validator, instance, and release relationships.
+- **Policy rule source** — Reviewed executable or declarative rule definition under `policy/`; distinct from an emitted policy-decision instance.
+- **Proof surface** — Fixtures, tests, validators, and workflows that support bounded enforceability without becoming semantic, policy, evidence, review, or release authority.
+- **Schema route** — The adopted default `schemas/contracts/v1/<family>/` path for contract-backed machine schemas.
+- **Truth label** — Evidence posture (`CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`), distinct from policy, validation, review, placement, or runtime state.
+- **Validator** — Reusable fail-closed checker that consumes declared authorities and emits bounded diagnostics or results without owning those authorities.
 
-- **Object family** — A named class of KFM objects with a shared contract, schema home, and fixture set (e.g. `EvidenceBundle`).
-- **Object meaning** — The prose contract describing what an object promises; lives in `contracts/`.
-- **Shape** — The machine-checkable structure of an object; lives in `schemas/`.
-- **Admissibility** — Whether a rule allows, denies, restricts, or abstains on a given object; lives in `policy/`.
-- **Cite-or-abstain** — KFM's default truth posture: if evidence does not support an answer, the system abstains rather than manufacturing one.
-- **Finite outcomes** — The four-state vocabulary `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` used by runtime response envelopes.
-- **`spec_hash`** — The content-addressed identifier of a contract or schema definition; tracked by `RunReceipt` and other process-memory objects.
-- **Schema-home rule** — ADR-0001: the canonical home for machine schemas is `schemas/contracts/v1/...`.
-- **Compatibility root** — A folder kept alongside a canonical one for backward compatibility (e.g. `jsonschema/`, `policies/`); MUST declare class in its README; MUST NOT evolve independently.
-- **Drift** — Any divergence between layers, mirrors, or canonical and compatibility roots; tracked in `docs/registers/DRIFT_REGISTER.md`.
-
-</details>
-
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
 
 ---
 
-## Related docs
+## Related docs and machine surfaces
 
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law (§§6.3–6.5 are the source of this document)
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — TODO link target; PROPOSED
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — TODO link target; PROPOSED
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — TODO link target; PROPOSED
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — TODO link target; PROPOSED
-- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule
-- [`docs/architecture/README.md`](./README.md) — architecture index
-- [`docs/architecture/governed-api.md`](./governed-api.md) — the public trust path
-- [`contracts/README.md`](../../contracts/README.md) — meaning layer index
-- [`schemas/README.md`](../../schemas/README.md) — shape layer index
-- [`policy/README.md`](../../policy/README.md) — admissibility layer index
-- [`tests/README.md`](../../tests/README.md) — enforceability layer index
+### Adopted authority and decisions
+
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — adopted placement doctrine.
+- [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted decision adopting the exact Directory Rules bytes.
+- [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — proposed dedicated schema-route, migration, and enforcement decision.
+- [`ADR-0002`](../adr/ADR-0002-contracts-vs-schemas-split.md) — proposed stricter cross-surface coupling and readiness decision.
+
+### Doctrine and architecture
+
+- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md)
+- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md)
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md)
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md)
+- [`docs/architecture/README.md`](./README.md)
+- [`docs/architecture/governed-api.md`](./governed-api.md)
+
+### Owning roots
+
+- [`contracts/README.md`](../../contracts/README.md)
+- [`schemas/README.md`](../../schemas/README.md)
+- [`policy/README.md`](../../policy/README.md)
+- [`fixtures/README.md`](../../fixtures/README.md)
+- [`tests/README.md`](../../tests/README.md)
+- [`tools/validators/README.md`](../../tools/validators/README.md)
+
+### Machine projection and validation
+
+- [`control_plane/root_registry.yaml`](../../control_plane/root_registry.yaml)
+- [`tools/validators/validator_registry.json`](../../tools/validators/validator_registry.json)
+- [`.github/workflows/schema-validation.yml`](../../.github/workflows/schema-validation.yml)
+- [`CONTRIBUTING.md`](../../CONTRIBUTING.md)
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md)
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md)
 
 ---
 
-**Last updated:** 2026-05-14
+**Last reviewed:** 2026-08-18 against `main@f287d7e1501229ebde23737aba98c07279684dbc`.
 
-[↑ Back to top](#quick-jump)
+[Back to top](#top)
