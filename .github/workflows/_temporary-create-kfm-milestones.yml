@@ -1,0 +1,216 @@
+name: One-shot KFM roadmap milestone bootstrap
+
+on:
+  push:
+    branches:
+      - automation/create-kfm-milestones-20260818
+    paths:
+      - .github/workflows/_temporary-create-kfm-milestones.yml
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: kfm-roadmap-milestones-20260818
+  cancel-in-progress: false
+
+jobs:
+  create-milestones:
+    name: Create 12 roadmap milestones
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Create or reuse milestones and record the result
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TRACKER_ISSUE: '2768'
+          EXECUTION_MARKER: '<!-- kfm-roadmap-milestones-20260818 -->'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+
+          token = os.environ['GH_TOKEN']
+          repository = os.environ['REPOSITORY']
+          tracker_issue = os.environ['TRACKER_ISSUE']
+          marker = os.environ['EXECUTION_MARKER']
+
+          desired = [
+              (
+                  'M01 - Authority, Directory Rules & Program Baseline',
+                  'Reconcile current main, accepted ADRs, Directory Rules, ownership, active issues and pull requests, and the repository evidence ledger. Completion establishes a current reviewable baseline only; it does not imply release or publication.',
+              ),
+              (
+                  'M02 - Contracts, Schemas, Policy & Compatibility',
+                  'Converge semantic contracts, machine schemas, policy homes, registries, validators, fixtures, and compatibility aliases without creating parallel authority or rewriting historical records.',
+              ),
+              (
+                  'M03 - Deterministic Identity & Temporal Authority',
+                  'Close temporal-envelope splits, stable identifiers, canonicalization and digest rules, namespace integrity, bitemporal semantics, correction and supersession lineage, and deterministic replay.',
+              ),
+              (
+                  'M04 - Evidence Resolution & Governed Response',
+                  'Prove deterministic no-network EvidenceRef -> EvidenceBundle resolution through the existing finite ANSWER / ABSTAIN / DENY / ERROR boundary, including policy, review, release, freshness, and correction checks.',
+              ),
+              (
+                  'M05 - Source Admission, Rights & Sensitive Data',
+                  'Assess and admit sources one at a time with authority role, rights, terms, cadence, identity, precision, sensitivity, public-safe transforms, fixtures, monitoring, correction, and rollback. Unknown posture remains HOLD or DENY.',
+              ),
+              (
+                  'M06 - Validation, Security & Supply-Chain Gates',
+                  'Complete fail-closed schema, boundary, policy, security, dependency, container, SBOM and attestation, no-network, and aggregate validation needed for trustworthy review.',
+              ),
+              (
+                  'M07 - Catalog, Provenance, Release & Rollback Closure',
+                  'Bind receipts, proofs, STAC / DCAT / PROV catalog closure, release manifests, promotion decisions, correction and withdrawal propagation, and tested rollback while keeping each object family distinct.',
+              ),
+              (
+                  'M08 - Public-Safe Hydrology & Ecology Proof Slices',
+                  'Deliver synthetic-first public-safe vertical slices that preserve spatial and temporal support, source role, uncertainty, evidence closure, map delivery, correction, and rollback.',
+              ),
+              (
+                  'M09 - Interoperable Data & Delivery Artifacts',
+                  'Prove GeoParquet, PMTiles, COG, MVT, and related carriers with pinned toolchains, deterministic bytes or semantics, manifests, range behavior, CRS integrity, and fail-closed negative cases.',
+              ),
+              (
+                  'M10 - MapLibre Runtime, PMTiles & Evidence Drawer',
+                  'Resolve renderer and adapter authority, execute pinned browser and long-session probes, and connect released layer selection to the renderer-neutral Evidence Drawer without direct internal-store access.',
+              ),
+              (
+                  'M11 - Governed API, Focus Mode & AI',
+                  'Expose inspectable claims through governed APIs and evidence-bounded Focus Mode or AI with citation validation, finite outcomes, receipts, no raw-model fallback, and policy-aware map actions.',
+              ),
+              (
+                  'M12 - Cross-Domain Atlas & Operational Readiness',
+                  'Expand public-safe domain lanes and cross-lane joins while closing observability, runbooks, incident and correction ownership, performance, accessibility, deployment readiness, and governed atlas release criteria.',
+              ),
+          ]
+
+          def api(method, path, payload=None):
+              url = f'https://api.github.com{path}'
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              request = urllib.request.Request(
+                  url,
+                  data=data,
+                  method=method,
+                  headers={
+                      'Accept': 'application/vnd.github+json',
+                      'Authorization': f'Bearer {token}',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'kfm-roadmap-milestone-bootstrap',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      body = response.read()
+                      return None if not body else json.loads(body.decode('utf-8'))
+              except urllib.error.HTTPError as exc:
+                  detail = exc.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'{method} {path} failed with HTTP {exc.code}: {detail}') from exc
+
+          def list_all(path):
+              items = []
+              page = 1
+              separator = '&' if '?' in path else '?'
+              while True:
+                  batch = api('GET', f'{path}{separator}per_page=100&page={page}')
+                  if not batch:
+                      return items
+                  items.extend(batch)
+                  if len(batch) < 100:
+                      return items
+                  page += 1
+
+          milestones = list_all(f'/repos/{repository}/milestones?state=all')
+          by_title = {item['title']: item for item in milestones}
+          results = []
+
+          for title, description in desired:
+              milestone = by_title.get(title)
+              action = 'reused'
+              if milestone is None:
+                  milestone = api(
+                      'POST',
+                      f'/repos/{repository}/milestones',
+                      {'title': title, 'description': description, 'state': 'open'},
+                  )
+                  action = 'created'
+              elif milestone.get('state') != 'open' or milestone.get('description') != description:
+                  milestone = api(
+                      'PATCH',
+                      f"/repos/{repository}/milestones/{milestone['number']}",
+                      {'description': description, 'state': 'open'},
+                  )
+                  action = 'updated'
+
+              by_title[title] = milestone
+              results.append(
+                  {
+                      'title': title,
+                      'action': action,
+                      'number': milestone['number'],
+                      'url': milestone['html_url'],
+                      'state': milestone['state'],
+                  }
+              )
+
+          refreshed = list_all(f'/repos/{repository}/milestones?state=all')
+          for title, _description in desired:
+              matches = [item for item in refreshed if item['title'] == title]
+              if len(matches) != 1:
+                  raise RuntimeError(f'Expected exactly one milestone titled {title!r}; found {len(matches)}')
+              if matches[0]['state'] != 'open':
+                  raise RuntimeError(f'Milestone {title!r} is not open after bootstrap')
+
+          created = sum(item['action'] == 'created' for item in results)
+          updated = sum(item['action'] == 'updated' for item in results)
+          reused = sum(item['action'] == 'reused' for item in results)
+          rows = '\n'.join(
+              f"| {index:02d} | [{item['title']}]({item['url']}) | `{item['action'].upper()}` | `{item['state'].upper()}` |"
+              for index, item in enumerate(results, start=1)
+          )
+          body = f"""{marker}
+          ## GitHub roadmap milestones created
+
+          **Result:** 12 of 12 open repository milestones are present (`{created}` created, `{updated}` updated, `{reused}` reused).
+
+          | Order | Milestone | Action | State |
+          |---:|---|---|---|
+          {rows}
+
+          - Due dates: none added.
+          - Issue and pull-request assignments: none changed.
+          - Execution branch: `{os.environ.get('GITHUB_REF_NAME', 'unknown')}`
+          - Execution commit: `{os.environ.get('GITHUB_SHA', 'unknown')}`
+          - Workflow run: `{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{repository}/actions/runs/{os.environ.get('GITHUB_RUN_ID', 'unknown')}`
+
+          > These milestones are planning and routing metadata. Milestone closure does not establish source admission, policy approval, lifecycle promotion, release, deployment, publication, or public-use authority.
+          """
+
+          comments = list_all(f'/repos/{repository}/issues/{tracker_issue}/comments')
+          existing_comment = next((comment for comment in comments if marker in comment.get('body', '')), None)
+          if existing_comment:
+              api('PATCH', f"/repos/{repository}/issues/comments/{existing_comment['id']}", {'body': body})
+          else:
+              api('POST', f'/repos/{repository}/issues/{tracker_issue}/comments', {'body': body})
+
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'a', encoding='utf-8') as summary:
+                  summary.write(body + '\n')
+
+          for item in results:
+              print(
+                  f"MILESTONE_RESULT action={item['action']} number={item['number']} "
+                  f"state={item['state']} title={item['title']} url={item['url']}"
+              )
+          print(f'MILESTONE_TOTAL created={created} updated={updated} reused={reused} present=12')
+          PY
