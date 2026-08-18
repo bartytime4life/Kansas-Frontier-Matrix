@@ -11,16 +11,16 @@
 
 | Field | Current bounded result |
 |---|---|
-| Evidence snapshot | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
-| Base architecture tree | `7e7a59249400f64bde174697aa6ada3f415d3838` |
-| Prior README blob | `2810faa778c537cc77a5e23d958e111a1948c1a3` |
+| Evidence snapshot | `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c` |
+| Base architecture tree | `7130327e01542244e96c51ebc4b61974bea9278b` |
+| Prior README blob | `636e433b96ff32bb756cc6f15d2190072ab238ca` |
 | Direct Markdown files | **41** |
 | Direct subdirectories | **8** |
 | Markdown files in those subdirectories | **62** |
 | Total Markdown documents | **103** |
 | Placement authority | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
 | Whole-system orientation | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) is the primary repository-grounded orientation candidate |
-| Active topology hazard | `TRUST_MEMBRANE.md` and `trust-membrane.md` are a case-insensitive path collision; canonical selection remains **CONFLICTED / HOLD** |
+| Active topology hazard | `TRUST_MEMBRANE.md` and `trust-membrane.md` are a case-insensitive path collision; the current-main identity, content, fragment, and consumer inventory leaves structural migration on explicit **HOLD** |
 | Writer-bound document | [`SKELETON_MAP.md`](./SKELETON_MAP.md) has a [repository workflow writer](../../.github/workflows/one-shot-skeleton-map-refresh.yml) and remains **HOLD** for manual convergence |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS`; specialist architecture and documentation stewardship remains **NEEDS VERIFICATION** |
 | Convergence state | Wave 0 plan merged in [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031); structural moves and retirements remain unexecuted |
@@ -28,7 +28,7 @@
 
 The inventory is **CONFIRMED** at the pinned tree. Document roles below are repository-grounded where inspected. Future migrations remain **PROPOSED** or **HOLD** until content, identity, consumer, authority, validation, and rollback closure is complete.
 
-**Quick navigation:** [Purpose and authority](#purpose-and-authority) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Folder map](#folder-map) · [Reading paths](#how-to-read-this-folder) · [Invariants](#doctrinal-invariants-this-folder-explains) · [System fit](#how-this-folder-fits) · [Validation](#validation) · [Anti-patterns](#anti-patterns-specific-to-this-folder) · [Review](#review-burden) · [ADRs](#adrs) · [FAQ](#faq) · [Last reviewed](#last-reviewed)
+**Quick navigation:** [Purpose and authority](#purpose-and-authority) · [Status](#status) · [Trust-membrane migration checkpoint](#trust-membrane-migration-checkpoint) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Folder map](#folder-map) · [Reading paths](#how-to-read-this-folder) · [Invariants](#doctrinal-invariants-this-folder-explains) · [System fit](#how-this-folder-fits) · [Validation](#validation) · [Anti-patterns](#anti-patterns-specific-to-this-folder) · [Review](#review-burden) · [ADRs](#adrs) · [FAQ](#faq) · [Last reviewed](#last-reviewed)
 
 ---
 
@@ -71,13 +71,71 @@ A path in this folder is an authority claim about **who explains a concern**, no
 | Root README | **PLACE / modernized in place** | This page is the architecture entrypoint and directory contract. |
 | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | **PLACE** | Primary whole-system orientation candidate; repository-grounded at its own evidence snapshot. |
 | [`SKELETON_MAP.md`](./SKELETON_MAP.md) | **HOLD / writer-bound** | A [one-shot writer workflow](../../.github/workflows/one-shot-skeleton-map-refresh.yml) targets it; do not manually merge, rename, or retire it until writer and consumer closure is complete. |
-| Upper/lower trust-membrane pair | **CONFLICTED / HOLD** | Both are full documents. The lowercase path is the proposed survivor, but no migration occurs through this README. |
+| Upper/lower trust-membrane pair | **CONFLICTED / explicit HOLD** | Both are full documents with distinct identities, content, and fragment schemes. The repository-local reference inventory is recorded below; no structural migration occurs through this README. |
 | Folder landing pages | **PLACE** | `cross-domain/`, `governed-ai/`, `governed-api/`, `map-master/`, `publication/`, `settlements-infrastructure/`, `story/`, and `ui/` are repository-present lanes. |
 | Flat/folder overlaps | **PROPOSED convergence** | Governed AI, Governed API, Map/MapLibre, publication, Evidence Drawer, and other clusters still have competing or overlapping entrypoints. |
 | Dated implementation notes | **HOLD** | Preserve until a verified report, archive, or history lane and supersession treatment are established. |
 | Runtime, deployment, public operation | **UNKNOWN unless separately proved** | Documentation presence and quality do not establish operational maturity. |
 
 The current convergence ledger and dependency order are recorded in [`document-convergence-plan.md`](./document-convergence-plan.md). Its original 102-document census is a pinned Wave 0 baseline; the merged plan itself is the additional document that brings the current tree to 103.
+
+[Back to top](#top)
+
+---
+
+## Trust-membrane migration checkpoint
+
+The dependency-ordered follow-up to [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031) stops at **HOLD** on `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c`. This inventory resolves repository-local references to the two architecture-root case variants. It deliberately excludes the separate authority at [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) and the separate cross-domain page at [`docs/architecture/cross-domain/trust-membrane.md`](./cross-domain/trust-membrane.md).
+
+| Closure dimension | Current bounded result | Evidence |
+|---|---|---|
+| Document identity | **OPEN / HOLD** | `TRUST_MEMBRANE.md` declares `kfm://doc/architecture/trust-membrane`; `trust-membrane.md` declares `kfm://doc/arch-trust-membrane`. The uppercase identity is also consumed by [`docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md`](../runbooks/geology/SOURCE_REFRESH_RUNBOOK.md); the lowercase identity is self-only in the repository-local identity search. |
+| No-loss content | **OPEN / HOLD** | The uppercase document is 758 lines / 43,588 bytes; the lowercase document is 809 lines / 50,033 bytes. A complete no-index comparison changes 1,209 lines: 630 insertions and 579 deletions. Their section sets and current-state postures are materially different. |
+| Inbound references | **INVENTORIED / not converged** | The path-resolution-aware referencing-file inventory is recorded below. Both variants have active repository references, including policy, domain, runbook, fixture, UI, and architecture consumers. |
+| Fragments | **OPEN / HOLD** | No repository-local inbound link with a `TRUST_MEMBRANE.md#...` or `trust-membrane.md#...` suffix was found. That does not close compatibility: the uppercase document uses long generated heading slugs, while the lowercase document preserves numbered anchors such as `#1`, `#1.2`, and `#related`; external or cached consumers remain unproved. |
+| Writers, generators, and registries | **OPEN / HOLD** | No workflow or generator appeared in the exact-path or document-identity inventory, but `control_plane/document_registry.yaml` registers neither identity and is itself `PROPOSED`. The geology runbook's uppercase `doc_id` dependency prevents an identity-blind rename. |
+| Structural rollback | **OPEN / HOLD** | A safe migration would need an accepted survivor identity, a no-loss merged body, preserved fragment aliases or an explicit compatibility decision, atomic rewrite of all consumers, and a tested temporary-name rollback. None is selected here because no structural mutation is executed. |
+| This README change | **CLOSED / bounded** | Revert the focused README commit. No trust-membrane path, bytes, identity, reference, workflow, registry, runtime, release, deployment, or publication state changes. |
+
+<details>
+<summary><strong><code>TRUST_MEMBRANE.md</code> referencing files — 10</strong></summary>
+
+- `docs/architecture/TRUST_MEMBRANE.md` — source metadata, current path, and sibling-conflict text;
+- `docs/architecture/README.md` — architecture inventory and HOLD;
+- `docs/architecture/ui/BOUNDARIES.md` — UI related-document and boundary references;
+- `docs/architecture/hazards-trust-membrane.md` — Hazards related-document and authority references;
+- `docs/architecture/ecology-cross-domain.md`;
+- `docs/architecture/domain-placement-law.md`;
+- `docs/architecture/critical-asset-exposure.md`;
+- `docs/architecture/document-convergence-plan.md`;
+- `docs/architecture/cross-lane-join-policy.md`; and
+- `docs/architecture/cross-domain-invasives.md`.
+
+</details>
+
+<details>
+<summary><strong><code>trust-membrane.md</code> referencing files — 13</strong></summary>
+
+- `docs/architecture/trust-membrane.md` — source metadata and proposed path;
+- `docs/architecture/TRUST_MEMBRANE.md` — lowercase sibling reference and conflict text;
+- `docs/architecture/README.md` — filename-level pair inventory and HOLD;
+- `docs/architecture/document-convergence-plan.md` — proposed survivor and migration plan;
+- `docs/brand/trust-state-visuals.md`;
+- `docs/brand/finite-outcome-microcopy.md`;
+- `policy/biotopes/README.md`;
+- `policy/ai_builder/README.md`;
+- `docs/domains/flora/API_CONTRACTS.md`;
+- `docs/domains/geology/API_CONTRACTS.md`;
+- `docs/domains/flora/MAP_UI_CONTRACTS.md`;
+- `docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md`; and
+- `fixtures/domains/hazards/invalid/ui_reads_raw_directly/README.md`.
+
+</details>
+
+> [!CAUTION]
+> A basename search also finds links that resolve to `docs/doctrine/trust-membrane.md` or `docs/architecture/cross-domain/trust-membrane.md`. Those are distinct documents and are not consumers of this case-collision pair.
+
+**Structural result: explicit HOLD.** No temporary-path rename, case-only move, content merge, alias, redirect, `doc_id` reassignment, fragment rewrite, consumer rewrite, retirement, or deletion is included. The smallest safe next decision is to choose the surviving identity and compatibility obligations through accountable review before preparing one atomic migration commit.
 
 [Back to top](#top)
 
@@ -436,7 +494,7 @@ Doctrine states KFM's accepted operating law. Architecture explains how reposito
 <details>
 <summary><strong>Why are both trust-membrane architecture pages still present?</strong></summary>
 
-They are a known case-insensitive collision with overlapping content and distinct document identities. The uppercase file is newer and repository-grounded; the lowercase path matches the proposed safe target grammar and has lineage material. The convergence plan proposes one atomic no-loss migration, but this README does not perform or authorize it.
+They are a known case-insensitive collision with distinct document identities, materially different content, incompatible fragment schemes, and active consumers of both path forms. The uppercase identity also has a runbook consumer. The current-main inventory therefore leaves migration on explicit **HOLD** until a survivor identity, no-loss merged body, fragment compatibility, atomic consumer rewrite, review route, and rollback are closed.
 </details>
 
 <details>
@@ -472,8 +530,8 @@ No. A commit, pull request, merge, badge, validator pass, or architecture page i
 | Field | Value |
 |---|---|
 | Review date | 2026-08-18 |
-| Evidence base | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
-| Base architecture tree | `7e7a59249400f64bde174697aa6ada3f415d3838` |
+| Evidence base | `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c` |
+| Base architecture tree | `7130327e01542244e96c51ebc4b61974bea9278b` |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS` |
 | Specialist stewardship | **NEEDS VERIFICATION** |
 | Next review trigger | Architecture-tree change; accepted ADR affecting placement or subsystem ownership; trust-membrane convergence; Skeleton Map writer retirement; or material runtime/release boundary change |
