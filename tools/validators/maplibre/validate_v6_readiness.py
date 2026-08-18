@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate the MapLibre GL JS 6.3 readiness candidate without installing MapLibre.
+"""Evaluate the MapLibre GL JS 6.4 readiness candidate without installing MapLibre.
 
 The validator combines bounded repository inspection with an optional committed
 probe-results record. It can prove exact dependency selection, ESM/ES2022
@@ -9,7 +9,7 @@ equivalence, WebGL2 availability, CSP behavior, tile-query safety, resource
 reclamation, terrain behavior, Evidence Drawer stability, or headless parity
 unless those probes have actually been executed and supplied.
 
-A ``READY`` result is eligibility evidence for human review of the exact 6.3.0
+A ``READY`` result is eligibility evidence for human review of the exact 6.4.0
 candidate. It does not authorize dependency admission, upgrade, release,
 deployment, publication, or public use.
 """
@@ -23,8 +23,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-PROFILE = "kfm-maplibre-v6-3-readiness-v2"
-TARGET_VERSION = "6.3.0"
+PROFILE = "kfm-maplibre-v6-4-readiness-v3"
+TARGET_VERSION = "6.4.0"
+UPSTREAM_TAG_COMMIT = "4529c6e451f0e5607ef42ad0ed81aa76a14a0f43"
 PROBE_NAMES = (
     "webgl2_failure_handling",
     "worker_csp_loading",
@@ -69,6 +70,7 @@ class ReadinessResult:
             "selected_version": self.selected_version,
             "target_version": TARGET_VERSION,
             "typescript_target": self.typescript_target,
+            "upstream_tag_commit": UPSTREAM_TAG_COMMIT,
         }
 
 
@@ -106,7 +108,7 @@ def _major(version: str) -> int | None:
 
 def _version_reasons(version: str | None) -> list[str]:
     if version is None:
-        return ["MAPLIBRE_V6_3_EXACT_VERSION_REQUIRED"]
+        return ["MAPLIBRE_TARGET_EXACT_VERSION_REQUIRED"]
     major = _major(version)
     if major is None:
         return ["MAPLIBRE_VERSION_NOT_EXACT"]
@@ -115,7 +117,7 @@ def _version_reasons(version: str | None) -> list[str]:
     if major > 6:
         return ["MAPLIBRE_MAJOR_UNREVIEWED"]
     if version != TARGET_VERSION:
-        return ["MAPLIBRE_V6_3_CANDIDATE_NOT_SELECTED"]
+        return ["MAPLIBRE_TARGET_CANDIDATE_NOT_SELECTED"]
     return []
 
 
@@ -244,6 +246,8 @@ def evaluate_manifest(value: Mapping[str, Any]) -> ReadinessResult:
     reasons: list[str] = []
     if value.get("profile") != PROFILE:
         return ReadinessResult(Outcome.ERROR, ("PROFILE_INVALID",), None, None, None, {})
+    if value.get("upstream_tag_commit") != UPSTREAM_TAG_COMMIT:
+        return ReadinessResult(Outcome.ERROR, ("UPSTREAM_TAG_COMMIT_MISMATCH",), None, None, None, {})
     version = value.get("selected_version") if isinstance(value.get("selected_version"), str) else None
     module_mode = value.get("module_mode") if isinstance(value.get("module_mode"), str) else None
     target = value.get("typescript_target") if isinstance(value.get("typescript_target"), str) else None
