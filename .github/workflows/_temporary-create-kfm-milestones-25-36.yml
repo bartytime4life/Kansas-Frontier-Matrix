@@ -1,0 +1,165 @@
+name: One-shot KFM milestone expansion M25-M36
+
+on:
+  push:
+    branches: [automation/create-kfm-milestones-25-36-20260818]
+    paths: [.github/workflows/_temporary-create-kfm-milestones-25-36.yml]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: kfm-milestones-25-36-20260818
+  cancel-in-progress: false
+
+jobs:
+  milestones:
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Verify authority, create atomically, and record evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          MARKER: '<!-- kfm-roadmap-milestones-25-36-20260818 -->'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, re, urllib.error, urllib.request
+
+          token, repo, marker = os.environ['GH_TOKEN'], os.environ['REPO'], os.environ['MARKER']
+          old = [
+            'M01 - Authority, Directory Rules & Program Baseline',
+            'M02 - Contracts, Schemas, Policy & Compatibility',
+            'M03 - Deterministic Identity & Temporal Authority',
+            'M04 - Evidence Resolution & Governed Response',
+            'M05 - Source Admission, Rights & Sensitive Data',
+            'M06 - Validation, Security & Supply-Chain Gates',
+            'M07 - Catalog, Provenance, Release & Rollback Closure',
+            'M08 - Public-Safe Hydrology & Ecology Proof Slices',
+            'M09 - Interoperable Data & Delivery Artifacts',
+            'M10 - MapLibre Runtime, PMTiles & Evidence Drawer',
+            'M11 - Governed API, Focus Mode & AI',
+            'M12 - Cross-Domain Atlas & Operational Readiness',
+            'M13 - Repository Control, Review Integrity & Conformance',
+            'M14 - Security Classification, Threat Model & Critical-Asset Exposure',
+            'M15 - Incident Response, Secrets, Key Lifecycle & Recovery',
+            'M16 - Quality Baselines, Non-Vacuous Tests & CI Reliability',
+            'M17 - Dependency, Container, SBOM & Supply-Chain Assurance',
+            'M18 - Temporal Semantics, Compatibility & Correction Lineage',
+            'M19 - Evidence Resolver, Citation Integrity & Governed Consumer Closure',
+            'M20 - Source Rights, Health, Watchers & Change Detection',
+            'M21 - Transportation, Infrastructure & Public-Safe Geometry',
+            'M22 - Drought, Water Supply, Soil & Agriculture Observation Proof',
+            'M23 - MapLibre Runtime Admission, Accessibility & Performance',
+            'M24 - GeoParquet, PMTiles & COG Cross-Engine Interoperability',
+          ]
+          new = [
+            ('M25 - Program Decision Ledger, Ownership & Portfolio Closure', 'Close the program-control loop after M13–M24: refresh #2768 and #2874 against current main, record accountable owner roles and independent-review gaps, reconcile completed lineage and open work, and maintain a finite decision/dependency ledger. Planning metadata remains non-authoritative; no release or publication is implied.'),
+            ('M26 - Trust Membrane, Sensitivity & Public-Path Closure', 'Prove the trust membrane end to end across governed API, map/tile, Evidence Drawer, Focus Mode, AI, export, cache, and diagnostics using synthetic negative cases, including #3022. Resolve classification, rights, precision, review, transform, and release prerequisites without exposing restricted detail.'),
+            ('M27 - Evidence Authentication, Citation & Consumer Closure', 'Extend #2975 from a bounded resolver proof to authenticated consumer closure: validate EvidenceRef-to-EvidenceBundle identity and digests, citations, freshness, policy, review, release/correction status, and deterministic propagation through API, UI, and AI consumers. Missing support remains ABSTAIN, DENY, or ERROR.'),
+            ('M28 - Source Admission Operations, Rights & Freshness', 'Operationalize source admission after #2874 and #2898 with explicit source role, rights, terms, identity, cadence, freshness, watcher behavior, correction, disable, rollback, and public-safe transforms. Admit one source family at a time; milestone state never implies live activation.'),
+            ('M29 - Temporal Replay, Correction & Cross-Version Migration', 'Extend #2990 into deterministic replay and migration across compatibility families: preserve observation, validity, publication, retrieval, and revision time; namespace integrity; legacy replay; successor receipts; correction, supersession, and withdrawal lineage; and rollback without destructive record rewriting.'),
+            ('M30 - Domain Convergence & Cross-Lane Join Governance', 'Converge domain proof slices into governed cross-lane joins, using #2899 and transportation, hydrology, ecology, soil, and agriculture evidence as inputs. Prove support, uncertainty, sensitivity, rights, temporal compatibility, harmful-precision controls, and abstention before any public cross-domain claim.'),
+            ('M31 - Catalog Graph, Provenance & Release Candidate Closure', 'Assemble one deterministic release candidate whose STAC, DCAT, and PROV catalog graph, evidence, receipts, proofs, manifests, rights, extents, correction or withdrawal propagation, and rollback identities agree. Keep catalog, provenance, proof, receipt, and release authorities distinct; no publication is implied.'),
+            ('M32 - Governed API, Query Semantics & Serving Readiness', 'Prove serving readiness for governed APIs: stable query semantics, finite outcomes, authorization, pagination and limits, temporal and spatial filters, evidence/citation envelopes, cache invalidation, error privacy, compatibility, and no direct internal-store or model access. Deployment remains separate.'),
+            ('M33 - Explorer Web, Accessibility & Interaction Continuity', 'Close Explorer Web interaction quality after #2957 and #2906: renderer and adapter ownership, released-layer selection, Evidence Drawer continuity, keyboard and screen-reader access, non-color states, CSP and workers, long-session stability, performance budgets, offline/range behavior, and rollback.'),
+            ('M34 - Observability, Incident, Correction & Recovery Rehearsal', 'Run synthetic, no-sensitive-data observability and recovery rehearsals covering detection, triage, private escalation, containment, correction, withdrawal, rollback, key and secret handling, audit evidence, and post-incident closure. Documentation and green checks do not prove operational readiness.'),
+            ('M35 - Reproducible Builds, SBOM, Attestation & Artifact Integrity', 'Prove reproducible build and artifact integrity across pinned dependencies and actions, lockfiles, container bases, scanners, SBOMs, licenses, provenance attestations, signatures, digest binding, no-network boundaries, and rebuild comparison. Do not suppress findings or treat one green scan as vulnerability absence.'),
+            ('M36 - Governed Atlas Release Readiness & Stewardship', 'Prepare one governed atlas release-readiness packet integrating public-safe data, APIs, map/UI, evidence, policy, accessibility, quality, security, observability, correction, rollback, stewardship, and post-release monitoring. Milestone closure is not release; publication requires a separate authorized decision.'),
+          ]
+
+          def api(method, path, payload=None):
+            req = urllib.request.Request('https://api.github.com' + path, data=None if payload is None else json.dumps(payload).encode(), method=method, headers={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'Content-Type':'application/json','User-Agent':'kfm-m25-m36','X-GitHub-Api-Version':'2022-11-28'})
+            try:
+              with urllib.request.urlopen(req, timeout=30) as r:
+                b=r.read(); return None if not b else json.loads(b)
+            except urllib.error.HTTPError as e:
+              raise RuntimeError(f'{method} {path}: HTTP {e.code}: {e.read().decode(errors="replace")}') from e
+
+          def every(path):
+            out=[]; page=1; sep='&' if '?' in path else '?'
+            while True:
+              batch=api('GET',f'{path}{sep}per_page=100&page={page}')
+              if not batch: return out
+              out += batch
+              if len(batch)<100: return out
+              page += 1
+
+          def rn(title):
+            m=re.match(r'^M(\d{2})\b',(title or '').strip()); return int(m.group(1)) if m else None
+
+          def bindings(n):
+            return sorted(({'number':x['number'],'kind':'pr' if 'pull_request' in x else 'issue','state':x['state'],'title':x['title']} for x in every(f'/repos/{repo}/issues?state=all&milestone={n}')),key=lambda x:(x['kind'],x['number']))
+
+          def snap(items):
+            out={}
+            for n,title in enumerate(old,1):
+              hit=[x for x in items if rn(x.get('title'))==n]
+              if len(hit)!=1 or hit[0]['title']!=title: raise ValueError(f'M{n:02d} authority conflict: expected {title!r}; observed {[x.get("title") for x in hit]!r}')
+              x=hit[0]
+              out[n]={'number':x['number'],'title':x['title'],'description':x.get('description'),'state':x.get('state'),'due_on':x.get('due_on'),'open_issues':x.get('open_issues'),'closed_issues':x.get('closed_issues'),'created_at':x.get('created_at'),'updated_at':x.get('updated_at'),'closed_at':x.get('closed_at'),'bindings':bindings(x['number'])}
+            return out
+
+          def digest(x): return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
+
+          def report(body):
+            comments=every(f'/repos/{repo}/issues/2768/comments')
+            hit=next((x for x in comments if marker in (x.get('body') or '')),None)
+            api('PATCH',f"/repos/{repo}/issues/comments/{hit['id']}",{'body':body}) if hit else api('POST',f'/repos/{repo}/issues/2768/comments',{'body':body})
+            with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f: f.write(body+'\n')
+
+          conflicts=[]
+          pr=api('GET',f'/repos/{repo}/pulls/3033')
+          if pr.get('title')!='revert: remove conflicting M13–M24 milestone packet' or pr.get('merge_commit_sha')!='34d509c690649b284a7c0be739e3a5c8c85926ee' or not pr.get('merged_at'):
+            conflicts.append(f'PR #3033 authority conflict: title={pr.get("title")!r}, merged_at={pr.get("merged_at")!r}, merge_sha={pr.get("merge_commit_sha")!r}')
+          comments=every(f'/repos/{repo}/issues/2768/comments')
+          for m in ('<!-- kfm-roadmap-milestones-20260818 -->','<!-- kfm-roadmap-milestones-13-24-20260818 -->'):
+            if not any(m in (x.get('body') or '') for x in comments): conflicts.append('Missing program marker '+m)
+          pulls=every(f'/repos/{repo}/pulls?state=open')
+          for x in pulls:
+            if re.search(r'(?i)milestone|\bM(?:2[5-9]|3[0-6])\b',(x.get('title') or '')+'\n'+(x.get('body') or '')): conflicts.append(f'Open PR #{x["number"]} overlaps milestone authority: {x["title"]}')
+          before=every(f'/repos/{repo}/milestones?state=all')
+          try: old_before=snap(before)
+          except ValueError as e: conflicts.append(str(e)); old_before={}
+          for n in range(25,37):
+            hit=[x for x in before if rn(x.get('title'))==n]
+            if hit: conflicts.append(f'M{n:02d} is not free: '+ '; '.join(f'GitHub milestone #{x["number"]} {x["title"]!r}, state={x.get("state")}, due_on={x.get("due_on")}' for x in hit))
+          main=api('GET',f'/repos/{repo}/commits/main')['sha']
+          open_issues=[x for x in every(f'/repos/{repo}/issues?state=open') if 'pull_request' not in x]
+          if conflicts:
+            report(marker+'\n## M25-M36 milestone expansion — ABSTAINED\n\nNo milestone, due date, issue assignment, pull request, release, deployment, publication, gate, or repository setting was changed.\n\n**Exact conflicts**\n\n'+'\n'.join('- '+x for x in conflicts)+f'\n\n- Current main: `{main}`\n- Open pull requests: `{len(pulls)}`\n- Open issues: `{len(open_issues)}`\n')
+            print('MILESTONE_BATCH_RESULT status=ABSTAINED created=0'); raise SystemExit(0)
+
+          old_hash=digest(old_before); created=[]
+          try:
+            for title,description in new:
+              created.append(api('POST',f'/repos/{repo}/milestones',{'title':title,'description':description,'state':'open'}))
+            after=every(f'/repos/{repo}/milestones?state=all'); errors=[]
+            try:
+              if digest(snap(after))!=old_hash: errors.append('M01-M24 metadata or bindings changed')
+            except ValueError as e: errors.append(str(e))
+            rows=[]
+            for n,(title,description) in enumerate(new,25):
+              hit=[x for x in after if rn(x.get('title'))==n]
+              if len(hit)!=1: errors.append(f'M{n:02d} post-create count={len(hit)}'); continue
+              x=hit[0]; b=bindings(x['number'])
+              if x['title']!=title or x.get('description')!=description or x.get('state')!='open' or x.get('due_on') is not None or b or x.get('open_issues') or x.get('closed_issues'): errors.append(f'M{n:02d} post-create metadata conflict')
+              rows.append(f'| {n} | {title} | `{x["number"]}` | open | none | 0 |')
+            if errors: raise RuntimeError('; '.join(errors))
+          except Exception as e:
+            rollback=[]
+            for x in reversed(created):
+              try: api('DELETE',f'/repos/{repo}/milestones/{x["number"]}')
+              except Exception as r: rollback.append(f'rollback failed for #{x.get("number")}: {r}')
+            report(marker+'\n## M25-M36 milestone expansion — ROLLED BACK\n\nPost-create verification failed; milestones created by this run were deleted where possible. M01-M24 were not intentionally mutated.\n\n- '+str(e)+'\n'+'\n'.join('- '+x for x in rollback))
+            raise
+
+          body=marker+'\n## GitHub roadmap milestones M25-M36 created\n\n**Result:** 12 of 12 were created after live all-or-nothing namespace and authority verification.\n\n| Order | Milestone | GitHub milestone # | State | Due date | Issue/PR bindings |\n|---:|---|---:|---|---|---:|\n'+'\n'.join(rows)+f'\n\n- M01-M24 metadata and all bindings remained identical: `{old_hash}`.\n- No issue or pull request was assigned; current issues retain their existing mappings.\n- No due date was added.\n- Corrective PR #3033 remains merged at `{pr["merge_commit_sha"]}`.\n- Current main: `{main}`.\n- Open pull requests at preflight: `{len(pulls)}`.\n- Open issues inspected: `{len(open_issues)}`.\n- Execution branch: `{os.environ.get("GITHUB_REF_NAME")}`.\n- Execution commit: `{os.environ.get("GITHUB_SHA")}`.\n- Workflow run: `{os.environ.get("GITHUB_SERVER_URL")}/{repo}/actions/runs/{os.environ.get("GITHUB_RUN_ID")}`.\n\n> These milestones are planning metadata only. They create no policy approval, source admission, evidence closure, lifecycle promotion, release, deployment, publication, public-use authority, gate exception, or repository-setting change.\n'
+          report(body)
+          print('MILESTONE_BATCH_RESULT status=CREATED created=12 preserved_m01_m24=true')
+          PY
