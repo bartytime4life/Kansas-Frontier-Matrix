@@ -1,0 +1,119 @@
+# Staging-only trigger for the pinned one-shot closure. The closure commit deletes this file.
+name: repository-topology-one-shot-closure-wrapper
+
+"on":
+  pull_request:
+    branches:
+      - agent/topology-closure-staging-base-20260818
+    paths:
+      - .github/workflows/repository-topology-one-shot-closure.yml
+      - .github/workflows/repository-topology-one-shot-closure-wrapper.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repository-topology-one-shot-closure-wrapper-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  KFM_TRUSTED_BASE_REF: 790ad870a4cd02adaf205666e413c8e26404c68b
+
+jobs:
+  close:
+    if: >-
+      github.repository == 'bartytime4life/Kansas-Frontier-Matrix' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.head_ref == 'agent/close-topology-repair-20260818' &&
+      github.base_ref == 'agent/topology-closure-staging-base-20260818' &&
+      github.actor == 'bartytime4life'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact trigger head with branch credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validator dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-runtime
+
+      - name: Execute only the pinned closure script
+        shell: bash
+        env:
+          TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TRIGGER_HEAD_SHA"
+          test "$(git rev-parse HEAD^)" = "90523ec65c8da673bdff0a1cc7ff5dffc040499f"
+          test "$(git hash-object .github/workflows/repository-topology-one-shot-closure.yml)" = \
+            "4434cd18b23c40d8bd18cc7e62aff871803b4ab2"
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import os
+          import subprocess
+          from pathlib import Path
+
+          import yaml
+
+          workflow_path = Path(
+              ".github/workflows/repository-topology-one-shot-closure.yml"
+          )
+          workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8"))
+          scripts = {
+              step.get("name"): step.get("run")
+              for step in workflow["jobs"]["close"]["steps"]
+              if isinstance(step, dict)
+          }
+          name = "Apply, regenerate, validate, and push the bounded closure"
+          script = scripts.get(name)
+          if not isinstance(script, str) or not script.strip():
+              raise SystemExit("pinned closure script missing")
+
+          old_parent = (
+              'test "$(git rev-parse HEAD^)" = '
+              '"790ad870a4cd02adaf205666e413c8e26404c68b"\n'
+          )
+          new_parent = (
+              'test "$(git rev-parse HEAD^)" = '
+              '"90523ec65c8da673bdff0a1cc7ff5dffc040499f"\n'
+          )
+          if script.count(old_parent) != 1:
+              raise SystemExit("closure parent assertion changed")
+          script = script.replace(old_parent, new_parent, 1)
+
+          stage_anchor = "\ngit add -A\n"
+          if script.count(stage_anchor) != 1:
+              raise SystemExit("closure staging anchor changed")
+          script = script.replace(
+              stage_anchor,
+              "\nrm .github/workflows/repository-topology-one-shot-closure-wrapper.yml"
+              "\ngit add -A\n",
+              1,
+          )
+
+          environment = os.environ.copy()
+          subprocess.run(
+              ["bash", "-lc", script],
+              check=True,
+              env=environment,
+          )
+          PY
