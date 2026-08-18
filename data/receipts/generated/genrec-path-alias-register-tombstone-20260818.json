@@ -5,13 +5,15 @@
     ".github/workflows/path-alias-register.yml",
     "contracts/governance/path_alias_register.md",
     "control_plane/path_alias_register.yaml",
-    "docs/architecture/directory-rules.md"
+    "docs/architecture/directory-rules.md",
+    "tests/validators/directory_governance/path_alias_cases_schema.py"
   ],
   "artifact_hashes": {
     ".github/workflows/path-alias-register.yml": "sha256:48f3d20fbeb905ae737dcd117756650c23fc972ecf0c026ee1b0086163843ccd",
     "contracts/governance/path_alias_register.md": "sha256:c99e03a9c50db43d60ac7382722c641bc2b8a374d9e33a52f1f258d410c5b2f9",
     "control_plane/path_alias_register.yaml": "sha256:4721fd4c2df986dbc63b2174feec1863034d96326775ed000b4cfbf9fe57f5a2",
-    "docs/architecture/directory-rules.md": "sha256:6d35df48e9de5989200c1f7ac2f94780729750d4c27b3f92b9c1e4e40b59853f"
+    "docs/architecture/directory-rules.md": "sha256:6d35df48e9de5989200c1f7ac2f94780729750d4c27b3f92b9c1e4e40b59853f",
+    "tests/validators/directory_governance/path_alias_cases_schema.py": "sha256:c23031bc989f9ee0b72330631811bc8c86689d59ecaebfd786e0a7c0fad1f20a"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -47,13 +49,14 @@
     ".github/workflows/path-alias-register.yml": "PROPOSED",
     "contracts/governance/path_alias_register.md": "PROPOSED",
     "control_plane/path_alias_register.yaml": "PROPOSED",
-    "docs/architecture/directory-rules.md": "PROPOSED"
+    "docs/architecture/directory-rules.md": "PROPOSED",
+    "tests/validators/directory_governance/path_alias_cases_schema.py": "PROPOSED"
   },
   "validation_gates": [
     {
       "gate": "deterministic-content-and-git-blob-preflight",
       "outcome": "PASS",
-      "reason": "Prepared bytes are UTF-8, final-newline terminated, tombstone size is below 32 KiB, explicit anchors are unique, and the alias register binds the computed tombstone Git blob."
+      "reason": "Prepared bytes are UTF-8, final-newline terminated, tombstone size is below 32 KiB, explicit anchors are unique, the alias register binds the computed tombstone Git blob, and the focused current-state test asserts the authorized redirect/tombstone state."
     },
     {
       "gate": "directory-rules-and-alias-authority-review",
@@ -63,7 +66,7 @@
     {
       "gate": "repository-native-hosted-validation",
       "outcome": "SKIPPED",
-      "reason": "Runs after the draft pull request is opened; exact-head results remain authoritative."
+      "reason": "Runs after the draft pull request is updated; exact-head results remain authoritative."
     }
   ],
   "policy_decisions": [
@@ -96,12 +99,12 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-08-18T05:48:07Z",
+  "created_at": "2026-08-18T06:05:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 3015,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Successor receipt for the bounded Directory Rules architecture-path tombstone. Historical receipts remain unchanged. This record creates no doctrine, migration, consumer-closure, retirement, release, deployment, or publication authority."
+  "notes": "Successor receipt for the bounded Directory Rules architecture-path tombstone and its focused current-state assertion. Historical receipts remain unchanged. This record creates no doctrine, migration, consumer-closure, retirement, release, deployment, or publication authority."
 }
