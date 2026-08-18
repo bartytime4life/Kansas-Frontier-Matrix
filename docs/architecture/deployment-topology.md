@@ -17,7 +17,7 @@ truth_posture: cite-or-abstain
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 9edeb38d2273fdb43e9a31dfb63239223a364c2a
+  base_commit: 790ad870a4cd02adaf205666e413c8e26404c68b
   prior_blob: 73ece039f0da4acf68843cb2dd6d20c6152df9e5
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_decision: ADR-0029 accepted
@@ -32,6 +32,7 @@ evidence_snapshot:
   governed_api_architecture_blob: 06c5fd269fb8a326269f7f8ba98c6b8a75e0fd1a
   explorer_readme_blob: f8f37ed6e396a19ca080ea29b41920afdf03a94b
   release_state_register_blob: f576239f447045b04d7b30c540234d8641ceb7dc
+  repository_topology_repair_merge: 790ad870a4cd02adaf205666e413c8e26404c68b
   open_pull_requests_at_preflight: 0
 related:
   - README.md
@@ -55,6 +56,7 @@ notes:
   - "Same-path architecture-document modernization only; no application, infrastructure, workflow, contract, schema, policy, data, release, deployment, publication, or repository-setting state changes."
   - "Current repository evidence replaces the prior no-mounted-repository posture and narrows every deployment claim to its verified scope."
   - "The current Compose and container surfaces are review placeholders. Their static, render, build, and scan paths do not establish service startup, application packaging, environment admission, release, deployment, or publication."
+  - "Current main includes PR #3011's removal of temporary repository-topology repair workflows; topology validation is not deployment evidence."
   - "Legacy section anchors are preserved."
 [/KFM_META_BLOCK_V2] -->
 
@@ -74,7 +76,7 @@ notes:
 | Field | Current evidence-bounded result |
 |---|---|
 | **Document role** | Cross-cutting explanatory architecture under `docs/architecture/`; not infrastructure configuration, application behavior, policy, release, or deployment authority. |
-| **Evidence snapshot** | `main@9edeb38d2273fdb43e9a31dfb63239223a364c2a`. |
+| **Evidence snapshot** | `main@790ad870a4cd02adaf205666e413c8e26404c68b`. |
 | **Directory authority** | Directory Rules v2 is adopted through [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md). |
 | **Path decision** | `PLACE` at the existing requested path; no move, alias, new root, or authority migration. |
 | **Infrastructure root** | [`infra/`](../../infra/) is the confirmed canonical responsibility root for deployment mechanics, hosts, networks, service exposure, infrastructure-as-code, and hardening. |
@@ -180,7 +182,7 @@ The artifact kind is a human architecture explanation; its authority owner is `d
 | [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) and package manifest | Locked build/test workspace, fail-closed default entrypoint, bounded fixture-first UI slices | Admitted renderer, live API transport, hosted application, or public product |
 | [`runtime/README.md`](../../runtime/README.md) | Internal runtime boundary and no-direct-public-runtime rule | Accepted provider inventory, production isolation, model service health, or deployed composition |
 | [`release/README.md`](../../release/README.md) and release register | Canonical release-decision root, fixture-first validation, operational holds, empty proposed register | Assembled approved release, promotion execution, rollback execution, or production parity |
-| Current issue and PR searches | No open PR owned this exact path at preflight; security/runtime/release blockers remain tracked elsewhere | Universal absence of external work or future overlap |
+| Current issue, PR, and topology-repair evidence | No open PR owned this exact path at preflight; current main includes PR #3011 removal of temporary topology-repair workflows; security/runtime/release blockers remain tracked elsewhere | Deployment readiness, universal absence of external work, or future overlap |
 
 ### State separation
 
@@ -1041,6 +1043,6 @@ This document should be corrected whenever current repository or environment evi
 
 ---
 
-<sub>Evidence basis: current repository bytes at `main@9edeb38d2273fdb43e9a31dfb63239223a364c2a`; accepted Directory Rules through ADR-0029; current infrastructure, Compose, Dockerfile, application, runtime, release, and workflow surfaces. This page creates no release, deployment, public endpoint, environment, or publication authority.</sub>
+<sub>Evidence basis: current repository bytes at `main@790ad870a4cd02adaf205666e413c8e26404c68b`; accepted Directory Rules through ADR-0029; current infrastructure, Compose, Dockerfile, application, runtime, release, and workflow surfaces. This page creates no release, deployment, public endpoint, environment, or publication authority.</sub>
 
 **Last updated:** `2026-08-18` · **Status:** `draft / repository-grounded` · [Back to top](#top)
