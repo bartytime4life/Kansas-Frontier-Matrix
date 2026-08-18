@@ -21,6 +21,7 @@ name: path-alias-register
       - "tools/validators/directory_governance/path_alias_register.md"
       - "tools/validators/directory_governance/validate_path_alias_register.py"
       - "tests/validators/directory_governance/test_validate_path_alias_register.py"
+      - "tests/validators/directory_governance/path_alias_*.py"
       - "data/receipts/generated/genrec-path-alias-register-*.json"
   push:
     branches:
@@ -39,6 +40,7 @@ name: path-alias-register
       - "tools/validators/directory_governance/path_alias_register.md"
       - "tools/validators/directory_governance/validate_path_alias_register.py"
       - "tests/validators/directory_governance/test_validate_path_alias_register.py"
+      - "tests/validators/directory_governance/path_alias_*.py"
       - "data/receipts/generated/genrec-path-alias-register-*.json"
   workflow_dispatch:
 
@@ -106,7 +108,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-path-alias-register-tombstone-20260818.json \
+            data/receipts/generated/genrec-path-alias-register-test-alignment-20260818.json \
             --repo-root .
 
       - name: Record validation boundary
@@ -117,6 +119,6 @@ jobs:
             echo "### Path Alias Register"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: schema, adopted-doctrine binding, Root Registry binding, compatibility classes, identity mapping, canonical-only writes, redirect/tombstone semantics, path/blob/digest parity, tombstone size, expiry, consumers, and rollback fields."
+            echo "- Scope: schema, adopted-doctrine binding, Root Registry binding, compatibility classes, identity mapping, canonical-only writes, redirect/tombstone semantics, path/blob/digest parity, tombstone size, expiry, consumers, rollback fields, and current-state test discovery."
             echo "- Boundary: validation cannot accept an ADR, authorize alias writes, close consumers, create/remove a tombstone, move/retire/delete paths, release, deploy, promote, or publish."
           } >> "$GITHUB_STEP_SUMMARY"
