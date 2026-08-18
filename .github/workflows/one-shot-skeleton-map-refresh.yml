@@ -17,7 +17,7 @@ name: one-shot-skeleton-map-refresh
     branches:
       - agent/update-skeleton-map
     paths:
-      - artifacts/tmp/skeleton-map-refresh/payload.tar.gz.b64
+      - artifacts/tmp/skeleton-map-refresh/payload.*
 
 permissions:
   contents: write
@@ -45,21 +45,23 @@ jobs:
         run: |
           set -euo pipefail
 
-          payload="artifacts/tmp/skeleton-map-refresh/payload.tar.gz.b64"
-          if [[ ! -f "$payload" ]]; then
-            echo "Payload already consumed; no action required."
+          chunk_dir="artifacts/tmp/skeleton-map-refresh"
+          chunks=("$chunk_dir/payload.00" "$chunk_dir/payload.01")
+          if [[ ! -f "${chunks[0]}" || ! -f "${chunks[1]}" ]]; then
+            echo "Complete payload is not present or was already consumed; no action required."
             exit 0
           fi
 
           test "$(git branch --show-current)" = "agent/update-skeleton-map"
           test "$(git hash-object docs/architecture/SKELETON_MAP.md)" = \
             "09440bbe7ac10e0e7b70eee10f4d50f9022f6c4f"
-          test "$(sha256sum "$payload" | awk '{print $1}')" = \
-            "692e4e87783d15191946f1f778b9cec10e02c0beec8071308a683da143425d2b"
 
           tmp="$(mktemp -d)"
           trap 'rm -rf "$tmp"' EXIT
-          base64 --decode "$payload" > "$tmp/payload.tar.gz"
+          cat "${chunks[@]}" > "$tmp/payload.tar.gz.b64"
+          test "$(sha256sum "$tmp/payload.tar.gz.b64" | awk '{print $1}')" = \
+            "692e4e87783d15191946f1f778b9cec10e02c0beec8071308a683da143425d2b"
+          base64 --decode "$tmp/payload.tar.gz.b64" > "$tmp/payload.tar.gz"
           test "$(sha256sum "$tmp/payload.tar.gz" | awk '{print $1}')" = \
             "832a74ee4f0d655c8edf565c155c0a627260db279a3cafea747fb6e91b3dd26f"
 
@@ -78,14 +80,14 @@ jobs:
             docs/architecture/SKELETON_MAP.md
           install -m 0644 "$tmp/genrec-skeleton-map-e98e8d99.json" \
             data/receipts/generated/genrec-skeleton-map-e98e8d99.json
-          rm -f "$payload"
-          rmdir artifacts/tmp/skeleton-map-refresh 2>/dev/null || true
+          rm -f "${chunks[@]}"
+          rmdir "$chunk_dir" 2>/dev/null || true
 
           git diff --check
           git add -A -- \
             docs/architecture/SKELETON_MAP.md \
             data/receipts/generated/genrec-skeleton-map-e98e8d99.json \
-            artifacts/tmp/skeleton-map-refresh
+            "$chunk_dir"
           git diff --cached --check
 
           git config user.name "github-actions[bot]"
