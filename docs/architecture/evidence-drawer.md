@@ -1,756 +1,694 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/evidence-drawer
-title: Evidence Drawer — KFM Architecture Doctrine
-type: standard
-version: v1.0
-status: draft
-owners: AI surface steward, UI lead
+title: Evidence Drawer — Current Architecture and Implementation Boundary
+type: architecture
+version: v2.0.0
+status: draft; repository-grounded; bounded-executable; projection-only; live-transport-unverified
+owners:
+  - "@bartytime4life"
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-18
 policy_label: public
+owning_root: "docs/"
+responsibility: Explain the Evidence Drawer trust surface, the current public-safe projection slice, and the boundaries that keep browser rendering subordinate to evidence, policy, review, release, correction, and rollback authority.
+base_commit: 75de13010bb615ad9b6b219d52e2e830c924c7ab
+prior_blob: ff66403209e9de60dc8ac4d1c6e8dfdc27476b23
+directory_governance: ADR-0029 adopts docs/doctrine/directory-rules.md as the sole writable human Directory Rules authority; this same-path architecture page remains under the docs responsibility root.
+truth_posture: CONFIRMED current repository evidence; PROPOSED production composition; UNKNOWN live runtime, deployment, and release enforcement unless explicitly identified
 related:
-  - docs/architecture/directory-rules.md
-  - docs/architecture/domain-placement-law.md
-  - docs/architecture/map-shell.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/maplibre-3d.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - .github/CODEOWNERS
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
   - contracts/ui/evidence_drawer_payload.md
-tags: [kfm, doctrine, architecture, ui, evidence-drawer, trust-membrane, focus-mode]
+  - contracts/evidence/evidence_drawer_payload.md
+  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
+  - schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json
+  - fixtures/ui/evidence_drawer_payload/README.md
+  - tools/validators/ui/validate_evidence_drawer_payload.py
+  - tests/validators/test_validate_evidence_drawer_payload.py
+  - apps/explorer-web/src/adapters/GovernedClient.ts
+  - apps/explorer-web/src/features/evidence_drawer/README.md
+  - apps/explorer-web/src/features/evidence_drawer/index.tsx
+  - apps/explorer-web/tests/evidence-drawer.test.ts
+  - .github/workflows/evidence-drawer-payload.yml
+tags: [kfm, architecture, ui, evidence-drawer, evidencebundle, evidenceref, trust-membrane, finite-outcomes, accessibility, correction, no-leak]
 notes:
-  - "Evidence Drawer is a UI projection of EvidenceBundle — never the truth itself. EvidenceBundle is canonical; EvidenceDrawerPayload is the governed projection."
-  - "Owner field is placeholder; resolve in CODEOWNERS."
-  - "All paths and route names are PROPOSED unless explicitly CONFIRMED at a commit. v1.0 was authored without mounted-repo inspection."
+  - "EvidenceDrawerPayload is a governed public-safe UI projection. It is not EvidenceBundle closure, policy, review, release, proof storage, correction authority, or publication authority."
+  - "The current executable slice is fixture-only and no-network: strict parsing, finite view-state resolution, keyboard-operable rendering, synthetic fixtures, validators, and tests."
+  - "Live governed API transport, map-click routing, upstream evidence and policy authenticity, release enforcement, production accessibility, deployment, and public publication remain NEEDS VERIFICATION."
+  - "The UI/evidence semantic-contract home seam and the relationship to docs/architecture/ui/EVIDENCE_DRAWER.md remain unresolved; this page does not settle either by repetition."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Evidence Drawer
 
-> **The trust surface for every clicked feature, every layer, and every AI answer. A governed projection of EvidenceBundle into a UI shape — never a substitute for the bundle itself.**
+> **Operating rule.** The Evidence Drawer renders a governed, public-safe projection of already-evaluated evidence. It never turns map properties, badges, popups, model text, schema validity, or browser state into truth.
 
-![Doctrine](https://img.shields.io/badge/type-doctrine-1f6feb)
-![Edition](https://img.shields.io/badge/edition-v1.0-2ea44f)
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Authority](https://img.shields.io/badge/authority-DPL%20%C2%A75%20%2B%20Atlas%20KFM--P1--FEAT--0065-1f6feb)
-![Contract](https://img.shields.io/badge/contract-EvidenceDrawerPayload-blueviolet)
-![Schema home](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2Fui%2F-blueviolet)
-![Outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%2F%20ABSTAIN%20%2F%20DENY%20%2F%20ERROR-ff7f50)
-![A11y](https://img.shields.io/badge/a11y-keyboard%20%2B%20ARIA%20%2B%20contrast%20required-2ea44f)
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
-![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--25-informational)
+![status](https://img.shields.io/badge/status-draft-orange)
+![repository evidence](https://img.shields.io/badge/repository--evidence-CONFIRMED-2ea44f)
+![implementation](https://img.shields.io/badge/implementation-bounded__fixture--only-blue)
+![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-8957e5)
+![network](https://img.shields.io/badge/network-none__in__current__slice-lightgrey)
+![publication](https://img.shields.io/badge/publication-not__authorized-critical)
 
-**Status:** draft · **Owners:** AI surface steward + UI lead *(placeholder; verify in `CODEOWNERS`)* · **Last reviewed:** 2026-05-25
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@75de13010bb615ad9b6b219d52e2e830c924c7ab` |
+| **Directory authority** | **CONFIRMED / ACCEPTED:** [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../doctrine/directory-rules.md) |
+| **Architecture page** | **CONFIRMED** at this existing path; same-path modernization only |
+| **UI projection profile** | **CONFIRMED present / PROPOSED semantics:** closed profile `kfm.explorer.evidence-drawer.public-safe.v1` |
+| **Executable browser slice** | **CONFIRMED present:** strict fixture parser, finite resolver, keyboard open/close, focus return, fixed no-leak negative copy |
+| **Validation surfaces** | **CONFIRMED present:** closed schema, valid/invalid fixtures, deterministic no-network validator, Python tests, Explorer tests, read-only workflow |
+| **Live governed API transport** | **UNKNOWN / not proven by the inspected slice** |
+| **Map-click, popup, badge, Focus Mode, export, and correction handoffs** | **NEEDS VERIFICATION** |
+| **Production policy/evidence/review/release authenticity** | **UNKNOWN** |
+| **Contract-home seam** | **UNRESOLVED:** UI-family bounded profile exists; evidence-family sibling remains `PATH-NEEDS-REVIEW` |
+| **Review route** | `@bartytime4life` through [`CODEOWNERS`](../../.github/CODEOWNERS); independent stewardship remains **NEEDS VERIFICATION** |
+| **Release/publication effect** | **None.** This page and the bounded fixture slice do not publish a claim |
 
 > [!IMPORTANT]
-> **The drawer is a projection, not the source of truth.** `EvidenceBundle` is canonical evidence ([`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md)); `EvidenceDrawerPayload` is its UI-shaped projection. The drawer renders what the bundle already proved — it does not compute new policy, infer new sensitivity, or reword the citation set. When the bundle says ABSTAIN, the drawer shows ABSTAIN; the drawer cannot recover into ANSWER on its own.
+> **Projection is not closure.** The UI profile can describe finite outcome, citations, trust state, and bounded history. It cannot prove that an `EvidenceRef` resolved, that an `EvidenceBundle` is authentic, that policy allowed disclosure, that review occurred, or that a release is public.
 
----
+> [!CAUTION]
+> **Current executable evidence is intentionally narrow.** The inspected adapter says it is fixture-only and performs no network or lifecycle-store access. Do not describe that slice as a live EvidenceRef-to-EvidenceBundle resolver, production API integration, or deployed public feature.
 
-## 📑 Contents
+> [!WARNING]
+> **Negative states are no-leak states.** `DENY`, `ERROR`, malformed payloads, and unavailable governed responses must not reflect restricted, diagnostic, or unsupported input text into the browser.
 
-- [§0 — Status & Authority](#0-status--authority)
-- [§1 — What the Evidence Drawer Is (and Is Not)](#1-what-the-evidence-drawer-is-and-is-not)
-- [§2 — Where It Lives](#2-where-it-lives)
-- [§3 — The EvidenceDrawerPayload Contract](#3-the-evidencedrawerpayload-contract)
-- [§4 — Resolution Lifecycle](#4-resolution-lifecycle)
-- [§5 — Trust-Visible States](#5-trust-visible-states)
-- [§6 — Per-Domain Projections](#6-per-domain-projections)
-- [§7 — Click Resolution, Popups, and Badges](#7-click-resolution-popups-and-badges)
-- [§8 — Accessibility Requirements](#8-accessibility-requirements)
-- [§9 — What the Drawer MUST NOT Do](#9-what-the-drawer-must-not-do)
-- [§10 — Reviewer Checklist for Drawer-Touching PRs](#10-reviewer-checklist-for-drawer-touching-prs)
-- [§11 — Open Questions and NEEDS VERIFICATION](#11-open-questions-and-needs-verification)
-- [§12 — Glossary](#12-glossary)
-- [§13 — Changelog](#13-changelog)
+**Quick navigation:** [Status](#0-status--authority) · [Definition](#1-what-the-evidence-drawer-is-and-is-not) · [Placement](#2-where-it-lives) · [Contract](#3-the-current-evidencedrawerpayload-contract) · [Lifecycle](#4-resolution-lifecycle) · [States](#5-trust-visible-states) · [Domains](#6-per-domain-projections) · [Launch surfaces](#7-click-resolution-popups-and-badges) · [Accessibility](#8-accessibility-requirements) · [Anti-patterns](#9-what-the-drawer-must-not-do) · [Review](#10-reviewer-checklist-for-drawer-touching-prs) · [Open items](#11-open-questions-and-needs-verification) · [Glossary](#12-glossary) · [History](#13-changelog)
 
 ---
 
 ## 0. Status & Authority
 
-| Field | Value |
+### 0.1 Authority order for this page
+
+| Question | Governing evidence |
 |---|---|
-| **Document type** | Architecture doctrine (single UI component; cross-cutting across all 13 KFM domains) |
-| **Edition** | v1.0 — initial component-architecture authoring |
-| **Authority of these rules** | **CONFIRMED — derives from:** Atlas card `KFM-P1-FEAT-0065` ("Evidence Drawer required on layers, popovers, and AI answers"; CONFIRMED doctrine per Pass-20 Part II); *Master MapLibre Components-Functions-Features v2.1* §N (Evidence Drawer Payloads), §S (Accessibility, UX, and Trust-Visible States); Atlas v1.1 per-domain J. tables (every domain has an "Evidence Drawer payload" endpoint); [Domain Placement Law §5](./domain-placement-law.md#5-multi-domain-and-cross-cutting-files) (cross-cutting placement). |
-| **Authority of any specific path/route quoted here** | **PROPOSED** unless explicitly noted. v1.0 was authored without mounted-repo inspection. Schema and contract homes follow [ADR-0001 schema home](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). |
-| **Conformance language** | RFC 2119-style: **MUST / MUST NOT** non-negotiable; **SHOULD / SHOULD NOT** strong default; **MAY** permitted. Same as [Directory Rules §2.2](./directory-rules.md#22-conformance-language-rfc-2119-style). |
-| **Owners** | AI surface steward (Focus Mode and trust-state binding) + UI lead (rendering and accessibility). |
-| **Reviewers required for change** | AI surface steward + UI lead + Docs steward. ADR required for: changing the `EvidenceDrawerPayload` schema in a breaking way; introducing a new finite-outcome state beyond ANSWER/ABSTAIN/DENY/ERROR; permitting the drawer to read from `data/raw|work|quarantine`. |
-| **Supersedes** | None. First edition. Does not supersede atlas card `KFM-P1-FEAT-0065` — operationalizes it. |
-| **Related doctrine** | [`docs/architecture/directory-rules.md`](./directory-rules.md), [`docs/architecture/domain-placement-law.md`](./domain-placement-law.md), [`docs/architecture/map-shell.md`](./map-shell.md), [`docs/architecture/governed-api.md`](./governed-api.md), [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md), [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md). |
-| **Default sensitivity posture** | **Drawer renders policy-filtered state only.** Restricted fields never reach the drawer; the drawer shows DENY/ABSTAIN/redacted-summary instead. |
-| **Last reviewed** | 2026-05-25 |
+| Where does an artifact belong? | Accepted [Directory Rules v2](../doctrine/directory-rules.md), accepted ADRs, then current repository evidence |
+| What does `EvidenceDrawerPayload` mean? | The applicable semantic contract, paired schema, and any accepted successor decision |
+| What is implemented now? | Pinned code, schemas, fixtures, tests, workflows, and generated artifacts tied to a known revision |
+| What supports a claim? | Resolved evidence and its authoritative evidence contract; never this page or the browser projection |
+| May a field be shown? | Policy, rights, sensitivity, purpose, audience, review, and release state |
+| Is a payload public? | Governed release evidence, not schema validity, a passing test, a commit, or a pull request |
+| Who reviews repository changes? | Verified `CODEOWNERS` route; role assignments and independent approval remain separate records |
 
-> **Truth-posture note (v1.0).** Grounded in: (a) [`docs/architecture/directory-rules.md`](./directory-rules.md) v1.3.1, [`docs/architecture/domain-placement-law.md`](./domain-placement-law.md) v1.0; (b) Atlas card `KFM-P1-FEAT-0065` (CONFIRMED doctrine; Pass-20 Part II explicitly states Evidence Drawer is mandatory on layers, popovers, and AI answers); (c) *Master MapLibre Components-Functions-Features v2.1* §N (Evidence Drawer Payloads), §S (Accessibility, UX, and Trust-Visible States), §M (component table for the Evidence Drawer); (d) Atlas v1.1 per-domain J. tables (Atmosphere, Settlements/Infrastructure, Archaeology, Frontier Matrix, and others each include an "Evidence Drawer payload" endpoint with `EvidenceDrawerPayload + EvidenceBundle projection` returning ANSWER / ABSTAIN / DENY / ERROR). **No mounted repo, CI workflow, or running UI was inspected for v1.0.** Every concrete route name, package path, and component file name is **PROPOSED**.
+This page explains architecture and current implementation boundaries. It does not amend contracts, schemas, policy, source admission, review authority, release state, or runtime behavior.
 
-[⤴ Back to top](#-contents)
+### 0.2 Current repository evidence
+
+| Surface | Confirmed state at the pinned snapshot | Safe interpretation |
+|---|---|---|
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) and [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Directory Rules v2 is the accepted, sole writable human placement authority | This page remains under the existing `docs/architecture/` responsibility lane; the legacy architecture copy of Directory Rules is not authority |
+| [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) | Closed Draft 2020-12 schema with four finite outcomes, bounded trust state, and optional bounded history | Proves a machine-declared public-safe profile exists; does not prove upstream evidence or public release |
+| [`contracts/ui/evidence_drawer_payload.md`](../../contracts/ui/evidence_drawer_payload.md) | Draft v0.3 bounded profile with explicit non-effects and current validation commands | Strongest current UI-facing semantic description |
+| [`contracts/evidence/evidence_drawer_payload.md`](../../contracts/evidence/evidence_drawer_payload.md) | Adjacent evidence-family contract marked `PATH-NEEDS-REVIEW`; paired evidence schema is described as a permissive scaffold | The UI/evidence authority split is unresolved; neither file may silently erase the other |
+| [`fixtures/ui/evidence_drawer_payload/`](../../fixtures/ui/evidence_drawer_payload/README.md) | Valid and invalid synthetic fixture lanes are present | Supports deterministic declaration testing only |
+| [`tools/validators/ui/validate_evidence_drawer_payload.py`](../../tools/validators/ui/validate_evidence_drawer_payload.py) | Closed-schema and cross-field validator; fixture-first; no-network | Checks declaration consistency, correction acyclicity, negative-history non-resolution, and no-leak rules |
+| [`tests/validators/test_validate_evidence_drawer_payload.py`](../../tests/validators/test_validate_evidence_drawer_payload.py) | Focused tests assert fixture polarity, schema closure, correction rules, deterministic execution, and network denial | Test source is present; tests were not executed in this documentation-only run |
+| [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict fixture-only parser for profile `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Browser boundary fails closed without claiming live API behavior |
+| [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Finite view-model resolver and keyboard-operable `<aside>` renderer | Confirms a bounded app-local rendering slice, not a complete drawer product |
+| [`apps/explorer-web/tests/evidence-drawer.test.ts`](../../apps/explorer-web/tests/evidence-drawer.test.ts) | Tests cover ANSWER, stale ABSTAIN, superseded history, DENY/ERROR no-leak, malformed payloads, and no network/store reads | Supports the declared fixture boundary; does not authenticate upstream records |
+| [`.github/workflows/evidence-drawer-payload.yml`](../../.github/workflows/evidence-drawer-payload.yml) | Read-only, fixture-only workflow exists for schema/fixtures/tests/receipt integrity | Workflow presence is not a required-check result, release decision, or publication proof |
+| [`apps/explorer-web/src/features/evidence_drawer/README.md`](../../apps/explorer-web/src/features/evidence_drawer/README.md) | Repository-grounded feature boundary documents the bounded executable slice and open production gaps | Component README, not architecture authority or runtime proof |
+| [`docs/architecture/ui/EVIDENCE_DRAWER.md`](./ui/EVIDENCE_DRAWER.md) | Earlier UI-oriented architecture page remains present | Its relationship to this page needs consolidation or a documented division of responsibility; this change does not decide that migration |
+
+### 0.3 Truth labels
+
+- **CONFIRMED** — verified from the pinned repository state or an accepted decision.
+- **PROPOSED** — architecture, profile semantics, production flow, or future work not established as current runtime or authority.
+- **UNKNOWN** — insufficient evidence to state a current result.
+- **NEEDS VERIFICATION** — a concrete repository, runtime, policy, rights, review, release, accessibility, or deployment check remains.
+
+### 0.4 Non-effects
+
+This page does not:
+
+- resolve an `EvidenceRef` or construct an `EvidenceBundle`;
+- activate a source, network connector, route, model runtime, or policy bundle;
+- approve rights, sensitivity, review, release, correction, or rollback;
+- create a public API, map-click path, Focus Mode path, export path, or deployment;
+- make a schema-valid payload truthful or public;
+- settle the `contracts/ui/` versus `contracts/evidence/` semantic-home seam;
+- supersede, move, rename, or delete [`docs/architecture/ui/EVIDENCE_DRAWER.md`](./ui/EVIDENCE_DRAWER.md);
+- publish, promote, release, deploy, or expose lifecycle stores.
+
+[Back to top](#top)
 
 ---
 
 ## 1. What the Evidence Drawer Is (and Is Not)
 
-### 1.1 The two-line definition
+### 1.1 Definition
 
-> **The Evidence Drawer is the trust-visible UI surface that appears when a user clicks a layer, feature, popover, or AI answer in `apps/explorer-web/`. It renders the governed projection of the underlying EvidenceBundle — citations, source summary, policy state, sensitivity, review state, release state, and limitations — so the user can decide whether to trust the claim.**
+The Evidence Drawer is a browser-side trust panel for a governed `EvidenceDrawerPayload`. Its job is to make the finite outcome and the public-safe projection of evidence, citations, limitations, trust state, and bounded correction or negative history inspectable.
 
-### 1.2 Three things it IS
+The current executable slice consumes synthetic or supplied payload objects. A future production composition may open the same panel from map features, badges, tables, Focus Mode citations, or other released surfaces, but those launch integrations are not proven by the inspected slice.
 
-1. **A projection of canonical evidence.** It takes `EvidenceBundle` (truth-bearing object that outranks generated language) and renders it as `EvidenceDrawerPayload` (UI-shaped). The bundle is canonical; the drawer is presentational.
-2. **A finite-outcome surface.** Every drawer state resolves to one of ANSWER / ABSTAIN / DENY / ERROR — the same grammar as the governed API and Focus Mode. There is no "loading forever" state; there is no "kind of evidence" state.
-3. **A keyboard-accessible trust surface.** Per *Master MapLibre v2.1 §S* and `ML-S-061` ("Keyboard-accessible Evidence Drawer and Focus Mode remain required for trust surfaces"), the drawer MUST be operable without a mouse, MUST expose ARIA labels, and MUST show stale / failed-verification / no-data states perceptibly — not just visually.
+### 1.2 It is
 
-### 1.3 Five things it is NOT
+1. **A public-safe projection surface.** It renders fields permitted by a closed UI profile.
+2. **A finite outcome surface.** It resolves only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
+3. **A fail-closed browser boundary.** Missing, malformed, contradictory, denied, or errored inputs do not become partial answers.
+4. **A bounded history surface.** Negative evidence and correction lineage may remain visible only under the profile's non-current rules.
+5. **An app-local accessibility surface.** The current renderer provides labeled structure, keyboard open/close, Escape handling, and focus return.
 
-| It is NOT | Because |
+### 1.3 It is not
+
+| It is not | Governing boundary |
 |---|---|
-| The source of truth | `EvidenceBundle` is canonical (per [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md)). The drawer is a projection; if it disagrees with the bundle, the bundle wins. |
-| A popup | A MapLibre popup is a lightweight hover/click affordance. The drawer is the persistent trust surface. *Master MapLibre v2.1 §N: "Popup is not substitute"*. They may coexist (popup teases, drawer proves), but popups MUST NOT carry citations as if they were the drawer. |
-| A verification badge | Badges are entry points; the drawer is the destination. Per `ML-061-139` ("Badge clicks should open proof details rather than replacing the Evidence Drawer"), badges OPEN the drawer; they do not replace it. |
-| An AI answer surface | AI Focus Mode answers go through their own `RuntimeResponseEnvelope` + `AIReceipt` surface. The drawer shows the **evidence cited by** the AI answer; it does not generate or critique the answer itself. |
-| A policy engine | Policy lives in `policy/`. The drawer renders `PolicyDecision` outcomes; it does not recompute them. *Master MapLibre v2.1 ML-056-019: "Do not recompute policy meaning in UI."* |
+| `EvidenceBundle` | Evidence closure remains upstream and separate |
+| An EvidenceRef resolver | The inspected adapter performs no network or store access |
+| A policy engine | Policy meaning and disclosure decisions must be settled before projection |
+| A release or publication authority | Release state cannot be created by UI, schema, tests, workflow, or docs |
+| A map popup or badge | Those may become launch affordances; they are not evidence |
+| An AI answer surface | Generated language remains governed separately and subordinate to evidence |
+| A canonical correction store | The payload may display bounded lineage; it does not issue or authenticate corrections |
+| A direct lifecycle-store client | Browser access to RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, proofs, or internal stores is forbidden |
+| A claim derived from feature properties | Renderer properties are interaction context, not authoritative support |
 
-### 1.4 The trust-membrane position
-
-The drawer sits at the **public edge of the trust membrane** ([`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md)). Every byte the user sees in the drawer has passed through `apps/governed-api/` and resolved against `EvidenceBundle`. The drawer cannot read from `data/raw/`, `data/work/`, `data/quarantine/`, or any internal store — that is a [Directory Rules §13.5](./directory-rules.md#135-additional-anti-patterns) anti-pattern ("Public route reads canonical store"), and the drawer is a public route.
+### 1.4 Current bounded architecture
 
 ```mermaid
 flowchart LR
-    U["User clicks<br/>map / layer / AI answer"] --> EW["apps/explorer-web/<br/>(Evidence Drawer)"]
-    EW -->|MapContextEnvelope| GA["apps/governed-api/<br/>(trust membrane)"]
-    GA -->|resolves| EB["EvidenceBundle"]
-    GA -->|projects| EDP["EvidenceDrawerPayload"]
-    GA -->|policy check| PD["PolicyDecision"]
-    EDP --> EW
-    PD --> EW
-    EW -->|renders| DR["Drawer UI state<br/>ANSWER / ABSTAIN / DENY / ERROR"]
+    F["Synthetic / supplied fixture"] --> P["parseEvidenceDrawerProjection<br/>GovernedClient.ts"]
+    P -->|valid| R["resolveEvidenceDrawer<br/>finite view model"]
+    P -->|invalid| E["ERROR / INVALID_PAYLOAD<br/>fixed no-leak copy"]
+    R --> M["mountEvidenceDrawer<br/>keyboard-operable aside"]
+    M --> U["Browser user"]
 
-    classDef ui fill:#1f6feb,stroke:#58a6ff,color:#fff;
-    classDef gov fill:#2ea44f,stroke:#3fb950,color:#fff;
-    classDef truth fill:#bf8700,stroke:#d29922,color:#fff;
-    classDef out fill:#8957e5,stroke:#bc8cff,color:#fff;
-    class EW,U,DR ui;
-    class GA gov;
-    class EB,PD truth;
-    class EDP out;
+    X["Network, lifecycle stores,<br/>policy execution, EvidenceBundle lookup"] -. "not in current slice" .-> P
 ```
 
-[⤴ Back to top](#-contents)
+The dashed path is intentionally absent from the current fixture-only implementation.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Where It Lives
 
-The drawer is a **cross-cutting UI component** per [Domain Placement Law §5.2](./domain-placement-law.md#52-cross-cutting-placement-table) and [Directory Rules §11](./directory-rules.md#11-ui-and-map-roots). It does NOT belong to any single domain.
+The target is an existing architecture page under the `docs/` responsibility root. Accepted Directory Rules place semantic meaning in `contracts/`, machine shape in `schemas/`, executable app composition in `apps/`, reusable fixtures in `fixtures/`, validators in `tools/validators/`, tests in `tests/` or the owning app, and workflow orchestration in `.github/workflows/`.
 
-### 2.1 Canonical placement table
-
-| Concern | Canonical home | Notes |
+| Responsibility | Current path | Status and boundary |
 |---|---|---|
-| **UI component code** | `apps/explorer-web/src/evidence-drawer/` | Component, hooks, state machine. **PROPOSED.** |
-| **Shared UI primitives** | `packages/ui/src/evidence-drawer/` | Reusable building blocks if other apps (e.g., `apps/review-console/`) reuse them. **PROPOSED.** |
-| **Renderer-adapter integration** | `packages/maplibre-runtime/src/feature-click-resolver.ts` | The `click → MapContextEnvelope → governed-API` bridge; lives inside the renderer adapter per [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) §7.2.a. **PROPOSED.** |
-| **Semantic contract (Markdown)** | `contracts/ui/evidence_drawer_payload.md` | Field meaning, invariants. Per [Directory Rules §6.3](./directory-rules.md#63-contracts--object-meaning). **PROPOSED.** |
-| **Machine schema (JSON Schema)** | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Per [ADR-0001 schema home](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md). **PROPOSED.** |
-| **Drawer projection policy** | `policy/runtime/drawer_projection.rego` | What fields the drawer is allowed to show given a `PolicyDecision`. **PROPOSED.** |
-| **Tests** | `tests/ui/evidence-drawer/`, `tests/contracts/evidence_drawer_payload/`, `tests/policy/drawer_projection/`, `tests/integration/maplibre/feature_click_to_drawer/` | Four parallel test homes (UI, contract, policy, integration). **PROPOSED.** |
-| **Fixtures** | `fixtures/ui/evidence_drawer/{valid,invalid}/`, `fixtures/maplibre/click_to_drawer/` | Per-state valid + invalid fixtures (one per §5 state). **PROPOSED.** |
-| **Per-domain projections** | Each domain's J-section in Atlas v1.1; route name TBD per [Directory Rules §18.a](./directory-rules.md#18a-carried-forward-from-v10) | `/v1/<domain>/evidence-drawer/<feature_id>` (PROPOSED; route style NEEDS VERIFICATION). |
-| **Storybook / preview** | `apps/explorer-web/src/evidence-drawer/stories/` (or wherever `apps/explorer-web/` stages component preview) | Each §5 state has at least one story. **PROPOSED.** |
+| Cross-cutting architecture | `docs/architecture/evidence-drawer.md` | This page; repository-grounded explanation |
+| UI-oriented architecture companion | `docs/architecture/ui/EVIDENCE_DRAWER.md` | Existing overlapping page; consolidation relationship unresolved |
+| UI-facing semantic profile | `contracts/ui/evidence_drawer_payload.md` | Confirmed draft bounded profile |
+| Evidence-facing sibling semantics | `contracts/evidence/evidence_drawer_payload.md` | Confirmed, `PATH-NEEDS-REVIEW` |
+| UI machine shape | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Confirmed closed public-safe profile |
+| Evidence-family machine scaffold | `schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json` | Confirmed sibling surface; final authority unresolved |
+| Reusable synthetic examples | `fixtures/ui/evidence_drawer_payload/{valid,invalid}/` | Confirmed |
+| Deterministic declaration validator | `tools/validators/ui/validate_evidence_drawer_payload.py` | Confirmed, no-network |
+| Validator tests | `tests/validators/test_validate_evidence_drawer_payload.py` | Confirmed |
+| Browser parser | `apps/explorer-web/src/adapters/GovernedClient.ts` | Confirmed fixture-only parser |
+| Browser view model and renderer | `apps/explorer-web/src/features/evidence_drawer/index.tsx` | Confirmed bounded implementation |
+| Feature boundary documentation | `apps/explorer-web/src/features/evidence_drawer/README.md` | Confirmed |
+| Explorer unit tests | `apps/explorer-web/tests/evidence-drawer.test.ts` | Confirmed |
+| Read-only CI orchestration | `.github/workflows/evidence-drawer-payload.yml` | Confirmed |
 
-> [!IMPORTANT]
-> **Drawer artifacts MUST NOT shadow cross-cutting object families.** `EvidenceBundle`, `EvidenceRef`, `PolicyDecision`, `RuntimeResponseEnvelope`, `SourceDescriptor`, `RedactionReceipt` are cross-cutting per [Domain Placement Law §5.3](./domain-placement-law.md#53-object-families-that-are-intrinsically-cross-cutting). The drawer **cites** them; it does not redefine them under `contracts/ui/` or `schemas/contracts/v1/ui/`. Only `EvidenceDrawerPayload` and `MapContextEnvelope` are drawer-owned cross-cutting families.
+### 2.1 Domain integration is not uniform
 
-### 2.2 The component-tree view (PROPOSED)
+The repository must not be summarized as having complete per-domain drawer integration merely because domain-named files exist.
 
-```text
-apps/explorer-web/
-├── src/
-│   ├── evidence-drawer/
-│   │   ├── EvidenceDrawer.tsx              # root component; orchestrates state
-│   │   ├── DrawerHeader.tsx                # feature_id + layer_id + close
-│   │   ├── SourceSummary.tsx               # SourceDescriptor projection
-│   │   ├── CitationList.tsx                # citations (links → EvidenceBundle)
-│   │   ├── PolicyBadge.tsx                 # ALLOW/DENY/ABSTAIN/restricted
-│   │   ├── SensitivityBadge.tsx            # T0–T4 indicator
-│   │   ├── ReleaseStateBadge.tsx           # released / candidate / stale / superseded
-│   │   ├── ReviewStateBadge.tsx            # reviewed / pending / corrected
-│   │   ├── LimitationsList.tsx             # explicit caveats (e.g., "AOD is not PM2.5")
-│   │   ├── CorrectionsBanner.tsx           # if CorrectionNotice exists
-│   │   ├── EmptyStates/
-│   │   │   ├── StaleState.tsx              # source freshness expired
-│   │   │   ├── AbstainState.tsx            # insufficient evidence
-│   │   │   ├── DenyState.tsx               # policy-denied
-│   │   │   ├── ErrorState.tsx              # upstream error
-│   │   │   ├── NoDataState.tsx             # nothing at click point
-│   │   │   └── UnverifiableState.tsx       # bundle present but verification failed
-│   │   ├── hooks/
-│   │   │   ├── useEvidenceDrawerPayload.ts # governed-API call hook
-│   │   │   └── useDrawerState.ts           # finite-state machine wrapper
-│   │   ├── state-machine.ts                # ANSWER/ABSTAIN/DENY/ERROR finite-state
-│   │   └── stories/                        # one story per §5 state
-└── …
-```
+- [`apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx`](../../apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx) currently re-exports the generic Evidence Drawer implementation.
+- [`apps/explorer-web/src/features/domains/archaeology/EvidenceDrawer.tsx`](../../apps/explorer-web/src/features/domains/archaeology/EvidenceDrawer.tsx) is still a greenfield placeholder.
 
-[⤴ Back to top](#-contents)
+These two confirmed examples prove that domain integration maturity is uneven. A complete domain inventory requires a separate pinned scan. Domain wrappers must not create parallel evidence, policy, schema, or release authority.
+
+[Back to top](#top)
 
 ---
 
-## 3. The EvidenceDrawerPayload Contract
+## 3. The Current `EvidenceDrawerPayload` Contract
 
-The `EvidenceDrawerPayload` is the wire contract between `apps/governed-api/` and the drawer component. *Master MapLibre v2.1 §M* records its required field intent; the schema home is `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` per [ADR-0001](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md).
+The current bounded machine profile is defined by [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) and explained by [`contracts/ui/evidence_drawer_payload.md`](../../contracts/ui/evidence_drawer_payload.md).
 
-### 3.1 Required fields (per Master MapLibre v2.1 §M)
+### 3.1 Profile and top-level fields
 
-| Field | Type | Meaning | Source |
-|---|---|---|---|
-| `feature_id` | string | Stable identifier for the clicked feature. | Layer manifest. |
-| `layer_id` | string | The layer in which the feature lives. | Layer manifest. |
-| `evidence_bundle_refs` | `EvidenceRef[]` | One or more references resolving to `EvidenceBundle` records. | Resolved via `packages/evidence-resolver/`. |
-| `source_summary` | object | Compact projection of `SourceDescriptor`: source name, authority role, rights, sensitivity tier, freshness, citation. | `contracts/source/source_descriptor.md`. |
-| `citations` | `Citation[]` | The citation set the user can follow. Each cites an `EvidenceBundle` claim. | `EvidenceBundle.claims[*].citations`. |
-| `policy_state` | object | Projected `PolicyDecision`: outcome (ALLOW/DENY/ABSTAIN), rationale code, restricted-fields list. | `contracts/runtime/policy_decision.md`. |
-| `release_state` | object | `ReleaseManifest` references: release_id, release_time, supersedes, rollback_target. Plus stale-state marker if relevant. | `contracts/release/release_manifest.md`. |
-| `review_state` | object | Whether the underlying claim has been steward-reviewed; correction_notice references if any. | `contracts/governance/review_record.md`. |
-| `limitations` | `Limitation[]` | Explicit caveats (e.g., "AQI is not concentration"; "AOD is not PM2.5"; "model output, not observation"). | Per-domain `EvidenceBundle.limitations`. |
-| `outcome` | enum | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. The finite-outcome marker. | This contract. |
+| Field | Current machine meaning |
+|---|---|
+| `profile` | Exact constant `kfm.explorer.evidence-drawer.public-safe.v1` |
+| `id` | Bounded projection identifier |
+| `outcome` | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
+| `reason_code` | Stable public-safe reason |
+| `title`, `summary` | Governed display text; negative states use fixed browser copy |
+| `evidence_refs` | Bounded public-safe evidence identifiers permitted by the outcome |
+| `citations` | Bounded HTTPS citations permitted by the outcome |
+| `limitations` | Public-safe caveats |
+| `trust_state` | Source role, policy, review, release, freshness, and correction labels |
+| `history` | Optional bounded negative outcomes and correction edges |
 
-### 3.2 Optional fields
+The schema is closed with `additionalProperties: false`. Unknown fields fail validation.
 
-| Field | When present | Meaning |
-|---|---|---|
-| `correction_notice_refs` | If `release_state.has_corrections === true` | Pointers to `CorrectionNotice` records for any claims that have been corrected. |
-| `representation_receipt_ref` | If the drawer is opened on a 3D-rendered feature | Per [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md), the `RepresentationReceipt` for the render batch that produced the visible feature. |
-| `reality_boundary_note_ref` | If the layer contains synthetic / interpolated / reconstructed surface | The `RealityBoundaryNote` explaining where reality ends and synthesis begins. |
-| `redaction_receipt_refs` | If any displayed field was redacted from a higher-tier original | The `RedactionReceipt` chain proving the redaction is deterministic and reviewed. |
-| `model_run_receipt_ref` | If the claim involved model output | The `ModelRunReceipt` for the model that produced the result. |
-| `accessibility` | Always when image / map / chart content present | Alt text, perceivable description; per *Master MapLibre v2.1 §S* and `ML-064-059` (Evidence Drawer image cards must use alt text and captions from source metadata). |
+### 3.2 Trust-state dimensions
 
-### 3.3 Field invariants
+| Dimension | Current values |
+|---|---|
+| `source_role` | `authoritative`, `official`, `derived`, `context` |
+| `policy` | `ALLOW`, `ABSTAIN`, `DENY`, `ERROR` |
+| `review` | `REVIEWED`, `PENDING`, `NOT_APPLICABLE` |
+| `release` | `RELEASED`, `UNRELEASED`, `WITHDRAWN` |
+| `freshness` | `CURRENT`, `STALE`, `UNKNOWN` |
+| `correction` | `NONE`, `CURRENT`, `CORRECTED`, `SUPERSEDED` |
 
-These invariants MUST hold; the drawer schema validators MUST enforce them; CI MUST refuse promotion of any payload that violates them.
+These labels are projection declarations. The browser does not authenticate them.
 
-1. **At least one `evidence_bundle_refs` entry unless `outcome ∈ {DENY, ERROR}`.** ANSWER and ABSTAIN payloads MUST carry resolvable evidence references; the drawer is not allowed to display claims without evidence.
-2. **Every `citations[*]` MUST resolve.** A dangling citation is a failure of citation validation ([`CitationValidationReport`](../../contracts/runtime/citation_validation_report.md), per *Master MapLibre v2.1 §M*); the drawer either ABSTAINS or displays an explicit "unresolved citation" badge — never silently drops.
-3. **`policy_state.restricted_fields` enumerates every field omitted for policy reasons.** Silent omission is forbidden. If `OccurrenceRestricted` data was filtered out, the payload MUST say so under `restricted_fields` even if it omits the values themselves.
-4. **`outcome === DENY` ⇒ `policy_state.rationale` MUST be present.** A deny without a reason is opaque; the drawer rationale code (not the rule body) is shown to the user.
-5. **`outcome === ABSTAIN` ⇒ at least one of `limitations`, `evidence_bundle_refs` (with `insufficient_for_claim` reason), or `release_state.stale` MUST be populated.** Abstain without a reason is fluent guessing.
-6. **Cross-cutting families MUST NOT be embedded in full.** The payload carries **references** (`evidence_bundle_refs`, `correction_notice_refs`, `release_manifest_ref`); the underlying objects resolve via the governed API. Embedding the full `EvidenceBundle` inline duplicates canonical truth and risks divergence.
+### 3.3 Cross-field rules enforced by the current validator and parser
 
-### 3.4 Schema sketch (PROPOSED)
+#### `ANSWER`
 
-> [!NOTE]
-> The fragment below is **illustrative** — the canonical machine-checkable schema lives at `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`. It is **PROPOSED**; mounted-repo verification required.
+- `reason_code` is `SUPPORTED`;
+- evidence references and citations are nonempty;
+- policy is `ALLOW`;
+- review is `REVIEWED`;
+- release is `RELEASED`;
+- freshness is `CURRENT`;
+- superseded evidence cannot answer;
+- correction history, when present, is complete, acyclic, and terminates in current support.
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://kfm.example/schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
-  "title": "EvidenceDrawerPayload",
-  "type": "object",
-  "required": ["feature_id", "layer_id", "outcome"],
-  "properties": {
-    "feature_id":            { "type": "string" },
-    "layer_id":              { "type": "string" },
-    "outcome":               { "enum": ["ANSWER", "ABSTAIN", "DENY", "ERROR"] },
-    "evidence_bundle_refs":  { "type": "array", "items": { "$ref": "../evidence/evidence_ref.schema.json" } },
-    "source_summary":        { "$ref": "./source_summary.schema.json" },
-    "citations":             { "type": "array", "items": { "$ref": "./citation.schema.json" } },
-    "policy_state":          { "$ref": "../runtime/policy\_decision.schema.json#/$defs/projection" },
-    "release_state":         { "$ref": "../release/release_state.schema.json" },
-    "review_state":          { "$ref": "../governance/review_state.schema.json" },
-    "limitations":           { "type": "array", "items": { "type": "string" } },
-    "correction_notice_refs":     { "type": "array", "items": { "$ref": "../release/correction_notice_ref.schema.json" } },
-    "representation_receipt_ref": { "$ref": "../maplibre/representation_receipt_ref.schema.json" },
-    "reality_boundary_note_ref":  { "$ref": "../3d/reality_boundary_note_ref.schema.json" },
-    "redaction_receipt_refs":     { "type": "array", "items": { "$ref": "../source/redaction_receipt_ref.schema.json" } },
-    "model_run_receipt_ref":      { "$ref": "../ai/model_run_receipt_ref.schema.json" },
-    "accessibility":              { "$ref": "./drawer_accessibility.schema.json" }
-  },
-  "allOf": [
-    { "$comment": "Invariant 1: ANSWER/ABSTAIN require evidence_bundle_refs",
-      "if":   { "properties": { "outcome": { "enum": ["ANSWER", "ABSTAIN"] } } },
-      "then": { "required": ["evidence_bundle_refs"], "properties": { "evidence_bundle_refs": { "minItems": 1 } } }
-    },
-    { "$comment": "Invariant 4: DENY requires policy_state.rationale",
-      "if":   { "properties": { "outcome": { "const": "DENY" } } },
-      "then": { "required": ["policy_state"], "properties": { "policy_state": { "required": ["rationale"] } } }
-    }
-  ]
-}
-```
+#### `ABSTAIN`
 
-[⤴ Back to top](#-contents)
+- uses a non-supported reason and policy `ABSTAIN`;
+- may retain bounded public-safe evidence references or negative history where the reason permits;
+- superseded, held, withdrawn, or revoked reasons require matching non-current history;
+- never upgrades stale or unresolved support into an answer.
+
+#### `DENY`
+
+- uses a non-supported reason and policy `DENY`;
+- exposes no evidence references, citations, or history identifiers;
+- browser copy is fixed so restricted input text is not reflected.
+
+#### `ERROR`
+
+- uses `UPSTREAM_ERROR` and policy `ERROR`;
+- exposes no evidence references, citations, or history;
+- malformed projections become the app-local `INVALID_PAYLOAD` error state;
+- absent input becomes the app-local `NO_GOVERNED_RESPONSE` abstention state.
+
+### 3.4 Bounded history
+
+A negative-history item declares:
+
+- a safe evidence identifier;
+- state `HELD`, `DENIED`, `SUPERSEDED`, `REVOKED`, or `WITHDRAWN`;
+- a matching reason code;
+- canonical UTC-second recording time;
+- `visible_in_runtime: true`;
+- `resolvable_as_current: false`.
+
+Correction edges must be unique, acyclic, non-self-referential, and bound to superseded prior evidence. Only a terminal correction target may support the current answer.
+
+### 3.5 Authority limit
+
+> [!IMPORTANT]
+> A schema-valid payload is only a valid projection candidate. It does not establish evidence authenticity, policy approval, review authority, release status, correction authenticity, rollback completion, deployment, or public publication.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Resolution Lifecycle
 
-### 4.1 Click-to-drawer (CONFIRMED doctrine)
+### 4.1 Confirmed fixture-only path
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor U as User
-    participant ML as MapLibre runtime<br/>(packages/maplibre-runtime/)
-    participant EW as apps/explorer-web/<br/>(Evidence Drawer)
-    participant GA as apps/governed-api/<br/>(trust membrane)
-    participant ER as packages/evidence-resolver/
-    participant POL as packages/policy-runtime/
-    participant EB as EvidenceBundle (data/proofs/)
+    participant F as Synthetic fixture / supplied object
+    participant G as GovernedClient parser
+    participant V as Evidence Drawer resolver
+    participant B as Browser renderer
+    participant U as User
 
-    U->>ML: Click on feature
-    ML->>EW: feature_id + layer_id + MapContextEnvelope
-    EW->>GA: GET /v1/<domain>/evidence-drawer/<feature_id>
-    GA->>POL: PolicyDecision(MapContext + feature)
-    POL-->>GA: ALLOW / DENY / ABSTAIN
-    alt outcome == DENY
-        GA-->>EW: EvidenceDrawerPayload{outcome:"DENY", policy_state.rationale}
-    else outcome != DENY
-        GA->>ER: Resolve(evidence_bundle_refs)
-        ER->>EB: Fetch + verify
-        EB-->>ER: bundle (or fail-closed)
-        ER-->>GA: bundle | unresolved
-        alt bundle unresolved
-            GA-->>EW: EvidenceDrawerPayload{outcome:"ABSTAIN", limitations:["unresolved evidence"]}
-        else bundle resolved
-            GA->>GA: Build projection (filter restricted_fields)
-            GA-->>EW: EvidenceDrawerPayload{outcome:"ANSWER", ...}
-        end
+    F->>G: candidate public-safe projection
+    G->>G: exact fields + finite values + history checks
+    alt malformed or contradictory
+        G-->>V: invalid
+        V-->>B: ERROR / INVALID_PAYLOAD with fixed copy
+    else valid
+        G-->>V: normalized projection
+        V->>V: map finite outcome to no-leak view model
+        V-->>B: ANSWER / ABSTAIN / DENY / ERROR
     end
-    EW->>U: Render drawer (one of §5 states)
+    B-->>U: labeled trust panel
 ```
 
-### 4.2 The five governing invariants of the resolution path
+Confirmed behavior:
 
-1. **No direct store reads.** The drawer NEVER calls `data/raw/`, `data/work/`, `data/quarantine/`, or any internal store. It only calls `apps/governed-api/`. ([Directory Rules §13.5](./directory-rules.md#135-additional-anti-patterns) "Public route reads canonical store".)
-2. **Policy check before evidence resolution.** A `DENY` decision short-circuits — no `EvidenceBundle` lookup happens for denied requests. This prevents timing-based information leaks.
-3. **Evidence resolution is fail-closed.** If `EvidenceBundle` cannot be resolved (unreachable, integrity failure, missing claim), the drawer ABSTAINS with an explicit reason. It does not silently fall back to a layer description or popup payload.
-4. **The projection MUST drop restricted fields, not the citation.** When `policy_state.restricted_fields` filters values, the citations remain visible (so users see *that* evidence exists, even if its content is restricted to reviewers).
-5. **Latency budgets.** Per *Master MapLibre v2.1 §T* and the v1.5 update packet's "Interaction-to-drawer latency budget" test: click → governed-API → drawer-appears within the agreed SLO; stale / error states are visible if the SLO is exceeded. No infinite spinners.
+1. No network request is made by the inspected parser or drawer feature.
+2. No lifecycle-store path is read.
+3. Missing input becomes a bounded abstention.
+4. Invalid input becomes a fixed error state.
+5. `DENY` and `ERROR` suppress evidence, citations, history, and untrusted text.
+6. `ANSWER` renders only parsed governed fields.
+7. History remains separate from current support.
 
-### 4.3 What the runtime does, in order
+### 4.2 Proposed production composition
 
-1. **MapLibre `click` event** captured in `packages/maplibre-runtime/src/feature-click-resolver.ts`.
-2. **MapContextEnvelope built** from current viewport (visible_layers, bounds, zoom, pitch, bearing, filters, time_window, selected_features). Per *Master MapLibre v2.1 §M*.
-3. **Drawer state machine transitions to LOADING** with progress indicator (NOT an infinite spinner; bound by SLO).
-4. **Governed-API call** to `/v1/<domain>/evidence-drawer/<feature_id>` with `MapContextEnvelope` as body.
-5. **Governed-API performs PolicyDecision** via `packages/policy-runtime/`. Restricted fields filtered.
-6. **Governed-API resolves `EvidenceBundle`** via `packages/evidence-resolver/` for non-denied requests.
-7. **Governed-API emits `RunReceipt`** to `data/receipts/runtime/`; per [Directory Rules §9.1](./directory-rules.md#91-data--the-lifecycle-invariant), every governed-API call leaves a receipt.
-8. **Response builds `EvidenceDrawerPayload`** with the §5 outcome marker.
-9. **Drawer renders** the matching §5 state.
+A production path would require, at minimum:
 
-[⤴ Back to top](#-contents)
+```text
+released interaction context
+  -> governed request
+  -> policy / rights / sensitivity precheck
+  -> EvidenceRef resolution and EvidenceBundle integrity checks
+  -> citation, review, release, correction, and rollback checks
+  -> public-safe EvidenceDrawerPayload projection
+  -> current strict parser
+  -> finite browser view
+```
+
+The following are **NEEDS VERIFICATION** or **UNKNOWN** at the pinned snapshot:
+
+- live request transport and endpoint shape;
+- map feature, popup, badge, table, Story Node, or Focus Mode launch wiring;
+- authoritative EvidenceRef-to-EvidenceBundle lookup;
+- source-rights and sensitivity enforcement;
+- review and release authenticity;
+- correction-store lookup and cache invalidation;
+- production telemetry and audit receipts;
+- deployment configuration and public accessibility;
+- required-check enforcement.
+
+### 4.3 Fail-closed order
+
+The production design must preserve this order:
+
+1. validate the request and actor context;
+2. apply rights, sensitivity, access, and release prechecks;
+3. resolve admissible evidence;
+4. verify citations and integrity;
+5. project only public-safe fields;
+6. validate the closed UI payload;
+7. render one finite outcome.
+
+A browser fallback to layer properties, popup text, cached model output, or a permissive sibling schema is forbidden.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Trust-Visible States
 
-The drawer has exactly **ten visible states**, plus loading. Each MUST be visually distinct, keyboard-accessible, and screen-reader-perceivable. Per *Master MapLibre v2.1 §S* (`ML-061-140`: "Unknown, stale, or failed verification states need distinct visual treatment") and `ML-S-063` ("No-data and unverifiable states are UI requirements").
+The current public profile has **four outcomes**, not ten independent top-level outcomes. Freshness, review, release, correction, and negative history refine those outcomes.
 
-### 5.1 The state table
+### 5.1 Outcome table
 
-| State | Outcome | Visual treatment (PROPOSED) | When | Required content |
-|---|---|---|---|---|
-| **OK / Released** | ANSWER | Green badge, full content | Released, in-date, fully evidence-backed, ALLOW policy | Everything in §3.1 |
-| **Corrected** | ANSWER | Amber CORRECTED banner above content | `CorrectionNotice` exists | Banner with link to correction notice; original + corrected values |
-| **Stale** | ANSWER (with warning) | Amber STALE badge | Source freshness expired per `SourceDescriptor.cadence` | Stale-source label; original release_time; days-since-staleness |
-| **Degraded** | ANSWER (with warning) | Orange DEGRADED badge | Cached / fallback served (e.g., upstream unreachable but cached PMTiles available, per `ML-064-017`) | Degradation reason; cache age; "values may differ from canonical" caveat |
-| **Superseded** | ANSWER (or ABSTAIN if user is on outdated layer) | Blue SUPERSEDED badge | A newer `ReleaseManifest` exists | Link to current release; "you are viewing release_id X; current is Y" |
-| **ABSTAIN** | ABSTAIN | Gray ABSTAIN state | Insufficient evidence, unresolved citation, model output without supporting bundle | Reason (one of: insufficient evidence, unresolved citation, missing receipt, stale beyond tolerance); guidance ("a reviewer will resolve this") |
-| **DENY** | DENY | Red DENY state with rationale | Policy denied (rights, sensitivity, sovereignty, restricted-use license) | Rationale code (not rule body); pointer to public-safe alternative if any; appeal path |
-| **No Data** | ANSWER (with explicit "no data at point") | Pale gray NO DATA state | Click landed on a layer point with no record | "No record at this location"; nearest-record link if helpful; not the same as DENY |
-| **Unverifiable** | ABSTAIN | Yellow UNVERIFIABLE badge | Bundle present but verification (signature, hash, attestation) failed | Failure reason ("signature did not verify", "hash mismatch", "missing attestation"); admin contact path |
-| **Error** | ERROR | Red ERROR state | Upstream system failure (governed API 5xx, network) | "Couldn't load evidence — try again" + retry control; **never** a fallback to inferred content |
+| Outcome | Typical current reasons | Browser posture |
+|---|---|---|
+| `ANSWER` | `SUPPORTED` | Render governed title, summary, evidence refs, HTTPS citations, limitations, trust labels, and safe correction history |
+| `ABSTAIN` | `MISSING_EVIDENCE`, `STALE_EVIDENCE`, `CITATION_UNRESOLVED`, `HELD_EVIDENCE`, `SUPERSEDED_EVIDENCE`, `WITHDRAWN_EVIDENCE`, `REVOKED_EVIDENCE` | Render fixed reason copy; show only bounded details permitted by the profile |
+| `DENY` | `POLICY_DENIED`, `RIGHTS_UNRESOLVED`, `SENSITIVE_DETAIL_RESTRICTED` | Render fixed no-leak copy; expose no evidence, citations, or history |
+| `ERROR` | `UPSTREAM_ERROR` | Render fixed error copy; expose no evidence or diagnostics |
 
-### 5.2 State diagram
+The app-local `INVALID_PAYLOAD` and `NO_GOVERNED_RESPONSE` codes are view-model safeguards, not schema `reason_code` values.
 
-```mermaid
-stateDiagram-v2
-    [*] --> LOADING: user clicks
-    LOADING --> OK: outcome=ANSWER + ALLOW + fresh
-    LOADING --> Corrected: ANSWER + has CorrectionNotice
-    LOADING --> Stale: ANSWER + source-freshness expired
-    LOADING --> Degraded: ANSWER + cached fallback
-    LOADING --> Superseded: ANSWER + newer ReleaseManifest
-    LOADING --> ABSTAIN: insufficient / unresolved
-    LOADING --> DENY: policy denied
-    LOADING --> NoData: no record at point
-    LOADING --> Unverifiable: bundle present + verification failed
-    LOADING --> Error: upstream failure
+### 5.2 State refinements
 
-    Corrected --> OK: user dismisses banner
-    Stale --> OK: refresh succeeds
-    Degraded --> OK: upstream recovers
-    Superseded --> OK: user navigates to current release
-    Error --> LOADING: retry
-    Unverifiable --> ABSTAIN: re-resolution still fails
-    ABSTAIN --> OK: evidence resolved
-    DENY --> [*]: no recovery in drawer
-    NoData --> [*]: click elsewhere
-```
+- **Stale** is currently an `ABSTAIN` with `STALE_EVIDENCE`, not an `ANSWER` warning.
+- **Superseded**, **withdrawn**, **revoked**, and **held** evidence remains non-current history.
+- **Corrected** may be an `ANSWER` only when the correction chain is complete and the terminal evidence ref is current support.
+- **Denied** history is not exposed in a public `DENY` projection.
+- **No data** has no separate schema outcome; a future semantics decision must map it explicitly without inventing a fifth finite outcome.
+- **Degraded** has no current top-level outcome or reason code; adding one requires contract/schema/parser/test review rather than UI-only invention.
 
-> [!WARNING]
-> **The state set is closed.** A new state requires an ADR per §0 (Reviewers required for change). Don't invent a "PROVISIONAL" or "MAYBE-OK" state — it defeats the finite-outcome guarantee. Use the existing ten + LOADING.
+### 5.3 Visual treatment
 
-### 5.3 Per-state accessibility contract
+The current TypeScript slice creates semantic text labels and ARIA state. It does not by itself prove production colors, icons, contrast, motion, responsive layout, or localization. Those remain UI implementation and accessibility obligations, not facts established by this page.
 
-Per *Master MapLibre v2.1 §S* and `ML-S-049`, every state MUST:
-
-- Have a unique ARIA `role` + `aria-live` configuration appropriate to its urgency (DENY and ERROR are assertive; STALE and Degraded are polite; OK and NoData are off).
-- Use a color **plus** an icon **plus** a text label — never color alone (WCAG 1.4.1 Use of Color).
-- Maintain a 4.5:1 contrast ratio against background (WCAG 1.4.3 / 1.4.11).
-- Expose a keyboard-operable "Why this state?" affordance that opens the rationale.
-
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 6. Per-Domain Projections
 
-Every KFM domain has an "Evidence Drawer payload" endpoint per Atlas v1.1 J-section. The endpoint is the **per-domain composition surface** — it builds the cross-cutting `EvidenceDrawerPayload` shape with domain-specific limitations and sensitivity defaults.
+### 6.1 Shared profile, domain-owned meaning
 
-### 6.1 The thirteen domain projections (Atlas v1.1)
+The current bounded UI profile is generic. Domain-owned services or fixtures may supply:
 
-| Domain | J-section endpoint (Atlas v1.1) | Domain-specific limitations |
-|---|---|---|
-| Hydrology | `Hydrology Evidence Drawer payload → EvidenceDrawerPayload + EvidenceBundle projection` | HUC version pin; NFHL regulatory disclaimer; gauge-site freshness window |
-| Soil | "Soil Evidence Drawer payload" | SSURGO/gNATSGO version pin; `SoilTimeCaveat` for legacy survey vintages |
-| Habitat | "Habitat Evidence Drawer payload" | `Model Run Receipt` for suitability surfaces; CARE label for stewardship zones |
-| Fauna | "Fauna Evidence Drawer payload" | Geoprivacy generalization marker; ITIS TSN + GBIF Backbone version pin |
-| Flora | "Flora Evidence Drawer payload" | RarePlantRecord geoprivacy; CARE label for ethnobotanical context |
-| Geology | "Geology Evidence Drawer payload" | GeologyBoundaryVersion pin; advisory disclaimer for resource estimates |
-| Atmosphere / Air | "Atmosphere/Air Evidence Drawer payload" | **"AQI is not concentration"**, **"AOD is not PM2.5"**, **"model fields are not observations"**, low-cost-sensor caveat |
-| Hazards | "Hazards Evidence Drawer payload" | **"KFM is observational, not emergency-alert authority"** disclaimer (Atlas Ch. 12) |
-| Roads / Rail / Trade | "Roads/Rail Evidence Drawer payload" | Historic-route uncertainty surface; modern vs historic distinction |
-| Settlements / Infrastructure | "Settlements/Infrastructure Evidence Drawer payload" | Critical-infrastructure deny banner; legal-municipality vs census distinction |
-| Archaeology | "Archaeology Evidence Drawer payload" | Sovereignty review note; "exact location denied" banner for T4 sites; CARE label |
-| Hazards | (above) | (above) |
-| Agriculture | "Agriculture Evidence Drawer payload" | Aggregate-vs-field-candidate distinction; "private operator joins denied" |
-| People / Genealogy / DNA / Land | "People/DNA/Land Evidence Drawer payload" | **Living-person fields deny banner**; DNA-consent banner; person-parcel join denial |
-| **+ Frontier Matrix** *(special-status)* | "Frontier Matrix Evidence Drawer payload" | Cell-snapshot receipt; "matrix cell is analytical release, not source truth" disclaimer |
-| **+ Planetary / 3D** *(special-status; per [`maplibre-3d.md`](./maplibre-3d.md))* | "Planetary/3D Evidence Drawer payload" | `RealityBoundaryNote` marker; "scene is reconstructed / interpolated" banner; admission-decision rationale |
+- domain claim labels and scope;
+- evidence identifiers and citations;
+- source-role and limitation text;
+- rights and sensitivity outcomes;
+- review, release, freshness, and correction state.
 
-### 6.2 The drawer schema is generic; projections specialize it
+Those values must be settled upstream by the owning domain and governance surfaces. The generic browser component must not hard-code domain truth, rewrite domain caveats, or introduce a parallel domain schema merely for presentation.
 
-Per `ML-056-014` ("Generic Evidence Drawer schema gap") and `ML-056-015` ("Drawer projection separates UI from canonical evidence"): **`EvidenceDrawerPayload` is one generic schema; per-domain projections specialize via `limitations`, `policy_state.restricted_fields`, and `source_summary`.**
+### 6.2 Current maturity is uneven
 
-This means:
+The confirmed Hydrology wrapper re-exports the generic drawer. The confirmed Archaeology wrapper remains a placeholder. This page therefore does not claim complete domain coverage, uniform route support, or identical domain fixtures.
 
-- **One schema** at `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` covers every domain.
-- **Per-domain limitations registries** at `policy/domains/<domain>/drawer_limitations.yaml` (PROPOSED) record the standard limitations that domain MUST attach (e.g., Atmosphere's "AQI is not concentration").
-- **Per-domain projection tests** at `tests/domains/<domain>/evidence_drawer/` verify that domain-specific caveats are correctly attached on each ANSWER/ABSTAIN payload.
+A later domain-conformance inventory should classify each domain surface as one of:
 
-The drawer COMPONENT does NOT need per-domain code — it renders whatever `EvidenceDrawerPayload` it receives. Domain-specific rendering hooks (e.g., custom limitation icons) are themed via the payload, not coded into the drawer.
+- generic re-export;
+- bounded domain adapter;
+- placeholder;
+- bespoke implementation requiring convergence;
+- absent;
+- not inspected.
 
-> [!TIP]
-> **No per-domain drawer components.** Per `ML-056-014`: "per-domain drawer schemas scale linearly" — that's the problem to avoid. There is **one** drawer component; domains supply payload content. Don't create `apps/explorer-web/src/evidence-drawer/fauna/`, `…/flora/`, etc.
+### 6.3 Sensitive domains
 
-[⤴ Back to top](#-contents)
+For archaeology, fauna, flora, people/DNA/land, infrastructure, or any other sensitive lane:
+
+- restricted values must be removed before the browser projection;
+- `DENY` must not disclose evidence or history identifiers;
+- generalization, redaction, consent, sovereignty, purpose, and audience decisions remain upstream;
+- the drawer may display a public-safe reason code, not the protected rule body or exact detail;
+- a map style, hidden DOM node, popup, or client filter is not a sensitivity control.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Click Resolution, Popups, and Badges
 
-Three trust-adjacent UI affordances coexist. Each has a defined role; **none may substitute for the drawer** (per `ML-061-139`).
+### 7.1 Architectural roles
 
-### 7.1 The three affordances
-
-| Affordance | Role | Triggers what |
+| Surface | Permitted role | Prohibited role |
 |---|---|---|
-| **MapLibre popup** | Lightweight feature teaser on hover/click | Shows feature name, layer, one-line summary. Has a **"Show evidence"** button that opens the drawer. |
-| **Verification badge** | Trust-state icon on the layer/feature/legend | Per `ML-061-138` and `ML-061-140`: exposes verified / stale / degraded / unverified state at a glance. **Clicking the badge opens the drawer** (`ML-061-139`). |
-| **Evidence Drawer** | Full trust surface | Shows everything in §3. Persistent (does not auto-dismiss); explicit close. |
+| Map feature | Launch context with stable feature/layer identity | Evidence or policy authority |
+| Popup / tooltip | Short non-consequential teaser and launch affordance | Complete citation or trust surface |
+| Trust / attestation badge | Finite state indicator linked to inspectable support | Proof by color or icon |
+| Evidence Drawer | Full public-safe projection of the governed outcome | Evidence creation, policy execution, or release |
+| Focus Mode citation | Launch context for inspecting cited support | Back channel to raw model output |
+| Export / screenshot | Carrier that preserves release and citation context when implemented | Independent truth artifact |
 
-### 7.2 Resolution priority
+### 7.2 Current implementation boundary
 
-When a user clicks the map, the drawer is the destination for the trust answer. The popup MAY appear first as a teaser; the badge MAY appear on the popup as a state indicator; both MUST link to the drawer.
+The inspected Evidence Drawer slice exposes a local `mountEvidenceDrawer` trigger for deterministic browser testing. It does not prove:
 
-```mermaid
-flowchart LR
-    Click["User click on feature"] --> Popup["MapLibre popup<br/>(teaser, optional)"]
-    Click --> Badge["Verification badge<br/>(state indicator)"]
-    Popup -->|"'Show evidence' button"| Drawer["Evidence Drawer"]
-    Badge -->|"badge click"| Drawer
-    Drawer -->|"resolves & renders"| State["One of §5 states"]
+- MapLibre click event wiring;
+- popup or badge routing;
+- stable feature-to-payload request identity;
+- Focus Mode citation handoff;
+- export/share preservation;
+- production governed-client transport.
 
-    classDef teaser fill:#6e7681,stroke:#8b949e,color:#fff;
-    classDef indicator fill:#bf8700,stroke:#d29922,color:#fff;
-    classDef drawer fill:#2ea44f,stroke:#3fb950,color:#fff;
-    class Popup teaser;
-    class Badge indicator;
-    class Drawer,State drawer;
-```
+Those integrations should reuse the strict parser and finite view model rather than bypass them.
 
-### 7.3 What's forbidden
+### 7.3 Anti-substitution rule
 
-- **Citations in popups** as if they were the citation set. Per *Master MapLibre v2.1 §N* component table: "Popup is not substitute". A popup may *mention* that evidence exists; it MUST NOT list citations as the canonical set.
-- **Badge as evidence**. Per `ML-061-090` ("Attestation badges should be backed by receipts and not visual trust theater") and the anti-pattern "Badge as proof substitute": a green badge alone is theater; the badge MUST link to the drawer where the receipt and EvidenceBundle live.
-- **Drawer-less feature interaction.** Per atlas card `KFM-P1-FEAT-0065`: every public claim, every map feature, every layer state, every AI answer MUST have an Evidence Drawer or equivalent trust-visible payload available. A clickable feature without a drawer path is incomplete.
+A popup, badge, map property, layer description, screenshot, Story Node, or AI answer cannot stand in for the drawer. Conversely, the drawer cannot stand in for the underlying `EvidenceBundle`, policy decision, review record, release manifest, correction notice, or rollback record.
 
-### 7.4 Export and screenshot behavior
-
-Per `ML-061-141` ("Exports and screenshots should preserve verification badge state and manifest ID"): any exported map, story export, or screenshot that includes badges MUST preserve the badge state and the linked `ReleaseManifest` ID at the time of export. This is so consumers of the export can verify they're looking at the same release the map was showing. Story exports inherit this rule via [`docs/architecture/governed-api.md`](./governed-api.md) (and [Atlas Ch. 21 phase 15](../atlases/)).
-
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 8. Accessibility Requirements
 
-Per *Master MapLibre v2.1 §S* and atlas card `ML-S-049` ("Keyboard-accessible drawer and badge controls are required for trust visibility"), accessibility is **non-negotiable** for the drawer. Trust visibility is trust ONLY when every user can access it.
+Accessibility is part of the trust surface because an evidence explanation that some users cannot reach or understand is not fully inspectable.
 
-### 8.1 Required affordances
+### 8.1 Confirmed in the current bounded renderer
 
-- [ ] **Keyboard operability.** The drawer opens, navigates, and closes without a mouse. Tab order is meaningful. Escape closes. Focus returns to the triggering badge or popup on close.
-- [ ] **ARIA roles.** The drawer container has `role="dialog"` (or `complementary`, depending on persistence model) with `aria-labelledby` pointing to the drawer title.
-- [ ] **`aria-live` for state changes.** When the drawer state transitions (loading → ANSWER, ANSWER → corrected, etc.), the change is announced. Urgency-appropriate (`polite` for stale, `assertive` for DENY/ERROR).
-- [ ] **Color + icon + label for every state.** Per §5.3. WCAG 1.4.1 (Use of Color). The DENY state, for example, is NOT only red — it has a deny icon and a "Denied" text label.
-- [ ] **Contrast.** 4.5:1 minimum for body text; 3:1 for large text and graphical elements (WCAG 1.4.3 / 1.4.11).
-- [ ] **Alt text on images.** Every image card in the drawer (per `ML-064-059`, `ML-064-091`) carries alt text from `SourceDescriptor.media[*].alt` or `EvidenceBundle.media[*].alt`. **Missing alt is a DENY / WARN policy** at the projection stage.
-- [ ] **Screen-reader-perceivable map context.** Per `ML-S-051` ("Time slider state should be perceivable and not only visual"): if the drawer references a time window from `MapContextEnvelope.time_window`, the window is announced as text, not only displayed as a slider position.
-- [ ] **No-data and unverifiable states perceivable.** Per `ML-S-063` ("No-data and unverifiable states are UI requirements"): these MUST have explicit text, not only iconography.
-- [ ] **Reduced-motion respect.** Drawer open/close animations honor `prefers-reduced-motion`.
+The current `mountEvidenceDrawer` implementation provides:
 
-### 8.2 CI accessibility tests
+- a native button to open the panel;
+- `aria-controls` and `aria-expanded`;
+- an `<aside>` with `role="complementary"`;
+- `aria-labelledby` and outcome-dependent `aria-live`;
+- a native close button;
+- Escape-to-close behavior;
+- focus movement into the drawer;
+- focus return to the prior connected element or trigger;
+- labeled lists for trust state, evidence refs, citations, history, and limitations;
+- fixed no-leak text for negative and invalid states.
 
-Per *Master MapLibre v2.1 §S* required validations:
+### 8.2 Needs verification before production claims
 
-| Test category | What it asserts | Live in |
-|---|---|---|
-| Keyboard navigation | Tab order, Escape close, focus restoration | `tests/ui/evidence-drawer/keyboard.spec.*` |
-| Contrast / color | 4.5:1 / 3:1 ratios across all §5 states | `tests/ui/evidence-drawer/contrast.spec.*` |
-| ARIA / screen reader | Roles, labels, live regions announce correctly | `tests/ui/evidence-drawer/aria.spec.*` |
-| State-perceivability | Each §5 state has text + icon + color | `tests/ui/evidence-drawer/state_perceivability.spec.*` |
-| Alt-text presence | No image card without alt | `tests/ui/evidence-drawer/alt_text.spec.*` |
-| Visual regression | §5 state snapshots stay stable | `tests/ui/evidence-drawer/visual.spec.*` |
+- focus trapping and behavior with multiple interactive controls;
+- reduced-motion support;
+- responsive/mobile behavior;
+- non-map alternative navigation;
+- color, icon, and text parity;
+- visual contrast and high-contrast modes;
+- screen-reader testing across supported browsers;
+- heading and landmark integration inside the full Explorer shell;
+- localization and long-text behavior;
+- production browser tests against live transport;
+- accessibility enforcement as a required release check.
 
-> [!CAUTION]
-> **An accessibility regression is a release blocker.** Per [Directory Rules §16](./directory-rules.md#16-path-validation-checklist-for-reviewers) reviewer checklist and *Master MapLibre v2.1 §S* "fail-closed" stance: a failing a11y test is not a warning — it's a refusal-to-promote. The drawer cannot be the trust surface for users who cannot use it.
+### 8.3 Accessibility failure posture
 
-[⤴ Back to top](#-contents)
+A payload or renderer that leaks restricted text, loses finite state, strands focus, or makes trust state imperceptible must fail closed. This page does not claim that all production accessibility gates are currently enforced.
+
+[Back to top](#top)
 
 ---
 
 ## 9. What the Drawer MUST NOT Do
 
-This is the drawer-specific anti-pattern register. It complements [Directory Rules §13](./directory-rules.md#13-anti-patterns-and-drift-prevention), [Domain Placement Law §10](./domain-placement-law.md#10-anti-patterns-specific-to-domain-placement), and [`docs/architecture/ecology-cross-domain.md`](./ecology-cross-domain.md) §8.
-
-| Anti-pattern | Symptom | Fix |
+| Anti-pattern | Failure | Required correction |
 |---|---|---|
-| **Drawer as truth** | The drawer renders a value not present in any `EvidenceBundle`. | `EvidenceBundle` is canonical (per [Trust Membrane doctrine](../doctrine/trust-membrane.md)); the drawer projects. Quarantine the route; require resolution. |
-| **Popup substitutes for drawer** | A popup shows full citations and trust state as if it were the drawer. | Popups are teasers; per *Master MapLibre v2.1 §N*, "Popup is not substitute". Refactor: popup → "Show evidence" button → drawer. |
-| **Badge as evidence** | A green badge appears without a backing receipt; clicking the badge does nothing or shows a tooltip. | Per `ML-061-090` and `ML-061-139`: badges link to drawer; drawer shows the receipt. Wire the click. |
-| **Silent restricted-field drop** | The drawer omits sensitive fields without indicating they were filtered. | Per §3.3 invariant 3: `policy_state.restricted_fields` MUST enumerate omissions. Add the enumeration; show "N fields restricted" in the UI. |
-| **DENY without rationale** | The drawer shows a generic "denied" with no reason code. | Per §3.3 invariant 4: DENY requires `policy_state.rationale`. Add the rationale code + appeal path (if any). |
-| **ABSTAIN without reason** | The drawer ABSTAINS but gives no reason. | Per §3.3 invariant 5: ABSTAIN requires at least one of limitations, unresolved-evidence reference, or stale flag. Surface it. |
-| **Drawer reads internal store** | The drawer fetches from `data/raw/`, `data/work/`, `data/quarantine/`, or directly from a model adapter. | Per §1.4 and [Directory Rules §13.5](./directory-rules.md#135-additional-anti-patterns): the drawer MUST go through `apps/governed-api/`. Refactor; add a runtime-proof test. |
-| **AI summary in drawer without AIReceipt** | The drawer renders generated text without an `AIReceipt` and citation-validation record. | The drawer is for evidence, not generation. AI content goes through Focus Mode and emits `AIReceipt`. If AI text appears in the drawer, it MUST cite the AIReceipt and the validated citations. |
-| **Infinite spinner** | The drawer shows LOADING forever when the upstream is slow or unreachable. | Per §4.2 invariant 5: latency budget is enforced; on SLO timeout the drawer transitions to ERROR (with retry) or DEGRADED (with cached) — never persistent LOADING. |
-| **Drawer renders DENY content for inspection** | The drawer is implemented to fetch denied fields server-side and then "hide" them client-side via style or CSS. | Style-only hiding is forbidden (compare *Master MapLibre v2.1* anti-pattern: "Style-filter geoprivacy — exact sensitive geometry exists in public tile but is hidden by style/filter"). The projection MUST drop restricted values on the server side; client receives only allowed data. |
-| **Per-domain drawer components** | `apps/explorer-web/src/evidence-drawer/fauna/`, `apps/explorer-web/src/evidence-drawer/archaeology/`, etc. exist as parallel components. | Per §6.2 and `ML-056-014`: one generic component, per-domain projections via payload content. Delete the per-domain components; theme via payload. |
-| **Drawer recomputes policy** | The drawer calls a policy engine on the client to filter fields. | Per `ML-056-019`: "Do not recompute policy meaning in UI." Policy lives server-side; drawer renders. |
-| **Citations point to layer descriptions, not EvidenceBundle** | The "citation" link goes to a layer info page instead of to a real evidence source. | Citations MUST cite `EvidenceBundle` claims, not UI metadata. Per `CitationValidationReport`: fail closed on un-resolvable citations. |
-| **3D scene drawer without RealityBoundaryNote** | A drawer opens on a 3D-rendered feature whose layer contains synthetic surface, but no `RealityBoundaryNote` reference is present. | Per [`maplibre-3d.md`](./maplibre-3d.md) and §3.2 (optional fields): synthetic surface ⇒ `RealityBoundaryNote` required. Refuse promotion. |
-| **Stale state hidden** | Source freshness has expired but the drawer renders as OK. | Per `ML-061-094`: stale-source UI state derives from normalized timing fields. The stale check is a `release_state.stale` flag enforced at projection. If it's missing, add it. |
-| **No-data conflated with DENY** | A click on a layer point with no record returns DENY. | "No record at this point" is ANSWER + NoData, not DENY. DENY means policy refused. Distinguish at the projection. |
+| **Drawer as truth** | UI text or map properties become claim support | Resolve and cite authoritative evidence upstream or abstain |
+| **Direct network/store access** | Browser reads lifecycle, proof, model, or canonical stores | Route through the governed trust membrane; keep browser projection-only |
+| **Client-side policy** | UI recomputes sensitivity or hides fields with CSS | Remove restricted values server-side and project only allowed state |
+| **Permissive fallback** | Closed UI profile fails, then a sibling permissive schema is accepted | Return `INVALID_PAYLOAD`; resolve schema authority separately |
+| **DENY or ERROR reflection** | Restricted or diagnostic input text appears in output | Use fixed no-leak copy and empty support/history fields |
+| **ABSTAIN upgraded to ANSWER** | Stale or unresolved evidence is displayed as fact | Preserve finite outcome and reason code |
+| **History as current support** | Held, denied, superseded, revoked, or withdrawn ref appears in current evidence | Reject the payload |
+| **Correction cycle** | Prior and active refs form a loop or ambiguous chain | Reject; require acyclic terminal binding |
+| **Badge as proof** | Visual state has no inspectable support path | Make the badge a launch affordance only |
+| **Popup as drawer** | Teaser carries full trust semantics without governed projection | Open the drawer for consequential inspection |
+| **Direct model text** | Generated language appears as evidence | Use governed AI envelopes and cited evidence; drawer stays evidence-facing |
+| **Per-domain authority fork** | Domain UI redefines shared finite outcomes or evidence meaning | Reuse the shared profile; specialize upstream data and limitations |
+| **Schema pass as publication** | Validator result is presented as released truth | Require evidence, policy, review, release, correction, and rollback closure |
+| **Documentation as runtime proof** | This page or a README is cited as proof of live behavior | Verify code, tests, workflows, artifacts, and runtime state |
 
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 10. Reviewer Checklist for Drawer-Touching PRs
 
-A PR is **drawer-touching** if it modifies: `apps/explorer-web/src/evidence-drawer/`, `packages/ui/src/evidence-drawer/`, `packages/maplibre-runtime/src/feature-click-resolver.ts`, `contracts/ui/evidence_drawer_payload.md`, `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`, `policy/runtime/drawer_projection.rego`, any `/v1/<domain>/evidence-drawer/...` route handler in `apps/governed-api/`, or any test under `tests/ui/evidence-drawer/` or `tests/integration/maplibre/feature_click_to_drawer/`.
+A change is drawer-touching when it modifies the UI profile, contracts, fixtures, validator, Explorer parser, view model, renderer, tests, workflow, launch integration, or upstream producer.
 
-This checklist is in addition to [Directory Rules §16](./directory-rules.md#16-path-validation-checklist-for-reviewers) and [Domain Placement Law §9](./domain-placement-law.md#9-reviewer-checklist).
+### Authority and placement
 
-### Contract & schema
+- [ ] The owning responsibility root is identified.
+- [ ] No new parallel evidence, contract, schema, policy, source, proof, release, or correction home is created.
+- [ ] The unresolved UI/evidence contract-home seam is not silently declared resolved.
+- [ ] `@bartytime4life` is used only as the verified GitHub review route; unverified steward identities are not invented.
 
-- [ ] **`EvidenceDrawerPayload` schema unchanged or version-bumped.** Breaking field changes require ADR per §0.
-- [ ] **Every required field present** in the projection (§3.1).
-- [ ] **All §3.3 invariants verified by tests.** New invariants added if applicable.
-- [ ] **Cross-cutting families cited by reference**, not embedded inline.
+### Contract and parser parity
 
-### Trust path
+- [ ] Profile identifier, required fields, outcomes, reason codes, and trust-state enums remain synchronized.
+- [ ] Unknown fields fail closed.
+- [ ] `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` cross-field rules remain exact.
+- [ ] App-local `INVALID_PAYLOAD` and `NO_GOVERNED_RESPONSE` are not added to the wire schema by accident.
+- [ ] A breaking profile change is versioned and reviewed with migration/rollback evidence.
 
-- [ ] **No direct store reads** from the drawer. All calls go through `apps/governed-api/`.
-- [ ] **Policy decision short-circuits before evidence resolution** (§4.2 invariant 2).
-- [ ] **Evidence resolution fail-closed** to ABSTAIN, not silent fallback (§4.2 invariant 3).
-- [ ] **Restricted fields dropped server-side**, not style-hidden client-side.
+### Evidence, policy, and no-leak boundary
 
-### States
+- [ ] Browser code performs no direct lifecycle-store, proof-store, model-runtime, or canonical-store read.
+- [ ] `DENY` and `ERROR` expose no evidence refs, citations, history, or untrusted text.
+- [ ] Restricted values are removed upstream, not hidden in the DOM or by style.
+- [ ] ABSTAIN reasons and non-current history remain visible only within public-safe bounds.
+- [ ] Schema validity is not described as evidence or release proof.
 
-- [ ] **All ten §5 states + LOADING covered** by fixtures and stories.
-- [ ] **No new state introduced** outside ANSWER / ABSTAIN / DENY / ERROR without ADR.
-- [ ] **DENY carries rationale.** ABSTAIN carries reason.
-- [ ] **Stale, Corrected, Superseded, Degraded** distinguished from each other in UI and in tests.
+### Correction and history
+
+- [ ] Negative state and reason code agree.
+- [ ] Historical evidence does not overlap current support.
+- [ ] Correction edges are unique, acyclic, and non-self-referential.
+- [ ] Every correction prior is represented as superseded history.
+- [ ] Every terminal correction target supporting an answer is current.
 
 ### Accessibility
 
-- [ ] **Keyboard operability** verified by test.
-- [ ] **ARIA roles + `aria-live` regions** present and announce correctly.
-- [ ] **Contrast ≥ 4.5:1** body / 3:1 large.
-- [ ] **Color + icon + text** on every state.
-- [ ] **Alt text** on every image card; missing-alt DENY/WARN policy active.
-- [ ] **Reduced-motion** respected.
+- [ ] Keyboard open, close, Escape, and focus return remain tested.
+- [ ] Landmarks, labels, and live regions match the rendered outcome.
+- [ ] No state relies on color alone.
+- [ ] New interactive content has a defined focus order and non-map alternative.
+- [ ] Production-only accessibility claims are backed by production-oriented evidence.
 
-### Per-domain projections
+### Validation
 
-- [ ] **No per-domain drawer components introduced** (§6.2).
-- [ ] **Domain-specific limitations** in `policy/domains/<domain>/drawer_limitations.yaml` (or PROPOSED home pending ADR) attached on each ANSWER/ABSTAIN payload.
-- [ ] **Per-domain projection test** added or updated under `tests/domains/<domain>/evidence_drawer/`.
+Current repository-native focused commands are:
 
-### 3D and special-status
+```bash
+python tools/validators/ui/validate_evidence_drawer_payload.py --fixtures
+python -m unittest -q tests.validators.test_validate_evidence_drawer_payload
+pnpm --filter explorer-web test
+pnpm --filter explorer-web build
+```
 
-- [ ] **`RepresentationReceipt` reference** present when the drawer is opened on a 3D-rendered feature.
-- [ ] **`RealityBoundaryNote` reference** present when any contributing layer has synthetic / interpolated surface.
-- [ ] **3D Admission Decision** rationale shown in policy_state when relevant.
+The dedicated workflow is [`.github/workflows/evidence-drawer-payload.yml`](../../.github/workflows/evidence-drawer-payload.yml). A green run proves only its bounded checks. It does not resolve evidence, execute policy, authenticate review, authorize release, deploy, or publish.
 
-### Latency, error, and retry
-
-- [ ] **SLO-bounded latency** verified by test; no infinite LOADING.
-- [ ] **Retry control** present on ERROR; clears state cleanly on success.
-- [ ] **Cached fallback** announces DEGRADED state with cache age (`ML-064-017`).
-
-### Trust-membrane
-
-- [ ] **`RunReceipt` emitted** to `data/receipts/runtime/` for every drawer-open call.
-- [ ] **No direct model output** in the drawer body (AI text only via Focus Mode + `AIReceipt`).
-- [ ] **Story export preserves drawer state and manifest ID** if the PR touches the export path (`ML-061-141`).
-
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 11. Open Questions and NEEDS VERIFICATION
 
-- **OPEN-EVD-01 — `/v1/<domain>/evidence-drawer/<feature_id>` route style.** §2.1 and §4 PROPOSE this route prefix. Atlas v1.1 J-tables mark "exact route UNKNOWN" for every domain. **Resolution by ADR** for the route prefix + path-parameter conventions. Recommendation: per-domain prefix preserves [Domain Placement Law §3](./domain-placement-law.md#3-the-lane-pattern) uniformity; alternative is a single `/v1/evidence-drawer/<feature_id>` (composition-style) endpoint that resolves domain from `feature_id`. Both are defensible; the latter reduces route proliferation but loses some review-time obviousness.
+| ID | Status | Question or gap | Closure evidence |
+|---|---|---|---|
+| `OPEN-EVD-01` | **NEEDS VERIFICATION** | What is the final semantic authority split between `contracts/ui/evidence_drawer_payload.md` and `contracts/evidence/evidence_drawer_payload.md`? | Accepted decision or contract migration with schema, fixture, validator, reference, and rollback closure |
+| `OPEN-EVD-02` | **NEEDS VERIFICATION** | Should `docs/architecture/evidence-drawer.md` and `docs/architecture/ui/EVIDENCE_DRAWER.md` be consolidated, or retain distinct whole-system/UI responsibilities? | Documentation-system decision, inbound-link inventory, stable-anchor plan, and reversible migration |
+| `OPEN-EVD-03` | **UNKNOWN** | Which live governed API endpoint and request envelope, if any, currently serves this profile? | Pinned route/config/code plus representative no-network or runtime test |
+| `OPEN-EVD-04` | **UNKNOWN** | Is EvidenceRef-to-EvidenceBundle resolution integrated into the drawer path? | Resolver contract, repository abstraction, policy/review/release checks, fixtures, tests, and runtime evidence |
+| `OPEN-EVD-05` | **NEEDS VERIFICATION** | Which domain wrappers are generic re-exports, bounded adapters, placeholders, bespoke forks, or absent? | Commit-pinned recursive inventory and convergence plan |
+| `OPEN-EVD-06` | **UNKNOWN** | Are map click, popup, badge, Focus Mode, table, Story Node, export, and share launch paths wired to the strict profile? | Integration tests and current route/adapter evidence |
+| `OPEN-EVD-07` | **UNKNOWN** | Which upstream component guarantees source rights, sensitive-field removal, review authenticity, release state, and correction completeness? | Accepted authority map, policy tests, and end-to-end fixtures |
+| `OPEN-EVD-08` | **NEEDS VERIFICATION** | Should no-data or degraded service receive new reason codes, or map to existing outcomes? | Contract/schema decision with parser, fixture, accessibility, and migration tests |
+| `OPEN-EVD-09` | **UNKNOWN** | Are production accessibility obligations enforced across supported browsers and non-map paths? | Browser matrix, screen-reader review, contrast/motion checks, and required CI evidence |
+| `OPEN-EVD-10` | **UNKNOWN** | Are the dedicated workflow and aggregate UI checks required by branch/ruleset policy? | Current GitHub ruleset and required-check evidence |
+| `OPEN-EVD-11` | **UNKNOWN** | Does a released correction invalidate cached drawer projections, exports, search, map state, and AI citations? | Correction/withdrawal propagation rehearsal and rollback receipt |
+| `OPEN-EVD-12` | **NEEDS VERIFICATION** | Is the generated authoring receipt still current against all bound artifact bytes? | Receipt validator result tied to the exact branch head |
 
-- **OPEN-EVD-02 — `policy/domains/<domain>/drawer_limitations.yaml` placement.** §6.2 PROPOSES this home for per-domain drawer limitations registries. Alternatives: `contracts/ui/drawer_limitations/<domain>.md` (treats limitations as semantic), `data/registry/drawer_limitations/` (treats them as append-only registry). **Resolution by per-lane README** is acceptable; ADR if the registry becomes ADR-significant (which it would if `RuntimeResponseEnvelope` decisions depend on the registry content). Recommendation: keep under `policy/domains/<domain>/` since limitations affect projection (a policy concern).
-
-- **OPEN-EVD-03 — Drawer state for "user is not authorized for this layer at all".** §5 defines DENY for policy-restricted *fields*; what about a user clicking on a layer they're not authenticated for? Two options: (a) DENY at the layer level (drawer never opens — the layer isn't even visible); (b) drawer opens with a special "AUTH-REQUIRED" sub-state. **Resolution by ADR.** Recommendation: (a) — the layer should not be visible if the user lacks authorization; per [Trust Membrane doctrine](../doctrine/trust-membrane.md), the membrane is operationalized at layer-discovery time, not drawer-open time.
-
-- **OPEN-EVD-04 — Whether to publish `EvidenceDrawerPayload` shape externally.** The schema is currently internal. Should KFM publish the schema as part of the public API contract (so downstream consumers can build their own drawers)? **Resolution by ADR.** Recommendation: yes — the schema is generic and stable, and external consumers will want to inspect KFM evidence themselves; publishing it under `schemas/contracts/v1/ui/` with a public versioning policy is consistent with KFM's evidence-first posture.
-
-- **OPEN-EVD-05 — Drawer behavior under Focus Mode.** When a Focus Mode AI answer cites multiple features, does each citation open the drawer independently, or does the drawer show a multi-claim view? **Resolution by ADR or per-design exploration.** Recommendation: each citation opens an independent drawer-state (one-citation-per-drawer keeps the projection bounded); multi-claim views are out-of-scope and live in the Focus Mode answer surface itself, not in the drawer.
-
-- **OPEN-EVD-06 — Drawer behavior on slow upstreams.** §4.2 invariant 5 references an SLO but does not specify it. **Resolution by SLO setting + ADR** for the SLO threshold. Recommendation pending SLO calibration: 1.5 s P95 click-to-drawer for the OK case; 3 s P95 ceiling before forced DEGRADED or ERROR transition.
-
-- **NEEDS VERIFICATION — Mounted-repo state of all drawer-touching paths.** v1.0 was authored without inspection. §2.1's component-tree placement, the route names, the schema home, the policy home are all PROPOSED.
-
-- **NEEDS VERIFICATION — `EvidenceDrawerPayload` schema authoring status.** Master MapLibre v2.1 §M lists the field intent; whether the actual `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` has been authored is NEEDS VERIFICATION.
-
-- **NEEDS VERIFICATION — Story export preservation behavior.** §7.4 cites `ML-061-141`; whether the live story-export tool actually preserves drawer state and manifest ID requires inspection of `tools/export/` (or wherever story exports live; per [Directory Rules §7.5](./directory-rules.md#75-tools-and-scripts) the path is PROPOSED).
-
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 12. Glossary
 
-Drawer-specific terms. Cross-domain terms live in [Directory Rules §19](./directory-rules.md#19-glossary) and [Domain Placement Law §13](./domain-placement-law.md#13-glossary).
-
-| Term | Definition |
+| Term | Meaning |
 |---|---|
-| **Evidence Drawer** | The UI component in `apps/explorer-web/` that renders `EvidenceDrawerPayload` for a clicked feature / layer / AI answer. The trust surface at the public edge of the trust membrane. |
-| **`EvidenceDrawerPayload`** | The wire contract between `apps/governed-api/` and the drawer. A governed projection of `EvidenceBundle` plus `PolicyDecision`, `ReleaseManifest` state, and `review_state` — UI-shaped, finite-outcome-marked. Lives at `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` (PROPOSED). |
-| **`MapContextEnvelope`** | The typed bounded map-context sent to the governed API when the drawer asks for a payload. Carries visible_layers, bounds, zoom, pitch, bearing, filters, time_window, selected_features. Per *Master MapLibre v2.1 §M*. |
-| **Drawer projection** | The act of transforming `EvidenceBundle` (canonical) into `EvidenceDrawerPayload` (UI-shaped), applying `PolicyDecision` to filter restricted fields. Happens in `apps/governed-api/`, never in the client. |
-| **Trust-visible state** | One of the ten §5 outcomes (OK / Corrected / Stale / Degraded / Superseded / ABSTAIN / DENY / NoData / Unverifiable / Error) + LOADING. The closed set of finite outcomes the drawer can show. |
-| **Stale-source badge** | The Stale §5 state indicator. Triggered when a `SourceDescriptor.cadence` window has elapsed without new admission. Per Atlas Ch. 24.8 stale-state markers. |
-| **Restricted-fields enumeration** | The `policy_state.restricted_fields` list inside `EvidenceDrawerPayload` — names the fields that were dropped from the projection for policy reasons. Silent omission is forbidden. |
-| **Click-to-drawer SLO** | The latency budget from MapLibre click event to drawer-rendered state. PROPOSED at 1.5 s P95 (OK case) / 3 s P95 ceiling (forced DEGRADED/ERROR transition). See §11 OPEN-EVD-06. |
-| **Per-domain projection** | The per-domain endpoint that emits `EvidenceDrawerPayload` with domain-specific limitations and sensitivity defaults. There is one drawer component; thirteen per-domain projections. |
-| **Verification badge** | A small UI affordance on a layer / legend / feature that indicates trust state at a glance. Clicking it opens the drawer (per `ML-061-139`). Badge is entry; drawer is destination. |
-| **Drawer story** | A Storybook (or equivalent) preview for one §5 state. Required: one story per state plus the LOADING state. |
+| **Evidence Drawer** | Browser-side trust panel that renders one governed public-safe projection and finite outcome |
+| **`EvidenceDrawerPayload`** | Closed UI projection profile; not evidence closure or release authority |
+| **`EvidenceRef`** | Governed pointer whose authoritative resolution remains upstream |
+| **`EvidenceBundle`** | Evidence-bearing object that outranks UI and generated language |
+| **Projection** | Upstream transformation from governed evidence/policy/review/release state into fields safe for a particular UI audience |
+| **Finite outcome** | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
+| **Reason code** | Stable public-safe explanation of the finite outcome |
+| **Trust state** | Projection labels for source role, policy, review, release, freshness, and correction |
+| **Negative history** | Held, denied, superseded, revoked, or withdrawn evidence retained as non-current audit context |
+| **Correction chain** | Acyclic mapping from superseded prior evidence to a terminal active evidence ref |
+| **No-leak copy** | Fixed browser text that prevents denied, errored, malformed, or diagnostic input from being reflected |
+| **Fixture-only** | Current bounded execution over synthetic/supplied files or objects without live source, network, or lifecycle-store access |
+| **Trust membrane** | Governed boundary that must resolve evidence and apply policy before public-safe projection |
+| **Launch surface** | Map feature, popup, badge, table, Focus Mode citation, Story Node, or export affordance that may open the drawer but cannot supply truth |
 
-[⤴ Back to top](#-contents)
+[Back to top](#top)
 
 ---
 
 ## 13. Changelog
 
-### v1.0 — 2026-05-25 (initial component-architecture authoring)
+### v2.0.0 — 2026-08-18
 
-**Authority class:** §17 "PR + reviewer sign-off; no ADR" *(per [Directory Rules §17](./directory-rules.md#17-document-change-discipline))*. This document operationalizes existing doctrine (atlas card `KFM-P1-FEAT-0065`, Master MapLibre v2.1 §N and §S, Atlas v1.1 per-domain J-tables) for the Evidence Drawer specifically. It does not add, remove, or rename a canonical root, change the schema-home rule, change lifecycle phases, or create parallel authority. It does not bend any [§3 invariant of Directory Rules](./directory-rules.md#3-the-deeper-rule).
+**Change class:** same-path, repository-grounded semantic modernization.
 
-**Evidence basis:**
+- Replaced the obsolete no-repository posture with a pinned current-state inventory.
+- Replaced the legacy architecture-copy Directory Rules authority with accepted ADR-0029 and `docs/doctrine/directory-rules.md`.
+- Recorded the actual closed UI schema, UI semantic contract, fixtures, validator, tests, workflow, fixture-only parser, view-state resolver, and renderer.
+- Corrected the old ten-state model to the current four finite outcomes plus trust-state and history refinements.
+- Removed the illustrative schema and speculative route, package, policy, SLO, and per-domain completeness claims.
+- Distinguished confirmed no-network browser behavior from unverified live governed API, EvidenceBundle resolution, map-click, Focus Mode, export, and deployment paths.
+- Recorded the unresolved UI/evidence contract-home seam and the overlapping UI architecture page without deciding a migration.
+- Added current no-leak, correction-chain, accessibility, reviewer, validation, and rollback boundaries.
+- Preserved the established numbered sections `0` through `13` for inbound-anchor stability.
 
-1. **Primary — atlas card `KFM-P1-FEAT-0065`** ("Evidence Drawer required on layers, popovers, and AI answers"): CONFIRMED doctrine status; states "Drawer content should come from governed envelopes, not client inference or raw model output" and "Users need to inspect evidence, policy, source, and release state at the point of interpretation."
-2. **Primary — *Master MapLibre Components-Functions-Features v2.1*** — §N (Evidence Drawer Payloads and Click Resolution), §S (Accessibility, UX, and Trust-Visible States), §M (component table for Evidence Drawer), §T (latency/performance budgets). Specifically: `EvidenceDrawerPayload` field intent (§3.1); generic-schema-with-per-domain-specialization rule (`ML-056-014`, `ML-056-015`); badge-opens-drawer rule (`ML-061-138`, `ML-061-139`, `ML-061-140`); stale-state markers (`ML-061-094`); keyboard-accessibility requirement (`ML-S-049`, `ML-S-061`); no-data and unverifiable state requirement (`ML-S-063`); export preservation (`ML-061-141`); cached-fallback DEGRADED state (`ML-064-017`); alt-text requirement (`ML-064-059`, `ML-064-091`).
-3. **Primary — Atlas v1.1 per-domain J-tables**: Hydrology, Soil, Habitat, Fauna, Flora, Geology, Atmosphere, Hazards, Roads/Rail/Trade, Settlements/Infrastructure, Archaeology, Agriculture, People/DNA/Land, Frontier Matrix, and Planetary/3D — each has an "Evidence Drawer payload" endpoint with `EvidenceDrawerPayload + EvidenceBundle projection` returning ANSWER / ABSTAIN / DENY / ERROR.
-4. **Primary — Atlas Ch. 24.8 stale-state markers** for the §5.1 Stale state definition.
-5. **Supporting — [`docs/architecture/directory-rules.md`](./directory-rules.md) v1.3.1**, [`docs/architecture/domain-placement-law.md`](./domain-placement-law.md) v1.0, [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) for §3.2 optional fields (`RepresentationReceipt`, `RealityBoundaryNote`).
-6. **What v1.0 explicitly does NOT have:** mounted-repo inspection; CI workflow inspection; running-UI test results; verification of any specific route name, component file, or schema file. All path/route claims are **PROPOSED**.
+### v1.0 — 2026-05-25
 
-**Substantive content:**
+Initial doctrine-oriented component architecture. The edition remains useful as lineage, but its no-mounted-repo assumptions, proposed-only implementation claims, illustrative schema, route proposals, state taxonomy, and Directory Rules references are superseded by v2.0.0 at this same path.
 
-| § | Section | Content |
-|---|---|---|
-| §0 | Status & Authority | Meta block; truth-posture note; explicit reference to atlas card KFM-P1-FEAT-0065 and Master MapLibre v2.1 §N + §S. |
-| §1 | What the Evidence Drawer Is (and Is Not) | Two-line definition; three IS / five IS NOT; trust-membrane position; Mermaid resolution flow. |
-| §2 | Where It Lives | Canonical placement table (9 rows); component-tree view; cross-cutting object family rule restatement. |
-| §3 | `EvidenceDrawerPayload` Contract | Required fields (9); optional fields (5); field invariants (6); illustrative JSON Schema fragment. |
-| §4 | Resolution Lifecycle | Sequence diagram (click → governed-API → drawer); five governing invariants; nine-step ordered runtime. |
-| §5 | Trust-Visible States | Ten-state table + LOADING; state-machine Mermaid; per-state accessibility contract. |
-| §6 | Per-Domain Projections | Atlas v1.1 J-table per-domain projection inventory; one-schema-many-projections principle. |
-| §7 | Click Resolution, Popups, and Badges | Three affordances table; resolution priority Mermaid; what's forbidden; export/screenshot behavior. |
-| §8 | Accessibility Requirements | Eight required affordances; six CI accessibility test categories. |
-| §9 | What the Drawer MUST NOT Do | 16 anti-patterns specific to drawer behavior. |
-| §10 | Reviewer Checklist | Drawer-specific superset of Directory Rules §16; six checklist clusters. |
-| §11 | Open Questions and NEEDS VERIFICATION | OPEN-EVD-01 through OPEN-EVD-06; three NEEDS VERIFICATION items. |
-| §12 | Glossary | 11 drawer-specific entries. |
-| §13 | Changelog | This entry. |
+### Rollback
 
-**What did NOT change** (this is the initial edition): n/a.
+Restore prior blob `ff66403209e9de60dc8ac4d1c6e8dfdc27476b23`. No contract, schema, fixture, validator, test, workflow, app code, data, release object, or runtime state is changed by this documentation-only update.
 
-**Validation:**
-
-- **Self-consistency:** §1 (what it is) ↔ §3 (contract) ↔ §5 (states) ↔ §9 (anti-patterns) all reinforce one another. §6 (per-domain projections) ↔ Atlas v1.1 J-tables. §8 (accessibility) ↔ §10 reviewer checklist.
-- **No invariant bend:** [Directory Rules §3, §5, §9.1](./directory-rules.md) unchanged. [Domain Placement Law §1, §3, §5](./domain-placement-law.md) unchanged. ADR-0001 schema-home rule unchanged. This document only elaborates existing doctrine.
-- **No silent resolution of ADR-class questions:** OPEN-EVD-01 through OPEN-EVD-06 explicitly flagged.
-- **No new authority created:** the drawer remains a cross-cutting UI component. No new root, no new domain, no new policy home, no new schema home.
-- **Reversibility:** to roll back v1.0, delete this file.
-
-**Items deliberately deferred:**
-
-- **Authoring of `contracts/ui/evidence_drawer_payload.md`** semantic contract — routine PR.
-- **Authoring of `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`** with the full invariants from §3.3 — routine PR; the fragment in §3.4 is illustrative.
-- **Authoring of `policy/runtime/drawer_projection.rego`** — routine PR.
-- **Per-domain `policy/domains/<domain>/drawer_limitations.yaml`** — 13 routine PRs (one per core domain) + 2 for special-status (Frontier Matrix, Planetary/3D). See OPEN-EVD-02.
-- **SLO calibration and ADR** for the click-to-drawer budget — OPEN-EVD-06.
-- **Route prefix ADR** — OPEN-EVD-01.
-- **Layer-level authentication state ADR** — OPEN-EVD-03.
-- **External schema publication ADR** — OPEN-EVD-04.
-
-[⤴ Back to top](#-contents)
-
----
-
-## Related docs
-
-- [`docs/architecture/directory-rules.md`](./directory-rules.md) — **canonical** placement doctrine; §6.4 (schemas), §6.5 (policy), §13.5 (anti-patterns) govern this document's placement decisions
-- [`docs/architecture/domain-placement-law.md`](./domain-placement-law.md) — **parent doctrine**; §5 (cross-cutting) authorizes this document's placement
-- [`docs/architecture/map-shell.md`](./map-shell.md) — `TODO` *(host shell for the drawer)*
-- [`docs/architecture/governed-api.md`](./governed-api.md) — `TODO` *(trust membrane through which drawer payloads flow)*
-- [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) — sole-renderer doctrine *(referenced in §3.2 for `RepresentationReceipt` and `RealityBoundaryNote`)*
-- [`docs/architecture/ecology-cross-domain.md`](./ecology-cross-domain.md) — cross-domain composition doctrine *(referenced via the strictest-contributor rule applied to ecological drawers)*
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — `TODO` *(the membrane the drawer sits on)*
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — `TODO` *(cite-or-abstain default)*
-- [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) — `TODO` *(canonical evidence object that the drawer projects)*
-- [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md) — `TODO` *(finite-outcome grammar shared with drawer)*
-- [`contracts/runtime/policy_decision.md`](../../contracts/runtime/policy_decision.md) — `TODO` *(policy_state projection source)*
-- [`contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md) — `TODO` *(release_state projection source)*
-- [`contracts/ui/evidence_drawer_payload.md`](../../contracts/ui/evidence_drawer_payload.md) — `TODO` *(semantic contract for this document's wire contract; PROPOSED authoring)*
-- [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../schemas/) — `TODO` *(machine schema; PROPOSED authoring)*
-- [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../atlases/) — `TODO` *(per-domain J-tables for §6.1; Ch. 24.8 stale-state markers for §5)*
-- *Master MapLibre Components-Functions-Features v2.1* — `TODO` *(§N Evidence Drawer Payloads; §S Accessibility; §M component table; §T performance)*
-
----
-
-**Last updated:** 2026-05-25 (v1.0 initial edition) · **Doc id:** `kfm://doc/evidence-drawer` · **Authority:** derives from atlas KFM-P1-FEAT-0065 + Master MapLibre v2.1 §N/§S + Atlas v1.1 per-domain J-tables · **Status:** draft
-
-[⤴ Back to top](#-contents)
+[Back to top](#top)
