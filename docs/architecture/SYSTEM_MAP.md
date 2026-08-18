@@ -20,7 +20,7 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 70d2f1da3a480e14a19573ebec55258fc64e5f8e
+  base_commit: f287d7e1501229ebde23737aba98c07279684dbc
   target_prior_blob: 6f760580bda6c23a6c227b3dd36edeaa7d34d9e0
   directory_rules_decision: ADR-0029 accepted
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
@@ -41,7 +41,7 @@ notes:
 > **One-line purpose.** Orient maintainers and reviewers to how Kansas Frontier Matrix responsibilities, lifecycle states, trust objects, implementation surfaces, release decisions, governed interfaces, and correction paths fit together—without treating this page as truth, policy, review, release, or publication authority.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d29922?style=flat-square)](#status-and-evidence-boundary)
-[![Base: main@70d2f1d](https://img.shields.io/badge/base-main%4070d2f1d-0969da?style=flat-square)](#status-and-evidence-boundary)
+[![Base: main@f287d7e](https://img.shields.io/badge/base-main%40f287d7e-0969da?style=flat-square)](#status-and-evidence-boundary)
 [![Directory Rules: accepted](https://img.shields.io/badge/Directory%20Rules-v2%20accepted-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 [![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-b42318?style=flat-square)](#status-and-evidence-boundary)
 
@@ -55,7 +55,7 @@ notes:
 | Document role | Human-readable whole-system architecture orientation |
 | Repository location | **CONFIRMED:** `docs/architecture/SYSTEM_MAP.md` |
 | Owning responsibility root | **CONFIRMED:** `docs/` — human-readable explanation |
-| Evidence base | **CONFIRMED:** `main@70d2f1da3a480e14a19573ebec55258fc64e5f8e` |
+| Evidence base | **CONFIRMED:** `main@f287d7e1501229ebde23737aba98c07279684dbc` |
 | Placement authority | **CONFIRMED:** Directory Rules v2 adopted by accepted ADR-0029 |
 | Numbered ADR posture | **CONFIRMED:** ADR-0029 accepted; the other numbered ADRs remain proposed in the current index |
 | Verified GitHub owner route | **CONFIRMED:** `@bartytime4life`; specialist stewardship remains `NEEDS VERIFICATION` |
@@ -448,6 +448,6 @@ This update changes one architecture document and its paired generated provenanc
 
 ---
 
-<sub>**Last reviewed:** `2026-08-18` · **Document version:** `v2` · **Role:** architecture orientation · **Base:** `main@70d2f1da3a480e14a19573ebec55258fc64e5f8e` · **Publication authority:** none</sub>
+<sub>**Last reviewed:** `2026-08-18` · **Document version:** `v2` · **Role:** architecture orientation · **Base:** `main@f287d7e1501229ebde23737aba98c07279684dbc` · **Publication authority:** none</sub>
 
 [Back to top](#top)

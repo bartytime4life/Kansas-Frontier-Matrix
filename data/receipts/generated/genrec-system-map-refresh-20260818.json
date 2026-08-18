@@ -5,7 +5,7 @@
     "docs/architecture/SYSTEM_MAP.md"
   ],
   "artifact_hashes": {
-    "docs/architecture/SYSTEM_MAP.md": "sha256:11b4cca3c0c33bbbf7158143d292141987e935f41422917f3d2c09ac6370d49b"
+    "docs/architecture/SYSTEM_MAP.md": "sha256:46f58514118c86a4bf5ffa3d548e8e030c3f8ec370c31404ec51d186a68d50e6"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -32,24 +32,24 @@
       "Pasted text(20260818-041104).txt — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
     ],
     "evidence_refs": [
-      "repo:main@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/architecture/SYSTEM_MAP.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/architecture/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/architecture/SKELETON_MAP.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/adr/INDEX.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:docs/doctrine/directory-rules.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:control_plane/root_registry.yaml@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:.github/CODEOWNERS@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:data/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:release/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:apps/governed-api/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:apps/explorer-web/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:packages/evidence-resolver/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:packages/maplibre/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:CONTRIBUTING.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e",
-      "repo:.github/PULL_REQUEST_TEMPLATE.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "repo:main@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/architecture/SYSTEM_MAP.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/architecture/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/architecture/SKELETON_MAP.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/adr/INDEX.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:docs/doctrine/directory-rules.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:control_plane/root_registry.yaml@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:.github/CODEOWNERS@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:data/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:release/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:apps/governed-api/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:apps/explorer-web/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:packages/evidence-resolver/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:packages/maplibre/README.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:CONTRIBUTING.md@f287d7e1501229ebde23737aba98c07279684dbc",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@f287d7e1501229ebde23737aba98c07279684dbc"
     ]
   },
   "truth_labels": {
@@ -59,7 +59,7 @@
     {
       "gate": "current-main-refresh",
       "outcome": "PASS",
-      "reason": "Final pre-write refresh confirmed main remained 70d2f1da3a480e14a19573ebec55258fc64e5f8e immediately before branch creation; open draft PR #2999 does not touch docs/architecture/SYSTEM_MAP.md."
+      "reason": "Delivery refresh observed main advance from 70d2f1da3a480e14a19573ebec55258fc64e5f8e to f287d7e1501229ebde23737aba98c07279684dbc through unrelated paths; the target prior blob remained 6f760580bda6c23a6c227b3dd36edeaa7d34d9e0 and no other open pull request was found for SYSTEM_MAP.md. The feature branch is reconciled forward before exact-head validation."
     },
     {
       "gate": "overlap-reconciliation",
@@ -94,7 +94,7 @@
     {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
-      "reason": "The receipt binds the authored SYSTEM_MAP.md bytes with SHA-256 digest 11b4cca3c0c33bbbf7158143d292141987e935f41422917f3d2c09ac6370d49b."
+      "reason": "The receipt binds the authored SYSTEM_MAP.md bytes with SHA-256 digest 46f58514118c86a4bf5ffa3d548e8e030c3f8ec370c31404ec51d186a68d50e6."
     },
     {
       "gate": "git-diff-check",
@@ -119,57 +119,57 @@
     {
       "id": "system-map-prior",
       "validated": true,
-      "evidence_ref": "repo:docs/architecture/SYSTEM_MAP.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:docs/architecture/SYSTEM_MAP.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "accepted-directory-governance",
       "validated": true,
-      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "current-adr-index",
       "validated": true,
-      "evidence_ref": "repo:docs/adr/INDEX.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:docs/adr/INDEX.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "root-class-projection",
       "validated": true,
-      "evidence_ref": "repo:control_plane/root_registry.yaml@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:control_plane/root_registry.yaml@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "verified-review-route",
       "validated": true,
-      "evidence_ref": "repo:.github/CODEOWNERS@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:.github/CODEOWNERS@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "data-root-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:data/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:data/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "release-root-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:release/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:release/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "governed-api-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:apps/governed-api/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:apps/governed-api/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "explorer-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:apps/explorer-web/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:apps/explorer-web/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "evidence-resolver-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:packages/evidence-resolver/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:packages/evidence-resolver/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     },
     {
       "id": "maplibre-current-boundary",
       "validated": true,
-      "evidence_ref": "repo:packages/maplibre/README.md@70d2f1da3a480e14a19573ebec55258fc64e5f8e"
+      "evidence_ref": "repo:packages/maplibre/README.md@f287d7e1501229ebde23737aba98c07279684dbc"
     }
   ],
   "human_review": {
