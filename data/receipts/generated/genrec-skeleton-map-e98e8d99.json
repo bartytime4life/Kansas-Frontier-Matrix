@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-skeleton-map-e98e8d99",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/SKELETON_MAP.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/SKELETON_MAP.md": "sha256:e98e8d993dfddfe68db7a08325a66142f09d4e086763430a1ca156234ea59810"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-17-session"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container structural validation",
+      "JSON Schema validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "current-user-request://update-docs-architecture-skeleton-map-v6",
+      "attachment://Pasted%20text%2820260818-034931%29.txt#sha256=b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/70d2f1da3a480e14a19573ebec55258fc64e5f8e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/architecture/SKELETON_MAP.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/control_plane/root_registry.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/doctrine/truth-posture.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/doctrine/trust-membrane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/.github/workflows/docs-control-plane.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/SKELETON_MAP.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "The direct update request, v6 implementation prompt, repository, immutable base, existing same-path target, docs-plus-generated-receipt closure, draft-PR ceiling, non-goals, and rollback boundary were resolved before mutation."
+    },
+    {
+      "gate": "current-base-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main, the complete target, open pull requests, and skeleton-named branches were checked. No open PR existed; the three named legacy branches were fully behind main with no unmerged commits."
+    },
+    {
+      "gate": "complete-baseline-and-governing-evidence-read",
+      "outcome": "PASS",
+      "reason": "The complete prior Skeleton Map and directly governing Directory Rules, accepted ADR-0029, legacy compatibility body, root registry, root README, CODEOWNERS, ADR index, ADR-0001, doctrine-identity conflict, validators, workflows, and generated-receipt contract were inspected at the pinned base."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing cross-cutting architecture orientation remains at docs/architecture/SKELETON_MAP.md. No root, lane, move, rename, alias, mirror, deletion, or parallel authority is introduced."
+    },
+    {
+      "gate": "current-evidence-refresh",
+      "outcome": "PASS",
+      "reason": "Stale claims that ADR-0029 was proposed, the legacy architecture body was absent, and the root README was conflicted were replaced with current repository evidence. Adopted placement and still-proposed ADR-0001 scope remain distinct."
+    },
+    {
+      "gate": "semantic-no-loss-and-truth-boundary",
+      "outcome": "PASS",
+      "reason": "The seven-plane orientation, lifecycle and trust diagrams, root map, domain lanes, connector lineage, workflow boundaries, compatibility classes, object-family separation, historical scaffold lineage, anti-patterns, review flow, rollback, and open-verification posture are preserved and strengthened."
+    },
+    {
+      "gate": "markdown-structure-and-internal-navigation",
+      "outcome": "PASS",
+      "reason": "UTF-8, LF, final newline, one H1, no skipped heading levels, balanced fences and details, unique explicit anchors, preserved status--ownership compatibility anchor, resolved internal fragments, and no trailing whitespace passed deterministic local checks."
+    },
+    {
+      "gate": "repository-relative-link-basis",
+      "outcome": "PASS",
+      "reason": "Governing and directly affected repository-relative targets were inspected at the pinned base; paths carried forward from the prior verified map remain bounded as repository presence rather than behavior. Hosted link checking remains separate evidence."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change introduces no credential, private endpoint, restricted payload, protected exact location, living-person or genomic material, rare-species or archaeology detail, infrastructure vulnerability, signing key, prompt body, or hidden reasoning."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required receipt fields, exact Skeleton Map SHA-256 binding, allowed truth label, finite validation outcomes, pending human review, ISO timestamp, citations, and non-authority notes conform to the inspected GENERATED_RECEIPT schema in local validation."
+    },
+    {
+      "gate": "mermaid-host-render",
+      "outcome": "SKIPPED",
+      "reason": "Mermaid source blocks were structurally checked, but GitHub visual rendering was not observed before draft-PR delivery."
+    },
+    {
+      "gate": "repository-native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available. Repository-native aggregate commands and hosted exact-head checks are reported after branch and draft-PR delivery rather than represented as local PASS."
+    },
+    {
+      "gate": "runtime-release-deployment-publication",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and generated provenance only. No contract, schema, policy, fixture, validator, workflow, runtime, release record, data, deployment, or publication behavior changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPO-BUILD-V6",
+      "validated": true,
+      "evidence_ref": "current-user-request://update-docs-architecture-skeleton-map-v6"
+    },
+    {
+      "id": "KFM-SKELETON-MAP-BASELINE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/architecture/SKELETON_MAP.md"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2-ADOPTED",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-ROOT-REGISTRY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/control_plane/root_registry.yaml"
+    },
+    {
+      "id": "KFM-REPOSITORY-ENTRYPOINT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/README.md"
+    },
+    {
+      "id": "KFM-ADR-INDEX",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/docs/adr/INDEX.md"
+    },
+    {
+      "id": "KFM-GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/70d2f1da3a480e14a19573ebec55258fc64e5f8e/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-18T04:05:13Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored same-path architecture-documentation refresh plus generated provenance on a scoped feature branch. The receipt binds only docs/architecture/SKELETON_MAP.md; it does not recursively bind itself. It is append-only process memory, not factual proof, policy permission, human approval, ReviewRecord, PromotionDecision, release authority, deployment, publication, or evidence that hosted checks passed. Human review and hosted exact-head validation remain pending."
+}
