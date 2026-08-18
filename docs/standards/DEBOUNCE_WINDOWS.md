@@ -218,7 +218,7 @@ Before a source-specific value can be treated as executable, the owning operatio
 | Candidate field | Purpose |
 |---|---|
 | `profile_id` and `profile_version` | Stable identity and compatibility boundary for the assignment |
-| `profile_spec_hash` | Digest of the declared profile under the current accepted hash grammar |
+| `profile_spec_hash` | Digest of the declared profile under the current declared executable hash grammar |
 | `source_descriptor_ref`, version, and digest | Exact source-governance record the profile depends on |
 | `logical_key_profile` | Deterministic partition grammar and cardinality limits |
 | `candidate_class` | `A`, `B`, or `C` only if that vocabulary is accepted |
@@ -309,7 +309,7 @@ The following is a design checklist, not a contract or schema:
 | `event_time_min/max`, `received_time_min/max` | Preserve temporal distinctions |
 | `event_refs[]` and ordered event digests | Prove complete input membership and replay order |
 | `maximum_wait_seconds`, `hold_down_seconds` | Record the applied values |
-| `prior_candidate_spec_hash` | Compare with the prior accepted candidate when applicable |
+| `prior_candidate_spec_hash` | Compare with the prior governed candidate when applicable |
 | `candidate_spec_hash` | Deterministic candidate-content identity under a declared profile |
 | `late_event_count` and `late_event_policy` | Make out-of-order handling visible |
 | `decision` and stable `reason_codes[]` | Finite, reviewable outcome |
@@ -486,7 +486,7 @@ The semantic, schema, fixture, implementation, and test artifacts belong under t
 | Does the generic coalescer operate before source-event admission or over admitted RAW event records? | **HOLD — authority and lifecycle model unresolved** |
 | Is the primary object family source-operational configuration, runtime configuration, or a split semantic/deployment profile? | **HOLD — placement owner unresolved** |
 | What is the canonical contract/schema name and subpath? | **HOLD — do not create a parallel authority** |
-| Does the accepted hash grammar remain `sha256:<hex>` or migrate after ADR-0013 resolution? | **NEEDS VERIFICATION / decision** |
+| Does the current executable hash grammar remain `sha256:<hex>` or migrate after ADR-0013 resolution? | **NEEDS VERIFICATION / decision** |
 | Where does active profile state live, and what consumer is authorized to mutate it? | **UNKNOWN** |
 | What is the canonical logical-key grammar and cardinality limit? | **NEEDS VERIFICATION** |
 | What are the late-event, reopened-window, and correction rules? | **NEEDS VERIFICATION** |
