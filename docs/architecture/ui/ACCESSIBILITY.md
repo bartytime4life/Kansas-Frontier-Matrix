@@ -1,60 +1,91 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/accessibility
 title: KFM UI — Accessibility Architecture
-type: standard
-version: v0.2
-status: draft
-owners: Docs steward + UI subsystem owner + Accessibility reviewer
+type: architecture
+version: v1.0-draft
+status: draft; repository-grounded; cross-cutting; explanatory; no-conformance-authority
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+owner_status: "CODEOWNERS routing is CONFIRMED. Accountable accessibility, UI, policy/privacy, evidence, release, and independent assistive-technology review assignments remain NEEDS VERIFICATION."
 created: 2026-05-14
-updated: 2026-05-24
+updated: 2026-08-18
 policy_label: public
+owning_root: docs/
+responsibility: "Explain the KFM UI accessibility boundary, current bounded implementation evidence, target behavior, validation burden, failure posture, and graduation gates without becoming contract, schema, policy, release, publication, or conformance authority."
+truth_posture: "CONFIRMED repository evidence / PROPOSED accessibility architecture / UNKNOWN production and whole-application conformance; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 241b1f6cd76110c188449b8942a9ea93b6aedf9f
+  target_prior_blob: 902f10807813152cfe8f59ec5e183c654a427cd7
+  ui_architecture_readme_blob: 36d975710d906a6c4146c550d40929b1822b667e
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  explorer_manifest_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  explorer_entrypoint_blob: 9c95ae67333b7cbf6bc88051fa5c76e4cd97efa4
+  shell_blob: 64c78c78820af33fb7a622094e4c0944ad9412f8
+  evidence_drawer_blob: 7746843c259594568fe75e975155a67eb8372e8f
+  evidence_drawer_contract_blob: 412a0a86c85c98748ac08e263a94c7eaac760c04
+  evidence_drawer_schema_blob: 4eefa03cffd7d5b97a24df0daf250bc31f7137ca
+  evidence_drawer_unit_test_blob: 24b3b4a028d31c37bd6467138ca97a54f3e21d22
+  evidence_drawer_browser_test_blob: 236416b2ccb39820e426a6e774e3962480631833
+  accessibility_workflow_blob: 3b2fc53fb686bfd8c2628e01e77c067857460c78
+  ui_build_workflow_blob: 52382d796a8dd5ecafc39a801515aff0a8b013f8
+  evidence_drawer_workflow_blob: b51b20965c8b49c415c0f4138d6056b08dec134c
+  renderer_adr_blob: 6bfd66b1169728d7fad08f0bb2d7e2a56e3577b2
 related:
   - docs/architecture/ui/README.md
-  - docs/architecture/ui/STATE_OWNERSHIP.md
   - docs/architecture/ui/BOUNDARIES.md
-  - docs/architecture/ui/ROUTE_MAP.md
+  - docs/architecture/ui/COMPARE_AND_EXPORT.md
   - docs/architecture/ui/CONTINUITY_NOTES.md
-  - docs/architecture/governed-ai/README.md
-  - docs/architecture/map-shell.md
-  - docs/architecture/maplibre-3d.md
-  - docs/architecture/story/README.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - schemas/contracts/v1/ui/EvidenceDrawerPayload.schema.json
-  - schemas/contracts/v1/runtime/RuntimeResponseEnvelope.schema.json
-  - schemas/contracts/v1/maplibre/view_state.schema.json
-  - schemas/contracts/v1/maplibre/camera_path.schema.json
-  - schemas/contracts/v1/maplibre/representation_receipt.schema.json
-  - schemas/contracts/v1/3d/reality_boundary_note.schema.json
-  - schemas/contracts/v1/policy/3d_admission_decision.schema.json
-  - schemas/contracts/v1/policy/plugin_admission.schema.json
-tags: [kfm, ui, accessibility, a11y, trust-visible, governed-ai, 3d, reality-boundary]
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
+  - docs/architecture/ui/FOCUS_FLOW.md
+  - docs/architecture/ui/GOVERNED_SHELL.md
+  - docs/architecture/ui/LAYERING.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/architecture/ui/STORY_PLAYER.md
+  - docs/architecture/ui/TELEMETRY.md
+  - docs/architecture/ui/TRUST_BADGES.md
+  - docs/architecture/ui/map-context-evidence-drawer-admission.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/doctrine/directory-rules.md
+  - contracts/ui/evidence_drawer_payload.md
+  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
+  - apps/explorer-web/src/main.ts
+  - apps/explorer-web/src/features/evidence_drawer/index.tsx
+  - apps/explorer-web/tests/evidence-drawer.test.ts
+  - apps/explorer-web/tests/browser/evidence-drawer.spec.ts
+  - .github/workflows/accessibility.yml
+  - .github/workflows/ui-build.yml
+  - .github/workflows/evidence-drawer-payload.yml
+tags: [kfm, ui, accessibility, architecture, explorer-web, evidence-drawer, finite-outcomes, keyboard, focus, non-map-parity, trust-membrane]
 notes:
-  - All repo paths PROPOSED until verified against mounted-repo evidence (Directory Rules §0).
-  - Section 20.1 of the Whole-UI + Governed AI Expansion Report is the doctrinal anchor for smoke criteria; v0.2 adds the 3D-specific accessibility doctrine from docs/architecture/maplibre-3d.md §10.
-  - v0.2 aligns this doc with the retire-Cesium renderer revision (one renderer, plugin-governed 3D, admission-not-handoff). All v0.1 anchors preserved.
+  - "v1.0-draft is a same-path documentation-only reconciliation against current repository evidence."
+  - "The inherited WCAG 2.2 AA statement is retained as a PROPOSED target, not a conformance claim or accepted release gate."
+  - "The current accessibility workflow is an explicit non-enforcing readiness HOLD; a green run is not an accessibility pass."
+  - "The default Explorer entrypoint is a bounded fail-closed shell plus fixture-driven Evidence Drawer, not a functional map, live governed client, deployment, or published product."
+  - "The prior maplibre-3d dependency and implemented 3D-admission assertions are removed. docs/architecture/maplibre-3d.md is absent, ADR-0007 remains proposed, and the renderer runtime remains on HOLD."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="kfm-ui--accessibility-architecture"></a>
 
 # KFM UI — Accessibility Architecture
 
-> How the Kansas Frontier Matrix UI shell makes governed truth — finite outcomes, evidence resolution, policy decisions, freshness state, **and now per-layer 3D / plugin admission and reality-boundary status** — perceivable, operable, understandable, and robust for every user, on every supported surface.
-
-![status: draft](https://img.shields.io/badge/status-draft-blue)
-![doc version: v0.2](https://img.shields.io/badge/doc%20version-v0.2-1f6feb)
-![doc class: architecture](https://img.shields.io/badge/doc%20class-architecture-6f42c1)
-![authority: PROPOSED](https://img.shields.io/badge/authority-PROPOSED-orange)
-![scope: ui](https://img.shields.io/badge/scope-ui-2ea44f)
-![3D a11y: gated](https://img.shields.io/badge/3D%20a11y-gated%20by%20admission-yellow)
-![standard: WCAG 2.2 AA · target](https://img.shields.io/badge/standard-WCAG%202.2%20AA%20%C2%B7%20target-lightgrey)
-![last reviewed: 2026-05-24](https://img.shields.io/badge/last%20reviewed-2026--05--24-informational)
-
-**Status:** draft (v0.2) · **Owners:** Docs steward + UI subsystem owner + Accessibility reviewer · **Last updated:** 2026-05-24
+> **One-line rule.** KFM accessibility keeps evidence, finite outcomes, trust state, correction state, and user control perceivable and operable without turning documentation, tests, badges, maps, or assistive-technology output into truth or release authority.
 
 > [!IMPORTANT]
-> This document is **doctrine-grade design**. All paths, route names, component names, validators, and CI hooks named here are **PROPOSED** until verified against mounted-repo evidence per Directory Rules §0 and §17. Where this doc says "the shell does X," read "the shell **must** do X to satisfy the trust-visible-states contract." Implementation maturity is **UNKNOWN** in this session.
+> **Current maturity is bounded.** At `main@241b1f6cd76110c188449b8942a9ea93b6aedf9f`, the default Explorer entrypoint composes a static fail-closed shell and a fixture-driven Evidence Drawer. The drawer has tested native controls, a named complementary landmark, Escape-to-close behavior, focus entry and restoration, finite text outcomes, citations, trust labels, and fixed no-leak negative copy. This evidence does **not** establish a functional map, complete route system, live governed transport, app-wide keyboard completion, automated accessibility-rule coverage, manual assistive-technology parity, WCAG conformance, deployment, release, or publication.
 
-> [!TIP]
-> **What changed in v0.2.** Accessibility doctrine for the **post-retire-Cesium** architecture is folded in. Specifically: (a) new keyboard-reachable controls for 3D (pitch, projection toggle, terrain exaggeration, plugin-hosted layer visibility) per [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10; (b) new state axes — `geometry_label` (2D/2.5D/3D), `3DAdmissionDecision`, `PluginAdmission`, `RealityBoundaryNote` (captured/interpretive/synthetic); (c) reduced-motion contract expanded to cover globe projection toggle, terrain exaggeration animation, and `CameraPath` playback; (d) 2D-fallback-always-offered rule; (e) alt-text obligations for 3D screenshots (ML-059-052). All v0.1 anchors preserved; new content threads inside existing sections (4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 16, 17).
+| Field | Current value |
+|---|---|
+| **Document status** | `draft` / repository-grounded architecture guidance |
+| **Placement authority** | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and adopted [`directory-rules.md`](../../doctrine/directory-rules.md) |
+| **Repository review route** | `@bartytime4life` through CODEOWNERS; not proof of independent accessibility review |
+| **Confirmed implementation** | Bounded shell semantics plus fixture-driven Evidence Drawer keyboard/focus behavior |
+| **Accessibility workflow** | `WORKFLOW_HOLD`; no axe or full keyboard-navigation audit runs |
+| **Renderer/map state** | `HOLD`; no functioning renderer or map is composed by the default entrypoint |
+| **Conformance posture** | `UNKNOWN`; WCAG 2.2 AA remains a proposed target only |
+| **Release/publication effect** | None |
 
 ---
 
@@ -77,511 +108,799 @@ notes:
 - [15. Anti-patterns](#15-anti-patterns)
 - [16. Open questions and NEEDS VERIFICATION](#16-open-questions-and-needs-verification)
 - [17. Related docs](#17-related-docs)
+- [Appendix A. No-loss modernization ledger](#appendix-a-no-loss-modernization-ledger)
+- [Appendix B. Rollback](#appendix-b-rollback)
 
 ---
 
 ## 1. Purpose & scope
 
-This document specifies the **accessibility architecture** for the Kansas Frontier Matrix (KFM) UI shell — the governed, map-first, time-aware interface where Evidence Drawer, Focus Mode, Story Node, Review/steward, layer catalog, **3D admission**, **plugin admission**, and diagnostics surfaces meet the public.
+This document explains accessibility as a cross-cutting UI architecture responsibility. It connects the public shell, finite outcomes, evidence inspection, trust-state projection, map alternatives, story playback, comparison/export, telemetry, and any future renderer surface to a common accessibility burden.
 
-**In scope.**
+It does **not** define semantic object meaning, machine payload shape, policy admissibility, release state, or formal accessibility conformance. Those responsibilities remain with their owning contracts, schemas, policy, implementation, tests, review records, and release artifacts.
 
-- Trust-visible state semantics (how `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `stale`, `restricted`, `cancelled`, `loading`, **`3d-admission-denied`**, **`plugin-admission-denied`**, **`reality-boundary-required`**, **`2d-fallback-active`** reach users with assistive technology).
-- Keyboard, focus, and dialog behavior for the map shell, drawer, dialogs, layer catalog, time control, Focus Mode, **and 3D controls (pitch, projection toggle, terrain exaggeration, per-mode layer visibility)**.
-- Non-map alternatives for every map-driven interaction, **including a 2D alternative for every 3D mode**.
-- Motion, animation, and Story Node reduced-motion behavior — covering Story Node camera, drawer transitions, **globe projection toggle, terrain exaggeration animation, and `CameraPath` playback**.
-- Contrast, color-not-alone, alt text, and zoom legibility for trust artifacts, **including the `RealityBoundaryBadge`**.
-- Smoke criteria, validation surfaces, and CI hooks the UI subsystem must satisfy before public release.
+### In scope
 
-**Out of scope.**
+- current repository evidence and its limits;
+- accessible projection of `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
+- keyboard order, focus movement, dismissal, restoration, and route/panel transitions;
+- landmarks, headings, accessible names, descriptions, status announcements, and link purpose;
+- non-map alternatives for consequential map interactions;
+- reduced-motion, pause/stop/skip, and non-cinematic alternatives;
+- color-not-alone, contrast, text scaling, reflow, and narrow-viewport behavior;
+- Evidence Drawer, trust-state, citation, history, correction, and limitation presentation;
+- safe negative-state copy and protected-detail suppression;
+- test, workflow, manual-review, and graduation expectations;
+- export and screenshot continuity where an export carries or implies a claim.
 
-- Visual design tokens, palette choices, and component implementation (lives in `packages/ui/` per Directory Rules §11; **PROPOSED**).
-- Schema field definitions for `EvidenceDrawerPayload`, `RuntimeResponseEnvelope`, `RepresentationReceipt`, `RealityBoundaryNote`, `3DAdmissionDecision`, `PluginAdmission`, etc. (live under `schemas/contracts/v1/` per ADR-0001; **PROPOSED**).
-- Map renderer internals and 3D primitive doctrine (covered by [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md); **PROPOSED**).
-- Document-level accessibility (PDF/UA) for generated reports, which is covered separately by C13-03 in the Idea Index and is **out of scope** here.
+### Out of scope
 
-[Back to top](#kfm-ui--accessibility-architecture)
+| Concern | Owning surface |
+|---|---|
+| Executable components and styles | [`apps/explorer-web/`](../../../apps/explorer-web/) or a reviewed shared package |
+| Object meaning | [`contracts/`](../../../contracts/) |
+| Machine validation | [`schemas/`](../../../schemas/) |
+| Allow, deny, restrict, abstain, and disclosure obligations | [`policy/`](../../../policy/) |
+| Source admission and evidence authenticity | Source/evidence lifecycle and governed resolver surfaces |
+| Release, correction, withdrawal, rollback, and publication decisions | [`release/`](../../../release/) and distinct lifecycle records |
+| Formal WCAG conformance statement | A scoped, reviewed conformance process backed by representative evidence |
+| PDF/UA or document-export conformance | The applicable generated-document and release process |
+| Renderer or plugin admission | The renderer/package decision and its accepted exception process |
+
+### Current-state split
+
+| Status | Bounded conclusion |
+|---|---|
+| **CONFIRMED** | Existing path and placement; static shell; native `main` landmark and heading; fixture-driven Evidence Drawer; finite text outcomes; named complementary landmark; open/close buttons; Escape close; focus entry/return; citation links; trust/history/limitation lists; focused unit and Playwright tests; build/test workflow; explicit accessibility workflow HOLD. |
+| **PROPOSED** | Whole-shell accessibility contract, WCAG 2.2 AA target, non-map parity, reduced-motion behavior, comprehensive keyboard model, trust-badge semantics, export continuity, automated rule-engine adoption, and release gates. |
+| **UNKNOWN** | Production behavior, deployed CSS, complete routes, all feature directories, map behavior, browser/device matrix, zoom/reflow results, high-contrast behavior, screen-reader parity, voice-control parity, cognitive accessibility, public operation, and formal conformance. |
+| **NEEDS VERIFICATION** | Accountable accessibility owner, independent reviewer, exact supported browser/assistive-technology matrix, target-size policy, announcement priority, audit cadence, exception process, and evidence required for release significance. |
+
+[Back to top](#top)
 
 ---
 
 ## 2. Why accessibility is governance, not finish
 
-In KFM, the UI is the public face of a governed truth membrane. Cite-or-abstain is the default truth posture, and outcomes are **finite and visible** — `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`. (CONFIRMED doctrine; Whole-UI + Governed AI Expansion Report §19.)
+KFM's ordinary UI is downstream of evidence, policy, review, release, correction, and rollback. Accessibility therefore determines whether users can perceive and operate the trust membrane, not merely whether the interface is visually polished.
 
-If those outcomes are not perceivable, operable, understandable, and robust, then a screen-reader user reads a blank map; a keyboard-only steward cannot reach the drawer; a low-vision user cannot tell `stale` from `released`; a reduced-motion user is forced through a cinematic Story Node camera or a globe-projection sweep; a touch user loses the freshness chip behind a collapsed panel; **or a user cannot tell a photoreal glTF reconstruction from a directly captured 3D Tile**. In every one of those cases the governance contract collapses silently — the failure is **not** that the UI is impolite, it is that **the trust membrane stops being visible**.
+A consequential state is not safely exposed when:
 
-> [!NOTE]
-> Accessibility in KFM is not a final coat of paint. It is part of the same contract that says **a popup is not the Evidence Drawer**, **a screenshot is not proof**, **fluent text is not evidence**, **and a photoreal 3D rendering is not a direct observation**. A state that cannot be announced, traversed, contrasted, and labeled is a state the public cannot trust.
+- a keyboard user cannot reach or leave the evidence surface;
+- a screen-reader user receives a generic “map” without the claim, scope, evidence, and limitation text;
+- `ABSTAIN`, `DENY`, stale, corrected, or withdrawn state is communicated by color alone;
+- a focus move hides the context that caused it;
+- motion is required to understand a time transition or story step;
+- a map click is the only way to select a feature or request evidence;
+- fixed negative copy is replaced by reflected upstream detail;
+- an export strips the release, citation, temporal, or correction context that made the view inspectable.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+The accessibility obligation follows the trust-bearing meaning of a surface. A decorative preview may have a smaller burden than a claim-bearing evidence panel, but no visual or generated carrier may hide the state required to interpret it safely.
+
+> [!CAUTION]
+> Accessibility evidence is not truth authority. A successful browser test, automated rule scan, or manual audit may show that a projection is operable; it does not prove that the evidence is authentic, policy-safe, reviewed, released, or published.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Doctrinal anchors
 
-These are the source documents and invariants this architecture inherits from.
+### Authority order for this document
 
-| Anchor | Source | Truth label |
+| Question | Controlling evidence |
+|---|---|
+| Where does this file belong? | Accepted ADR-0029, adopted Directory Rules v2, and the existing `docs/architecture/ui/` lane |
+| What exists now? | Current repository bytes, tests, workflows, and emitted artifacts tied to a known revision |
+| What should the UI do? | Proposed architecture plus reviewed contracts, schemas, policy, implementation, and acceptance evidence |
+| May content be shown? | Evidence, rights, sensitivity, policy, review, release, correction, and access state |
+| Is the UI accessible? | A scoped conformance claim supported by representative automated and manual evidence—not this document |
+| Is something released or published? | A governed release/publication transition—not a document, build, test, badge, or pull request |
+
+### Placement basis
+
+The existing target is placement-safe:
+
+- `docs/` owns human-facing explanation;
+- `docs/architecture/` owns cross-system architecture descriptions;
+- `docs/architecture/ui/` is the existing UI architecture lane;
+- changing this file in place does not create a new root or parallel authority.
+
+### Current repository evidence
+
+| Surface | Confirmed evidence | Boundary |
 |---|---|---|
-| Cite-or-abstain truth posture | KFM core invariants; `docs/doctrine/truth-posture.md` | **CONFIRMED doctrine** |
-| Finite outcomes — `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Whole-UI + Governed AI Expansion Report §19; KFM Encyclopedia §8C | **CONFIRMED doctrine** |
-| Trust membrane (no public RAW/WORK/QUARANTINE; no popup-as-proof) | `docs/doctrine/trust-membrane.md`; Encyclopedia §8A–B | **CONFIRMED doctrine** |
-| Accessibility smoke criteria | Whole-UI + Governed AI Expansion Report §20.1 | **CONFIRMED doctrine** |
-| MapLibre is the renderer, not the truth store | Encyclopedia §8A; Directory Rules §11 | **CONFIRMED doctrine** |
-| **MapLibre is the sole browser-side renderer; Cesium retired** *(new in v0.2)* | [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §0; Appendix B retire-Cesium ADR (PROPOSED upstream) | **PROPOSED architectural decision** |
-| **3D-as-carrier invariants I-3D-1…I-3D-7** *(new in v0.2)* | [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §1 | **CONFIRMED doctrine** (I-3D-1, I-3D-2, I-3D-3 from corpus; I-3D-4, I-3D-5, I-3D-6, I-3D-7 PROPOSED) |
-| **3D controls keyboard-reachable; 2D fallback offered; alt text on terrain-screenshot exports** *(new in v0.2)* | [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10 Accessibility; ML-059-052; ML-059-087 | **CONFIRMED doctrine** |
-| **Reality Boundary Note distinguishes captured from interpretive 3D** *(new in v0.2)* | KFM Atlas §18; KFM-P9-FEAT-0014; ML-059-050; ML-059-052; ML-059-055 | **CONFIRMED doctrine** |
-| Trust badges do not rely on color alone | Expansion Report §20.1; ML-S-020; ML-061-140 | **CONFIRMED doctrine** |
-| Reduced-motion mode disables/shortens Story Node camera | Expansion Report §20.1; ML-059-087 | **CONFIRMED doctrine** |
-| Map interactions have non-map alternatives | Expansion Report §20.1 | **CONFIRMED doctrine** |
-| WCAG 2.2 AA as the **target conformance level** | Industry standard reference | **PROPOSED** for KFM (target; no measurement) |
-| PDF/UA preflight for generated PDFs | Idea Index C13-03 | **PROPOSED**, out of scope here |
-| ARIA Authoring Practices for dialog, listbox, tab, slider patterns | External standard reference | **PROPOSED** as pattern source |
+| Explorer package | Vite, TypeScript, Vitest, and Playwright scripts are declared | Tooling does not prove app-wide accessibility or deployment |
+| Default entrypoint | Creates one `main` landmark labelled by the `h1` and mounts the baseline drawer | No map, route tree, live transport, auth, released data, or production composition |
+| Baseline shell | Returns fixed `ABSTAIN / NO_GOVERNED_RESPONSE`; supplied input returns fixed `ERROR / UNSUPPORTED_BASELINE_INPUT` | Safe default only; not a complete response pipeline |
+| Evidence Drawer resolver | Converts a strict local projection into `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; uses fixed no-leak negative copy | Does not resolve evidence, execute policy, authorize review/release, or access lifecycle stores |
+| Evidence Drawer DOM | Native buttons, named complementary landmark, heading, lists, links, `aria-live`, Escape dismissal, focus entry, and focus restoration | It is a non-modal complementary surface, not a complete dialog system or shell-wide focus model |
+| Unit tests | Cover supported, stale, superseded, denied, error, malformed, contradictory, oversized, no-network, and no-direct-store behavior | Fixture proof only |
+| Browser test | Covers Enter-to-open, focus on close, Escape-to-close, focus restoration, citations, history, and fixed no-leak negative states | One fixture surface, not all features or assistive technologies |
+| `ui-build` workflow | Runs locked Explorer build and full package test script | CI signal only |
+| `evidence-drawer-payload` workflow | Validates the closed schema, fixture polarity, focused tests, and generated receipt | Projection validation only; no upstream evidence/policy/release authenticity |
+| `accessibility` workflow | Emits explicit `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` for axe and keyboard-navigation jobs | It checks nothing and must not be reported as an accessibility pass |
+| Renderer decision | ADR-0007 remains proposed; the package and adapter are placeholders | No functional map or 3D accessibility claim is established |
 
-> [!NOTE]
-> WCAG 2.2 AA is the **target** conformance level for the public surfaces. It is **not** a claim that any rendered build has been measured. Conformance measurement is an open verification item — see §16.
+### Corrected lineage
 
-[Back to top](#kfm-ui--accessibility-architecture)
+The prior v0.2 document treated an absent `docs/architecture/maplibre-3d.md` file and proposed renderer/3D object families as a current doctrinal anchor. This update removes that dependency and narrows 3D language to conditional future requirements. Any future terrain, globe, extrusion, point-cloud, animation, plugin, or custom-layer surface must establish its own accepted package boundary and accessibility evidence before this document can record it as current behavior.
+
+[Back to top](#top)
 
 ---
 
 ## 4. The trust-visible state model
 
-Every governed UI surface — Evidence Drawer, Focus Mode response, layer chip, time chip, drawer header, Story Node node, review row, **3D mode toggle, plugin status indicator, Reality Boundary Badge** — must surface enough of the governance state for an assistive technology user to know **what kind of answer they are looking at** before they read its content.
+Accessibility applies to the meaning of KFM's finite states, not only their visual treatment.
 
-### 4.1 Required state axes
+### Current public projection vocabulary
 
-Every consequential rendered claim must expose, in text and not by color alone, these axes:
+The closed UI schema and current drawer use these top-level outcomes:
 
-| Axis | Vocabulary (illustrative) | Required for |
-|---|---|---|
-| Outcome | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Focus Mode response, drawer header |
-| Source role | `observed`, `regulatory`, `modeled`, `aggregate`, `administrative`, `candidate`, `synthetic` | drawer evidence rows |
-| Rights | `public`, `restricted`, `unknown` | drawer header, layer chip |
-| Sensitivity | `none`, `geoprivacy`, `CARE`, `sovereignty`, `archaeology`, … | drawer header, Story Node node |
-| Review state | `unreviewed`, `in-review`, `approved`, `corrected`, `superseded` | drawer header, review console |
-| Freshness | `fresh`, `stale`, `unknown` | layer chip, drawer header, time chip |
-| Release state | `published`, `unreleased`, `withdrawn` | layer chip, drawer header |
-| Correction state | `none`, `correction-applied`, `correction-pending` | drawer header |
-| **Geometry label** *(new in v0.2, per I-3D-4)* | `2D`, `2.5D`, `3D` | layer chip, drawer header, 3D mode toggle |
-| **3D admission** *(new in v0.2, per I-3D-6)* | `admissible-2d-only`, `terrain-allowed`, `globe-allowed`, `extrusion-allowed`, `tiles3d-allowed`, `gltf-allowed`, `pointcloud-allowed`, `denied:<reason>` | layer chip, mode toggle, drawer |
-| **Plugin admission** *(new in v0.2, per I-3D-7)* | `pinned`, `drifted`, `unpinned`, `unattested` | layer chip (when 3D mode is requested), diagnostics |
-| **Reality boundary** *(new in v0.2, per KFM-P9-FEAT-0014)* | `captured`, `interpretive`, `synthetic`, `reconstructed`, `unspecified` | drawer header, Reality Boundary Badge, exports |
+| Outcome | Accessible meaning | Current announcement behavior | Disclosure rule |
+|---|---|---|---|
+| `ANSWER` | Bounded supported projection is available | `polite` | Show title, summary, public-safe evidence refs, citations, limitations, and trust/history state |
+| `ABSTAIN` | Support is missing, stale, superseded, unresolved, or otherwise insufficient | `polite` | Explain a bounded safe reason; do not manufacture a claim |
+| `DENY` | Policy, rights, sensitivity, or access blocks disclosure | `polite` in the current drawer | Use fixed no-leak copy; omit evidence refs, citations, and protected history identifiers |
+| `ERROR` | The projection, resolver, validator, service, or payload failed | `assertive` | Fail closed and suppress partial or diagnostic content |
 
-Vocabulary above is **illustrative**; canonical enumerations live in the appropriate `schemas/contracts/v1/` schemas (**PROPOSED**, ADR-0001). For the four new axes, the schema homes are `schemas/contracts/v1/maplibre/`, `schemas/contracts/v1/3d/`, and `schemas/contracts/v1/policy/` per [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §4.
+Whether `DENY` should remain `polite` or graduate to an assertive announcement is **NEEDS VERIFICATION** through user research and assistive-technology testing. This document does not silently rewrite current implementation.
 
-### 4.2 No color-alone rule
+### Trust-state axes currently represented
 
-> [!WARNING]
-> Color is **never** sufficient to communicate trust state. Every state token must carry a **text label**, an **accessible name**, and an **icon shape or letterform** distinguishable in monochrome. A red border is not a `DENY`; the literal word and reason code make it a `DENY`. (ML-S-020; ML-061-140; Expansion Report §20.1.) **This applies to the Reality Boundary Badge with full force:** an amber halo is not "interpretive" — the text label "Interpretive reconstruction" plus an icon shape make it so.
+The bounded drawer profile exposes text labels for:
 
-### 4.3 Distinct treatment for unknown / stale / failed verification
+- source role;
+- policy outcome;
+- review state;
+- release state;
+- freshness state;
+- correction state;
+- evidence references and citations where allowed;
+- limitations;
+- bounded negative history and correction lineage where allowed.
 
-`unknown`, `stale`, and `failed-verification` MUST each have a **visually and textually distinct** treatment. Folding them together — for example, painting all three grey with the same label — collapses a meaningful distinction that the trust contract relies on. (ML-061-140; Expansion Report §20.1.) The same rule extends in v0.2 to the new axes: **`3d-admission-denied`**, **`plugin-admission-denied`**, **`reality-boundary-required-but-missing`**, and **`2d-fallback-active`** must each be distinct from each other and from `stale`, `unknown`, and `failed-verification`.
+`STALE`, `HELD`, `SUPERSEDED`, `WITHDRAWN`, and `REVOKED` are reason/history conditions, not additional public response outcomes. UI copy, tests, filters, telemetry, and documentation must keep those layers distinct.
 
-### 4.4 Live-region announcement
+### Required projection pattern
 
-When a finite outcome changes — drawer opens with `ANSWER`, Focus Mode returns `ABSTAIN`, a layer chip flips to `stale`, a request is cancelled, **a 3D mode is denied, a plugin is denied, a layer falls back to 2D, or a reality-boundary badge appears** — the change MUST be announced through an ARIA live region of appropriate politeness:
+Every claim-bearing state should provide, at the level appropriate to the surface:
 
-- `assertive` — `DENY`, `ERROR`, restricted-geometry redaction event, **`plugin-admission-denied`**, **`3d-admission-denied:policy`**, **`reality-boundary-required-but-missing`**.
-- `polite` — `ANSWER`, `ABSTAIN`, freshness change, correction applied, **`2d-fallback-active`** (when fallback is the licensed outcome), **reality-boundary badge surfacing** on first encounter per node/layer.
-- not announced — purely visual hover preview without semantic change.
+1. a textual state label;
+2. a stable accessible name or heading;
+3. a bounded reason that does not leak protected details;
+4. the evidence/citation relationship when disclosure is allowed;
+5. time, freshness, review, release, and correction context where material;
+6. an operable next step—inspect, retry, narrow scope, return, or request review—only when that action is actually available;
+7. an announcement strategy that avoids both silence and repeated interruption.
 
-Exact ARIA wiring is a **PROPOSED** implementation detail; the requirement is that no consequential state change is silent.
+### Color, icons, and badges
 
-[Back to top](#kfm-ui--accessibility-architecture)
+Color, iconography, shape, animation, and spatial position may reinforce state but may not carry it alone. Trust badges are projections of upstream state. They must not:
+
+- imply acceptance, release, or publication that has not occurred;
+- hide stale, denied, corrected, or withdrawn state;
+- expose protected policy reason text;
+- replace the underlying evidence/citation view;
+- become the only accessible name of a control.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Keyboard, focus, and dialog discipline
 
-The map shell, drawer, dialogs, layer catalog, time control, Focus Mode, **and the 3D control surface** form a **keyboard-complete** surface: every action available with a pointer is available with the keyboard, and every action's effect is announced to assistive technology.
+### Confirmed bounded drawer behavior
 
-### 5.1 Keyboard contract
+The current Evidence Drawer:
 
-| Surface | Required keyboard behavior |
-|---|---|
-| App shell | Stable landmark roles (banner, navigation, main, complementary, contentinfo); skip-to-main link as the first focusable item. |
-| Route navigation | Reachable and operable by keyboard alone; current route announced. |
-| Map canvas | Receives focus; arrow keys pan; `+`/`-` zoom; `Enter` activates focused feature; `Esc` returns focus to map controls. |
-| **3D control surface** *(new in v0.2, per `maplibre-3d.md` §10)* | **All 3D controls reachable by keyboard alone**: pitch slider, projection toggle (2D ↔ globe), terrain exaggeration slider, and per-plugin layer visibility toggles (terrain, hillshade, fill-extrusion, 3D Tiles, glTF, point cloud, deck.gl interleaved). Each control's current value and admission status announced. |
-| **3D mode toggle (per layer)** *(new in v0.2)* | Toggle is focusable; activation requests the mode through `packages/maplibre-runtime/`; ALLOW renders the mode and announces `RepresentationReceipt`-derived state; DENY/ABSTAIN announces reason and offers the **2D fallback** as the next focusable action. |
-| Layer catalog | Tab into list; arrow keys move within; `Space` toggles; toggling announces new layer state, source role, rights, freshness, release state, **geometry label, and admissible 3D modes**. |
-| Time control | Keyboard-operable slider with discrete steps; current valid time, source time, and version-lock state announced. |
-| Drawer | Opens with focus moved to the drawer's first heading; `Esc` closes and returns focus to the invoking element. **When the drawer surfaces a `RealityBoundaryNote`, the badge is focusable and the note text is reachable inside the drawer body.** |
-| Dialog | Modal focus trap; `Tab` cycles within; `Esc` closes; background inert. |
-| Focus Mode | Question control reachable by keyboard; response region is a live region; citations are focusable links. |
-| Story Node | Arrow keys move through the version strip (predecessor/current/successor/latest), as in ML-059-019. **Any per-layer 3D mode requested by the node is announced on entry as admissible or denied, with a focusable "view in 2D" affordance.** |
-| Verification badge | Focusable; activation opens proof details — **not** a replacement for the Evidence Drawer (ML-061-139). |
-| **Reality Boundary Badge** *(new in v0.2)* | Focusable; activation opens the `RealityBoundaryNote` in the drawer, never a popup. Announced on first encounter per layer/node. |
+- uses a native button to open;
+- sets `aria-controls` and updates `aria-expanded`;
+- exposes a named complementary landmark;
+- moves focus to the native close button when opened;
+- closes on the close button or `Escape`;
+- restores focus to the prior connected element, falling back to the opener;
+- destroys its listeners and DOM through an explicit cleanup function.
 
-### 5.2 Focus order and visibility
+This is evidence for one non-modal drawer fixture. It does not prove complete shell navigation, focus visibility, focus containment, route transitions, multiple overlays, or assistive-technology parity.
 
-- Focus order MUST match the visible reading order; tab traps exist only inside true modals.
-- The focus indicator MUST be visible on every interactive element at every theme — light, dark, high-contrast.
-- Focus must not be lost when a panel opens, closes, or rerenders; on close, focus returns to the invoking control.
-- **When a 3D mode request resolves (ALLOW/DENY/ABSTAIN), focus remains on the requesting control or moves to the next licensed action (e.g., the 2D fallback button) — never into unrelated map space.**
+### Architecture requirements
 
-### 5.3 Drawer / dialog focus management
+1. **Use native controls first.** Buttons, links, headings, lists, tables, inputs, and disclosure elements should carry their native semantics unless a reviewed custom pattern is necessary.
+2. **Preserve logical order.** DOM order, reading order, keyboard order, and visual order must not diverge in a way that changes meaning.
+3. **Keep focus visible.** Every operable element requires a visible focus indicator under supported themes and zoom levels.
+4. **Move focus only for a reason.** Opening a drawer, modal, error summary, or route may move focus when the move reveals the requested context; background refreshes must not steal focus.
+5. **Restore focus safely.** Dismissal should return focus to the invoking control or the nearest stable successor when the invoker no longer exists.
+6. **Match semantics to behavior.** A non-modal complementary drawer should not claim dialog semantics. A true modal must define labelling, description, initial focus, containment, dismissal, inert background, and restoration.
+7. **Do not require pointer precision.** Every consequential pointer action needs an equivalent keyboard path.
+8. **Do not trap users.** Focus traps, nested overlays, and global shortcuts require representative tests and an escape route.
+9. **Keep shortcuts discoverable and conflict-safe.** Single-key shortcuts should not activate unexpectedly in text-entry contexts.
+10. **Announce completion and failure without loops.** Live regions must not re-announce unchanged content on every render.
 
-> [!IMPORTANT]
-> The Evidence Drawer is **the trust object**, not a popup. Its focus behavior is part of the contract. On open: focus moves to the drawer; on close: focus returns to the trigger; on internal navigation (citation, lineage break, badge activation, **Reality Boundary Note activation**): focus remains predictable and never lands in unrelated map space. (ML-S-019.)
+### Shell-wide focus scenarios that remain unproven
 
-[Back to top](#kfm-ui--accessibility-architecture)
+- route and deep-link arrival;
+- map-to-list and list-to-map selection transfer;
+- Focus Mode request/response transitions;
+- story-step navigation and cancellation;
+- compare/export completion and error summaries;
+- correction, withdrawal, or stale-state updates after a view is open;
+- multiple simultaneous panels;
+- authentication, authorization, or steward-review flows;
+- map or future renderer controls.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Map alternatives (the non-map path)
 
-A map alone is not an accessible interface. Every consequential map interaction MUST have a **non-map alternative** — a keyboard-reachable list or table that exposes the same state, in the same vocabulary, with the same outcomes. (Expansion Report §20.1.) **In v0.2, this rule extends to every 3D mode: every layer that may render in `terrain`, `globe`, `extrusion`, `tiles3d`, `gltf`, `pointcloud`, or `deck.gl interleaved` mode MUST have a 2D alternative.**
+KFM is map-first, not map-only. A map is a spatial carrier and interaction surface; it cannot be the sole path to consequential information.
 
-### 6.1 Required alternatives
+### Required non-map parity
 
-| Map interaction | Non-map alternative |
+For every claim-bearing map interaction, the target architecture should provide a corresponding non-map route that supports the same public-safe scope:
+
+| Map interaction | Non-map equivalent |
 |---|---|
-| Click a feature → drawer | A keyboard-reachable list of currently selected features, each opening the drawer for that feature. |
-| Pan to a region | A search/select input that scopes the result list to that region. |
-| Toggle layers visually | The layer catalog panel, with the same toggles, badges, and freshness chips. |
-| Read time state | A time-state panel showing valid time, source time, release time, and version-lock status. |
-| See "what's here" | A results list/table showing the same features, each with source role, rights, sensitivity, freshness, **geometry label, admissible 3D modes**, and release state. |
-| Focus Mode camera | A summary panel that produces the same `ANSWER`/`ABSTAIN`/`DENY`/`ERROR` outcome without animation. |
-| **3D mode request** *(new in v0.2)* | **The 2D mercator view is always offered as the alternative**, with the same `LayerManifest`, the same `EvidenceBundle`, and the same drawer content. Per `maplibre-3d.md` §10: "2D fallback offered when any 3D admission fails." |
-| **Terrain / globe context view** *(new in v0.2)* | A non-projected mercator view that preserves all evidence; the globe is a context view that does not lower the bar (`maplibre-3d.md` §8.4). |
-| **Reality Boundary Note** *(new in v0.2)* | The note text is rendered in the drawer body in addition to the badge; users who cannot perceive the badge still receive the captured-vs-interpretive distinction. |
+| Inspect a feature | Searchable/listed result with name, scope, time, trust state, and evidence action |
+| Select a layer | Layer catalog control with textual state, description, availability, and limitations |
+| Read a legend | Structured text or table describing classes, units, thresholds, unknown/no-data state, and representation limits |
+| Change time | Keyboard-operable time control plus a textual current-time summary |
+| Compare places or times | Structured comparison table or list preserving units, scope, evidence, and correction state |
+| Open evidence | Direct Evidence Drawer control from the list/table result, not only from a map click |
+| Understand extent | Textual geography description and safe identifiers; geometry alone is insufficient |
+| Review stale/corrected state | Explicit history or status section independent of layer color/visibility |
 
-### 6.2 Non-map alternatives are first-class, not fallback
+### Map-selection boundary
 
-The list/table view MUST be discoverable by sighted keyboard users and screen-reader users **on the same page** as the map — not behind a separate "accessible view" toggle that hides it from the default experience. The principle is **equivalent access in the default experience**, not a parallel impoverished view. **The same principle governs the 2D-fallback-for-3D rule: the 2D alternative is always offered, not buried behind a settings page.**
+A rendered pixel, feature property, hover state, or click is a **candidate selection**, not evidence. The accessible alternative must route through the same governed resolution boundary as the pointer path. It must not create a simplified client-only evidence shortcut.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+### Current status
+
+No functional map is composed by the default Explorer entrypoint. Non-map parity is therefore a target architecture requirement, not a confirmed map implementation. The current Evidence Drawer can be opened without a map, which is useful bounded evidence but not proof of complete map/list equivalence.
+
+### Conditional future 3D or animated views
+
+Any later 3D, terrain, globe, extrusion, point-cloud, synthetic, or reconstruction surface must provide:
+
+- a 2D or structured non-map alternative carrying equivalent governed meaning;
+- explicit representation and limitation text;
+- keyboard-reachable controls;
+- reduced-motion behavior;
+- no dependence on free-orbit camera movement to understand the claim;
+- accessible screenshots/exports with the same evidence and release context.
+
+These are **PROPOSED admission requirements**, not proof that a renderer, plugin, 3D object family, or corresponding schema is accepted or implemented.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Motion, animation, and Story Node behavior
 
-Motion is a governance signal in KFM (it carries Story Node sequence, time-slice scrubbing, drawer transitions, Focus Mode cinematics, **globe projection toggling, terrain exaggeration changes, and `CameraPath` playback**). It is also an accessibility hazard for users with vestibular disorders, photosensitive conditions, and cognitive-load constraints.
+Motion can clarify time, change, and spatial relationships, but it must never be the only carrier of meaning or a required path through evidence.
 
-### 7.1 Reduced-motion contract
+### Target behavior
 
-When the user-agent indicates reduced motion (e.g. `prefers-reduced-motion: reduce`), the shell MUST:
+- honor the user's reduced-motion preference for decorative and navigational animation;
+- provide pause, stop, skip, or step controls for non-trivial playback;
+- preserve the same evidence, time, release, and correction state when animation is disabled;
+- avoid automatic camera movement after focus enters an evidence or form control;
+- do not use flashing, rapid pulsing, or repeated attention capture for trust state;
+- announce story-step changes through stable headings/status text rather than motion alone;
+- retain the current step and context when a user pauses or exits;
+- allow a static list or outline of story steps;
+- treat autoplay as opt-in unless a reviewed exception is supported by user evidence;
+- keep loading indicators bounded and paired with textual status.
 
-- Disable or substantially shorten Story Node camera animation and drawer transitions (Expansion Report §20.1; ML-059-087).
-- Replace any time-slice scrubbing animation with discrete state changes.
-- Render Focus Mode answers without cinematic camera moves; outcomes still display in full.
-- Prefer cross-fades or instant cuts over translations, rotations, and zooms.
-- Never make a finite outcome conditional on motion completing — outcomes are textual and present in DOM order on render.
-- **Disable or substantially shorten the globe projection transition** (`setProjection({type:'globe'})` cross-fade is replaced with an instant cut). *(new in v0.2)*
-- **Disable terrain exaggeration animation** when the user adjusts the slider — exaggeration changes as discrete steps. *(new in v0.2)*
-- **Disable `CameraPath` playback animation** in Story Node, time-slider, and Focus Mode contexts; the path's `ViewState`s render as discrete snapshots that the user steps through with keyboard navigation. *(new in v0.2, per ML-059-082 + ML-059-087)*
-- **Suppress hillshade and `sky` cross-fades** triggered by terrain admission changes; the result state is announced via live region without an interpolation. *(new in v0.2)*
+### Story and timeline requirements
 
-### 7.2 Motion alternatives are not optional
+A Story Node or timeline step should expose:
 
-> [!CAUTION]
-> If a Story Node, Focus Mode camera path, or 3D scene cannot preserve evidence/release/drawer continuity in a reduced-motion or 2D-fallback mode, the node MUST fall back to 2D or `ABSTAIN` rather than render an inaccessible cinematic. **In v0.2, 3D is no longer a separate-renderer handoff but a per-layer admission inside the same MapLibre runtime; the doctrine still holds — admission failures and reduced-motion mode both route to the same 2D fallback.** (Encyclopedia §8C; Expansion Report §19.3; [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10.)
+- step title and position;
+- place and temporal scope;
+- claim/interpretation type;
+- evidence and citation action;
+- limitations and representation notes;
+- next, previous, pause/stop, and exit controls;
+- correction or supersession state where material.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+### Current status
+
+Story playback, camera motion, map transitions, and reduced-motion behavior are not established by the default entrypoint. Sibling documents and feature directories are architecture or implementation evidence only where separately verified. This page does not promote them to completed behavior.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Perception, contrast, and zoom legibility
 
-### 8.1 Contrast
+### Architecture requirements
 
-| Surface | Minimum contrast (target) |
-|---|---|
-| Body text against background | 4.5 : 1 |
-| Large text (≥ 18 pt / 14 pt bold) | 3 : 1 |
-| Interactive controls and focus indicators | 3 : 1 against adjacent colors |
-| Non-text trust artifacts (chips, badge shapes, freshness pips) | 3 : 1 against adjacent colors |
-| **Reality Boundary Badge** *(new in v0.2)* | 3 : 1 against adjacent colors; icon shape distinguishable in monochrome; text label `Captured` / `Interpretive` / `Synthetic` / `Reconstructed` always present. |
-| **3D mode-toggle controls and per-plugin visibility toggles** *(new in v0.2)* | 3 : 1 against adjacent colors at every state (ALLOW/DENY/ABSTAIN/2D-fallback). |
+1. **Text carries the state.** Color and iconography reinforce but do not replace labels such as `ABSTAIN`, `DENY`, `STALE`, `CORRECTED`, or `WITHDRAWN`.
+2. **Contrast is measured.** Text, controls, focus indicators, charts, legends, and trust-state boundaries require measured contrast under supported themes; screenshots and badges are not evidence.
+3. **Zoom and text resizing preserve meaning.** Content must reflow without hiding trust state, citations, error summaries, or controls.
+4. **No-data is distinct from zero.** Missing, withheld, stale, and not-applicable states require separate text, not just empty space or a pale color.
+5. **Patterns remain distinguishable.** Charts and map classes should use labels, patterns, line styles, or symbols in addition to hue.
+6. **Focus and selection differ.** Keyboard focus, selected feature, hover, active route, and denied/restricted state must not collapse into one visual treatment.
+7. **Typography remains readable.** Long evidence IDs and URLs must wrap or be shortened accessibly without forcing horizontal page scroll.
+8. **High-contrast and forced-color modes are tested.** Custom styling must not erase native control boundaries or focus indicators.
+9. **User settings do not hide governance.** Theme, density, or reduced-detail settings may simplify decoration but may not remove outcome, evidence, release, freshness, or correction meaning.
 
-These targets align with WCAG 2.2 AA conventions. Actual measurement of any rendered theme is **NEEDS VERIFICATION**.
+### Current status
 
-### 8.2 Colorbars and trust-visible color use
+The bounded entrypoint creates semantic text and native controls, but no comprehensive styling, contrast, reflow, text-resize, forced-color, or zoom evidence was verified for this update. Formal thresholds, supported theme matrix, and exception handling remain **NEEDS VERIFICATION**.
 
-Flood depth/velocity/risk colorbars and trust chips MUST carry WCAG-compatible contrast, explicit text labels, and provenance metadata (ML-059-071). Colorblind-safe palettes are preferred; pattern, shape, or icon redundancy is required where color carries semantic load. **The Reality Boundary Badge is subject to the same rule: an amber-on-tan badge that distinguishes "interpretive" purely by hue is non-conforming.**
-
-### 8.3 Zoom and reflow
-
-Trust-visible information must remain legible at **200% zoom** without loss of state, and panels must reflow without horizontal scrolling at 320 CSS px width (ML-059-047; common WCAG 2.2 reflow target). Sidecar metadata and provenance text are **not** allowed to be truncated out of the visible state. **The 3D control surface (pitch, projection toggle, terrain exaggeration, per-plugin visibility) must also remain usable at 200% zoom and reflow at 320 CSS px width**; if not, the surface collapses to a single accessible expandable menu rather than disappearing.
-
-[Back to top](#kfm-ui--accessibility-architecture)
+[Back to top](#top)
 
 ---
 
 ## 9. Alt text, popups, and the Evidence Drawer
 
-### 9.1 Alt text on map media
+### Evidence Drawer role
 
-Field media, photographs, and figures bound to map features MUST have meaningful alt text. Where evidence comes from STAC items, accessibility metadata belongs **in the field STAC assets** themselves so that Evidence Drawer rows can render an accessible description without re-derivation (ML-064-059; ML-064-091).
+The Evidence Drawer is the current bounded accessibility proof surface. It is not the evidence authority itself. The current implementation projects:
 
-### 9.1.a Alt text on 3D screenshots and exports *(new in v0.2)*
+- a title and finite outcome/reason code;
+- a safe message;
+- source-role, policy, review, release, freshness, and correction labels;
+- public-safe evidence references where allowed;
+- citation links where allowed;
+- bounded history and correction lineage where allowed;
+- limitations;
+- fixed no-leak behavior for `DENY`, `ERROR`, and malformed payloads.
 
-Every 3D screenshot, export, or report-embedded view MUST carry alt text that describes (at minimum):
+The paired UI contract and closed schema remain `PROPOSED` profiles. Their executable tests prove shape and projection behavior, not upstream authenticity or public release.
 
-- The scene's `LayerManifest`-named layers actually rendered.
-- The active **geometry label** (`2D` / `2.5D` / `3D`).
-- The active **reality boundary** (`Captured` / `Interpretive` / `Synthetic` / `Reconstructed`) — if any layer is interpretive or synthetic, the alt text says so.
-- The `ViewState` summary (center, zoom, projection — globe vs mercator; pitch in coarse terms such as "tilted view" or "top-down").
-- The freshness state of the dominant layer(s).
+### Popup boundary
 
-Per ML-059-052 ("3D previews and captures require alt text") and ML-059-050 ("3D assets require generalization, alt text, checksums, STAC extensions and temporal anchors"). The alt-text generator is wired to `RepresentationReceipt` metadata so the description is **derived, not authored ad hoc**.
+A popup, tooltip, toast, map label, or badge may provide a brief summary and an accessible name. It must not become a smaller parallel Evidence Drawer that:
 
-### 9.2 Popup is not the drawer
+- omits evidence/citation and limitation state;
+- exposes protected reasons;
+- presents stale or superseded evidence as current;
+- makes a consequential claim from client-only feature properties;
+- traps hover-only content away from keyboard and touch users.
 
-> [!IMPORTANT]
-> A map popup is a **cue**, not a citation surface. It must not substitute for the Evidence Drawer for consequential claims (ML-059-061; ML-061-139). Popups MAY summarize, but consequential claims resolve through the Evidence Drawer with focus management, ARIA semantics, and announced state changes. **A Reality Boundary Badge popup is also a cue — the full `RealityBoundaryNote` text lives in the drawer.**
+A popup that implies a claim should provide an operable route to the governed evidence surface.
 
-### 9.3 Accessible Evidence Drawer fields
+### Images, charts, maps, and screenshots
 
-The Evidence Drawer SHOULD expose these accessible elements:
+Text alternatives should communicate **purpose and governed meaning**, not reproduce every pixel. Depending on the artifact, that may require:
 
-- Drawer heading naming the layer, feature, and outcome (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`).
-- Trust strip with source role, rights, sensitivity, review, freshness, release, correction, **geometry label, 3D admission status, plugin admission status, reality boundary** — each as labeled text.
-- Evidence list, each row focusable and exposing its `EvidenceRef`-derived label.
-- Citation links, each with a descriptive accessible name (not "click here").
-- Reason codes for `ABSTAIN` and `DENY` (including `3d-admission-denied:*`, `plugin-admission-denied:*`), in plain language.
-- Lineage break notices rendered as readable text, never as silent breaks (ML-061-089).
-- **`RealityBoundaryNote` text** when the active layer is interpretive, synthetic, or reconstructed — rendered as readable prose, with the badge as the focusable jump target. *(new in v0.2)*
-- **`RepresentationReceipt` reference** when 3D content is active — so a steward can audit which plugin versions, ViewState, and time slice were used. *(new in v0.2)*
+- a concise accessible name;
+- a longer description or adjacent data table;
+- place, time, units, source role, and representation limits;
+- the release/correction state;
+- evidence and citation references;
+- an explanation of withheld, generalized, or unavailable detail;
+- a statement that an image is illustrative, modeled, derived, or synthetic where material.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+Decorative images should be marked decorative. Claim-bearing images and exported screenshots must not rely on filename, surrounding color, or visual realism as their only explanation.
+
+### Current gaps
+
+- no app-wide figure/chart/map alternative model is proven;
+- no representative screen-reader matrix is recorded;
+- no link-purpose audit across all feature directories is proven;
+- no current screenshot/export manifest binding was verified;
+- no automated rule-engine run is wired through the accessibility workflow.
+
+[Back to top](#top)
 
 ---
 
 ## 10. Touch and narrow-viewport behavior
 
-Touch and narrow-viewport layouts MUST keep map, time context, drawer, **3D control surface, Reality Boundary Badge**, and focus states usable without hiding critical trust information (Expansion Report §20.1).
+Accessibility applies to mobile and coarse-pointer operation even when desktop is the primary review surface.
 
-Concretely:
+### Target requirements
 
-- Hit targets for trust chips, drawer toggles, time controls, **3D mode toggles, and the Reality Boundary Badge** are at least 24 × 24 CSS px (WCAG 2.2 target-size minimum-target). 44 × 44 CSS px is preferred for primary controls.
-- The freshness chip, rights chip, outcome label, **geometry-label chip, and Reality Boundary Badge** MUST remain visible at narrow widths; they may relocate but may not be collapsed into an undisclosed overflow.
-- Drawer behavior on narrow widths preserves focus trap and `Esc`-to-close semantics.
-- The non-map list/table alternative — and the **2D fallback affordance** for any 3D mode — remains reachable from narrow viewports.
+- controls remain operable without precision dragging or hover;
+- adjacent controls have enough separation to avoid accidental activation;
+- drawers and panels preserve headings, close controls, outcome, and trust state when space is constrained;
+- content order remains logical when panels stack;
+- horizontal scrolling is confined to data regions that genuinely require it and is described;
+- long evidence references and citations wrap without covering controls;
+- sticky headers, floating controls, and virtual keyboards do not obscure focused content;
+- orientation changes preserve context and focus where practical;
+- gestures have button or menu equivalents;
+- time sliders, range controls, and map gestures expose keyboard and textual alternatives;
+- safe-area and browser zoom behavior do not hide dismissal or recovery controls.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+### Target-size policy
+
+The repository does not establish one measured minimum target-size policy in the evidence inspected here. The project should choose, document, test, and version one policy rather than copying an unverified number into architecture prose. Exceptions must remain operable and reviewable.
+
+### Current status
+
+No representative narrow-viewport, touch, coarse-pointer, virtual-keyboard, or orientation evidence was verified for the default Explorer composition.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Accessibility smoke criteria (canonical)
 
-These are the canonical pre-release smoke criteria for the KFM UI shell, adapted from Whole-UI + Governed AI Expansion Report §20.1 (CONFIRMED doctrine) and extended in v0.2 with the 3D accessibility doctrine from [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10. Each is a release gate; missing criteria block public exposure of the affected surface.
-
-| # | Criterion | Source |
-|---|---|---|
-| A1 | Keyboard-only route navigation and panel open/close is possible; focus order is stable; drawer and dialogs trap and release focus correctly. | Expansion Report §20.1 |
-| A2 | Map interactions have non-map alternatives: selected features and results appear in a keyboard-accessible list/table. | Expansion Report §20.1 |
-| A3 | Trust badges do not rely on color alone; text labels are available for source role, rights, sensitivity, review, freshness, release, correction state, **geometry label, 3D admission, plugin admission, and reality boundary**. | Expansion Report §20.1; ML-S-020; v0.2 extension |
-| A4 | Reduced-motion mode disables or shortens Story Node camera animation and drawer transitions. | Expansion Report §20.1; ML-059-087 |
-| A5 | Touch and narrow-viewport layouts keep map, time context, drawer, **3D control surface**, and focus states usable without hiding critical trust information. | Expansion Report §20.1; v0.2 extension |
-| A6 | Loading, cancelled, denied, abstained, error, stale, restricted, **`3d-admission-denied`, `plugin-admission-denied`, `reality-boundary-required-but-missing`, and `2d-fallback-active`** states are announced and visibly differentiated. | Expansion Report §20.1; ML-061-140; v0.2 extension |
-| A7 | Verification badge state is keyboard-reachable, contrast-compliant, and screen-reader-described; activation opens proof detail, not a drawer replacement. | ML-061-138; ML-061-139 |
-| A8 | CARE labels and sovereignty notice chips are rendered as text in the UI for sensitive material. | ML-061-160; ML-061-164 |
-| A9 | Map media and field photographs carry alt text sourced from STAC asset metadata. | ML-064-059; ML-064-091 |
-| A10 | Trust-visible information remains legible at 200% zoom and reflows at 320 CSS px width. | ML-059-047 |
-| **A11** *(new in v0.2)* | **All 3D controls (pitch, projection toggle, terrain exaggeration, per-plugin layer visibility) are keyboard-reachable; current values and admission status announced.** | `maplibre-3d.md` §10 |
-| **A12** *(new in v0.2)* | **A 2D fallback is offered whenever any 3D admission fails; the fallback is focusable, announced, and renders the same `EvidenceBundle`.** | `maplibre-3d.md` §10; ML-W-057 |
-| **A13** *(new in v0.2)* | **3D screenshots, exports, and report-embedded views carry alt text derived from `RepresentationReceipt`, naming the layers, geometry label, reality-boundary status, and `ViewState`.** | `maplibre-3d.md` §10; ML-059-050; ML-059-052 |
-| **A14** *(new in v0.2)* | **Reality Boundary Badge has text + icon (never color-only), is keyboard-reachable, opens the `RealityBoundaryNote` in the drawer, and is announced on first encounter per layer/node.** | KFM-P9-FEAT-0014; ML-S-020 |
-| **A15** *(new in v0.2)* | **Reduced-motion mode disables/shortens globe projection toggle, terrain exaggeration animation, and `CameraPath` playback in addition to Story Node camera and drawer transitions.** | `maplibre-3d.md` §10; ML-059-087 extension |
-
 > [!NOTE]
-> A1–A6 are **CONFIRMED doctrine** under Expansion Report §20.1 (A3, A5, A6 expanded in v0.2). A7–A10 are **CONFIRMED doctrine** from the MapLibre Master atlas Category S evidence. A11–A15 are **CONFIRMED doctrine** under [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10 / KFM-P9-FEAT-0014. All require fixture coverage before they can be claimed as enforced — see [§12](#12-validation-surfaces-and-ci-hooks).
+> The word **canonical** is retained in this heading only to preserve the legacy fragment identifier. This document is not a conformance authority. The table below separates confirmed bounded proof from proposed graduation evidence.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+### Current executable proof
+
+| Criterion | Current state | Evidence boundary |
+|---|---|---|
+| Native drawer opener and closer | **CONFIRMED** | One fixture-driven Evidence Drawer |
+| Named `main` and complementary landmarks | **CONFIRMED** | Default entrypoint and drawer fixture only |
+| Keyboard open with Enter | **CONFIRMED** | Playwright fixture test |
+| Focus moves to close control | **CONFIRMED** | Playwright fixture test |
+| Escape closes and restores focus | **CONFIRMED** | Playwright fixture test |
+| Finite text outcome and reason code | **CONFIRMED** | Drawer projection profile only |
+| Citation/history/limitation lists | **CONFIRMED** | Supported fixture and bounded history profile |
+| Fixed no-leak `DENY` and `ERROR` copy | **CONFIRMED** | Synthetic canary tests only |
+| Closed schema and fixture polarity | **CONFIRMED bounded lane** | Proposed UI projection profile; no upstream authenticity |
+| App build and package tests | **CONFIRMED workflow surface** | CI signal only |
+| Automated axe scan | **HOLD / not implemented** | Accessibility workflow explicitly skips |
+| Full keyboard-navigation audit | **HOLD / not implemented** | Accessibility workflow explicitly skips |
+| Whole-app focus order and visible focus | **UNKNOWN** | No representative completion evidence |
+| Map/list parity | **HOLD / not applicable to current entrypoint** | No functioning map |
+| Reduced-motion behavior | **UNKNOWN** | No representative animation/story runtime |
+| Zoom, reflow, contrast, forced colors | **UNKNOWN** | No measured results verified |
+| Screen-reader/browser/device matrix | **UNKNOWN** | No manual evidence package verified |
+| WCAG 2.2 AA conformance | **UNKNOWN / not claimed** | Proposed target only |
+
+### Graduation evidence for a claim-bearing UI slice
+
+A slice should not be described as accessibility-complete until the applicable evidence set includes:
+
+1. semantic structure and accessible-name review;
+2. complete keyboard operation, focus visibility, and focus restoration tests;
+3. finite outcome, stale/correction, and no-leak negative-state tests;
+4. automated rule-engine results with reviewed exclusions;
+5. manual keyboard review outside the scripted happy path;
+6. representative screen-reader testing for supported browser/platform combinations;
+7. zoom, text resize, reflow, high-contrast/forced-color, and reduced-motion checks;
+8. pointer/touch and narrow-viewport checks where supported;
+9. non-map equivalence for every consequential map-only action;
+10. export continuity where the slice can export or capture claim-bearing material;
+11. documented defects, exceptions, owner, due date, and rollback/disable path;
+12. release-significance review that does not confuse a test pass with publication approval.
+
+### Failure behavior
+
+- missing required evidence produces `HOLD`, not a guessed pass;
+- an unavailable automated tool does not waive manual review;
+- a manual review does not waive deterministic regression tests;
+- a green non-enforcing workflow is not an accessibility result;
+- critical keyboard, focus, disclosure, or protected-detail failures block the affected public surface;
+- rollback or feature disablement must remain available when a regression reaches a released surface.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Validation surfaces and CI hooks
 
-The architecture above is enforced through a layered validation surface. **All paths and validator names are PROPOSED until verified against mounted-repo evidence.**
+### Repository-native focused commands
 
-### 12.1 Diagram — accessibility validation surfaces
+The following commands are present in current documentation or workflow configuration. Run the smallest applicable set from a repository checkout:
 
-```mermaid
-flowchart LR
-    A["Author / PR"] --> B["Schema validation"]
-    B --> C["Unit & component tests"]
-    C --> D["Accessibility smoke<br/>Playwright + axe-like + keyboard script"]
-    D --> D2["3D a11y smoke<br/>pitch · projection · exaggeration ·<br/>plugin visibility · 2D fallback"]
-    D2 --> E["E2E smoke<br/>finite-outcome rendering"]
-    E --> F["Visual regression<br/>contrast & badge state<br/>(incl. Reality Boundary Badge)"]
-    F --> G["Policy tests<br/>DENY / ABSTAIN / restricted ·<br/>3D admission · plugin admission"]
-    G --> H["Release gate"]
-    H -. "fails closed" .-> X(("No public exposure"))
-    H --> Y["Public surface"]
+```bash
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  docs/architecture/ui/ACCESSIBILITY.md \
+  --repo-root . \
+  --profile required
 
-    classDef gate fill:#fff4e5,stroke:#d97706,color:#7c2d12;
-    classDef proof fill:#ecfdf5,stroke:#059669,color:#064e3b;
-    class B,C,D,D2,E,F,G gate
-    class H,Y proof
+pnpm --filter explorer-web build
+pnpm --filter explorer-web test
+
+python tools/validators/ui/validate_evidence_drawer_payload.py --fixtures
+python -m unittest -q tests.validators.test_validate_evidence_drawer_payload
+python -m pytest -q tests/policy/test_explorer_web_adapter_boundary.py
 ```
 
-> [!NOTE]
-> Diagram reflects the validation **responsibility surface**, not a verified workflow. PR workflow YAML, runner targets, and gate ordering are **PROPOSED** until the repo is mounted. The 3D-a11y smoke node is new in v0.2.
+A documentation-only change should also receive the repository's configured metadata, stale-claim, link, anchor, document-graph, and docs-build checks when those workflows apply.
 
-### 12.2 Proposed validation matrix
+### Workflow truth table
 
-| Check | Command family (PROPOSED) | Expected result |
+| Workflow | What it currently does | What it does **not** prove |
 |---|---|---|
-| Schema validation | `ajv` / `jsonschema` over `schemas/contracts/v1` (incl. `maplibre/`, `3d/`, `policy/` subtrees) and UI fixtures | Valid fixtures pass; invalid fail |
-| Unit / component tests | `npm`/`pnpm`/`yarn test` | Shell, drawer, focus, layers, **Reality Boundary Badge** pass |
-| Accessibility smoke | Playwright + axe-like checks + keyboard script | No critical violations; map actions have non-map alternatives |
-| **3D accessibility smoke** *(new in v0.2)* | Playwright `e2e/focus-mode-3d-toggle.spec.ts` + keyboard script | 3D controls (pitch, projection, exaggeration, plugin visibility) keyboard-reachable; 2D fallback offered on every admission failure; live-region announcements verified |
-| **Plugin admission accessibility check** *(new in v0.2)* | Component test against `PluginAdmission` DENY fixtures | Layer chip renders the deny reason as text; chip is focusable; activation does not crash |
-| **Reality Boundary Badge tests** *(new in v0.2)* | Component test + axe contrast check | Text + icon present at every theme; contrast ≥ 3:1; activation opens drawer not popup; announced on first encounter |
-| E2E smoke | Playwright route/load/focus/map-click | Finite outcomes display correctly |
-| Visual regression | Storybook / Loki / Playwright screenshots | Contrast and badge-state snapshots stable (incl. captured vs interpretive vs synthetic Reality Boundary Badge variants) |
-| Policy tests | `conftest` or repo policy runner | DENY invalid, unreleased, uncited, restricted flows; **3D admission DENY and Plugin Admission DENY paths fire correctly** |
-| **Reduced-motion smoke (expanded)** *(new in v0.2)* | `prefers-reduced-motion: reduce` Playwright override | Story Node camera, drawer transitions, **globe projection toggle, terrain exaggeration animation, and `CameraPath` playback** all degrade gracefully |
+| `ui-build` | Installs locked dependencies, builds Explorer, runs package unit/browser tests | Whole-app accessibility, policy, evidence authenticity, release, deployment, publication |
+| `evidence-drawer-payload` | Validates proposed closed schema, fixtures, focused validator tests, and generated receipt | Live transport, upstream evidence resolution, policy execution, accountable review, public release |
+| `accessibility` | Emits explicit HOLD summaries and warnings; executes no repository code | Axe results, keyboard/focus behavior, WCAG conformance, release readiness |
 
-Adapted from Whole-UI + Governed AI Expansion Report §20 validation checklist and [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) §10. Status of each check in the current session is **PROPOSED** — no workflow YAML or runner has been verified.
+### Proposed accessibility workflow graduation
 
-### 12.3 Proposed test files
+Replacing the HOLD scaffold requires a separate, reviewable implementation slice that establishes:
 
-| File (PROPOSED path) | Purpose |
+- a repository-owned command;
+- deterministic public-safe fixtures;
+- pinned dependencies and a defined browser setup;
+- positive and negative cases;
+- no secrets and no canonical/internal-store access;
+- stable output and failure semantics;
+- reviewed exclusions;
+- accountable ownership;
+- an emergency disable/rollback path;
+- documentation that states the exact scope rather than “accessibility passed.”
+
+### Evidence classification
+
+| Result | Safe claim |
 |---|---|
-| `tests/accessibility/ui_shell_axe.spec.ts` | Accessibility smoke with keyboard and axe-like checks |
-| `tests/accessibility/3d_controls_keyboard.spec.ts` *(new in v0.2)* | Keyboard reachability of pitch / projection toggle / terrain exaggeration / per-plugin visibility |
-| `tests/accessibility/reality_boundary_badge.spec.tsx` *(new in v0.2)* | Reality Boundary Badge contrast, text+icon, activation behavior, announcement |
-| `tests/accessibility/reduced_motion_3d.spec.ts` *(new in v0.2)* | Reduced-motion behavior for globe toggle, exaggeration, CameraPath playback |
-| `tests/ui/FocusOutcomeRenderer.test.ts` | Finite outcome rendering tests (ANSWER/ABSTAIN/DENY/ERROR, incl. 3D admission / plugin admission DENY reasons) |
-| `tests/ui/LayerCatalogPanel.test.tsx` | Layer catalog/toggle/legend tests (incl. geometry-label and admissible-modes display) |
-| `tests/e2e/ui_shell_smoke.spec.ts` | Shell load / navigation smoke |
-| `tests/e2e/focus_negative_states.spec.ts` | ABSTAIN / DENY / ERROR e2e behavior |
-| `tests/e2e/focus-mode-3d-toggle.spec.ts` *(new in v0.2, mirrored from `maplibre-3d.md`)* | 3D mode toggle ALLOW/DENY/ABSTAIN with 2D fallback announcement |
+| Static source inspection | The named semantics exist in the inspected source |
+| Unit test | The bounded resolver/view-model behavior passed its fixtures |
+| Browser test | The scripted DOM interaction passed in the configured browser environment |
+| Automated rules scan | The scanned page/state produced the recorded findings under the tool version and ruleset |
+| Manual keyboard review | The reviewer completed the named scenarios on the named build |
+| Assistive-technology review | The named AT/browser/platform combinations produced the recorded results |
+| Conformance statement | Only the explicitly evaluated scope meets the declared standard/version and exception policy |
 
-Paths from Whole-UI + Governed AI Expansion Report §29 and `maplibre-3d.md` §6.2; **PROPOSED** until verified.
+No lower row is implied by a higher-looking badge or workflow name.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+[Back to top](#top)
 
 ---
 
 ## 13. Negative, abstain, deny, and stale states
 
-> [!IMPORTANT]
-> Negative states are not error UX — they are **first-class governance outcomes**. A user with assistive technology must be able to tell `ABSTAIN` from `DENY` from `ERROR` from `stale` from **`3d-admission-denied`** from **`plugin-admission-denied`** from **`reality-boundary-required-but-missing`** from **`2d-fallback-active`** without reading the surrounding paragraph. (ML-S-063; Expansion Report §19; v0.2 extension.)
+Negative states carry accessibility and information-disclosure obligations at the same time.
 
-<details>
-<summary><strong>Required announced behaviors per state</strong> (click to expand)</summary>
+### Current bounded behavior
 
-| State | Visible treatment (required) | Announcement (required) | Reason exposure |
-|---|---|---|---|
-| `loading` | Text + non-color indicator; not silent | Polite — "Loading <surface>" | n/a |
-| `cancelled` | Distinct from loading and error | Polite — "Cancelled" | Optional cause |
-| `ANSWER` | Outcome label + citation list | Polite — "Answer with N citations" | n/a |
-| `ABSTAIN` | Outcome label + reason codes | Polite — "Abstained: <reason>" | Required reason code in plain language |
-| `DENY` | Outcome label + policy reason | Assertive — "Denied: <reason>" | Required reason code; no sensitive leak |
-| `ERROR` | Outcome label + safe diagnostic | Assertive — "Error: <safe message>" | Generic; no RAW/QUARANTINE/credential leak |
-| `stale` | Distinct chip + age text | Polite — "Stale source as of <date>" | Optional source-head note |
-| `restricted` | Redaction or generalization chip | Assertive on first encounter | Required obligation in plain language |
-| `failed-verification` | Distinct from stale and from unknown | Assertive | Required reason code |
-| `unknown` | Distinct from stale and from failed | Polite | Optional explanation |
-| **`3d-admission-denied`** *(new in v0.2)* | Distinct chip on layer + mode toggle | Assertive — "3D mode <mode> denied: <reason>" | Required reason code (`care-generalization-required`, `geometry-label-mismatch`, `living-person-data`, `release-state-unpublished`, etc.) |
-| **`plugin-admission-denied`** *(new in v0.2)* | Distinct chip on layer when 3D mode is requested | Assertive — "Plugin <name> denied: <reason>" | Required reason code (`unpinned`, `drifted`, `unattested`) |
-| **`reality-boundary-required-but-missing`** *(new in v0.2)* | Distinct chip on layer + drawer header | Assertive — "Reality Boundary Note required for interpretive content; not found" | Required obligation: surface the gap, do not silently render |
-| **`2d-fallback-active`** *(new in v0.2)* | Distinct chip on layer + map status strip | Polite — "Showing 2D view; 3D mode <mode> <reason>" | Required reason code paired with offered "Try 3D again" affordance when admissible |
-| **`reality-boundary:interpretive`** *(new in v0.2)* | Reality Boundary Badge surfaced; drawer expanded | Polite on first encounter — "Interpretive reconstruction" | Note text rendered in drawer body |
-| **`reality-boundary:synthetic`** *(new in v0.2)* | Reality Boundary Badge surfaced; drawer expanded | Polite on first encounter — "Synthetic surface" | Note text rendered in drawer body |
+| State | Current drawer behavior |
+|---|---|
+| No governed response | `ABSTAIN / NO_GOVERNED_RESPONSE`, polite live region, no evidence refs |
+| Missing/stale/citation-unresolved support | `ABSTAIN` with fixed bounded reason; eligible public-safe evidence refs may remain visible |
+| Policy/rights/sensitivity restriction | `DENY` with fixed no-leak copy; no evidence refs, citations, or protected history identifiers |
+| Upstream or invalid payload | `ERROR` with assertive live region and fixed safe copy; no partial claim |
+| Superseded evidence | `ABSTAIN`; history may remain visible but cannot support a current claim |
+| Correction | Active answer may show bounded prior-to-active lineage and corrected trust state |
 
-</details>
+### Architecture requirements
 
-Diagnostics MUST NOT leak `RAW`/`WORK`/`QUARANTINE` data, restricted coordinates, credentials, prompts, internal store handles, **or unredacted plugin paths/lockfile contents** *(new in v0.2)*, even in error messages. (Expansion Report §19.4.)
+- never render an empty map/panel as the only denial or error state;
+- do not reflect upstream error text, prompt content, sensitive reasons, raw identifiers, or restricted coordinates;
+- keep no-data, withheld, stale, loading, cancelled, and failed states distinct;
+- provide a stable heading and recovery action where an action exists;
+- avoid repeated assertive announcements during polling or retries;
+- preserve history without presenting it as current support;
+- make retry idempotent and prevent duplicate submissions;
+- retain the user's safe context after a failure;
+- do not visually hide denied content while leaving it in the accessibility tree;
+- do not remove protected content from the accessibility tree while leaving it discoverable in DOM attributes, URLs, telemetry, or client state.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+### State transitions
+
+Future live transport must define and test transitions such as:
+
+```text
+idle -> loading -> ANSWER
+               -> ABSTAIN
+               -> DENY
+               -> ERROR -> retry/cancel
+
+ANSWER -> STALE/CORRECTED/WITHDRAWN notice -> governed refresh
+```
+
+Loading and cancellation are UI process states, not new truth outcomes. They must not overwrite the final governed response vocabulary.
+
+[Back to top](#top)
 
 ---
 
 ## 14. Export and screenshot continuity
 
-When the user exports a map view, snapshot, or report, the accessible state SHOULD travel with it:
+An export, screenshot, copied summary, printed view, or story capture is a downstream carrier. Accessibility and traceability must survive the transition away from the live UI.
 
-- Verification badge state and manifest ID preserved in exports (ML-061-141).
-- Alt text for exported imagery carried from STAC asset metadata.
-- CARE labels, sovereignty notices, generalization logs, and freshness state preserved in any printed or PDF artifact.
-- **`RepresentationReceipt` reference attached to every export of a view where any 3D mode was active** — so the layer set, projection, ViewState, time slice, plugin versions, and `geometry_label` are auditable from the export alone. *(new in v0.2, per `maplibre-3d.md` §9)*
-- **`RealityBoundaryNote` text and badge state preserved** in every export of a view that included interpretive, synthetic, or reconstructed content. The captured-vs-interpretive distinction must survive a screenshot. *(new in v0.2)*
-- **3D-screenshot alt text** derived from `RepresentationReceipt` (per §9.1.a), naming the layers, geometry label, reality-boundary status, and `ViewState`. *(new in v0.2)*
-- For generated PDFs, the document-level PDF/UA preflight applies (Idea Index C13-03; **PROPOSED**, out of scope for this doc but linked).
+### Target export obligations
 
-[Back to top](#kfm-ui--accessibility-architecture)
+Where material and policy-safe, an export should preserve:
+
+- human-readable title and purpose;
+- place and temporal scope;
+- units and classification/legend meaning;
+- outcome and trust state;
+- evidence and citation references;
+- release identifier and generated-at time;
+- limitations and representation notes;
+- stale, corrected, superseded, or withdrawn state;
+- non-map table or textual equivalent for consequential graphics;
+- accessible document structure appropriate to the format;
+- public-safe redaction/generalization disclosures without protected details;
+- correction or withdrawal locator.
+
+### Screenshot boundary
+
+A screenshot alone is not proof. Claim-bearing screenshots need adjacent or embedded context sufficient to identify the released view and inspect its evidence. Decorative screenshots need useful alt text or must be marked decorative. Photorealism, map precision, and visual polish must not be described as evidence quality.
+
+### Current status
+
+No production export, screenshot manifest, accessible generated-document pipeline, or correction propagation was verified for this update. [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md) remains the detailed architecture companion; implementation and release claims require separate evidence.
+
+[Back to top](#top)
 
 ---
 
 ## 15. Anti-patterns
 
-> [!WARNING]
-> The patterns below collapse the trust-visible-state contract. They are not stylistic preferences; they are forbidden in public surfaces.
+Do not:
 
-- **Color-only trust signaling.** Red border without label, grey chip without state name, traffic-light dots without text. (ML-S-020.)
-- **Folding `unknown`, `stale`, and `failed-verification` into one grey blob.** Each must be distinguishable. (ML-061-140.)
-- **Popup as proof.** A popup that displays evidence but lacks Evidence Drawer focus, ARIA semantics, and citation surface. (ML-059-061; ML-061-139.)
-- **Badge as proof.** A verification badge that does not link to its receipts/attestations. (ML-061-138; ML-061-139.)
-- **Parallel "accessible view" toggle.** A separate impoverished page that hides accessibility from the default experience.
-- **Cinematic-only Focus Mode.** A Focus Mode answer that depends on motion completing or 3D rendering to surface its outcome.
-- **Silent state changes.** A drawer outcome that changes from `ANSWER` to `ABSTAIN` without announcement.
-- **Diagnostic leak.** An error message that exposes RAW/WORK/QUARANTINE handles, prompts, credentials, restricted coordinates, **or plugin lockfile contents**.
-- **Sensitive geometry by style filter.** Hiding restricted features with a style filter rather than denying publication. (Master atlas; sensitive-geometry deny tests; `maplibre-3d.md` I-3D-5 requires ≥5 km generalization on CARE-masked archaeology *before* tile generation.)
-- **Color-only Reality Boundary Badge.** *(new in v0.2)* An amber halo on a 3D model without the text label "Interpretive" — visually persuasive 3D mistaken for direct evidence (KFM-P9-FEAT-0014).
-- **2.5D as true-3D evidence.** *(new in v0.2)* Rendering a `geometry_label: '2.5D'` layer (e.g., fill-extrusion) and labeling it `3D` in the UI — collapses I-3D-4 (`maplibre-3d.md` §1).
-- **3D mode without 2D fallback.** *(new in v0.2)* A node, layer, or route that activates a 3D mode and offers no keyboard-reachable, screen-reader-announced 2D alternative.
-- **Cinematic-only Reality Boundary Badge.** *(new in v0.2)* A badge that surfaces only via a CameraPath animation or hover transition that reduced-motion users cannot perceive.
-- **Plugin admission as silent failure.** *(new in v0.2)* Failing to load a plugin-hosted 3D layer (because of `unpinned` / `drifted` plugin version) and degrading to 2D without an announcement.
-- **3D screenshot without alt text.** *(new in v0.2)* Exporting a 3D scene or terrain view as PNG/PDF without a `RepresentationReceipt`-derived alt text (ML-059-050; ML-059-052).
+- declare the application accessible because one component has keyboard tests;
+- report the green accessibility HOLD scaffold as a pass;
+- claim WCAG conformance from a build, unit test, automated scan, badge, or document;
+- make map clicks, drag gestures, hover, color, or animation the only path to meaning;
+- hide `ABSTAIN`, `DENY`, stale, corrected, or withdrawn state behind visual-only badges;
+- place protected details in alt text, `aria-label`, hidden DOM, URLs, or live regions;
+- reflect upstream denial/error messages into the browser;
+- force focus movement during background refreshes;
+- use `role="dialog"` without implementing dialog behavior;
+- trap focus in a non-modal panel;
+- disable zoom or text scaling to preserve layout;
+- remove focus outlines without a tested replacement;
+- autoplay story or camera motion without an operable alternative;
+- make a 3D or animated view the only representation of a claim;
+- treat an inaccessible denial as permission to reveal more detail;
+- create a second accessibility schema, policy, checklist authority, or component package from this document;
+- list nonexistent paths as implemented dependencies;
+- turn a proposed renderer decision into an accessibility implementation claim;
+- let exports strip evidence, release, temporal, limitation, or correction context;
+- close an accessibility defect without exact-head regression evidence or a documented disposition.
 
-[Back to top](#kfm-ui--accessibility-architecture)
+[Back to top](#top)
 
 ---
 
 ## 16. Open questions and NEEDS VERIFICATION
 
-These items are checkable but not yet checked strongly enough to act as fact in this session.
+### Decision backlog
 
-| # | Item | Status |
-|---|---|---|
-| OQ-1 | Which WCAG version (2.1 vs 2.2) is the formal target conformance level for KFM public surfaces? This doc currently writes **WCAG 2.2 AA** as a working target. | NEEDS VERIFICATION |
-| OQ-2 | Which axe-like engine (axe-core, Pa11y, custom) is the chosen smoke runner? | NEEDS VERIFICATION |
-| OQ-3 | Does any rendered build of the shell exist that can be measured against §11 criteria today? | UNKNOWN |
-| OQ-4 | Where does the canonical enumeration of trust state vocabulary live in `schemas/contracts/v1/`? *(For the v0.2 axes: `maplibre/`, `3d/`, `policy/` subtrees per `maplibre-3d.md` §4.)* | PROPOSED (ADR-0001 implies; not verified) |
-| OQ-5 | Are ARIA live-region announcements localized? If KFM gains non-English locales, freshness/outcome/admission messages need locale-aware text. | UNKNOWN |
-| OQ-6 | What is the minimum target-size policy — WCAG 2.2 minimum (24 px) or KFM-preferred (44 px) for primary controls? | NEEDS VERIFICATION |
-| OQ-7 | Does the Story Node version strip ARIA pattern follow combobox, listbox, or tab semantics? ML-059-019 names keyboard arrow behavior but not the role. | NEEDS VERIFICATION |
-| OQ-8 | Is there a documented "no-data" / "blank map" empty state for routes that load with zero features? (ML-S-063.) | UNKNOWN |
-| OQ-9 | How does the export pipeline (§14) carry accessible state into static PDF/PNG artifacts? Does this overlap with C13-03 PDF/UA preflight? Does it always attach `RepresentationReceipt` when 3D was active, or only on interpretive layers? | NEEDS VERIFICATION |
-| OQ-10 | Are review console keyboard flows separately gated by role, or do reviewers inherit the public shell's keyboard contract? | UNKNOWN |
-| **OQ-11** *(new in v0.2)* | What is the canonical ARIA role for the **3D mode toggle** per layer — `switch`, `radiogroup` of modes, `listbox` of admissible modes, or a custom widget with `aria-haspopup="menu"`? `maplibre-3d.md` §10 names "keyboard-reachable" but not the role. | NEEDS VERIFICATION |
-| **OQ-12** *(new in v0.2)* | Should the **Reality Boundary Badge** use a single label (e.g., "Interpretive reconstruction") or a two-line label naming the method (e.g., "Photogrammetric reconstruction · interpretive")? The corpus requires "distinguish reality-based capture from interpretive reconstruction" (KFM-P9-FEAT-0014) but does not specify wording. | PROPOSED |
-| **OQ-13** *(new in v0.2)* | Should the **2D-fallback-active** state include a one-click "Try 3D again" affordance, or require the user to re-toggle the mode from the layer catalog? UX preference; both are conformant. | PROPOSED |
-| **OQ-14** *(new in v0.2)* | Are **`CameraPath`** previews in Story Node played as discrete keyboard-stepped snapshots in reduced-motion mode, or paused-with-controls? `maplibre-3d.md` §10 + ML-059-087 support either; pick one to make tests deterministic. | PROPOSED |
-| **OQ-15** *(new in v0.2)* | Does **`prefers-color-scheme`** affect the **Reality Boundary Badge** contrast targets, or is the badge held to dark/light/high-contrast 3:1 regardless? | NEEDS VERIFICATION |
-| **OQ-16** *(new in v0.2)* | When a plugin is denied (`unpinned` / `drifted`), how much detail can the announced reason carry without leaking lockfile contents? Need a redaction rule for plugin-admission failure messages. | NEEDS VERIFICATION |
-| **OQ-17** *(new in v0.2)* | Should the **3D control surface** (pitch / projection / exaggeration / per-plugin visibility) be a single ARIA `toolbar` or a `complementary` landmark with grouped controls? | PROPOSED |
+| ID | Question | Status | Evidence needed |
+|---|---|---|---|
+| A11Y-01 | What is the exact supported browser, operating-system, input, and assistive-technology matrix? | NEEDS VERIFICATION | Product support decision plus representative test evidence |
+| A11Y-02 | Is WCAG 2.2 AA the accepted target, and what scope/exceptions process applies? | PROPOSED / NEEDS VERIFICATION | Accepted decision and conformance methodology |
+| A11Y-03 | Who is accountable for accessibility architecture, implementation review, manual audit, and release disposition? | NEEDS VERIFICATION | Verified role assignments; do not invent names |
+| A11Y-04 | Which automatic rule engine and pinned version should graduate the HOLD workflow? | NEEDS VERIFICATION | Dependency/supply-chain review, fixtures, command, tests, rollback |
+| A11Y-05 | Which states require polite versus assertive announcements? | NEEDS VERIFICATION | User research and AT/browser testing; avoid interruption loops |
+| A11Y-06 | What is the target-size and pointer-spacing policy? | NEEDS VERIFICATION | Accepted measurable policy and device tests |
+| A11Y-07 | What constitutes non-map parity for layers, selections, legends, temporal controls, and compare views? | PROPOSED | One end-to-end map/list proof slice and contract boundary |
+| A11Y-08 | What manual audit cadence and evidence-retention period apply? | NEEDS VERIFICATION | Governance/release decision and audit record format |
+| A11Y-09 | How are accessibility defects prioritized against rights, sensitivity, evidence, and release failures? | NEEDS VERIFICATION | Shared severity and release-blocking policy |
+| A11Y-10 | What is the accessible export/document format matrix? | UNKNOWN | Implemented export paths, format standards, and release tests |
+| A11Y-11 | How should dynamic correction/withdrawal updates be announced without stealing focus? | PROPOSED | Live transport design and representative AT tests |
+| A11Y-12 | Which proposed renderer/map surfaces will be admitted, and what accessibility evidence must accompany each? | HOLD | Accepted renderer/package decision and functioning runtime evidence |
 
-Track resolution in `docs/registers/VERIFICATION_BACKLOG.md` (**PROPOSED** path per Whole-UI + Governed AI Expansion Report §29).
+### Graduation gates
 
-[Back to top](#kfm-ui--accessibility-architecture)
+The accessibility architecture may advance from **bounded component proof** to **subsystem evidence** only when:
+
+1. exact scope and supported environment are named;
+2. representative shell/routes and claim-bearing components exist;
+3. automated and manual evidence cover the same exact build;
+4. keyboard, focus, landmarks, names, state announcements, non-map parity, reflow, contrast, reduced motion, and negative-state disclosure are tested as applicable;
+5. unresolved high-severity findings have an explicit HOLD, exception, or remediation decision;
+6. policy/privacy review confirms accessibility surfaces do not leak protected detail;
+7. release and rollback ownership is known;
+8. the accessibility workflow executes real checks and no longer reports `WORKFLOW_HOLD`;
+9. documentation names remaining limitations without implying conformance;
+10. a correction path exists for a false or outdated accessibility claim.
+
+### Smallest coherent next implementation slice
+
+A bounded next slice is **not** to claim whole-app conformance. It is to replace one accessibility workflow HOLD with one deterministic, repository-owned check over the current public-safe Evidence Drawer browser fixture, while preserving:
+
+- no secrets and read-only permissions;
+- pinned dependencies;
+- positive and negative states;
+- keyboard/focus tests;
+- fixed no-leak denial/error behavior;
+- a reviewed exclusion mechanism;
+- exact scope in the workflow summary;
+- rollback to the prior HOLD scaffold if the new lane is unreliable.
+
+That proposal remains separate from this documentation-only update.
+
+[Back to top](#top)
 
 ---
 
 ## 17. Related docs
 
-- [`docs/architecture/ui/README.md`](./README.md) — UI subsystem overview and trust-visible shell purpose (**PROPOSED**)
-- [`docs/architecture/maplibre-3d.md`](../maplibre-3d.md) — **Renderer / 3D doctrine and I-3D-1…I-3D-7 invariants — upstream for v0.2's 3D accessibility additions** (**PROPOSED**) *(new in v0.2)*
-- [`docs/architecture/story/README.md`](../story/README.md) — Story Node player, per-layer 3D admission, Reality Boundary Badge consumption (**PROPOSED**) *(new in v0.2)*
-- [`docs/architecture/ui/STATE_OWNERSHIP.md`](./STATE_OWNERSHIP.md) — Ownership of map, time, layer, drawer, focus, story, review, export, settings, diagnostics state (**PROPOSED**)
-- [`docs/architecture/ui/BOUNDARIES.md`](./BOUNDARIES.md) — Browser allowed/forbidden operations; MapLibre adapter; 3D admission and plugin admission gates (**PROPOSED**)
-- [`docs/architecture/ui/ROUTE_MAP.md`](./ROUTE_MAP.md) — Route families and shell continuity rules (**PROPOSED**)
-- [`docs/architecture/ui/CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — How prior UI doctrine and PDF lineage are preserved, including the Cesium-handoff → 3D-admission supersession (**PROPOSED**)
-- [`docs/architecture/governed-ai/README.md`](../governed-ai/README.md) — Governed AI subsystem and Focus Mode finite-outcome contract (**PROPOSED**)
-- [`docs/architecture/map-shell.md`](../map-shell.md) — MapLibre shell, layer registry, evidence resolution (**PROPOSED**)
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain default (**PROPOSED**)
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public/canonical separation (**PROPOSED**)
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Path and responsibility-root law (**CONFIRMED in attached doctrine**; repo placement **PROPOSED**)
+### Architecture lane
+
+- [`README.md`](./README.md) — UI subsystem landing page and current maturity.
+- [`BOUNDARIES.md`](./BOUNDARIES.md) — browser authority and forbidden operations.
+- [`GOVERNED_SHELL.md`](./GOVERNED_SHELL.md) — persistent shell architecture.
+- [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) — evidence inspection architecture.
+- [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) — governed Focus Mode flow.
+- [`LAYERING.md`](./LAYERING.md) — layer catalog and trust-state architecture.
+- [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) — proposed renderer-neutral seam.
+- [`STORY_PLAYER.md`](./STORY_PLAYER.md) — story playback architecture.
+- [`COMPARE_AND_EXPORT.md`](./COMPARE_AND_EXPORT.md) — comparison and export continuity.
+- [`TELEMETRY.md`](./TELEMETRY.md) — safe UI observability.
+- [`TRUST_BADGES.md`](./TRUST_BADGES.md) — trust-state projection.
+- [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — lineage and redesign continuity.
+- [`map-context-evidence-drawer-admission.md`](./map-context-evidence-drawer-admission.md) — map-context admission seam.
+
+### Placement and decision records
+
+- [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules v2 adoption.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — adopted placement authority.
+- [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — proposed renderer decision; not implementation authority.
+
+### Current bounded implementation and proof
+
+- [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json)
+- [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts)
+- [`apps/explorer-web/src/features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx)
+- [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
+- [`apps/explorer-web/tests/evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts)
+- [`apps/explorer-web/tests/browser/evidence-drawer.spec.ts`](../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts)
+- [`contracts/ui/evidence_drawer_payload.md`](../../../contracts/ui/evidence_drawer_payload.md)
+- [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json)
+- [`fixtures/ui/evidence_drawer_payload/`](../../../fixtures/ui/evidence_drawer_payload/)
+- [`tools/validators/ui/validate_evidence_drawer_payload.py`](../../../tools/validators/ui/validate_evidence_drawer_payload.py)
+- [`tests/validators/test_validate_evidence_drawer_payload.py`](../../../tests/validators/test_validate_evidence_drawer_payload.py)
+- [`tests/policy/test_explorer_web_adapter_boundary.py`](../../../tests/policy/test_explorer_web_adapter_boundary.py)
+
+### Workflows
+
+- [`accessibility.yml`](../../../.github/workflows/accessibility.yml) — explicit non-enforcing readiness HOLD.
+- [`ui-build.yml`](../../../.github/workflows/ui-build.yml) — Explorer build and package tests.
+- [`evidence-drawer-payload.yml`](../../../.github/workflows/evidence-drawer-payload.yml) — closed projection validation.
+
+### Removed stale dependencies
+
+The previous document linked to or treated these as current supporting authorities even though they were absent, case-mismatched, or unsupported by current evidence:
+
+- `docs/architecture/maplibre-3d.md`;
+- `schemas/contracts/v1/ui/EvidenceDrawerPayload.schema.json` (wrong case; the current file is lowercase);
+- proposed 3D admission, plugin admission, reality-boundary, camera-path, and representation-receipt schemas as implemented accessibility dependencies;
+- a completed retire-Cesium or sole-renderer transition;
+- a functioning map/3D runtime.
+
+Their removal from this page does not delete a repository object or decide their future disposition.
+
+[Back to top](#top)
 
 ---
 
-> **Last reviewed:** 2026-05-24 · **Authority:** PROPOSED (architecture doctrine; implementation maturity UNKNOWN) · **Version:** v0.2 (revision; supersedes v0.1) · [Back to top](#kfm-ui--accessibility-architecture)
+## Appendix A. No-loss modernization ledger
+
+| Prior material | Disposition in v1.0-draft |
+|---|---|
+| Accessibility as governance | **RETAINED and grounded** in the current trust membrane |
+| Finite outcomes | **RETAINED and corrected** to the actual closed profile: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` |
+| Stale/restricted/corrected state | **RETAINED** as reason, trust, and history conditions rather than invented top-level outcomes |
+| Keyboard/focus guidance | **RETAINED**, with current Evidence Drawer behavior separated from target shell behavior |
+| Dialog guidance | **RETAINED and narrowed**; current drawer is non-modal complementary content, not a modal dialog |
+| Non-map alternative | **RETAINED as PROPOSED architecture**; no functioning map parity is claimed |
+| Reduced-motion/story guidance | **RETAINED as PROPOSED architecture**; no runtime behavior is claimed |
+| Contrast, zoom, touch, and reflow | **RETAINED as requirements** with current evidence marked UNKNOWN |
+| Evidence Drawer guidance | **EXPANDED and grounded** in code, schema, contract, fixtures, and tests |
+| Negative-state safety | **EXPANDED and grounded** in fixed no-leak copy and canary tests |
+| Smoke criteria | **PRESERVED through the legacy anchor**, split into current proof and graduation evidence |
+| Validation | **REPLACED** with current repository-native commands and workflow truth boundaries |
+| Export continuity | **RETAINED as PROPOSED architecture** and bounded by release/evidence context |
+| 3D-specific controls and object families | **NARROWED to conditional future requirements** because renderer/3D authority and implementation are not established |
+| `maplibre-3d.md` doctrinal dependency | **REMOVED** because the path is absent |
+| Placeholder owners | **REPLACED** with the verified CODEOWNERS route and explicit unassigned-review gaps |
+| “All repo paths proposed / implementation unknown” | **REPLACED** with a commit-pinned repository checkpoint and per-claim status |
+| Existing section fragments | **PRESERVED** by retaining headings 1–17 and the historical top anchor |
+
+[Back to top](#top)
+
+---
+
+## Appendix B. Rollback
+
+This update changes documentation only.
+
+Before merge, rollback is closing the draft pull request and deleting its feature branch. After an authorized merge, rollback is a normal reviewed revert of the documentation commit or restoration of prior blob `902f10807813152cfe8f59ec5e183c654a427cd7`.
+
+Rollback requires no data migration, schema migration, policy change, package reinstall, runtime restart, cache invalidation, release withdrawal, or publication correction because this file does not change executable behavior or public release state.
+
+A later implementation must define its own rollback. In particular, graduating the accessibility workflow from HOLD requires an explicit disable/revert path and must not erase prior findings or conformance limitations.
+
+[Back to top](#top)
