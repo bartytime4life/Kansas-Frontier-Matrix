@@ -1,589 +1,802 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-architecture-ui-compare-and-export
-title: Compare and Export — UI Subsystem Architecture
-type: standard
-version: v1
-status: draft
-owners: <UI subsystem owner> + <docs steward>  # placeholder — replace after CODEOWNERS verification
+title: Compare and Export — Current Architecture and Implementation Boundary
+type: architecture
+version: v2.0.0
+status: draft; repository-grounded; placeholder-only; live-transport-unverified; export-policy-absent
+owners:
+  - "@bartytime4life"
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-18
 policy_label: public
+owning_root: "docs/"
+responsibility: Explain the Compare and Export trust surfaces, the currently implemented repository slice, and the boundaries that keep comparison and outbound artifacts subordinate to evidence, policy, review, release, correction, and rollback authority.
+base_commit: 34d509c690649b284a7c0be739e3a5c8c85926ee
+prior_blob: 12d63f1dc12c5dca774fb42b123153d0e09c401a
+directory_governance: ADR-0029 adopts docs/doctrine/directory-rules.md as the sole writable human Directory Rules authority; this same-path architecture page remains under the docs responsibility root.
+truth_posture: CONFIRMED current repository evidence; PROPOSED production composition; UNKNOWN live runtime, policy enforcement, deployment, and release behavior unless explicitly identified
 related:
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - .github/CODEOWNERS
   - docs/architecture/ui/README.md
-  - docs/architecture/ui/STATE_OWNERSHIP.md
-  - docs/architecture/ui/ROUTE_MAP.md
+  - docs/architecture/ui/ACCESSIBILITY.md
   - docs/architecture/ui/BOUNDARIES.md
   - docs/architecture/ui/CONTINUITY_NOTES.md
-  - docs/architecture/ui/TELEMETRY.md
-  - docs/architecture/governed-ai/README.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/directory-rules.md
-  - policy/export/README.md
+  - docs/architecture/ui/EVIDENCE_DRAWER.md
+  - docs/architecture/ui/LAYERING.md
+  - docs/architecture/evidence-drawer.md
+  - apps/explorer-web/src/main.ts
+  - apps/explorer-web/src/adapters/GovernedClient.ts
+  - apps/explorer-web/src/features/compare/README.md
+  - apps/explorer-web/src/features/compare/index.tsx
+  - apps/explorer-web/src/features/export/README.md
+  - apps/explorer-web/src/features/export/index.tsx
+  - apps/governed-api/routes/README.md
+  - apps/governed-api/src/routes/README.md
+  - contracts/ui/citation_validation_report.md
+  - schemas/contracts/v1/ui/citation_validation_report.schema.json
+  - schemas/contracts/v1/receipts/README.md
   - policy/telemetry/README.md
-tags: [kfm, ui, compare, export, governance, trust-membrane]
+  - policy/telemetry/no_restricted_coords.rego
+tags: [kfm, architecture, ui, compare, export, evidence, trust-membrane, finite-outcomes, policy, correction, rollback, no-leak]
 notes:
-  - All paths PROPOSED until verified against a mounted KFM repository.
-  - No external research consulted; project knowledge is authoritative for all KFM-specific claims.
+  - "The current Compare and Export source entries are greenfield placeholders. Their README contracts exist, but components, route wiring, adapters, fixtures, tests, receipt emission, and runtime behavior are not established by the inspected slice."
+  - "The Explorer entrypoint mounts the baseline shell and fixture-driven Evidence Drawer only. Compare and Export are not launch-wired there."
+  - "No Compare or Export route is present in the inspected governed-api route directories, and the current GovernedClient is a fixture-only Evidence Drawer adapter with no network or lifecycle-store access."
+  - "policy/export/ is absent at the pinned snapshot. policy/telemetry/ exists, but its only inspected Rego rule identifies itself as a greenfield stub and defaults deny to false; it is not enforcement evidence."
+  - "CitationValidationReport has a semantic contract and a permissive UI schema stub. No Compare projection schema or ExportReceipt schema was verified in the inspected homes."
 [/KFM_META_BLOCK_V2] -->
 
-# Compare and Export — UI Subsystem Architecture
+<a id="top"></a>
+<a id="compare-and-export--ui-subsystem-architecture"></a>
 
-> The two governed surfaces by which KFM users *see differences* and *take evidence away*. Both panels are public-safe carriers, not authorities: they consume released artifacts, preserve citations, and surface finite outcomes.
+# Compare and Export — Current Architecture and Implementation Boundary
 
-<!-- Badges are TODO placeholders — Shields.io targets to be set after CODEOWNERS, CI workflow, and release register are verified in the mounted repo. -->
+> **Operating rule.** Compare may show governed differences, and Export may eventually package governed public-safe material. Neither surface may create truth, evidence, policy, review, release, correction, rollback, or publication authority.
 
 ![status](https://img.shields.io/badge/status-draft-orange)
-![authority](https://img.shields.io/badge/authority-architecture%20subsystem-blue)
-![lifecycle](https://img.shields.io/badge/lifecycle-PROPOSED-yellow)
-![policy](https://img.shields.io/badge/policy-public-green)
-![evidence](https://img.shields.io/badge/evidence-cite--or--abstain-informational)
-![last%20updated](https://img.shields.io/badge/updated-2026--05--14-lightgrey)
+![repository evidence](https://img.shields.io/badge/repository--evidence-CONFIRMED-2ea44f)
+![implementation](https://img.shields.io/badge/implementation-placeholder--only-blue)
+![outcomes](https://img.shields.io/badge/outcomes-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-8957e5)
+![export policy](https://img.shields.io/badge/export--policy-absent-critical)
+![publication](https://img.shields.io/badge/publication-not__authorized-critical)
 
-**Status:** `draft` · **Owners:** UI subsystem owner + docs steward *(placeholder — confirm via CODEOWNERS)* · **Last updated:** 2026-05-14
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
+| **Directory authority** | **CONFIRMED / ACCEPTED:** [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md) |
+| **Architecture page** | **CONFIRMED** at this existing path; same-path modernization only |
+| **Review route** | `@bartytime4life` through [`CODEOWNERS`](../../../.github/CODEOWNERS); independent stewardship remains **NEEDS VERIFICATION** |
+| **Compare source** | **CONFIRMED path / placeholder only:** [`features/compare/index.tsx`](../../../apps/explorer-web/src/features/compare/index.tsx) exports `placeholder = true` |
+| **Export source** | **CONFIRMED path / placeholder only:** [`features/export/index.tsx`](../../../apps/explorer-web/src/features/export/index.tsx) exports `placeholder = true` |
+| **Explorer launch wiring** | **CONFIRMED bounded:** [`main.ts`](../../../apps/explorer-web/src/main.ts) mounts the baseline shell and fixture-driven Evidence Drawer, not Compare or Export |
+| **Browser transport** | **CONFIRMED bounded:** [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) is an Evidence Drawer fixture adapter with no network or lifecycle-store access; no Compare/Export client is established |
+| **Governed API routes** | **CONFIRMED absent from inspected route surfaces:** no Compare or Export implementation appears under the two current route directories |
+| **Compare / Export schemas** | **NOT VERIFIED:** no Compare projection schema or `ExportReceipt` schema was found in the inspected UI and receipt schema homes |
+| **Citation validation** | **CONFIRMED semantic contract + permissive stub only:** the UI schema requires only `id` and allows additional properties |
+| **Export policy** | **CONFIRMED absent:** `policy/export/` is not present at the pinned snapshot |
+| **Telemetry policy** | **CONFIRMED present / not enforcement proof:** the inspected Rego file is a greenfield stub with `default deny := false` |
+| **Runtime, deployment, release, and publication** | **UNKNOWN / no effect from this page** |
+
+> [!IMPORTANT]
+> **Current implementation is not a Compare or Export product.** The repository has app-local feature directories and detailed README contracts, but both executable entries are placeholders. No route, request envelope, artifact builder, receipt emitter, policy gate, launch wiring, or production transport is proven by the inspected slice.
+
+> [!CAUTION]
+> **An outbound file is not governed merely because the browser can download it.** A screenshot, copied canvas, ad hoc GeoJSON, debug dump, generated report, or model-produced narrative is not a KFM export unless a future governed flow proves the required evidence, policy, release, correction, and receipt closure.
+
+> [!WARNING]
+> **Negative states are no-leak states.** `DENY`, `ERROR`, malformed responses, absent policy, unresolved rights, and unavailable evidence must not reflect protected fields, internal identifiers, raw diagnostics, exact sensitive locations, or unsupported claim text into either surface.
+
+**Quick navigation:** [Status](#0-status-and-authority) · [Scope](#1-scope-and-non-goals) · [Placement](#2-repo-fit) · [Snapshot](#3-status-snapshot) · [Architecture](#4-subsystem-diagram) · [Compare](#5-compare-panel) · [Export](#6-export-panel) · [State](#7-state-ownership) · [Outcomes](#8-finite-outcomes-by-surface) · [Trust membrane](#9-trust-membrane-rules) · [Receipts](#10-receipts-and-proof-objects) · [Contracts](#11-routes-dtos-and-schemas) · [Policy](#12-policy-hooks) · [Telemetry](#13-telemetry-posture) · [Validation](#14-validators-and-tests) · [Rollback](#15-rollback-path) · [Continuity](#16-continuity-and-prior-doctrine) · [Open items](#17-open-questions-and-verification-backlog) · [Related docs](#18-related-docs) · [At a glance](#appendix-a-compare-vs-export-at-a-glance)
 
 ---
 
-## Quick jump
+## 0. Status and authority
 
-- [1. Scope and non-goals](#1-scope-and-non-goals)
-- [2. Repo fit](#2-repo-fit)
-- [3. Status snapshot](#3-status-snapshot)
-- [4. Subsystem diagram](#4-subsystem-diagram)
-- [5. Compare panel](#5-compare-panel)
-- [6. Export panel](#6-export-panel)
-- [7. State ownership](#7-state-ownership)
-- [8. Finite outcomes by surface](#8-finite-outcomes-by-surface)
-- [9. Trust-membrane rules](#9-trust-membrane-rules)
-- [10. Receipts and proof objects](#10-receipts-and-proof-objects)
-- [11. Routes, DTOs, and schemas](#11-routes-dtos-and-schemas)
-- [12. Policy hooks](#12-policy-hooks)
-- [13. Telemetry posture](#13-telemetry-posture)
-- [14. Validators and tests](#14-validators-and-tests)
-- [15. Rollback path](#15-rollback-path)
-- [16. Continuity and prior doctrine](#16-continuity-and-prior-doctrine)
-- [17. Open questions and verification backlog](#17-open-questions-and-verification-backlog)
-- [18. Related docs](#18-related-docs)
-- [Appendix A. Compare vs Export at a glance](#appendix-a-compare-vs-export-at-a-glance)
+### 0.1 Authority order for this page
+
+| Question | Governing evidence |
+|---|---|
+| Where does this page belong? | Accepted Directory Rules v2, accepted ADRs, then current repository evidence |
+| What do Compare and Export mean? | Applicable semantic contracts and accepted architecture decisions; this page explains but does not create them |
+| What is implemented now? | Pinned source, route inventories, schemas, policy, fixtures, tests, workflows, and emitted artifacts |
+| What may a public surface read? | Governed API envelopes and released public-safe carriers; never direct lifecycle or canonical stores |
+| What supports a claim or difference? | Resolved evidence, source role, time, policy, review, and release state |
+| What may leave KFM as an export? | A governed decision and artifact chain appropriate to format, audience, rights, sensitivity, correction, and rollback |
+| Who reviews repository changes? | Verified `CODEOWNERS` routing; role assignments and independent approval remain separate records |
+
+This page is architecture documentation. It does not amend contracts, schemas, policy, review authority, route inventory, release state, or runtime behavior.
+
+### 0.2 Current repository evidence
+
+| Surface | Confirmed state | Safe interpretation |
+|---|---|---|
+| [`docs/architecture/ui/README.md`](./README.md) | Repository-grounded UI architecture landing page | Explorer Web is a bounded fixture-first shell, not a complete live map product |
+| [`apps/explorer-web/src/features/compare/README.md`](../../../apps/explorer-web/src/features/compare/README.md) | Detailed draft feature contract exists | Contract prose does not prove components, route wiring, tests, or runtime |
+| [`apps/explorer-web/src/features/compare/index.tsx`](../../../apps/explorer-web/src/features/compare/index.tsx) | Two-line greenfield placeholder | Compare is not implemented by this entry |
+| [`apps/explorer-web/src/features/export/README.md`](../../../apps/explorer-web/src/features/export/README.md) | Detailed draft feature contract exists and records missing export policy | Contract prose does not prove governed export behavior |
+| [`apps/explorer-web/src/features/export/index.tsx`](../../../apps/explorer-web/src/features/export/index.tsx) | Two-line greenfield placeholder | Export is not implemented by this entry |
+| [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts) | Mounts baseline shell and Evidence Drawer | Compare and Export are not launch-wired in the inspected entrypoint |
+| [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict, no-network Evidence Drawer projection parser | It is not a live generalized governed client and has no Compare/Export contract |
+| [`apps/governed-api/routes/`](../../../apps/governed-api/routes/README.md) | README plus domain subdirectory in the inspected lane | No Compare or Export route is established there |
+| [`apps/governed-api/src/routes/`](../../../apps/governed-api/src/routes/README.md) | README plus agriculture subdirectory in the inspected lane | No Compare or Export route is established there |
+| [`schemas/contracts/v1/ui/citation_validation_report.schema.json`](../../../schemas/contracts/v1/ui/citation_validation_report.schema.json) | Draft stub; only `id` required; additional properties allowed | It cannot prove claim coverage, export safety, or citation closure |
+| [`contracts/ui/citation_validation_report.md`](../../../contracts/ui/citation_validation_report.md) | Draft UI projection semantics | Explicitly not evidence closure, policy, release approval, or proof storage |
+| [`schemas/contracts/v1/receipts/`](../../../schemas/contracts/v1/receipts/README.md) | Receipt family exists; no `ExportReceipt` schema verified in the inspected listing | Export receipt shape and enforcement remain open |
+| [`policy/telemetry/`](../../../policy/telemetry/README.md) | Documentation plus one greenfield Rego stub | Presence is not fail-closed telemetry enforcement |
+| `policy/export/` | Not present | No executable export-policy lane is established at the inspected snapshot |
+
+### 0.3 Truth labels
+
+- **CONFIRMED** — verified from the pinned repository state or an accepted decision.
+- **PROPOSED** — architecture or future behavior not established as current implementation.
+- **UNKNOWN** — evidence is insufficient to state a current result.
+- **NEEDS VERIFICATION** — a concrete repository, runtime, policy, rights, review, release, accessibility, or deployment check remains.
+
+### 0.4 Non-effects
+
+This page does not:
+
+- implement or launch a Compare or Export component;
+- add a browser or governed-API route;
+- define a new DTO, schema, receipt, or policy bundle;
+- authorize comparison with unreleased or restricted material;
+- authorize any download format or redistribution right;
+- resolve `EvidenceRef` to `EvidenceBundle`;
+- approve citation coverage, redaction, review, release, correction, or rollback;
+- make a screenshot, report, archive, tile slice, or copied browser payload a KFM artifact;
+- publish, promote, release, deploy, or expose lifecycle stores.
+
+[Back to top](#top)
 
 ---
 
 ## 1. Scope and non-goals
 
-**In scope.** Architecture, state ownership, trust boundaries, finite-outcome grammar, policy hooks, receipts, validators, and rollback for the **Compare** and **Export** panels of the Kansas Frontier Matrix Explorer UI.
+**In scope.** The architectural purpose, repository evidence, state boundaries, finite outcomes, trust requirements, validation expectations, and open implementation seams for the Explorer Web Compare and Export feature families.
 
 **Out of scope.**
 
-- Visual design and component styling. Those belong in `packages/ui/` and `docs/brand/`.
-- Source admission, redaction rules, and rights tiering. Those belong in `policy/sensitivity/` and per-domain dossiers.
-- Map renderer mechanics. See [BOUNDARIES.md](./BOUNDARIES.md) and [LAYERING.md](./LAYERING.md).
-- Focus Mode and governed AI generation. See [`docs/architecture/governed-ai/`](../governed-ai/).
+- Visual styling or reusable component design.
+- Implementing feature modules, adapters, routes, storage, workers, artifact builders, or downloads.
+- Choosing export formats or redistribution terms.
+- Defining field-level schemas, policy rules, receipt identity, or persistence.
+- Admitting sources, resolving rights, approving sensitive transforms, or releasing data.
+- Treating the feature READMEs or this page as runtime proof.
 
-> [!NOTE]
-> Compare and Export are **derivative carriers**. They display and package what has already been admitted, validated, released, and reviewed elsewhere. They never originate evidence, never bypass policy, and never publish on their own authority.
+Compare and Export are **derivative carriers**:
+
+- Compare is intended to show that two governed states differ.
+- Export is intended to carry an already governed state beyond the interactive shell.
+- Neither surface may originate the truth or authority it displays.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Repo fit
 
-This doc is a sibling of the other `docs/architecture/ui/*.md` subsystem docs and inherits their authority posture.
+### 2.1 Directory Rules basis
+
+This is a same-path modernization of an existing tracked architecture document. Its primary responsibility is to explain UI architecture to humans, so the owning root remains `docs/`. The change does not create a root, move a file, establish a schema or policy home, or turn the page into executable authority.
+
+| Responsibility | Confirmed or intended home | Current posture |
+|---|---|---|
+| Architecture explanation | `docs/architecture/ui/COMPARE_AND_EXPORT.md` | **CONFIRMED existing path** |
+| App-local Compare feature | `apps/explorer-web/src/features/compare/` | **CONFIRMED directory; placeholder executable entry** |
+| App-local Export feature | `apps/explorer-web/src/features/export/` | **CONFIRMED directory; placeholder executable entry** |
+| Public client shell | `apps/explorer-web/` | **CONFIRMED responsibility lane** |
+| Trust-membrane service | `apps/governed-api/` | **CONFIRMED root/lane; Compare/Export routes not established** |
+| Semantic meaning | `contracts/` | Existing contracts may be referenced; Compare/Export-specific authority remains unresolved |
+| Machine shape | `schemas/` | Existing stubs are not implementation proof |
+| Admissibility | `policy/` | Export policy lane absent; telemetry lane incomplete |
+| Receipts and proof instances | governed data/release families | No current Compare/Export emission is proven |
+| Tests and fixtures | owning app and shared test/fixture roots | No exact Compare/Export executable suite verified |
+| Release/correction/rollback | `release/` and governed accountability families | Must remain separate from UI state |
+
+### 2.2 Dependency direction
+
+The intended dependency direction is one-way:
 
 ```text
-docs/architecture/ui/
-├── README.md
-├── STATE_OWNERSHIP.md
-├── ROUTE_MAP.md
-├── BOUNDARIES.md
-├── CONTINUITY_NOTES.md
-├── LAYERING.md
-├── TELEMETRY.md
-└── COMPARE_AND_EXPORT.md   ← this file
+evidence / policy / review / release / correction authority
+  -> governed API projection
+  -> validated Explorer adapter
+  -> Compare or Export view state
+  -> user-visible finite outcome
 ```
 
-> [!IMPORTANT]
-> All paths in this document are **PROPOSED** per [Directory Rules](../../doctrine/directory-rules.md) §0 until verified against a mounted KFM repository. The doctrine in this doc is CONFIRMED from project sources; the *placement* of files this doc references is not.
+The browser must not reverse that direction by:
 
-**Upstream dependencies.**
+- reading lifecycle or canonical stores;
+- constructing evidence closure;
+- deciding policy or release state;
+- writing receipt, proof, correction, or release authority directly;
+- treating renderer state or downloadable bytes as public truth.
 
-- `docs/doctrine/lifecycle-law.md` — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
-- `docs/doctrine/trust-membrane.md` — public clients consume governed APIs only.
-- `docs/architecture/ui/STATE_OWNERSHIP.md` — which state machine owns `ViewState`, `TimeState`, and panel state.
-- `docs/architecture/ui/BOUNDARIES.md` — browser allowed/forbidden operations.
-- `schemas/contracts/v1/` — DTO and receipt shapes (PROPOSED home per ADR-0001).
-
-**Downstream effects.**
-
-- `policy/export/README.md` — export policy bundle (rights, sensitivity, proof references).
-- `policy/telemetry/README.md` — safe UI telemetry constraints.
-- `data/receipts/` — emitted `ExportReceipt` and `CitationValidationReport` instances.
-- `release/` — `ReleaseManifest` instances that Compare reads and Export pins.
+[Back to top](#top)
 
 ---
 
 ## 3. Status snapshot
 
-| Aspect | Status | Notes |
+| Capability | Current evidence | Status |
 |---|---|---|
-| Doctrine | **CONFIRMED** | Encyclopedia, Whole-UI Expansion Report, Domains Atlas, MapLibre Master all describe Compare/Export with consistent intent. |
-| Component implementation | **PROPOSED / NEEDS VERIFICATION** | `ComparePanel.tsx` and `ExportPanel.tsx` listed as `CREATE OR ADAPT` in the Whole-UI plan; no mounted-repo verification this session. |
-| Schema homes | **PROPOSED** | `schemas/contracts/v1/runtime/`, `schemas/contracts/v1/ui/`, `schemas/contracts/v1/receipts/` per ADR-0001 default. |
-| Policy homes | **PROPOSED** | `policy/export/`, `policy/telemetry/`. |
-| Test homes | **PROPOSED** | `tests/ui/`, `tests/e2e/`, `tests/fixtures/` per Whole-UI report. |
-| Negative-state coverage | **PROPOSED** | ANSWER / ABSTAIN / DENY / ERROR fixtures planned; no live tests verified this session. |
+| Compare feature directory | README plus placeholder `index.tsx` | **CONFIRMED placeholder** |
+| Export feature directory | README plus placeholder `index.tsx` | **CONFIRMED placeholder** |
+| Explorer entrypoint integration | Baseline shell + Evidence Drawer only | **CONFIRMED not launch-wired** |
+| Compare adapter or parser | No exact implementation found in the inspected adapter surface | **NOT VERIFIED** |
+| Export adapter or request builder | No exact implementation found in the inspected adapter surface | **NOT VERIFIED** |
+| Live governed transport | Current `GovernedClient.ts` is fixture-only Evidence Drawer code | **UNKNOWN for Compare/Export** |
+| Compare API resource | No route present in inspected governed-api route directories | **NOT IMPLEMENTED in inspected surface** |
+| Export API resource | No route present in inspected governed-api route directories | **NOT IMPLEMENTED in inspected surface** |
+| Compare machine contract | No dedicated schema verified | **UNKNOWN / NEEDS VERIFICATION** |
+| Export machine contract | No request/response or receipt schema verified | **UNKNOWN / NEEDS VERIFICATION** |
+| Citation validation report | Semantic contract + permissive UI schema stub | **PROPOSED / not closure** |
+| Export policy | `policy/export/` absent | **BLOCKED for governed export** |
+| Telemetry policy | README + fail-open greenfield stub | **PRESENT / not enforcement** |
+| Compare/Export tests | No exact app tests found in bounded search | **NOT VERIFIED** |
+| Accessibility behavior | No feature implementation to test | **UNKNOWN** |
+| Downloadable artifact | No builder or governed flow established | **ABSENT from inspected slice** |
+| Runtime/deployment | No runtime or deployment evidence inspected | **UNKNOWN** |
+
+The strongest current result is architectural documentation plus app-local placeholders. That is useful repository structure, but it is not a user-facing feature.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Subsystem diagram
 
+### 4.1 Current confirmed slice
+
 ```mermaid
 flowchart LR
-  classDef public  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
-  classDef gov     fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
-  classDef proof   fill:#fff3e0,stroke:#ef6c00,color:#bf360c
-  classDef forbid  fill:#ffebee,stroke:#c62828,color:#b71c1c,stroke-dasharray:4 3
+    MAIN["Explorer main.ts"] --> SHELL["Baseline shell"]
+    MAIN --> DRAWER["Fixture-driven Evidence Drawer"]
 
-  subgraph BROWSER["Browser (public-safe carriers)"]
-    direction TB
-    LCP[LayerCatalogPanel]:::public
-    CMP[ComparePanel]:::public
-    EXP[ExportPanel]:::public
-    ED[EvidenceDrawer]:::public
-    TL[TimeState / ViewState]:::public
-  end
+    COMPARE_DOC["Compare README"] --> COMPARE_PLACEHOLDER["compare/index.tsx<br/>placeholder = true"]
+    EXPORT_DOC["Export README"] --> EXPORT_PLACEHOLDER["export/index.tsx<br/>placeholder = true"]
 
-  subgraph GAPI["Governed API (apps/governed-api/)"]
-    direction TB
-    R1[GET layers/&#123;id&#125;/manifest]:::gov
-    R2[GET evidence/&#123;ref&#125;]:::gov
-    R3[POST exports]:::gov
-    R4[POST telemetry/ui]:::gov
-  end
+    GC["GovernedClient.ts<br/>Evidence Drawer fixture parser"] --> DRAWER
 
-  subgraph TRUTH["Canonical + Released stores"]
-    direction TB
-    RM[ReleaseManifest]:::proof
-    LM[LayerManifest]:::proof
-    EB[EvidenceBundle]:::proof
-    CR[Catalog records]:::proof
-  end
-
-  RAW[RAW / WORK / QUARANTINE / canonical]:::forbid
-
-  LCP --> R1
-  CMP --> R1
-  CMP --> R2
-  ED  --> R2
-  EXP --> R3
-  EXP --> R2
-  TL  -.bound by.-> CMP
-  TL  -.bound by.-> EXP
-
-  R1 --> LM
-  R2 --> EB
-  R3 --> RM
-  R1 --> RM
-  R3 -.emits.-> ER[ExportReceipt]:::proof
-  R3 -.emits.-> CVR[CitationValidationReport]:::proof
-
-  CMP -. forbidden .-> RAW
-  EXP -. forbidden .-> RAW
-
-  click CMP "#5-compare-panel"
-  click EXP "#6-export-panel"
+    COMPARE_PLACEHOLDER -. "not mounted" .-> MAIN
+    EXPORT_PLACEHOLDER -. "not mounted" .-> MAIN
+    API["Governed API route surfaces"] -. "no Compare/Export route found" .-> COMPARE_PLACEHOLDER
+    API -. "no Compare/Export route found" .-> EXPORT_PLACEHOLDER
 ```
 
-> [!NOTE]
-> **PROPOSED diagram.** The flow above reflects doctrine from project knowledge. Exact route names, file paths, and emit-time semantics are PROPOSED until the mounted repo is inspected.
+### 4.2 Proposed production composition
+
+```mermaid
+flowchart LR
+    AUTH["Evidence + policy + review + release<br/>correction / rollback authority"] --> API["Governed API projection"]
+    API --> VALIDATE["Strict client validation"]
+    VALIDATE --> CMP["Compare view"]
+    VALIDATE --> EXP["Export request view"]
+
+    CMP --> OC["ANSWER / ABSTAIN / DENY / ERROR"]
+    EXP --> OE["ANSWER / ABSTAIN / DENY / ERROR"]
+
+    OE -->|ANSWER only| ART["Governed outbound artifact<br/>+ receipt / citation report refs"]
+    ART --> USER["Authorized user"]
+
+    INTERNAL["RAW / WORK / QUARANTINE<br/>canonical / proof stores"] -. "forbidden browser path" .-> CMP
+    INTERNAL -. "forbidden browser path" .-> EXP
+```
+
+The second diagram is **PROPOSED**. It defines the trust direction a future implementation must preserve; it does not claim the routes, objects, or artifact builder exist.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Compare panel
 
-The Compare panel lets users juxtapose two **governed views** of the same map area, time window, or layer set, and inspect the **proof deltas** between them.
+### 5.1 Intended role
 
-### 5.1 What Compare compares
+Compare is a viewing surface for differences between two governed, explicitly identified states. A mature implementation may support:
 
-| Comparison axis | Inputs | Why it matters |
+| Candidate axis | Minimum trust requirement | Status |
 |---|---|---|
-| **Release versions** | two `ReleaseManifest` instances of the same layer family | A user can see what changed between published releases — content, digests, rollback target. |
-| **Time slices** | two `ViewState`/`TimeState` snapshots of the same layer | Temporal change is core to KFM ("time-aware spatial knowledge system"). |
-| **Layer overlays** | two `LayerDescriptor`/`LayerManifest` references | Side-by-side context across domain lanes. |
-| **Proof deltas** | `EvidenceBundle` diffs, signature/digest changes, `CorrectionNotice` presence | Surfaces whether *what counts as support* has changed, not just what is rendered. |
+| Release-to-release | Both releases independently identified; correction and supersession state visible | **PROPOSED** |
+| Time-to-time | Time semantics labeled; same object or layer identity preserved | **PROPOSED** |
+| Layer-to-layer | Each side carries its own source role, release state, evidence affordance, and policy posture | **PROPOSED** |
+| Proof-summary delta | Server-produced, public-safe summary; browser does not recompute canonical evidence | **PROPOSED** |
+| Rollback preview | Current release and rollback target identified; review-only unless separately released | **PROPOSED** |
+| Candidate-to-release | Role-gated review surface only; not the ordinary public path | **PROPOSED / policy-significant** |
 
-### 5.2 What Compare must not do
+### 5.2 Public-path boundary
 
-> [!WARNING]
-> Compare **MUST NOT** open a comparison against `RAW`, `WORK`, `QUARANTINE`, unreleased candidates, internal stores, or canonical-only views. Both sides of any compare MUST be **released or release-equivalent** artifacts with a resolvable `ReleaseManifest` reference. Comparing a released layer against an unreleased one is a trust-membrane violation.
+The ordinary public Compare path must not:
 
-- No "preview unreleased vs current" mode on the public path. Steward-only previews live in the read-only `ReviewConsole`, never in the public Compare panel.
-- No silent merge of the two sides into a third synthetic surface. If a derived comparison artifact is needed, it goes through the standard publication path (validate → promote → release) with its own `ReleaseManifest` and `RealityBoundaryNote`.
-- No popup substitution. Per the Trust-Membrane rule, popups can summarize but cannot replace the `EvidenceDrawer`. Compare opens the drawer on demand; it does not inline drawer content as authority.
+- load `RAW`, `WORK`, `QUARANTINE`, unpublished candidates, or canonical-only records;
+- infer a material difference from pixels alone;
+- merge two sides into a third authoritative surface;
+- hide correction, withdrawal, supersession, stale state, or unequal source roles;
+- resolve or diff canonical `EvidenceBundle` content in the browser;
+- treat a popup, badge, renderer property, or local cache as evidence;
+- expose a role-gated candidate comparison through the public shell.
 
-### 5.3 Compare flow
+A steward review tool may eventually compare candidate and released states, but that is a separate authorization and audit boundary. It is not established by the current Compare placeholder.
 
-1. User opens Compare; selects axis (release | time | layer | proof).
-2. Compare requests the relevant `LayerManifest` / `EvidenceBundle` projections through the **governed client** (`apps/explorer-web/src/api/governedClient.ts`, PROPOSED path).
-3. `MapRuntimeBoundary` synchronizes camera/time across both panes via `MapRuntimePort`; only validated `LayerDescriptor`s are applied.
-4. Proof-delta computation is **server-side**: the panel does not diff `EvidenceBundle` payloads in the browser. The browser receives a pre-computed delta projection with `evidence_refs[]`, citation list, and outcome class.
-5. Outcomes render through the shared `OutcomeRenderer` (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
+### 5.3 Minimum future request context
 
-> [!TIP]
-> When in doubt about whether something belongs in Compare or in the `EvidenceDrawer`: **Compare shows *that* something changed; the Drawer shows *why* a claim is supported.** Compare summarizes deltas; the Drawer carries `EvidenceBundle` resolution.
+A future Compare request needs, at minimum:
 
-[↑ Back to top](#compare-and-export--ui-subsystem-architecture)
+- stable left and right references;
+- explicit comparison axis;
+- spatial and temporal scope;
+- source-role and release posture for each side;
+- public-safe evidence affordances;
+- policy and audience context;
+- correction, supersession, withdrawal, and rollback context where material;
+- a finite outward outcome and public-safe reason code.
+
+The exact field names, route shape, and persistence model remain **PROPOSED** until accepted contracts, schemas, fixtures, validators, and tests exist.
+
+### 5.4 Compare and the Evidence Drawer
+
+Compare should show **what changed** and which trust dimensions differ. The [Evidence Drawer](../evidence-drawer.md) explains why a claim is supported or why support is unavailable. Compare must not duplicate evidence authority or turn a compact delta summary into EvidenceBundle closure.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Export panel
 
-The Export panel produces public-safe, citation-preserving packages of what the user is looking at. Every export is a **governed request** that returns a finite outcome and, on `ANSWER`, emits an `ExportReceipt`.
+### 6.1 Current boundary
 
-### 6.1 Doctrinal anchor
+Export is not implemented by the inspected feature entry, and no export-policy lane, governed route, request/response schema, artifact builder, or `ExportReceipt` schema was verified. Therefore the repository does not currently support a claim that Explorer produces governed KFM exports.
 
-From the Encyclopedia: *"Temporal UI and public-safe export/reporting. **Export must preserve evidence and policy.**"* The `StorySnapshot / ExportReceipt` family records the **evidence, redactions, and release state at the moment of a story / export / atlas snapshot** and pins a rollback target.
+### 6.2 Intended role
 
-### 6.2 What Export must include
+A future Export surface may collect bounded user intent and submit it to a governed service. It must not build a trust-bearing artifact solely from browser state.
 
-Every successful export carries:
+A successful governed export would need closure appropriate to its format and audience, including:
 
-- A snapshot identity (`snapshot_id`).
-- `evidence_refs[]` pointing into `EvidenceBundle` material that supports any claims rendered in the export.
-- `redactions[]` for any policy-driven transforms (geoprivacy, generalization, rights restrictions).
-- `release_refs[]` to the `ReleaseManifest`(s) of every layer present.
-- A `rollback_target` linking to the prior release the export was pinned against.
-- A `CitationValidationReport` confirming that every citable claim resolved.
+- a stable export/request identity;
+- bounded spatial, temporal, layer, feature, and audience scope;
+- released source and layer references;
+- evidence or citation coverage for claim-bearing content;
+- rights, sensitivity, sovereignty, consent, and redistribution evaluation;
+- redaction, generalization, aggregation, suppression, or geoprivacy transforms;
+- correction, withdrawal, stale-state, and rollback context;
+- artifact identity and digest;
+- an export/accountability receipt and citation-validation result;
+- a finite decision that permits artifact delivery.
 
-### 6.3 What Export must refuse
+These are **PROPOSED obligations**, not a verified field list.
 
-| Refusal class | Trigger | Outcome |
+### 6.3 Refusal posture
+
+| Condition | Safe outward result | Required behavior |
 |---|---|---|
-| Uncited claim | Any rendered text, badge, or annotation cannot resolve a citation | `ABSTAIN` |
-| Rights / sensitivity | Source rights unknown, locality restricted, CARE-flagged, living-person fields exposed | `DENY` |
-| Unreleased content | A layer in view lacks a `ReleaseManifest` | `DENY` |
-| Stale evidence | Source freshness expired and no released alternative | `ABSTAIN` |
-| Malformed request | Contract violation, infrastructure failure | `ERROR` |
-| Pending steward review | `ReviewRecord` in HOLD state for sensitive lane | `HOLD` (no export emitted; surface remains in prior state) |
+| Evidence or citations unresolved | `ABSTAIN` | Do not create a claim-bearing artifact |
+| Rights, sensitivity, or redistribution not permitted | `DENY` | Do not create or expose the artifact |
+| Unreleased or withdrawn input on the public path | `DENY` | Keep lifecycle/internal content out of the browser and export |
+| Stale support with no released alternative | `ABSTAIN` | Explain the bounded reason without inventing freshness |
+| Invalid request or service failure | `ERROR` | Emit fixed no-leak error copy; no partial artifact |
+| Review or release state pending | `ABSTAIN` or `DENY`, according to the accepted runtime contract | Do not invent a fifth public response state merely because an upstream object is on hold |
 
-> [!CAUTION]
-> **A screenshot is not proof.** Screenshots produced outside the governed Export path carry no `ExportReceipt`, no citation validation, and no rollback target. They MUST NOT be treated as KFM artifacts. The trust-membrane rule "no uncited export" applies to *all* outbound carriers — PDF, PNG, GeoJSON, PMTiles slice, Story Node embed, atlas page.
+`HOLD` may remain a review or release state upstream. It is not a confirmed fifth outward Compare/Export runtime outcome in the current executable UI profile.
 
-### 6.4 Export-time policy chain
+### 6.4 Screenshot boundary
 
-1. **Pre-resolution policy check** — does the user have entitlement for the requested format and scope?
-2. **Citation validation** — every claim renderable in the export must resolve; failures route to `ABSTAIN`.
-3. **Rights / sensitivity gate** — `PolicyDecision` against `policy/export/`; restricted/unknown rights default to `DENY`.
-4. **Release-state check** — every layer must have a current `ReleaseManifest`; correction lineage must be visible.
-5. **Receipt emission** — on `ANSWER`, persist `ExportReceipt` + `CitationValidationReport` and link them to the user's snapshot.
+A screenshot may be useful as ordinary user content, but it is not proof of:
 
-[↑ Back to top](#compare-and-export--ui-subsystem-architecture)
+- evidence closure;
+- policy clearance;
+- released data;
+- correction currency;
+- artifact integrity;
+- KFM publication.
+
+A future governed PNG or PDF export must travel through the same evidence, policy, release, citation, and receipt checks as any other outbound format.
+
+[Back to top](#top)
 
 ---
 
 ## 7. State ownership
 
-State ownership is governed by [STATE_OWNERSHIP.md](./STATE_OWNERSHIP.md); this section restates only the slices Compare and Export depend on.
+The browser may own interaction state. It must not own trust-bearing state.
 
-| State slice | Owner | Read by Compare | Read by Export | Notes |
-|---|---|---|---|---|
-| `TimeState` | shell `timeState.ts` (PROPOSED) | yes — both panes | yes — pinned at submit | Valid-time, observed-time, freshness; debounced for slider changes. |
-| `ViewState` | shell `shellState.ts` (PROPOSED) | yes | yes | Camera, bounds, layer visibility set. Anchors `StorySnapshot`/`ExportReceipt`. |
-| `LayerCatalogItem` set | `LayerCatalogPanel` | yes | yes | Carries release/policy/sensitivity badges needed at point of use. |
-| `EvidenceDrawerPayload` | `EvidenceDrawer` | on demand | on demand (for cited claims) | Compare and Export do not cache drawer payloads; they re-resolve. |
-| `ComparePanel` local state | `ComparePanel` itself | n/a | no — Export does not depend on Compare being open | Axis selection, paired references, delta projection. |
-| `ExportPanel` local state | `ExportPanel` itself | no | n/a | Format selection, scope, pending receipt. |
+| State family | Browser responsibility | Upstream authority | Current evidence |
+|---|---|---|---|
+| Panel open/closed state | Own | None | **PROPOSED; no component exists** |
+| Compare axis and selected references | Own pending validated request | Governed identity and admissibility | **PROPOSED** |
+| Export scope and format choice | Own pending validated request | Governed policy and format admission | **PROPOSED** |
+| Viewport, selected feature, visible layer choices | Own as interaction context | Released layer/feature identity | Existing shell is bounded; Compare/Export handoff not verified |
+| Finite outcome view model | Render only | Governed API/runtime envelope | Four outcomes confirmed only in the current Evidence Drawer slice |
+| Evidence, source role, policy, review, release, correction | Display public-safe projection only | Evidence, policy, review, and release authorities | Compare/Export projection not implemented |
+| Receipt, proof, artifact digest, rollback target | Display references only | Accountability/release families | No Compare/Export emission verified |
+| Downloadable artifact | Deliver only after authorized response | Governed export service | No builder or route verified |
 
-> [!NOTE]
-> Neither panel owns any portion of the **trust-bearing** state. Trust state — what's released, what's cited, what's redacted — lives behind the governed API. Panels hold only display preferences and pending-request scaffolding.
+Browser-local caches must not become alternate truth or receipt stores. Re-resolution and invalidation behavior remain a required future design seam.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Finite outcomes by surface
 
-Every governed surface in KFM returns one of a small, well-known set of outcomes. The shared `OutcomeRenderer` (PROPOSED) renders each consistently across panels.
+The only repository-grounded executable UI profile inspected here uses four outward outcomes:
 
-| Surface | Returns | Forbidden outcome / behavior |
+| Outcome | Meaning at the UI boundary | No-leak requirement |
 |---|---|---|
-| Compare delta request | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Returning a delta computed against an unreleased candidate; comparing across release lines without surfacing `CorrectionNotice` lineage. |
-| Export request | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD` | Emitting an export without `ExportReceipt`; treating a screenshot as an export; merging citations across release lines without explicit `release_refs[]` per claim. |
-| Layer-manifest resolver (used by both) | `ANSWER` / `DENY` / `ERROR` | Returning a layer that lacks a `ReleaseManifest`. |
-| Evidence resolver (used by both) | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Returning raw `EvidenceBundle` bytes to the browser; returning `WORK`/`QUARANTINE` material. |
-| Telemetry sink (UI events) | `ANSWER` / `DENY` / `ERROR` | Accepting raw query payload; accepting export contents. |
+| `ANSWER` | The governed response permits the bounded result | Render only fields in the accepted public-safe projection |
+| `ABSTAIN` | Support, freshness, scope, or review closure is insufficient | Do not echo unsupported claim text as a partial answer |
+| `DENY` | Policy, rights, sensitivity, release, or audience posture forbids the result | Do not expose protected reasons or fields |
+| `ERROR` | Payload, contract, adapter, service, or infrastructure failed | Use fixed safe copy; do not reflect raw diagnostics |
 
-**Outcome semantics** (per Domains Atlas §24.3.1):
+For Compare and Export, this table is **PROPOSED architecture aligned to the current finite UI profile**. The feature placeholders do not currently return any runtime outcome.
 
-- **`ANSWER`** — evidence sufficient, policy permits, release state allows, review state recorded.
-- **`ABSTAIN`** — evidence insufficient, cannot cite, or stale with no released alternative.
-- **`DENY`** — policy, rights, sensitivity, or release state forbids the result.
-- **`ERROR`** — schema violation, malformed request, contract or infrastructure failure.
-- **`HOLD`** — release / correction paused pending steward, rights-holder, or policy review.
+`HOLD`, `PASS`, `FAIL`, review states, lifecycle states, and release states may exist upstream. They must not be silently collapsed into `ANSWER`, and they do not become additional public response outcomes without an accepted runtime contract and compatibility tests.
+
+[Back to top](#top)
 
 ---
 
 ## 9. Trust-membrane rules
 
-These rules are CONFIRMED doctrine (Encyclopedia + MapLibre Master + Whole-UI Expansion Report) and apply to Compare and Export the same way they apply to every other public-facing surface.
+These rules govern any future implementation:
 
-| # | Rule | Reason |
-|---|---|---|
-| 1 | No browser access to `RAW`, `WORK`, `QUARANTINE`, canonical/internal, unpublished candidate stores, graph stores, object stores, vector indexes, or model runtimes. | The public path is governed APIs and released artifacts only. |
-| 2 | No direct model client from the browser. | AI is interpretive and evidence-subordinate; Focus Mode lives behind the governed API. |
-| 3 | No unreleased tile load — `addSource` / `addLayer` is blocked unless `LayerManifest` + release state allow it. | Layer toggle is not publication. |
-| 4 | No sensitive geometry hidden only by style filters. | Geoprivacy requires `RedactionReceipt`, generalization, or denial — not styling. |
-| 5 | No popup as `EvidenceDrawer` substitute. | Popup may summarize; only the drawer resolves `EvidenceBundle`. |
-| 6 | No uncited export or screenshot. | Exports must carry citations, evidence IDs, version locks, and release-manifest references. |
-| 7 | No comparison or export across release lines without explicit `release_refs[]` + correction lineage. | Otherwise corrections silently disappear from outbound carriers. |
-| 8 | No raw export payload in telemetry. | Telemetry is for UI behavior, never trust content. |
+1. **No direct lifecycle-store access.** Public Compare and Export consume governed projections and released public-safe carriers only.
+2. **No renderer-as-truth.** Pixels, styles, feature properties, local diffs, and screenshots are interaction outputs, not evidence.
+3. **No browser evidence closure.** Evidence resolution, canonical proof comparison, policy, and release checks remain upstream.
+4. **No hidden-sensitive-by-style pattern.** Sensitive geometry and fields must be transformed or denied before they reach the browser.
+5. **No uncited claim-bearing export.** Missing evidence or citation coverage returns a finite negative outcome.
+6. **No silent correction crossing.** Compare and Export must surface correction, withdrawal, supersession, and stale-state context where material.
+7. **No candidate leak through Compare.** Role-gated review material cannot become an ordinary public compare side.
+8. **No raw export content in telemetry.** Telemetry must not carry artifact bytes, claim text, evidence payloads, protected coordinates, or credentials.
+9. **No receipt-as-publication shortcut.** A receipt records an action; it does not make an artifact true, reviewed, released, or public.
+10. **No UI-created release authority.** A panel, route success, test, workflow, commit, or pull request cannot promote lifecycle state.
 
-> [!IMPORTANT]
-> Rule 7 is the Compare-specific extension of Rule 6. A screenshot of a comparison view that crosses a correction boundary, without surfacing the `CorrectionNotice`, would publish a misleading delta. Compare-driven exports MUST carry both sides' `release_refs[]` and any `CorrectionNotice` that intervened.
+[Back to top](#top)
 
 ---
 
 ## 10. Receipts and proof objects
 
-> [!NOTE]
-> Receipt definitions and field shapes are CONFIRMED doctrine from the Domains Atlas §24.2 and the Encyclopedia. Exact schema *file* placement is PROPOSED under `schemas/contracts/v1/receipts/` (per ADR-0001 default) until verified.
+### 10.1 Current evidence
 
-| Object | Role in Compare / Export | Required shape (PROPOSED) | Lifecycle phase |
-|---|---|---|---|
-| `ExportReceipt` (= `StorySnapshot`) | Emitted on every `ANSWER` export | `snapshot_id`, `evidence_refs[]`, `redactions[]`, `release_refs[]`, `rollback_target`, `time` | `CATALOG / TRIPLET` → `PUBLISHED` |
-| `CitationValidationReport` | Emitted alongside every export and surfaced in Compare deltas | `claim_ids`, `citation_ids`, pass/fail, missing evidence, stale evidence | `CATALOG / TRIPLET` |
-| `PolicyDecision` | Records the rights / sensitivity / release evaluation | `policy_id`, `target_object`, `decision`, `reason_code`, `time`, `evidence_refs[]` | All phases |
-| `ReleaseManifest` | Both sides of a Compare must reference one; Export pins one per layer | `release_id`, `contents[]`, `digests`, `evidence_refs[]`, `rollback_target`, `time` | `PUBLISHED` |
-| `RollbackCard` | Targeted when an export's pinned release is later rolled back | `release_id`, `rollback_to`, `reason`, `invalidates[]`, `review_ref`, `time` | `PUBLISHED` |
-| `CorrectionNotice` | Surfaced inside Compare when present between sides | `claim_ref`, `prior_release_ref`, `change_summary`, `invalidates[]`, `review_ref`, `time` | `PUBLISHED` |
-| `RedactionReceipt` | Listed in `redactions[]` for any export touching sensitive lanes | `policy_ref`, `redaction_method`, `kept_fields`, `removed_fields`, `geometry_transform`, `reviewer` | `WORK` → `PUBLISHED` |
+| Object or family | Current repository evidence | Boundary |
+|---|---|---|
+| `CitationValidationReport` | UI semantic contract plus permissive schema stub | Not EvidenceBundle closure, policy, release approval, or proof storage |
+| Receipt schema family | Repository-present receipt lane | No `ExportReceipt` schema verified in the inspected listing |
+| `RedactionReceipt` and other receipt schemas | Some receipt schemas are present | Presence does not prove Export consumes or emits them |
+| Compare receipt | No dedicated receipt contract or schema verified | Compare is currently a placeholder viewing family |
+| Export artifact receipt | Doctrine and README lineage describe the need | Machine shape, identity, persistence, emission, and validation remain open |
 
-### 10.1 Receipt → phase mapping (relevant rows)
+### 10.2 Required separation
 
-| Receipt | RAW | WORK / QUARANTINE | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
-|---|---|---|---|---|---|
-| `PolicyDecision` | • | • | • | • | • |
-| `RedactionReceipt` |   | • | • | • | • |
-| `ValidationReport` |   | • | • | • |   |
-| `ReleaseManifest` |   |   |   | • | • |
-| `CorrectionNotice` |   |   |   |   | • |
-| `RollbackCard` |   |   |   |   | • |
-| `StorySnapshot` / `ExportReceipt` |   |   |   | • | • |
+A future implementation must keep these concerns separate:
 
-Reading note: a dot means the receipt is normally emitted, amended, or referenced at that phase. Receipts created earlier remain referenced (not duplicated) at later phases via `EvidenceRef`.
+```text
+user request
+  != PolicyDecision
+  != citation-validation result
+  != artifact bytes
+  != action receipt
+  != proof
+  != ReleaseManifest
+  != publication
+```
 
-[↑ Back to top](#compare-and-export--ui-subsystem-architecture)
+Compare should not emit a new trust object merely because a view was rendered. Export may eventually emit an action/accountability receipt after an authorized artifact is built, but that receipt cannot substitute for the evidence, policy, review, release, correction, or rollback objects it references.
+
+### 10.3 Schema caution
+
+The current UI `CitationValidationReport` schema requires only `id` and allows additional properties. Architecture prose must not present proposed fields such as claim counts, evidence references, findings, or release references as schema-enforced current behavior.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Routes, DTOs, and schemas
 
-All routes and DTOs below are **PROPOSED** per the Whole-UI Expansion Report §17.1–17.2. Names and exact paths must be reconciled against the mounted repo before treatment as fact.
+### 11.1 Current route inventory
 
-### 11.1 Routes (PROPOSED)
+No Compare or Export route is present in the inspected governed-api route directories. The former example route names in this page were planning language, not implementation evidence, and are intentionally removed.
 
-| Surface | Method + path | Purpose | Negative states |
-|---|---|---|---|
-| Compare | (reuses layer-manifest + evidence resolvers; no dedicated Compare route in current doctrine) | Delta projections computed server-side from existing governed resolvers. | `DENY` unreleased / `ABSTAIN` insufficient evidence / `ERROR` invalid scope. |
-| Export | `POST /api/v1/exports` | Create governed export request with proof references. | `DENY` rights/sensitivity; `ABSTAIN` incomplete evidence; `ERROR` malformed; `HOLD` pending review. |
-| Telemetry (used by both panels) | `POST /api/v1/telemetry/ui` | Safe UI telemetry only. | `DENY` raw payload; `ERROR` invalid event. |
+### 11.2 Current browser adapter inventory
 
-> [!NOTE]
-> No dedicated `POST /api/v1/compare` route appears in current project doctrine. Compare is doctrinally a **composition** over the layer-manifest resolver, evidence resolver, and release manifest resolver. A dedicated Compare route would require an ADR per Directory Rules §2.4(5) (parallel home) before adoption.
+The current `GovernedClient.ts` implements one closed Evidence Drawer projection profile and explicitly performs no network or lifecycle-store access. It does not establish:
 
-### 11.2 DTOs / schemas (PROPOSED homes)
+- a general HTTP client;
+- Compare request or response handling;
+- Export submission or artifact retrieval;
+- receipt or citation-report transport;
+- policy or release enforcement.
 
-```text
-schemas/contracts/v1/
-├── runtime/
-│   ├── decision_envelope.schema.json
-│   └── runtime_response_envelope.schema.json
-├── ui/
-│   ├── evidence_drawer_payload.schema.json
-│   └── compare_delta_projection.schema.json        # PROPOSED — new
-├── layers/
-│   ├── layer_catalog_item.schema.json
-│   ├── layer_descriptor.schema.json
-│   └── layer_manifest.schema.json
-├── evidence/
-│   └── evidence_bundle.schema.json
-├── receipts/
-│   ├── export_receipt.schema.json                  # PROPOSED — collected under §24.2 plan
-│   ├── citation_validation_report.schema.json
-│   ├── policy_decision.schema.json
-│   ├── release_manifest.schema.json
-│   ├── correction_notice.schema.json
-│   └── rollback_card.schema.json
-└── telemetry/
-    └── ui_event.schema.json
-```
+### 11.3 Current schema inventory
 
-### 11.3 UI components (PROPOSED)
+| Surface | Verified machine shape |
+|---|---|
+| Compare request/response | None verified |
+| Compare delta projection | None verified |
+| Export request/response | None verified |
+| Export artifact metadata | None verified |
+| Export receipt | None verified |
+| UI citation validation report | Permissive draft stub only |
+| Evidence Drawer payload | A separate, closed fixture-only profile exists; it does not automatically govern Compare or Export |
 
-```text
-apps/explorer-web/src/                              # path PROPOSED; adapt to actual app path
-├── features/
-│   ├── compare/ComparePanel.tsx
-│   ├── export/ExportPanel.tsx
-│   └── outcome/OutcomeRenderer.tsx
-├── api/
-│   ├── governedClient.ts
-│   └── responseValidators.ts
-└── state/
-    ├── timeState.ts
-    └── shellState.ts
-```
+### 11.4 Closure required before implementation claims
 
-> [!IMPORTANT]
-> If the mounted repository uses a different app path than `apps/explorer-web/`, **all paths in §11.3 must be adapted** and recorded in `docs/registers/DRIFT_REGISTER.md`. Do not create `apps/explorer-web/` as a parallel surface to an existing app.
+A production claim requires a dependency-closed slice that identifies:
+
+1. semantic contract owner;
+2. machine schema and version;
+3. finite outcome envelope;
+4. public-safe fixtures, including negative and no-leak cases;
+5. validator and focused tests;
+6. governed API resource and repository abstraction;
+7. strict browser parser;
+8. accessibility behavior;
+9. policy and release checks;
+10. correction, withdrawal, rollback, and cache invalidation behavior;
+11. no-network unit-test proof and separately governed live transport;
+12. documentation synchronized with the implemented boundary.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Policy hooks
 
-| Policy bundle | Triggered by | Default posture | Path (PROPOSED) |
-|---|---|---|---|
-| `policy/export/` | Every `POST /api/v1/exports` | Fail-closed on unknown rights, restricted sensitivity, missing `evidence_refs[]`, missing `rollback_target`, unsupported format. | `policy/export/README.md` + Rego rules. |
-| `policy/telemetry/` | Every `POST /api/v1/telemetry/ui` | Fail-closed on raw payload, prompt content, export bytes, query strings carrying claim text. | `policy/telemetry/README.md`. |
-| `policy/sensitivity/` | Implicit on every Compare/Export against sensitive lanes | Default redaction/generalization; `DENY` on archaeology, rare-species, living-person, infrastructure precise-location exposure. | `policy/sensitivity/`. |
-| `policy/release/` | Implicit — both panels require released `ReleaseManifest` on every side | `DENY` if `ReleaseManifest` missing; `HOLD` if `ReviewRecord` pending. | `policy/release/`. |
+### 12.1 Current policy evidence
 
-> [!WARNING]
-> Export policy and telemetry policy are **separate bundles**. Conflating them is an anti-pattern: telemetry must never carry export payload, and export must never bypass telemetry's denial of raw content. The two bundles share a fail-closed posture but evaluate different inputs.
+| Policy surface | Current state | Safe claim |
+|---|---|---|
+| `policy/export/` | Absent | Export admissibility is not implemented in that proposed lane |
+| `policy/telemetry/README.md` | Present | Documents intended posture |
+| `policy/telemetry/no_restricted_coords.rego` | Greenfield stub; `default deny := false`; no real rules | Must not be represented as fail-closed enforcement |
+| General access, sensitivity, decision, and release policy | Repository contains policy lanes, but Compare/Export wiring was not verified | Current integration remains UNKNOWN |
+
+### 12.2 Future export-policy obligations
+
+A future policy decision should evaluate, as applicable:
+
+- actor, role, audience, purpose, destination, and redistribution;
+- source terms, rights, license, attribution, and expiry;
+- sensitivity, sovereignty, consent, living-person, DNA, rare-species, archaeology, infrastructure, and private-property constraints;
+- spatial and temporal scope;
+- released, corrected, withdrawn, stale, or superseded state;
+- requested format and whether it preserves required metadata;
+- transform obligations and whether their receipts resolve;
+- evidence and citation coverage;
+- rollback and correction path.
+
+Unknown or unsupported policy state must fail closed. This page does not choose the policy package, rule language, or reason-code registry.
+
+[Back to top](#top)
 
 ---
 
 ## 13. Telemetry posture
 
-Compare and Export emit only **safe UI telemetry**: which panel was opened, which axis was selected, which outcome class was rendered, request/response latency. They never emit:
+No Compare- or Export-specific telemetry implementation was verified.
 
-- Query strings carrying claim text.
-- Export bytes, partial renders, or screenshot data.
-- `EvidenceBundle` contents.
-- Personally identifiable session state.
-- Map layer payloads, source-system URLs, or auth tokens.
+A future telemetry profile may record bounded operational events such as:
 
-Telemetry events validate against `schemas/contracts/v1/telemetry/ui_event.schema.json` (PROPOSED) at the client boundary and are re-validated server-side. Failures `DENY` or `ERROR`; they do not silently drop.
+- panel opened;
+- comparison axis selected;
+- export format selected;
+- request submitted;
+- finite outcome class rendered;
+- latency and coarse failure class;
+- receipt view opened.
 
-See [TELEMETRY.md](./TELEMETRY.md) for the shared posture.
+It must not record:
+
+- export bytes or screenshots;
+- claim text, prompts, citation excerpts, or evidence payloads;
+- exact restricted coordinates or sensitive feature identifiers;
+- source credentials, authorization tokens, signed URLs, or private endpoints;
+- raw API responses or internal reason details;
+- personally identifying session material beyond an accepted, minimized telemetry contract.
+
+Client validation and server validation are both required. A telemetry failure must not weaken Export or Compare policy, and an export must not depend on telemetry acceptance.
+
+[Back to top](#top)
 
 ---
 
 ## 14. Validators and tests
 
-| Test family | Required negative case | Expected outcome | Home (PROPOSED) |
-|---|---|---|---|
-| Compare against unreleased layer | One side is `WORK`/`QUARANTINE` candidate | `DENY` | `tests/ui/ComparePanel.test.tsx` |
-| Compare across correction boundary | `CorrectionNotice` exists between the two sides | `ANSWER` with `CorrectionNotice` surfaced; never silent | `tests/ui/ComparePanel.test.tsx` |
-| Export with uncited annotation | Rendered label cannot resolve a citation | `ABSTAIN` | `tests/ui/ExportPanel.test.tsx` |
-| Export of sensitive-lane layer | Archaeology / rare-species / living-person field present | `DENY` or `redactions[]` emitted | `tests/policy/export_sensitive_deny.test.ts` |
-| Export with rolled-back release | Pinned release has `RollbackCard` | `DENY` until re-pin to current release | `tests/policy/export_rolled_back.test.ts` |
-| Export schema fixture | Valid + invalid `ExportReceipt` fixtures | Valid passes; invalid fails closed | `tools/validators/export/validate_export_receipt.py` |
-| Citation validation fixture | Missing evidence; stale evidence; conflicting source roles | Each yields a distinct `ABSTAIN`/`DENY` reason code | `tools/validators/focus/validate_citation_report.py` (reused) |
-| Telemetry deny | Event carries raw payload | `DENY` with `reason_code` | `tests/policy/telemetry_raw_payload_deny.test.ts` |
-| E2E negative states | All four outcome classes render with citations/reasons/obligations | Smoke pass | `tests/e2e/compare_export_negative_states.spec.ts` |
-| Accessibility smoke | Keyboard navigation, focus management, screen-reader labels on both panels | Pass | `tests/accessibility/compare_export_axe.spec.ts` |
+### 14.1 Current evidence
 
-> [!NOTE]
-> Validator commands and CI workflow names are PROPOSED. Reconcile with `.github/workflows/ui-governed.yml` and `.github/workflows/contracts-ui-ai.yml` (both PROPOSED in the Whole-UI plan) once the mounted repo is inspected.
+- Compare and Export executable entries are placeholders.
+- No exact Compare or Export app test was found in the bounded feature/test search.
+- No dedicated Compare or Export workflow was verified.
+- The CitationValidationReport machine schema is a permissive stub.
+- The export-policy lane is absent.
+- Therefore no end-to-end or dependency-closed Compare/Export behavior is proven.
+
+### 14.2 Required future validation
+
+| Test family | Required case | Expected posture |
+|---|---|---|
+| Contract/schema polarity | Valid and malformed request/response fixtures | Deterministic accept/reject |
+| Four finite outcomes | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Stable view state and no unsafe fallback |
+| No-leak negatives | Protected fields and diagnostics in denied/error inputs | Never reflected into browser output |
+| Trust membrane | Attempts to read lifecycle/canonical stores or bypass governed API | Rejected |
+| Compare identity | Left/right identity, time, release, and correction mismatch | Negative outcome or explicit bounded disclosure |
+| Candidate exposure | Candidate compare attempted on public path | `DENY` |
+| Export evidence coverage | Unresolved claim or citation | `ABSTAIN` |
+| Export rights/sensitivity | Unknown or prohibited posture | `DENY` |
+| Export partial failure | Builder or persistence fails after request | `ERROR`; no partial artifact exposed |
+| Receipt binding | Artifact identity/digest, policy, citations, releases, transforms, rollback | Exact binding or no `ANSWER` |
+| Correction propagation | Pinned release later corrected, withdrawn, or rolled back | Export marked stale/invalidated; reissue path tested |
+| Accessibility | Keyboard flow, focus return, headings, labels, live regions, non-color trust cues | Pass |
+| No-network unit tests | Network and model calls denied in fixture suite | Pass |
+| Telemetry minimization | Protected content submitted to telemetry | Rejected |
+
+Repository-native command names and workflow names must be taken from the implementation that owns the future slice. This page does not invent them.
+
+[Back to top](#top)
 
 ---
 
 ## 15. Rollback path
 
-<details>
-<summary>Click to expand: per-change rollback matrix</summary>
+### 15.1 This documentation change
 
-| Change type | Rollback action | Owner | Notes |
-|---|---|---|---|
-| New `ComparePanel.tsx` PR | Feature flag off; revert UI PR | UI subsystem owner | No published effect; mock fixtures only in PR 5 increment. |
-| New `ExportPanel.tsx` PR | Feature flag off; revert UI PR | UI subsystem owner | Export route stays disabled until policy bundle is live. |
-| `export_receipt.schema.json` change | Revert schema PR; re-validate any fixtures | Schemas steward | Schema is contract; breaking changes need ADR + deprecation note. |
-| `policy/export/` rule change | Revert policy bundle; fail-closed until fixed | Policy steward | Default fail-closed posture is already the safe state. |
-| Telemetry policy change | Revert policy bundle | Policy steward | Telemetry stops accepting events until reconciled; preferable to leaking payload. |
-| `POST /api/v1/exports` route change | Feature flag off; revert route PR | API owner | Route is the trust-boundary surface; revert before propagation. |
-| Documented behavior change | Update `docs/architecture/ui/CONTINUITY_NOTES.md` + `DRIFT_REGISTER.md` | Docs steward | Docs are part of the working system; explain why, not just what. |
+Rollback this modernization by restoring prior blob:
 
-</details>
+```text
+12d63f1dc12c5dca774fb42b123153d0e09c401a
+```
 
-> [!TIP]
-> A failed export does **not** trigger rollback. `ABSTAIN`/`DENY`/`ERROR` are designed outcomes; they are the system working correctly. Rollback applies when a *released* artifact is determined to be wrong and must be replaced or withdrawn — at which point any `ExportReceipt` pinned to it gains a stale-state marker and the user is offered a re-issue against the current release.
+No contract, schema, policy, fixture, validator, test, workflow, app source, route, receipt, release object, data instance, deployment, or publication state changes with this page.
+
+### 15.2 Future feature rollback
+
+A future implementation should define reversible boundaries independently:
+
+| Change family | Minimum rollback posture |
+|---|---|
+| Browser feature | Disable launch wiring and revert app-local code without exposing stale cached state |
+| Governed API resource | Disable resource, preserve audit records, and return fixed safe negative outcomes |
+| Schema/contract | Retain compatibility fixtures and a documented predecessor path |
+| Policy | Revert to the last reviewed fail-closed bundle; never fall through to allow |
+| Artifact builder | Stop delivery, preserve failed-run receipts, and remove partial outputs from public reach |
+| Released artifact | Issue correction or withdrawal, invalidate caches, identify affected receipts, and point to rollback target |
+| Telemetry | Stop collection on validation failure; do not block the safer core outcome |
+
+[Back to top](#top)
 
 ---
 
 ## 16. Continuity and prior doctrine
 
-This section preserves lineage from prior reports so design intent is not silently dropped.
+The modernization retains these durable ideas from the prior page and its lineage:
 
-| Source | Continuity point |
+- Compare is for seeing governed differences, not creating a new truth layer.
+- Export is for carrying governed material outward, not bypassing publication controls.
+- Public clients use governed interfaces and released public-safe carriers.
+- Each comparison side retains its own identity, time, source role, evidence affordance, release state, and correction lineage.
+- Claim-bearing exports preserve evidence and citation support appropriate to the format.
+- Screenshots and browser downloads are not proof.
+- Sensitive fields and geometry must be transformed or denied before browser delivery.
+- Corrections, withdrawals, supersessions, and rollback remain visible.
+- Compare is a viewing family; Export is the artifact-producing family.
+- Telemetry is operational metadata, not an alternate export channel.
+
+Material corrections in this edition:
+
+| Prior posture | Repository-grounded correction |
 |---|---|
-| KFM Encyclopedia (Capability table) | "Time slider / compare / export — Temporal UI and public-safe export/reporting. `ViewState`, `ExportReceipt`. Export must preserve evidence and policy." Status: PROPOSED. |
-| Whole-UI Expansion Report §17.1–17.2 | `ComparePanel`, `ExportPanel` defined as PROPOSED UI component families; `POST /api/v1/exports` defined as PROPOSED route with `DENY` rights/sensitivity, `ABSTAIN` incomplete evidence. |
-| Whole-UI Expansion Report Appendix B | `apps/explorer-web/src/features/compare/ComparePanel.tsx` and `apps/explorer-web/src/features/export/ExportPanel.tsx` marked `CREATE OR ADAPT` / `PROPOSED / NEEDS VERIFICATION`. |
-| MapLibre Master §10 (Trust-Membrane Chapter) | "No uncited export. Screenshots, reports, Story Nodes, and Focus answers retain citations and manifest/version references." |
-| MapLibre Master V. (Exports, Screenshots, Reports, and Citation Preservation) | Exports preserve citations and release; STAC/DCAT/PROV preservation; uncited screenshots remain unsupported; split-view conflict screenshots are first-class; timeline exports preserve evidence; promotion summaries support export reports. |
-| Domains Atlas §24.2 (Master Receipt Catalog) | `StorySnapshot` / `ExportReceipt` defined with `snapshot_id`, `evidence_refs[]`, `redactions[]`, `release_refs[]`, `rollback_target`, `time`. |
-| Domains Atlas §24.3 (Master Decision Outcome Envelope) | Outcomes `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` (+ `HOLD`, `PASS`, `FAIL`) consolidated. |
+| All paths were treated as proposed because no repo was mounted | Current paths and blobs are pinned and classified |
+| `ComparePanel.tsx` and `ExportPanel.tsx` were described as planned components | Current executable entries are only placeholders |
+| Example API routes were presented as proposed architecture | No Compare/Export route exists in the inspected route surfaces; example names are removed |
+| A Compare delta schema and ExportReceipt schema were listed | Neither was verified in the inspected schema homes |
+| `CitationValidationReport` fields were described as required | Current UI schema requires only `id` and remains permissive |
+| `policy/export/` was treated as a downstream dependency | The lane is absent |
+| Telemetry policy was presented as fail-closed | The inspected Rego rule is a fail-open greenfield stub and not enforcement |
+| `HOLD` appeared as an additional Export runtime outcome | Current executable UI evidence supports four outward outcomes; hold remains an upstream state unless a future accepted contract says otherwise |
+| Proposed test and workflow names were listed | No exact Compare/Export suite or workflow was verified; invented names are removed |
 
-See [CONTINUITY_NOTES.md](./CONTINUITY_NOTES.md) for the broader UI continuity record.
+[Back to top](#top)
 
 ---
 
 ## 17. Open questions and verification backlog
 
-Track these in `docs/registers/VERIFICATION_BACKLOG.md`:
+### P0 — required before governed outbound artifacts
 
-- **NEEDS VERIFICATION** — exact app path: `apps/explorer-web/` is PROPOSED. The Whole-UI report flags this for every component file.
-- **NEEDS VERIFICATION** — schema home: `schemas/contracts/v1/receipts/` is the default per Directory Rules §7.4 / ADR-0001; confirm by inspection.
-- **NEEDS VERIFICATION** — whether a dedicated `compare_delta_projection` schema is warranted, or whether Compare composes purely over `LayerManifest` + `EvidenceBundle` projections.
-- **NEEDS VERIFICATION** — whether `policy/export/` and `policy/telemetry/` are separate bundles in the mounted repo, or live under a shared `policy/ui/` lane. Default per Whole-UI plan: separate.
-- **OPEN** — supported export formats. Doctrine references PMTiles slices, STAC/DCAT/PROV-linked packages, PDF reports, Story Node embeds; the canonical list belongs in `policy/export/README.md`, not here.
-- **OPEN** — whether Compare deltas should emit their own receipt class (`CompareDeltaReceipt`?) or always go through the user-initiated export path. Current doctrine: no separate receipt; Compare is a viewing surface, Export is the artifact-producing surface.
-- **OPEN** — 3D Compare. 3D is conditional per the MapLibre Master; Compare's behavior under a 3D scene is deferred until 2D Compare + Export pass.
+- Define accountable semantic ownership for Export request, response, artifact metadata, citation report, and receipt.
+- Establish a machine schema family with closed positive and negative fixtures.
+- Create and review export policy with deny-by-default rights, sensitivity, purpose, audience, format, and redistribution checks.
+- Decide deterministic artifact and receipt identity/digest binding.
+- Prove no partial artifact is reachable after any negative outcome or failure.
+- Define correction, withdrawal, stale-state, affected-receipt, cache invalidation, reissue, and rollback behavior.
+- Establish an authenticated, least-privilege storage and delivery path without browser access to internal stores.
+
+### P1 — required before a credible Compare or Export pilot
+
+- Decide whether Compare has a dedicated API projection or composes over existing governed resources.
+- Define public Compare modes separately from role-gated review comparisons.
+- Implement strict browser adapters and four finite outcomes.
+- Add public-safe synthetic fixtures for release, time, correction, withdrawal, denial, error, and stale cases.
+- Add keyboard, focus, screen-reader, live-region, reduced-motion, and non-color trust-state tests.
+- Wire launch surfaces only after contracts, policy, validators, and negative cases exist.
+- Define bounded export formats and the rights/metadata obligations of each.
+- Decide whether `CitationValidationReport` remains a UI projection, references the evidence-family report, or is replaced by a redacted shared profile.
+
+### P2 — operational maturity
+
+- Define rate limits, cancellation, idempotency, retry, artifact expiry, and orphan cleanup.
+- Prove telemetry minimization and fail-safe behavior.
+- Measure browser memory, large-layer compare cost, export duration, artifact size, and accessibility under load.
+- Establish signed delivery, integrity verification, SBOM/dependency review, incident response, and audit retention where significance requires them.
+- Verify deployment, authorization, independent review, required checks, and operational dashboards.
+
+### Unresolved governance seams
+
+- Compare and Export responsibility roles are described in READMEs, but only `@bartytime4life` is a verified GitHub review identity.
+- The UI/evidence split for CitationValidationReport remains unresolved.
+- The public response-envelope authority for `HOLD` versus four finite outcomes remains unresolved for these features.
+- The exact homes for materialized export receipts, citation reports, and artifacts must follow accepted object-family authority rather than convenience.
+- A future implementation must reconcile with the ongoing `docs/architecture/` consolidation effort rather than creating a duplicate architecture page.
+
+[Back to top](#top)
 
 ---
 
 ## 18. Related docs
 
-- [`docs/architecture/ui/README.md`](./README.md) — UI subsystem overview *(PROPOSED)*
-- [`docs/architecture/ui/STATE_OWNERSHIP.md`](./STATE_OWNERSHIP.md) — state ownership matrix *(PROPOSED)*
-- [`docs/architecture/ui/ROUTE_MAP.md`](./ROUTE_MAP.md) — route families and shell continuity *(PROPOSED)*
-- [`docs/architecture/ui/BOUNDARIES.md`](./BOUNDARIES.md) — browser allowed/forbidden operations *(PROPOSED)*
-- [`docs/architecture/ui/CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — UI doctrine lineage *(PROPOSED)*
-- [`docs/architecture/ui/TELEMETRY.md`](./TELEMETRY.md) — telemetry posture *(PROPOSED)*
-- [`docs/architecture/governed-ai/README.md`](../governed-ai/README.md) — Focus Mode and adapter-first runtime *(PROPOSED)*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-path discipline *(PROPOSED)*
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED` *(PROPOSED)*
-- [`policy/export/README.md`](../../../policy/export/README.md) — export policy bundle *(PROPOSED)*
-- [`policy/telemetry/README.md`](../../../policy/telemetry/README.md) — telemetry policy bundle *(PROPOSED)*
+### Confirmed repository surfaces
+
+- [UI subsystem README](./README.md) — repository-grounded UI architecture landing page
+- [UI boundaries](./BOUNDARIES.md) — trust-membrane doctrine; implementation claims require separate verification
+- [UI accessibility](./ACCESSIBILITY.md) — accessibility architecture and obligations
+- [UI continuity notes](./CONTINUITY_NOTES.md) — lineage and drift context
+- [UI Evidence Drawer](./EVIDENCE_DRAWER.md) — overlapping UI-oriented Evidence Drawer architecture
+- [UI layering](./LAYERING.md) — layer responsibility guidance
+- [Current Evidence Drawer architecture](../evidence-drawer.md) — repository-grounded bounded executable slice
+- [Compare feature README](../../../apps/explorer-web/src/features/compare/README.md) — app-local draft feature contract
+- [Export feature README](../../../apps/explorer-web/src/features/export/README.md) — app-local draft feature contract
+- [Explorer Web source entrypoint](../../../apps/explorer-web/src/main.ts) — current bounded launch wiring
+- [Directory Rules v2](../../doctrine/directory-rules.md) — accepted placement authority through ADR-0029
+- [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — adoption decision
+- [Telemetry policy README](../../../policy/telemetry/README.md) — intended telemetry posture; executable enforcement remains incomplete
+
+### Relationship rule
+
+This page owns the cross-feature architecture explanation. The app-local READMEs own proposed feature boundaries. Contracts own meaning, schemas own shape, policy owns admissibility, tests and validators own enforceability, release objects own release/correction/rollback, and runtime evidence owns operational claims. Repetition in one surface does not promote it over the others.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix A. Compare vs Export at a glance
 
-<details>
-<summary>Click to expand: side-by-side comparison</summary>
-
-| Aspect | Compare panel | Export panel |
+| Aspect | Compare | Export |
 |---|---|---|
-| Purpose | See *that* something changed | Take evidence away in a citation-preserving package |
-| Inputs | Two governed views (release / time / layer / proof) | One governed view + scope + format |
-| Outputs | A rendered delta projection in the browser | An `ExportReceipt` + `CitationValidationReport` + downloadable artifact |
-| Authoritative artifacts read | `LayerManifest`, `ReleaseManifest`, `EvidenceBundle`, `CorrectionNotice` | Same + `RedactionReceipt`, `PolicyDecision` |
-| Receipts emitted | None (viewing surface) | `ExportReceipt` (= `StorySnapshot`), `CitationValidationReport` |
-| Route (PROPOSED) | Reuses governed resolvers; no dedicated route | `POST /api/v1/exports` |
-| Outcome classes | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD` |
-| Policy bundle | `policy/sensitivity/`, `policy/release/` *(PROPOSED)* | `policy/export/` *(PROPOSED)* |
-| Failure-mode default | Surface the missing side, refuse the delta | Refuse the export, surface the reason |
-| Telemetry | Panel-open, axis selection, outcome class | Panel-open, format selection, outcome class |
-| Most common anti-pattern | Comparing against an unreleased candidate | Treating a screenshot as proof |
-| Trust-membrane rule that bites first | Rule 7 (no compare across release lines without lineage) | Rule 6 (no uncited export) |
-
-</details>
-
----
-
-<sub>Authority: this document is doctrine-faithful per the project knowledge sources cited in §16. Path-specific claims are **PROPOSED** per Directory Rules §0 until verified in a mounted KFM repository. CONFIRMED doctrinal claims are sourced from the KFM Encyclopedia, the Whole-UI + Governed AI Expansion Report, the MapLibre Master, the Domains Atlas v1.1, and Directory Rules.</sub>
+| Primary intent | See governed differences | Carry governed material outward |
+| Current executable state | Placeholder | Placeholder |
+| Launch-wired | No | No |
+| Confirmed client adapter | None | None |
+| Confirmed governed route | None | None |
+| Confirmed machine contract | None | None |
+| Confirmed policy integration | None | None; proposed export policy lane absent |
+| Confirmed receipt emission | None | None |
+| Future inputs | Two governed references + scope | One governed selection + scope + format + audience |
+| Future outward states | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
+| Trust-bearing state owner | Upstream evidence/policy/release authorities | Upstream evidence/policy/release authorities |
+| Browser responsibility | Render validated delta projection | Submit bounded request and deliver authorized result |
+| Most important negative boundary | No candidate/internal side on public path | No artifact without complete governed closure |
+| Most common anti-pattern | Treating pixel difference as claim difference | Treating screenshot/download as KFM export |
+| Receipt posture | No receipt merely for viewing | Future receipt required for an authorized artifact; exact shape unresolved |
+| Publication effect | None | None until separately reviewed and released |
 
 ---
 
-**Related:** [UI README](./README.md) · [State Ownership](./STATE_OWNERSHIP.md) · [Boundaries](./BOUNDARIES.md) · [Directory Rules](../../doctrine/directory-rules.md)
-**Last updated:** 2026-05-14
-[↑ Back to top](#compare-and-export--ui-subsystem-architecture)
+<sub>Authority boundary: this document is a repository-grounded architecture explanation. It does not implement Compare or Export, activate policy, approve rights or sensitivity, resolve evidence, emit a receipt, release an artifact, or publish KFM content.</sub>
+
+**Related:** [UI README](./README.md) · [Compare feature](../../../apps/explorer-web/src/features/compare/README.md) · [Export feature](../../../apps/explorer-web/src/features/export/README.md) · [Evidence Drawer](../evidence-drawer.md) · [Directory Rules](../../doctrine/directory-rules.md)
+
+[Back to top](#top)
