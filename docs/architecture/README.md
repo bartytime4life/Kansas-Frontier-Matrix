@@ -1,186 +1,233 @@
+<a id="top"></a>
+
 # `docs/architecture/`
 
-> **Cross-cutting architecture explanations for the Kansas Frontier Matrix — the human-readable "how it fits together" companion to doctrine, ADRs, and domain dossiers. Doctrine states what is true; this folder explains how the running system expresses it.**
-
-<!--
-Badge targets are placeholders until CI, repo owners, and CODEOWNERS are verified
-against the mounted repository. Replace TODOs with real Shields.io endpoints in the
-first verification PR. Doctrine basis: Directory Rules §0, §6.1, §15.
--->
-
-[![Authority](https://img.shields.io/badge/authority-canonical-1f6feb)](#authority-level)
-[![Layer](https://img.shields.io/badge/layer-docs%20%C2%B7%20explains-555)](#how-this-folder-fits)
-[![Invariant](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%E2%80%89%2F%E2%80%89QUARANTINE%E2%86%92PROCESSED%E2%86%92CATALOG%E2%80%89%2F%E2%80%89TRIPLET%E2%86%92PUBLISHED-1f6feb)](../doctrine/lifecycle-law.md)
-[![Schema home](https://img.shields.io/badge/schema%20home-ADR--0001-555)](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
-[![Trust membrane](https://img.shields.io/badge/membrane-apps%2Fgoverned--api%2F-2da44e)](./governed-api.md)
-[![Outcomes](https://img.shields.io/badge/finite%20outcomes-ANSWER%20%C2%B7%20ABSTAIN%20%C2%B7%20DENY%20%C2%B7%20ERROR-1f6feb)](./governed-api.md)
-[![Status](https://img.shields.io/badge/status-active-2da44e)](#status)
-[![Last reviewed](https://img.shields.io/badge/last%20reviewed-TODO-lightgrey)](#last-reviewed)
-
-| Field | Value |
-|---|---|
-| **Folder role** | Human-facing architecture surface (cross-cutting; not domain, not doctrine, not ADR). |
-| **Authority class** | Canonical — `docs/` is the human-facing control plane (Directory Rules §5, §6.1). |
-| **Authority kind** | Explanatory. Does not own decisions, meaning, shape, admissibility, or proof. |
-| **Owners** | Architecture steward · Docs steward *(placeholder — confirm against `CODEOWNERS` / `docs/governance/`)*. |
-| **Status** | Folder doctrine: **CONFIRMED**. Folder presence on disk: **PROPOSED / NEEDS VERIFICATION** (no mounted repo this session). |
-| **Repo fit** | Sits inside `docs/`. Reads from `docs/doctrine/` and `docs/adr/`. Read by `docs/domains/<domain>/`, `docs/runbooks/`, contributors, reviewers. |
-| **Conformance** | Follows Directory Rules §15 *Required README Contract* and §16 *Path-Validation Checklist*. |
-
-**Quick jump:** [Purpose](#purpose) · [Authority level](#authority-level) · [Status](#status) · [What belongs](#what-belongs-here) · [What doesn't](#what-does-not-belong-here) · [Folder map](#folder-map) · [How to read this folder](#how-to-read-this-folder) · [Doctrinal map](#doctrinal-invariants-this-folder-explains) · [Diagram](#how-this-folder-fits) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Anti-patterns](#anti-patterns-specific-to-this-folder) · [Review burden](#review-burden) · [Related folders](#related-folders) · [ADRs](#adrs) · [FAQ](#faq) · [Last reviewed](#last-reviewed)
-
----
-
-## Purpose
-
-`docs/architecture/` explains the **shape of the system** in human-readable prose: how the trust membrane, the lifecycle invariant, the contract / schema / policy / tests split, the map shell, and the deployment topology fit together. It is the bridge between **doctrine** (`docs/doctrine/`, which states the invariants) and **decisions** (`docs/adr/`, which records the binding choices) — and it is what onboarding readers, reviewers, and domain stewards reach for first when they need a cross-cutting mental model.
-
-It **does not decide anything**. Decisions live in `docs/adr/`. Object meaning lives in `contracts/`. Machine-checkable shape lives in `schemas/`. Admissibility (allow / deny / restrict / abstain) lives in `policy/`. Enforceability proof lives in `tests/` + `fixtures/`. Machine-readable indexes live in `control_plane/`. This folder **explains those layers and how they compose** — it never replaces them.
+> **Purpose.** Provide the human-readable, cross-cutting architecture map for the Kansas Frontier Matrix: how accepted doctrine, ADRs, responsibility roots, lifecycle states, trust objects, subsystem boundaries, governed interfaces, release controls, correction, and rollback fit together.
 
 > [!IMPORTANT]
-> Architecture pages are **not** the source of canonical decision. If a reviewer is reaching for a sentence here to settle an enforcement dispute, that is Directory Rules §13.5 *Documentation as truth* anti-pattern — promote the rule to an ADR, a doctrine page, or a `control_plane/` register.
+> **Explanatory, not sovereign.** This folder does not decide doctrine, object meaning, machine shape, admissibility, review, release, or publication. Those responsibilities remain with accepted doctrine and ADRs, `contracts/`, `schemas/`, `policy/`, executable implementation and tests, receipts and proofs, and append-only release records.
 
-[↑ Back to top](#docsarchitecture)
+## Current checkpoint
+
+| Field | Current bounded result |
+|---|---|
+| Evidence snapshot | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
+| Base architecture tree | `7e7a59249400f64bde174697aa6ada3f415d3838` |
+| Prior README blob | `2810faa778c537cc77a5e23d958e111a1948c1a3` |
+| Direct Markdown files | **41** |
+| Direct subdirectories | **8** |
+| Markdown files in those subdirectories | **62** |
+| Total Markdown documents | **103** |
+| Placement authority | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
+| Whole-system orientation | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) is the primary repository-grounded orientation candidate |
+| Active topology hazard | `TRUST_MEMBRANE.md` and `trust-membrane.md` are a case-insensitive path collision; canonical selection remains **CONFLICTED / HOLD** |
+| Writer-bound document | [`SKELETON_MAP.md`](./SKELETON_MAP.md) has a [repository workflow writer](../../.github/workflows/one-shot-skeleton-map-refresh.yml) and remains **HOLD** for manual convergence |
+| Review route | `@bartytime4life` through `.github/CODEOWNERS`; specialist architecture and documentation stewardship remains **NEEDS VERIFICATION** |
+| Convergence state | Wave 0 plan merged in [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031); structural moves and retirements remain unexecuted |
+| Release/publication effect | None |
+
+The inventory is **CONFIRMED** at the pinned tree. Document roles below are repository-grounded where inspected. Future migrations remain **PROPOSED** or **HOLD** until content, identity, consumer, authority, validation, and rollback closure is complete.
+
+**Quick navigation:** [Purpose and authority](#purpose-and-authority) · [Status](#status) · [What belongs here](#what-belongs-here) · [What does not belong here](#what-does-not-belong-here) · [Folder map](#folder-map) · [Reading paths](#how-to-read-this-folder) · [Invariants](#doctrinal-invariants-this-folder-explains) · [System fit](#how-this-folder-fits) · [Validation](#validation) · [Anti-patterns](#anti-patterns-specific-to-this-folder) · [Review](#review-burden) · [ADRs](#adrs) · [FAQ](#faq) · [Last reviewed](#last-reviewed)
 
 ---
 
-## Authority level
+## Purpose and authority
 
-`docs/` is one of KFM's canonical roots (Directory Rules §5). Within `docs/`, this folder is the cross-cutting architecture surface listed explicitly in Directory Rules §6.1 and named in §0 as related doctrine to Directory Rules itself (`contract-schema-policy-split.md`).
+`docs/architecture/` explains how KFM responsibilities compose across the repository. It is the bridge between:
 
-| Property | Value |
+- [`docs/doctrine/`](../doctrine/) — accepted invariants and operating law;
+- [`docs/adr/`](../adr/) — dated decisions and their status;
+- responsibility roots such as `contracts/`, `schemas/`, `policy/`, `apps/`, `packages/`, `data/`, `release/`, `tools/`, `tests/`, and `fixtures/`; and
+- domain, runbook, security, standards, source, and review documentation that needs a shared system context.
+
+A path in this folder is an authority claim about **who explains a concern**, not proof that the explained feature is implemented, secure, deployed, released, public-safe, or operational.
+
+| Question | Owning evidence |
 |---|---|
-| Authority class | **Canonical** |
-| Authority kind | **Explanatory** (not enforcement, not decision, not validation) |
-| Wins over | Per-root READMEs *for cross-cutting prose*; domain dossiers and prior architecture reports (lineage only, per §2.1 item 5). |
-| Loses to | **Doctrine** (`docs/doctrine/`) on invariants. **Accepted ADRs** (`docs/adr/`) on numbered decisions. **Mounted repo evidence** on current-state claims. |
-| Cited in doctrine | Directory Rules §0 names `contract-schema-policy-split.md` as related doctrine. |
+| What is an invariant? | Accepted doctrine and accepted ADRs |
+| What exists now? | Commit-pinned repository files and configuration |
+| What works now? | Implementation plus representative tests, workflows, artifacts, logs, or observed runtime evidence |
+| What does an object mean? | `contracts/` |
+| What machine shape is valid? | `schemas/` |
+| What is allowed, denied, restricted, or withheld? | `policy/`, rights, sensitivity, review, and release evidence |
+| What was executed? | Receipts and bounded process evidence |
+| What is released, corrected, withdrawn, or rollback-ready? | `release/` and the applicable public-safe carrier records |
+| What does this folder own? | Cross-cutting human explanation and navigation |
 
-[↑ Back to top](#docsarchitecture)
+> [!CAUTION]
+> Architecture prose must not become a substitute for a missing contract, schema, policy rule, test, review record, release decision, or runtime proof. When prose and implementation conflict, record the conflict instead of silently upgrading either side.
+
+[Back to top](#top)
 
 ---
 
 ## Status
 
-| Item | Status | Note |
+| Surface | Current status | Safe interpretation |
 |---|---|---|
-| Folder doctrine (this README contract) | **CONFIRMED** | Anchored in Directory Rules §6.1 and §15. |
-| Folder presence on current disk | **PROPOSED / NEEDS VERIFICATION** | No mounted repo in this session. Verify with a `git ls-tree`-equivalent inspection. |
-| Specific child files listed below | **PROPOSED** | Names and roles are doctrinal; on-disk existence unverified. |
-| Owners | **NEEDS VERIFICATION** | Confirm against `CODEOWNERS` (or `.github/CODEOWNERS`) and `docs/governance/`. |
-| ADR-0001 (schema home) linkage | **CONFIRMED file; decision status `proposed`** | Records the configured schema-home direction without supplying accepted decision authority. |
-| Other ADRs cited | **PROPOSED** | Placeholders until the ADR index is enumerated. |
-| Conformance to Directory Rules §15 | **CONFIRMED for this file** | This README's sections, in order, satisfy the contract. |
+| Folder and current tree | **CONFIRMED** | `docs/architecture/` contains 103 Markdown documents at the pinned checkpoint. |
+| Directory Rules v2 | **ACCEPTED** | ADR-0029 adopts the exact current doctrine bytes as placement authority. |
+| Root README | **PLACE / modernized in place** | This page is the architecture entrypoint and directory contract. |
+| [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | **PLACE** | Primary whole-system orientation candidate; repository-grounded at its own evidence snapshot. |
+| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | **HOLD / writer-bound** | A [one-shot writer workflow](../../.github/workflows/one-shot-skeleton-map-refresh.yml) targets it; do not manually merge, rename, or retire it until writer and consumer closure is complete. |
+| Upper/lower trust-membrane pair | **CONFLICTED / HOLD** | Both are full documents. The lowercase path is the proposed survivor, but no migration occurs through this README. |
+| Folder landing pages | **PLACE** | `cross-domain/`, `governed-ai/`, `governed-api/`, `map-master/`, `publication/`, `settlements-infrastructure/`, `story/`, and `ui/` are repository-present lanes. |
+| Flat/folder overlaps | **PROPOSED convergence** | Governed AI, Governed API, Map/MapLibre, publication, Evidence Drawer, and other clusters still have competing or overlapping entrypoints. |
+| Dated implementation notes | **HOLD** | Preserve until a verified report, archive, or history lane and supersession treatment are established. |
+| Runtime, deployment, public operation | **UNKNOWN unless separately proved** | Documentation presence and quality do not establish operational maturity. |
 
-[↑ Back to top](#docsarchitecture)
+The current convergence ledger and dependency order are recorded in [`document-convergence-plan.md`](./document-convergence-plan.md). Its original 102-document census is a pinned Wave 0 baseline; the merged plan itself is the additional document that brings the current tree to 103.
+
+[Back to top](#top)
 
 ---
 
 ## What belongs here
 
-Files that are **cross-cutting**, **human-readable**, and **explain how multiple responsibility roots compose**.
+Material belongs in `docs/architecture/` when its primary responsibility is to explain how multiple KFM roots, lifecycle stages, or subsystems compose.
 
-- **System context** — what KFM is, what it isn't, who it serves, what it interfaces with (sources, public clients, reviewers, downstream consumers).
-- **Deployment topology** — how KFM is deployed, exposure posture, trust boundaries between `apps/`, `runtime/`, `infra/`, and the public network. Expresses `infra/` deny-by-default in narrative form.
-- **Governed API** — the trust membrane in narrative form: `apps/governed-api/`, `RuntimeResponseEnvelope`, the finite outcomes (`ANSWER` · `ABSTAIN` · `DENY` · `ERROR`; with `HOLD`, `PASS`, `FAIL` as validator-class and review-class outcomes per Atlas v1.1 §24.3), endpoint categories, denial tests.
-- **Map shell** — MapLibre as a disciplined renderer **behind** the governed API; the *released layer → user click → governed API → `EvidenceRef` → `EvidenceBundle` → Evidence Drawer → Focus Mode outcome* flow; what the renderer is *not* (truth, policy, citation, AI authority).
-- **Contract / schema / policy split** — the four-layer division of labor: `contracts/` (meaning) · `schemas/` (shape) · `policy/` (admissibility) · `tests/` + `fixtures/` (proof of enforceability). Named in Directory Rules §0 as related doctrine.
-- **New cross-cutting architecture pages** — only when they span multiple responsibility roots and are not domain-specific. A page introducing a binding rule **MUST** pair with an ADR (Directory Rules §2.4).
+Typical examples:
 
-> [!TIP]
-> If a page would only describe one root, it usually belongs in that root's own README (e.g., `apps/governed-api/README.md`, `packages/maplibre/README.md`) rather than here. This folder is the **cross-cutting** view; per-root READMEs are the **local** view.
+- whole-system context and responsibility-plane orientation;
+- trust-membrane wiring and governed public-path boundaries;
+- contract/schema/policy/test division of responsibility;
+- evidence, identity, source-role, classification, and temporal composition;
+- MapLibre, UI, Governed API, Governed AI, publication, story, and cross-domain subsystem architecture;
+- deployment and exposure topology at an explanatory level;
+- cross-domain seams that genuinely span multiple domain lanes; and
+- convergence plans that record current topology, conflicts, migration preconditions, validation, and rollback.
 
-[↑ Back to top](#docsarchitecture)
+A substantial subsystem should normally have one active landing page. Deeper pages should own narrower local responsibilities and point back to that landing page rather than compete with it.
+
+[Back to top](#top)
 
 ---
 
-## What does NOT belong here
+## What does not belong here
 
-| Content | Goes to | Why |
+| Content | Owning lane | Reason |
 |---|---|---|
-| Invariants and law (lifecycle, truth posture, trust membrane, authority ladder, **watcher-as-non-publisher**) | `docs/doctrine/` | Doctrine is the *what is true*; architecture is the *how it's expressed*. |
-| Numbered decisions with `proposed \| accepted \| superseded \| rejected` status | `docs/adr/` | ADRs are the binding decision record (Directory Rules §2.4). |
-| Domain-specific architecture (hydrology, soil, fauna, archaeology, …) | `docs/domains/<domain>/` | Domain Placement Law (Directory Rules §12). |
-| Object-meaning definitions (`SourceDescriptor`, `EvidenceBundle`, `DecisionEnvelope`, `ReleaseManifest`, …) | `contracts/` | Different governance layer. |
-| Machine-checkable schema | `schemas/contracts/v1/...` | Schema-home rule (ADR-0001). |
-| Allow / deny / restrict / abstain rules (Rego/OPA bundles) | `policy/` | Policy is executable; explanation about it lives here. |
-| Operational procedures, rollback drills, release dry-runs, validation runs | `docs/runbooks/` | Runbooks are *how to operate*; this folder is *how it's built*. |
-| Generated review/release reports | `docs/reports/` | Generated artifacts; read-only. |
-| Machine-readable governance maps and registers | `control_plane/` or `docs/registers/` | Indexes belong with the index layer. |
-| Source-descriptor standards or external standards (STAC, DCAT, PROV, …) | `docs/sources/`, `docs/standards/` | Different concerns. |
-| Lane-internal manifests (per-layer `LayerManifest`, tile manifests) | `data/published/layers/<domain>/` (data plane) | Release manifests live in `release/manifests/`; lane-internal manifests live with their lifecycle (Directory Rules §18 open question). |
-| Brand, logos, voice, style | `docs/brand/` or `packages/ui/` | Different concerns. |
+| Invariants and operating law | `docs/doctrine/` | Doctrine states what is true. |
+| Numbered architecture decisions | `docs/adr/` | ADRs record decision status and consequences. |
+| Domain-only architecture | `docs/domains/<domain>/` | Domains are lanes inside responsibility roots, not architecture-root topics by importance alone. |
+| Object-family semantics | `contracts/` | Contracts define meaning. |
+| Machine validation shape | `schemas/` | Schemas define fields and constraints. |
+| Allow/deny/restrict/abstain logic | `policy/` | Policy owns admissibility. |
+| Executable behavior | `apps/`, `packages/`, `connectors/`, `pipelines/`, `runtime/`, `tools/` | Code and configuration own behavior. |
+| Validation proof | `tests/`, `fixtures/`, workflows, emitted reports | Documentation cannot prove enforceability. |
+| Lifecycle bytes and governed records | `data/<phase>/`, `data/receipts/`, `data/proofs/`, `release/` | Lifecycle and accountability objects remain separate. |
+| Operational procedures | `docs/runbooks/` | Runbooks explain how to operate a verified surface. |
+| Threat and incident detail | `docs/security/` | Security documentation owns threat, exposure, and incident responsibilities. |
+| Source catalogs and standards profiles | `docs/sources/`, `docs/standards/` | Source identity and external-standard interpretation have separate lanes. |
+| Generated or historical reports | `docs/reports/`, verified archive/history lanes | Durable architecture should not compete with dated run history. |
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Folder map
 
-The five files below are the **doctrinal contents** of this folder per Directory Rules §6.1. Subfolders for `ui/`, `governed-ai/`, `story/`, and `review/` are **PROPOSED** in the Whole-UI Governed AI Expansion plan and remain placeholders until an ADR or migration note lands.
-
 ```text
 docs/architecture/
-├── README.md                            # this file — folder landing page
-├── system-context.md                    # what KFM is and what it interfaces with
-├── deployment-topology.md               # how it's deployed, exposed, audited
-├── governed-api.md                      # apps/governed-api/ in narrative form
-├── map-shell.md                         # MapLibre boundary and click-to-evidence
-├── contract-schema-policy-split.md      # the four-layer governance split
-├── ui/                                  # (PROPOSED) shell, layout, state ownership
-├── governed-ai/                         # (PROPOSED) Focus Mode boundary, MockAdapter
-├── story/                               # (PROPOSED) StoryManifest / StoryNode behavior
-└── review/                              # (PROPOSED) review-console architecture
+├── README.md                         # this entrypoint
+├── SYSTEM_MAP.md                     # primary whole-system orientation candidate
+├── SKELETON_MAP.md                   # writer-bound orientation surface — HOLD
+├── document-convergence-plan.md      # 102-file Wave 0 ledger and migration sequence
+├── system-context.md                 # system boundary and external interfaces
+├── contract-schema-policy-split.md   # meaning / shape / admissibility / proof split
+├── ... 35 additional direct Markdown pages
+├── cross-domain/                     # 9 Markdown files
+├── governed-ai/                      # 10 Markdown files
+├── governed-api/                     # 8 Markdown files
+├── map-master/                       # 8 Markdown files
+├── publication/                      # 9 Markdown files
+├── settlements-infrastructure/       # 1 Markdown file
+├── story/                            # 2 Markdown files
+└── ui/                               # 15 Markdown files
 ```
 
-| File or subfolder | Role | Audience | Status |
-|---|---|---|---|
-| `README.md` | This folder's contract and entry point. | All readers. | **CONFIRMED** contract · **PROPOSED** on disk |
-| `system-context.md` | The KFM *what / who / interfaces* view. | New contributors, reviewers, partners. | **PROPOSED** |
-| `deployment-topology.md` | Components, hosts, network exposure, trust boundaries; expresses `infra/` deny-by-default in prose. | Operators, security reviewers. | **PROPOSED** |
-| `governed-api.md` | Trust membrane; `RuntimeResponseEnvelope`; finite outcomes; endpoint categories; denial tests. | API authors, integrators, reviewers. | **PROPOSED** |
-| `map-shell.md` | MapLibre rules, *click-to-evidence* flow, `EvidenceDrawerPayload` fields, UI states. | UI authors, reviewers. | **PROPOSED** |
-| `contract-schema-policy-split.md` | The four-layer division (`contracts/` · `schemas/` · `policy/` · `tests/` + `fixtures/`). | Schema authors, contract authors, reviewers. | **PROPOSED** |
-| `ui/`, `governed-ai/`, `story/`, `review/` | Subsystem architecture pages flagged in the Whole-UI Governed AI Expansion plan. | Subsystem authors. | **PROPOSED** — pending ADR or scoping note |
+### Primary orientation and control pages
 
-Additional architecture pages MAY be added when (a) they are cross-cutting, (b) doctrine and an accepted ADR support them, and (c) they are not better placed in a per-root README.
+| Page | Current role | Status |
+|---|---|---|
+| [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | Repository-grounded whole-system orientation | `PLACE` |
+| [`system-context.md`](./system-context.md) | System boundary, audiences, and external interfaces | `PLACE` |
+| [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | Cross-root meaning/shape/admissibility/enforceability explanation | `PLACE` |
+| [`document-convergence-plan.md`](./document-convergence-plan.md) | Current overlap ledger, migration waves, validation, and rollback | `PLACE`; non-authoritative plan |
+| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | Skeleton/topology orientation with an active repository writer dependency | `HOLD` |
 
-[↑ Back to top](#docsarchitecture)
+### Subsystem landing lanes
+
+| Lane | Files | Read first | Current boundary |
+|---|---:|---|---|
+| Cross-domain | 9 | [`cross-domain/README.md`](./cross-domain/README.md) | Shared kernel, cross-lane relations, seams, and anti-collapse rules |
+| Governed AI | 10 | [`governed-ai/README.md`](./governed-ai/README.md) | Adapter, evidence, Focus Mode, prompt-injection, receipt, and provider boundaries |
+| Governed API | 8 | [`governed-api/README.md`](./governed-api/README.md) | Audience, envelope, lifecycle, deployment, error, and threat boundaries |
+| Map/rendering | 8 | [`map-master/README.md`](./map-master/README.md) | Renderer, layer lifecycle, tiles, parity, viewer verification, and performance |
+| Publication | 9 | [`publication/README.md`](./publication/README.md) | Release objects, gates, state, correction, rollback, and geospatial manifests |
+| Settlements/infrastructure | 1 | [`settlements-infrastructure/README.md`](./settlements-infrastructure/README.md) | Architecture-adjacent domain lane under review for final placement |
+| Story | 2 | [`story/README.md`](./story/README.md) | Story identity and continuity |
+| UI | 15 | [`ui/README.md`](./ui/README.md) | Governed shell, Evidence Drawer, Focus Mode, review, accessibility, telemetry, and export |
+
+### Root-level overlap clusters
+
+| Cluster | Current active reading posture | Convergence state |
+|---|---|---|
+| Trust membrane | Read doctrine first, then the two architecture variants with the conflict visible | `TRUST_MEMBRANE.md` and `trust-membrane.md` remain `CONFLICTED / HOLD` |
+| Governed AI | Folder README is the landing-page candidate; flat `governed-ai.md` remains a migration source | `PROPOSED` no-loss convergence |
+| Governed API | Folder README is the landing-page candidate; flat `governed-api.md` remains a migration source | `PROPOSED` no-loss convergence |
+| Map/MapLibre | `map-master/README.md` is the landing-page candidate; flat map and MapLibre pages remain overlapping inputs | `PROPOSED` responsibility split |
+| Publication/release | `publication/README.md` is the landing-page candidate; flat release pages remain overlapping inputs | `HOLD` where gate vocabulary is unresolved |
+| Evidence Drawer | Root concept page plus UI- and map-specific pages | Root owns universal boundary; subordinate pages should narrow |
+| Evidence identity/hash | `evidence-identity.md` plus older hash guidance | Normative hash grammar remains outside architecture prose |
+| Source roles | Root anti-collapse rule plus taxonomy and cross-domain duplicate | Taxonomy, enforcement, and seam responsibilities remain to split |
+| Sensitivity/classification | Multiple architecture, doctrine, security, policy, and domain surfaces | Vocabulary and authority conflicts remain `HOLD` |
+| Cross-domain seams | `cross-domain/` plus several flat seam pages | Move only after domain, sensitivity, naming, link, and consumer review |
+| Dated briefing work | Durable briefing architecture plus campaign and repair records | Preserve; verify report/archive/history destination before movement |
+
+> [!WARNING]
+> Do not “fix” overlap by deleting the older-looking page. A migration is complete only when unique content, document identity, inbound links, writers, generated consumers, external compatibility, validation, and rollback are closed.
+
+[Back to top](#top)
 
 ---
 
 ## How to read this folder
 
-Pick the entry point that matches what you came for.
-
-| If you are… | Read first | Then |
+| Task | Start here | Continue with |
 |---|---|---|
-| New to KFM | `system-context.md` → `contract-schema-policy-split.md` | `docs/doctrine/lifecycle-law.md`, then a domain README under `docs/domains/`. |
-| Reviewing a public-API change | `governed-api.md` | `docs/doctrine/trust-membrane.md`, the `apps/governed-api/` README, and the relevant `policy/runtime/` rules. |
-| Reviewing a UI / map change | `map-shell.md` | `docs/doctrine/truth-posture.md` (cite-or-abstain), the `apps/explorer-web/` and `packages/maplibre/` READMEs. |
-| Reviewing a new schema or contract | `contract-schema-policy-split.md` | ADR-0001 (schema home), `contracts/README.md`, `schemas/README.md`. |
-| Working on deployment, exposure, or hardening | `deployment-topology.md` | `infra/README.md`, `docs/security/`, `docs/runbooks/`. |
-| Adding a new domain | `system-context.md` → `contract-schema-policy-split.md` | `docs/domains/README.md` and Directory Rules §12 *Domain Placement Law*. |
-| Investigating a drift or conflict | `contract-schema-policy-split.md` | `docs/registers/DRIFT_REGISTER.md` and Directory Rules §2.5. |
+| Understand KFM as a whole | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | [`system-context.md`](./system-context.md), then applicable doctrine |
+| Understand authority and placement | [`document-convergence-plan.md`](./document-convergence-plan.md) | [Directory Rules](../doctrine/directory-rules.md), [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| Review a public API boundary | [`governed-api/README.md`](./governed-api/README.md) | Trust-membrane conflict pair, runtime contracts/schemas, policy, tests |
+| Review map or renderer work | [`map-master/README.md`](./map-master/README.md) | [`ui/README.md`](./ui/README.md), [`evidence-drawer.md`](./evidence-drawer.md) |
+| Review the governed shell or accessibility | [`ui/README.md`](./ui/README.md) | UI child page for the exact surface, then implementation/tests |
+| Review Focus Mode or model integration | [`governed-ai/README.md`](./governed-ai/README.md) | Adapter, evidence, receipt, injection, and policy surfaces |
+| Review release, correction, or rollback | [`publication/README.md`](./publication/README.md) | `release/`, schemas/contracts, fixtures, validators, runbooks |
+| Review a cross-domain seam | [`cross-domain/README.md`](./cross-domain/README.md) | Owning domain docs, source-role and sensitivity rules |
+| Review a new contract or schema | [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | `contracts/README.md`, `schemas/README.md`, applicable policy and fixtures |
+| Investigate architecture drift | [`document-convergence-plan.md`](./document-convergence-plan.md) | [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md), current repository evidence |
+| Investigate `SKELETON_MAP.md` | Treat it as writer-bound | Inspect the one-shot writer workflow and generated receipt before editing |
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Doctrinal invariants this folder explains
 
-This folder narrates the invariants below; it does **not** own them. If prose here drifts from the named doctrine page, the doctrine page wins and a drift entry SHOULD open in `docs/registers/DRIFT_REGISTER.md` (Directory Rules §2.5).
-
-| Invariant | Owned by | Explained in |
+| Invariant | Doctrinal owner | Architecture surfaces |
 |---|---|---|
-| **Lifecycle law** — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`; promotion is a **governed state transition, not a file move** | `docs/doctrine/lifecycle-law.md` | `system-context.md`, `deployment-topology.md` |
-| **Truth posture** — *cite-or-abstain*; uncited inference is denied | `docs/doctrine/truth-posture.md` | `governed-api.md`, `map-shell.md` |
-| **Trust membrane** — public clients reach data **only** through `apps/governed-api/`; no public RAW path; no direct model client | `docs/doctrine/trust-membrane.md` | `governed-api.md`, `map-shell.md` |
-| **Authority ladder** — doctrine ▸ ADR ▸ Directory Rules ▸ per-root README ▸ lineage ▸ repo state | `docs/doctrine/authority-ladder.md` | `system-context.md` |
-| **Watcher-as-non-publisher** — workers emit `RunReceipt`, `AIReceipt`, candidates only; **never** publish, mutate canonical records, or bypass review | `docs/doctrine/` *(named in Directory Rules §19 glossary)* | `deployment-topology.md`, `governed-api.md` |
-| **Directory Rules** — responsibility-rooted placement; root is boring; domains are lanes | `docs/doctrine/directory-rules.md` | every page here, but especially `contract-schema-policy-split.md` |
+| Lifecycle: `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` | [`lifecycle-law.md`](../doctrine/lifecycle-law.md) | System Map, deployment, publication, trust membrane |
+| Evidence first and cite-or-abstain | [`evidence-first.md`](../doctrine/evidence-first.md) and truth-posture doctrine | Governed API, Governed AI, Evidence Drawer, evidence identity |
+| Public clients use governed interfaces, not canonical/internal stores | [`trust-membrane.md`](../doctrine/trust-membrane.md) | Trust membrane, Governed API, map, UI, critical exposure |
+| Derived carriers remain derived | [`derived-stays-derived.md`](../doctrine/derived-stays-derived.md) | Map, tiles, graphs, AI, story, 3D, publication |
+| Corrections and rollback remain first-class | [`corrections-first-class.md`](../doctrine/corrections-first-class.md) | Publication, Evidence Drawer, API, story, UI |
+| File placement expresses responsibility and authority | [`directory-rules.md`](../doctrine/directory-rules.md) | This README, domain placement, cross-domain, convergence plan |
+| AI is interpretive and subordinate to evidence and policy | [`ai-as-assistant.md`](../doctrine/ai-as-assistant.md) | Governed AI, Focus Mode, API, prompt-injection architecture |
 
-[↑ Back to top](#docsarchitecture)
+Architecture pages narrate these rules; they do not amend them.
+
+[Back to top](#top)
 
 ---
 
@@ -188,253 +235,235 @@ This folder narrates the invariants below; it does **not** own them. If prose he
 
 ```mermaid
 flowchart LR
-  subgraph upstream["Upstream sources of truth"]
-    direction TB
-    doctrine["docs/doctrine/<br/>invariants & law"]
-    adr["docs/adr/<br/>numbered decisions"]
-  end
+  D["docs/doctrine/<br/>accepted invariants"] --> A["docs/architecture/<br/>cross-cutting explanation"]
+  R["docs/adr/<br/>decision records"] --> A
+  E["current repository evidence<br/>code · config · tests · artifacts"] --> A
 
-  subgraph here["docs/architecture/ — this folder"]
-    direction TB
-    sc["system-context.md"]
-    gapi["governed-api.md"]
-    msh["map-shell.md"]
-    dt["deployment-topology.md"]
-    csp["contract-schema-policy-split.md"]
-  end
+  A --> S["SYSTEM_MAP.md<br/>whole-system orientation"]
+  A --> C["cross-domain/"]
+  A --> GAI["governed-ai/"]
+  A --> GAPI["governed-api/"]
+  A --> MAP["map-master/"]
+  A --> PUB["publication/"]
+  A --> UI["ui/"]
+  A --> STORY["story/"]
 
-  subgraph downstream["Downstream readers"]
-    direction TB
-    domains["docs/domains/&lt;domain&gt;/"]
-    runbooks["docs/runbooks/"]
-    contributors["contributors<br/>& reviewers"]
-  end
+  A -. explains .-> K["contracts/<br/>meaning"]
+  A -. explains .-> J["schemas/<br/>shape"]
+  A -. explains .-> P["policy/<br/>admissibility"]
+  A -. explains .-> T["tests/ + fixtures/<br/>enforceability"]
+  A -. explains .-> REL["release/<br/>release, correction, rollback"]
 
-  subgraph layers["Governance layers it explains (does not own)"]
-    direction LR
-    contracts["contracts/<br/>meaning"]
-    schemas["schemas/<br/>shape"]
-    policy["policy/<br/>admissibility"]
-    tests["tests/ + fixtures/<br/>proof"]
-    cp["control_plane/<br/>indexes"]
-  end
-
-  doctrine -->|grounds| here
-  adr -->|binds| here
-  here -->|frames| domains
-  here -->|frames| runbooks
-  here -->|onboards| contributors
-  here -.explains.-> layers
-
-  classDef this fill:#eef2ff,stroke:#3730a3,color:#1e1b4b;
-  classDef upstr fill:#ecfdf5,stroke:#047857,color:#064e3b;
-  classDef downstr fill:#fff7ed,stroke:#9a3412,color:#7c2d12;
-  classDef layer fill:#fef9c3,stroke:#854d0e,color:#713f12;
-  class sc,gapi,msh,dt,csp this;
-  class doctrine,adr upstr;
-  class domains,runbooks,contributors downstr;
-  class contracts,schemas,policy,tests,cp layer;
+  S --> DOMAIN["docs/domains/<domain>/"]
+  C --> DOMAIN
+  GAPI --> CLIENT["governed clients"]
+  MAP --> CLIENT
+  UI --> CLIENT
+  GAI --> CLIENT
+  PUB --> CLIENT
 ```
 
-The diagram reflects the four-layer division named in Directory Rules §6.1: *`docs/` explains; `control_plane/` indexes; `contracts/` defines meaning; `schemas/` defines shape.* This folder lives in the `docs/` layer and explicitly **does not** carry meaning, shape, admissibility, or proof — it points at the homes that do.
+The arrows into architecture mean **grounds or informs**. The dotted arrows mean **explains but does not own**. No edge in this diagram authorizes a lifecycle transition or public release.
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Inputs
 
-Where the content in this folder draws from:
+Architecture work should be grounded in the smallest relevant closure of:
 
-- **Doctrine** — `docs/doctrine/` for the invariants this folder explains in narrative form.
-- **ADRs** — `docs/adr/` for binding decisions cited by name and number (e.g., ADR-0001 schema home).
-- **Implementation evidence** — READMEs and visible behavior under `apps/`, `packages/`, `runtime/`, `infra/`, `connectors/`, `pipelines/`. Used to keep architecture prose honest against repo reality.
-- **Domain dossiers (lineage)** — domain plans and prior architecture reports under `docs/domains/<domain>/` and `docs/archive/`. Treated as **supporting evidence**, not authority (Directory Rules §2.1, item 5).
-- **External standards** — `docs/standards/` for STAC, DCAT, PROV, and similar references where applicable.
+- accepted doctrine and ADRs;
+- the current repository tree and exact file bytes;
+- semantic contracts, machine schemas, policy, configuration, and implementation;
+- representative fixtures and tests;
+- workflow definitions and exact-head results where available;
+- emitted receipts, proofs, manifests, correction, withdrawal, and rollback records;
+- subsystem and domain READMEs;
+- current standards/source evidence where facts are version-sensitive; and
+- the document graph, registry, drift register, and convergence plan.
 
-[↑ Back to top](#docsarchitecture)
+A prior PDF, atlas, dossier, prompt, issue, or pull-request description may supply lineage or a proposal. It does not prove current behavior by itself.
+
+[Back to top](#top)
 
 ---
 
 ## Outputs
 
-What this folder enables downstream:
+This folder should provide:
 
-- **Onboarding context** for new contributors and reviewers without sending them straight into doctrine.
-- **Reviewer mental model** for PRs that touch the trust membrane, the map shell, the contract/schema/policy split, or deployment posture.
-- **Cross-references** for `docs/domains/<domain>/` READMEs, `docs/runbooks/`, and per-root READMEs that need a single canonical link to "the architecture page for X."
-- **The narrative spine** that ties `contracts/`, `schemas/`, `policy/`, `data/`, `release/`, and `control_plane/` into a coherent system rather than six disconnected roots.
+- an accurate entrypoint into the current architecture collection;
+- a reading order for maintainers and reviewers;
+- explicit boundaries between explanatory prose and authority-bearing roots;
+- visible conflicts, holds, migration state, and evidence limits;
+- stable links to subsystem landing pages;
+- a no-loss convergence path for duplicate and misplaced pages; and
+- documentation updates paired with behavior changes when architecture materially changes.
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Validation
 
-Architecture docs are validated **as documents**, not as runtime systems. Validators below are **PROPOSED / NEEDS VERIFICATION** until inspected against the mounted repo.
+Run the repository-native changed-area checks from the feature branch. Replace `<BASE_SHA>` with the immutable base used for the pull request.
 
-- **Link integrity** — relative links resolve; permalinks (when used to pin a line) point to a real SHA. *(PROPOSED validator: `tools/validators/docs_link_check`.)*
-- **Anchor stability** — heading anchors used by other docs do not break silently on revision.
-- **Path-claim discipline** — every path mentioned exists in the repo or is labeled `PROPOSED` / `NEEDS VERIFICATION`. *(PROPOSED validator: `tools/validators/path_claim_check`.)*
-- **ADR linkage** — each ADR cited resolves to an `accepted` (or explicitly `proposed` / `superseded`) ADR file under `docs/adr/`.
-- **Terminology consistency** — names match the contracts that own them; this folder MUST NOT silently rename them. Names that MUST be preserved exactly include: `RuntimeResponseEnvelope`, `DecisionEnvelope`, `EvidenceBundle`, `EvidenceRef`, `EvidenceDrawerPayload`, `SourceDescriptor`, `LayerManifest`, `LayerCatalogItem`, `LayerDescriptor`, `MapReleaseManifest`, `KFMGeoManifest`, `TileArtifactManifest`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, `RollbackCard`, `CorrectionNotice`, `ReviewRecord`, `RunReceipt`, `AIReceipt`, `ValidationReport`, `CitationValidationReport`, `StoryManifest`, `StoryNode`, `spec_hash`, *finite outcomes*. Lifecycle phases preserved exactly: `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
-- **Outcome-vocabulary consistency** — finite outcomes referenced here MUST match Atlas v1.1 §24.3: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` (governed-API class); `HOLD` (review/promotion paused); `PASS` / `FAIL` (validator class).
-- **Drift register** — material conflicts between this folder and the repo open an entry in `docs/registers/DRIFT_REGISTER.md` rather than silently conforming (Directory Rules §2.5).
+```bash
+git diff --check
 
-> [!NOTE]
-> Architecture docs MUST NOT be cited as the source of a canonical decision. If a reviewer is reaching for a sentence in this folder to settle an enforcement dispute, that signals an ADR or doctrine page should exist (Directory Rules §13.5 *Documentation as truth*).
+python tools/validators/docs/document-graph/check_document_graph.py \
+  --repo-root . \
+  --entrypoint README.md \
+  --entrypoint docs/README.md \
+  --registry control_plane/document_registry.yaml \
+  --git-diff <BASE_SHA>...HEAD \
+  --format markdown \
+  README.md docs tools/validators/docs
 
-[↑ Back to top](#docsarchitecture)
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --git-diff <BASE_SHA>...HEAD \
+  --format json
+
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --registry control_plane/document_registry.yaml \
+  --git-diff <BASE_SHA>...HEAD \
+  --format markdown \
+  --output /tmp/docs-meta-block.md \
+  --registry-delta-output /tmp/document-registry-delta.json \
+  README.md docs tools/validators/docs
+
+python tools/validators/directory_governance/validate_repository_topology.py \
+  --format text
+```
+
+These checks prove only their declared QA profiles. They do not choose document authority, accept an ADR, establish evidence sufficiency, approve policy, perform review, release data, deploy software, or publish KFM.
+
+[Back to top](#top)
 
 ---
 
 ## Anti-patterns specific to this folder
 
-Drift forms specific to architecture docs. These are local restatements of Directory Rules §13; the canonical list lives there.
-
-| Anti-pattern | Symptom | Fix |
+| Anti-pattern | Failure | Required response |
 |---|---|---|
-| **Architecture as decision** | A `.md` page here is cited as the binding rule for a policy or schema choice. | Promote the rule to an ADR or doctrine page. Update this folder to *cite*, not *decide*. (§13.5) |
-| **Domain page in cross-cutting folder** | A hydrology-only architecture page lands here. | Move under `docs/domains/hydrology/`. Domain Placement Law (§12). |
-| **Mirror divergence with per-root README** | An architecture page contradicts the owning root's README (e.g., `governed-api.md` ≠ `apps/governed-api/README.md`). | Per-root README wins on local detail; architecture is the cross-cutting view. Open a drift entry. |
-| **Stale topology** | `deployment-topology.md` describes a host or component that no longer exists. | Verify against `infra/` and `apps/`; update or open a `VERIFICATION_BACKLOG.md` entry. |
-| **Renamed canonical term** | An architecture page silently calls `RuntimeResponseEnvelope` a "response object" or `EvidenceBundle` a "citation pack." | Restore the exact KFM term; preserve compound capitalization. |
-| **Outcome vocabulary drift** | A page introduces "success / failure" instead of the finite outcome set. | Use the exact set: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` (plus `HOLD`, `PASS`, `FAIL` per Atlas v1.1 §24.3). |
+| Architecture as decision authority | Explanatory prose settles a contract, policy, schema, or release dispute | Route the rule to its owning authority and cite it here |
+| Proposal-era inventory presented as current | Real files are labeled absent or hypothetical | Refresh from a pinned tree and keep the evidence snapshot visible |
+| Duplicate landing pages | Readers cannot tell where a subsystem begins | Compare content and consumers; converge through a no-loss migration |
+| Case-insensitive collision | Windows/macOS checkouts cannot represent both paths safely | Use one atomic case-safe migration; do not leave two writable variants |
+| Manual edit of a writer-bound page | A workflow or generator overwrites or diverges from the edit | Reconcile the writer, source, output, receipt, and rollback first |
+| Domain material promoted to the architecture root | Topic importance replaces responsibility-root placement | Route to `docs/domains/<domain>/` or a bounded cross-domain seam |
+| Dated run history treated as durable architecture | Stale operational state competes with current design | Preserve lineage in a verified report/archive/history lane |
+| Runtime claim inferred from a document | “The system does X” lacks code/test/runtime evidence | Narrow the claim and link to current implementation evidence |
+| Compatibility copy becomes writable authority | A mirror drifts from its source | Make the relationship one-way, time-bounded, and exit-tested |
+| Cleanup resolves a vocabulary dispute | File movement silently selects a gate, sensitivity, or outcome model | Keep the conflict visible until an accepted decision exists |
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Review burden
 
-| Change | Reviewers | Extras |
+| Change | Minimum review route | Additional closure |
 |---|---|---|
-| Typo, link fix, formatting | Architecture steward **or** Docs steward. | None. |
-| New cross-cutting architecture page | Architecture steward + Docs steward. | If the page introduces a binding rule, an **ADR is required** (Directory Rules §2.4). |
-| Substantive revision touching trust membrane, lifecycle invariant, or four-layer split | Architecture steward + Docs steward + at least one subsystem owner of the affected root. | Update `docs/doctrine/` if the invariant moved; cite the ADR. |
-| Deletion / relocation of a file | Architecture steward + Docs steward. | Follow Directory Rules §14 *Migration Discipline*; preserve anchors or note breakage. |
-| Domain-specific change masquerading as cross-cutting | **Reject** with a pointer to `docs/domains/<domain>/`. | — |
-| Outcome-vocabulary change | Architecture steward + Governed-API owner + Policy owner. | ADR required if the finite-outcome set changes. |
+| Typo, exact link, or formatting repair | `@bartytime4life` through CODEOWNERS | Changed-area documentation checks |
+| Root README inventory update | CODEOWNERS route plus architecture/docs stewardship review when assigned | Pinned tree census and link/graph validation |
+| New cross-cutting page | CODEOWNERS route plus affected subsystem owner | Placement decision, non-duplication search, document identity |
+| Substantive trust/evidence/release change | CODEOWNERS route plus applicable evidence, policy, security, release, or domain reviewer | Contracts/schemas/policy/tests and current behavior evidence |
+| Move, rename, split, mirror, or retirement | CODEOWNERS route plus owners of every affected responsibility | No-loss comparison, inbound links, writers, registry, compatibility, rollback |
+| Vocabulary or authority change | Accepted ADR or other governing decision | Do not let the same change authorize its dependent migration |
 
-Owners are placeholders until confirmed in `CODEOWNERS` (or `.github/CODEOWNERS`) and `docs/governance/`.
+`.github/CODEOWNERS` currently verifies one executable review route: `@bartytime4life`. Role names such as architecture steward, docs steward, policy steward, or release authority remain governance roles, not GitHub identities, until separately assigned and verified.
 
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## Related folders
 
-<details>
-<summary><strong>Doctrine, decisions, and registers (click to expand)</strong></summary>
-
-| Folder | Relationship |
+| Lane | Relationship |
 |---|---|
-| [`docs/doctrine/`](../doctrine/) | Invariants and law. Architecture explains them; it never overrides them. |
-| [`docs/adr/`](../adr/) | Numbered architecture decisions. Architecture pages cite ADRs; ADRs do not live here. |
-| [`docs/domains/`](../domains/) | Per-domain architecture. Cross-cutting pages here, domain-specific pages there. |
-| [`docs/runbooks/`](../runbooks/) | Operational procedures. This folder frames the system; runbooks operate it. |
-| [`docs/registers/`](../registers/) | `AUTHORITY_LADDER`, `CANONICAL_LINEAGE_EXPLORATORY`, `DRIFT_REGISTER`, `VERIFICATION_BACKLOG`, `OBJECT_FAMILY_MAP`. |
-| [`docs/standards/`](../standards/) | External standards KFM conforms to (STAC, DCAT, PROV, etc.). |
-| [`docs/security/`](../security/) | Threat model, exposure posture, incident response. Pairs with `deployment-topology.md`. |
-| [`docs/governance/`](../governance/) | Roles, review burden, separation of duties. Pairs with `governed-api.md`. |
-| [`docs/intake/`](../intake/) | `IDEA_INTAKE`, `NEW_IDEAS_INDEX` — exploratory ideas; not promoted to architecture without review. |
-| [`docs/archive/`](../archive/) | Lineage, exploratory, deprecated. Supporting evidence only. |
+| [`docs/doctrine/`](../doctrine/) | Invariants and operating law that architecture explains |
+| [`docs/adr/`](../adr/) | Decision records that bind architecture |
+| [`docs/domains/`](../domains/) | Domain-specific architecture and evidence boundaries |
+| [`docs/runbooks/`](../runbooks/) | Operational procedures for verified surfaces |
+| [`docs/security/`](../security/) | Threat, exposure, and incident responsibilities |
+| [`docs/sources/`](../sources/) | Source identity, roles, terms, and onboarding |
+| [`docs/standards/`](../standards/) | External-standard profiles and interpretation |
+| [`docs/registers/`](../registers/) | Drift, verification, lineage, and document registers |
+| [`contracts/`](../../contracts/) | Semantic meaning |
+| [`schemas/`](../../schemas/) | Machine-checkable shape |
+| [`policy/`](../../policy/) | Admissibility and obligations |
+| [`apps/`](../../apps/) and [`packages/`](../../packages/) | Deployable and reusable implementation |
+| [`tests/`](../../tests/) and [`fixtures/`](../../fixtures/) | Enforceability evidence |
+| [`data/`](../../data/) | Lifecycle, registry, receipt, proof, and public-safe carrier planes |
+| [`release/`](../../release/) | Promotion, release, correction, withdrawal, and rollback authority |
+| [`control_plane/`](../../control_plane/) | Machine-readable governance projections |
 
-</details>
-
-<details>
-<summary><strong>Implementation roots this folder explains (click to expand)</strong></summary>
-
-| Folder | What this folder says about it |
-|---|---|
-| [`contracts/`](../../contracts/) | Owns object meaning. `contract-schema-policy-split.md` explains the boundary with `schemas/` and `policy/`. |
-| [`schemas/`](../../schemas/) | Owns machine-checkable shape. Default home `schemas/contracts/v1/...` per ADR-0001. |
-| [`policy/`](../../policy/) | Owns admissibility (allow / deny / restrict / abstain). Singular root; `policies/` is compatibility only (Directory Rules §6.5, §8). |
-| [`tests/`](../../tests/) and [`fixtures/`](../../fixtures/) | Own enforceability proof. `contract-schema-policy-split.md` names them as the fourth governance layer. |
-| [`apps/governed-api/`](../../apps/governed-api/) | The trust membrane in executable form; `governed-api.md` is its narrative. |
-| [`apps/explorer-web/`](../../apps/explorer-web/) + [`packages/maplibre/`](../../packages/maplibre/) | The disciplined map shell; `map-shell.md` is its narrative. |
-| [`apps/workers/`](../../apps/workers/) | Watcher-as-non-publisher in executable form; emits `RunReceipt` / `AIReceipt` / candidates only. |
-| [`runtime/`](../../runtime/), [`infra/`](../../infra/) | Local adapters and deployment posture; `deployment-topology.md` is their narrative. |
-| [`release/`](../../release/) | Release decisions (`ReleaseManifest`, `RollbackCard`, `CorrectionNotice`). |
-| [`control_plane/`](../../control_plane/) | Machine-readable indexes. This folder **explains**; `control_plane/` **indexes**. |
-
-All paths above are **PROPOSED / NEEDS VERIFICATION** for current repo presence.
-
-</details>
-
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## ADRs
 
-| ADR | Status | Why it matters here |
+| Decision | Current status | Effect on this folder |
 |---|---|---|
-| **ADR-0001 — Schema home** | **CONFIRMED file; decision status `proposed`.** | Records `schemas/contracts/v1/...` as the configured and proposed schema home; central to `contract-schema-policy-split.md`. |
-| *(future) ADR — `apps/api/` vs `apps/governed-api/` boundary* | **PROPOSED** | Directory Rules §7.1 and §18 list this boundary as **open**; resolution belongs in an ADR, summarized here. |
-| *(future) ADR — `policies/` ↔ `policy/` resolution* | **PROPOSED** | Directory Rules §6.5, §8, §18 name this as open; default canonical is `policy/`. |
-| *(future) ADR — `triplets/` vs `triplet/` form in `data/`* | **PROPOSED** | Directory Rules §18 open question; current doctrine uses **`triplets/`** (plural). |
-| *(future) ADR — `data/manifests/` vs `release/manifests/` boundary* | **PROPOSED** | Directory Rules §18 open question; current doctrine keeps `release/manifests/` canonical for release manifests, with lane-internal manifests inside `data/published/`. |
-| *(future) ADR — `data/rollback/` vs `release/rollback_cards/` boundary* | **PROPOSED** | Directory Rules §18 open question; current doctrine keeps the **decision** in `release/rollback_cards/` and **data-plane alias-revert receipts** in `data/rollback/`. |
+| [ADR-0029 — Adopt Directory Governance Standard v2](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Controls placement, responsibility roots, compatibility, migration, and rollback discipline |
+| [ADR index](../adr/INDEX.md) | Current decision inventory | Check actual status before presenting any numbered ADR as binding |
+| Schema-home, Governed API, public-client, renderer, promotion-gate, and other architecture ADRs | Status varies; many remain proposed | Architecture may explain proposals but must not silently accept them |
 
-> [!NOTE]
-> ADRs follow the template fields named in Directory Rules §2.4: `id`, `title`, `status` (`proposed | accepted | superseded | rejected`), `date`, `context`, `decision`, `consequences`, `alternatives`. Adding an ADR here means linking it from the relevant architecture page **and** from `docs/adr/README.md`.
-
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
 ## FAQ
 
 <details>
-<summary><strong>How is this folder different from <code>docs/doctrine/</code>?</strong></summary>
+<summary><strong>How is architecture different from doctrine?</strong></summary>
 
-Doctrine states *what is true* — the invariants: lifecycle law, truth posture, trust membrane, authority ladder, watcher-as-non-publisher. Architecture explains *how those truths are expressed in the running system* — the topology, the API envelope, the map boundary, the four-layer split. **Doctrine wins on conflict.**
+Doctrine states KFM's accepted operating law. Architecture explains how repository responsibilities and subsystems express that law. Doctrine wins on an invariant conflict; current implementation evidence wins on a current-behavior claim.
 </details>
 
 <details>
-<summary><strong>How is this folder different from <code>docs/adr/</code>?</strong></summary>
+<summary><strong>How is <code>SYSTEM_MAP.md</code> different from <code>SKELETON_MAP.md</code>?</strong></summary>
 
-ADRs are decisions: dated, numbered, with `proposed | accepted | superseded | rejected` status. Architecture pages explain the resulting system and cite ADRs by number. A page here SHOULD NOT be the binding record of a decision; promote that to an ADR (Directory Rules §13.5).
+`SYSTEM_MAP.md` is the current primary whole-system orientation candidate. `SKELETON_MAP.md` remains a separate, writer-bound topology surface. The [one-shot writer workflow](../../.github/workflows/one-shot-skeleton-map-refresh.yml) currently targets it, so its final manual/generated/compatibility role is **HOLD** until writer, source, receipt, link, and consumer closure is complete.
 </details>
 
 <details>
-<summary><strong>Where does a domain-specific architecture page go?</strong></summary>
+<summary><strong>Why are both trust-membrane architecture pages still present?</strong></summary>
 
-`docs/domains/<domain>/`, not here. Domain Placement Law (Directory Rules §12) says domains live as **lanes** inside responsibility roots. Cross-cutting prose that genuinely spans multiple domains MAY live here; if it would only matter to one domain, it belongs in that domain's folder.
+They are a known case-insensitive collision with overlapping content and distinct document identities. The uppercase file is newer and repository-grounded; the lowercase path matches the proposed safe target grammar and has lineage material. The convergence plan proposes one atomic no-loss migration, but this README does not perform or authorize it.
 </details>
 
 <details>
-<summary><strong>Should I add diagrams?</strong></summary>
+<summary><strong>Which finite outcomes are safe to cite?</strong></summary>
 
-Yes, when they reflect real structure or responsibility boundaries. Mermaid is preferred for inline rendering on GitHub. Decorative diagrams are out; diagrams that paper over weak grounding should be replaced with a *Diagram omitted — NEEDS VERIFICATION* note and an open question.
+The current runtime response schema uses `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. `HOLD`, `PASS`, `FAIL`, `RESOLVED`, and `UNRESOLVED` belong to other review, validator, or package-local surfaces unless a governing contract says otherwise. Do not merge these vocabularies through documentation cleanup.
 </details>
 
 <details>
-<summary><strong>What if the repo conflicts with what an architecture page describes?</strong></summary>
+<summary><strong>How should a new architecture page be added?</strong></summary>
 
-Open a `docs/registers/DRIFT_REGISTER.md` entry and propose a resolution: an ADR amending architecture, or a migration plan bringing the repo into conformance. **Do not silently update the page to match the repo** (Directory Rules §2.5).
+Identify the one explanatory responsibility, search for an existing landing page or equivalent, verify the owning lane under accepted Directory Rules, preserve domain and subsystem boundaries, assign stable identity where required, connect the page to navigation, and add changed-area validation. A new binding rule requires its own accepted decision path.
 </details>
 
 <details>
-<summary><strong>What goes in <code>contract-schema-policy-split.md</code> versus <code>contracts/README.md</code>?</strong></summary>
+<summary><strong>What happens when documentation and implementation disagree?</strong></summary>
 
-`contract-schema-policy-split.md` explains the **division of labor** across `contracts/`, `schemas/`, `policy/`, and `tests/` + `fixtures/` — the four-layer story. `contracts/README.md` describes only what `contracts/` itself owns. The split file is the *cross-cutting* view; the per-root README is the *local* view.
+State the conflict and determine which evidence owns the question. Do not silently rewrite implementation from a plan or rewrite doctrine from a current accident. Use the drift register, an ADR, a bounded implementation change, or a correction according to the responsibility involved.
 </details>
 
 <details>
-<summary><strong>Which finite outcomes are canonical?</strong></summary>
+<summary><strong>Does a merged documentation pull request publish KFM?</strong></summary>
 
-For governed-API surfaces: `ANSWER` · `ABSTAIN` · `DENY` · `ERROR`. For review/promotion paused state: `HOLD`. For validator-class outcomes: `PASS` / `FAIL`. The full mapping by surface lives in `governed-api.md`; the doctrinal anchor is Atlas v1.1 §24.3 *Master Decision Outcome Envelope Reference*. Sensitive lanes default to `DENY` (fail closed).
+No. A commit, pull request, merge, badge, validator pass, or architecture page is not a governed lifecycle promotion, release, deployment, or publication.
 </details>
 
-<details>
-<summary><strong>Where do <code>ui/</code>, <code>governed-ai/</code>, <code>story/</code>, and <code>review/</code> subfolders come from?</strong></summary>
-
-They are PROPOSED in the *KFM Whole-UI + Governed AI Expansion* plan as architecture-level subsystem homes. They are not yet ADR-bound. Until an ADR or scoping note lands, treat them as placeholders; substantive subsystem prose MAY live as a single file under this folder (e.g., `map-shell.md` instead of `ui/map-shell.md`).
-</details>
-
-[↑ Back to top](#docsarchitecture)
+[Back to top](#top)
 
 ---
 
@@ -442,21 +471,26 @@ They are PROPOSED in the *KFM Whole-UI + Governed AI Expansion* plan as architec
 
 | Field | Value |
 |---|---|
-| Last reviewed | `YYYY-MM-DD` *(placeholder — set on first PR)* |
-| Reviewer | `<name>` *(placeholder)* |
-| Next review trigger | Material change to doctrine, schema-home rule, governed-API envelope, map-shell boundary, or finite-outcome set; **or** 6 months since last review (Directory Rules §15). |
+| Review date | 2026-08-18 |
+| Evidence base | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
+| Base architecture tree | `7e7a59249400f64bde174697aa6ada3f415d3838` |
+| Review route | `@bartytime4life` through `.github/CODEOWNERS` |
+| Specialist stewardship | **NEEDS VERIFICATION** |
+| Next review trigger | Architecture-tree change; accepted ADR affecting placement or subsystem ownership; trust-membrane convergence; Skeleton Map writer retirement; or material runtime/release boundary change |
+| Rollback | Revert the focused README commit; no runtime, data, policy, release, deployment, or publication state changes |
 
-> If this date is older than six months, the folder is a **drift candidate**. Open a verification PR or a `docs/registers/DRIFT_REGISTER.md` entry.
+### Related documents
 
----
+- [`SYSTEM_MAP.md`](./SYSTEM_MAP.md)
+- [`document-convergence-plan.md`](./document-convergence-plan.md)
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)
+- [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md)
+- [`docs/registers/DOCUMENT_REGISTRY.md`](../registers/DOCUMENT_REGISTRY.md)
+- [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml)
+- [`tools/validators/docs/document-graph/README.md`](../../tools/validators/docs/document-graph/README.md)
+- [`tools/validators/docs/link-check/README.md`](../../tools/validators/docs/link-check/README.md)
+- [`tools/validators/docs/meta-block/README.md`](../../tools/validators/docs/meta-block/README.md)
+- [`tools/validators/directory_governance/README.md`](../../tools/validators/directory_governance/README.md)
 
-### Related docs
-
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law (this README's contract anchor)
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — `apps/governed-api/` invariant
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain
-- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema home convention
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — open this when prose drifts from repo
-
-*Last updated:* `YYYY-MM-DD` *(placeholder)* · [↑ Back to top](#docsarchitecture)
+[Back to top](#top)
