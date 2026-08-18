@@ -1,0 +1,3 @@
+Temporary read-only repository-topology diagnostic trigger.
+
+This file exists only on the isolated diagnostic branch and is not intended for main.
