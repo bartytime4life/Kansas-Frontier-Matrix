@@ -1,0 +1,225 @@
+name: One-shot KFM roadmap milestone expansion
+
+on:
+  push:
+    branches:
+      - automation/create-kfm-milestones-13-24-20260818
+    paths:
+      - .github/workflows/_temporary-create-kfm-milestones-13-24.yml
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: kfm-roadmap-milestones-13-24-20260818
+  cancel-in-progress: false
+
+jobs:
+  create-milestones:
+    name: Create KFM milestones M13-M24
+    if: github.repository == 'bartytime4life/Kansas-Frontier-Matrix'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Create or reuse the 12 milestone records
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TRACKER_ISSUE: '2768'
+          EXECUTION_MARKER: '<!-- kfm-roadmap-milestones-13-24-20260818 -->'
+          PLANNING_BASE: '397e950c3b4d1b23be814f95e571f60c06f753a6'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import textwrap
+          import urllib.error
+          import urllib.request
+
+          token = os.environ['GH_TOKEN']
+          repository = os.environ['REPOSITORY']
+          tracker_issue = os.environ['TRACKER_ISSUE']
+          marker = os.environ['EXECUTION_MARKER']
+          planning_base = os.environ['PLANNING_BASE']
+
+          desired = [
+              (
+                  'M13 - Repository Control, Review Integrity & Conformance',
+                  'Close repository-control, review-integrity, and conformance gaps: reconcile current main/open work, required checks, CODEOWNERS limits, Directory Rules drift, documentation truth, and aggregate-validator reliability. Current anchors: #2768 and #2874. Completion is commit-pinned evidence; it grants no release or publication authority.',
+              ),
+              (
+                  'M14 - Security Classification, Threat Model & Critical-Asset Exposure',
+                  'Converge data classification, threat modeling, exposure planning, deny tests, audit invariants, and critical-asset or harmful-precision controls. Current work includes PRs #3009 and #3010. Prove public paths fail closed without leaking restricted reasons; documentation or a green check alone is not security assurance or release approval.',
+              ),
+              (
+                  'M15 - Incident Response, Secrets, Key Lifecycle & Recovery',
+                  'Resolve the public security-guidance to restricted-runbook handoff in #2900; define accountable roles, private intake, finite incident states, evidence custody, secrets and key rotation or revocation, synthetic exercises, correction, and rollback. Do not expose operational details or activate a real incident.',
+              ),
+              (
+                  'M16 - Quality Baselines, Non-Vacuous Tests & CI Reliability',
+                  'Establish reproducible quality baselines across contracts, schemas, policy, validators, API, and UI; remove placeholder or vacuous checks; classify introduced, inherited, and external failures; add deterministic no-network fixtures, accessibility checks, and stable result grammar. Passing checks remain bounded evidence.',
+              ),
+              (
+                  'M17 - Dependency, Container, SBOM & Supply-Chain Assurance',
+                  'Close dependency and supply-chain assurance: dependency review, CodeQL, repository and container scans, action pinning, lockfile, license and integrity review, SBOMs, attestations, signatures, and OpenSSF signals. Reproduce and fix HIGH or CRITICAL findings without suppression. This does not prove vulnerability absence.',
+              ),
+              (
+                  'M18 - Temporal Semantics, Compatibility & Correction Lineage',
+                  'Complete the compatibility-first temporal split in #2990 while preserving the common authority, legacy replay, temporal distinctions, namespace integrity, deterministic IDs, and correction, supersession and withdrawal lineage. Add migration receipts and rollback; do not destructively rewrite records or accept ADRs by implication.',
+              ),
+              (
+                  'M19 - Evidence Resolver, Citation Integrity & Governed Consumer Closure',
+                  'Deliver the deterministic no-network EvidenceRef-to-EvidenceBundle slice in #2975 through the existing ANSWER, ABSTAIN, DENY and ERROR envelope. Verify identities, digests, scope, freshness, rights, sensitivity, policy, review, release, citations, and path safety. No live source, model call, deployment, or publication.',
+              ),
+              (
+                  'M20 - Source Rights, Health, Watchers & Change Detection',
+                  'Create a current source-health and rights discipline: authority role, terms, attribution, redistribution, access, cadence, source-head identity, drift, staleness, retry, correction, disable, and rollback. Watchers may emit candidates and receipts only. Coordinate with #2874 and source-admission work; live activation is separate.',
+              ),
+              (
+                  'M21 - Transportation, Infrastructure & Public-Safe Geometry',
+                  'Advance #2898 for NG911, K-Hub or LRS, mobile LiDAR, and supporting transportation geometry. Prove identity and crosswalk behavior, CRS, revisions, rights, infrastructure sensitivity, deterministic snapshots, public-safe generalization, and correction. No crash-data access, live connector, or publication.',
+              ),
+              (
+                  'M22 - Drought, Water Supply, Soil & Agriculture Observation Proof',
+                  'Advance #2899 synthetic-first across USDM, streamflow, groundwater, precipitation or EDDI, soil moisture, and agricultural context. Preserve support type, observation, valid, publication, retrieval and revision times, uncertainty, conflict, stale and abstain states; prohibit causal shortcuts. Live snapshots remain gated.',
+              ),
+              (
+                  'M23 - MapLibre Runtime Admission, Accessibility & Performance',
+                  'Resolve #2957 architecture and execute #2906 measured readiness. Establish one MapLibre adapter and dependency owner, then prove WebGL2, CSP and workers, PMTiles, terrain, selection stability, long-session resource behavior, headless parity, accessibility, performance budgets, and rollback. No implicit ADR acceptance or release.',
+              ),
+              (
+                  'M24 - GeoParquet, PMTiles & COG Cross-Engine Interoperability',
+                  'Execute #2907 and related GeoParquet, PMTiles, and COG carrier proofs with pinned toolchains. Verify bytes or semantics, CRS, metadata, nulls, statistics and pruning, range behavior, digests, catalog mapping, legacy compatibility, and malformed negative cases. Keep current defaults until a separate governed decision.',
+              ),
+          ]
+
+          titles = [title for title, _description in desired]
+          if len(desired) != 12 or len(set(titles)) != 12:
+              raise RuntimeError('Expected exactly 12 unique milestone definitions')
+          for title, description in desired:
+              if len(description) > 400:
+                  raise RuntimeError(f'Milestone description exceeds GitHub limit: {title} ({len(description)})')
+
+          def api(method, path, payload=None):
+              url = f'https://api.github.com{path}'
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              request = urllib.request.Request(
+                  url,
+                  data=data,
+                  method=method,
+                  headers={
+                      'Accept': 'application/vnd.github+json',
+                      'Authorization': f'Bearer {token}',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'kfm-roadmap-milestone-expansion',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response:
+                      body = response.read()
+                      return None if not body else json.loads(body.decode('utf-8'))
+              except urllib.error.HTTPError as exc:
+                  detail = exc.read().decode('utf-8', errors='replace')
+                  raise RuntimeError(f'{method} {path} failed with HTTP {exc.code}: {detail}') from exc
+
+          def list_all(path):
+              items = []
+              page = 1
+              separator = '&' if '?' in path else '?'
+              while True:
+                  batch = api('GET', f'{path}{separator}per_page=100&page={page}')
+                  if not batch:
+                      return items
+                  items.extend(batch)
+                  if len(batch) < 100:
+                      return items
+                  page += 1
+
+          milestones = list_all(f'/repos/{repository}/milestones?state=all')
+          by_title = {item['title']: item for item in milestones}
+          results = []
+
+          for title, description in desired:
+              milestone = by_title.get(title)
+              action = 'reused'
+              if milestone is None:
+                  milestone = api(
+                      'POST',
+                      f'/repos/{repository}/milestones',
+                      {'title': title, 'description': description, 'state': 'open'},
+                  )
+                  action = 'created'
+              elif milestone.get('state') != 'open' or milestone.get('description') != description:
+                  milestone = api(
+                      'PATCH',
+                      f"/repos/{repository}/milestones/{milestone['number']}",
+                      {'description': description, 'state': 'open'},
+                  )
+                  action = 'updated'
+
+              by_title[title] = milestone
+              results.append(
+                  {
+                      'title': title,
+                      'action': action,
+                      'number': milestone['number'],
+                      'url': milestone['html_url'],
+                      'state': milestone['state'],
+                  }
+              )
+
+          refreshed = list_all(f'/repos/{repository}/milestones?state=all')
+          for title, description in desired:
+              matches = [item for item in refreshed if item['title'] == title]
+              if len(matches) != 1:
+                  raise RuntimeError(f'Expected one milestone titled {title!r}; found {len(matches)}')
+              item = matches[0]
+              if item['state'] != 'open' or item.get('description') != description:
+                  raise RuntimeError(f'Milestone verification failed for {title!r}')
+
+          created = sum(item['action'] == 'created' for item in results)
+          updated = sum(item['action'] == 'updated' for item in results)
+          reused = sum(item['action'] == 'reused' for item in results)
+          rows = '\n'.join(
+              f"| {index:02d} | [{item['title']}]({item['url']}) | `{item['action'].upper()}` | `{item['state'].upper()}` |"
+              for index, item in enumerate(results, start=13)
+          )
+
+          body = textwrap.dedent(
+              f"""\
+              {marker}
+              ## GitHub roadmap milestones M13-M24 created
+
+              **Result:** 12 of 12 targeted milestones are present and open (`{created}` created, `{updated}` updated, `{reused}` reused).
+
+              **Planning evidence inspected:** `main@{planning_base}`; the current open issue portfolio (#2768, #2874, #2898, #2899, #2900, #2906, #2907, #2957, #2975, #2990); open architecture PRs #3009 and #3010; the current security workflow; repository-grounded security and quality guidance; and supplied KFM research, whole-system, Directory Rules, MapLibre, soil, geology, and domain-atlas sources.
+
+              | Order | Milestone | Action | State |
+              |---:|---|---|---|
+              {rows}
+
+              - Due dates: none added.
+              - Issue and pull-request assignments: none changed.
+              - This is a targeted execution layer beneath the broader M01-M12 roadmap, not a replacement for it.
+              - Execution branch: `{os.environ.get('GITHUB_REF_NAME', 'unknown')}`
+              - Execution commit: `{os.environ.get('GITHUB_SHA', 'unknown')}`
+              - Workflow run: `{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{repository}/actions/runs/{os.environ.get('GITHUB_RUN_ID', 'unknown')}`
+
+              > Milestones are planning and routing metadata. Creating or closing one does not establish policy approval, source admission, evidence closure, lifecycle promotion, release, deployment, publication, or public-use authority.
+              """
+          )
+
+          comments = list_all(f'/repos/{repository}/issues/{tracker_issue}/comments')
+          existing_comment = next((comment for comment in comments if marker in comment.get('body', '')), None)
+          if existing_comment:
+              api('PATCH', f"/repos/{repository}/issues/comments/{existing_comment['id']}", {'body': body})
+          else:
+              api('POST', f'/repos/{repository}/issues/{tracker_issue}/comments', {'body': body})
+
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              summary.write(body)
+          PY
