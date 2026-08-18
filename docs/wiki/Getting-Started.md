@@ -2,16 +2,16 @@
 KFM_WIKI_SOURCE
 page_id: Getting-Started
 title: Getting Started
-version: v0.2.0
+version: v0.3.0
 status: PROPOSED wiki source; review required
 created: 2026-08-07
-updated: 2026-08-15
+updated: 2026-08-18
 authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, contracts, schemas, policy, tests, lifecycle records, and release decisions outrank this page
 source_path: docs/wiki/Getting-Started.md
 owning_root: docs/
 responsibility: public onboarding for reading, verifying, running, changing, validating, and reviewing KFM without weakening the trust membrane
-evidence_snapshot: main@85fa02e81d0e8ca0b746d5b659aa987b910aecd2
-prior_blob: 7acc98dd438230f86f7af8ccc5b6972f0f8bd152
+evidence_snapshot: main@9cb437d803a431928d3b919d9a7814647f812583
+prior_blob: f40a2e8b8c84aa338da3ddbffb678b501d8ff222
 publication_effect: none until separately synchronized to the native GitHub Wiki
 -->
 
@@ -39,7 +39,7 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 > KFM is a governed spatial evidence and publication system. The public unit of value is an **inspectable claim**, not a file, map layer, tile, graph edge, dashboard, workflow, AI answer, or polished document by itself. Canonical repository evidence and the authority that owns each question outrank this orientation page.
 
 > [!NOTE]
-> **Evidence checkpoint:** this page was reconciled against [`main@85fa02e81d0e8ca0b746d5b659aa987b910aecd2`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/85fa02e81d0e8ca0b746d5b659aa987b910aecd2). Re-check current `main`, open pull requests, workflows, package metadata, and target-local READMEs before relying on commands or implementation claims.
+> **Evidence checkpoint:** this page was reconciled against [`main@9cb437d803a431928d3b919d9a7814647f812583`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9cb437d803a431928d3b919d9a7814647f812583). Re-check current `main`, open pull requests, workflows, package metadata, and target-local READMEs before relying on commands or implementation claims.
 
 ## At a glance
 
@@ -48,13 +48,14 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 | What should I understand first? | The inspectable-claim model, lifecycle, trust membrane, responsibility roots, domain lanes, and finite negative outcomes |
 | What is the shortest reading path? | [Home](Home.md) → [Architecture](Architecture.md) → [Data Lifecycle](Data-Lifecycle.md) → [Domains](Domains.md) |
 | What should I verify before editing? | Current base SHA, exact target bytes, owning root, nearest README, authority documents, overlapping work, acceptance checks, and rollback |
+| How do ordinary programming layers map to KFM? | [Programming scaffold for a bounded change](#programming-scaffold-for-a-bounded-change): use existing responsibility roots instead of importing a parallel generic tree |
 | What is the Python baseline? | Python `>=3.11`, `python -m pip install -e ".[test]"`, then `make validate` and `git diff --check` |
 | What is the JavaScript baseline? | Node `>=22.13 <23`, `pnpm@11.17.0`, lockfile installation, and package-scoped commands |
 | What is the normal delivery path? | One focused feature branch and a draft pull request with exact-head validation and separate human review |
 | What do public clients use? | Governed APIs and released public-safe artifacts—not RAW, WORK, QUARANTINE, candidate, canonical/internal, or direct model-runtime stores |
 | Does this page publish or synchronize anything? | **No.** It changes no lifecycle, release, deployment, publication, or native-wiki state |
 
-**Quick navigation:** [Choose your path](#choose-your-path) · [First 15 minutes](#your-first-15-minutes) · [Read before editing](#read-before-editing) · [Toolchain](#verify-your-toolchain) · [Clone and pin](#clone-and-pin-your-base) · [Python](#python-baseline) · [JavaScript](#javascript-workspace) · [Repository](#understand-the-repository-first) · [First contribution](#a-safe-first-contribution) · [Task contract](#before-the-first-write) · [Validation](#validate-the-claim-not-just-the-file) · [Stop conditions](#stop-conditions) · [Limits](#what-setup-does-not-prove)
+**Quick navigation:** [Choose your path](#choose-your-path) · [First 15 minutes](#your-first-15-minutes) · [Read before editing](#read-before-editing) · [Toolchain](#verify-your-toolchain) · [Clone and pin](#clone-and-pin-your-base) · [Python](#python-baseline) · [JavaScript](#javascript-workspace) · [Repository](#understand-the-repository-first) · [Programming scaffold](#programming-scaffold-for-a-bounded-change) · [First contribution](#a-safe-first-contribution) · [Task contract](#before-the-first-write) · [Validation](#validate-the-claim-not-just-the-file) · [Stop conditions](#stop-conditions) · [Limits](#what-setup-does-not-prove)
 
 ---
 
@@ -289,6 +290,49 @@ data/<lifecycle>/hydrology/
 
 These examples illustrate the responsibility-lane pattern. Inspect current conventions before creating a path, and do not create a new root-level domain directory.
 
+### Programming scaffold for a bounded change
+
+Use general software-engineering layers as a **reasoning model**, not as permission to create a second repository structure. KFM already has responsibility roots. The accepted Directory Rules, the nearest root or lane README, current repository bytes, and the authority that owns each question determine placement.
+
+| General programming concern | KFM placement | Boundary to preserve |
+|---|---|---|
+| Entrypoint or delivery mechanism | App-local routes, browser entrypoints, CLI commands, worker entrypoints, and service startup under the owning lane in `apps/`; ordinary public and semi-public traffic crosses `apps/governed-api/` | Translate protocol input and output without hiding domain, policy, source, evidence, lifecycle, or release authority in the handler |
+| Application use case or orchestration | Deployable-specific orchestration in the owning app; reusable deterministic implementation in `packages/`; lifecycle transformation and execution in `pipelines/` with declarative intent in `pipeline_specs/` | Orchestration may coordinate authorities but must not redefine contracts, schemas, policy, lifecycle state, or release decisions |
+| Domain language and invariants | Human explanation in the relevant `docs/domains/` lane; semantic meaning and invariants in `contracts/`; reusable implementation in the owning `packages/` lane where implementation is actually shared | A database shape, JSON schema, UI model, source payload, or package name does not become semantic authority |
+| Machine shape and compatibility | `schemas/`, bound to the applicable semantic contract | Shape validation does not establish factual truth, rights, sensitivity clearance, policy permission, release, or publication |
+| Policy, authorization, sensitivity, and obligations | `policy/`, with the applicable contracts, fixtures, and tests | Apps, packages, connectors, pipelines, and runtime components apply policy; they do not silently author normative policy |
+| Port or effect boundary | A durable cross-boundary meaning belongs in `contracts/`; the smallest code interface stays with the owning app or package | Time, randomness, network, storage, filesystem, model, message, and external-policy effects should be explicit, replaceable, bounded, and testable rather than hidden in business behavior |
+| Adapter | Source acquisition and admission in `connectors/`; bounded provider bindings and runtime composition in `runtime/`; app-local protocol translation in `apps/`; reusable non-deployable adapters in `packages/` only when reuse is demonstrated | Every adapter remains subordinate to contracts, schemas, policy, evidence, release state, timeouts, cancellation, and finite failure behavior |
+| Bootstrap and composition | Deployable composition in `apps/`; bounded internal provider selection in `runtime/`; non-secret configuration in `configs/`; deployment and exposure mechanics in `infra/` | Secrets stay outside Git, composition grants no new authority, and public clients never receive a direct runtime or canonical-store path |
+| Shared technical capability | Reusable non-deployable code in `packages/`; repository validators, generators, builders, and operators in `tools/`; thin operator wrappers in `scripts/` | Do not create an unowned `shared`, `common`, or utility authority that accumulates domain rules or hidden effects |
+| Verification data and executable evidence | Reusable deterministic inputs in `fixtures/`; repository-wide conformance in `tests/`; app- or package-local tests beside the owning implementation where current conventions require them | Cover supported behavior and important invalid, unavailable, stale, deny, abstain, and error paths; prefer deterministic no-network proof where practical |
+| Operations, migration, and release | Human procedures in the appropriate `docs/` runbook or guide; deployment mechanics in `infra/`; versioned migrations in `migrations/`; promotion, correction, withdrawal, and rollback decisions in `release/` | A merge, build, deployment, generated artifact, receipt, or green test is not by itself a release or publication decision |
+
+#### Default vertical slice
+
+Start with one observable, dependency-closed path through the existing monorepo:
+
+```text
+external input
+  -> owning app entrypoint
+  -> application or use-case orchestration
+  -> contract-defined domain behavior
+  -> explicit effect boundary
+  -> bounded adapter
+  -> finite result
+     (ANSWER / ABSTAIN / DENY / ERROR where governed-response contracts apply)
+```
+
+Add only the direct dependencies required to make that path true: applicable contracts, schemas, policy, fixtures, tests, documentation, generated receipt, migration, and rollback evidence. Not every slice needs every root, and an empty layer created only to complete a diagram is not progress.
+
+#### When to split or introduce a new surface
+
+The default is a bounded vertical slice inside the current repository. Do not add a new root, deployable, service, datastore, event bus, generic base class, or parallel contract/schema/policy/receipt/release home merely because a generic scaffold names one. A larger split needs current evidence of an independent deployability, scaling, reliability, security-isolation, ownership, technology, or release-cadence requirement, followed by the placement authority, accepted decision, compatibility analysis, migration, validation, correction, and rollback required by that consequence.
+
+#### Minimum review packet
+
+A coherent programming change normally includes the owning README and implementation plus only its direct contract, schema, policy, fixture, test, documentation, receipt, generated-output, migration, and rollback dependencies. The pull request should make the observable goal, changed paths, non-goals, positive and negative validation, unresolved uncertainty, and exact recovery path inspectable.
+
 ### Keep trust-bearing object families separate
 
 | Surface | What it owns | What it cannot prove by itself |
@@ -426,9 +470,10 @@ File presence is evidence of repository state. It is not a shortcut around the a
 
 ## Current evidence boundary
 
-**CONFIRMED at `main@85fa02e81d0e8ca0b746d5b659aa987b910aecd2`:**
+**CONFIRMED at `main@9cb437d803a431928d3b919d9a7814647f812583`:**
 
 - the wiki source packet exists under `docs/wiki/`;
+- ordinary programming layers are mapped to existing KFM responsibility roots rather than a parallel generic scaffold;
 - accepted ADR-0029 adopts the current Directory Rules authority;
 - `pyproject.toml` requires Python 3.11 or newer and defines a test extra;
 - `package.json` pins Node `>=22.13 <23` and `pnpm@11.17.0`;
@@ -443,6 +488,7 @@ File presence is evidence of repository state. It is not a shortcut around the a
 
 | Next goal | Continue with |
 |---|---|
+| Plan a bounded programming change | [Programming scaffold](#programming-scaffold-for-a-bounded-change) |
 | Run and interpret checks | [Development and Validation](Development-and-Validation.md) |
 | Prepare a contribution | [Contributing](Contributing.md) |
 | Decide where a file belongs | [Repository Map](Repository-Map.md) |
