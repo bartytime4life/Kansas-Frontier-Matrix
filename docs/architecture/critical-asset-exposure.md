@@ -1,702 +1,967 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/critical-asset-exposure
-title: Critical-Asset Exposure — Architectural Treatment
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + sensitivity/policy lead + infrastructure-domain steward + map/UI lead>
+title: Critical Asset Exposure — Current Architecture and Control Map
+type: architecture-reference
+version: v2.0-draft
+status: draft; repository-grounded; mixed-maturity; fail-closed; no-policy-authority; no-release; no-publication
+owners:
+  - "@bartytime4life — verified GitHub review route through CODEOWNERS"
+  - "NEEDS VERIFICATION — architecture, security, infrastructure-sensitivity, policy, evidence, release, and public-client stewards"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-18
 policy_label: public
-related: [
-  docs/doctrine/trust-membrane.md,
-  docs/doctrine/authority-ladder.md,
-  docs/doctrine/truth-posture.md,
-  docs/architecture/TRUST_MEMBRANE.md,
-  docs/architecture/system-context.md,
-  docs/architecture/governed-api.md,
-  docs/architecture/map-shell.md,
-  docs/architecture/maplibre-3d.md,
-  docs/architecture/ui/CONTINUITY_NOTES.md,
-  docs/standards/MAP_TRUST_STATES.md,
-  docs/standards/EVIDENCE_BUNDLE.md,
-  docs/standards/RELEASE_MANIFEST.md,
-  docs/standards/SENSITIVITY_RUBRIC.md,
-  docs/standards/REDACTION_DETERMINISM.md,
-  docs/standards/DUO_PROFILE.md,
-  policy/sensitivity/infrastructure/,
-  policy/render/,
-  contracts/v1/receipts/,
-  schemas/contracts/v1/receipts/
-]
-tags: [kfm, architecture, critical-asset, infrastructure, sensitivity, t4, geoprivacy, redaction, generalization, adversary-mapping]
-notes: [
-  "Architectural treatment of how KFM handles exposure of critical assets — infrastructure detail, vulnerability information, archaeological sites, rare-species locations, and adjacent high-sensitivity asset classes.",
-  "Defers to docs/doctrine/trust-membrane.md (what the membrane is) and docs/architecture/TRUST_MEMBRANE.md (how it's built); this doc is one narrow application of the sensitivity rubric.",
-  "Surfaces a corpus tension between Atlas Domains §24.5.2 (critical infrastructure detail = T4) and kfm_unified_doctrine_synthesis.md §16 (critical assets = T2 summary) — see §14 item 1."
-]
+owning_root: docs/
+responsibility: >
+  Explain the cross-root architecture for identifying, transforming, reviewing,
+  releasing, and serving public-safe representations of critical or potentially
+  exploit-enabling infrastructure information without becoming policy source,
+  schema authority, an operational-security assessment, release authority, or
+  implementation proof.
+truth_posture: >
+  CONFIRMED current repository paths, accepted Directory Rules placement,
+  proposed ADR status, scaffold and inactive policy surfaces, reserved exposure
+  schema family, proposed settlements-infrastructure schemas, placeholder
+  generalized-infrastructure fixtures, documentation-first test boundary, and
+  fail-closed Governed API scaffold / PROPOSED two-stage control architecture,
+  input closure, public-safe transform obligations, validation matrix, and
+  graduation sequence / UNKNOWN active policy bundle, accepted evaluator,
+  authenticated reviewers, authoritative exposure decision, transform execution,
+  release integration, public-client enforcement, deployed isolation, correction
+  propagation, and operational effectiveness.
+current_path: docs/architecture/critical-asset-exposure.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0af1823ff5a54d2fa3b5f0dfe5db18e5056aa372
+  prior_blob: 243f75697987e28d7083a55efa3964274d5df571
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  sensitivity_rubric_blob: e2ef5cccdcc1bf6f8d93b977005444239bebabf4
+  exposure_schema_readme_blob: b00ef1ddb630e7359eee0306329ecba93348345f5
+  generalized_fixture_readme_blob: 2bca20ed40364fd8ee48d95ec6a57d9062a82bad
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+  policy_vocabulary_contract_blob: 51158caefd7b440851fb37489c511a5c710bed2b
+  policy_vocabulary_registry_blob: ae68a9f3cf80308f18bd0427ef2c85057750f12
+  redaction_receipt_contract_blob: c686cdf5c79a8b99ac66d4b01cd30d2f450f645f
+related:
+  - README.md
+  - TRUST_MEMBRANE.md
+  - governed-api.md
+  - cross-lane-join-policy.md
+  - data-classification-framework.md
+  - ../standards/SENSITIVITY_RUBRIC.md
+  - ../standards/MAP_TRUST_STATES.md
+  - ../security/EXPOSURE_PLAN.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - ../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../domains/settlements-infrastructure/README.md
+  - ../domains/hazards/PUBLICATION_AND_BOUNDARY.md
+  - ../../policy/domains/settlements-infrastructure/README.md
+  - ../../policy/sensitivity/README.md
+  - ../../contracts/policy/policy_decision_vocabulary.md
+  - ../../contracts/shared/redaction_receipt.md
+  - ../../schemas/contracts/v1/exposure/README.md
+  - ../../schemas/contracts/v1/domains/settlements-infrastructure/README.md
+  - ../../fixtures/infrastructure-generalized/README.md
+  - ../../tests/domains/settlements-infrastructure/README.md
+  - ../../apps/governed-api/README.md
+  - ../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+notes:
+  - "Same-path architecture-document modernization only."
+  - "No policy source, contract, schema, fixture, validator, test, route, data object, release record, deployment, publication, or repository setting is changed."
+  - "The former document's useful threat, generalization, role-separation, and rollback concepts are retained but reclassified against current repository evidence."
+  - "ADR-0010 and ADR-0025 remain proposed. This document cannot accept them by description."
 [/KFM_META_BLOCK_V2] -->
 
-# Critical-Asset Exposure — Architectural Treatment
+<a id="top"></a>
 
-> The architecture of how KFM decides what to show, generalize, suppress, or deny when the data describes a **critical asset** — bridges, dams, power lines, water systems, hospitals, archaeological sites, rare-species locations, and the adjacent asset classes whose precise public exposure could enable real-world harm.
+# Critical Asset Exposure — Current Architecture and Control Map
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: architecture explainer](https://img.shields.io/badge/type-architecture--explainer-informational)](#)
-[![posture: deny-by-default for critical detail](https://img.shields.io/badge/posture-deny--by--default%20for%20critical%20detail-critical)](#)
-[![scope: how exposure is gated](https://img.shields.io/badge/scope-how%20exposure%20is%20gated-blueviolet)](#)
-[![join-risk: Hazards %C3%97 Settlements](https://img.shields.io/badge/join--risk-Hazards%20%C3%97%20Settlements-yellow)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> **Purpose.** Explain how KFM should prevent exact, operational, compositional, or otherwise exploit-enabling infrastructure detail from crossing into public or semi-public surfaces, while showing exactly which parts of that control path are present, proposed, held, or unverified in the current repository.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + sensitivity/policy lead + infrastructure-domain steward + map/UI lead_ | 2026-05-24 |
-
----
-
-> [!CAUTION]
-> **This document is an architectural treatment, not a doctrine, not a contract, and not a policy.** Doctrine lives in `docs/doctrine/trust-membrane.md` and (PROPOSED) `docs/standards/SENSITIVITY_RUBRIC.md`. The OPA rules that mechanically deny are in `policy/sensitivity/infrastructure/`. The receipt object meanings are in `contracts/v1/receipts/`. This document explains the architecture — the components, transforms, decision flow, and cross-lane risks — that sit between those canonical homes. See §2.
-
----
-
-## Quick jump
-
-- [1. Purpose](#1-purpose)
-- [2. Scope and repo fit](#2-scope-and-repo-fit)
-- [3. Authority and standing](#3-authority-and-standing)
-- [4. What KFM calls a critical asset](#4-what-kfm-calls-a-critical-asset)
-- [5. The exposure decision flow](#5-the-exposure-decision-flow)
-- [6. The four exposure outcomes](#6-the-four-exposure-outcomes)
-- [7. The four transforms](#7-the-four-transforms)
-- [8. The receipts that record each transform](#8-the-receipts-that-record-each-transform)
-- [9. Cross-lane risks — the join hazards](#9-cross-lane-risks--the-join-hazards)
-- [10. Hazards × Settlements — the canonical adversary case](#10-hazards--settlements--the-canonical-adversary-case)
-- [11. Render-time enforcement](#11-render-time-enforcement)
-- [12. Reality Boundary Notes in critical-asset 3D scenes](#12-reality-boundary-notes-in-critical-asset-3d-scenes)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Tensions and known limits](#14-tensions-and-known-limits)
-- [15. Open questions](#15-open-questions)
-- [16. Related docs](#16-related-docs)
-- [Appendix A — Asset-class × tier × transform matrix](#appendix-a--asset-class--tier--transform-matrix)
-- [Appendix B — Worked example](#appendix-b--worked-example)
-
----
-
-## 1. Purpose
-
-CONFIRMED — Atlas Domains §24.9.2 names the failure mode in one row:
-
-> *"Sensitive content released without redaction. `RedactionReceipt` missing; rights / sovereignty violation. DENY surface: Release queue; sensitivity reviewer."*
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §17:
-
-> *"Hazards × Settlements: Public exposure summary OK; **critical-asset precise locations DENY**. Failure mode: Adversary mapping."*
-
-These two doctrinal lines, taken together, describe the structural concern this document is the architecture of. KFM ingests, normalizes, and publishes information about **infrastructure, archaeological sites, rare-species locations, sensitive cultural resources, and other critical-asset classes**. Some of that information is genuinely public; some of it is genuinely not; most of it is **dual-use** — useful to a city planner, a researcher, or a steward, and dangerous to an adversary, a looter, or someone who would exploit a precise location for harm.
-
-The trust membrane's *what* (denial of raw / unreviewed / restricted state from becoming public) is doctrinal. Its *how* (the components, denial surfaces, foundations) is the subject of `docs/architecture/TRUST_MEMBRANE.md`. This document is the **architecture of one narrow but consequential application**: how KFM decides, mechanically, what is shown, what is generalized, what is suppressed, and what is denied when the data describes a critical asset.
-
-The architectural choices documented here flow from one rule:
-
-> **Default-deny for critical detail; release only the safest representation that still answers the legitimate question.**
-
-The rest of this document is the structural elaboration of that one sentence.
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Scope and repo fit
-
-### 2.1 What this document is
-
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | KFM architecture explainer | CONFIRMED per Directory Rules §6.1 (`docs/architecture/`) |
-| Proposed path | `docs/architecture/critical-asset-exposure.md` | PROPOSED; casing matches sibling architecture-folder convention |
-| Sibling architecture docs | `system-context.md`, `governed-api.md`, `map-shell.md`, `maplibre-3d.md`, `contract-schema-policy-split.md`, `TRUST_MEMBRANE.md`, `ui/CONTINUITY_NOTES.md` | CONFIRMED per Directory Rules §6.1 (mounted-repo presence NEEDS VERIFICATION) |
-| Primary doctrine anchors | `docs/doctrine/trust-membrane.md`; `kfm_unified_doctrine_synthesis.md` §15–§17, §19; Atlas §24.5.2, §24.5.3, §24.9.2 | CONFIRMED |
-| Authority NOT held | Doctrine; the sensitivity-rubric vocabulary; OPA rules; object meaning; deployment topology | CONFIRMED |
-
-### 2.2 What this document is NOT
-
-| If the content is about… | …it lives at | …not here |
-|---|---|---|
-| The sensitivity-tier vocabulary itself (T0–T4) | `docs/standards/SENSITIVITY_RUBRIC.md` (PROPOSED, not yet authored) | this doc |
-| `RedactionReceipt`, `AggregationReceipt`, `RepresentationReceipt`, `ReviewRecord`, `PolicyDecision` object meaning | `contracts/v1/receipts/` (PROPOSED home) | this doc |
-| Their JSON Schemas | `schemas/contracts/v1/receipts/` (PROPOSED home) | this doc |
-| OPA rules that gate critical-asset exposure | `policy/sensitivity/infrastructure/`, `policy/sensitivity/archaeology/`, `policy/sensitivity/fauna/`, `policy/sensitivity/flora/` (PROPOSED homes) | this doc |
-| Geometry-transform code (generalization, suppression, fuzz/jitter) | `packages/geometry/` (PROPOSED home) | this doc |
-| Render-time policy on cached tiles | `packages/maplibre-runtime/src/verifier/` (PROPOSED home); `policy/render/` | this doc |
-| Per-domain critical-asset inventories | `data/source/`, `contracts/v1/domains/` | this doc |
-| Per-deployment audience-class policies | `policy/api/` | this doc |
-| Determinism of redaction transforms | `docs/standards/REDACTION_DETERMINISM.md` (PROPOSED, not yet authored) | this doc |
-| Tests and fixtures | `tests/sensitivity/`, `fixtures/sensitivity/` | this doc |
-| Per-domain runbooks | `docs/runbooks/sensitivity/` (PROPOSED home) | this doc |
-
-What this document **does** own:
-
-- The architectural definition of what KFM treats as a critical asset (§4).
-- The exposure decision flow (§5).
-- The four exposure outcomes (§6) and the four transforms (§7).
-- The receipts each transform emits (§8).
-- The cross-lane join-risk register (§9–§10).
-- The render-time enforcement architecture for critical assets (§11).
-- The Reality Boundary Note rule for 3D critical-asset scenes (§12).
-- The anti-pattern register (§13).
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Authority and standing
-
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | KFM architecture explainer | CONFIRMED per Directory Rules §6.1 |
-| Canonical path | `docs/architecture/critical-asset-exposure.md` | PROPOSED |
-| Primary doctrine anchor | `kfm_unified_doctrine_synthesis.md` §15 (T0–T4), §16 (per-domain matrix), §17 (cross-lane joins), §19 (negative states) | CONFIRMED |
-| Atlas anchor | `KFM_Domains_v1_1_+_Pass23_Pass32_Consolidated_Atlas` §24.5.2 (per-domain tier defaults), §24.5.3 (tier transitions), §24.9.2 (trust-membrane anti-patterns) | CONFIRMED |
-| Architecture companion | [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) | CONFIRMED authored (prior session) |
-| Standards companion | [`docs/standards/MAP_TRUST_STATES.md`](../standards/MAP_TRUST_STATES.md), [`EVIDENCE_BUNDLE.md`](../standards/EVIDENCE_BUNDLE.md), [`RELEASE_MANIFEST.md`](../standards/RELEASE_MANIFEST.md), [`DUO_PROFILE.md`](../standards/DUO_PROFILE.md) | CONFIRMED authored (prior session) |
-| MapLibre Category Q anchor | `Master_MapLibre_Components-Functions-Features` Category Q — Sensitive Geometry, Geoprivacy, Rights, and Policy | CONFIRMED |
-| Authority NOT held | Doctrine, vocabulary, OPA code, contract Markdown, schemas, geometry-transform code, tests, deployment topology | CONFIRMED |
-
-[Back to top](#quick-jump)
-
----
-
-## 4. What KFM calls a critical asset
-
-The term "critical asset" is used in the corpus across multiple domains, with similar but not identical meanings. This section enumerates the asset classes the architecture treats together — i.e., classes for which the **default-deny posture for precise detail** is doctrinally established.
-
-CONFIRMED — drawn from Atlas Domains §24.5.2 per-domain tier defaults and `kfm_unified_doctrine_synthesis.md` §16.
-
-| Asset class | Domain | Default tier (CONFIRMED) | Why "critical" |
-|---|---|---|---|
-| **Infrastructure Asset (critical)** | Settlements/Infrastructure | **T4** for critical detail; **T1** for generalized footprint | Dams, bridges, substations, water treatment, telecom backbones — adversary mapping risk; cascading-failure risk |
-| **Infrastructure — condition / vulnerability** | Settlements/Infrastructure | **T4**; **T3** only to named authorities | Knowing *where* a critical asset is, is one thing; knowing *that it is weak* is another |
-| **Critical asset dependency** | Settlements/Infrastructure | **T4** for precise dependency graphs | Adversary use of node-link knowledge for cascading attack |
-| **Archaeological site location (precise)** | Archaeology | **T4**; T1 generalized only after steward review | Looting; sovereignty harm; cultural-resource destruction |
-| **Human remains / sacred sites** | Archaeology | **T4 forever** for public; T3 only under explicit named authorization | Sovereignty; cultural harm; legal protection under NAGPRA-class regimes |
-| **Sensitive fauna occurrence** | Fauna | **T4**; T1 only via geoprivacy generalization | Poaching; nest disturbance; commercial collection |
-| **Rare or culturally sensitive plant location** | Flora | **T4**; T1 only via generalization + steward review | Wild harvest pressure; cultural sovereignty |
-| **Sensitive 3D scene content** | Planetary/3D | **T4**; T1/T2 only with `RealityBoundaryNote` + `RepresentationReceipt` | A 3D reconstruction of a sensitive asset re-encodes the same precision the 2D denial existed to protect |
-| **Living-person × parcel join** | People × Settlements/Land | **T4** | Privacy, identity exposure |
-| **Critical infrastructure × Hazards exposure join** | Settlements × Hazards | **DENY** at the join level | Adversary mapping (§10) |
-
-The asset classes above share architectural treatment even when their underlying domains differ. **Critical asset** in this document means *any asset class whose default-deny tier is T4 due to harm potential* — not just the literal "Infrastructure Asset (critical)" object family.
-
-> [!NOTE]
-> A "critical asset" in this architectural sense is defined by **the doctrine's default tier and the harm it protects against**, not by the asset's importance to the operator. A historical settlement marker can be culturally critical without being a critical asset in this sense; a power substation is one whether or not anyone considers it culturally important.
-
-[Back to top](#quick-jump)
-
----
-
-## 5. The exposure decision flow
-
-PROPOSED architectural composition. The flow combines doctrinal inputs (default tier, audience class, evidence and policy state) into a finite outcome at the outer mouth of the trust membrane (per `docs/architecture/TRUST_MEMBRANE.md` §5.4).
-
-```mermaid
-flowchart TB
-  IN[Candidate critical-asset record<br/>at PROCESSED]
-  T4[Default tier: T4 — deny by default]
-
-  IN --> T4
-
-  T4 --> STEWARD{Steward review<br/>completed?}
-  STEWARD -- no --> KEEP_T4[Hold at T4<br/>or in CATALOG with audience=denied]
-  STEWARD -- yes --> TRANSFORM{Which transform<br/>can preserve the<br/>legitimate need?}
-
-  TRANSFORM -->|Generalize geometry| GEN[Generalize<br/>RedactionReceipt + ReviewRecord]
-  TRANSFORM -->|Suppress dependency| SUP[Suppress fields<br/>RedactionReceipt + ReviewRecord]
-  TRANSFORM -->|Aggregate to area unit| AGG[AggregationReceipt + ReviewRecord]
-  TRANSFORM -->|Synthetic 3D representation| REP[RealityBoundaryNote + RepresentationReceipt + ReviewRecord]
-  TRANSFORM -->|None usable| DENY[Stay at T4 — deny]
-
-  GEN --> RELEASE_T1[T1 — public via governed API]
-  SUP --> RELEASE_T1
-  AGG --> RELEASE_T1
-  REP --> RELEASE_T1or2[T1 or T2]
-
-  TRANSFORM -->|Named authorization| AGREE[Named agreement +<br/>PolicyDecision + ReviewRecord]
-  AGREE --> RELEASE_T3[T3 — released only<br/>to named parties]
-
-  RELEASE_T1 --> API_GATE[Governed API audience-class gate]
-  RELEASE_T1or2 --> API_GATE
-  RELEASE_T3 --> API_GATE
-  API_GATE --> RENDER[Render-time policy +<br/>VerifyReceipt]
-  RENDER --> SHELL[Map shell renders with<br/>TrustVisibleState badge]
-
-  DENY -.->|"Even existence may be denied<br/>per steward review"| KEEP_T4
-
-  style T4 fill:#ffe4e1,stroke:#a04545
-  style DENY fill:#ffe4e1,stroke:#a04545
-  style KEEP_T4 fill:#ffe4e1,stroke:#a04545
-  style API_GATE fill:#fff4cc,stroke:#b58900
-  style RENDER fill:#fff4cc,stroke:#b58900
-```
-
-PROPOSED — diagram composes Atlas §24.5.3 tier transitions with the trust-membrane denial surfaces from `docs/architecture/TRUST_MEMBRANE.md` §6. Tooling and route names NEED VERIFICATION.
-
-### 5.1 What the diagram is **not** showing
-
-The diagram intentionally omits:
-
-- **Audience-class projection** (`public` / `partner` / `steward` / `internal` / `denied`). Audience-class gating sits at every `API_GATE` step; a T1 record may render differently to a `public` audience vs a `steward` audience. See `docs/architecture/TRUST_MEMBRANE.md` §9.
-- **Consent state** for consent-bearing critical assets (e.g., archaeological records contributed under specific consent). Consent gates run alongside sensitivity gates; see `docs/standards/DUO_PROFILE.md`.
-- **Per-domain steward chains.** The diagram says "Steward review"; the actual reviewer matrix is per-domain (archaeology stewards, infrastructure stewards, fauna stewards, etc.) and is governed by separation-of-duties policy (Atlas §24.9.3).
-
-[Back to top](#quick-jump)
-
----
-
-## 6. The four exposure outcomes
-
-For critical-asset content, **T0 is structurally unavailable** — a critical asset by definition is not public-safe without transformation. The four outcomes that **are** available correspond to T1, T2, T3, and T4.
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §15 tier table.
-
-| Outcome | Tier | What gets published | Required transforms / authorizations |
-|---|---|---|---|
-| **Generalized public release** | T1 | Generalized footprint; suppressed dependency; aggregated unit | `RedactionReceipt` + `ReviewRecord` + `PolicyDecision` |
-| **Steward-only release** | T2 | Higher detail to authenticated stewards/reviewers; public sees T1 or denial | `PolicyDecision` + `ReviewRecord` |
-| **Named-authority release** | T3 | Full detail (incl. condition/vulnerability) to named, recorded parties | Named agreement + `PolicyDecision` + `ReviewRecord` |
-| **Denied** | T4 | Nothing — existence may be denied per steward review | None (the absence is the answer) |
+| Field | Current result |
+|---|---|
+| **Document role** | Cross-cutting architecture explanation under `docs/architecture/`; not policy, schema, release authority, an operational vulnerability assessment, or emergency guidance. |
+| **Evidence snapshot** | `main@0af1823ff5a54d2fa3b5f0dfe5db18e5056aa372`. |
+| **Directory result** | `PLACE` at the existing requested path. Accepted Directory Rules assign human-readable cross-root architecture to `docs/architecture/`; no move, alias, new root, or authority migration is needed. |
+| **Decision posture** | [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) and [`ADR-0025`](../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) remain effectively **PROPOSED**. |
+| **Policy posture** | Sensitivity and Settlements/Infrastructure policy source is tracked but scaffolded, mixed, evaluator-unbound, and not established as active public enforcement. |
+| **Exposure-contract posture** | [`schemas/contracts/v1/exposure/`](../../schemas/contracts/v1/exposure/README.md) is a reserved, empty schema family; no accepted exposure request or decision shape is present. |
+| **Fixture and test posture** | The generalized-infrastructure fixture lane is placeholder-only; the domain-test parent is documentation-first, with identity as its only confirmed child README and no proved critical-exposure test suite. |
+| **Dynamic public boundary** | The Governed API has three GET routes (`/bootstrap`, `/layers`, `/evidence`) that return `ABSTAIN / NOT_IMPLEMENTED`; unknown routes and unsupported methods return safe `ERROR` envelopes. No critical-asset exposure route or evidence-backed `ANSWER` path is proved. |
+| **Publication effect** | None. This page, a schema pass, policy file, workflow, pull request, merge, map layer, or denial message is not a release or publication decision. |
 
 > [!IMPORTANT]
-> **T0 is unavailable for critical assets by doctrine, not by accident.** The exposure decision (§5) never produces a T0 outcome from a T4 input without a redaction transform — and the transform produces T1, not T0.
+> **The repository contains control surfaces, not a complete control path.** Current evidence supports architecture and policy documentation, proposed schemas, an inactive policy-decision vocabulary, placeholder fixtures, bounded structural checks, and a fail-closed API scaffold. It does **not** support a claim that KFM can currently classify, transform, approve, release, serve, revoke, or audit critical-asset exposure end to end.
 
-### 6.1 What "denied" actually means at the surface
-
-CONFIRMED — `MAP_TRUST_STATES.md` §4 and §10 (anti-patterns).
-
-A denied critical-asset request returns a chip — *"Restricted — not publicly available"* — at the map shell, popup, Drawer, and AI panel. It does **not** return a blank tile. For the highest-sensitivity classes (e.g., human remains, sacred sites), per `MAP_TRUST_STATES.md` §12 item 6 (denial-leakage open question), the chip may say *"unavailable"* rather than *"denied"* so that the existence of the record is not itself disclosed.
-
-[Back to top](#quick-jump)
-
----
-
-## 7. The four transforms
-
-CONFIRMED — Atlas §24.5.3 *Allowed transforms* and per-domain transforms in `kfm_unified_doctrine_synthesis.md` §16. KFM uses **four** canonical transforms to demote a critical-asset record from T4 to a public-releasable tier.
-
-| Transform | What it does | Example | Receipt |
-|---|---|---|---|
-| **Generalization** | Replaces precise geometry with a coarser proxy (county, watershed, H3 cell, fuzzed buffer) | Precise dam location → county; precise nest → watershed | `RedactionReceipt` (geometry_transform field) |
-| **Suppression** | Removes specific fields while preserving others | Drop `condition_score` and `dependency_graph`; keep `facility_type`, `service_area` | `RedactionReceipt` (removed_fields, kept_fields) |
-| **Aggregation** | Replaces per-asset records with area-unit summaries | Per-substation outage records → county-decade summary | `AggregationReceipt` |
-| **Synthetic representation** | Replaces direct evidence with a clearly-marked reconstruction or synthetic surface | 3D scene of a fortified site rebuilt from generalized surface; not a re-publication of the precise model | `RepresentationReceipt` + `RealityBoundaryNote` |
-
-### 7.1 Composition rules
-
-PROPOSED. Transforms compose, with constraints:
-
-1. **Generalization + suppression** is the most common composition (e.g., generalized footprint with dependency fields suppressed). Both receipts are emitted; the resulting record is T1.
-2. **Aggregation + suppression** combines per-asset records into area units while also dropping condition fields. Both receipts.
-3. **Synthetic representation never composes with raw evidence in the same artifact.** A `RepresentationReceipt` artifact is its own thing; mixing reconstruction with precise observation in one layer collapses the boundary the `RealityBoundaryNote` exists to maintain (§12).
-4. **Deterministic transforms preferred.** When a generalization or fuzz is applied, the function should be deterministic on the input so that re-running the pipeline produces byte-identical output (see `REDACTION_DETERMINISM.md`, PROPOSED, not yet authored). Non-deterministic jitter is permitted only when randomness itself is the protection — and even then, the seed and parameters are recorded.
-
-### 7.2 What transforms cannot do
-
-Transforms cannot:
-
-- Turn a T4 record into T0. The result of a redaction transform is at best T1.
-- Reverse without correction. Once a T1 derivative ships, demoting it back to T4 requires a `CorrectionNotice` and may require a tombstone if the derivative cached (`RELEASE_MANIFEST.md` §10).
-- Substitute for steward review. The receipt records the transform; the review records the human judgment that the transform is adequate for this asset class.
-
-[Back to top](#quick-jump)
-
----
-
-## 8. The receipts that record each transform
-
-CONFIRMED — Atlas object-family table; `kfm_unified_doctrine_synthesis.md` §24.1 receipt list.
-
-| Receipt | Records | Required content (CONFIRMED Atlas) |
-|---|---|---|
-| `RedactionReceipt` | A redaction or generalization step on a sensitive object | `policy_ref`, `redaction_method`, `kept_fields`, `removed_fields`, `geometry_transform`, `reviewer` |
-| `AggregationReceipt` | An aggregation step (county-year roll-up, watershed total, decadal mean) | `geometry_scope`, `time_scope`, `aggregation_method`, `input_source_refs`, `suppression_rule`, `output_unit` |
-| `RepresentationReceipt` | A representation step where surface fidelity differs from evidence fidelity (3D scene from 2D evidence, synthetic terrain) | `evidence_ref`, `representation_method`, `parameters`, `reality_boundary_note_ref` |
-| `RealityBoundaryNote` | The public-facing or steward-facing statement that a carrier is synthetic or reconstructed and not direct evidence | `scope`, `method_summary`, `evidence_refs[]`, `visibility` |
-| `ReviewRecord` | A steward, rights-holder, or policy reviewer's decision on a candidate transition | `reviewer`, `role`, `decision`, `evidence_refs[]`, `policy_ref`, `time` |
-| `PolicyDecision` | The OPA-level rule evaluation that allowed or denied the transform | `policy_id`, `target_object`, `decision`, `reason_code`, `time`, `evidence_refs[]` |
-
-### 8.1 The receipt chain for a typical critical-asset transform
-
-PROPOSED — chain composition NEEDS VERIFICATION against `contracts/v1/receipts/`.
-
-```text
-SourceDescriptor (T4-tier source) 
-  → RunReceipt (transform execution)
-    → RedactionReceipt (geometry generalized, dependency suppressed)
-      → ReviewRecord (infrastructure steward ALLOW)
-        → PolicyDecision (policy.sensitivity.infrastructure ALLOW)
-          → EvidenceBundle (T1 derivative)
-            → PromotionDecision (release into PUBLISHED)
-              → ReleaseManifest (entry referencing the T1 derivative)
-                → governed API → public surface (T1 layer with TrustVisibleState=verified)
-```
-
-Every step in the chain is **content-addressed** and **resolvable from the public artifact** by EvidenceRef → EvidenceBundle resolution. A reviewer or auditor reading the public-facing T1 derivative can walk the chain back to the T4 source through governed APIs without ever directly accessing the T4 data.
-
-[Back to top](#quick-jump)
-
----
-
-## 9. Cross-lane risks — the join hazards
-
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §17 *Cross-lane relations and source-role anti-collapse*. The most powerful KFM views come from joins across domains; so do the most dangerous **source-role collisions** that re-expose what each side individually suppressed.
-
-| Join | What re-exposes the critical asset | Mitigation |
-|---|---|---|
-| **Hazards × Settlements** | Critical-asset precise location implied by hazard impact area. See §10. | DENY at the precise-location join; publish only "public exposure summary." |
-| **Roads/Rail × Archaeology** | Site coordinates inferred from corridor inflection or survey route. | Historical corridor may publish; site coordinates do not. |
-| **People × Land** | Living-person identifier joined to parcel re-exposes residence. | Deceased historical assertions at T1; living-person × parcel deny. |
-| **Soil × Agriculture** | Aggregation re-exposes per-operator yield through narrow cell counts. | No farm/operator × parcel × yield join for public release. |
-| **Hydrology × Fauna (aquatic species)** | Generalized species range polygon plus stream geometry implies occurrence. | Species sensitivity sets the join tier; HUC may stay T0 only if no occurrence join is published. |
-| **Atmosphere × Hazards** | Source-role anti-collapse: observed/modeled/regulatory/aggregate must remain distinct. | Source-role anti-collapse rule (Atlas §24.9.3). |
-| **Planetary/3D × Infrastructure** | A 3D scene reconstructs a critical-asset facility in detail visible at zoom. | `RealityBoundaryNote` + scene admission gate; sensitive geometry not eligible for high-fidelity 3D. |
-| **Frontier-matrix × all** | A flattened "frontier score" treated as one number obscures the source-role distinction. | Named definition + uncertainty + source-role preservation per cell. |
+> [!CAUTION]
+> **Critical-asset risk is representation- and operation-dependent.** A record is not automatically public-safe because it is individually ordinary, generalized at one zoom level, or stored in a published-looking directory. Geometry, attributes, time, joins, queryability, bulk export, audience, and surrounding released layers can combine into harmful precision.
 
 > [!WARNING]
-> **Source-role collapse is the most common silent failure** (`unified-doctrine §17`). A modeled value cited as an observation, an aggregate cited as a per-place observation, a synthetic surface presented as reality — these are doctrine violations even when the underlying data are correct. The cross-lane join is where the collapse most often happens.
+> **Client-side hiding is not protection.** Map styling, omitted popup fields, coarse default zoom, hidden layers, search filters, private-looking routes, model refusal prompts, or UI feature flags cannot substitute for server-side policy, irreversible public-safe transformation, release review, and negative tests over the delivered bytes.
 
-### 9.1 The join-evaluation architecture
-
-PROPOSED. A cross-lane join that involves a critical-asset class on **either** side must:
-
-1. Evaluate each side's `EvidenceBundle` independently.
-2. Compute the **most-restrictive applicable tier** across the join.
-3. Resolve the join only if the most-restrictive tier permits the requested audience class.
-4. Emit a `PolicyDecision` recording the join evaluation, even when ALLOW — the audit trail records that the join was considered, not just executed.
-5. Treat the joined output as a **new derivative** with its own EvidenceBundle and its own receipts; the join is not a free composition.
-
-The most-restrictive rule is identical to the trust-state precedence rule in `MAP_TRUST_STATES.md` §6.2: doubt always demotes, never promotes.
-
-[Back to top](#quick-jump)
+**Quick navigation:** [Role](#1-role-authority-and-truth-posture) · [Scope](#2-scope-and-terminology) · [Repository state](#3-current-repository-state) · [Threat model](#4-exposure-threat-model) · [Architecture](#5-two-stage-control-architecture) · [Inputs](#6-required-decision-context) · [Transforms](#7-public-safe-transform-and-obligation-model) · [Outcomes](#8-finite-outcomes-and-public-safe-reasons) · [Composition](#9-cross-lane-and-aggregation-risk) · [Surfaces](#10-public-client-map-ai-and-export-boundaries) · [Release](#11-release-correction-withdrawal-and-rollback) · [Validation](#12-validation-and-negative-proof) · [Maturity](#13-maturity-matrix-and-change-checklist) · [Open work](#14-conflicts-holds-and-open-verification) · [Related](#15-related-repository-evidence)
 
 ---
 
-## 10. Hazards × Settlements — the canonical adversary case
+## 1. Role, authority, and truth posture
 
-CONFIRMED — `kfm_unified_doctrine_synthesis.md` §17:
+### 1.1 What this page owns
 
-> *"Hazards × Settlements: Public exposure summary OK; critical-asset precise locations DENY. Failure mode: Adversary mapping."*
+This page owns one responsibility: a human-readable architecture map of the control path between internally held infrastructure information and released public-safe representations.
 
-This is the load-bearing example. KFM has rich, legitimate uses for hazards × settlements joins — flood exposure for emergency planning, drought impact on water utilities, severe-weather risk for transportation networks. It also has a doctrinal default-deny on **precise critical-asset coordinates** in any such join, because the same join that helps a planner identify mitigation priorities can help an adversary identify single-point-of-failure targets.
+It explains:
 
-### 10.1 What is and is not published
+- what KFM means by critical-asset exposure;
+- why a single record, a cross-lane join, or an apparently harmless derivative may create risk;
+- the difference between preparing a public-safe release candidate and answering a public request;
+- the evidence, rights, sensitivity, review, release, and correction context needed at each stage;
+- how generalization, redaction, aggregation, delay, and export limits should be represented as obligations rather than informal UI behavior;
+- which current repository surfaces participate in the design; and
+- which tests and runtime evidence would be required before claiming enforcement.
 
-| Question a user might ask | Architecturally permitted? | What gets returned |
-|---|---|---|
-| *"What is the flood exposure of the county's water utilities?"* | **Yes** | County-level summary; counts; aggregate impact estimates; no precise facility coordinates |
-| *"Which dams in this watershed are within the 100-year floodplain?"* | **Conditional** | If the dam population is generalized (e.g., "three of seven facilities"), yes. If it would identify specific facilities, no. |
-| *"Where exactly is the substation that serves this hospital, and what is its condition rating?"* | **No** | T4 + T4 join; the question itself is denied. Hospital may be T1 generalized; substation location + condition is T4. |
-| *"Show me a map of every critical bridge in Kansas with its load rating and vulnerability assessment."* | **No** | Quintessential adversary-mapping query; T4 across the board. |
-| *"What is the historical record of dam failures in Kansas?"* | **Yes** | Historical (T0) hazard events; named facilities only where already a matter of public record. |
+It does not own:
 
-### 10.2 The architectural enforcement
-
-PROPOSED — implementation NEEDS VERIFICATION.
-
-The Hazards × Settlements join is gated at three points, any of which fails closed independently:
-
-1. **At the lifecycle plane (CATALOG):** The join projection that combines `HazardEvent` × `InfrastructureAsset` carries the most-restrictive tier label. If either side is T4, the projection is T4. The CATALOG record may exist; its `audience_class` is `denied` for `public`.
-2. **At the promotion gate (the inner mouth):** No `PromotionDecision` admits a T4 projection to PUBLISHED without a transform receipt demoting it to T1 or lower.
-3. **At the governed API (the outer mouth):** Audience-class projection refuses to serve T2/T3/T4 projections to a `public` caller; AI surfaces refuse to answer queries that would reconstruct the T4 join from public derivatives.
-
-The render-time AI rule (`kfm_unified_doctrine_synthesis.md` §20) is the third line: even if a query is phrased to *infer* a critical-asset location from public-tier derivatives, the AI must ABSTAIN — its citation-validity check fails when the inference target is itself denied.
-
-> [!CAUTION]
-> **AI inference is a covert adversary-mapping path.** An adversary need not request the precise coordinates if the AI can be coaxed into stitching them together from public-safe derivatives. The §6 denial surface 5 (governed AI runtime) in `docs/architecture/TRUST_MEMBRANE.md` exists for exactly this reason.
-
-[Back to top](#quick-jump)
-
----
-
-## 11. Render-time enforcement
-
-CONFIRMED — KFM-P1-FEAT-0042 (viewer-side verification fails closed); ML-058-034 (render-time consent verification); `kfm_unified_doctrine_synthesis.md` §20 (AI boundary).
-
-The trust membrane gates at promotion; render-time enforcement is the second line. Per `docs/architecture/TRUST_MEMBRANE.md` §6 denial surface 4, the render-time verifier is the component that refuses tiles or features whose signatures, sidecars, hashes, or `ReleaseManifest` cannot be verified. For critical-asset exposure, that surface also:
-
-| Render-time check | What it refuses |
+| Concern | Owning surface |
 |---|---|
-| Audience-class re-check | A tile fetched by a session that is not the audience class the tile was released for |
-| Consent freshness | A tile bearing consent-revoked critical-asset data (e.g., archaeological record with revoked steward consent) |
-| Sensitivity re-check | A tile whose `release_state` is `withdrawn` due to sensitivity reclassification |
-| Reality-boundary chip | A 3D scene of a critical asset that lacks an attached `RealityBoundaryNote` reference |
-| Generalization-floor check | A tile whose geometry resolution at the current zoom would exceed the policy's published-resolution floor for the asset class |
+| Directory placement | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
+| Binding deny-by-default decision | Accepted ADR and reviewed policy; ADR-0010 is currently proposed |
+| Domain object meaning | [`contracts/domains/`](../../contracts/domains/) and shared contracts |
+| Machine-checkable object shape | [`schemas/contracts/v1/`](../../schemas/contracts/v1/) |
+| Sensitivity and admissibility rules | [`policy/`](../../policy/README.md), especially domain and sensitivity lanes |
+| Evidence support | `EvidenceRef`, `EvidenceBundle`, proofs, receipts, and their accepted resolvers |
+| Release, correction, withdrawal, rollback | [`release/`](../../release/README.md) and referenced accountability objects |
+| Deployable enforcement | Governed applications, accepted evaluators, packages, infrastructure, and observed runtime evidence |
+| Proof of enforceability | [`tests/`](../../tests/README.md), [`fixtures/`](../../fixtures/README.md), validators, workflows, and exact-head runs |
 
-The generalization-floor check is the architectural defense against a subtle failure mode: a layer that publishes generalized geometry at low zoom may, at high zoom, render at a precision that defeats the generalization. The render-time verifier holds the floor.
+### 1.2 Current review route and functional ownership
 
-> [!IMPORTANT]
-> A T1 derivative is not architecturally safer than its `RedactionReceipt` guarantees. The render-time verifier exists to enforce the receipt's claims at the pixel: if the receipt says "generalized to county," the renderer enforces that no zoom level reveals sub-county detail of the critical-asset geometry — by clipping, snapping to the generalized geometry, or refusing the tile.
+[`CODEOWNERS`](../../.github/CODEOWNERS) routes repository review to `@bartytime4life`. That is a GitHub review route only. The following functional authorities remain **NEEDS VERIFICATION**:
 
-[Back to top](#quick-jump)
+- architecture stewardship;
+- critical-infrastructure and operational-security review;
+- sensitivity-policy stewardship;
+- municipal, utility, transportation, communications, and emergency-services source review;
+- rights and redistribution review;
+- evidence and release review;
+- independent approval where policy significance requires separation of duties; and
+- correction, incident, withdrawal, and rollback authority.
+
+### 1.3 Truth labels used here
+
+| Label | Meaning in this page |
+|---|---|
+| `CONFIRMED` | Verified from the pinned repository tree, current files, tests, schemas, contracts, accepted placement authority, or exact runtime scaffold. |
+| `PROPOSED` | Architecture, decision, input, transform, outcome mapping, validator, or graduation step not established as active behavior. |
+| `UNKNOWN` | Current evidence cannot support a stronger claim. |
+| `NEEDS VERIFICATION` | A named repository, policy, security, release, deployment, or runtime check can settle the question. |
+| `CONFLICTED` | Current surfaces assign incompatible or overlapping status, vocabulary, scope, or authority. |
+| `HOLD` | The safe current disposition is to prevent graduation until required evidence or authority exists. |
+
+[Back to top](#top)
 
 ---
 
-## 12. Reality Boundary Notes in critical-asset 3D scenes
+## 2. Scope and terminology
 
-CONFIRMED — Atlas Planetary/3D object family; ML-057 / ML-059 series:
+### 2.1 Critical asset
 
-> *"Each scene carries a `RealityBoundaryNote`; synthetic is never observed."*
+In this architecture, a **critical asset** is an infrastructure object, system, relationship, or operational representation whose public precision, combination, timing, or accessibility could create material safety, security, continuity, privacy, cultural, rights, or public-service risk.
 
-3D scenes are an exposure architecture all their own. A 3D reconstruction of a critical-asset facility, even when based on generalized 2D evidence, can re-encode information about the asset that the 2D generalization existed to suppress. The doctrinal answer is:
+Candidate object families may include:
 
-1. **Sensitive 3D scene content defaults to T4** (Atlas §24.5.2). A 3D scene of a critical asset is denied unless steward review + `RepresentationReceipt` + `RealityBoundaryNote` are present.
-2. **Every released 3D scene carries a `RealityBoundaryNote`** that names the scope (what part is synthetic), the method summary, the upstream evidence refs, and the visibility (public-facing vs steward-only).
-3. **Synthetic surfaces are never labeled "observed."** A 3D reconstruction is a representation; the doctrine refuses any framing that lets a synthetic surface read as direct evidence.
-4. **The chip is mandatory at the surface.** Per `MAP_TRUST_STATES.md` §7.3, the `RealityBoundaryNote` chip renders alongside the trust-state badge; one is not a substitute for the other.
+- infrastructure assets, facilities, nodes, segments, corridors, service areas, operators, condition observations, and dependencies;
+- energy generation, transmission, distribution, storage, and fuel-support representations;
+- drinking-water, wastewater, pumping, treatment, storage, and distribution representations;
+- transportation chokepoints, crossings, terminals, depots, control points, and network dependencies;
+- communications, public-safety communications, dispatch, control, and coordination representations;
+- public-service continuity and emergency-support facilities; and
+- cross-domain joins that reveal asset function, condition, accessibility, dependency, or consequence.
 
-### 12.1 Architectural composition
+This list is architectural scope, not a source registry, legal classification, current operational inventory, or statement that any named asset is critical.
 
-```text
-3D scene of a critical asset
-  ↓ requires
-RepresentationReceipt (the method record)
-  ↓ requires
-RealityBoundaryNote (the public-facing chip and steward-facing scope statement)
-  ↓ requires
-EvidenceBundle (the upstream T1 generalized 2D evidence the scene was built from)
-  ↓ requires
-RedactionReceipt (the upstream redaction that demoted the source from T4 to T1)
+### 2.2 Exposure
+
+**Exposure** is any operation that makes information available beyond its approved internal or steward-only context. It includes more than a public map:
+
+- API responses and query endpoints;
+- map, tile, PMTiles, COG, GeoParquet, search, graph, and catalog projections;
+- downloads, bulk exports, screenshots, stories, reports, dashboards, and notebooks;
+- Evidence Drawer and Focus Mode payloads;
+- logs, telemetry, error messages, denial reasons, and diagnostics;
+- caches, object storage, CDNs, browser bundles, source maps, and offline packages;
+- role-gated review surfaces when their authorization boundary is weak or unclear; and
+- combinations of individually released surfaces.
+
+### 2.3 Public-safe derivative
+
+A **public-safe derivative** is a separately identified representation produced from governed input under an accepted transform profile, validated against the intended audience and operation, reviewed where required, and released with correction and rollback support.
+
+A public-safe derivative:
+
+- is not the canonical exact source object;
+- does not inherit authority merely because it is generalized;
+- must preserve evidence and limitations appropriate to the claim it carries;
+- must not reveal reversal-enabling parameters in public receipts or reasons; and
+- remains subject to correction, withdrawal, supersession, and re-evaluation when surrounding releases change.
+
+### 2.4 Out of scope
+
+This document does not provide:
+
+- facility-specific vulnerability findings;
+- access, maintenance, security, response, bypass, targeting, or exploitation instructions;
+- emergency alerts or operational advice;
+- legal determinations about critical-infrastructure classification;
+- real protected coordinates, topology, credentials, private dependency data, or operational status;
+- an accepted sensitivity tier for any real object; or
+- permission to activate, ingest, transform, serve, export, or publish a live source.
+
+[Back to top](#top)
+
+---
+
+## 3. Current repository state
+
+### 3.1 Evidence inventory
+
+| Surface | CONFIRMED current state | Safe conclusion |
+|---|---|---|
+| This architecture page | Existing tracked file under `docs/architecture/`; prior content was predominantly greenfield and repository-unverified | Same-path modernization receives `PLACE`; the page remains explanatory only. |
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted; adopts exact Directory Rules v2 bytes | Placement authority is established. It does not decide critical-asset policy. |
+| [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Source metadata `draft`; effective status `proposed` | Deny-by-default architecture is proposed, not an accepted cross-domain decision. |
+| [`ADR-0025`](../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Proposed decision around public-client store isolation | Useful constraint and implementation pressure; not accepted or deployed isolation proof. |
+| [`SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) | Draft T0–T4 explanatory rubric | Vocabulary aid only; not an accepted policy mapping for every infrastructure object. |
+| [`policy/sensitivity/`](../../policy/sensitivity/README.md) | Proposed scaffold corpus with mixed Rego defaults; no accepted shared evaluator or bundle | Runtime sensitivity behavior is `UNKNOWN`; operations depending on it remain held. |
+| [`policy/domains/settlements-infrastructure/`](../../policy/domains/settlements-infrastructure/README.md) | Four direct Rego sources; current documentation reports three inert `default deny := false` stubs, one generated `default allow := false` scaffold, no operative non-default rule body, no direct native test, zero JSON fixtures, and evaluator-unbound readiness checks | Correctly placed policy source exists, but no complete critical-asset policy is proved. |
+| [`policy/decision/vocabulary.v1.json`](../../policy/decision/vocabulary.v1.json) | `PROPOSED_INACTIVE` registry for finite policy reasons and `ANSWER` obligations | The vocabulary is a fixture-first candidate, not an evaluator or decision authority. |
+| [`schemas/contracts/v1/exposure/`](../../schemas/contracts/v1/exposure/README.md) | Reserved folder with no schema instances | No accepted generic exposure request or exposure decision shape exists. |
+| [`schemas/contracts/v1/domains/settlements-infrastructure/`](../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) | Minimal proposed schemas for settlement, public asset, infrastructure node, and infrastructure corridor | Shape scaffolding exists; exposure semantics, policy closure, and release behavior remain outside those schemas. |
+| [`contracts/shared/redaction_receipt.md`](../../contracts/shared/redaction_receipt.md) | Proposed cross-domain semantics; related schema is permissive and field-empty | Useful semantic direction; no enforceable critical-asset transform receipt is established. |
+| [`fixtures/infrastructure-generalized/`](../../fixtures/infrastructure-generalized/README.md) | Placeholder `.gitkeep`; no valid or invalid fixture payloads | Generalization proof is absent. |
+| [`tests/domains/settlements-infrastructure/`](../../tests/domains/settlements-infrastructure/README.md) | Domain test-parent documentation; identity is the only confirmed child README, while policy, release, map/API, AI, and no-network families are proposed | No executable critical-asset exposure suite or pass state is proved. |
+| Governed API source | Three registered routes; all return deterministic `ABSTAIN / NOT_IMPLEMENTED`; unknown routes and unsupported methods return safe `ERROR` | Fail-closed scaffold is present. No critical-asset exposure endpoint, policy evaluation, evidence resolution, transform selection, or released `ANSWER` is proved. |
+| [`RuntimeResponseEnvelope`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Proposed closed schema with `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; `ANSWER` requires evidence refs and precision metadata | Intended outward shape exists, but active critical-asset integration is absent. |
+
+### 3.2 What is not proved
+
+Current repository evidence does not prove:
+
+- an accepted critical-asset taxonomy or sensitivity mapping;
+- an authoritative exposure-request input contract;
+- an active policy bundle, selector, evaluator, or authenticated actor context;
+- a deterministic generalization/redaction implementation for infrastructure;
+- a complete transform receipt with accepted machine shape;
+- independent security or infrastructure review;
+- a release candidate assembled from a public-safe derivative;
+- public API, map, search, graph, export, or AI enforcement;
+- cache invalidation after correction or withdrawal;
+- deployed browser, CDN, object-store, database, graph, model-runtime, or network isolation; or
+- operational metrics showing denied exposure, false-clear prevention, or reversal resistance.
+
+[Back to top](#top)
+
+---
+
+## 4. Exposure threat model
+
+This section defines defensive architecture concerns. It does not enumerate real assets or provide exploitation guidance.
+
+### 4.1 Single-object harmful precision
+
+A single payload may expose too much through:
+
+- exact point, line, polygon, interior, entrance, or control geometry;
+- asset identifiers that join easily to external operational detail;
+- capacity, condition, maintenance, outage, repair, staffing, access, or status fields;
+- high-resolution imagery, elevation, topology, or network attributes;
+- timestamps or update cadence that reveal current activity; or
+- metadata, filenames, URLs, logs, and errors that reveal hidden structure.
+
+### 4.2 Compositional or adversary-mapping risk
+
+Individually ordinary releases may become sensitive when combined. Risk can arise from:
+
+- joining an asset layer to hazards, access routes, population, service areas, or operational observations;
+- exposing upstream and downstream dependencies across infrastructure families;
+- correlating public geometry with condition, timing, imagery, or third-party datasets;
+- repeated queries that reconstruct a withheld boundary or feature set;
+- bulk export that enables complete inventory reconstruction; or
+- multiple zoom levels or historical releases that reveal the exact source representation.
+
+The public-safety question is therefore not only **“is this field sensitive?”** It is also **“what can the released representation reveal when combined with the rest of the public corpus?”**
+
+### 4.3 Reverse inference
+
+A generalized derivative may still leak protected detail through:
+
+- deterministic displacement with public reversal parameters;
+- stable ordering, unique counts, or sparse aggregates;
+- residual exact vertices or unchanged attributes;
+- tile boundaries, source-layer names, or feature IDs;
+- public receipts that disclose hidden transform parameters;
+- diffs between releases; or
+- a denial reason that confirms the presence, type, or condition of a protected asset.
+
+### 4.4 Temporal disclosure
+
+Freshness itself may be sensitive. A safe historical layer can become unsafe when paired with current status or frequent updates. Exposure assessment must keep observation, valid, retrieval, release, correction, and withdrawal times distinct where material.
+
+### 4.5 Authorization and delivery drift
+
+Protection can fail after policy evaluation through:
+
+- a direct static URL that bypasses the Governed API;
+- stale caches after withdrawal;
+- search or graph indexes retaining exact values;
+- exports carrying fields not shown in the UI;
+- role-gated routes that are reachable without the intended authorization;
+- model context packets that include internal detail;
+- logs or telemetry retaining denied values; or
+- a future client interpreting an inactive vocabulary as active permission.
+
+### 4.6 Failure precedence
+
+When evidence, rights, sensitivity, review, release, transform integrity, or evaluator state is unresolved, the safe precedence is:
+
+1. `ERROR` when the required evaluator, bundle, input, or runtime mechanism cannot be trusted;
+2. `DENY` when public precision, rights, sensitivity, or exposure policy blocks the operation;
+3. `ABSTAIN` when evidence, freshness, scope, or support is insufficient to make the claim;
+4. `ANSWER` only when the public-safe artifact is already prepared, validated, released, current, and supported.
+
+[Back to top](#top)
+
+---
+
+## 5. Two-stage control architecture
+
+Critical-asset controls need two distinct decisions. Collapsing them makes it easy to treat a runtime request as permission to transform or publish internal data.
+
+```mermaid
+flowchart TD
+  A["Internal or candidate infrastructure object"] --> B["Release-preparation assessment"]
+  B --> C{"Evidence, rights, sensitivity, review, and composition closed?"}
+  C -->|"no"| D["HOLD / QUARANTINE / DENY candidate"]
+  C -->|"yes"| E["Select public-safe transform obligations"]
+  E --> F["Execute transform outside public client"]
+  F --> G["Validate output, non-leakage, identity, and receipts"]
+  G --> H["Review and release decision"]
+  H --> I["Released public-safe derivative"]
+  I --> J["Request-time exposure decision"]
+  J --> K{"Finite runtime outcome"}
+  K --> L["ANSWER"]
+  K --> M["ABSTAIN"]
+  K --> N["DENY"]
+  K --> O["ERROR"]
 ```
 
-A 3D scene that is missing any link in this chain fails closed at the scene admission gate (`docs/architecture/TRUST_MEMBRANE.md` §6 denial surface — extended for 3D admission).
+The diagram is a proposed architecture over current scaffolded surfaces. It is not a claim that the flow executes today.
 
-[Back to top](#quick-jump)
+### 5.1 Stage A — release-preparation assessment
 
----
+This internal stage decides whether a candidate may advance toward a public-safe derivative. It may require:
 
-## 13. Anti-patterns
+- exact internal retention with no public derivative;
+- geometry generalization;
+- exact-location redaction;
+- attribute suppression;
+- aggregation;
+- delayed release;
+- bulk-export prohibition;
+- removal of identifiers or dependency edges;
+- specialist or steward review;
+- re-evaluation after surrounding layers change; or
+- quarantine, rejection, or hold.
 
-CONFIRMED — Atlas §24.9.2 *Trust-membrane anti-patterns* (rows directly relevant to critical-asset exposure are reproduced and extended).
+These are **candidate dispositions and obligations**, not public runtime outcomes.
 
-| Anti-pattern | What goes wrong | DENY surface |
-|---|---|---|
-| **Sensitive content released without redaction** | `RedactionReceipt` missing; rights / sovereignty violation. | Release queue; sensitivity reviewer. |
-| **Critical-asset precise location published in a Hazards × Settlements join** | Adversary mapping. | Promotion gate (CATALOG → PUBLISHED); governed API (outer mouth). |
-| **AI infers a critical-asset location from public-tier derivatives** | Covert adversary-mapping path; cite-or-abstain broken. | Governed AI runtime; `AIReceipt` evaluator. |
-| **3D scene of a critical asset rendered without `RealityBoundaryNote`** | Reconstruction read as observation; doctrinal §12 violation. | Scene admission gate; representation-receipt validator. |
-| **Generalization defeated at high zoom** | Published layer reveals sub-county detail of the asset at zoom 17 because the renderer does not enforce the resolution floor. | Render-time verifier; generalization-floor check (§11). |
-| **T4 demoted to T0** (rather than T1) | Tier transition rule violated; redaction transforms produce T1, not T0. | Promotion gate. |
-| **Source-role collapse on join** | Modeled value cited as observation; aggregate as per-place observation; synthetic as reality. | Validator; Focus Mode citation evaluator. |
-| **Critical-asset dependency graph published** | The dependency structure is itself sensitive even when individual assets are public. | Promotion gate; `policy/sensitivity/infrastructure/`. |
-| **Critical-asset condition/vulnerability released to public tier** | Atlas §24.5.2: T3 only to named authorities; never T0/T1. | Promotion gate; named-party agreement check. |
-| **Cached withdrawn critical-asset tile continues to render** | Cache invalidation incomplete; withdrawn content survives the invalidation window. | Render-time verifier; cache-invalidation contract (C6-08). |
-| **Steward review skipped on transform** | Transform receipt exists but `ReviewRecord` is missing; the receipt records the *what* without the human judgment. | Promotion gate; review-record validator. |
-| **"Show me all critical bridges" type query allowed via AI** | Quintessential adversary-mapping query passed through. | Governed AI runtime; query-class denylist. |
-| **Existence of T4 record disclosed by denial chip** | Chip says "denied" rather than "unavailable"; the existence is itself the leak. | Render-time chip selection; per-tier chip policy. |
-| **Per-domain critical-asset list maintained ad hoc, not in policy** | The asset list is part of doctrine, not configuration; ad hoc maintenance loses the audit chain. | `policy/sensitivity/infrastructure/`. |
+### 5.2 Stage B — request-time exposure decision
 
-> [!IMPORTANT]
-> The Atlas §24.9.2 anti-patterns table is **authoritative**. This document does not extend its doctrinal force; it preserves the relevant rows and adds critical-asset-specific entries in the same style. New anti-patterns observed in practice go into the Atlas (or a successor doctrine doc), not into this file.
+This stage evaluates a request only against released, public-safe, current, policy-bound material. It must not fetch internal exact data and generalize it opportunistically in the browser.
 
-[Back to top](#quick-jump)
+A request-time `ANSWER` requires at least:
 
----
+- an allowed operation and audience;
+- a released artifact or governed projection;
+- resolved evidence support;
+- satisfied rights and sensitivity obligations;
+- verified transform and artifact identity;
+- current correction/withdrawal state;
+- requested precision no greater than released precision; and
+- a safe response envelope.
 
-## 14. Tensions and known limits
+### 5.3 No hidden third path
 
-| # | Tension | Source | KFM posture |
-|---|---|---|---|
-| 1 | **Corpus-internal tier conflict** on Settlements/Infrastructure critical assets. Atlas §24.5.2 lists *"Infrastructure Asset (critical): T4 default for critical detail; T1 for generalized footprint."* `kfm_unified_doctrine_synthesis.md` §16 lists *"Settlements/Infrastructure — critical assets: **T2** (public summary only; precise locations deny)."* | Atlas §24.5.2 vs unified-doctrine §16 | Surfaced rather than smoothed. PROPOSED reconciliation: **T4 default for critical detail, T2 for public summary, T1 for generalized footprint.** The three tiers describe three different objects (detail vs summary vs footprint), not the same object. ADR resolution NEEDED — §15 item 1. |
-| 2 | Generalization as a transform is most effective when the asset class is dense (many assets, large area). Sparse asset classes (e.g., few large dams in a watershed) are harder to generalize without re-identification. | §7 | Per-asset-class generalization parameters; the receipt records the parameters; steward review confirms adequacy. PROPOSED — needs per-class guidance in `policy/sensitivity/infrastructure/`. |
-| 3 | The render-time generalization-floor check (§11) costs a per-zoom evaluation. | §11 | Performance cost is the price of the floor; bypass is not an option. Per-asset-class budgets in `policy/render/`. |
-| 4 | Cross-lane join evaluation (§9) requires computing the most-restrictive tier across both sides; this is expensive at query time. | §9 | Pre-compute the join's tier at CATALOG time and store on the projection; query-time check is a single lookup, not a recomputation. PROPOSED. |
-| 5 | The "show me all critical bridges" query class is not always overt; an adversary may phrase it as a planning question. | §10, §13 | Query intent is not the gate; tier and audience-class are. AI ABSTAIN is the safe failure mode regardless of phrasing. |
-| 6 | 3D reconstructions of sensitive sites may be required for cultural-heritage stewardship or research, where the steward and the public's safe-need diverge. | §12 | Steward-only T2 release is the architectural answer; the same scene may be T4 for `public` and T2 for `steward`. |
-| 7 | Some critical assets are legitimately a matter of public record (named in news, plaques, government inventories) and cannot be "denied" coherently. | §6.1, §13 | Public-record status is part of the source role; the doctrine does not deny what is already public. The denial chip is not used for already-public content; the architecture is bounded by what is genuinely sensitive. |
-| 8 | The denial-leakage problem (§6.1) — knowing that a denial exists for a feature can itself be sensitive. | `MAP_TRUST_STATES.md` §12 item 6 | Per-tier chip policy: T4 denial chip says "unavailable"; T3 denial chip may say "restricted to named parties"; T2 denial says "available to authenticated reviewers." Implementation NEEDED. |
-| 9 | The list of asset classes in §4 is partial; new asset classes may emerge as KFM expands. | §4 | The list is doctrinal, not configurational. Adding to it requires steward + governance review, not just data ingestion. |
-| 10 | Air-gapped or partial-network deployments cannot reach external transparency logs in real time; signature checks degrade. | `docs/architecture/TRUST_MEMBRANE.md` §13 | The default-deny posture for critical assets means the safe failure mode is *more* denial, not less. A degraded signature path may downgrade a T1 critical-asset layer to `unknown` per `MAP_TRUST_STATES.md` §4, not silently render. |
-| 11 | Determinism of redaction transforms is required for reproducibility but conflicts with the case where randomness *is* the protection. | §7.1 | `REDACTION_DETERMINISM.md` (PROPOSED) governs the determinism policy; seeded randomness is the documented compromise. |
+The following paths are denied by architecture:
 
-[Back to top](#quick-jump)
+- internal store directly to browser;
+- candidate directly to tile service;
+- policy scaffold directly to public allow;
+- schema-valid object directly to publication;
+- map style directly to redaction;
+- AI prompt directly to sensitive-data control;
+- reviewer UI directly to public route; and
+- release directory placement directly to public state.
+
+[Back to top](#top)
 
 ---
 
-## 15. Open questions
+## 6. Required decision context
 
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR or mounted-repo evidence.
+A mature release-preparation or request-time evaluation should receive explicit, versioned context. Current repository evidence does not establish one accepted aggregate input profile; the table below is **PROPOSED**.
 
-1. **Critical-infrastructure tier reconciliation** (§14 item 1) — Atlas §24.5.2 says T4 default for detail / T1 for footprint; unified-doctrine §16 says T2 summary. PROPOSED resolution treats these as three distinct objects (detail / summary / footprint) at three distinct tiers; ADR confirmation NEEDED.
-2. **`SENSITIVITY_RUBRIC.md`** authoring (PROPOSED in `docs/standards/`) — this document defers to it for vocabulary; until it exists, the tier definitions reference unified-doctrine §15 directly.
-3. **`REDACTION_DETERMINISM.md`** authoring (PROPOSED in `docs/standards/`) — same shape; this document references the determinism rule §7.1 in advance of its publication.
-4. **Per-asset-class generalization parameters** — generalization-distance defaults per asset class; documented in `policy/sensitivity/infrastructure/`, `policy/sensitivity/archaeology/`, `policy/sensitivity/fauna/`, etc.
-5. **Generalization-floor enforcement at render time** — implementation in `packages/maplibre-runtime/src/verifier/`. PROPOSED; NEEDS VERIFICATION.
-6. **Per-tier denial-chip copy** — T2 / T3 / T4 chip text policy (§14 item 8). NEEDS DECISION.
-7. **Pre-computed join tiers vs query-time evaluation** — performance/correctness trade-off (§14 item 4). PROPOSED pre-compute; NEEDS DECISION.
-8. **AI query-class denylist** — the catalogue of query shapes that trigger automatic ABSTAIN even before evidence resolution (e.g., "show me all critical bridges"). PROPOSED in §13; NEEDS curation.
-9. **3D scene admission gate path** — where in the promotion pipeline 3D scenes are gated. PROPOSED placeholder in §12; NEEDS placement in `docs/architecture/`.
-10. **Steward chain per asset class** — the reviewer matrix (which steward(s) sign off on which asset class's transforms). PROPOSED per-domain; ADR / Directory Rules update NEEDED.
-11. **Named-party agreement registry** — where T3 named-party authorizations are recorded. PROPOSED in `release/named-parties/`; NEEDS VERIFICATION.
-12. **Public-record exception protocol** — when an asset is already a matter of public record (§14 item 7), the architecture does not generate a denial chip; the architecture for *deciding* whether something is "already public" is itself a steward-review process.
-13. **Cross-deployment portability** — whether a T1 layer released in one deployment can be re-served by a partner deployment whose own policy may differ. PROPOSED no (each deployment makes its own release decisions); NEEDS DECISION.
-14. **Withdrawal propagation for critical assets** — given the asymmetric harm of a delayed withdrawal vs a delayed publication, withdrawal cache-invalidation budgets may be tighter for critical-asset layers. PROPOSED yes; NEEDS DECISION.
-
-[Back to top](#quick-jump)
-
----
-
-## 16. Related docs
-
-PROPOSED links — verify all paths against mounted repo before publishing.
-
-### Doctrine
-
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — the doctrine this document is a narrow application of.
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — anchors the audience-class facet.
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — anchors cite-or-abstain.
-
-### Sibling architecture
-
-- [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — how the trust membrane is constructed; this document is one application of it.
-- [`docs/architecture/system-context.md`](./system-context.md) — _PROPOSED placement._
-- [`docs/architecture/governed-api.md`](./governed-api.md) — _PROPOSED placement._
-- [`docs/architecture/map-shell.md`](./map-shell.md) — _PROPOSED placement._
-- [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) — anchors the 3D scene admission gate (§12).
-- [`docs/architecture/ui/CONTINUITY_NOTES.md`](./ui/CONTINUITY_NOTES.md) — UI continuity assumes the trust state from this document.
-- [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) — the rule that keeps this document out of `contracts/`, `schemas/`, and `policy/`.
-
-### Standards
-
-- [`docs/standards/MAP_TRUST_STATES.md`](../standards/MAP_TRUST_STATES.md) — `TrustVisibleState` vocabulary used at the chip (§6.1, §11, §13).
-- [`docs/standards/EVIDENCE_BUNDLE.md`](../standards/EVIDENCE_BUNDLE.md) — bundle the receipt chain composes into.
-- [`docs/standards/RELEASE_MANIFEST.md`](../standards/RELEASE_MANIFEST.md) — release-side handling; withdrawal propagation (§14 item 14).
-- [`docs/standards/PROV/README.md`](../standards/PROV/README.md) — provenance threading.
-- [`docs/standards/DUO_PROFILE.md`](../standards/DUO_PROFILE.md) — consent gates for consent-bearing critical-asset content.
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) — _PROPOSED, not yet authored._ Tier vocabulary.
-- [`docs/standards/REDACTION_DETERMINISM.md`](../standards/REDACTION_DETERMINISM.md) — _PROPOSED, not yet authored._ Determinism rule for redaction transforms.
-
-### Implementation homes
-
-- [`contracts/v1/receipts/`](../../contracts/v1/receipts/) — object meaning for `RedactionReceipt`, `AggregationReceipt`, `RepresentationReceipt`, `RealityBoundaryNote`, `ReviewRecord`, `PolicyDecision`.
-- [`schemas/contracts/v1/receipts/`](../../schemas/contracts/v1/receipts/) — machine shape.
-- [`policy/sensitivity/infrastructure/`](../../policy/sensitivity/infrastructure/) — _PROPOSED home._
-- [`policy/sensitivity/archaeology/`](../../policy/sensitivity/archaeology/) — _PROPOSED home._
-- [`policy/sensitivity/fauna/`](../../policy/sensitivity/fauna/) — _PROPOSED home._
-- [`policy/sensitivity/flora/`](../../policy/sensitivity/flora/) — _PROPOSED home._
-- [`policy/render/`](../../policy/render/) — render-time enforcement.
-- [`packages/geometry/`](../../packages/geometry/) — generalization, suppression, fuzz/jitter transforms.
-- [`packages/maplibre-runtime/src/verifier/`](../../packages/maplibre-runtime/src/verifier/) — render-time generalization-floor check.
-
-### Tests / runbooks
-
-- [`tests/sensitivity/`](../../tests/sensitivity/) — positive/negative fixtures for each anti-pattern.
-- [`fixtures/sensitivity/`](../../fixtures/sensitivity/) — input fixtures.
-- [`docs/runbooks/sensitivity/`](../runbooks/sensitivity/) — _PROPOSED home._ Steward how-to for redaction reviews.
-
-[Back to top](#quick-jump)
-
----
-
-<details>
-<summary><strong>Appendix A — Asset-class × tier × transform matrix</strong></summary>
-
-PROPOSED consolidated matrix — synthesizing Atlas §24.5.2, unified-doctrine §16, and the asset-class enumeration in §4 of this document. Every row NEEDS VERIFICATION against `policy/sensitivity/<domain>/`.
-
-| Asset class | Default tier | T4 → T1 transform | T4 → T2 transform | T4 → T3 transform | Receipts required |
-|---|---|---|---|---|---|
-| Critical infrastructure — detail | **T4** | Generalized footprint + suppressed dependency | Steward review (no transform needed) | Named authorization | `RedactionReceipt` + `ReviewRecord` + `PolicyDecision` |
-| Critical infrastructure — condition / vulnerability | **T4** | — (no public release) | — (steward-only release exists but is rare) | Named authorization | `ReviewRecord` + named-party agreement |
-| Critical infrastructure — dependency graph | **T4** | Suppressed dependency (publish only the node set, not the edges) | Steward review | Named authorization | `RedactionReceipt` (suppression) + `ReviewRecord` |
-| Archaeological site location (precise) | **T4** | Generalized geometry to coarse cell + steward review | Steward review | Named authorization | `RedactionReceipt` + `ReviewRecord` |
-| Human remains / sacred sites | **T4 forever** | — (doctrine forbids) | — | Named authorization with sovereignty review | Sovereignty `ReviewRecord` + `PolicyDecision` |
-| Sensitive fauna occurrence | **T4** | Geoprivacy generalization to watershed | Steward review | Research-collaborator agreement | `RedactionReceipt` + `ReviewRecord` |
-| Rare / culturally sensitive plant location | **T4** | Generalization + steward review | Steward review | Research-collaborator agreement | `RedactionReceipt` + `ReviewRecord` |
-| 3D scene of a critical asset | **T4** | Synthetic representation with `RealityBoundaryNote` + generalized 2D source | Steward review | Named authorization | `RepresentationReceipt` + `RealityBoundaryNote` + `ReviewRecord` + `RedactionReceipt` (upstream) |
-| Living-person × parcel join | **T4** | — (doctrine forbids public release) | — | — | — |
-| Critical infrastructure × Hazards exposure join | **T4 / DENY at precise location** | Aggregated to county-level public-exposure summary | Steward review | — | `AggregationReceipt` + `ReviewRecord` |
-
-</details>
-
-<details>
-<summary><strong>Appendix B — Worked example</strong></summary>
-
-A county-government planning question: *"What is the flood-exposure profile of the water-utility infrastructure in this county?"*
-
-**Input data (internal, behind the membrane):**
-
-| Object | Domain | Tier | Notes |
-|---|---|---|---|
-| `InfrastructureAsset` records for each water-utility facility | Settlements/Infrastructure | **T4** | Precise location + condition rating + dependency graph |
-| `HazardEvent` records for historical floods | Hazards | T0 | Historical hazard data is public |
-| `100-year floodplain polygon` | Hydrology | T0 | NFHL regulatory layer |
-
-**The naïve join (DENY):**
-
-A naïve `InfrastructureAsset × HazardEvent × Floodplain` join would produce a per-facility flood-exposure record with precise location and condition rating. This is **denied** — it is the §10 canonical adversary-mapping case.
-
-**The architectural answer (T1 release):**
-
-The pipeline produces a transformed projection:
-
-```text
-InfrastructureAsset (T4)
-  ↓ RedactionReceipt: generalize geometry to county; suppress condition rating
-    ↓ AggregationReceipt: count assets per county per exposure category
-      ↓ EvidenceBundle (T1): { county, facility_count_by_exposure_category, methodology_ref }
-        ↓ ReviewRecord: infrastructure steward ALLOW
-          ↓ PolicyDecision: policy.sensitivity.infrastructure ALLOW
-            ↓ PromotionDecision: release into PUBLISHED
-              ↓ ReleaseManifest entry
-                ↓ Governed API audience-class projection: public
-                  ↓ Map shell renders T1 layer: 
-                       "12 water-utility facilities in this county;
-                        4 within 100-year floodplain; 8 outside."
-```
-
-**What the planner sees:**
-
-- A county-level layer with the aggregate counts.
-- A chip indicating the data is aggregated (the `AggregationReceipt` is visible in the Evidence Drawer).
-- A trust-state badge: `verified`.
-- A footer reference to the methodology document.
-- **No precise facility locations.**
-- **No condition ratings.**
-
-**What a researcher with steward access sees:**
-
-- Same layer at the public tier, *plus* a steward-mode toggle that resolves the underlying T2 projection with per-facility (still generalized) data and (if their role permits) condition ratings.
-- Same Evidence Drawer; the per-facility detail is visible because the steward's audience class permits it.
-- Same trust-state badge: `verified`.
-
-**What an adversary sees, having only public access:**
-
-- The same county-level aggregate.
-- A denial chip on any deep-link, popup, or API query that would request per-facility detail.
-- An AI panel that ABSTAINs on any query phrased to infer the per-facility detail (e.g., *"Which water-utility facility in county X is at greatest flood risk?"* — citation closure cannot complete because the cited bundle is denied to public).
-
-**What happens if the data is withdrawn (e.g., consent revoked on a contributed dataset):**
-
-- `RELEASE_MANIFEST.md` §10 transition: `verified → withdrawn`.
-- Cache invalidation propagates to CDN; during propagation, the layer shows `unknown` per `MAP_TRUST_STATES.md` §4.
-- Once propagation completes, the layer shows `withdrawn` with a `CorrectionNotice` link.
-- A planner who bookmarked the URL still resolves the layer — but sees the withdrawal chip, not the previous content.
-
-This is the architecture, end-to-end, for one critical-asset class. The same shape applies to every row in Appendix A; the specific transforms and receipts differ per asset class.
-
-</details>
-
----
-
-### Footer
-
-> **Document class:** Architecture explainer (narrow application of the sensitivity rubric to critical assets) · **Scope:** How KFM gates exposure of critical assets — components, decision flow, transforms, receipts, cross-lane risks, render-time enforcement · **Authority NOT held:** doctrine, the sensitivity-tier vocabulary, OPA rules, object meaning, deployment topology.
-
-| | |
+| Context family | Minimum questions |
 |---|---|
-| **Doctrine** | [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) |
-| **Membrane architecture** | [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — the broader architecture; this doc is one application |
-| **Sibling architecture** | [system-context.md](./system-context.md) · [governed-api.md](./governed-api.md) · [map-shell.md](./map-shell.md) · [maplibre-3d.md](./maplibre-3d.md) · [ui/CONTINUITY_NOTES.md](./ui/CONTINUITY_NOTES.md) |
-| **Companion standards** | [MAP_TRUST_STATES.md](../standards/MAP_TRUST_STATES.md) · [EVIDENCE_BUNDLE.md](../standards/EVIDENCE_BUNDLE.md) · [RELEASE_MANIFEST.md](../standards/RELEASE_MANIFEST.md) · [DUO_PROFILE.md](../standards/DUO_PROFILE.md) · [PROV/](../standards/PROV/README.md) · _SENSITIVITY_RUBRIC.md (PROPOSED)_ · _REDACTION_DETERMINISM.md (PROPOSED)_ |
-| **Canonical implementation homes** | Meaning → [`contracts/v1/receipts/`](../../contracts/v1/receipts/) · Shape → [`schemas/contracts/v1/receipts/`](../../schemas/contracts/v1/receipts/) · Rules → [`policy/sensitivity/`](../../policy/sensitivity/) · Render → [`policy/render/`](../../policy/render/) · Transforms → [`packages/geometry/`](../../packages/geometry/) |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
+| Operation | Is the request view, query, identify, search, compare, export, bulk-download, print, story, AI context, or reviewer retrieval? |
+| Audience and actor | Public, semi-public, authenticated reviewer, steward, system process; which role and purpose are actually authenticated? |
+| Target identity | Which object, artifact, layer, feature, release, field set, geography, and temporal version are in scope? |
+| Requested precision | Exact geometry, generalized geometry, aggregate, attribute detail, temporal recency, query volume, and exportability. |
+| Object role | Asset, facility, node, segment, corridor, service area, operator, condition observation, dependency, or derivative carrier. |
+| Source and evidence | SourceDescriptor, source role, rights, EvidenceRefs, EvidenceBundle, limitations, and freshness. |
+| Sensitivity | Accepted sensitivity label or profile, harmful-precision posture, cross-lane composition risk, and review trigger. |
+| Transform | Selected profile, input/output digests, non-disclosure guard, validation evidence, and proposed RedactionReceipt reference. |
+| Review | Required specialist roles, exact candidate version, decision time, independence, and expiry. |
+| Release | Candidate/release identity, ReleaseManifest, policy version, rollback target, correction state, withdrawal state, and cache/index invalidation plan. |
+| Evaluator | Policy bundle digest, evaluator version, input-profile version, effective time, and failure behavior. |
+| Surrounding exposure | Other released layers, joins, graph edges, search fields, exports, stories, model context, and prior versions that can change the risk. |
 
-[Back to top](#quick-jump)
+### 6.1 Inputs that must not be inferred
+
+The evaluator must not infer permission from:
+
+- a domain name;
+- a source being official;
+- a record already existing in the repository;
+- a low map zoom;
+- missing sensitivity metadata;
+- absence of an explicit deny rule;
+- a previously released sibling artifact;
+- an authenticated caller without operation-specific authorization;
+- a model-generated summary;
+- a passing schema check; or
+- an old policy decision applied to a corrected or recomposed artifact.
+
+### 6.2 Sensitivity tiers are supporting vocabulary, not automatic decisions
+
+The draft [`SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) provides T0–T4 explanatory labels. This architecture does not assign one fixed tier to every infrastructure record.
+
+Classification must consider:
+
+- exact representation and fields;
+- audience and operation;
+- time and currentness;
+- cross-lane joins and derivative surfaces;
+- source terms and rights;
+- public benefit and alternatives;
+- reversal and reconstruction risk; and
+- qualified review requirements.
+
+A public-safe aggregate may be lower risk than its exact source. A seemingly low-risk record may escalate when paired with current condition or dependency data.
+
+[Back to top](#top)
+
+---
+
+## 7. Public-safe transform and obligation model
+
+### 7.1 Obligation vocabulary
+
+The inactive policy-decision vocabulary currently includes useful candidate obligations:
+
+- `GENERALIZE_GEOMETRY`;
+- `REDACT_EXACT_LOCATION`;
+- `DELAY_PUBLICATION`;
+- `WITHHOLD_EXPORT`;
+- `REQUIRE_STEWARD_REVIEW`;
+- `ATTACH_CITATIONS`;
+- `ATTACH_RIGHTS_NOTICE`; and
+- `VERIFY_ROLLBACK_TARGET`.
+
+Those entries are `PROPOSED_INACTIVE`. They define no active permission. A future accepted evaluator must prove that every obligation is enforced before returning or releasing an `ANSWER`-eligible derivative.
+
+### 7.2 Transform families
+
+| Transform family | Defensive purpose | Minimum proof expectation |
+|---|---|---|
+| Generalize geometry | Reduce location or network precision to the approved public representation | No exact residual geometry; deterministic or reviewable output; precision disclosed without reversal parameters |
+| Redact exact location | Remove coordinates or location-bearing attributes | Exact values absent from payload, tiles, indexes, logs, receipts, and exports |
+| Aggregate | Replace sparse or identifying records with a safe group or region | Minimum group/coverage rule; no singleton recovery; uncertainty and scope visible |
+| Suppress attributes | Remove capacity, condition, access, dependency, operator, identifier, or operational detail | Closed output field allowlist; no hidden source properties in tiles or downloads |
+| Simplify or clip | Reduce line/polygon detail or constrain to a safe boundary | Topology and artifact checks; no concealed exact child geometry |
+| Delay | Reduce current operational sensitivity | Explicit embargo/end condition; no watcher or cache path exposes early bytes |
+| Withhold export | Permit bounded viewing without bulk retrieval | API, static delivery, browser, and CDN controls; no alternate download path |
+| Withhold entirely | Produce no public derivative | Public-safe denial/absence behavior without confirming protected details |
+
+### 7.3 Transform receipt boundary
+
+The proposed shared [`RedactionReceipt`](../../contracts/shared/redaction_receipt.md) is the correct semantic direction for recording a protective transform, but its machine schema is currently permissive and field-empty.
+
+A future critical-asset transform receipt should bind, without leaking protected content:
+
+- receipt, candidate, input, and output identity;
+- transform class and versioned profile;
+- policy and review references;
+- evidence and source-role references;
+- input and output digests;
+- validation reports;
+- release candidate and eventual release references;
+- correction, withdrawal, and rollback references; and
+- a non-disclosure guard for hidden transform parameters.
+
+The receipt records what happened. It does not select policy, prove sufficiency, approve release, or expose the original value.
+
+### 7.4 No client-only transforms
+
+The browser may render a released generalized derivative. It must not receive exact geometry and hide, round, displace, aggregate, or suppress it as the only protection. Public-safe transformation belongs before delivery and must be validated against the actual emitted bytes.
+
+[Back to top](#top)
+
+---
+
+## 8. Finite outcomes and public-safe reasons
+
+### 8.1 Runtime outcomes
+
+Trust-bearing public responses use the finite runtime vocabulary:
+
+| Outcome | Critical-asset meaning |
+|---|---|
+| `ANSWER` | A released, current, evidence-supported public-safe derivative satisfies the request at no greater precision than approved. |
+| `ABSTAIN` | Evidence, freshness, scope, identity, or support is insufficient to make the requested claim reliably. |
+| `DENY` | Rights, sensitivity, harmful precision, role, operation, release state, or exposure policy blocks the request. |
+| `ERROR` | Required policy, evaluator, schema, resolver, release, or runtime context is missing or failed, so reliable evaluation is impossible. |
+
+`GENERALIZE`, `REDACT`, `DELAY`, `AGGREGATE`, `WITHHOLD_EXPORT`, and `REQUIRE_REVIEW` are obligations or candidate dispositions. They are not additional top-level runtime outcomes.
+
+### 8.2 Current inactive reason codes
+
+The proposed inactive vocabulary includes relevant public-safe reason codes:
+
+| Code | Outcome | Safe architectural use |
+|---|---|---|
+| `PUBLIC_PRECISION_UNSAFE` | `DENY` | Requested detail exceeds the released public-safe representation. |
+| `SENSITIVITY_UNRESOLVED` | `DENY` | Sensitivity classification or required transform is unresolved. |
+| `RIGHTS_UNKNOWN` | `DENY` | Public use or redistribution rights are unresolved. |
+| `EVIDENCE_UNRESOLVED` | `ABSTAIN` | Required evidence does not resolve. |
+| `EVIDENCE_STALE` | `ABSTAIN` | Available evidence is outside the admitted freshness window. |
+| `POLICY_INPUT_INCOMPLETE` | `ERROR` | Required actor, operation, evidence, sensitivity, review, release, or evaluator context is absent. |
+| `POLICY_BUNDLE_UNAVAILABLE` | `ERROR` | The selected bundle or evaluator context cannot be verified. |
+| `OPERATION_ALLOWED_WITH_OBLIGATIONS` | `ANSWER` | The bounded operation may proceed only after every accepted obligation is enforced. |
+
+These codes remain inactive candidates. A public response must not expose internal rule paths, protected classifications, exact denied values, stack traces, or details that confirm a sensitive asset's presence or condition.
+
+### 8.3 Reason minimization
+
+Public reasons should explain the outcome without revealing the protected fact. Operator-grade detail belongs in authenticated audit or review surfaces with appropriate access and retention controls.
+
+Examples of safe public posture:
+
+- “Requested precision is unavailable for this audience.”
+- “The requested representation is not released for public use.”
+- “Evidence is not current enough to support this claim.”
+- “The policy decision service could not complete reliably.”
+
+Unsafe posture includes echoing exact coordinates, restricted fields, internal paths, rule source, hidden asset type, or operational condition.
+
+[Back to top](#top)
+
+---
+
+## 9. Cross-lane and aggregation risk
+
+### 9.1 Cross-lane joins are separate governed objects
+
+A join that combines infrastructure with hazards, hydrology, roads/rail, settlements, people/land, archaeology, imagery, or other domains must follow the architecture in [`cross-lane-join-policy.md`](./cross-lane-join-policy.md).
+
+The join must not:
+
+- upcast source authority;
+- inherit public safety from either input;
+- hide temporal mismatch;
+- collapse missing support into a false match;
+- expose restricted reasons or exact geometry;
+- become canonical truth merely because it is materialized; or
+- bypass release and rollback because both inputs were previously released.
+
+### 9.2 Aggregation is not automatically safe
+
+Aggregation can still leak when groups are sparse, unique, stable across releases, or paired with outside data. A safe aggregate needs explicit thresholds, representation rules, uncertainty, audience, export posture, and reconstruction tests.
+
+### 9.3 Surrounding-release dependency
+
+Exposure safety is not purely local to one artifact. A new release can make an older generalized layer unsafe through composition. Release review should therefore record material surrounding layers and trigger re-evaluation when high-risk joins become possible.
+
+### 9.4 Query and rate posture
+
+Even a public-safe per-request response may become unsafe under exhaustive query, enumeration, differencing, or bulk access. Future enforcement may need:
+
+- query-shape limits;
+- bounded spatial and temporal windows;
+- export restrictions;
+- anti-enumeration controls;
+- caching that does not preserve denied content;
+- audit-safe rate observation; and
+- denial behavior that does not reveal hidden set membership.
+
+These controls are **PROPOSED / NEEDS VERIFICATION**. This page does not claim they exist.
+
+[Back to top](#top)
+
+---
+
+## 10. Public client, map, AI, and export boundaries
+
+### 10.1 Governed API
+
+The Governed API is the intended dynamic trust boundary, but current code is a three-route fail-closed scaffold. A future critical-asset request must not graduate directly from this page or from a route name.
+
+Before a route can return `ANSWER`, current architecture requires:
+
+- accepted request and response contracts;
+- authenticated actor and operation context where applicable;
+- authoritative evidence lookup;
+- accepted policy bundle and evaluator;
+- public-safe artifact resolution;
+- release, correction, and withdrawal checks;
+- response-envelope validation;
+- safe reason handling;
+- no-network deterministic fixtures and negative tests; and
+- deployed isolation evidence.
+
+### 10.2 MapLibre and Evidence Drawer
+
+MapLibre is a renderer and interaction surface, not exposure authority.
+
+A public map may:
+
+- render an already released public-safe derivative;
+- show public-safe trust, release, freshness, and limitation state;
+- link to Evidence Drawer citations and public-safe transform notices; and
+- withhold or visibly deny unavailable precision.
+
+It must not:
+
+- fetch exact internal geometry;
+- contain hidden sensitive source properties;
+- derive permission from zoom, style, opacity, or visibility;
+- reveal denied content through hit-testing, source inspection, feature state, or client cache;
+- treat a map click as authorization; or
+- reconstruct a withheld asset through neighboring layers.
+
+The draft [`MAP_TRUST_STATES.md`](../standards/MAP_TRUST_STATES.md) is vocabulary guidance, not proof of implemented state propagation.
+
+### 10.3 Governed AI / Focus Mode
+
+AI may interpret released public-safe evidence. It must not receive exact internal infrastructure detail merely because the final prose is intended to be general.
+
+For critical-asset questions, AI must:
+
+- operate behind the Governed API;
+- receive only the released precision allowed for the caller and operation;
+- cite admissible released evidence;
+- preserve limitations and transform notices;
+- return `ABSTAIN`, `DENY`, or `ERROR` when support or policy is unresolved; and
+- avoid confirming restricted presence, condition, topology, or operational detail through generated language.
+
+A prompt or refusal message is not the primary data control.
+
+### 10.4 Search, graph, and catalog
+
+Search indexes, graph projections, and catalogs are downstream carriers. They need the same field, geometry, release, correction, and withdrawal controls as the visible map.
+
+A public-safe map paired with an exact search result is not public-safe. A denied map feature whose graph neighbors remain queryable is not withheld.
+
+### 10.5 Exports, stories, screenshots, and offline packages
+
+Exports can remove interactive guardrails and enable bulk analysis. Every export profile should define:
+
+- released artifact and version;
+- included fields and geometry precision;
+- evidence and rights notices;
+- limitations and public-safe transform state;
+- audience and reuse constraints;
+- expiry or correction behavior where material; and
+- withdrawal and rollback references.
+
+A screenshot or story can also reveal precise context through labels, scale, basemap, or nearby features. Communication artifacts are not exempt from exposure review.
+
+[Back to top](#top)
+
+---
+
+## 11. Release, correction, withdrawal, and rollback
+
+### 11.1 Release prerequisites
+
+A critical-asset public-safe derivative should not enter released state until the candidate has evidence appropriate to consequence, including:
+
+- stable identity and digests;
+- source-role and rights closure;
+- sensitivity and harmful-precision assessment;
+- transform profile and receipt;
+- output byte and field validation;
+- composition and reverse-inference tests;
+- required specialist and independent review;
+- release manifest and public scope;
+- correction and withdrawal path;
+- rollback target; and
+- cache, search, graph, tile, export, and AI invalidation plan.
+
+Current repository evidence does not prove that this closure exists for a critical-asset candidate.
+
+### 11.2 Corrections
+
+A correction may be required when:
+
+- an asset or derivative was misclassified;
+- public precision was excessive;
+- a transform failed or leaked residual detail;
+- source rights or terms changed;
+- surrounding releases increased compositional risk;
+- a reviewer decision was superseded;
+- evidence became stale or conflicted; or
+- the public representation no longer matches the released object.
+
+Correction must preserve lineage. Do not silently edit a released derivative and leave old caches or exports authoritative.
+
+### 11.3 Withdrawal and emergency containment
+
+When exposure risk is suspected, the safe immediate action is containment: disable or withdraw affected public carriers, prevent new exports, block AI context, and preserve evidence for review. Containment does not create a new canonical classification or prove an incident root cause.
+
+### 11.4 Rollback
+
+Rollback must target a known prior public-safe release or a withdrawn/empty public state. It must not restore an older artifact whose policy, rights, or composition posture is no longer valid.
+
+A rollback rehearsal should verify:
+
+- release alias or lookup reversion;
+- cache/CDN invalidation;
+- tile, search, graph, export, story, and AI-context parity;
+- correction or withdrawal notices;
+- audit and receipt retention; and
+- no re-exposure of the exact source object.
+
+[Back to top](#top)
+
+---
+
+## 12. Validation and negative proof
+
+### 12.1 Current validation boundary
+
+Current evidence supports documentation and readiness checks, not a complete critical-asset exposure proof. The placeholder generalized fixture lane and proposed test families must not be counted as executable coverage.
+
+### 12.2 Minimum synthetic fixture set
+
+A future fixture-first slice should include fake, clearly non-real objects and no network or model calls.
+
+| Fixture | Expected result |
+|---|---|
+| Released public-safe aggregate with current evidence, rights, transform receipt, review, and rollback | `ANSWER` at the released precision only |
+| Exact geometry requested when only generalized geometry is released | `DENY / PUBLIC_PRECISION_UNSAFE` |
+| Missing EvidenceBundle resolution | `ABSTAIN / EVIDENCE_UNRESOLVED` |
+| Stale evidence for a current-status claim | `ABSTAIN / EVIDENCE_STALE` |
+| Unknown redistribution rights | `DENY / RIGHTS_UNKNOWN` |
+| Missing sensitivity or transform context | `DENY / SENSITIVITY_UNRESOLVED` |
+| Missing evaluator or incomplete policy input | `ERROR` with a public-safe reason |
+| Exact value remains in an attribute, tile property, search field, graph edge, log, or export after generalization | Validation failure and release block |
+| Generalized records can be differenced or joined to recover exact membership | Validation failure and release block |
+| Browser bundle or static URL addresses internal lifecycle paths | Boundary failure and release block |
+| AI context contains more precision than the released artifact | Boundary failure and `DENY` |
+| Withdrawal leaves old tile/search/graph/export/AI surfaces reachable | Rollback/correction failure |
+| Denial reason confirms protected presence or condition | Safe-reason failure |
+| Default tests attempt DNS, sockets, live sources, model runtime, or external policy service | Test failure / `ERROR` |
+
+### 12.3 Required validation layers
+
+| Layer | Proof needed |
+|---|---|
+| Contract and schema | Closed, accepted request, policy input, decision, transform receipt, release, and runtime envelope shapes |
+| Policy | Native positive and negative tests against an accepted bundle and exact evaluator version |
+| Transform | Determinism or bounded reproducibility, field allowlist, no residual exact detail, reverse-inference tests |
+| Evidence | EvidenceRef resolution, source-role preservation, freshness, citation closure |
+| Release | Candidate closure, reviewer authority, manifest binding, correction and rollback targets |
+| API | Finite outcomes, safe reasons, auth/role behavior, no internal paths, no direct store reads |
+| Browser and static delivery | Bundle inspection, network route inventory, CORS/CSP and static-host posture, no hidden exact fields |
+| Derived surfaces | Tile, search, graph, catalog, export, story, screenshot, offline package, and AI-context parity |
+| Operations | Logs, telemetry, cache invalidation, incident containment, withdrawal propagation, rollback drill |
+
+### 12.4 Non-vacuity
+
+A test suite is not meaningful when it only checks that empty directories exist, that a README contains a phrase, or that all current routes abstain. Graduation requires at least one supported synthetic public-safe case and representative `ABSTAIN`, `DENY`, and `ERROR` cases across the actual evaluator and consumer boundary.
+
+[Back to top](#top)
+
+---
+
+## 13. Maturity matrix and change checklist
+
+### 13.1 Current maturity
+
+| Capability | Current status | Evidence-backed interpretation |
+|---|---|---|
+| Architecture doctrine | **PARTIAL / repository-grounded** | Multiple current docs describe the intended boundary; acceptance of ADR-0010/0025 is still held. |
+| Sensitivity vocabulary | **DRAFT** | T0–T4 and map trust-state documents exist as explanatory drafts. |
+| Domain policy source | **SCAFFOLD** | Correctly placed files and documentation exist; operative critical-asset rules are not established. |
+| Shared sensitivity evaluator | **HOLD** | No accepted bundle, selector, input assembly, evaluator, or governed consumer binding is proved. |
+| Exposure contract/schema | **RESERVED / EMPTY** | Folder exists; no schema instances. |
+| Infrastructure schemas | **PROPOSED MINIMAL SHAPES** | Domain shape scaffolds exist without exposure closure. |
+| Transform semantics | **PROPOSED** | Shared RedactionReceipt prose exists; machine shape and validator are not closed. |
+| Generalization fixtures | **PLACEHOLDER** | No payloads or expected-output cases. |
+| Exposure tests | **DOCUMENTATION-FIRST / HELD** | No complete executable policy, transform, release, map/API, export, or AI exposure suite is proved. |
+| Governed API | **FAIL-CLOSED SCAFFOLD** | Three routes abstain; no evidence-backed exposure behavior. |
+| Public map/export/AI enforcement | **UNKNOWN / NOT PROVED** | No deployed or exact consumer proof. |
+| Release/correction/rollback | **MIXED FIXTURE-FIRST / CRITICAL-ASSET CLOSURE UNPROVED** | Repository has general release machinery, but no bounded critical-asset end-to-end proof is established here. |
+
+### 13.2 Checklist for any future implementation change
+
+Before changing a critical-asset exposure surface, confirm:
+
+- [ ] The owning responsibility root is identified and Directory Rules placement is checked.
+- [ ] No parallel contract, schema, policy, fixture, test, proof, receipt, release, or public-data home is created.
+- [ ] The affected object family and source roles are explicit.
+- [ ] Actor, audience, purpose, operation, and requested precision are explicit.
+- [ ] Evidence, rights, sensitivity, review, release, correction, and rollback context is version-bound.
+- [ ] Public-safe transforms happen before public delivery.
+- [ ] The transform emits a safe, auditable receipt without reversal-enabling detail.
+- [ ] The output is tested across API, map, tile, search, graph, export, logs, telemetry, cache, and AI context as applicable.
+- [ ] Cross-lane and aggregate reconstruction risk is evaluated.
+- [ ] Negative reasons are public-safe.
+- [ ] Default tests are deterministic and no-network.
+- [ ] At least one supported and representative `ABSTAIN`, `DENY`, and `ERROR` case is proved.
+- [ ] Correction, withdrawal, invalidation, and rollback are exercised.
+- [ ] Documentation is updated without presenting passing checks as publication authority.
+
+### 13.3 Smallest legitimate implementation sequence
+
+The smallest dependency-ordered sequence is **PROPOSED**:
+
+1. Ratify or revise the governing default-deny decision and reviewer roles.
+2. Close one bounded exposure input/decision contract and schema profile without activating live sources.
+3. Adopt one synthetic critical-asset representation and one public-safe derivative profile.
+4. Implement a deterministic transform plus safe receipt shape and negative fixtures.
+5. Bind one accepted policy bundle and evaluator to the synthetic profile.
+6. Prove finite outcomes and no-network behavior in a non-public harness.
+7. Bind the released synthetic derivative to Governed API projection and public-client negative tests.
+8. Run correction, withdrawal, cache invalidation, and rollback rehearsal.
+9. Only then consider a real source or public release through separate governed admission and release work.
+
+This document performs none of those transitions.
+
+[Back to top](#top)
+
+---
+
+## 14. Conflicts, holds, and open verification
+
+### 14.1 Current conflicts
+
+| ID | Conflict | Safe disposition |
+|---|---|---|
+| `CAE-C01` | ADR-0010 expresses a proposed deny-by-default decision, while active cross-domain enforcement is not established | Keep decision and enforcement as separate held transitions. |
+| `CAE-C02` | Draft T0–T4 vocabulary can be mistaken for an accepted automatic infrastructure classification | Treat tiers as explanatory until policy and reviewer authority are accepted. |
+| `CAE-C03` | Settlements/Infrastructure policy documentation reports a machine T0 baseline tension with proposed T4 critical-detail escalation | Do not infer either mapping as authoritative; require operation-specific policy input. |
+| `CAE-C04` | Native policy source uses mixed boolean defaults, while outward systems require `ANSWER / ABSTAIN / DENY / ERROR` | Require accepted normalization and failure precedence before any consumer binding. |
+| `CAE-C05` | Exposure schema family is reserved but empty, while architecture prose names request and decision concepts | Hold generic exposure integration until semantic and machine authority close. |
+| `CAE-C06` | Shared RedactionReceipt semantics are substantive, but the schema is permissive and field-empty | Do not treat receipt presence as transform proof or release support. |
+| `CAE-C07` | Generalized-infrastructure fixtures and broad domain-test families are documented but not implemented | Keep maturity at placeholder/documentation-first. |
+| `CAE-C08` | Map trust-state vocabulary includes proposed extensions and path-shaped implementation claims | Use it as draft UX vocabulary only, not runtime proof. |
+
+### 14.2 Open verification register
+
+1. Which accepted object family should carry release-preparation exposure assessment: a dedicated `ExposureDecision`, a policy decision with obligations, or another accepted profile?
+2. Which exact input contract supplies actor, operation, audience, requested precision, evidence, rights, sensitivity, review, release, and composition context?
+3. Which policy bundle, evaluator, selector, and digest-binding mechanism is authoritative?
+4. Which infrastructure object families and representation classes require specialist review?
+5. Which generalization, aggregation, temporal-delay, and export thresholds are safe for each accepted profile?
+6. How are surrounding public layers enumerated and re-evaluated for compositional risk?
+7. Which transform parameters may be auditable without enabling reversal or re-identification?
+8. Which synthetic fixture becomes the first non-vacuous supported case?
+9. Which tests prove exact geometry and attributes are absent from tiles, search, graph, exports, logs, telemetry, caches, and AI context?
+10. Which deployed controls prove browsers and static hosts cannot address internal or candidate stores?
+11. Which authenticated roles may view internal exact representations, and how is least privilege enforced?
+12. Which reviewer roles require independence from author, evaluator operator, and release approver?
+13. How are corrections and withdrawals propagated across CDN, object storage, API caches, search, graph, map, stories, exports, and AI?
+14. What is the first rollback target and how is rollback rehearsed without restoring unsafe prior bytes?
+15. Which metrics detect false clears, over-denial, stale decisions, reconstruction risk, and incomplete invalidation without logging protected values?
+
+### 14.3 HOLD conditions
+
+Keep implementation or release on hold when any of the following is unresolved:
+
+- rights or redistribution terms;
+- asset identity or object role;
+- requested operation or authenticated audience;
+- evidence support or freshness;
+- sensitivity or harmful-precision assessment;
+- public-safe transform profile;
+- reviewer authority;
+- policy bundle or evaluator integrity;
+- release, correction, withdrawal, or rollback state;
+- surrounding-release composition risk; or
+- proof that emitted bytes contain no protected detail.
+
+[Back to top](#top)
+
+---
+
+## 15. Related repository evidence
+
+### Governing placement and decisions
+
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)
+- [`ADR-0029 — Adopt Directory Governance Standard v2`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted placement authority
+- [`ADR-0010 — Deny-by-Default for DNA, Rare Species, Archaeology, and Critical Infrastructure`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) — proposed
+- [`ADR-0025 — Public Client Never Reads Canonical or Internal Stores`](../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) — proposed
+
+### Architecture, security, and standards companions
+
+- [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md)
+- [`docs/architecture/governed-api.md`](./governed-api.md)
+- [`docs/architecture/cross-lane-join-policy.md`](./cross-lane-join-policy.md)
+- [`docs/architecture/data-classification-framework.md`](./data-classification-framework.md)
+- [`docs/security/EXPOSURE_PLAN.md`](../security/EXPOSURE_PLAN.md)
+- [`docs/standards/SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md)
+- [`docs/standards/MAP_TRUST_STATES.md`](../standards/MAP_TRUST_STATES.md)
+- [`docs/domains/settlements-infrastructure/README.md`](../domains/settlements-infrastructure/README.md)
+- [`docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md`](../domains/hazards/PUBLICATION_AND_BOUNDARY.md)
+
+### Current policy, contract, schema, fixture, and test surfaces
+
+- [`policy/domains/settlements-infrastructure/README.md`](../../policy/domains/settlements-infrastructure/README.md)
+- [`policy/sensitivity/README.md`](../../policy/sensitivity/README.md)
+- [`contracts/policy/policy_decision_vocabulary.md`](../../contracts/policy/policy_decision_vocabulary.md)
+- [`policy/decision/vocabulary.v1.json`](../../policy/decision/vocabulary.v1.json)
+- [`contracts/shared/redaction_receipt.md`](../../contracts/shared/redaction_receipt.md)
+- [`schemas/contracts/v1/exposure/README.md`](../../schemas/contracts/v1/exposure/README.md)
+- [`schemas/contracts/v1/domains/settlements-infrastructure/README.md`](../../schemas/contracts/v1/domains/settlements-infrastructure/README.md)
+- [`fixtures/infrastructure-generalized/README.md`](../../fixtures/infrastructure-generalized/README.md)
+- [`tests/domains/settlements-infrastructure/README.md`](../../tests/domains/settlements-infrastructure/README.md)
+
+### Current dynamic boundary
+
+- [`apps/governed-api/README.md`](../../apps/governed-api/README.md)
+- [`apps/governed-api/src/governed_api/main.py`](../../apps/governed-api/src/governed_api/main.py)
+- [`apps/governed-api/src/governed_api/routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py)
+- [`apps/governed-api/src/governed_api/stub.py`](../../apps/governed-api/src/governed_api/stub.py)
+- [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json)
+
+---
+
+## Footer
+
+| Field | Value |
+|---|---|
+| **Document class** | Cross-cutting architecture reference |
+| **Evidence snapshot** | `main@0af1823ff5a54d2fa3b5f0dfe5db18e5056aa372` |
+| **Last updated** | 2026-08-18 |
+| **Current result** | Repository-grounded same-path modernization; no policy, runtime, release, or publication effect |
+| **Rollback** | Revert this documentation commit; no data, policy, contract, schema, fixture, test, runtime, release, deployment, cache, or publication state changes |
+
+[Back to top](#top)
