@@ -1,11 +1,11 @@
-# Temporary branch-locked reconstruction wrapper.
+# Temporary PR-locked reconstruction wrapper.
 # The successful reconstruction commit deletes this file and the payload chunks.
 name: one-shot-skeleton-map-refresh
 
 "on":
-  push:
+  pull_request:
     branches:
-      - agent/update-skeleton-map
+      - tmp/skeleton-map-reconstruction-base-20260818
     paths:
       - .github/workflows/one-shot-skeleton-map-refresh.yml
 
@@ -20,23 +20,28 @@ jobs:
   assemble:
     if: >-
       github.repository == 'bartytime4life/Kansas-Frontier-Matrix' &&
-      github.ref == 'refs/heads/agent/update-skeleton-map' &&
+      github.event.pull_request.base.ref == 'tmp/skeleton-map-reconstruction-base-20260818' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'agent/update-skeleton-map' &&
       github.actor == 'bartytime4life'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out exact temporary branch
+      - name: Check out exact temporary head with branch credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: true
-          ref: agent/update-skeleton-map
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Decode, verify, install, and commit bounded artifacts
         shell: bash
+        env:
+          TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
 
+          git checkout -B agent/update-skeleton-map "$TRIGGER_HEAD_SHA"
           test "$(git branch --show-current)" = "agent/update-skeleton-map"
           test -z "$(git status --porcelain)"
 
@@ -85,4 +90,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "docs(architecture): materialize refreshed skeleton map"
-          git push origin HEAD
+          git push origin HEAD:agent/update-skeleton-map
