@@ -19,7 +19,7 @@ document_relationship: 'CONFLICTED / NARROWED — this flat note is the cross-cu
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 96034b6e5b48861b567b8dc3dd9824b0e5a24164
+  base_commit: 109c8fd52ceaed9c6628f9364f88dc18449903e6
   target_prior_blob: fea0342e79c904b15237e58487858b4ea6238b83
   sibling_overview_blob: 9e1071bb69910bde3f364d319923c4db00637639
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -913,4 +913,4 @@ Documentation follows verified behavior and accepted decisions; it does not pre-
 
 ---
 
-**Last reviewed:** 2026-08-18 against `main@96034b6e5b48861b567b8dc3dd9824b0e5a24164` · **Prior blob:** `fea0342e79c904b15237e58487858b4ea6238b83` · [Back to top](#top)
+**Last reviewed:** 2026-08-18 against `main@109c8fd52ceaed9c6628f9364f88dc18449903e6` · **Prior blob:** `fea0342e79c904b15237e58487858b4ea6238b83` · [Back to top](#top)
