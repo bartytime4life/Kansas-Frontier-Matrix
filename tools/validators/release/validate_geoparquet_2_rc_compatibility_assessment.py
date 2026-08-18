@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Validate the inactive GeoParquet 2.0 RC declared compatibility packet."""
+"""Validate the inactive GeoParquet 2.0 RC exact-toolchain declaration packet."""
 from __future__ import annotations
 
 import argparse
 import copy
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -14,22 +15,56 @@ from jsonschema import Draft202012Validator
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/cases.json"
-PROFILE = "kfm.geoparquet-2-rc-compatibility-assessment.v1"
+PROFILE = "kfm.geoparquet-2-rc-compatibility-assessment.v2"
 CANDIDATE_VERSION = "2.0.0-rc.1"
 DECLARED_DEFAULT = "1.1.0"
 UPSTREAM_COMMIT = "0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa"
-SCOPE = "declared-synthetic-readiness-for-byte-probes"
-STATUS_KEYS = {
-    "native_geometry_write",
-    "native_geometry_read",
-    "workflow_round_trip",
-    "native_type_inspection",
-    "crs_round_trip",
-    "row_group_spatial_statistics",
-    "row_group_spatial_pruning",
-    "legacy_1_1_read",
-    "unknown_metadata_preservation",
+SCOPE = "exact-toolchain-declaration-ready-for-byte-probes"
+EXPECTED_TOOLCHAINS: Mapping[str, Mapping[str, str]] = {
+    "GDAL": {
+        "tool_version": "3.13.2",
+        "source_ref": "upstream:OSGeo/gdal@b40672525acf3f5c4f29d8541aa7dcff1e18eb92",
+    },
+    "DUCKDB": {
+        "tool_version": "1.5.5",
+        "source_ref": "upstream:duckdb/duckdb@d8cdaa33fda8df955cc76ef58a280f68f4cd43fa",
+        "extension_version": "spatial@1.5.5",
+    },
+    "SEDONA_SPARK": {
+        "tool_version": "1.9.0",
+        "source_ref": "upstream:apache/sedona@34098262086a6137d105cd8d9e0b366e4a8246c0",
+        "spark_version": "3.5.9",
+        "spark_source_ref": "upstream:apache/spark@7c14a3c28b141cc97a330c4d0f5d2a6da7267f85",
+        "java_major": "11",
+        "scala_version": "2.12.18",
+        "parquet_java_version": "1.13.1",
+    },
+    "SEDONA_DB": {
+        "tool_version": "0.4.0",
+        "source_ref": "upstream:apache/sedona:sedonadb-0.4.0-release",
+    },
 }
+EXPECTED_INSPECTOR: Mapping[str, str] = {
+    "tool_name": "PYARROW",
+    "tool_version": "25.0.0",
+    "source_ref": "upstream:apache/arrow@apache-arrow-25.0.0",
+}
+STATUS_KEYS = frozenset(
+    {
+        "native_geometry_write",
+        "native_geography_write",
+        "native_geometry_read",
+        "workflow_round_trip",
+        "native_type_inspection",
+        "logical_type_footer_inspection",
+        "crs_round_trip",
+        "row_group_spatial_statistics",
+        "row_group_statistics_inspection",
+        "row_group_spatial_pruning",
+        "legacy_1_1_read",
+        "unknown_metadata_preservation",
+    }
+)
 ERROR_CODES = frozenset(
     {
         "PROFILE_INVALID",
@@ -46,12 +81,19 @@ ERROR_CODES = frozenset(
         "PARQUET_NATIVE_SPATIAL_STATISTICS_REQUIRED",
         "GEOPARQUET_1X_COVERING_ASSUMPTION_CONFLICT",
         "LEGACY_1_1_FIXTURES_REQUIRED",
-        "REQUIRED_ENGINE_MATRIX_INCOMPLETE",
+        "REQUIRED_TOOLCHAIN_MATRIX_INCOMPLETE",
+        "TOOLCHAIN_VERSION_MISMATCH",
+        "TOOLCHAIN_SOURCE_BINDING_MISMATCH",
+        "TOOLCHAIN_TRANSITIVE_PIN_MISMATCH",
+        "TOOL_ARTIFACT_DIGEST_INVALID",
+        "INSPECTOR_PIN_MISMATCH",
+        "EVIDENCE_REF_REUSED",
         "GOVERNANCE_BOUNDARY_VIOLATION",
         "SCHEMA_INVALID",
         "DECLARED_OUTCOME_MISMATCH",
     }
 )
+SHA256_RE = re.compile(r"^sha256:([0-9a-f]{64})$")
 
 
 @dataclass(frozen=True)
@@ -84,25 +126,85 @@ def _schema_valid(candidate: Any) -> bool:
         return False
 
 
-def _engine_reasons(engine_checks: Mapping[str, Any]) -> list[str]:
+def _digest_valid(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    match = SHA256_RE.fullmatch(value)
+    if match is None:
+        return False
+    digest = match.group(1)
+    return digest != "0" * 64 and len(set(digest)) >= 4
+
+
+def _status_reasons(value: Mapping[str, Any]) -> list[str]:
     reasons: list[str] = []
-    if set(engine_checks) != {"GDAL", "DUCKDB", "SEDONA"}:
-        return ["REQUIRED_ENGINE_MATRIX_INCOMPLETE"]
-    for engine in engine_checks.values():
-        if not isinstance(engine, Mapping):
-            return ["REQUIRED_ENGINE_MATRIX_INCOMPLETE"]
-        if engine.get("pinned") is not True:
+    for key, status in value.items():
+        if key not in STATUS_KEYS:
+            continue
+        if status == "FAIL":
+            reasons.append("BYTE_PROBE_FAILED")
+        elif status == "NOT_RUN":
+            reasons.append("BYTE_PROBES_PENDING")
+    return reasons
+
+
+def _toolchain_reasons(matrix: Mapping[str, Any], inspector: Mapping[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    if set(matrix) != set(EXPECTED_TOOLCHAINS):
+        return ["REQUIRED_TOOLCHAIN_MATRIX_INCOMPLETE"]
+
+    evidence_refs: list[str] = []
+    for lane_name, expected in EXPECTED_TOOLCHAINS.items():
+        lane = matrix.get(lane_name)
+        if not isinstance(lane, Mapping):
+            return ["REQUIRED_TOOLCHAIN_MATRIX_INCOMPLETE"]
+        if lane.get("pinned") is not True:
             reasons.append("TOOL_VERSION_NOT_PINNED")
-        behavior = engine.get("unsupported_assumption_behavior")
-        if behavior != "REJECT":
+        if lane.get("tool_version") != expected["tool_version"]:
+            reasons.append("TOOLCHAIN_VERSION_MISMATCH")
+        if lane.get("source_ref") != expected["source_ref"]:
+            reasons.append("TOOLCHAIN_SOURCE_BINDING_MISMATCH")
+        if not _digest_valid(lane.get("artifact_digest")):
+            reasons.append("TOOL_ARTIFACT_DIGEST_INVALID")
+        if lane.get("unsupported_assumption_behavior") != "REJECT":
             reasons.append("UNSUPPORTED_ASSUMPTION_NOT_FAIL_CLOSED")
-        for key, value in engine.items():
-            if key not in STATUS_KEYS:
-                continue
-            if value == "FAIL":
-                reasons.append("BYTE_PROBE_FAILED")
-            elif value == "NOT_RUN":
-                reasons.append("BYTE_PROBES_PENDING")
+        evidence_ref = lane.get("evidence_ref")
+        if isinstance(evidence_ref, str):
+            evidence_refs.append(evidence_ref)
+        reasons.extend(_status_reasons(lane))
+
+    duckdb = matrix["DUCKDB"]
+    if duckdb.get("extension_version") != EXPECTED_TOOLCHAINS["DUCKDB"]["extension_version"]:
+        reasons.append("TOOLCHAIN_TRANSITIVE_PIN_MISMATCH")
+    if not _digest_valid(duckdb.get("extension_digest")):
+        reasons.append("TOOL_ARTIFACT_DIGEST_INVALID")
+
+    sedona_spark = matrix["SEDONA_SPARK"]
+    for key in (
+        "spark_version",
+        "spark_source_ref",
+        "java_major",
+        "scala_version",
+        "parquet_java_version",
+    ):
+        if sedona_spark.get(key) != EXPECTED_TOOLCHAINS["SEDONA_SPARK"][key]:
+            reasons.append("TOOLCHAIN_TRANSITIVE_PIN_MISMATCH")
+    if not _digest_valid(sedona_spark.get("spark_distribution_digest")):
+        reasons.append("TOOL_ARTIFACT_DIGEST_INVALID")
+
+    if inspector.get("pinned") is not True:
+        reasons.append("TOOL_VERSION_NOT_PINNED")
+    if any(inspector.get(key) != value for key, value in EXPECTED_INSPECTOR.items()):
+        reasons.append("INSPECTOR_PIN_MISMATCH")
+    if not _digest_valid(inspector.get("artifact_digest")):
+        reasons.append("TOOL_ARTIFACT_DIGEST_INVALID")
+    inspector_ref = inspector.get("evidence_ref")
+    if isinstance(inspector_ref, str):
+        evidence_refs.append(inspector_ref)
+    reasons.extend(_status_reasons(inspector))
+
+    if len(evidence_refs) != len(set(evidence_refs)):
+        reasons.append("EVIDENCE_REF_REUSED")
     return reasons
 
 
@@ -142,9 +244,8 @@ def assess(candidate: Any) -> Assessment:
     if fmt["legacy_1_1_fixtures_preserved"] is not True:
         reasons.append("LEGACY_1_1_FIXTURES_REQUIRED")
 
-    reasons.extend(_engine_reasons(candidate["engine_checks"]))
-    governance = candidate["governance"]
-    if any(value is not False for value in governance.values()):
+    reasons.extend(_toolchain_reasons(candidate["toolchain_matrix"], candidate["inspector"]))
+    if any(value is not False for value in candidate["governance"].values()):
         reasons.append("GOVERNANCE_BOUNDARY_VIOLATION")
 
     reasons = sorted(set(reasons))
@@ -174,11 +275,16 @@ def candidate_from_case(base_candidate: Mapping[str, Any], case: Mapping[str, An
     candidate = copy.deepcopy(dict(base_candidate))
     all_status = case.get("all_probe_status")
     if all_status is not None:
-        for engine in candidate.get("engine_checks", {}).values():
-            if isinstance(engine, dict):
-                for key in list(engine):
+        for lane in candidate.get("toolchain_matrix", {}).values():
+            if isinstance(lane, dict):
+                for key in list(lane):
                     if key in STATUS_KEYS:
-                        engine[key] = all_status
+                        lane[key] = all_status
+        inspector = candidate.get("inspector")
+        if isinstance(inspector, dict):
+            for key in list(inspector):
+                if key in STATUS_KEYS:
+                    inspector[key] = all_status
     overrides = case.get("overrides", {})
     if isinstance(overrides, Mapping):
         _deep_update(candidate, overrides)
@@ -216,7 +322,7 @@ def validate_cases() -> int:
             print(json.dumps({"case_id": case_id, **comparable}, sort_keys=True))
     if failed:
         return 1
-    print(f"CONFIRMED: {len(seen)} GeoParquet 2.0 RC assessment cases passed exact polarity.")
+    print(f"CONFIRMED: {len(seen)} GeoParquet 2.0 RC exact-toolchain cases passed exact polarity.")
     return 0
 
 

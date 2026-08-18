@@ -10,6 +10,7 @@ name: geoparquet-2-rc-compatibility-assessment
       - "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py"
       - "tests/release/test_geoparquet_2_rc_compatibility_assessment.py"
       - "data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json"
   push:
     branches: [main]
     paths:
@@ -20,6 +21,7 @@ name: geoparquet-2-rc-compatibility-assessment
       - "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py"
       - "tests/release/test_geoparquet_2_rc_compatibility_assessment.py"
       - "data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json"
+      - "data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json"
   workflow_dispatch:
 
 permissions:
@@ -58,18 +60,18 @@ jobs:
         run: python -m pytest -q tests/release/test_geoparquet_2_rc_compatibility_assessment.py
       - name: Run exact synthetic fixture polarity
         run: python tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py --cases
-      - name: Verify generated authoring receipt integrity
+      - name: Verify successor authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json \
+            data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
         run: |
           {
-            echo "### GeoParquet 2.0 RC compatibility assessment"
+            echo "### GeoParquet 2.0 RC exact-toolchain declaration"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: declared synthetic GDAL, DuckDB, and Sedona-facing readiness packet for later byte probes."
-            echo "- Boundary: GeoParquet 1.1 remains the declared default; no carrier bytes, dependencies, migration, release, deployment, or publication are created."
+            echo "- Scope: exact synthetic GDAL, DuckDB Spatial, SedonaSpark, SedonaDB, and PyArrow declarations for later carrier-byte probes."
+            echo "- Boundary: GeoParquet 1.1 remains the declared default; no carrier bytes, package artifacts, dependencies, migration, release, deployment, or publication are created."
           } >> "$GITHUB_STEP_SUMMARY"
