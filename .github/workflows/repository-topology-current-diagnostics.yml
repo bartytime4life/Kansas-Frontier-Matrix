@@ -1,5 +1,5 @@
-# Temporary read-only diagnostic for the current repository-topology transition.
-# Remove this workflow before the repair pull request leaves draft state.
+# Read-only diagnostic retained only for the post-#2998 topology repair.
+# Remove this workflow before the follow-up repair pull request leaves draft state.
 name: repository-topology-current-diagnostics
 
 "on":
