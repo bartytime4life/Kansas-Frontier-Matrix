@@ -1,0 +1,94 @@
+# Temporary branch-locked reconstruction workflow.
+#
+# Purpose:
+#   Materialize one reviewed documentation payload on the temporary
+#   `agent/update-skeleton-map` branch so the final artifact blobs can be copied
+#   into a clean, single-commit review branch. This workflow is never proposed
+#   for main and is removed by resetting the temporary branch to the current
+#   main tree after reconstruction.
+#
+# Non-effects:
+#   No source activation, lifecycle promotion, policy decision, release,
+#   deployment, publication, repository-setting change, or default-branch write.
+name: one-shot-skeleton-map-refresh
+
+"on":
+  push:
+    branches:
+      - agent/update-skeleton-map
+    paths:
+      - artifacts/tmp/skeleton-map-refresh/payload.tar.gz.b64
+
+permissions:
+  contents: write
+
+concurrency:
+  group: one-shot-skeleton-map-refresh
+  cancel-in-progress: false
+
+jobs:
+  assemble:
+    if: >-
+      github.repository == 'bartytime4life/Kansas-Frontier-Matrix' &&
+      github.ref == 'refs/heads/agent/update-skeleton-map'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact temporary branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Decode, verify, install, and commit bounded artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          payload="artifacts/tmp/skeleton-map-refresh/payload.tar.gz.b64"
+          if [[ ! -f "$payload" ]]; then
+            echo "Payload already consumed; no action required."
+            exit 0
+          fi
+
+          test "$(git branch --show-current)" = "agent/update-skeleton-map"
+          test "$(git hash-object docs/architecture/SKELETON_MAP.md)" = \
+            "09440bbe7ac10e0e7b70eee10f4d50f9022f6c4f"
+          test "$(sha256sum "$payload" | awk '{print $1}')" = \
+            "692e4e87783d15191946f1f778b9cec10e02c0beec8071308a683da143425d2b"
+
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          base64 --decode "$payload" > "$tmp/payload.tar.gz"
+          test "$(sha256sum "$tmp/payload.tar.gz" | awk '{print $1}')" = \
+            "832a74ee4f0d655c8edf565c155c0a627260db279a3cafea747fb6e91b3dd26f"
+
+          mapfile -t members < <(tar -tzf "$tmp/payload.tar.gz" | sort)
+          test "${#members[@]}" -eq 2
+          test "${members[0]}" = "SKELETON_MAP.new.md"
+          test "${members[1]}" = "genrec-skeleton-map-e98e8d99.json"
+
+          tar -xzf "$tmp/payload.tar.gz" -C "$tmp"
+          test "$(sha256sum "$tmp/SKELETON_MAP.new.md" | awk '{print $1}')" = \
+            "e98e8d993dfddfe68db7a08325a66142f09d4e086763430a1ca156234ea59810"
+          test "$(sha256sum "$tmp/genrec-skeleton-map-e98e8d99.json" | awk '{print $1}')" = \
+            "2d74c22fc3808b6468456f39ddd6de313a9e74b108d951a483139ece37bcd75b"
+
+          install -m 0644 "$tmp/SKELETON_MAP.new.md" \
+            docs/architecture/SKELETON_MAP.md
+          install -m 0644 "$tmp/genrec-skeleton-map-e98e8d99.json" \
+            data/receipts/generated/genrec-skeleton-map-e98e8d99.json
+          rm -f "$payload"
+          rmdir artifacts/tmp/skeleton-map-refresh 2>/dev/null || true
+
+          git diff --check
+          git add -A -- \
+            docs/architecture/SKELETON_MAP.md \
+            data/receipts/generated/genrec-skeleton-map-e98e8d99.json \
+            artifacts/tmp/skeleton-map-refresh
+          git diff --cached --check
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(architecture): materialize refreshed skeleton map"
+          git push origin HEAD
