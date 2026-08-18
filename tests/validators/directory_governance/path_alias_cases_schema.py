@@ -80,8 +80,14 @@ class PathAliasSchemaCases(PathAliasTestSupport, unittest.TestCase):
         self.assertEqual("ADR-0029", alias["decision_ref"])
         self.assertEqual([], alias["writers"]["alias"])
         self.assertEqual("canonical_only", alias["write_rule"])
-        self.assertEqual("legacy_body_read_only", alias["body_mode"])
+        self.assertEqual("canonical_only_with_redirect", alias["read_rule"])
+        self.assertEqual("tombstone", alias["body_mode"])
+        self.assertEqual(
+            "9f70679c61dba2df46fd85d780f115fee6b59007",
+            alias["legacy_git_blob"],
+        )
         self.assertEqual("OPEN", alias["consumer_closure"])
+        self.assertEqual("PARTIAL", alias["verification_state"])
 
     def test_current_register_passes_projection_semantics(self) -> None:
         result = validate_register(
