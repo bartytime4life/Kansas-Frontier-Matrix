@@ -211,6 +211,7 @@ jobs:
           required_paths=(
             "Makefile"
             ".github/workflows/briefing-implementation-campaign.yml"
+            ".github/workflows/maplibre-acquisition-inventory.yml"
             "apps/explorer-web"
             "configs/maplibre/README.md"
             "configs/maplibre/perf-envelope.v1.json"
@@ -236,9 +237,11 @@ jobs:
             "tests/fixtures/maplibre/README.md"
             "tests/maplibre/README.md"
             "tests/maplibre/perf_fixture_builder.py"
+            "tests/maplibre/test_assess_acquisition_inventory.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
             "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
+            "tools/validators/maplibre/assess_acquisition_inventory.py"
             "tools/validators/maplibre/validate_perf_governance.py"
             "tools/validators/maplibre/validate_v6_readiness.py"
           )
@@ -448,7 +451,10 @@ jobs:
               "verify_perf_thresholds.py",
               "verify_render_diff_coverage.py",
           }
-          separately_governed_validators = {"validate_v6_readiness.py"} | (
+          separately_governed_validators = {
+              "assess_acquisition_inventory.py",
+              "validate_v6_readiness.py",
+          } | (
               {"validate_source_metadata.py"}
               if source_metadata_root.exists()
               else set()
@@ -463,9 +469,9 @@ jobs:
           if actual_validators != expected_validators:
               raise SystemExit(
                   "MapLibre validator inventory changed outside the accepted perf "
-                  "wrappers/placeholders and separately governed source-metadata/v6-readiness lanes. "
-                  "Review the aggregate command, inputs, fixtures, and exit outcomes before "
-                  "changing CI."
+                  "wrappers/placeholders and separately governed acquisition/source-metadata/"
+                  "v6-readiness lanes. Review the aggregate command, inputs, fixtures, and "
+                  "exit outcomes before changing CI."
               )
           for name in schema_wrappers:
               text = (validator_root / name).read_text(encoding="utf-8")
@@ -570,6 +576,10 @@ jobs:
 
           print("The reviewed pnpm workspace lockfile is present and no alternative lockfile exists.")
           print("The @kfm/maplibre importer and package remain dependency-free.")
+          print(
+              "Classified the MapLibre acquisition inventory under its dedicated "
+              "no-network workflow."
+          )
           if source_metadata_payloads:
               print(
                   f"Classified {len(source_metadata_payloads)} source-metadata JSON payloads "
@@ -596,7 +606,7 @@ jobs:
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT for browser/perf/render/trust stages."
             echo "- Gate: WORKFLOW_HOLD"
             echo "- Toolchain: the reviewed pnpm workspace lock is accepted as dependency state only; no dependency install or browser run occurred."
-            echo "- Fixture boundary: source-metadata JSON fixtures and the v6-readiness fixture pack remain governed by their dedicated no-network workflow/campaign and are not runtime/performance baselines."
+            echo "- Fixture boundary: acquisition inventory, source-metadata JSON fixtures, and the v6-readiness fixture pack remain governed by their dedicated no-network workflows/campaign and are not runtime/performance baselines."
             echo "- Blockers: dependency-free MapLibre package; no runtime/baseline fixtures; live CDN dependencies; permissive schemas; placeholder governance verifiers; unsigned attestation; unaccepted trust-output roots."
             echo "- Safety: no browser, server, external source, screenshot, receipt, attestation, proof, release object, correction, rollback, failure bundle, or artifact upload was produced."
           } >> "$GITHUB_STEP_SUMMARY"
