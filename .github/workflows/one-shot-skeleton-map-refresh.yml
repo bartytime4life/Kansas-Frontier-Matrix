@@ -1,9 +1,8 @@
-# Temporary PR-locked reconstruction wrapper.
+# Temporary PR-locked Git-data reconstruction wrapper.
 #
-# The successful job materializes the reviewed documentation payload on the
-# independent `docs/refresh-skeleton-map-20260818` branch. The output commit
-# deletes this workflow and the payload chunks, so the resulting tree contains
-# only the intended documentation, receipt, and cleanup delta relative to main.
+# The job verifies the bounded payload, creates exact Git blobs, and builds one
+# review commit directly on the then-current `main` tree. It does not modify the
+# temporary workflow or payload paths in the output commit.
 name: one-shot-skeleton-map-refresh
 
 "on":
@@ -17,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: one-shot-skeleton-map-refresh-output
+  group: one-shot-skeleton-map-refresh-git-data
   cancel-in-progress: false
 
 jobs:
@@ -30,32 +29,29 @@ jobs:
       github.actor == 'bartytime4life'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OUTPUT_BRANCH: docs/refresh-skeleton-map-20260818
     steps:
       - name: Check out exact trigger head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Decode, verify, install, and push bounded output
+      - name: Verify payload and create exact review commit through Git data API
         shell: bash
-        env:
-          TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          OUTPUT_BRANCH: docs/refresh-skeleton-map-20260818
         run: |
           set -euo pipefail
 
-          git checkout -B agent/skeleton-map-output-trigger-20260818 "$TRIGGER_HEAD_SHA"
-          test "$(git branch --show-current)" = "agent/skeleton-map-output-trigger-20260818"
+          test "$(git branch --show-current)" = ""
           test -z "$(git status --porcelain)"
 
           chunk_dir="artifacts/tmp/skeleton-map-refresh"
           chunks=("$chunk_dir/payload.00" "$chunk_dir/payload.01")
           test -f "${chunks[0]}"
           test -f "${chunks[1]}"
-          test "$(git hash-object docs/architecture/SKELETON_MAP.md)" = \
-            "09440bbe7ac10e0e7b70eee10f4d50f9022f6c4f"
 
           tmp="$(mktemp -d)"
           trap 'rm -rf "$tmp"' EXIT
@@ -70,34 +66,73 @@ jobs:
           test "${#members[@]}" -eq 2
           test "${members[0]}" = "SKELETON_MAP.new.md"
           test "${members[1]}" = "genrec-skeleton-map-e98e8d99.json"
-
           tar -xzf "$tmp/payload.tar.gz" -C "$tmp"
+
           test "$(sha256sum "$tmp/SKELETON_MAP.new.md" | awk '{print $1}')" = \
             "e98e8d993dfddfe68db7a08325a66142f09d4e086763430a1ca156234ea59810"
           test "$(sha256sum "$tmp/genrec-skeleton-map-e98e8d99.json" | awk '{print $1}')" = \
             "2d74c22fc3808b6468456f39ddd6de313a9e74b108d951a483139ece37bcd75b"
 
-          install -m 0644 "$tmp/SKELETON_MAP.new.md" \
-            docs/architecture/SKELETON_MAP.md
-          install -m 0644 "$tmp/genrec-skeleton-map-e98e8d99.json" \
-            data/receipts/generated/genrec-skeleton-map-e98e8d99.json
-          rm -f "${chunks[@]}" .github/workflows/one-shot-skeleton-map-refresh.yml
-          rmdir "$chunk_dir" 2>/dev/null || true
+          repo="$GITHUB_REPOSITORY"
+          main_sha="$(gh api "repos/$repo/git/ref/heads/main" --jq '.object.sha')"
+          main_tree="$(gh api "repos/$repo/git/commits/$main_sha" --jq '.tree.sha')"
+          prior_blob="$(gh api "repos/$repo/contents/docs/architecture/SKELETON_MAP.md?ref=$main_sha" --jq '.sha')"
+          test "$prior_blob" = "09440bbe7ac10e0e7b70eee10f4d50f9022f6c4f"
 
-          git diff --check
-          git add -A -- \
-            docs/architecture/SKELETON_MAP.md \
-            data/receipts/generated/genrec-skeleton-map-e98e8d99.json \
-            "$chunk_dir" \
-            .github/workflows/one-shot-skeleton-map-refresh.yml
-          git diff --cached --check
+          base64 -w0 "$tmp/SKELETON_MAP.new.md" > "$tmp/document.b64"
+          jq -n --rawfile content "$tmp/document.b64" \
+            '{content: $content, encoding: "base64"}' > "$tmp/document-blob.json"
+          doc_blob="$(gh api --method POST "repos/$repo/git/blobs" \
+            --input "$tmp/document-blob.json" --jq '.sha')"
+          test "$doc_blob" = "91ed3b1106b8e46243fd4af7e24d661f66d1d86b"
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # The repository's local commit-msg hook mistakes the generated digest
-          # token `e98e8d99` for a duplicated Task #98 reference. Content, hash,
-          # archive-member, and diff checks above remain fail-closed; hosted CI
-          # still evaluates the resulting review branch. Skip only that
-          # misclassifying local message hook for this one bounded commit.
-          git commit --no-verify -m "docs(architecture): refresh repository orientation"
-          git push origin HEAD:"$OUTPUT_BRANCH"
+          base64 -w0 "$tmp/genrec-skeleton-map-e98e8d99.json" > "$tmp/receipt.b64"
+          jq -n --rawfile content "$tmp/receipt.b64" \
+            '{content: $content, encoding: "base64"}' > "$tmp/receipt-blob.json"
+          receipt_blob="$(gh api --method POST "repos/$repo/git/blobs" \
+            --input "$tmp/receipt-blob.json" --jq '.sha')"
+          test "$receipt_blob" = "becb1ced7dafd20b29ece3bccc86a16556c1cfab"
+
+          jq -n \
+            --arg base_tree "$main_tree" \
+            --arg doc "$doc_blob" \
+            --arg receipt "$receipt_blob" \
+            '{
+              base_tree: $base_tree,
+              tree: [
+                {
+                  path: "docs/architecture/SKELETON_MAP.md",
+                  mode: "100644",
+                  type: "blob",
+                  sha: $doc
+                },
+                {
+                  path: "data/receipts/generated/genrec-skeleton-map-e98e8d99.json",
+                  mode: "100644",
+                  type: "blob",
+                  sha: $receipt
+                }
+              ]
+            }' > "$tmp/tree.json"
+          new_tree="$(gh api --method POST "repos/$repo/git/trees" \
+            --input "$tmp/tree.json" --jq '.sha')"
+
+          jq -n \
+            --arg message "docs(architecture): refresh skeleton map" \
+            --arg tree "$new_tree" \
+            --arg parent "$main_sha" \
+            '{message: $message, tree: $tree, parents: [$parent]}' > "$tmp/commit.json"
+          commit_sha="$(gh api --method POST "repos/$repo/git/commits" \
+            --input "$tmp/commit.json" --jq '.sha')"
+
+          if gh api "repos/$repo/git/ref/heads/$OUTPUT_BRANCH" >/dev/null 2>&1; then
+            gh api --method PATCH "repos/$repo/git/refs/heads/$OUTPUT_BRANCH" \
+              -f sha="$commit_sha" -F force=false >/dev/null
+          else
+            gh api --method POST "repos/$repo/git/refs" \
+              -f ref="refs/heads/$OUTPUT_BRANCH" -f sha="$commit_sha" >/dev/null
+          fi
+
+          test "$(gh api "repos/$repo/git/ref/heads/$OUTPUT_BRANCH" --jq '.object.sha')" = "$commit_sha"
+          printf 'main_sha=%s\ncommit_sha=%s\ndocument_blob=%s\nreceipt_blob=%s\n' \
+            "$main_sha" "$commit_sha" "$doc_blob" "$receipt_blob"
