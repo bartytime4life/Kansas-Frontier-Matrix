@@ -63,7 +63,8 @@
       "repo:pull/3127",
       "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
       "attachment:KFM Directory Governance Standard v2.0.0-draft.1",
-      "attachment:KFM Unified Doctrine Synthesis"
+      "attachment:KFM Unified Doctrine Synthesis",
+      "repo:pull/3128"
     ]
   },
   "truth_labels": {
@@ -108,12 +109,12 @@
     {
       "gate": "draft-pr-delivery",
       "outcome": "PASS",
-      "reason": "Opened draft PR #3127 from agent/update-governed-api-archaeology-20260819 to main. Opening head e212b99c3b7b5aaaf09761a7ec2ac64fb0daad3a; human review remains pending."
+      "reason": "Opened authoring draft PR #3127 at head e212b99c3b7b5aaaf09761a7ec2ac64fb0daad3a. The repository owner merged it before the receipt commit landed; the document is now on main at merge commit 52f7d563741163ffe8124bc04b1ea22be9dd286a. Opened receipt-only follow-up draft PR #3128 at reconciled head 32d287c7c677a1a6cc4381867087816aec19652c."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending hosted execution after the generated receipt commit; hosted exact-head results remain separate evidence."
+      "reason": "Pending hosted execution for receipt-only follow-up draft PR #3128 at exact head 32d287c7c677a1a6cc4381867087816aec19652c; hosted results remain separate evidence."
     },
     {
       "gate": "human-review",
@@ -180,12 +181,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-19T23:15:30Z",
+  "created_at": "2026-08-19T23:19:40Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": 3127,
+    "pr_number": 3128,
     "adr_link": "docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
     "drift_register_entry": null
   },
-  "notes": "Same-path documentation modernization delivered in draft PR #3127. It grounds the current three-route ABSTAIN scaffold, corrects audience and finite-outcome vocabulary, exposes the missing Archaeology response-resource contract and unbound policy/release surfaces, preserves sensitive-domain fail-closed constraints, and changes no route, contract, schema, policy, fixture, validator, test, workflow, data, release, deployment, publication, source activation, or repository setting."
+  "notes": "The Archaeology architecture document was authored in PR #3127 and merged by the repository owner at 52f7d563741163ffe8124bc04b1ea22be9dd286a before its receipt commit landed. Receipt-only follow-up draft PR #3128 restores the missing authoring lineage. The document grounds the current three-route ABSTAIN scaffold, corrects audience and finite-outcome vocabulary, exposes the missing Archaeology response-resource contract and unbound policy/release surfaces, preserves sensitive-domain fail-closed constraints, and changes no route, contract, schema, policy, fixture, validator, test, workflow, data, release, deployment, publication, source activation, or repository setting."
 }
