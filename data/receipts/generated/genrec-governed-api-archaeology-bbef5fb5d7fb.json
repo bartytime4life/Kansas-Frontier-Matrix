@@ -109,12 +109,12 @@
     {
       "gate": "draft-pr-delivery",
       "outcome": "PASS",
-      "reason": "Opened authoring draft PR #3127 at head e212b99c3b7b5aaaf09761a7ec2ac64fb0daad3a. The repository owner merged it before the receipt commit landed; the document is now on main at merge commit 52f7d563741163ffe8124bc04b1ea22be9dd286a. Opened receipt-only follow-up draft PR #3128 at reconciled head 32d287c7c677a1a6cc4381867087816aec19652c."
+      "reason": "Opened authoring draft PR #3127 at head e212b99c3b7b5aaaf09761a7ec2ac64fb0daad3a. The repository owner merged it before the receipt commit landed; the document is on main at merge commit 52f7d563741163ffe8124bc04b1ea22be9dd286a. Opened receipt-only follow-up draft PR #3128 after non-force reconciliation with that merge. Later receipt-metadata commits change only this lineage file."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending hosted execution for receipt-only follow-up draft PR #3128 at exact head 32d287c7c677a1a6cc4381867087816aec19652c; hosted results remain separate evidence."
+      "reason": "Pending hosted execution for the current exact head of receipt-only follow-up draft PR #3128; hosted results remain separate execution evidence and are not embedded recursively into this receipt."
     },
     {
       "gate": "human-review",
@@ -181,7 +181,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-19T23:19:40Z",
+  "created_at": "2026-08-19T23:20:40Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
     "pr_number": 3128,
