@@ -1,809 +1,773 @@
-<!--
-================================================================================
-KFM Meta Block v2
---------------------------------------------------------------------------------
-doc_id:             kfm://doc/arch-trust-membrane
-title:              Trust Membrane — Architecture
-class:              architecture / cross-cutting enforcement
-status:             draft
-truth_posture:      cite-or-abstain
-governance_layer:   trust boundary (data plane <-> public plane)
-proposed_path:      docs/architecture/trust-membrane.md   (PROPOSED)
-directory_rule:     §6 docs/architecture/<topic>.md — cross-cutting doctrine
-                    has an architecture-perspective companion. The principle
-                    lives at docs/doctrine/trust-membrane.md; this file is
-                    the architectural wiring view. See §1.2 for the split.
-sibling_docs:       docs/architecture/system-context.md
-                    docs/architecture/deployment-topology.md
-                    docs/architecture/governed-api.md
-                    docs/architecture/map-shell.md
-                    docs/architecture/maplibre-3d.md
-                    docs/architecture/spatial-foundation.md
-                    docs/architecture/contract-schema-policy-split.md
-doctrinal_anchor:   docs/doctrine/trust-membrane.md  (CONFIRMED authority per
-                    directory-rules.md v1.3; this architecture doc must not
-                    contradict it — see §1.2).
-related_doctrine:   docs/doctrine/authority-ladder.md
-                    docs/doctrine/lifecycle-law.md
-                    docs/doctrine/truth-posture.md
-                    docs/doctrine/directory-rules.md (v1.3)
-related_atlas:      KFM_Domains_v1_1 §20 (Master API/Validator/Test);
-                    Pass 23/32 Atlas §24.3 (decision outcomes), §24.7
-                    (separation of duties), §24.9.2 (trust-membrane
-                    anti-patterns), §24.9.3 (governance-process anti-patterns).
-related_adrs:       ADR-0001 (schema home) — CONFIRMED authored.
-                    ADR-0006 (policy engine / default-deny) — PROPOSED in
-                    Build Manual Appendix B.
-                    ADR-0014 (release / correction / withdrawal / rollback
-                    model) — PROPOSED in Build Manual Appendix B.
-                    ADR-S-06 (AI surface boundary) — PROPOSED in Atlas
-                    open-ADR backlog.
-                    ADR-S-09 (reviewer role separation) — PROPOSED.
-spec_hash:          NEEDS VERIFICATION (generated at release time).
-owners:             <PLACEHOLDER — trust-membrane steward; do not invent>
-created:            <YYYY-MM-DD — set on PR>
-updated:            <YYYY-MM-DD — set on PR>
-policy_label:       public
-tags:               [kfm, architecture, trust-membrane, governance,
-                    governed-api, lifecycle, finite-outcomes, separation-of-duties]
-notes:              Authored docs-only; no mounted repo, ADR set, CI run,
-                    runtime log, or release artifact inspected. Every
-                    implementation-layer path, route, schema, or test claim
-                    is PROPOSED until mounted-repo verification.
-================================================================================
--->
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/arch-trust-membrane
+title: Trust Membrane — Architectural Contract and Crossing Model
+type: architecture-reference
+version: v2.0-draft
+status: draft; repository-grounded; case-collision-hold; non-authoritative
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — architecture, evidence, policy, release, and public-client stewardship"
+created: 2026-05-06
+updated: 2026-08-19
+policy_label: public
+owning_root: docs/
+responsibility: Explain the durable cross-root crossing model that separates internal lifecycle state, release decisions, governed delivery, and public-client behavior without becoming doctrine, policy, release authority, or implementation proof.
+truth_posture: CONFIRMED commit-pinned repository evidence / PROPOSED integrated target model / UNKNOWN production enforcement / HOLD on case-colliding document migration
+related:
+  - README.md
+  - TRUST_MEMBRANE.md
+  - document-convergence-plan.md
+  - governed-api.md
+  - evidence-drawer.md
+  - publication/promotion-gates.md
+  - ../doctrine/directory-rules.md
+  - ../doctrine/trust-membrane.md
+  - ../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+tags:
+  - kfm
+  - architecture
+  - trust-membrane
+  - governed-api
+  - evidence
+  - policy
+  - release
+  - public-client
+  - correction
+  - rollback
+notes:
+  - "Same-path documentation modernization only; no contract, schema, policy, code, data, release, deployment, or publication effect."
+  - "The case-colliding TRUST_MEMBRANE.md sibling remains present and the structural migration remains on explicit HOLD."
+  - "This page owns a durable explanatory crossing model; it does not choose a canonical survivor or convert current bounded proofs into operational authority."
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="trust-membrane--architecture"></a>
 
-# Trust Membrane — Architecture
+# Trust Membrane — Architectural Contract and Crossing Model
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![truth--posture](https://img.shields.io/badge/truth--posture-cite--or--abstain-success)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success)
-![implementation](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![repo--depth](https://img.shields.io/badge/repo--depth-UNKNOWN-lightgrey)
-![enforcement](https://img.shields.io/badge/enforcement-default--deny-critical)
-![scope](https://img.shields.io/badge/scope-cross--cutting-blueviolet)
-<!-- CI badge URL is a placeholder; no mounted workflow was verified this session.
-![ci](https://img.shields.io/github/actions/workflow/status/<OWNER>/<REPO>/<WORKFLOW>.yml?branch=main)
--->
-
-> **One-line purpose.** Describe how KFM's **trust membrane** — the architectural boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth — is **wired** in the system: where its enforcement points live, what crossings it permits, what finite outcomes mark its edge, how promotion gates A–G operate at the boundary, what anti-patterns route to which DENY surfaces, and how the membrane is validated, rolled back, and corrected.
+> **Purpose.** Explain how KFM is intended to move from internal, not-yet-warranted material to governed release and public-safe delivery while preserving evidence, policy, review, correction, and rollback boundaries.
 
 > [!IMPORTANT]
-> The **principle** of the trust membrane is doctrine. It lives at [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md). This document is the **architecture-perspective companion**: it describes *how the membrane is realized in code, contracts, policies, and infrastructure*. Where the two documents touch the same concept, the **doctrinal version is authoritative** and this file must not silently amend it; any amendment is ADR-class per *directory-rules.md* §2.4. See [§1.2](#1.2) for the split.
+> **Architecture is explanatory, not sovereign.** This page does not define semantic object meaning, machine shape, admissibility, review authority, release state, or publication. Those responsibilities remain with accepted doctrine and ADRs, `contracts/`, `schemas/`, `policy/`, executable implementation and tests, evidence and proof records, and append-only release/correction/rollback records.
 
----
+> [!CAUTION]
+> **The case-colliding sibling remains unresolved.** [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) and this lowercase page have different document identities, content, and historical fragments but collide on case-insensitive filesystems. The architecture convergence plan proposes an eventual no-loss convergence to one lowercase path; that migration is still **HOLD**. This update neither selects a survivor nor repairs or retires either identity.
 
-## Mini Table of Contents
+## Current bounded result
 
-- [1. Architectural role and posture](#1)
-- [2. The two sides of the membrane](#2)
-- [3. Enforcement points (where the membrane lives in the code)](#3)
-- [4. Crossings — the only legitimate paths into public state](#4)
-- [5. Finite outcomes at the edge — ANSWER · ABSTAIN · DENY · ERROR · HOLD](#5)
-- [6. Promotion gates A–G as boundary controls](#6)
-- [7. Trust-membrane anti-patterns and their DENY surfaces](#7)
-- [8. Separation of duties at the membrane](#8)
-- [9. Stale state, correction, rollback at the membrane](#9)
-- [10. Failure modes — what happens when the membrane breaks](#10)
-- [11. Repository placement (PROPOSED)](#11)
-- [12. Validation tests](#12)
-- [13. Open questions and verification backlog](#13)
-- [14. Glossary tie-in](#14)
-- [Related docs · Footer](#related)
+| Field | Repository-grounded result |
+|---|---|
+| Evidence snapshot | `main@45fc45556a007196aa29e725f3a4b9fe9af8294e` |
+| Prior lowercase blob | `40602152f13044fa87d57c73c71d797f95afa61e` |
+| Uppercase sibling blob | `e260a1dbe20ec011901fbe8fb752cd3bb66a9eeb` |
+| Placement authority | Accepted ADR-0029 and adopted Directory Rules v2 |
+| Current dynamic API surface | Three fail-closed GET scaffolds under `apps/governed-api/` |
+| Current successful public answers | None proved; scaffolded routes return `ABSTAIN / NOT_IMPLEMENTED` |
+| Current evidence resolver | Internal, no-network, non-authoritative candidate check |
+| Current browser integration | Fixture-only governed projection parser; no live API transport proved |
+| Current release machinery | Mixed-maturity, fixture-first readiness surfaces; operational release remains held |
+| Structural migration | `HOLD` |
+| Release or publication effect | None |
+
+**Quick navigation:** [Role](#1) · [Boundary model](#2) · [Enforcement points](#3) · [Crossings](#4) · [Outcomes](#5) · [Gates A–G](#6) · [Anti-patterns](#7) · [Duties](#8) · [Correction](#9) · [Failure modes](#10) · [Placement](#11) · [Validation](#12) · [Backlog](#13) · [Glossary](#14) · [Related docs](#related)
 
 ---
 
 <a id="1"></a>
 
-## 1. Architectural role and posture
+## 1. Architectural role, authority, and scope
 
-### 1.1 What the trust membrane is, architecturally
+KFM's trust membrane is a **distributed architectural composition**, not one file, package, endpoint, validator, or badge. It is the combined boundary through which a claim-bearing or trust-bearing response must pass before a normal client may treat it as renderable.
 
-> **CONFIRMED doctrine.** *KFM Atlas v1.1 Appendix A* defines the trust membrane as **"the boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth."** *[DIRRULES] [GAI]*
+At minimum, the composition has to keep these responsibilities distinct:
 
-Architecturally, that boundary is not a single component; it is a **distributed enforcement surface** realized through a small, well-known set of contracts, services, schemas, policies, and tests. The membrane is "alive" wherever:
+1. **Internal lifecycle state** — source material, candidates, unresolved evidence, quarantine, and processing state.
+2. **Evidence and policy evaluation** — support, source role, rights, sensitivity, audience, freshness, review, and obligation checks.
+3. **Release governance** — promotion readiness, accountable decision records, correction, withdrawal, and rollback.
+4. **Governed delivery** — API or separately governed static delivery of already released public-safe carriers.
+5. **Client rendering** — map, Evidence Drawer, Focus Mode, export, search, graph, and other public surfaces that obey the governed result.
 
-- An artifact transitions across the lifecycle (`RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`).
-- A public client requests a layer, feature, evidence projection, or AI answer.
-- A reviewer signs a `PromotionDecision`, `ReleaseManifest`, `CorrectionNotice`, or `RollbackCard`.
-- A validator or policy gate returns a finite outcome (`ANSWER · ABSTAIN · DENY · ERROR · HOLD`).
+The membrane is therefore a boundary of **composed responsibilities**. No one component may silently inherit all five.
 
-Said negatively: **anywhere none of those things happens but public exposure does, the membrane has been bypassed.**
+### 1.1 What this page owns
+
+This page owns a human-readable architecture model for:
+
+- the two sides of the boundary;
+- the two distinct crossings—promotion and exposure;
+- the role of finite runtime outcomes;
+- the difference between readiness, release, and public rendering;
+- the interaction among evidence, policy, review, release, correction, and rollback;
+- the failure posture when one dependency is unavailable or unresolved; and
+- the repository responsibility roots that participate.
+
+It does **not** own:
+
+- the meaning of `EvidenceRef`, `EvidenceBundle`, `DecisionEnvelope`, `PolicyDecision`, `RuntimeResponseEnvelope`, `PromotionDecision`, or `ReleaseManifest`;
+- their JSON Schema shapes;
+- executable policy;
+- authenticated review or release decisions;
+- API routing or deployment;
+- public artifact bytes; or
+- a decision about the case-colliding document pair.
 
 <a id="1.2"></a>
 
-### 1.2 Doctrine vs. architecture — the split this document maintains
+### 1.2 Doctrine, architecture, decision, and implementation are different evidence classes
 
-> [!NOTE]
-> The trust membrane is doctrinal **and** architectural. The corpus distinguishes the two responsibilities cleanly. This file respects that split.
-
-| Concern | Lives in | Owns |
+| Surface | Current role | Authority limit |
 |---|---|---|
-| **Principle** — what the membrane is, why it exists, the cite-or-abstain posture, the "raw → public truth" invariant. | [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) *(CONFIRMED home per directory-rules.md §6.1)*. | The **rule**. |
-| **Architecture** — where the rule is enforced; the components, contracts, schemas, and tests that realize it; the DENY surfaces and finite-outcome envelopes; the diagrams. | **This file** (`docs/architecture/trust-membrane.md`). | The **wiring**. |
-| **Placement law** — root folders, schema home, policy home, lifecycle roots, ADR triggers. | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). | The **map**. |
+| Accepted [Directory Rules v2](../doctrine/directory-rules.md) through [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement authority | Does not prove trust-membrane runtime behavior. |
+| [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) | Repository-present draft trust-language articulation | Presence and polished prose do not establish adoption or enforcement. |
+| This page | Durable explanatory crossing model | Does not create doctrine, policy, release, or implementation authority. |
+| [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) | Repository-grounded current architecture and enforcement snapshot | Does not choose the case-collision survivor. |
+| [ADR-0004](../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Proposed dynamic trust-boundary decision | Source remains draft/effectively proposed; configured code does not imply acceptance. |
+| Current code, schemas, tests, workflows, and emitted artifacts | Implementation evidence for their exact scope | A passing fixture or route test does not prove production enforcement. |
 
-> [!WARNING]
-> A trust-membrane claim that appears here but not in the doctrinal file is **PROPOSED architecture commentary**, not new doctrine. If this file looks like it adds a new invariant, that change is **ADR-class** per *directory-rules.md* §2.4 and must be filed before adoption.
+### 1.3 Non-negotiable invariants carried into this model
 
-### 1.3 Invariants this document preserves
+- `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED` remains a governance sequence.
+- Promotion is a governed state transition, not a file move, commit, pull request, merge, workflow result, or badge.
+- Ordinary clients use governed interfaces or already released public-safe artifacts, not canonical/internal stores as their normal path.
+- `EvidenceRef` should resolve to admissible evidence before a consequential `ANSWER`.
+- Evidence, policy, review, release, correction, and rollback state remain distinguishable.
+- Unknown rights, sensitivity, sovereignty, harmful precision, release state, or evidence support fails closed.
+- Maps, tiles, graphs, indexes, scenes, dashboards, exports, and generated language remain carriers or interpretations, not sovereign truth.
+- A current warrant can be corrected, withdrawn, superseded, or rolled back.
 
-| # | Invariant | Source |
-|---|---|---|
-| I-TM-1 | **CONFIRMED** — Public clients and normal UI surfaces use **governed APIs and released artifacts**, never canonical or internal stores. | [ENCY] [GAI] KFM-P1-FEAT-0038. |
-| I-TM-2 | **CONFIRMED** — The MapLibre shell consumes released layers through a `LayerManifest` resolver; it does not reach back past the API. | [MAP-MASTER] [GAI] |
-| I-TM-3 | **CONFIRMED** — Governed AI / Focus Mode answers from resolved `EvidenceBundle`s, not from `RAW / WORK / QUARANTINE`. | [GAI] |
-| I-TM-4 | **CONFIRMED** — Every governed surface returns a **finite outcome** from `{ANSWER, ABSTAIN, DENY, ERROR, HOLD}` (and `{PASS, FAIL}` for validator-class). | [GAI] [ENCY] Atlas §24.3.1. |
-| I-TM-5 | **CONFIRMED** — Default-deny: absence of evidence, policy, review, or release state **blocks** public exposure. | [ENCY] C5-02. |
-| I-TM-6 | **CONFIRMED** — Promotion is a **governed state transition**, not a file move. Gates A–G apply. | [DIRRULES] [ENCY] C5-01. |
-| I-TM-7 | **CONFIRMED** — Source role is **fixed at admission**; promotion never upgrades it. | [ENCY] Pass-23 §3. |
-| I-TM-8 | **CONFIRMED** — Sensitive content is transformed, generalized, or denied **before** the renderer or AI surface. Style filters are not protection. | [MAP-MASTER] ML-Q-082. |
-| I-TM-9 | **CONFIRMED** — Release without `ReleaseManifest` and rollback target is forbidden. | [ENCY] [DIRRULES] |
-| I-TM-10 | **CONFIRMED** — Admin shortcuts must be justified, constrained, audited, and **kept out of the normal public path**. | [GAI] [DIRRULES] |
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="2"></a>
 
-## 2. The two sides of the membrane
+## 2. Boundary model: two sides, three planes, two crossings
 
-> **CONFIRMED doctrine.** *Atlas §24.9.2* names the two sides as "canonical/internal" and "governed/public." The membrane exists to keep them separate.
+The simplest architectural model has two sides.
 
-```mermaid
-flowchart LR
-  subgraph CANON["Canonical / internal side (NEVER public)"]
-    RAW["RAW<br/>SourceDescriptor · retrieval receipt"]
-    WORK["WORK / QUARANTINE<br/>CandidateDelta · TransformReceipt · hold reasons"]
-    PROC["PROCESSED<br/>validated normalized objects + receipts"]
-    CANSTORE[("Canonical store<br/>PostGIS · object store · index")]
-  end
+### Internal side
 
-  subgraph BOUNDARY["Trust membrane (this doc)"]
-    CAT["CATALOG / TRIPLET<br/>STAC · DCAT · PROV<br/>+ EvidenceBundle"]
-    REL["RELEASE<br/>PromotionDecision · ReleaseManifest<br/>rollback target · signatures"]
-    POL["Policy gates<br/>OPA · Conftest · validators<br/>(PASS · FAIL · HOLD · DENY)"]
-  end
+Material on the internal side may be legitimate work, but it is not yet warranted for ordinary public rendering:
 
-  subgraph PUBLIC["Governed / public side"]
-    API["Governed API<br/>DecisionEnvelope"]
-    ML["MapLibre shell<br/>LayerManifest resolver"]
-    GAI["Governed AI / Focus Mode<br/>RuntimeResponseEnvelope · AIReceipt"]
-    EXP["Exports · Stories<br/>+ citation closure"]
-  end
-
-  RAW --> WORK --> PROC
-  PROC --> CAT
-  CAT --> POL
-  POL --> REL
-  REL --> API
-  API --> ML
-  API --> GAI
-  API --> EXP
-
-  RAW -.->|DENY direct read| ML
-  WORK -.->|DENY direct read| ML
-  PROC -.->|DENY direct read| ML
-  CANSTORE -.->|DENY direct read| ML
-  RAW -.->|DENY direct read| GAI
-  WORK -.->|DENY direct read| GAI
-  PROC -.->|DENY direct read| GAI
-
-  classDef canon fill:#fef2f2,stroke:#dc2626,color:#7f1d1d
-  classDef bound fill:#fefce8,stroke:#ca8a04,color:#713f12
-  classDef pub   fill:#f0fdf4,stroke:#16a34a,color:#14532d
-  class CANON,RAW,WORK,PROC,CANSTORE canon
-  class BOUNDARY,CAT,REL,POL bound
-  class PUBLIC,API,ML,GAI,EXP pub
+```text
+source edge / pre-RAW
+  -> RAW
+  -> WORK or QUARANTINE
+  -> PROCESSED
+  -> CATALOG / TRIPLET candidate state
 ```
 
-> [!TIP]
-> Read the diagram as a one-way valve. **Every arrow into the public side passes through `PolicyDecision → PromotionDecision → ReleaseManifest`.** Dashed lines are DENY edges — they are not just unwired; they are actively blocked by the validators, policies, and contracts listed in [§3](#3).
+This side may contain source responses, candidates, exact or sensitive values, unresolved evidence, incomplete rights review, model output, draft relations, proposed catalog records, and unreleased artifacts. Location inside the repository does not itself grant access or publication status.
 
-### 2.1 Concrete examples of each side
+### Governed-delivery side
 
-| Side | Examples (illustrative) |
-|---|---|
-| **Canonical / internal** | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, PostGIS canonical schemas, internal object store, raw STAC drafts, candidate `LayerManifest`s not yet signed, model checkpoints, AI prompts and intermediate generation. |
-| **Trust membrane (boundary)** | `data/catalog/{stac,dcat,prov}/`, `data/triplets/`, `data/receipts/`, `data/proofs/`, `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/`, `policy/**`, `tools/validators/`, `tools/promotion_gate/`. |
-| **Governed / public** | `apps/governed-api/`, `apps/explorer-web/` (MapLibre shell), Focus Mode endpoints, exports / story snapshots, governed Evidence Drawer payloads. |
+Material on the governed-delivery side is still bounded. It is not “permanently true”; it is supported for a declared use, audience, precision, time, and release state:
 
-> **PROPOSED placement.** Paths above follow *Build Manual* §5 and *directory-rules.md* v1.3; mounted-repo presence is **UNKNOWN** this session.
+```text
+reviewed promotion packet
+  -> release decision and manifest
+  -> public-safe released carrier or governed runtime response
+  -> client rendering with evidence, obligations, and correction state
+```
 
-[↑ Back to top](#top)
+### Three responsibility planes
+
+| Plane | Owns | Must not become |
+|---|---|---|
+| Internal lifecycle and evidence plane | Source capture, processing, candidate evidence, proofs, receipts, catalog/triplet preparation | A normal public data path |
+| Release-decision plane | Promotion, release, correction, withdrawal, rollback, signatures, accountable review records | A payload store or automatic publisher |
+| Governed-delivery plane | Runtime envelopes and released public-safe carrier access | Canonical truth, policy source, or hidden release authority |
+
+### Two crossings
+
+The membrane is easiest to reason about when the crossings are separated:
+
+1. **Promotion crossing:** `CATALOG / TRIPLET candidate -> PUBLISHED release state`.
+2. **Exposure crossing:** released or policy-safe state -> governed response or public-safe carrier -> client.
+
+A system can have a valid promotion record and still deny a particular caller, audience, precision, export, or render operation. Conversely, a runtime route cannot manufacture release state merely because it returns schema-valid JSON.
+
+```text
+INTERNAL LIFECYCLE
+  |
+  |  Crossing A: evidence + policy + validation + review + release + rollback
+  v
+RELEASED STATE
+  |
+  |  Crossing B: caller/surface + evidence resolution + policy + freshness + correction
+  v
+GOVERNED DELIVERY
+  |
+  v
+PUBLIC CLIENT
+```
+
+Every arrow is a responsibility boundary. The diagram is a target composition, not proof that the current repository executes the full chain.
+
+[Back to top](#top)
 
 ---
 
 <a id="3"></a>
 
-## 3. Enforcement points (where the membrane lives in the code)
+## 3. Current enforcement points and their exact limits
 
-> **PROPOSED architectural realization.** The corpus names the enforcement surfaces; mapping them to specific repository homes is **PROPOSED** until verified. None is claimed to exist in a mounted repo from this session.
+The repository contains bounded implementation surfaces that protect parts of the membrane. None currently proves the full composition.
 
-| Enforcement point | What it enforces | Outcome verbs | Proposed home |
-|---|---|---|---|
-| **Governed API** (`apps/governed-api/`) | I-TM-1, I-TM-4 — every public surface returns a `DecisionEnvelope`; canonical reads are denied. | `ANSWER · ABSTAIN · DENY · ERROR` | `apps/governed-api/` |
-| **LayerManifest resolver** | I-TM-2 — public layer fetch must go through resolver; only released manifests answer. | `ANSWER · DENY · ERROR` | `apps/governed-api/` route + `packages/maplibre-runtime/` |
-| **EvidenceRef → EvidenceBundle resolver** | I-TM-3 — composed claims render only when all required `EvidenceRef`s resolve; otherwise abstain. | `ANSWER · ABSTAIN · DENY · ERROR` | `packages/evidence/` |
-| **Focus Mode runtime** | I-TM-3, I-TM-4 — AI answers cite released bundles; ABSTAIN otherwise; DENY on policy / sensitivity. | `ANSWER · ABSTAIN · DENY · ERROR` | `packages/ai/` + `apps/governed-api/` |
-| **Promotion gate validator** | I-TM-5, I-TM-6 — Gates A–G ([§6](#6)); fail-closed on any missing receipt, signature, DQ check, sensitivity sign-off. | `PASS · FAIL · HOLD` | `tools/promotion_gate/` |
-| **OPA / Conftest policy bundle** | I-TM-4, I-TM-5, I-TM-8 — emits `PolicyDecision` (`DecisionEnvelope`) for access, render, capability, consent, sensitivity, promotion. | `ALLOW · DENY · ABSTAIN · ERROR` | `policy/` (Build Manual §5; directory-rules v1.3) |
-| **Release queue / `ReleaseManifest`** | I-TM-9 — public exposure denied until manifest signed, rollback target present, derivative invalidation listed. | `PASS · FAIL · HOLD` | `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/` |
-| **Citation validation** | I-TM-3 — Focus Mode and exports fail closed on uncited or unresolvable claims. | `PASS · FAIL` | `packages/evidence/` + `tools/validators/` |
-| **Renderer-boundary tests** | I-TM-2 — CI denies a public client that bypasses the resolver. | `PASS · FAIL` | `tests/contract/` + `tests/policy/` |
-| **Cross-renderer test absence** | I-TM-2 *(v1.3 sole-renderer doctrine)* — directory is doctrinally empty; presence is drift. | n/a | `tests/integration/cross-renderer/` — **must not exist** (see [`maplibre-3d.md`](./maplibre-3d.md), *directory-rules.md* §13.5). |
-| **Source-role anti-collapse validator** | I-TM-7 — promotion that "upgrades" modeled → observed → authority is rejected. | `PASS · FAIL` | `tools/validators/source_role/` |
-| **`AIReceipt` evaluator** | I-TM-3 — every AI surface answer records inputs, evidence ids, citation report id, policy ids, outcome. | n/a (audit) | `packages/ai/` |
-| **Admin-shortcut audit** | I-TM-10 — admin / break-glass paths are not normal-path public routes; audit log + steward review. | n/a (audit) | `tools/audit/` + `docs/security/` |
+| Surface | CONFIRMED bounded behavior | What remains unproved |
+|---|---|---|
+| [`apps/governed-api/`](../../apps/governed-api/README.md) | WSGI scaffold dispatches three registered GET routes. | Authentication, authorization, accepted policy evaluation, evidence resolution, release binding, deployed isolation, production traffic. |
+| [`routes/registry.py`](../../apps/governed-api/src/governed_api/routes/registry.py) | Exact route set is `/bootstrap`, `/layers`, `/evidence`. | Versioned production API catalogue or live consumer integration. |
+| [`stub.py`](../../apps/governed-api/src/governed_api/stub.py) | Routes return `ABSTAIN / NOT_IMPLEMENTED`; safe errors avoid detailed leakage. | Any evidence-backed `ANSWER`. |
+| API boundary tests | Verify 404/405 behavior, safe error shape, exact route manifest, forbidden renderer/model imports, and selected internal-store literal guards. | Complete information-flow, auth, exfiltration, policy, or deployment proof. |
+| [`RuntimeResponseEnvelope`](../../contracts/runtime/runtime_response_envelope.md) and paired schema | Proposed closed four-outcome client envelope; `ANSWER` requires evidence refs and `precision_actually_used`. | Accepted semantics, live route emission, policy-state vocabulary, public-client enforcement. |
+| [`DecisionEnvelope`](../../contracts/runtime/decision_envelope.md) | Proposed finite runtime decision record with policy family, reasons, and obligations. | Policy execution, release approval, or transport behavior. |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Proposed semantic record for one policy evaluation event. | Accepted policy bundle, evaluator binding, authenticated authority, operational enforcement. |
+| [`packages/evidence-resolver/`](../../packages/evidence-resolver/README.md) | Internal no-network v1alpha1 candidate check over explicit caller-supplied inputs. | Authoritative lookup, claim-scope closure, rights/sensitivity evaluation, public outcome mapping, production consumer. |
+| [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict fixture-only Evidence Drawer projection parser; no network or lifecycle-store access. | Live Governed API transport or production runtime parity. |
+| [`release/`](../../release/README.md) | Canonical append-only release-decision root with multiple fixture-first validation surfaces. | Authenticated operational release, public alias mutation, correction propagation, cache invalidation, deployed rollback. |
+| [Promotion-gate readiness validator](../../tools/validators/promotion_gate/README.md) | Deterministic, no-network A–G packet checks with finite results and no writes. | Existence/authenticity of referenced objects, live policy, signatures, release execution, publication. |
 
-### 3.1 Components and contracts at a glance
+### Composition rule
 
-```mermaid
-flowchart TB
-  subgraph CONTRACTS["Boundary contracts"]
-    EB["EvidenceBundle"]
-    ER["EvidenceRef"]
-    PD["PolicyDecision /<br/>DecisionEnvelope"]
-    PR["PromotionDecision"]
-    RM["ReleaseManifest"]
-    RT["rollback target"]
-    AR["AIReceipt"]
-    CVR["CitationValidationReport"]
-    LM["LayerManifest"]
-    TAM["TileArtifactManifest"]
-    CN["CorrectionNotice"]
-    RC["RollbackCard"]
-  end
+A mature `ANSWER` path must compose these responsibilities without collapsing them:
 
-  subgraph SERVICES["Boundary services"]
-    GAPI["Governed API"]
-    RES["EvidenceRef resolver"]
-    OPA["OPA / Conftest policy"]
-    PGV["Promotion gate validator"]
-    RQ["Release queue"]
-    FMR["Focus Mode runtime"]
-  end
-
-  GAPI --> PD
-  GAPI --> EB
-  RES --> EB
-  RES --> ER
-  OPA --> PD
-  PGV --> PR
-  PGV --> RM
-  RQ --> RM
-  RQ --> RT
-  RQ --> CN
-  RQ --> RC
-  FMR --> AR
-  FMR --> CVR
-  GAPI --> LM
-  LM --> TAM
-
-  classDef c fill:#eef6ff,stroke:#3b82f6,color:#0b3a78
-  classDef s fill:#f0fdf4,stroke:#16a34a,color:#14532d
-  class CONTRACTS,EB,ER,PD,PR,RM,RT,AR,CVR,LM,TAM,CN,RC c
-  class SERVICES,GAPI,RES,OPA,PGV,RQ,FMR s
+```text
+request and caller context
+  -> released-state selection
+  -> evidence resolution
+  -> policy / rights / sensitivity / audience evaluation
+  -> freshness and correction evaluation
+  -> precision actually supported
+  -> runtime response envelope
+  -> client rendering under obligations
 ```
 
-[↑ Back to top](#top)
+A current repository component may prove one step. It must not advertise the entire sequence unless the missing steps are also evidenced.
+
+[Back to top](#top)
 
 ---
 
 <a id="4"></a>
 
-## 4. Crossings — the only legitimate paths into public state
+## 4. Legitimate crossings and crossing preconditions
 
-> **CONFIRMED doctrine.** Atlas §20.3 (Master API Surface Table) enumerates the surfaces; *Build Manual* §29 shows the no-network proof slice. Every legitimate crossing is enumerated below.
+### 4.1 Crossing A — promotion into released state
 
-| Crossing | Carrier | Required pre-conditions | Finite outcomes |
-|---|---|---|---|
-| **Source summary** | `SourceDescriptor` projection | `SourceDescriptor` exists; rights resolved. | `ANSWER · ABSTAIN · DENY · ERROR` |
-| **Domain feature / detail lookup** | `DomainFeatureEnvelope` + `DecisionEnvelope` | `EvidenceRef` resolves; policy permits; release applies. | `ANSWER · ABSTAIN · DENY · ERROR` |
-| **Layer manifest fetch** | `LayerManifest` (+ `TileArtifactManifest`) | `ReleaseManifest` applies; rollback target valid. | `ANSWER · DENY · ERROR` |
-| **Evidence resolution** | `EvidenceBundle` | `EvidenceRef` resolves to a released bundle. | `ANSWER · ABSTAIN · DENY · ERROR` |
-| **Focus Mode runtime answer** | `RuntimeResponseEnvelope` + `AIReceipt` | All required `EvidenceRef`s resolve; `CitationValidationReport` passes; policy permits. | `ANSWER · ABSTAIN · DENY · ERROR` |
-| **Review queue surface** | `ReviewRecord` + `PolicyDecision` | Steward / rights-holder review present. | `ALLOW · RESTRICT · DENY · ERROR` |
-| **Correction / rollback** | `CorrectionNotice` + `RollbackCard` | Derivative invalidation listed; prior release referenced. | `ACCEPTED · HOLD · DENY · ERROR` |
+A promotion crossing is legitimate only when the candidate is bound to enough evidence and governance for its consequence. The exact required records depend on the profile, but the architecture requires these categories to remain inspectable:
 
-> [!NOTE]
-> Every row above lists **what the public sees**. None of them returns raw bytes, internal store identifiers, unreleased candidates, or uncited AI language. Returning any of those is the failure-mode register from [§10](#10).
+- deterministic candidate and artifact identity;
+- source and evidence support;
+- validation appropriate to object type;
+- rights, sensitivity, audience, and permitted-use posture;
+- provenance and integrity records;
+- accountable review;
+- release decision and manifest;
+- correction or withdrawal path;
+- rollback target; and
+- a record of obligations that downstream delivery must preserve.
 
-### 4.1 The minimal proof slice (no-network)
+A readiness validator may say a declared packet is `APPROVE_READY`. It does not perform the promotion, authenticate the reviewer, or create the release.
 
-> **CONFIRMED scaffold — *Build Manual* §29 Appendix A.** Reproduced for orientation; this is the architectural trace of one valid crossing from end to end.
+### 4.2 Crossing B — exposure to a client
 
-```text
-SourceDescriptor (public-safe synthetic fixture)
-  → RAW fixture metadata only
-  → PROCESSED HUC12 fixture
-  → EvidenceBundle
-  → LayerManifest
-  → StyleManifest
-  → TileArtifactManifest or GeoJSON fixture
-  → CatalogMatrix dry run
-  → PromotionReceipt dry run
-  → MapReleaseManifest dry run
-  → MapLibre click fixture
-  → EvidenceDrawerPayload
-  → FocusModeRequest
-  → MockAdapter response
-  → CitationValidationReport
-  → RuntimeResponseEnvelope
-  → AIReceipt + RunReceipt
-  → rollback target
-```
+A release does not grant universal exposure. Each request or delivery surface may add constraints:
 
-Expected outcomes on this slice (Build Manual §29):
+- caller identity and role;
+- requested operation—view, query, export, download, analyze, narrate, or administer;
+- audience and purpose;
+- requested spatial, temporal, and attribute precision;
+- current policy and sensitivity state;
+- evidence resolvability;
+- freshness;
+- correction, supersession, withdrawal, or rollback state;
+- obligations such as citation, attribution, generalization, no-export, or review.
 
-- `ANSWER` on valid public-safe fixture.
-- `ABSTAIN` on missing `EvidenceBundle`.
-- `DENY` on sensitive exact geometry.
-- `DENY` on unknown rights.
-- `ERROR` on policy engine unavailable.
-- `DENY` release on missing rollback.
-- `DENY` UI direct model call.
-- `DENY` public raw path.
+The runtime must expose only the precision actually supported and allowed. Client-side hiding, opacity, styling, zoom limits, or collapsed panels are presentation behavior, not protection.
 
-[↑ Back to top](#top)
+### 4.3 Static delivery is not an escape hatch
+
+A separately governed static edge may serve already released public-safe PMTiles, COGs, GeoParquet, manifests, styles, or similar carriers. It must preserve release identity, integrity, correction state, rights, and rollback obligations. It must not become:
+
+- a second policy authority;
+- a direct internal-store path;
+- a way to serve unreleased candidate bytes;
+- an unsigned mutable alias whose provenance cannot be reconstructed; or
+- a public artifact whose source and release binding are invisible.
+
+### 4.4 Administrative and break-glass paths
+
+Operational administration may require access that normal clients never receive. Such access should be:
+
+- authenticated and least-privilege;
+- purpose-bound and time-bounded where practical;
+- logged without leaking the protected payload;
+- separated from normal public routes;
+- reviewable and revocable; and
+- incapable of silently creating release or publication state.
+
+No administrative shortcut belongs in the ordinary public request path.
+
+[Back to top](#top)
 
 ---
 
 <a id="5"></a>
 
-## 5. Finite outcomes at the edge — ANSWER · ABSTAIN · DENY · ERROR · HOLD
+## 5. Finite outcomes and state vocabulary
 
-> **CONFIRMED doctrine.** *Atlas §24.3.1* names the finite outcome set and the public-surface effect of each. **Operational states** (`NORMAL · DEGRADED · ESCALATE · QUARANTINE`) are deliberately **separate** from finite decision outcomes. *(ML-065-008.)*
+### 5.1 Public runtime outcomes
 
-| Outcome | When | Required artifacts | Public-surface effect |
-|---|---|---|---|
-| **`ANSWER`** | Evidence sufficient; policy permits; release state allows; review (if required) recorded. | Resolved `EvidenceBundle`; `PolicyDecision = ALLOW`; `ReleaseManifest` applies. | Substantive answer with Evidence Drawer and citation. |
-| **`ABSTAIN`** | Evidence insufficient; cannot cite; or evidence stale and no released alternative. | `AIReceipt` with reason; **no claim emitted**. | Non-substantive note with reason; **never invents**. |
-| **`DENY`** | Policy, rights, sensitivity, or release state forbids. **Sensitive lanes default here.** | `PolicyDecision = DENY` + reason code; `AIReceipt` records denial. | Denial reason; offers alternative non-restricted surface where possible. |
-| **`ERROR`** | Governed API cannot evaluate — missing schema, malformed query, contract violation, infra failure. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error; **never falls through silently**. |
-| **`HOLD`** | Promotion / release / correction paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = HOLD`; no public claim while held. | Surface remains in prior state; no silent rollback. |
+The paired runtime response schema currently closes the public outcome vocabulary to four values:
 
-> [!CAUTION]
-> A "soft" outcome — `WARN`, `MAYBE`, `PARTIAL`, `KIND_OF_OK`, `FYI`, free-form status string — is **forbidden at the boundary**. Every public-side response either commits to one of the five outcomes above or is rejected as `ERROR`. The validator that enforces this lives in `tests/contract/` (PROPOSED).
+| Outcome | Meaning | Client posture |
+|---|---|---|
+| `ANSWER` | Evidence, policy, freshness, correction, release, and requested scope support a bounded response. | Render only with evidence refs, precision actually used, and required obligations. |
+| `ABSTAIN` | Support is insufficient, stale, unresolved, conflicted, or too broad without proving a prohibition. | Explain the safe limitation; do not infer an answer. |
+| `DENY` | Policy, rights, sensitivity, audience, consent, or operation rules prohibit exposure. | Do not render the protected payload; use a safe non-oracular reason. |
+| `ERROR` | The governed operation could not complete safely or deterministically. | Fail closed; do not infer truth or permission. |
 
-### 5.1 `DecisionEnvelope` shape (PROPOSED, mirrored from Pass-23 KFM-P5-PROG-0001)
+Unknown or missing outcomes must never default to `ANSWER`.
 
-```text
-{
-  "decision_id":   "<uuid>",
-  "outcome":       "ANSWER | ABSTAIN | DENY | ERROR | HOLD",
-  "policy_family": "promotion | access | render | capability | consent | sensitivity",
-  "reasons":       ["missing_spec_hash", "blocking_obligations_1", ...],
-  "obligations":   [{ "type": "redact", "op": "generalize_geometry", "level": "coarse" }],
-  "evaluated_at":  "<ISO-8601>"
-}
-```
+### 5.2 Internal states are not fifth public outcomes
 
-**Proposed schema home (per *directory-rules.md* §7.4 and ADR-0001):** `schemas/contracts/v1/runtime/decision_envelope.schema.json`.
+The repository also uses internal or profile-local vocabulary such as:
 
-> [!NOTE]
-> The `obligations[]` form converges on the structured shape (`{type, op, level?}`); the corpus also shows older string forms. Converging is a **PROPOSED** ADR item (Atlas KFM-P5-PROG-0001 dependencies).
+- `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`;
+- `HOLD`;
+- `RESOLVED`, `UNRESOLVED`, `DENIED`;
+- `PASS`, `APPROVE_READY`, `BLOCKED`;
+- `REVIEWED`, `PENDING`, `WITHDRAWN`, `SUPERSEDED`, `REVOKED`.
 
-[↑ Back to top](#top)
+These terms describe lifecycle, review, readiness, resolver, release, or history state. They must not be added to a public runtime envelope merely because they are meaningful elsewhere.
+
+### 5.3 Object-family separation
+
+| Object or result | Owns | Does not own |
+|---|---|---|
+| `DecisionEnvelope` | Finite runtime decision semantics, reasons, obligations, policy family | Policy execution, release, transport |
+| `PolicyDecision` | One policy-evaluation record | Runtime response, promotion, publication |
+| `RuntimeResponseEnvelope` | Client-facing outcome, evidence refs, state summaries, answer precision | Evidence storage, policy execution, release approval |
+| Evidence resolver result | Internal candidate closure result | Public `ANSWER`, rights clearance, release |
+| Promotion-gate result | Readiness finding | `PromotionDecision`, release, publication |
+| `ReleaseManifest` / release records | Release identity and transition support | Public payload bytes or universal access |
+
+The same words may appear in several families. The family and owning authority determine their meaning.
+
+[Back to top](#top)
 
 ---
 
 <a id="6"></a>
 
-## 6. Promotion gates A–G as boundary controls
+## 6. Current bounded promotion gates A–G
 
-> **CONFIRMED — *KFM Pass-10 dossier* C5-01.** Promotion gates A–G are the canonical seven-gate matrix between authoring and PUBLISHED. The same OPA bundle (pinned by digest) is expected to run in CI (Conftest) and at runtime (PDP). *(C5-03 policy parity.)*
+The repository's implemented no-network readiness validator uses the following current gate vocabulary:
 
-| Gate | Intent | Machine check | Required evidence at the boundary |
-|---|---|---|---|
-| **A — Structure & Metadata** | Meta block present; zone correct; placement valid. | `check_structure`; placement linter. | KFM Meta Block v2; directory-rules conformance. |
-| **B — Schemas & Contracts** | Shape valid; contract honored. | JSON Schema validation; OpenAPI validation. | `schemas/contracts/v1/...` PASS; `contracts/` reference resolves. |
-| **C — Policy Parity** | CI policy decision matches runtime. | Conftest / OPA decision; parity test. | Pinned OPA bundle digest matches runtime. |
-| **D — Security & Sensitivity** | Sensitivity tier honored; license allowed; rights resolved. | Sensitivity scan; SPDX allowlist; rights probe. | `RedactionReceipt` (where needed); `ReviewRecord` (sensitive lanes). |
-| **E — Data Quality** | DQ thresholds met; assertions PASS. | DQ profiler; assertion runner. | `ValidationReport` PASS. |
-| **F — Provenance & Lineage** | Receipts cosign-signed; lineage closed. | Cosign verify; OpenLineage event present; PROV closure. | `RunReceipt`, `EvidenceBundle`, PROV record. |
-| **G — Reviewability (two-key)** | Human approval + policy approval; CODEOWNERS-enforced. | Required-checks branch protection; reviewer attestation. | `PromotionDecision` signed; reviewer distinct from author on sensitive lanes. |
+| Gate | Current name | Bounded checks | Current limit |
+|:---:|---|---|---|
+| A | Identity and closure | Candidate, author, profile, spec hash, lifecycle boundary, manifest identity | Declared packet consistency only |
+| B | Asset integrity | Candidate/manifest/receipt hash agreement and digest-set equality | Does not authenticate external bytes or signatures |
+| C | Geometry and CRS | Declared validity, deterministic processing, `EPSG:4326`, bounded world bbox | Does not inspect a live production artifact |
+| D | Temporal semantics | Real UTC-second interval and supplied evaluation time | Does not decide domain fitness or currentness |
+| E | Rights/sensitivity policy context | Known profile/labels and finite supplied policy result | Does not run an accepted policy evaluator |
+| F | Proof and catalog support | Evidence, attestation, STAC/DCAT/PROV, run receipt, conditional AI receipt | Does not dereference or authenticate references |
+| G | Review and rollback | Fixture-only review, identity/authority declarations, separation, scope, bindings, correction and rollback links | Does not authenticate actors, assignments, or execute rollback |
+
+The validator returns `PASS`, `ABSTAIN`, `DENY`, or `ERROR`, with precedence `ERROR > DENY > ABSTAIN > PASS`.
 
 > [!IMPORTANT]
-> **Default-deny is structural.** *(C5-02.)* Promotion is denied unless: `spec_hash` matches recomputation, the run receipt is cosign-signed and verifiable, SPDX rights are in the allowlist, at least one attestation bundle is published, and every DQ check status is PASS. **The absence of evidence blocks promotion.**
+> `PASS` means only that the bounded declared packet has no finding under the current profile. It does not mean `APPROVED`, `PROMOTED`, `RELEASED`, `PUBLISHED`, or safe for a public client.
 
-### 6.1 What the membrane refuses to do
+The architecture depends on gate meanings remaining stable and versioned. Changing gate names, order, required inputs, or transition semantics is authority-bearing work and should not be smuggled into an explanatory Markdown edit.
 
-- Auto-merge until **all seven** gates pass.
-- Promote a candidate whose `spec_hash` does not match recomputation.
-- Accept a `ReleaseManifest` lacking a rollback target.
-- Allow the author to also sign release on a sensitive lane (separation of duties — [§8](#8)).
-- Upgrade a source role through promotion (e.g., modeled → observed). *(Atlas Pass-23 §3.)*
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="7"></a>
 
-## 7. Trust-membrane anti-patterns and their DENY surfaces
+## 7. Anti-patterns and deny surfaces
 
-> **CONFIRMED doctrine — *Atlas §24.9.2* and *Doctrine Synthesis* §29.2.** Reproduced here so that any architectural change is evaluated against the same list a reviewer will use.
+The membrane is breached when a normal public path does any of the following:
 
-| Anti-pattern | What goes wrong | DENY surface (where the membrane catches it) |
+| Anti-pattern | Why it fails | Required posture |
 |---|---|---|
-| Public client reads `RAW / WORK / QUARANTINE`. | Trust membrane bypassed; promotion gates skipped. | Governed API; `LayerManifest` resolver. |
-| Map shell consumes canonical / internal store directly. | Renderer becomes the public surface and inherits no governance. | MapLibre shell wiring; layer registry; renderer-boundary tests. |
-| AI returns uncited language. | Generated text substitutes for evidence; cite-or-abstain broken. | Focus Mode; AI surface steward; `CitationValidationReport`. |
-| AI answers from `RAW / WORK` rather than `EvidenceBundle`. | AI becomes its own truth source. | Governed AI runtime; `AIReceipt` evaluator. |
-| Sensitive content released without redaction. | `RedactionReceipt` missing; rights / sovereignty violation. | Release queue; sensitivity reviewer; Gate D. |
-| Aggregate cited as per-place observation. | Source-role collapse; matrix-cell semantics violated. | Validator; Focus Mode citation evaluator. |
-| Synthetic surface presented without **Reality Boundary Note**. | Reconstruction read as observation. | Scene admission gate; representation receipt validator. |
-| KFM used as alert / instruction authority. | Out-of-scope use of governed evidence as life-safety guidance. | Hazards / Air / Hydrology surfaces; AI surface scope policy. |
-| Release without `ReleaseManifest` or rollback target. | Public surface cannot be rolled back; release not auditable. | Release queue; release authority; Gate G. |
-| AI generation routed through an admin shortcut. | Admin bypass becomes a normal-path public route. | Trust-membrane audit; infra; admin-shortcut audit (I-TM-10). |
-| Style filter "hides" sensitive geometry. | Geometry still ships to the client. | Sensitivity tests; renderer-boundary tests; `policy/maplibre/` deny rule. |
-| Quiet promotion via CI shortcut. | Gates A–G bypassed. | Branch protection; required-checks parity tests. |
-| Documenting a change instead of validating it. | Docs become a substitute for tests. | "Docs are part of the working system, never a substitute" rule *(Atlas §24.9.3)*. |
-| Two parallel schema homes. | Reviewers no longer know which schema is authoritative. | ADR-0001 (schema home); placement linter. |
+| Browser reads `RAW`, `WORK`, `QUARANTINE`, candidate, or internal evidence stores directly | Bypasses evidence, policy, release, and correction controls | `DENY` and remove the direct path |
+| Route returns an `ANSWER` with unresolved or empty evidence support | Converts absence into authority | `ABSTAIN` or `ERROR` |
+| Client requests exact sensitive data and hides it with styling | Payload already crossed the boundary | Transform or deny before delivery |
+| Search, graph, vector index, or tile service is treated as canonical truth | Derived carrier replaces evidence | Resolve through governed evidence and release state |
+| Model output is exposed directly | Generated language bypasses evidence and policy | Governed adapter and envelope only |
+| Readiness `PASS` is represented as release | Confuses validation with accountable transition | Keep readiness and release records separate |
+| Merge or GitHub release is represented as KFM publication | Repository state is not lifecycle state | Require governed release evidence |
+| Denial reasons reveal protected facts | Negative outcome becomes an oracle | Return safe reason families only |
+| Error handling falls back to stale or cached `ANSWER` | Failure becomes unsafe success | Fail closed and expose correction/freshness state |
+| One service owns evidence, policy, review, release, and client rendering | Eliminates independent checks and audit boundaries | Split responsibilities or record an explicit bounded exception |
+| Documentation chooses a canonical survivor while migration evidence is open | Prose performs structural authority | Keep the collision on `HOLD` |
 
-> [!WARNING]
-> If a PR or change appears to ship one of these patterns "temporarily," the membrane treats *temporary* as **permanent until rolled back**. The architectural answer is to add the missing receipt / signature / review and re-enter the gate, not to ship and patch.
+### Cross-surface inference
 
-[↑ Back to top](#top)
+Protection must cover more than the primary payload. Review must include:
+
+- errors and reason codes;
+- feature counts and bounding boxes;
+- timing and cache behavior;
+- search facets and autocomplete;
+- graph neighborhoods;
+- map labels, tiles, styles, and source-layer metadata;
+- exports and screenshots;
+- story and Focus Mode summaries;
+- telemetry and logs;
+- 3D scenes and terrain-derived views; and
+- joins that reconstruct protected precision from public fragments.
+
+A public-safe layer can still be unsafe when combined with another layer. The operation and composition matter, not only each input's label.
+
+[Back to top](#top)
 
 ---
 
 <a id="8"></a>
 
-## 8. Separation of duties at the membrane
+## 8. Separation of duties and review burden
 
-> **CONFIRMED doctrine — *Atlas §24.7* and *Doctrine Synthesis* §31.** At release maturity, policy-significant duties are separated by role.
+### Current verified review route
 
-### 8.1 Roles that meet at the boundary
+The current `.github/CODEOWNERS` routes repository review to `@bartytime4life`. That is a verified GitHub review route, not proof of:
 
-| Role | Owns at the membrane | Cannot also own at the membrane |
-|---|---|---|
-| **Author / contributor** | Drafts schemas, content, fixtures, candidate deltas. | Self-release on sensitive lanes. |
-| **Docs steward** | Doctrine, ADR index, drift register, per-root READMEs. | Admissibility decisions; policy authoring. |
-| **Schema steward** | Schema home; validator registry. | Policy authoring; release approval. |
-| **Policy steward** | `policy/` content; sensitivity tiers; deny / allow rules. | Source admission; release approval. |
-| **Source steward** | `SourceDescriptor`; rights; activation; cadence. | Release approval on sensitive lanes for the same source. |
-| **Release authority** | `PromotionDecision`; `ReleaseManifest`; rollback target; correction notice. | Schema / policy authoring on the same release. |
-| **Review steward (domain / sensitivity / rights-holder)** | `ReviewRecord`; sensitive-lane sign-off. | Authoring the content being reviewed. |
-| **Governed-AI steward** | AI adapter; `AIReceipt`; structured-output validation; replay. | Release approval for content the AI produced. |
-| **Correction reviewer** | `CorrectionNotice`; `RollbackCard` sign-off. | Authoring the correction subject. |
+- an authenticated `StewardshipAssignment`;
+- independent review;
+- policy or sensitivity qualification;
+- release authority;
+- required code-owner enforcement;
+- branch-protection coupling; or
+- completed human approval.
 
-### 8.2 Two-person rule
+### Mature target separation
 
-> [!IMPORTANT]
-> **For T3 / T4 material, at least one reviewer outside the author's role chain must sign the `PromotionDecision`.** *(PROPOSED; finalized by ADR-S-09.)* The two-person rule applies to sensitive-lane releases, AI surface changes (template / policy binding), correction / rollback when steward-significant, and atlas / supplement publication.
+As KFM matures, policy-significant crossings should separate at least these functions where consequence justifies it:
 
-### 8.3 Maturity note
+| Function | Responsibility |
+|---|---|
+| Producer or transform author | Creates candidate bytes and receipts |
+| Evidence reviewer | Checks source role, scope, limitations, and evidence closure |
+| Policy/sensitivity reviewer | Evaluates rights, audience, precision, consent, sovereignty, and obligations |
+| Release reviewer | Decides whether the candidate may enter a named release state |
+| Operator | Executes an authorized transition or rollback |
+| Client/runtime owner | Ensures governed outcomes and obligations survive delivery |
+| Correction/incident owner | Coordinates withdrawal, replacement, invalidation, and public correction |
 
-> [!NOTE]
-> *Directory Rules* §2 treats separation of duties as **maturity-dependent**. Early-stage doctrine work can be authored and approved by the same actor when materiality is low. As maturity rises and the public trust surface expands, separation must be **enforced through tooling**, not custom. The membrane does not claim that enforcement exists today; it claims that the **architecture is shaped so enforcement can be added without re-plumbing.**
+One person may temporarily hold multiple roles in a bootstrap project, but the overlap should be visible. A generator, validator, or coding agent must never represent itself as independent approval.
 
-[↑ Back to top](#top)
+### High-consequence review
+
+Living-person data, genomics, rare species, archaeology, culturally restricted knowledge, private land or wells, critical infrastructure, and harmful precise locations require domain-appropriate review before less restrictive handling. This page does not establish the qualified reviewers or thresholds; those remain policy and stewardship decisions.
+
+[Back to top](#top)
 
 ---
 
 <a id="9"></a>
 
-## 9. Stale state, correction, rollback at the membrane
+## 9. Freshness, correction, withdrawal, and rollback
 
-> **CONFIRMED doctrine.** A `PUBLISHED` claim may become **stale** long before it is corrected. *Atlas §24.8* separates "stale" from "wrong."
+Trust is current and bounded, not permanent.
 
-### 9.1 Stale markers (visible at the public edge)
+### State and outcome are separate
 
-| Marker | Triggered by | UI signal | Required action |
-|---|---|---|---|
-| Source freshness expired | Cadence in `SourceDescriptor` passed without a new admission. | Stale source badge in Evidence Drawer. | Refresh or annotate. |
-| Upstream evidence superseded | A required `EvidenceRef` was superseded but not re-resolved here. | Stale evidence badge; `ABSTAIN` for derivatives. | Re-resolve or withdraw. |
-| Sensitivity policy moved | Tier scheme updated; current release no longer satisfies. | Restricted / pending badge. | Hold; re-review. |
-| Pending correction | `CorrectionNotice` recorded but not yet propagated to derivatives. | Correction-pending badge. | Propagate; rollback if needed. |
+- A response may be `ABSTAIN` because support is stale.
+- A public artifact may be `WITHDRAWN` while the runtime returns `DENY` or `ABSTAIN`.
+- A corrected release may support `ANSWER` only through the active replacement evidence.
+- A runtime failure may return `ERROR` without changing the underlying release state.
 
-### 9.2 Correction lifecycle
+### Required correction path
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant DET as Detector (validator / reviewer)
-    participant CR  as Correction reviewer
-    participant RA  as Release authority
-    participant API as Governed API
-    participant ML  as MapLibre / Focus Mode
+A material correction should preserve and propagate:
 
-    DET->>CR: file CorrectionNotice (lists invalidated derivatives)
-    CR->>RA: sign CorrectionNotice
-    RA->>RA: prepare RollbackCard (rollback target = prior release)
-    RA->>API: emit new ReleaseManifest OR repoint to rollback target
-    API-->>ML: layers / answers reflect corrected or rolled-back state
-    Note over ML: Stale badges clear; correction-pending<br/>badges resolve; AI surface re-resolves<br/>EvidenceRefs and may now ABSTAIN<br/>on still-pending derivatives.
-```
+1. prior identity and release lineage;
+2. the correction, withdrawal, supersession, or rollback decision;
+3. the active replacement or explicit absence of one;
+4. evidence and reason references safe for the audience;
+5. cache, index, tile, search, graph, export, and AI invalidation requirements;
+6. public-facing state and notices;
+7. replay evidence; and
+8. rollback or forward-fix target.
 
-> [!IMPORTANT]
-> **A correction that does not list invalidated derivatives is rejected.** *(Atlas §24.9.3; *Doctrine Synthesis* §29.3.)* The membrane's correction path is not "fix the one record"; it is "fix the one record **and** propagate or withdraw everything that referenced it."
+### Dynamic and static delivery
 
-### 9.3 Rollback target
+Dynamic APIs can check correction state on each request. Static carriers require explicit invalidation, alias, manifest, and cache discipline. A static file remaining reachable after withdrawal is not automatically a valid release.
 
-Every `ReleaseManifest` MUST carry a rollback target (Atlas; Build Manual §10). The rollback target is not a backup — it is a **named, signed previous release state** that public clients can be redirected to without rewriting history. The `RollbackCard` is exercised periodically through drills.
+### Current maturity
 
-[↑ Back to top](#top)
+The repository contains release, rollback, correction, and alias-verification guidance and fixture-first validators. It does not currently prove operational public correction propagation, alias mutation, cache invalidation, or deployed rollback. Those capabilities remain `UNKNOWN` or `NEEDS VERIFICATION`.
+
+[Back to top](#top)
 
 ---
 
 <a id="10"></a>
 
-## 10. Failure modes — what happens when the membrane breaks
+## 10. Failure modes and fail-closed behavior
 
-> **PROPOSED architectural failure register**, derived from *Atlas §24.10*, *Doctrine Synthesis* §30, and *Master MapLibre v2.1* anti-pattern entries. Pairs each failure with a counter-control already named in this document.
+| Failure | Safe result | Evidence required to graduate |
+|---|---|---|
+| Evidence reference missing or unresolved | `ABSTAIN` | Governed EvidenceRef-to-EvidenceBundle resolution with admissibility and scope |
+| Policy bundle or evaluator unavailable | `ERROR` or `DENY` according to accepted policy contract | Bound accepted evaluator, versioned inputs, negative tests, audit record |
+| Rights or sensitivity unclear | `DENY`, `ABSTAIN`, or quarantine | Qualified review, source terms, transform profile, obligations |
+| Requested precision exceeds support | Narrow scope or `ABSTAIN`; never invent precision | Evidence-backed `precision_actually_used` and transform receipts |
+| Release state missing | `ABSTAIN` or `DENY` | Valid release binding and correction/rollback references |
+| Release withdrawn or superseded | Do not render old payload as current | Active correction lineage and invalidation proof |
+| API route unavailable | `ERROR` | Safe retry/degradation design that does not bypass the API |
+| Static artifact integrity mismatch | `DENY` or `ERROR` | Manifest/digest verification and replacement or rollback |
+| Client payload malformed | `ERROR`; render no protected content | Closed parser/schema and negative fixtures |
+| Internal store becomes reachable from public path | Incident/containment; `DENY` | Route isolation, auth, tests, logs, and review |
+| Validator or workflow fails | Block the claimed transition | Root-cause evidence; never weaken a gate solely to obtain green status |
+| Case-collision migration is incomplete | `HOLD` structural change | Identity, content, inbound-link, fragment, consumer, history, and rollback closure |
 
-| Failure | What it looks like | Counter-control | Section |
-|---|---|---|---|
-| Public route bypasses the resolver. | Direct fetch of canonical store URL. | Renderer-boundary test; layer-manifest resolver as sole layer source. | [§3](#3), [§7](#7) |
-| AI emits uncited language. | A Focus Mode answer without `CitationValidationReport`. | Cite-or-abstain rule; `AIReceipt` evaluator. | [§5](#5), [§7](#7) |
-| Promotion without rollback target. | `ReleaseManifest` signed but `rollback_target` absent. | Gate G; release-queue admission. | [§6](#6) |
-| Style filter used for sensitivity. | Sensitive geometry in the tile, "hidden" by paint rule. | Sensitivity tests; `policy/maplibre/` deny rule. | [§7](#7) |
-| Source-role upgrade. | Modeled artifact relabeled "observed" at promotion. | Source-role anti-collapse validator. | [§3](#3), [I-TM-7](#1.3) |
-| Quiet promotion via CI shortcut. | Branch protection bypassed; required-checks not all green. | Required-checks branch protection; parity test (C5-03). | [§6](#6) |
-| Admin shortcut on the public path. | Break-glass route renders public answers without gates. | Admin-shortcut audit (I-TM-10); infra review. | [§3](#3) |
-| Replay drift after dependency bump. | Same input, different output, no announcement. | Replay golden hashes; pinned environment. | [§12](#12) |
-| Documentation drift vs. implementation. | Docs say "the system does X"; the system does not. | Drift register; docs-update rule. | [§14](#14) |
-| Cross-lane source-role mixing on joins. | Aggregate row joined to a per-place row; UI implies per-place truth. | Most-restrictive-applicable-row default; join policy. | [§7](#7) |
+A system must not turn absence, ambiguity, stale state, or operational failure into a permissive default.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="11"></a>
 
-## 11. Repository placement (PROPOSED)
+## 11. Repository placement and responsibility map
 
-> [!IMPORTANT]
-> All paths below are **PROPOSED** until verified against a mounted repository. They follow *directory-rules.md* v1.3 §6 (`docs/architecture/`), §7.1 (`apps/`), §7.2 (`packages/`), §7.4 (`schemas/contracts/v1/`), §10.4 (cross-domain doctrine), and §11 (release homes).
+### Directory Rules basis
 
-```text
-docs/
-├── architecture/
-│   ├── trust-membrane.md          # this file (PROPOSED)
-│   ├── system-context.md          # PROPOSED sibling
-│   ├── deployment-topology.md     # PROPOSED sibling
-│   ├── governed-api.md            # PROPOSED sibling — close cousin of this doc
-│   ├── map-shell.md               # PROPOSED sibling
-│   ├── maplibre-3d.md             # CONFIRMED authored (prior session)
-│   ├── spatial-foundation.md      # CONFIRMED authored (prior session)
-│   └── contract-schema-policy-split.md
-└── doctrine/
-    └── trust-membrane.md          # CONFIRMED doctrinal home — see §1.2
+Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the single writable human Directory Rules authority. This page remains at `docs/architecture/trust-membrane.md` because its primary responsibility is cross-root human explanation.
 
-apps/
-├── governed-api/                  # PROPOSED — Governed API service
-└── explorer-web/                  # CONFIRMED canonical map-first shell
-                                    # (per directory-rules.md v1.2/v1.3)
+The same-path update is `PLACE` for documentation purpose. It does not authorize the later structural migration of the case-colliding pair.
 
-packages/
-├── evidence/                      # PROPOSED — EvidenceRef resolver, CitationValidationReport
-├── policy/                        # PROPOSED — policy harness, DecisionEnvelope
-├── ai/                            # PROPOSED — AIReceipt, FocusModeRequest/Response
-└── maplibre-runtime/              # CONFIRMED v1.3 segment
+### Current responsibility roots
 
-schemas/
-└── contracts/v1/
-    ├── evidence/                  # evidence_bundle.schema.json, evidence_ref.schema.json
-    ├── policy/                    # policy_decision.schema.json
-    ├── runtime/                   # decision_envelope.schema.json
-    ├── release/                   # promotion_decision.schema.json,
-    │                              # rollback_target.schema.json
-    ├── ai/                        # ai_receipt.schema.json,
-    │                              # focus_mode_request.schema.json,
-    │                              # focus_mode_response.schema.json
-    └── maplibre/                  # layer_manifest.schema.json,
-                                   # tile_artifact_manifest.schema.json
-
-policy/
-├── core/                          # default-deny base rules
-├── sensitivity/                   # tier rules (T0-T4)
-├── release/                       # promotion / release / consent
-├── ai/                            # AI surface boundary
-└── maplibre/                      # render gate; sensitive-geometry deny
-
-release/
-├── manifests/                     # ReleaseManifest set
-├── promotion_decisions/           # PromotionDecision set
-├── rollback_cards/                # RollbackCard set
-├── correction_notices/            # CorrectionNotice set
-├── withdrawal_notices/            # WithdrawalNotice set
-└── signatures/                    # cosign signatures, DSSE envelopes
-
-tools/
-├── promotion_gate/                # Gates A-G runner; default-deny on missing evidence
-├── validators/                    # source-role anti-collapse, citation, etc.
-└── audit/                         # admin-shortcut audit; trust-membrane audit
-
-tests/
-├── contract/                      # DecisionEnvelope round-trip; finite-outcome enum
-├── policy/                        # OPA / Conftest parity (C5-03)
-├── integration/                   # end-to-end crossing tests
-└── e2e/                           # full membrane drill (Build Manual §29 slice)
-```
-
-### 11.1 Placement rules cheat-sheet
-
-| Artifact | Home | Why |
+| Responsibility | Current or governing home | Boundary |
 |---|---|---|
-| This doc | `docs/architecture/trust-membrane.md` | Architecture-perspective companion to the doctrinal file. *(directory-rules §6, §10.4.)* |
-| Doctrinal trust-membrane principle | `docs/doctrine/trust-membrane.md` | The rule is doctrine, not architecture. *(directory-rules §6.1.)* |
-| `DecisionEnvelope` schema | `schemas/contracts/v1/runtime/decision_envelope.schema.json` | Default schema home; runtime family. *(ADR-0001.)* |
-| `EvidenceBundle` / `EvidenceRef` schemas | `schemas/contracts/v1/evidence/` | Evidence family. |
-| `PromotionDecision` / `ReleaseManifest` / `rollback_target` schemas | `schemas/contracts/v1/release/` | Release family. |
-| OPA / Rego policy bundles | `policy/<family>/` | Policy owns admissibility. *(directory-rules §6.5.)* |
-| Promotion gate runner | `tools/promotion_gate/` | Long-lived trust-bearing tooling. *(directory-rules §7.5.)* |
-| Renderer-boundary tests | `tests/contract/` + `tests/policy/` | Contract and policy parity. |
-| `cross-renderer/` test dir | **must not exist** | Doctrinally empty per v1.3 sole-renderer architecture. |
+| Human architecture explanation | `docs/architecture/` | Explanatory only |
+| Accepted placement doctrine | `docs/doctrine/directory-rules.md` plus ADR-0029 | Placement authority only |
+| Architecture decisions | `docs/adr/` | Proposed or accepted according to each record |
+| Semantic meaning | `contracts/` | No executable or release authority |
+| Machine shape | `schemas/` | Validation is not approval |
+| Policy source | `policy/` | Rules do not publish by themselves |
+| Deployable dynamic trust boundary | `apps/governed-api/` | Current scaffold is fail-closed, not complete |
+| Public map/client shell | `apps/explorer-web/` | Current governed adapter is fixture-only |
+| Reusable evidence candidate logic | `packages/evidence-resolver/` | Internal and non-authoritative |
+| Validators | `tools/validators/` | Findings are bounded evidence |
+| Synthetic proof inputs | `fixtures/` | Fixtures are not source truth |
+| Executable tests | `tests/` and app-local test lanes | Tests prove declared scope |
+| Process receipts and proofs | `data/receipts/`, `data/proofs/` | Distinct from decisions and payloads |
+| Release decisions | `release/` | Append-only decision plane, not payload store |
+| Released public-safe carriers | `data/published/` | Require governed release; path presence alone is insufficient |
 
-> [!NOTE]
-> **No parallel schema, policy, source, registry, release, or proof home** is created for trust-membrane wiring. The membrane's contracts live in the same families every domain uses. Any apparent need for a parallel home is ADR-class. *(directory-rules §2.4.)*
+### No parallel authority
 
-[↑ Back to top](#top)
+Do not create another trust-membrane package, policy root, schema home, release root, or public API merely to make the architecture diagram look complete. A missing integration seam should remain explicit until its owner and authority are established.
+
+### Case-collision hold
+
+The current planning direction favors eventual lowercase convergence, but this page does not execute it. Before any rename, deletion, consolidation, or tombstone:
+
+1. freeze a base commit;
+2. compare both complete documents;
+3. reconcile both `doc_id` values and titles;
+4. inventory inbound links, fragments, generators, workflows, and external compatibility;
+5. preserve unique governance-significant content;
+6. choose a survivor through accountable review;
+7. repair references atomically;
+8. validate on case-sensitive and case-insensitive expectations; and
+9. record rollback.
+
+[Back to top](#top)
 
 ---
 
 <a id="12"></a>
 
-## 12. Validation tests
+## 12. Validation and acceptance evidence
 
-> **PROPOSED test categories.** None claimed to exist in a mounted repository this session.
+### CONFIRMED bounded validation surfaces
 
-<details>
-<summary><strong>Lifecycle-boundary tests (PROPOSED)</strong></summary>
+| Surface | Current proof |
+|---|---|
+| Governed API route tests | Three routes remain deterministic `ABSTAIN`; unknown routes and unsupported methods fail safely |
+| Governed API boundary tests | Selected forbidden imports and internal-store path literals are blocked |
+| Runtime response schema/validator | Four finite outcomes, closed shape, conditional answer precision, EvidenceRef shape binding |
+| Evidence resolver | Synthetic no-network candidate matrix, deterministic result ordering, socket/DNS denial |
+| Promotion readiness | Synthetic A–G matrix with PASS/ABSTAIN/DENY/ERROR polarity, no writes, no network |
+| Explorer governed projection parser | Strict fixture-only parser, correction-history checks, finite states, no network/lifecycle access |
+| Documentation controls | Link, metadata, document-graph, build, and topology workflows exist; exact-head results remain separate evidence |
 
-- Public surface request that references `RAW`, `WORK`, `QUARANTINE`, or canonical internal store → **DENY** / **ERROR**.
-- Public surface request that targets `PROCESSED` directly (without `ReleaseManifest`) → **DENY**.
-- Public surface request that targets a `CATALOG` candidate (without `PromotionDecision`) → **DENY**.
+### Missing integrated proof
 
-</details>
+The following remain required before claiming an operational trust membrane:
 
-<details>
-<summary><strong>Finite-outcome contract tests (PROPOSED)</strong></summary>
+- one authoritative repository-local EvidenceRef-to-EvidenceBundle lookup and scope model;
+- accepted policy inputs, bundles, evaluator, reason/obligation vocabularies, and consumer binding;
+- authenticated caller and review authority;
+- release-bound `RuntimeResponseEnvelope` emission from the dynamic API;
+- a real Explorer transport that consumes the governed API without internal-store fallback;
+- separately governed static-delivery integrity and correction behavior;
+- a complete negative matrix for unauthorized callers, restricted precision, withdrawn releases, stale evidence, policy failure, and upstream outages;
+- correction propagation through dynamic responses, caches, tiles, search, graph, exports, and AI;
+- deployment isolation, least privilege, telemetry minimization, and operational logs;
+- rollback and forward-correction rehearsal against a bounded released fixture; and
+- exact-head hosted checks plus human review for the implemented slice.
 
-- Every governed surface route returns `outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR, HOLD}`.
-- Operational status strings (`NORMAL`, `DEGRADED`, etc.) **must not** appear in the `outcome` field. *(ML-065-008.)*
-- `DecisionEnvelope` round-trip: valid envelope passes schema; invalid (missing `decision_id`, free-form `outcome`, unstructured `obligations`) **fails closed**.
+### Documentation acceptance for this page
 
-</details>
+This page is acceptable when:
 
-<details>
-<summary><strong>Policy parity tests (PROPOSED — C5-03)</strong></summary>
+- the metadata block is structurally valid;
+- the same path and document identity are preserved;
+- the H1 compatibility anchor and numbered legacy anchors remain;
+- links and fragments resolve at the pinned base;
+- current implementation claims match inspected repository evidence;
+- target architecture is labeled rather than presented as current fact;
+- the case-collision migration remains held;
+- one file changes; and
+- rollback is exact and documented.
 
-- CI Conftest decision **equals** runtime PDP decision for the same input and same pinned bundle digest.
-- Bundle digest drift between CI and runtime → **FAIL**.
+A green documentation check cannot accept ADR-0004, activate a source, approve policy, establish release authority, or publish KFM knowledge.
 
-</details>
-
-<details>
-<summary><strong>Promotion-gate tests (PROPOSED — C5-01 / C5-02)</strong></summary>
-
-- Missing `spec_hash` → **FAIL** (Gate B).
-- Unsigned `RunReceipt` → **FAIL** (Gate F).
-- License not on SPDX allowlist → **FAIL** (Gate D).
-- No attestation bundle → **FAIL** (Gate F).
-- Any DQ check status != `PASS` → **FAIL** (Gate E).
-- Author == release approver on sensitive lane → **FAIL** (Gate G).
-- `ReleaseManifest` without rollback target → **FAIL** (Gate G).
-
-</details>
-
-<details>
-<summary><strong>Evidence and citation tests (PROPOSED)</strong></summary>
-
-- Composed claim with any unresolved `EvidenceRef` → **ABSTAIN** (not silent `ANSWER`).
-- Focus Mode answer with `CitationValidationReport.verdict != PASS` → **ABSTAIN**.
-- `AIReceipt` missing required fields (`context_hash`, `evidence_ids`, `citation_report_id`, `policy_ids`, `outcome`) → **ERROR**.
-
-</details>
-
-<details>
-<summary><strong>Renderer-boundary tests (PROPOSED)</strong></summary>
-
-- MapLibre boot path that fetches a canonical store URL → **FAIL**.
-- Layer with `geometry_label` mismatching `requested_mode` → **DENY**. *(See [`maplibre-3d.md`](./maplibre-3d.md).)*
-- Sensitive geometry "hidden" by MapLibre `filter` only → **DENY** (sensitivity test must shoot the wire, not the paint). *(ML-Q-082.)*
-- `cross-renderer/` test directory present → **drift; FAIL**. *(directory-rules v1.3.)*
-
-</details>
-
-<details>
-<summary><strong>Correction / rollback tests (PROPOSED)</strong></summary>
-
-- `CorrectionNotice` without invalidated-derivative list → **FAIL**.
-- Rollback drill: repoint `release_state` to prior `ReleaseManifest`; downstream layers/answers reflect rolled-back state.
-- Withdrawn release continues to return **DENY** with the withdrawal reason; **never** silently re-emerges.
-
-</details>
-
-<details>
-<summary><strong>Source-role anti-collapse tests (PROPOSED)</strong></summary>
-
-- Promotion that relabels a modeled artifact as observed → **FAIL**.
-- Aggregate cited as per-place observation → **FAIL** (validator and Focus Mode citation evaluator both refuse).
-
-</details>
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="13"></a>
 
-## 13. Open questions and verification backlog
+## 13. Dependency-ordered verification backlog
 
-| ID | Question | Resolution path |
-|---|---|---|
-| **OPEN-TM-01** | Does a mounted `docs/doctrine/trust-membrane.md` exist, and if so, are there claims here that contradict it? | Mount repo; diff against this file; record any contradiction in `docs/registers/DRIFT_REGISTER.md` and route through ADR. |
-| **OPEN-TM-02** | Are the §3 enforcement-point paths (apps, packages, tools, policy, release) present, partially present, or absent in the mounted repo? | Mount repo; inventory; record findings in drift register. |
-| **OPEN-TM-03** | Is the `decision_envelope.schema.json` (or equivalent) already authored? Does it follow the structured `obligations` shape? | Search `schemas/contracts/v1/runtime/`; verify against §5.1. |
-| **OPEN-TM-04** | Is the OPA bundle pinned by digest across CI and runtime (C5-03 policy parity)? | Inspect CI workflows and runtime config; record digests. |
-| **OPEN-TM-05** | Is the `cross-renderer/` test directory absent from the mounted repo (v1.3 sole-renderer doctrine)? | Inspect `tests/integration/`; if present, file drift. |
-| **OPEN-TM-06** | Is the two-person rule (§8.2) currently enforced by tooling or by custom? | Inspect CODEOWNERS, branch protection, release queue. |
-| **OPEN-TM-07** | Is the renderer-boundary test family fully wired (renderer cannot fetch canonical store, style filter cannot hide sensitive geometry)? | Inspect `tests/contract/`, `tests/policy/`, `packages/maplibre-runtime/`. |
-| **OPEN-TM-08** | What is the SPDX allowlist for Gate D? | Settle ADR per Pass-10 C5-02 Open Questions. |
-| **OPEN-TM-09** | Which ADR numbers (currently PROPOSED in Build Manual Appendix B and Atlas Open-ADR backlog) are actually filed and at what status? | Inspect `docs/adr/`; reconcile with the known ADR-0003 numbering conflict. |
-| **OPEN-TM-10** | Which steward holds **trust-membrane authority** across stewards? *(Atlas §24.7 lists individual roles but no consolidated owner.)* | Surface in `docs/governance/` once the steward set is verified. |
+### P0 — authority and safety closure
 
-[↑ Back to top](#top)
+1. **Case-collision decision packet:** compare complete uppercase/lowercase identities, content, fragments, consumers, and history; choose a survivor or continue `HOLD`.
+2. **ADR-0004 disposition:** accept, revise, or hold the dynamic Governed API decision without inferring acceptance from configured code.
+3. **Policy runtime:** establish accountable input, bundle, evaluator, outcome, reason, obligation, correction, and rollback semantics.
+4. **Evidence resolution:** graduate from caller-supplied candidate checking to an authoritative, no-network repository abstraction for one bounded fixture.
+5. **Release authority:** bind authenticated review, release decision, manifest, correction, and rollback without treating readiness as release.
+6. **Sensitive handling:** ratify operation- and domain-specific rights, consent, sovereignty, precision, audience, and reviewer requirements.
+
+### P1 — dependency-closed proof slice
+
+Build one synthetic, public-safe, no-network flow:
+
+```text
+released candidate
+  -> authoritative EvidenceRef resolution
+  -> policy decision
+  -> review/release binding
+  -> RuntimeResponseEnvelope
+  -> governed client parsing and rendering
+  -> correction or withdrawal replay
+  -> rollback verification
+```
+
+The slice should include `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, and prove no model, connector, DNS, or external store call.
+
+### P2 — operational and public-surface maturity
+
+- production authentication and authorization;
+- dynamic/static parity;
+- cache and index invalidation;
+- browser, export, search, graph, map, story, and AI obligation parity;
+- performance and accessibility budgets;
+- telemetry and audit retention;
+- incident response;
+- public correction visibility; and
+- deployment, recovery, and rollback rehearsal.
+
+### Open questions
+
+- Which document identity survives the case-collision migration?
+- Which current object is the authoritative public response envelope for each surface?
+- Which reason and obligation vocabularies are safe and accepted?
+- Which repository abstraction owns evidence lookup without becoming a second evidence store?
+- Which release alias, registry, or manifest is authoritative at runtime?
+- Which review roles are accountable and independently enforceable?
+- Which static carriers may be served directly, under which integrity and correction checks?
+- How are stale, corrected, withdrawn, and rollback-affected responses represented consistently across all clients?
+- Which checks are actually required by repository rules at the exact head?
+
+[Back to top](#top)
 
 ---
 
 <a id="14"></a>
 
-## 14. Glossary tie-in
+## 14. Glossary and bounded definitions
 
-> **CONFIRMED — KFM Atlas v1.1 Appendix A** and the Build Manual §28. Reproduced only for the terms most relevant to the trust membrane; the canonical glossary is the Atlas / Build Manual.
-
-| Term | Short definition |
+| Term | Meaning in this page |
 |---|---|
-| **Trust membrane** | The boundary preventing raw, unreviewed, restricted, or generated state from becoming public truth. |
-| **Governed API** | The interface enforcing evidence, policy, release, finite outcomes, and audit at the public side of the membrane. |
-| **`DecisionEnvelope`** | Normalized finite-outcome envelope: `decision_id`, `outcome`, `policy_family`, `reasons[]`, `obligations[]`, `evaluated_at`. |
-| **`EvidenceBundle`** | Resolved evidence package for a claim; canonical artifact behind every `ANSWER`. |
-| **`EvidenceRef`** | Reference that must resolve to `EvidenceBundle` before public claim authority. |
-| **`PolicyDecision`** | Policy verdict at the membrane; shape mirrors `DecisionEnvelope`. |
-| **`PromotionDecision`** | Governed state transition into release; signed by release authority. |
-| **`ReleaseManifest`** | Release-state bundle of artifacts with rollback target and signatures. |
-| **`RollbackCard`** | Defines a reversible target release; repoints `release_state` without rewriting history. |
-| **`CorrectionNotice`** | Lists invalidated derivatives when a `PUBLISHED` claim is corrected. |
-| **`AIReceipt`** | Audit trail for AI surface execution; binds `evidence_ids`, `citation_report_id`, `policy_ids`, `outcome`. |
-| **`CitationValidationReport`** | Pass / fail citation closure for Focus Mode, popups, exports. |
-| **Promotion gates A–G** | Structure · Schemas/Contracts · Policy Parity · Security/Sensitivity · Data Quality · Provenance/Lineage · Reviewability. |
-| **Default-deny** | Absence of evidence, policy, review, or release state blocks public exposure. |
-| **Cite-or-abstain** | Public claim is either fully cited or replaced with `ABSTAIN` + reason. |
+| Trust membrane | Distributed composition separating internal lifecycle state from governed release and delivery |
+| Internal side | Not-yet-warranted source, candidate, quarantine, work, and processing state |
+| Promotion crossing | Governed transition from candidate catalog/triplet state toward a named release |
+| Exposure crossing | Governed transition from released/policy-safe state to a client response or public-safe carrier |
+| Warrant | Recorded support for a bounded use, audience, precision, time, and release state |
+| Evidence closure | Evidence references resolve to admissible support for the claim and operation |
+| Readiness | Validator result indicating declared preconditions passed; not release |
+| Release | Accountable state transition with manifest, correction, and rollback support |
+| Public-safe carrier | Released derivative suitable for a declared public audience; still not sovereign truth |
+| Governed API | Proposed single dynamic trust boundary under ADR-0004; current implementation is a fail-closed scaffold |
+| Static-delivery edge | Separately governed delivery of already released public-safe artifacts |
+| Finite outcome | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` for public runtime responses |
+| HOLD | Internal governance state that blocks a decision or structural change; not a public runtime outcome |
+| Obligation | Requirement a downstream surface must preserve, such as citation, attribution, generalization, or no-export |
+| Correction lineage | Inspectable relation among prior, corrected, superseded, withdrawn, replacement, and rollback states |
+| Non-oracular denial | Safe negative response that does not disclose the protected fact through its reason |
+| Case collision | Two tracked paths differ only by case and cannot coexist safely on common case-insensitive filesystems |
 
 ---
 
 <a id="related"></a>
 
-## Related docs
+## Related documents and evidence surfaces
 
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — **doctrinal home**; this file is the architecture-perspective companion. *(CONFIRMED authority per directory-rules v1.3; mounted-repo presence NEEDS VERIFICATION.)*
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — what overrides what when sources conflict.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → PUBLISHED` invariant.
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain.
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law (v1.3).
-- [`docs/architecture/governed-api.md`](./governed-api.md) — the boundary's primary public surface. *(PROPOSED sibling.)*
-- [`docs/architecture/map-shell.md`](./map-shell.md) — how the MapLibre shell stays downstream of the boundary. *(PROPOSED sibling.)*
-- [`docs/architecture/system-context.md`](./system-context.md) — overall system context. *(PROPOSED sibling.)*
-- [`docs/architecture/spatial-foundation.md`](./spatial-foundation.md) — the foundational spatial-grammar lane that flows through this boundary. *(CONFIRMED authored prior session.)*
-- [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) — 3D surface downstream of the membrane. *(CONFIRMED authored prior session.)*
-- [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) — meaning / shape / admissibility split the membrane relies on. *(PROPOSED sibling.)*
-- *KFM Domains v1.1* §20 (Master API / Validator / Test) and §24.3 (decision outcomes).
-- *Pass 23/32 Consolidated Atlas* §24.7 (separation of duties), §24.9.2 (trust-membrane anti-patterns), §24.10 (risk register).
-- *KFM Unified Doctrine Synthesis* §29 (anti-pattern register), §31 (separation of duties).
-- *KFM Unified Implementation Architecture Build Manual* §10 (domain-lane packet), §29 (no-network proof slice), Appendix B (ADR queue).
-- *KFM Components Pass-10 Idea Index* C5-01 (gate matrix A–G), C5-02 (default-deny), C5-03 (policy parity).
+### Architecture and convergence
 
----
+- [`README.md`](./README.md) — architecture lane map and explicit structural migration hold.
+- [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — current repository-grounded architecture/enforcement snapshot.
+- [`document-convergence-plan.md`](./document-convergence-plan.md) — provisional no-loss convergence direction.
+- [`governed-api.md`](./governed-api.md) — dynamic API architecture.
+- [`evidence-drawer.md`](./evidence-drawer.md) — universal client explanation surface.
+- [`publication/promotion-gates.md`](./publication/promotion-gates.md) — promotion-gate architecture context.
+- [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) — meaning, shape, admissibility, execution, and proof boundaries.
 
-**Last updated:** `<YYYY-MM-DD — set on PR>`
-**Doc version:** `v1 (draft)`
-**Spec hash:** *NEEDS VERIFICATION (generated at release time).*
+### Doctrine and decisions
 
-[↑ Back to top](#top)
+- [Directory Rules v2](../doctrine/directory-rules.md) and [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md).
+- [Draft trust-membrane doctrine articulation](../doctrine/trust-membrane.md).
+- [ADR-0004](../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) — proposed Governed API decision.
+
+### Contracts, implementation, and bounded proof
+
+- [`RuntimeResponseEnvelope`](../../contracts/runtime/runtime_response_envelope.md) and its [paired schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json).
+- [`DecisionEnvelope`](../../contracts/runtime/decision_envelope.md).
+- [`PolicyDecision`](../../contracts/policy/policy_decision.md).
+- [`apps/governed-api/`](../../apps/governed-api/README.md).
+- [`packages/evidence-resolver/`](../../packages/evidence-resolver/README.md).
+- [`release/`](../../release/README.md).
+- [Promotion-gate readiness validator](../../tools/validators/promotion_gate/README.md).
+- [Explorer fixture-only governed adapter](../../apps/explorer-web/src/adapters/GovernedClient.ts).
+
+## Non-effects
+
+This documentation update does not:
+
+- accept, reject, or supersede an ADR;
+- choose the case-collision survivor;
+- move, rename, delete, mirror, or tombstone a path;
+- change a contract, schema, policy, fixture, validator, test, workflow, application, package, data record, receipt, proof, release record, or repository setting;
+- authenticate a reviewer or caller;
+- activate a source, connector, model, route, policy evaluator, evidence store, or public artifact;
+- promote lifecycle state;
+- release, deploy, publish, correct, withdraw, or roll back KFM knowledge.
+
+## Last reviewed and rollback
+
+**Last reviewed:** 2026-08-19 against `main@45fc45556a007196aa29e725f3a4b9fe9af8294e`.
+
+**Rollback:** Before merge, close the draft pull request and abandon its branch. After an authorized merge, revert the documentation commit or restore prior blob `40602152f13044fa87d57c73c71d797f95afa61e`. No data migration, source deactivation, cache invalidation, correction notice, release rollback, deployment rollback, or public withdrawal is required because this page changes explanatory Markdown only.
+
+[Back to top](#top)
