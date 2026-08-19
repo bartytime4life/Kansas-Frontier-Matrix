@@ -30,7 +30,7 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 854cb663dd70a39675280743159872e4cf6e9354
+  base_commit: 6e45646702022513fa0777b294d09ea90d73cf58
   target_prior_blob: a9337842473846d05d14dbbc1a52cbca7199ea63
   standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -434,7 +434,7 @@ The exact field names and hash projection belong in contracts and schemas, not i
 
 ## 7. Current KFM repository state
 
-The observations in this section are pinned to `main@854cb663dd70a39675280743159872e4cf6e9354`. They establish repository bytes, not deployed behavior.
+The observations in this section are pinned to `main@6e45646702022513fa0777b294d09ea90d73cf58`. They establish repository bytes, not deployed behavior.
 
 ### 7.1 Confirmed surfaces
 
