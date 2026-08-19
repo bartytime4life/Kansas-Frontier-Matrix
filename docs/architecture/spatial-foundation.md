@@ -1,727 +1,1212 @@
-<!--
-================================================================================
-KFM Meta Block v2
---------------------------------------------------------------------------------
-doc_id:             kfm://doc/arch-spatial-foundation
-title:              Spatial Foundation — Architecture
-class:              architecture / cross-domain doctrine
-status:             draft
-truth_posture:      cite-or-abstain
-governance_layer:   data plane (spatial grammar) · map plane (renderer-bound)
-proposed_path:      docs/architecture/spatial-foundation.md   (PROPOSED)
-directory_rule:     §6 docs/architecture/<topic>.md — cross-domain doctrine.
-                    §10.4 cross-domain topics live here, not under
-                    docs/domains/<picked-one>/.
-sibling_docs:       docs/architecture/system-context.md
-                    docs/architecture/deployment-topology.md
-                    docs/architecture/governed-api.md
-                    docs/architecture/map-shell.md
-                    docs/architecture/maplibre-3d.md
-                    docs/architecture/contract-schema-policy-split.md
-related_doctrine:   docs/doctrine/authority-ladder.md
-                    docs/doctrine/lifecycle-law.md
-                    docs/doctrine/trust-membrane.md
-                    docs/doctrine/directory-rules.md  (v1.3)
-related_atlas:      KFM_Domains_v1_1 §18 (Spatial Foundation, Cartography,
-                    Reference Systems) — doctrinal source of object families.
-                    Pass 23/32 Consolidated Atlas §24.4.1 — cross-lane edges
-                    owned by Spatial Foundation.
-related_standards:  docs/standards/PMTILES.md
-                    docs/standards/OGC-API-TILES.md
-                    docs/standards/ISO-19115.md
-                    docs/standards/PROV.md
-related_adrs:       ADR-0001 (schema-home) — CONFIRMED authored.
-                    ADR-0008 (MapLibre default 2D shell + renderer boundary)
-                    — PROPOSED in Build Manual Appendix B.
-                    ADR-0009 (PMTiles/COG/GeoParquet artifact policy)
-                    — PROPOSED in Build Manual Appendix B.
-                    ADR-PROPOSED: MapLibre as Sole Browser-Side Renderer
-                    (per maplibre-3d.md Appendix B).
-spec_hash:          NEEDS VERIFICATION (generated at release time).
-owners:             <PLACEHOLDER — Spatial Foundation steward + map-plane
-                    steward; do not invent>
-created:            <YYYY-MM-DD — set on PR>
-updated:            <YYYY-MM-DD — set on PR>
-policy_label:       public
-tags:               [kfm, architecture, spatial, crs, projection, geometry,
-                    cartography, maplibre, generalization]
-notes:              Authored docs-only; no mounted repo, CI run, workflow,
-                    runtime log, ADR set, or release artifact inspected.
-                    Implementation maturity is bounded per the current-session
-                    evidence limit.
-================================================================================
--->
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/architecture/spatial-foundation
+title: Spatial Foundation — Current Architecture and Spatial-Control Boundary
+type: architecture-reference
+version: v2.0-draft
+status: "draft; repository-grounded; cross-cutting; mixed-maturity; no-domain-truth-authority; no-policy-authority; no-release; no-publication"
+owners:
+  - "@bartytime4life — verified GitHub review route through CODEOWNERS"
+  - "NEEDS VERIFICATION — spatial-foundation, geography, geodesy, survey, map, evidence, policy, release, security, and independent-review stewards"
+created: "NEEDS VERIFICATION — target predates this repository-grounded revision"
+updated: 2026-08-19
+policy_label: "public; architecture; spatial-foundation; cross-cutting; representation; geometry-lineage; fail-closed; release-gated"
+owning_root: docs/
+current_path: docs/architecture/spatial-foundation.md
+responsibility: >
+  Explain the cross-system architecture for spatial identity, geography versions,
+  reference systems, geometry lineage, transformations, scale support, uncertainty,
+  spatial joins, and public-safe representation without becoming a domain lane,
+  semantic contract, machine schema, policy source, executable transform, source
+  registry, lifecycle store, release authority, or implementation proof.
+truth_posture: >
+  CONFIRMED same-path architecture placement, accepted Directory Rules,
+  CODEOWNERS review routing, cross-cutting/non-domain posture in current registers,
+  three proposed-inactive machine-backed spatial-foundation profiles, adjacent
+  fixture-only geography/crosswalk/admin-boundary and georeference profiles, a
+  deterministic fixture-only CSV-to-GeoJSON preflight, a greenfield geo package,
+  a fail-closed Governed API scaffold, and several documentation/inventory drifts /
+  PROPOSED complete spatial-control architecture, CRS profile closure, geometry
+  fingerprinting, scale-support and uncertainty semantics, operational transform
+  receipts, policy integration, and governed consumer bindings / CONFLICTED
+  Spatial Foundation domain-vs-cross-cutting labeling, source-lifecycle placement
+  for 3DEP, map/layer contract homes, and incomplete family indexes / UNKNOWN
+  active source intake, real geometry processing, accepted CRS registry, runtime
+  transformations, evidence resolution, public-safe enforcement, release
+  integration, deployed behavior, and operational effectiveness.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 45fc45556a007196aa29e725f3a4b9fe9af8294e
+  target_prior_blob: 8e6ec163063d465d47ef1576c54755bc41539915
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  domain_lane_projection_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
+  spatial_domain_scaffold_blob: f0d3a41c2a1474bf804e21c8b328b44356e9b1f6
+  spatial_contract_family_blob: c500d6120b9c990c48703247730d6b9efb4f5112
+  spatial_schema_family_blob: ec3e15743a90bdc902a43f8aa8b39a91509fbcba
+  boundary_derivation_contract_blob: 8ec39e8d2089a7a64229a6b8452e5065abd4943a
+  xy_transform_contract_blob: 1618cdaccf65a0e55b1806f753ffb9afbccaad00
+  lidar_lineage_contract_blob: 8b82ed6ce81a330a781346d57136b25c7490be53
+  geography_version_contract_blob: 35d2886a444af39d68326f6d3aa625b173321147
+  geography_version_schema_blob: 09365abedf0469519546b29d1503694674494b24
+  geography_version_validator_blob: caf24421868c3858bd1229c29670a051713d83e5
+  geography_crosswalk_contract_blob: 683d22abb441edcc6b280f9a74950cc3363a42c5
+  admin_boundary_change_contract_blob: 27dd83b9a33c7b6e44397a3f2c2a8e76dbb98e96
+  geo_package_readme_blob: 275fd1fb20fc3e843b85feb992e10d22034c3481
+  geo_package_manifest_blob: ad9241a73d73d1c47fe2d29e52594b3961e8b588
+  geo_core_blob: 228384a7b82327f71f10bf16edc3a399f40c7576
+  map_schema_readme_blob: 945118eec8ec9f4c36549fe7a6fbcdf18bc09f41
+  map_contract_readme_blob: 4416722f89251682990db51522d9ce8ee00a4369
+  map_release_manifest_contract_blob: e2a70bdd659cf432901ee9d5544b8e1418c23e60
+  csv_geojson_preflight_blob: b3b6d4eeae5e59e42715b1dc7e43376dddbc8dbd
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+related:
+  - ./README.md
+  - ./SYSTEM_MAP.md
+  - ./system-context.md
+  - ./contract-schema-policy-split.md
+  - ./cross-lane-join-policy.md
+  - ./source-role-anti-collapse.md
+  - ./data-classification-framework.md
+  - ./map-shell.md
+  - ./governed-api.md
+  - ./sensitive-domain-fail-closed.md
+  - ./sensitivity.md
+  - ./document-convergence-plan.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../registers/DOMAIN_LANE.md
+  - ../registers/OBJECT_FAMILY.md
+  - ../../control_plane/domain_lane_register.yaml
+  - ../../contracts/spatial-foundation/README.md
+  - ../../schemas/contracts/v1/spatial-foundation/README.md
+  - ../../contracts/common/geography_version.md
+  - ../../contracts/crosswalks/geography_crosswalk.md
+  - ../../contracts/common/admin_boundary_change.md
+  - ../../contracts/map/README.md
+  - ../../contracts/release/map_release_manifest.md
+  - ../../packages/geo/README.md
+  - ../../tools/ingest/csv_geojson_preflight/preflight.py
+  - ../../apps/governed-api/src/governed_api/main.py
+  - ../../release/README.md
+tags: [kfm, architecture, spatial-foundation, geography-version, crs, geometry, transformation, scale, uncertainty, crosswalk, provenance, map, evidence, release]
+notes:
+  - "Same-path architecture-document modernization only; no contract, schema, source, fixture, validator, package, policy, data, API, release, deployment, or publication mutation."
+  - "Spatial Foundation is treated as a cross-cutting capability because the current domain-lane projection excludes spatial and contains no spatial-foundation domain entry."
+  - "The legacy document identity and explicit anchors 1 through 15 plus related are preserved for inbound compatibility."
+  - "No real coordinates, protected geometry, source payload, operational redaction parameter, or sensitive transform threshold is included."
+[/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Spatial Foundation — Architecture
+# Spatial Foundation — Current Architecture and Spatial-Control Boundary
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![truth--posture](https://img.shields.io/badge/truth--posture-cite--or--abstain-success)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-success)
-![implementation](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![repo--depth](https://img.shields.io/badge/repo--depth-UNKNOWN-lightgrey)
-![governance](https://img.shields.io/badge/governance-default--on-informational)
-![scope](https://img.shields.io/badge/scope-cross--domain-blueviolet)
-<!-- CI badge URL is left as a placeholder; no mounted workflow was verified this session.
-![ci](https://img.shields.io/github/actions/workflow/status/<OWNER>/<REPO>/<WORKFLOW>.yml?branch=main)
--->
+> **Operating rule.** Spatial Foundation makes location, geometry, reference systems, geography versions, transformations, scale support, uncertainty, and spatial lineage explicit and reviewable. It does not create domain truth, decide policy, certify a legal boundary, activate a source, approve a release, or make a rendered map authoritative.
 
-> **One-line purpose.** Define how the **Spatial Foundation** — KFM's cross-cutting grammar for coordinate reference, geometry validity, scale, generalization, uncertainty, basemap context, and cartographic representation — participates in the system architecture, what it owns versus what it does not, how its artifacts flow through the trust membrane to the MapLibre shell and the Governed AI surface, and what gates govern its publication path.
+[![Document: architecture](https://img.shields.io/badge/document-architecture--reference-0969da?style=flat-square)](#1)
+[![Placement: confirmed](https://img.shields.io/badge/placement-PLACE-2da44e?style=flat-square)](#10)
+[![Context: cross-cutting](https://img.shields.io/badge/context-cross--cutting-0969da?style=flat-square)](#1)
+[![Profiles: fixture-only](https://img.shields.io/badge/profiles-fixture--only-f59e0b?style=flat-square)](#3)
+[![Geo package: placeholder](https://img.shields.io/badge/geo%20package-0.0.0%20placeholder-b42318?style=flat-square)](#3)
+[![Public API: abstain/error scaffold](https://img.shields.io/badge/public%20API-ABSTAIN%20%2F%20ERROR%20scaffold-f59e0b?style=flat-square)](#8)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#16)
 
-> [!NOTE]
-> Spatial Foundation is **doctrinally CONFIRMED** in *KFM Domains v1.1* §18 and *Pass 23/32 Consolidated Atlas* §24.4.1. Every **implementation-layer** claim in this document — paths, schemas, policy files, tests, route names, CI status — is **PROPOSED** until verified against a mounted repository. No mounted repo, ADR set, CI workflow, or runtime was inspected for this draft.
+> [!IMPORTANT]
+> **Current repository evidence supports several bounded control slices, not an end-to-end spatial foundation.** The repository contains proposed-inactive contracts, closed schemas, synthetic fixtures, deterministic validators, tests, and workflows for selected geography, crosswalk, administrative-boundary, coordinate-creation, LiDAR-lineage, boundary-derivation, and georeference questions. Those slices deliberately avoid real source access, real geometry processing, policy evaluation, evidence resolution, release, and publication.
 
----
+> [!CAUTION]
+> **A CRS token, valid geometry, low residual, passing fixture, digest, or map-ready artifact is not spatial truth.** Every consequential use still needs source role, evidence, temporal scope, intended use, rights, sensitivity, review, release, correction, and rollback support appropriate to the operation.
 
-## Mini Table of Contents
+> [!WARNING]
+> **No universal CRS or redaction parameter is approved here.** Analysis, storage, interchange, web delivery, vertical reference, epoch, generalization, and public-safe precision are operation-specific. Public documentation must not expose reversal-enabling or protection-weakening parameters.
 
-- [1. Architectural role and posture](#1)
-- [2. What Spatial Foundation owns and does not own](#2)
-- [3. Object families and identity](#3)
-- [4. Source families and rights](#4)
-- [5. Cross-lane edges (the heart of this domain)](#5)
-- [6. CRS doctrine — analysis vs. web delivery](#6)
-- [7. Pipeline shape — RAW → PUBLISHED](#7)
-- [8. Trust membrane — how spatial artifacts reach the public](#8)
-- [9. Sensitivity transforms and public-safe geometry](#9)
-- [10. Repository placement (PROPOSED)](#10)
-- [11. Contracts, schemas, and policy surfaces](#11)
-- [12. Validation tests](#12)
-- [13. Anti-patterns](#13)
-- [14. Open questions and verification backlog](#14)
-- [15. Glossary tie-in](#15)
-- [Related docs · Footer](#related)
+**Quick navigation:** [Role](#1) · [Boundary](#2) · [Repository state](#3) · [Sources](#4) · [Cross-lane joins](#5) · [CRS and operations](#6) · [Lifecycle and time](#7) · [Trust membrane](#8) · [Sensitivity](#9) · [Placement](#10) · [Contracts and outcomes](#11) · [Validation](#12) · [Anti-patterns](#13) · [Maturity and backlog](#14) · [Glossary](#15) · [Change and rollback](#16) · [Related](#related)
+
+## Current bounded result
+
+| Field | Current result |
+|---|---|
+| **Evidence snapshot** | `main@45fc45556a007196aa29e725f3a4b9fe9af8294e` |
+| **Directory result** | `PLACE` at `docs/architecture/spatial-foundation.md`; accepted ADR-0029 assigns human-readable cross-system architecture to `docs/architecture/`, and the convergence plan independently records this same-path disposition. |
+| **Context result** | Cross-cutting capability, not a registered domain lane. The current machine projection excludes `spatial`; `docs/domains/spatial-foundation/README.md` remains a proposed scaffold. |
+| **Machine-backed Spatial Foundation family** | Three proposed-inactive, fixture-first profiles: `BoundaryDerivationRecord`, `XYPointTransformReceiptCandidate`, and `LidarDerivedProductLineageReceipt`. |
+| **Adjacent geography family** | Proposed-inactive `GeographyVersion`, `GeographyCrosswalk`, and `AdminBoundaryChange` profiles with deterministic no-network validation. |
+| **Adjacent georeference family** | Proposed-inactive GCP identity, GCP-evidence, resource-space distribution, and affine-quality profiles under the map contract/schema family. |
+| **Reusable implementation package** | `packages/geo` is a `0.0.0` greenfield placeholder with an empty initializer and comment-only `core.py`; no supported API or operational transform is established. |
+| **Runtime/public boundary** | The Governed API exposes three scaffold GET routes and returns `ABSTAIN / NOT_IMPLEMENTED`; unsupported requests return safe `ERROR`. No spatial query, CRS registry, transform, geometry, or map-release `ANSWER` path is established. |
+| **Release/public effect** | None. This document, a fixture pass, a workflow, a manifest candidate, or a rendered map does not release or publish anything. |
 
 ---
 
 <a id="1"></a>
 
-## 1. Architectural role and posture
+## 1. Architectural role, authority, and cross-cutting status
 
-### 1.1 Why Spatial Foundation is an architecture topic, not a domain section
+Spatial Foundation is the **context map for shared spatial meaning**. It explains how KFM components should talk about location and representation without collapsing distinct models into one universal geometry model.
 
-The Spatial Foundation is unusual among KFM lanes: it is a **bounded responsibility** in the DDD sense (it owns its own object families, has its own ubiquitous language, and is governed by the same RAW → PUBLISHED lifecycle as every other lane) **and** it is a **cross-cutting prerequisite** for every domain that has a footprint on the Earth — which is to say, all of them.
+It covers the architecture-level relationships among:
 
-> **CONFIRMED doctrine.** *KFM Domains v1.1 §18.A* states Spatial Foundation's purpose is to "provide the shared spatial grammar for coordinate reference systems, geometry validity, scale, spatial support, generalization, uncertainty, basemap context, and cartographic representation." *[ENCY] [MAP-MASTER] [INDEX-18]*
+- geography identity and version;
+- coordinate reference systems, datums, epochs, units, and axis order;
+- source geometry, observed coordinates, derived geometry, generalized geometry, and synthetic geometry;
+- coordinate creation, transformation, georeferencing, resampling, simplification, aggregation, and redaction;
+- scale, resolution, support, extent, precision, and uncertainty;
+- spatial joins, overlays, crosswalks, and administrative-boundary lineage;
+- map-facing artifacts and their release envelopes; and
+- correction, supersession, withdrawal, and rollback of spatial derivatives.
 
-Per *directory-rules.md* §10.4, cross-domain doctrine belongs in `docs/architecture/<topic>.md`, **not** under `docs/domains/<picked-one>/`. This file therefore sits alongside [`system-context.md`](./system-context.md), [`map-shell.md`](./map-shell.md), [`governed-api.md`](./governed-api.md), [`maplibre-3d.md`](./maplibre-3d.md), and [`contract-schema-policy-split.md`](./contract-schema-policy-split.md), and treats Spatial Foundation as an **architectural surface** that other domain documents reference and depend on.
+### 1.1 Spatial Foundation is not a domain lane
 
-### 1.2 Invariants this document preserves
+The current repository contains a proposed scaffold at `docs/domains/spatial-foundation/`, but the machine-readable domain-lane projection:
 
-> [!IMPORTANT]
-> The following invariants come from KFM core doctrine (see [`directory-rules.md`](../doctrine/directory-rules.md), [`lifecycle-law.md`](../doctrine/lifecycle-law.md), [`trust-membrane.md`](../doctrine/trust-membrane.md)) and are reproduced here so that any Spatial Foundation change is evaluated against them.
+- lists thirteen domain lanes;
+- names `spatial` as a cross-cutting exclusion; and
+- contains no `spatial-foundation` domain entry.
 
-| # | Invariant | Source |
+This page therefore treats Spatial Foundation as a **cross-cutting architecture and contract family**, not as Domain 1 or as an independent source-of-truth lane. Adding it as a domain would require a separately governed domain-lane decision and synchronized register change.
+
+### 1.2 Authority by question
+
+| Question | Owning authority | Role of this page |
 |---|---|---|
-| I-SF-1 | **CONFIRMED** — Lifecycle is `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`. Promotion is a governed state transition, not a file move. | [DIRRULES] [ENCY] |
-| I-SF-2 | **CONFIRMED** — Public clients and the MapLibre shell consume **released** Spatial Foundation artifacts through a governed API and `LayerManifest` resolver, **not** canonical/internal stores. | [MAP-MASTER] [GAI] |
-| I-SF-3 | **CONFIRMED** — `EvidenceRef` must resolve to `EvidenceBundle` before any consequential spatial claim is rendered, exported, or promoted. | [ENCY] |
-| I-SF-4 | **CONFIRMED** — Source role is **fixed at admission** for every spatial source (authority, observation, context, model). Promotion never upgrades role. | [ENCY] §3 of Pass-23 supplement |
-| I-SF-5 | **CONFIRMED** — Cross-domain joins through Spatial Foundation must preserve ownership, source role, sensitivity, and EvidenceBundle support. *(§18.F constraint.)* | [ENCY] §18.F |
-| I-SF-6 | **CONFIRMED** — Style filters are **not** a valid mechanism for protecting sensitive geometry. Sensitive geometry must be transformed, generalized, denied, or quarantined **before** it reaches the renderer. | [MAP-MASTER] ML-Q-082 |
-| I-SF-7 | **PROPOSED** — Analysis CRS and web-delivery CRS are kept distinct; mixing them without manifest fields is an anti-pattern. *(See §6.)* | [MAP-MASTER] ML-061-096 |
+| Where cross-system spatial architecture is explained | Accepted Directory Rules and this `docs/architecture/` lane | Explain relationships and current evidence |
+| What a spatial object means | The accepted semantic contract under `contracts/` | Link and compare; do not redefine |
+| What machine shape is valid | The paired schema under `schemas/` | Link and report maturity; do not duplicate |
+| Which source is admissible | Source registry, source admission, rights, and policy surfaces | Require closure; do not activate |
+| How a pure reusable transform runs | Accepted implementation under `packages/`, `tools/`, or another verified execution root | State boundaries and evidence; do not claim runtime |
+| Whether a geometry may be exposed | Policy, sensitivity, rights, review, evidence, and release records | Explain required closure; never allow |
+| What a public client receives | Governed API and released public-safe artifacts | Keep public traffic downstream of trust |
+| Whether a map or artifact is released | `release/` plus referenced accountability objects | No release authority |
+| Whether behavior is effective in deployment | Tests, workflows, artifacts, logs, dashboards, and observed runtime | Record only verified evidence |
 
-[↑ Back to top](#top)
+### 1.3 Core invariants
+
+1. **Representation is contextual.** A geometry or coordinate is meaningful only with its source role, reference system, time, support, precision, and intended operation.
+2. **Identity is version-bounded.** Feature identity across geography versions is not inferred.
+3. **Transformation is explicit.** Reprojection, coordinate creation, georeferencing, aggregation, simplification, generalization, redaction, and resampling require a named, versioned, reviewable operation.
+4. **Derived stays derived.** A transformed geometry does not become source geometry or legal authority.
+5. **Validation is bounded.** Shape validity and numeric quality do not establish source truth, fitness for every use, or public safety.
+6. **Policy remains external.** A pure spatial helper does not decide rights, sensitivity, access, release, or publication.
+7. **Public delivery is downstream.** Ordinary clients receive released public-safe representations through governed interfaces.
+8. **Correction is spatially complete.** Supersession or withdrawal must propagate to affected artifacts, indexes, caches, maps, exports, and AI context.
+9. **Missing context fails closed.** The safe result is `ABSTAIN`, `DENY`, `HOLD`, `QUARANTINE`, or `ERROR`, not an inferred default.
+
+[Back to top](#top)
 
 ---
 
 <a id="2"></a>
 
-## 2. What Spatial Foundation owns and does not own
+## 2. Responsibility boundary: what belongs and what does not
 
-> [!CAUTION]
-> Reading the boundary correctly is the whole point of an architecture doc. Spatial Foundation provides **grammar**, not truth about hydrology, fauna, archaeology, or any other domain. Every other domain produces its own truth on its own geometry; Spatial Foundation defines how that geometry is described, projected, scaled, generalized, and presented.
+### 2.1 Architecture responsibilities
 
-### 2.1 Owned (CONFIRMED — KFM Domains v1.1 §18.B)
+This page may explain:
 
-- Coordinate Reference Profiles.
-- Geography Versions (named, time-bounded administrative or analytic geographies).
-- Projection Transform Receipts.
-- Geometry Fingerprints.
-- Base Layer Descriptors.
-- Map Style Rules.
-- Scale Support Profiles.
-- Uncertainty Surfaces (the *spatial* uncertainty primitive; domain-specific uncertainty stays with the domain).
-- Generalization Transforms.
-- LayerManifest *as it pertains to spatial-grammar layers* (admin boundaries, geographies, base layers). *Domain* LayerManifests stay with the domain.
+- shared spatial vocabulary and anti-collapse rules;
+- the current contract/schema/validator context map;
+- required input closure for spatial operations;
+- finite operation and validation outcomes;
+- scale, uncertainty, temporal, sensitivity, and release handoffs;
+- source-role preservation across geometry derivation;
+- public-safe representation principles; and
+- maturity, validation, correction, and rollback requirements.
 
-### 2.2 Explicitly **not** owned (CONFIRMED — §18.B)
+### 2.2 Responsibilities owned elsewhere
 
-Hydrology, soil, geology, hazards, transport (roads/rail/trade), settlements/infrastructure, archaeology, people/DNA/land, habitat, fauna, flora, agriculture, and atmosphere truth all stay with their own domain lanes. Spatial Foundation **constrains and supports** them; it does not own them.
+| Concern | Owning surface | Why it remains separate |
+|---|---|---|
+| Hydrologic, soil, habitat, fauna, flora, agriculture, geology, atmosphere, hazards, transport, settlement, archaeology, or people truth | Owning domain contracts, evidence, and lifecycle lanes | Spatial Foundation supplies representation grammar, not domain meaning |
+| Source descriptors and activation state | Source registry and connector governance | A source path or URL is not spatial authority |
+| Real RAW, WORK, QUARANTINE, PROCESSED, catalog, triplet, or published objects | `data/` lifecycle and accountability planes | Architecture prose does not store or promote data |
+| Machine shape | `schemas/` | Closed schemas must remain single-authority |
+| Admissibility, access, rights, sensitivity, and release policy | `policy/`, review, rights, and release authorities | Pure geometry mechanics cannot grant permission |
+| Reusable executable geometry code | Verified package/tool/runtime implementation | Documentation is not an executable transform |
+| Map style, rendering, camera, and interaction | Map/UI/runtime owners | Render state is not geometry truth |
+| Receipts, proofs, reviews, release manifests, corrections, and rollback records | Their distinct accountability families | One object must not absorb another authority |
+| Legal boundary, parcel, title, ownership, or survey certification | Qualified source and legal/survey authority | Analytic derivation must not imply legal effect |
+| AI interpretation | Governed AI behind the trust membrane | Generated language is not evidence or spatial authority |
 
-### 2.3 The boundary in one diagram
+### 2.3 Context-map view
 
 ```mermaid
 flowchart LR
-  subgraph SF["Spatial Foundation (this doc)"]
-    CRS["Coordinate Reference Profile"]
-    GV["GeographyVersion"]
-    PTR["Projection Transform Receipt"]
-    GF["Geometry Fingerprint"]
-    BL["Base Layer Descriptor"]
-    MSR["MapStyleRule"]
-    SSP["Scale Support Profile"]
-    US["UncertaintySurface (spatial)"]
-    GT["Generalization Transform"]
-  end
+  Sources["Sources + SourceDescriptor<br/>role, rights, time, reference context"]
+  Evidence["EvidenceRef → EvidenceBundle"]
+  Contracts["Spatial semantic contracts"]
+  Schemas["Closed machine schemas"]
+  Pure["Pure fixture validators / future helpers"]
+  Policy["Rights + sensitivity + operation policy"]
+  Review["Qualified review"]
+  Release["Release + correction + rollback"]
+  API["Governed API"]
+  Map["Map / export / AI carriers"]
 
-  subgraph DOMAINS["Domain lanes (own their truth)"]
-    HYD["Hydrology"]
-    SOIL["Soil"]
-    GEOL["Geology"]
-    HAZ["Hazards"]
-    ROADS["Roads/Rail/Trade"]
-    SETTLE["Settlements/Infra"]
-    ARCH["Archaeology"]
-    PEOPLE["People/DNA/Land"]
-    HAB["Habitat"]
-    FAUNA["Fauna"]
-    FLORA["Flora"]
-    AG["Agriculture"]
-    AIR["Atmosphere"]
-  end
+  Sources --> Evidence
+  Sources --> Contracts
+  Contracts --> Schemas
+  Schemas --> Pure
+  Evidence --> Policy
+  Pure --> Policy
+  Policy --> Review
+  Review --> Release
+  Release --> API
+  API --> Map
 
-  subgraph SURFACES["Consumers (downstream)"]
-    ML["MapLibre shell"]
-    GAI["Governed AI / Focus Mode"]
-    API["Governed API"]
-    EXP["Exports / Stories"]
-  end
-
-  SF -- "CRS · scale · geometry · layer · representation grammar" --> DOMAINS
-  DOMAINS -- "released, evidence-bearing artifacts" --> SURFACES
-  SF -- "base layers, geographies,\nstyle, generalization transforms" --> SURFACES
-
-  classDef sf fill:#eef6ff,stroke:#3b82f6,color:#0b3a78
-  classDef dom fill:#fff7ed,stroke:#ea8a3c,color:#7c3a06
-  classDef surf fill:#f0fdf4,stroke:#16a34a,color:#14532d
-  class SF,CRS,GV,PTR,GF,BL,MSR,SSP,US,GT sf
-  class DOMAINS,HYD,SOIL,GEOL,HAZ,ROADS,SETTLE,ARCH,PEOPLE,HAB,FAUNA,FLORA,AG,AIR dom
-  class SURFACES,ML,GAI,API,EXP surf
+  Map -. "must not become authority" .-> Evidence
 ```
 
-> **PROPOSED diagram caveat.** Edges shown are the strongest ones documented in *KFM Domains v1.1* §18.F and *Pass 23/32 Atlas* §24.4.1; conditional and rarely-used relations are not drawn. *(NEEDS VERIFICATION against mounted-repo cross-domain registry once available.)*
+No arrow authorizes the next state by itself. Each transition has its own evidence and owner.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="3"></a>
 
-## 3. Object families and identity
+## 3. Current repository state and object-family maturity
 
-> **CONFIRMED ubiquitous language / PROPOSED field realization.** Each object family below is a bounded vocabulary term in the Spatial Foundation context. Its KFM-specific meaning is constrained by source role, evidence closure, time axes, and release state. *(KFM Domains v1.1 §18.C–E.)*
+### 3.1 Machine-backed Spatial Foundation profiles
 
-| Object family | Purpose | Identity rule | Temporal handling |
+| Profile | Confirmed repository packet | Current bounded meaning | What it does not prove |
 |---|---|---|---|
-| **Coordinate Reference Profile** | Names a CRS plus its KFM-specific binding (datum, units, vertical reference, axis order, accuracy band). | **PROPOSED** deterministic basis: source id + object role + temporal scope + normalized digest. | **CONFIRMED** — source / observed / valid / retrieval / release / correction times stay distinct where material. |
-| **GeographyVersion** | A named, time-bounded administrative or analytic geography (e.g., TIGER county vintage, HUC version, treaty boundary edition). | Same. | Same. |
-| **Projection Transform Receipt** | Records a CRS-to-CRS transform actually applied to evidence (transform pipeline, tolerances, vertical handling). | Same. | Same. |
-| **Geometry Fingerprint** | Stable hash + canonical-form signature for a geometry, used to detect change and to wire EvidenceRefs to specific shapes. | Same. | Same. |
-| **Base Layer Descriptor** | Names a basemap or contextual layer (e.g., USGS terrain hillshade, NAIP imagery) with rights, source role, release state. | Same. | Same. |
-| **MapStyleRule** | A rule about how a layer must be styled to remain public-safe and evidence-faithful (color ramps, label rules, classification break logic). | Same. | Same. |
-| **Scale Support Profile** | Declares the scales / zoom levels at which an artifact is faithful, and where over- or under-zoom is misleading. | Same. | Same. |
-| **UncertaintySurface** | Spatial expression of evidence uncertainty (positional accuracy, generalization residual, classification confidence). | Same. | Same. |
-| **Generalization Transform** | Records a simplification / aggregation / fuzzing operation applied to geometry, including tolerance and reason. | Same. | Same. |
-| **LayerManifest** *(spatial-grammar layers)* | Governs the identity, evidence linkage, time, geometry policy, and trust badges of a spatial-grammar layer (e.g., admin overlay). Domain LayerManifests stay with the domain. | Same. | Same. |
+| `BoundaryDerivationRecord` | Contract, closed schema, synthetic fixtures, validator, tests, workflow, generated authoring receipt | Source-role-aware provenance for analytic geometry derived from survey control and historical material; explicit non-title and non-legal limitations | Real survey accuracy, legal boundary, title, ownership, evidence closure, policy, release, or public use |
+| `XYPointTransformReceiptCandidate` | Contract, closed schema, fixture matrix, validator, tests, workflow, generated authoring receipt | Declared table-to-point coordinate creation with field roles, pinned CRS ref/digest, bounds, precision, counts, and output lineage | Source-table inspection, CRS parsing, coordinate transformation, coordinate accuracy, review, lifecycle mutation, or publication |
+| `LidarDerivedProductLineageReceipt` | Contract, closed schema, fixture matrix, validator, tests, workflow, generated authoring receipt | Deterministic lineage from one LAZ source capture through COPC/EPT carriers and modeled DEM/terrain derivatives | Artifact-byte verification, source activation, datum/CRS verification, transform execution, evidence, policy, release, or public authority |
 
-<details>
-<summary><strong>Why "identity rule" is PROPOSED in every row</strong></summary>
+All three are **PROPOSED_INACTIVE or fixture-first**. Their existence proves reviewable repository slices, not operational adoption.
 
-The deterministic identity basis (`source id + object role + temporal scope + normalized digest`) is **doctrinal**: every Spatial Foundation object should be deterministically reproducible from its inputs. The schema fields and the canonicalization rule that realize this identity in JSON Schema, JCS+SHA-256 hashing, and a registry are **PROPOSED** until a mounted-repo schema (e.g., `schemas/contracts/v1/domains/spatial_foundation/*.schema.json`) is verified.
+### 3.2 Adjacent geography and boundary-lineage profiles
 
-</details>
+| Profile | Current home | Confirmed behavior | Boundary |
+|---|---|---|---|
+| `GeographyVersion` | `contracts/common/` + `schemas/contracts/v1/common/` | Closed fixture profile; RFC 8785 JCS + SHA-256 identity; version-local feature identity; crosswalk required for different-version joins | Carries no geometry; resolves no evidence, source, crosswalk, rights, or policy |
+| `GeographyCrosswalk` | `contracts/crosswalks/` + paired schema/validator/tests | Direction-specific, version-pinned mapping declaration with integer-millionth weights and deterministic identity | Performs no geometry comparison, overlay, join, reverse mapping, or identity equivalence |
+| `AdminBoundaryChange` | `contracts/common/` + paired schema/validator/tests | Deterministic administrative lineage event between pinned geography versions | Proves no legal change, geometry, transferability, crosswalk correctness, or release |
+| GCP identity and assessments | `contracts/map/` + `schemas/contracts/v1/map/` | Synthetic control-point identity, evidence posture, resource-space distribution, and affine residual quality | No real imagery, GNSS, CRS transform, historical alignment, policy, or release |
 
-[↑ Back to top](#top)
+These objects participate in the Spatial Foundation context but retain their present semantic owners. This page does not move them into `contracts/spatial-foundation/`.
+
+### 3.3 Reusable implementation and ingestion surfaces
+
+| Surface | Confirmed state | Safe conclusion |
+|---|---|---|
+| `packages/geo/pyproject.toml` | `kfm-geo`, version `0.0.0` only | Distribution intent exists; build/install/import support is not established |
+| `packages/geo/src/geo/__init__.py` | Empty | No supported exports |
+| `packages/geo/src/geo/core.py` | One placeholder comment | No transform behavior |
+| CSV-to-GeoJSON preflight | Deterministic, fixture-only, bounded-input normalizer with explicit synthetic point policy and no lifecycle/public authority | A real preflight implementation exists, but only for the admitted synthetic fixture profile |
+| Governed API | Three GET routes backed by scaffold envelopes | Public spatial behavior is not implemented; default public posture remains fail-closed |
+
+### 3.4 Unclosed or conflicted families
+
+| Family or seam | Current disposition |
+|---|---|
+| `CoordinateReferenceProfile` | Recognized in doctrine/register prose, but a machine-backed accepted profile was not established by the bounded exact-base search. `XYPointTransformReceiptCandidate` carries a pinned CRS reference; it is not a general CRS registry. |
+| General `ProjectionTransformReceipt` | A broad operational profile is not established. The XY receipt is a narrow coordinate-creation candidate, and georeference profiles cover synthetic affine quality only. |
+| `GeometryFingerprint` | Architecture concept remains PROPOSED; no accepted cross-format fingerprint contract and parity suite was verified. |
+| `ScaleSupportProfile` | PROPOSED; no accepted machine-backed profile was verified. |
+| `UncertaintySurface` | Used in doctrine and domain planning, but no single accepted cross-system semantic/schema authority was verified. |
+| `GeneralizationTransform` | PROPOSED as a cross-system concept; current redaction/profile authority and operational parameters remain separate and conflicted. |
+| `LayerManifest` | CONFLICTED across map, data, and layers contract/schema families; current map schema README keeps convergence on HOLD. |
+| Spatial family indexes | `contracts/spatial-foundation/README.md` and the schema-family README list only `BoundaryDerivationRecord` although two later profiles are present; inventory is stale. |
+| Domain labeling | `docs/domains/spatial-foundation/README.md` is a proposed scaffold while current domain registers classify spatial as cross-cutting. |
+| 3DEP lifecycle placement | Connector documentation proposes a Spatial Foundation raw lane while an actual RAW README exists under Hydrology; source ownership and placement require a separate decision, not an architecture-doc shortcut. |
+
+[Back to top](#top)
 
 ---
 
 <a id="4"></a>
 
-## 4. Source families and rights
+## 4. Source families, source roles, and evidence closure
 
-> **CONFIRMED categories / NEEDS VERIFICATION on terms.** The source families below are named in *KFM Domains v1.1* §18.D. Their current rights, sensitivity terms, and freshness windows are **NEEDS VERIFICATION** — never quote a source role or license from this document; consult the live `data/registry/source_descriptors/spatial_foundation/` set.
+Spatial Foundation consumes source context; it does not make sources authoritative.
 
-| Source family | Typical role | Rights / sensitivity | Freshness cadence | Status |
-|---|---|---|---|---|
-| **USGS 3DEP / terrain** (DEM, LiDAR, hillshade) | authority · observation · context · model (depending on artifact) | Generally public-domain; **rights NEEDS VERIFICATION** per artifact; sensitive joins (e.g., archaeology) **fail closed**. | source-vintage specific | [ENCY] [MAP-MASTER] [INDEX-18] |
-| **TIGER (US Census)** — administrative geometry | authority · observation · context | Public-domain; **NEEDS VERIFICATION** for current vintage. | annual | [ENCY] [MAP-MASTER] |
-| **GNIS** — feature names / places | authority · observation · context | Public-domain; **NEEDS VERIFICATION**; sensitive name joins reviewed. | continuous | [ENCY] [MAP-MASTER] |
-| **State and local GIS** (e.g., DASC, county GIS) | authority · observation · context · model | varies per source; rights **NEEDS VERIFICATION**; sensitive infrastructure / parcel joins **fail closed**. | source-specific | [ENCY] |
-| **Authoritative basemaps** (USGS, OpenStreetMap, vendor) | context | License-specific; OSM is ODbL-bound; vendor tiles carry per-tile rights. **NEEDS VERIFICATION**. | continuous | [ENCY] [MAP-MASTER] |
-| **Imagery / DEM / COG** (NAIP, Sentinel, Landsat, county aerial) | observation · context | mixed; rights and sensitivity vary; cloud-optimized variants are **derived** artifacts. | source-specific | [ENCY] [MAP-MASTER] |
-| **Historical maps** (USGS topo, GLO, county atlas, fire-insurance) | authority *for then-current claims only* · context | rights mixed; reproduction terms **NEEDS VERIFICATION**; positional accuracy can be modest and must carry an `UncertaintySurface`. | static (per vintage) | [ENCY] [MAP-MASTER] |
+### 4.1 Source-family posture
 
-> [!WARNING]
-> Source role is **fixed at admission**. Promotion from `WORK` to `PROCESSED` never upgrades a modeled artifact to an observation, and never upgrades an observed artifact to authority. *(Pass-23 §3 supplement.)*
+Candidate source families may provide administrative boundaries, statistical geographies, hydrographic reference geometry, names, survey control, elevation, imagery, or historic map material. For each admitted source or product, KFM must preserve:
 
-[↑ Back to top](#top)
+- source descriptor identity and digest;
+- publisher and source role;
+- product/sub-product identity;
+- rights, attribution, redistribution, and access posture;
+- observed, valid, publication, retrieval, and correction time where material;
+- horizontal and vertical reference information;
+- units, axis order, epoch, scale, resolution, accuracy, and uncertainty;
+- immutable source or snapshot identity;
+- transformation and derivation lineage; and
+- sensitivity and public-use restrictions.
+
+A source catalog page, connector README, or tracked RAW directory is not activation evidence. Live endpoints, payload presence, terms, currentness, receipts, and runtime behavior require separate verification.
+
+### 4.2 Source-role anti-collapse
+
+| Source or product role | Spatial Foundation rule |
+|---|---|
+| Observed coordinate or source capture | Preserve as observed input; do not overwrite with a derivative |
+| Administrative/statistical boundary | Preserve authority, vintage, legal/statistical scope, and version-local identity |
+| Survey control or legal instrument | Preserve source role and limitations; analytic derivation cannot claim title or legal boundary |
+| Analytic access carrier | Preserve lineage to source bytes; carrier convenience does not create new observation authority |
+| Modeled surface | Keep model method, input lineage, resolution, uncertainty, and intended use explicit |
+| Historic map or reconstructed geometry | Keep georeference and interpretation uncertainty visible; never present reconstruction as observation |
+| Generalized or redacted derivative | Keep transform, review, policy, and release support; never treat it as exact canonical geometry |
+| Synthetic fixture | Keep fixture-only state and authority flags false |
+
+### 4.3 Evidence closure
+
+A spatially consequential claim should not reach `ANSWER` or release merely because coordinates exist. Required closure may include:
+
+1. a digest-bound source and object identity;
+2. explicit spatial and temporal support;
+3. resolvable `EvidenceRef → EvidenceBundle`;
+4. source-role and authority classification;
+5. rights and sensitivity evaluation;
+6. operation-specific validation;
+7. transform and derivation receipts;
+8. qualified review where significance requires it;
+9. release, correction, and rollback references; and
+10. public-safe delivered-byte verification.
+
+When any required support is missing, the system narrows, abstains, holds, quarantines, denies, or errors.
+
+[Back to top](#top)
 
 ---
 
 <a id="5"></a>
 
-## 5. Cross-lane edges (the heart of this domain)
+## 5. Cross-lane relations, joins, and geography versioning
 
-> **CONFIRMED doctrine — Pass 23/32 Atlas §24.4.1, *"Edges owned by Spatial Foundation."***
+Spatial joins are claims. The fact that two geometries intersect in one software run does not by itself establish semantic compatibility, identity, causation, legal relation, or public safety.
 
-| Relation | Downstream lane | What flows | Constraint |
-|---|---|---|---|
-| Spatial grammar (canonical) | **All domains** | Coordinate Reference Profile, GeographyVersion, Projection Transform Receipt, scale-support, base-layer descriptors are **sourced here** — no domain redefines them locally. | Relation must preserve ownership, source role, sensitivity, and EvidenceBundle support. |
-| Terrain & raster support | **Hydrology · Soil · Geology · Hazards · Atmosphere** | Time-aware overlay primitives (raster-dem, hillshade, COG context) are constrained by SF rules: clipping, projection, generalization tolerance. | Same. |
-| Public-safe geometry & sensitivity transforms | **Archaeology · Fauna · Flora · Settlements/Infrastructure · People** | SF supplies the `Generalization Transform`, `RedactionReceipt`-compatible geometry transforms, and minimum-cell rules these domains require to publish. | Same. |
-| Renderer & Focus-Mode delivery | **MapLibre shell · Governed AI** | Renderer and Focus surfaces stay **downstream of released evidence**; no map shell may consume a canonical SF store directly. | Same. |
-| 3D & planetary anchors | **Planetary / 3D** | Vertical datum, terrain reference, and reality-boundary rendering constraints **originate here**. | Same. *(See [`maplibre-3d.md`](./maplibre-3d.md) §4.)* |
+### 5.1 Required join declaration
 
-### 5.1 Sequence — how a domain claim becomes a public-safe map layer
+A governed spatial relation should declare:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant SRC as Source (e.g., USGS 3DEP)
-    participant SF as Spatial Foundation
-    participant DOM as Domain lane (e.g., Hydrology)
-    participant CAT as Catalog (STAC/DCAT/PROV)
-    participant REL as Release queue
-    participant API as Governed API
-    participant ML as MapLibre shell
+- left and right object identities and versions;
+- source roles and evidence references;
+- geometry roles: source, observed, derived, generalized, or synthetic;
+- CRS and coordinate-operation context;
+- spatial predicate and dimensional model;
+- valid/observed time relationship;
+- scale, resolution, tolerance, and boundary semantics;
+- crosswalk or lineage reference when geography versions differ;
+- uncertainty and ambiguous-edge treatment;
+- sensitivity and inference-risk result;
+- deterministic or reproducible method identity; and
+- output claim, caveats, correction, and rollback linkage.
 
-    SRC->>SF: ingest tile / DEM / boundary; admit with source role
-    SF->>SF: assign Coordinate Reference Profile, Projection Transform Receipt
-    SF->>DOM: provide canonical CRS, GeographyVersion, scale support
-    DOM->>DOM: produce evidence-bearing claim with EvidenceRef
-    DOM->>SF: request generalization / public-safe transform (if sensitive)
-    SF-->>DOM: return generalized geometry + Generalization Transform receipt
-    DOM->>CAT: write STAC Item + PROV link + EvidenceBundle
-    CAT->>REL: candidate (LayerManifest + TileArtifactManifest + StyleManifest)
-    REL->>REL: PolicyDecision · PromotionDecision · rollback target
-    REL->>API: ReleaseManifest published
-    ML->>API: request layer via LayerManifest resolver
-    API-->>ML: signed manifest + tile URL (PMTiles/MVT/COG)
-    ML->>ML: render with trust badge, time slider, evidence-drawer hook
+### 5.2 Version and crosswalk rule
+
+Current `GeographyVersion` behavior is deliberately strict:
+
+```text
+same version + compatible declared semantics
+  -> a join may be evaluated under its own policy and evidence gates
+
+different version
+  -> separately reviewed GeographyCrosswalk required
+
+no crosswalk or unresolved crosswalk
+  -> no cross-version identity inference
 ```
 
-> [!TIP]
-> Read the diagram top-down as a **trust path**. The renderer never reaches back past the Governed API. Any "shortcut" that lets MapLibre fetch a canonical SF tile directly is the anti-pattern [§13](#13) calls out.
+A passing `GeographyCrosswalk` fixture establishes declaration coherence only. It does not execute the mapping or prove that weights or feature relations are correct.
 
-[↑ Back to top](#top)
+### 5.3 Cross-lane relation examples
+
+| Relation | Minimum spatial control | Additional owning control |
+|---|---|---|
+| Observation → administrative area | Geography version, point/area support, predicate, boundary semantics, time compatibility | Observation-domain evidence and policy |
+| Soil map unit → watershed | Source roles, overlay method, geography versions, sliver/tolerance handling | Soil and Hydrology review |
+| Species occurrence → habitat patch | Public-safe occurrence geometry, time/season compatibility, uncertainty | Fauna sensitivity and Habitat model posture |
+| Infrastructure → hazard context | Public-safe asset representation, hazard support and time | Critical-asset and hazard policy |
+| Historic place → current geography | Historic map/geography version, georeference quality, crosswalk/lineage | Historical evidence and interpretation review |
+| Person or parcel → place | Versioned geography and controlled join method | Living-person, consent, land/title, and inference-risk policy |
+
+### 5.4 Join outcomes
+
+| Outcome | Meaning |
+|---|---|
+| `PASS` / candidate relation | Declared inputs and spatial method are coherent for further governed evaluation |
+| `ABSTAIN` | Geometry, crosswalk, evidence, time, or scale support is unresolved |
+| `DENY` | Rights, sensitivity, source role, inference risk, or prohibited precision blocks the relation |
+| `HOLD` | Qualified review or a required transform remains pending |
+| `ERROR` | The operation cannot be evaluated safely or deterministically |
+
+A candidate relation is not a released claim.
+
+[Back to top](#top)
 
 ---
 
 <a id="6"></a>
 
-## 6. CRS doctrine — analysis vs. web delivery
+## 6. Coordinate reference systems and coordinate operations
 
-> **CONFIRMED doctrine / PROPOSED placement.** The analysis CRS and the web-delivery CRS are kept distinct in KFM. Mixing them without manifest fields is recorded as an anti-pattern in *Master MapLibre v2.1* ML-061-096.
+### 6.1 No single universal CRS
 
-### 6.1 The two-CRS rule
+KFM should not encode one CRS as universal truth. A suitable reference system depends on:
 
-| Purpose | Typical CRS (PROPOSED) | Why |
-|---|---|---|
-| Analysis / measurement (Kansas + national CONUS) | **EPSG:5070** (NAD83 / CONUS Albers Equal Area) | Equal-area; correct distances and areas for hydrology, agriculture, habitat, soil. |
-| Tiled web delivery | **EPSG:3857** (Web Mercator) | Standard for vector tiles, PMTiles, raster XYZ. |
-| Lat/long interchange & STAC `geometry` | **EPSG:4326** (WGS84 lat/long) | Required by STAC and most catalog standards. |
-| 3D terrain with vertical context | **EPSG:4979** (WGS84 3D) or equivalent | Required when vertical datum is material. *(See [`maplibre-3d.md`](./maplibre-3d.md) §2.1.)* |
+- source authority and native coordinates;
+- operation type;
+- location and area of use;
+- distance, area, direction, topology, or visualization requirements;
+- horizontal and vertical datums;
+- coordinate epoch and dynamic-reference concerns;
+- available grid resources and transformation method;
+- required accuracy and error budget;
+- interchange or renderer constraints; and
+- public-safe precision.
 
-> [!NOTE]
-> These CRS choices are **PROPOSED defaults** consistent with KFM corpus guidance for Kansas-scope work. The authoritative per-artifact CRS lives in each `LayerManifest` and `TileArtifactManifest`, not in this document. A domain that uses a different analysis CRS for justified reasons should record the choice with a `Projection Transform Receipt`.
+A common web-delivery projection, geographic interchange coordinates, a Kansas-scale analytical projection, a local engineering CRS, and a vertical elevation reference answer different questions. They must not be silently substituted.
 
-### 6.2 What must be recorded with every spatial artifact
+### 6.2 Minimum CRS declaration
 
-Per *Master MapLibre v2.1* ML-061-015 (vertical datum & CRS in terrain artifact manifests) and ML-064-034 (PMTiles `sha256` in STAC):
+A mature `CoordinateReferenceProfile` should bind, at minimum:
 
-- **CRS (`proj:code` or equivalent)** — required.
-- **Vertical datum and units** — required for terrain, elevation, and any artifact where altitude is material.
-- **bbox / geometry / shape / transform** — required STAC Projection extension fields. *(PROPOSED CI lint per Pass 27 KFM-P27-IDEA-0009.)*
-- **Tiler / version / flags** — required for PMTiles and MVT artifacts so the build is reproducible.
-- **Generalization tolerance** — required when geometry is simplified or aggregated.
-- **Source vintage and time window** — required (see [§7](#7)).
-- **EvidenceRef** — required; resolves to `EvidenceBundle` at runtime.
+| Field family | Required meaning |
+|---|---|
+| Profile identity | Stable version and digest |
+| Authority | Authority name, code, and registry/version where applicable |
+| Full definition | Immutable definition or digest-bound reference, not only a short code |
+| Coordinate system | Axis names, order, direction, and units |
+| Datum/reference frame | Horizontal datum or reference frame |
+| Coordinate epoch | Required when the frame or operation is time-dependent |
+| Vertical context | Vertical datum, geoid/model reference, units, and height type where relevant |
+| Area of use | Declared geographic applicability |
+| Intended operations | Analysis, storage, interchange, delivery, georeferencing, or other bounded use |
+| Accuracy/limitations | Declared accuracy, known limitations, and unsupported uses |
+| Grid/resource dependencies | Digest-bound transformation grids or resources where required |
+| Evidence and review | Source and reviewer references |
+| Supersession | Prior profile and correction/rollback linkage |
 
-### 6.3 Vertical-datum trap
+The repository does not yet establish this as an accepted general profile. The narrow XY receipt's CRS reference must not be promoted into a universal registry by implication.
 
-> [!WARNING]
-> NFHL (National Flood Hazard Layer) vertical datum and units **must be checked before any engineering claim** is rendered. *(Master MapLibre v2.1 ML-061-022.)* Hazard surfaces that mix NAVD88 with NGVD29 without a recorded `Projection Transform Receipt` produce flood-relevant errors of feet, not inches.
+### 6.3 Coordinate-operation declaration
 
-[↑ Back to top](#top)
+A consequential operation should bind:
+
+- source and target CRS profiles;
+- operation method and version;
+- axis-order handling;
+- datum/epoch and vertical handling;
+- required grids/resources and their digests;
+- dimensionality and unit conversions;
+- antimeridian, wrap, and out-of-area behavior where material;
+- precision and rounding policy;
+- input/output artifact digests;
+- feature count and rejection accounting;
+- accuracy or residual evidence;
+- software/tool identity and deterministic settings;
+- reason codes, limitations, review, and receipt identity.
+
+### 6.4 Operation-specific finite outcomes
+
+| Outcome | Meaning |
+|---|---|
+| `PASS` | Declared operation and bounded validation close for the candidate |
+| `ABSTAIN` | Required CRS, grid, epoch, vertical, source, or evidence context is unresolved |
+| `DENY` | Operation is outside area of use, violates policy, loses prohibited precision, or would expose unsafe detail |
+| `HOLD` | Numeric checks pass but qualified review or policy closure remains pending |
+| `ERROR` | Definition, grid, axis, dimensionality, identity, or execution cannot be evaluated reliably |
+
+Errors never fall back to identity transformation or a guessed default.
+
+### 6.5 Vertical and temporal reference rule
+
+Elevation and 3D uses require more than an XY code. KFM must keep:
+
+- ellipsoidal height;
+- orthometric/elevation height;
+- vertical datum;
+- geoid or conversion model;
+- vertical units;
+- acquisition or observation epoch; and
+- transformation method
+
+explicit where material. A terrain renderer can display a surface without proving that vertical references are compatible with another dataset.
+
+[Back to top](#top)
 
 ---
 
 <a id="7"></a>
 
-## 7. Pipeline shape — RAW → PUBLISHED
+## 7. Lifecycle, spatial identity, and temporal support
 
-> **CONFIRMED doctrine / PROPOSED lane application.** Spatial Foundation follows the universal KFM lifecycle. *(DIRRULES · ENCY · MAP-MASTER · INDEX-18.)*
+Spatial artifacts follow the KFM lifecycle:
 
-| Stage | Handling | Gate | Status |
-|---|---|---|---|
-| **RAW** | Capture immutable source payload or reference with source role, rights, sensitivity, citation, time, and hash. | `SourceDescriptor` exists. | PROPOSED |
-| **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, and policy; hold failures. | `ValidationReport` + `PolicyDecision` pass, or `QuarantineReason` recorded. | PROPOSED |
-| **PROCESSED** | Emit validated normalized SF objects, receipts, and public-safe candidates. | `EvidenceRef`, `ValidationReport`, and digest closure exist. | PROPOSED |
-| **CATALOG / TRIPLET** | Emit STAC/DCAT/PROV records, `EvidenceBundle`, graph projections, and release candidates. | Catalog / proof closure passes. | PROPOSED |
-| **PUBLISHED** | Serve released public-safe artifacts (PMTiles, COG, GeoParquet, GeoJSON snapshots, style bundles) through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, and review/policy state exist. | PROPOSED |
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
-### 7.1 Eight time axes the artifact must keep distinct
+This is a governed state sequence. Reprojection, validation, tiling, or schema conformance does not promote an object.
 
-> **CONFIRMED doctrine.** The Build Manual §9.3 names eight axes that KFM never collapses into one timestamp. Spatial Foundation inherits all of them.
+### 7.1 Lifecycle responsibilities
 
-| Axis | Meaning (for SF artifacts) |
+| Stage | Spatial Foundation responsibility | Required caution |
+|---|---|---|
+| RAW | Preserve source bytes/references, native reference context, source role, times, rights, and digests | Do not normalize away source semantics |
+| WORK | Propose coordinate, geometry, crosswalk, georeference, or derivation operations | Candidate outputs remain non-public |
+| QUARANTINE | Hold unresolved CRS, datum, units, geometry, source role, rights, sensitivity, or lineage | No silent repair |
+| PROCESSED | Record validated candidate geometry and transform lineage | Processed is not released |
+| CATALOG / TRIPLET | Project spatial metadata, provenance, relations, and caveats | Derived catalog/graph records do not replace evidence |
+| PUBLISHED | Reference only released public-safe artifacts and accountability objects | Release must include correction and rollback |
+| Correction / withdrawal / rollback | Invalidate or supersede affected spatial derivatives and public carriers | Preserve prior state and reason |
+
+### 7.2 Spatial identity
+
+Different identity questions require different objects:
+
+| Identity question | Current or proposed answer |
 |---|---|
-| `valid_time` | When the geography or boundary is true in the world (e.g., 1880 county boundary edition). |
-| `observed_time` | When a measurement (DEM flight, survey) occurred. |
-| `source_publication_time` | When the source published the artifact. |
-| `retrieval_time` | When KFM acquired it. |
-| `processing_time` | When KFM transformed / projected / generalized it. |
-| `transaction_time` | When KFM recorded the internal SF fact. |
-| `release_time` | When the public-safe SF artifact was released. |
-| `correction_time` | When a correction / withdrawal / supersession was recorded. |
+| Which geography vocabulary/vintage is intended? | `GeographyVersion` |
+| How may feature IDs map between versions? | `GeographyCrosswalk` |
+| What administrative lineage event occurred? | `AdminBoundaryChange` |
+| Which source/derived artifacts participate in LiDAR lineage? | `LidarDerivedProductLineageReceipt` |
+| Which exact GCP set was declared? | `GeoreferenceControlPointSet` |
+| Which geometry bytes or feature set are equivalent? | `GeometryFingerprint` remains PROPOSED |
+| Which coordinate-creation operation produced a point candidate? | `XYPointTransformReceiptCandidate` |
 
-> [!TIP]
-> "Time slider" UX over historical geographies depends on `valid_time` being correct per `GeographyVersion`. A 1955 county boundary rendered with a 2024 boundary edition is a *temporal source-role collapse* — flag and quarantine.
+A name, feature ID, geometry equality, and administrative continuity are not interchangeable identity proofs.
 
-[↑ Back to top](#top)
+### 7.3 Time axes
+
+A mature spatial object should separate time dimensions that matter to its claim. Candidate dimensions include:
+
+- source-valid or legal-effective time;
+- observation/acquisition time;
+- source publication time;
+- retrieval time;
+- processing time;
+- geography-version validity;
+- KFM release time;
+- correction, supersession, withdrawal, or rollback time.
+
+Not every object needs every field. The contract for each object must state which dimensions are required and must not substitute retrieval time for valid time or release time for observation time.
+
+[Back to top](#top)
 
 ---
 
 <a id="8"></a>
 
-## 8. Trust membrane — how spatial artifacts reach the public
+## 8. Trust membrane, map delivery, and governed clients
 
-> **CONFIRMED doctrine.** Public clients and the MapLibre shell consume released SF artifacts through a governed API and `LayerManifest` resolver, **not** canonical/internal stores. *(MAP-MASTER · GAI · DIRRULES.)*
+### 8.1 Public-path rule
 
-```mermaid
-flowchart TB
-  subgraph CANON["Canonical / internal stores (NOT public)"]
-    RAW["RAW / WORK / QUARANTINE"]
-    PROC["PROCESSED"]
-  end
+Ordinary public and semi-public clients must not read:
 
-  subgraph BOUNDARY["Trust membrane"]
-    CAT["CATALOG / TRIPLET<br/>STAC · DCAT · PROV"]
-    REL["RELEASED<br/>ReleaseManifest · rollback target"]
-  end
+- RAW, WORK, or QUARANTINE material;
+- canonical/internal geometry stores;
+- unrestricted source payloads;
+- unreleased transform outputs;
+- private source registries or policy internals;
+- direct model outputs;
+- stack traces, filesystem paths, or reversal-enabling parameters.
 
-  subgraph PUBLIC["Public path"]
-    API["Governed API<br/>LayerManifest resolver"]
-    ML["MapLibre shell"]
-    GAI["Governed AI / Focus Mode"]
-  end
+They consume governed API envelopes and released public-safe artifacts.
 
-  RAW --> PROC --> CAT --> REL
-  REL --> API
-  API --> ML
-  API --> GAI
+### 8.2 Current Governed API evidence
 
-  RAW -.->|DENY direct read| ML
-  PROC -.->|DENY direct read| ML
-  RAW -.->|DENY direct read| GAI
+At the pinned base, the Governed API:
 
-  classDef canon fill:#fef2f2,stroke:#dc2626,color:#7f1d1d
-  classDef bound fill:#fefce8,stroke:#ca8a04,color:#713f12
-  classDef pub fill:#f0fdf4,stroke:#16a34a,color:#14532d
-  class CANON,RAW,PROC canon
-  class BOUNDARY,CAT,REL bound
-  class PUBLIC,API,ML,GAI pub
-```
+- registers `/bootstrap`, `/layers`, and `/evidence`;
+- permits only GET for those scaffold routes;
+- returns `ABSTAIN / NOT_IMPLEMENTED` from scaffold handlers; and
+- returns a safe `ERROR` envelope for unsupported methods or routes.
 
-### 8.1 What the renderer is allowed to see
+That behavior is a fail-closed scaffold. It is not a spatial foundation API, CRS registry, feature query, reprojection service, geometry store, or evidence-backed map-answer path.
 
-| Item | Public path | Notes |
-|---|---|---|
-| PMTiles bundle digest | **Yes** (via `LayerManifest` + `TileArtifactManifest`) | Fetch verification compares against catalog `sha256`. *(ML-064-034.)* |
-| Style JSON (released) | **Yes** | Style spec_hash verified at boot. |
-| Generalized geometry | **Yes** | Generalization Transform receipt available via Evidence Drawer. |
-| Exact archaeology / fauna / flora geometry | **No** *(unless reviewer-tier authenticated)* | T2+ — see [§9](#9). |
-| Canonical CRS database | **No** | The renderer receives the *released* CRS profile; it never queries the canonical store. |
-| RAW / WORK DEM tile | **No** | Public terrain delivery is always a released, governed derivative. |
+### 8.3 Public spatial response closure
 
-### 8.2 Governed AI / Focus Mode bound
+A future map- or feature-facing `ANSWER` should carry or resolve:
 
-> **CONFIRMED doctrine.** Governed AI may **summarize** released Spatial Foundation EvidenceBundles, **compare** evidence across vintages of a `GeographyVersion`, and **explain** uncertainty surfaces; it must **ABSTAIN** when evidence is insufficient and **DENY** when policy / rights / sensitivity / release state blocks the request. *(GAI · ENCY.)* AI never becomes its own truth source for spatial claims.
+- released object and artifact identity;
+- geography version and spatial support;
+- public-safe geometry role;
+- CRS or delivery-profile context;
+- source and EvidenceBundle references;
+- policy, rights, sensitivity, and review state;
+- release, correction, stale, supersession, withdrawal, and rollback state;
+- limitations and fitness for use; and
+- citations appropriate to the claim.
 
-[↑ Back to top](#top)
+A renderer may use a delivery CRS or simplified geometry, but the response must preserve the lineage needed to understand that representation.
+
+### 8.4 MapReleaseManifest boundary
+
+The repository has a fixture-first `MapReleaseManifest` profile that checks synthetic closure among artifacts, layers/styles, catalogs, evidence, policy, rights, sensitivity, review, attestations, correction, cache invalidation, and rollback. Its validator does not fetch artifacts, verify live headers, authenticate review, execute policy, invalidate caches, authorize release, or publish.
+
+Map-release fixture maturity therefore does not establish a public spatial delivery path.
+
+### 8.5 Carriers are not truth
+
+| Carrier | Spatial Foundation obligation |
+|---|---|
+| PMTiles, MVT, COG, GeoParquet, TileJSON | Bind artifact digest, extent, CRS/tiling profile, source lineage, release state, and limitations |
+| Map style or popup | Use released public-safe fields only; never implement protection solely in the client |
+| Search or graph projection | Preserve geography version, evidence, source role, correction, and sensitivity boundaries |
+| Screenshot, story, report, export | Preserve release ID, spatial/temporal scope, citations, and correction state |
+| AI answer | Stay within released geometry precision and cited EvidenceBundle support |
+
+[Back to top](#top)
 
 ---
 
 <a id="9"></a>
 
-## 9. Sensitivity transforms and public-safe geometry
+## 9. Sensitivity, generalization, and public-safe geometry
 
-> **CONFIRMED doctrine.** Spatial Foundation owns the **generalization machinery** that other domains use to produce public-safe geometry. The **policy decision** (what to release, to whom, when) stays with the originating domain. *(KFM Domains v1.1 §18.F; Pass-23 §24.5.)*
+### 9.1 Sensitivity is operation- and composition-specific
 
-### 9.1 Tier scheme (extends KFM Atlas §20.5)
+A source object is not automatically safe or unsafe solely because of its domain label. Exposure risk depends on:
 
-| Tier | Name | Default audience | Required gates |
-|---|---|---|---|
-| **T0** | Open | Any public client via governed API | Standard Promotion Gates. |
-| **T1** | Generalized | Any public client via governed API | `RedactionReceipt` or `AggregationReceipt` + `Generalization Transform`. |
-| **T2** | Reviewer | Stewards, named research collaborators | + `ReviewRecord`. |
-| **T3** | Restricted | Named authorized parties | + named-agreement record. |
-| **T4** | Denied | — | not released; existence may be disclosable only with steward review. |
+- object and attribute content;
+- requested operation and audience;
+- spatial and temporal precision;
+- surrounding layers and joins;
+- queryability and bulk export;
+- rights, consent, sovereignty, and source terms;
+- current review and release state; and
+- correction or revocation state.
 
-### 9.2 SF transforms by sister-lane sensitivity (PROPOSED defaults)
+Exact archaeology, culturally controlled sites, rare-species locations, living-person or private-land joins, genomic associations, and exploit-enabling infrastructure detail require fail-closed handling.
 
-| Sister-lane sensitive object | SF transform | Receipt produced |
+### 9.2 Protective-transform boundary
+
+A protective transform may:
+
+- generalize;
+- aggregate;
+- suppress;
+- mask;
+- withhold;
+- delay;
+- simplify;
+- clip; or
+- otherwise reduce harmful precision.
+
+It produces a **candidate derivative**, not automatic declassification or release.
+
+The accepted control path should remain:
+
+```text
+restricted or sensitive input
+  -> explicit policy decision
+  -> accepted transform profile
+  -> transform execution
+  -> validation and residual-risk review
+  -> receipt
+  -> public-safe derivative candidate
+  -> release decision
+```
+
+### 9.3 Operational parameters
+
+This architecture page intentionally does not approve:
+
+- exact radii, cells, thresholds, seeds, salts, or noise parameters;
+- operational transform recipes;
+- reversal or re-identification material;
+- rare-site or infrastructure coordinates; or
+- a universal mapping from sensitivity labels to one transform.
+
+Parameter authority remains with accepted policy/profile, security/privacy/domain review, and release governance. Public receipts and reason codes must omit material that weakens protection.
+
+### 9.4 Geometry roles
+
+| Role | Meaning | Public posture |
 |---|---|---|
-| Archaeology — site location (T4 default) | Generalization to coarse cell (e.g., ≥ 5 km buffer; H3 cell at low resolution); see also [`maplibre-3d.md`](./maplibre-3d.md) §8. | `Generalization Transform` + `RedactionReceipt` *(receipt produced by SF; policy decision by Archaeology steward)*. |
-| Fauna — sensitive occurrence (T4) | Geoprivacy generalization to coarse cell; nest/den exact denied. | `Generalization Transform` + `RedactionReceipt`. |
-| Flora — rare-plant precise location (T4) | Generalization or aggregation to range polygon. | `Generalization Transform` + `RedactionReceipt`. |
-| Critical infrastructure (T2) | Public summary geometry; precise asset denied. | `Generalization Transform` + steward sign-off. |
-| Living-person residence (T4) | No transform releases identity to public. | DENY. |
-| Historic settlement uncertain footprint | `UncertaintySurface` rather than crisp polygon. | `UncertaintySurface` artifact. |
+| `SOURCE` / authoritative source geometry | Geometry as supplied by its authority | Not automatically public or fit for all uses |
+| `OBSERVED` | Directly observed coordinate/geometry support | Subject to evidence, rights, sensitivity, and release |
+| `DERIVED` | Produced by an analytic or transform process | Keep method, inputs, uncertainty, and receipt |
+| `GENERALIZED` / redacted | Precision intentionally reduced | Candidate public-safe representation only |
+| `SYNTHETIC` | Fixture, scenario, reconstruction, or generated geometry | Must be labeled; never observation |
+| `WITHHELD` | No public geometry | Public response may disclose only an approved safe fact or denial |
 
-> [!WARNING]
-> **Style filters are not protection.** *(Master MapLibre v2.1 ML-Q-082.)* A MapLibre `filter` expression that "hides" a sensitive feature still ships the geometry to the client. Sensitive geometry must be transformed, generalized, denied, or quarantined **before** the renderer sees it. The renderer-side filter is a UX nicety only.
+### 9.5 Delivered-byte rule
 
-[↑ Back to top](#top)
+Public-safety validation must inspect the delivered artifact and composition, not only the source table or style. Tests should cover:
+
+- coordinates and geometry bytes;
+- attributes, labels, popups, search fields, and indexes;
+- tile bounds, zooms, overviews, metadata, and sidecars;
+- cache and CDN variants;
+- downloadable exports;
+- cross-layer inference; and
+- AI prose that might restate protected precision.
+
+[Back to top](#top)
 
 ---
 
 <a id="10"></a>
 
-## 10. Repository placement (PROPOSED)
+## 10. Repository placement and current authority map
 
-> [!IMPORTANT]
-> All paths below are **PROPOSED** until verified against a mounted repository. They follow *directory-rules.md* v1.3 §6 (`docs/architecture/`), §7.4 (schema home), and §10.4 (cross-domain doctrine). No mounted repo, ADR set, CI workflow, runtime log, or release artifact was inspected for this draft.
+### 10.1 Directory result
 
-```text
-docs/
-├── architecture/
-│   ├── spatial-foundation.md          # this file (PROPOSED)
-│   ├── system-context.md              # PROPOSED sibling per directory-rules §6
-│   ├── deployment-topology.md         # PROPOSED sibling
-│   ├── governed-api.md                # PROPOSED sibling
-│   ├── map-shell.md                   # PROPOSED sibling
-│   ├── maplibre-3d.md                 # CONFIRMED authored (prior session)
-│   └── contract-schema-policy-split.md
-│
-schemas/
-└── contracts/v1/
-    └── domains/
-        └── spatial_foundation/        # PROPOSED schema home
-            ├── coordinate_reference_profile.schema.json
-            ├── geography_version.schema.json
-            ├── projection_transform_receipt.schema.json
-            ├── geometry_fingerprint.schema.json
-            ├── base_layer_descriptor.schema.json
-            ├── map_style_rule.schema.json
-            ├── scale_support_profile.schema.json
-            ├── uncertainty_surface.schema.json
-            └── generalization_transform.schema.json
-│
-policy/
-├── domains/
-│   └── spatial_foundation/            # PROPOSED policy home
-│       ├── crs_admission.rego
-│       ├── projection_transform_admission.rego
-│       └── generalization_admission.rego
-└── maplibre/                          # CONFIRMED v1.3 segment per directory-rules
-    ├── style_admission.rego
-    └── base_layer_admission.rego
-│
-data/
-└── registry/
-    └── source_descriptors/
-        └── spatial_foundation/        # PROPOSED registry home
-            ├── usgs_3dep.yaml
-            ├── tiger.yaml
-            ├── gnis.yaml
-            └── ...
-│
-tests/
-├── domains/
-│   └── spatial_foundation/            # PROPOSED test home
-│       ├── valid/
-│       ├── invalid/
-│       └── public_safe/
-└── maplibre/                          # CONFIRMED v1.3 segment
-│
-release/
-└── manifests/spatial_foundation/      # PROPOSED release home
-```
+Accepted ADR-0029 adopts Directory Rules v2. The architecture convergence plan assigns this document `PLACE` at the current path with one bounded responsibility: explain representation, geometry, CRS, and temporal-spatial boundaries.
 
-### 10.1 Placement rules cheat-sheet
+This revision creates no new root or lane.
 
-| Artifact | Home | Why |
+### 10.2 Current placement map
+
+| Responsibility | Confirmed path | Current posture |
 |---|---|---|
-| Architecture doc (this file) | `docs/architecture/spatial-foundation.md` | Cross-domain doctrine. *(directory-rules §10.4.)* |
-| JSON Schema for an SF object family | `schemas/contracts/v1/domains/spatial_foundation/<object>.schema.json` | Schema home is the **shape** root, not `contracts/`. *(ADR-0001.)* |
-| Semantic contract Markdown (object meaning) | `contracts/domains/spatial_foundation/<object>.md` | `contracts/` owns **meaning**, not shape. *(directory-rules §6.3.)* |
-| OPA / policy bundle | `policy/domains/spatial_foundation/` | Policy owns **admissibility**. *(directory-rules §6.5.)* |
-| Source descriptor | `data/registry/source_descriptors/spatial_foundation/` | Registry root. *(directory-rules §6.7.)* |
-| Validator (executable) | `tools/validators/spatial_foundation/` | Tools home for long-lived trust-bearing scripts. |
-| Map style for SF base layers | `policy/maplibre/` + `styles/` | Per v1.3 of directory rules. |
+| Cross-system architecture | `docs/architecture/spatial-foundation.md` | This page; `PLACE` |
+| Domain-style landing page | `docs/domains/spatial-foundation/README.md` | Proposed scaffold; conflicts with cross-cutting register posture |
+| Spatial semantic contract family | `contracts/spatial-foundation/` | Proposed-inactive, fixture-first family |
+| Spatial machine schema family | `schemas/contracts/v1/spatial-foundation/` | Three closed proposed profiles; family README inventory is stale |
+| Shared geography version/event meaning | `contracts/common/` | Existing proposed-inactive profiles |
+| Geography mapping meaning | `contracts/crosswalks/` | Existing proposed-inactive crosswalk profile |
+| Georeference quality meaning | `contracts/map/` | Existing fixture-only map-oriented profiles |
+| Reusable geometry package | `packages/geo/` | Greenfield placeholder |
+| Deterministic validators | `tools/validators/`, `tools/ingest/` | Selected fixture-backed implementations |
+| Executable conformance | `tests/validators/`, `tests/map/` | Test files present; this docs change does not rerun them |
+| Source connectors | `connectors/` | Draft source-admission lanes; activation unverified |
+| Lifecycle data | `data/<phase>/<domain-or-owner>/` | Current source-lane placement is mixed and requires owner-specific decisions |
+| Map/release machine shape | `schemas/contracts/v1/map/` | Mixed maturity; layer-family overlap held |
+| Public trust membrane | `apps/governed-api/` | Fail-closed scaffold |
+| Release/correction/rollback | `release/` | Separate authority |
 
-> [!NOTE]
-> **No parallel schema, policy, source, registry, release, or proof home** is created for Spatial Foundation. The above paths are the same families every other domain uses, simply scoped to `spatial_foundation`. If a future change appears to require a parallel home, an ADR is mandatory. *(directory-rules §2.4.)*
+### 10.3 Placement rules for future work
 
-[↑ Back to top](#top)
+Before creating or moving a spatial artifact:
+
+1. identify its **one primary responsibility**;
+2. determine whether it is architecture, semantic meaning, machine shape, policy, executable mechanics, a source connector, lifecycle data, a receipt/proof, or a release record;
+3. inspect current accepted ADRs and existing family homes;
+4. avoid parallel schema, contract, policy, registry, proof, or release authority;
+5. preserve consumer and reference closure;
+6. add a PathDecisionRecord or ADR when required;
+7. validate exact paths and rollback.
+
+A topic name does not justify a root or a domain lane.
+
+### 10.4 Current placement conflicts on HOLD
+
+- `docs/domains/spatial-foundation/` versus current cross-cutting classification;
+- incomplete contract/schema family README inventories;
+- map/data/layers `LayerManifest` overlap;
+- 3DEP RAW placement under Hydrology versus proposal-era Spatial Foundation examples;
+- broad CRS/profile object names without an accepted machine-backed family; and
+- mixed placement of geography, crosswalk, map, and spatial-foundation contracts.
+
+This page records those tensions. It does not resolve them by rewriting links or moving files.
+
+[Back to top](#top)
 
 ---
 
 <a id="11"></a>
 
-## 11. Contracts, schemas, and policy surfaces
+## 11. Contracts, schemas, policy, outcomes, and non-collapse
 
-> **PROPOSED.** The artifact contracts below are derived from KFM Atlas §18.E (object families) and the Build Manual §10 (domain-lane minimum contract). None is claimed to exist in a mounted repository from this session.
+### 11.1 Responsibility split
 
-| Artifact | Required envelope fields (PROPOSED) | Outcome verbs | Schema home (PROPOSED) |
-|---|---|---|---|
-| `CoordinateReferenceProfile` | `crs_id`, `source_role`, `axis_order`, `vertical_datum`, `units`, `accuracy_band`, `EvidenceRef`, `valid_time` | n/a (descriptor) | `…/spatial_foundation/coordinate_reference_profile.schema.json` |
-| `GeographyVersion` | `geography_id`, `vintage`, `valid_time`, `bbox`, `source_role`, `EvidenceRef` | n/a | `…/geography_version.schema.json` |
-| `ProjectionTransformReceipt` | `from_crs`, `to_crs`, `pipeline`, `tolerance`, `input_digest`, `output_digest`, `tool`, `version`, `EvidenceRef` | n/a (receipt) | `…/projection_transform_receipt.schema.json` |
-| `GeometryFingerprint` | `geometry_id`, `canonical_form_digest`, `bbox`, `crs`, `simplification_tolerance` | n/a | `…/geometry_fingerprint.schema.json` |
-| `BaseLayerDescriptor` | `layer_id`, `source_role`, `rights_statement`, `tile_format` (`pmtiles`/`mvt`/`xyz`/`raster`), `EvidenceRef`, `release_state` | n/a | `…/base_layer_descriptor.schema.json` |
-| `MapStyleRule` | `rule_id`, `applies_to_layer`, `style_kind`, `classification_rule`, `accessibility_check`, `EvidenceRef` | n/a | `…/map_style_rule.schema.json` |
-| `ScaleSupportProfile` | `profile_id`, `min_zoom`, `max_zoom`, `min_scale`, `max_scale`, `distortion_band` | n/a | `…/scale_support_profile.schema.json` |
-| `UncertaintySurface` | `surface_id`, `kind` (positional, classification, generalization residual), `crs`, `value_band`, `EvidenceRef` | n/a | `…/uncertainty_surface.schema.json` |
-| `GeneralizationTransform` | `transform_id`, `input_geometry_fingerprint`, `algorithm`, `tolerance`, `reason_code`, `EvidenceRef` | n/a (receipt) | `…/generalization_transform.schema.json` |
-| `LayerManifest` *(SF layers)* | `layer_id`, `geometry_label` (`2d` / `2.5d` / `true_3d_evidence`), `crs_ref`, `style_ref`, `tile_artifact_ref`, `EvidenceRef`, `policy_label`, `release_state` | ANSWER / DENY / ERROR | `schemas/contracts/v1/maplibre/layer_manifest.schema.json` *(per directory-rules v1.3)* |
-| `TileArtifactManifest` | `artifact_id`, `format` (`pmtiles`/`mvt`/`cog`), `sha256`, `tiler`, `tiler_version`, `flags`, `zooms`, `EvidenceRef` | n/a (manifest) | `schemas/contracts/v1/maplibre/tile_artifact_manifest.schema.json` |
-| `MapReleaseManifest` | `release_id`, `layer_refs`, `style_ref`, `tile_artifact_refs`, `rollback_target`, `signatures` | ANSWER / DENY / ERROR | `schemas/contracts/v1/release/map_release_manifest.schema.json` |
+| Surface | Owns | Does not own |
+|---|---|---|
+| Architecture page | Cross-system explanation and context map | Object semantics or executable behavior |
+| Semantic contract | Meaning, invariants, intended fields, limitations | JSON Schema, policy, runtime, release |
+| JSON Schema | Closed machine shape | Truth, source authority, fitness, public safety |
+| Validator | Bounded deterministic checks and findings | Evidence resolution, human review, release authority |
+| Transform implementation | Explicit-input mechanics | Policy selection or publication |
+| Policy decision | Allow, deny, restrict, hold, abstain, or obligations | Transform execution or evidence creation |
+| Receipt | What operation was declared/performed | Sufficiency, truth, or release approval |
+| EvidenceBundle | Support for claims | Policy or release decision |
+| Review record | Qualified review of an exact subject | Source truth or schema authority |
+| Release record | Exact approved artifact/state/audience and rollback | Canonical source bytes or contract meaning |
+| Renderer/client | Display and interaction | Evidence, policy, or publication authority |
 
-[↑ Back to top](#top)
+### 11.2 Current profile outcome vocabularies
+
+The current bounded profiles do not yet share one universal outcome enum:
+
+| Profile family | Current outcomes |
+|---|---|
+| `BoundaryDerivationRecord` review | `ACCEPTED_FOR_ANALYSIS`, `HOLD`, `REJECTED` |
+| XY point-transform validator | `PASS`, `ABSTAIN`, `DENY`, `ERROR` |
+| LiDAR lineage validator | Bounded fixture conformance; exact validator outcomes require direct validator inspection |
+| `GeographyVersion` validator | `PASS`, `DENY`, parser/runtime `ERROR` |
+| GCP evidence assessment | `PASS`, `ABSTAIN`, `DENY`, `ERROR` |
+| GCP spatial distribution / affine quality | `READY`, `HOLD`, `ERROR` |
+| Governed API | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; current scaffold emits only `ABSTAIN` or `ERROR` |
+
+These vocabularies answer different questions. A future normalization layer may map them into a governed response envelope, but this document does not silently equate `PASS`, `READY`, `ACCEPTED_FOR_ANALYSIS`, and `ANSWER`.
+
+### 11.3 Identity and hash boundary
+
+Current profiles use more than one local identity projection. For example:
+
+- `GeographyVersion` uses RFC 8785 JCS plus SHA-256 after removing its identity fields;
+- Spatial Foundation fixture contracts document profile-specific canonical projections; and
+- map/georeference profiles define their own deterministic fixture identities.
+
+A digest proves the declared bytes/projection. It does not prove:
+
+- semantic correctness;
+- source authenticity;
+- legal authority;
+- spatial accuracy;
+- evidence admissibility;
+- policy approval;
+- release; or
+- publication.
+
+Repository-wide hash convergence remains a separate object-family governance question.
+
+### 11.4 Policy obligations for spatial operations
+
+Depending on the operation, policy may require:
+
+- `ATTACH_CITATIONS`;
+- `GENERALIZE_GEOMETRY`;
+- `REDACT_EXACT_LOCATION`;
+- `WITHHOLD_EXPORT`;
+- `REQUIRE_STEWARD_REVIEW`;
+- delayed or staged access;
+- rights/attribution notices;
+- rollback verification; or
+- outright denial.
+
+Obligations are not suggestions. A consumer must enforce all applicable obligations before treating an operation as allowed.
+
+[Back to top](#top)
 
 ---
 
 <a id="12"></a>
 
-## 12. Validation tests
+## 12. Validation, synthetic proof, and graduation
 
-> **PROPOSED test categories.** None claimed to exist in a mounted repository this session.
+### 12.1 What current bounded validation proves
 
-<details>
-<summary><strong>Contract tests (PROPOSED)</strong></summary>
+Repository-present fixture profiles can prove such things as:
 
-- Valid `CoordinateReferenceProfile`, `GeographyVersion`, `ProjectionTransformReceipt`, `GeometryFingerprint`, `BaseLayerDescriptor`, `MapStyleRule`, `ScaleSupportProfile`, `UncertaintySurface`, `GeneralizationTransform`, `LayerManifest`, `TileArtifactManifest` round-trip against schemas.
-- Invalid fixtures (missing `crs`, missing `vertical_datum` on terrain, missing `EvidenceRef`, missing `spec_hash`, missing tiler version, missing generalization tolerance) **fail closed**.
-- STAC Projection front-matter lint (`proj:code`, `bbox`, `geometry`, `shape`, `transform`) passes for processed-stage artifacts. *(Per KFM-P27-IDEA-0009.)*
+- closed JSON Schema conformance;
+- duplicate-key and non-finite-number rejection;
+- bounded input handling;
+- canonical ordering and deterministic identity;
+- internal count, time, lineage, and reference consistency;
+- version-local identity and crosswalk-required posture;
+- source-role anti-collapse;
+- synthetic affine residual and control-distribution arithmetic;
+- non-authority governance flags; and
+- no-network behavior in selected tests.
 
-</details>
+This documentation update does not execute those suites. File presence and test source are **CONFIRMED**; exact-head pass state remains **NEEDS VERIFICATION** until CI or local execution completes for the new branch.
 
-<details>
-<summary><strong>Policy tests (PROPOSED)</strong></summary>
+### 12.2 What validation does not prove
 
-- Layer with `geometry_label: '2.5D'` and `requested_mode: 'true_3d_evidence'` → **DENY**. *(Cross-ref [`maplibre-3d.md`](./maplibre-3d.md) §10.)*
-- Sensitive geometry without `Generalization Transform` and `RedactionReceipt` → **DENY**.
-- Layer relying on style `filter` for sensitivity hiding → **DENY**. *(ML-Q-082.)*
-- Vertical-datum / units missing on engineering-relevant raster → **DENY**.
-- Tiler version drift versus pinned manifest → **DENY**.
-- Public client request that bypasses `LayerManifest` resolver → **DENY**.
+A green fixture does not establish:
 
-</details>
+- live source accessibility or rights;
+- external registry currentness;
+- correctness of a CRS definition or grid;
+- real coordinate or geometry accuracy;
+- source artifact integrity unless bytes are independently verified;
+- legal boundary, parcel, title, or ownership;
+- georeference truth;
+- transform fitness outside the fixture profile;
+- policy, consent, sovereignty, or sensitivity closure;
+- authenticated review;
+- operational scale or performance;
+- release, deployment, publication, or public safety.
 
-<details>
-<summary><strong>Integration / smoke tests (PROPOSED)</strong></summary>
+### 12.3 Minimum negative-state matrix
 
-- Round-trip: `RAW` USGS 3DEP tile → `Projection Transform Receipt` → `BaseLayerDescriptor` → `LayerManifest` → `TileArtifactManifest` → `MapReleaseManifest` → MapLibre boot, `RenderReceipt` emitted within budget.
-- PMTiles range/CORS/cache test against released artifact. *(Master MapLibre v2.1 Category T.)*
-- Time-slider regression: a layer rendered at `valid_time = 1880` does **not** show the 2024 boundary edition.
-- Cross-renderer integration tests are **doctrinally empty** per *directory-rules.md* v1.3 (single-renderer architecture). Any such test directory is drift.
-- Globe-projection toggle inherits 2D admission decisions; no projection-driven loosening. *(See [`maplibre-3d.md`](./maplibre-3d.md) §8.4.)*
+A mature spatial control path should test at least:
 
-</details>
+| Class | Required negative cases |
+|---|---|
+| Input safety | malformed JSON/CSV, duplicate keys/headers, non-finite values, symlinks, oversized files, formula-like cells, unsafe paths |
+| CRS/reference | missing definition, wrong axis order, unit mismatch, outside area of use, missing grid, epoch mismatch, vertical-datum mismatch |
+| Geometry | invalid topology, empty/degenerate geometry, dimensionality drift, antimeridian/wrap error, precision loss, unexpected bounds |
+| Identity | digest mismatch, unstable ordering, duplicate IDs, version drift, cross-version identity inference |
+| Crosswalk/join | missing crosswalk, weights inconsistent, reverse-use not authorized, source-role collapse, time incompatibility |
+| Transform | output-count drift, unreconciled rejects, nondeterminism, missing receipt, unpinned parameters, unsupported method |
+| Sensitivity | exact protected geometry, revealing attributes, cross-layer inference, unsafe export, reversal material |
+| Release | candidate artifact served, stale/superseded/withdrawn artifact hidden as current, missing rollback, cache not invalidated |
+| Runtime | evaluator unavailable, evidence unresolved, policy error, safe error redaction, no direct internal-store path |
 
-<details>
-<summary><strong>Rollback / correction tests (PROPOSED)</strong></summary>
+### 12.4 Graduation ladder
 
-- A `CorrectionNotice` on a base-layer artifact correctly lists invalidated derivatives (downstream domain layers that used the affected `GeographyVersion`).
-- `RollbackCard` repoints `release_state` to a prior `MapReleaseManifest` without rewriting history.
+| Level | Required evidence |
+|---|---|
+| 0 — Documentation | Repository-grounded boundaries and explicit unknowns |
+| 1 — Inactive profile | Contract, closed schema, synthetic fixtures, deterministic validator, tests, workflow |
+| 2 — Pure implementation | Explicit-input no-network helper with resource bounds, stable API, parity/replay tests |
+| 3 — Source-bound integration | Admitted source descriptor, immutable snapshot, rights/currentness evidence, real but controlled fixtures |
+| 4 — Governed consumer | Policy and EvidenceBundle resolution, finite envelope, authenticated review, obligation enforcement |
+| 5 — Release-significant operation | Exact artifacts, proofs/receipts, catalog closure, release/correction/rollback, delivered-byte tests |
+| 6 — Operational evidence | Hosted required checks, deployment config, logs/metrics, incident/correction rehearsal, observed effectiveness |
 
-</details>
+Current maturity is uneven: selected profiles reach Level 1; the CSV preflight is a narrow Level 2-like fixture tool; the general geo package remains Level 0/placeholder; no end-to-end Level 5 or 6 Spatial Foundation path is established here.
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="13"></a>
 
-## 13. Anti-patterns
+## 13. Anti-pattern register
 
-> **CONFIRMED doctrine — Pass 23/32 Atlas §24.9.** Recorded here so any SF change is evaluated against them.
-
-| Anti-pattern | What goes wrong | Counter-rule |
+| Anti-pattern | Why it fails | Required correction |
 |---|---|---|
-| MapLibre shell consumes a canonical SF store directly. | Renderer becomes the public surface and inherits no governance. | Public path is only `Governed API → LayerManifest resolver → MapLibre`. |
-| Domain redefines its own CRS or `GeographyVersion`. | Two truths for the same geography; cross-lane joins drift. | Sole source is `data/registry/source_descriptors/spatial_foundation/`. |
-| Sensitive geometry "hidden" by MapLibre `filter`. | Geometry still ships to the client. | Transform / generalize / deny **before** the renderer. |
-| Projection done implicitly in a domain pipeline without a `Projection Transform Receipt`. | Provenance gap; reprojection drift across runs. | Every reprojection emits a receipt. |
-| Vertical datum omitted on terrain or hazard layer. | Flood / engineering claims become unreliable. | Vertical datum and units are required fields. *(ML-061-015, ML-061-022.)* |
-| Source role "upgraded" by promotion (e.g., modeled → observed). | Source-role collapse in cross-lane joins. | Source role is fixed at admission. *(Pass-23 §3.)* |
-| `valid_time = today` rendered over a 1880 cadastral overlay. | Temporal source-role collapse. | Time-slider tests; `GeographyVersion.valid_time` lock. |
-| Atlas summary cited as evidence. | Atlas / supplements / matrices are reference views, not authority. | `EvidenceBundle` is authoritative. *(§24.9.3.)* |
+| “Everything spatial belongs to Spatial Foundation” | Collapses domain truth and responsibility roots | Keep domain meaning with the owning lane; share only cross-cutting spatial grammar |
+| Treating Spatial Foundation as a registered domain because a scaffold exists | A placeholder path is not domain authority | Preserve cross-cutting posture unless an ADR/register change accepts a domain |
+| CRS code only | Omits axis, datum, epoch, units, vertical context, area of use, and operation | Use a versioned full profile or digest-bound definition |
+| Silent reprojection | Breaks lineage and auditability | Emit an operation/transform receipt and validate output |
+| Defaulting an error to identity/no-op transform | Creates plausible but false geometry | `ERROR` or `ABSTAIN`; no guessed fallback |
+| Cross-version feature-ID reuse | Infers identity without evidence | Require a separately reviewed crosswalk |
+| “Valid geometry means correct” | Topology validity says nothing about source or fitness | Preserve source role, accuracy, uncertainty, time, and intended use |
+| “Low RMS means historically accurate” | Fit to supplied GCPs does not authenticate the GCPs | Require GCP evidence, distribution, review, and source support |
+| Derived geometry overwrites source geometry | Erases source truth and correction path | Store derivative separately with input/output digests and lineage |
+| Generalization equals declassification | Transform mechanics do not decide residual risk or release | Require policy, review, validation, receipt, and release |
+| Style-only hiding | Delivered bytes remain available to clients | Transform or withhold upstream; test delivered artifacts |
+| One global analysis CRS | Distorts operations outside its intended use | Select and bind operation-specific reference profiles |
+| Horizontal-only 3D handling | Silently mixes vertical datums and units | Bind vertical reference, epoch, units, and conversion method |
+| Map artifact as evidence | A carrier cannot support itself | Resolve map-visible claims to EvidenceBundle and source lineage |
+| Schema pass as publication | Shape validation lacks rights, policy, review, release, and rollback | Keep promotion/release separate |
+| Publishing transform parameters that weaken protection | Enables reversal or inference | Classify parameters and expose only public-safe receipt fields |
+| Source README as connector activation proof | Documentation does not establish code, terms, payloads, or runtime | Verify current source, configuration, tests, receipts, and operation |
+| Parallel spatial contract/schema homes | Creates conflicting authority | Use PathDecisionRecord/ADR and migrate with consumer closure |
+| AI choosing CRS or sensitivity posture from prose alone | Generated language is not authority | Resolve exact profiles, evidence, and policy before action |
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 <a id="14"></a>
 
-## 14. Open questions and verification backlog
+## 14. Maturity matrix and verification backlog
 
-| ID | Question | Resolution path |
+### 14.1 Current maturity
+
+| Capability | Current state | Safe claim |
 |---|---|---|
-| **OPEN-SF-01** | Are the `spatial_foundation/` schema, policy, registry, and test paths in §10 already present in the mounted repo, partially present, or absent? | Mount repo; inventory paths; record findings in `docs/registers/DRIFT_REGISTER.md`. |
-| **OPEN-SF-02** | What CRS is the **default analysis CRS** in any current Kansas-specific pipeline? Does EPSG:5070 match practice, or has a different equal-area CRS been adopted locally? | Inspect any existing pipeline manifests; reconcile against §6.1. |
-| **OPEN-SF-03** | Is a `Generalization Transform` schema already drafted? If yes, does it satisfy the sister-lane redaction needs from Archaeology / Fauna / Flora / Settlements? | Search `schemas/contracts/v1/`; verify against the §9.2 transform requirements. |
-| **OPEN-SF-04** | Does the existing (if any) `LayerManifest` schema carry `crs_ref`, `geometry_label`, `policy_label`, `release_state`, and `EvidenceRef`? | Inspect `schemas/contracts/v1/maplibre/`; cross-check against [`maplibre-3d.md`](./maplibre-3d.md) §4. |
-| **OPEN-SF-05** | Is ADR-0008 (MapLibre default 2D shell + renderer boundary) and ADR-0009 (PMTiles/COG/GeoParquet artifact policy) accepted, or still PROPOSED? | Inspect `docs/adr/`; if numbering conflicts, route through the drift register. |
-| **OPEN-SF-06** | Which steward holds **release authority** for Spatial Foundation artifacts? Atlas v1.1 §18 names the domain but does not name a steward in this session's evidence. | Surface in `docs/governance/` once the steward set is verified. |
-| **OPEN-SF-07** | Spec-hash strategy: JCS+SHA-256? Different canonicalization? | Per ADR-0004 (deterministic ID and hash policy) — **NEEDS VERIFICATION** of ADR status. |
-| **OPEN-SF-08** | Are STAC Projection extension fields lintable in CI? KFM-P27-IDEA-0009 records this as PROPOSED; mounted-repo CI status is **UNKNOWN**. | Inspect `.github/workflows/`. |
+| Cross-system architecture page | Existing and now repository-grounded by this change | Explanation only |
+| Spatial domain page | Placeholder scaffold | Not a registered domain or mature lane |
+| Spatial contract/schema family | Three proposed-inactive fixture profiles | Bounded machine proof exists |
+| Geography version/crosswalk/admin event | Proposed-inactive, machine-backed fixture packets | Declaration and deterministic identity proof only |
+| Georeference identity/evidence/quality | Proposed-inactive fixture packets | Synthetic control and arithmetic proof only |
+| CSV-to-GeoJSON preflight | Narrow deterministic fixture-only implementation | Candidate normalization only |
+| Reusable `kfm-geo` package | `0.0.0` placeholder | No supported runtime API |
+| General CRS registry/profile | Not established | HOLD |
+| General projection/reprojection engine | Not established | HOLD |
+| Geometry fingerprint parity | Not established | HOLD |
+| Scale-support and uncertainty profile | Not established as one accepted cross-system family | HOLD |
+| Active spatial policy/evaluator | Not established | HOLD |
+| Governed public spatial API | API scaffold only | `ABSTAIN` / safe `ERROR` |
+| Source activation and real payloads | Unverified | UNKNOWN |
+| End-to-end release/correction/rollback | No Spatial Foundation operation proved | UNKNOWN / HOLD |
+| Operational metrics and deployment | Not verified | UNKNOWN |
 
-[↑ Back to top](#top)
+### 14.2 P0 — authority and safety closure
+
+- Reconcile cross-cutting Spatial Foundation posture with the domain scaffold and any remaining “Domain 1” references.
+- Refresh `contracts/spatial-foundation/README.md` and `schemas/contracts/v1/spatial-foundation/README.md` to inventory all current profiles without changing authority.
+- Resolve the map/data/layers `LayerManifest` authority conflict before new layer schema work.
+- Decide source-lifecycle ownership for cross-cutting elevation/reference products such as 3DEP; do not move data from this document.
+- Ratify object-family-specific hash and canonicalization rules where profiles must interoperate.
+- Define qualified spatial/geodesy/survey review responsibilities and separation-of-duties triggers.
+- Preserve fail-closed handling for legal-boundary, title, protected-location, critical-asset, living-person, and sovereignty-sensitive uses.
+
+### 14.3 P1 — first dependency-closed spatial slice
+
+A credible next implementation slice should be small and no-network. One candidate is an inactive `CoordinateReferenceProfile` packet that:
+
+- reuses current digest/reference conventions rather than creating a CRS store;
+- binds full definition, axes, units, datum/frame, epoch, vertical context, area of use, and limitations;
+- includes positive and negative synthetic cases;
+- returns finite outcomes;
+- proves no network or hidden registry lookup;
+- has deterministic identity and resource bounds;
+- is referenced by, but does not silently rewrite, the XY transform profile;
+- creates no runtime service, source activation, policy decision, or release.
+
+Placement and compatibility require current Directory Rules and contract-family review before implementation.
+
+### 14.4 P2 — integration and operational proof
+
+- Implement one pure transform helper with cross-engine parity and grid/resource pinning.
+- Add geometry fingerprint semantics and cross-format canonicalization tests.
+- Add scale-support and uncertainty contracts tied to explicit claim support.
+- Bind one admitted public-safe source snapshot through evidence, policy, review, transform, release, correction, and rollback.
+- Add governed API spatial responses with `ANSWER / ABSTAIN / DENY / ERROR`.
+- Test delivered PMTiles/COG/GeoParquet bytes, headers, metadata, caches, exports, and cross-layer inference.
+- Rehearse correction, withdrawal, and rollback propagation.
+- Establish performance, observability, incident, and stale-state evidence.
+
+### 14.5 Definition of done for this architecture page
+
+- [x] Existing path retained and Directory Rules basis recorded.
+- [x] Cross-cutting/non-domain posture reconciled with current registers.
+- [x] Current contracts, schemas, validators, package, preflight, API, and release surfaces classified by evidence.
+- [x] Proposal-era paths and implementation claims removed or relabeled.
+- [x] Legacy anchors 1–15 and `related` retained.
+- [x] Sensitive operational parameters removed.
+- [x] Current conflicts and holds made explicit.
+- [x] Validation, negative-state, graduation, correction, and rollback burdens documented.
+- [ ] Hosted exact-head documentation and repository checks complete.
+- [ ] Qualified human review complete.
+
+[Back to top](#top)
 
 ---
 
 <a id="15"></a>
 
-## 15. Glossary tie-in
+## 15. Glossary
 
-> **CONFIRMED — KFM Atlas v1.1 Appendix A** and the Build Manual §28. Reproduced here only for the terms most relevant to Spatial Foundation; the canonical glossary is the Atlas.
-
-| Term | Short definition (Atlas-grounded) |
+| Term | Meaning in this architecture |
 |---|---|
-| **Coordinate Reference Profile** | KFM-bound CRS descriptor including datum, units, vertical reference, axis order, accuracy band. |
-| **GeographyVersion** | A named, time-bounded administrative or analytic geography. |
-| **Projection Transform Receipt** | Reproducible record of a CRS-to-CRS transform actually applied. |
-| **Generalization Transform** | Reproducible record of geometric simplification / aggregation / fuzzing. |
-| **Geometry Fingerprint** | Stable canonical-form digest of a geometry for change detection and evidence wiring. |
-| **UncertaintySurface** | Spatial expression of evidence uncertainty (positional / classification / generalization residual). |
-| **LayerManifest** | Governed identity, evidence, time, geometry, and trust state of a map layer. |
-| **TileArtifactManifest** | Tiler, version, flags, zooms, format, digest, source links of a tile bundle. |
-| **MapReleaseManifest** | Release-state bundle of layers, styles, and tile artifacts with rollback target. |
-| **Trust membrane** | The boundary preventing RAW / WORK / QUARANTINE state from becoming public truth. |
-| **Governed API** | The interface enforcing evidence, policy, release, finite outcomes, and audit. |
-| **Public-safe** | Released, rights-cleared, sensitivity-reviewed, citable, reviewable, rollback-capable. |
+| **Spatial Foundation** | Cross-cutting architecture and contract context for spatial representation and control; not a registered domain lane at the current evidence snapshot |
+| **Spatial object** | Object whose meaning depends on location, geometry, support, reference system, spatial relation, or extent |
+| **Geometry role** | Source, observed, derived, generalized/redacted, synthetic, or withheld representation status |
+| **GeographyVersion** | Version-bounded declaration of a geography vocabulary and referenced boundary artifact; feature identity remains version-local |
+| **GeographyCrosswalk** | Direction-specific mapping declaration between pinned geography versions; not an executed join |
+| **AdminBoundaryChange** | Source-supported administrative lineage event; not legal or geometry truth by itself |
+| **CoordinateReferenceProfile** | Proposed versioned declaration of coordinate/reference meaning and intended use |
+| **Coordinate operation** | Explicit transformation between reference contexts, including axis/unit/datum/epoch/vertical handling |
+| **Projection/transform receipt** | Audit record binding declared inputs, method, resources, outputs, findings, and limitations |
+| **Geometry fingerprint** | Proposed stable identity for a geometry or feature set under an accepted canonicalization profile |
+| **Spatial support** | The point, line, area, grid cell, raster footprint, volume, or aggregation unit to which a claim applies |
+| **Scale support profile** | Proposed declaration of scales/resolutions at which an object or claim remains meaningful |
+| **Uncertainty surface** | Spatially varying representation of uncertainty; model output, not observation |
+| **Generalization** | Intentional reduction of spatial or attribute precision; candidate protective transform, not automatic declassification |
+| **Georeferencing** | Relating resource/image coordinates to a declared target coordinate space using control evidence and a transform |
+| **GCP** | Ground control point or control correspondence used by a georeference process |
+| **CRS** | Coordinate reference system, including coordinate system and datum/reference-frame context |
+| **Datum / reference frame** | Definition that anchors coordinates to the Earth or another declared reference |
+| **Coordinate epoch** | Time at which coordinates in a dynamic frame apply |
+| **Vertical datum** | Reference for elevation/height values |
+| **Area of use** | Geographic area for which a CRS or operation is intended |
+| **Derived stays derived** | Transform outputs retain derivative status and do not overwrite or outrank source truth |
+| **Public-safe derivative** | Separately identified, validated, reviewed, policy-supported, released representation for a bounded audience and operation |
+| **Inspectable claim** | Claim whose evidence, source role, spatial/temporal support, policy, review, release, correction, and rollback can be inspected |
+| **Trust membrane** | Governed interface separating public clients from canonical/internal stores and unreviewed runtime components |
+
+[Back to top](#top)
+
+---
+
+<a id="16"></a>
+
+## 16. Change discipline, non-effects, correction, and rollback
+
+### 16.1 Review checklist for material spatial changes
+
+A pull request that changes a trust-bearing spatial contract, schema, transform, source lane, or public behavior should identify:
+
+- exact subject, operation, audience, and intended use;
+- owning responsibility root and Directory Rules basis;
+- source and target identities/digests;
+- affected CRS, datum, epoch, vertical, unit, and grid resources;
+- geometry roles and spatial support;
+- evidence, source role, rights, sensitivity, and review dependencies;
+- deterministic identity and replay impact;
+- affected contracts, schemas, fixtures, validators, tests, workflows, artifacts, clients, and documentation;
+- negative cases and delivered-byte tests;
+- correction, supersession, cache invalidation, and rollback targets; and
+- residual unknowns and explicit HOLDs.
+
+### 16.2 Non-effects of this update
+
+This same-path documentation change does **not**:
+
+- register Spatial Foundation as a domain;
+- accept a new object family or ADR;
+- change a contract, schema, fixture, validator, test, workflow, package, connector, policy, registry, data object, API route, release record, or artifact;
+- activate or fetch a source;
+- inspect or transform real coordinates or geometry;
+- approve a CRS, datum, epoch, grid, transform, scale threshold, or redaction parameter;
+- resolve evidence, rights, sensitivity, review, or release state;
+- migrate 3DEP or any other lifecycle data;
+- establish legal-boundary, parcel, title, ownership, surveying, or engineering authority;
+- promote lifecycle state;
+- release, deploy, serve, or publish; or
+- prove operational spatial safety.
+
+### 16.3 Correction posture
+
+If this page later conflicts with current code or accepted authority:
+
+1. record the conflict and exact evidence;
+2. narrow or correct the architecture claim;
+3. do not silently rewrite a semantic contract or machine schema from this page;
+4. update connected documentation and indexes only within a reviewed change;
+5. preserve prior identity and history where material; and
+6. link the correction to affected implementation or governance work.
+
+### 16.4 Rollback
+
+Before merge, close the draft pull request and abandon its feature branch.
+
+After an authorized merge, revert the documentation commit or restore prior blob:
+
+```text
+8e6ec163063d465d47ef1576c54755bc41539915
+```
+
+Because the change is documentation-only, rollback requires no source shutdown, data migration, transform reversal, cache purge, API rollback, release withdrawal, deployment change, or public correction.
+
+[Back to top](#top)
 
 ---
 
 <a id="related"></a>
 
-## Related docs
+## Related repository evidence
 
-- [`docs/architecture/system-context.md`](./system-context.md) — overall KFM system context. *(PROPOSED sibling per directory-rules §6.)*
-- [`docs/architecture/map-shell.md`](./map-shell.md) — the MapLibre shell architecture this domain feeds. *(PROPOSED sibling.)*
-- [`docs/architecture/maplibre-3d.md`](./maplibre-3d.md) — 3D / planetary surface, downstream of SF. *(CONFIRMED authored prior session.)*
-- [`docs/architecture/governed-api.md`](./governed-api.md) — the trust-membrane interface SF artifacts pass through. *(PROPOSED sibling.)*
-- [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) — the meaning / shape / admissibility split SF follows. *(PROPOSED sibling.)*
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement authority (v1.3).
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — public path boundary.
-- [`docs/standards/PMTILES.md`](../standards/PMTILES.md) — PMTiles v3 conformance profile. *(CONFIRMED authored prior session; repo-presence NEEDS VERIFICATION.)*
-- [`docs/standards/OGC-API-TILES.md`](../standards/OGC-API-TILES.md) — OGC API Tiles integration. *(CONFIRMED authored prior session.)*
-- [`docs/standards/ISO-19115.md`](../standards/ISO-19115.md) — geographic metadata crosswalk. *(CONFIRMED authored prior session.)*
-- [`docs/standards/PROV.md`](../standards/PROV.md) — provenance profile. *(CONFIRMED authored prior session; naming variance vs. corpus `PROVENANCE.md` → directory-rules §18 OPEN-DR-01.)*
-- *KFM Domains v1.1* §18 — doctrinal source.
-- *Pass 23/32 Consolidated Atlas* §24.4.1 — cross-lane edges owned by Spatial Foundation.
-- *Master MapLibre Components-Functions-Features v2.1* Category K (raster/COG/DEM/terrain/hillshade) and Category Q (sensitive geometry / geoprivacy).
+### Architecture and governance
 
----
+- [`docs/architecture/README.md`](./README.md)
+- [`docs/architecture/SYSTEM_MAP.md`](./SYSTEM_MAP.md)
+- [`docs/architecture/system-context.md`](./system-context.md)
+- [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md)
+- [`docs/architecture/cross-lane-join-policy.md`](./cross-lane-join-policy.md)
+- [`docs/architecture/source-role-anti-collapse.md`](./source-role-anti-collapse.md)
+- [`docs/architecture/map-shell.md`](./map-shell.md)
+- [`docs/architecture/governed-api.md`](./governed-api.md)
+- [`docs/architecture/sensitive-domain-fail-closed.md`](./sensitive-domain-fail-closed.md)
+- [`docs/architecture/document-convergence-plan.md`](./document-convergence-plan.md)
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)
+- [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [`docs/registers/DOMAIN_LANE.md`](../registers/DOMAIN_LANE.md)
+- [`docs/registers/OBJECT_FAMILY.md`](../registers/OBJECT_FAMILY.md)
+- [`control_plane/domain_lane_register.yaml`](../../control_plane/domain_lane_register.yaml)
 
-**Last updated:** `<YYYY-MM-DD — set on PR>`
-**Doc version:** `v1 (draft)`
-**Spec hash:** *NEEDS VERIFICATION (generated at release time).*
+### Spatial and geography contracts
 
-[↑ Back to top](#top)
+- [`contracts/spatial-foundation/README.md`](../../contracts/spatial-foundation/README.md)
+- [`contracts/spatial-foundation/boundary_derivation_record.md`](../../contracts/spatial-foundation/boundary_derivation_record.md)
+- [`contracts/spatial-foundation/xy_point_transform_receipt.md`](../../contracts/spatial-foundation/xy_point_transform_receipt.md)
+- [`contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md`](../../contracts/spatial-foundation/lidar_derived_product_lineage_receipt.md)
+- [`schemas/contracts/v1/spatial-foundation/README.md`](../../schemas/contracts/v1/spatial-foundation/README.md)
+- [`contracts/common/geography_version.md`](../../contracts/common/geography_version.md)
+- [`contracts/crosswalks/geography_crosswalk.md`](../../contracts/crosswalks/geography_crosswalk.md)
+- [`contracts/common/admin_boundary_change.md`](../../contracts/common/admin_boundary_change.md)
+- [`contracts/map/georeference_control_point_set.md`](../../contracts/map/georeference_control_point_set.md)
+- [`contracts/map/georeference_control_point_evidence_assessment.md`](../../contracts/map/georeference_control_point_evidence_assessment.md)
+- [`contracts/map/georeference_spatial_distribution.md`](../../contracts/map/georeference_spatial_distribution.md)
+- [`contracts/map/georeference_transform_quality.md`](../../contracts/map/georeference_transform_quality.md)
+
+### Implementation, delivery, and release
+
+- [`packages/geo/README.md`](../../packages/geo/README.md)
+- [`tools/ingest/csv_geojson_preflight/preflight.py`](../../tools/ingest/csv_geojson_preflight/preflight.py)
+- [`contracts/map/README.md`](../../contracts/map/README.md)
+- [`schemas/contracts/v1/map/README.md`](../../schemas/contracts/v1/map/README.md)
+- [`contracts/release/map_release_manifest.md`](../../contracts/release/map_release_manifest.md)
+- [`connectors/usgs/3dep/README.md`](../../connectors/usgs/3dep/README.md)
+- [`data/raw/hydrology/usgs_3dep/README.md`](../../data/raw/hydrology/usgs_3dep/README.md)
+- [`apps/governed-api/src/governed_api/main.py`](../../apps/governed-api/src/governed_api/main.py)
+- [`apps/governed-api/src/governed_api/stub.py`](../../apps/governed-api/src/governed_api/stub.py)
+- [`release/README.md`](../../release/README.md)
+
+<p align="right"><a href="#top">Back to top</a></p>
