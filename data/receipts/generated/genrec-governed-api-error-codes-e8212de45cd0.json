@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-governed-api-error-codes-e8212de45cd0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/ERROR_CODES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/ERROR_CODES.md": "sha256:e8212de45cd02f164880f014f816a47bea0c181621e687b1dab34f1502536981"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/ERROR_CODES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:commit/bdbac0cba150c1f0e96d47435965c13caec170a7",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/governed-api/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/doctrine/directory-rules.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:contracts/runtime/runtime_response_envelope.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:contracts/runtime/runtime_response_http_binding_v1.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:packages/envelopes/src/envelopes/runtime_response.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:tools/validators/validate_runtime_response_envelope.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/src/governed_api/main.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/src/governed_api/stub.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/ERROR_CODES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 0a547c12e7965565d397fcad46d94c1c7b41f0c7, verified prior target blob ae59686dfea140866e9b6194bb9964ade629e020, and found no open pull request or branch claiming the exact target path."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Re-fetched main after the target commit and confirmed it remained 0a547c12e7965565d397fcad46d94c1c7b41f0c7; no base reconciliation was required."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 confirm the existing docs/architecture/governed-api/ placement while semantic contracts, machine schemas, policy, runtime, clients, observability, receipts, release, and publication remain in their owning roots."
+    },
+    {
+      "gate": "runtime-error-behavior-reconciliation",
+      "outcome": "PASS",
+      "reason": "Inspected the RuntimeResponseEnvelope schema, candidate builder, validator, fixtures, WSGI dispatcher, stub builder, and app-local tests; current executable ERROR behavior is bounded to SAFE_RUNTIME_ERROR on 404 and 405 paths."
+    },
+    {
+      "gate": "reason-code-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "Recorded the conflict between the unconstrained top-level reason_code string, upper-snake executable literals, the v0.1 lower-case slash catalogue, and the inactive HTTP binding without promoting any proposal into a canonical registry."
+    },
+    {
+      "gate": "legacy-catalogue-no-loss",
+      "outcome": "PASS",
+      "reason": "Retained all nine v0.1 classes and all 34 slash-namespaced identifiers as PROPOSED_LINEAGE while correcting unsupported canonical, nested-shape, retry, severity, and stability claims."
+    },
+    {
+      "gate": "markdown-structure-anchor-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified one H1, YAML-readable meta block, 21 unique explicit anchors, 41 resolved local fragment references, balanced code fences, stable Markdown tables, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 6504ba3b8bf1262c18ab7f180712870d8a0bd580 matches the locally computed Git blob; final document SHA-256 is e8212de45cd02f164880f014f816a47bea0c181621e687b1dab34f1502536981."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked against the current generated-receipt field, enum, hash, path/hash closure, review-state, and additional-property constraints."
+    },
+    {
+      "gate": "repository-native-documentation-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; deterministic source checks and remote blob verification were completed instead."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no registry adoption, runtime, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-envelope-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-runtime-error-stubs",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "current-boundary-tests",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/tests/test_boundary_guards.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "inactive-http-binding",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/runtime_response_http_binding_v1.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "grounded-envelope-companion",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/governed-api/ENVELOPES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T23:53:47Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It corrects proposal-era claims that ERROR_CODES.md already defines a canonical public slash registry and nested reason object, grounds current behavior to the RuntimeResponseEnvelope top-level reason_code plus SAFE_RUNTIME_ERROR on 404/405, preserves the complete v0.1 catalogue as proposal lineage, adds explicit compatibility HOLDs and a no-network graduation slice, and changes no contract, schema, policy, route, runtime, client, release, deployment, or publication state."
+}
