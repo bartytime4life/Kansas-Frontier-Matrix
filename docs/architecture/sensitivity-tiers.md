@@ -58,7 +58,7 @@ related:
   - ../../data/registry/sensitivity/README.md
   - ../../release/README.md
   - ../../.github/CODEOWNERS
- tags:
+tags:
   - kfm
   - architecture
   - sensitivity
