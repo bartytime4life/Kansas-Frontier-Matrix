@@ -26,8 +26,9 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3ddf171cd7c4a5b4dbbeec3127e9721411c2c8eb
+  base_commit: ad143585aa3e0ad1da34111b07ac378f8ccdcb50
   target_prior_blob: e69e4e9ee9a9771d0ad33aecfbb7ce91bd60867f
+  provenance_standard_blob: 84162bc67244a062638a960e01390a5de6d797e2
   evidence_bundle_schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
   synthetic_projection_blob: 2f2f90b67b64664b89ea4937febfc223c256b838
 external_currentness:
@@ -73,7 +74,7 @@ notes:
 
 | Field | Current result |
 |---|---|
-| Snapshot | `main@3ddf171cd7c4a5b4dbbeec3127e9721411c2c8eb` |
+| Snapshot | `main@ad143585aa3e0ad1da34111b07ac378f8ccdcb50` |
 | Placement | **PLACE** at `docs/standards/PROV.md` |
 | Review | `@bartytime4life`; specialist stewardship **NEEDS VERIFICATION** |
 | Upstream | PROV-O W3C Recommendation, 2013-04-30; `http://www.w3.org/ns/prov#` |
