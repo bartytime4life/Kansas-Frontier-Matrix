@@ -1,606 +1,769 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/pmtiles
-title: PMTiles — KFM Standards Profile
-type: standard
-version: v1.1
-status: draft; partial-structural-implementation
-owner: TODO-pmtiles-standards-steward
+title: PMTiles — KFM Archive and Readiness Boundary
+type: standard; archive-guidance; carrier-readiness-boundary
+version: v2.0-draft
+status: "draft; repository-grounded; upstream-currentness-refreshed; partial-structural-implementation; no-adoption; no-release; no-publication"
+owners:
+  - "@bartytime4life — verified default GitHub review route through the standards-lane boundary"
+  - "NEEDS VERIFICATION — PMTiles, map/tile, standards, contract, schema, policy, evidence, security, release, runtime, performance, and independent-review stewards"
 created: 2026-05-14
-updated: 2026-08-03
-policy_label: public
+updated: 2026-08-18
+policy_label: "repository-facing; standards-guidance; pmtiles; map-carrier; release-gated; public-safe-only"
+owning_root: docs/
+current_path: docs/standards/PMTILES.md
+responsibility: >
+  Explain the upstream PMTiles Version 3 archive format, distinguish it from
+  inner tile encodings, hosting, KFM attestation, runtime activation, and
+  governed publication, disclose the exact bounded PMTiles-related
+  implementation currently present in the repository, and define the evidence
+  required before KFM may claim conformance or release a public PMTiles carrier.
+truth_posture: >
+  CONFIRMED current path, standards-lane placement, default review route,
+  upstream PMTiles Version 3 structure and tile-type registry, current split
+  SHA-256 PMTiles/PMIDX/PMSIG/RunReceipt compatibility checks, synthetic
+  partial-read and mobile verification fixtures, deny-by-default policy text,
+  partial CI gate, inactive metadata-readiness profile, unresolved
+  TileArtifactManifest schema family, and MapLibre package scaffold / PROPOSED
+  canonical PMTiles attestation profile, cryptographic key trust, policy
+  execution, release binding, browser admission, hosting profile, performance
+  budgets, correction, and rollback behavior / UNKNOWN production PMTiles
+  generation, deployed Range/CORS behavior, functioning MapLibre PMTiles
+  consumer, released PMTiles artifacts, public publication, and accountable
+  specialist stewardship.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 6e45646702022513fa0777b294d09ea90d73cf58
+  target_prior_blob: 4dd59b0341aa7a2bac2962cf80e9beab2938caa0
+  attestation_standard_blob: 372845bd9ee9877a96de2d01d824e003d22010b5
+  pmidx_spec_blob: 2dd09ad79f935ed5f61d6be899fdfd5e60e6d4a9
+  attestation_fixture_readme_blob: a9e8d87db4688c69e88121e15542ac1f3abc7c55
+  mobile_fixture_readme_blob: e6758940031ca4e0fc274d27a32e058034e250d5
+  attestation_workflow_blob: 7857db8fafc77b40c84f09d208ca6a60d2b7d4df
+  tile_artifact_contract_blob: 138e2d97b0d0bd7311c7c36a45ed983bae63b154
+  tile_artifact_schema_blob: ed8fb0834c06a6254d6175f9a08b8d17ccc68d71
+  carrier_readiness_contract_blob: 17055a680b83a4f83834735e88aeb0569322845b
+  tiles_policy_blob: 5ac2a37d468f99f9195667f723d99b2b7a3325f4
+  development_signer_blob: e519a96ed57ba26085604ac45a145c869f30958c
+external_currentness_review:
+  access_date: 2026-08-18
+  upstream_spec: "PMTiles Version 3 Specification; v3 changelog through 3.6"
+  upstream_delivery: "Protomaps cloud-storage, CLI, and MapLibre guidance"
+  currentness_risk: "The archive header version remains 3 while v3 capabilities and implementations continue to evolve"
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/architecture/map-shell.md
-  - docs/standards/STAC.md
-  - docs/standards/MVT.md
-  - docs/standards/COG.md
-  - contracts/release/tile_artifact_manifest.md
-  - contracts/release/release_manifest.md
-  - schemas/contracts/v1/map/tile_artifact_manifest.schema.json
-  - docs/standards/pmtiles/PMTILES_ATTESTATION_STANDARD.md
-  - tools/validators/pmtiles/validate_attestation_bundle.py
-  - policy/release/
-tags: [kfm, standards, tiles, pmtiles, maplibre, release, publication]
+  - ./README.md
+  - ./MVT.md
+  - ./COG.md
+  - ./OGC-API-TILES.md
+  - ./pmtiles/PMTILES_ATTESTATION_STANDARD.md
+  - ./pmtiles/PMIDX_SPEC_V1.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../contracts/release/tile_artifact_manifest.md
+  - ../../contracts/release/geospatial_carrier_readiness.md
+  - ../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - ../../tools/validators/pmtiles/README.md
+  - ../../fixtures/pmtiles/attestation/README.md
+  - ../../fixtures/pmtiles/mobile_verification/README.md
+  - ../../tests/validators/test_pmtiles_attestation_bundle.py
+  - ../../.github/workflows/pmtiles-attestation.yml
+  - ../../policy/rego/tiles_publish.rego
+  - ../../packages/maplibre/README.md
+tags: [kfm, standards, pmtiles, tiles, mvt, mlt, maplibre, attestation, carrier-readiness, release]
 notes:
-  - PMTiles is CONFIRMED doctrine / partial structural compatibility implementation / PROPOSED publication profile
-  - This standard has one PMTiles-standards authority-owner role; assignment NEEDS VERIFICATION. Schema, security, policy, release, MapLibre, and docs stewards are review roles. CODEOWNERS routes review to @bartytime4life
-  - Canonical TileArtifactManifest schema family remains unresolved; the implemented declared-manifest check is opt-in and non-canonical
-  - External PMTiles v3 spec facts inline-cited; KFM profile rules sourced to project doctrine
+  - "Same-path documentation modernization only; no contract, schema, policy, fixture, validator, workflow, package, source, tile artifact, release object, runtime, deployment, or public product changes."
+  - "The prior page overstated KFM-wide adoption, a monolithic sidecar, browser-side cryptographic verification, and production release behavior."
+  - "This revision distinguishes upstream archive conformance, the current non-canonical structural compatibility slice, hosted delivery readiness, runtime admission, and governed release."
+  - "Malformed generated citation tokens are removed and replaced with direct authoritative references."
+  - "Legacy title and numbered-section anchors are retained for inbound-link compatibility."
 [/KFM_META_BLOCK_V2] -->
 
-# PMTiles — KFM Standards Profile
+<a id="top"></a>
+<a id="pmtiles--kfm-standards-profile"></a>
 
-> How Kansas Frontier Matrix consumes, produces, signs, verifies, and publishes the PMTiles single-file tile archive format — and what KFM forbids when it doesn't.
+# PMTiles — KFM Archive and Readiness Boundary
 
-<!-- Badge row: status, license/policy, validation, version, last-updated -->
-![Status](https://img.shields.io/badge/status-draft-blue)
-![Authority](https://img.shields.io/badge/authority-standards--profile-informational)
-![PMTiles Spec](https://img.shields.io/badge/PMTiles-v3-success)
-![Trust Posture](https://img.shields.io/badge/posture-cite--or--abstain-critical)
-![Doctrine](https://img.shields.io/badge/doctrine-CONFIRMED-brightgreen)
-![Implementation](https://img.shields.io/badge/implementation-partial%20structural-orange)
-![Updated](https://img.shields.io/badge/updated-2026--08--03-lightgrey)
+> **Purpose.** Explain what PMTiles Version 3 governs, what KFM currently checks, what remains non-canonical or unimplemented, and what must be proven before a PMTiles carrier may participate in a governed release.
 
-**Status:** Draft · partial structural compatibility implementation · publication profile proposed · **Owner:** _TODO — PMTiles standards steward_ · **Last updated:** 2026-08-03
+![status](https://img.shields.io/badge/status-v2.0--draft-d4a72c?style=flat-square)
+![evidence](https://img.shields.io/badge/evidence-repository--grounded-1a7f37?style=flat-square)
+![upstream](https://img.shields.io/badge/upstream-PMTiles--v3-0969da?style=flat-square)
+![profile](https://img.shields.io/badge/KFM_profile-UNRESOLVED-b54708?style=flat-square)
+![implementation](https://img.shields.io/badge/implementation-STRUCTURAL__COMPATIBILITY-8250df?style=flat-square)
+![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)
 
----
+> [!IMPORTANT]
+> **A PMTiles archive is a derived delivery carrier, not evidence, policy, review, release, or public truth.** A valid header, matching digest, successful range read, visible MapLibre layer, passing fixture, signature-shaped object, or green workflow does not establish source authority, public safety, evidence closure, release approval, or publication.
 
-## Quick Jump
+> [!CAUTION]
+> **Current KFM implementation is bounded and non-canonical.** The repository implements deterministic, no-network structural checks for a split SHA-256 PMTiles + PMIDX + PMSIG + RunReceipt compatibility bundle, optional declared-manifest reconciliation, captured partial-read fixtures, and a synthetic mobile decode/render handoff. Cryptographic signature trust, canonical schema authority, policy execution, release/correction/rollback closure, functioning MapLibre protocol admission, deployed hosting, and public publication remain held or unknown.
 
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. What PMTiles is](#2-what-pmtiles-is)
-- [3. KFM trust posture for tiles](#3-kfm-trust-posture-for-tiles)
-- [4. Conformance language](#4-conformance-language)
-- [5. KFM profile (required fields and behaviors)](#5-kfm-profile-required-fields-and-behaviors)
-- [6. Lifecycle placement](#6-lifecycle-placement)
-- [7. Sidecar contract](#7-sidecar-contract)
-- [8. Verification flow](#8-verification-flow)
-- [9. CI publication gates](#9-ci-publication-gates)
-- [10. Failure modes and DENY conditions](#10-failure-modes-and-deny-conditions)
-- [11. Anti-patterns](#11-anti-patterns)
-- [12. When **not** to use PMTiles](#12-when-not-to-use-pmtiles)
-- [13. Object-family bindings](#13-object-family-bindings)
-- [14. Repo placement (PROPOSED)](#14-repo-placement-proposed)
-- [15. Open questions and verification backlog](#15-open-questions-and-verification-backlog)
-- [16. References](#16-references)
+> [!WARNING]
+> **Do not collapse archive, payload, transport, runtime, and release.** PMTiles is an archive format. MVT, MapLibre Vector Tile, PNG, JPEG, WebP, and AVIF are inner tile types. HTTP Range or a server-mediated Z/X/Y API is delivery. MapLibre protocol registration is runtime integration. KFM evidence, policy, review, and release records decide whether the carrier may be exposed.
+
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@6e45646702022513fa0777b294d09ea90d73cf58` |
+| **Directory result** | `PLACE` at existing `docs/standards/PMTILES.md`; accepted Directory Rules assign human-readable standards guidance to `docs/standards/` |
+| **Upstream baseline** | PMTiles Version 3; v3 changelog reviewed through 3.6 on 2026-08-18 |
+| **KFM adoption** | **NOT ESTABLISHED** as one accepted canonical PMTiles attestation, hosting, runtime, or publication profile |
+| **Current executable proof** | Structural compatibility checks over synthetic or repository-local candidates; authority remains `NONE` |
+| **Canonical manifest/schema** | `TileArtifactManifest` semantics are proposed; the only inspected schema is an open map-family scaffold |
+| **Cryptographic verification** | **NOT ESTABLISHED**; PMSIG handling is shape-only and the repository signer emits an explicit development placeholder |
+| **Policy execution** | Deny-by-default Rego text exists; execution and policy tests in the PMTiles release path are not established by the inspected workflow |
+| **Browser/runtime consumer** | Synthetic PNG verification/render handoff exists; MapLibre boot, `pmtiles://` protocol admission, and a functioning package consumer are not established |
+| **Hosted delivery** | Range/CORS behavior is an upstream requirement for direct browser delivery; no KFM deployment or host probe is established here |
+| **Release/public effect** | None |
+
+**Quick navigation:** [Purpose](#1-purpose--scope) · [Upstream](#2-what-pmtiles-is) · [Trust](#3-kfm-trust-posture-for-tiles) · [Language](#4-conformance-language) · [Profile](#5-kfm-profile-required-fields-and-behaviors) · [Lifecycle](#6-lifecycle-placement) · [Sidecars](#7-sidecar-contract) · [Verification](#8-verification-flow) · [CI](#9-ci-publication-gates) · [Failures](#10-failure-modes-and-deny-conditions) · [Anti-patterns](#11-anti-patterns) · [Alternatives](#12-when-not-to-use-pmtiles) · [Objects](#13-object-family-bindings) · [Placement](#14-repo-placement-proposed) · [Open work](#15-open-questions-and-verification-backlog) · [References](#16-references)
 
 ---
 
 ## 1. Purpose & scope
 
-This profile is the **KFM-binding interpretation** of the upstream PMTiles v3 specification. The upstream spec defines the byte format; this profile defines the **governance envelope** around it — which fields are mandatory for a KFM release, what proof must travel with every archive, how clients verify it before `addSource`, and what conditions trigger a `DENY`.
+This page is the human-readable KFM boundary for PMTiles. It records the checked upstream format, the repository's current structural compatibility slice, the intended governance posture, and the evidence still required for conformance or release claims.
+
+It is **not** the byte-format specification, a canonical machine schema, a policy rule, an attestation, a release decision, a deployment contract, or proof that a public KFM client consumes PMTiles.
+
+### 1.1 Authority by question
+
+| Question | Owning authority | Role of this page |
+|---|---|---|
+| What PMTiles Version 3 means | The official PMTiles specification and changelog | Record the checked upstream baseline; do not redefine it |
+| Whether KFM adopts PMTiles | Accepted KFM decisions, active contracts/schemas/policy, implementation, tests, and release evidence | State the current unresolved adoption boundary |
+| What the KFM PMTiles compatibility bundle checks | Current validator code, fixtures, tests, and workflow at a pinned revision | Summarize its exact structural limits |
+| What `TileArtifactManifest` means | [`contracts/release/tile_artifact_manifest.md`](../../contracts/release/tile_artifact_manifest.md) | Cite semantics; do not select the unresolved schema family |
+| What machine shape is valid | An accepted schema under `schemas/` | State that the current map-family schema is an open scaffold |
+| What is allowed or denied | `policy/`, governed review, and release authority | Explain prerequisites; do not execute or replace policy |
+| Whether a signature is trusted | Approved cryptographic implementation, key registry, signer policy, and verification evidence | State that current PMSIG checks are non-cryptographic |
+| Whether a host is PMTiles-ready | Observed HTTP Range, CORS, validator, cache, integrity, and failure evidence for the deployed endpoint | Record target checks; do not infer deployment behavior |
+| Whether a browser may load the archive | Accepted runtime adapter/protocol, manifest binding, policy, release, and browser tests | State that current MapLibre activation is not established |
+| Whether a release may publish | Evidence, policy, review, proof, release, correction, and rollback authorities | Explain closure; never approve publication |
+
+### 1.2 In scope and out of scope
 
 | In scope | Out of scope |
 |---|---|
-| KFM's profile of PMTiles v3 (vector and raster) | The PMTiles binary format itself — see upstream spec |
-| Required sidecar fields and signing | Style spec, glyph spec, sprite spec |
-| Verification and CI gates for tile release | Server-mediated tile serving (see Martin/tegola profile) |
-| Trust placement of PMTiles in the lifecycle | MVT internal encoding (see `docs/standards/MVT.md`) |
-| When PMTiles **must not** be used | Tile authoring tooling (covered in pipeline docs) |
+| PMTiles Version 3 archive facts and currentness | Redefining upstream PMTiles bytes |
+| KFM trust and lifecycle posture for PMTiles carriers | MVT or MLT payload semantics; see [`MVT.md`](./MVT.md) and upstream encoding specifications |
+| Current PMTiles compatibility validators, fixtures, policy text, and CI boundary | Activating a source, renderer dependency, endpoint, or public route |
+| Candidate manifest, sidecar, attestation, hosting, and release evidence | Creating a canonical `TileArtifactManifest` schema |
+| Fail-closed and correction expectations | Approving rights, sensitivity, review, release, or publication |
+| Alternatives when PMTiles is the wrong carrier | General map styling, glyph, sprite, or scene architecture |
 
-> [!IMPORTANT]
-> PMTiles is **CONFIRMED doctrine** in KFM. The current repository has a
-> **partial structural compatibility implementation** for an offline split
-> bundle and an opt-in declared-manifest profile; the broader production,
-> runtime, canonical-schema, cryptographic, policy, release, and publication
-> profile remains **PROPOSED**. Path-shaped claims outside the confirmed slice
-> remain PROPOSED until verified against mounted-repo evidence.
+### 1.3 Current evidence limit
+
+Repository bytes prove that the named files and checks exist at the evidence snapshot. They do not prove production inputs, successful hosted Range behavior, deployed consumer interoperability, current required-check settings, cryptographic key custody, authorized review, release, or publication.
+
+[Back to top](#top)
 
 ---
 
 ## 2. What PMTiles is
 
-PMTiles is a single-file archive format for pyramids of map tiles, designed for **static cloud-storage delivery with HTTP Range reads** and no tile server. KFM treats it as a **derived release carrier**, never as a source of evidentiary truth.
+PMTiles is a single-file archive format for tiled data. The archive can be read from local storage or through byte-range access on static/object storage; a server can also expose its contents through another API. KFM treats PMTiles as a downstream carrier for already-governed, public-safe derivatives.
 
-**Upstream facts (EXTERNAL):**
+### 2.1 Upstream Version 3 checkpoint
 
-- The current specification version is Version 3. [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NDcxNiwibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1naXRodWIuY29tIiwic2l0ZURvbWFpbiI6ImdpdGh1Yi5jb20iLCJzaXRlTmFtZSI6IkdpdEh1YiIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNvdXJjZSI6IkdpdEh1YiIsInRpdGxlIjoiR2l0SHViIC0gcHJvdG9tYXBzXC9QTVRpbGVzOiBQeXJhbWlkcyBvZiBtYXAgdGlsZXMgaW4gYSBzaW5nbGUgZmlsZSBvbiBzdGF0aWMgc3RvcmFnZSDCtyBHaXRIdWIiLCJ1cmwiOiJodHRwczpcL1wvZ2l0aHViLmNvbVwvcHJvdG9tYXBzXC9wbXRpbGVzIn1dLCJzdGFydEluZGV4Ijo0NjY5LCJ0aXRsZSI6IkdpdEh1YiAtIHByb3RvbWFwc1wvUE1UaWxlczogUHlyYW1pZHMgb2YgbWFwIHRpbGVzIGluIGEgc2luZ2xlIGZpbGUgb24gc3RhdGljIHN0b3JhZ2UgwrcgR2l0SHViIiwidXJsIjoiaHR0cHM6XC9cL2dpdGh1Yi5jb21cL3Byb3RvbWFwc1wvcG10aWxlcyIsInV1aWQiOiJmNmRkOTIwYi1iYjkxLTQ4NDUtYjcyZC0wMjI0ZTgyNTU4N2YifQ%3D%3D "GitHub")](https://github.com/protomaps/pmtiles)
-- PMTiles is a single-file archive format for tiled data. The recommended MIME Type for PMTiles is `application/vnd.pmtiles`. [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NDg0MiwibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1naXRodWIuY29tIiwic2l0ZURvbWFpbiI6ImdpdGh1Yi5jb20iLCJzaXRlTmFtZSI6IkdpdEh1YiIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNvdXJjZSI6IkdpdEh1YiIsInRpdGxlIjoiUE1UaWxlc1wvc3BlY1wvdjNcL3NwZWMubWQgYXQgbWFpbiDCtyBwcm90b21hcHNcL1BNVGlsZXMiLCJ1cmwiOiJodHRwczpcL1wvZ2l0aHViLmNvbVwvcHJvdG9tYXBzXC9QTVRpbGVzXC9ibG9iXC9tYWluXC9zcGVjXC92M1wvc3BlYy5tZCJ9XSwic3RhcnRJbmRleCI6NDcxOSwidGl0bGUiOiJQTVRpbGVzXC9zcGVjXC92M1wvc3BlYy5tZCBhdCBtYWluIMK3IHByb3RvbWFwc1wvUE1UaWxlcyIsInVybCI6Imh0dHBzOlwvXC9naXRodWIuY29tXC9wcm90b21hcHNcL1BNVGlsZXNcL2Jsb2JcL21haW5cL3NwZWNcL3YzXC9zcGVjLm1kIiwidXVpZCI6ImE4MDI5OWU0LWQ1YzktNGEwNi1iYzkyLWM4OTZkN2MyNTMzMCJ9 "GitHub")](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
-- The magic number is a fixed 7-byte field whose value is always `PMTiles` in UTF-8 encoding (0x50 0x4D 0x54 0x69 0x6C 0x65 0x73). The version is a fixed 1-byte field whose value is always 3 (0x03). [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NTA0MSwibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1naXRodWIuY29tIiwic2l0ZURvbWFpbiI6ImdpdGh1Yi5jb20iLCJzaXRlTmFtZSI6IkdpdEh1YiIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNvdXJjZSI6IkdpdEh1YiIsInRpdGxlIjoiUE1UaWxlc1wvc3BlY1wvdjNcL3NwZWMubWQgYXQgbWFpbiDCtyBwcm90b21hcHNcL1BNVGlsZXMiLCJ1cmwiOiJodHRwczpcL1wvZ2l0aHViLmNvbVwvcHJvdG9tYXBzXC9QTVRpbGVzXC9ibG9iXC9tYWluXC9zcGVjXC92M1wvc3BlYy5tZCJ9XSwic3RhcnRJbmRleCI6NDg0NSwidGl0bGUiOiJQTVRpbGVzXC9zcGVjXC92M1wvc3BlYy5tZCBhdCBtYWluIMK3IHByb3RvbWFwc1wvUE1UaWxlcyIsInVybCI6Imh0dHBzOlwvXC9naXRodWIuY29tXC9wcm90b21hcHNcL1BNVGlsZXNcL2Jsb2JcL21haW5cL3NwZWNcL3YzXC9zcGVjLm1kIiwidXVpZCI6IjExMzYxY2E2LTIwYzktNGE2Yi1iYzM0LTI0NjJhZjM3YzlhMiJ9 "GitHub")](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
-- The root directory MUST be contained in the first 16,384 bytes (16 KiB) so that latency-optimized clients can retrieve the root directory in advance. [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NTE5MywibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1naXRodWIuY29tIiwic2l0ZURvbWFpbiI6ImdpdGh1Yi5jb20iLCJzaXRlTmFtZSI6IkdpdEh1YiIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNvdXJjZSI6IkdpdEh1YiIsInRpdGxlIjoiUE1UaWxlc1wvc3BlY1wvdjNcL3NwZWMubWQgYXQgbWFpbiDCtyBwcm90b21hcHNcL1BNVGlsZXMiLCJ1cmwiOiJodHRwczpcL1wvZ2l0aHViLmNvbVwvcHJvdG9tYXBzXC9QTVRpbGVzXC9ibG9iXC9tYWluXC9zcGVjXC92M1wvc3BlYy5tZCJ9XSwic3RhcnRJbmRleCI6NTA0NCwidGl0bGUiOiJQTVRpbGVzXC9zcGVjXC92M1wvc3BlYy5tZCBhdCBtYWluIMK3IHByb3RvbWFwc1wvUE1UaWxlcyIsInVybCI6Imh0dHBzOlwvXC9naXRodWIuY29tXC9wcm90b21hcHNcL1BNVGlsZXNcL2Jsb2JcL21haW5cL3NwZWNcL3YzXC9zcGVjLm1kIiwidXVpZCI6IjUxOTU1MWVkLWY0ZjQtNGI0OS1hMGNjLTUxNzdkZGFlODQyNCJ9 "GitHub")](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
-- Spec version 2 would always issue a 512 kilobyte initial request; version 3 reduces this to 16 kilobytes. [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NTMwMSwibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1wcm90b21hcHMuY29tIiwic2l0ZURvbWFpbiI6InByb3RvbWFwcy5jb20iLCJzaXRlTmFtZSI6IlByb3RvbWFwcyIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNvdXJjZSI6IlByb3RvbWFwcyIsInRpdGxlIjoiV2hhdCdzIG5ldyBpbiBQTVRpbGVzIFYzIC0gUHJvdG9tYXBzIEJsb2ciLCJ1cmwiOiJodHRwczpcL1wvcHJvdG9tYXBzLmNvbVwvYmxvZ1wvcG10aWxlcy12My13aGF0cy1uZXdcLyJ9XSwic3RhcnRJbmRleCI6NTE5NiwidGl0bGUiOiJXaGF0J3MgbmV3IGluIFBNVGlsZXMgVjMgLSBQcm90b21hcHMgQmxvZyIsInVybCI6Imh0dHBzOlwvXC9wcm90b21hcHMuY29tXC9ibG9nXC9wbXRpbGVzLXYzLXdoYXRzLW5ld1wvIiwidXVpZCI6IjBmZTA5MjVlLTM4NDMtNGU2Ni05Yzc5LTVkMjQyMmNkOTQ3ZCJ9 "Protomaps")](https://protomaps.com/blog/pmtiles-v3-whats-new/)
-- GDAL has native support for PMTiles starting with version 3.8.0 (2023-11-13). [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6NTM4MSwibWV0YWRhdGEiOnsiZmF2aWNvblVybCI6Imh0dHBzOlwvXC93d3cuZ29vZ2xlLmNvbVwvczJcL2Zhdmljb25zP3N6PTY0JmRvbWFpbj1wcm90b21hcHMuY29tIiwic2l0ZURvbWFpbiI6InByb3RvbWFwcy5jb20iLCJzaXRlTmFtZSI6IlByb3RvbWFwcyIsInR5cGUiOiJ3ZWJwYWdlX21ldGFkYXRhIn0sInNvdXJjZXMiOlt7Imljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNvdXJjZSI6IlByb3RvbWFwcyIsInRpdGxlIjoiQ3JlYXRpbmcgUE1UaWxlcyB8IFByb3RvbWFwcyBEb2NzIiwidXJsIjoiaHR0cHM6XC9cL2RvY3MucHJvdG9tYXBzLmNvbVwvcG10aWxlc1wvY3JlYXRlIn1dLCJzdGFydEluZGV4Ijo1MzA0LCJ0aXRsZSI6IkNyZWF0aW5nIFBNVGlsZXMgfCBQcm90b21hcHMgRG9jcyIsInVybCI6Imh0dHBzOlwvXC9kb2NzLnByb3RvbWFwcy5jb21cL3BtdGlsZXNcL2NyZWF0ZSIsInV1aWQiOiJjMDVmOTVjMS1hNmEyLTQ0ZjMtOWQ5OC05OTQzM2M0NzdhMjEifQ%3D%3D "Protomaps")](https://docs.protomaps.com/pmtiles/create)
+The authoritative PMTiles material checked on 2026-08-18 establishes:
 
-```mermaid
-flowchart LR
-  A[Client request<br/>at zoom Z, x, y] --> B[Header read<br/>first 16 KiB]
-  B --> C[Root directory<br/>resolves tile entry]
-  C --> D[Range read<br/>tile bytes]
-  D --> E[Decode<br/>MVT / PNG / JPEG / AVIF]
-  E --> F[Render in MapLibre]
-  classDef ext fill:#fef3c7,stroke:#b45309,color:#7c2d12;
-  class A,B,C,D,E ext;
-```
+| Upstream property | Version 3 rule |
+|---|---|
+| Archive purpose | One file containing a pyramid of tiled data |
+| Recommended media type | `application/vnd.pmtiles` |
+| Header | Fixed 127 bytes at offset zero |
+| Magic and format version | UTF-8 `PMTiles` followed by version byte `0x03` |
+| Root directory | Header plus compressed root directory must fit within the first 16,384 bytes |
+| Main sections | Header, root directory, JSON metadata, optional leaf directories, and tile data |
+| Internal compression | Unknown, none, gzip, Brotli, or Zstandard enum values |
+| Tile compression | Declared once in the header for the archive's tiles |
+| Tile type | Unknown/other, MVT, PNG, JPEG, WebP, AVIF, or MapLibre Vector Tile |
+| Metadata | Valid UTF-8 JSON object; MVT archives must include `vector_layers` as defined by TileJSON 3.0 |
+| Tile identity | Directory entries address tile content through PMTiles TileIDs derived from Z/X/Y |
+| Bounds and zoom | Stored in the header; max zoom must be greater than or equal to min zoom |
 
-<sub>Diagram: PMTiles v3 read pattern at a high level. Layout is sourced to the upstream spec; the rendering tail is KFM-specific and governed by the verification flow in §8.</sub>
+The header format version remains `3`. The separate v3 changelog has evolved through revisions that added AVIF, MapLibre Vector Tile, clarified directory rules, and added terrain encoding metadata. KFM tooling must therefore pin and test the exact feature subset it accepts rather than treating the string “v3” as proof of universal compatibility.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+### 2.2 What PMTiles does not define
+
+PMTiles does not define:
+
+- whether source records are authoritative, licensed, current, or public-safe;
+- KFM evidence, policy, review, release, correction, or rollback state;
+- the meaning of MVT/MLT fields or raster pixels;
+- a public API contract, layer semantics, style semantics, or Evidence Drawer payload;
+- a required KFM signing, sidecar, receipt, or catalog profile;
+- whether direct browser access or a server-mediated tile API is appropriate;
+- per-user authorization or row-level revocation.
+
+### 2.3 Archive, payload, delivery, and renderer separation
+
+| Layer | Examples | Governs |
+|---|---|---|
+| Archive | PMTiles Version 3 | Header, directories, metadata, tile-data layout |
+| Inner payload | MVT, MapLibre Vector Tile, PNG, JPEG, WebP, AVIF | Vector or raster tile encoding |
+| Tile coordinate/addressing context | Z/X/Y, tile matrix set, CRS, scheme | How tile coordinates map to space |
+| Direct delivery | Static/object storage with HTTP Range and CORS | Byte retrieval from the archive |
+| Server-mediated delivery | Z/X/Y endpoint, OGC API - Tiles profile, governed API | Server resolves archive bytes into responses |
+| Renderer integration | `pmtiles` JavaScript protocol for MapLibre, another admitted client | Runtime source registration and decoding |
+| KFM governance | Evidence, policy, review, release, correction, rollback | Whether the carrier may be exposed and how it remains accountable |
+
+Upstream `pmtiles verify` checks archive ordering and header information. It is useful byte-format evidence, but it is not a KFM attestation, source review, policy decision, release manifest, or publication approval.
+
+[Back to top](#top)
 
 ---
 
 ## 3. KFM trust posture for tiles
 
-KFM separates **what a tile is** from **what a claim is**. A tile renders pixels; a claim resolves to an `EvidenceBundle`. The two are not the same object, and the rendering layer is not allowed to substitute for the evidence layer.
+> **One-line law.** PMTiles may carry released map derivatives; it must never become the source, evidence bundle, policy engine, review record, release authority, or correction ledger.
 
-```mermaid
-flowchart TD
-  EB[EvidenceBundle<br/>canonical truth<br/>cite-or-abstain] -->|references| TAM[TileArtifactManifest]
-  TAM -->|describes| PMT[PMTiles archive<br/>+ signed sidecar]
-  PMT -->|rendered as| VIS[Map visualization<br/>downstream carrier]
-  VIS -.->|MUST resolve back to| EB
-  classDef truth fill:#dcfce7,stroke:#166534,color:#14532d;
-  classDef carrier fill:#dbeafe,stroke:#1e40af,color:#1e3a8a;
-  classDef visual fill:#fef3c7,stroke:#b45309,color:#7c2d12;
-  class EB truth;
-  class TAM,PMT carrier;
-  class VIS visual;
-```
+### 3.1 Trust rules
 
-> [!CAUTION]
-> **Visual rendering does not establish evidentiary certainty.** A drawn polygon, a glowing badge, or a confident-looking style is not proof. Any consequential claim must resolve through the Evidence Drawer or Focus Mode to an `EvidenceBundle`, regardless of how good the tile looks.
+- Public clients may consume only governed, released, public-safe artifacts or governed API responses.
+- Sensitive geometry and attributes must be removed, generalized, redacted, or withheld **before** archive construction. Renderer styling is not a security boundary.
+- Every consequential map-visible claim must retain resolvable evidence and release context outside the tile bytes.
+- Archive identity, content digest, source/build lineage, policy/review state, release state, correction lineage, and rollback target remain separate inspectable objects.
+- A candidate archive may be built and tested before publication. Build success is not lifecycle promotion.
+- Unknown rights, sensitivity, evidence, signature trust, policy, release, or rollback state fails closed for public exposure.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+### 3.2 State separation
+
+| Axis | Example | Must not be confused with |
+|---|---|---|
+| Upstream conformance | Header and directory bytes satisfy PMTiles Version 3 | KFM adoption or release |
+| Declared carrier readiness | Metadata says v3/MVT/XYZ, bounded size, approved fields | Byte-format proof or policy approval |
+| Structural compatibility | PMTiles/PMIDX/PMSIG/RunReceipt values reconcile | Cryptographic trust or source truth |
+| Hosted readiness | Range, CORS, cache, and byte integrity work on a deployed host | Release approval |
+| Runtime readiness | An admitted adapter loads the released artifact and fails closed | Evidence or policy authority |
+| Release readiness | Evidence, rights, sensitivity, validation, review, manifest, correction, and rollback close | Public exposure by itself |
+| Publication | A governed release is actually exposed through an authorized route | Permanent truth; correction still applies |
+
+### 3.3 Current repository evidence
+
+| Surface | CONFIRMED observation | Safe conclusion |
+|---|---|---|
+| [`docs/standards/README.md`](./README.md) | Standards pages are human-readable guidance and must separate adoption, implementation, validation, release, and publication | This page cannot adopt PMTiles or prove conformance |
+| [`PMTILES_ATTESTATION_STANDARD.md`](./pmtiles/PMTILES_ATTESTATION_STANDARD.md) | Draft v1.2 records partial structural implementation and unresolved canonical profile/signature/policy/release authority | The nested page is a proposed attestation design plus implementation ledger, not release authority |
+| [`PMIDX_SPEC_V1.md`](./pmtiles/PMIDX_SPEC_V1.md) | Documents the implemented SHA-256 chunk/Merkle compatibility profile and unauthenticated range-metadata limitation | PMIDX v1 is an implemented compatibility profile, not an adopted long-term profile |
+| [`tools/validators/pmtiles/`](../../tools/validators/pmtiles/README.md) | Header, metadata, archive digest, chunk leaves, Merkle root, declared ranges, bundle subjects, and opt-in manifest declarations receive deterministic structural checks | Success has `authority: NONE`; canonical schema, crypto, policy, and release remain separate |
+| [`fixtures/pmtiles/attestation/`](../../fixtures/pmtiles/attestation/README.md) | Synthetic mutation descriptors generate PMTiles and companion bytes in temporary directories | Fixture success proves only the named no-network behavior |
+| [`fixtures/pmtiles/mobile_verification/`](../../fixtures/pmtiles/mobile_verification/README.md) | Tiny synthetic archive, partial verification, PNG decode, and browser canvas handoff are tested | MapLibre is not booted; runtime and release holds remain |
+| [`pmtiles-attestation.yml`](../../.github/workflows/pmtiles-attestation.yml) | Read-only, no-secret workflow checks boundaries, runs synthetic tests, inspects candidates, and deliberately denies structurally complete candidates while crypto/release remain unavailable | Partial CI exists; it signs, releases, deploys, and publishes nothing |
+| [`tiles_publish.rego`](../../policy/rego/tiles_publish.rego) | Deny-by-default policy text requires header, shared `spec_hash`, PMIDX root, signature verification, approved builder, rollback manifest, and resolved policy | File presence and marker inspection do not prove OPA execution or policy-test coverage in the PMTiles workflow |
+| [`sign_pmtiles.py`](../../tools/attest/sign_pmtiles.py) | Emits a PMSIG-shaped JSON object with `DEVELOPMENT_PLACEHOLDER_NOT_A_VALID_COSE_SIGNATURE` | No production signing or trusted signature exists from this tool |
+| [`TileArtifactManifest` contract](../../contracts/release/tile_artifact_manifest.md) | Proposed semantics exist and explicitly preserve release/evidence/policy separation | Contract prose is not a canonical schema or release record |
+| [`map/tile_artifact_manifest` schema](../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json) | Open object scaffold with no defined properties and `additionalProperties: true` | It cannot prove meaningful tile-manifest conformance |
+| [`GeospatialCarrierReadinessCheck`](../../contracts/release/geospatial_carrier_readiness.md) | Inactive metadata-only preflight includes an MVT + PMTiles delivery declaration | It does not open PMTiles or MVT bytes, resolve evidence, execute policy, or publish |
+| [`packages/maplibre/`](../../packages/maplibre/README.md) | Private `0.0.0` scaffold and placeholder export; functioning adapter, dependency set, protocol, and consumers are not established | Browser-side PMTiles loading remains unimplemented or unknown at this snapshot |
+
+The PMTiles attestation workflow watches `docs/standards/pmtiles/**`, but not this root `docs/standards/PMTILES.md` file. This is a documentation/CI coverage gap, not evidence that the root page is ignored by every repository check.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Conformance language
 
-This profile uses RFC 2119-style terms aligned with `directory-rules.md` §2.2.
+The words `MUST`, `SHOULD`, and `MAY` are binding only when their authority is explicit.
 
-| Term | Meaning |
+| Source of language | Meaning in this page |
 |---|---|
-| **MUST / MUST NOT** | Non-negotiable. Violations block release and merge. |
-| **SHOULD / SHOULD NOT** | Strong default. Deviation requires explicit justification in the release receipt or per-layer README. |
-| **MAY** | Permitted; stay consistent within the lane. |
+| Upstream PMTiles specification | Normative for a claim of PMTiles Version 3 format conformance |
+| Accepted KFM contract, schema, policy, ADR, or release rule | Normative for the adopted KFM scope it governs |
+| Current compatibility validator | Binding only for its named, versioned compatibility profile and finite outcomes |
+| Proposed target profile in this page | Design requirement for review; not active policy or release authority |
+| Example or checklist | Illustrative unless an owning authority adopts it |
 
-[Back to top](#pmtiles--kfm-standards-profile)
+A documentation edit, badge, merged pull request, or repeated `MUST` does not make a proposed rule adopted. This revision therefore uses **current compatibility profile** for implemented checks and **proposed release profile** for unresolved target behavior.
+
+[Back to top](#top)
 
 ---
 
 ## 5. KFM profile (required fields and behaviors)
 
-Every PMTiles archive published by KFM **MUST** satisfy the following before it can be referenced by any released `LayerManifest`, `StyleManifest`, or public route.
+No single canonical KFM PMTiles profile is currently established. This section separates upstream conformance, the implemented compatibility profile, and the proposed release target.
 
-### 5.1 Format
+### 5.1 Upstream byte-format conformance
 
-| Field | KFM value | Source |
+Before KFM claims an artifact is PMTiles Version 3, a byte-aware check should establish at least:
+
+- exact magic, version byte, and 127-byte header decoding;
+- valid, bounded, non-overlapping archive regions;
+- header plus compressed root directory within the first 16 KiB;
+- valid declared internal and tile compression values;
+- valid tile type, zoom range, bounds, and center fields;
+- valid directory encoding, non-empty entries, positive entry lengths, and in-bounds offsets;
+- metadata decoded with the declared internal compression and parsed as a UTF-8 JSON object;
+- `vector_layers` metadata for an MVT archive;
+- tile payloads compatible with the header-declared tile type and compression; and
+- archive ordering/cluster posture when the intended access profile depends on it.
+
+The current KFM header reader and compatibility tests cover a bounded subset. They handle uncompressed and gzip metadata. Brotli and Zstandard metadata, generic tile-payload decoding, complete directory traversal, and universal v3 feature coverage are not established by the inspected slice.
+
+### 5.2 Implemented compatibility profile
+
+The current split bundle is:
+
+| Artifact | Current role | Current proof boundary |
 |---|---|---|
-| `pmtiles_version` | `v3` | CONFIRMED doctrine (project) |
-| `tiling_scheme` | `xyz` (WebMercator) unless explicitly justified | CONFIRMED doctrine (project) |
-| `tile_format` (vector) | `mvt` | CONFIRMED doctrine (project) |
-| `tile_format` (raster) | `png`, `jpeg`, or `webp` | PROPOSED (raster lane) |
-| MIME type | `application/vnd.pmtiles` | EXTERNAL: upstream spec |
-| Magic header | `PMTiles` (7 bytes) + version byte `0x03` | EXTERNAL: upstream spec |
+| `tiles.pmtiles` | Synthetic or repository-local candidate archive | Header/metadata and whole-file SHA-256 checks within the validator envelope |
+| `tiles.pmtiles.pmidx` | `kfm.pmidx.v1` SHA-256 chunk/Merkle sidecar | Archive digest, leaves, root, and single-chunk range consistency; range metadata is not authenticated |
+| `tiles.pmtiles.pmsig` | `kfm.pmsig.v1` signature-subject carrier | Subject and shape reconciliation only; no trusted cryptographic verification |
+| `tiles.pmtiles.runreceipt.json` | PMTiles RunReceipt compatibility subject | Exactly one subject plus builder/build parameters/digest/`spec_hash` reconciliation; owning receipt semantics remain separate |
+| Optional declared manifest | `kfm.pmtiles.tile-artifact-manifest.compat.v1` | Non-canonical v3/MVT declaration reconciled with bounded archive evidence; source/generator/artifact refs are syntax-only |
+| Captured range packet | `kfm.pmtiles.partial-read.compat.v1` | Captured bytes bind to a supplied containing leaf and PMSIG subject; result is `STRUCTURAL_HOLD` |
 
-### 5.2 Tile-size budget
+The compatibility envelope currently limits PMIDX JSON to 16 MiB, companion JSON to 1 MiB, `chunk_bytes` to 1 byte through 64 MiB, and leaves/ranges to 100,000. Ranges are half-open and must fit within one declared chunk. These are implementation limits, not universal PMTiles requirements.
 
-> [!WARNING]
-> Oversized tiles increase HTTP Range cost, decode time, and client memory pressure. CI **SHOULD** gate pathological tile-size distributions before publication.
+A positive bundle retains at least:
 
-| Tile type | KFM target | Rationale |
-|---|---|---|
-| Vector (MVT) | **≤ 64 KB per tile** | Decode budget; mobile heap safety |
-| Raster (PNG/JPEG/WebP) | **≤ 256 KB per tile** | Range-read latency budget |
+- `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`;
+- `POLICY_EVALUATION_NOT_RUN`;
+- `RANGE_METADATA_NOT_AUTHENTICATED`;
+- `RELEASE_AUTHORIZATION_NOT_EVALUATED`;
+- `TILE_ARTIFACT_MANIFEST_SCHEMA_AUTHORITY_UNRESOLVED` when the optional manifest is used;
+- `TILE_MANIFEST_DECLARED_PROVENANCE_UNATTESTED` when the optional manifest is used; and
+- `TILE_MANIFEST_ARTIFACT_REF_REGISTRY_UNRESOLVED` when the optional manifest is used.
 
-### 5.3 Hosting
+### 5.3 Proposed release-profile information
 
-PMTiles publication **MUST** be served from a host that satisfies:
+A future canonical manifest/attestation profile should bind, without embedding payload bytes:
 
-1. **HTTP Range** support (verified by `HEAD` + Range probe in CI).
-2. **CORS** allow for the public viewer origin.
-3. **Stable cache headers** consistent with the immutability of the archive.
-4. **Object-store immutability** (object lock or equivalent) for the released `.pmtiles` and its sidecar.
+| Information family | Minimum target |
+|---|---|
+| Artifact identity | Stable manifest ID, governed artifact ref, byte size, media type, complete-content digest |
+| Archive profile | PMTiles version, internal compression, tile compression, tile type, clustered posture |
+| Spatial profile | Tile matrix/scheme, CRS where not implied, public-safe bounds, center, min/max zoom |
+| Payload profile | MVT/MLT layer declarations or raster format/encoding metadata; field allowlist for public vectors |
+| Time profile | Valid, observed, source, build, release, correction, and stale times where material |
+| Build identity | Deterministic build specification, `spec_hash`, builder/tool versions, parameters, source refs |
+| Evidence and source role | EvidenceRefs/EvidenceBundle linkage and explicit observed/modeled/derived/context source roles |
+| Rights and sensitivity | Rights, attribution, sensitivity, redaction/generalization, access, and export obligations |
+| Validation and attestation | Byte-format report, digest commitments, signature/key evidence, policy/review records |
+| Release state | Release manifest, promotion decision, immutable artifact identity, correction/withdrawal lineage, rollback target |
+| Delivery/runtime | Expected direct-range or server-mediated route, host profile, admitted consumer/protocol, finite failure behavior |
 
-### 5.4 Pairing
+Until a canonical schema and profile are accepted, examples in documentation must not be presented as machine authority.
 
-A PMTiles archive **MUST NOT** be published alone. The release unit is `{ .pmtiles, .pmtiles.sidecar.json }`, co-located in the same immutable bucket prefix.
+### 5.4 Performance and tile-size posture
 
-[Back to top](#pmtiles--kfm-standards-profile)
+The repository's inactive MVT metadata preflight currently checks a **64 KiB interactive tile budget**. That is evidence for the named inactive profile only, not a universal PMTiles or KFM raster limit. The prior page's 256 KiB raster rule is not supported strongly enough to retain as a binding requirement.
+
+A future performance profile should be benchmark-bound and record:
+
+- tile-size distribution, not only maximum size;
+- archive and root-directory size;
+- request count and transferred bytes for representative views;
+- cold and warm latency under the intended host/CDN;
+- decode, layout, paint, and memory behavior on supported devices;
+- directory depth and clustering posture;
+- cache-hit and invalidation behavior;
+- failure behavior under truncated, stale, mismatched, or denied artifacts; and
+- budget version, benchmark fixture, toolchain, device/browser matrix, and result digest.
+
+### 5.5 Proposed hosting readiness
+
+Direct browser delivery requires an observed host profile. At minimum, the release candidate should prove:
+
+1. byte-range `GET` behavior over representative header, directory, metadata, and tile ranges;
+2. cross-origin configuration for the exact viewer origins when storage and UI origins differ;
+3. exposure of the validators' required response headers, including stable entity identity such as `ETag` where used;
+4. consistent byte representation so requested offsets and artifact digests remain meaningful;
+5. immutable or content-addressed release URLs rather than mutable `latest` aliases as the authority-bearing reference;
+6. cache directives, invalidation, correction, and rollback behavior;
+7. expected behavior for `HEAD`, preflight, unsatisfiable ranges, stale entity validators, and missing objects; and
+8. no credentials, internal paths, policy reasons, or restricted metadata in public URLs or responses.
+
+Upstream Protomaps guidance requires HTTP Range support and proper CORS for cross-origin direct-browser access. KFM deployment claims remain **UNKNOWN** until measured against an actual endpoint.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Lifecycle placement
 
-PMTiles is a **PUBLISHED-phase** artifact. It is produced **after** validation, promotion, and policy gates. It MUST NOT be sourced from `RAW`, `WORK`, or `QUARANTINE`, and tile build is not a substitute for source review.
+PMTiles can be created as a **candidate derived artifact before publication**. Its lifecycle authority depends on state and governing records, not on the filename or physical directory.
 
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+             candidate build/hold          catalog/proof closure       released reference
 ```
-RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED ← PMTiles lands here
-```
 
-| Phase | PMTiles relationship |
-|---|---|
-| `data/raw/` | Source artifacts only. Never tile-direct. |
-| `data/work/` or `data/quarantine/` | Source preparation, sensitivity review. No tile yet. |
-| `data/processed/` | Canonical pre-tile artifacts (e.g., GeoParquet, COG). |
-| `data/catalog/` and `data/triplets/` | STAC/PROV closure; tile asset registered. |
-| `data/published/` | Immutable `.pmtiles` + sidecar; referenced by a signed `MapReleaseManifest`. |
+| Lifecycle point | Permitted PMTiles relationship | Not established by file presence |
+|---|---|---|
+| RAW | Source bytes or immutable source references only; PMTiles should not replace source capture | Source authority, normalization, or public safety |
+| WORK | Experimental or replay candidate may be built in an isolated non-public lane | Conformance, review, or release |
+| QUARANTINE | Candidate may be held for rights, sensitivity, identity, validation, or profile conflicts | Permission to render or publish |
+| PROCESSED | Deterministic candidate artifact may be generated and byte-validated from approved processed inputs | Catalog closure or release |
+| CATALOG / TRIPLET | Candidate metadata, provenance, evidence, and relationship projections may be assembled | Promotion or public serving |
+| PUBLISHED | An immutable artifact is referenced by the required release, policy, review, correction, and rollback objects and exposed only through an authorized route | Permanent correctness or immunity from correction |
 
-> [!NOTE]
-> **Promotion is a governed state transition, not a file move.** A PMTiles file appearing in a "published" directory without a signed `PromotionDecision` and a referenced `MapReleaseManifest` is drift, not a release.
+> [!IMPORTANT]
+> **Build, copy, path, workflow, pull request, merge, and render are not promotion.** A candidate under `data/published/pmtiles/` is not a governed release merely because a current workflow scans that path.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+Logical lifecycle ownership and physical byte storage may differ. External object storage may hold large immutable archives, while KFM retains governed identifiers, digests, manifests, receipts, proofs, release decisions, correction records, and rollback targets in their owning repository or registry surfaces.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Sidecar contract
 
-The sidecar is the **public verification envelope** for the tile artifact. It carries integrity metadata, provenance linkage, the signing proof, publication metadata, and optional delta manifests. **Without the sidecar, the tile is not a KFM release.**
+There is no established canonical single `layer.pmtiles.sidecar.json` contract in the inspected repository. The currently implemented compatibility chain is split across PMIDX, PMSIG, and RunReceipt-shaped files, with an optional non-canonical declared manifest.
 
-> [!NOTE]
-> **Current repository evidence is narrower than this proposed release shape.**
-> The implemented offline lane reconciles a split SHA-256 PMIDX + PMSIG +
-> RunReceipt compatibility bundle. When explicitly requested, it also checks
-> `kfm.pmtiles.tile-artifact-manifest.compat.v1`, a non-canonical PMTiles
-> v3/MVT declaration, against archive header/metadata and bundle digests. It
-> does not implement the BLAKE3, DSSE/cosign, Rekor, delta, policy, runtime, or
-> release behavior proposed below, and it retains
-> `TILE_ARTIFACT_MANIFEST_SCHEMA_AUTHORITY_UNRESOLVED`,
-> `TILE_MANIFEST_DECLARED_PROVENANCE_UNATTESTED`, and
-> `TILE_MANIFEST_ARTIFACT_REF_REGISTRY_UNRESOLVED`.
+### 7.1 Current split compatibility bundle
 
-### 7.1 Placement
-
-```
-data/published/tiles/<layer-slug>/<version>/
-├── layer.pmtiles
-└── layer.pmtiles.sidecar.json
-```
-
-> [!IMPORTANT]
-> The path above is **PROPOSED**. Final placement MUST be checked against `docs/doctrine/directory-rules.md` and any ADR governing `data/published/` substructure. See §14.
-
-### 7.2 Required fields (CONFIRMED in project doctrine)
-
-```json
-{
-  "spec_hash":            "blake3_of_canonical_source_descriptor",
-  "pmtiles_version":      "v3",
-  "root_hash":            "blake3_of_pmtiles_root",
-  "root_hash_algo":       "blake3",
-  "tile_format":          "mvt",
-  "tiling_scheme":        "xyz",
-  "minzoom":              0,
-  "maxzoom":              14,
-  "byte_ranges_manifest": [],
-  "delta_base_hash":      null,
-  "generation_tool":      "tippecanoe@<version> + go-pmtiles@<version>",
-  "timestamp":            "RFC3339",
-  "signature_b64":        "DSSE_or_cosign_signature",
-  "signature_algo":       "ed25519",
-  "signature_kid":        "key-id-or-kms-uri",
-  "rekor_index_or_proof": "transparency-log-entry-or-inclusion-proof"
-}
-```
-
-### 7.3 Field semantics
-
-| Field | Purpose | KFM rule |
+| File | Binding | Current authority |
 |---|---|---|
-| `spec_hash` | Deterministic fingerprint of the canonicalized `SourceDescriptor` | MUST be reproducible from canonicalized inputs |
-| `pmtiles_version` | Format version | MUST be `"v3"` |
-| `root_hash` / `root_hash_algo` | Integrity anchor for the archive | MUST be BLAKE3 over the PMTiles root |
-| `tile_format` | Inner tile encoding | MUST match actual archive contents |
-| `tiling_scheme` | Tile addressing scheme | MUST be `"xyz"` unless an ADR justifies otherwise |
-| `minzoom` / `maxzoom` | Zoom envelope | MUST match the build output |
-| `byte_ranges_manifest` | Optional per-tile/chunk hashes for high-assurance verification | RECOMMENDED for offline-verifiable releases |
-| `delta_base_hash` | Parent artifact linkage for incremental updates | REQUIRED when publishing a delta |
-| `generation_tool` | Build provenance | MUST record tool@version (e.g. tippecanoe, go-pmtiles) |
-| `timestamp` | Generation time | MUST be RFC 3339 UTC |
-| `signature_b64` / `signature_algo` / `signature_kid` | Detached signature over the sidecar payload | MUST be present and verifiable |
-| `rekor_index_or_proof` | Transparency-log entry or inclusion proof | MUST be present for public release |
+| `.pmtiles` | Complete archive bytes and metadata `spec_hash` | Derived candidate only |
+| `.pmidx` | Whole-file SHA-256, ordered chunk leaves, Merkle root, optional ranges, shared `spec_hash` | Structural integrity compatibility only |
+| `.pmsig` | Archive digest, PMIDX root, `spec_hash`, key ID, signature carrier | Subject/shape only; no cryptographic trust |
+| `.runreceipt.json` | Builder and build-definition compatibility subject | Structural provenance compatibility only |
+| Optional manifest descriptor | Archive/profile/source/generator declaration | Non-canonical syntax and reconciliation only |
 
-> [!CAUTION]
-> **Sidecars are publication artifacts.** They MUST NOT expose secrets, private source locations, unpublished policy state, or restricted `EvidenceBundle` contents.
+The repository's current `spec_hash` compatibility value is SHA-256. Competing BLAKE3, monolithic sidecar, GeoManifest, DSSE/COSE, transparency-log, and outboard-proof proposals remain unresolved. This page does not select among them or silently translate one profile into another.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+### 7.2 Target sidecar/attestation requirements
+
+A future adopted chain should:
+
+- bind the complete archive digest and the exact accepted byte-format profile;
+- bind the deterministic build specification and source version(s);
+- identify the builder, tools, parameters, environment, and replay inputs;
+- authenticate signatures against approved algorithms, identities, key custody, validity, and revocation state;
+- bind any partial-read/range proof metadata rather than only the chunk bytes;
+- resolve artifact and source refs against governed registries;
+- reference evidence, rights, sensitivity, policy, review, validation, release, correction, withdrawal, and rollback state;
+- preserve compatibility/version identifiers and a migration path;
+- avoid embedding private source locations, credentials, restricted evidence, or sensitive policy reasons; and
+- remain verifiable offline where the adopted risk profile requires it.
+
+### 7.3 No sidecar-as-sovereign-truth
+
+A sidecar, PMIDX, PMSIG, RunReceipt, TileArtifactManifest, proof, or signature remains a distinct object family. None may substitute for source evidence, a PolicyDecision, authorized review, a ReleaseManifest, correction lineage, or rollback execution.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Verification flow
 
-Every public client **MUST** verify the sidecar before registering the PMTiles source in the renderer. This is non-negotiable for the public path.
+Verification should be layered so that a strong result at one layer cannot impersonate a stronger authority class.
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant App as MapLibre app
-  participant CDN as CDN / object store
-  participant Sig as Verifier
-  participant ML as MapLibre source
-
-  App->>CDN: Fetch sidecar.json
-  CDN-->>App: sidecar payload
-  App->>Sig: Verify DSSE / cosign signature
-  Sig-->>App: ok | fail
-  App->>Sig: Check spec_hash, tiling_scheme, tile_format
-  Sig-->>App: ok | fail
-  App->>CDN: Sample byte ranges (QA / high-assurance)
-  CDN-->>App: range bytes
-  App->>Sig: BLAKE3 compare to root_hash
-  Sig-->>App: ok | fail
-  alt all checks pass
-    App->>ML: addSource('layer', {url: 'pmtiles://...'})
-  else any check fails
-    App->>App: DENY render · surface degraded state
-  end
+flowchart TD
+    A[Candidate PMTiles bytes] --> B[Upstream byte-format checks]
+    B -->|fail| X[ERROR or HOLD]
+    B --> C[Current structural compatibility bundle]
+    C -->|fail| X
+    C --> D[Cryptographic identity and key trust]
+    D -->|unavailable or fail| H[HOLD or DENY]
+    D --> E[Evidence, rights, sensitivity, policy, and review]
+    E -->|unresolved or deny| H
+    E --> F[Release, correction, withdrawal, and rollback closure]
+    F -->|not approved| H
+    F --> G[Hosted delivery and admitted runtime consumer]
+    G -->|host or runtime failure| H
+    G --> P[Governed PUBLISHED exposure]
 ```
 
-### 8.1 MapLibre runtime checklist
+### 8.1 Verification levels
 
-- [ ] Fetch sidecar (same bucket as the `.pmtiles`)
-- [ ] Verify DSSE / cosign signature
-- [ ] Verify `spec_hash`, `tiling_scheme`, `tile_format` match expected layer profile
-- [ ] (High-assurance builds) sample byte ranges, BLAKE3-hash, compare to `root_hash`
-- [ ] Only then call `map.addSource(...)`
-- [ ] **Fail closed** on any mismatch — render an explicit degraded state, not silence
+| Level | Evidence | Current KFM status |
+|---|---|---|
+| Format | PMTiles header, regions, directories, metadata, payload compatibility | **PARTIAL STRUCTURAL** |
+| Bundle | Archive digest, PMIDX leaves/root/ranges, PMSIG subject, RunReceipt subject, optional declaration | **IMPLEMENTED COMPATIBILITY / NON-CANONICAL** |
+| Cryptographic | Approved signature algorithm, key identity, trust root, validity, revocation, verified bytes | **HOLD / NOT ESTABLISHED** |
+| Policy/review | Source, evidence, rights, sensitivity, obligations, reviewer authority | **HOLD / NOT EXECUTED by inspected workflow** |
+| Release | Promotion, immutable release binding, correction, withdrawal, rollback | **HOLD / NOT ESTABLISHED** |
+| Host | Range/CORS/cache/entity/integrity behavior on deployed endpoint | **UNKNOWN** |
+| Runtime | Accepted adapter/protocol, manifest binding, finite failures, public-safe consumer tests | **UNKNOWN; synthetic handoff only** |
+| Publication | Authorized public exposure of a released carrier | **NONE** |
 
-### 8.2 Cesium / 3D path
+### 8.2 MapLibre integration boundary
 
-For Cesium and other 3D consumers, KFM **PREFERS** server-rasterized PMTiles or raster PMTiles with signed sidecar over client-side vector verification.
+Upstream Protomaps documents direct MapLibre use through the `pmtiles` JavaScript library and MapLibre's `addProtocol` feature:
 
-| Recommendation | Reason |
-|---|---|
-| Raster drape preferred | Lower client verification cost |
-| Short-lived signed URLs | Reduce artifact scraping |
-| Token allowlists | Access control on gated layers |
-| Sampled range hashing only on low-confidence builds | Practical integrity validation |
+```javascript
+import { Protocol } from "pmtiles";
 
-[Back to top](#pmtiles--kfm-standards-profile)
+const protocol = new Protocol();
+maplibregl.addProtocol("pmtiles", protocol.tile);
+```
+
+A source may then use a `pmtiles://https://…/archive.pmtiles` URL. This is an **upstream integration example**, not proof that KFM has admitted the dependency, protocol, endpoint, package API, or source.
+
+KFM runtime activation additionally requires an accepted adapter boundary, dependency and supply-chain review, endpoint allowlisting, released manifest binding, public-safe attributes/geometry, finite failure states, correction handling, browser/device tests, and rollback. Whether cryptographic verification occurs in the browser, a governed gateway, a release verifier, or more than one layer remains a governance and threat-model decision.
+
+<a id="82-cesium--3d-path"></a>
+
+### 8.3 Renderer-neutral and 3D boundary
+
+The legacy Cesium-specific recommendation is retired from this page because PMTiles is renderer-neutral and current KFM browser-renderer decisions are owned elsewhere. PMTiles can carry raster or vector tiles used in 2D, 2.5D, globe, or terrain-adjacent presentations, but it does not by itself encode OGC 3D Tiles, glTF scenes, point clouds, subsurface volumes, or a 3D evidence model.
+
+A 3D or synthetic view remains a downstream representation and must preserve the same evidence, policy, sensitivity, release, correction, and reality-boundary controls as the 2D evidence baseline.
+
+[Back to top](#top)
 
 ---
 
 ## 9. CI publication gates
 
-Every PMTiles release **MUST** pass the following gates before promotion to PUBLISHED. PROPOSED gate set, drawn from project doctrine.
+The current repository has a **partial attestation gate**, not a complete publication pipeline.
 
-| Gate | Required | Surface |
+### 9.1 Current workflow boundary
+
+[`pmtiles-attestation.yml`](../../.github/workflows/pmtiles-attestation.yml) currently:
+
+- uses read-only repository contents permission;
+- exposes no secret, write, OIDC, deployment, or publication capability;
+- installs no project dependencies and runs standard-library Python after action bootstrap;
+- checks required PMTiles validator/spec/policy boundary files;
+- parses validator scripts and local compatibility schemas;
+- confirms COSE handling remains explicitly shape-only;
+- confirms deny-by-default policy markers remain present without executing the policy;
+- runs the generated synthetic attestation unittest matrix;
+- checks repository-local candidate completeness and structural reconciliation;
+- returns an explicit hold when no candidate exists; and
+- deliberately denies a structurally reconciled candidate because cryptographic verification and governed release remain unavailable.
+
+It emits GitHub logs, annotations, and a job conclusion only. It signs nothing, writes no receipt or proof, evaluates no release policy, promotes no lifecycle state, deploys nothing, and publishes nothing.
+
+### 9.2 Proposed dependency-ordered release gates
+
+| Gate | Required evidence | Current status |
 |---|---|---|
-| Canonical `SourceDescriptor` stable | YES | `spec_hash` reproducible across runs |
-| `spec_hash` deterministic | YES | Cross-run hash equality test |
-| Sidecar present and well-formed | YES | Canonical schema family is unresolved; current opt-in PMTiles v3/MVT compatibility evidence is structural only and cannot satisfy this publication gate. |
-| Sidecar signed (DSSE / cosign) | YES | `cosign verify-blob` passes |
-| Transparency log entry present | YES | `rekor_index_or_proof` resolves |
-| HTTP Range + CORS support verified on host | YES | HEAD + Range probe |
-| Tile-size distribution within budget | SHOULD | Distribution test against §5.2 |
-| Rights / sensitivity posture resolved | YES | Policy decision recorded; no unresolved deferrals |
-| Sensitive geometry reviewed and transformed before tile build | YES | See §10 and `policy/sensitivity/` |
-| `MapReleaseManifest` references the tile asset | YES | Catalog closure check |
-| Rollback target identified | YES | Prior `MapReleaseManifest` pointer present |
-| `RunReceipt` records build provenance | YES | Receipt links signature proof id |
+| 1. Source/build identity | Admitted source refs, deterministic build spec, reproducible `spec_hash`, approved builder/toolchain | **PARTIAL declaration only** |
+| 2. PMTiles format | Complete accepted v3 byte-profile validation and inner-payload compatibility | **PARTIAL structural** |
+| 3. Integrity bundle | Complete digest, sidecar/range commitments, subject reconciliation | **IMPLEMENTED compatibility / profile unresolved** |
+| 4. Cryptographic trust | Approved signature verification, key registry, validity/revocation, signed subject bytes | **HOLD** |
+| 5. Evidence/policy/review | Evidence resolution, rights, sensitivity, source role, obligations, authorized review | **HOLD** |
+| 6. Catalog/release | Manifest closure, promotion decision, immutable artifact identity, correction/withdrawal/rollback | **HOLD** |
+| 7. Hosted delivery | Measured Range/CORS/entity/cache/error behavior for the exact release URL | **UNKNOWN** |
+| 8. Runtime admission | Accepted consumer/protocol, manifest-only source activation, browser/device and negative-state tests | **UNKNOWN** |
+| 9. Publication | Authorized exposure through governed public/restricted route | **NONE** |
 
-<details>
-<summary><strong>Drop-in CI checklist (build lane → publish)</strong></summary>
+A future gate may combine implementation steps, but it must not collapse their authority. A passing lower gate cannot auto-approve a higher one.
 
-```bash
-# 1. Capture source identity and canonicalize
-#    - record ETag, Last-Modified, Content-Length of upstream
-#    - canonicalize SourceDescriptor JSON, compute BLAKE3
-blake3 canonical_descriptor.json > spec_hash.txt
+### 9.3 Documentation validation gap
 
-# 2. Build PMTiles (vector example via tippecanoe + go-pmtiles)
-tippecanoe -o layer.mbtiles -Z5 -z14 --force input.geojson
-pmtiles convert layer.mbtiles layer.pmtiles
+The PMTiles attestation workflow's path filter includes the nested `docs/standards/pmtiles/**` lane but not this root page. A later bounded workflow correction may add the root path if maintainers decide that PMTiles implementation changes must re-run the attestation boundary when this overview changes. This documentation-only revision does not alter the workflow or required-check identity.
 
-# 3. Compute integrity anchor
-blake3 layer.pmtiles > root_hash.txt
-
-# 4. Emit sidecar (template in §7.2) and sign it
-cosign sign-blob \
-  --output-signature sidecar.sig \
-  --key cosign.key \
-  layer.pmtiles.sidecar.json
-
-# 5. Upload .pmtiles + sidecar together to immutable object store
-# 6. Record signature proof id in RunReceipt
-# 7. Reference asset in MapReleaseManifest and update catalog
-```
-
-> Example commands are illustrative; exact tool versions, flags, and signing keys MUST be pinned in `pipeline_specs/` and `infra/` per repo convention. GDAL has native support for PMTiles starting with version 3.8.0 (2023-11-13) [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6MTc1MTAsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNpdGVEb21haW4iOiJwcm90b21hcHMuY29tIiwic2l0ZU5hbWUiOiJQcm90b21hcHMiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPXByb3RvbWFwcy5jb20iLCJzb3VyY2UiOiJQcm90b21hcHMiLCJ0aXRsZSI6IkNyZWF0aW5nIFBNVGlsZXMgfCBQcm90b21hcHMgRG9jcyIsInVybCI6Imh0dHBzOlwvXC9kb2NzLnByb3RvbWFwcy5jb21cL3BtdGlsZXNcL2NyZWF0ZSJ9XSwic3RhcnRJbmRleCI6MTc0MzQsInRpdGxlIjoiQ3JlYXRpbmcgUE1UaWxlcyB8IFByb3RvbWFwcyBEb2NzIiwidXJsIjoiaHR0cHM6XC9cL2RvY3MucHJvdG9tYXBzLmNvbVwvcG10aWxlc1wvY3JlYXRlIiwidXVpZCI6ImVjNzdlYmVmLThhZDItNDkyMC04YjE0LWQ1MDVlYWMyYjRlMyJ9 "Protomaps")](https://docs.protomaps.com/pmtiles/create) and may also be used as a builder for raster sources.
-
-</details>
-
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 10. Failure modes and DENY conditions
 
-The publication pipeline and the public client **MUST** fail closed on the conditions below. Silent fallback to a stale tile or to a degraded render without a visible trust-state badge is itself a violation.
+Not every negative result is the same authority class. Structural tools should return their finite structural result; policy should return its governed decision; runtime should expose a bounded trust-visible state.
 
-| Condition | Action |
+| Condition | Current evidence or required posture |
 |---|---|
-| Invalid signature | **DENY** |
-| Missing sidecar | **DENY** |
-| Unknown tiling scheme | **DENY** |
-| Invalid or missing `spec_hash` | **DENY** |
-| Tile format mismatch (declared vs actual) | **DENY** |
-| Unresolved rights or sensitivity posture | **DENY** |
-| Exact sensitive geometry exposed (e.g., rare-species precision below the policy threshold) | **DENY** |
-| Publication before review state is recorded | **DENY** |
-| Unverifiable delta chain (`delta_base_hash` cannot be resolved) | **DENY** |
-| Source-layer mismatch between style and tile | **DENY** at style-compile time |
-| Missing `RunReceipt` linkage | **DENY** |
-| Transparency-log entry absent | **DENY** |
+| Invalid magic/version/header/region bounds | Structural `ERROR` or workflow failure; never render or release |
+| Unsupported internal metadata compression | Compatibility hold/failure; do not claim generic v3 coverage |
+| Archive digest, leaf, root, range, subject, or `spec_hash` mismatch | Structural failure; deny candidate progression |
+| Missing or malformed companion object | Structural failure or explicit hold |
+| PMSIG development placeholder or shape-only verification | `CRYPTOGRAPHIC_VERIFICATION_UNWIRED`; no release |
+| Rewritten PMIDX range metadata with unchanged root | `RANGE_METADATA_NOT_AUTHENTICATED`; no range-proof claim |
+| Open or conflicting manifest schema authority | Hold canonical conformance claim |
+| Unresolved artifact/source refs or unattested generator declaration | Hold provenance/release claim |
+| Unknown rights, sensitivity, source role, or review state | Governed `DENY`, `ABSTAIN`, or `HOLD` according to owning policy; no public exposure |
+| Sensitive geometry or attributes encoded in public tiles | Deny release; transform upstream rather than hide by style |
+| Missing release, correction, withdrawal, or rollback linkage | Hold/deny publication |
+| Range/CORS/entity/cache behavior fails on release host | Deny direct-browser route; do not silently fall back to unverified bytes |
+| Runtime source does not match the released manifest | Deny activation and expose a trust-visible error/degraded state |
+| Stale, superseded, withdrawn, or corrected artifact remains cached | Invalidate governed routes/caches and surface correction state |
+| No evidence supporting a map-visible consequential claim | `ABSTAIN` from the claim even if the tile renders |
 
 > [!WARNING]
-> A "trust badge" or signature icon in the UI is **not enough**. Failures MUST deny or fall back **before** render, and the trust-visible state of the layer (released / stale / degraded / denied) MUST be exposed to the user.
+> **A trust badge is not a gate.** Denial or hold must occur in the owning validator, policy, release, delivery, or runtime boundary before unsafe use. The UI reflects the result; it does not create it.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 11. Anti-patterns
 
-| Anti-pattern | What it looks like | Why it's wrong |
-|---|---|---|
-| **Treating tiles as proof** | Citing a rendered polygon as an authoritative claim | PMTiles is a downstream carrier; claims resolve to `EvidenceBundle` |
-| **Style-only hiding of sensitive geometry** | Filtering out a `protected: true` feature in MapLibre paint | Sensitive geometry MUST be transformed *before* tile build, not hidden by style |
-| **Hand-coded raw tile URLs in style JSON** | `"tiles": ["https://some-bucket/...pmtiles/{z}/..."]` written by hand | UI wiring MUST be generated from released manifests |
-| **PMTiles before review** | Tile build pipeline runs ahead of sensitivity / rights review | Publication is a state transition; build is not promotion |
-| **MLT as default** | Switching the renderer to the MapLibre Tile format because it is newer | MLT remains **NEEDS VERIFICATION** until toolchain and renderer support are proven |
-| **Verification theater** | Showing a green checkmark icon without an actual signature check | Cosmetic badges are not gates |
-| **Layer toggle as publication** | UI toggle "publishes" a layer | Publication is a governed `PromotionDecision` + signed `ReleaseManifest`, not a UI state |
+| Anti-pattern | Why it fails |
+|---|---|
+| Treating a rendered tile as evidence | Pixels/features are downstream carriers and must resolve to EvidenceBundle support |
+| Calling this page a binding conformance profile | `docs/standards/` explains; contracts, schemas, policy, implementation, tests, and release evidence make bounded claims real |
+| Treating `pmtiles verify` as KFM release proof | Upstream archive verification does not establish evidence, policy, review, or release |
+| Requiring one monolithic `.sidecar.json` as current fact | Current repository behavior uses a split, non-canonical compatibility bundle |
+| Calling a PMSIG placeholder a signature | The current signer explicitly emits a development placeholder and verifier is shape-only |
+| Assuming policy is executed because Rego exists | Current workflow checks marker text; it does not run the policy engine |
+| Generating PMTiles only after `PUBLISHED` | A candidate must be built and validated before promotion; build state and release state are distinct |
+| Style-only hiding of sensitive fields/geometry | Public tile bytes already contain the data; transform or withhold before build |
+| Mutable `latest.pmtiles` as release identity | Mutable aliases undermine digest binding, cache invalidation, rollback, and audit |
+| Browser-side verification theater | Client checks without approved trust roots, manifest binding, and failure behavior may only add a badge |
+| Universal PMTiles default | Dynamic, per-user, revocable, analytical, scientific-raster, or 3D-specific workloads may need other carriers |
+| Treating MLT as prohibited because it is newer | PMTiles v3 now has a MapLibre Vector Tile type; KFM adoption/tooling still requires explicit verification |
+| Path equals publication | A candidate under `data/published/` remains a candidate until governed release closes |
+| Layer toggle equals promotion | Renderer state cannot create a PromotionDecision or ReleaseManifest |
 
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 12. When **not** to use PMTiles
 
-PMTiles is excellent for **stable, public-safe, low-cadence, static-CDN-friendly** layers. It is the wrong tool for several other cases.
+PMTiles is strongest for immutable or low-cadence tiled derivatives that can be served as one archive. Choose another carrier when the workload or policy boundary does not fit.
 
-| Avoid PMTiles when… | Use instead |
+| Requirement | Better fit or decision path |
 |---|---|
-| Data is highly transactional or real-time | Server-mediated tiles (Martin / tegola), governed API |
-| Per-user policy filtering is required | Server-mediated tiles behind the governed API; capability tokens |
-| Access must be revocable per row or per feature | Server-mediated; do not bake gated content into a static archive |
-| The layer changes more frequently than the release cadence can publish | Server-mediated; consider H3 tile-diff watcher patterns (PROPOSED) |
-| The data is intermediate / build-only | `MBTiles` as a build intermediate, then convert |
-| Raster analysis with overviews and range reads | `COG` (Cloud Optimized GeoTIFF) |
-| Continuous raster surfaces with scientific access patterns | `COG` + STAC item |
+| Highly transactional, rapidly changing, or request-time data | Governed API or server-mediated tile service |
+| Per-user/role filtering, feature-level revocation, or private joins | Server-side authorization and filtered responses; do not bake into a public static archive |
+| Canonical vector analytics/interchange | GeoParquet or the canonical database, with PMTiles only as a derived display carrier |
+| Scientific raster analysis and windowed raster access | COG plus governed metadata/catalog bindings |
+| Small, bounded, low-volume interactive feature set | Governed GeoJSON/API response may be simpler |
+| OGC tileset discovery and interoperable tile API | [`OGC-API-TILES.md`](./OGC-API-TILES.md) profile, potentially backed by PMTiles internally |
+| OGC 3D Tiles, glTF, point clouds, volumes, or scene graphs | A format and release profile designed for that asset class |
+| Data with unresolved rights, sensitivity, source role, or review | WORK/QUARANTINE; no public carrier |
+| Offline package requiring a different update/revocation model | Explicit offline bundle profile with signed manifest, update, expiry, and rollback semantics |
+| Source-preservation or evidence archive | Preserve the source/evidence object; do not substitute PMTiles |
 
-> [!NOTE]
-> "Universal default PMTiles" is a documented anti-pattern in the KFM map-strategy table. PMTiles wins for static, public-safe derivatives; it loses for dynamic, access-controlled, or per-user-filtered surfaces.
-
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 13. Object-family bindings
 
-PMTiles is bound into KFM's object-family graph through the following contracts (PROPOSED implementation paths; CONFIRMED object families).
+PMTiles participates in KFM through references among distinct object families. No object below absorbs the authority of another.
 
 ```mermaid
 flowchart LR
-  SD[SourceDescriptor] --> VR[ValidationReport]
-  VR --> PD[PromotionDecision]
-  PD --> TAM[TileArtifactManifest]
-  TAM --> MRM[MapReleaseManifest]
-  MRM --> LM[LayerManifest]
-  LM --> STY[StyleManifest]
-  TAM -.references.-> EB[EvidenceBundle]
-  MRM -.signed by.-> RR[RunReceipt]
-  MRM -.rollback to.-> PREV[Prior MapReleaseManifest]
-  classDef truth fill:#dcfce7,stroke:#166534;
-  classDef carrier fill:#dbeafe,stroke:#1e40af;
-  classDef governance fill:#fce7f3,stroke:#9d174d;
-  class EB truth;
-  class TAM,MRM,LM,STY carrier;
-  class SD,VR,PD,RR,PREV governance;
+    SD[SourceDescriptor] --> PA[Processed artifact]
+    PA --> TAM[TileArtifactManifest candidate]
+    PA --> EV[EvidenceRef / EvidenceBundle]
+    TAM --> AT[PMIDX / PMSIG / RunReceipt / validation]
+    EV --> REL[Governed release decision]
+    AT --> REL
+    POL[Policy and review] --> REL
+    REL --> LM[Released LayerManifest]
+    LM --> API[Governed API or released artifact route]
+    API --> UI[MapLibre / other admitted consumer]
+    REL -. correction / rollback .-> PREV[Prior safe release]
 ```
 
-| Object family | Role for PMTiles | Status |
+| Object family | PMTiles relationship | Current status |
 |---|---|---|
-| `SourceDescriptor` | Upstream identity; basis for `spec_hash` | CONFIRMED family / PROPOSED home |
-| `TileArtifactManifest` | Tile-level integrity contract (sidecar fields + extras) | CONFIRMED family / schema family unresolved / non-canonical PMTiles compatibility evidence implemented |
-| `MapReleaseManifest` | Release decision that references the tile asset | CONFIRMED family / PROPOSED home |
-| `LayerManifest` | Layer-level binding to released tile asset | CONFIRMED family / PROPOSED home |
-| `StyleManifest` | Style binding; `tileProtocol` enum includes `pmtiles` | CONFIRMED family / PROPOSED home |
-| `PromotionDecision` | Governed state transition to PUBLISHED | CONFIRMED family / PROPOSED home |
-| `RunReceipt` | Build provenance; links signature proof id | CONFIRMED family / PROPOSED home |
-| `EvidenceBundle` | What clicked features MUST resolve to | CONFIRMED family / PROPOSED home |
+| `SourceDescriptor` | Identifies admitted upstream source and source role | Family exists in doctrine/repository surfaces; live source binding not established here |
+| Processed canonical artifact | Reproducible input to tile build | Required by lifecycle; production PMTiles producer not established |
+| `EvidenceRef` / `EvidenceBundle` | Supports consequential claims carried by features/pixels | Required by doctrine; PMTiles bytes do not replace it |
+| `TileArtifactManifest` | Describes artifact identity, digest, format, bounds, zoom, lineage, policy/release refs | Proposed semantic contract; canonical schema unresolved |
+| PMIDX | Structural archive/chunk commitment compatibility object | Implemented non-canonical SHA-256 profile |
+| PMSIG | Signature-subject carrier | Shape-only; cryptographic trust held |
+| PMTiles RunReceipt | Build/run provenance compatibility subject | Structural reconciliation only |
+| `ValidationReport` | Records bounded checks and limitations | Owning schema/report integration needs verification |
+| `PolicyDecision` / review record | Decides rights, sensitivity, obligations, and exposure | Policy text exists; execution and review closure not established |
+| `ReleaseManifest` / promotion decision | Binds authorized immutable release and intended audience | No PMTiles release established by this review |
+| Correction/withdrawal/rollback objects | Supersede or remove unsafe/stale releases and identify prior safe state | Required target; runtime propagation unverified |
+| `LayerManifest` | Connects a released layer to an artifact and source-layer semantics | Strict fixture profile exists; active consumer not established |
+| Runtime descriptor/admission result | Allows an approved renderer adapter to load only the released artifact | Proposed; MapLibre package remains scaffold |
 
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 14. Repo placement (PROPOSED)
 
-The following paths are **PROPOSED** in line with `docs/doctrine/directory-rules.md`. Each is **NEEDS VERIFICATION** until checked against current mounted-repo evidence.
+<a id="14-repo-placement-proposed"></a>
 
-```
-docs/
-└── standards/
-    └── PMTILES.md                                # this file (standards profile)
+The path of this document is **CONFIRMED and retained**. Adjacent current repository surfaces are listed below by responsibility; listing them does not declare each surface adopted or canonical.
 
-contracts/
-└── release/
-    └── tile_artifact_manifest.md                 # PROPOSED — meaning
-
-schemas/
-└── contracts/
-    └── v1/
-        └── release/
-            └── tile_artifact_manifest.schema.json # PROPOSED — shape (per ADR-0001)
-
-policy/
-├── release/                                      # release-gate policy
-└── sensitivity/                                  # sensitivity classes and redaction rules
-
-data/
-└── published/
-    └── tiles/
-        └── <layer-slug>/<version>/
-            ├── layer.pmtiles
-            └── layer.pmtiles.sidecar.json
+```text
+docs/standards/PMTILES.md                         # human-readable overview and readiness boundary
+docs/standards/pmtiles/                           # specialized draft attestation and PMIDX guidance
+contracts/release/tile_artifact_manifest.md       # proposed semantic meaning
+schemas/contracts/v1/map/
+  tile_artifact_manifest.schema.json              # current open scaffold; canonical family unresolved
+tools/validators/pmtiles/                         # structural validators and routing documentation
+fixtures/pmtiles/attestation/                     # synthetic mutation descriptors
+fixtures/pmtiles/mobile_verification/             # synthetic mobile/browser handoff packet
+tests/validators/
+  test_pmtiles_attestation_bundle.py              # focused structural suite
+.github/workflows/pmtiles-attestation.yml         # partial fail-closed CI boundary
+policy/rego/tiles_publish.rego                    # deny-by-default proposed publication policy text
+tools/attest/sign_pmtiles.py                      # development PMSIG placeholder emitter
+data/published/pmtiles/README.md                   # current workflow-scanned candidate boundary; not release proof
+packages/maplibre/                                # current renderer-package scaffold
 ```
 
-> [!NOTE]
-> Per `directory-rules.md`, `docs/standards/` is the canonical home for **external standards KFM conforms to** (e.g., STAC, DCAT, PROV). PMTiles fits this lane. The placement is therefore PROPOSED with high confidence, pending mounted-repo verification.
+### 14.1 Directory Rules basis
 
-> [!IMPORTANT]
-> Per ADR-0001 (schema home), the default machine-schema home is `schemas/contracts/v1/...`. A `TileArtifactManifest` schema **MUST NOT** be authored in `contracts/<…>/…schema.json` form. If a parallel home exists in the current repo, treat it as **CONFLICTED** and route through the drift register.
+Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). The existing file explains an external format and KFM interoperability/readiness posture, so `docs/standards/PMTILES.md` remains under the `docs/` responsibility root. This same-path update creates no new authority or lifecycle root.
 
-[Back to top](#pmtiles--kfm-standards-profile)
+### 14.2 Known placement/identity tensions
+
+- Root `PMTILES.md` and nested `pmtiles/` documents overlap in topic but currently serve overview versus specialized compatibility roles; their long-term consolidation/supersession relationship remains **NEEDS VERIFICATION**.
+- `TileArtifactManifest` semantic meaning is under `contracts/release/`, while the only inspected schema is an open `schemas/contracts/v1/map/` scaffold and the proposed release-family schema is absent.
+- The attestation workflow scans both compatibility `artifacts/` and `data/published/pmtiles/`; scanning a path does not make either location release authority.
+- Tool-local PMTiles schemas are compatibility schemas for the validator lane, not substitutes for an accepted KFM canonical contract-schema family.
+
+Any move, rename, consolidation, or schema-family decision requires a separate, reversible change with inbound-link repair, migration notes, and the applicable governance decision. This update performs none of those transitions.
+
+[Back to top](#top)
 
 ---
 
 ## 15. Open questions and verification backlog
 
-These items are explicitly **not resolved** by this profile and SHOULD be tracked in `docs/registers/VERIFICATION_BACKLOG.md`.
+1. **Canonical profile decision — NEEDS GOVERNED DECISION.** Select or explicitly relate the split SHA-256 compatibility profile, monolithic BLAKE3 proposals, GeoManifest direction, DSSE/COSE subject model, transparency-log posture, and partial-read proof design.
+2. **Schema authority — HOLD.** Resolve `TileArtifactManifest` contract/schema family, versioning, compatibility fixtures, registry bindings, and migration path.
+3. **Cryptographic trust — HOLD.** Select approved algorithms, subject canonicalization, key custody, signer identity, trust roots, validity/revocation, offline verification, and rotation/rollback behavior.
+4. **Range-proof authenticity — HOLD.** Decide whether PMIDX v1 range metadata is replaced, separately signed, or bound into a new tree/outboard proof; preserve compatibility identifiers.
+5. **Metadata compression coverage — NEEDS VERIFICATION.** Determine required none/gzip/Brotli/Zstandard support and add positive/negative byte fixtures for the accepted subset.
+6. **Tile-type support — NEEDS VERIFICATION.** Decide which of MVT, MapLibre Vector Tile, PNG, JPEG, WebP, AVIF, terrain encoding, and unknown/other are admitted per producer/consumer path.
+7. **Policy execution — HOLD.** Prove Rego or successor policy execution with positive/negative fixtures, exact input contract, policy bundle identity, reason codes, and independent review.
+8. **Release closure — HOLD.** Bind PMTiles candidates to accepted release, promotion, evidence, correction, withdrawal, cache invalidation, and rollback records without creating parallel authority.
+9. **Hosting profile — NEEDS MEASUREMENT.** Test exact Range, CORS, `ETag`/entity, cache, byte consistency, errors, CDN, private/public origin, and correction behavior on intended endpoints.
+10. **Runtime admission — HOLD.** Decide and implement the MapLibre adapter/protocol/dependency boundary, endpoint allowlist, manifest resolver, CSP/CORS posture, finite outcomes, mobile/browser budgets, and rollback.
+11. **Verification placement — NEEDS DECISION.** Determine which checks run at build, release, gateway, browser, offline client, or multiple layers; do not expose restricted trust metadata to public clients.
+12. **Performance budgets — NEEDS BENCHMARK.** Replace proposal constants with named datasets, views, devices, host conditions, percentiles, failure budgets, and reproducible result digests.
+13. **Workflow path coverage — BOUNDED GAP.** Decide whether root `docs/standards/PMTILES.md` changes should trigger the PMTiles attestation workflow; preserve workflow/check identity if changed.
+14. **Catalog interoperability — NEEDS VERIFICATION.** Define PMTiles asset roles and integrity/release fields for STAC/DCAT/PROV or successors without treating catalog presence as proof.
+15. **Owner and separation of duties — NEEDS VERIFICATION.** Name accountable PMTiles, security, policy, map/runtime, release, correction, and independent-review roles without inventing people.
+16. **Existing candidate inventory — NEEDS VERIFICATION.** Inventory any real `.pmtiles`, `.pmidx`, `.pmsig`, RunReceipt, manifest, release, deployed endpoint, and public consumer at a pinned revision before making production claims.
 
-- **CONFIRMED CONFLICT / NEEDS DECISION** — The proposed `schemas/contracts/v1/release/tile_artifact_manifest.schema.json` is absent while a permissive map-family placeholder exists at `schemas/contracts/v1/map/tile_artifact_manifest.schema.json`; an ADR or equivalent governed decision must select the canonical family before schema claims.
-- **NEEDS VERIFICATION** — Pinned tool versions for the build chain: `tippecanoe`, `go-pmtiles` (`pmtiles` CLI), `pmtiles-js`, `pmtiles-rs`, MapLibre GL JS, GDAL, cosign, BLAKE3 implementation.
-- **NEEDS VERIFICATION** — Whether KFM's signing path is DSSE-over-cosign, plain cosign keyless, KMS-backed, or hybrid. The sidecar template above is doctrine-consistent but does not pre-decide.
-- **NEEDS VERIFICATION** — Whether MLT (MapLibre Tile) inside PMTiles is on the roadmap or remains pilot-only. Project doctrine currently labels MLT as **NEEDS VERIFICATION** until toolchain and renderer support are proven.
-- **OPEN** — Whether the byte-ranges manifest is RECOMMENDED for every public release or REQUIRED for a defined sensitivity class.
-- **OPEN** — Whether delta updates (`delta_base_hash`, `byte_ranges_manifest`) require a separate `DeltaReleaseManifest` family or are absorbed into `MapReleaseManifest`.
-- **OPEN** — Whether KFM publishes a public `pmtiles.io`-style inspector mirror, or treats inspection as a stewarded-only tool.
-- **OPEN** — Per-layer SLO targets (the project notes a sample target of p95 tile fetch under 150 ms from CDN; **NEEDS VERIFICATION** whether this is normative for KFM).
-
-[Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
 
 ---
 
 ## 16. References
 
-### KFM doctrine (project sources)
+### KFM repository evidence
 
-- `docs/doctrine/directory-rules.md` — placement authority for this file and related schemas
-- `docs/doctrine/lifecycle-law.md` — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
-- `docs/doctrine/trust-membrane.md` — public path discipline
-- `docs/architecture/map-shell.md` — MapLibre shell, source registration, evidence resolution
-- `docs/standards/STAC.md` — STAC profile (PMTiles asset role)
-- `docs/standards/MVT.md` — vector tile internal encoding
-- `docs/standards/COG.md` — raster carrier alternative
-- `contracts/release/` — `TileArtifactManifest`, `MapReleaseManifest` semantics
-- `schemas/contracts/v1/` — machine-checkable shapes; the `TileArtifactManifest` family decision remains unresolved
-- `policy/release/`, `policy/sensitivity/` — admissibility and sensitivity gates
+- [`docs/standards/README.md`](./README.md) — standards-lane authority and state separation
+- [`docs/standards/MVT.md`](./MVT.md) — MVT encoding and readiness boundary
+- [`docs/standards/COG.md`](./COG.md) — raster-carrier alternative
+- [`docs/standards/OGC-API-TILES.md`](./OGC-API-TILES.md) — tile API/interoperability boundary
+- [`PMTiles Attestation Standard`](./pmtiles/PMTILES_ATTESTATION_STANDARD.md) — proposed attestation chain and current partial implementation ledger
+- [`PMIDX Sidecar Specification V1`](./pmtiles/PMIDX_SPEC_V1.md) — current SHA-256 compatibility algorithm
+- [`PMTiles validator README`](../../tools/validators/pmtiles/README.md) — executable structural boundary and holds
+- [`PMTiles attestation fixtures`](../../fixtures/pmtiles/attestation/README.md) — synthetic mutation matrix
+- [`Synthetic mobile PMTiles fixtures`](../../fixtures/pmtiles/mobile_verification/README.md) — no-network browser handoff boundary
+- [`PMTiles Attestation` workflow](../../.github/workflows/pmtiles-attestation.yml) — partial fail-closed CI behavior
+- [`TileArtifactManifest` contract](../../contracts/release/tile_artifact_manifest.md) — proposed semantics and schema conflict
+- [`GeospatialCarrierReadinessCheck`](../../contracts/release/geospatial_carrier_readiness.md) — inactive metadata-only preflight
+- [`tiles_publish.rego`](../../policy/rego/tiles_publish.rego) — deny-by-default proposed publication policy text
+- [`MapLibre package boundary`](../../packages/maplibre/README.md) — current package scaffold and unresolved runtime admission
+- [`Directory Rules`](../doctrine/directory-rules.md) and accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — placement authority
 
-### External standards and tooling
+### Authoritative upstream references
 
-- PMTiles v3 specification (`protomaps/PMTiles`, `spec/v3/spec.md`) [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6MjcxODEsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNpdGVEb21haW4iOiJnaXRodWIuY29tIiwic2l0ZU5hbWUiOiJHaXRIdWIiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPWdpdGh1Yi5jb20iLCJzb3VyY2UiOiJHaXRIdWIiLCJ0aXRsZSI6IlBNVGlsZXNcL3NwZWNcL3YzXC9zcGVjLm1kIGF0IG1haW4gwrcgcHJvdG9tYXBzXC9QTVRpbGVzIiwidXJsIjoiaHR0cHM6XC9cL2dpdGh1Yi5jb21cL3Byb3RvbWFwc1wvUE1UaWxlc1wvYmxvYlwvbWFpblwvc3BlY1wvdjNcL3NwZWMubWQifV0sInN0YXJ0SW5kZXgiOjI3MTE2LCJ0aXRsZSI6IlBNVGlsZXNcL3NwZWNcL3YzXC9zcGVjLm1kIGF0IG1haW4gwrcgcHJvdG9tYXBzXC9QTVRpbGVzIiwidXJsIjoiaHR0cHM6XC9cL2dpdGh1Yi5jb21cL3Byb3RvbWFwc1wvUE1UaWxlc1wvYmxvYlwvbWFpblwvc3BlY1wvdjNcL3NwZWMubWQiLCJ1dWlkIjoiYTdmNGNiNmMtMGVjYi00N2M4LTljYTAtYTBjYzE4MGRkZDk1In0%3D "GitHub")](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md) — authoritative format definition
-- PMTiles GitHub repository (`protomaps/PMTiles`) [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6MjcyNjUsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49Z2l0aHViLmNvbSIsInNpdGVEb21haW4iOiJnaXRodWIuY29tIiwic2l0ZU5hbWUiOiJHaXRIdWIiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPWdpdGh1Yi5jb20iLCJzb3VyY2UiOiJHaXRIdWIiLCJ0aXRsZSI6IkdpdEh1YiAtIHByb3RvbWFwc1wvUE1UaWxlczogUHlyYW1pZHMgb2YgbWFwIHRpbGVzIGluIGEgc2luZ2xlIGZpbGUgb24gc3RhdGljIHN0b3JhZ2UgwrcgR2l0SHViIiwidXJsIjoiaHR0cHM6XC9cL2dpdGh1Yi5jb21cL3Byb3RvbWFwc1wvcG10aWxlcyJ9XSwic3RhcnRJbmRleCI6MjcyMTgsInRpdGxlIjoiR2l0SHViIC0gcHJvdG9tYXBzXC9QTVRpbGVzOiBQeXJhbWlkcyBvZiBtYXAgdGlsZXMgaW4gYSBzaW5nbGUgZmlsZSBvbiBzdGF0aWMgc3RvcmFnZSDCtyBHaXRIdWIiLCJ1cmwiOiJodHRwczpcL1wvZ2l0aHViLmNvbVwvcHJvdG9tYXBzXC9wbXRpbGVzIiwidXVpZCI6ImQyY2MxNDNmLTUyODgtNGFmNS1iYmMyLTYxYTZiOTc1NjM1MCJ9 "GitHub")](https://github.com/protomaps/pmtiles) — go-pmtiles CLI, JS library, OpenLayers integration
-- Protomaps PMTiles documentation [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6MjczNTIsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNpdGVEb21haW4iOiJwcm90b21hcHMuY29tIiwic2l0ZU5hbWUiOiJQcm90b21hcHMiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPXByb3RvbWFwcy5jb20iLCJzb3VyY2UiOiJQcm90b21hcHMiLCJ0aXRsZSI6IlBNVGlsZXMgQ29uY2VwdHMgfCBQcm90b21hcHMgRG9jcyIsInVybCI6Imh0dHBzOlwvXC9kb2NzLnByb3RvbWFwcy5jb21cL3BtdGlsZXNcLyJ9XSwic3RhcnRJbmRleCI6MjczMjEsInRpdGxlIjoiUE1UaWxlcyBDb25jZXB0cyB8IFByb3RvbWFwcyBEb2NzIiwidXJsIjoiaHR0cHM6XC9cL2RvY3MucHJvdG9tYXBzLmNvbVwvcG10aWxlc1wvIiwidXVpZCI6ImVkYzZiNWYzLTM1YmItNGVjNC1iYTM1LTRjNTBjMDQ5ZTIwNSJ9 "Protomaps")](https://docs.protomaps.com/pmtiles/) — pmtiles concepts and viewer
-- "What's new in PMTiles V3" (Protomaps blog) [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6Mjc0MjgsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNpdGVEb21haW4iOiJwcm90b21hcHMuY29tIiwic2l0ZU5hbWUiOiJQcm90b21hcHMiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPXByb3RvbWFwcy5jb20iLCJzb3VyY2UiOiJQcm90b21hcHMiLCJ0aXRsZSI6IldoYXQncyBuZXcgaW4gUE1UaWxlcyBWMyAtIFByb3RvbWFwcyBCbG9nIiwidXJsIjoiaHR0cHM6XC9cL3Byb3RvbWFwcy5jb21cL2Jsb2dcL3BtdGlsZXMtdjMtd2hhdHMtbmV3XC8ifV0sInN0YXJ0SW5kZXgiOjI3Mzg1LCJ0aXRsZSI6IldoYXQncyBuZXcgaW4gUE1UaWxlcyBWMyAtIFByb3RvbWFwcyBCbG9nIiwidXJsIjoiaHR0cHM6XC9cL3Byb3RvbWFwcy5jb21cL2Jsb2dcL3BtdGlsZXMtdjMtd2hhdHMtbmV3XC8iLCJ1dWlkIjoiYjlhODMyZGUtYTA2Ni00MzU5LWFhZGItZjg4OTExNmQ5ZDI0In0%3D "Protomaps")](https://protomaps.com/blog/pmtiles-v3-whats-new/) — v2→v3 changes, smaller initial request, metadata limits
-- Protomaps "Creating PMTiles" docs [![](claude-citation:/icon.png?validation=F10FEA1B-2852-48B2-A308-69F9C5E28DC4&citation=eyJlbmRJbmRleCI6Mjc1MjIsIm1ldGFkYXRhIjp7ImZhdmljb25VcmwiOiJodHRwczpcL1wvd3d3Lmdvb2dsZS5jb21cL3MyXC9mYXZpY29ucz9zej02NCZkb21haW49cHJvdG9tYXBzLmNvbSIsInNpdGVEb21haW4iOiJwcm90b21hcHMuY29tIiwic2l0ZU5hbWUiOiJQcm90b21hcHMiLCJ0eXBlIjoid2VicGFnZV9tZXRhZGF0YSJ9LCJzb3VyY2VzIjpbeyJpY29uVXJsIjoiaHR0cHM6XC9cL3d3dy5nb29nbGUuY29tXC9zMlwvZmF2aWNvbnM/c3o9NjQmZG9tYWluPXByb3RvbWFwcy5jb20iLCJzb3VyY2UiOiJQcm90b21hcHMiLCJ0aXRsZSI6IkNyZWF0aW5nIFBNVGlsZXMgfCBQcm90b21hcHMgRG9jcyIsInVybCI6Imh0dHBzOlwvXC9kb2NzLnByb3RvbWFwcy5jb21cL3BtdGlsZXNcL2NyZWF0ZSJ9XSwic3RhcnRJbmRleCI6Mjc0ODksInRpdGxlIjoiQ3JlYXRpbmcgUE1UaWxlcyB8IFByb3RvbWFwcyBEb2NzIiwidXJsIjoiaHR0cHM6XC9cL2RvY3MucHJvdG9tYXBzLmNvbVwvcG10aWxlc1wvY3JlYXRlIiwidXVpZCI6IjQzNzY2NzgyLWYyNTUtNDA2Yi05YzI2LWU2YzE0NjA0YjYwZCJ9 "Protomaps")](https://docs.protomaps.com/pmtiles/create) — `rio pmtiles`, GDAL native support from 3.8.0
-- DSSE, cosign, Rekor — sigstore ecosystem (transparency, signing, attestation)
-- BLAKE3 — integrity hashing
+- [PMTiles Version 3 Specification](https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
+- [PMTiles v3 Changelog](https://github.com/protomaps/PMTiles/blob/main/spec/v3/CHANGELOG.md)
+- [PMTiles project](https://github.com/protomaps/PMTiles)
+- [Cloud Storage for PMTiles](https://docs.protomaps.com/pmtiles/cloud-storage)
+- [PMTiles for MapLibre GL](https://docs.protomaps.com/pmtiles/maplibre)
+- [PMTiles CLI](https://docs.protomaps.com/pmtiles/cli)
+- [Creating PMTiles](https://docs.protomaps.com/pmtiles/create)
 
-> [!NOTE]
-> External references above support generic format and tooling facts only. They do **not** authorize KFM-specific repo-state claims; those remain governed by `directory-rules.md` and current mounted-repo evidence.
+### Reference posture
 
----
+Upstream references establish the external format and implementation guidance as checked on 2026-08-18. They do not establish KFM adoption, conformance, source rights, policy, runtime, release, deployment, or publication. Repository-relative references establish tracked bytes and bounded behavior at the evidence snapshot; they do not prove external deployments or authority beyond their named scope.
 
-## Related docs
-
-- [Directory Rules](../doctrine/directory-rules.md) · _TODO verify path_
-- [STAC profile](./STAC.md) · _TODO author_
-- [MVT profile](./MVT.md) · _TODO author_
-- [COG profile](./COG.md) · _TODO author_
-- [Map Shell architecture](../architecture/map-shell.md) · _TODO verify path_
-- [TileArtifactManifest contract](../../contracts/release/tile_artifact_manifest.md) · _TODO verify path_
-
-**Last reviewed:** 2026-08-03 · **Next review:** flag if older than 6 months · [Back to top](#pmtiles--kfm-standards-profile)
+[Back to top](#top)
