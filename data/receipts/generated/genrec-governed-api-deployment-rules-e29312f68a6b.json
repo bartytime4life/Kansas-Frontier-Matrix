@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-governed-api-deployment-rules-e29312f68a6b",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/DEPLOYMENT_RULES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/DEPLOYMENT_RULES.md": "sha256:e29312f68a6b53f35b014964a56960ef0ccbaf19c94c750bdb06527d7a349ecc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/architecture/governed-api/DEPLOYMENT_RULES.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:blob/863ce5b35138f3f8a817bbe85a89a923892215e5",
+      "repo:branch/agent/ground-governed-api-deployment-rules-20260819",
+      "repo:docs/architecture/governed-api/README.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/architecture/deployment-topology.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/doctrine/directory-rules.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:.github/CODEOWNERS@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:CONTRIBUTING.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:apps/governed-api/src/governed_api/main.py@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:apps/governed-api/src/governed_api/stub.py@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:infra/README.md@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:infra/compose/docker-compose.yml@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:infra/docker/Dockerfile.governed-api@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:tests/infra/test_compose_static.py@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:.github/workflows/infra-compose-smoke.yml@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:.github/workflows/api-test.yml@091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@091c128261d0bec26de36d9df7a549c4f3402777",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/DEPLOYMENT_RULES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 091c128261d0bec26de36d9df7a549c4f3402777, verified prior target blob 977709a9f6cbac8bef8e433e0d4a0b2bf7d034aa, rechecked main after authoring, and found no open pull request claiming the exact target path."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support the existing docs/architecture/governed-api/ placement for human architecture while apps, infra, configs, runtime, contracts, schemas, policy, tests, receipts, proofs, release, and runbooks retain their owning responsibilities."
+    },
+    {
+      "gate": "current-implementation-inventory",
+      "outcome": "PASS",
+      "reason": "Inspected the current WSGI app, three-route registry, ABSTAIN stub, app boundary tests, placeholder Dockerfile, loopback-only Compose mapping, static Compose test, build-only Compose workflow, and API smoke workflow; deployment maturity was not inferred beyond those bounded surfaces."
+    },
+    {
+      "gate": "legacy-control-reconciliation",
+      "outcome": "PASS",
+      "reason": "Replaced unsupported operational claims, hard-coded TLS/CORS/rate/log/health profiles, and legacy audience-based quotas with explicitly proposed requirements, acceptance evidence, and HOLDs without declaring a canonical caller model or environment."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified YAML-readable KFM meta block, one semantic H1, preserved numbered section headings, balanced code fences and details blocks, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "anchor-and-link-closure",
+      "outcome": "PASS",
+      "reason": "Resolved all in-document fragments and checked 35 unique repository-relative references against the pinned repository tree and directly inspected target files."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 863ce5b35138f3f8a817bbe85a89a923892215e5 matches the locally computed Git blob; final document SHA-256 is e29312f68a6b53f35b014964a56960ef0ccbaf19c94c750bdb06527d7a349ecc."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was validated against schemas/contracts/v1/receipts/generated_receipt.schema.json with artifact-path/hash closure, finite enums, pending human review, and no additional top-level properties."
+    },
+    {
+      "gate": "repository-native-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "The change is documentation-only and no mounted repository dependency environment was available; no runtime, container-start, deployment, or external-environment claim is made."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no architecture approval, environment authorization, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "current-governed-api-runtime",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/main.py@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "current-route-registry",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "current-negative-runtime",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "current-placeholder-compose",
+      "validated": true,
+      "evidence_ref": "repo:infra/compose/docker-compose.yml@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "current-placeholder-image",
+      "validated": true,
+      "evidence_ref": "repo:infra/docker/Dockerfile.governed-api@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "static-compose-validation",
+      "validated": true,
+      "evidence_ref": "repo:tests/infra/test_compose_static.py@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "build-only-compose-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/infra-compose-smoke.yml@091c128261d0bec26de36d9df7a549c4f3402777"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T23:34:31Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It preserves the stable document ID, H1, path, and numbered section anchors; grounds deployment preparation to the current WSGI scaffold, three ABSTAIN routes, placeholder non-root image, loopback Compose mapping, static tests, and build-only workflow; distinguishes source-present, statically checked, image-buildable, packaged, startable, healthy, integrated, released, deployed, verified, and published states; moves TLS, CORS, rate, secret, logging, network, health, observability, release-binding, and rollback language into explicit target requirements with acceptance evidence; demotes legacy audience-based numeric tiers; and records current HOLDs including the unreconciled container port 8080 versus local helper default 8000. It changes no code, route, contract, schema, policy, configuration, workflow, image, environment, release, deployment, or publication."
+}
