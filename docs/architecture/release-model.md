@@ -1,604 +1,1047 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-release-model
-title: Release Model — Architecture
-type: standard
-version: v1
-status: draft
-owners: <Release authority + Schema steward + Docs steward — TBD>
+title: Release Model — Current Repository Architecture and Graduation Boundary
+type: architecture
+version: v2.0
+status: draft; repository-grounded; explanatory; mixed-maturity; non-authoritative; operational-release-hold
+owners:
+  - "@bartytime4life — current CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent release, evidence, policy, review, correction, rollback, contracts, schemas, validation, security, and operations stewardship"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-19
+policy_label: public; architecture; release-model; candidate-is-not-release; evidence-bound; correction-aware; rollback-aware; non-publication
+current_path: docs/architecture/release-model.md
+owning_root: docs/
+responsibility: >-
+  Explain how current KFM release-related contracts, schemas, candidate profiles,
+  references, digests, decisions, receipts, proofs, release records, published
+  carriers, correction, withdrawal, and rollback surfaces compose without
+  transferring authority among their owning responsibility roots.
+truth_posture: >-
+  CONFIRMED current path, accepted Directory Rules v2 placement authority,
+  current ReleaseManifest contract/schema/validator/test/workflow surface,
+  bounded PromotionReceipt and RollbackCard profiles, publication-denial dry run,
+  canonical release decision root, and current content-hash implementation /
+  PROPOSED production ReleaseManifest profile, operational reference resolution,
+  authenticated review and signing, accepted promotion sequence, applied release
+  transition, correction propagation, rollback execution, and public consumers /
+  CONFLICTED publication-document overlap, A-G gate vocabularies, release-manifest
+  collection paths, permissive legacy schema branch, and CorrectionNotice family
+  placement / UNKNOWN first governed production release, active release alias,
+  deployed release registry, complete consumer closure, runtime parity, and public
+  release behavior / NEEDS VERIFICATION exact-head hosted checks, independent
+  stewards, required-check coupling, accepted policy evaluator, signing trust root,
+  production storage, and recovery evidence.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 7ef1597779774d80346f81ecd8104b720797c587
+  target_prior_blob: 196b69d3d2eb66a526248ce24400d4270f880c92
+  directory_rules_decision: ADR-0029 accepted
+  release_manifest_schema_blob: c76cd9bdddb34cf33c8eb62801269553726c5923
+  release_manifest_validator_blob: 00307dc0d5e2c3867a229076e3702f8111455425
+  release_manifest_test_blob: eff34352614a0c03c7ff8b326f83fa9699525e98
+  release_manifest_workflow_blob: 91d9a995328f8d162121341ed265fa87781be4e8
+  promotion_receipt_contract_blob: ed432f8e3e02d170589c9e04d78087a69346909d
+  promotion_receipt_schema_blob: b9819cc92303aae5b4ab17f0ec9aac48ca236d10
+  rollback_card_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  publication_denial_tool_blob: 5fed3a16aa0915b9233861048fc6a1e676e0ed8f
+  release_dry_run_workflow_blob: 8f76d1011b80769952a0a6561ed7e5cd963bf8c9
 related:
-  - docs/architecture/README.md
-  - docs/architecture/release-discipline.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/planetary-3d.md
-  - docs/architecture/maplibre-3d.md
-  - docs/architecture/people-place-joins.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - docs/adr/README.md
-  - docs/standards/PROV.md
-  - docs/standards/SIGNING.md
-tags: [kfm, architecture, release, data-model, content-addressing, receipts, evidence-bundle, supersession, spec-hash]
+  - ./README.md
+  - ./document-convergence-plan.md
+  - ./release-discipline.md
+  - ./identity-and-spec-hash.md
+  - ./contract-schema-policy-split.md
+  - ./publication/README.md
+  - ./publication/release-objects.md
+  - ../doctrine/lifecycle-law.md
+  - ../doctrine/trust-membrane.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
+  - ../adr/ADR-0018-promotion-gate-sequence.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../standards/RELEASE_MANIFEST.md
+  - ../../contracts/release/README.md
+  - ../../contracts/release/release_manifest.md
+  - ../../contracts/release/promotion_receipt.md
+  - ../../contracts/release/rollback_card.md
+  - ../../contracts/correction/correction_notice.md
+  - ../../schemas/contracts/v1/release/release_manifest.schema.json
+  - ../../schemas/contracts/v1/release/promotion_receipt.schema.json
+  - ../../policy/release/README.md
+  - ../../release/README.md
+  - ../../tools/validators/release/validate_release_manifest.py
+  - ../../tools/release/release_dry_run.py
+  - ../../tests/validators/test_validate_release_manifest.py
+  - ../../.github/workflows/release-manifest.yml
+  - ../../.github/workflows/release-dry-run.yml
+tags: [kfm, architecture, release, release-manifest, promotion-receipt, rollback-card, identity, evidence, receipts, proofs, correction, publication, fail-closed]
 notes:
-  - Repo not mounted in authoring session; all path claims are PROPOSED.
-  - Companion to docs/architecture/release-discipline.md — same lane, different axis (model vs process).
-  - PROV.md / PROVENANCE.md naming variance tracked at directory-rules §18 OPEN-DR-01.
+  - "v2.0 replaces the May 2026 proposal-only object-graph description with a current-repository architecture explanation and explicit graduation boundary."
+  - "The existing tracked path is preserved. The architecture convergence plan's future publication-lane migration remains HOLD and is not performed here."
+  - "The current strict ReleaseManifest profile is deterministic and useful but PROPOSED_INACTIVE, FIXTURE_ONLY, and CANDIDATE; every authority-bearing governance flag is false."
+  - "Current executable content identity is RFC 8785 JCS plus SHA-256 serialized as sha256:<64-lowercase-hex>; release identity, activity identity, reference identity, and domain identity remain separate families."
+  - "Old major-section anchors are retained for compatibility."
 [/KFM_META_BLOCK_V2] -->
 
-# Release Model — Architecture
+<a id="top"></a>
+<a id="release-model--architecture"></a>
 
-> A release is not an event — it is a **typed, content-addressed object graph**. This doc names the objects that participate, the identity rules that bind them, the references that connect them, and the supersession edges that let the graph evolve without losing audit. The process side lives in `docs/architecture/release-discipline.md`; this is the data side.
+# Release Model — Current Repository Architecture and Graduation Boundary
 
-![status: draft](https://img.shields.io/badge/status-draft-blue)
-![doc class: architecture](https://img.shields.io/badge/class-architecture-6f42c1)
-![spec_hash: JCS+SHA-256](https://img.shields.io/badge/spec__hash-JCS%2BSHA--256-1f6feb)
-![identity: content-addressed](https://img.shields.io/badge/identity-content--addressed-228b22)
-![graph: typed · resolvable](https://img.shields.io/badge/graph-typed%20%C2%B7%20resolvable-0078a8)
-![canonicalization: JCS / URDNA2015](https://img.shields.io/badge/canonicalization-JCS%20%2F%20URDNA2015-b08800)
-![TODO: ci-badge-target](https://img.shields.io/badge/CI-TODO-lightgrey)
+> **One-line rule.** KFM models a release through several separately governed object families and responsibility roots. A valid candidate, digest, reference, receipt, decision-shaped record, workflow result, pull request, merge, or GitHub release is not a governed KFM release until evidence, policy, review, release, correction, rollback, application, and public-delivery authority close.
 
-**Status** · draft &nbsp;·&nbsp; **Owners** · *Release authority + Schema steward + Docs steward — TBD* &nbsp;·&nbsp; **Updated** · 2026-05-25
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-status)
+[![Placement: adopted](https://img.shields.io/badge/placement-adopted-2da44e?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![ReleaseManifest: fixture only](https://img.shields.io/badge/ReleaseManifest-fixture%20only-8250df?style=flat-square)](#7-the-releasemanifest-as-graph-root)
+[![References: declared](https://img.shields.io/badge/references-declared%20not%20resolved-d97706?style=flat-square)](#6-reference-types)
+[![Operational release: held](https://img.shields.io/badge/operational%20release-held-b42318?style=flat-square)](#current-status)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-boundary)
+
+> [!IMPORTANT]
+> **Architecture is explanatory, not sovereign.** Semantic meaning belongs to `contracts/`; machine shape to `schemas/`; admissibility to `policy/`; bounded executable behavior to validators, tests, and workflows; receipts and proofs to their data lanes; release, correction, withdrawal, rollback, and signature decisions to `release/`; public-safe carriers to `data/published/`; and public access to governed delivery surfaces.
+
+> [!CAUTION]
+> **The old page promoted a target architecture into current fact.** The repository now has meaningful fixture-first release validation, but it does not establish a production release profile, resolved object graph, authenticated review chain, accepted promotion policy, verified signatures, applied lifecycle transition, active alias, deployed registry, correction propagation, rollback execution, or public publication.
+
+> [!WARNING]
+> **Do not collapse distinct identity or trust objects.** `spec_hash` is bounded content-integrity evidence. It is not a release ID, run ID, domain-object ID, reference-resolution proof, policy decision, review, signature, release authorization, or publication state.
+
+**Quick navigation:** [Status](#current-status) · [Authority](#authority-boundary) · [Scope](#1-scope-and-companion-document) · [Composition](#2-a-release-is-an-object-graph) · [Identity](#3-identity-and-content-addressing) · [Object families](#4-the-master-receipt-catalog) · [Lifecycle](#5-receipt--lifecycle-phase) · [References](#6-reference-types) · [ReleaseManifest](#7-the-releasemanifest-as-graph-root) · [Variants](#8-release-class-shape-variants) · [Delta](#9-delta-and-patch-governance) · [Supersession](#10-supersession-as-graph-evolution) · [Homes](#11-schema-homes) · [Example](#12-worked-example-illustrative) · [Anti-patterns](#13-anti-patterns) · [Backlog](#14-verification-backlog) · [Related](#15-related-docs)
 
 ---
 
-## Quick jump
+<a id="current-status"></a>
 
-- [1. Scope and companion document](#1-scope-and-companion-document)
-- [2. A release is an object graph](#2-a-release-is-an-object-graph)
-- [3. Identity and content-addressing](#3-identity-and-content-addressing)
-- [4. The master receipt catalog](#4-the-master-receipt-catalog)
-- [5. Receipt × lifecycle phase](#5-receipt--lifecycle-phase)
-- [6. Reference types](#6-reference-types)
-- [7. The ReleaseManifest as graph root](#7-the-releasemanifest-as-graph-root)
-- [8. Release-class shape variants](#8-release-class-shape-variants)
-- [9. Delta and patch governance](#9-delta-and-patch-governance)
-- [10. Supersession as graph evolution](#10-supersession-as-graph-evolution)
-- [11. Schema homes](#11-schema-homes)
-- [12. Worked example](#12-worked-example-illustrative)
-- [13. Anti-patterns](#13-anti-patterns)
-- [14. Verification backlog](#14-verification-backlog)
-- [15. Related docs](#15-related-docs)
+## Current status
+
+Evidence snapshot: `main@7ef1597779774d80346f81ecd8104b720797c587`; prior target blob `196b69d3d2eb66a526248ce24400d4270f880c92`.
+
+| Surface | Current repository evidence | Safe conclusion |
+|---|---|---|
+| Placement | Existing tracked architecture page; accepted Directory Rules v2 keeps human cross-root explanation in `docs/architecture/`. | **CONFIRMED same-path `PLACE` for this update.** Future convergence under `publication/` remains `HOLD`. |
+| `ReleaseManifest` meaning | Draft v0.3 semantic contract, schema-paired and explicit about its non-authority boundary. | Meaning exists but no accepted production profile is established. |
+| `ReleaseManifest` machine shape | Draft 2020-12 dual-profile schema: permissive legacy branch plus closed strict branch. | Mixed compatibility surface; an id-only legacy object can validate without release completeness. |
+| Strict candidate profile | `RELEASE_MANIFEST_FIXTURE_V1`, `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, lifecycle `CANDIDATE`. | Deterministic synthetic candidate validation only. |
+| Strict governance flags | Reference, artifact, policy, review, signature, promotion, release, publication, and public-use flags are all fixed to `false`. | The schema prevents a fixture from self-promoting. |
+| Identity | RFC 8785 JCS plus SHA-256, serialized as `sha256:<64-lowercase-hex>`; strict manifest identity excludes stored `id` and `spec_hash`. | Bounded implemented content identity; no universal release or object identity grammar. |
+| Validator | Bounded file admission, schema, identity, canonical ordering, reference-role, public-intended prerequisite, temporal, lineage, and non-authority checks. | `PASS` proves selected local bytes and declarations only. |
+| Fixture/test surface | Four valid and seventeen invalid cases are declared; tests cover deterministic/no-network behavior and fail-closed parsing. | **CONFIRMED repository matrix and test code; exact-head hosted execution remains separate evidence.** |
+| `PromotionReceipt` | Proposed fixture-first contract/schema with exact ordered A–G readiness records and finite outcomes. | A receipt is process memory for one declared attempt, not the decision or transition. |
+| `RollbackCard` | Proposed closed fixture-first candidate contract/schema/validator with explicit non-execution flags. | Recovery planning can be validated locally; no rollback is authorized or executed. |
+| Publication-denial dry run | Deterministic helper applies five synthetic negative mutations and requires every case to remain blocked. | Bounded denial proof only; no candidate, decision, manifest, release record, or publication is created. |
+| Release policy | `policy/release/` documents scaffolded and unbound rule source; no accepted evaluator/consumer was established. | Operational policy remains `HOLD`. |
+| Release decision plane | `release/` is the canonical append-only decision root under ADR-0029. | Correct home is established; production assembly, authenticated authority, and public operation remain unproved. |
+| Public carriers | `data/published/` is the intended public-safe carrier lane. | No carrier becomes public merely because a release-shaped record exists. |
+| Operational release | Candidate assembly, transition application, live alias mutation, correction propagation, rollback execution, deployment, and public parity are not established here. | **HOLD / UNKNOWN**, fail closed. |
+
+### State separation
+
+```text
+tracked path
+  != semantic contract accepted
+  != schema valid
+  != strict candidate PASS
+  != references resolved
+  != artifact bytes verified
+  != signatures verified
+  != policy evaluated
+  != review authenticated
+  != promotion decided
+  != transition applied
+  != release authorized
+  != publication authorized
+  != public use allowed
+```
+
+A KFM release model is trustworthy only when these distinctions remain visible.
+
+---
+
+<a id="authority-boundary"></a>
+
+## Authority boundary
+
+| Question | Owning surface | This page may do |
+|---|---|---|
+| What does a release object mean? | `contracts/release/`, `contracts/correction/`, and other accepted semantic contracts | Explain relationships and current maturity. |
+| What machine shape is valid? | `schemas/contracts/v1/release/`, `schemas/contracts/v1/correction/`, and paired validators | Summarize the checked profile; never redefine it. |
+| What content digest is produced? | `packages/hashing/`, object-family projection rules, and consuming validators | Report current RFC 8785 JCS + SHA-256 behavior and its limits. |
+| What evidence supports a consequential claim? | `EvidenceRef`/`EvidenceBundle` contracts, resolver behavior, proofs, and policy | Require resolution; do not pretend declaration equals support. |
+| What is admissible? | Accepted policy source, evaluator profile, and normalized decision records | Expose current holds and conflicts. |
+| Who reviewed or approved? | Authenticated review records and accountable authority assignments | State when review remains unverified. |
+| What was executed? | Run/process receipts and bounded execution evidence | Distinguish process memory from proof and decision. |
+| What is released, corrected, withdrawn, or rollback-ready? | Append-only records under `release/` plus governed carrier and invalidation evidence | Link and explain; never issue or apply a state transition. |
+| What may a public client consume? | Governed APIs and approved public-safe carriers under release controls | Preserve the trust membrane. |
+| What does this page own? | Human-readable cross-root architecture explanation | No contract, schema, policy, release, or publication authority. |
 
 ---
 
 ## 1. Scope and companion document
 
-### 1.1 What this doc is
+### 1.1 What this page is
 
-This document is the **data-model artifact for releases**: the object catalog, identity rules, reference types, content-addressing rules, schema-home conventions, and supersession graph that together describe what a KFM release **is** as a structured artifact. It is the static counterpart to `docs/architecture/release-discipline.md`, which describes the dynamic side (gates, separation of duties, workflows, anti-patterns).
+This page explains the **model side** of release architecture: object-family separation, current machine profiles, identity boundaries, reference states, lifecycle relationships, correction/rollback lineage, and the evidence needed to graduate from fixture validation to an operational release.
 
-| Axis | Doc |
-|---|---|
-| **Process** — gates, approvals, workflows, separation of duties, reason codes, rollback procedures | `docs/architecture/release-discipline.md` |
-| **Model** — object catalog, identity, references, content-addressing, schema shape, supersession lineage | **this doc** |
+The adjacent publication and discipline pages explain process and navigation:
 
-The two are read together. A reviewer asking *"may this go out today?"* reaches for the discipline doc. A schema author or downstream consumer asking *"what fields must I emit / consume / verify?"* reaches for the model doc.
+| Axis | Primary explanatory surface | Current caveat |
+|---|---|---|
+| Publication-lane orientation | [`publication/README.md`](publication/README.md) | Repository-grounded; records multiple A–G vocabularies and operational hold. |
+| Gate/process narrative | [`release-discipline.md`](release-discipline.md) | Proposal-era overlap; future convergence remains unexecuted. |
+| Object relationships and maturity | **This page** | Same-path repository-grounded modernization. |
+| Release-manifest interoperability | [`../standards/RELEASE_MANIFEST.md`](../standards/RELEASE_MANIFEST.md) | Current standards guidance; not object authority. |
+| Release object meaning | [`../../contracts/release/`](../../contracts/release/README.md) | Mixed-maturity semantic contracts. |
+| Release decisions and records | [`../../release/`](../../release/README.md) | Canonical append-only decision root; operational execution remains held. |
 
 ### 1.2 Non-goals
 
-- This document does **not** define wire formats for any individual receipt; those live in `schemas/contracts/v1/receipts/...` (PROPOSED path; **NEEDS VERIFICATION** in mounted repo).
-- This document does **not** describe gates, gate ordering, or separation of duties; see `docs/architecture/release-discipline.md`.
-- This document does **not** describe the governed API; see `docs/architecture/governed-api.md` (PROPOSED).
-- This document does **not** rename existing KFM object families. Names are stable vocabulary; renames go through ADR.
+This page does not:
 
-> [!IMPORTANT]
-> Every object below is part of a single typed graph. `EvidenceRef` and other typed pointers in this model must **resolve** — not merely reference — the objects they point at. The Atlas §24.6.2 *universal closure rule* applies at the data layer: a release whose graph contains an unresolved reference is not yet a release.
+- define or amend a semantic contract, schema, policy rule, validator, fixture, workflow, or release record;
+- accept ADR-0013 or ADR-0018;
+- select one of the repository's competing A–G vocabularies as accepted doctrine;
+- resolve or authenticate any reference;
+- verify real artifact bytes, signatures, reviewers, authorities, rights, or sensitivity decisions;
+- assemble a candidate, issue a decision, apply a transition, change an alias, invalidate a cache, deploy, or publish;
+- migrate this flat page into `docs/architecture/publication/`;
+- turn documentation quality into implementation or release proof.
+
+### 1.3 Directory Rules basis and convergence hold
+
+Accepted ADR-0029 adopts the current Directory Rules v2 bytes. This tracked page explains a cross-root concern to humans, so the current same-path update receives `PLACE`.
+
+The architecture convergence plan proposes eventual consolidation of flat release pages with the `publication/` lane. That proposal remains `HOLD`: no complete no-loss comparison, document-identity decision, inbound-consumer migration, compatibility treatment, or rollback plan has authorized a move. This change updates content only.
 
 ---
 
 ## 2. A release is an object graph
 
-### 2.1 The core picture
+The **target architecture** is a typed, resolvable, policy-checked, review-authenticated, release-authorized composition. The **current repository implementation** is narrower: it validates declared candidate shapes and selected relationships without resolving or authenticating the graph.
 
-A KFM release is a `ReleaseManifest` at the root, with typed edges to every artifact, bundle, receipt, decision, and review record the release depends on. Each node is content-addressed; each edge is a typed, resolvable reference.
+### 2.1 Current declared ReleaseManifest composition
+
+The strict fixture profile declares these families:
 
 ```mermaid
-flowchart TD
-  classDef root  fill:#e8e2ff,stroke:#6f42c1,color:#3d2a78
-  classDef bundle fill:#f0fff4,stroke:#1a7f37,color:#0b4a2a
-  classDef receipt fill:#fff7e6,stroke:#bf8700,color:#6c4a00
-  classDef decision fill:#fdecea,stroke:#b22222,color:#7a0e0e
-  classDef artifact fill:#eef6ff,stroke:#1f6feb,color:#0b3d91
+flowchart TB
+  classDef manifest fill:#c8e6c9,stroke:#1b5e20;
+  classDef declared fill:#fff4e0,stroke:#d97706;
+  classDef authority fill:#ffe8e8,stroke:#b42318;
 
-  RM["ReleaseManifest<br/>(root · signed · content-addressed)"]:::root
+  RM["ReleaseManifest candidate<br/>PROPOSED_INACTIVE · FIXTURE_ONLY"]:::manifest
+  ART["artifacts[]<br/>ref + sha256 digest + media type + role"]:::declared
+  SRC["source_descriptor_refs[]"]:::declared
+  EVD["evidence_bundle_refs[]"]:::declared
+  POL["policy_decision_refs[]"]:::declared
+  PRO["promotion_decision_refs[]"]:::declared
+  REV["review_record_refs[]"]:::declared
+  CAT["catalog_refs[]"]:::declared
+  PRF["proof_refs[]"]:::declared
+  REC["receipt_refs[]"]:::declared
+  ATT["attestation_refs[]"]:::declared
+  LIN["lineage<br/>previous + correction + withdrawal + rollback refs"]:::declared
+  GOV["governance flags<br/>all false"]:::authority
 
-  EB["EvidenceBundle<br/>(JSON-LD · spec_hash · graph fragment)"]:::bundle
-  PA["PMTiles / COG / GeoParquet<br/>(carrier artifacts)"]:::artifact
-  LM["LayerManifest<br/>StyleManifest<br/>TileArtifactManifest"]:::artifact
-
-  RR["RunReceipt"]:::receipt
-  TR["TransformReceipt"]:::receipt
-  RD["RedactionReceipt"]:::receipt
-  AG["AggregationReceipt"]:::receipt
-  MR["ModelRunReceipt"]:::receipt
-  RPR["RepresentationReceipt"]:::receipt
-  AIR["AIReceipt"]:::receipt
-  VR["ValidationReport"]:::receipt
-  REV["ReviewRecord"]:::receipt
-
-  PD["PolicyDecision"]:::decision
-  PrD["PromotionDecision"]:::decision
-  RC["RollbackCard / CorrectionNotice"]:::decision
-
-  SD["SourceDescriptor"]:::receipt
-  RBN["RealityBoundaryNote"]:::receipt
-
-  RM --> EB
-  RM --> PA
-  RM --> LM
-  RM --> PrD
-  RM -.->|"rollback_target"| RM
-
-  EB --> SD
-  EB --> RR
-  EB --> TR
-  EB --> RD
-  EB --> AG
-  EB --> MR
-  EB --> RPR
-  EB --> AIR
-  EB --> RBN
-
-  PrD --> VR
-  PrD --> PD
-  PrD --> REV
-  RC -.->|"invalidates[]"| RM
+  RM --> ART
+  RM --> SRC
+  RM --> EVD
+  RM --> POL
+  RM --> PRO
+  RM --> REV
+  RM --> CAT
+  RM --> PRF
+  RM --> REC
+  RM --> ATT
+  RM --> LIN
+  RM --> GOV
 ```
 
-### 2.2 What that picture implies
+The validator checks declaration-level invariants such as canonical ordering, duplicate prevention, evidence-artifact bindings, public-intended prerequisites, temporal ordering, lineage prerequisites, floating `latest` denial, and reference-role separation. It does **not** open the referenced objects or establish their authority.
 
-- **The ReleaseManifest is the graph root.** Consumers bind to it; the rest is reachable from it. (See §7.)
-- **EvidenceBundles carry the claim-bearing receipts.** Source identity, transform history, redaction, aggregation, model runs, representation, AI usage — all hang under bundles that the manifest references.
-- **Decisions sit between artifacts and process.** PolicyDecision, PromotionDecision, and their cousins record *why* the manifest was allowed to ship; ValidationReport and ReviewRecord record *who and what* validated it.
-- **Correction and rollback are typed back-edges**, not destructive operations. They reach into the graph and mark invalidation; they never overwrite history.
+### 2.2 Target operational composition
+
+A production release would require at least these independently evidenced steps:
+
+```text
+candidate bytes and object-family projection
+  -> deterministic digest and candidate identity
+  -> source/evidence reference resolution
+  -> artifact-byte verification
+  -> rights and sensitivity evaluation
+  -> policy evaluation under an accepted digest-bound bundle
+  -> authenticated review and separation-of-duties checks
+  -> accountable PromotionDecision
+  -> release/correction/rollback record assembly
+  -> transition application and immutable carrier binding
+  -> alias/catalog/cache/search/map/API/AI propagation
+  -> externally observable parity and recovery evidence
+```
+
+No single object replaces that sequence. A `ReleaseManifest` is a binding envelope, not sovereign truth. A `PromotionReceipt` records a declared attempt, not the accountable decision. A `ProofPack` supports a release but does not apply it. A signature authenticates a binding under a trust root but does not establish evidence, policy, or release authorization by itself.
+
+### 2.3 Anti-collapse model
+
+| Family | Primary question | Must remain separate from |
+|---|---|---|
+| Candidate/profile | Does this proposed packet have the declared local shape and consistency? | Release, publication, evidence truth, approval. |
+| Evidence | What admissible support exists for release-visible claims? | Receipt, policy result, manifest, generated prose. |
+| Receipt | What process or attempt ran, over what inputs, with what bounded result? | Proof, decision, review, manifest, release. |
+| Proof | What support justifies a conclusion or release claim? | Process memory, policy source, release record. |
+| Policy result | Is the named operation admissible under an accepted policy context? | Evidence truth, reviewer authentication, release application. |
+| Review record | Who reviewed what exact subject, under which role and scope? | Authoring, routing, workflow status. |
+| Decision | Which accountable finite disposition applies? | Validator result, receipt, manifest. |
+| Manifest | Which artifacts and trust references bind one release candidate or released state? | Payload storage, approval, proof closure by itself. |
+| Release record | Which transition was authorized/applied, corrected, withdrawn, or rolled back? | Git commit, PR, deployment, carrier bytes. |
+| Published carrier | Which immutable public-safe bytes may governed clients consume? | Canonical/internal truth and unrestricted source material. |
 
 ---
 
 ## 3. Identity and content-addressing
 
-### 3.1 The deterministic-basis rule
+### 3.1 Current implemented content identity
 
-**PROPOSED deterministic basis** (uniform across every object family in the Atlas):
+The current bounded hashing path uses:
 
 ```text
-object_id = digest(
-  source_id          : str   # source-ledger id (when applicable)
-  object_role        : enum  # observed | regulatory | modeled |
-                             # aggregate | administrative |
-                             # candidate | synthetic
-  temporal_scope     : str   # ISO interval / fuzzy interval / "unknown"
-  normalized_digest  : hex   # canonicalized canonical-form digest of payload
-)
+object-family value/projection
+  -> RFC 8785 JSON Canonicalization Scheme
+  -> SHA-256
+  -> sha256:<64-lowercase-hex>
 ```
 
-This is the same recipe used for every domain object family; releases use it for their own root.
+For the strict `ReleaseManifest` candidate:
 
-### 3.2 Canonicalization: JCS+SHA-256 is the default
+1. deep-copy the candidate;
+2. remove top-level stored `id` and `spec_hash`;
+3. compute the RFC 8785 JCS + SHA-256 digest;
+4. store the digest as `spec_hash`;
+5. derive `id` as `release-manifest:` plus the first 24 digest hex characters.
 
-**CONFIRMED doctrine** (Pass-10 C1-02; C4-04; C8-04; C8-05):
+This is **CONFIRMED bounded implementation** in the current validator. It is not a universal identity law.
 
-| Canonicalization | When to use | Status |
+### 3.2 Identity classes stay separate
+
+| Identity class | Example | Current owner/posture |
 |---|---|---|
-| **RFC 8785 JCS + SHA-256** | Default for JSON payloads (manifests, receipts, bundles' JSON layer) | **CONFIRMED default** |
-| **W3C URDNA2015 + SHA-256** | When RDF-semantic equivalence is needed (graph-layer claims with multiple syntactic JSON-LD forms) | **CONFIRMED conditional** |
+| Content identity | `spec_hash` | Bounded hashing contract/package/validator; current grammar `sha256:<hex>`. |
+| Candidate object identity | `release-manifest:<24 hex>` | Strict fixture profile only; not the final production release-ID decision. |
+| Release identity | `release_id` and release records | Release contracts and append-only decision plane; separate from content digest. |
+| Activity identity | `run_id`, promotion attempt ID | Runtime/receipt contracts; no universal accepted grammar established here. |
+| Reference identity | Evidence, policy, review, proof, receipt, attestation refs | Owning reference contracts and resolvers. |
+| Domain object identity | Source/time/geometry-aware entity identity | Owning domain contracts; never inferred from generic JSON equality alone. |
 
-The two **can disagree for the same logical bundle** — the corpus is explicit that the choice has policy and reproducibility implications (Pass-10 C8-05). A bundle's `spec_hash` is computed from exactly one canonicalization path, recorded in the bundle, and never re-computed under the other.
+Two releases may bind different decisions or times while including byte-identical artifacts. Two attempts may evaluate the same candidate while having different activity IDs. Two domain assertions may identify the same real-world entity but differ in source role, valid time, correction state, or representation.
 
-### 3.3 `spec_hash` is the universal address
+### 3.3 What a matching digest proves
 
-Every consequential object in the release graph carries a `spec_hash` field whose value is the canonicalized content digest of the object. This is the same value that:
+A digest match proves equality only under the same admitted value, object-family projection, exclusions, normalization profile, canonicalization profile, and algorithm.
 
-- Appears as the object's `kfm:spec_hash` in JSON-LD form.
-- Becomes the path in a content-addressed store (`kfm://entity-bundle/<sha256>`, `oci://<registry>/<repo>@sha256:<digest>`, `ipfs://<cid>`).
-- Is recorded in the `ReleaseManifest.contents[]` entry for the object.
-- Is what a consumer pins to and a verifier recomputes.
+It does not prove:
 
-### 3.4 The `manifestSpecHash` exclusion
+- semantic equivalence outside that hash domain;
+- source authority or evidence sufficiency;
+- rights, sensitivity, policy, review, or release approval;
+- reference existence or authenticity;
+- signature trust;
+- transition application;
+- publication or public fitness.
 
-**CONFIRMED doctrine** (Master MapLibre ML-M-046): the `manifestSpecHash` field of a manifest must be computed over the manifest *with the `spec_hash` field itself excluded* — otherwise the hash includes the hash and computation is non-terminating. The exclusion is performed at canonicalization time, before the SHA-256 step.
+### 3.4 Current conflicts and absent paths
 
-> [!CAUTION]
-> Content-addressing is what makes releases *reversible*. Floating pointers (`latest`, branch tips, mutable URLs) defeat reversibility and are forbidden as consumer-binding targets (see `docs/architecture/release-discipline.md` §5.3). The governed API may *resolve* `latest` at request time; the receipt records the resolved `spec_hash`.
+- ADR-0013 remains `proposed`; `jcs:sha256:<hex>` and a universal run-ID grammar are not current executable write behavior.
+- The current strict manifest uses JCS + SHA-256; it does not require URDNA2015, JSON-LD canonicalization, BLAKE3, Merkle trees, or Bao proofs.
+- No universal object-family hash-domain registry was verified.
+- A future cryptographic profile must preserve backward readability and record the exact canonicalization/projection/version rather than silently changing digest meaning.
 
 ---
 
 ## 4. The master receipt catalog
 
-**CONFIRMED doctrine** (Atlas §24.2.1): A receipt is a structured, persisted record of a specific governed operation, with enough context for audit and rollback. *The receipt is never optional when the operation is consequential; if no receipt exists, the operation did not happen in the governed sense.*
+The old page called nearly every trust-bearing object a “receipt.” Current repository architecture requires a stricter taxonomy.
 
-### 4.1 The catalog
+### 4.1 Object-family catalog
 
-| Receipt | Purpose | Triggered by | Required content (PROPOSED shape) |
+| Object/family | Kind | Current repository posture | What it must not impersonate |
 |---|---|---|---|
-| **SourceDescriptor** | Records source identity, rights, role, sensitivity, cadence at admission *(anchor of every downstream receipt; not strictly a receipt itself)* | Source admission | `source_id`, `source_role`, `authority`, `rights`, `sensitivity`, `cadence`, `ingest_hash`, `time`, `citation` |
-| **TransformReceipt** | Records a spatial or attribute transform (reprojection, generalization, snap, simplification) | Geometry normalization, projection, generalization | `input_geom_hash`, `output_geom_hash`, `transform`, `parameters`, `tolerance`, `timestamp`, `actor` |
-| **RedactionReceipt** | Records a public-safe transformation that removed, masked, fuzzed, or withheld content for sensitivity, rights, or policy | Sensitive-domain publication (living-person, rare-species, archaeology coords, infrastructure detail) | `policy_ref`, `redaction_method`, `kept_fields`, `removed_fields`, `geometry_transform`, `reviewer` |
-| **AggregationReceipt** | Records an aggregation step and pins the geometry scope | Aggregate publication; matrix-cell computation | `geometry_scope`, `time_scope`, `aggregation_method`, `input_source_refs`, `suppression_rule`, `output_unit` |
-| **ModelRunReceipt** | Records a modeled output: model identity, version, inputs, parameters, uncertainty, validation | Modeled product publication; suitability surface; smoke trajectory; restoration model | `model_id`, `model_version`, `inputs[]`, `parameters`, `run_time`, `uncertainty_surface_ref`, `validation_ref` |
-| **RepresentationReceipt** | Records a representation step where surface fidelity differs from evidence fidelity | 3D scene publication; tile/PMTiles export; visual-only generalization | `evidence_ref`, `representation_method`, `parameters`, `reality_boundary_note_ref` |
-| **AIReceipt** | Records a governed AI answer: prompt scope, evidence used, policy decision, outcome class, abstention/denial reason | Any Focus Mode answer; any AI-drafted note or summary | `prompt_scope`, `evidence_refs[]`, `policy_ref`, `outcome`, `reason_code`, `model_id`, `time` |
-| **ReviewRecord** | Records a steward, rights-holder, or policy review of a candidate transition | Promotion gate; sensitive-lane publication; correction acceptance | `reviewer`, `role`, `decision`, `evidence_refs[]`, `policy_ref`, `time` |
-| **PolicyDecision** | Records a policy evaluation: which rule, against which object, with which outcome | Every governed gate; rights / sensitivity / release checks | `policy_id`, `target_object`, `decision`, `reason_code`, `time`, `evidence_refs[]` |
-| **ValidationReport** | Records the outcome of a validator run | WORK promotion; PROCESSED → CATALOG; release closure | `validator_id`, `target`, `passes[]`, `failures[]`, `time`, `deterministic_inputs` |
-| **PromotionDecision** | Records the promotion-gate result with gate IDs, inputs, proofs, release target, rollback target | Catalog → PUBLISHED transition | `gate_ids[]`, `inputs[]`, `proofs[]`, `release_target`, `rollback_target` |
-| **PromotionReceipt** | Records that the PromotionDecision's gates were satisfied at the transition moment | Promotion to PUBLISHED | `decision_ref`, `gate_outcomes[]`, `signer_identity`, `time` |
-| **ReleaseManifest** | Records the contents, version, signatures, and rollback target for a release | PUBLISHED transition | `release_id`, `contents[]`, `digests`, `evidence_refs[]`, `rollback_target`, `time`, signatures |
-| **CorrectionNotice** | Records that a published claim was corrected: what changed, why, what derivatives were invalidated | Post-publication correction | `claim_ref`, `prior_release_ref`, `change_summary`, `invalidates[]`, `review_ref`, `time` |
-| **RollbackCard** | Records a rollback decision and the targeted prior release | Failed release; correction | `release_id`, `rollback_to`, `reason`, `invalidates[]`, `review_ref`, `time` |
-| **RealityBoundaryNote** | Public-facing or steward-facing statement that a carrier is synthetic or reconstructed and not direct evidence | Synthetic surfaces; reconstructed scenes; AI-drafted text | `scope`, `method_summary`, `evidence_refs[]`, `visibility` |
-| **MatrixCellReceipt** | Records the inputs, definitions, geography version, and uncertainty of a single Frontier Matrix cell | Matrix-cell publication | `cell_id`, `definition_ref`, `geography_version`, `inputs[]`, `uncertainty`, `review_ref` |
-| **StorySnapshot / ExportReceipt** | Records the evidence, redactions, and release state at the moment of a story / export / atlas snapshot | Story or export publication | `snapshot_id`, `evidence_refs[]`, `redactions[]`, `release_refs[]`, `rollback_target`, `time` |
-| **VerifyReceipt** | Runtime verification receipt for tile activation | Tile activation on client | `digest_verified`, `bounds_verified`, `schema_verified`, `root_hash`, `tileset`, `capability_issued` |
-| **RuntimeProbeResult** | Probe result for renderer/tile runtime budgets | Pre-release runtime check | `decode_latency`, `hash_throughput`, `heap_growth`, `token_latency`, `device_profile`, `pass_fail` |
-| **CitationValidationReport** | Pass/fail citation closure object for Focus Mode, Story Nodes, popups, exports | Catalog / Release / Focus Mode | claim ↔ citation pass/fail with missing/stale evidence enumeration |
-| **EventRunReceipt** | Pre-RAW watcher event admission *(out-of-spine; tracked under KFM-IDX-EVT-* Pre-RAW Event Family)* | Watcher event admission | Pre-RAW event envelope fields |
+| `SourceDescriptor` | Source registry / authority declaration | Repository-present family; release manifests declare refs. | Receipt, evidence truth, policy approval. |
+| `EvidenceRef` / `EvidenceBundle` | Evidence pointer / resolved support | Central doctrine; strict manifest declares bundle refs but does not resolve them. | Generated text, policy result, manifest. |
+| `RunReceipt` | Process receipt | Referenced by strict manifest provenance and receipt arrays. | Proof, review, release decision. |
+| `TransformReceipt` / redaction or aggregation receipts | Process receipts | Release scope may declare transform receipt refs. | Policy approval or proof of public safety by presence alone. |
+| `ValidationReport` | Bounded validation result | Used throughout release readiness; object-specific maturity varies. | Evidence truth, review, release authority. |
+| `PolicyDecision` | Decision/result | Manifest may declare refs; current release policy is unbound. | Evidence or authenticated review. |
+| `ReviewRecord` | Review record | Required by public-intended strict candidate declarations; authentication remains unproved. | CODEOWNERS routing or workflow success. |
+| `PromotionDecision` | Accountable lifecycle decision | Proposed contract/schema/fixtures exist. | Readiness `PASS`, `PromotionReceipt`, or file movement. |
+| `PromotionReceipt` | Release-scoped attempt receipt | Proposed fixture-first A–G profile. | `PromotionDecision`, proof, manifest, applied transition. |
+| `ProofPack` / proof refs | Proof composition | Referenced as a distinct family; current production closure unproved. | Receipt, policy source, manifest, release. |
+| `ReleaseManifest` | Release-binding manifest | Dual-profile; strict branch fixture-only candidate. | Payload store, decision, policy evaluator, publication. |
+| `RollbackCard` | Recovery candidate/plan | Closed fixture-first candidate profile; non-executing. | Executed rollback or public mutation. |
+| `CorrectionNotice` | Named correction/supersession notice | Draft contract; schema remains permissive placeholder and placement seam is conflicted. | Corrected payload, release manifest, policy approval. |
+| `WithdrawalNotice` | Withdrawal semantic object | Contract family exists; maturity requires separate verification. | Erasure or silent removal. |
+| Release/correction/rollback records | Append-only state records | Canonical home under `release/`; operational application remains held. | Git history, documentation, carrier bytes. |
+| Published artifact | Public-safe carrier | Intended home under `data/published/` after release. | Release decision, evidence authority, canonical store. |
 
-### 4.2 EvidenceBundle: the carrier of carriers
+### 4.2 Receipt minimum contract
 
-**CONFIRMED doctrine** (Pass-10 C4-04, C8-04): An EvidenceBundle is a JSON-LD document that packages a graph fragment (persons, places, events, claims), the run receipts that justify each claim, and the authority crosswalks (Wikidata, LCNAF, GNIS, ITIS, …). It is content-addressed by `spec_hash`. It is *the* unit of publication for graph-layer assertions.
+A process receipt should answer:
 
-Inside a bundle:
+- which activity ran;
+- which exact inputs and profiles were used;
+- which outputs or findings resulted;
+- which digests bind them;
+- when and under what execution context it ran;
+- whether it created any authority or side effect;
+- how it relates to predecessor/successor receipts.
 
-| JSON-LD field | What it carries |
-|---|---|
-| `kfm:id` | The bundle's identity (equal to its `spec_hash`) |
-| `kfm:spec_hash` | Canonicalized content digest |
-| `kfm:entities` | Graph nodes (persons, events, places, …) |
-| `kfm:sources` | Source citations with URLs, licenses, fetch times |
-| `prov:wasGeneratedBy` | The PROV-O Activity that produced the bundle |
-| `kfm:run_receipt_ref` | Pointer to the immutable RunReceipt |
-| `kfm:evidence_ref` | Where a STAC or DCAT record references the bundle by content address |
+A receipt should not claim more than the process observed. `authority_created: false` is a useful explicit boundary in current fixture tooling.
 
-A consumer who fetches the bundle by `spec_hash` can verify it offline.
+### 4.3 PromotionReceipt boundary
+
+The current proposed `PromotionReceipt` contains:
+
+- one `promotion_id` and exact candidate binding;
+- the `kfm/promotion-readiness/A-G/v1` profile;
+- exactly seven ordered gate results;
+- finite status `PASS`, `ABSTAIN`, `DENY`, or `ERROR`;
+- readiness `APPROVE_READY` or `BLOCKED`;
+- a declared `CATALOG`/`TRIPLET` → `PUBLISHED` transition and `applied` boolean;
+- separately typed evidence, policy, review, attestation, and decision refs;
+- a receipt digest and actor/time declaration.
+
+Even `transition.applied: true` proves only schema and local consistency. It does not authenticate the decision reference, verify support, establish that a transition occurred, or create a release record.
 
 ---
 
 ## 5. Receipt × lifecycle phase
 
-**CONFIRMED doctrine** (Atlas §24.2.2): receipts are emitted, amended, or referenced at specific lifecycle phases. The dot in each cell means the receipt is normally present at that phase. Receipts created earlier remain *referenced* at later phases via `EvidenceRef` — never duplicated.
+Receipts and trust objects accompany lifecycle transitions; they do not replace the lifecycle or make a transition true.
 
-| Receipt | RAW | WORK / QUARANTINE | PROCESSED | CATALOG / TRIPLET | PUBLISHED |
-|---|---|---|---|---|---|
-| SourceDescriptor | • | • | • | • | • |
-| TransformReceipt | | • | • | • | |
-| RedactionReceipt | | | • | • | • |
-| AggregationReceipt | | | • | • | • |
-| ModelRunReceipt | | | • | • | • |
-| RepresentationReceipt | | | | • | • |
-| AIReceipt | | | | | • *(Focus Mode only)* |
-| ReviewRecord | | • | • | • | |
-| PolicyDecision | • | • | • | • | • |
-| ValidationReport | | • | • | • | |
-| ReleaseManifest | | | | | • |
-| CorrectionNotice | | | | | • |
-| RollbackCard | | | | | • |
-| RealityBoundaryNote | | | • | • | • |
-| MatrixCellReceipt | | | | • | • |
-| StorySnapshot | | | | | • |
+```text
+SOURCE / PRE-RAW
+  -> RAW
+  -> WORK / QUARANTINE
+  -> PROCESSED
+  -> CATALOG / TRIPLET
+  -> candidate readiness and decision
+  -> applied release transition
+  -> PUBLISHED carrier and governed delivery
+  -> correction / withdrawal / rollback / recompile
+```
 
-> [!TIP]
-> The mapping is doctrinal because it constrains the receipt graph: a `RedactionReceipt` produced in WORK is *not* the same kind of artifact as one produced at PUBLISHED. The producer phase becomes part of the receipt's audit trail, and consumers downstream can ask "which receipts were present at which phase" to detect promotion shortcuts.
+| Lifecycle boundary | Typical object families | Current bounded state | Required graduation evidence |
+|---|---|---|---|
+| Source admission | SourceDescriptor, intake/event receipt, policy context | Varies by source; outside this page's narrow implementation proof. | Accepted source profile, rights, sensitivity, deterministic capture, no silent activation. |
+| RAW → WORK/QUARANTINE | Run/TransformReceipt, ValidationReport, quarantine reason | Domain-specific; no universal release claim here. | Bounded execution plus explicit failure/exit paths. |
+| WORK → PROCESSED | Validation, transformation, redaction/aggregation support | Domain-specific. | Reproducible validators and correct source/time/geometry semantics. |
+| PROCESSED → CATALOG/TRIPLET | EvidenceBundle, catalog/provenance/triplet closure | Synthetic closure proofs exist in bounded lanes; production closure remains separate. | Resolvable refs, catalog identity, proof, correction propagation. |
+| CATALOG/TRIPLET readiness | A–G readiness result, ReviewRecord shape, PromotionDecision shape, PromotionReceipt | Meaningful fixture-first implementation; ADR-0018 remains proposed and vocabularies conflict. | Accepted sequence, active policy evaluator, authenticated support/review, exact packet binding. |
+| Transition application | Release decision, manifest, signatures/attestations, rollback support | `HOLD`; no accepted release application engine established. | Accountable authority, append-only record, side-effect receipts, idempotency, recovery. |
+| PUBLISHED | ReleaseManifest binding plus immutable public-safe carriers and aliases | No first governed production release established here. | Carrier-byte verification, governed alias, API/map/search parity, public correction path. |
+| Correction/withdrawal/rollback | CorrectionNotice, WithdrawalNotice, RollbackCard, new/superseding release records | Candidate and prose surfaces exist; operational propagation unproved. | Applied invalidations, public-safe notice, restored/withdrawn state, replay and audit evidence. |
+
+### 5.1 Finite outcomes do not collapse
+
+| Layer | Example vocabulary | Meaning |
+|---|---|---|
+| Validator | `PASS` / `FAIL` / `ERROR` | Local shape or semantic-check result. |
+| Readiness evaluator | `PASS` / `ABSTAIN` / `DENY` / `ERROR` | Bounded readiness over one pinned packet. |
+| Readiness mapping | `APPROVE_READY` / `BLOCKED` | Eligibility for separately governed decision processing. |
+| Promotion decision | `APPROVE` / `DENY` / `ABSTAIN` | Accountable disposition under its contract. |
+| Release state | Candidate/held/degraded or accepted release vocabulary | State recorded by the release decision plane. |
+| Public runtime | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Governed outward response; not the internal release decision vocabulary. |
+
+A conversion between layers must be explicit, versioned, testable, and non-escalating.
 
 ---
 
 ## 6. Reference types
 
-The release graph uses a small, typed set of references. Each one has a **source field**, a **target type**, and a **resolution rule**.
+### 6.1 Declaration, resolution, authentication, authorization
 
-| Reference field | Points at | Resolution rule |
+A reference passes through distinct states:
+
+| State | Question | Current strict ReleaseManifest coverage |
 |---|---|---|
-| `EvidenceRef` / `kfm:evidence_ref` | EvidenceBundle | Must resolve to a fetchable bundle whose recomputed `spec_hash` matches the reference's expected digest |
-| `source_id` | SourceDescriptor | Must resolve to the canonical descriptor in the source register |
-| `model_id` | ModelRunReceipt | Must resolve to a ModelRunReceipt whose `model_version` matches |
-| `policy_id` / `policy_ref` | PolicyDecision (or policy bundle) | Must resolve to the policy whose digest was pinned at decision time |
-| `validator_id` | ValidationReport | Must resolve to the validator whose deterministic inputs are recorded |
-| `prior_release_ref` | ReleaseManifest | Must resolve to a prior manifest in the release history |
-| `rollback_to` / `rollback_target` | ReleaseManifest | Must resolve to a prior manifest still validly reachable from the current rollback chain |
-| `claim_ref` | The corrected claim within an EvidenceBundle | Must resolve to a specific node within a specific bundle |
-| `invalidates[]` | Set of derivative artifacts (tiles, layers, stories, exports, AIReceipts) | Every element must resolve to a known artifact |
-| `reality_boundary_note_ref` | RealityBoundaryNote | Must resolve when the receipt's `source_role` is `synthetic` or `modeled` |
-| `delta_base_hash` | A prior tile / PMTiles artifact | Must resolve to a parent artifact whose digest matches |
+| Declared | Is a syntactically bounded pointer present in the correct field? | Yes. |
+| Canonical | Is the pointer array sorted, unique, and free of forbidden floating aliases? | Yes, for selected arrays. |
+| Role-separated | Is the same pointer prevented from silently serving conflicting roles? | Bounded cross-role check. |
+| Artifact-bound | Does a declared EvidenceBundle ref have a matching declared artifact role? | Yes, declaration-level only. |
+| Resolved | Does the target exist under the authoritative resolver? | No. |
+| Integrity-verified | Do target bytes match their digest and profile? | No. |
+| Authenticated | Are signer/reviewer/issuer identities trusted for the exact subject and scope? | No. |
+| Policy-admissible | Is the target allowed for this operation, audience, time, and purpose? | No. |
+| Release-authorized | Did accountable authority approve and apply the transition? | No. |
+| Public-usable | Is the released carrier propagated and allowed for governed clients? | No. |
 
-### 6.1 The "resolves, not just references" rule
+The strict schema encodes those absent authority states as `false` rather than leaving them ambiguous.
 
-**CONFIRMED doctrine** (Atlas §24.6.2): A transition (and therefore a release manifest at the data layer) is closed only when *every required artifact resolves — not merely references — the artifacts it depends on*. The data-model implication: a `ReleaseManifest` whose `evidence_refs[]` contains even one unresolvable pointer is **not a valid release manifest**, even if it parses against the schema. The schema catches shape; resolution catches reality.
+### 6.2 Current reference families
 
-### 6.2 What "resolve" means operationally
+| Field/reference family | Declared purpose | Current check |
+|---|---|---|
+| `source_descriptor_refs[]` | Source identity and role context | Required, canonical array; no dereference. |
+| `evidence_bundle_refs[]` | Resolved support target | Required and must match declared `EVIDENCE_BUNDLE` artifacts; no evidence resolution. |
+| `policy_decision_refs[]` | Policy results relevant to release | May be required for public intent; no policy execution/authentication. |
+| `promotion_decision_refs[]` | Accountable transition decisions | May be required for public intent; no decision authentication. |
+| `review_record_refs[]` | Review support | May be required for public intent; no actor or assignment authentication. |
+| `catalog_refs[]` | Catalog closure | Canonical array; no STAC/DCAT/PROV closure proof. |
+| `proof_refs[]` | Proof support | Canonical array; no proof verification. |
+| `receipt_refs[]` | Process memory | Required canonical array; no receipt authenticity proof. |
+| `attestation_refs[]` | Signature/provenance support | Canonical array; no signature or trust-root verification. |
+| `lineage.*` | Predecessor, correction, withdrawal, rollback pointers | Local temporal/relationship checks only. |
+| `provenance.run_receipt_ref` | Run that assembled/evaluated candidate | Declared and one exact duplicate role is intentionally allowed; no execution authentication. |
 
-A reference resolves when:
+### 6.3 EvidenceRef rule
 
-1. The target exists at the named content-addressed location.
-2. Its recomputed `spec_hash` matches the reference's expected digest.
-3. It is not tombstoned (see §10).
-4. The dependency cycle is acyclic (a release manifest cannot transitively reference itself).
+For consequential claims, `EvidenceRef` should resolve to an admissible `EvidenceBundle` before release or outward `ANSWER`. A manifest pointer does not make the target evidence true, current, rights-compatible, public-safe, or sufficient for the claim.
+
+### 6.4 Public-safe diagnostics
+
+Reference failures should emit stable codes and bounded paths, not raw untrusted values, private reviewer notes, restricted source URLs, secrets, or sensitive exact locations. Current manifest tests explicitly check that untrusted title values are not reflected in diagnostics.
 
 ---
 
 ## 7. The ReleaseManifest as graph root
 
-### 7.1 Identity
+The old page called `ReleaseManifest` the authoritative graph root. Current evidence supports a narrower statement:
 
-**CONFIRMED doctrine** (Atlas KFM-P7-PROG-0003 *ReleaseManifest as the publishable artifact*, NI-425): *When the gate allows promotion to PUBLISHED, it emits a ReleaseManifest: a single, signed, hashable JSON object listing every dataset, bundle, and tile archive included in the release.*
+> **A mature `ReleaseManifest` should bind one release identity to an artifact inventory and resolvable trust references. The current strict profile is an inactive fixture-only candidate envelope, not an authoritative released graph root.**
 
-### 7.2 Required content (PROPOSED shape)
+### 7.1 Dual-profile schema
 
-| Field | Purpose |
-|---|---|
-| `release_id` | Stable identifier for this release |
-| `spec_hash` | Self-digest (excluding the `spec_hash` field itself; see §3.4) |
-| `contents[]` | List of every dataset, bundle, tile archive, layer manifest, with stable IDs |
-| `digests` | `spec_hash` per element in `contents[]` |
-| `evidence_refs[]` | Pointers to backing EvidenceBundles |
-| `policy_decision_ref` | The PolicyDecision authorizing the release |
-| `promotion_decision_ref` | The PromotionDecision recording gate outcomes |
-| `review_record_ref` | The ReviewRecord if materiality required one |
-| `rollback_target` | Stable ID of the prior release this one can revert to |
-| `correction_path` | How a correction will be issued (`supersession` vs `in-place amendment`) |
-| `signatures` | cosign / DSSE signatures |
-| `signer_identity` | Release-authority identity binding |
-| `time` | UTC timestamp of release decision |
-| `release_index_entries[]` | Pass 15 addendum: per-content entries with `dataset_id`, `spec_hash`, `run_receipt`, `SPDX`, `timestamp`, `evidence_bundle_digest` |
-| `prior_release_ref` | Pointer to the prior release in the sequence (forms the release chain) |
-
-### 7.3 The ReleaseManifest ↔ delta_manifest relationship
-
-**PROPOSED disposition** (Atlas KFM-P7-PROG-0003 expansion direction): *Define the ReleaseManifest as the union of the included delta_manifest references; the delta manifest is per-product, the release manifest is per-release.*
-
-| Object | Granularity | Lives in |
+| Profile | Machine shape | Trust posture |
 |---|---|---|
-| `ReleaseManifest` | Per-release (the envelope) | `release/manifests/` |
-| `delta_manifest` / `TileArtifactManifest` | Per-product (one tile artifact, one PMTiles archive, one COG) | `data/published/.../` (PROPOSED) |
-| `LayerManifest` | Per-layer composition | `data/published/.../` (PROPOSED) |
-| `StyleManifest` | Per-style | `data/published/.../` (PROPOSED) |
-| `MapReleaseManifest` | Per-map release; subtype of `ReleaseManifest` | `release/manifests/` |
+| Legacy minimal | Requires only `id`; optional `spec_hash` and `version`; allows undeclared fields. | Compatibility debt. It does not prove release completeness or safety. |
+| `RELEASE_MANIFEST_FIXTURE_V1` | Closed object with identity, artifact inventory, refs, scope, temporal, lineage, provenance, and governance fields. | `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, `CANDIDATE`; candidate validation only. |
 
-This **PROPOSED** layering resolves the corpus's note that "the relationship between a ReleaseManifest and a delta_manifest (per-tile-set) is not fully resolved; both exist in the corpus and overlap." The disposition above keeps both, with the manifest as union.
+The `oneOf` design prevents strict objects from silently falling through the legacy branch because the legacy branch excludes objects that require `object_type`.
+
+### 7.2 Strict candidate field families
+
+| Family | Current field surface | Current authority limit |
+|---|---|---|
+| Identity | `id`, `spec_hash`, `release_id`, `release_version`, `title` | Deterministic candidate identity, not final release identity or approval. |
+| State | `lifecycle_state: CANDIDATE`; `release_state: CANDIDATE|HELD|DEGRADED` | No `PUBLISHED` state in strict profile. |
+| Contents | `artifact_count`, `artifacts[]` with ref/digest/media type/role | Declared inventory; bytes not read or verified. |
+| Sources/evidence | SourceDescriptor and EvidenceBundle refs | Declared support; targets not resolved. |
+| Decisions/review | Policy, promotion, and review refs | Declared prerequisites; not authenticated. |
+| Catalog/proof/receipts | Catalog, proof, receipt, attestation refs | Declared trust links; not verified. |
+| Exposure | Audience, rights, sensitivity, generalization, transform receipts | Declared posture; does not authorize public use. |
+| Time | Assembly and optional effective interval | Local ordering only. |
+| Lineage | Predecessor, corrections, withdrawal, rollback | Local relationship checks; no recovery application. |
+| Provenance | Run receipt and validator implementation path | Declared process binding. |
+| Governance | Nine booleans fixed to `false` | Explicitly denies authority creation. |
+
+### 7.3 Artifact roles
+
+The strict schema currently permits:
+
+`DATASET`, `EVIDENCE_BUNDLE`, `LAYER_MANIFEST`, `TILE_ARCHIVE`, `CATALOG`, `REPORT`, `API_PAYLOAD`, `PROOF`, and `OTHER`.
+
+An artifact entry includes:
+
+- opaque `artifact_ref`;
+- exact `sha256:<hex>` digest declaration;
+- media type;
+- bounded role.
+
+This is not a carrier-byte verifier. A future production profile must specify how physical bytes, external stores, OCI objects, PMTiles/COG/GeoParquet assets, catalogs, and API snapshots are fetched and verified without making the manifest a payload store.
+
+### 7.4 Public-intended candidate checks
+
+For `release_scope.audience: PUBLIC`, the current validator requires declared:
+
+- approved rights;
+- public-safe or transform-required sensitivity posture;
+- EvidenceBundle refs;
+- policy decision refs;
+- promotion decision refs;
+- review record refs.
+
+When sensitivity is `TRANSFORM_REQUIRED`, output must be declared generalized and transform receipt refs must be present.
+
+These checks are necessary declarations, not proof of resolution or approval.
+
+### 7.5 Current finite outcome
+
+`validate_release_manifest.py` emits `PASS`, `FAIL`, or `ERROR` with:
+
+```json
+{
+  "authority_created": false,
+  "file": "fixture:valid:valid_public_candidate",
+  "findings": [],
+  "outcome": "PASS",
+  "scope": "release-manifest-fixture-only-v1"
+}
+```
+
+The example is illustrative of the output shape. A `PASS` does not create or modify a release.
 
 ---
 
 ## 8. Release-class shape variants
 
-Different release classes specialize the ReleaseManifest with class-specific required content. Each variant is **PROPOSED** unless otherwise noted.
+The repository already distinguishes a generic release manifest from map-specific and other carrier-specific profiles. That does not establish a production inheritance model.
 
-| Variant | Class-specific required content |
-|---|---|
-| **Data release** | At least one EvidenceBundle; one or more dataset entries with `dataset_id` + `spec_hash` |
-| **Map release** *(`MapReleaseManifest`)* | At least one LayerManifest, StyleManifest, and TileArtifactManifest; plugin-pin attestation; render-budget probe result |
-| **Scene release** *(`SceneManifest` envelope)* | At least one Scene Manifest; Reality Boundary Note for any synthetic input; 3D Admission Decision; plugin-admission attestation |
-| **Frontier Matrix release** *(`MatrixReleaseManifest`)* | At least one MatrixCellReceipt; GeographyVersion pin; AggregationReceipt per matrix cell that computed from underlying records |
-| **AI release** | An `AIReceipt` per published Focus Mode template; CitationValidationReport pass; AI surface steward review |
-| **Story / Export release** | StorySnapshot or ExportReceipt; embedded `release_refs[]` pointing to the data releases the story / export cites |
+### 8.1 Current and adjacent profiles
 
-> [!NOTE]
-> Variants do not relax the base requirements. A scene release still needs an EvidenceBundle for every scene component; an AI release still needs the underlying data releases to be in PUBLISHED state. Variants *add* requirements; they never remove them.
+| Surface | Purpose | Current posture |
+|---|---|---|
+| `release_manifest.schema.json` | Generic dual-profile release candidate shape | Fixture-only strict branch plus permissive legacy compatibility. |
+| `map_release_manifest.schema.json` | Map-specific release shape | Repository-present; maturity and relationship to the generic profile require separate verification. |
+| `LayerManifest` / tile and geo-manifest families | Renderer/delivery artifact declarations | Adjacent contracts/schemas/docs; do not replace the release decision. |
+| Domain release indexes/candidate READMEs | Domain-facing planning and navigation | Mixed guidance/scaffold maturity; no payload or release implied. |
+| `release/manifests/` and `release/manifest/` | Competing collection lanes | Path convention remains conflicted; no move in this change. |
+
+### 8.2 Recommended extension rule
+
+A future profile should extend a common release binding only when:
+
+1. the shared semantic contract is accepted;
+2. the shared machine schema has a stable compatibility policy;
+3. the extension adds carrier/domain fields without weakening shared invariants;
+4. validators prove both base and extension closure;
+5. profile identity and canonicalization domain are explicit;
+6. public consumers can distinguish profiles safely;
+7. correction and rollback work across the extension;
+8. an ADR or accepted contract records any authority-changing split.
+
+Avoid copy-pasted “release manifests” that diverge by domain without a shared compatibility contract.
+
+### 8.3 Release class is not exposure class
+
+A map release, report release, API snapshot, dataset bundle, story export, or model-derived artifact may use different carrier profiles. Each still requires independent rights, sensitivity, evidence, policy, review, release, correction, and rollback closure appropriate to consequence.
 
 ---
 
 ## 9. Delta and patch governance
 
-**CONFIRMED doctrine** (Atlas KFM-P28-IDEA-0015 *PMTiles delta and patch governance*; KFM-P5-PROG-0003 *DeltaTileIndex with BAO/BLAKE3 verified streaming*; KFM-P28-PROG-0020 `pmtiles_delta_manifest.schema.json`): When publication moves through deltas rather than full re-pushes, the delta itself is a typed object with its own identity and validation rules.
+The old page described delta manifests, BLAKE3 leaves, Bao roots, and PMTiles patch verification as though they were current release-model behavior. That is not supported by the inspected implementation.
 
-### 9.1 DeltaTileIndex shape (PROPOSED, KFM-P5-PROG-0003)
+### 9.1 Current bounded result
 
-```text
-{
-  "object_type": "DeltaTileIndex",
-  "schema_version": "v1",
-  "tileset":   "<tileset_id>",
-  "spec_hash": "<JCS+SHA-256 over the index minus this field>",
-  "chunks": [
-    {"id": "<chunk_id>", "offset": <int>, "length": <int>, "blake3": "<hex>"}
-  ],
-  "root_hash":        "<BAO root over the artifact bytes>",
-  "delta_base_hash":  "<spec_hash of the parent artifact>",
-  "byte_ranges_manifest": "<incremental patch verification info>"
-}
-```
+- The generic strict `ReleaseManifest` accepts artifact digests in SHA-256 form.
+- No Merkle construction is required by that schema.
+- No BLAKE3 or Bao verifier is part of the current strict manifest validator.
+- No accepted delta-manifest layering decision was verified for this page.
+- PMTiles, COG, GeoParquet, catalog, and related artifact-specific integrity work remains in separate standards, manifest, tool, and proof lanes.
 
-### 9.2 Required edges from delta to manifest
+### 9.2 Requirements for a future delta profile
 
-| Edge | Rule |
+A delta or patch may graduate only when it records and proves:
+
+| Requirement | Reason |
 |---|---|
-| `delta_base_hash` → parent artifact | **PROPOSED required** (KFM-P28-IDEA-0015): patches lacking base-hash linkage are denied at the validator |
-| Delta → enclosing `ReleaseManifest` | The release manifest must list the delta by `spec_hash` in `contents[]` and reference its `delta_base_hash` in the chain |
-| Delta → `RunReceipt` for the build | `verify_status`, `verify_time_ms`, `root_hash` must be recorded |
-| Delta → cosign signature | The DeltaTileIndex (or its sidecar) must be cosign-signed before publication |
+| Base release and base artifact digest | Prevent application to the wrong parent. |
+| Target release and target artifact digest | Bind the intended result. |
+| Patch profile/version/tool identity | Make replay and compatibility inspectable. |
+| Complete changed-range or chunk manifest | Prevent hidden or omitted byte regions. |
+| Deterministic reassembly | Enable independent verification. |
+| Final full-object digest | Patch validity is subordinate to the target artifact identity. |
+| Rights/sensitivity equivalence or reevaluation | A small byte delta can change public-safety posture materially. |
+| Correction and rollback lineage | Patches must not erase release history. |
+| Fail-closed client behavior | Partial verification must never be treated as complete release verification. |
 
-### 9.3 What clients verify at activation
+### 9.3 Patch is not release
 
-**PROPOSED runtime contract** (KFM-P5-PROG-0003): A client receives the sidecar, recomputes `BLAKE3` over fetched byte ranges, checks against the `root_hash`, and emits a `VerifyReceipt` (`{digest_verified, bounds_verified, schema_verified, root_hash, tileset, capability_issued}`). Activation is forbidden if verification fails.
+A delta may reduce transport cost. It does not reduce the evidence, policy, review, release, correction, or rollback burden. The release model should bind the reconstructed full artifact, not merely attest that a patch file exists.
 
 ---
 
 ## 10. Supersession as graph evolution
 
-**CONFIRMED doctrine** (Atlas §24.8.2): A release is not a leaf in the graph — it is a node with both forward edges (to its contents) and a chain of past versions. Supersession is how the graph evolves without losing audit.
+### 10.1 Append-only principle
 
-### 10.1 The supersession rules per object class
-
-| Object class | Supersession rule | Required lineage artifact |
-|---|---|---|
-| **SourceDescriptor** | Replaced by newer descriptor; old retained with `superseded_by` link | Supersession entry in source register |
-| **EvidenceBundle** | Replaced when corrected; old retained for audit | EvidenceBundle + CorrectionNotice + supersession link |
-| **GeographyVersion** | Replaced by newer version; both versions remain queryable for time-bound claims | Version register entry + crosswalk |
-| **Schema** (under `schemas/contracts/v1/...`) | Replaced via ADR; old retained | ADR + supersession link in schema header |
-| **Policy** | Replaced via accepted ADR; old retained | ADR + supersession link |
-| **ReleaseManifest** | Replaced by next release; rollback target remains valid | Manifest history + rollback chain |
-| **AIReceipt** | **Never superseded retroactively.** Old answer retained; new answer is a **new** receipt | Two distinct AIReceipts with cross-reference |
-| **Atlas / supplement** | Superseded by ADR-recorded new version; lineage retained | Supersession appendix in new edition |
-
-### 10.2 The release chain
+Published state changes through new typed records and new or superseding bindings, not silent in-place mutation.
 
 ```mermaid
 flowchart LR
-  classDef rel fill:#e8e2ff,stroke:#6f42c1,color:#3d2a78
-  classDef corr fill:#fdecea,stroke:#b22222,color:#7a0e0e
-
-  R1["ReleaseManifest v1<br/>(spec_hash=A)"]:::rel
-  R2["ReleaseManifest v2<br/>(spec_hash=B)<br/>prior_release_ref→A"]:::rel
-  R3["ReleaseManifest v3<br/>(spec_hash=C)<br/>prior_release_ref→B"]:::rel
-  RB["ReleaseManifest v3′<br/>(rollback target=A)<br/>rolls back from B"]:::corr
-  CN["CorrectionNotice<br/>(invalidates v2 derivatives)"]:::corr
-
-  R1 --> R2 --> R3
-  R2 -.->|"superseded by"| RB
-  RB -.->|"rollback_to"| R1
-  CN -.->|"invalidates[]"| R2
+  R1["Release record A"] --> R2["Release record B<br/>predecessor → A"]
+  R2 --> R3["Release record C<br/>predecessor → B"]
+  CN["CorrectionNotice"] -. affects .-> R2
+  RC["RollbackCard candidate"] -. targets .-> R1
+  WN["WithdrawalNotice"] -. withdraws .-> R3
 ```
 
-### 10.3 Tombstone as a typed object
+The diagram is architectural. Current operational correction, withdrawal, alias propagation, and rollback execution remain unproved.
 
-**CONFIRMED doctrine** (Pass-10 C5-09 *Tombstones for Reversible Revocation*): A revocation is **a new typed object**, not a deletion. The tombstone is appended to the ledger and:
+### 10.2 Current strict manifest lineage
 
-| Field | Purpose |
-|---|---|
-| `retracted_object_ref` | The object being retracted |
-| `reason` | Why it was retracted |
-| `superseded_by` | Pointer to the replacement object, if any |
-| `signer_identity` | Who authorized the tombstone |
-| `time` | UTC timestamp |
+The strict candidate requires:
 
-UI and API clients hide tombstoned items from public views; lineage and audit remain explorable.
+- nullable `previous_release_manifest_ref`;
+- unique `correction_refs[]`;
+- nullable `withdrawal_ref`;
+- required `rollback_ref`.
+
+If correction refs are present, a predecessor is required. These are local consistency checks; the validator does not resolve the chain or verify that the rollback target is safe.
+
+### 10.3 RollbackCard candidate
+
+The current proposed `RollbackCard` profile can represent:
+
+- `ROLLBACK_CANDIDATE`;
+- `WITHDRAWAL_CANDIDATE`;
+- `HOLD`;
+- `ERROR`.
+
+It declares affected/target releases, support refs, invalidation classes, restoration posture, correction linkage, timing, lineage, and explicit false governance flags. It does not execute rollback, mutate aliases/caches, erase history, or publish.
+
+### 10.4 CorrectionNotice maturity
+
+The current `CorrectionNotice` contract is draft. Its paired schema remains a permissive placeholder, the schema-declared validator was not found in the inspected contract evidence, and placement between `contracts/correction/` and release-family guidance is conflicted.
+
+Therefore this page does not claim machine-enforced correction closure. A production release model needs:
+
+- one accepted semantic and machine profile;
+- affected-object/release binding;
+- evidence and policy support;
+- public-safe reason and summary;
+- reviewer and release authority;
+- invalidation and successor/rollback behavior;
+- API/map/search/AI/cache propagation;
+- append-only public lineage.
+
+### 10.5 Tombstone and lawful erasure
+
+A tombstone should be a typed withdrawal/retraction record that preserves audit lineage. It must not be confused with hard deletion. Lawful erasure or protected-data removal can require stronger deletion behavior, but the public/system record should preserve the minimum safe, legal, non-leaking explanation and correction lineage allowed by policy.
 
 ---
 
 ## 11. Schema homes
 
-**PROPOSED schema-home convention** (Atlas §24.2 *PROPOSED schema home: each receipt class should be under `schemas/contracts/v1/receipts/` unless an ADR relocates it*; directory-rules §18.e OPEN-DR-13; KFM Encyclopedia §5.3):
+### 11.1 Current responsibility split
 
-| Object family | Proposed home |
+| Responsibility | Current home | Status/boundary |
+|---|---|---|
+| Release object meaning | `contracts/release/` | Mixed maturity; draft contracts. |
+| Correction object meaning | `contracts/correction/` | CorrectionNotice placement seam remains conflicted. |
+| Release machine shapes | `schemas/contracts/v1/release/` | Repository-present; object profiles have different maturity. |
+| Correction machine shapes | `schemas/contracts/v1/correction/` | CorrectionNotice schema remains permissive placeholder. |
+| Release admissibility policy | `policy/release/`, `policy/promotion/`, related accepted bundles | Current rule source/scaffolds are not an accepted active release policy system. |
+| Candidate fixtures | `fixtures/release/` and family-specific fixture lanes | Synthetic proof only. |
+| Validators | `tools/validators/release/`, `tools/validators/promotion_gate/` | Bounded checks; no release authority. |
+| Tests | `tests/release/`, `tests/validators/` | Behavior proof within declared scope. |
+| Process receipts | `data/receipts/` | Process memory; not proof or decision. |
+| Proof | `data/proofs/` | Support; not transition application. |
+| Release/correction/rollback records | `release/` | Canonical append-only decision plane. |
+| Public-safe carriers | `data/published/` | Immutable/released delivery bytes after authorization. |
+| Human architecture | `docs/architecture/` and `docs/architecture/publication/` | Explanation and navigation only. |
+| Standards guidance | `docs/standards/` | External profile interpretation; not internal object authority. |
+
+### 11.2 No new parallel homes
+
+This update creates no contract, schema, policy, source, evidence, receipt, proof, release, manifest, correction, rollback, or published-data home. It does not resolve existing `release/manifest/` versus `release/manifests/`, flat versus folder contract, correction-family, or publication-document overlap.
+
+### 11.3 Placement conflicts to preserve visibly
+
+| Conflict | Current disposition |
 |---|---|
-| All receipts (SourceDescriptor, RunReceipt, TransformReceipt, RedactionReceipt, AggregationReceipt, ModelRunReceipt, RepresentationReceipt, AIReceipt, ReviewRecord, ValidationReport, CitationValidationReport, …) | `schemas/contracts/v1/receipts/` |
-| Decision objects (PolicyDecision, PromotionDecision, PromotionReceipt) | `schemas/contracts/v1/policy/` |
-| Release-envelope objects (ReleaseManifest, MapReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice) | `schemas/contracts/v1/release/` |
-| Evidence objects (EvidenceBundle, EvidenceRef) | `schemas/contracts/v1/evidence/` |
-| Map / renderer artifacts (LayerManifest, StyleManifest, TileArtifactManifest, SceneManifest, TerrainModel, SyntheticSurface, ViewState, CameraPath) | `schemas/contracts/v1/maplibre/` |
-| 3D / asset artifacts (3DTileSet, glTFAsset, PointCloud, DigitalTwinView, RealityBoundaryNote, 3DAdmissionDecision) | `schemas/contracts/v1/3d/` |
-| Delta / patch artifacts (DeltaTileIndex, pmtiles_delta_manifest) | `schemas/contracts/v1/release/delta/` *(PROPOSED sub-home)* |
-| Frontier Matrix artifacts (MatrixCellReceipt, GeographyVersion, CountyYearPanel) | `schemas/contracts/v1/matrix/` *(PROPOSED)* |
-| Source-watch / Pre-RAW events | `schemas/contracts/v1/intake/` *(PROPOSED)* |
-| Story / export artifacts (StorySnapshot, ExportReceipt) | `schemas/contracts/v1/story/` *(PROPOSED)* |
-
-All homes are **PROPOSED** until verified in a mounted repo. The split between `maplibre/` and `3d/` is **PROPOSED** and tracked as directory-rules §18.e **OPEN-DR-13**.
+| Flat `release-model.md` / `release-discipline.md` versus `publication/` lane | Future convergence `HOLD`; same-path modernization only. |
+| `release/manifest/` versus `release/manifests/` | `CONFLICTED`; classify contents and consumers before migration. |
+| `contracts/release/release_manifest.md` versus folder-form contract material | `NEEDS VERIFICATION`; do not create another authority. |
+| `CorrectionNotice` under correction versus release semantic families | `CONFLICTED`; resolve through contract/ADR/migration evidence. |
+| Multiple A–G documents | `CONFLICTED`; ADR-0018 remains proposed. |
+| Release policy source under release-decision root or other drift lanes | Denied by current Directory Rules for new work; existing drift requires governed migration, not silent cleanup. |
 
 ---
 
 ## 12. Worked example (illustrative)
 
 > [!NOTE]
-> The example below is **illustrative**, not drawn from a real release. Object IDs and digests are placeholders.
+> This example is synthetic. It demonstrates current candidate declarations and the graduation gap; it is not a real Kansas release, release decision, or public artifact.
 
-A single Map release for a hypothetical *Cottonwood Falls 1888 — Settlements layer* might decompose into the following object graph:
+### 12.1 Fixture-level candidate
 
-```text
-ReleaseManifest                  release_id=rel-2026-05-24-001
-  spec_hash                      sha256:aaaa...
-  prior_release_ref              rel-2026-04-12-003
-  rollback_target                rel-2026-04-12-003
-  promotion_decision_ref         pd-2026-05-24-001
-  policy_decision_ref            polD-2026-05-24-001
-  review_record_ref              rev-2026-05-24-001
-  signer_identity                <release-authority-id>
-  contents[]:
-    ├── EvidenceBundle           bundle-cottonwood-1888  spec_hash=sha256:bbbb...
-    │     ├── SourceDescriptor   src-fed-census-1890     (role=observed)
-    │     ├── SourceDescriptor   src-kshs-newspaper-1888 (role=administrative)
-    │     ├── RunReceipt         run-2026-05-23-014
-    │     ├── TransformReceipt   tr-geom-reproject-001
-    │     ├── ValidationReport   val-2026-05-24-007  (passes[]=...)
-    │     ├── PolicyDecision     polD-bundle-2026-05-24
-    │     └── (CRM/PROV-O graph fragment with E5 Event, E21 Person, E53 Place)
-    ├── LayerManifest            lm-settlements-1888-v3  spec_hash=sha256:cccc...
-    │     ├── plugin_dependencies: pinned
-    │     ├── projection_compatibility: globe + mercator
-    │     └── evidence_refs[]   → EvidenceBundle bundle-cottonwood-1888
-    ├── StyleManifest            sm-settlements-historical-v2  spec_hash=sha256:dddd...
-    ├── TileArtifactManifest     pmtiles-settlements-1888.delta
-    │     ├── delta_base_hash    sha256:<parent-artifact-digest>
-    │     ├── root_hash          <BAO root>
-    │     └── verify_receipt_ref vr-2026-05-24-002
-    └── ReviewRecord             rev-2026-05-24-001  (steward + release authority)
+```json
+{
+  "object_type": "ReleaseManifest",
+  "schema_version": "1.0.0",
+  "profile_status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "id": "release-manifest:0123456789abcdef01234567",
+  "spec_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "release_id": "release:synthetic.example.v1",
+  "release_version": "1.0.0",
+  "title": "Synthetic public-safe example candidate",
+  "lifecycle_state": "CANDIDATE",
+  "release_state": "CANDIDATE",
+  "artifact_count": 2,
+  "artifacts": [
+    {
+      "artifact_ref": "artifact:synthetic:evidence-bundle:v1",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "media_type": "application/json",
+      "role": "EVIDENCE_BUNDLE"
+    },
+    {
+      "artifact_ref": "artifact:synthetic:pmtiles:v1",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "media_type": "application/vnd.pmtiles",
+      "role": "TILE_ARCHIVE"
+    }
+  ],
+  "source_descriptor_refs": ["source:synthetic:fixture"],
+  "evidence_bundle_refs": ["artifact:synthetic:evidence-bundle:v1"],
+  "policy_decision_refs": ["policy-decision:synthetic:public-safe"],
+  "promotion_decision_refs": ["promotion-decision:synthetic:approve"],
+  "review_record_refs": ["review:synthetic:independent"],
+  "catalog_refs": [],
+  "proof_refs": ["proof:synthetic:closure"],
+  "receipt_refs": ["receipt:synthetic:assembly"],
+  "attestation_refs": ["attestation:synthetic:build"],
+  "release_scope": {
+    "audience": "PUBLIC",
+    "rights_status": "APPROVED",
+    "sensitivity_status": "PUBLIC_SAFE",
+    "generalized": false,
+    "transform_receipt_refs": []
+  },
+  "temporal": {
+    "assembled_at": "2026-08-19T18:00:00Z",
+    "effective_from": null,
+    "effective_to": null
+  },
+  "lineage": {
+    "previous_release_manifest_ref": null,
+    "correction_refs": [],
+    "withdrawal_ref": null,
+    "rollback_ref": "rollback:synthetic:hold"
+  },
+  "provenance": {
+    "run_receipt_ref": "receipt:synthetic:assembly",
+    "validator_implementation_ref": "tools/validators/release/validate_release_manifest.py"
+  },
+  "governance": {
+    "references_resolved": false,
+    "artifacts_verified": false,
+    "policy_evaluated": false,
+    "review_authenticated": false,
+    "signatures_verified": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}
 ```
 
-A consumer pinning to `release_id=rel-2026-05-24-001` and `spec_hash=sha256:aaaa...` records exactly the manifest above. A later rollback to `rel-2026-04-12-003` is reachable through the manifest's `rollback_target` and through every prior manifest's `prior_release_ref`. A correction issued tomorrow becomes `rel-2026-05-25-001` with `prior_release_ref=rel-2026-05-24-001`, leaving today's release queryable forever via its digest.
+The displayed `id` and `spec_hash` are placeholders, so this exact example is **not expected to pass** deterministic identity validation. That is intentional: documentation must not present invented digests as verified values.
+
+### 12.2 What current validation could prove
+
+With correctly recomputed identity and a shape-consistent packet, current validation could prove:
+
+- closed strict schema shape;
+- deterministic candidate `spec_hash` and `id`;
+- canonical arrays and artifact count;
+- declaration-level EvidenceBundle artifact binding;
+- public-intended prerequisite declarations;
+- temporal and correction-predecessor consistency;
+- absence of floating `latest` refs and selected role collapse;
+- all authority flags remain false.
+
+### 12.3 What remains before a governed release
+
+```text
+resolve and authenticate every referenced target
+  -> verify actual artifact bytes and declared digests
+  -> evaluate accepted rights/sensitivity/release policy
+  -> authenticate reviewer roles and separation of duties
+  -> verify signatures/attestations under an accepted trust root
+  -> issue accountable PromotionDecision and release records
+  -> apply an idempotent transition
+  -> bind immutable public-safe carrier bytes and governed alias
+  -> propagate catalog/API/map/search/AI/cache state
+  -> prove correction and rollback behavior
+  -> retain append-only audit and public-safe notice lineage
+```
+
+Until those steps close, the correct state is candidate, hold, abstain, deny, or error—not release by implication.
 
 ---
 
 ## 13. Anti-patterns
 
-<details>
-<summary><strong>Click to expand: catalog of release-model anti-patterns</strong></summary>
-
 | Anti-pattern | Why it fails | Counter-rule |
 |---|---|---|
-| **Reference present, target missing** | Manifest parses but graph does not close | "Resolves, not just references" rule (§6.1) |
-| **`spec_hash` computed without canonicalization** | Two clients get different digests for the same bundle; verification breaks | JCS+SHA-256 default; URDNA2015 only when RDF semantics required; choice recorded in the object |
-| **`spec_hash` field included in its own hash input** | Computation non-terminating | `manifestSpecHash` exclusion at canonicalization time (§3.4) |
-| **`latest` pointer recorded as consumer binding** | Defeats content-addressing; rollback becomes destructive | Bind to `spec_hash`; resolve `latest` only inside governed API |
-| **Receipt overwritten in place** | Audit trail destroyed | Receipts are content-addressed and immutable; corrections produce *new* receipts with `superseded_by` |
-| **AIReceipt retroactively edited to "match" newer evidence** | Destroys the historical record of what the AI could say when | A new answer is a **new** AIReceipt; old retained with cross-reference (§10.1) |
-| **EvidenceBundle without `prov:wasGeneratedBy`** | Claim cannot answer "why do you say that"; provenance unwitnessed | PROV-O graph-layer policy gate fails closed on missing provenance |
-| **Delta without `delta_base_hash`** | Patch chain broken; client cannot verify lineage | Validator denies patches lacking base-hash linkage (KFM-P28-IDEA-0015) |
-| **Renderer-shaped artifact landing in `schemas/contracts/v1/3d/`** (or vice versa) | Schema-home boundary blurred; OPEN-DR-13 unresolved | Apply §11 split; resolve via ADR |
-| **ReleaseManifest without `rollback_target`** | Release cannot be reversed | Release gate fails closed; reason code `ROLLBACK_TARGET_MISSING` |
-| **Tombstone implemented as hard delete** | Investigators cannot trace what was retracted | Tombstone is a typed object (§10.3); erasure only when legally required |
-| **Multiple manifests claim the same `release_id`** | Release identity collision; consumers cannot pin | `release_id` is unique; supersession uses new `release_id` + `prior_release_ref` link |
-| **`evidence_refs[]` points at a tombstoned bundle** | Bundle hidden but still authoritative-by-pointer | Tombstone surfaces at resolution; manifest using tombstoned bundle fails closed |
-| **Manifest signed but `policy_decision_ref` missing** | Attestation without authorization | Signature is necessary but not sufficient; PolicyDecision must accompany |
-
-</details>
+| Calling a schema-valid candidate a release | Shape is not authority. | Preserve candidate/decision/application/publication separation. |
+| Treating legacy id-only validation as completeness | Permissive compatibility branch omits release requirements. | Surface branch identity and require the appropriate profile explicitly. |
+| Treating a declared ref as resolved | Pointer presence does not prove target existence, integrity, authority, or admissibility. | Resolve, verify, authenticate, and policy-check through governed services. |
+| Calling every trust object a receipt | Erases the difference between process memory, proof, review, decision, manifest, and release state. | Use the object-family taxonomy in §4. |
+| Using `spec_hash` as release identity | Content digest and release decision identity answer different questions. | Keep content, activity, object, reference, and release identities separate. |
+| Recording `latest` as a durable binding | Floating aliases defeat deterministic replay and rollback. | Resolve aliases to immutable release/carrier identities and record the resolved binding. |
+| Including stored `id` or `spec_hash` in its own manifest hash subject | Creates recursive/unstable identity. | Use the object-family projection implemented by the validator. |
+| Claiming URDNA2015, Merkle, BLAKE3, Bao, DSSE, SLSA, Sigstore, OCI, or IPFS conformance without implementation evidence | Proposal-era technologies become false current facts. | Mark them PROPOSED and require contract, schema, implementation, fixtures, tests, workflow, and operational proof. |
+| Treating `PromotionReceipt` as `PromotionDecision` | Attempt receipt is not accountable authorization. | Keep the receipt, readiness result, decision, manifest, and applied transition distinct. |
+| Treating `transition.applied: true` as execution proof | A declaration can be internally consistent and still unauthenticated or unexecuted. | Require append-only release records and side-effect evidence from an authorized operator. |
+| Treating workflow success as publication | CI proves only its declared check scope. | Require release authority and public-delivery evidence separately. |
+| Storing payloads under `release/` | Collapses decision records and carrier bytes. | Keep public-safe payloads under governed `data/published/` or accepted external storage. |
+| Storing policy source under `release/` | Creates parallel authority and invalid dependency direction. | Use canonical `policy/`; migrate existing drift only through reviewed, reversible change. |
+| Silent correction or manifest edit | Destroys audit and consumer reproducibility. | Append CorrectionNotice/new manifest/release lineage and propagate invalidation. |
+| Rollback card without execution evidence | Candidate plan is misrepresented as recovery. | Distinguish plan, decision, execution receipt, restored state, invalidation, and public parity. |
+| Browser-side policy or direct canonical-store read | Bypasses the trust membrane and may leak restricted data. | Public clients consume governed APIs and released public-safe carriers only. |
+| Documentation migration during semantic modernization | Combines content repair with unresolved authority/compatibility change. | Keep this update same-path; leave publication-lane convergence on HOLD. |
 
 ---
 
 ## 14. Verification backlog
 
-| Item | Evidence that would settle it | Status |
+### P0 — authority and operational safety
+
+| Item | Evidence required to close | Current status |
 |---|---|---|
-| `schemas/contracts/v1/release/release_manifest.schema.json` present with §7.2 field set | Mounted schema file | **NEEDS VERIFICATION** |
-| `schemas/contracts/v1/release/rollback_card.schema.json` present | Mounted schema file | **NEEDS VERIFICATION** |
-| `schemas/contracts/v1/release/correction_notice.schema.json` present | Mounted schema file | **NEEDS VERIFICATION** |
-| `schemas/contracts/v1/receipts/` directory present with one schema per receipt class in §4.1 | Mounted directory tree | **NEEDS VERIFICATION** |
-| `schemas/contracts/v1/evidence/evidence_bundle.schema.json` present with §4.2 JSON-LD field set | Mounted schema file | **NEEDS VERIFICATION** |
-| `schemas/contracts/v1/release/delta/pmtiles_delta_manifest.schema.json` present | Mounted schema file | **NEEDS VERIFICATION** |
-| ADR confirming JCS+SHA-256 vs URDNA2015 default canonicalization (Pass-10 C8-05) | Accepted ADR | **PROPOSED** |
-| ADR formalizing `manifestSpecHash` self-exclusion rule (§3.4) | Accepted ADR | **PROPOSED** |
-| ADR resolving the ReleaseManifest ↔ delta_manifest layering (§7.3) | Accepted ADR | **PROPOSED** |
-| ADR resolving schemas/contracts/v1/maplibre/ vs /3d/ split (directory-rules §18.e OPEN-DR-13) | Accepted ADR | **PROPOSED open** |
-| `kfm:` namespace IRI base and versioning strategy (Pass-10 C.3 item 1) | Accepted ADR | **UNKNOWN** |
-| Versioned EvidenceBundle schema (`kfm-bundle/1.0`) and reference verifier shipped in Python + Go (Pass-10 C8-04 expansion) | Schema + tools | **PROPOSED** |
-| Reference resolution verifier ("resolves, not just references") wired in CI (§6.1) | CI workflow + integration test | **PROPOSED** |
-| `release_index_entries[]` Pass 15 addendum fields confirmed in schema | Mounted schema | **NEEDS VERIFICATION** |
-| StorySnapshot / ExportReceipt schema home and retention policy (ADR-S-11) | Accepted ADR | **PROPOSED open** |
-| Stale-state propagation cross-lane rule (ADR-S-10) | Accepted ADR | **PROPOSED open** |
-| This file's canonical path `docs/architecture/release-model.md` | Mounted `docs/architecture/` tree + README index | **PROPOSED** |
+| Accept or revise the final promotion-readiness sequence | Accepted ADR resolving A–G scope, names, mappings, and compatibility | `PROPOSED / CONFLICTED` |
+| Activate one release-policy profile safely | Accepted bundle/evaluator/entrypoint, native tests, digest binding, normalized outcomes, replay, governed consumer | `HOLD` |
+| Define accountable release and review authority | Authenticated role registry, subject/scope binding, independent-review enforcement, correction/incident ownership | `NEEDS VERIFICATION` |
+| Resolve EvidenceRef/EvidenceBundle and support refs | No-network fixture resolver plus production adapter, finite outcomes, digest binding, policy/release checks | `PARTIAL elsewhere / production HOLD` |
+| Verify carrier bytes and signatures | Accepted artifact loader, digest profile, trust root, signature/attestation verifier, negative tests | `UNKNOWN / PROPOSED` |
+| Apply transition through append-only release records | Idempotent operator, state machine, decision binding, side-effect receipts, alias safety, no partial commit | `HOLD` |
+| Prove correction and rollback end to end | Correction/withdrawal/rollback profiles, invalidation propagation, restoration, public notice, replay and drill evidence | `PARTIAL fixture-first / operational HOLD` |
+| Preserve trust membrane | Tests proving public clients cannot reach candidate/internal stores or direct model/policy surfaces | `NEEDS VERIFICATION per consumer` |
 
-> [!NOTE]
-> All file paths in this document are **PROPOSED** per directory-rules. Verify against a mounted repo before linking from neighboring docs.
+### P1 — profile and compatibility closure
 
-[Back to top](#release-model--architecture)
+| Item | Evidence required to close | Current status |
+|---|---|---|
+| Deprecate or constrain legacy ReleaseManifest branch | Inventory of consumers/instances, compatibility fixtures, migration guide, ratchet, rollback | `OPEN` |
+| Accept production ReleaseManifest profile | Contract/schema version, mandatory refs, canonicalization, signatures, rights/sensitivity, correction/rollback, validators | `PROPOSED` |
+| Resolve generic versus map/domain manifest extension | Accepted extension contract, cross-profile tests, consumer discrimination, no weakened invariants | `OPEN` |
+| Resolve `release/manifest/` vs `release/manifests/` | Complete object/consumer inventory, canonical lane decision, migration manifest, aliases, rollback | `CONFLICTED` |
+| Resolve flat/folder release contract overlap | Content/identity/consumer comparison and single writable authority | `NEEDS VERIFICATION` |
+| Resolve CorrectionNotice family placement and profile | Accepted semantic home, closed schema, fixtures, validator, policy/release integration | `CONFLICTED / PARTIAL` |
+| Define release identity/version grammar | Accepted contract/ADR separating release ID, version, digest, predecessor, correction, withdrawal, rollback | `OPEN` |
+| Define reference resolver protocol | Stable ref grammar, target authority, integrity/authentication state, bounded diagnostics, cache rules | `OPEN` |
+
+### P2 — integrity, interoperability, scale, and operations
+
+| Item | Evidence required to close | Current status |
+|---|---|---|
+| Merkle/chunk/delta profile | Accepted threat model, format, canonical leaves, full-object digest, verifier parity, migration | `PROPOSED` |
+| STAC/DCAT/PROV closure | Accepted profile mappings, deterministic emitter, cross-profile identity tests, correction/withdrawal propagation | `PARTIAL synthetic proof / production HOLD` |
+| OCI/ORAS or external artifact storage | Accepted rights/security/storage profile, digest pinning, retention, outage and rollback behavior | `UNKNOWN` |
+| Release registry and immutable alias service | Authenticated registry, atomic compare-and-set, history, rollback, cache invalidation, audit | `UNKNOWN` |
+| Cross-language verification | Python plus at least one independent implementation and shared vectors | `PROPOSED` |
+| Operational observability | Release dashboards, finite health states, incident/correction triggers, no sensitive leakage | `UNKNOWN` |
+| Recovery objectives and drills | Measured RTO/RPO, rollback and withdrawal drills, downstream parity checks | `UNKNOWN` |
+
+### Documentation convergence hold
+
+The flat release model/discipline pages and publication lane overlap. A later structural change must close:
+
+1. source and target document identities;
+2. complete no-loss content comparison;
+3. inbound links and fragment consumers;
+4. generated/writer dependencies;
+5. one accepted survivor responsibility;
+6. compatibility/redirect or explicit no-redirect decision;
+7. changed-area and repository-wide documentation validation;
+8. temporary-name case-safe migration where applicable;
+9. exact rollback instructions.
+
+No move, rename, redirect, mirror, supersession, or deletion occurs through this update.
 
 ---
 
 ## 15. Related docs
 
-- `docs/architecture/README.md` — architecture index *(TODO: link verify)*
-- `docs/architecture/release-discipline.md` — process companion: gates, separation of duties, workflows *(authored prior; PROPOSED path)*
-- `docs/architecture/governed-api.md` — the surface that resolves manifests for public clients *(PROPOSED)*
-- `docs/architecture/contract-schema-policy-split.md` — meaning vs shape vs admissibility *(PROPOSED)*
-- `docs/architecture/planetary-3d.md` — Scene Manifest / Reality Boundary Note specifics *(authored prior; PROPOSED path)*
-- `docs/architecture/maplibre-3d.md` — renderer-side LayerManifest / StyleManifest / TileArtifactManifest realization *(authored prior; PROPOSED path)*
-- `docs/architecture/people-place-joins.md` — sibling lane doc; join releases sit on this model *(authored prior; PROPOSED path)*
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED governance *(PROPOSED)*
-- `docs/doctrine/trust-membrane.md` — public-path constraints *(PROPOSED)*
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default *(PROPOSED)*
-- `docs/standards/PROV.md` — W3C PROV-O + PAV profile *(CONFIRMED authored prior; naming variance vs `PROVENANCE.md` tracked at directory-rules §18 OPEN-DR-01)*
-- `docs/standards/SIGNING.md` — signing and attestation profile *(PROPOSED in corpus Pass-10 C1-03; not yet authored)*
-- `directory-rules.md` — root-folder authority boundaries
+### Primary current sources
+
+- [`README.md`](README.md) — `docs/architecture/` authority and navigation contract.
+- [`document-convergence-plan.md`](document-convergence-plan.md) — provisional convergence ledger; structural work remains unexecuted.
+- [`publication/README.md`](publication/README.md) — repository-grounded publication-lane orientation and gate-vocabulary conflict register.
+- [`identity-and-spec-hash.md`](identity-and-spec-hash.md) — current content identity, wire grammar, and migration boundary.
+- [`contract-schema-policy-split.md`](contract-schema-policy-split.md) — meaning, shape, admissibility, behavior, and proof separation.
+- [`../standards/RELEASE_MANIFEST.md`](../standards/RELEASE_MANIFEST.md) — current repository profile and external-standards boundary.
+- [`../../contracts/release/release_manifest.md`](../../contracts/release/release_manifest.md) — `ReleaseManifest` semantic contract.
+- [`../../schemas/contracts/v1/release/release_manifest.schema.json`](../../schemas/contracts/v1/release/release_manifest.schema.json) — current dual-profile machine shape.
+- [`../../tools/validators/release/validate_release_manifest.py`](../../tools/validators/release/validate_release_manifest.py) — bounded strict-candidate validator.
+- [`../../tests/validators/test_validate_release_manifest.py`](../../tests/validators/test_validate_release_manifest.py) — focused fixture, parser, identity, and no-network tests.
+- [`../../.github/workflows/release-manifest.yml`](../../.github/workflows/release-manifest.yml) — read-only fixture workflow.
+- [`../../contracts/release/promotion_receipt.md`](../../contracts/release/promotion_receipt.md) — proposed attempt-receipt semantics.
+- [`../../schemas/contracts/v1/release/promotion_receipt.schema.json`](../../schemas/contracts/v1/release/promotion_receipt.schema.json) — exact A–G receipt shape.
+- [`../../contracts/release/rollback_card.md`](../../contracts/release/rollback_card.md) — fixture-first non-executing recovery candidate contract.
+- [`../../contracts/correction/correction_notice.md`](../../contracts/correction/correction_notice.md) — draft correction semantics and current profile gap.
+- [`../../policy/release/README.md`](../../policy/release/README.md) — release policy boundary and inactive scaffold status.
+- [`../../release/README.md`](../../release/README.md) — canonical append-only release decision root and current maturity.
+- [`../../tools/release/release_dry_run.py`](../../tools/release/release_dry_run.py) — bounded five-case publication-denial helper.
+- [`../../.github/workflows/release-dry-run.yml`](../../.github/workflows/release-dry-run.yml) — read-only candidate/readiness/rollback-card workflow boundary.
+
+### Decision and doctrine boundaries
+
+- [`../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md`](../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md) — proposed identity grammar; not current write authority.
+- [`../adr/ADR-0018-promotion-gate-sequence.md`](../adr/ADR-0018-promotion-gate-sequence.md) — proposed final-readiness sequence; records vocabulary conflict and holds.
+- [`../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted placement decision.
+- [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) — accepted placement authority.
+- [`../doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle invariant.
+- [`../doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — governed public-path boundary.
+
+### Overlapping pages retained pending convergence
+
+- [`release-discipline.md`](release-discipline.md) — proposal-era process companion; do not treat its older runtime/signing assertions as current proof.
+- [`publication/release-objects.md`](publication/release-objects.md) — proposal-era object catalog; mixed-maturity paths and gate mappings require reconciliation.
+- [`publication/RELEASE_GATES.md`](publication/RELEASE_GATES.md) and [`publication/promotion-gates.md`](publication/promotion-gates.md) — competing gate narratives recorded, not silently normalized.
 
 ---
 
-<sub>Last updated · 2026-05-25 &nbsp;·&nbsp; Doc class · architecture &nbsp;·&nbsp; Status · draft &nbsp;·&nbsp; <a href="#release-model--architecture">Back to top ↑</a></sub>
+## Validation and maintenance
+
+### Focused repository-native checks
+
+Run after changing this page in a mounted checkout:
+
+```bash
+python tools/validators/docs/meta-block/validate_meta_blocks.py \
+  docs/architecture/release-model.md
+python tools/validators/docs/link-check/check_links.py \
+  docs/architecture/release-model.md
+python tools/validators/docs/document-graph/validate_document_graph.py
+python tools/validators/directory_governance/validate_repository_topology.py
+```
+
+Tool names and CLI arguments should be rechecked against the exact branch before execution; the commands above are repository-path derived, not claimed as executed in this authoring step.
+
+The directly related implementation checks are:
+
+```bash
+python -m unittest tests.validators.test_validate_release_manifest -v
+python tools/validators/release/validate_release_manifest.py --fixtures
+python -m unittest -q tests.release.test_promotion_receipt
+python tools/validators/release/validate_promotion_receipt.py --fixtures
+python tools/release/release_dry_run.py --pretty
+```
+
+A green result proves only each tool's declared bounded scope.
+
+### Review burden
+
+Material review should include:
+
+- documentation/architecture review for scope, anchors, and convergence boundaries;
+- release/contracts/schemas review for accurate object-family descriptions;
+- evidence/policy/review/security review for no authority inflation;
+- correction/rollback review for append-only recovery semantics;
+- validation/CI review for exact command and workflow claims;
+- independent release stewardship when an operational profile is proposed.
+
+### Maintenance triggers
+
+Re-review this page when any of these change:
+
+- `ReleaseManifest`, `PromotionReceipt`, `PromotionDecision`, `RollbackCard`, `CorrectionNotice`, or `WithdrawalNotice` contract/schema versions;
+- hash/canonicalization grammar or object-family projection;
+- reference resolver or EvidenceBundle rules;
+- A–G gate scope or ADR-0018 status;
+- release policy bundle/evaluator;
+- reviewer/authority registry and separation of duties;
+- candidate assembly, transition application, alias management, signing, correction, rollback, or public-delivery implementation;
+- manifest/collection lane migration;
+- first governed production release or recovery drill.
+
+### Rollback
+
+This is a one-file explanatory update. Revert its commit to restore prior blob `196b69d3d2eb66a526248ce24400d4270f880c92`. Reverting this document must not alter any contract, schema, policy, validator, fixture, workflow, receipt, proof, release record, carrier, alias, cache, runtime, deployment, or publication state.
+
+<sub>Last updated · 2026-08-19 &nbsp;·&nbsp; Doc class · architecture &nbsp;·&nbsp; Status · repository-grounded draft &nbsp;·&nbsp; <a href="#top">Back to top ↑</a></sub>
