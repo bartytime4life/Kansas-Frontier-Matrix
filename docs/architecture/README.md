@@ -21,7 +21,7 @@
 | Placement authority | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
 | Whole-system orientation | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) is the primary repository-grounded orientation candidate |
 | Active topology hazard | `TRUST_MEMBRANE.md` and `trust-membrane.md` are a case-insensitive path collision; the current-main identity, content, fragment, and consumer inventory leaves structural migration on explicit **HOLD** |
-| Writer-bound document | [`SKELETON_MAP.md`](./SKELETON_MAP.md) has a [repository workflow writer](../../.github/workflows/one-shot-skeleton-map-refresh.yml) and remains **HOLD** for manual convergence |
+| Skeleton Map posture | [`SKELETON_MAP.md`](./SKELETON_MAP.md) is the source-maintained physical-topology and responsibility-routing companion; [PR #3097](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3097) records retirement of the temporary one-shot writer, and current `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb` has no active workflow at the former path |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS`; specialist architecture and documentation stewardship remains **NEEDS VERIFICATION** |
 | Convergence state | Wave 0 plan merged in [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031); structural moves and retirements remain unexecuted |
 | Release/publication effect | None |
@@ -70,7 +70,7 @@ A path in this folder is an authority claim about **who explains a concern**, no
 | Directory Rules v2 | **ACCEPTED** | ADR-0029 adopts the exact current doctrine bytes as placement authority. |
 | Root README | **PLACE / modernized in place** | This page is the architecture entrypoint and directory contract. |
 | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | **PLACE** | Primary whole-system orientation candidate; repository-grounded at its own evidence snapshot. |
-| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | **HOLD / writer-bound** | A [one-shot writer workflow](../../.github/workflows/one-shot-skeleton-map-refresh.yml) targets it; do not manually merge, rename, or retire it until writer and consumer closure is complete. |
+| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | **PLACE / source-maintained** | Repository-grounded physical-topology and responsibility-routing companion. PR #3097 records retirement of the temporary one-shot writer; no active current-main workflow targets this file. |
 | Upper/lower trust-membrane pair | **CONFLICTED / explicit HOLD** | Both are full documents with distinct identities, content, and fragment schemes. The repository-local reference inventory is recorded below; no structural migration occurs through this README. |
 | Folder landing pages | **PLACE** | `cross-domain/`, `governed-ai/`, `governed-api/`, `map-master/`, `publication/`, `settlements-infrastructure/`, `story/`, and `ui/` are repository-present lanes. |
 | Flat/folder overlaps | **PROPOSED convergence** | Governed AI, Governed API, Map/MapLibre, publication, Evidence Drawer, and other clusters still have competing or overlapping entrypoints. |
@@ -190,7 +190,7 @@ A substantial subsystem should normally have one active landing page. Deeper pag
 docs/architecture/
 ├── README.md                         # this entrypoint
 ├── SYSTEM_MAP.md                     # primary whole-system orientation candidate
-├── SKELETON_MAP.md                   # writer-bound orientation surface — HOLD
+├── SKELETON_MAP.md                   # physical topology and responsibility routing
 ├── document-convergence-plan.md      # 102-file Wave 0 ledger and migration sequence
 ├── system-context.md                 # system boundary and external interfaces
 ├── contract-schema-policy-split.md   # meaning / shape / admissibility / proof split
@@ -213,7 +213,7 @@ docs/architecture/
 | [`system-context.md`](./system-context.md) | System boundary, audiences, and external interfaces | `PLACE` |
 | [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | Cross-root meaning/shape/admissibility/enforceability explanation | `PLACE` |
 | [`document-convergence-plan.md`](./document-convergence-plan.md) | Current overlap ledger, migration waves, validation, and rollback | `PLACE`; non-authoritative plan |
-| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | Skeleton/topology orientation with an active repository writer dependency | `HOLD` |
+| [`SKELETON_MAP.md`](./SKELETON_MAP.md) | Commit-pinned physical topology and responsibility routing | `PLACE`; source-maintained |
 
 ### Subsystem landing lanes
 
@@ -265,7 +265,7 @@ docs/architecture/
 | Review a cross-domain seam | [`cross-domain/README.md`](./cross-domain/README.md) | Owning domain docs, source-role and sensitivity rules |
 | Review a new contract or schema | [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | `contracts/README.md`, `schemas/README.md`, applicable policy and fixtures |
 | Investigate architecture drift | [`document-convergence-plan.md`](./document-convergence-plan.md) | [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md), current repository evidence |
-| Investigate `SKELETON_MAP.md` | Treat it as writer-bound | Inspect the one-shot writer workflow and generated receipt before editing |
+| Investigate `SKELETON_MAP.md` | Read it as the source-maintained physical-topology companion | Check its pinned root inventory, root registry projection, current drift register, and retired writer lineage |
 
 [Back to top](#top)
 
@@ -488,7 +488,7 @@ Doctrine states KFM's accepted operating law. Architecture explains how reposito
 <details>
 <summary><strong>How is <code>SYSTEM_MAP.md</code> different from <code>SKELETON_MAP.md</code>?</strong></summary>
 
-`SYSTEM_MAP.md` is the current primary whole-system orientation candidate. `SKELETON_MAP.md` remains a separate, writer-bound topology surface. The [one-shot writer workflow](../../.github/workflows/one-shot-skeleton-map-refresh.yml) currently targets it, so its final manual/generated/compatibility role is **HOLD** until writer, source, receipt, link, and consumer closure is complete.
+`SYSTEM_MAP.md` is the current primary whole-system orientation candidate. `SKELETON_MAP.md` is the separate source-maintained, commit-pinned physical-topology and responsibility-routing companion. PR #3097 records retirement of its temporary one-shot writer, and current main has no active workflow targeting the file; historical writer lineage is evidence, not a manual-edit gate.
 </details>
 
 <details>
@@ -529,12 +529,13 @@ No. A commit, pull request, merge, badge, validator pass, or architecture page i
 
 | Field | Value |
 |---|---|
-| Review date | 2026-08-18 |
+| Review date | 2026-08-19 |
 | Evidence base | `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c` |
+| Focused correction evidence | [PR #3097](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3097) and `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb` confirm temporary writer retirement and absence of the former workflow path |
 | Base architecture tree | `7130327e01542244e96c51ebc4b61974bea9278b` |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS` |
 | Specialist stewardship | **NEEDS VERIFICATION** |
-| Next review trigger | Architecture-tree change; accepted ADR affecting placement or subsystem ownership; trust-membrane convergence; Skeleton Map writer retirement; or material runtime/release boundary change |
+| Next review trigger | Architecture-tree change; accepted ADR affecting placement or subsystem ownership; trust-membrane convergence; a new Skeleton Map writer or role change; or material runtime/release boundary change |
 | Rollback | Revert the focused README commit; no runtime, data, policy, release, deployment, or publication state changes |
 
 ### Related documents
