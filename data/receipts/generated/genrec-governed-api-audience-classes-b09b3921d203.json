@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec-governed-api-audience-classes-b09b3921d203",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/AUDIENCE_CLASSES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/AUDIENCE_CLASSES.md": "sha256:b09b3921d2034bc90f4305dd3b4e396607e835082b247d34542d523857bf7756"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/architecture/governed-api/README.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/doctrine/directory-rules.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:.github/CODEOWNERS@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:apps/governed-api/src/governed_api/main.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:apps/governed-api/src/governed_api/stub.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:policy/access/README.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:contracts/release/api_capability_exposure_assessment.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:schemas/contracts/v1/release/api_capability_exposure_assessment.schema.json@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:contracts/release/field_level_api_authorization_assessment.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:schemas/contracts/v1/release/field_level_api_authorization_assessment.schema.json@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:contracts/policy/policy_reviewer_role_vocabulary.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:commit/67f438825d9b530833cfb438af74f51798520fc8",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/AUDIENCE_CLASSES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 2a9a14018ab98bdf9022f7d4fbcd638ca895d0af, verified prior target blob 51a40d8deb4d43c4e6eebd57b40e54ae6852e471, and found no open pull request claiming the exact target path."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Re-fetched main after the target commit and confirmed it remained 2a9a14018ab98bdf9022f7d4fbcd638ca895d0af; no base reconciliation was required."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 confirm the existing docs/architecture/governed-api/ placement while contracts, schemas, policy, runtime, configuration, tests, receipts, review, release, and publication remain in their owning roots."
+    },
+    {
+      "gate": "current-runtime-route-inventory",
+      "outcome": "PASS",
+      "reason": "Inspected the WSGI dispatcher, route registry, stub builder, and app-local tests. The executable registry contains only /bootstrap, /layers, and /evidence; no audience metadata or authorization middleware was found in those inspected surfaces, and all registered routes remain ABSTAIN / NOT_IMPLEMENTED."
+    },
+    {
+      "gate": "audience-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "Cross-checked the legacy five literals against fixture-only capability-audience, exposure-posture, field-level caller-role, policy-input audience, reviewer-role, and finite-outcome vocabularies; the document records the conflict rather than declaring an unsupported canonical enum."
+    },
+    {
+      "gate": "access-policy-boundary",
+      "outcome": "PASS",
+      "reason": "Confirmed the direct policy/access lane is documentation-only and bounded all authentication-provider, grant, evaluator, OPA-binding, revocation, audit, rate-limit, deployment, and public-exposure claims as unverified or held."
+    },
+    {
+      "gate": "markdown-structure-anchor-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified one H1, YAML-readable meta block, 15 unique explicit anchors including the legacy numbered section anchors, resolved local fragments, balanced fences/details, no tabs or trailing whitespace, final newline, and 21 repository-relative targets against the inspected tree."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 28662c84ac1347cd63f0246fc47d418f76b7ec0b matches the locally computed Git blob; final document SHA-256 is b09b3921d2034bc90f4305dd3b4e396607e835082b247d34542d523857bf7756."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked for required fields, finite enums, hash patterns, path/hash closure, pending human review, and no additional top-level properties."
+    },
+    {
+      "gate": "repository-native-documentation-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; deterministic local source checks and remote blob verification were completed, while hosted exact-head checks remain separate execution evidence."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no approval, auth, access, policy, route, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "proposed-trust-membrane-status",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "current-route-registry",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "current-negative-runtime",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "access-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/access/README.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "fixture-only-api-exposure-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/api_capability_exposure_assessment.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "fixture-only-field-authorization-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/field_level_api_authorization_assessment.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T22:48:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It preserves the legacy public/partner/steward/internal/denied vocabulary as migration lineage, corrects denied into a finite outcome rather than an audience, grounds the executable surface to the three current ABSTAIN stubs, separates identity/role/capability/exposure/field/lifecycle/outcome/rate/review axes, removes unsupported auth, token-lifetime, quota, OPA, and /api/v1 route claims, and records the smallest no-network graduation proof. It changes no contract, schema, policy, route, runtime, configuration, test, workflow, auth state, access grant, release, deployment, or publication."
+}
