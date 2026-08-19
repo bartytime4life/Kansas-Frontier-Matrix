@@ -38,6 +38,9 @@
       "repo:docs/architecture/governed-api/DEPLOYMENT_RULES.md@091c128261d0bec26de36d9df7a549c4f3402777",
       "repo:blob/863ce5b35138f3f8a817bbe85a89a923892215e5",
       "repo:branch/agent/ground-governed-api-deployment-rules-20260819",
+      "repo:commit/a38b91f1a65122a94b7e738fa3c846981cda8bf8",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7",
       "repo:docs/architecture/governed-api/README.md@091c128261d0bec26de36d9df7a549c4f3402777",
       "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@091c128261d0bec26de36d9df7a549c4f3402777",
       "repo:docs/architecture/deployment-topology.md@091c128261d0bec26de36d9df7a549c4f3402777",
@@ -67,7 +70,12 @@
     {
       "gate": "current-main-and-overlap-inspection",
       "outcome": "PASS",
-      "reason": "Pinned main at 091c128261d0bec26de36d9df7a549c4f3402777, verified prior target blob 977709a9f6cbac8bef8e433e0d4a0b2bf7d034aa, rechecked main after authoring, and found no open pull request claiming the exact target path."
+      "reason": "Pinned the authoring base at 091c128261d0bec26de36d9df7a549c4f3402777, verified prior target blob 977709a9f6cbac8bef8e433e0d4a0b2bf7d034aa, and found no open pull request claiming the exact target path."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced to 0a547c12e7965565d397fcad46d94c1c7b41f0c7 through merged PR #3129, which changed ENVELOPES.md and its generated receipt but not DEPLOYMENT_RULES.md. The current adjacent envelope page was inspected and main was merged into the task branch at a38b91f1a65122a94b7e738fa3c846981cda8bf8 without changing the two-file task diff."
     },
     {
       "gate": "directory-rules-and-authority-boundary",
@@ -128,6 +136,11 @@
       "evidence_ref": "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777"
     },
     {
+      "id": "post-authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
       "id": "accepted-directory-rules",
       "validated": true,
       "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@091c128261d0bec26de36d9df7a549c4f3402777"
@@ -186,5 +199,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Same-path documentation modernization. It preserves the stable document ID, H1, path, and numbered section anchors; grounds deployment preparation to the current WSGI scaffold, three ABSTAIN routes, placeholder non-root image, loopback Compose mapping, static tests, and build-only workflow; distinguishes source-present, statically checked, image-buildable, packaged, startable, healthy, integrated, released, deployed, verified, and published states; moves TLS, CORS, rate, secret, logging, network, health, observability, release-binding, and rollback language into explicit target requirements with acceptance evidence; demotes legacy audience-based numeric tiers; and records current HOLDs including the unreconciled container port 8080 versus local helper default 8000. It changes no code, route, contract, schema, policy, configuration, workflow, image, environment, release, deployment, or publication."
+  "notes": "Same-path documentation modernization. It preserves the stable document ID, H1, path, and numbered section anchors; grounds deployment preparation to the current WSGI scaffold, three ABSTAIN routes, placeholder non-root image, loopback Compose mapping, static tests, and build-only workflow; distinguishes source-present, statically checked, image-buildable, packaged, startable, healthy, integrated, released, deployed, verified, and published states; moves TLS, CORS, rate, secret, logging, network, health, observability, release-binding, and rollback language into explicit target requirements with acceptance evidence; demotes legacy audience-based numeric tiers; and records current HOLDs including the unreconciled container port 8080 versus local helper default 8000. The task branch was reconciled with current main after the adjacent ENVELOPES.md modernization merged. It changes no code, route, contract, schema, policy, configuration, workflow, image, environment, release, deployment, or publication."
 }
