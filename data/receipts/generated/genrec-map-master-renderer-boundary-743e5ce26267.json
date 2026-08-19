@@ -33,6 +33,7 @@
     "evidence_refs": [
       "repo:commit/996b7e16d46a703c9436b26ef74ed0ecaf87796a",
       "repo:commit/1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
+      "repo:commit/2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
       "repo:docs/architecture/map-master/RENDERER_BOUNDARY.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
       "repo:docs/architecture/map-master/README.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
       "repo:docs/architecture/map-shell.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
@@ -61,7 +62,8 @@
       "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
       "attachment:KFM Directory Governance Standard v2.0.0-draft.1",
       "repo:docs/architecture/map-master/2D_3D_PARITY.md@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
-      "repo:docs/architecture/map-master/LAYER_LIFECYCLE.md@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7"
+      "repo:docs/architecture/map-master/LAYER_LIFECYCLE.md@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
+      "repo:docs/architecture/map-master/PERFORMANCE_BUDGETS.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
     ]
   },
   "truth_labels": {
@@ -77,6 +79,11 @@
       "gate": "post-authoring-main-reconciliation",
       "outcome": "PASS",
       "reason": "Reconciled the branch without force to main@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7. Intervening changes modified only docs/architecture/map-master/2D_3D_PARITY.md, docs/architecture/map-master/LAYER_LIFECYCLE.md, and docs/architecture/publication/GEO_MANIFEST.md; the target did not overlap. The final document incorporates the newly grounded parity and layer-lifecycle postures."
+    },
+    {
+      "gate": "final-pre-pr-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the branch without force to main@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af. The additional main delta added only the generated performance-budget receipt and grounded docs/architecture/map-master/PERFORMANCE_BUDGETS.md; the renderer-boundary target did not overlap and its operational-performance HOLD is compatible with this document."
     },
     {
       "gate": "directory-rules-and-authority-boundary",
@@ -109,9 +116,14 @@
       "reason": "No mounted repository checkout or dependency environment was available. Current code, tests, validators, and workflow bytes were inspected; no repository-native command was represented as executed."
     },
     {
+      "gate": "draft-pr-delivery",
+      "outcome": "PASS",
+      "reason": "Opened draft PR #3123 from agent/update-map-master-renderer-boundary-20260819 to main. The opening head was 1a37b4d34fb3f190277960364d0e9b8a4042d52a; human review remains pending."
+    },
+    {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+      "reason": "Pending hosted execution for draft PR #3123 after the final receipt update; hosted exact-head results remain separate evidence."
     },
     {
       "gate": "human-review",
@@ -181,9 +193,9 @@
   "created_at": "2026-08-19T22:43:22Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 3123,
     "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
     "drift_register_entry": null
   },
-  "notes": "Same-path documentation modernization. It preserves the seven negative authorities, corrects stale placement and truth-store claims, reconciles current renderer-neutral and fixture-only implementation evidence plus the newly grounded 2D/3D parity and layer-lifecycle companions, keeps ADR-0006/0007 and concrete MapLibre admission on HOLD, and changes no contract, schema, policy, dependency, lockfile, source, runtime, release, deployment, publication, or repository setting."
+  "notes": "Same-path documentation modernization delivered in draft PR #3123. It preserves the seven negative authorities, corrects stale placement and truth-store claims, reconciles current renderer-neutral and fixture-only implementation evidence plus the grounded 2D/3D parity, layer-lifecycle, and performance-budget companions, keeps ADR-0006/0007 and concrete MapLibre admission on HOLD, and changes no contract, schema, policy, dependency, lockfile, source, runtime, release, deployment, publication, or repository setting."
 }
