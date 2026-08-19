@@ -1,547 +1,915 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/publication/correction
-title: Correction Path (Publication Architecture)
-type: standard
-version: v1
-status: draft
-owners: Docs steward + Release authority + Subsystem owner (publication)
+title: Correction Path
+type: architecture-reference
+version: v2.0.0
+status: draft; repository-grounded; mixed-maturity; non-executing; non-publication
+owners:
+  - "@bartytime4life — CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent correction, release, policy, rights/sensitivity, and public-surface stewardship"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-19
+policy_label: public; architecture; publication; correction; supersession; withdrawal; fail-closed; no-erasure
+owning_root: docs/
+current_path: docs/architecture/publication/CORRECTION.md
+responsibility: Explain KFM publication-correction architecture, current repository proof, authority boundaries, finite failure states, derivative-propagation profiles, graduation gates, public visibility obligations, and recovery coupling without creating or executing correction authority.
+truth_posture: >-
+  CONFIRMED accepted Directory Rules placement, the tracked architecture page,
+  current correction contracts and schemas, the placeholder CorrectionNotice and
+  SupersessionNotice machine profiles, fixture-only CorrectionImpactAssessment and
+  CorrectionPropagationPlan validators/tests, canonical correction_notices release
+  lane, inactive release-policy scaffolds, and current CODEOWNERS route / PROPOSED
+  strict CorrectionNotice profile, correction policy, authenticated review,
+  correction decision and execution receipts, public notice behavior, derivative
+  executor, operational reason-code registry, and health measures / UNKNOWN deployed
+  runtime, external storage, current public aliases, public API/UI parity, correction
+  service, and end-to-end recovery capability / NEEDS VERIFICATION accountable
+  stewards, accepted object-family placement, signer trust, retention, independent
+  review, consumer closure, and a production-like correction drill
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 1a491637df6ce97aa41c4328d88a1f7ba61c6c61
+  target_prior_blob: dcd7bd43f63a340842ed0f6df315ca68dbb11f69
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  correction_notice_contract_blob: 4716f2bc6e714ad2ab873d95144417d7855f5beb
+  correction_notice_schema_blob: 8f260eb5a5adba0b4966adfeffebfbcf6960277d
+  correction_impact_contract_blob: c397c83f558299388f9d5ca0a9c58deffb3f8c86
+  correction_impact_schema_blob: f721aa7cd9c1b30cf63ab108f12c9b08927fd0bf
+  correction_impact_validator_blob: 2d78540bb04a906fee7e86588fac71303511d787
+  correction_impact_tests_blob: e720222ec5d695a5e8db2be75048d4f07863eeb9
+  correction_propagation_contract_blob: b61e7fb0ecd0e68588a29642f3c47e0cb810eff9
+  correction_propagation_schema_blob: 3b178bd83c5753a90b30a1549ef5ed587986bd70
+  correction_propagation_validator_blob: 4cb4f366a21612adf660fae4bb8dacbc67a169ab
+  correction_propagation_tests_blob: 2c5647b7d87447ad2c69f373c9e81a26e57a206a
+  correction_notices_readme_blob: 12ad123b53e03e46cd1adfbaf8d5c1855fd99f31
+  release_policy_readme_blob: 8a6a91e18f29f6f961eac88270b385a95b86281e
 related:
-  - docs/architecture/publication/README.md
-  - docs/architecture/publication/ROLLBACK.md
-  - docs/architecture/publication/GEO_MANIFEST.md
-  - docs/architecture/review/README.md
-  - docs/architecture/governed-ai/README.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md
-  - contracts/OBJECT_MAP.md
-  - schemas/contracts/v1/review/correction_notice.schema.json
-  - schemas/contracts/v1/review/review_record.schema.json
-tags: [kfm, publication, correction, rollback, governance]
+  - README.md
+  - ROLLBACK.md
+  - rollback-and-correction.md
+  - release-objects.md
+  - release-state-machine.md
+  - RELEASE_GATES.md
+  - ../../doctrine/corrections-first-class.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/lifecycle-law.md
+  - ../../doctrine/trust-membrane.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../contracts/correction/README.md
+  - ../../../contracts/correction/correction_notice.md
+  - ../../../contracts/correction/correction_impact_assessment.md
+  - ../../../contracts/correction/correction_propagation_plan.md
+  - ../../../contracts/correction/supersession_notice.md
+  - ../../../schemas/contracts/v1/correction/README.md
+  - ../../../schemas/contracts/v1/correction/correction_notice.schema.json
+  - ../../../schemas/contracts/v1/correction/correction_impact_assessment.schema.json
+  - ../../../schemas/contracts/v1/correction/correction_propagation_plan.schema.json
+  - ../../../schemas/contracts/v1/correction/supersession_notice.schema.json
+  - ../../../fixtures/contracts/v1/correction/correction_impact_assessment/
+  - ../../../fixtures/contracts/v1/correction/correction_propagation_plan/
+  - ../../../tools/validators/correction/validate_correction_impact_assessment.py
+  - ../../../tools/validators/correction/validate_correction_propagation_plan.py
+  - ../../../tests/validators/correction/test_correction_impact_assessment.py
+  - ../../../tests/validators/test_validate_correction_propagation_plan.py
+  - ../../../release/correction_notices/README.md
+  - ../../../policy/release/README.md
+  - ../../../data/receipts/generated/README.md
+tags: [kfm, architecture, publication, correction, supersession, withdrawal, derivative-invalidation, evidence, review, policy, release, rollback, audit, fail-closed]
 notes:
-  - Path docs/architecture/publication/CORRECTION.md is PROPOSED until verified against mounted repo evidence.
-  - Doctrine in this doc is CONFIRMED. Schema paths, route names, and implementation maturity remain PROPOSED.
+  - "v2.0.0 is a same-path repository-grounded modernization of the proposal-era page."
+  - "The document preserves its doc_id, H1, top target, quick-jump target, and all seventeen legacy numbered section anchors."
+  - "Accepted ADR-0029 settles public correction-object placement at release/correction_notices/; release/correction/ and release/corrections/ remain classification or migration sources rather than parallel canonical writers."
+  - "The current CorrectionNotice and SupersessionNotice schemas are permissive placeholders. No CorrectionNotice validator, fixture family, policy/correction lane, or operational correction executor was found at the evidence snapshot."
+  - "CorrectionImpactAssessment and CorrectionPropagationPlan are deterministic fixture-only, no-network, non-executing profiles. Their COMPLETE or PASS outcomes do not prove a correction was approved, applied, propagated, released, or published."
+  - "This revision changes documentation and its generated authoring receipt only. It does not change contracts, schemas, policy, fixtures, validators, workflows, release records, published state, deployment, or public behavior."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="correction-path"></a>
 
 # Correction Path
 
-*How a defective KFM release is corrected without silently mutating the past, and how every correction stays inspectable, reviewable, and reversible.*
+> **Purpose.** Explain how KFM names, reviews, supersedes, propagates, verifies, and publicly signals a correction without silently rewriting published history, bypassing evidence and policy, or treating a fixture validator as operational correction authority.
 
-<!-- Badge row -->
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Authority](https://img.shields.io/badge/authority-architecture-blue)
-![Truth label](https://img.shields.io/badge/doctrine-CONFIRMED-2ea44f)
-![Implementation](https://img.shields.io/badge/implementation-PROPOSED-yellow)
-![Lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED%20%E2%86%92%20PUBLISHED%27-purple)
-![Policy](https://img.shields.io/badge/policy-public-lightgrey)
-<!-- TODO: replace static badges with repo-relative Shields.io targets after CI conventions are verified. -->
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-authority)
+[![Directory Rules: accepted](https://img.shields.io/badge/Directory%20Rules-v2%20accepted-2da44e?style=flat-square)](#2-where-this-doc-fits)
+[![CorrectionNotice: placeholder](https://img.shields.io/badge/CorrectionNotice-placeholder-bc4c00?style=flat-square)](#6-correctionnotice--required-content)
+[![Propagation profiles: fixture only](https://img.shields.io/badge/propagation-fixture%20only-8250df?style=flat-square)](#10-derivative-invalidation)
+[![Operational correction: held](https://img.shields.io/badge/operational%20correction-HOLD-b42318?style=flat-square)](#current-implementation-maturity)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Correction is a publication requirement, not an afterthought.** A released claim, layer, catalog record, artifact, or answer must have a visible **correction path** and a named **rollback target** *before* it is treated as safely publishable. Silent edits to a prior release are forbidden.
+> **Correction is a governed publication transition, not an edit, notice, pull request, workflow pass, pointer change, cache purge, or deployment.** Those mechanisms may participate in a future accepted operator, but none creates correction authority or public truth by itself.
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** Docs steward + Release authority + Subsystem owner (publication) &nbsp;·&nbsp; **Last updated:** 2026-05-14
+> [!CAUTION]
+> **The current `CorrectionNotice` object family is not machine-closed.** Its semantic contract is draft, its schema requires only `id` and permits additional properties, its declared fixture and validator paths are absent, and `policy/correction/` is absent at this evidence snapshot.
+
+> [!WARNING]
+> **The implemented correction validators are inventories, not executors.** `CorrectionImpactAssessment.COMPLETE` and `CorrectionPropagationPlan.PASS` prove only bounded fixture semantics and local consistency. They do not mutate an alias, invalidate a cache, rebuild a tile, issue a correction notice, authenticate review, authorize release, or publish anything.
+
+> [!NOTE]
+> **Current repository result.** KFM has a tracked correction architecture lane, semantic contracts, four correction schemas, two deterministic fixture-first validation profiles, and a canonical public correction-notice lane. It does not yet establish a strict CorrectionNotice profile, active correction policy, authenticated correction decision, production operator, execution receipt lane, public parity, or end-to-end correction drill.
+
+<a id="quick-jump"></a>
+
+**Quick navigation:** [Status](#status-and-authority) · [Scope](#1-scope) · [Repo fit](#2-where-this-doc-fits) · [Doctrine](#3-confirmed-doctrine) · [Flow](#4-correction-flow-proposed) · [Defects](#5-defect-classes-and-posture) · [CorrectionNotice](#6-correctionnotice--required-content) · [Transition](#7-published--published-state-transition) · [Stale vs wrong](#8-stale-vs-wrong) · [Lineage](#9-supersession-lineage) · [Propagation](#10-derivative-invalidation) · [Duties](#11-separation-of-duties) · [AI](#12-governed-ai-surface-and-corrections) · [Reasons](#13-gate-failure-reason-codes) · [UI](#14-trust-visible-ui-signals) · [Anti-patterns](#15-anti-patterns) · [Maturity](#current-implementation-maturity) · [Backlog](#16-verification-backlog) · [References](#17-related-docs) · [Appendix](#appendix)
+
+---
+
+<a id="status-and-authority"></a>
+<a id="authority-and-publication-boundary"></a>
+
+## Status and authority
+
+| Field | Current bounded result |
+|---|---|
+| Tracked path | `docs/architecture/publication/CORRECTION.md` |
+| Document identity | `kfm://doc/architecture/publication/correction` |
+| Document role | Human-readable publication-correction architecture reference |
+| Owning root | `docs/` |
+| Placement | **CONFIRMED** under accepted ADR-0029 and Directory Rules v2 |
+| Repository evidence base | `main@1a491637df6ce97aa41c4328d88a1f7ba61c6c61` |
+| Prior document blob | `dcd7bd43f63a340842ed0f6df315ca68dbb11f69` |
+| Repository review route | `@bartytime4life` through current CODEOWNERS |
+| Independent correction/release stewardship | **NEEDS VERIFICATION** |
+| CorrectionNotice profile | Draft semantic contract; permissive placeholder schema; validator and fixtures absent |
+| Impact and propagation profiles | **CONFIRMED** fixture-only, no-network, non-authoritative validation surfaces |
+| Active correction policy | **HOLD** — `policy/correction/` absent; `policy/release/` remains inactive scaffolding |
+| Operational correction | **HOLD / UNKNOWN** beyond inspected repository surfaces |
+| Release, deployment, publication effect | None |
+
+This page explains boundaries and evidence. It does not own semantic meaning, machine shape, admissibility, actor authority, release decisions, correction execution, process receipts, published payloads, or public serving.
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| **CONFIRMED** | Verified from current repository bytes, accepted ADRs, tests, workflows, or generated artifacts inspected for this revision |
+| **PROPOSED** | A candidate design, inactive profile, unaccepted behavior, graduation step, or future operational surface |
+| **UNKNOWN** | Not established strongly enough from available repository, platform, deployment, or runtime evidence |
+| **NEEDS VERIFICATION** | A concrete check remains before relying on the claim |
+
+`HOLD`, `PASS`, `COMPLETE`, `ABSTAIN`, `DENY`, and `ERROR` are operational or validator outcomes; they do not replace the four truth labels.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
 
-## Quick jump
-
-- [1. Scope](#1-scope)
-- [2. Where this doc fits](#2-where-this-doc-fits)
-- [3. CONFIRMED doctrine](#3-confirmed-doctrine)
-- [4. Correction flow (PROPOSED)](#4-correction-flow-proposed)
-- [5. Defect classes and posture](#5-defect-classes-and-posture)
-- [6. `CorrectionNotice` — required content](#6-correctionnotice--required-content)
-- [7. `PUBLISHED → PUBLISHED′` state transition](#7-published--published-state-transition)
-- [8. Stale vs. wrong](#8-stale-vs-wrong)
-- [9. Supersession lineage](#9-supersession-lineage)
-- [10. Derivative invalidation](#10-derivative-invalidation)
-- [11. Separation of duties](#11-separation-of-duties)
-- [12. Governed AI surface and corrections](#12-governed-ai-surface-and-corrections)
-- [13. Gate failure reason codes](#13-gate-failure-reason-codes)
-- [14. Trust-visible UI signals](#14-trust-visible-ui-signals)
-- [15. Anti-patterns](#15-anti-patterns)
-- [16. Verification backlog](#16-verification-backlog)
-- [17. Related docs](#17-related-docs)
-
----
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-This document defines the **correction path** for KFM's publication subsystem: the governed `PUBLISHED → PUBLISHED′` transition that supersedes a defective release with an evidence-supported one, the `CorrectionNotice` lineage object that makes the correction inspectable, and the relationship between correction, rollback, and review.
+This page covers the architecture of correcting material that has crossed, or is represented as having crossed, the KFM `PUBLISHED` boundary:
 
-**In scope.** Correction posture by defect class · `CorrectionNotice` shape and required references · supersession lineage · derivative invalidation · separation-of-duties for steward-significant corrections · trust-visible stale / superseded / withdrawn badging.
+- detection, containment, evidence resolution, review, policy, release, execution, verification, public notice, and audit;
+- the distinction among a defect report, `CorrectionNotice`, `SupersessionNotice`, impact assessment, propagation plan, accountable decision, execution receipt, and corrected public carrier;
+- the current placeholder `CorrectionNotice` and `SupersessionNotice` profiles;
+- the current fixture-only `CorrectionImpactAssessment` and `CorrectionPropagationPlan` profiles;
+- defect classification, stale-versus-wrong posture, supersession lineage, derivative propagation, and public signals;
+- the accepted correction-object placement and current alias/path drift;
+- the production gaps that keep operational correction on hold;
+- validation, graduation, and rollback of this documentation change.
 
-**Out of scope.** The rollback drill and `RollbackCard` mechanics are summarized here but specified in [`ROLLBACK.md`](./ROLLBACK.md). The promotion gates (Admission → Release) are specified in the lifecycle and release-gate docs.
+This page does **not**:
 
-> [!NOTE]
-> **Truth labels in this doc.** Doctrinal statements (that correction must exist, that supersession must not silently delete, that the trust membrane holds) are **CONFIRMED**. Specific paths, schema homes, route names, validator names, and CI workflow names are **PROPOSED** until verified against mounted-repo evidence per Directory Rules §0.
+- apply a correction, supersession, withdrawal, or rollback;
+- authorize a release-state transition;
+- define accepted public routes, current aliases, cache behavior, or retention windows;
+- authenticate actors or approve separation of duties;
+- activate policy or create a policy decision;
+- replace contracts, schemas, fixtures, validators, tests, workflows, runbooks, or release records;
+- prescribe database transaction rollback, schema migration rollback, infrastructure rollback, or Git rollback;
+- claim deployed API, MapLibre, Evidence Drawer, search, graph, export, or AI parity.
 
-[↑ Back to top](#quick-jump)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="2-where-this-doc-fits"></a>
 
 ## 2. Where this doc fits
 
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes [Directory Rules v2](../../doctrine/directory-rules.md) the placement authority. This same-path page receives `PLACE`: its primary responsibility is to explain publication correction to humans.
+
+### Current responsibility map
+
+| Responsibility | Current or accepted home | Current status |
+|---|---|---:|
+| Architecture and boundaries | `docs/architecture/publication/CORRECTION.md` | **CONFIRMED** tracked page |
+| Correction doctrine companion | [`docs/doctrine/corrections-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED** tracked draft; implementation paths inside it remain mixed maturity |
+| Correction semantic family | [`contracts/correction/`](../../../contracts/correction/) | **CONFIRMED** tracked family; CorrectionNotice placement conflict remains open |
+| CorrectionNotice meaning | [`contracts/correction/correction_notice.md`](../../../contracts/correction/correction_notice.md) | **CONFIRMED** draft semantic contract |
+| CorrectionNotice machine shape | [`schemas/contracts/v1/correction/correction_notice.schema.json`](../../../schemas/contracts/v1/correction/correction_notice.schema.json) | **CONFIRMED** permissive placeholder; not field-complete |
+| SupersessionNotice meaning/shape | [`contracts/correction/supersession_notice.md`](../../../contracts/correction/supersession_notice.md) and paired schema | **CONFIRMED** draft/placeholder; no validator established |
+| Downstream carrier inventory | [`CorrectionImpactAssessment`](../../../contracts/correction/correction_impact_assessment.md) plus schema, fixtures, validator, and tests | **CONFIRMED** fixture-only / non-executing |
+| Dependency propagation inventory | [`CorrectionPropagationPlan`](../../../contracts/correction/correction_propagation_plan.md) plus schema, fixtures, validator, and tests | **CONFIRMED** fixture-only / non-executing |
+| Public correction objects | [`release/correction_notices/`](../../../release/correction_notices/) | **CONFIRMED** canonical collection name under Directory Rules; current lane contains indexes/scaffolds, not a proved governed correction instance |
+| Release-admissibility policy source | [`policy/release/`](../../../policy/release/) | **CONFIRMED** path; current modules are inactive scaffolds |
+| Correction-specific policy | `policy/correction/` | **CONFIRMED absent** at this snapshot |
+| Executed correction/invalidation receipts | `data/receipts/correction/` | **PROPOSED** subtype lane; **CONFIRMED absent** at this snapshot |
+| Corrected public-safe carriers | [`data/published/`](../../../data/published/) | **CONFIRMED** payload responsibility; no correction parity proved |
+| Production correction operator or pipeline | `tools/release/` or `pipelines/` by accepted responsibility | **UNKNOWN / no correction-specific production operator established in the inspected surfaces** |
+| Public delivery | [`apps/governed-api/`](../../../apps/governed-api/) and [`apps/explorer-web/`](../../../apps/explorer-web/) | Paths exist; correction behavior remains **UNKNOWN** |
+
+### Accepted collection grammar and current drift
+
+Directory Rules §13.3 selects `release/correction_notices/` for public correction objects. The current repository also contains `release/correction/` and `release/corrections/`. Those lanes are not silently promoted to parallel canonical writers; each object requires classification, migration evidence, one writable authority, parity checks, and rollback before consolidation.
+
+The current correction schema-family README is also stale relative to the directory it indexes: it lists only the placeholder `correction_notice.schema.json`, while the directory now also contains impact-assessment, propagation-plan, and supersession schemas. This page records that drift; it does not repair a neighboring authority or change schema status.
+
+### Present architecture split
+
 ```text
 docs/architecture/publication/
-├── README.md              # Publication subsystem overview (PROPOSED)
-├── CORRECTION.md          # ← this doc
-├── ROLLBACK.md            # Rollback path & drill (PROPOSED companion)
-└── GEO_MANIFEST.md        # Geo asset manifest doctrine (PROPOSED sibling)
+└── CORRECTION.md                         # human explanation; this page
+
+contracts/correction/
+├── correction_notice.md                  # draft semantics; placeholder schema
+├── supersession_notice.md                # draft semantics; placeholder schema
+├── correction_impact_assessment.md       # fixture-only carrier inventory
+└── correction_propagation_plan.md        # fixture-only dependency inventory
+
+schemas/contracts/v1/correction/
+├── correction_notice.schema.json         # permissive placeholder
+├── supersession_notice.schema.json       # permissive placeholder
+├── correction_impact_assessment.schema.json
+└── correction_propagation_plan.schema.json
+
+release/correction_notices/               # public correction-object collection
+policy/release/                            # inactive release-policy source
 ```
 
-> [!NOTE]
-> Path placement reflects Directory Rules §15 (Required README Contract) at the folder level and the responsibility-root convention: publication concerns live under `docs/architecture/publication/`, with the canonical lifecycle objects in `schemas/contracts/v1/...` and policy in `policy/...` per ADR-0001. **Tree above is PROPOSED.**
-
-```mermaid
-flowchart LR
-    A["docs/architecture/<br/>publication/<br/>CORRECTION.md"] --> B["contracts/<br/>OBJECT_MAP.md"]
-    A --> C["schemas/contracts/v1/<br/>review/correction_notice.schema.json"]
-    A --> D["policy/release/<br/>correction_*.rego"]
-    A --> E["tests/fixtures/<br/>correction/"]
-    A --> F["release/<br/>ReleaseManifest history"]
-    A --> G["docs/architecture/<br/>publication/ROLLBACK.md"]
-    style A fill:#fef3c7,stroke:#a16207,color:#000
-    style C stroke-dasharray: 5 5
-    style D stroke-dasharray: 5 5
-    style E stroke-dasharray: 5 5
-```
-
-> [!WARNING]
-> Diagram dependencies marked with dashed borders are **PROPOSED** paths. Their existence in the mounted repo has not been verified in this session.
-
-[↑ Back to top](#quick-jump)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="3-confirmed-doctrine"></a>
 
 ## 3. CONFIRMED doctrine
 
-The following are CONFIRMED by KFM publication doctrine. They do not depend on mounted-repo state.
+The following is the governing correction posture supported by KFM's current operating law, accepted placement rules, and correction doctrine. The dedicated [`corrections-first-class.md`](../../doctrine/corrections-first-class.md) page remains draft and does not prove operational adoption by itself.
 
-| # | Doctrine | Why it matters |
+| # | Governing posture | Consequence |
 |---|---|---|
-| D1 | Correction and rollback are **publication requirements**, not afterthoughts. | A release without a correction path and rollback target is not safely publishable. |
-| D2 | A correction **preserves the original release record**, identifies the defect, classifies it, emits a `CorrectionNotice`, updates the relevant `EvidenceBundle` and `ReleaseManifest`, and publishes a **superseding release**. | Silent mutation of a prior release destroys auditability. |
-| D3 | The durable public unit is the **inspectable claim**. | Every PUBLISHED claim, layer, catalog record, artifact, or answer must be traceable to evidence, policy, review, release state, correction path, and rollback target. |
-| D4 | The **trust membrane** holds during correction. | Corrections route through the same governed APIs and gates as initial releases; no client reaches RAW, WORK, QUARANTINE, canonical stores, graph internals, vector indexes, source APIs, or direct model runtimes. |
-| D5 | **Promotion is a governed state transition, not a file move.** | A correction that bypasses gates is not a correction; it is drift. |
-| D6 | **Cite-or-abstain** survives correction. If post-correction evidence is insufficient to support a claim, the governed surface must ABSTAIN rather than serve the prior claim. | Fluency must not stand in for evidence. |
+| D1 | Corrections, withdrawals, supersessions, rollback, and lineage are first-class and inspectable. | A public object without a correction and rollback path is not release-ready. |
+| D2 | A correction is named and append-only. | Prior release, evidence, decision, and receipt history is not silently rewritten. |
+| D3 | Evidence, policy, review, release decision, correction execution, and public notice remain separate authorities. | One notice, validator result, workflow, or receipt cannot collapse the chain. |
+| D4 | Public clients remain behind the trust membrane. | Corrected state reaches public surfaces only through governed APIs or released public-safe carriers. |
+| D5 | Cite-or-abstain survives correction. | If the remaining evidence cannot support the claim, public surfaces narrow, abstain, deny, or hold rather than re-serving unsupported content. |
+| D6 | Rights, sensitivity, sovereignty, privacy, and harmful precision fail closed. | Immediate containment may precede the full editorial correction, but it does not erase the need for accountable notice and lineage. |
+| D7 | Publication and promotion are governed transitions, not file operations. | Editing a manifest, alias, tile, document, or database row does not by itself establish corrected public truth. |
+| D8 | Correction is reversible and correctable. | A correction may itself be superseded; rollback and forward-fix targets remain explicit. |
 
-[↑ Back to top](#quick-jump)
+### Correction, withdrawal, and rollback are different
+
+| Operation | Primary purpose | Public-state posture |
+|---|---|---|
+| Correction | Replace a wrong or trust-modified public assertion with a governed successor | New candidate and release state; prior lineage retained |
+| Supersession | Record that a newer governed object replaces an earlier one | Forward and backward links; no in-place rewrite |
+| Withdrawal | Remove or deny a public route while preserving the record and safe explanation | Public route closes; audit persists |
+| Rollback | Repoint governed current state to a previously safe target | Operational recovery; see [`ROLLBACK.md`](ROLLBACK.md) |
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="4-correction-flow-proposed"></a>
 
 ## 4. Correction flow (PROPOSED)
 
-The flow below is **PROPOSED implementation** of CONFIRMED doctrine. Step ordering, artifact names, and validator names are the recommended shape; specific paths and tool names remain NEEDS VERIFICATION until repo-mounted.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Detector as Defect detector<br/>(steward, validator, user report, AI audit)
-    participant Reviewer as Correction reviewer
-    participant RelAuth as Release authority
-    participant Release as ReleaseManifest store
-    participant Evidence as EvidenceBundle store
-    participant Public as Governed API / UI
-
-    Detector->>Reviewer: Defect report (classified)
-    Reviewer->>Reviewer: Validate defect against EvidenceBundle + policy
-    Reviewer->>Evidence: Open superseding EvidenceBundle (PROPOSED)
-    Reviewer->>RelAuth: Submit CorrectionNotice + ReviewRecord
-    RelAuth->>RelAuth: Separation-of-duties check
-    RelAuth->>Release: Emit superseding ReleaseManifest<br/>(prior manifest retained)
-    RelAuth->>Release: Record rollback target
-    Release->>Public: Repoint aliases; mark prior release superseded
-    Public->>Public: Stale/superseded/withdrawn badging<br/>+ invalidate downstream derivatives
-    Note over RelAuth,Release: Old release record is never deleted.
-```
-
-### Required artifacts at each step
-
-| Step | Required artifact | Truth label |
-|---|---|---|
-| Detection | Defect report (free-form or structured) referencing `release_id`, claim, or artifact | PROPOSED minimum |
-| Classification | One of the defect classes in §5 | CONFIRMED categories |
-| Evidence repair | Superseding `EvidenceBundle` with supersession link to prior | PROPOSED schema home: `schemas/contracts/v1/evidence/` |
-| Review | `ReviewRecord` linked to the `CorrectionNotice` | PROPOSED schema home: `schemas/contracts/v1/review/review_record.schema.json` |
-| Notice | `CorrectionNotice` (see §6) | PROPOSED schema home: `schemas/contracts/v1/review/correction_notice.schema.json` |
-| Release | Superseding `ReleaseManifest` + rollback target | CONFIRMED requirement; PROPOSED schema home |
-| Invalidation | Derivative-invalidation list (tiles, indexes, graph projections, AIReceipts) | PROPOSED shape |
-| Public signal | UI badge: `superseded` / `withdrawn` / `stale` | CONFIRMED doctrine |
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 5. Defect classes and posture
-
-CONFIRMED by KFM doctrine. Posture pairs each defect class with a correction strategy and a rollback strategy; the two are distinct but coupled.
-
-| Defect class | Correction posture | Rollback posture |
-|---|---|---|
-| **Evidence gap** | ABSTAIN, or withdraw the unsupported claim | Restore prior evidence-supported release |
-| **Source-role defect** | Restore source role; refuse upcast; emit corrected `SourceDescriptor` | Withdraw artifacts that depended on the wrong role |
-| **Rights defect** | DENY public use; quarantine source / artifact | Withdraw affected artifacts |
-| **Sensitivity leak** | Redact or generalize; notify stewards; emit `RedactionReceipt` | **Immediate** public disablement |
-| **Geometry defect** | Rebuild derivative layer and Evidence Drawer payload | Restore previous digest-pinned artifact |
-| **Temporal defect** | Correct `valid_time` / `source_time` / `retrieval_time` / `release_time` | Mark stale until rebuilt |
-| **Policy defect** | Re-run policy and `DecisionEnvelope` | Disable route / layer if the gate failed |
-| **Validation defect** | Re-run validator; supersede `ValidationReport` | Hold at prior validated release |
-| **Rendering / API defect** | Patch governed API or layer manifest; re-validate | Revert route / manifest |
-| **AI-answer defect** | Invalidate `AIReceipt` and `RuntimeResponseEnvelope` | Remove answer; **preserve** the `EvidenceBundle` |
-| **Catalog defect** | Re-emit catalog closure after proof repair | Restore previous catalog state |
-
-> [!CAUTION]
-> **Sensitivity leaks demand immediate action.** The correction posture is parallel to but not a substitute for the rollback posture: public surfaces must be disabled *before* the steward-side correction completes.
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 6. `CorrectionNotice` — required content
-
-> [!NOTE]
-> The shape below is the **PROPOSED minimum** required fields. The authoritative schema lives at `schemas/contracts/v1/review/correction_notice.schema.json` (PROPOSED path; NEEDS VERIFICATION in mounted repo). Names, types, and required-flags are governed by the schema, not by this doc.
-
-```json
-{
-  "object_type": "CorrectionNotice",
-  "schema_version": "v1",
-  "notice_id": "kfm://correction/<uuid>",
-  "created": "2026-05-14T00:00:00Z",
-  "spec_hash": "sha256:...",
-  "defect_class": "evidence | source_role | rights | sensitivity | geometry | temporal | policy | validation | rendering | api | ai_answer | catalog",
-  "affected_release": "kfm://release/<release_id>",
-  "affected_claims": ["kfm://claim/<claim_id>"],
-  "affected_artifacts": ["kfm://artifact/<artifact_id>"],
-  "evidence_supersedes": ["kfm://evidence/<bundle_id>"],
-  "evidence_replacement": ["kfm://evidence/<new_bundle_id>"],
-  "review_record": "kfm://review/<review_id>",
-  "supersession": {
-    "supersedes_release": "kfm://release/<prior>",
-    "superseded_by_release": "kfm://release/<new>"
-  },
-  "rollback_target": "kfm://release/<safe_prior>",
-  "derivative_invalidation": [
-    "kfm://tile/...",
-    "kfm://index/...",
-    "kfm://graph-projection/...",
-    "kfm://ai-receipt/..."
-  ],
-  "public_signal": "superseded | withdrawn | stale | corrected",
-  "reasons": ["short structured reason codes"],
-  "notes": ["human-readable narrative for the Evidence Drawer"]
-}
-```
-
-> [!IMPORTANT]
-> `affected_release`, `defect_class`, `supersession`, `rollback_target`, and `review_record` are **PROPOSED required**. A `CorrectionNotice` missing any of these should fail closed at the release gate with `RELEASE_MANIFEST_INVALID` or a `CORRECTION_*` reason code (see §13).
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 7. `PUBLISHED → PUBLISHED′` state transition
-
-CONFIRMED doctrine: correction is a **governed lifecycle transition**, sitting alongside Admission, Normalization, Validation, Catalog closure, Release, and Rollback. It is **not** a file edit.
-
-| Field | Value |
-|---|---|
-| **Transition** | `PUBLISHED → PUBLISHED′` |
-| **Pre-condition** | Detected error or new evidence; downstream derivatives identified |
-| **Required artifacts (PROPOSED minimum)** | `CorrectionNotice`; `ReviewRecord`; derivative-invalidation list; `ReleaseManifest` update or supersession; named `rollback_target` |
-| **Failure-closed outcome** | Stale-state announcement; **no silent edit** of the prior release |
-| **Separation of duties** | Author / detector ≠ correction reviewer; release authority distinct when correction is steward-significant (see §11) |
-
-```mermaid
-stateDiagram-v2
-    [*] --> PUBLISHED
-    PUBLISHED --> DEFECT_DETECTED: defect report
-    DEFECT_DETECTED --> CLASSIFIED: defect_class set
-    CLASSIFIED --> EVIDENCE_REPAIR: open superseding EvidenceBundle
-    EVIDENCE_REPAIR --> REVIEW: ReviewRecord
-    REVIEW --> RELEASE_GATE: CorrectionNotice + ReleaseManifest update
-    RELEASE_GATE --> PUBLISHED_PRIME: supersede + invalidate derivatives
-    RELEASE_GATE --> HOLD: fail-closed (missing artifact / review)
-    HOLD --> REVIEW: re-submit
-    PUBLISHED_PRIME --> [*]
-    note right of PUBLISHED_PRIME
-        Prior PUBLISHED is retained
-        with supersession link.
-        Rollback target named.
-    end note
-```
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 8. Stale vs. wrong
-
-CONFIRMED doctrine: KFM **separates stale from wrong**. Both have visible markers and traceable lifecycles, but they are different defects with different correction postures.
-
-| Property | **Stale claim** | **Wrong claim** |
-|---|---|---|
-| Definition | Evidence, source freshness, dependent data, or context has aged past declared tolerance. | The substance of the claim is incorrect. |
-| Trigger | Cadence / version drift; review-aged; policy or model version superseded. | Counter-evidence; logic, geometry, temporal, or source-role error. |
-| Required action | Re-admit, supersede, or mark stale. Does **not** always require a `CorrectionNotice`. | `CorrectionNotice` always required. |
-| UI signal | `stale` badge in Evidence Drawer. | `superseded` / `withdrawn` / `corrected` badge. |
-| Rollback | Optional; depends on severity. | Often required for sensitivity or rights defects. |
-
-> [!TIP]
-> When a claim is **both** stale and wrong, treat it as wrong: emit a `CorrectionNotice` and follow §4. The stale badge can be retained as supporting context in the Evidence Drawer.
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 9. Supersession lineage
-
-CONFIRMED doctrine (extends Atlas v1.0 Appendix E): supersession is the audit trail that lets a future reviewer reconstruct *why* the prior release was wrong, *how* it was corrected, and *what* now stands in its place.
-
-| Object class | Supersession rule | Required lineage artifact |
-|---|---|---|
-| `SourceDescriptor` | Replaced by newer descriptor; old retained with `superseded_by` link. | Supersession entry in source register. |
-| `EvidenceBundle` | Replaced when corrected; old bundle retained for audit. | `EvidenceBundle` + `CorrectionNotice` + supersession link. |
-| `GeographyVersion` | Replaced by newer version; both queryable for time-bound claims. | Version register entry + crosswalk. |
-| Schema (`schemas/contracts/v1/...`) | Replaced via ADR; old schema retained. | ADR + supersession link in schema header. |
-| Policy | Replaced via accepted ADR; old policy retained. | ADR + supersession link. |
-| `ReleaseManifest` | Replaced by next release; rollback target remains valid. | Manifest history + rollback chain. |
-| `AIReceipt` | **Never** superseded retroactively. Old answer retained; a new answer is a new receipt. | Two distinct `AIReceipt`s with cross-reference. |
-
-> [!WARNING]
-> **A supersession without a forward link is a defect.** The "Supersession lineage gap" governance indicator (PROPOSED healthy posture: zero) treats unlinked supersessions as broken.
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 10. Derivative invalidation
-
-CONFIRMED doctrine: corrections must name and invalidate downstream derivatives. A correction that leaves stale tiles, indexes, or graph projections in place is incomplete.
-
-```mermaid
-graph TD
-    A[Defective PUBLISHED release] --> B[CorrectionNotice]
-    B --> C[Superseding ReleaseManifest]
-    C --> D1[Tile / PMTiles invalidation]
-    C --> D2[COG / GeoParquet invalidation]
-    C --> D3[Search index invalidation]
-    C --> D4[Graph / triplet projection invalidation]
-    C --> D5[AIReceipt invalidation]
-    C --> D6[Catalog record supersession]
-    D1 --> E[Public UI surfaces repoint]
-    D2 --> E
-    D3 --> E
-    D4 --> E
-    D5 --> E
-    D6 --> E
-    style B fill:#fef3c7,stroke:#a16207,color:#000
-    style C fill:#fef3c7,stroke:#a16207,color:#000
-```
-
-### PROPOSED invalidation classes
-
-| Derivative class | Invalidation action | Posture |
-|---|---|---|
-| Tile / PMTiles / MVT / COG | Mark digest stale; serve only post-correction digest | Fail closed if digest mismatch |
-| GeoParquet / vector source | Retain prior parquet for audit; route reads only the new manifest | Pin canonical artifact via release manifest |
-| Search index | Reindex from post-correction catalog; surface stale-banner until reindex completes | Index is derivative; never canonical |
-| Graph / triplet projection | Re-emit projection from canonical/catalog truth | Graph is derivative |
-| `AIReceipt` | Mark answer removed; preserve `EvidenceBundle` for re-answer | AI receipt is runtime accountability, not evidence |
-| Catalog record | Emit superseded catalog record with link to corrected record | Catalog is discovery, not proof |
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 11. Separation of duties
-
-CONFIRMED doctrine: correction is one of the actions where authorship and approval **must** separate when materiality applies.
-
-| Action | May author also approve? | Required separation (PROPOSED) |
-|---|---|---|
-| Correction / rollback (steward-significant) | **No.** | Author / detector + correction reviewer + release authority. |
-| Correction (routine, non-sensitive) | Conditional. | Domain steward may self-author; release authority still distinct for any change touching public surfaces. |
-| Sensitive-lane correction | **No.** | Author + sensitivity reviewer + release authority + rights-holder rep where applicable. |
-| AI-answer correction | **No.** | AI surface steward + docs steward (policy binding); release authority for any public re-emission. |
-
-> [!NOTE]
-> Maturity-dependent: Directory Rules §2 treats separation of duties as **maturity-dependent**. Early doctrine work may be authored and approved by the same actor at low materiality. As the public trust surface expands, separation must be enforced through tooling, not custom — this doc does not claim that enforcement is already in place.
-
-[↑ Back to top](#quick-jump)
-
----
-
-## 12. Governed AI surface and corrections
-
-CONFIRMED doctrine: AI is interpretive, not the root truth source. The correction path applies to AI surfaces with two specific rules.
-
-1. **An `AIReceipt` is never superseded retroactively.** A corrected answer is a **new receipt** with a cross-reference to the prior; the prior is retained for audit.
-2. **The `EvidenceBundle` survives.** When an AI-answer defect is detected, the answer envelope and `AIReceipt` are invalidated, but the underlying `EvidenceBundle` is preserved — the bundle is canonical, the answer is derivative.
+The complete flow below is **PROPOSED operational architecture**. Current repository proof is strongest for the two inventory/validation steps; the decision, execution, receipt, and public-parity stages remain held or unknown.
 
 ```mermaid
 flowchart LR
-    A[Old AIReceipt] -. cross-reference .-> B[New AIReceipt]
-    A --> C[EvidenceBundle <br/>preserved]
-    B --> C
-    A -- invalidated --> D[RuntimeResponseEnvelope:<br/>answer removed]
-    style A stroke:#dc2626,color:#dc2626
-    style D stroke:#dc2626,color:#dc2626
-    style C fill:#dcfce7,stroke:#15803d
+  DETECT["Detect and classify defect"] --> CONTAIN["Contain unsafe public exposure"]
+  CONTAIN --> EVIDENCE["Resolve evidence, scope, rights, sensitivity"]
+  EVIDENCE --> NOTICE["Draft CorrectionNotice"]
+  NOTICE --> IMPACT["CorrectionImpactAssessment"]
+  IMPACT --> PLAN["CorrectionPropagationPlan"]
+  PLAN --> REVIEW["Authenticated review and policy"]
+  REVIEW --> DECIDE["Accountable correction/release decision"]
+  DECIDE --> EXECUTE["Apply successor, withdrawal, or rollback"]
+  EXECUTE --> RECEIPTS["Emit execution and invalidation receipts"]
+  RECEIPTS --> VERIFY["Verify all affected carriers"]
+  VERIFY --> PUBLIC["Expose public-safe notice and current state"]
+  PUBLIC --> AUDIT["Retain append-only lineage"]
+
+  classDef implemented fill:#ede9fe,stroke:#6d28d9,color:#111;
+  classDef held fill:#fee2e2,stroke:#b91c1c,color:#111;
+  classDef proposed fill:#fef3c7,stroke:#a16207,color:#111;
+  class IMPACT,PLAN implemented;
+  class REVIEW,DECIDE,EXECUTE,RECEIPTS,VERIFY,PUBLIC held;
+  class DETECT,CONTAIN,EVIDENCE,NOTICE,AUDIT proposed;
 ```
 
-Allowed AI behaviors during and after correction:
+### Stage contract
 
-- Summarize the released, corrected `EvidenceBundle`.
-- Explain limitations and uncertainty.
-- Draft steward-review notes for the next correction cycle.
-- **ABSTAIN** when post-correction evidence is insufficient.
-- **DENY** when policy, rights, sensitivity, or release state blocks the request.
+| Stage | Minimum evidence or object | Current repository status |
+|---|---|---:|
+| Detect | Typed finding or report bound to affected release/claim/artifact | **PROPOSED**; no shared strict defect-report profile verified |
+| Contain | Public-safe hold, denial, withdrawal, or rollback request appropriate to severity | **UNKNOWN** operational behavior |
+| Resolve | EvidenceRef → EvidenceBundle, source role, time, geography, rights, sensitivity, and affected scope | **NEEDS VERIFICATION** integration |
+| Name | `CorrectionNotice` or `SupersessionNotice` | Contracts/schemas exist; machine closure **HOLD** |
+| Inventory | `CorrectionImpactAssessment` | **CONFIRMED** fixture-only validator/test surface |
+| Plan | `CorrectionPropagationPlan` | **CONFIRMED** fixture-only validator/test surface |
+| Review | Authenticated review record plus policy decision | **UNKNOWN** integrated authority |
+| Decide | Accountable correction/release decision with successor or withdrawal target | **UNKNOWN** accepted profile/operator |
+| Execute | Versioned successor, withdrawal, or governed rollback | **HOLD** |
+| Receipt | Append-only execution and per-carrier completion records | **HOLD**; subtype lane absent |
+| Verify | Carrier parity, citations, cache/search/graph/map/API/AI/documentation checks | **HOLD** beyond synthetic profile validation |
+| Expose | Public-safe notice and current release state through governed interfaces | **UNKNOWN** deployed parity |
+| Audit | Prior state, reasons, decisions, receipts, and successor links retained | **PROPOSED** operational closure |
 
-Forbidden during correction:
+> [!IMPORTANT]
+> Immediate containment for a rights, sensitivity, security, or harmful-precision defect may precede the full correction packet. That emergency containment must still produce accountable follow-up, preserve safe audit, and not become a permanent undocumented state.
 
-- Re-serving the old `AIReceipt` as authoritative.
-- Generating uncited claims to fill an evidence gap created by the correction.
-- Reaching past the governed API to direct model runtimes, RAW, WORK, QUARANTINE, or canonical stores.
-
-[↑ Back to top](#quick-jump)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="5-defect-classes-and-posture"></a>
+
+## 5. Defect classes and posture
+
+The classes below are an architecture taxonomy, not an accepted policy enum. A future strict profile may normalize or split them after contract, policy, and steward review.
+
+| Defect class | Initial public posture | Correction path | Rollback or withdrawal posture |
+|---|---|---|---|
+| Evidence gap or contradiction | `ABSTAIN` or `HOLD` the unsupported assertion | Resolve support, narrow scope, or emit a successor | Restore prior evidence-supported state when available |
+| Source-role defect | Hold affected derived claims; do not upcast weak support | Repair source-role metadata and dependent claims | Withdraw derivatives built on the invalid role |
+| Rights or consent defect | `DENY` affected public use | Re-evaluate admissibility and issue a safe notice | Withdraw immediately when permission no longer supports exposure |
+| Sensitivity, sovereignty, privacy, or harmful precision | Immediate containment and least-exposing public state | Redact, generalize, stage, delay, or withdraw with qualified review | Disable affected route or artifact before full editorial closure |
+| Geometry or CRS defect | Hold affected map/analysis surfaces when material | Rebuild from validated geometry and preserve old digest | Restore prior digest-pinned carrier if safe |
+| Temporal or freshness defect | Mark stale, narrow time, or `ABSTAIN`; do not imply currentness | Repair valid/source/retrieval/release time and dependent claims | Optional unless current public use is unsafe |
+| Policy or review defect | `HOLD` or `DENY` the operation | Re-run accepted policy and authenticated review | Disable or withdraw when prior exposure lacked authority |
+| Validation or integrity defect | Hold affected release candidate or public carrier | Rebuild and revalidate from pinned inputs | Restore prior validated target when possible |
+| API, renderer, tile, cache, search, graph, export, or document defect | Fail closed in the affected carrier without redefining truth | Repair the carrier and verify parity | Repoint or withdraw affected delivery surface |
+| AI-answer or citation defect | Remove or `ABSTAIN` the answer; preserve evidence | Re-resolve evidence and emit a new answer/receipt | Never rewrite the prior receipt as though it never existed |
+| Catalog or provenance defect | Hold discovery/public references that cannot resolve | Re-emit catalog/provenance from corrected support | Restore prior catalog projection only if still valid |
+
+> [!CAUTION]
+> Defect class alone cannot determine review burden or public action. Severity, affected audience, sensitivity, rights, geography, time, materiality, reversibility, and the availability of a safe prior state all matter.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="6-correctionnotice--required-content"></a>
+
+## 6. `CorrectionNotice` — required content
+
+### Current machine truth
+
+The current paired schema at [`schemas/contracts/v1/correction/correction_notice.schema.json`](../../../schemas/contracts/v1/correction/correction_notice.schema.json):
+
+- declares JSON Schema Draft 2020-12;
+- has status `PROPOSED` in its `x-kfm` metadata;
+- requires only `id`;
+- optionally defines `version` and `spec_hash` as unconstrained strings;
+- permits additional properties;
+- points to a fixture root, validator, and policy lane that were not found at this evidence snapshot.
+
+Schema-valid under that profile therefore does **not** prove affected objects, evidence, defect class, review, policy, successor, rollback, propagation, public summary, or release state.
+
+### Current semantic contract
+
+The draft [`CorrectionNotice` contract](../../../contracts/correction/correction_notice.md) treats the notice as a named trust object rather than the corrected artifact. It recommends, but the current schema does not enforce, these semantic groups:
+
+| Group | Proposed content | Why required before operational use |
+|---|---|---|
+| Identity | Stable notice ID, version, deterministic digest | Replay and unambiguous lineage |
+| Scope | Affected release, claims, assets, layers, catalogs, answers, or public surfaces | Prevent vague notices |
+| Reason | Defect class, severity/materiality, structured public-safe reasons | Drive review, containment, and explanation |
+| Evidence | Resolvable source and evidence references; counter-evidence or update record | Preserve cite-or-abstain |
+| Review and policy | Authenticated reviewer/issuer, review state, policy decision reference, obligations | Separate semantics from authority |
+| Successor state | Replacement release/artifact/claim or withdrawal posture; effective time | Identify what now stands |
+| Recovery | Rollback target and forward-fix posture | Preserve reversibility |
+| Propagation | Impact assessment and propagation-plan references; completion receipts | Prove carrier closure rather than merely assert it |
+| Public explanation | Safe summary, notice audience, disclosure limits, forward link | Make correction visible without exposing restricted detail |
+| AI authorship | Generated receipt reference when AI drafts substantive notice prose | Keep generated language subordinate and reviewable |
+
+### Operational HOLD
+
+A production-capable `CorrectionNotice` remains on hold until the following dependency-closed packet exists and is accepted:
+
+1. one canonical semantic home or documented compatibility model;
+2. strict versioned schema with finite enums and cross-field rules;
+3. valid and invalid no-network fixtures;
+4. deterministic validator and focused tests;
+5. evidence, review, policy, release, successor, rollback, and propagation bindings;
+6. public-safe redaction rules for sensitive reasons;
+7. versioning, migration, correction-of-correction, and backward-compatibility rules;
+8. integration into an accountable correction decision and executor without making the validator the authority.
+
+> [!WARNING]
+> Do not copy the proposal-era JSON example from an older edition into production. It was architecture prose, not the current schema, and it named fields the repository does not yet machine-enforce.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="7-published--published-state-transition"></a>
+
+## 7. `PUBLISHED → PUBLISHED′` state transition
+
+`PUBLISHED → PUBLISHED′` is explanatory notation for a governed successor state. It is not a literal current state-machine enum, database transaction, file rename, or proof that the repository can apply the transition.
+
+| Layer | Required distinction | Current posture |
+|---|---|---:|
+| Candidate validation | Are the proposed notice, impact inventory, propagation plan, and successor packet structurally coherent? | Partial fixture-first proof |
+| Accountable decision | May this correction, withdrawal, supersession, or rollback proceed under evidence, policy, review, rights, sensitivity, and release rules? | **UNKNOWN / HOLD** |
+| Application | Were public pointers, manifests, carriers, caches, indexes, and notices changed by an authorized operator? | **HOLD** |
+| Receipt and verification | Is the exact applied effect recorded, replayable, and independently checked across every affected carrier? | **HOLD** |
+| Public state | Do governed API/UI/map/search/export/AI surfaces expose the safe current state and visible lineage? | **UNKNOWN** |
+
+```mermaid
+stateDiagram-v2
+  [*] --> PUBLISHED
+  PUBLISHED --> DEFECT_DETECTED: named finding
+  DEFECT_DETECTED --> CONTAINED: safe hold / denial / withdrawal request
+  CONTAINED --> CANDIDATE: notice + evidence + impact + propagation plan
+  CANDIDATE --> REVIEW_HOLD: missing or rejected authority
+  REVIEW_HOLD --> CANDIDATE: corrected packet
+  CANDIDATE --> DECIDED: accountable approval
+  DECIDED --> APPLIED: authorized successor / withdrawal / rollback
+  APPLIED --> VERIFIED: execution receipts + carrier parity
+  VERIFIED --> PUBLISHED_PRIME: public-safe notice + current state
+  PUBLISHED_PRIME --> [*]
+  note right of PUBLISHED_PRIME
+    Prior state remains inspectable
+    subject to policy and retention.
+    Forward and backward lineage survive.
+  end note
+```
+
+No stage may infer the next from filenames, a workflow conclusion, or prose. A candidate `PASS` is not a decision; a decision is not execution; execution without receipts is not verified completion; public display without governed lineage is not KFM-grade correction.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="8-stale-vs-wrong"></a>
+
+## 8. Stale vs. wrong
+
+KFM must not collapse **stale**, **wrong**, **disputed**, **withdrawn**, and **superseded** into one badge or reason. They can overlap, but each carries different evidence and policy consequences.
+
+| State | Meaning | Minimum posture | CorrectionNotice requirement |
+|---|---|---|---|
+| Stale | Support or context exceeded an accepted freshness or review tolerance | Mark stale, narrow scope, hold, or abstain according to policy | Conditional; required when the public meaning or trust state materially changes |
+| Wrong | The substantive assertion, geometry, attribution, time, source role, or result is incorrect | Contain unsupported use and create a governed successor or withdrawal | Required under the proposed operational profile |
+| Disputed | Qualified evidence or authority challenges the assertion but resolution is pending | Surface dispute or abstain when material | Conditional; notice or caveat must preserve the dispute record |
+| Withdrawn | Public use is no longer permitted or safe, or the object is no longer supported | Close the governed public route and preserve safe audit | Required public-safe withdrawal/correction lineage |
+| Superseded | A newer governed object now stands in place of the prior one | Preserve old identity and link forward to the successor | Required lineage record |
+
+> [!IMPORTANT]
+> Stale does not mean safe to keep serving. The appropriate public behavior depends on accepted freshness policy and consequence. When stale support cannot justify the requested claim, the governed result is `ABSTAIN`, `HOLD`, or `DENY`, not a stale badge attached to an otherwise authoritative answer.
+
+When an object is both stale and wrong, use the wrong/correction path and preserve stale state as supporting context rather than as a substitute for correction.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="9-supersession-lineage"></a>
+
+## 9. Supersession lineage
+
+Supersession allows a future reviewer to reconstruct what was asserted, why it changed, what now stands, and which evidence, policy, review, release, propagation, and rollback records support the transition.
+
+### Current repository evidence
+
+- [`contracts/correction/supersession_notice.md`](../../../contracts/correction/supersession_notice.md) exists as a draft semantic contract.
+- [`schemas/contracts/v1/correction/supersession_notice.schema.json`](../../../schemas/contracts/v1/correction/supersession_notice.schema.json) exists as a permissive placeholder.
+- No supersession validator or fixture family was established in the inspected correction validator/fixture lanes.
+- [`release/correction_notices/`](../../../release/correction_notices/) and its flora, hydrology, and roads-rail-trade sublanes contain README/scaffold material rather than a proved governed correction-notice instance.
+
+### Lineage obligations
+
+| Object family | Required posture |
+|---|---|
+| Source or dataset version | Preserve prior source/version identity and record the authoritative update relationship |
+| Evidence bundle or claim | Preserve prior support and bind the successor, caveat, dispute, or withdrawal |
+| Geography, schema, contract, or policy | Preserve versioned identity and migration/supersession rules; do not rewrite historical meaning |
+| Release manifest or public carrier | Preserve prior release identity, successor/withdrawal target, effective time, and rollback relationship |
+| Catalog, graph, search, or tile projection | Rebuild from corrected support and record the prior projection as superseded or withdrawn |
+| Runtime or generated receipt | Preserve the original receipt; emit a new receipt for the corrected action or answer and cross-reference it |
+| Public notice | Link backward to affected state and forward to current state without revealing restricted reasons |
+
+Forward and backward pointers should be validated as one closure. A forward-only or backward-only link may strand users or auditors and must not be treated as complete lineage.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="10-derivative-invalidation"></a>
+
+## 10. Derivative invalidation
+
+Two repository-owned profiles now make the derivative burden more concrete. Both are intentionally bounded and non-executing.
+
+### `CorrectionImpactAssessment`
+
+The [`CorrectionImpactAssessment` contract](../../../contracts/correction/correction_impact_assessment.md), paired schema, fixtures, validator, and tests define an exact ten-carrier inventory in canonical order:
+
+1. `CATALOG`
+2. `API`
+3. `MAP`
+4. `TILE`
+5. `SEARCH`
+6. `GRAPH`
+7. `EXPORT`
+8. `AI`
+9. `CACHE`
+10. `DOCUMENTATION`
+
+Its finite outcomes are `COMPLETE`, `HOLD`, and `ERROR`. The current valid fixture lane contains one `COMPLETE` and one `HOLD` profile; the invalid lane exercises missing carrier, digest drift, invalid cache action, and missing AI citation revalidation. Tests prove deterministic identity, no network access, exact fixture polarity, and false authority/repository-mutation/release/publication/public-use flags.
+
+> [!CAUTION]
+> `COMPLETE` means the declared inventory is structurally and semantically closed for review. It does **not** mean the carriers were changed, the correction was approved, or public state is correct.
+
+### `CorrectionPropagationPlan`
+
+The [`CorrectionPropagationPlan` contract](../../../contracts/correction/correction_propagation_plan.md), paired schema, one deterministic `cases.json` matrix, validator, and tests model dependency-level actions and statuses. The fixture polarity is two `PASS`, one `ABSTAIN`, eleven `DENY`, and one `ERROR` cases.
+
+The validator recomputes identity, surface closure, entry order, reason codes, summary counts, time consistency, completion-receipt requirements, and replacement-target bindings. Tests deny network access and verify that mutation, release, publication, and history-deletion claims remain false.
+
+> [!CAUTION]
+> `PASS` means a fixture plan is internally coherent. It does **not** prove that any downstream system consumed the plan or completed an action.
+
+### Operational completion requirement (PROPOSED)
+
+A future correction executor should treat a carrier as complete only when an append-only execution or completion receipt binds:
+
+- the exact correction/decision ID;
+- affected prior and successor release/object IDs;
+- carrier kind and artifact or route identity;
+- planned versus observed action;
+- pre- and post-action digests or state references;
+- operator identity and authorization reference;
+- start, completion, and observation times;
+- result and stable reason codes;
+- verification method and verifier identity;
+- rollback or recovery target;
+- safe public-state observation where applicable.
+
+| Carrier | Typical required effect | Fail-closed observation |
+|---|---|---|
+| Catalog/provenance | Re-emit or supersede discovery/provenance projection | Old projection still resolves as current |
+| API | Serve only governed current state; preserve lineage | Route serves affected prior state without notice |
+| Map/tile/raster/vector | Rebuild, repoint, withdraw, or mark unavailable | Old digest remains publicly admitted |
+| Search/graph | Reindex or reproject from corrected support | Stale result remains current or lacks lineage |
+| Export/story/documentation | Regenerate or supersede with release/correction references | Download or narrative omits correction state |
+| AI | Re-resolve evidence/citations; withdraw or replace answer | Prior answer remains authoritative |
+| Cache/CDN | Invalidate exact keys or version namespace | Cached prior bytes remain reachable as current |
+
+No `data/receipts/correction/` subtype lane, accepted receipt profile, production executor, or end-to-end carrier parity proof was found. Operational derivative invalidation remains on hold.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="11-separation-of-duties"></a>
+
+## 11. Separation of duties
+
+Current [`CODEOWNERS`](../../../.github/CODEOWNERS) routes the repository to `@bartytime4life` and explicitly states that routing is not a `ReviewRecord`, policy decision, release approval, publication authority, or proof of independent review. No authenticated correction-role registry or independent correction/release approver was established in the inspected surfaces.
+
+### Proposed operational role split
+
+| Role | Owns | Must not silently collapse into |
+|---|---|---|
+| Detector/reporter | Finding, affected scope, initial evidence, urgency | Final reviewer or release authority for a material self-authored correction |
+| Correction author | Candidate notice, evidence packet, impact assessment, propagation plan | Policy decision or execution receipt |
+| Evidence/domain reviewer | Factual support, scope, source role, time, geography | Rights/sensitivity authority outside scope |
+| Rights/sensitivity/policy reviewer | Admissibility, disclosure limits, obligations, denial/withdrawal posture | Release execution |
+| Release authority | Accountable correction, supersession, withdrawal, or rollback decision | Authoring and independent verification at materiality |
+| Operator | Exact application of the authorized decision | Decision authority or self-issued verification |
+| Independent verifier | Receipt integrity, carrier parity, public-state observation | Operator for the same significant action |
+| Docs/public-notice steward | Safe explanatory notice and navigation | Evidence, policy, or release authority |
+
+Routine low-materiality work may eventually use a bounded exception, but that exception needs an accepted threshold, authenticated actor scope, audit record, expiry, and escalation rule. Significant, sensitive, rights-bearing, or public-state corrections default to separated duties.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="12-governed-ai-surface-and-corrections"></a>
+
+## 12. Governed AI surface and corrections
+
+AI may assist discovery and drafting. It is not the evidence source, correction reviewer, policy authority, release authority, operator, or verifier.
+
+### Allowed bounded uses
+
+- detect candidate contradictions, stale citations, or affected derivative references;
+- cluster duplicate reports and draft a candidate defect summary;
+- summarize resolved EvidenceBundles for reviewer use;
+- draft public-safe notice prose with explicit source references and a generated authoring receipt;
+- propose an impact inventory or propagation plan for deterministic validation;
+- re-answer only after governed evidence, policy, review, and release state support it;
+- return `ABSTAIN`, `DENY`, or `ERROR` when support or authority is missing.
+
+### Prohibited uses
+
+- treating generated prose as the evidence for its own correction;
+- silently rewriting a prior notice, answer, receipt, or release record;
+- inventing a corrected fact, reviewer, policy decision, release ID, or completion receipt;
+- exposing restricted reasons or sensitive geometry in public notice text;
+- reaching around the governed API to canonical/internal stores or direct model runtimes;
+- using hidden reasoning or chain-of-thought as proof.
+
+A corrected AI answer is a new runtime event with new citations and accountability records. The prior answer/receipt remains preserved according to policy and retention; it is not retroactively rewritten. Deployed Focus Mode, Evidence Drawer, search, map, and AI correction parity remains **UNKNOWN** in this evidence pass.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="13-gate-failure-reason-codes"></a>
 
 ## 13. Gate failure reason codes
 
-PROPOSED catalog — reason codes the release gate may emit when a correction submission fails closed. Names are PROPOSED; canonical list lives in the release policy bundle once verified.
+KFM does not yet have one accepted correction reason-code registry. Keep three layers distinct.
 
-| Failure family | Reason code (PROPOSED) | When it fires | Recovery |
-|---|---|---|---|
-| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Correction submission lacks a required artifact. | Re-emit missing receipt; re-run review; re-validate. |
-| Correction-specific | `CORRECTION_DEFECT_UNCLASSIFIED`, `CORRECTION_SUPERSESSION_MISSING`, `CORRECTION_DERIVATIVE_LIST_MISSING` | `CorrectionNotice` missing `defect_class`, `supersession`, or `derivative_invalidation`. | Complete the notice; resubmit. |
-| Release infrastructure | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING` | Superseding manifest malformed or missing rollback target. | Manifest fix; supply rollback target. |
-| Review state | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Required reviewer signature missing or rejected. | Run required review; supply `ReviewRecord`. |
-| Sensitivity / rights | `SENSITIVITY_UNRESOLVED`, `RIGHTS_UNKNOWN` | Sensitivity or rights status not resolved post-correction. | Steward review; tier reassignment. |
-| Source-role | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN` | Correction attempts to upcast / collapse a source role. | Restore source role; refuse upcast. |
+### Confirmed validator-local findings
 
-> [!CAUTION]
-> Reason codes must be machine-readable. Free-text rejection without a structured code is a drift indicator and should be flagged in the drift register.
+The current fixture validators use implementation-local codes for bounded validation. Examples include:
 
-[↑ Back to top](#quick-jump)
+| Profile | Confirmed examples | Scope |
+|---|---|---|
+| Impact assessment | `AI_CITATION_REVALIDATION_REQUIRED`, `CACHE_ACTION_INVALID`, `ASSESSMENT_DIGEST_MISMATCH`, `SCHEMA_INVALID` | Fixture shape, identity, and carrier semantics only |
+| Propagation plan | `CORRECTION_SCHEMA_INVALID`, `CORRECTION_SPEC_HASH_MISMATCH`, `CORRECTION_SURFACE_CLOSURE_MISMATCH`, `CORRECTION_COMPLETION_RECEIPT_REQUIRED`, `CORRECTION_TARGET_RELEASE_REQUIRED`, `CORRECTION_TIME_INVALID` | Fixture dependency-plan integrity only |
+
+These codes do not prove accepted public policy, release denial semantics, or operator behavior.
+
+### Proposal-era architecture codes retained for compatibility
+
+The prior edition named codes such as `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW`, `CORRECTION_DEFECT_UNCLASSIFIED`, `CORRECTION_SUPERSESSION_MISSING`, `CORRECTION_DERIVATIVE_LIST_MISSING`, `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING`, `REVIEW_NEEDED`, `SENSITIVITY_UNRESOLVED`, `RIGHTS_UNKNOWN`, and `ROLE_COLLAPSE`.
+
+Those names remain **PROPOSED**. Do not expose them as a stable API, policy, or release contract until an accepted registry defines:
+
+- namespace and version;
+- owning contract/policy surface;
+- public-safe versus restricted detail;
+- outcome mapping (`HOLD`, `ABSTAIN`, `DENY`, `ERROR`, or candidate validation failure);
+- retryability and escalation;
+- supersession and compatibility behavior;
+- cross-surface mapping for API, UI, map, export, and AI.
+
+Free text may accompany a code, but free text alone must not be the only machine-visible failure signal for a consequential correction operation.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="14-trust-visible-ui-signals"></a>
 
 ## 14. Trust-visible UI signals
 
-CONFIRMED doctrine: the public UI surfaces what governance already decided. It does not re-decide.
+The table below is **PROPOSED public behavior**. No deployed route, component, payload, or public-parity test was established by this documentation pass.
 
-| State | Trigger | Evidence Drawer badge | Layer / tile behavior |
-|---|---|---|---|
-| `superseded` | A newer `ReleaseManifest` supersedes this release via `CorrectionNotice`. | Superseded badge with forward link to corrected release. | Layer serves corrected artifact; prior remains queryable by release id only. |
-| `withdrawn` | Sensitivity, rights, or severe defect required public disablement. | Withdrawn badge with rationale class (rights / sensitivity / safety). | Layer disabled; route returns `DENY`. |
-| `corrected` | A correction has been applied and re-released. | Corrected badge with link to `CorrectionNotice`. | Normal serve from corrected artifacts. |
-| `stale` | Source freshness / schema / geography / model / review / policy version drift, no defect yet. | Stale badge with cause class. | Layer continues to serve; user is informed. |
+| Public state | Minimum safe signal | Governed behavior |
+|---|---|---|
+| Correction pending / containment | Temporarily unavailable, under review, or narrowed scope with a public-safe reason | Do not re-serve affected state merely to avoid an empty surface |
+| Corrected | Notice that content changed, effective time, current release link, and safe summary | Serve only the governed current state |
+| Superseded | Forward link to current state and prior-version identity | Prior may remain inspectable only as policy permits and never as current |
+| Withdrawn | Public-safe withdrawal notice without restricted details | Public route denies or abstains; audit remains protected |
+| Stale | Cause class, observed/currentness time, and limitation | Continue, narrow, hold, or abstain only as accepted policy permits |
+| Disputed | Visible caveat or abstention when material | Do not flatten unresolved dispute into a confident answer |
+| Correction failed | Stable public-safe failure state and recovery posture | Fail closed; do not silently fall back to affected state |
 
-> [!IMPORTANT]
-> The badge **is not the proof**. Every badge dereferences to the `CorrectionNotice`, `ReviewRecord`, or `SourceDescriptor` that justifies it. UI badges are not a substitute for the Evidence Drawer.
+The map renderer, UI badge, search result, export footer, or AI response never decides the state. Each is a downstream projection of governed evidence, policy, review, release, and correction records.
 
-[↑ Back to top](#quick-jump)
+Public notice text must disclose enough to preserve trust while withholding secrets, private data, exact sensitive locations, legal strategy, security details, or restricted reasons. A generic badge with no resolvable lineage is not proof.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="15-anti-patterns"></a>
 
 ## 15. Anti-patterns
 
-> [!WARNING]
-> Each of the following is a failure of the correction path. They are listed so reviewers can name them before they harden into authority.
+| Anti-pattern | Why it fails | Correct posture |
+|---|---|---|
+| Silent in-place mutation | Erases the inspected prior state and breaks lineage | Create a governed successor or withdrawal; preserve prior identity |
+| Notice as authority | Prose cannot approve or apply a correction | Link notice to evidence, review, policy, decision, execution, and current release state |
+| Placeholder schema treated as complete | Current schema accepts almost any additional content | Keep CorrectionNotice operational use on hold until strict closure exists |
+| `COMPLETE` treated as applied | Impact profile validates inventory only | Require actual execution/completion receipts and carrier verification |
+| `PASS` treated as approval | Propagation profile validates coherence only | Keep decision and execution separate |
+| Alias lane treated as canonical by presence | `release/correction/`, `release/corrections/`, and `release/correction_notices/` coexist | Follow accepted collection grammar and govern migration/classification |
+| Same actor authors, decides, executes, and verifies | Hides mistakes and defeats accountability | Separate significant duties or record an accepted bounded exception |
+| History deletion or receipt rewrite | Prevents replay and audit | Append new records; use policy-governed retention, not semantic erasure |
+| Stale badge used for a wrong claim | Avoids correction and may keep unsupported truth visible | Use the correction/withdrawal path and preserve stale context separately |
+| Incomplete derivative scope | Old API, tile, cache, search, graph, export, document, or AI state remains current | Inventory all carriers and verify observed completion |
+| Public notice leaks sensitive reason/detail | Correction creates a new exposure | Redact/generalize notice; keep restricted rationale behind governed access |
+| Documentation or workflow described as publication | Confuses repository state with public truth | Preserve explicit non-effects and separately authorize release/application |
 
-| Anti-pattern | Symptom | Why it fails | Correct posture |
-|---|---|---|---|
-| **Silent mutation** | Prior release file edited in place. | Destroys audit. Violates D2 / D5. | Emit superseding release; preserve prior. |
-| **Notice-less correction** | New release published with no `CorrectionNotice`. | No lineage. UI cannot badge `corrected`. | Always emit `CorrectionNotice`. |
-| **Orphan supersession** | New release supersedes a prior with no forward link. | Breaks supersession lineage indicator. | Forward + backward link both required. |
-| **Stale-as-correction** | A `stale` badge used in place of a `CorrectionNotice` for a substantively wrong claim. | Conflates §8 categories. | Emit `CorrectionNotice` for wrong claims. |
-| **Derivative drift** | Tiles, indexes, or graph projections not invalidated after correction. | Old artifacts serve through public CDN. | Name and invalidate all derivatives. |
-| **AI re-serve** | Old `AIReceipt` answer re-served after correction. | Bypasses governed surface. | New `AIReceipt`; cross-reference; ABSTAIN if evidence insufficient. |
-| **Same-author release** | Author of defective release self-approves the correction at materiality. | Violates §11. | Separation of duties enforced. |
-| **Policy-skip** | Correction routed around `PolicyDecision` because "it's just a fix." | Gate-bypass; trust-membrane breach. | Re-run policy gate as for any release. |
-| **Rollback collapse** | `CorrectionNotice` published with no `rollback_target`. | `RELEASE_MANIFEST_INVALID` / `ROLLBACK_TARGET_MISSING`. | Name a valid prior release as rollback target. |
-
-[↑ Back to top](#quick-jump)
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="current-implementation-maturity"></a>
+
+## Current implementation maturity
+
+| Surface | Repository proof | Safe conclusion |
+|---|---|---|
+| Architecture page | Tracked at the requested path; parent publication README links it | Human explanation exists; no behavioral authority |
+| CorrectionNotice | Draft semantic contract plus permissive placeholder schema | Meaning is described; machine closure and operational use remain held |
+| SupersessionNotice | Draft semantic contract plus permissive placeholder schema | Lineage intent exists; validator/fixtures/integration not established |
+| CorrectionImpactAssessment | Contract, strict schema, two valid and four invalid fixtures, deterministic validator, focused no-network tests | Bounded carrier-inventory proof only |
+| CorrectionPropagationPlan | Contract, strict schema, 15-case matrix, deterministic validator, no-network tests | Bounded dependency-plan proof only |
+| Public correction-notice collection | Parent and three domain index/scaffold lanes | Placement/indexing exists; no proved governed public correction instance |
+| Policy | Release-policy lane contains inactive scaffolds; correction-specific policy absent | No accepted correction admissibility result |
+| Review and actor authority | CODEOWNERS routes to one verified account | Review routing only; no independent/authenticated correction authority proved |
+| Release decision/application | No accepted correction decision profile or correction-specific operator established | Operational correction **HOLD** |
+| Execution receipts | Proposed subtype lane absent | Applied effects and carrier completion cannot be proved end to end |
+| API/UI/map/search/export/AI parity | No deployed or end-to-end evidence inspected | **UNKNOWN** |
+| Production-like correction drill | No end-to-end governed correction/withdrawal/re-correction drill established | **HOLD / NEEDS VERIFICATION** |
+
+### Proposed health indicators
+
+These are useful only after their producers, denominators, windows, and evidence sources are accepted:
+
+- time from trusted detection to safe containment;
+- time from containment to accountable decision;
+- CorrectionNotice strict-validation rate;
+- affected-carrier inventory completeness;
+- propagation completion-receipt coverage;
+- public-surface parity lag by carrier;
+- unresolved forward/backward lineage gaps;
+- stale prior-state reachability as current;
+- unauthorized in-place mutation count;
+- sensitive-reason redaction incidents;
+- correction failure, rollback, and re-correction rate.
+
+No dashboard or operational measurement of these indicators was verified in this pass.
+
+<p align="right"><a href="#top">Back to top</a></p>
+
+---
+
+<a id="16-verification-backlog"></a>
 
 ## 16. Verification backlog
 
-The items below are NEEDS VERIFICATION until checked against the mounted repository. They are tracked here for the docs steward and should also appear in `docs/registers/VERIFICATION_BACKLOG.md`.
+### Confirmed bounded work already present
 
-<details>
-<summary><strong>Open verification items (PROPOSED)</strong></summary>
+- [x] Accepted Directory Rules select `docs/` for this architecture page and `release/correction_notices/` for public correction objects.
+- [x] CorrectionNotice and SupersessionNotice semantic contracts and placeholder schemas exist.
+- [x] CorrectionImpactAssessment has a deterministic strict schema, fixture polarity, validator, and no-network tests.
+- [x] CorrectionPropagationPlan has a deterministic strict schema, 15-case polarity, validator, and no-network tests.
+- [x] Release policy explicitly documents its inactive scaffold status and non-authority.
+- [x] CODEOWNERS explicitly distinguishes review routing from approval and separation of duties.
 
-- [ ] **Schema home**: `schemas/contracts/v1/review/correction_notice.schema.json` exists and matches the PROPOSED shape in §6.
-- [ ] **Schema home**: `schemas/contracts/v1/review/review_record.schema.json` exists.
-- [ ] **Policy bundle**: `policy/release/` (or repo equivalent) emits the §13 reason codes.
-- [ ] **Fixtures**: `tests/fixtures/correction/` covers each defect class in §5 with at least one positive and one negative case.
-- [ ] **Validator**: A `CorrectionNotice` validator enforces required references (`affected_release`, `supersession`, `rollback_target`, `review_record`).
-- [ ] **CI workflow**: A workflow runs correction-notice validation and derivative-invalidation closure check on every release PR.
-- [ ] **Trust-membrane test**: A cross-system test proves no public client can fetch a superseded release without the supersession link.
-- [ ] **ADR**: Whether a separate ADR is required for the `CorrectionNotice` schema home; or whether ADR-0001 (schema home) covers it.
-- [ ] **OBJECT_MAP**: `contracts/OBJECT_MAP.md` carries `CorrectionNotice`, `ReviewRecord`, `ReleaseManifest`, `RollbackCard` with current schema paths.
-- [ ] **Companion doc**: `docs/architecture/publication/ROLLBACK.md` exists and is cross-linked.
-- [ ] **Folder README**: `docs/architecture/publication/README.md` meets Directory Rules §15 contract.
-- [ ] **Governance indicators**: "Correction lead time", "Derivative-invalidation coverage", "Supersession lineage gap", "Release with rollback target" are reported in the governance dashboard.
+### Operational HOLDs
 
-</details>
+- [ ] Resolve canonical CorrectionNotice semantic placement between correction and release families, or document a compatibility model with one writer.
+- [ ] Replace the permissive CorrectionNotice and SupersessionNotice placeholders with reviewed versioned profiles.
+- [ ] Add valid/invalid fixtures, validators, focused tests, and registry wiring for those notice families.
+- [ ] Define and activate accepted correction policy with finite outcomes, public-safe reason codes, and replayable decisions.
+- [ ] Bind authenticated ReviewRecord/actor authority and enforce appropriate separation of duties.
+- [ ] Define accountable correction, supersession, withdrawal, and re-correction decisions separately from candidate validation.
+- [ ] Implement an idempotent, least-privilege correction operator with dry-run and fail-closed behavior.
+- [ ] Define immutable execution/completion receipt profiles and the accepted subtype lane under `data/receipts/`.
+- [ ] Prove catalog, API, map, tile, search, graph, export, AI, cache, and documentation propagation with observed receipts.
+- [ ] Prove public-safe notice, current-state, citation, and lineage parity through governed APIs and clients.
+- [ ] Establish retention, restricted-history access, correction-of-correction, rollback, and incident runbooks.
+- [ ] Run production-like no-network/synthetic drills before any live correction authority is activated.
 
-[↑ Back to top](#quick-jump)
+### Smallest coherent next slice
+
+The next bounded repository-owned slice should close the **CorrectionNotice candidate profile**, not build a production operator:
+
+1. reconcile the semantic home against accepted Directory Rules and current release contracts;
+2. define one strict versioned schema from the reviewed semantic contract;
+3. add deterministic valid/invalid fixtures and a no-network validator;
+4. test identity, required references, public-safe summary rules, no-authority flags, and fail-closed parsing;
+5. wire bounded validation into current registry/CI conventions;
+6. preserve policy, actor authority, release decision, execution, receipts, public behavior, and publication as explicit later HOLDs.
+
+That slice is dependency-closed enough to make notice candidates trustworthy without pretending that KFM can yet apply a correction.
+
+### Operational graduation gates
+
+A correction path should not be called operational until evidence proves all of the following:
+
+- accepted contracts and strict schemas for notices, decisions, receipts, and lineage;
+- authenticated actors and materiality-appropriate independent review;
+- accepted correction/release policy and deterministic evaluator binding;
+- resolvable evidence, rights, sensitivity, temporal, and affected-scope closure;
+- idempotent decision application with dry-run, compare-and-swap or equivalent conflict control, and least privilege;
+- immutable execution and per-carrier completion receipts;
+- complete public-surface parity and fail-closed negative behavior;
+- correction, withdrawal, rollback, re-correction, partial-failure, and rollback-of-correction drills;
+- documented incident, correction request, escalation, retention, and recovery runbooks;
+- accountable human approval for live activation.
+
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
+
+<a id="17-related-docs"></a>
 
 ## 17. Related docs
 
-<details>
-<summary><strong>Doctrine</strong></summary>
+### Publication architecture
 
-- [Directory Rules](../../doctrine/directory-rules.md) — §15 README contract, §0 status & authority.
-- [Lifecycle Law](../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED.
-- [Trust Membrane](../../doctrine/trust-membrane.md) — public clients consume governed APIs only.
-- [Truth Posture](../../doctrine/truth-posture.md) — cite-or-abstain.
-- [Authority Ladder](../../registers/AUTHORITY_LADDER.md) — how doctrine, repo, source, and runtime evidence rank.
+- [Publication Architecture](README.md) — lane boundary, maturity map, and conflict register.
+- [Publication Rollback Discipline](ROLLBACK.md) — candidate profile, synthetic rehearsal, and operational rollback HOLDs.
+- [Rollback and Correction](rollback-and-correction.md) — concise comparison; currently proposal-era and requires separate convergence review.
+- [Release Objects](release-objects.md) — publication object-family overview.
+- [Release State Machine](release-state-machine.md) — explanatory release-state narrative.
+- [Release Gates](RELEASE_GATES.md) — detailed readiness/gate architecture.
 
-</details>
+### Doctrine, placement, and review routing
 
-<details>
-<summary><strong>Publication subsystem</strong></summary>
+- [Corrections Are First-Class](../../doctrine/corrections-first-class.md) — draft doctrine companion.
+- [Directory Rules](../../doctrine/directory-rules.md) — accepted placement and collection grammar through ADR-0029.
+- [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted adoption record.
+- [Lifecycle Law](../../doctrine/lifecycle-law.md) — lifecycle boundary.
+- [Trust Membrane](../../doctrine/trust-membrane.md) — governed public-interface rule.
+- [CODEOWNERS](../../../.github/CODEOWNERS) — repository review routing, not approval authority.
 
-- `docs/architecture/publication/README.md` *(PROPOSED)* — subsystem overview.
-- `docs/architecture/publication/ROLLBACK.md` *(PROPOSED)* — rollback path & drill.
-- `docs/architecture/publication/GEO_MANIFEST.md` *(PROPOSED)* — geo asset manifest for tile / COG trust badges.
+### Contracts, schemas, fixtures, validators, and tests
 
-</details>
+- [Correction contracts](../../../contracts/correction/README.md)
+- [Correction schema family](../../../schemas/contracts/v1/correction/README.md)
+- [Correction impact fixtures](../../../fixtures/contracts/v1/correction/correction_impact_assessment/)
+- [Correction propagation fixtures](../../../fixtures/contracts/v1/correction/correction_propagation_plan/)
+- [Impact-assessment validator](../../../tools/validators/correction/validate_correction_impact_assessment.py)
+- [Propagation-plan validator](../../../tools/validators/correction/validate_correction_propagation_plan.py)
+- [Impact-assessment tests](../../../tests/validators/correction/test_correction_impact_assessment.py)
+- [Propagation-plan tests](../../../tests/validators/test_validate_correction_propagation_plan.py)
 
-<details>
-<summary><strong>Adjacent subsystems</strong></summary>
+### Release, policy, receipts, and public carriers
 
-- `docs/architecture/review/README.md` — review & steward read-only surface.
-- `docs/architecture/governed-ai/README.md` — AI runtime, AIReceipt, finite outcomes.
-- `docs/architecture/ui/EVIDENCE_DRAWER.md` — drawer payload that surfaces correction lineage.
-- `contracts/OBJECT_MAP.md` — canonical object map for `CorrectionNotice`, `ReviewRecord`, `ReleaseManifest`, `RollbackCard`.
+- [Public correction-notice lane](../../../release/correction_notices/README.md)
+- [Release policy lane](../../../policy/release/README.md)
+- [Generated authoring receipts](../../../data/receipts/generated/README.md)
+- [Public-safe carriers](../../../data/published/README.md)
 
-</details>
+### Documentation rollback
 
-<details>
-<summary><strong>Registers</strong></summary>
+Before merge, close the draft pull request and abandon the feature branch. After an authorized merge, revert the bounded documentation commit and remove only its generated authoring receipt through the same reviewed change. Do not alter historical correction, release, or process records to roll back this page.
 
-- `docs/registers/VERIFICATION_BACKLOG.md` — tracks NEEDS VERIFICATION items.
-- `docs/registers/DRIFT_REGISTER.md` — tracks drift between doctrine and repo state.
-- `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` — classification of canon vs. lineage vs. exploratory packets.
-
-</details>
-
-> [!NOTE]
-> All links above are **PROPOSED relative paths**. They depend on the canonical `docs/` tree being laid out per the Whole-UI Expansion Report's proposed file map. Verify against mounted repo before treating any link as live.
+<p align="right"><a href="#top">Back to top</a></p>
 
 ---
 
-**Last updated:** 2026-05-14 &nbsp;·&nbsp; **Owners:** Docs steward + Release authority + Subsystem owner (publication) &nbsp;·&nbsp; [↑ Back to top](#quick-jump)
+<a id="appendix"></a>
+
+## Appendix
+
+### A. Repository-native validation commands
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m pytest -q \
+  tests/validators/correction/test_correction_impact_assessment.py
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest \
+  tests.validators.test_validate_correction_propagation_plan -v
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/correction/validate_correction_propagation_plan.py \
+  --fixtures
+
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<generated-receipt>.json
+
+make schemas
+git diff --check
+```
+
+These commands validate bounded repository objects. A green result does not activate correction policy, authenticate review, apply a release transition, or prove deployed public parity.
+
+### B. Compatibility ledger for the prior edition
+
+| Prior element | Disposition in v2.0.0 |
+|---|---|
+| `doc_id`, H1, and quick-jump target | Preserved |
+| Numbered section anchors `1` through `17` | Preserved explicitly |
+| Proposal-era path uncertainty | Replaced with current repository and accepted Directory Rules evidence |
+| Proposal-era `review/` schema paths | Corrected to the current `correction/` schema family |
+| Illustrative CorrectionNotice JSON | Removed as non-authoritative and replaced with current schema/contract truth |
+| Defect, stale/wrong, lineage, propagation, AI, UI, and anti-pattern content | Retained, bounded, and reconciled with current implementation maturity |
+| Unverified validator/fixture/CI claims | Replaced with exact implemented and absent surfaces |
+| Operational correction claims | Held until decision, execution, receipt, public-parity, and drill evidence exists |
+
+### C. Change history
+
+| Version | Date | Change |
+|---|---|---|
+| `v1` | 2026-05-14 | Proposal-era correction architecture page. |
+| `v2.0.0` | 2026-08-19 | Same-path repository-grounded modernization; current object-family proof, fixture-only profiles, accepted placement, explicit production HOLDs, and authoring provenance. |
+
+---
+
+**Last updated:** 2026-08-19 · **Review route:** `@bartytime4life` via CODEOWNERS · **Operational correction:** HOLD · **Publication effect:** none
+
+<p align="right"><a href="#top">Back to top</a></p>
