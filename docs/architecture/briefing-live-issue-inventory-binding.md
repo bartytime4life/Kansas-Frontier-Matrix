@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-architecture-briefing-live-issue-inventory-binding
 title: Briefing Live Issue Inventory Binding — Current Repository Boundary
- type: architecture-implementation-note
+type: architecture-implementation-note
 version: v1.0-draft
 status: "draft; repository-grounded; implementation-present; profile-proposed-inactive; non-authoritative; no-live-activation; no-repository-mutation; archive-placement-hold"
 owners:
