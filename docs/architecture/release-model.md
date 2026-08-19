@@ -993,15 +993,26 @@ No move, rename, redirect, mirror, supersession, or deletion occurs through this
 Run after changing this page in a mounted checkout:
 
 ```bash
-python tools/validators/docs/meta-block/validate_meta_blocks.py \
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --format text \
   docs/architecture/release-model.md
 python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
   docs/architecture/release-model.md
-python tools/validators/docs/document-graph/validate_document_graph.py
-python tools/validators/directory_governance/validate_repository_topology.py
+python tools/validators/docs/document-graph/check_document_graph.py \
+  --repo-root . \
+  --entrypoint README.md \
+  --entrypoint docs/README.md \
+  --format text \
+  README.md docs
+python tools/validators/directory_governance/validate_repository_topology.py \
+  --format text
 ```
 
-Tool names and CLI arguments should be rechecked against the exact branch before execution; the commands above are repository-path derived, not claimed as executed in this authoring step.
+These commands are derived from the current validator READMEs. Their exact-head results remain separate execution evidence and are not claimed by this document update.
 
 The directly related implementation checks are:
 
