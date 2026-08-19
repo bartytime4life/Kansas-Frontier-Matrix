@@ -1,527 +1,939 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/standard/evidence-bundle-conformance
-title: EvidenceBundle — External Standards Conformance Dossier
-type: standard
-version: v1
-status: draft
-owners: <TBD: docs steward + evidence/governance lead>
+doc_id: kfm://doc/standards/evidence-bundle
+title: EvidenceBundle — Repository Profile and Interoperability Boundary
+type: standard; evidence-profile-guidance; interoperability-boundary
+version: v2.0
+status: "draft; repository-grounded; mixed-maturity; non-authoritative"
+owners: ["@bartytime4life"]
 created: 2026-05-24
-updated: 2026-05-24
-policy_label: public
-related: [
-  contracts/v1/evidence/,
-  schemas/contracts/v1/evidence/,
-  policy/evidence/,
-  docs/standards/PROV.md,
-  docs/standards/PROV/README.md,
-  docs/standards/DUO_PROFILE.md,
-  docs/standards/ISO-19115.md,
-  docs/standards/SIGNING.md,
-  docs/standards/CANONICALIZATION.md,
-  docs/standards/PMTILES.md,
-  docs/architecture/contract-schema-policy-split.md,
-  docs/doctrine/trust-membrane.md,
-  docs/doctrine/lifecycle-law.md
-]
-tags: [kfm, standard, evidence-bundle, conformance, jcs, prov-o, slsa, stac, dcat, cosign, dsse, governance]
-notes: [
-  "Topical standards document (UPPERCASE_WITH_UNDERSCORES) per Directory Rules §6.1.a — names a KFM-coined object's external-standards conformance posture, not the object's meaning.",
-  "Object meaning is owned by contracts/v1/evidence/; machine shape by schemas/contracts/v1/evidence/; admissibility by policy/. This file does NOT redefine those.",
-  "Placement is intentionally narrow; see §2 Scope Guardrail and Appendix B Placement Rationale."
-]
+updated: 2026-08-18
+policy_label: repository-facing; evidence; standards-guidance; cite-or-abstain; non-release; non-publication
+owning_root: docs/
+current_path: docs/standards/EVIDENCE_BUNDLE.md
+responsibility: "Describe the current repository EvidenceBundle profile, its validation and resolver boundaries, and its relationship to external standards without redefining semantic, machine-shape, policy, evidence, release, or publication authority."
+truth_posture: "CONFIRMED current path, accepted placement, draft contract, proposed closed schema, minimal schema fixtures, validator wrapper, domain projections, internal v1alpha1 resolver, read-only CI, inactive evidence-policy stub, and fail-closed governed-api scaffold / PROPOSED graduation path and standards mappings / UNKNOWN authoritative registry, active policy, released bundle instances, production consumers, and external interoperability / NEEDS VERIFICATION specialist ownership, independent review, current hosted checks, and release integration"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: f9a515a1124f9f5397996f6bc7cb3fd1a3534c40
+  prior_target_blob: a8d4c2a569790635cda0dc96744e43fe9af56b8d
+  contract_blob: 731c348832add23cddd14e796aa56ce2b9268259
+  schema_blob: cf5256831b63dca46a5f68b168441adcf68b8751
+  schema_validator_blob: c1760c5e92eae6390f5adcde4593e8e9bab26535
+  schema_fixture_readme_blob: 89ace659414a757c14a4d3e516fd31d44c6a9969
+  resolver_readme_blob: d64f112e9fe6538178c74dd31cc751235781c7f3
+  resolver_workflow_blob: 39f9ba31bf6d88987e3f7281d3a92a62546a08da
+  evidence_policy_stub_blob: d60a9ea030ca57f5d577dabd760343e9d73a725c
+  canonicalization_blob: dc1a945417e0abf6761ccb4980f03433d8e2ba64
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+related:
+  - docs/standards/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/architecture/evidence-identity.md
+  - docs/architecture/governed-api.md
+  - docs/standards/CANONICALIZATION.md
+  - docs/standards/SIGNING.md
+  - docs/standards/PROV.md
+  - docs/standards/PROVENANCE.md
+  - contracts/evidence/evidence_bundle.md
+  - contracts/evidence/evidence_ref.md
+  - contracts/evidence/verification_state_history.md
+  - schemas/contracts/v1/evidence/evidence_bundle.schema.json
+  - schemas/contracts/v1/evidence/evidence_ref.schema.json
+  - schemas/contracts/v1/common/spec_hash.schema.json
+  - policy/evidence/README.md
+  - packages/evidence-resolver/README.md
+  - .github/workflows/evidence-resolver.yml
+tags: [kfm, standards, EvidenceBundle, EvidenceRef, evidence, schema, resolver, provenance, signing, catalog, interoperability, cite-or-abstain]
+notes:
+  - "v2.0 replaces the May 2026 proposal-only conformance dossier with a current-repository profile and explicit authority boundary."
+  - "The current EvidenceBundle schema is a closed JSON object with ten required fields; it does not declare JSON-LD, PROV-O, signatures, attestations, STAC/DCAT records, content-addressed URIs, or an external conformance certificate."
+  - "The internal resolver is non-authoritative. RESOLVED means CONTINUE_GOVERNED_CHECKS, never public ANSWER, release, or publication."
+  - "Legacy major-section anchors are retained through explicit HTML aliases."
+  - "This update changes no contract, schema, policy, fixture, validator, test, workflow, package, data object, release state, deployment, or publication surface."
 [/KFM_META_BLOCK_V2] -->
 
-# EvidenceBundle — External Standards Conformance Dossier
+<a id="top"></a>
+<a id="quick-jump"></a>
+<a id="evidencebundle--external-standards-conformance-dossier"></a>
 
-> A single place to answer the question *"which external standards does a KFM EvidenceBundle conform to, and how does an external consumer verify one?"* — without redefining the EvidenceBundle itself.
+# EvidenceBundle — Repository Profile and Interoperability Boundary
 
-[![status: draft](https://img.shields.io/badge/status-draft-orange)](#)
-[![type: topical standards document](https://img.shields.io/badge/type-topical--standards--document-informational)](#)
-[![scope: external conformance only](https://img.shields.io/badge/scope-external%20conformance%20only-critical)](#)
-[![governance: cite-or-abstain](https://img.shields.io/badge/governance-cite--or--abstain-blueviolet)](#)
-[![identity: JCS+SHA--256](https://img.shields.io/badge/identity-JCS%2BSHA--256-9cf)](#)
-[![signing: Cosign / DSSE / SLSA](https://img.shields.io/badge/signing-Cosign%20%7C%20DSSE%20%7C%20SLSA-yellowgreen)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
+> **One-line rule.** A current KFM `EvidenceBundle` is a proposed, closed claim-scope support shape plus bounded validation and candidate-resolution surfaces; it is not evidence truth, policy permission, review approval, release authority, publication, or an externally certified interoperability package.
 
-| Status | Owners | Last reviewed |
-|---|---|---|
-| **draft** | _TBD — docs steward + evidence/governance lead_ | 2026-05-24 |
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-at-a-glance)
+[![Schema: proposed closed shape](https://img.shields.io/badge/schema-proposed%20closed%20shape-1f6feb?style=flat-square)](#5-conformance-baseline)
+[![Resolver: internal v1alpha1](https://img.shields.io/badge/resolver-internal%20v1alpha1-8250df?style=flat-square)](#12-validation-pipeline)
+[![Policy: evaluator unbound](https://img.shields.io/badge/policy-evaluator%20unbound-d97706?style=flat-square)](#11-policy-sensitivity-and-redaction)
+[![Public ANSWER: unavailable](https://img.shields.io/badge/public%20ANSWER-unavailable-b42318?style=flat-square)](#10-trust-topologies)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#3-operating-boundary)
 
----
+> [!IMPORTANT]
+> **Human-readable standards guidance only.** [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) owns semantic meaning; [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) owns the current machine shape; [`policy/evidence/`](../../policy/evidence/README.md) is the policy-source lane; implementation, fixtures, tests, workflows, governed data, and `release/` own their separate responsibilities. This page may explain those surfaces but cannot make them adopted, authoritative, released, or public.
 
 > [!CAUTION]
-> **Scope guardrail.** This document is **not** the EvidenceBundle reference. It does **not** define the object's meaning, fields, validation rules, or admissibility. Those live in `contracts/v1/evidence/` (meaning), `schemas/contracts/v1/evidence/` (shape), and `policy/` (admissibility). This document only describes how a KFM EvidenceBundle aligns with the external standards an interoperability partner or external auditor would check it against. See §2 and Appendix B before adding any content here.
+> **The May 2026 dossier overclaimed current conformance.** The repository does not support treating every bundle as JSON-LD, PROV-O/PAV-complete, content-addressed, Cosign/DSSE/SLSA-attested, STAC/DCAT/ISO-mapped, OpenLineage-bound, or independently externally verifiable. Those ideas remain design lineage or graduation candidates unless an owning contract, schema, policy, implementation, fixture suite, consumer, and release record establish them.
+
+> [!WARNING]
+> **`RESOLVED` is not `ANSWER`.** The implemented package evaluates caller-supplied candidate state without registry, network, source, or policy lookup. A `RESOLVED` result remains `authoritative: false`, projects only to `CONTINUE_GOVERNED_CHECKS`, and is not renderable.
+
+**Quick navigation:** [Status](#status-at-a-glance) · [Purpose](#1-purpose) · [Scope](#2-scope-guardrail--what-this-doc-is-not) · [Boundary](#3-operating-boundary) · [Standards](#4-external-standards-conformance-matrix) · [Profile](#5-conformance-baseline) · [Identity](#6-content-addressing) · [Provenance](#7-provenance--prov-o--pav-alignment) · [Signing](#8-signing-and-attestation) · [Catalog](#9-catalog-interoperability--stac-dcat-iso-19115) · [Trust](#10-trust-topologies) · [Verification](#11-external-verification-flow) · [Validation](#12-validation-pipeline) · [Open work](#13-open-questions) · [Related](#14-related-docs) · [Example](#appendix-a--worked-external-verification) · [Placement](#appendix-b--placement-rationale)
 
 ---
 
-## Quick jump
+<a id="status-at-a-glance"></a>
 
-- [1. Purpose](#1-purpose)
-- [2. Scope guardrail — what this doc is NOT](#2-scope-guardrail--what-this-doc-is-not)
-- [3. Authority and standing](#3-authority-and-standing)
-- [4. External-standards conformance matrix](#4-external-standards-conformance-matrix)
-- [5. Identity and canonicalization](#5-identity-and-canonicalization)
-- [6. Content addressing](#6-content-addressing)
-- [7. Provenance — PROV-O & PAV alignment](#7-provenance--prov-o--pav-alignment)
-- [8. Signing and attestation](#8-signing-and-attestation)
-- [9. Catalog interoperability — STAC, DCAT, ISO 19115](#9-catalog-interoperability--stac-dcat-iso-19115)
-- [10. Trust topologies](#10-trust-topologies)
-- [11. External verification flow](#11-external-verification-flow)
-- [12. Tensions and known limits](#12-tensions-and-known-limits)
-- [13. Open questions](#13-open-questions)
-- [14. Related docs](#14-related-docs)
-- [Appendix A — Worked external verification](#appendix-a--worked-external-verification)
-- [Appendix B — Placement rationale](#appendix-b--placement-rationale)
+## Status at a glance
+
+Evidence snapshot: `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40`; prior document blob `a8d4c2a569790635cda0dc96744e43fe9af56b8d`.
+
+| Surface | Current repository evidence | Safe conclusion |
+|---|---|---|
+| Placement | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts Directory Rules v2, and [`docs/standards/README.md`](./README.md) classifies this path as an evidence-bundle documentation profile. | **CONFIRMED `PLACE` at the existing path** for human-readable guidance only. |
+| Review routing | Repository-default CODEOWNERS routes this path to `@bartytime4life`. | **CONFIRMED GitHub route;** accountable evidence, policy, release, security, and independent-review stewardship remain **NEEDS VERIFICATION**. |
+| Semantic contract | [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) is draft v0.2 and describes a claim-scope closure artifact. | **CONFIRMED present / PROPOSED meaning.** It is not an accepted release or policy decision. |
+| Machine shape | The shared schema is JSON Schema Draft 2020-12, closed at the root, requires ten fields, and declares `x-kfm.status: PROPOSED`. | **CONFIRMED shape / PROPOSED profile.** Shape validity is not semantic or policy closure. |
+| Generic fixtures | The contract fixture family contains one valid fixture, one missing-`bundle_id` negative fixture, and one expected-error matcher. | **CONFIRMED minimal polarity coverage.** Broad semantic and negative coverage is not established. |
+| Generic validator | `tools/validators/validate_evidence_bundle.py` delegates to the shared JSON Schema runner. | **CONFIRMED shape validator.** It does not resolve references, recompute meaning-bearing digests, evaluate rights, or authorize release. |
+| Domain projections | Domain schemas can reference the shared shape; the soil projection, for example, denies independent fields and declares no public-release authority. | **CONFIRMED projection pattern.** Domain projection does not establish domain evidence truth. |
+| Candidate resolver | `packages/evidence-resolver/` implements only `kfm/evidence-ref-bundle-candidate/v1alpha1`, using explicit caller-supplied objects and snapshots. | **CONFIRMED bounded internal alpha.** No authoritative registry lookup, evidence creation, policy evaluation, review, release, or public outcome. |
+| Resolver validation | `make evidence-resolver` runs 21 synthetic fixtures and 19 standard-library tests; `make evidence-resolver-deny` keeps all negatives non-`RESOLVED`. | **CONFIRMED declared local test surface.** Current exact-head execution remains a separate check. |
+| Policy | `policy/evidence/bundle_closure_required.rego` is a proposed stub whose only operative rule is `default deny := false`; its sample rule is commented out. | **CONFIRMED inactive policy stub.** `deny = false` must not be interpreted as allow, closure, or release permission. |
+| Governed API | The current `/evidence` route is part of a fail-closed `ABSTAIN / NOT_IMPLEMENTED` scaffold. | **CONFIRMED negative scaffold.** No public EvidenceBundle-backed `ANSWER` path is established. |
+| Release and publication | No released EvidenceBundle instance, authoritative public resolver, production consumer, or external conformance certificate was established by the inspected surfaces. | **UNKNOWN / NOT ESTABLISHED.** Do not infer absence beyond the bounded search, and do not claim maturity. |
+
+### State separation
+
+The following states are independent:
+
+```text
+path present
+  != semantic contract accepted
+  != schema valid
+  != cross-record closure
+  != candidate RESOLVED
+  != policy allowed
+  != review approved
+  != release authorized
+  != public ANSWER
+  != publication
+  != external interoperability certification
+```
+
+A green check proves only its declared boundary at a specific revision.
+
+[Back to quick navigation](#quick-jump)
 
 ---
+
+<a id="1-purpose"></a>
+<a id="1-why-this-dossier-exists"></a>
 
 ## 1. Purpose
 
-A KFM **EvidenceBundle** is a content-addressed JSON-LD artifact that travels with every consequential claim KFM publishes. CONFIRMED doctrine — Pass-10 C4-04, C8-04, KFM-P26-IDEA-0003 — states that an EvidenceBundle "should carry identity, inputs, parameters, artifacts, checks, integrity, and signatures as the canonical evidence artifact for consequential claims." The KFM Encyclopedia ranks it explicitly: *"EvidenceBundle outranks generated language, renderer state, graph projections, search indexes, tiles, PMTiles, COGs, dashboards, and synthetic scenes."*
+This page has three responsibilities:
 
-That puts EvidenceBundle at the center of KFM's trust membrane — and it puts it directly in the path of multiple external standards: JSON-LD canonicalization (RFC 8785 JCS / W3C URDNA2015), graph-layer provenance (W3C PROV-O + PAV), content-addressed identity (`spec_hash`), supply-chain attestation (Cosign / Sigstore / SLSA / in-toto / DSSE), and catalog interoperability (STAC, DCAT, ISO 19115 via DCAT).
+1. record the **current repository profile** that external and internal readers can actually inspect;
+2. distinguish current bindings from **proposed standards relationships**; and
+3. define the evidence required before stronger conformance language may be used.
 
-This dossier collects the external-standards posture in one place so that:
+The prior edition treated a large future architecture as current behavior. It described bundles as content-addressed JSON-LD objects carrying PROV-O, PAV, signatures, attestations, STAC/DCAT relationships, and cross-topology verification. The current schema carries none of those fields. The current validator checks shape, while the current resolver checks one non-authoritative candidate profile over supplied snapshots.
 
-1. An interoperability partner can read **one document** to understand what they need to implement on their side.
-2. An external auditor can read **one document** to know what they need to verify.
-3. KFM contributors can read **one document** to understand which external standard each EvidenceBundle field is bound to.
-4. Version-pin and conformance-level decisions for each external standard live in **one document** rather than scattered across the codebase.
+This revision therefore uses the following vocabulary:
 
-> [!NOTE]
-> This file is a **topical standards document** in the Directory Rules §6.1.a sense — UPPERCASE_WITH_UNDERSCORES, KFM-coined, sibling to `SENSITIVITY_RUBRIC.md` and `REDACTION_DETERMINISM.md`. It is **not** an external-standard short-name profile (those use UPPERCASE-WITH-HYPHENS — `ISO-19115.md`, `OAI-PMH.md`). See §3 and Appendix B for the placement rationale.
-
-[Back to top](#quick-jump)
-
----
-
-## 2. Scope guardrail — what this doc is NOT
-
-> [!IMPORTANT]
-> If you find yourself adding content that defines fields, validates fields, or admits/denies EvidenceBundles, **stop**. That content belongs in `contracts/`, `schemas/`, or `policy/`, not here. The boundaries below are not negotiable; they are Directory Rules §6.1.a.
-
-| If the content is about… | …it lives at | …not here |
-|---|---|---|
-| What an EvidenceBundle field **means** | `contracts/v1/evidence/evidence_bundle.md` (PROPOSED home) | this doc |
-| The **machine shape** of an EvidenceBundle (JSON Schema) | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` (PROPOSED home; corpus card KFM-P26-PROG-0004) | this doc |
-| The OPA rules that **admit, deny, or restrict** an EvidenceBundle | `policy/evidence/` (PROPOSED home) | this doc |
-| The **JSON-LD context** an EvidenceBundle ships with | `schemas/contracts/v1/contexts/` (PROPOSED home) | this doc |
-| Per-domain EvidenceBundle **extension fields** (e.g., flora, fauna, hydrology) | `contracts/v1/evidence/` + `schemas/contracts/v1/evidence/<domain>/` | this doc |
-| The **OpenLineage event emitter** that produces lineage facets | `pipelines/` / `runtime/` | this doc |
-| The **CI workflow** that verifies bundles in PRs | `.github/workflows/` (PROPOSED home) | this doc |
-| **Tests** and **fixtures** | `tests/standards/evidence/` + `fixtures/standards/evidence/` | this doc |
-| Tutorials, recipes, and how-tos for authors | `docs/runbooks/` or `docs/guides/` | this doc |
-
-What this document **does** own:
-
-- The list of external standards an EvidenceBundle conforms to or crosswalks against.
-- The version pin per external standard.
-- The conformance level KFM targets per external standard.
-- The integration touchpoint (which external term maps to which EvidenceBundle concept — without redefining the concept).
-- The external-verification recipe — what an outside consumer does to verify one of these bundles.
-
-[Back to top](#quick-jump)
-
----
-
-## 3. Authority and standing
-
-| Aspect | Value | Label |
-|---|---|---|
-| Document class | KFM-coined **topical standards document** | CONFIRMED per Directory Rules §6.1.a |
-| Canonical path | `docs/standards/EVIDENCE_BUNDLE.md` | PROPOSED — placement rationale in Appendix B |
-| Doctrine anchors | C1-01 (Run Receipt), C1-02 (spec_hash via JCS), C1-03 (Cosign), C1-04 (SLSA / in-toto), C4-04 (EvidenceBundle JSON-LD), C8-03 (PROV-O & PAV), C8-04 (EvidenceBundle JSON-LD graph), C8-05 (JCS vs URDNA2015) | CONFIRMED |
-| Pass-32 corroboration | KFM-P26-IDEA-0002 (EvidenceRef resolution triad), KFM-P26-IDEA-0003 (EvidenceBundle as canonical artifact contract), KFM-P26-PROG-0004 (`evidence_bundle.schema.json`), KFM-P8-IDEA-0001 (three trust topologies), KFM-P13-PROG-0011 (SLSA in-toto predicate), KFM-P10-PROG-0006 (DSSE/SLSA attestations) | CONFIRMED |
-| Authority **NOT** held by this doc | Object meaning, machine shape, admissibility, JSON-LD context, runtime emitter, tests, CI | CONFIRMED (Directory Rules §6.1.a) |
+| Term | Meaning in this page |
+|---|---|
+| **Current profile** | Repository-present contract/schema/validator/resolver behavior at the pinned revision. |
+| **Relationship** | An adjacent standard or object family that may be referenced without being embedded or adopted. |
+| **Graduation candidate** | A proposed binding that requires owning artifacts, validation, consumers, review, and compatibility evidence. |
+| **Conformance** | A bounded claim tied to a named profile, version, validator, fixtures, and observed producer/consumer behavior. |
+| **Publication** | A separate governed state requiring release, correction, and rollback authority. |
 
 > [!NOTE]
-> The corpus instruction *"never for KFM's own object meaning"* in Directory Rules §6.1.a is the reason §2 above is the longest required section in this document. The file is permissible at this path because it scopes itself to **external-standards conformance posture for** EvidenceBundle, not to the bundle's definition. Appendix B walks the placement argument in full.
+> `EvidenceBundle outranks generated language` is a KFM trust principle. It does not make every object named `EvidenceBundle` truthful, admissible, released, or public. The bundle itself must still be applicable to the claim scope and pass the remaining governed checks.
 
-[Back to top](#quick-jump)
-
----
-
-## 4. External-standards conformance matrix
-
-The matrix below is the **principal payload** of this document. Each row names an external standard, the KFM EvidenceBundle concept that touches it, the conformance level KFM targets, and where to look in the corpus for the doctrine anchor. PROPOSED — every implementation-level claim (Pinned version, Conformance level) NEEDS VERIFICATION against mounted-repo evidence (no mounted repo this session).
-
-| External standard | KFM touchpoint | Conformance level | Pinned version | Doctrine anchor |
-|---|---|---|---|---|
-| **RFC 8785 — JSON Canonicalization Scheme (JCS)** | Canonical byte-form of the bundle prior to `spec_hash` computation. | **CONFORMS** (default canonicalization) | NEEDS VERIFICATION per policy-bundle release | C1-02, C8-05 |
-| **W3C URDNA2015 — RDF Dataset Normalization** | Alternate canonicalization where RDF-semantic equivalence is the relevant invariant. | **CONFORMS, opt-in only** | NEEDS VERIFICATION | C8-05 |
-| **SHA-256 (FIPS 180-4)** | Digest function over canonical bytes; result recorded as `jcs:sha256:<hex>`. | **CONFORMS** | n/a (algorithm) | C1-02 |
-| **BLAKE3** | Permitted alternate digest for mirror manifests and intermediate artifacts (not the primary `spec_hash`). | **CONFORMS, alternate** | n/a | KFM-P32-PROG-0014 (PMTiles sidecar precedent) |
-| **W3C JSON-LD 1.1** | The bundle is a JSON-LD document; entities, sources, provenance, and run-receipt references serialize under JSON-LD semantics. | **CONFORMS** | JSON-LD 1.1 | C4-04, C8-04 |
-| **W3C PROV-O** | `prov:wasGeneratedBy`, `prov:Activity`, `prov:Entity`, `prov:Agent` on every claim node; round-trip to a fetchable `RunReceipt`. | **CONFORMS, REQUIRED** | NEEDS VERIFICATION; profile in `docs/standards/PROV/` | C8-03, C8-04 |
-| **PAV (Provenance, Authoring, Versioning)** | `pav:createdOn`, `pav:createdBy`, `pav:version` on entity nodes; complements PROV-O's authoring gap. | **CONFORMS** | PAV 2.3 family — NEEDS VERIFICATION | C8-03 |
-| **Sigstore / Cosign** | Keyless signing of the bundle's content-addressed digest; transparency-log entry in Rekor. | **CONFORMS, default** | Cosign current; OIDC issuer allowlist NEEDS VERIFICATION | C1-03 |
-| **DSSE (Dead Simple Signing Envelope)** | Envelope format for Cosign signatures over bundle attestation predicates. | **CONFORMS** | DSSE v1 | C1-03, KFM-P10-PROG-0006 |
-| **SLSA (Supply-chain Levels for Software Artifacts)** | Provenance predicate (`slsaprovenance`) attesting builder, materials, invocation. | **CONFORMS, target level NEEDS VERIFICATION** | SLSA target NEEDS VERIFICATION (corpus open question: level 1 / 2 / 3) | C1-04, KFM-P13-PROG-0011 |
-| **in-toto** | Predicate format underneath SLSA provenance; same DSSE envelope. | **CONFORMS** | in-toto attestation framework v1 | C1-04, KFM-P10-PROG-0006 |
-| **OGC STAC 1.x** | Catalog items reference EvidenceBundles via `kfm:evidence_ref` and (PROPOSED) a `rel:attestation` link. | **CONFORMS, with KFM extension** | STAC 1.x — NEEDS VERIFICATION pin | C4-04, KFM-P7-PROG-0001 |
-| **W3C DCAT v3** | Catalog distributions mirror STAC asset hrefs; `dcat:Distribution` may carry the bundle digest. | **CONFORMS** | DCAT v3 | KFM-P10-PROG-0006 Pass-32 addendum |
-| **ISO 19115** | Geographic-metadata crosswalk reached via DCAT, not directly bound to EvidenceBundle. | **CONFORMS, indirect** (via `docs/standards/ISO-19115.md`) | ISO 19115-1:2014 + Amd 2:2020 — NEEDS VERIFICATION pin | C4 family |
-| **OpenLineage** | Lineage events emitted alongside the bundle; `RunReceipt` carries the OpenLineage `run_id` (by reference per C1-01 open question). | **CONFORMS** | OpenLineage 1.x — NEEDS VERIFICATION pin | C1-05 |
-| **CIDOC-CRM E13 (Attribute Assignment)** | Scholarly-attribution overlap with PROV-O; the dividing line is unsettled. | **CROSSWALK, unsettled** | CIDOC-CRM 7.x | C8-01, C8-03 |
-
-> [!IMPORTANT]
-> "Conformance level" in this table is a KFM target, not a third-party assessment. None of these claims have been independently audited; the column is a contract KFM commits to honor, not a certificate.
-
-[Back to top](#quick-jump)
+[Back to quick navigation](#quick-jump)
 
 ---
 
-## 5. Identity and canonicalization
+<a id="2-scope-guardrail--what-this-doc-is-not"></a>
+<a id="2-scope-guardrail"></a>
 
-CONFIRMED doctrine — Pass-10 C1-02:
+## 2. Scope guardrail — what this document is not
 
-> *"The `spec_hash` for a dataset entry, model spec, contract, or evidence bundle is computed by canonicalizing the JSON via RFC 8785 JCS (JSON Canonicalization Scheme) and then taking SHA-256 over the canonical bytes; it is recorded as `jcs:sha256:<hex>`."*
+### In scope
 
-The canonicalization choice is **the** load-bearing decision of EvidenceBundle identity. Two consumers using different JSON serializers must compute the same `spec_hash` for the same logical bundle, or the entire chain — content-addressing, signing, verification, audit — comes apart.
+- current contract and schema posture;
+- exact required fields and closed-shape constraints;
+- current fixture, validator, resolver, workflow, policy, and governed-API boundaries;
+- identity, canonicalization, provenance, signing, catalog, and standards relationships;
+- finite outcomes and non-equivalences;
+- graduation evidence and rollback requirements;
+- compatibility with legacy anchors and readers.
 
-### 5.1 Canonicalization decision matrix
+### Out of scope
 
-PROPOSED — the rule below codifies Pass-10 C8-05 and the corpus default.
+- changing the semantic contract or machine schema;
+- deciding source authority, evidence truth, claim-scope applicability, rights, sensitivity, or policy;
+- selecting an authoritative evidence registry;
+- activating a source or network connector;
+- creating a release, correction, withdrawal, rollback, deployment, or publication;
+- certifying external interoperability;
+- accepting an ADR or changing repository governance;
+- turning examples into evidence or production records.
 
-| Bundle content shape | Canonicalization | `spec_hash` prefix | Rationale |
-|---|---|---|---|
-| Pure JSON (no embedded RDF semantics consumers rely on) | **RFC 8785 JCS** | `jcs:sha256:` | Default. Faster, more universally implemented; matches every other `spec_hash` in KFM. |
-| JSON-LD document where consumers depend on **RDF-semantic equivalence** (e.g., federated SPARQL merging KFM bundles with non-KFM RDF) | **W3C URDNA2015** | `urdna2015:sha256:` (PROPOSED prefix) | Opt-in only; receipt records the choice. Reproducibility across implementations NEEDS VERIFICATION via a test-vector suite (C8-05 expansion direction). |
+### Authority map
 
-> [!WARNING]
-> Hashing developer-formatted JSON (no canonicalization step) is **prohibited**. The corpus is explicit (C1-02): *"trivial reformatting would produce different hashes and break re-runs and audits."* Any tool that emits a `spec_hash` without going through a documented canonicalization is a trust-membrane bypass.
-
-### 5.2 Implementation pinning posture
-
-PROPOSED — implementation NEEDS VERIFICATION.
-
-- One JCS implementation **MUST** be pinned per language ecosystem (Python, TypeScript, Go) and the pin **MUST** appear in `infra/tool-versions.yaml` (PROPOSED home).
-- A `kfm-hash` CLI is the SHOULD-be-canonical entry point per Pass-10 C1-02 expansion direction; until it exists, language-specific helpers in `tools/spec_hash/` are acceptable.
-- The full JCS-vs-URDNA2015 decision matrix and language-pin table lives at `docs/standards/CANONICALIZATION.md` (PROPOSED, not yet authored — Pass-10 C1-02 expansion direction).
-
-[Back to top](#quick-jump)
-
----
-
-## 6. Content addressing
-
-CONFIRMED doctrine — Pass-10 C4-04:
-
-> *"Each catalog entry references an evidence bundle … stored at a content-addressed URI (`kfm://entity-bundle/<sha256>`, `oci://...`, or `ipfs://...`) and surfaced in STAC properties as `kfm:evidence_ref`."*
-
-### 6.1 Content-addressed URI families
-
-| Scheme | Use | Notes |
+| Question | Owning surface | This page may do |
 |---|---|---|
-| `kfm://entity-bundle/<sha256>` | KFM-internal canonical URI | Resolved by KFM bundle resolver; same digest, same bundle, every time. |
-| `oci://<registry>/<repo>@sha256:<hex>` | When the bundle is published as an OCI artifact (alongside or instead of the JSON-LD file) | Lets KFM bundles reuse OCI tooling — registries, mirrors, garbage collection. |
-| `ipfs://<cid>` | When the bundle is mirrored to IPFS for offline / federated access | Optional; only used when the deployment topology calls for it. |
+| What does `EvidenceBundle` mean? | [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) | Report the current draft meaning and conflicts. |
+| What machine representation is valid? | [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) | Summarize exact constraints and status. |
+| What does `EvidenceRef` mean? | [`contracts/evidence/evidence_ref.md`](../../contracts/evidence/evidence_ref.md) | Explain pointer-versus-closure separation. |
+| What candidate checks exist? | [`packages/evidence-resolver/`](../../packages/evidence-resolver/README.md) | Document the implemented alpha boundary. |
+| What is admissible or disclosable? | [`policy/evidence/`](../../policy/evidence/README.md), source rights, sensitivity, review, and release authorities | Expose the current policy gap; never infer allow. |
+| What validates a bounded requirement? | Fixtures, validators, tests, and invoking workflows | Name the checked surface and proof limit. |
+| Which materialized instance is governed evidence or proof? | Governed `data/` families | Avoid treating docs, examples, and fixtures as evidence. |
+| Which release/correction/rollback applies? | `release/` | State prerequisites; never approve. |
+| Where human standards guidance lives | Adopted Directory Rules and [`docs/standards/README.md`](./README.md) | Maintain this same-path profile. |
 
-All three schemes resolve the **same bundle bytes** when the underlying content is the same. The choice of scheme is a transport decision, not an identity decision; the identity is the digest.
-
-### 6.2 Append-only by construction
-
-Content-addressing means a published bundle **cannot be mutated without changing its identity**. Revocation is therefore not deletion — it is the publication of a **tombstone receipt** (C5-09) that supersedes the bundle and triggers cache invalidation (C6-08 — see `docs/standards/DUO_PROFILE.md` §7.2 for the consent-side equivalent). The bundle bytes remain reachable for audit; only their authority changes.
-
-[Back to top](#quick-jump)
-
----
-
-## 7. Provenance — PROV-O & PAV alignment
-
-CONFIRMED doctrine — Pass-10 C8-03, C8-04:
-
-> *"Every claim node in the graph carries a `prov:wasGeneratedBy` edge to a PROV-O Activity that links back to its run receipt … The graph publishes PROV-O fragments as part of every evidence bundle, and the policy gate checks that every claim node has at least one `prov:wasGeneratedBy` link."*
-
-EvidenceBundle's PROV-O alignment is governed by the dedicated profile at [`docs/standards/PROV/`](./PROV/README.md). This dossier records only the **conformance commitment**, not the profile detail:
-
-- Every EvidenceBundle **MUST** carry a PROV-O fragment.
-- Every claim node within the fragment **MUST** carry at least one `prov:wasGeneratedBy` edge.
-- That edge **MUST** resolve to a fetchable `RunReceipt` whose `spec_hash` matches what the bundle references.
-- PAV terms (`pav:createdOn`, `pav:createdBy`, `pav:version`) layer onto entity nodes for authoring metadata.
-- The PROV-O vs CIDOC-CRM E13 dividing line is an unresolved doctrine question (C8-03); it is tracked under the PROV profile, not here.
-
-> [!NOTE]
-> A `RunReceipt` whose `prov:wasGeneratedBy` edge points at an Activity that cannot be fetched is a **publication blocker**, not a warning (C5-08). The graph-layer gate enforces this. See `docs/standards/PROV/README.md` for the policy hookup and `policy/graph/` for the rule code (PROPOSED home).
-
-[Back to top](#quick-jump)
+[Back to quick navigation](#quick-jump)
 
 ---
 
-## 8. Signing and attestation
+<a id="3-authority-and-standing"></a>
+<a id="3-operating-boundary"></a>
 
-CONFIRMED doctrine — Pass-10 C1-03, C1-04; Pass-32 KFM-P10-PROG-0006, KFM-P13-PROG-0011.
+## 3. Operating boundary
 
-### 8.1 The three-layer signing stack
+The current bounded flow is:
 
 ```mermaid
-flowchart TB
-  subgraph Layer1["Layer 1 — Identity"]
-    A[JCS canonicalization]
-    B[SHA-256 over canonical bytes]
-    A --> B
-    B --> C[spec_hash<br/>jcs:sha256:HEX]
-  end
+flowchart LR
+    C["Draft semantic contract"] --> S["PROPOSED closed schema"]
+    S --> V["Schema fixture validator"]
+    V --> R["Internal v1alpha1 candidate evaluator"]
+    R --> P["Policy / rights / sensitivity"]
+    P --> H["Human review"]
+    H --> L["Release / correction / rollback"]
+    L --> A["Governed API ANSWER"]
 
-  subgraph Layer2["Layer 2 — Signature"]
-    D[Cosign keyless sign]
-    E[Fulcio cert<br/>via OIDC]
-    F[Rekor transparency log]
-    D --> E
-    D --> F
-  end
+    R -. "RESOLVED = continue only" .-> P
+    R -. "UNRESOLVED" .-> B["ABSTAIN"]
+    R -. "DENIED" .-> D["DENY"]
+    R -. "ERROR" .-> E["ERROR"]
 
-  subgraph Layer3["Layer 3 — Attestation"]
-    G[SLSA provenance predicate]
-    H[in-toto Statement]
-    I[DSSE envelope]
-    J[cosign attest --predicate]
-    G --> H --> I --> J
-  end
-
-  C --> D
-  C --> G
-  J --> K[Receipt attestations slot]
-  F --> K
-
-  style C fill:#fff4cc,stroke:#b58900
-  style K fill:#d9eaff,stroke:#2c5282
+    classDef current fill:#dbeafe,stroke:#2563eb;
+    classDef proposed fill:#fff7d6,stroke:#a16207;
+    classDef held fill:#fee2e2,stroke:#b91c1c;
+    class S,V,R current;
+    class C,P,H,L proposed;
+    class A held;
 ```
 
-PROPOSED — diagram reflects C1-02 / C1-03 / C1-04 / KFM-P10-PROG-0006 / KFM-P13-PROG-0011 in combination. Object names align with attached doctrine; tooling pins NEED VERIFICATION.
+The diagram shows responsibility order, not implementation closure. The current package does not call the policy, review, release, or API surfaces.
 
-### 8.2 What each layer answers
-
-| Layer | Answers the question | Standard |
-|---|---|---|
-| **Identity** | *"Is this the same bundle as before?"* | RFC 8785 JCS + SHA-256 |
-| **Signature** | *"Who signed this, and is the signature recorded in a public log?"* | Sigstore / Cosign / Fulcio / Rekor |
-| **Attestation** | *"With what inputs, on what platform, at what commit was this built?"* | SLSA + in-toto + DSSE |
-
-The three layers compose, not substitute. A bundle with identity but no signature is unverifiable; a bundle with signature but no attestation tells you who but not how; a bundle with attestation but no canonical identity has nothing stable to attest about.
-
-### 8.3 Keyless-vs-keyed posture
-
-CONFIRMED (C1-03): keyless via Sigstore is the **default**; a pinned key pair is the **air-gapped fallback**. PROPOSED — the dual-mode policy and the OIDC-issuer allowlist live at `docs/standards/SIGNING.md` (PROPOSED, not yet authored). Sovereignty-driven preference for pinned keys is a recognized variance (C1-03 tension).
-
-[Back to top](#quick-jump)
-
----
-
-## 9. Catalog interoperability — STAC, DCAT, ISO 19115
-
-EvidenceBundles do not live alone — they are reached **through** catalog records. Three external standards govern that reach.
-
-### 9.1 STAC integration
-
-CONFIRMED (C4-04): STAC items carry `kfm:evidence_ref` in their properties, pointing at the bundle's content-addressed URI.
-
-PROPOSED (Pass-32 KFM-P7-PROG-0001 — *STAC attestation hook*): STAC items SHOULD also expose a `rel:attestation` link directly to the bundle, so any STAC client can resolve from a catalog hit to the evidence without bespoke API knowledge. The `rel:attestation` is not currently a standard STAC link relation; KFM uses it under a controlled namespace until it is registered through the STAC extension process.
-
-### 9.2 DCAT integration
-
-PROPOSED (Pass-32 SRC-P32 atlas addendum): `dcat:Distribution` records mirror the STAC asset href; the bundle digest is carried as the distribution identity. The full crosswalk lives in `docs/standards/PROV/crosswalk-dcat.md` (PROPOSED, not yet authored).
-
-### 9.3 ISO 19115 — reached via DCAT
-
-ISO 19115 conformance is **indirect** — the bundle does not embed ISO 19115 records directly; the DCAT catalog layer carries the ISO 19115 crosswalk for downstream geographic-metadata consumers. The profile lives at `docs/standards/ISO-19115.md` (prior-session-authored; presence NEEDS VERIFICATION).
-
-[Back to top](#quick-jump)
-
----
-
-## 10. Trust topologies
-
-CONFIRMED (Pass-32 KFM-P8-IDEA-0001): the same EvidenceBundle resolves into **three distinct trust topologies** depending on the deployment context. External standards apply differently in each.
-
-| Topology | Verification path | External standards in play |
-|---|---|---|
-| **CI-centric** | CI watcher → ONNX validator → OPA decision → Cosign + DSSE signature | Cosign, DSSE, OPA (Rego), Sigstore |
-| **Manifest-level** | STAC watcher → `spec_hash` diff → WASM validator → in-toto / SLSA attestation | JCS, SHA-256, STAC, in-toto, SLSA |
-| **Edge / mobile** | Delta PMTiles → device-attested verify → ephemeral capability tokens | PMTiles, device-attestation profiles (PROPOSED), capability-token format (PROPOSED) |
-
-> [!NOTE]
-> No topology is canonical. The CI path optimizes for fast iteration and developer ergonomics; the manifest path optimizes for offline, content-addressed reproducibility; the edge path optimizes for partial, capability-bounded verification on devices that cannot run the full pipeline. An EvidenceBundle published once **MUST** be verifiable from all three vantage points — that is the load-bearing property KFM commits to.
-
-[Back to top](#quick-jump)
-
----
-
-## 11. External verification flow
-
-The recipe below is the **principal external-consumer payload** of this document. It describes what an outside auditor or interoperability partner does to verify a KFM EvidenceBundle they have received by reference.
-
-PROPOSED. Tool names and step ordering NEED VERIFICATION when the `kfm-hash` CLI and the reference verifier ship (C1-02 / C8-04 expansion directions).
+### Lifecycle and trust membrane
 
 ```text
-Given:
-  - An EvidenceBundle URI (kfm://, oci://, or ipfs://)
-  - The expected spec_hash (jcs:sha256:<hex>)
-
-Steps:
-  1. Fetch the bundle bytes from the URI.
-  2. Verify content-address: SHA-256(bundle bytes) MUST equal the URI digest.
-  3. Canonicalize the bundle: RFC 8785 JCS over the JSON (or URDNA2015 if the
-     bundle's receipt records that choice).
-  4. Compute the spec_hash: SHA-256(canonical bytes).
-  5. Verify the spec_hash matches the expected value.
-  6. Fetch the Cosign signature bundle from the receipt's attestations[] entry.
-  7. Verify the signature against the Sigstore root and the OIDC-issuer allowlist;
-     check the Rekor transparency-log entry.
-  8. Fetch the SLSA provenance predicate from the same attestations[] slot.
-  9. Verify the predicate's subject digest matches the spec_hash from step 4.
- 10. Verify the predicate's builder identity is on the documented allowlist.
- 11. For each PROV-O Activity referenced by the bundle, fetch the corresponding
-     RunReceipt and verify its spec_hash matches what the bundle references.
- 12. For consent-bearing claims (per docs/standards/DUO_PROFILE.md), additionally
-     verify the ConsentSidecar and Passport visa — out of scope of this verifier.
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED
 ```
 
-A verifier that completes steps 1–11 has independently established: the bundle is byte-identical to what was signed; the signer is who they claim to be; the build environment was the one attested; and every claim is round-trip-resolvable to a `RunReceipt`. **That is the full external verification surface** of an EvidenceBundle.
+- A contract or schema is not lifecycle data.
+- A fixture is synthetic test material, not evidence.
+- A validator result is not a proof or release.
+- A candidate resolver result creates no lifecycle transition.
+- Public clients must consume governed interfaces and released public-safe artifacts, not proof stores or candidate inputs.
+- Corrections and withdrawals must preserve lineage instead of silently replacing prior support.
 
-[Back to top](#quick-jump)
+### Object-family non-collapse
 
----
-
-## 12. Tensions and known limits
-
-| Tension | Source | KFM posture |
+| Object or status | It is | It is not |
 |---|---|---|
-| JCS and URDNA2015 can produce different hashes for the same logical JSON-LD content. | C8-05 | JCS is the default; URDNA2015 is opt-in. The receipt records the choice. A public test-vector suite is the (PROPOSED) reconciliation surface. |
-| Cosign keyless mode depends on Sigstore availability at sign time. | C1-03 | A KMS-managed key fallback is documented. Air-gapped operation uses the keyed mode. |
-| SLSA level target is not committed. | C1-04 open question | NEEDS DECISION — level 1 / 2 / 3. Level 3 requires hardened build platforms and is meaningfully more expensive. |
-| STAC's `rel:attestation` link relation is not yet standard. | KFM-P7-PROG-0001 | KFM uses it under a controlled namespace pending submission through the STAC extension process. |
-| PROV-O and CIDOC-CRM E13 overlap is unsettled. | C8-03 | PROV-O is preferred for graph-layer claim provenance; CRM E13 for scholarly attribution. The dividing line is a `docs/standards/PROV/crosswalk-crm-e13.md` open item. |
-| KFM has multiple slightly divergent run-receipt field-name conventions (`fetch_time` vs `fetched_at`, `http_validators` vs `source_validators`). | C1-01 tension | A canonical `run_receipt.v1` schema (PROPOSED) freezes the names; until then, EvidenceBundles MUST emit the version they validated against. |
-| OpenLineage `run_id` is carried by reference vs embedded — open. | C1-01 open question | NEEDS DECISION; impacts how EvidenceBundle links lineage events. |
-| Naming clash between this doc's title and the EvidenceBundle reference at `contracts/v1/evidence/evidence_bundle.md` (PROPOSED). | this doc | The scope guardrail in §2 is the protection; if drift accumulates, retitle this file (e.g., `EVIDENCE_BUNDLE_CONFORMANCE.md`) per §13 item 6. |
+| `EvidenceRef` | A pointer with `ref`, `kind`, and optional `bundle_ref`. | Proof that a bundle exists or applies. |
+| `EvidenceBundle` | A proposed claim-scope support package. | PolicyDecision, ReviewRecord, ReleaseManifest, receipt, catalog record, API response, or AI answer. |
+| Schema-valid bundle | A value accepted by the current JSON Schema. | Cross-record closure, citation accuracy, rights clearance, or release readiness. |
+| Resolver `RESOLVED` | A local candidate passed the named v1alpha1 checks over supplied state. | Evidence truth, public `ANSWER`, review, release, or publication. |
+| `spec_hash` | Integrity identity for an admitted specification projection. | Bundle ID, source-native ID, release ID, citation, or truth. |
+| Receipt | Process memory and audit support. | Evidence or release authority by itself. |
+| ReleaseManifest | A release-governance object. | EvidenceBundle semantics or source truth. |
 
-[Back to top](#quick-jump)
-
----
-
-## 13. Open questions
-
-UNKNOWN / NEEDS VERIFICATION items, tracked here until resolved by ADR or mounted-repo evidence.
-
-1. **SLSA target level for KFM data runs** — corpus C1-04 open question; affects which build-platform hardening is required.
-2. **OIDC-issuer allowlist** for Cosign verification — corpus C1-03 open question; affects which builder identities pass the §11 verifier.
-3. **Canonical `run_receipt.v1` JSON Schema location and content** — corpus C1-01 expansion direction; once authored, EvidenceBundle's `runReceiptRef` field is bound to it.
-4. **URDNA2015 use-case enumeration** — corpus C1-02 / C8-05 open question: which KFM bundles, if any, actually require URDNA2015 today?
-5. **OpenLineage `run_id` carriage** — embedded or by reference — corpus C1-01 open question.
-6. **This document's title clash** with the future `contracts/v1/evidence/evidence_bundle.md` — if confusion arises, retitle this file to `EVIDENCE_BUNDLE_CONFORMANCE.md` and leave a redirect. Resolution by README rule, not ADR.
-7. **STAC `rel:attestation` registration** — submit through the STAC extension process (KFM-P7-PROG-0001 expansion direction).
-8. **DSSE bundle storage layout** — `release/attest/` vs `tools/attest/` per `Master_MapLibre_Components-Functions-Features` ATLAS-04 OPEN-DR-07.
-9. **Bundle reference verifier languages** — corpus C8-04 expansion direction calls for Python and Go; whether TypeScript joins is open.
-10. **Partial-fetch support** for very large bundles — corpus C8-04 open question.
-
-[Back to top](#quick-jump)
+[Back to quick navigation](#quick-jump)
 
 ---
 
-## 14. Related docs
+<a id="4-external-standards-conformance-matrix"></a>
+<a id="4-authority-and-placement"></a>
 
-PROPOSED links — verify all paths against mounted repo before publishing.
+## 4. External-standards relationship matrix
 
-- [`contracts/v1/evidence/`](../../contracts/v1/evidence/) — _PROPOSED contract home._ Object meaning for `EvidenceBundle`, `EvidenceRef`, `RunReceipt`. **The canonical place for the bundle's definition; this dossier defers to it.**
-- [`schemas/contracts/v1/evidence/`](../../schemas/contracts/v1/evidence/) — _PROPOSED schema home._ Machine shape (Pass-32 KFM-P26-PROG-0004).
-- [`policy/evidence/`](../../policy/evidence/) — _PROPOSED policy home._ Admissibility, lineage-required gate, tombstone propagation.
-- [`docs/standards/PROV.md`](./PROV.md) — provenance profile (W3C PROV-O / PAV) — migration pending; see [`docs/standards/PROV/README.md`](./PROV/README.md).
-- [`docs/standards/PROV/README.md`](./PROV/README.md) — provenance profile folder index.
-- [`docs/standards/DUO_PROFILE.md`](./DUO_PROFILE.md) — consent-vocabulary profile (GA4GH DUO); EvidenceBundle carries `ConsentSidecar` by reference.
-- [`docs/standards/SIGNING.md`](./SIGNING.md) — _PROPOSED, not yet authored._ Cosign / Sigstore / SLSA / DSSE signing posture.
-- [`docs/standards/CANONICALIZATION.md`](./CANONICALIZATION.md) — _PROPOSED, not yet authored._ Full JCS-vs-URDNA2015 decision matrix.
-- [`docs/standards/ISO-19115.md`](./ISO-19115.md) — geographic-metadata profile.
-- [`docs/standards/OAI-PMH.md`](./OAI-PMH.md) — harvest protocol profile.
-- [`docs/standards/OGC-API-TILES.md`](./OGC-API-TILES.md) — tiles API profile.
-- [`docs/standards/PMTILES.md`](./PMTILES.md) — published-tile profile.
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) — _PROPOSED, not yet authored._ Sister topical standards document.
-- [`docs/standards/REDACTION_DETERMINISM.md`](./REDACTION_DETERMINISM.md) — _PROPOSED, not yet authored._ Sister topical standards document.
-- [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — the rule that keeps this dossier out of `contracts/`, `schemas/`, and `policy/`.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — _PROPOSED placement._ Trust-membrane invariants EvidenceBundle is the load-bearing artifact of.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — _PROPOSED placement._ Lifecycle the bundle accompanies.
+This table replaces blanket `CONFORMS` claims with the strongest result supported by the current repository.
 
-[Back to top](#quick-jump)
+| Standard or practice | Current EvidenceBundle binding | Status and limit | Graduation evidence required |
+|---|---|---|---|
+| JSON Schema Draft 2020-12 | The shared schema declares this dialect. | **CONFIRMED direct machine-shape binding.** It proves only schema behavior. | Stable schema version, compatibility policy, representative fixtures, observed producers/consumers. |
+| RFC 8785 JCS | KFM has a generic JCS + SHA-256 hashing implementation, and `spec_hash` uses the current common wrapper. | **CONFIRMED adjacent implementation / PARTIAL bundle binding.** The EvidenceBundle schema does not define its meaning-bearing projection or require recomputation. | Accepted EvidenceBundle hash domain, field projection, vectors, recomputation validator, producer/consumer parity. |
+| SHA-256 | `checksums` values and the common `spec_hash.value` use `sha256:<64-lowercase-hex>`. | **CONFIRMED syntax.** Digest presence is not proof of correct coverage, provenance, or truth. | Coverage rules, recomputation, failure codes, correction behavior, migration policy. |
+| JSON-LD 1.1 | No `@context`, `@id`, graph, or JSON-LD profile field exists in the current schema. | **NOT ESTABLISHED.** The prior “bundle is JSON-LD” claim is withdrawn. | Accepted semantic profile, context authority, schema/shape strategy, canonicalization profile, vectors, consumers. |
+| RDF dataset canonicalization | No RDF canonicalizer or EvidenceBundle RDF identity is verified. | **UNKNOWN / NOT IMPLEMENTED.** | Accepted RDF wire grammar, bounded implementation, vectors, dual-identity migration, consumer need. |
+| W3C PROV-O / PAV | No PROV or PAV field is present. `transforms` and `source_records` are strings only. | **ADJACENT GUIDANCE / NOT DIRECT CONFORMANCE.** | Accepted provenance projection, resolver rules, fixtures, validation, correction and release bindings. |
+| STAC / DCAT | Catalog profiles are separate object families; the bundle schema contains no STAC Item, DCAT Distribution, or catalog-link contract. | **SEPARATE RELATIONSHIP / NOT DIRECT CONFORMANCE.** | Accepted link relation, identity rules, synthetic and real closure fixtures, producer/consumer parity. |
+| ISO 19115 / Dublin Core | No direct field mapping or application profile is declared by the bundle schema. | **NO DIRECT BINDING.** | Object-family-specific mapping, loss rules, identifiers, rights/sensitivity handling, tests. |
+| SPDX identifiers | `rights.license` is an unconstrained string. | **NO SPDX VALIDATION.** `NOASSERTION` may be data, but the schema does not interpret it. | Accepted rights contract, SPDX grammar/version policy, exceptions, negative fixtures, evaluator binding. |
+| Sigstore / Cosign | No signature, certificate, transparency-log, or signer field exists. | **ADJACENT SIGNING GUIDANCE / NOT BUNDLE CONFORMANCE.** | Signature carrier and subject binding, key/identity policy, verifier, negative tests, release integration. |
+| DSSE / in-toto / SLSA | No attestation envelope or predicate reference exists in the profile. | **NOT ESTABLISHED.** | Accepted attestation object family, digest binding, storage, verifier, builder policy, rollback behavior. |
+| OpenLineage | No run/event identity or facet binding exists in the profile. | **NOT ESTABLISHED.** | Accepted event relationship, ID rules, producer, consumer, replay and correction tests. |
+| CIDOC-CRM E13 | No scholarly-attribution crosswalk is bound to the profile. | **REFERENCE ONLY.** | A scoped mapping decision and demonstrated use case. |
+| Content-addressed URI schemes | `bundle_id` is a pattern-constrained identifier, not a required digest URI. | **NOT REQUIRED.** `kfm://`, OCI, IPFS, or similar transport forms are not current profile rules. | Accepted identity/transport separation, resolver registry, immutable storage behavior, migration and correction policy. |
+
+> [!IMPORTANT]
+> A future document may say “conforms” only when it names the exact KFM profile, upstream version or immutable identifier, mandatory requirement set, validator, positive and negative fixtures, producer, consumer, review state, and release evidence. Standards prose alone cannot grant that status.
+
+[Back to quick navigation](#quick-jump)
 
 ---
 
-<details>
-<summary><strong>Appendix A — Worked external verification</strong></summary>
+<a id="5-identity-and-canonicalization"></a>
+<a id="5-conformance-baseline"></a>
+<a id="7-evidencebundle-canonical-form"></a>
 
-A worked example for a hypothetical EvidenceBundle published to OCI. **All values are illustrative**; do not copy as a contract.
+## 5. Current machine profile
+
+The shared schema currently defines a single closed JSON object.
+
+### Required fields
+
+| Field | Current shape | What it can establish | What it cannot establish |
+|---|---|---|---|
+| `bundle_id` | String matching `^[a-z][a-z0-9_:.-]*$`. | Syntactic bundle identifier. | Content address, global uniqueness, registry presence, or release identity. |
+| `claim_scope` | String. | A supplied scope statement. | Formal claim logic, semantic equivalence, geography/time support, or applicability. |
+| `evidence_refs` | Non-empty array of current `EvidenceRef` objects. | Structural membership list. | Reference resolution, source authority, freshness, correction state, or closure. |
+| `source_records` | Non-empty array of strings. | Supplied record handles. | SourceDescriptor binding, native-ID semantics, provenance graph, or fetchability. |
+| `citations` | Non-empty array of strings. | Supplied citation text. | Citation accuracy, quote support, locator validity, or publication suitability. |
+| `rights` | Closed object requiring string `license`. | Presence of one supplied license value. | Rights ownership, jurisdiction, obligations, SPDX validity, compatibility, or permission. |
+| `sensitivity` | Current `sensitivity_label` object. | Presence of level, reason, and applied time in the proposed shape. | Policy correctness, reviewer authority, transform adequacy, or disclosure permission. |
+| `transforms` | Array of strings; empty is allowed. | Supplied transform labels. | Ordering semantics, executable identity, provenance closure, or deterministic replay. |
+| `checksums` | Non-empty map whose values match `sha256:<hex>`. | Presence of syntactically valid digest strings. | Coverage, recomputation, canonicalization, or subject binding. |
+| `spec_hash` | Current common object `{ "value": "sha256:<hex>" }`. | Supplied spec identity in the executable grammar. | Bundle identity, release identity, evidence truth, or accepted migration to another grammar. |
+
+All ten fields are required, and undeclared root fields are rejected. The schema metadata remains `PROPOSED`.
+
+### Fields the current profile does not contain
+
+The current profile has no top-level field for:
+
+- version, creation time, valid time, retrieval time, review time, or release time;
+- JSON-LD `@context` or RDF graph;
+- structured SourceDescriptor, source role, or source authority;
+- structured citation locator, excerpt, quotation, or support relationship;
+- structured provenance activity, agent, entity, or derivation edge;
+- signature, signer, certificate, key, transparency log, or attestation;
+- STAC, DCAT, ISO, Dublin Core, OpenLineage, or CIDOC record;
+- PolicyDecision, ReviewRecord, ReleaseManifest, CorrectionNotice, or RollbackCard;
+- canonical registry, supersession, correction, or withdrawal snapshot;
+- public-renderability or publication authority.
+
+Adding any of these is a contract/schema evolution task, not a documentation shortcut.
+
+### Illustrative schema-valid shape
+
+The record below is synthetic documentation data. It is not evidence, a proof, a source record, policy permission, review, release, or publication.
+
+```json
+{
+  "bundle_id": "kfm:evidence-bundle:synthetic-001",
+  "claim_scope": "Synthetic documentation example only.",
+  "evidence_refs": [
+    {
+      "ref": "kfm:evidence:synthetic-record-001",
+      "kind": "record",
+      "bundle_ref": "kfm:evidence-bundle:synthetic-001"
+    }
+  ],
+  "source_records": [
+    "kfm:source-record:synthetic-001"
+  ],
+  "citations": [
+    "Synthetic citation for documentation validation only."
+  ],
+  "rights": {
+    "license": "NOASSERTION"
+  },
+  "sensitivity": {
+    "level": "public",
+    "reason": "Synthetic non-sensitive documentation example.",
+    "applied_at": "2026-08-18T00:00:00Z"
+  },
+  "transforms": [],
+  "checksums": {
+    "synthetic_record": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "spec_hash": {
+    "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  }
+}
+```
+
+Passing the schema with this record would prove only that the declared shape is accepted.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="6-content-addressing"></a>
+<a id="6-source-record-metadata"></a>
+<a id="8-bundle-id-and-content-addressing"></a>
+
+## 6. Identity, canonicalization, and content addressing
+
+### Identity domains remain distinct
+
+| Value | Current role | Non-equivalence rule |
+|---|---|---|
+| `bundle_id` | Stable-looking object identifier supplied by the record. | Must not be assumed to equal a digest, URI, release ID, source ID, or `spec_hash`. |
+| `EvidenceRef.ref` | Pointer identity for a measurement, record, dataset, or artifact. | Must not be assumed to identify the bundle or prove membership. |
+| `checksums.*` | Named SHA-256 digest strings for unspecified covered subjects. | Must not be treated as `bundle_id`, `spec_hash`, or release identity. |
+| `spec_hash.value` | SHA-256 identity of an admitted specification projection under current common tooling. | Must not be treated as the bundle's content digest unless an accepted object-family rule says so. |
+| Source-native ID | Identity assigned by the source system. | Must remain distinguishable from KFM object identity. |
+| Release ID | Identity of a governed release decision or manifest. | Must remain owned by release authority. |
+
+### Current canonicalization posture
+
+[`CANONICALIZATION.md`](./CANONICALIZATION.md) records a generic RFC 8785 JCS plus SHA-256 implementation with current wire grammar `sha256:<64-lowercase-hex>`. It also records that the proposed `jcs:sha256:<hex>` migration is not adopted.
+
+For EvidenceBundle specifically, current repository evidence does **not** establish:
+
+- the exact meaning-bearing field projection used to compute its `spec_hash`;
+- whether `bundle_id`, citations, sensitivity time, checksums, or other values are included or normalized;
+- a bundle-specific digest recomputation validator;
+- cross-language bundle vectors;
+- equivalence between whole-object bytes and `spec_hash`;
+- a required content-addressed URI or storage layout.
+
+Therefore:
+
+1. use only the current `sha256:<hex>` grammar where the schema requires it;
+2. do not emit `jcs:sha256:`, `urdna2015:sha256:`, `rdfc:sha256:`, or another prefix as current EvidenceBundle data;
+3. do not infer that the same `bundle_id` implies the same bytes;
+4. do not infer that matching digests imply evidence truth or release authority; and
+5. treat OCI, IPFS, `kfm://entity-bundle/`, and similar locations as proposed transport or registry designs until adopted and implemented.
+
+### Required graduation work
+
+A content-addressed EvidenceBundle profile needs, at minimum:
+
+- one accepted identity contract separating object ID, content digest, spec hash, source-native IDs, and release IDs;
+- an object-family canonicalization projection;
+- deterministic vectors and mutation tests;
+- a recomputation validator with stable reason codes;
+- storage and resolver semantics;
+- correction, supersession, withdrawal, retention, and garbage-collection rules;
+- producer and consumer parity; and
+- migration and rollback evidence.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="7-provenance--prov-o--pav-alignment"></a>
+<a id="9-provenance-and-derivation"></a>
+
+## 7. Provenance and derivation
+
+The current schema carries three coarse provenance-adjacent surfaces:
+
+- `source_records`: strings;
+- `transforms`: strings; and
+- `checksums`: named digest strings.
+
+Those fields can help a later resolver or reviewer, but they do not form a provenance graph and do not satisfy an external provenance profile by themselves.
+
+### Current limits
+
+| Concern | Current state | Required stronger surface |
+|---|---|---|
+| Source role and authority | Not represented in the bundle schema. | Bound SourceDescriptor/source-role records and policy rules. |
+| Source record identity | Unstructured strings. | Accepted identifier grammar and resolvable record snapshots. |
+| Transform order and parameters | Unstructured strings; no execution identity. | Structured transform records or receipt references with deterministic ordering. |
+| Activity, agent, entity relationships | Absent. | Accepted provenance projection, such as a scoped PROV profile, if the use case requires it. |
+| Citation support relationship | Citation strings only. | Structured locator, claim-support edge, quotation/excerpt rules, and citation validation. |
+| Correction and supersession | Not represented in the bundle schema. | Authoritative history/correction objects and release propagation. |
+| Replay | Not guaranteed by the bundle alone. | Inputs, executable/spec identity, time, environment where material, and deterministic validation. |
+
+The current resolver consumes a separate `VerificationStateHistory` snapshot supplied by the caller. That preserves an important boundary: history replay is not silently invented from `source_records` or `transforms`.
+
+### PROV-O and PAV relationship
+
+[`PROV.md`](./PROV.md), [`PROVENANCE.md`](./PROVENANCE.md), and the nested [`PROV/`](./PROV/README.md) lane describe provenance ideas with mixed maturity. None of those documents makes PROV-O or PAV mandatory for the current EvidenceBundle schema. A future binding must identify whether provenance is:
+
+- embedded in a bundle;
+- referenced by immutable ID;
+- emitted as a separate catalog/proof projection; or
+- reconstructed from receipts and governed history.
+
+The choice affects identity, canonicalization, privacy, correction, payload size, and interoperability. It requires a reviewed profile rather than a sentence in this page.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="8-signing-and-attestation"></a>
+<a id="10-signing-attestation-and-key-binding"></a>
+
+## 8. Signing, attestation, and key binding
+
+The current EvidenceBundle profile contains no signing or attestation fields. A schema-valid bundle cannot, by itself, tell a verifier:
+
+- who created or signed it;
+- which identity provider or key was used;
+- which bytes or digest were signed;
+- whether a signature was logged or revoked;
+- which builder, inputs, invocation, or environment produced it;
+- which attestation predicate or envelope applies; or
+- whether a release authority accepted the result.
+
+[`SIGNING.md`](./SIGNING.md) is the adjacent human-readable signing guidance. It does not automatically bind Sigstore, Cosign, DSSE, in-toto, SLSA, a transparency log, a KMS, or an OIDC issuer to EvidenceBundle.
+
+### Safe current posture
+
+| Claim | Current result |
+|---|---|
+| “Every EvidenceBundle is signed.” | **NOT ESTABLISHED** |
+| “Keyless Sigstore is the default.” | **NOT ESTABLISHED for EvidenceBundle** |
+| “A bundle has SLSA provenance.” | **NOT ESTABLISHED** |
+| “An external verifier can discover the signature from the bundle.” | **NOT ESTABLISHED** |
+| “Signature verification authorizes release.” | **DENY as an inference** — signature and release are separate. |
+
+### Graduation requirements
+
+A signing or attestation binding must define:
+
+1. the signed subject and canonical bytes;
+2. the signature or attestation object family and location;
+3. digest, bundle ID, spec hash, and release-manifest bindings;
+4. accepted algorithms, keys or identities, trust roots, expiry, and revocation;
+5. offline and degraded verification behavior;
+6. stable finite outcomes and safe diagnostics;
+7. positive, tampered, wrong-subject, expired, revoked, and untrusted-identity fixtures;
+8. policy and review obligations;
+9. release, correction, withdrawal, and rollback behavior; and
+10. independent interoperability evidence.
+
+A signature can support integrity and origin. It cannot replace source authority, claim support, rights, sensitivity, review, or release.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="9-catalog-interoperability--stac-dcat-iso-19115"></a>
+
+## 9. Catalog interoperability — STAC, DCAT, and metadata profiles
+
+`EvidenceBundle`, catalog record, proof object, receipt, release manifest, and published carrier remain separate families.
+
+```mermaid
+flowchart LR
+    EB["EvidenceBundle\nclaim-scope support"] --> CR["Catalog relationship\nSTAC / DCAT / other"]
+    EB --> PR["Proof object"]
+    EB --> RR["Receipts / verification reports"]
+    CR --> RM["ReleaseManifest"]
+    PR --> RM
+    RR --> RM
+    RM --> PA["Published public-safe carrier"]
+
+    EB -. "does not become" .-> CR
+    EB -. "does not authorize" .-> RM
+```
+
+### Current result
+
+- The shared EvidenceBundle schema has no STAC Item, asset, link, collection, or extension field.
+- It has no DCAT Dataset or Distribution field.
+- It has no ISO 19115 or Dublin Core application-profile field.
+- It has no standard link relation for signature, attestation, proof, release, correction, or rollback.
+- Synthetic STAC/DCAT/PROV catalog-closure work elsewhere in the repository is bounded to its declared release-candidate profile. It does not create a general EvidenceBundle application profile.
+- Domain projection schemas reference the shared EvidenceBundle shape rather than adding independent catalog fields.
+
+### Safe relationship pattern
+
+A future catalog may reference a released bundle by governed identifier, and a bundle may be discoverable through catalog closure, provided that:
+
+- each object keeps its own identity and authority;
+- references are resolvable at the authorized exposure level;
+- public catalogs do not leak proof-store paths, restricted sources, or sensitive reasons;
+- corrections and withdrawals propagate through catalog, cache, API, map, export, and AI surfaces; and
+- catalog discoverability is never treated as proof, release, or publication authority.
+
+Profile-specific mapping belongs in the corresponding standards page and machine profile, not in the base EvidenceBundle schema by implication.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="10-trust-topologies"></a>
+
+## 10. Trust topologies and current implementation depth
+
+The previous dossier required every bundle to be verifiable through CI-centric, manifest-level, and edge/mobile topologies. Current repository evidence does not establish that requirement.
+
+| Topology or stage | Current evidence | Status |
+|---|---|---|
+| Generic schema validation | One positive and one negative contract fixture plus shared JSON Schema runner. | **IMPLEMENTED, narrow** |
+| Local/CI candidate resolution | Internal v1alpha1 package, synthetic fixtures, standard-library tests, validator wrapper, and read-only workflow. | **IMPLEMENTED, non-authoritative** |
+| Authoritative registry resolution | No repository/store/network lookup in the package; caller supplies the lookup snapshot. | **NOT IMPLEMENTED in this slice** |
+| Evidence admissibility | Caller supplies a policy outcome; package does not evaluate policy. Evidence-policy Rego is an inactive stub. | **NOT IMPLEMENTED** |
+| Human review and separation of duties | No accepted EvidenceBundle review flow established by this profile. | **NEEDS VERIFICATION** |
+| Release/correction/rollback integration | No base-profile binding established. | **NOT ESTABLISHED** |
+| Governed public `ANSWER` | Governed API remains an `ABSTAIN / NOT_IMPLEMENTED` scaffold. | **NOT IMPLEMENTED** |
+| External manifest verification | No complete bundle signature/catalog/release verifier established. | **NOT ESTABLISHED** |
+| Edge/mobile/offline partial verification | No EvidenceBundle-specific implementation or profile established. | **UNKNOWN / FUTURE** |
+
+### Current runtime projection
+
+```text
+resolver RESOLVED   -> CONTINUE_GOVERNED_CHECKS
+resolver UNRESOLVED -> ABSTAIN
+resolver DENIED     -> DENY
+resolver ERROR      -> ERROR
+```
+
+Every projection remains non-authoritative and non-renderable. No resolver outcome maps directly to `ANSWER`.
+
+### Remaining governed checks after `RESOLVED`
+
+The checked-in resolver documentation names at least:
+
+- evidence authority;
+- rights;
+- sensitivity;
+- policy;
+- review;
+- release;
+- citation; and
+- correction.
+
+A consumer may require additional checks according to domain, source, scope, precision, time, or consequence. This page does not define that policy.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="11-external-verification-flow"></a>
+<a id="11-policy-sensitivity-and-redaction"></a>
+
+## 11. Current verification flow, policy, sensitivity, and redaction
+
+### What an external or internal verifier can do today
+
+Given a candidate JSON file and the current repository tooling, a verifier can:
+
+1. parse the file as JSON;
+2. validate it against the proposed closed schema;
+3. inspect whether required fields are present and syntactically valid;
+4. run the internal candidate resolver only when the verifier also supplies the exact EvidenceRef, bundle candidate, lookup snapshot, validated VerificationStateHistory, bitemporal as-of instants, and caller policy projection required by the v1alpha1 profile; and
+5. interpret a local `RESOLVED` result only as permission to continue the remaining governed checks.
+
+A verifier cannot establish from the bundle alone:
+
+- that source records are authoritative, retrievable, current, or rights-cleared;
+- that citations accurately support the requested claim;
+- that `claim_scope` is semantically equivalent to the requested scope;
+- that digests cover the correct subjects or were recomputed;
+- that sensitivity classification or redaction is correct;
+- that policy, review, release, correction, or rollback has closed;
+- that the bundle is signed or attested;
+- that a public `ANSWER` is allowed; or
+- that KFM or an external party has published a conforming artifact.
+
+### Evidence-policy status
+
+The only direct Rego file in `policy/evidence/` is a proposed greenfield stub:
+
+```rego
+package kfm.bundle_closure_required
+
+default deny := false
+```
+
+Its illustrative deny rule is commented out. No caller may normalize this to `ALLOW`. The safe state is **evaluator unbound / evidence admissibility not established**.
+
+### Sensitivity and redaction
+
+The schema requires the current proposed `sensitivity_label` object, but presence is not policy correctness. Before disclosure, a governed evaluator and authorized review must consider, as applicable:
+
+- source terms and rights;
+- living-person, genomic, cultural, archaeological, ecological, infrastructure, land/title, and precise-location sensitivity;
+- requested role, purpose, geography, time, and precision;
+- whether generalization, redaction, staged access, delay, quarantine, abstention, or denial is required;
+- transform receipts and non-leakage checks; and
+- correction and rollback implications.
+
+Sensitive reasons must not be exposed merely because the bundle carries a `reason` string.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="12-tensions-and-known-limits"></a>
+<a id="12-validation-pipeline"></a>
+
+## 12. Validation pipeline and proof limits
+
+### Repository-native commands
 
 ```bash
-# 1. Fetch the bundle by digest
-oras pull <registry>/<repo>@sha256:<HEX> --output ./bundle.jsonld
-
-# 2. Verify content-address
-sha256sum ./bundle.jsonld
-# expected: <HEX>
-
-# 3-5. Canonicalize and compute spec_hash
-kfm-hash --canonicalize=jcs ./bundle.jsonld
-# expected output: jcs:sha256:<HEX-matching-bundle-record>
-
-# 6. Fetch the cosign signature bundle (separately stored next to the receipt)
-cosign download attestation <registry>/<repo>@sha256:<HEX> > ./att.dsse
-
-# 7. Verify the signature against Sigstore + Rekor
-cosign verify-attestation \
-  --type slsaprovenance \
-  --certificate-identity-regexp '^https://github.com/<ALLOWED-ORG>/.+' \
-  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
-  <registry>/<repo>@sha256:<HEX>
-
-# 8-10. Inspect the SLSA predicate
-cosign verify-attestation ... | jq '.payload | @base64d | fromjson'
-# inspect subject digest, builder identity, materials, invocation
-
-# 11. Walk the PROV-O fragment and resolve each Activity
-jq '.. | select(."prov:wasGeneratedBy"? != null)' ./bundle.jsonld \
-  | xargs -n1 kfm-evidence-resolve --verify-receipt-hash
+python tools/validators/validate_evidence_bundle.py --fixtures
+make evidence-resolver
+make evidence-resolver-deny
 ```
 
-The exact commands depend on the tooling pin (`kfm-hash`, `kfm-evidence-resolve`) — those CLIs are PROPOSED and NEEDS VERIFICATION against mounted-repo evidence. The shape of the steps is doctrine-grounded.
+| Command or workflow | Current declared coverage | Does not prove |
+|---|---|---|
+| `validate_evidence_bundle.py --fixtures` | One valid and one invalid generic schema fixture. | Cross-record closure, digest recomputation, citations, rights, sensitivity, policy, release, or production behavior. |
+| `make evidence-resolver` | 21 synthetic candidate-profile fixtures and 19 standard-library tests; deterministic, bounded, no-network checks. | Authoritative lookup, evidence truth, policy evaluation, review, release, public response, or publication. |
+| `make evidence-resolver-deny` | Every negative fixture remains non-`RESOLVED`. | Completeness of all real-world denial cases. |
+| `.github/workflows/evidence-resolver.yml` | Read-only CI definition for the bounded candidate and negative profiles, plus fixture-to-runtime projection checks. | Exact-head pass state, required-check significance, production deployment, or external conformance. |
+| Governed API tests | Fail-closed scaffold behavior. | A substantive EvidenceBundle-backed `ANSWER`. |
 
-</details>
+### Minimum validation layers
 
-<details>
-<summary><strong>Appendix B — Placement rationale</strong></summary>
+| Layer | Question | Current state |
+|---|---|---|
+| Syntax | Is the input bounded valid JSON? | Resolver and schema tooling provide bounded checks in their declared lanes. |
+| Schema | Does it match the proposed machine shape? | **Implemented, minimal fixture coverage.** |
+| Cross-reference | Do refs, membership, lookup, subject, and verification history agree for supplied state? | **Implemented only in internal v1alpha1 candidate profile.** |
+| Semantic scope | Does the bundle support the requested claim, geography, time, and precision? | **Not established.** |
+| Source authority | Are source roles, records, and authority admissible? | **Not established by base profile.** |
+| Citation | Do citations accurately support the claim? | **Not established by base profile.** |
+| Integrity | Were meaning-bearing values canonically hashed and recomputed? | **Partial generic tooling; bundle-specific profile not established.** |
+| Rights/sensitivity | May the content be used and disclosed at the requested precision? | **Policy/evaluator unbound.** |
+| Review | Has authorized review closed with required separation? | **Needs verification.** |
+| Release | Is there a valid release, correction, and rollback target? | **Not established.** |
+| Runtime | May the governed interface return `ANSWER`? | **No current substantive path.** |
+| Interoperability | Can an independent implementation reproduce the same result? | **Not established.** |
 
-This document lives at `docs/standards/EVIDENCE_BUNDLE.md` despite Directory Rules §6.1.a stating that `docs/standards/` "is the canonical home for **external** standards profiles … never for KFM's own object meaning (which lives in `contracts/`)." The placement is legitimate, but only because of a narrow scoping commitment.
+### Failure posture
 
-**What §6.1.a forbids:** placing the EvidenceBundle's **object meaning** here. That is owned by `contracts/v1/evidence/`. This document does not do that.
+- malformed or unsupported input -> `ERROR`;
+- absent, stale, inconsistent, corrected, revoked, superseded, withdrawn, or incomplete supplied closure state -> `UNRESOLVED` and runtime `ABSTAIN`;
+- bound caller policy denial -> `DENIED` and runtime `DENY`;
+- bounded candidate success -> `RESOLVED`, then continue governed checks;
+- infrastructure or validator uncertainty must never silently become allow or answer.
 
-**What §6.1.a permits:** placing a "Multi-word topical standards document … not external standards" using UPPERCASE_WITH_UNDERSCORES. The examples §6.1.a names are `SENSITIVITY_RUBRIC.md`, `REDACTION_DETERMINISM.md`, `SMART_SYNC.md` — all KFM-coined topics that document **standardized practices** about KFM-internal objects without redefining those objects. This file matches that pattern: it documents the **standardized external-conformance posture** of EvidenceBundle.
+[Back to quick navigation](#quick-jump)
 
-**Why this scoping is non-trivial.** If left undefended, this file would drift toward becoming "the EvidenceBundle reference" — which is precisely what §6.1.a forbids. The scope guardrail in §2 is therefore not boilerplate; it is the structural defense that keeps the placement legitimate. Every reviewer who adds content here is asked to confirm the content is **about EvidenceBundle's external-standards posture**, not about EvidenceBundle itself.
+---
 
-**Alternative paths considered:**
+<a id="13-open-questions"></a>
+<a id="13-open-questions-and-verification-backlog"></a>
 
-| Alternative | Verdict |
-|---|---|
-| Move to `contracts/v1/evidence/evidence_bundle.md` | Wrong — `contracts/` is object meaning, not external-conformance dossiers. |
-| Split into per-standard files (`docs/standards/EVIDENCE_BUNDLE_JCS.md`, `..._SLSA.md`, etc.) | Wrong — fragments the cross-cutting view this dossier is meant to provide. |
-| Rename to `EVIDENCE_BUNDLE_CONFORMANCE.md` for unambiguous scope | **Reasonable.** Recorded as §13 open question 6; resolution by README rule, not ADR. |
-| Embed the content into `contracts/v1/evidence/evidence_bundle.md` as a section | Wrong — couples object meaning to external-version churn; external pins should move independently of the contract. |
-| Place under `docs/standards/PROV/` as a subsidiary | Wrong — EvidenceBundle's external conformance includes far more than PROV-O (signing, content-addressing, STAC, DCAT). The PROV folder owns only the PROV-O / PAV slice. |
+## 13. Open questions and verification backlog
 
-The current path is the least-bad choice given the constraints. If §13 item 6 resolves to a rename, the migration is a one-line redirect.
+The backlog is dependency ordered. Later interoperability work must not bypass the earlier authority and closure decisions.
 
-</details>
+### P0 — authority and safe closure
+
+1. **Ownership and independent review** — verify accountable evidence, contract, schema, policy, security, release, and correction owners without inventing identities.
+2. **Contract and schema status** — accept, revise, version, or explicitly retain the current draft/proposed profile; define compatibility and deprecation rules.
+3. **Canonical claim scope** — replace or govern the unconstrained string if machine-checkable geography, time, precision, claim family, or applicability is required.
+4. **Authoritative lookup inputs** — define the registry, lookup snapshot, verification history, correction state, and bitemporal as-of authorities consumed by a real resolver.
+5. **Evidence admissibility policy** — define fail-closed input shape, gate order, reason codes, obligations, evaluator bundle, fixtures, tests, and governed consumer binding.
+6. **Rights and sensitivity semantics** — define license/source-term evaluation, sensitivity authority, transform requirements, reason exposure, and reviewer thresholds.
+7. **Release, correction, withdrawal, and rollback binding** — define how bundle identity and applicability propagate through release and public surfaces.
+
+### P1 — semantic and executable completeness
+
+8. **Structured source records and citations** — define resolvable source-native identity, SourceDescriptor binding, locators, excerpts/quotations, support relationships, and citation validation.
+9. **Transform and provenance model** — choose embedded, referenced, or derived provenance; define transform order, parameters, executable identity, receipts, and replay.
+10. **EvidenceBundle hash domain** — define object-family canonicalization, field inclusion/exclusion, normalization, digest coverage, recomputation, reason codes, and migration.
+11. **Cross-record validator** — add fixtures for empty/invalid members, ID mismatch, missing rights, invalid sensitivity, unknown source, stale history, correction, checksum mismatch, and unsupported scope.
+12. **Governed resolver interface** — define a stable package/API contract and consumer that preserves candidate non-authority and finite outcomes.
+13. **Public answer path** — connect evidence, policy, review, release, citation, freshness, correction, and precision checks before any `ANSWER` is renderable.
+14. **Domain projection rules** — keep shared fields canonical; require accepted extension policy before adding domain-specific fields.
+
+### P2 — interoperability and operational maturity
+
+15. **Standards application profiles** — adopt only needed JSON-LD, PROV, STAC/DCAT, metadata, signing, attestation, and lineage bindings with exact profiles and tests.
+16. **External reference verifier** — implement bounded, no-network-capable verification with trusted-input configuration and safe diagnostics.
+17. **Cross-language vectors** — prove equivalent behavior in every admitted implementation language.
+18. **Large-bundle and partial-fetch behavior** — define chunking, manifests, range integrity, denial semantics, retention, and correction.
+19. **Observed producer/consumer closure** — prove at least one realistic governed producer and one consumer over a released public-safe synthetic or authorized fixture.
+20. **Operational evidence** — establish hosted checks, required-check policy, telemetry, SLOs, incident/correction runbooks, and rollback rehearsals without exposing sensitive details.
+
+### Graduation rule
+
+A proposal graduates only when its authority owner, contract, machine shape, policy, representative fixtures, validator, tests, producer, consumer, review state, release state, correction path, and rollback path are appropriate to the claim being made.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="14-related-docs"></a>
+
+## 14. Related documents and implementation surfaces
+
+### Governing boundaries
+
+- [`docs/standards/README.md`](./README.md) — standards-lane responsibility and current inventory.
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — adopted placement bytes through ADR-0029.
+- [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted placement decision.
+- [`contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — meaning, shape, and admissibility separation.
+- [`evidence-identity.md`](../architecture/evidence-identity.md) — cross-root composition and current resolver boundary.
+- [`governed-api.md`](../architecture/governed-api.md) — current fail-closed public interface posture.
+
+### Meaning and shape
+
+- [`EvidenceBundle` semantic contract](../../contracts/evidence/evidence_bundle.md).
+- [`EvidenceRef` semantic contract](../../contracts/evidence/evidence_ref.md).
+- [`VerificationStateHistory` semantic contract](../../contracts/evidence/verification_state_history.md).
+- [`EvidenceBundle` schema](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json).
+- [`EvidenceRef` schema](../../schemas/contracts/v1/evidence/evidence_ref.schema.json).
+- [`spec_hash` schema](../../schemas/contracts/v1/common/spec_hash.schema.json).
+- [Soil domain projection example](../../schemas/contracts/v1/domains/soil/evidence_bundle.schema.json).
+
+### Validation and implementation
+
+- [Generic EvidenceBundle fixtures](../../fixtures/contracts/v1/evidence/evidence_bundle/README.md).
+- [Generic schema validator](../../tools/validators/validate_evidence_bundle.py).
+- [Evidence resolver package](../../packages/evidence-resolver/README.md).
+- [Resolver implementation boundary](../../packages/evidence-resolver/src/evidence_resolver/README.md).
+- [Resolver fixtures](../../fixtures/packages/evidence_resolver/README.md).
+- [Resolver tests](../../tests/packages/evidence_resolver/README.md).
+- [Resolver validator](../../tools/validators/evidence_resolver/README.md).
+- [Resolver workflow](../../.github/workflows/evidence-resolver.yml).
+- [Evidence policy boundary](../../policy/evidence/README.md).
+- [Evidence policy stub](../../policy/evidence/bundle_closure_required.rego).
+
+### Adjacent standards guidance
+
+- [`CANONICALIZATION.md`](./CANONICALIZATION.md).
+- [`SIGNING.md`](./SIGNING.md).
+- [`PROV.md`](./PROV.md), [`PROVENANCE.md`](./PROVENANCE.md), and [`PROV/`](./PROV/README.md).
+- [`STAC.md`](./STAC.md), [`DCAT.md`](./DCAT.md), [`ISO-19115.md`](./ISO-19115.md), and [`DUBLIN-CORE.md`](./DUBLIN-CORE.md).
+- [`RELEASE_MANIFEST.md`](./RELEASE_MANIFEST.md) and [`RUN_RECEIPT.md`](./RUN_RECEIPT.md).
+
+> [!CAUTION]
+> These adjacent files have mixed maturity. Their presence does not make every discussed standard adopted or every described binding implemented.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="appendix-a--worked-external-verification"></a>
+
+## Appendix A — Worked bounded verification
+
+This appendix demonstrates the current repository boundary. It is not an external conformance certificate.
+
+### 1. Validate the generic schema fixtures
+
+```bash
+python tools/validators/validate_evidence_bundle.py --fixtures
+```
+
+Expected meaning of a green result:
+
+- the checked valid fixture passes the current schema;
+- the checked invalid fixture is rejected;
+- the local schema registry resolves the referenced EvidenceRef, sensitivity, and spec-hash schemas.
+
+It does not prove semantic closure, source authority, citation accuracy, policy, review, release, or publication.
+
+### 2. Run the internal candidate profile
+
+```bash
+make evidence-resolver
+make evidence-resolver-deny
+```
+
+Expected meaning of green results:
+
+- the 21 synthetic fixture expectations match;
+- the 19 standard-library tests pass;
+- negative fixtures remain non-`RESOLVED`;
+- bounded no-network and safe-diagnostic assertions hold for the tested revision.
+
+### 3. Interpret candidate output safely
+
+```text
+RESOLVED   -> continue evidence authority, rights, sensitivity, policy,
+              review, release, citation, and correction checks
+UNRESOLVED -> ABSTAIN
+DENIED     -> DENY
+ERROR      -> ERROR
+```
+
+Do not transform `RESOLVED` into `ANSWER`, do not expose the candidate payload directly to a public client, and do not treat the fixture suite as real evidence.
+
+### 4. Current external-verification limit
+
+A third party cannot yet derive a complete current verification recipe from a bundle alone because signature discovery, attestation, authoritative registry/history lookup, policy evaluation, release binding, correction state, and public profile versioning are not established by the base object.
+
+[Back to quick navigation](#quick-jump)
+
+---
+
+<a id="appendix-b--placement-rationale"></a>
+
+## Appendix B — Placement rationale, compatibility, and rollback
+
+### Placement result
+
+`docs/standards/EVIDENCE_BUNDLE.md` is the existing tracked human-readable standards-guidance path.
+
+- Accepted ADR-0029 adopts Directory Rules v2.
+- `docs/standards/README.md` explicitly lists this file as an evidence-bundle documentation profile.
+- The document explains a cross-root profile and standards boundary.
+- It does not own semantic meaning, machine shape, policy, implementation, data, or release authority.
+- No new root, sibling authority, rename, or compatibility mirror is created.
+
+The finite placement outcome is **`PLACE` at the current path**.
+
+### Legacy-anchor compatibility
+
+This revision preserves explicit aliases for the prior major headings, including Purpose, Scope, Authority, external standards, identity, content addressing, provenance, signing, catalog interoperability, trust topologies, external verification, tensions, open questions, related documents, and both appendices. Inbound fragment links therefore remain addressable even though the document's conclusions changed materially.
+
+### Correction and rollback
+
+This change is documentation-only. Rollback is to revert the feature-branch commit or restore prior blob:
+
+```text
+a8d4c2a569790635cda0dc96744e43fe9af56b8d
+```
+
+Rollback must not revive the prior unsupported claims as implementation fact. If the older bytes are restored for historical analysis, they should be labeled as proposal-era lineage and current repository evidence should still control operational claims.
+
+### Non-effects
+
+This document does not:
+
+- change a contract or schema;
+- create policy or an evaluator;
+- modify fixtures, validators, tests, workflows, or package code;
+- activate a registry, source, connector, or network path;
+- create or move evidence, proofs, receipts, catalog records, or published data;
+- authorize review, release, correction, rollback execution, deployment, or publication; or
+- change repository settings.
+
+[Back to quick navigation](#quick-jump)
 
 ---
 
 ### Footer
 
-> **Document class:** Topical standards document · **Scope:** External-standards conformance posture for EvidenceBundle · **Authority NOT held:** object meaning, machine shape, admissibility, runtime, tests.
-
-| | |
+| Field | Value |
 |---|---|
-| **Canonical homes** | Meaning → [`contracts/v1/evidence/`](../../contracts/v1/evidence/) · Shape → [`schemas/contracts/v1/evidence/`](../../schemas/contracts/v1/evidence/) · Admissibility → [`policy/evidence/`](../../policy/evidence/) |
-| **Related** | [PROV/](./PROV/README.md) · [DUO_PROFILE.md](./DUO_PROFILE.md) · [ISO-19115.md](./ISO-19115.md) · [OAI-PMH.md](./OAI-PMH.md) · [PMTILES.md](./PMTILES.md) · _SIGNING.md (PROPOSED)_ · _CANONICALIZATION.md (PROPOSED)_ |
-| **Sister topical docs** | _SENSITIVITY_RUBRIC.md (PROPOSED)_ · _REDACTION_DETERMINISM.md (PROPOSED)_ |
-| **Last updated** | 2026-05-24 |
-| **Doc owner** | _TBD_ |
+| Document class | Human-readable EvidenceBundle profile and interoperability-boundary guidance |
+| Current path | `docs/standards/EVIDENCE_BUNDLE.md` |
+| Placement | **CONFIRMED existing path; accepted standards-guidance lane** |
+| Meaning authority | [`contracts/evidence/evidence_bundle.md`](../../contracts/evidence/evidence_bundle.md) |
+| Shape authority | [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) |
+| Policy boundary | [`policy/evidence/`](../../policy/evidence/README.md) — evaluator unbound |
+| Implemented resolver | Internal `kfm/evidence-ref-bundle-candidate/v1alpha1`; non-authoritative |
+| Public answer | Not implemented by the inspected surfaces |
+| Release/publication effect | None |
+| Default GitHub review route | `@bartytime4life`; specialist and independent review **NEEDS VERIFICATION** |
+| Last updated | 2026-08-18 |
 
-[Back to top](#quick-jump)
+[Back to top](#top)
