@@ -1,32 +1,53 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/sovereignty-care
-title: Sovereignty & CARE — Architecture
-type: standard
-version: v1.0
-status: draft
-owners: TODO-architecture-steward-and-care-steward-and-tribal-liaison
+title: Sovereignty & CARE — Current Responsibility and Enforcement Map
+type: architecture-reference
+version: v2.0-draft
+status: draft; repository-grounded; non-authoritative; convergence-hold
+owners:
+  - "@bartytime4life — CODEOWNERS review route only"
+  - "NEEDS VERIFICATION — accountable Indigenous/community data-governance, tribal liaison, rights, consent, sensitivity, policy, review, release, correction, and operations stewardship"
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-08-19
 policy_label: public
+owning_root: docs/
+current_path: docs/architecture/sovereignty-care.md
+responsibility: Explain how KFM composes Indigenous data-governance principles, qualified authority, rights, consent, sensitivity, source role, protective transformation, review, release, correction, rollback, and public-surface behavior without becoming doctrine, a CARE standard, semantic contract, machine schema, policy source, registry record, consultation record, release decision, or runtime proof.
+truth_posture: CONFIRMED current repository paths and bounded readiness/fixture surfaces at the pinned snapshot / CONFIRMED external CARE and FAIR principle sources / PROPOSED KFM integration target where no accepted contract, schema, policy, authority assignment, or runtime proof exists / CONFLICTED proposal-era CARE metadata, inheritance, tier, geometry, waiver, and catalog claims / HOLD on qualified stewardship, structural split, field vocabulary, authority-resolution protocol, and policy-sensitive graduation
+evidence_base: bartytime4life/Kansas-Frontier-Matrix main@45fc45556a007196aa29e725f3a4b9fe9af8294e; prior target blob 5041e65079efd36c53cbfc646725b2001414c7d2; ADR-0029 is the only accepted numbered ADR
 related:
   - ./sensitivity.md
   - ./sensitivity-tiers.md
-  - ./source-roles.md
   - ./source-role-anti-collapse.md
-  - ./smoke-atmosphere-hazards.md
-  - ./connected-dots-architecture-brief.md
-  - ./contract-schema-policy-split.md
-  - ./governed-api.md
-  - ./maplibre-3d.md
+  - ./data-classification-framework.md
+  - ./document-convergence-plan.md
   - ../doctrine/directory-rules.md
-  - ../../contracts/care/
-  - ../../schemas/contracts/v1/catalog/metablock-v2.json
-  - ../../policy/care/README.md
+  - ../adr/INDEX.md
+  - ../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../sources/catalog/CARE-COMPLIANCE.md
+  - ../sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
+  - ../sources/RIGHTS_GUIDANCE.md
+  - ../domains/archaeology/CULTURAL_REVIEW.md
+  - ../domains/archaeology/SENSITIVITY.md
+  - ../../contracts/policy/policy_input_bundle.md
+  - ../../contracts/policy/policy_decision.md
+  - ../../contracts/policy/sensitivity_label.md
+  - ../../contracts/shared/redaction_receipt.md
+  - ../../schemas/contracts/v1/policy/policy_input_bundle.schema.json
+  - ../../schemas/contracts/v1/policy/policy_decision.schema.json
+  - ../../schemas/contracts/v1/receipts/redaction_receipt.schema.json
+  - ../../policy/consent/README.md
   - ../../policy/consent/people/README.md
-  - ../../policy/sensitivity/archaeology/README.md
-  - ../../data/registry/rights/
-  - ../../KFM_Encyclopedia.md
-  - ../../Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md
+  - ../../policy/sensitivity/README.md
+  - ../../policy/sensitivity/archaeology/sovereignty_chip_required.rego
+  - ../../data/registry/rights/README.md
+  - ../../packages/policy-runtime/README.md
+  - ../../apps/governed-api/README.md
+  - ../../apps/explorer-web/README.md
+  - ../../apps/explorer-web/src/features/domains/archaeology/README.md
+  - ../../release/README.md
+  - ../../.github/workflows/policy-test.yml
 tags:
   - kfm
   - architecture
@@ -34,769 +55,903 @@ tags:
   - care
   - fair
   - indigenous-data-governance
-  - tribal-sovereignty
-  - cultural-heritage
-  - archaeology
+  - qualified-authority
   - consent
-  - default-deny
+  - rights
+  - sensitivity
+  - cultural-review
+  - geoprivacy
+  - source-role
+  - fail-closed
+  - correction
+  - rollback
 notes:
-  - "Doctrinal anchors: Components Pass 10 §6.15 (Category C15 — FAIR + CARE Reconciliation, cards C15-01 through C15-04); Atlas v1.1 card KFM-P1-PROG-0023 (MetaBlock v2 CARE fields); KFM-P11-PROG-0025 (Tribal sovereignty label inheritance via AIANNH/BIA); KFM-P1-IDEA-0034 (cultural/archaeological/steward review); KFM-P1-IDEA-0031 (deny-by-default for sensitive exact locations); ML-061-158/159/160 (H3 r7-r9 generalization, CARE chips); ai-build-operating-contract.md §23 (sensitive-domain decision matrix)."
-  - "KFM is NOT a substitute for community authority. CARE provides the architectural surface for community-authored governance; KFM enforces what authorities-to-control declare. Where this doc speaks of 'how CARE is enforced in KFM', it speaks operationally — not interpretively. Decisions about whether something IS CARE-applicable and what the consent posture should be remain with the relevant community and steward."
-  - "FAIR shapes the architecture; CARE shapes the policy. (C15-04 slogan: 'FAIR by Design, CARE in Practice'.)"
-  - "Default-deny on CARE-tagged assets is CONFIRMED doctrine (C15-03). The remediation playbook for legitimate-asset denials is named in the Pass 10 high-priority writing track and is NEEDS VERIFICATION as a separate authoring task; this doc names the architectural surface for it."
-  - "Authoring session: docs-only. No mounted repository, CI run, workflow, dashboard, runtime log, or release artifact was inspected. Implementation-maturity claims are bounded per the current-session evidence limit."
-  - "Sixth doc in the publication-controls architecture family alongside sensitivity.md, sensitivity-tiers.md, source-roles.md, source-role-anti-collapse.md, smoke-atmosphere-hazards.md."
+  - "Same-path architecture modernization only. No doctrine, ADR, contract, schema, policy, registry, fixture, validator, workflow, application, source, release, deployment, publication, or repository-setting state changes."
+  - "The architecture convergence plan assigns this page SPLIT because it mixes architecture, doctrine, policy, and domain responsibilities. This revision narrows the current page to explanatory composition but does not perform or authorize that split."
+  - "The five proposal-era MetaBlock v2 CARE field names remain visible as lineage only. They are not represented as GIDA-defined fields, an accepted KFM semantic contract, a current machine schema, or an active policy input."
+  - "No Indigenous knowledge, sacred-place detail, exact protected location, private authority contact, living-person record, genomic material, oral-history substance, or other restricted content is included."
+  - "External sources checked 2026-08-19: Global Indigenous Data Alliance CARE Principles; the peer-reviewed CARE practice paper; the FAIR Guiding Principles paper; U.S. Census AIANNH geography service; U.S. Indian Affairs Tribal Leaders Directory and disclaimer."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Sovereignty & CARE — Architecture
+# Sovereignty & CARE — Current Responsibility and Enforcement Map
 
-> **FAIR shapes the architecture; CARE shapes the policy.** This doc is the architectural treatment of the sovereignty / CARE dimension of KFM publication: the MetaBlock v2 CARE fields, the default-deny rule for CARE-tagged assets, the tribal sovereignty label inheritance pattern, the generalization requirements for sensitive cultural geometry, the DCAT/STAC kfm:care namespace, and the remediation surface for legitimate denials. The rule is simple and not yielding: when an asset names an `authority_to_control`, publication defaults to deny until that authority's consent grant is present, valid, and unrevoked.
+> **Purpose.** Explain how KFM should recognize Indigenous data sovereignty and CARE-aligned obligations without converting geographic overlays, metadata tags, technical openness, signatures, generalized geometry, or repository prose into community authority, consent, policy approval, or release authority.
 
-![status](https://img.shields.io/badge/status-draft-yellow?style=flat-square)
-![type](https://img.shields.io/badge/type-architecture_standard-blue?style=flat-square)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%2F%20PROPOSED%20enforcement-lightgrey?style=flat-square)
-![principles](https://img.shields.io/badge/principles-FAIR%20%2B%20CARE-2ea44f?style=flat-square)
-![default](https://img.shields.io/badge/default-deny%20on%20authority__to__control-critical?style=flat-square)
-![slogan](https://img.shields.io/badge/slogan-FAIR%20by%20design%2C%20CARE%20in%20practice-1f6feb?style=flat-square)
-![meta-block](https://img.shields.io/badge/meta%20block-v2-blue?style=flat-square)
-[![License: NEEDS VERIFICATION](https://img.shields.io/badge/license-NEEDS%20VERIFICATION-lightgrey?style=flat-square)](#)
-[![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey?style=flat-square)](#)
+| Field | Current bounded result |
+|---|---|
+| **Document role** | Human-readable cross-root architecture under `docs/architecture/`; not doctrine, a CARE standard, semantic contract, machine schema, policy source, registry record, consultation record, evidence, review, release, or runtime authority. |
+| **Evidence snapshot** | `main@45fc45556a007196aa29e725f3a4b9fe9af8294e`. |
+| **Placement authority** | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md). |
+| **Numbered ADR posture** | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) is the only accepted numbered ADR. CARE-adjacent [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) remains proposed. |
+| **External principle basis** | CARE means Collective Benefit, Authority to Control, Responsibility, and Ethics in the Indigenous data-governance framework published by the Global Indigenous Data Alliance and its peer-reviewed practice paper. FAIR remains a separate data-management framework. |
+| **CARE-specific KFM contract/schema/policy** | No repository path was found for the proposal-era `contracts/care/`, `schemas/contracts/v1/catalog/metablock-v2.json`, or `policy/care/` homes cited by the prior page. Their absence does not authorize replacement paths through this document. |
+| **Generic policy objects** | Draft [`PolicyInputBundle`](../../contracts/policy/policy_input_bundle.md) and [`PolicyDecision`](../../contracts/policy/policy_decision.md) contracts and paired proposed schemas exist. The input schema is a permissive placeholder; the decision schema has finite outcomes but does not establish a CARE evaluator. |
+| **Rights registry** | [`data/registry/rights/`](../../data/registry/rights/README.md) has a parent README and a Flora child README. Canonical record shape, concrete records, resolver, validators, runtime consumers, and release integration remain unproved. |
+| **Consent and sensitivity source** | [`policy/consent/`](../../policy/consent/README.md) and [`policy/sensitivity/`](../../policy/sensitivity/README.md) exist in mixed draft/scaffold maturity. Repository presence does not establish accepted rules, authenticated authority, or production enforcement. |
+| **Archaeology sovereignty scaffold** | [`sovereignty_chip_required.rego`](../../policy/sensitivity/archaeology/sovereignty_chip_required.rego) is a three-line proposed scaffold with `default allow := false`; it contains no operative authority-resolution, consent, review, or release rule. |
+| **Policy runtime** | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) remains a `0.0.0` greenfield placeholder with no accepted evaluator, active bundle selector, public API, verified consumers, deployment, or health evidence. |
+| **Policy workflow** | [`policy-test.yml`](../../.github/workflows/policy-test.yml) is a read-only readiness/drift guard. It explicitly does not provide repository-wide policy evaluation or emit `PolicyDecision`. |
+| **Public UI** | Explorer Web contains documentation for a future archaeology feature boundary, not verified CARE chips, authority notices, consent enforcement, or route/runtime behavior. |
+| **Convergence disposition** | The repository-grounded convergence plan assigns this page `SPLIT` into architecture plus doctrine/policy/domain ownership, with qualified stewardship review required. That structural change remains on `HOLD`. |
+| **Mutation effect** | Same-path documentation update only. No trust-bearing authority or lifecycle state changes. |
+| **Publication effect** | None. A document, commit, workflow, or pull request is not consultation, consent, policy approval, release, deployment, or KFM publication. |
 
 > [!IMPORTANT]
-> **KFM is not a substitute for community authority.** CARE provides the architectural surface for community-authored governance; KFM enforces what authorities-to-control declare. Decisions about whether something *is* CARE-applicable and what the consent posture should be remain with the relevant community and steward. This doc speaks operationally — how the architecture encodes those decisions in machine-checkable form — not interpretively. The corpus is explicit: "Determining which assets are CARE-applicable requires judgment that cannot be fully automated; the field population is a curatorial process, not an engineering one."
+> **KFM cannot infer community authority.** A map intersection, place name, administrative geography, source organization, cultural keyword, badge, or model classification may identify a need for review. None of those establishes who has authority to decide, what scope that authority covers, whether consultation occurred, or whether an operation is permitted.
 
 > [!CAUTION]
-> **This is doctrine-rank architecture, not implementation proof.** The FAIR+CARE pairing, MetaBlock v2 fields, default-deny rule, sovereignty label inheritance, generalization thresholds, and UI requirements are CONFIRMED from Components Pass 10 §6.15 (cards C15-01 through C15-04), Atlas v1.1 cards KFM-P1-PROG-0023, KFM-P11-PROG-0025, KFM-P1-IDEA-0034, and MapLibre v2.1 ML-061-158/159/160. Concrete schema homes, policy bundles, validator names, the curatorial-decision SOP, and the remediation playbook are **PROPOSED** until verified in a mounted repository.
+> **CARE is not a metadata shortcut.** The CARE Principles are people- and purpose-oriented Indigenous data-governance principles. Reducing them to five fields, a single `authority_to_control` trigger, one OPA rule, or a UI chip would erase the substantive authority, relationships, benefits, responsibilities, and ethics the principles require.
 
----
+> [!NOTE]
+> **Generalization is not clearance.** A generalized map, delayed record, redacted field, aggregate statistic, or public-safe identifier can remain restricted because sovereignty, consent, rights, purpose, benefit, or future-use obligations are unresolved.
 
-## Contents
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. The pairing: FAIR + CARE](#2-the-pairing-fair--care)
-- [3. The four CARE principles](#3-the-four-care-principles)
-- [4. MetaBlock v2 CARE fields](#4-metablock-v2-care-fields)
-- [5. The default-deny rule (C15-03)](#5-the-default-deny-rule-c15-03)
-- [6. Tribal sovereignty label inheritance](#6-tribal-sovereignty-label-inheritance)
-- [7. Cultural, archaeological, sacred-site review](#7-cultural-archaeological-sacred-site-review)
-- [8. Generalization rules for sensitive cultural geometry](#8-generalization-rules-for-sensitive-cultural-geometry)
-- [9. The kfm:care DCAT / STAC namespace extension](#9-the-kfmcare-dcat--stac-namespace-extension)
-- [10. CARE remediation playbook](#10-care-remediation-playbook)
-- [11. Curatorial decisions: when does CARE apply?](#11-curatorial-decisions-when-does-care-apply)
-- [12. UI requirements](#12-ui-requirements)
-- [13. Composition with sister sub-architectures](#13-composition-with-sister-sub-architectures)
-- [14. Per-domain CARE applicability](#14-per-domain-care-applicability)
-- [15. Anti-patterns](#15-anti-patterns)
-- [16. Where this lives in the repository](#16-where-this-lives-in-the-repository)
-- [17. Verification backlog](#17-verification-backlog)
-- [18. Related docs](#18-related-docs)
-- [Appendix A — CARE applicability questionnaire](#appendix-a--care-applicability-questionnaire)
+**Quick navigation:** [Purpose](#1-purpose--scope) · [FAIR + CARE](#2-the-pairing-fair--care) · [Principles](#3-the-four-care-principles) · [Metadata](#4-metablock-v2-care-fields) · [Fail-safe posture](#5-the-default-deny-rule-c15-03) · [Geography and authority](#6-tribal-sovereignty-label-inheritance) · [Cultural review](#7-cultural-archaeological-sacred-site-review) · [Geometry](#8-generalization-rules-for-sensitive-cultural-geometry) · [Catalogs](#9-the-kfmcare-dcat--stac-namespace-extension) · [Remediation](#10-care-remediation-playbook) · [Applicability](#11-curatorial-decisions-when-does-care-apply) · [UI](#12-ui-requirements) · [Composition](#13-composition-with-sister-sub-architectures) · [Domains](#14-per-domain-care-applicability) · [Anti-patterns](#15-anti-patterns) · [Placement](#16-where-this-lives-in-the-repository) · [Verification](#17-verification-backlog) · [Related](#18-related-docs) · [Questionnaire](#appendix-a--care-applicability-questionnaire)
 
 ---
 
 ## 1. Purpose & scope
 
-CARE — **Collective benefit, Authority to control, Responsibility, Ethics** — was developed by the Global Indigenous Data Alliance as the data-ethics complement to the technical FAIR principles. The KFM corpus adopts the pairing: **FAIR shapes the architecture so every asset is findable, accessible, interoperable, and reusable; CARE shapes the policy so that whether an asset is actually published, to whom, and on what terms is governed by the relevant community's authority.** Without CARE, FAIR alone produces technically open data that may violate the rights of the communities it describes. Without FAIR, CARE has no machine-checkable substrate.
+This page owns one responsibility: the human-readable architecture map for sovereignty and CARE concerns that cross KFM responsibility roots and domain lanes.
 
-**In scope.**
-- The architectural treatment of CARE in KFM: MetaBlock v2 fields, default-deny rule, namespace extension, generalization requirements, UI surface, remediation surface.
-- The tribal sovereignty label inheritance pattern (AIANNH / BIA overlays).
-- The cultural / archaeological / sacred-site review requirements.
-- Geometry generalization thresholds (H3 r7–r9 for sensitive archaeology; 5 km for archaeological terrain).
-- The composition of CARE with the consent render gate, the sensitivity tier scheme, the source-role taxonomy, and the trust membrane.
-- Per-domain CARE applicability (which domains are most often CARE-applicable).
+It explains:
 
-**Out of scope.**
-- Interpretation of Indigenous data sovereignty itself — see [GIDA's CARE Principles](#11-curatorial-decisions-when-does-care-apply) and the relevant community / steward authority.
-- The general sensitivity architecture (see [`./sensitivity.md`](./sensitivity.md)).
-- The T0–T4 release tier scheme (see [`./sensitivity-tiers.md`](./sensitivity-tiers.md)).
-- The source-role taxonomy (see [`./source-roles.md`](./source-roles.md)) and rule (see [`./source-role-anti-collapse.md`](./source-role-anti-collapse.md)).
-- Concrete Rego/OPA modules (live in `policy/care/`, `policy/consent/people/`).
-- Per-domain canonical manuals (live at `docs/domains/<domain>/`).
+- what the CARE Principles can support as external governance guidance;
+- why FAIR, CARE, rights, consent, sensitivity, source role, review, and release remain separate concerns;
+- how potential sovereignty relevance should trigger qualified review rather than automatic authority assignment;
+- how protective transforms preserve—not extinguish—authority and obligations;
+- which current repository surfaces exist and what their bounded evidence proves;
+- what public API, map, export, story, search, graph, and AI consumers must not infer; and
+- what evidence is required before CARE-sensitive work can graduate from planning to governed operation.
 
-[↑ Back to top](#top)
+It does **not**:
+
+- decide whether any specific asset, person, place, collection, source, record, or knowledge system is Indigenous data or CARE-applicable;
+- identify a Tribe, Nation, community, cultural authority, rightsholder, representative, or reviewer for a particular matter;
+- reproduce or interpret Indigenous knowledge, oral-history substance, sacred-place meaning, community categories, or restricted cultural information;
+- define an accepted KFM CARE contract, schema, namespace, policy bundle, authority registry, consent token, waiver, review record, reason-code registry, or public UI component;
+- accept proposal-era `MetaBlock v2` fields, T0–T4 tiers, fixed H3 resolutions, fixed distance thresholds, DSSE waivers, status-list designs, or automatic geography-based inheritance;
+- execute policy, authenticate consent, prove consultation, approve a protective transform, authorize release, or publish an artifact; or
+- perform the broader structural `SPLIT` proposed by the convergence plan.
+
+### Responsibility split
+
+| Responsibility | Owning authority or lane | This page's role |
+|---|---|---|
+| CARE principle meaning | Global Indigenous Data Alliance and cited CARE publication; qualified Indigenous authorities for local practice | Link and summarize at a high level; do not redefine. |
+| KFM architecture composition | `docs/architecture/` | Explain boundaries and dependency direction. |
+| Normative KFM doctrine | `docs/doctrine/` plus accepted ADRs | Reference only; this page cannot create doctrine. |
+| Object semantics | `contracts/` | CARE-specific object meanings remain unaccepted/unimplemented. |
+| Machine shape | `schemas/` | No CARE or MetaBlock v2 machine profile is accepted by this page. |
+| Allow/deny/abstain rules | `policy/` plus accepted bundle/evaluator bindings | Describe required fail-safe behavior; do not author policy. |
+| Authority, rights, source, and dataset control state | Governed registry lanes under `data/registry/` | Explain pointers and non-effects; do not create registry records. |
+| Domain-specific review | Qualified domain and cultural/Indigenous stewardship processes | Preserve local authority and scope; do not centralize cultural meaning. |
+| Review and consultation records | Separately governed review object family | Require auditable evidence; do not claim review occurred. |
+| Release, correction, withdrawal, rollback | `release/` and governed lifecycle artifacts | Preserve separate final authority. |
+| Public behavior | Governed API and released public-safe carriers | State consumer obligations and negative states; do not claim implementation. |
+
+The current path is appropriate for this explanatory cross-root map. A future split must retain this architecture anchor or provide a verified replacement and compatibility plan; it must not move normative rules into `docs/architecture/` or use restructuring to weaken restrictions.
+
+[Back to top](#top)
 
 ---
 
 ## 2. The pairing: FAIR + CARE
 
-The pairing is **CONFIRMED doctrine** from Components Pass 10 §6.15 and card C15-04. The slogan — *"FAIR by Design, CARE in Practice"* — is not decoration. It is operational:
+The project has used the shorthand **“FAIR by design, CARE in practice.”** It is useful only when read as a reminder that technical data quality and legitimate governance are both necessary. It is not an accepted policy rule and must not imply that FAIR is merely technical while CARE can be reduced to a post-processing gate.
 
-| Principle set | What it shapes | KFM expression |
-|---|---|---|
-| **FAIR** (Findable, Accessible, Interoperable, Reusable) | The **architecture**. Every asset has a stable identifier, an open protocol, a shared schema, and a clear license. | `SourceDescriptor`, `EvidenceBundle`, `EvidenceRef`, DCAT distributions, STAC Items, schema contracts. |
-| **CARE** (Collective benefit, Authority to control, Responsibility, Ethics) | The **policy**. Whether an asset is actually published, to whom, and on what terms — is governed by the relevant community's authority. | MetaBlock v2 CARE fields; default-deny on `authority_to_control`; sovereignty label inheritance; cultural-review gates. |
+### External source ledger
+
+| Source | Current check | What it supports | What it does not prove for KFM |
+|---|---|---|---|
+| [Global Indigenous Data Alliance — CARE Principles](https://www.gida-global.org/careprinciples) | Official GIDA page checked 2026-08-19 | CARE is Collective Benefit, Authority to Control, Responsibility, and Ethics; the framework is people- and purpose-oriented and complements FAIR. | KFM fields, policy, review authority, implementation, or applicability to a particular asset. |
+| [The CARE Principles for Indigenous Data Governance](https://doi.org/10.5334/dsj-2020-043) | Peer-reviewed practice paper checked 2026-08-19 | CARE's Indigenous data-governance rationale, lifecycle orientation, relationship to FAIR, and need for Indigenous participation and determination of governance protocols. | A universal software schema, one global consent mechanism, or a substitute for local community standards. |
+| [The FAIR Guiding Principles](https://doi.org/10.1038/sdata.2016.18) | Formal FAIR publication checked 2026-08-19 | Findable, Accessible, Interoperable, and Reusable characteristics; FAIR principles precede implementation choices and are not themselves a technology specification. | Permission to expose, reuse, or publish sensitive or community-governed data. |
+| [U.S. Census TIGERweb AIANNH service](https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html) | Official geography service checked 2026-08-19 | A source of American Indian, Alaska Native, and Native Hawaiian legal/statistical geography layers. | The complete identity of a contemporary authority, consent, jurisdiction for a KFM operation, or cultural meaning. |
+| [U.S. Indian Affairs Tribal Leaders Directory](https://www.bia.gov/service/tribal-leaders-directory) | Official directory checked 2026-08-19 | A current contact/discovery aid for federally recognized Tribal governments and Indian Affairs offices. | A legal-purpose map, guaranteed real-time contact accuracy, an official recognition list by itself, or authority over every relevant data matter. |
+
+### Architectural pairing
 
 ```mermaid
 flowchart LR
-  classDef fair fill:#2ea44f,stroke:#14532d,color:#fff
-  classDef care fill:#7c3aed,stroke:#4c1d95,color:#fff
-  classDef joint fill:#1f6feb,stroke:#0b3d91,color:#fff
-  classDef block fill:#b91c1c,stroke:#7f1d1d,color:#fff
-
-  F["FAIR<br/>Findable · Accessible ·<br/>Interoperable · Reusable"]:::fair
-  C["CARE<br/>Collective benefit · Authority to control ·<br/>Responsibility · Ethics"]:::care
-  M["MetaBlock v2<br/>(FAIR fields + CARE fields)"]:::joint
-  D["DCAT / STAC + kfm:care<br/>(CARE surfaces in catalog)"]:::joint
-  O["OPA default-deny<br/>on authority_to_control"]:::block
-  Pub[("PUBLISHED")]
-
-  F --> M
-  C --> M
-  M --> D
-  M --> O
-  D --> Pub
-  O -->|allow when grant present, valid, unrevoked| Pub
-  O -.X.-|deny by default| Pub
+  A["FAIR-oriented data stewardship\nidentity · metadata · provenance · interoperability"] --> C["Governed KFM candidate"]
+  B["CARE-oriented Indigenous data governance\nbenefit · authority · responsibility · ethics"] --> C
+  C --> D["Rights · consent · sensitivity · source role · evidence"]
+  D --> E["Qualified review · protective transform · policy"]
+  E --> F["Release · correction · rollback"]
+  F --> G["Governed public-safe carrier"]
 ```
 
-> [!IMPORTANT]
-> **FAIR alone is insufficient.** Technically open data that violates community rights is a CARE failure regardless of how findable and interoperable it is. **CARE alone is insufficient.** Principles without operational machinery are aspirational. The pairing — FAIR architecture + CARE policy — is what makes KFM's posture both checkable and ethical.
+The diagram is explanatory target architecture. Current repository evidence does not establish the complete flow.
 
-[↑ Back to top](#top)
+### Non-collapse rules
+
+- FAIRness never creates permission, consent, authority, or public-release status.
+- CARE alignment never excuses weak identity, provenance, citation, integrity, correction, or interoperability.
+- Technical machine actionability must not automate a decision that belongs to an Indigenous authority or qualified human review.
+- The absence of public data or formal metadata does not imply the absence of rights, authority, or obligations.
+- A local Indigenous or community standard may be more specific or restrictive than a generic CARE mapping; KFM must not use CARE to override it.
+- Applying CARE language to non-Indigenous collective contexts requires care not to erase the framework's Indigenous origin or substitute generic institutional preferences for Indigenous data governance.
+
+[Back to top](#top)
 
 ---
 
 ## 3. The four CARE principles
 
-The CARE principles below are the framework KFM adopts; their authoritative articulation belongs to the Global Indigenous Data Alliance. KFM treats them as the policy lens through which CARE-applicable assets are governed.
+The table below paraphrases the external framework and maps it to KFM architecture. It is not a KFM policy bundle or a scoring rubric.
 
-| Principle | What it means in CARE doctrine | KFM operational expression |
-|---|---|---|
-| **C — Collective benefit** | Data should be designed and used to provide benefit to the community, not just to researchers or institutions. | `benefit_commitments` field on MetaBlock v2 records what benefit flows back to the relevant community from publication and reuse. |
-| **A — Authority to control** | The relevant community holds authority over decisions about the data — what it is, how it's used, who sees it. | `authority_to_control` field on MetaBlock v2 names the authoring community / body. A non-empty value triggers default-deny until the authority's consent grant is on file. |
-| **R — Responsibility** | Those who work with the data have responsibility to support the community's vision and wellbeing. | `steward_org` field on MetaBlock v2 names the institutional steward; `obligations` field records what is required of users of the data. |
-| **E — Ethics** | Indigenous rights and wellbeing are the primary concern through the data lifecycle. | The pairing of consent records (the consent render gate, see [`./sensitivity.md`](./sensitivity.md) §7), cultural-review requirements, and the default-deny rule together constitute the ethical floor. |
+| CARE principle | External governance meaning, bounded | KFM architecture obligation | Unsafe reduction |
+|---|---|---|---|
+| **Collective Benefit** | Indigenous data ecosystems should enable benefits defined for Indigenous Peoples, including governance, participation, and equitable outcomes. | Record the intended purpose, affected collective, benefit commitments or unresolved benefit question, accountable party, evidence of engagement, and review/correction path where applicable. | “The public may find this useful,” a download count, or a generalized social-benefit claim authored by KFM. |
+| **Authority to Control** | Indigenous Peoples' rights and interests in Indigenous data must be recognized, and their authority over governance and use empowered. | Identify the qualified authority through an accountable process; bind decisions to operation, purpose, audience, scope, time, and downstream use; preserve withdrawal or change. | A polygon intersection, a `steward_org` string, public availability, an institutional custodian, or a signed technical object. |
+| **Responsibility** | Data users and stewards have responsibilities to maintain respectful relationships, support capacity, and explain how data use advances self-determination and benefit. | Make stewardship duties, attribution, capability/benefit commitments, retention, reporting, contact/escalation, and downstream obligations inspectable without exposing protected details. | A one-time compliance checkbox, passive attribution line, or repository owner acting as community representative. |
+| **Ethics** | Indigenous Peoples' rights and wellbeing should guide the data lifecycle, including harms, benefits, justice, representation, and future use. | Evaluate present and foreseeable reuse, joins, inference, model training, public precision, export, retention, and correction with qualified participation and conservative defaults. | Generic institutional ethics approval, absence of a known complaint, or a model's harm score. |
 
-> [!NOTE]
-> **The principles are not a checklist.** A CARE-applicable asset that passes every machine check can still be a CARE failure if the community's authority was not meaningfully respected. The architecture supports good practice; it does not replace it.
+### Architectural consequences
 
-[↑ Back to top](#top)
+1. **Authority precedes field population.** KFM cannot safely fill an authority field until a qualified process has identified the relevant authority and scope.
+2. **Benefit is not self-certified.** KFM cannot declare collective benefit merely because a feature is educational, public, or technically useful.
+3. **Responsibility survives transformation.** Aggregation, redaction, derived modeling, translation, and catalog projection do not erase obligations.
+4. **Ethics includes future use.** Public tiles, exports, embeddings, model context, screenshots, and copied datasets can enable harms not visible in the original request.
+5. **No single score represents CARE.** A numeric rank cannot safely collapse four principles, local governance protocols, rights, consent, sensitivity, and release.
+
+[Back to top](#top)
 
 ---
 
 ## 4. MetaBlock v2 CARE fields
 
-MetaBlock v2 extends the v1 (FAIR-only) shape with five CARE-aligned fields. **CONFIRMED** from Components Pass 10 §C15-01 and Atlas card KFM-P1-PROG-0023.
+The prior page described five “canonical” MetaBlock v2 fields:
 
-| Field | Meaning | Required when |
-|---|---|---|
-| `steward_org` | The institutional steward of the asset. | CARE applies (Indigenous, marginalized-community, sensitive-cultural, sovereignty-implicating). |
-| `authority_to_control` | The community or body whose authority governs the asset. | CARE applies. **A non-empty value triggers default-deny per [§5](#5-the-default-deny-rule-c15-03).** |
-| `consent` | The consent grant under which the asset is held — structured per the consent objects in [`./sensitivity.md`](./sensitivity.md) §7. | CARE applies. |
-| `obligations` | The obligations attached to use of the asset (citation requirements, restrictions on derivative use, embargo periods, etc.). | CARE applies. |
-| `benefit_commitments` | What benefit flows back to the relevant community from publication and reuse. | CARE applies. |
-
-### 4.1 Optional-vs-required is itself a CARE decision
-
-The five fields are **required for any asset where CARE applies** and **optional for assets where it does not**. The corpus is explicit (C15-01) that *the optionality is itself a CARE decision*: omitting the fields for a non-applicable asset is acceptable; omitting them for an applicable asset is a violation that the policy gate (C15-03) refuses.
-
-### 4.2 Illustrative MetaBlock v2 (PROPOSED — NEEDS VERIFICATION)
-
-```json
-{
-  "metablock_version": "2.0",
-  "fair": {
-    "identifier": "kfm:asset/archaeology/ellsworth-county/2026-q2",
-    "license": "kfm:rights/care-restricted",
-    "format": "application/geo+json",
-    "rights_statement": "Held under named consent from Ellsworth County tribal liaison program."
-  },
-  "care": {
-    "steward_org": "Ellsworth County Cultural Resources Office",
-    "authority_to_control": "<tribal-authority-identifier>",
-    "consent": {
-      "consent_ref": "kfm:consent/<consent-id>",
-      "expires_at": "2027-05-25T00:00:00Z",
-      "scope": ["generalized-h3-r7", "context-only-story-nodes"],
-      "revocation_endpoint": "https://<authority-endpoint>/status"
-    },
-    "obligations": [
-      "Cite steward and authority in all derivative use.",
-      "No precise coordinates in any derivative.",
-      "Re-confirm consent before each release cycle."
-    ],
-    "benefit_commitments": [
-      "Share generalized findings with the community in plain-language summary.",
-      "Provide raw evidence access to the named authority on request."
-    ]
-  }
-}
+```text
+steward_org
+authority_to_control
+consent
+obligations
+benefit_commitments
 ```
 
-> [!WARNING]
-> **CARE fields cannot be fabricated.** A `steward_org` value invented to "pass" the validator is a CARE failure of the highest order. The fields must reflect actual relationships with actual communities and stewards. The curatorial-decision SOP ([§11](#11-curatorial-decisions-when-does-care-apply)) is the architectural surface that prevents fabrication.
+Those names are **proposal-era KFM planning vocabulary**. They are not fields defined by GIDA, not an accepted KFM semantic contract, and not a current machine schema at the previously claimed path. Repository search did not find `contracts/care/` or `schemas/contracts/v1/catalog/metablock-v2.json` at the pinned snapshot.
 
-[↑ Back to top](#top)
+### Current machine/semantic surface
+
+| Surface | Confirmed state | Safe conclusion |
+|---|---|---|
+| [`PolicyInputBundle`](../../contracts/policy/policy_input_bundle.md) contract | Draft/proposed rich semantic target | It can describe a future explicit-input boundary, but the paired schema currently requires only `id` and permits arbitrary additional properties. |
+| [`PolicyDecision`](../../contracts/policy/policy_decision.md) contract/schema | Draft/proposed closed decision shape | It supports `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` and policy families including `consent` and `sensitivity`; it does not prove an evaluator or CARE policy. |
+| [`SensitivityLabel`](../../contracts/policy/sensitivity_label.md) family | Draft/proposed context surface | A label is not authority, consent, rights clearance, review, or release approval. |
+| [`RedactionReceipt`](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) profile | `PROPOSED_INACTIVE`, fixture-only | It proves deterministic fixture validation only; all authority-bearing execution/review/release flags are fixed false. |
+| [`data/registry/rights/`](../../data/registry/rights/README.md) | README-level registry boundary | It records proposed rights-review posture and pointers; concrete records and runtime resolution are unproved. |
+| CARE-specific semantic contract | Not found at cited proposal path | Remains a governance and design gap. |
+| CARE-specific machine schema | Not found at cited proposal path | Remains a governance and design gap. |
+| Accepted authority/consultation record | Not established | Do not infer or fabricate one. |
+
+### Field-family target, not schema
+
+A future governed design will likely need information in the following **families**. This table deliberately avoids fixing JSON property names or cardinality.
+
+| Information family | Why it may be needed | Required boundary |
+|---|---|---|
+| Applicability assessment | Why Indigenous data-governance review is or is not material to the exact operation. | Qualified, evidenced, versioned, and correctable; not automated solely from content or geography. |
+| Authority identification | Who may decide which operation, purpose, audience, fields, precision, retention, and future use. | Authority source and scope must be explicit; no public disclosure of protected contacts. |
+| Consultation/review state | Whether contact, consultation, review, disagreement, or deferral occurred. | A state record cannot misrepresent engagement; missing evidence remains unresolved. |
+| Consent/permission state | Operation-specific permission, conditions, validity, expiry, suspension, or withdrawal where applicable. | Separate from rights, source custody, sensitivity, and release. |
+| Obligations | Attribution, access, retention, benefit, reporting, language, provenance, redistribution, deletion, and future-use duties. | Structured enough for enforcement and human review; safe public summary separated from restricted detail. |
+| Collective-benefit account | Intended and observed benefit, commitments, accountable parties, and community-defined measures where appropriate. | Community-defined or reviewed; no KFM self-certification. |
+| Ethics/harm assessment | Current and future risks, joins, inference, precision, model use, export, and downstream reuse. | Reviewed per operation and audience; not a universal score. |
+| Evidence and provenance | Sources, review records, effective policy/bundle, decision, transform, release, and correction lineage. | References resolve under their own authorities; metadata does not become evidence by repetition. |
+
+### Metadata safety
+
+CARE-related metadata can itself be sensitive. Authority names, contact routes, dispute details, sacred/cultural category names, restriction reasons, community membership, exact places, and consultation notes must not be exposed merely to make a record look complete. Public carriers should receive only the minimum reviewed, released summary needed for trust and correct use.
+
+[Back to top](#top)
 
 ---
 
 ## 5. The default-deny rule (C15-03)
 
-> **Any asset whose MetaBlock v2 declares a non-empty `authority_to_control` field is gated by an OPA rule that defaults to deny on publication, with an explicit allow path that requires the named authority's consent grant to be present, valid, and unrevoked.**
+The prior page described an active rule: a non-empty `authority_to_control` field automatically denied publication until a consent grant was valid and unrevoked. Current repository evidence does **not** support that implementation claim.
 
-That sentence — CONFIRMED doctrine from Components Pass 10 §C15-03 — is the operational hinge between CARE-as-principle and CARE-as-enforced-policy.
+### Current bounded evidence
 
-### 5.1 The rule logic
+- CARE-adjacent [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) is proposed, not accepted.
+- No accepted CARE field contract or schema establishes `authority_to_control` as an input.
+- No `policy/care/` bundle exists at the cited proposal path.
+- The archaeology sovereignty Rego file is a proposed scaffold with only `default allow := false`.
+- The general policy runtime is not functional or bound to an evaluator.
+- The broad policy workflow deliberately preserves a repository-wide evaluator/bundle `HOLD`.
+- The generic `PolicyDecision` schema provides finite outcomes but does not prove that any CARE rule produces them.
 
-```mermaid
-flowchart TD
-  Start([Publication request<br/>for CARE-tagged asset])
-  Q1{authority_to_control<br/>non-empty?}
-  Q2{Consent grant<br/>on file?}
-  Q3{Grant valid<br/>(not expired)?}
-  Q4{Grant unrevoked<br/>(status list)?}
-  Allow[ALLOW<br/>publish with obligations]
-  Deny[DENY<br/>route to remediation]
-  Skip([No CARE gate<br/>(other gates still apply)])
+### Durable fail-safe architecture
 
-  Start --> Q1
-  Q1 -->|No| Skip
-  Q1 -->|Yes| Q2
-  Q2 -->|No| Deny
-  Q2 -->|Yes| Q3
-  Q3 -->|No| Deny
-  Q3 -->|Yes| Q4
-  Q4 -->|No| Deny
-  Q4 -->|Yes| Allow
+The absence of an active CARE rule does not justify optimistic exposure. Where authority, rights, consent, purpose, sensitivity, review, release, or harmful precision is material and unresolved, the safe design is to stop or narrow the operation through the owning gate.
 
-  classDef deny fill:#b91c1c,stroke:#7f1d1d,color:#fff
-  classDef allow fill:#2ea44f,stroke:#14532d,color:#fff
-  classDef skip fill:#475569,stroke:#1e293b,color:#fff
-  class Deny deny
-  class Allow allow
-  class Skip skip
-```
+| Condition | Candidate finite response | Meaning |
+|---|---|---|
+| Required authority or consultation evidence is absent or cannot be resolved | `ABSTAIN`, `DENY`, or governance `HOLD` | Do not invent authority or proceed as though non-applicability were proven. |
+| Authority explicitly disallows the evaluated operation | `DENY` | Preserve the scope and effective time of the decision; do not search for a less restrictive proxy. |
+| Authority permits the exact operation with conditions | Policy candidate may become `ANSWER` only after obligations and all other gates close | Consent/permission is necessary where applicable but never sufficient for release. |
+| Evidence conflicts about authority, scope, consent, or status | `ABSTAIN` or `DENY`; route to qualified review | Conflict is visible and cannot be resolved by source prestige or majority vote alone. |
+| Policy, resolver, registry, signature, or runtime fails | `ERROR` | Never fall back to allow. |
+| Request can be safely narrowed without misrepresenting the source or authority | Narrow and re-evaluate | A narrower purpose, audience, field set, time, or precision is a new operation—not retroactive approval. |
 
-### 5.2 Why default-deny
+`HOLD` and `QUARANTINE` are governance/lifecycle states, not values in the current `PolicyDecision` outcome enum. Callers must normalize state and decision vocabularies explicitly rather than treating every non-allow condition as the same result.
 
-Per C15-03: **"Default-deny is the only posture that makes CARE robust to drift; default-allow with explicit denials would mean any oversight produces a CARE violation, while default-deny means oversight produces a publication delay that can be remediated."**
+### No consent-only bypass
 
-The asymmetry is architecturally deliberate. The cost of mistaken denial is operational friction (a delayed publication); the cost of mistaken allowance is a CARE violation (a published asset that should not have been). KFM accepts the friction to avoid the violation.
+Even a valid consent or permission record cannot by itself establish:
 
-### 5.3 Gates where the rule runs
+- source identity or source role;
+- rights or license closure;
+- evidence sufficiency;
+- cultural interpretation authority outside the recorded scope;
+- safe geometry, joins, or future reuse;
+- authenticated human review;
+- release authorization;
+- correction propagation; or
+- rollback readiness.
 
-The default-deny rule fires at **two** governed transitions, so that a CARE violation is rejected at both build time and runtime:
-
-| Gate | When it fires |
-|---|---|
-| **Promotion gate** (CATALOG → PUBLISHED) | Before any release advances to PUBLISHED. Build-time check. |
-| **Admission webhook** (— → RAW) | When the source first arrives. Runtime check at intake. |
-
-> [!IMPORTANT]
-> **The rule is composable with all other gates.** Passing the CARE default-deny does not exempt the asset from the sensitivity-tier transitions, the consent render gate, the source-role validators, or the trust-membrane checks. It is **one** of several gates the asset must clear. See [§13](#13-composition-with-sister-sub-architectures) for composition.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 6. Tribal sovereignty label inheritance
 
-PROPOSED policy from Atlas card **KFM-P11-PROG-0025**: artifacts whose AOIs (areas of interest) intersect AIANNH / BIA overlays should **inherit** `sovereignty:tribal` and sensitivity labels, or require signed time-boxed waivers before promotion.
+The prior architecture proposed automatic “inheritance” of sovereignty labels from AIANNH/BIA spatial overlays. That pattern is unsafe as an authority decision and is not established by current implementation evidence.
 
-### 6.1 The inheritance mechanism
+### Geography is a review signal, not authority
 
-| Step | What happens |
+U.S. Census AIANNH data combine several legal and statistical geography types. They can help identify possible relevance, but a spatial intersection does not answer:
+
+- which Indigenous Nation, Tribe, community, or other authority is relevant to the exact data and operation;
+- whether the geometry represents jurisdiction, residence, cultural connection, historic relation, service area, statistical approximation, or another role;
+- whether multiple authorities or rightsholders are involved;
+- whether authority extends to a source, object, knowledge category, use, audience, or time period;
+- whether consultation, permission, or consent occurred; or
+- whether a non-intersection clears CARE or sovereignty obligations.
+
+The U.S. Indian Affairs Tribal Leaders Directory can support contact discovery for federally recognized Tribal governments. Its own disclaimer separates the directory from the official recognition list, warns that leadership/contact data may change, and says map locations are not for legal purposes. It cannot be used as an automated authority resolver.
+
+### Target resolution sequence
+
+```mermaid
+flowchart TD
+  A["Potential relevance signal\nsource · subject · geography · relationship"] --> B["Qualified applicability review"]
+  B --> C{"Authority resolvable for this operation?"}
+  C -- "no / conflict" --> D["HOLD · ABSTAIN · DENY"]
+  C -- "candidate" --> E["Verify authority identity and scope"]
+  E --> F["Consultation / permission / obligation assessment"]
+  F --> G{"All required evidence current?"}
+  G -- "no" --> D
+  G -- "yes" --> H["Operation-specific PolicyDecision candidate"]
+  H --> I["Independent evidence · sensitivity · review · release gates"]
+```
+
+This is proposed target behavior, not a claim of implemented resolution.
+
+### Separate state that must not be collapsed
+
+| State | Question |
 |---|---|
-| **Admission** | The asset's AOI is computed and compared against AIANNH (American Indian, Alaska Native, and Native Hawaiian) and BIA (Bureau of Indian Affairs) overlay layers. |
-| **Intersection** | If the AOI intersects any AIANNH or BIA polygon, the asset inherits a `sovereignty:tribal` label and the relevant authority identifiers. |
-| **MetaBlock v2 update** | The `authority_to_control` field is populated with the intersecting authority identifiers (or held as `pending-consultation` if multiple). |
-| **Default-deny applies** | The CARE rule (§5) now applies; publication requires consent grants from each named authority. |
-| **Re-evaluation** | When source rights or sovereignty status changes (e.g., overlay updates), affected assets are re-evaluated. |
+| Geographic relevance | Does a governed source or reviewed relation suggest the matter may intersect an Indigenous place, people, territory, record, or knowledge system? |
+| Authority candidate | Which authority may be relevant, and from what source was that possibility derived? |
+| Verified authority assignment | Who is qualified to decide the exact operation and scope, and what evidence supports that assignment? |
+| Consultation state | Has meaningful contact or consultation occurred, with whom, for what purpose, and with what limitations? |
+| Permission/consent state | Is the operation allowed, conditioned, suspended, withdrawn, disputed, or unresolved? |
+| Obligations | What duties survive through processing, cataloging, delivery, reuse, correction, or deletion? |
+| Public disclosure state | Which parts of the authority and review record may be exposed without creating harm or misrepresentation? |
 
-### 6.2 Signed time-boxed waivers
+### Negative rules
 
-For assets where the AOI intersection is narrow, incidental, or already governed by a community-issued waiver, a **signed time-boxed waiver** can override the inheritance — but only with explicit cryptographic provenance:
+- Do not assign authority from nearest polygon, majority overlap, county, watershed, historic map, or model prediction.
+- Do not assume a government agency, museum, university, archive, vendor, or data custodian is the Indigenous authority to control.
+- Do not interpret lack of an AIANNH intersection as permission.
+- Do not treat a current federal-recognition directory as a complete map of all cultural, traditional, historic, local, or data-governance authority relevant to a matter.
+- Do not publish private contact information, disagreement detail, or consultation notes as proof of transparency.
+- Do not allow AI to choose the authority or summarize contested cultural meaning into a canonical label.
 
-- The waiver must be **signed** by the relevant authority (DSSE envelope).
-- The waiver must be **time-boxed** (expiry in the signed payload).
-- The waiver must be **revocable** via the same status-list mechanism used for consent (see [`./sensitivity.md`](./sensitivity.md) §7).
-- The waiver is **referenced** in the MetaBlock v2 `consent` field with the consent-ref pattern.
-
-> [!CAUTION]
-> **Sovereignty label evasion is an anti-pattern.** Stripping the AIANNH intersection from the AOI, fuzzing the AOI to fall below the intersection threshold, or claiming "incidental" intersection without a signed waiver — all of these are CARE failures. The validator must check the *original* AOI, not the published-derivative AOI, to catch evasion.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 7. Cultural, archaeological, sacred-site review
 
-PROPOSED policy from Atlas card **KFM-P1-IDEA-0034**: cultural, archaeological, tribal, sacred, burial, and steward-governed material requires **review and public-safe transformation** before release.
+Cultural review is a qualified human and community-governance process. It is not a label-generation feature, an automated content classifier, a substitute for consultation, or a standing approval for all archaeology or cultural-heritage material.
 
-| Material class | Required review | Allowed transforms |
-|---|---|---|
-| **Archaeological site locations** | Steward + cultural review | Generalization to H3 r7–r9 cell (see [§8](#8-generalization-rules-for-sensitive-cultural-geometry)); never exact coordinates without review. |
-| **Burial sites** | Cultural reviewer + rights-holder representative | Generally **T4 forever** (no public derivative); context-only Story Nodes if any release. |
-| **Human remains** | Cultural reviewer + rights-holder + sovereignty review | **T4 forever** at all public surfaces. |
-| **Sacred sites** | Cultural reviewer + sovereignty review | **T4 forever** at all public surfaces; Story Nodes use context-only spatial footprints. |
-| **Restricted cultural archives** | Steward + cultural review | Held under named consent only; never bulk-published. |
-| **Indigenous knowledge / oral history** | Community authority | Held under named consent; obligations preserved through derivative use. |
-| **Collection-security locations** (museum holdings, etc.) | Security reviewer | Generalized to institution-level; never per-shelf detail. |
-| **Looting-risk detail** | Security reviewer + cultural reviewer | **T4** by default; never public. |
+### Current repository boundary
 
-> [!IMPORTANT]
-> **The list is open, not closed.** The corpus names the most common cases; per-domain stewards may add to the list. When in doubt, the default is denial pending review. The Atlas Phase 5 / 6 lifecycle rule applies: *"disable sensitive layer if [review state cannot be established]."*
+[`docs/domains/archaeology/CULTURAL_REVIEW.md`](../domains/archaeology/CULTURAL_REVIEW.md) is a large draft protocol carrying proposal-era fields, reviewer roles, tier transitions, geometry rules, and automatic inheritance claims. Its repository presence proves documentation only. Current evidence does not establish:
 
-[↑ Back to top](#top)
+- verified stewardship identities or a standing reviewer roster;
+- authenticated authority or rightsholder assignments;
+- accepted cultural-review, consent, revocation, or waiver contracts/schemas;
+- real review records;
+- an active policy bundle or evaluator;
+- a release gate consuming those records; or
+- a public archaeology carrier approved under that process.
+
+### Required architecture properties
+
+| Property | Requirement |
+|---|---|
+| Qualified participation | The relevant Indigenous or cultural authority must be able to shape the decision; KFM maintainers cannot appoint themselves as substantive cultural authorities. |
+| Operation-specific scope | Review binds purpose, audience, fields, precision, time, derivative, export, model/AI use, retention, and future reuse. |
+| No cultural-content appropriation | KFM records decision state and obligations at the minimum safe level; it does not translate sacred or community-controlled meaning into a universal ontology. |
+| Multi-authority handling | Conflicting, overlapping, or multiple authorities remain visible and unresolved until an accountable process closes them. |
+| Review evidence | A reviewed record should identify who/what role acted, authority basis, scope, outcome, conditions, effective time, and correction/withdrawal path without exposing protected details. |
+| Separation of duties | The data producer, technical transformer, reviewer, policy evaluator, and release authority should not be silently collapsed where consequence warrants independent review. |
+| No waiver-by-document | An architecture page, staff note, signed blob, “emergency” label, or deadline cannot waive sovereignty, rights, consent, or cultural review. |
+| Continuing authority | Permission may be time-bound, conditional, withdrawn, or superseded; KFM must re-evaluate dependent outputs. |
+
+### Review work states
+
+A future review object may need states such as unassessed, awaiting authority resolution, in consultation, conditions proposed, approved for a bounded operation, denied, disputed, suspended, withdrawn, or superseded. This page does not adopt those names or a transition graph. It requires that any accepted vocabulary preserve uncertainty and withdrawal rather than compressing everything into a Boolean `approved` field.
+
+### Oral histories and community knowledge
+
+Oral-history, language, traditional knowledge, sacred knowledge, and community narratives require source- and community-specific governance. Public availability of a transcript, recording, catalog card, old publication, or archival finding aid does not prove KFM may ingest, model, join, summarize, translate, train on, map, or republish its contents.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Generalization rules for sensitive cultural geometry
 
-CONFIRMED rules from MapLibre v2.1 ML-061-158 / ML-061-159 / ML-059-055 and ai-build-operating-contract.md §23.
+Protective transformation is one part of the trust chain. It does not resolve sovereignty, rights, consent, cultural authority, source role, or purpose by itself.
 
-### 8.1 Geometry generalization
+### Proposal-era thresholds are not accepted rules
 
-| Geometry class | Generalization requirement | Source |
-|---|---|---|
-| **Archaeological sites — public layer** | Generalized to **H3 r7–r9** cell footprints. **Any geometry below H3 r7 is prohibited** for sensitive archaeology products without review. | ML-061-159 |
-| **Sacred sites — public layer** | **No public derivative** of exact location; context-only Story Nodes only. | ML-061-158 |
-| **Restricted cultural archives** | **No exact-coordinate exposure** without review. | ML-061-158 |
-| **Cultural corridors, geophysics anomalies, historical alignments** | H3-generalized footprints; 3D scenes accept only generalized geometry. | ML-061-157 |
-| **Archaeological terrain layers** | Coordinate generalization of **at least 5 km** when terrain is linked to archaeological locations; all captures require alt text and metadata. | ML-059-055 |
-| **Reconstructed historical scenes** | Synthetic content carries Reality Boundary Note + `RepresentationReceipt` per [`./source-roles.md`](./source-roles.md) §6.14. | ML-059-046 |
+The prior page and related planning corpus named H3 resolutions, county/region floors, and fixed-distance buffers such as five kilometers. No accepted KFM policy profile, qualified review, contract/schema, active evaluator, or operational validation establishes those as universal thresholds. This revision removes them as current architecture facts.
 
-### 8.2 H3 resolution reference
+### Required transform properties
 
-H3 is the recommended hex-grid system for sensitive-cultural generalization. Cell sizes shown are approximate (cell size varies with latitude).
+| Property | Required posture |
+|---|---|
+| Minimize before processing | Do not acquire or retain exact geometry merely because a later transform is planned. Use the least detail needed for the governed purpose. |
+| Profiled operation | Transform type and precision are selected for the domain, source, threat, audience, time, downstream use, and authority—not from a universal constant. |
+| Distinct identities | Restricted input and public-safe candidate have separate stable identities/digests and explicit lineage. |
+| Reproducibility without disclosure | Record transform class/profile/version and verifier-safe evidence while withholding reversal material and exact protected values. |
+| Composition testing | Reassess joins, labels, time series, neighboring features, source URLs, metadata, search, graph, exports, screenshots, and AI text. |
+| Multi-release inference | Test whether repeated releases, different zooms, or correction history reconstruct protected detail. |
+| Review and policy | Qualified review and policy decide whether the candidate is adequate; a transform receipt records process only. |
+| Release and correction | Bind the approved derivative to release, invalidate it on withdrawal/correction, and verify cache/index/map/AI propagation. |
 
-| H3 resolution | Approximate cell area | Use in CARE generalization |
-|---|---|---|
-| **r6** | ~36 km² | Too coarse for site-level cultural context — typical lower bound for region-level public layers. |
-| **r7** | ~5 km² | **Minimum allowed cell size** for sensitive archaeology products. |
-| **r8** | ~0.7 km² | Allowed with steward review. |
-| **r9** | ~0.1 km² | Allowed with steward + cultural review; near the upper bound of generalization. |
-| **r10 and finer** | < 0.02 km² | **Prohibited** for sensitive archaeology without explicit named authorization (T3 only). |
+### Current bounded fixture surface
 
-### 8.3 The "not findable by policy" pattern
+The proposed-inactive [`RedactionReceipt`](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) fixture profile enumerates transform classes and requires deterministic identifiers and references for certain public-candidate fixtures. Its governance block fixes `policy_executed`, `human_review_authenticated`, `restricted_input_opened`, `release_authorized`, and `publication_authorized` to `false`.
 
-The Pass 10 high-priority architecture item names a **"not-findable-by-policy convention for CARE-restricted assets"**. The pattern is:
+That is useful no-network validation evidence. It is not proof that KFM has transformed real restricted cultural data, selected an adequate profile, authenticated review, or produced a safe public carrier.
 
-- The asset *exists* in the canonical store but is **not surfaced in the catalog** for the policy reasons recorded.
-- The catalog row exists with a `policy:not-findable` flag and the policy reasons (anonymized as appropriate); searches do not return the asset.
-- A steward query (authenticated reviewer surface) can list `not-findable` assets and see why.
-- The pattern is the architectural answer to "how do you record an asset's existence without exposing it?"
+> [!CAUTION]
+> **Client-side hiding is not protection.** Opacity, zoom limits, missing popup fields, style filters, feature-state, disabled buttons, or a CARE badge do not remove coordinates or attributes already delivered to a browser.
 
-> [!NOTE]
-> The "not-findable-by-policy" convention is **PROPOSED**, named in the Pass 10 expansion agenda, and is NEEDS VERIFICATION as a concrete architecture item. This doc names the pattern; the schema PR and policy bundle that realize it are separate authoring tasks.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 9. The kfm:care DCAT / STAC namespace extension
+## 9. The `kfm:care` DCAT / STAC namespace extension
 
-CONFIRMED doctrine from Components Pass 10 §C15-02. The `kfm:care` namespace extension surfaces MetaBlock v2 CARE fields in DCAT distributions and STAC Item / Collection properties so that downstream catalog consumers see the fields **without reading the full MetaBlock**.
+The prior page presented `kfm:care` as a current DCAT/STAC extension. At the pinned snapshot, that claim is supported only by proposal-era documentation such as [`docs/sources/catalog/CARE-COMPLIANCE.md`](../sources/catalog/CARE-COMPLIANCE.md). No accepted KFM semantic contract, JSON-LD context, STAC extension schema, DCAT profile, validator, fixture family, namespace governance record, or released catalog instance was verified.
 
-### 9.1 Why a namespace extension
+### Safe current conclusion
 
-DCAT and STAC are the catalog vocabularies KFM publishes through. Extending them with `kfm:care` means a downstream consumer that fetches a DCAT distribution or a STAC Item sees `steward_org`, `authority_to_control`, `consent`, `obligations`, and `benefit_commitments` **directly in the catalog representation**.
+- `kfm:care` is **PROPOSED vocabulary**, not a current interoperability guarantee.
+- The five MetaBlock field names are **PROPOSED lineage**, not canonical machine fields.
+- A catalog record is a projection and discovery surface, not authority, consent, policy, review, or release.
+- A consumer that ignores an extension must not thereby receive a less restricted asset.
+- A public catalog must not disclose the protected reason, authority contact, sacred category, precise place, or consultation detail merely to explain that access is constrained.
 
-| Property | Behavior |
+### Graduation requirements for a future profile
+
+| Requirement | Acceptance evidence |
 |---|---|
-| Consumer **understands** `kfm:care` | Can act on the fields — display the steward, surface obligations, check consent expiry. |
-| Consumer **does not understand** `kfm:care` | Ignores the fields safely; the consumer is not blocked but does not see CARE context either. |
+| Namespace governance | Accepted owner, stable URI, versioning and deprecation rules, source attribution, and conflict policy. |
+| Semantic contract | Field/object meaning, scope, optionality, cardinality, authority, public/restricted projections, and non-effects. |
+| Machine schemas | Closed or deliberately extensible shapes for STAC/DCAT/JSON-LD carriers with negative fixtures. |
+| Obligation propagation | Proof that conditions survive from source/authority records through derivative, catalog, API, export, map, story, and AI surfaces. |
+| Consumer behavior | Tests for extension-aware and extension-unaware consumers; unrecognized governance metadata cannot produce unsafe allow. |
+| Identity and integrity | Deterministic profile/version binding and catalog-to-release/carrier digest closure. |
+| Correction | Withdrawal, supersession, and correction propagation across catalogs, caches, indexes, and copies. |
+| Interoperability | Cross-profile tests that preserve source role, rights, authority, release, and correction semantics rather than only JSON validity. |
 
-### 9.2 PROPOSED illustrative STAC Item
+No catalog extension should be activated before the underlying authority, rights, consent, policy, review, and release object families are settled. Publishing metadata first would create a polished projection over unresolved governance.
 
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "stac_extensions": [
-    "https://kfm.example.org/stac-extensions/care/v0.1.0/schema.json"
-  ],
-  "id": "kfm:asset/<asset-id>",
-  "properties": {
-    "datetime": "2026-05-25T00:00:00Z",
-    "kfm:care": {
-      "steward_org": "Ellsworth County Cultural Resources Office",
-      "authority_to_control": "<authority-identifier>",
-      "consent_status": "active",
-      "consent_expires_at": "2027-05-25T00:00:00Z",
-      "obligations_summary": "Cite steward + authority; no exact coords; re-confirm consent before each cycle.",
-      "benefit_commitments_summary": "Generalized findings to community; raw access on request."
-    }
-  }
-}
-```
-
-> [!NOTE]
-> **The namespace URL above is illustrative.** Concrete namespace IRI, versioning policy, and upstream-submission posture (DCAT-AP, STAC-extensions registry) are PROPOSED. The Pass 10 expansion agenda lists "namespace-versioning policy" and "engage with the STAC extensions community" as follow-up items.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 10. CARE remediation playbook
 
-Default-deny without good remediation paths is operational friction; the corpus is explicit (C15-03) that the rule must be paired with a clear remediation playbook so that legitimate CARE-applicable assets can reach publication when the consent is properly recorded.
+A denial, abstention, or hold is not a defect to route around. It is an explicit state showing that required authority or evidence is incomplete, conflicting, expired, withdrawn, or disallowed.
 
-> [!IMPORTANT]
-> **The remediation playbook is a high-priority writing item in the Pass 10 expansion agenda (item 6, Writing Track, High priority).** This section names the architectural surface for it; the actual playbook is a separate authoring task. The section below is the **architectural shape** the playbook should fill, not the playbook itself.
+### Remediation sequence
 
-### 10.1 The remediation surface
+1. **Preserve the original outcome.** Do not rewrite or delete a denial to make a later attempt appear continuously allowed.
+2. **Expose a safe reason.** Give public callers only a bounded explanation; keep protected authority, contact, location, dispute, and policy detail out of public reasons and logs.
+3. **Identify the missing authority-owned evidence.** Separate missing source identity, authority assignment, consultation, consent, rights, sensitivity, review, transform, release, correction, or runtime evidence.
+4. **Contact through an approved process.** Do not scrape contact data, infer representation, or use a repository placeholder as the reviewer.
+5. **Narrow the operation when legitimate.** Reduce purpose, audience, fields, precision, retention, export, model use, or future reuse only if the resulting operation is independently assessed.
+6. **Create a new decision event.** A new input bundle, review, policy decision, transform, and release candidate supersede rather than mutate prior evidence.
+7. **Propagate obligations.** Carry attribution, access, benefit, retention, reporting, language, deletion, and future-use requirements through every dependent surface.
+8. **Verify correction and rollback.** Invalidate stale tiles, APIs, catalogs, search, graph, exports, stories, screenshots where controlled, and AI retrieval context.
 
-When the default-deny rule fires on a publication request, the system emits:
+### No emergency waiver is established
 
-| Field | Content |
-|---|---|
-| `outcome` | `DENY` |
-| `reasons[]` | One or more of: `MISSING_AUTHORITY_TO_CONTROL`, `MISSING_CONSENT_GRANT`, `EXPIRED_CONSENT`, `REVOKED_CONSENT`, `MISSING_STEWARD_ORG`, `OBLIGATIONS_NOT_RECORDED`, `BENEFIT_COMMITMENTS_NOT_RECORDED`, `AOI_INTERSECTS_AIANNH_NO_WAIVER`. |
-| `remediation_ref` | URI to the relevant remediation playbook step. |
-| `steward_contact` | Contact for the institutional steward (the `steward_org`). |
+The prior page proposed time-boxed, DSSE-signed waivers. Current repository evidence does not establish a CARE waiver contract, qualified issuer, allowed emergency classes, policy rule, signer trust root, audit path, revocation, or release integration. A signature proves control of a key under a verified trust model; it does not prove community authority or ethical legitimacy.
 
-### 10.2 Open questions the playbook must answer
+Any exceptional restricted-access process would require a separately accepted policy and operational design with least privilege, purpose limitation, named authority, time bounds, full audit, no public fallback, incident handling, and rollback. This architecture page cannot create it.
 
-Per C15-03:
+### Correction is more than access removal
 
-- **How are denied assets surfaced to the steward and the authority?**
-- **Is there a feedback channel that does not itself violate CARE?**
-- **What is the proposed cadence for re-evaluating denied assets?**
-- **How are remediation outcomes logged so they become part of the asset's lineage?**
+A complete correction must consider:
 
-### 10.3 PROPOSED steward-feedback sidecar
+- source and rights registries;
+- derived data and public carriers;
+- catalog and graph projections;
+- aliases and “current” pointers;
+- CDN/browser/server caches;
+- search and vector indexes;
+- exports and story packages;
+- Evidence Drawer and Focus Mode context;
+- model prompts, retrieval corpora, and generated summaries;
+- citations and public correction notices; and
+- receipts proving propagation at the scope KFM controls.
 
-Per C15-03 suggested future work: build the steward-feedback channel as a sidecar to the gate, with **explicit consent on what the channel may transmit**. The sidecar pattern is the only one that preserves CARE during remediation: the feedback channel must be governed by its own consent grant, separate from the asset's publication consent.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 11. Curatorial decisions: when does CARE apply?
 
-The corpus is realistic (C15-01): **determining which assets are CARE-applicable requires judgment that cannot be fully automated; the field population is a curatorial process, not an engineering one.** The architecture provides the surface; the curatorial-decision SOP fills it.
+Applicability is a governance decision supported by evidence, not a content-classification shortcut.
 
-> [!IMPORTANT]
-> **The curatorial-decision SOP is listed in the Pass 10 expansion agenda as an authoring task** ("Author a curatorial-decision SOP for the CARE-applicability question and pilot it on the existing dossier set"). This section names the *architectural inputs* the SOP needs — it is not the SOP itself.
+### Screening signals
 
-### 11.1 Material categories that almost always trigger CARE
+The following may justify a **review trigger**, but none independently decides applicability or authority:
 
-The corpus identifies four categories where CARE applies as a default:
+- data about Indigenous Peoples, Nations, communities, families, individuals, territories, environments, resources, governance, languages, cultures, heritage, specimens, or knowledge;
+- a source, custodian, or collection describing Indigenous provenance or restrictions;
+- an Indigenous Nation, Tribal government, community, or rightsholder asserting an interest;
+- an operation involving mapping, linking, inference, commercialization, AI/model training, export, public storytelling, repatriation, retention, or future reuse;
+- a geography or relation suggesting possible relevance;
+- cultural or archaeological material with uncertain provenance, authority, or consultation history;
+- downstream use that could affect collective benefit, self-determination, representation, wellbeing, or harm.
 
-1. **Indigenous data** — data about, from, or affecting Indigenous communities.
-2. **Marginalized-community data** — data about communities that have historically been the subject of, rather than the authors of, data collection.
-3. **Sensitive-cultural data** — sacred sites, burial locations, cultural-heritage records, oral histories, ethnobotanical knowledge.
-4. **Sovereignty-implicating data** — data that intersects tribal lands, treaty rights, or community-controlled territories.
+### What does not prove non-applicability
 
-### 11.2 Material categories where CARE may or may not apply
+- no AIANNH polygon intersection;
+- no `authority_to_control` field;
+- no current restriction in source metadata;
+- an open license or public website;
+- old publication or prior institutional use;
+- a generalized or aggregate output;
+- absence of a known living person;
+- inability to find a contact quickly;
+- an AI classifier returning “not sensitive”; or
+- a deadline, grant requirement, public-interest claim, or technical cost.
 
-Some KFM material requires curatorial judgment to determine CARE applicability:
+### Decision record burden
 
-- **Historical land-survey data** that crossed Indigenous lands during periods of dispossession.
-- **Public archaeological surveys** with mixed steward / community authorship.
-- **Place-name records** with origins in multiple cultural traditions.
-- **Wildlife / habitat data** that intersects culturally-significant species or landscapes.
-- **Climate / weather records** in communities with traditional ecological knowledge systems.
+A mature applicability decision should be able to answer, at the minimum safe level:
 
-### 11.3 The default-when-unclear rule
+- what exact operation was assessed;
+- which data, source roles, places, relationships, and time were in scope;
+- who was qualified to assess applicability and why;
+- which evidence and local/community standards were considered;
+- whether authority was resolved, conflicted, or unknown;
+- what obligations or prohibitions apply;
+- when the decision expires or must be rechecked;
+- which downstream artifacts depend on it; and
+- how correction, withdrawal, or dispute changes the result.
 
-> **When CARE applicability is unclear, the default is "applicable pending review."** The asset admits with `authority_to_control = "pending-consultation"`, the default-deny rule fires, and the curatorial process resolves the question before publication.
+The current repository has no accepted general applicability contract, schema, policy, fixture family, evaluator, or authenticated record set. Until those exist, consequential CARE-sensitive candidates remain in a restricted review or hold posture rather than receiving an automatically generated public label.
 
-This is the safest posture and is consistent with the broader KFM deny-by-default doctrine. It also means **the curatorial SOP must be reachable** — there must be an actual process to resolve the question, not just an architectural placeholder.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 12. UI requirements
 
-CONFIRMED from MapLibre v2.1 ML-059-029, ML-061-160, ML-059-055.
+Public and reviewer interfaces are consumers of governed decisions. They do not identify authority, decide CARE applicability, authenticate consent, or authorize release.
 
-| UI element | Required when | Behavior |
-|---|---|---|
-| **CARE annotation chip** | Any CARE-tagged asset is visible | Visible CARE status: `public` / `generalized` / `restricted`. Chip is part of the layer's standard trust-state surface. |
-| **Sovereignty notice chip** | Asset has `sovereignty:tribal` label or AOI intersects AIANNH / BIA overlay | Visible sovereignty notice naming the authority (or "pending consultation"). |
-| **Generalization log** | Asset has been generalized per [§8](#8-generalization-rules-for-sensitive-cultural-geometry) | Visible record of the generalization applied (e.g., "H3 r7 generalization"; "5 km terrain generalization"). |
-| **Consent / custodial review indicator** | Asset is held under named consent | Visible indicator of consent status (active / expiring / expired) and steward contact. |
-| **Obligations summary** | Any CARE-tagged asset | Summary of `obligations` visible in the Evidence Drawer. |
-| **Alt text** | Any cultural / archaeological capture (screenshots, terrain rendering, etc.) | Alt text + metadata mandatory. |
-| **Story Node context-only footprint** | Narrative covers sensitive cultural content | Context-only spatial footprint; precise site disclosure is avoided. |
+### Public surface requirements
 
-> [!IMPORTANT]
-> **CARE chips are not decoration; they are part of the trust membrane.** When the renderer shows a CARE-tagged asset *without* the chip, the surface has drifted out of compliance. UI lint tests must catch missing chips on CARE-tagged layers.
+| Requirement | Safe behavior |
+|---|---|
+| No restricted bytes | Public clients receive only released public-safe derivatives through governed interfaces; they never receive exact protected values and then hide them. |
+| Finite state | Show answer, abstention, denial, error, stale, withdrawn, corrected, or restricted state without implying the UI made the decision. |
+| Bounded explanation | Explain that governance or permission is unresolved/limited without revealing protected reasons, contacts, locations, or cultural categories. |
+| Authority attribution | Display an authority name or statement only when verified, approved for public disclosure, current, and correctly scoped. |
+| No badge-as-proof | A CARE or sovereignty chip is a navigation/trust cue only; it is never proof of compliance, consultation, consent, or authority. |
+| Obligation visibility | Surface public obligations such as attribution, use limits, no-export, or citation only when supported by the released decision and safe to disclose. |
+| Correction visibility | Show current correction, withdrawal, supersession, or stale status and prevent access to invalidated carriers. |
+| Accessibility | Do not encode restrictions only in color or map symbology; use text, status semantics, keyboard access, and assistive-technology-compatible controls. |
+| No misleading absence | Omitted detail must not be presented as “none exists,” and missing features must not be interpreted as clearance or non-applicability. |
 
-[↑ Back to top](#top)
+### Reviewer/admin surface requirements
+
+- least privilege and purpose-bound access;
+- authenticated identity and role verification;
+- separation from the normal public path;
+- audit-safe actions and reason codes;
+- no sensitive values in URLs, analytics, client logs, crash reports, or screenshots;
+- explicit session, export, retention, and revocation controls;
+- no model-generated recommendation as final authority; and
+- immediate restriction when authority, consent, rights, or review state changes.
+
+### Current proof limit
+
+[`apps/explorer-web/src/features/domains/archaeology/README.md`](../../apps/explorer-web/src/features/domains/archaeology/README.md) documents a proposed archaeology feature boundary and mentions future CARE/sovereignty notices. It explicitly says implementation files, routes, tests, governed envelopes, receipts, review records, release manifests, and runtime behavior remain unverified. Repository search did not surface a `kfm:care` implementation under Explorer Web.
+
+MapLibre is a renderer. A style, source, layer filter, popup, camera, feature-state flag, or plugin cannot evaluate CARE, consent, sovereignty, or release.
+
+[Back to top](#top)
 
 ---
 
 ## 13. Composition with sister sub-architectures
 
-CARE composes with — does not replace — the other sub-architectures in the publication-controls family.
+CARE-sensitive decisions compose with other KFM concerns. None is a substitute for the others.
 
-```mermaid
-flowchart TB
-  classDef care fill:#7c3aed,stroke:#4c1d95,color:#fff
-  classDef tier fill:#1f6feb,stroke:#0b3d91,color:#fff
-  classDef consent fill:#0891b2,stroke:#155e75,color:#fff
-  classDef role fill:#2ea44f,stroke:#14532d,color:#fff
-  classDef trust fill:#b91c1c,stroke:#7f1d1d,color:#fff
+| Concern | Question | Relationship to sovereignty/CARE |
+|---|---|---|
+| Sensitivity | Could the requested content or precision enable harm? | CARE may strengthen restrictions, but a low sensitivity label cannot clear authority or consent. |
+| Rights and source terms | May KFM acquire, retain, transform, redistribute, or export under source/legal terms? | Passing source rights does not establish Indigenous authority; failing rights can independently block use. |
+| Consent/permission | Is the exact operation permitted by the relevant subject, authority, agreement, or policy? | Consent is operation-specific and can be withdrawn; it does not prove collective benefit or ethics. |
+| Source role | What may the source actually support? | Cultural authority and source authority are different; a custodian or secondary source cannot be promoted by paraphrase. |
+| Evidence | Does the consequential claim resolve to admissible support for the requested scope? | CARE metadata does not become evidence for the underlying domain claim. |
+| Geoprivacy/protective transform | What detail must be removed, generalized, delayed, aggregated, or withheld? | Transform reduces exposure but does not extinguish sovereignty or obligations. |
+| Review | Who assessed the operation, under what authority, with what independence and limits? | A review record must not impersonate consultation or substantive cultural authority. |
+| Release | Is there a current governed decision binding the exact public-safe carrier? | CARE/consent/policy results are inputs, not release authority. |
+| Correction/rollback | What happens when authority, consent, evidence, or release changes? | Restrictions must propagate to every dependent derivative and public surface. |
 
-  asset[("Publication request")]
-  Care["CARE default-deny<br/>(this doc)"]:::care
-  Tier["Sensitivity tier transition<br/>(sensitivity-tiers.md)"]:::tier
-  Cnt["Consent render gate<br/>(sensitivity.md §7)"]:::consent
-  Role["Source-role validators<br/>(source-role-anti-collapse.md)"]:::role
-  TM["Trust-membrane<br/>(no RAW/WORK to public)"]:::trust
-  Pub[("PUBLISHED")]
+### Composite safe rule
 
-  asset --> Care
-  asset --> Tier
-  asset --> Cnt
-  asset --> Role
-  asset --> TM
-  Care --> Pub
-  Tier --> Pub
-  Cnt --> Pub
-  Role --> Pub
-  TM --> Pub
-```
+A public operation may proceed only when every material concern is either closed by its owning authority or explicitly represented in a finite safe outcome. The result is not “the least restrictive label wins.” An unresolved authority, right, consent, sensitivity, evidence, review, or release requirement blocks or narrows the operation.
 
-### 13.1 Composition rules
+### Source-role preservation
 
-| Sister sub-architecture | Composition rule |
-|---|---|
-| **Sensitivity tiers (T0–T4)** | A CARE-tagged asset can never be **T0**; T1 is the highest tier available, and only after generalization. Sacred sites and burial are **T4 forever** (the existence of a record may be released only as steward review permits). |
-| **Consent render gate** | The consent render gate ([`./sensitivity.md`](./sensitivity.md) §7) is the per-render check; the CARE default-deny is the per-publication check. Both must pass for any release. The CARE gate fires at promotion + admission; the consent render gate fires per request. |
-| **Source-role taxonomy** | The CARE rule is **role-agnostic**: it applies to observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic alike. A modeled product about a CARE-applicable community is still CARE-tagged. |
-| **Source-role anti-collapse** | An AI surface paraphrasing a CARE-tagged asset is doubly governed: the source-role anti-collapse rule prevents role drift, and the CARE rule prevents publication without consent. AI text about CARE-applicable content needs both `AIReceipt` and a valid CARE allow path. |
-| **Trust membrane** | CARE-tagged assets share the same trust-membrane invariants as everything else: no public client reads RAW / WORK / QUARANTINE; admin shortcuts are not public paths. |
+- Indigenous authority over governance does not turn a modeled environmental estimate into an observation.
+- An authoritative scientific source does not override Indigenous authority, consent, or purpose restrictions.
+- A museum or agency custodian does not automatically hold authority to control Indigenous data.
+- A public-safe derivative does not replace the restricted canonical object.
+- A CARE-aligned statement does not prove a domain claim unless its EvidenceRef resolves to admissible EvidenceBundle support.
 
-> [!CAUTION]
-> **A pass on one gate is not a pass overall.** A CARE-tagged asset that satisfies the default-deny rule (valid consent grant on file) still has to pass the tier-transition gates, the consent render gate, the source-role validators, and the trust-membrane checks. Each gate is independent; passes compose by intersection.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 14. Per-domain CARE applicability
 
-The table below names KFM domains by how often CARE applies. **CARE applicability is a curatorial decision per asset**, not a domain-level default — but some domains see CARE applicability often enough that admission validators should expect it.
+This table is a **screening and review map**, not a domain-default classifier. Applicability remains object-, source-, relationship-, purpose-, audience-, time-, and authority-specific.
 
-| Domain | CARE applicability | Notes |
+| Domain/context | Why review may be material | Safe architecture posture |
 |---|---|---|
-| **Archaeology / Cultural Heritage** | **Very high** | Default expectation: CARE applies. Sacred sites and burials are T4 forever; site locations require steward + cultural review + H3 r7 generalization. |
-| **People / DNA / Land** | **Very high** | DNA / genomic data is T4; living-person data requires consent; tribal-affiliated land assertions require CARE review. |
-| **Fauna (sensitive occurrences)** | **High** | Culturally-significant species (e.g., totemic, ceremonial) require CARE review beyond standard sensitive-occurrence redaction. |
-| **Flora (ethnobotanical)** | **High** | Ethnobotanical context, traditional-use plants, ceremonial species. |
-| **Settlements / Infrastructure (community-significant)** | **Medium** | Tribal community settlements, ceremonial infrastructure, historical sites of cultural significance. |
-| **Hazards** (events affecting tribal lands) | **Medium** | Disasters affecting tribal communities may carry CARE-tagged context. |
-| **Hydrology** (sacred waters, fishing rights) | **Medium** | Specific reaches and water bodies may carry CARE tags. |
-| **Geology** (sacred landforms) | **Medium** | Geological features of cultural significance. |
-| **Roads / Rail / Trade Routes** | **Low** | Historical trails and trade routes may carry CARE tags where they cross or originate in tribal territories. |
-| **Atmosphere / Air, Soil, Agriculture, Spatial Foundation** | **Low** | Generally not CARE-applicable, but the AIANNH / BIA intersection check still runs at admission. |
+| Archaeology and cultural heritage | Sites, collections, burials, sacred places, provenance, oral histories, cultural affiliation, repatriation, and looting risk may involve Indigenous authority and restricted knowledge. | Hold exact or interpretive exposure until qualified authority, rights, sensitivity, review, transform, and release are resolved. |
+| People, genealogy, DNA, and land | Collective identity, kinship, genomic data, ancestors, residence, land relationships, and living-person information can implicate both individual and collective rights. | Do not infer group membership, authority, consent, or lineage; apply the strictest relevant people/genomic/land and collective governance controls. |
+| Flora, fauna, habitat, ecology | Specimens, species knowledge, stewardship practices, traditional ecological knowledge, biocultural data, and locations may be community-governed even when the base observation is public. | Separate scientific observation from Indigenous knowledge and stewardship authority; restrict joins and knowledge-bearing attributes. |
+| Hydrology, soil, geology, atmosphere, hazards | Environmental measurements and models may concern Indigenous territories, resources, impacts, governance, or knowledge systems. | A public agency source does not settle community authority or impact; evaluate purpose, relation, precision, and downstream decisions. |
+| Roads, rail, trade, settlements, infrastructure | Historic routes, place names, removals, cultural landscapes, sacred travel, service/infrastructure effects, and critical assets may require review. | Avoid converting historic or administrative maps into present authority or cultural interpretation; restrict harmful precision. |
+| Maps, 3D, remote sensing, and reconstruction | Visualizations can imply observation, ownership, cultural meaning, or unrestricted access; detailed terrain and models can expose protected places. | Preserve reality/source boundaries, authority, transform receipts, public-safe derivatives, and explicit limitations. |
+| Archives, libraries, museums, universities, and agencies | Institutional custody may coexist with Indigenous rights and interests in records, specimens, images, recordings, and metadata. | Custody and open access are not sufficient authority; review provenance, agreements, community standards, retention, and reuse. |
+| AI, search, graph, embeddings, and analytics | Derived relations, summaries, classification, translation, training, and retrieval can reconstruct or repurpose governed data. | Treat indexes/models as downstream carriers; filter before ingestion, prohibit authority inference, and invalidate dependent context on correction. |
+| General public administrative data | Many records may have no CARE relevance, but joins, place relations, names, and downstream use can change that. | Use evidence-based screening and document non-applicability only when sufficiently supported; absence of a trigger field is not proof. |
 
-> [!NOTE]
-> **"Low" does not mean "never."** Every admission runs the AOI intersection check (§6); a low-applicability domain can still produce CARE-tagged assets when the AOI intersects. The applicability column reflects the *typical case*, not a binary determination.
+### No universal domain outcome
 
-[↑ Back to top](#top)
+A domain cannot be marked permanently CARE-applicable or permanently exempt through this page. A single dataset can contain mixed records, fields, sources, authorities, permissions, and audiences. KFM needs operation-specific decisions and safe defaults, not a broad domain badge.
+
+[Back to top](#top)
 
 ---
 
 ## 15. Anti-patterns
 
-<details>
-<summary><strong>Sovereignty / CARE anti-pattern register</strong> (click to expand)</summary>
-
-| Anti-pattern | Why it violates the rule |
+| Anti-pattern | Why it fails |
 |---|---|
-| **Omitting CARE fields for a CARE-applicable asset.** | C15-01 explicit violation. C15-03 default-deny refuses the asset. |
-| **Fabricating CARE fields to "pass" the validator.** | Curatorial fraud. CARE fields must reflect actual relationships. |
-| **Default-allow with explicit denials for CARE-tagged assets.** | C15-03 explicitly rejects this posture. Default-deny is the only robust stance. |
-| **Stripping AIANNH intersection from an AOI to evade label inheritance.** | Sovereignty label evasion. Validator must check original AOI. |
-| **Treating "incidental" AIANNH intersection as a free pass.** | Without a signed waiver, no intersection is incidental enough. |
-| **Publishing archaeological geometry below H3 r7 without review.** | ML-061-159 explicit prohibition. |
-| **Rendering reconstructed historical scenes without Reality Boundary Note.** | Source-role collapse (synthetic → observed). See [`./source-role-anti-collapse.md`](./source-role-anti-collapse.md) §5 pattern #6. |
-| **Re-publishing a CARE-tagged asset after consent revocation.** | The status-list check on every render must catch this. Failure is a CARE violation. |
-| **Bulk-publishing restricted cultural archives.** | Only named-consent releases permitted; bulk is never authorized. |
-| **Treating CARE compliance as a one-time check.** | Consent expires; obligations evolve; revocation can happen at any time. CARE is per-request, not per-admission. |
-| **Hiding sensitive cultural geometry behind a style filter only.** | Same as the broader sensitivity anti-pattern (sensitivity.md §6). Tiles still carry the coordinates. |
-| **AI surface paraphrasing CARE-tagged content without `AIReceipt`.** | Cite-or-abstain failure compounded by CARE failure. |
-| **Stripping `obligations` from derivative artifacts.** | Obligations travel with the data per CARE Responsibility principle. |
-| **Renderer omitting CARE chips on CARE-tagged layers.** | UI compliance failure (ML-061-160). |
-| **Skipping the curatorial-decision step when CARE applicability is unclear.** | Default-when-unclear is "applicable pending review." Skipping = silent admission as non-applicable. |
-| **Maintaining "not-findable-by-policy" assets without a steward query surface.** | Records exist without governance visibility. Stewards must be able to inspect what is denied and why. |
-| **Publishing benefit commitments that are not actually fulfilled.** | The `benefit_commitments` field is a commitment, not a placeholder. Unfulfilled commitments are a CARE violation. |
+| Treating the five proposal-era CARE fields as GIDA's canonical schema | The CARE Principles are governance principles, not those property names; KFM has not accepted the field model. |
+| Automatic authority assignment from AIANNH/BIA or another polygon | Geographic relevance is not authority, jurisdiction for the operation, consultation, or consent. |
+| Treating no polygon intersection as clearance | Cultural, historic, relational, data, and governance authority need not match one current boundary layer. |
+| CARE badge or “sovereignty chip” as compliance proof | UI decoration cannot prove authority, consultation, policy, or release. |
+| FAIR/open-license/public-source bypass | Technical openness and source terms do not extinguish Indigenous rights or interests. |
+| Institution or data custodian treated as authority to control | Custody, funding, publication, collection, or source prestige does not automatically confer Indigenous authority. |
+| Generic “tribal liaison” placeholder treated as review | An unverified role label is not a qualified person, Nation, community, mandate, or consultation record. |
+| Signature, DSSE envelope, credential, or status list treated as consent | Cryptographic integrity proves bytes/key relations under a trust model; it does not establish legitimate authority or substantive permission. |
+| Fixed H3 resolution or distance as universal protection | Risk depends on place, time, source, relation, harm, audience, and community governance; fixed values can underprotect or misrepresent. |
+| Generalized geometry treated as unrestricted | Authority, consent, rights, obligations, or cultural restrictions may remain. |
+| Client-side hiding | Protected bytes already reached the client and may be recovered. |
+| Sensitive reason strings and logs | The control itself discloses authority, location, disagreement, identity, or restriction rationale. |
+| Public contact scraping | Contact discovery is not authority verification and can expose or burden individuals. |
+| AI classification of CARE applicability or authority | A model can triage candidates but cannot make the substantive governance decision. |
+| One-time approval with no expiry/correction | Authority, contact, consent, purpose, use, and community standards can change. |
+| Consent-only release | Independent evidence, rights, sensitivity, review, transform, release, correction, and rollback remain required. |
+| Architecture prose treated as policy | This page explains responsibilities; accepted policy and observed runtime behavior carry enforcement proof. |
+| Catalog extension before authority closure | Produces polished machine-readable metadata over unresolved governance and may encourage unsafe reuse. |
+| “Collective benefit” self-certified by KFM | Benefit must be grounded in affected Indigenous Peoples' priorities and accountable relationships, not a project narrative. |
 
-</details>
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
 ## 16. Where this lives in the repository
 
-CARE **doctrine** lives in `docs/architecture/`. **Enforcement** is split across responsibility roots per Directory Rules. All paths are **PROPOSED** until verified per Directory Rules §2.5.
+Accepted Directory Rules place each artifact by its one authority responsibility. The sovereignty/CARE concern is intentionally distributed; a future structural split must preserve that separation.
 
-```mermaid
-flowchart TB
-  classDef doctrine fill:#1f6feb,stroke:#0b3d91,color:#fff
-  classDef contract fill:#0f766e,stroke:#064e3b,color:#fff
-  classDef schema   fill:#7c3aed,stroke:#4c1d95,color:#fff
-  classDef policy   fill:#b91c1c,stroke:#7f1d1d,color:#fff
-  classDef data     fill:#ca8a04,stroke:#713f12,color:#fff
-  classDef tests    fill:#16a34a,stroke:#14532d,color:#fff
-  classDef ui       fill:#0891b2,stroke:#155e75,color:#fff
-
-  D["docs/architecture/<br/>sovereignty-care.md<br/>(this doc — doctrine)"]:::doctrine
-
-  C["contracts/care/<br/>(steward_org, authority_to_control,<br/>obligations, benefit_commitments)"]:::contract
-  S1["schemas/contracts/v1/catalog/<br/>metablock-v2.json"]:::schema
-  S2["schemas/contracts/v1/catalog/<br/>stac-care-extension/v0.1.0/"]:::schema
-  S3["schemas/contracts/v1/catalog/<br/>dcat-care-extension/v0.1.0/"]:::schema
-
-  P1["policy/care/<br/>(default-deny on authority_to_control)"]:::policy
-  P2["policy/sensitivity/archaeology/<br/>(H3 r7 floor, terrain 5 km)"]:::policy
-  P3["policy/consent/people/<br/>(consent render gate)"]:::policy
-
-  R["data/registry/rights/<br/>(consent grants · revocation status)"]:::data
-  T["tests/policy/care/<br/>(default-deny · sovereignty inheritance ·<br/>generalization-floor fixtures)"]:::tests
-  U["apps/explorer-web/<br/>care-chips · sovereignty-notice ·<br/>obligations-summary"]:::ui
-
-  D --> C & S1 & S2 & S3
-  D --> P1 & P2 & P3
-  P1 --> R
-  P1 --> T
-  P2 --> T
-  P3 --> R
-  P3 --> T
-  D --> U
-```
-
-| Responsibility | Root | What lives here |
+| Responsibility | Current path or surface | Current bounded status |
 |---|---|---|
-| Doctrine — this doc | `docs/architecture/sovereignty-care.md` | FAIR+CARE pairing; default-deny rule; sovereignty label inheritance; UI requirements. |
-| Object meaning | `contracts/care/` | What `steward_org`, `authority_to_control`, `obligations`, `benefit_commitments`, `sovereignty:tribal` *mean*. |
-| Object shape — MetaBlock v2 | `schemas/contracts/v1/catalog/metablock-v2.json` | JSON Schema for MetaBlock v2 including required-when-applicable CARE fields. |
-| Object shape — STAC extension | `schemas/contracts/v1/catalog/stac-care-extension/v0.1.0/` | `kfm:care` STAC extension schema. |
-| Object shape — DCAT extension | `schemas/contracts/v1/catalog/dcat-care-extension/v0.1.0/` | `kfm:care` DCAT extension JSON-LD context. |
-| Enforcement — CARE | `policy/care/` | Default-deny on `authority_to_control`; sovereignty label inheritance; remediation surface emit. |
-| Enforcement — sensitivity (archaeology) | `policy/sensitivity/archaeology/` | H3 r7 floor; 5 km terrain generalization; sacred/burial T4-forever. |
-| Enforcement — consent | `policy/consent/people/` | Consent render gate (per-render check). |
-| Rights & consent registry | `data/registry/rights/` | Consent grants; revocation status; obligations records. |
-| Enforceability proof | `tests/policy/care/` | Default-deny fixtures; sovereignty inheritance fixtures; generalization-floor fixtures. |
-| UI surface | `apps/explorer-web/` (PROPOSED) | CARE chips; sovereignty notice chips; obligations summary; generalization log. |
+| Cross-root architecture map | `docs/architecture/sovereignty-care.md` | This explanatory page; same-path modernization. |
+| Convergence plan | [`docs/architecture/document-convergence-plan.md`](./document-convergence-plan.md) | Assigns this page `SPLIT`; no move or split is authorized here. |
+| Sensitivity architecture | [`docs/architecture/sensitivity.md`](./sensitivity.md) | Repository-grounded umbrella map; sovereignty/CARE is one concern, not a universal sensitivity rank. |
+| Proposal-era catalog register | [`docs/sources/catalog/CARE-COMPLIANCE.md`](../sources/catalog/CARE-COMPLIANCE.md) | Draft explanatory register with unaccepted MetaBlock, namespace, consent, and gate claims; not policy or machine authority. |
+| Domain cultural-review plan | [`docs/domains/archaeology/CULTURAL_REVIEW.md`](../domains/archaeology/CULTURAL_REVIEW.md) | Draft/proposal-heavy domain protocol; reviewer identities, records, policy, and release integration unproved. |
+| CARE-specific semantic contract | Prior page cited `contracts/care/` | Path not found at the pinned snapshot; exact home and object family require governance/placement review. |
+| CARE/MetaBlock machine schema | Prior page cited `schemas/contracts/v1/catalog/metablock-v2.json` | Path not found at the pinned snapshot; no accepted schema or validator established. |
+| CARE policy source | Prior page cited `policy/care/` | Path not found at the pinned snapshot; do not create a parallel policy family without accepted placement and semantics. |
+| Generic policy input meaning | [`contracts/policy/policy_input_bundle.md`](../../contracts/policy/policy_input_bundle.md) | Draft semantic target; paired schema remains permissive placeholder. |
+| Generic policy decision meaning/shape | [`contracts/policy/policy_decision.md`](../../contracts/policy/policy_decision.md) and [schema](../../schemas/contracts/v1/policy/policy_decision.schema.json) | Draft/proposed closed finite decision shape; no CARE evaluator. |
+| Consent rule-source boundary | [`policy/consent/`](../../policy/consent/README.md) | Draft and placement/maturity conflicts remain; people lane is README-only for executable behavior. |
+| Sensitivity rule-source boundary | [`policy/sensitivity/`](../../policy/sensitivity/README.md) | Proposed scaffold corpus with mixed defaults; no active repository-wide bundle/evaluator. |
+| Archaeology sovereignty rule scaffold | [`policy/sensitivity/archaeology/sovereignty_chip_required.rego`](../../policy/sensitivity/archaeology/sovereignty_chip_required.rego) | Proposed three-line scaffold; no operative rule. |
+| Rights registry | [`data/registry/rights/`](../../data/registry/rights/README.md) | Parent README and Flora child README; no accepted record shape, concrete records, resolver, or runtime integration. |
+| Protective-transform fixture profile | [`RedactionReceipt`](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) | Proposed-inactive, fixture-only, no policy/review/release/publication authority. |
+| Policy runtime | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) | `0.0.0` placeholder, unbound evaluator, no verified consumers/deployment. |
+| Policy readiness workflow | [`.github/workflows/policy-test.yml`](../../.github/workflows/policy-test.yml) | Drift/readiness guard; broad workflow evaluates no policy and emits no decision. |
+| Governed API | [`apps/governed-api/`](../../apps/governed-api/README.md) | Intended trust membrane; CARE/authority route-by-route enforcement and deployment require separate proof. |
+| Explorer Web | [`apps/explorer-web/`](../../apps/explorer-web/README.md) | Public/semi-public shell; no verified CARE implementation surfaced. |
+| Release/correction/rollback | [`release/`](../../release/README.md) | Separate decision plane; CARE metadata, review, consent, or policy cannot replace it. |
+| Document registry | [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml) | Current file contains only its required-artifact-index entry; this architecture page is not registered there at the pinned snapshot. |
 
-[↑ Back to top](#top)
+### Directory Rules basis
+
+- `docs/architecture/` owns human-readable cross-root architecture explanation.
+- `contracts/` owns semantic meaning.
+- `schemas/` owns machine shape.
+- `policy/` owns rule source.
+- `data/registry/` owns governed control records, not policy or release.
+- `packages/` and `apps/` own implementation/runtime surfaces.
+- `release/` owns append-only release, correction, withdrawal, and rollback decisions.
+
+The owning-root analysis supports editing this tracked architecture page in place. It does **not** support creating any missing CARE path in this documentation-only slice.
+
+### Structural convergence boundary
+
+Before implementing the provisional `SPLIT`, maintainers must:
+
+1. compare complete unique content across this page, sensitivity architecture, catalog CARE register, cultural-review docs, source/right docs, policy READMEs, and domain pages;
+2. obtain qualified Indigenous/community data-governance and affected-domain review;
+3. identify the accepted authority owner for principle guidance, KFM semantics, schema, policy, registry, domain protocols, and public behavior;
+4. preserve document identity, inbound links, anchors, and useful historical lineage;
+5. avoid accepting field names, tiers, thresholds, authority inheritance, or waiver mechanisms through file movement;
+6. update every affected reference in one dependency-closed change; and
+7. prove rollback and no-loss treatment.
+
+Until then, the page remains at its current path and the split stays on `HOLD`.
+
+[Back to top](#top)
 
 ---
 
 ## 17. Verification backlog
 
-| ID | Item | Evidence that would settle it |
-|---|---|---|
-| **VB-CARE-01** | `schemas/contracts/v1/catalog/metablock-v2.json` exists and defines the five CARE fields per §4 | Schema inspection |
-| **VB-CARE-02** | `policy/care/` Rego bundle implements the default-deny rule per §5 (`authority_to_control` non-empty triggers deny unless consent grant present, valid, unrevoked) | Bundle inspection + negative fixtures |
-| **VB-CARE-03** | Sovereignty label inheritance against AIANNH / BIA overlays is implemented at admission per §6 | Pipeline inspection + intersection-positive fixtures |
-| **VB-CARE-04** | `policy/sensitivity/archaeology/` enforces H3 r7 floor and 5 km terrain generalization per §8 | Bundle inspection + below-floor negative fixtures |
-| **VB-CARE-05** | `kfm:care` STAC extension exists with namespace IRI + JSON Schema + JSON-LD context per §9 | Repository inspection + sample STAC Item |
-| **VB-CARE-06** | `kfm:care` DCAT extension exists per §9 | JSON-LD context inspection |
-| **VB-CARE-07** | Default-deny rule runs at **both** the promotion gate and the admission webhook per §5.3 | Gate inspection + trace logging |
-| **VB-CARE-08** | CARE remediation playbook is authored per §10 (Pass 10 high-priority Writing Track item 6) | `docs/runbooks/care/remediation.md` (PROPOSED) or equivalent |
-| **VB-CARE-09** | Curatorial-decision SOP for CARE applicability is authored per §11 | `docs/runbooks/care/applicability-sop.md` (PROPOSED) or equivalent |
-| **VB-CARE-10** | "Not-findable-by-policy" convention is designed and implemented per §8.3 | Schema + policy + steward-query surface |
-| **VB-CARE-11** | UI carries CARE chips, sovereignty notice chips, generalization logs per §12 | Style + component inspection + UI lint fixtures |
-| **VB-CARE-12** | Consent grants and revocation status are stored in `data/registry/rights/` and consulted by the default-deny rule | Registry inspection + integration tests |
-| **VB-CARE-13** | Signed time-boxed waivers (§6.2) are supported by the validator: DSSE envelope, expiry, status-list revocation | Schema + validator behavior |
-| **VB-CARE-14** | Per-domain CARE applicability defaults (§14) are reflected in admission-validator defaults | Validator config inspection |
-| **VB-CARE-15** | Owner / `CODEOWNERS` entries name an architecture steward, a CARE steward, and a tribal liaison contact for this file | `.github/CODEOWNERS` inspection |
-| **VB-CARE-16** | This doc is registered in `control_plane/document_registry.yaml` | Registry inspection |
-| **VB-CARE-17** | An ADR governs the `kfm:care` namespace versioning policy (C15-02 expansion item) | `docs/adr/` listing |
-| **VB-CARE-18** | An ADR governs the MetaBlock v2 migration from v1 (C15-01 open question) | `docs/adr/` listing |
+### P0 — authority and safe-handling prerequisites
 
-[↑ Back to top](#top)
+| ID | Open verification | Evidence required to close |
+|---|---|---|
+| **VB-CARE-01** | Who is accountable for Indigenous/community data governance, Tribal/community liaison, rights, consent, sensitivity, policy, review, release, correction, and incident response? | Verified people/teams, mandates, separation of duties, escalation, recusal, and succession records. |
+| **VB-CARE-02** | What process identifies the qualified authority for a particular KFM operation? | Reviewed protocol co-developed or accepted with relevant authorities; source hierarchy; conflict/multi-authority handling; synthetic negative tests. |
+| **VB-CARE-03** | What KFM object families are actually needed for applicability, authority, consultation, consent/permission, obligations, benefit, ethics, review, dispute, and withdrawal? | Accepted ADR/decision, semantic contracts, non-collapse map, identity/versioning rules, public/restricted projections, migration plan. |
+| **VB-CARE-04** | What machine schemas and validators enforce those accepted objects? | Closed or intentionally extensible schemas, valid/invalid no-network fixtures, deterministic validators, focused tests, compatibility/versioning plan. |
+| **VB-CARE-05** | Which policy family owns CARE-sensitive gates, and how does it compose with rights, consent, sensitivity, access, render, and release? | Accepted policy ownership/entrypoints, reason/obligation vocabularies, bundle manifest, selector, evaluator binding, normalization, fail-safe tests. |
+| **VB-CARE-06** | Which Indigenous/community standards, agreements, research codes, or local protocols govern the first intended source/operation? | Qualified authority review and citable, permissioned evidence; no generic CARE substitution. |
+| **VB-CARE-07** | Which real source, rights, and authority records exist, and can they be resolved without exposing protected detail? | Governed registry contracts/schemas, synthetic fixtures, concrete reviewed records in an authorized environment, resolver tests, access/audit evidence. |
+| **VB-CARE-08** | How are disputes, suspension, withdrawal, revocation, and authority changes represented? | Accepted state/decision model, temporal semantics, correction/withdrawal contracts, dependency graph, propagation and rollback rehearsal. |
+| **VB-CARE-09** | What restricted-data environment is approved for real cultural/Indigenous material? | Security/privacy/sovereignty threat model, least privilege, audit, retention/deletion, key/secret management, incident and breach response, qualified approval. |
+
+### P1 — first governed proof slice
+
+| ID | Open verification | Evidence required to close |
+|---|---|---|
+| **VB-CARE-10** | Can one wholly synthetic, no-network candidate exercise applicability, unresolved authority, bounded permission, denial, error, correction, and rollback without encoding real cultural knowledge? | Synthetic fixture design reviewed for non-harm; deterministic replay; ANSWER/ABSTAIN/DENY/ERROR cases; no model/network calls. |
+| **VB-CARE-11** | Does `PolicyInputBundle` have sufficient machine shape for explicit authority/consent/obligation inputs? | Contract/schema reconciliation, additional-properties decision, validators, fixtures, producer/consumer tests. |
+| **VB-CARE-12** | Can an accepted evaluator produce a normalized, auditable `PolicyDecision` without hidden fetches or unsafe reason leakage? | Buildable runtime, pinned evaluator/bundle, explicit inputs, timeout/failure behavior, receipts, negative tests, first bounded consumer. |
+| **VB-CARE-13** | Are protective transforms adequate for the specific operation without implying clearance? | Qualified profile review, threat model, input/output identity, transform validation, inference tests, review and release references. |
+| **VB-CARE-14** | Do API, map, search, graph, export, story, and AI surfaces receive only the released public-safe projection? | Dependency/data-flow tests, browser/network traces, payload/tile/export inspection, cross-surface lint, public-origin verification. |
+| **VB-CARE-15** | Does correction or withdrawal invalidate every controlled derivative and cache? | Synthetic rehearsal across manifests, aliases, catalogs, tiles, APIs, search, graph, exports, stories, and AI context, with parity receipts. |
+| **VB-CARE-16** | Can the public UI communicate restriction and correction accessibly without disclosing protected reasons? | Accessibility review, finite-state fixtures, safe reason-code review, screenshots/DOM tests, no-restricted-byte proof. |
+| **VB-CARE-17** | Is human review authenticated and meaningfully separate from technical authorship/release? | Verified identities/roles, review records, CODEOWNERS versus substantive authority distinction, separation tests, approval audit. |
+
+### P2 — interoperability and operations
+
+| ID | Open verification | Evidence required to close |
+|---|---|---|
+| **VB-CARE-18** | Should KFM define a `kfm:care` STAC/DCAT/JSON-LD profile? | Accepted namespace/owner, external interoperability review, schemas, fixtures, catalog closure tests, consumer fallback behavior, deprecation plan. |
+| **VB-CARE-19** | How are obligations enforced after export or third-party reuse? | Terms/rights model, downstream packaging, machine/human notices, access controls where possible, monitoring and correction limits honestly documented. |
+| **VB-CARE-20** | How are benefit commitments reviewed and measured without KFM self-certification? | Community-defined measures, accountable reporting, review cadence, dispute/correction process, privacy-safe public summary. |
+| **VB-CARE-21** | What operational SLOs apply to withdrawal, cache invalidation, registry refresh, authority recheck, and incident response? | Accepted runbooks, measured rehearsals, alerts, dashboards, incident records, correction and rollback targets. |
+| **VB-CARE-22** | How should overlapping sovereignty/CARE documents be split or consolidated? | No-loss content ledger, inbound-link/anchor inventory, qualified stewardship and owner decision, identity/supersession plan, validation and rollback. |
+| **VB-CARE-23** | What external source currentness checks are required? | Dated source ledger for GIDA/CARE references, Census geography vintage, current federal recognition source, contact discovery, local/community standards, and limitations. |
+
+### Graduation evidence
+
+| Level | Minimum evidence |
+|---|---|
+| **P0 — safe design** | Accountable authority-resolution process; accepted object/decision boundaries; no-real-data synthetic fixtures; explicit rights/consent/sensitivity/source-role composition; no new public path. |
+| **P1 — bounded pilot** | Deterministic evaluator slice; finite outcomes; authenticated synthetic review; transform and release-candidate binding; public-surface negative tests; correction/rollback rehearsal; no live source activation. |
+| **P2 — operational use** | Qualified authority participation; real reviewed records in an approved environment; active policy/runtime health; release and withdrawal propagation; interoperability and external-currentness checks; incident/runbook evidence. |
+
+### Repository-native validation for this documentation change
+
+Run against the feature-branch range and record actual outcomes:
+
+```bash
+git diff --check
+
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --git-diff <BASE_SHA>...HEAD \
+  --format json
+
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  --registry control_plane/document_registry.yaml \
+  --git-diff <BASE_SHA>...HEAD \
+  --format markdown \
+  README.md docs tools/validators/docs
+
+python tools/validators/docs/document-graph/check_document_graph.py \
+  --repo-root . \
+  --entrypoint README.md \
+  --entrypoint docs/README.md \
+  --registry control_plane/document_registry.yaml \
+  --git-diff <BASE_SHA>...HEAD \
+  --format markdown \
+  README.md docs tools/validators/docs
+
+python tools/validators/directory_governance/validate_repository_topology.py \
+  --format text
+```
+
+A green documentation check proves only the declared document/link/topology scope. It does not prove CARE applicability, community authority, consultation, consent, policy execution, safe handling, release, or deployed enforcement.
+
+### Rollback
+
+Before merge, close the draft pull request and abandon the feature branch. After an authorized merge, revert the documentation commit through the normal reviewed path. Reverting this page must not mutate registry, policy, review, release, public, or correction state.
+
+[Back to top](#top)
 
 ---
 
 ## 18. Related docs
 
-| Path | Role |
-|---|---|
-| [`./sensitivity.md`](./sensitivity.md) | Umbrella sensitivity architecture; sovereignty/CARE is its §8 sub-architecture. |
-| [`./sensitivity-tiers.md`](./sensitivity-tiers.md) | T0–T4 release tiers; CARE-tagged assets cap at T1 (after generalization) and bottom at T4 for sacred/burial. |
-| [`./source-roles.md`](./source-roles.md) | Source-role taxonomy; the CARE rule is role-agnostic. |
-| [`./source-role-anti-collapse.md`](./source-role-anti-collapse.md) | Source-role anti-collapse rule; composes with CARE for AI surfaces. |
-| [`./smoke-atmosphere-hazards.md`](./smoke-atmosphere-hazards.md) | Cross-domain worked example; demonstrates how multiple gates compose. |
-| `docs/architecture/connected-dots-architecture-brief.md` | System-wide brief; CARE sits in its publication-controls layer. |
-| `docs/architecture/contract-schema-policy-split.md` | Why CARE *meaning* lives in `contracts/`, *shape* in `schemas/`, *enforcement* in `policy/`. |
-| `docs/architecture/governed-api.md` | The only public surface; emits CARE-aware `PolicyDecision` outcomes. |
-| `docs/architecture/maplibre-3d.md` | Renderer doctrine; honors CARE chips, sovereignty notice chips, and generalization logs. |
-| `docs/runbooks/care/remediation.md` (PROPOSED) | The CARE remediation playbook for default-deny denials (Pass 10 high-priority writing item). |
-| `docs/runbooks/care/applicability-sop.md` (PROPOSED) | The curatorial-decision SOP for CARE applicability. |
-| `docs/doctrine/directory-rules.md` | Placement law. |
-| `contracts/care/README.md` | PROPOSED per-root README for CARE semantics. |
-| `policy/care/README.md` | PROPOSED per-root README for CARE enforcement. |
-| `KFM_Encyclopedia.md` §11 (Sensitive / Deny-by-Default Posture) | Doctrinal cross-reference for sensitive-content posture. |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.5 (tier reference) | Tier scheme that CARE composes with. |
-| `KFM_Components_Pass_10_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` §6.15 (Category C15 — FAIR + CARE Reconciliation) | Primary doctrinal anchor for this doc. |
+### Current KFM architecture and doctrine
 
-[↑ Back to top](#top)
+- [Sensitivity architecture](./sensitivity.md) — current cross-root sensitivity and enforcement map.
+- [Sensitivity tiers](./sensitivity-tiers.md) — proposed T0–T4 release-tier architecture; remains on governance `HOLD`.
+- [Source-role anti-collapse](./source-role-anti-collapse.md) — preserves what evidence can support.
+- [Data-classification framework](./data-classification-framework.md) — classification composition and enforcement boundaries.
+- [Architecture convergence plan](./document-convergence-plan.md) — provisional `SPLIT` disposition and migration controls.
+- [Directory Rules v2](../doctrine/directory-rules.md) — accepted exact bytes through ADR-0029 despite the source file's retained pre-adoption status label.
+- [ADR index](../adr/INDEX.md) — one accepted numbered ADR and proposed remainder at the pinned snapshot.
+
+### Source, rights, consent, sensitivity, and domain material
+
+- [Source catalog CARE compliance](../sources/catalog/CARE-COMPLIANCE.md) — proposal-era explanatory register; not accepted machine/policy authority.
+- [Rights and sensitivity map](../sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md) — source-catalog planning surface.
+- [Rights guidance](../sources/RIGHTS_GUIDANCE.md) — source rights documentation.
+- [Rights registry](../../data/registry/rights/README.md) — registry boundary and current maturity limits.
+- [Consent policy boundary](../../policy/consent/README.md) and [people consent lane](../../policy/consent/people/README.md) — draft policy-source documentation, not active consent enforcement.
+- [Sensitivity policy boundary](../../policy/sensitivity/README.md) — mixed proposed scaffolds and explicit runtime hold.
+- [Archaeology cultural review](../domains/archaeology/CULTURAL_REVIEW.md) — draft domain protocol requiring repository and authority reconciliation.
+- [Archaeology sensitivity](../domains/archaeology/SENSITIVITY.md) — domain-specific planning and restrictions.
+
+### Contracts, schemas, runtime, and release
+
+- [PolicyInputBundle contract](../../contracts/policy/policy_input_bundle.md) and [schema](../../schemas/contracts/v1/policy/policy_input_bundle.schema.json).
+- [PolicyDecision contract](../../contracts/policy/policy_decision.md) and [schema](../../schemas/contracts/v1/policy/policy_decision.schema.json).
+- [SensitivityLabel contract](../../contracts/policy/sensitivity_label.md).
+- [RedactionReceipt contract](../../contracts/shared/redaction_receipt.md) and [fixture-only schema](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json).
+- [Policy runtime placeholder](../../packages/policy-runtime/README.md).
+- [Governed API](../../apps/governed-api/README.md) and [Explorer Web](../../apps/explorer-web/README.md) boundaries.
+- [Release decision plane](../../release/README.md).
+- [Policy readiness workflow](../../.github/workflows/policy-test.yml).
+
+### External authoritative references
+
+- [Global Indigenous Data Alliance — CARE Principles](https://www.gida-global.org/careprinciples).
+- [Carroll et al., “The CARE Principles for Indigenous Data Governance”](https://doi.org/10.5334/dsj-2020-043).
+- [Wilkinson et al., “The FAIR Guiding Principles”](https://doi.org/10.1038/sdata.2016.18).
+- [U.S. Census TIGERweb AIANNH service](https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_restmapservice.html).
+- [U.S. Indian Affairs Tribal Leaders Directory](https://www.bia.gov/service/tribal-leaders-directory).
+
+[Back to top](#top)
 
 ---
 
 ## Appendix A — CARE applicability questionnaire
 
-The questionnaire below is **PROPOSED** as a starting point for the curatorial-decision SOP ([§11](#11-curatorial-decisions-when-does-care-apply)). It is not the SOP itself; it is the architectural shape the SOP should fill. Authoritative SOP belongs in `docs/runbooks/care/applicability-sop.md`.
+> [!IMPORTANT]
+> This questionnaire is a **review aid**, not an automated classifier, policy rule, authority resolver, consent form, or approval record. A “no” or “unknown” answer does not prove CARE is inapplicable. A “yes” answer triggers qualified review; it does not identify the authority or authorize use.
 
-<details>
-<summary><strong>CARE applicability questionnaire (PROPOSED)</strong> (click to expand)</summary>
+### A. Subject and relationship
 
-### A.1 Initial triage
+1. Does the material concern Indigenous Peoples, Nations, communities, families, individuals, territories, environments, resources, governance, cultures, languages, heritage, specimens, or knowledge?
+2. Does the source or provenance describe Indigenous origin, custody, collection, contribution, restriction, or community relationship?
+3. Could a join, map, graph, model, translation, label, or inference create an Indigenous relationship not explicit in the source?
+4. Could the material concern more than one Nation, Tribe, community, rightsholder, family, or authority?
+5. Is the absence of a formal label or current boundary being incorrectly treated as evidence of no relationship?
 
-| # | Question | If "Yes" |
-|---|---|---|
-| 1 | Does the asset describe, originate from, or affect an Indigenous community? | CARE applies. |
-| 2 | Does the asset's AOI intersect AIANNH or BIA overlays? | CARE applies (per §6). |
-| 3 | Does the asset describe a sacred site, burial, human remains, or restricted cultural archive? | CARE applies; default tier **T4 forever** for the most sensitive subsets. |
-| 4 | Does the asset describe traditional ecological knowledge or ethnobotanical content? | CARE applies. |
-| 5 | Does the asset describe a community that has historically been the subject of, rather than the author of, data collection? | CARE applies. |
-| 6 | Does the asset's source carry rights-of-use restrictions referring to community authority? | CARE applies. |
+### B. Operation and purpose
 
-If **any** answer is "Yes," the asset is CARE-applicable. Proceed to A.2.
+6. What exact operation is proposed: acquire, retain, normalize, link, analyze, model, train, summarize, translate, map, export, publish, commercialize, correct, or delete?
+7. Who is the audience, and can the output be copied, downloaded, indexed, scraped, embedded, or reused outside KFM?
+8. Does the new purpose differ from the purpose for which the material was collected, shared, or previously published?
+9. What future uses, joins, or model behaviors could reasonably follow from the proposed operation?
+10. Can the purpose be met with less data, lower precision, shorter retention, a different source, or no public output?
 
-If **all** answers are "No," document the determination in the curatorial log and admit without CARE fields. (Documentation matters: the determination itself should be reviewable.)
+### C. Authority and consultation
 
-### A.2 Field population
+11. Who may have authority to decide the exact operation and scope, and what evidence supports that possibility?
+12. Has that authority been verified through a qualified process rather than geography, source custody, or institutional assumption?
+13. Has meaningful consultation occurred for this operation, and is its scope, outcome, condition, disagreement, or deferral recorded safely?
+14. Are there local/community standards, research codes, agreements, protocols, or restrictions that are more specific than generic CARE guidance?
+15. If authority is disputed, overlapping, unavailable, or unknown, has the operation been held rather than guessed?
 
-For CARE-applicable assets, populate the five MetaBlock v2 CARE fields per §4:
+### D. Collective benefit and responsibility
 
-| Field | Source of the value |
+16. Who defines the intended collective benefit, and how is KFM accountable to that definition?
+17. Are benefit commitments concrete, resourced, time-bound, reviewable, and correctable rather than promotional language?
+18. What stewardship, attribution, capability, reporting, language, access, retention, deletion, or return-of-results responsibilities apply?
+19. Who receives questions, disputes, corrections, or withdrawal requests, and is that channel approved and safe?
+20. Will downstream recipients receive and honor the obligations, or must export/reuse be denied?
+
+### E. Ethics, harm, and precision
+
+21. Could publication or reuse cause stigma, misrepresentation, surveillance, extraction, cultural harm, commercial exploitation, physical harm, looting, harassment, re-identification, or loss of control?
+22. Could geometry, time, labels, metadata, source URLs, screenshots, or repeated releases reconstruct protected information?
+23. Could AI, search, graph, embeddings, or analytics upcast uncertainty or restore withheld attributes?
+24. Does the proposed representation falsely imply observation, ownership, jurisdiction, agreement, homogeneity, or present-day authority?
+25. Are public reasons and trust cues free of protected authority, contact, dispute, place, and cultural details?
+
+### F. Consent, rights, review, release, and correction
+
+26. Is any required consent/permission operation-, audience-, purpose-, field-, precision-, retention-, and time-specific?
+27. Are rights/source terms, consent, sensitivity, sovereignty, evidence, and release evaluated independently?
+28. Is qualified human review authenticated and separate from the producer where consequence warrants it?
+29. Is the public-safe derivative separately identified, validated, reviewed, policy-checked, and bound to a release manifest and rollback target?
+30. Can suspension, withdrawal, correction, or authority change invalidate every controlled derivative, cache, catalog, search, map, export, story, and AI context?
+
+### Safe questionnaire outcome
+
+| Result | Posture |
 |---|---|
-| `steward_org` | Institutional steward; named in the source agreement. |
-| `authority_to_control` | Community / authority; named by the source agreement or determined through consultation. If unresolved at admission, use `pending-consultation`. |
-| `consent` | Reference to consent grant in `data/registry/rights/`. If unresolved at admission, the default-deny rule will refuse publication until the grant is recorded. |
-| `obligations` | Listed in the consent grant. May include citation requirements, restrictions on derivative use, embargo periods, re-confirmation cadence. |
-| `benefit_commitments` | Listed in the consent grant. What benefit returns to the community? |
+| Material relationship or authority is plausible but unresolved | `HOLD`, `ABSTAIN`, `DENY`, or `QUARANTINE`; obtain qualified review. |
+| Authority is identified but operation/permission/obligations remain incomplete | Do not proceed; narrow or complete the governed record. |
+| Permission appears valid but another gate is unresolved | Do not treat permission as release; complete rights, sensitivity, evidence, review, transform, release, correction, and rollback. |
+| All required evidence is closed for one bounded operation | Produce a new operation-specific decision candidate; no standing universal approval is implied. |
+| Resolver/evaluator/system fails | `ERROR`; never fall back to allow. |
 
-### A.3 Edge cases (PROPOSED resolutions)
-
-| Edge case | Resolution |
-|---|---|
-| The community authority is contested between multiple authorities. | `authority_to_control = "pending-consultation"`; route to QUARANTINE until resolved. |
-| The source agreement is silent on CARE applicability. | Default-when-unclear: applicable pending review. |
-| The asset is a derivative of another asset that is already CARE-tagged. | Derivative **inherits** the CARE tagging from the parent asset. Strip-and-republish is an anti-pattern. |
-| The asset is generalized to a public-safe form (e.g., H3 r6 cell). | Generalization does not automatically remove CARE tagging. The generalized form may release under a different obligation set, but `authority_to_control` typically persists. |
-| The consent grant expires while the asset is published. | The status-list check on every render catches this. The asset becomes effectively unpublished until consent is re-confirmed. |
-
-### A.4 Documentation of the decision
-
-Every applicability determination is itself a curatorial artifact and should be recorded:
-
-- Who made the determination (curator identity).
-- When (timestamp).
-- On what evidence (source agreement reference, community consultation reference, etc.).
-- What was decided (CARE-applicable / not applicable / pending-consultation).
-- How the determination is reviewable (link to consultation record, audit trail).
-
-</details>
-
-[↑ Back to top](#top)
-
----
-
-**Related docs:** [sensitivity](./sensitivity.md) · [sensitivity-tiers](./sensitivity-tiers.md) · [source-roles](./source-roles.md) · [source-role-anti-collapse](./source-role-anti-collapse.md) · [smoke-atmosphere-hazards](./smoke-atmosphere-hazards.md) · [directory-rules](../doctrine/directory-rules.md) · [governed-api](./governed-api.md) · [KFM Encyclopedia](../../KFM_Encyclopedia.md)
-
-**Last updated:** 2026-05-25 · **Doc version:** v1.0 · **Meta block:** v2 · [↑ Back to top](#top)
+[Back to top](#top)
