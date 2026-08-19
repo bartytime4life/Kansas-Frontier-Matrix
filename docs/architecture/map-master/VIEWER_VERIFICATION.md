@@ -17,7 +17,7 @@ current_path: docs/architecture/map-master/VIEWER_VERIFICATION.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 2a9a14018ab98bdf9022f7d4fbcd638ca895d0af
+  base_commit: eded2a83abfbb2e977b120c58cf4d0423d6aab96
   target_prior_blob: 40d4e4ab96eb784d7cf219dffaaf14ae742c9a40
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_decision: ADR-0029 accepted
@@ -33,6 +33,9 @@ evidence_snapshot:
   explorer_maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
   maplibre_package_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
   performance_budgets_blob: c800cdd8d622ca2a4596cf80e9951f241fc70187
+  renderer_boundary_blob: 628872aa58f9f86e31337924025a8590405385b5
+  layer_lifecycle_blob: 630557b79421e70033a9a2d906c3c472be714ecb
+  tile_artifacts_blob: f68bf295761711e1cec6046c2ea0f54564a0d4a4
 related:
   - README.md
   - ../map-shell.md
@@ -73,7 +76,7 @@ notes:
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af` |
+| **Evidence snapshot** | `main@eded2a83abfbb2e977b120c58cf4d0423d6aab96` |
 | **Document role** | Human-readable architecture reference; not a contract, schema, policy rule, runtime gate, release record, or publication authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md); this existing `docs/architecture/map-master/` path has placement outcome `PLACE` |
 | **Current executable proof** | **CONFIRMED / BOUNDED:** a no-network TypeScript evaluator, 13 synthetic cases, three Vitest tests, and a path-scoped read-only workflow |
@@ -153,20 +156,20 @@ The safe current conclusion is therefore **fixture-only runtime-admission classi
 | Renderer package and adapter | Private scaffold plus comment-only adapter | Renderer runtime remains `HOLD` |
 | This architecture page | Existing human documentation path | May explain evidence; cannot create the missing behavior |
 
-### 0.3 Current documentation drift
+### 0.3 Adjacent documentation reconciliation
 
-Some sibling pages retain May 2026 proposal language, while other adjacent pages have since been grounded in current repository evidence:
+The same-day map-master modernization chain has now grounded several sibling pages in current repository evidence:
 
-| Surface | Drift affecting viewer verification | Current disposition |
+| Surface | Current contribution to viewer verification | Current disposition |
 |---|---|---|
-| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Calls this page an active runtime enforcement gate and states that only a verified-source path may call MapLibre | **STALE current-state claim**; the downstream-renderer rule remains useful |
-| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Treats a four-manifest composition as an implemented pre-render requirement | **PROPOSED lineage** pending contract and resolver closure |
-| [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Describes signatures, BAO, and viewer verification as an active artifact path | **PROPOSED lineage**; current carrier verification must be proved separately |
-| [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Now grounds separate mobile-PMTiles, rendering-resource-envelope, and public-map-service-SLO fixture families while keeping production thresholds and operational telemetry on hold | **CURRENT adjacent reconciliation**; none of those bounded profiles is integrated into this admission evaluator |
-| [`README.md`](README.md) | Classifies this page as retained draft guidance and says browser enforcement is not established | **CURRENT bounded interpretation** for the map-master lane |
+| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Preserves the seven negative authorities, records renderer-neutral bounded slices, and keeps concrete MapLibre admission/runtime on hold | **CURRENT adjacent reconciliation**; it no longer claims this page is an active `addSource` gate |
+| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Separates candidate validation, runtime eligibility, release readiness, decision, transition application, public serving, correction, withdrawal, and rollback | **CURRENT adjacent reconciliation**; the object families remain mixed-maturity |
+| [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Grounds bounded PMTiles/MVT/COG/Zarr and delivery-profile evidence, while explicitly holding trusted signing, BAO/BLAKE3 streaming, browser cryptographic verification, runtime admission, release, and publication | **CURRENT adjacent reconciliation** |
+| [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Grounds separate mobile-PMTiles, rendering-resource-envelope, and public-map-service-SLO fixture families while keeping production thresholds and operational telemetry on hold | **CURRENT adjacent reconciliation**; none of those bounded profiles is integrated into this admission evaluator |
+| [`README.md`](README.md) | Preserves the lane-wide renderer/runtime hold and classifies this page as draft guidance; some child summaries predate the same-day sibling modernizations | **CURRENT entry point with bounded summary lag** |
 | [`ui/LAYERING.md`](../ui/LAYERING.md) | Records the exact fixture-only admission, inactive policy, abstain route, synthetic shell, and renderer hold | **CURRENT adjacent reconciliation** |
 
-This update does not silently rewrite those siblings. Their useful invariants remain linked, while current behavior is bounded here by executable evidence.
+This update consumes those corrected boundaries without rewriting their owning pages or turning any bounded fixture into an operational viewer gate.
 
 [Back to top](#top)
 
@@ -512,7 +515,7 @@ Signature verification may graduate only after:
 
 The prior edition described browser-side BAO subtree verification for PMTiles, COG, and Zarr range reads. Current evidence does not establish that path.
 
-[`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) itself labels BAO as `PROPOSED / INFERRED`. The current runtime-admission evaluator:
+The newly grounded [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) explicitly records BAO/BLAKE3 verified streaming, browser-side cryptographic verification, and verify-before-`addSource` enforcement as unestablished proposal-era claims. The current runtime-admission evaluator:
 
 - does not fetch bytes;
 - does not issue range requests;
@@ -980,9 +983,9 @@ Routine same-path documentation corrections, fixture additions inside an accepte
 | [`README.md`](README.md) | Map-master entry point and current sibling map | **CONFIRMED current boundary** |
 | [`../map-shell.md`](../map-shell.md) | Current Explorer composition, synthetic map stage, and renderer hold | **CONFIRMED bounded implementation** |
 | [`../ui/LAYERING.md`](../ui/LAYERING.md) | Current layer-object and runtime-admission reconciliation | **CONFIRMED bounded architecture** |
-| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Seven negative authorities | **Useful invariant / stale active-enforcement claims** |
-| [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Artifact and integrity design lineage | **PROPOSED / NEEDS VERIFICATION** |
-| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Four-manifest composition lineage | **PROPOSED / NEEDS VERIFICATION** |
+| [`RENDERER_BOUNDARY.md`](RENDERER_BOUNDARY.md) | Repository-grounded seven-negative-authority boundary | **CONFIRMED bounded evidence / concrete renderer hold** |
+| [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Repository-grounded mixed-maturity carrier and integrity boundary | **CONFIRMED bounded profiles / signing, BAO, runtime, release, and publication holds** |
+| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Repository-grounded mixed-maturity lifecycle separation | **CONFIRMED bounded candidate/release profiles / operational loader and release holds** |
 | [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Repository-grounded fixture-first performance boundary | **CONFIRMED bounded evidence / production and operational holds** |
 | [`LayerManifest` contract](../../../contracts/data/layer_manifest.md) | Draft semantic profile with strict fixture-only branch | **CONFIRMED repository bytes / PROPOSED profile** |
 | [Runtime-admission contract](../../../contracts/runtime/layer_manifest_admission.md) | Fixture eligibility and non-effects | **CONFIRMED repository bytes / PROPOSED-INACTIVE meaning** |
