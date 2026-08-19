@@ -1,0 +1,266 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md": "sha256:3cac8895b6ea613235382cbfd821086ec1a2eee36d4e8eeb7bea5f7ba944df2a"
+  },
+  "artifact_paths": [
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-architecture-ui-MAP_RUNTIME_BOUNDARY.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/CODEOWNERS@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": ".github-CODEOWNERS",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:CONTRIBUTING.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "CONTRIBUTING.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-doctrine-directory-rules.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/INDEX.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-adr-INDEX.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-adr-ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-adr-ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-adr-ADR-0007-MapLibre-GL-JS-Is-the-Sole-Browser-Side-Renderer.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/map-shell.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-architecture-map-shell.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/architecture/governed-api.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "docs-architecture-governed-api.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/package.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-package.json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/MapLibreAdapter.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-src-adapters-MapLibreAdapter.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/index.tsx@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-src-features-map_runtime-index.tsx",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-src-features-map_runtime-CLICK_EVIDENCE_BRIDGE.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-src-features-map_runtime-layer_manifest_admission.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/tests/map-evidence-drawer.test.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-tests-map-evidence-drawer.test.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "apps-explorer-web-tests-browser-map-evidence-drawer.spec.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/maplibre/package.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "packages-maplibre-package.json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:packages/maplibre/src/index.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "packages-maplibre-src-index.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/validators/maplibre/assess_acquisition_inventory.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "tools-validators-maplibre-assess_acquisition_inventory.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tests/maplibre/test_assess_acquisition_inventory.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "tests-maplibre-test_assess_acquisition_inventory.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tests/policy/test_explorer_web_adapter_boundary.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "tests-policy-test_explorer_web_adapter_boundary.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "id": "schemas-contracts-v1-receipts-generated_receipt.schema.json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:issue/2957#issuecomment-5318072927",
+      "id": "github-issue-2957-issuecomment-5318072927",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "id": "attachment-KFM-Repository-Build-Out-Markdown-Modernization-Implementation-Agent-v6.0.0",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "id": "attachment-KFM-MapLibre-Operating-Architecture-Governed-UI-and-AI-Interaction-Manual-Revised-Working-Edition",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-19T20:02:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "repo:docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:.github/CODEOWNERS@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:CONTRIBUTING.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/doctrine/directory-rules.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/adr/INDEX.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/architecture/map-shell.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:docs/architecture/governed-api.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/package.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/src/adapters/MapLibreAdapter.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/src/features/map_runtime/index.tsx@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/tests/map-evidence-drawer.test.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:packages/maplibre/package.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:packages/maplibre/src/index.ts@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:tools/validators/maplibre/assess_acquisition_inventory.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:tests/maplibre/test_assess_acquisition_inventory.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:tests/policy/test_explorer_web_adapter_boundary.py@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@75849a09b2d18113a9a9b6c78332b83d19eb5832",
+      "github:issue/2957#issuecomment-5318072927",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "ChatGPT",
+    "provider": "OpenAI",
+    "version": "GPT-5.6 Pro"
+  },
+  "notes": "Same-path architecture modernization grounded in current repository evidence. It records the implemented renderer-neutral selection and fixture-only layer-admission slices, corrects the future adapter direction to the package-owned seam recorded by issue #2957 maintainer direction, and preserves the MapLibre dependency/runtime HOLD. It changes no contract, schema, policy, dependency, app/runtime behavior, lifecycle state, release, deployment, publication, or repository setting.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic hashing",
+      "local Markdown parser validation",
+      "local anchor validation",
+      "local receipt-shape validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "receipt_id": "genrec-map-runtime-boundary-3cac8895b6ea",
+  "truth_labels": {
+    "docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-target-refresh",
+      "outcome": "PASS",
+      "reason": "Current main was refreshed to 75849a09b2d18113a9a9b6c78332b83d19eb5832; the target prior blob remained baf929fdca617ea95ea4ce5bde4c7b8abd9ac6d5."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open pull request changes MAP_RUNTIME_BOUNDARY.md. Draft PR #3099 references it only as adjacent evidence and changes LAYERING.md plus its own generated receipt."
+    },
+    {
+      "gate": "same-path-directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing human-readable UI architecture document remains at docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md under the docs responsibility root; no move, root, or parallel authority is introduced."
+    },
+    {
+      "gate": "authority-and-current-state-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision separates accepted ADR-0029 placement, proposed ADR-0006/0007, issue #2957 maintainer direction, current bounded code, and unresolved renderer/dependency/runtime gates."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "CommonMark parsing passed with one H1, 67 headings, 16 balanced fenced-code markers, no heading-level jumps, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "anchors-and-navigation",
+      "outcome": "PASS",
+      "reason": "All 37 internal fragment links resolve; the prior H1 and legacy section anchors remain available."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "Introduced repository-relative targets were checked against the pinned repository evidence set; high-signal implementation, ADR, test, package, and architecture targets were opened directly."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds the final Markdown bytes with SHA-256 3cac8895b6ea613235382cbfd821086ec1a2eee36d4e8eeb7bea5f7ba944df2a and Git blob b02f7da076a4c6e07310edaab44f929c38f06001."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after the draft pull request is opened and remain separate execution evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; this generated receipt is authoring provenance, not approval or merge authority."
+    }
+  ]
+}
