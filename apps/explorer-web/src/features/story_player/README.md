@@ -2,122 +2,133 @@
 doc_id: kfm://app/explorer-web/src/features/story_player/readme
 title: Explorer Web Story Player Feature README
 type: app-readme
-version: v0.2
-status: draft
-owners: OWNER_TBD — Apps steward · UI steward · Story steward · Evidence steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Telemetry steward · Docs steward
+version: v0.3
+status: draft; repository-grounded; implementation-partial; projection-only; no-live-playback; no-publisher
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route; specialist Story and UI stewardship remains NEEDS VERIFICATION"
+reviewers_required:
+  - "Story and UI stewardship — assignment NEEDS VERIFICATION"
+  - "Evidence and citation stewardship — assignment NEEDS VERIFICATION"
+  - "Policy, sensitivity, and rights review — assignment NEEDS VERIFICATION"
+  - "Release, correction, and rollback review — assignment NEEDS VERIFICATION"
+  - "Accessibility review — assignment NEEDS VERIFICATION"
+  - "Independent review — NEEDS VERIFICATION"
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-08-19
 policy_label: public
+owning_root: apps/
+responsibility: "Document the implemented app-local StoryManifest projection consumer, its finite fail-closed output, and the boundaries that must remain closed until governed transport, evidence resolution, rendered playback, map/runtime integration, release, and publication are separately proven."
+truth_posture: "CONFIRMED bounded repository code and tests / PROPOSED future playback / UNKNOWN deployed behavior; cite-or-abstain"
+current_path: apps/explorer-web/src/features/story_player/README.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: fec1f92fde6fb7dd83c995f9984d495bb61a84bb
+  target_prior_blob: 4bac3eb49bea7ee9e07d3b3e0466831d96ce2d1b
+  story_player_entry_blob: 6c3b3e63b28027e9f21f859beed791e2dd16879d
+  story_player_test_blob: 54195d2676ca6f125b8c661c5c52c3adb4c2b16a
+  story_player_current_implementation_blob: 7566f69f0a7ff87b461b54098fb00f0c41deed63
+  story_manifest_contract_blob: e0365d00a36f1aef57ed7dd1a051b4c70dec09b2
+  story_manifest_schema_blob: 67fa2fae5534ffc7a277fae8adfcb9afb81e9fc0
+  story_manifest_fixture_blob: 98e1ce24cacae42a19134c45ed3158a724282684
+  story_manifest_validator_blob: 4122c5040d71d9098711717466cbb06f7fba2136
+  story_manifest_test_blob: c8ccdb1fef0b277f759a340b993bf9c8684622e1
+  story_player_architecture_blob: 526d4e0500b686f18a05426059471d5f6cc65b69
+  story_subsystem_architecture_blob: 7561eec79fd79c4adedef53c9ccbf32dafe7b8e3
+  story_player_receipt_blob: 3d5b6ee9cecdaee803a6bab731f2d7eab11579da
+inspection_boundary: >
+  Repository reads at the pinned main commit covering this feature directory,
+  resolveStoryPlayer source, its focused Vitest suite, CURRENT_IMPLEMENTATION.md,
+  the UI StoryManifest contract/schema/fixtures/validator/test lineage, the Story
+  Player and Story subsystem architecture pages, Story policy posture, Governed API
+  route inventory, renderer ADR lineage, and the generated authoring receipt. No live
+  Story transport, browser playback, StoryNode-body dereference, EvidenceBundle
+  resolution, policy execution, map or renderer execution, accessibility session,
+  telemetry stream, release, deployment, correction drill, rollback execution, or
+  publication was exercised.
 related:
+  - ./index.tsx
+  - ./CURRENT_IMPLEMENTATION.md
+  - ../../../tests/story-player.test.ts
   - ../README.md
   - ../../README.md
   - ../../adapters/README.md
   - ../../../README.md
-  - ../../../../README.md
   - ../../../../governed-api/README.md
   - ../../../../../docs/doctrine/directory-rules.md
-  - ../../../../../docs/architecture/ui/README.md
+  - ../../../../../docs/architecture/story/README.md
   - ../../../../../docs/architecture/ui/STORY_PLAYER.md
   - ../../../../../docs/architecture/ui/GOVERNED_SHELL.md
   - ../../../../../docs/architecture/ui/EVIDENCE_DRAWER.md
   - ../../../../../docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
-  - ../../../../../docs/architecture/ui/LAYERING.md
   - ../../../../../docs/architecture/ui/ACCESSIBILITY.md
   - ../../../../../docs/architecture/ui/TELEMETRY.md
-  - ../../../../../docs/architecture/governed-ai/FOCUS_FLOW.md
-  - ../../../../../packages/ui/README.md
-  - ../../../../../packages/maplibre/README.md
-  - ../../../../../packages/maplibre-runtime/README.md
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
+  - ../../../../../contracts/ui/story_manifest.md
+  - ../../../../../contracts/ui/story_node.md
+  - ../../../../../schemas/contracts/v1/ui/story_manifest.schema.json
+  - ../../../../../fixtures/ui/story_manifest/cases.json
+  - ../../../../../tools/validators/ui/validate_story_manifest.py
+  - ../../../../../tests/validators/test_validate_story_manifest.py
   - ../../../../../policy/story/README.md
   - ../../../../../release/README.md
-  - ../../../../../data/README.md
-tags: [kfm, apps, explorer-web, features, story-player, story-node, story-manifest, evidence-gate, 2d-first, conditional-3d, finite-outcomes, narrative-motion]
+  - ../../../../../data/receipts/generated/genrec-story-player-governed-projection-20260814.json
+tags: [kfm, apps, explorer-web, story-player, story-manifest, public-safe-projection, finite-outcomes, evidence, policy, 2d-only, no-live-playback, no-publisher]
 notes:
-  - "Replaces the greenfield Story Player feature stub with a governed feature README."
-  - "This app path uses the requested underscore directory `story_player`; current architecture docs also propose StoryNodePlayer paths under `story/`. This README does not resolve that path naming split."
-  - "Story Player UI features may compose released narrative/story envelopes, but they must not author stories, publish story bundles, bypass evidence gates, become renderer authority, hide sensitivity, treat 3D as alternate truth, expose protected detail through motion/thumbnails/telemetry, or render direct model output as truth."
-  - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, StoryManifest/StoryNode schemas, StoryEvidenceGate behavior, 3D runtime probes, accessibility behavior, telemetry, and package scripts remain NEEDS VERIFICATION."
-  - "policy/story/README.md currently exists as a greenfield bundle stub; executable story policy remains NEEDS VERIFICATION."
-  - "packages/maplibre-runtime/README.md was not found on main during this revision, so runtime-package specifics remain NEEDS VERIFICATION."
-  - "v0.2 refreshes the evidence basis, aligns truth posture with current GitHub evidence, adds a minimum safe implementation slice, adds runtime anti-bypass checks, and strengthens evidence-gate, 2D-first, conditional-3D, sensitivity, accessibility, telemetry, and path-split review gates without claiming runtime maturity."
+  - "v0.3 replaces proposal-era and broadly unverified maturity language with the bounded implemented resolveStoryPlayer consumer and its 10 focused app tests."
+  - "The consumer accepts one already-governed kfm.ui.story-manifest.public-safe.v1 candidate and returns a non-authoritative StoryPlayerProjection; it is not live Story playback."
+  - "canPlay=true reports local projection eligibility only. It does not authenticate evidence, citations, policy, review, release, correction, or publication."
+  - "Live governed transport, StoryNode and EvidenceBundle resolution, rendered controls, MapLibre or other renderer integration, 3D, release, deployment, and publication remain HOLD or NEEDS VERIFICATION."
+  - "The app-local source performs defensive closed-profile checks but does not replace the canonical contract, schema, validator, or governed trust membrane."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
-
-<div align="center">
 
 # Explorer Web Story Player Feature
 
 `apps/explorer-web/src/features/story_player/`
 
-**App-local Explorer Web feature boundary for governed story playback: StoryManifest and StoryNode sequence rendering, map/time/evidence continuity, per-node evidence gates, finite outcomes, 2D-first playback, conditional 3D handoff, Evidence Drawer links, Focus context, export lineage, accessibility-safe narrative motion, and safe telemetry.**
+> **Current determination.** This directory is no longer an empty or one-export placeholder. It contains a pure, deterministic, **2D-only StoryManifest projection consumer** and a focused 10-case Vitest suite. The consumer creates a bounded view model from one already-governed public-safe projection; it does not fetch, resolve, render, release, or publish a story.
 
-![status](https://img.shields.io/badge/status-draft-blue)
-![owner](https://img.shields.io/badge/owner-OWNER__TBD-lightgrey)
-![feature](https://img.shields.io/badge/feature-story__player-0a7ea4)
-![mode](https://img.shields.io/badge/mode-2D__first-df7e00)
-![truth](https://img.shields.io/badge/truth-NEEDS__VERIFICATION-yellow)
-
-[Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-story-player-feature-map) · [Minimum slice](#8-minimum-safe-implementation-slice) · [Definition of done](#16-definition-of-done)
-
-</div>
-
----
+[![status: implementation partial](https://img.shields.io/badge/status-implementation--partial-f59e0b?style=flat-square)](#0-evidence-basis-for-this-revision)
+[![consumer: implemented](https://img.shields.io/badge/consumer-implemented-2da44e?style=flat-square)](#7-story-player-feature-map)
+[![live playback: absent](https://img.shields.io/badge/live%20playback-absent-b42318?style=flat-square)](#8-minimum-safe-implementation-slice)
+[![mode: 2D only](https://img.shields.io/badge/mode-2D%20only-6e7781?style=flat-square)](#4-default-posture)
+[![MapLibre and 3D: HOLD](https://img.shields.io/badge/MapLibre%20%2F%203D-HOLD-b42318?style=flat-square)](#12-runtime-anti-bypass-matrix)
+[![publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#3-authority-boundary)
 
 > [!IMPORTANT]
-> **Status:** draft / `NEEDS VERIFICATION`  
-> **Owners:** `OWNER_TBD` — Apps steward · UI steward · Story steward · Evidence steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Telemetry steward · Docs steward  
-> **Path:** `apps/explorer-web/src/features/story_player/README.md`  
-> **Responsibility root:** `apps/` — deployable application surfaces  
-> **Directory Rules basis:** deployable application feature code belongs under `apps/`; Story Player is an app-local UI playback/composition surface, not a story authoring home, story publication authority, evidence resolver, policy home, schema home, contract home, release home, renderer package, source registry, telemetry policy home, model runtime, or lifecycle-data lane.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent feature-boundary README posture / CONFIRMED Story Player architecture doc exists / CONFIRMED GovernedShell, Evidence Drawer, Map Runtime Boundary, Accessibility, and UI Telemetry docs exist / CONFIRMED `policy/story/README.md` exists as greenfield stub / CONFIRMED `packages/maplibre-runtime/README.md` not found on `main` in this revision / PROPOSED feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, schemas, package scripts, governed API envelopes, StoryEvidenceGate behavior, 3D runtime probes, accessibility behavior, telemetry behavior, and runtime behavior
+> `resolveStoryPlayer()` consumes a projection that must already have passed the governing contract, schema, validator, evidence, policy, review, and release processes. Its defensive checks and `canPlay` result do not perform or authenticate those processes.
 
 > [!CAUTION]
-> Story Player is a rendering and orchestration surface, not a truth source. Narrative text, screenshots, animations, rendered features, 3D scenes, camera paths, thumbnails, Focus excerpts, and telemetry do not outrank EvidenceBundle support, release state, policy, citation closure, or finite outcome gates.
+> **`canPlay=true` is not live playback and is not publication authority.** It only means the supplied closed projection declares the exact local eligibility posture required by this consumer. Story order, narrative presentation, screenshots, maps, camera movement, 3D scenes, tests, receipts, and generated language never outrank evidence, policy, review, release, correction, or rollback.
 
----
-
-## Quick jump
-
-- [0. Evidence basis for this revision](#0-evidence-basis-for-this-revision)
-- [1. Purpose](#1-purpose)
-- [2. Repo fit](#2-repo-fit)
-- [3. Authority boundary](#3-authority-boundary)
-- [4. Default posture](#4-default-posture)
-- [5. Inputs](#5-inputs)
-- [6. Exclusions](#6-exclusions)
-- [7. Story Player feature map](#7-story-player-feature-map)
-- [8. Minimum safe implementation slice](#8-minimum-safe-implementation-slice)
-- [9. Diagram](#9-diagram)
-- [10. Story Player UI obligations](#10-story-player-ui-obligations)
-- [11. Per-module contract](#11-per-module-contract)
-- [12. Runtime anti-bypass matrix](#12-runtime-anti-bypass-matrix)
-- [13. Inspection path](#13-inspection-path)
-- [14. Validation expectations](#14-validation-expectations)
-- [15. Safe change pattern](#15-safe-change-pattern)
-- [16. Definition of done](#16-definition-of-done)
-- [17. Open verification items](#17-open-verification-items)
+**Quick jump:** [Evidence](#0-evidence-basis-for-this-revision) · [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Boundary](#3-authority-boundary) · [Posture](#4-default-posture) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-story-player-feature-map) · [Next slice](#8-minimum-safe-implementation-slice) · [Diagram](#9-diagram) · [Obligations](#10-story-player-ui-obligations) · [Module contract](#11-per-module-contract) · [Anti-bypass](#12-runtime-anti-bypass-matrix) · [Inspection](#13-inspection-path) · [Validation](#14-validation-expectations) · [Safe change](#15-safe-change-pattern) · [Done](#16-definition-of-done) · [Open work](#17-open-verification-items)
 
 ---
 
 ## 0. Evidence basis for this revision
 
-This README is a documentation boundary, not runtime proof. The 2026-07-09 revision updates an existing README and keeps implementation maturity bounded while aligning the feature contract with current repository evidence.
+This README explains app-local repository behavior; it does not create runtime, policy, release, or publication authority.
 
-| Evidence item | Status | What it supports | What it does not prove |
-|---|---|---|---|
-| `apps/explorer-web/src/features/story_player/README.md` exists on `main`. | CONFIRMED | This is an existing README update, not a new path proposal. | It does not prove story components, hooks, routes, tests, fixtures, schemas, evidence gates, 3D probes, telemetry, or runtime behavior exist. |
-| `apps/explorer-web/src/features/README.md` exists and defines feature modules as UI composition surfaces. | CONFIRMED | Story Player belongs under the Explorer Web feature boundary when it is app-local UI playback/composition. | It does not prove Story Player is wired into routes or launch surfaces. |
-| `docs/doctrine/directory-rules.md` confirms `apps/` as the deployable-application responsibility root. | CONFIRMED | The target path is within the correct responsibility root for app-local feature code. | It does not decide whether the feature is complete or release-ready. |
-| `docs/architecture/ui/STORY_PLAYER.md` exists and defines Story Player doctrine. | CONFIRMED document presence and doctrine posture | Story playback must remain 2D-first, evidence-gated, governed-envelope-based, finite-outcome-based, and conditional for 3D. | It does not prove implementation, route names, schemas, validators, or tests. |
-| `docs/architecture/ui/GOVERNED_SHELL.md` exists and defines the persistent shell. | CONFIRMED document presence and doctrine posture | Story Player must preserve shell map/time/drawer continuity. | It does not prove shell/player integration. |
-| `docs/architecture/ui/EVIDENCE_DRAWER.md` exists. | CONFIRMED document presence | Story node claims should hand off to governed evidence inspection. | It does not prove Story Player/Evidence Drawer integration. |
-| `docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md` exists. | CONFIRMED document presence | Story playback must use `MapRuntimePort` and avoid direct renderer authority. | It does not prove adapter wiring or import guards. |
-| `docs/architecture/ui/ACCESSIBILITY.md` and `docs/architecture/ui/TELEMETRY.md` exist. | CONFIRMED document presence | Narrative motion and telemetry must remain accessible, safe, and non-authoritative. | They do not prove Story Player accessibility or telemetry implementation. |
-| `policy/story/README.md` exists as a greenfield bundle stub. | CONFIRMED placeholder state | Story policy wiring must remain `NEEDS VERIFICATION`. | It does not prove executable story policy bundles or runtime wiring exist. |
-| `packages/maplibre-runtime/README.md` was not found on `main` during this revision. | CONFIRMED absence from GitHub fetch attempt | Runtime-package references remain `NEEDS VERIFICATION`. | It does not prove no runtime package will exist, or that another accepted runtime package home is absent. |
+| Surface | Confirmed current state | Safe conclusion |
+|---|---|---|
+| [`index.tsx`](./index.tsx) | Exports `resolveStoryPlayer()` plus the bounded projection and finite-state types it uses. | The app-local projection consumer is implemented. |
+| [`story-player.test.ts`](../../../tests/story-player.test.ts) | Contains 10 focused Vitest cases covering eligible, abstained, denied, error, superseded, malformed, missing-response, ordering, and anti-bypass behavior. | The bounded consumer has app-level unit proof; rendered playback is not tested. |
+| [`CURRENT_IMPLEMENTATION.md`](./CURRENT_IMPLEMENTATION.md) | Records the executable slice and explicit non-effects. | The feature is implementation-partial, not placeholder and not live. |
+| [`contracts/ui/story_manifest.md`](../../../../../contracts/ui/story_manifest.md) and its closed schema/validator lineage | Define the fixture-only public-safe projection profile and least-permissive trust posture. | They remain the semantic and machine-shape authority; this app code is only a defensive consumer. |
+| [`docs/architecture/ui/STORY_PLAYER.md`](../../../../../docs/architecture/ui/STORY_PLAYER.md) | Separates projection consumption from future governed playback and preserves renderer, 3D, release, and publication gates. | Architecture prose does not prove deployed behavior. |
+| [`docs/architecture/story/README.md`](../../../../../docs/architecture/story/README.md) | Records the implemented consumer separately from absent transport and rendered playback. | Story architecture remains broader than this app-local slice. |
+| Generated Story Player receipt | Binds the initial authored source/test/document set. | Process memory is not evidence resolution, human review, release, or publication. |
+
+### Five distinct maturity states
+
+| State | Current status | Non-effect |
+|---|---|---|
+| Feature documentation | **Present and repository-grounded** | Documentation is not executable authority. |
+| StoryManifest projection profile | **Executable; contract status remains proposed/fixture-only** | It does not resolve refs or approve policy/release. |
+| App-local projection consumer | **Implemented and unit-tested** | It does not fetch, route, render, or publish. |
+| Live governed Story playback | **Not established** | No browser or deployed playback behavior may be claimed. |
+| Story release/publication | **None established** | A passing projection, commit, merge, test, or receipt is not publication. |
 
 [Back to top](#top)
 
@@ -125,22 +136,16 @@ This README is a documentation boundary, not runtime proof. The 2026-07-09 revis
 
 ## 1. Purpose
 
-`apps/explorer-web/src/features/story_player/` is the proposed app-local feature boundary for Story Player source modules inside Explorer Web.
+The current responsibility of this feature directory is narrow:
 
-It may eventually hold route modules, panels, view models, hooks, finite-state renderers, manifest loaders, node playback controls, transition handlers, evidence-gate renderers, 2D/3D fallback controls, receipt displays, accessibility behavior, telemetry guards, and feature orchestration for:
+1. accept one unknown candidate value supplied by an upstream caller;
+2. require the exact `kfm.ui.story-manifest.public-safe.v1` closed projection shape used by the current bounded profile;
+3. refuse unknown fields, malformed identity/flags, duplicate nodes, and unsorted node order;
+4. return one finite, non-authoritative `StoryPlayerProjection`;
+5. expose ordered node references only when the candidate declares the fully public-safe `READY / ANSWER` posture;
+6. withhold nodes for every abstained, denied, errored, missing, malformed, stale, unreleased, restricted, or superseded path.
 
-- loading released or fixture-marked `StoryManifest` envelopes through the governed API;
-- rendering sequenced `StoryNode` content over the persistent map/time/evidence shell;
-- preserving camera, layer, time, drawer, citation, release, correction, and rollback continuity between nodes;
-- rendering per-node finite outcomes: `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`;
-- opening Evidence Drawer payloads for consequential claims and trust badges;
-- using Focus outputs only as governed, cited, finite-outcome narrative context;
-- running 2D playback end-to-end by default;
-- entering 3D only when runtime probe, evidence parity, release parity, asset integrity, policy, and accessibility obligations pass;
-- displaying reduced-motion, pause, back, forward, skip-to-drawer, exit-story, and non-map alternatives;
-- emitting safe telemetry without raw evidence, prompts, exact restricted coordinates, PII, sovereign identifiers, DNA markers, model outputs, secrets, or internal store handles.
-
-This directory is not proof that any Story Player component, route, hook, adapter, schema, fixture, test, package script, governed API route, manifest resolver, evidence gate, 3D probe, telemetry path, accessibility behavior, Evidence Drawer handoff, Focus handoff, Export handoff, or runtime behavior is implemented.
+This is a projection/view-model concern. A later live player may add governed transport, StoryNode-body resolution, visible controls, map/time continuity, Evidence Drawer handoff, accessibility behavior, telemetry, export, and conditional 3D only after their own dependency-closed proofs.
 
 [Back to top](#top)
 
@@ -148,305 +153,406 @@ This directory is not proof that any Story Player component, route, hook, adapte
 
 ## 2. Repo fit
 
-| Concern | Owning root | Expected relationship |
+| Concern | Current home | Relationship to this feature |
 |---|---|---|
-| Story Player feature source | `apps/explorer-web/src/features/story_player/` | App-local Story Player modules, if implemented and tested |
-| Feature boundary | `apps/explorer-web/src/features/` | Parent feature/root contract |
-| Adapter boundary | `apps/explorer-web/src/adapters/` | Governed API, evidence, layer, map, export, diagnostics, and story adapters |
-| Explorer Web app | `apps/explorer-web/` | Map-first public/semi-public shell |
-| Governed API | `apps/governed-api/` | Trust membrane and normal story-manifest/node-resolution path |
-| Story Player doctrine | `docs/architecture/ui/STORY_PLAYER.md` | Story playback, evidence gate, 2D-first, 3D handoff, telemetry, and validation doctrine |
-| Governed Shell doctrine | `docs/architecture/ui/GOVERNED_SHELL.md` | Persistent shell, trust header, time banner, finite outcome, and bootstrap doctrine |
-| Evidence Drawer architecture | `docs/architecture/ui/EVIDENCE_DRAWER.md` | Proof inspection and evidence handoff posture |
-| Map Runtime doctrine | `docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md` | Renderer adapter boundary consumed by story playback |
-| Accessibility doctrine | `docs/architecture/ui/ACCESSIBILITY.md` | Narrative motion, keyboard, reduced-motion, and non-map alternative posture |
-| Telemetry doctrine | `docs/architecture/ui/TELEMETRY.md` | Safe UI telemetry expectations |
-| Story policy | `policy/story/` | Current repo has greenfield stub; executable story policy remains `NEEDS VERIFICATION` |
-| Shared UI components | `packages/ui/` | Reusable story controls, cards, badges, timelines, drawers, and accessibility primitives when shared |
-| Renderer helper package | `packages/maplibre/` | Renderer behavior stays behind adapter/wrapper boundaries |
-| Renderer runtime package | `packages/maplibre-runtime/` | Referenced by earlier docs, but README not found on `main` in this revision; `NEEDS VERIFICATION` |
-| Policy gates | `policy/` | Access, sensitivity, rights, release, and decision policy |
-| Release authority | `release/` | Publication, correction, supersession, rollback control |
-| Lifecycle artifacts | `data/` | Receipts, proofs, registry, catalog, story manifests, published artifacts; not browser-readable directly |
-| Contracts and schemas | `contracts/`, `schemas/contracts/v1/` | Object meaning and machine shape; this feature references, not owns |
+| App-local projection consumer | `apps/explorer-web/src/features/story_player/index.tsx` | Implemented here. |
+| Focused app tests | `apps/explorer-web/tests/story-player.test.ts` | Exercise this consumer without transport or rendering. |
+| StoryManifest semantics | `contracts/ui/story_manifest.md` | Referenced; not owned or redefined here. |
+| StoryManifest machine shape | `schemas/contracts/v1/ui/story_manifest.schema.json` | Canonical closed profile; not replaced by local TypeScript checks. |
+| Fixtures and deterministic validation | `fixtures/ui/story_manifest/`, `tools/validators/ui/`, `tests/validators/` | Upstream bounded profile proof. |
+| Story architecture | `docs/architecture/story/README.md` and `docs/architecture/ui/STORY_PLAYER.md` | Explain the cross-root and UI boundaries. |
+| Governed transport | `apps/governed-api/` plus an accepted Explorer adapter | **HOLD:** no verified Story route or transport is implemented here. |
+| Evidence and citation resolution | Governed evidence/citation surfaces | **HOLD:** this feature carries public-safe refs but does not resolve them. |
+| Story policy | `policy/story/` and shared policy authorities | **HOLD:** current Story policy posture is non-enforcing. |
+| Map runtime | Accepted map adapter/runtime boundary | **HOLD:** this feature imports no renderer and renders no map. |
+| Release and publication | `release/` and governed publication surfaces | **HOLD:** no Story release or publication state is created here. |
+
+The underscore path `story_player/` is the current implemented app home. This README does not create a parallel `story/` feature directory, a `packages/maplibre-runtime/` package, or a story-specific schema authority.
+
+[Back to top](#top)
+
+---
 
 ## 3. Authority boundary
 
-This feature renders governed story playback. It does not own story authoring, story publication, evidence truth, StoryManifest schemas, StoryNode schemas, StoryEvidenceGate schema authority, policy decisions, sensitivity decisions, release decisions, source admission, citation validation, renderer implementation, model invocation, export receipts, telemetry truth, lifecycle artifacts, canonical stores, graph/vector stores, or AI output.
+This feature may defensively project an already-governed StoryManifest candidate. It does **not** own or perform:
 
-```text
-apps/explorer-web/src/features/story_player/ = app-local Story Player UI feature
-apps/explorer-web/src/features/              = feature boundary
-apps/explorer-web/src/adapters/              = adapter boundary
-apps/governed-api/                           = trust membrane and story-resolution path
-docs/architecture/ui/STORY_PLAYER.md         = Story Player doctrine
-docs/architecture/ui/GOVERNED_SHELL.md       = shell continuity doctrine
-docs/architecture/ui/EVIDENCE_DRAWER.md      = evidence inspection doctrine
-docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md = renderer boundary doctrine
-policy/story/                                = story policy lane; current stub only
-schemas/contracts/v1/story/                  = Story machine shapes, if present and accepted
-contracts/story/                             = Story object semantics, if present and accepted
-packages/ui/                                 = shared UI primitives
-packages/maplibre/                           = renderer helper/wrapper boundary
-packages/maplibre-runtime/                   = referenced runtime package, not found on main in this revision
-policy/                                      = finite policy decisions
-data/                                        = lifecycle artifacts, receipts, proofs, manifests
-release/                                     = publication, correction, rollback authority
-```
+- Story authoring, narrative truth, source admission, or claim creation;
+- StoryManifest or StoryNode semantic/schema authority;
+- EvidenceRef or EvidenceBundle resolution;
+- citation validation or evidence sufficiency decisions;
+- rights, sensitivity, CARE/sovereignty, policy, review, or correction decisions;
+- promotion, release, withdrawal, rollback, deployment, or publication;
+- governed API routes, authentication, or transport envelopes;
+- map renderer selection, renderer imports, adapter admission, or 3D admission;
+- model invocation, Focus synthesis, export authority, or telemetry truth;
+- lifecycle, canonical, graph, vector, object-store, or unpublished-candidate reads.
+
+The browser-facing trust membrane remains intact: this feature must receive a public-safe governed projection through an accepted interface and must never reach around that interface to obtain more permissive data.
+
+[Back to top](#top)
+
+---
 
 ## 4. Default posture
 
-Story Player feature modules should fail closed, run 2D-first, preserve evidence continuity, expose finite outcomes, and never silently turn missing evidence into narrative continuity.
+`resolveStoryPlayer()` is fail-closed, finite, non-authoritative, and fixed to `mode: "2D"`.
 
-A Story Player path should not render consequential node content when any of these are unresolved:
+### Returned codes
 
-- governed API envelope and response validation;
-- `StoryManifest`, `StoryNode`, `StoryTransition`, or `StoryEvidenceGate` validation;
-- node-level EvidenceRef-to-EvidenceBundle closure;
-- citation validation, release state, freshness, and rollback support;
-- source role, source authority, source rights, and license posture;
-- sensitivity, CARE/sovereignty, living-person, DNA/genomic, archaeology, infrastructure, rare-species, or precise-location posture;
-- 2D map/time/layer/evidence continuity;
-- optional 3D runtime probe, asset checksum, STAC/provenance metadata, accessibility alternate, evidence parity, release parity, and rollback/fallback path;
-- Focus output citation and finite-outcome state, if a node uses Focus context;
-- Story export lineage, version stamp, correction lineage, and rollback target;
-- accessibility state for reduced motion, keyboard playback controls, focus, screen reader state announcements, compressed layouts, and non-map alternatives;
-- safe telemetry posture.
+| Code | Outcome | Node exposure | Meaning |
+|---|---|---:|---|
+| `STORY_READY` | `ANSWER` | Ordered refs exposed | Candidate passed the local closed-shape and declared public-safe eligibility checks. |
+| `STORY_ABSTAINED` | `ABSTAIN` | None | Candidate is valid but not locally playable, including partial, stale, unreleased, or superseded posture. |
+| `STORY_DENIED` | `DENY` | None | Candidate declares denied/blocked posture. |
+| `STORY_ERROR` | `ERROR` | None | Candidate declares an upstream error posture. |
+| `NO_GOVERNED_RESPONSE` | `ABSTAIN` | None | No candidate was supplied. |
+| `INVALID_PAYLOAD` | `ERROR` | None | Candidate fails the local closed-profile checks; untrusted content is not reflected. |
+
+### Local `canPlay=true` conditions
+
+The consumer exposes nodes only when all of the following are declared by a valid candidate:
+
+- `state=READY` and `outcome=ANSWER`;
+- `authoritative=false` and `projection_only=true`;
+- rights `CLEARED`, sensitivity `PUBLIC`, policy `ALLOW`, review `REVIEWED`, release `RELEASED`, and freshness `CURRENT`;
+- correction is not `SUPERSEDED`;
+- evidence, citation-validation, policy-decision, release, and review reference arrays are non-empty;
+- constituent node refs and order indexes are unique and strictly increasing.
+
+These are defensive eligibility checks. The consumer does not dereference or authenticate any reference and does not rerun the repository validator.
+
+[Back to top](#top)
+
+---
 
 ## 5. Inputs
 
-| Input family | Examples | Required posture |
-|---|---|---|
-| Story manifest | story id, version, node sequence, required layers, time windows, drawer refs, optional 3D constraints | Governed API projection and schema validation |
-| Story node | node id, camera/time/layer state, claims, evidence refs, drawer refs, transition requirements | Evidence-gated before consequential render |
-| Story transition | to-next, trigger, timing, easing, evidence-continuity assertion, fallback behavior | No transition when dependency gate fails |
-| Evidence gate | node outcome, reason codes, obligations, citation closure summary | Finite and visible |
-| Map/time state | camera, bounds, layer refs, valid/observed/source/retrieval/release/correction time, freshness | Persistent shell and time-kind anti-collapse |
-| 3D state | runtime probe result, asset refs, checksums, STAC/provenance metadata, fallback mode | Optional and conditional; never alternate truth |
-| Policy state | rights, sensitivity, CARE/sovereignty, audience, release, review, correction, rollback | Preserved from governed API/policy |
-| API envelope | story response, node response, `DecisionEnvelope`, finite outcome | Runtime-validated before render |
-| UI state | loading, playing, paused, answered, denied, abstained, error, stale, cancelled, timeout | Finite and tested states |
-| Accessibility state | reduced motion, keyboard controls, state announcements, non-map list, focus return | Required for narrative UI |
-| Telemetry state | story opened, node changed, gate failed, 3D denied, drawer opened, playback cancelled | Non-secret, policy-safe, no raw claims/evidence/restricted geometry |
+### Current accepted input
+
+One unknown candidate representing the closed public-safe StoryManifest projection. The current function performs no network request and has no route or adapter dependency.
+
+### Current output
+
+A `StoryPlayerProjection` containing finite outcome/code, public-safe title and accessibility summary when valid, story/state metadata, reason and limiting-node references, evidence/citation refs, caveats, optional public replacement ref, `canPlay`, fixed `mode: "2D"`, and `authoritative: false`.
+
+### Not current inputs
+
+The consumer does not accept or resolve raw StoryNode bodies, claim text, geometry, coordinates, source payloads, policy inputs, release candidates, model output, map objects, renderer handles, 3D assets, telemetry payloads, credentials, or lifecycle-store paths.
+
+[Back to top](#top)
+
+---
 
 ## 6. Exclusions
 
-| Does not belong here | Correct home |
+| Excluded concern | Required authority or future dependency |
 |---|---|
-| Story authoring tools | `docs/architecture/story/`, authoring/admin workflows, not this player feature |
-| Story publication, promotion, release, rollback decisions | `release/` |
-| Story schemas and contracts | `schemas/contracts/v1/story/`, `contracts/story/` |
-| Story policy bundles and policy decisions | `policy/story/`, `policy/decision/`, `policy/` |
-| Governed API manifest/node resolver implementation | `apps/governed-api/` |
-| EvidenceBundle construction or citation validation | governed API / evidence resolver / validation packages |
-| Evidence Drawer payload construction | governed API / Evidence Drawer feature |
-| Renderer implementation, 3D plugin admission, or raw MapLibre/plugin imports | `packages/maplibre/`, repo-confirmed runtime package, or accepted renderer package |
-| Direct browser-to-model calls or Focus synthesis pipeline | server-side governed AI runtime behind governed API only |
-| Shared reusable UI primitives | `packages/ui/` |
-| Lifecycle artifacts, receipts, proofs, story manifests, and published artifacts | `data/` |
-| Sensitive details in public story manifests | Denied, generalized, staged, delayed, or server-dereferenced under policy |
-| RAW, WORK, QUARANTINE, canonical stores, graph/vector stores, object stores, unpublished candidates | Forbidden from browser Story Player path |
-| Raw telemetry payload collection | Forbidden; telemetry must be safe UI telemetry only |
-| Secrets, credentials, tokens, private keys | Secret manager / deployment environment |
+| Story authoring/editing | Separate governed authoring workflow |
+| Live StoryManifest retrieval | Governed API route and accepted Explorer adapter |
+| StoryNode-body retrieval | Governed resolver with evidence/policy closure |
+| Evidence/citation resolution | EvidenceBundle and citation authorities |
+| Policy execution | Repository policy engine and decision records |
+| Rendered playback controls | App UI composition with accessibility proof |
+| Map/time/layer orchestration | Accepted map runtime port and governed layer/time state |
+| Direct MapLibre/Cesium/plugin imports | Prohibited here; renderer boundary must remain isolated |
+| 3D runtime and assets | Conditional admission only after parity, integrity, policy, fallback, and accessibility proof |
+| Story release, correction, rollback, publication | `release/` and governed publication authorities |
+| Raw telemetry or protected detail | Prohibited; any future telemetry must be public-safe and non-authoritative |
+| Direct lifecycle/canonical/model access | Prohibited from the browser feature |
+
+[Back to top](#top)
+
+---
 
 ## 7. Story Player feature map
 
-Exact modules remain `NEEDS VERIFICATION`. Candidate modules should be introduced only with route inventory, fixtures, tests, and accepted story contracts.
+### Confirmed files
 
-| Candidate module | Purpose | Required safeguard | Status |
-|---|---|---|---|
-| `story-player-shell` | Player layout, controls, node panel, finite states | Governed manifest only | PROPOSED |
-| `manifest-loader` | Load StoryManifest envelope | Schema validation and release state | PROPOSED |
-| `node-renderer` | Render StoryNode narrative, map/time/layer state | Evidence gate required | PROPOSED |
-| `story-evidence-gate` | Aggregate claim evidence into node outcome | No evidence, no claim | PROPOSED |
-| `transition-controller` | Move between nodes | Blocks dependent nodes on gate failure | PROPOSED |
-| `drawer-links` | Open Evidence Drawer for node claims and badges | EvidenceBundle-derived support only | PROPOSED |
-| `focus-context-panel` | Show Focus-derived narrative context | Finite outcome and citations required | PROPOSED |
-| `conditional-3d-handoff` | Probe and enter 3D when allowed | Evidence/release parity and fallback | PROPOSED |
-| `sensitivity-guard` | Generalize, delay, redact, or deny restricted nodes | No protected disclosure through story UX | PROPOSED |
-| `a11y-playback-controls` | Pause/back/forward/exit/reduced motion/non-map alternative | Accessibility tests | PROPOSED |
-| `telemetry-safe-events` | Record aggregate node/playback events | No raw evidence, PII, precise restricted coordinates | PROPOSED |
+| File | Current responsibility | Status |
+|---|---|---|
+| [`index.tsx`](./index.tsx) | Closed defensive parsing and finite StoryPlayerProjection creation | **Implemented** |
+| [`README.md`](./README.md) | App-local feature boundary and contributor guidance | **Current document** |
+| [`CURRENT_IMPLEMENTATION.md`](./CURRENT_IMPLEMENTATION.md) | First-slice implementation note and explicit non-effects | **Confirmed** |
+| [`story-player.test.ts`](../../../tests/story-player.test.ts) | Focused app proof for projection eligibility and anti-bypass behavior | **10 tests implemented** |
 
-> [!WARNING]
-> Candidate module names are not implementation proof. Do not document a Story Player module as runnable until files, route wiring, tests, fixtures, package scripts, governed API envelopes, schemas, evidence gates, story policy, 3D probes, telemetry constraints, and accessibility fixtures confirm it.
+### Held future capabilities
+
+| Capability | Current status | Required before claiming it |
+|---|---|---|
+| Governed manifest loader | **HOLD** | Story route, envelope contract, authentication, adapter, negative fixtures, and no-direct-store proof |
+| StoryNode resolver/rendered player | **HOLD** | Node-body contract, evidence/citation/policy resolution, finite UI states, and accessibility proof |
+| Evidence Drawer handoff | **HOLD** | Governed reference resolution and drawer integration tests |
+| Map/time/layer continuity | **HOLD** | Accepted runtime port, governed state contract, renderer isolation, and browser tests |
+| Telemetry | **HOLD** | Safe event schema, redaction, purpose, retention, and no-authority proof |
+| Conditional 3D | **HOLD** | Accepted renderer/admission decisions, asset integrity, evidence/release parity, accessibility alternate, and deterministic 2D fallback |
+| Release/public playback | **HOLD** | Human review, release object, correction/rollback path, deployment proof, and publication authorization |
+
+Do not introduce speculative module names as current files. Add a capability to the confirmed inventory only when source, tests, ownership, and authority boundaries exist together.
+
+[Back to top](#top)
+
+---
 
 ## 8. Minimum safe implementation slice
 
-A smallest useful Story Player slice should prove evidence-gated 2D playback before adding conditional 3D or export flows.
+### Completed bounded slice
 
-| Slice item | Minimum requirement | Why it is required |
-|---|---|---|
-| Governed story request | Story manifest/node data comes from governed API envelopes only | Prevents direct lifecycle/canonical reads |
-| Manifest parser | Validate `StoryManifest`, node sequence, release refs, version, and rollback target | Prevents malformed stories becoming narrative truth |
-| Node evidence gate | Each consequential node claim resolves to evidence/citation/policy outcome | Enforces cite-or-abstain |
-| Finite outcome renderer | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are visible per node | Prevents hidden failure continuity |
-| 2D-first playback | Full story path works in 2D without 3D | Keeps 3D optional, not authoritative |
-| Conditional 3D guard | 3D requires runtime probe, evidence parity, release parity, asset integrity, and accessibility fallback | Prevents alternate-truth spectacle |
-| Sensitivity guard | Restricted nodes generalize, delay, redact, suppress, or deny | Prevents protected detail exposure |
-| Focus-context guard | Focus-derived narrative context requires finite outcome, citations, policy, and limitations | Prevents model text from becoming story truth |
-| Evidence Drawer handoff | Consequential node claims open governed Evidence Drawer support | Keeps evidence inspectable |
-| Accessibility path | Pause, back, forward, exit, reduced motion, state announcements, focus return, non-map alternative | Makes narrative motion usable |
-| Telemetry guard | Emit non-secret event metadata only | Prevents logs from capturing raw story claims/evidence or restricted geometry |
-| Lifecycle denial test | Prove browser code does not import/read lifecycle roots, canonical stores, graph stores, vector stores, or model runtimes | Preserves public-client boundary |
+The current slice is complete only at the app-local projection boundary:
 
-This slice is still `PROPOSED` until files, fixtures, tests, route wiring, and accepted contracts are verified.
+- pure/no-network candidate consumption;
+- exact profile/version/identity/flag checks needed by the consumer;
+- finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` output;
+- node withholding for every non-eligible path;
+- ordered node refs only for a locally eligible public-safe projection;
+- fixed 2D/non-authoritative output;
+- focused malformed-input and anti-bypass tests.
+
+### Smallest coherent next slice
+
+The next implementation slice must begin with **authority and governed transport closure**, not map animation or 3D:
+
+1. define or adopt the Story response envelope and route ownership;
+2. prove authenticated Governed API transport with no browser lifecycle/canonical reads;
+3. validate the returned envelope and StoryManifest profile at the boundary;
+4. preserve explicit no-response, invalid, abstain, deny, and error states;
+5. keep node bodies, evidence resolution, rendering, MapLibre, 3D, release, and publication out until their dependencies are separately closed.
+
+A local `canPlay=true` result is not permission to skip those steps.
+
+[Back to top](#top)
+
+---
 
 ## 9. Diagram
 
 ```mermaid
-flowchart TD
-    player["Story Player"] --> adapters["src/adapters"]
-    adapters --> api["apps/governed-api"]
-    api --> resolver["StoryManifest / StoryNode resolver"]
-    resolver --> gate{"StoryEvidenceGate"}
-    gate -->|ANSWER| node["render node + citations + drawer refs"]
-    gate -->|ABSTAIN| abstain["ABSTAIN / typed reason"]
-    gate -->|DENY| deny["DENY / policy obligation"]
-    gate -->|ERROR| error["ERROR / no claim leakage"]
-    node --> map["MapRuntimePort"]
-    node --> drawer["Evidence Drawer"]
-    node --> focus["Focus context if cited"]
-    node --> probe{"3D requested?"}
-    probe -->|pass + parity + a11y| three["conditional 3D view"]
-    probe -->|fail| twod["2D fallback or ABSTAIN"]
-    player -. FORBID .-> raw["RAW / WORK / QUARANTINE / canonical stores / model runtimes / raw telemetry"]
+flowchart LR
+    upstream["Already-governed StoryManifest projection"] --> consumer["resolveStoryPlayer()\nimplemented, pure, no network"]
+    consumer --> ready{"Local eligibility"}
+    ready -->|READY / ANSWER + public-safe declarations| refs["StoryPlayerProjection\nordered node refs\ncanPlay=true\nmode=2D"]
+    ready -->|partial / superseded / missing| abstain["ABSTAIN\nno nodes"]
+    ready -->|blocked / denied| deny["DENY\nno nodes"]
+    ready -->|error / malformed| error["ERROR\nno nodes"]
+
+    transport["Governed Story transport"] -. HOLD .-> upstream
+    refs -. HOLD .-> bodies["StoryNode-body resolution"]
+    refs -. HOLD .-> evidence["EvidenceBundle / citation resolution"]
+    refs -. HOLD .-> rendered["Rendered playback + accessibility"]
+    rendered -. HOLD .-> map["Accepted map runtime / MapLibre adapter"]
+    map -. HOLD .-> three["Conditional 3D"]
+    rendered -. HOLD .-> release["Release / deployment / publication"]
 ```
+
+[Back to top](#top)
+
+---
 
 ## 10. Story Player UI obligations
 
-| Obligation | Example effect |
+| Obligation | Current effect |
 |---|---|
-| `governed_api_only` | Story state comes through governed API envelopes |
-| `2d_first` | Player runs fully in 2D; 3D is optional and conditional |
-| `evidence_gate_required` | Each consequential node claim must pass EvidenceBundle/citation/release/policy checks |
-| `finite_outcomes_required` | `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` are explicit per node |
-| `no_story_authoring` | Player cannot create, edit, approve, publish, or promote story bundles |
-| `3d_not_alternate_truth` | 3D consumes same evidence/release/drawer continuity as 2D or falls back/abstains |
-| `sensitive_context_only` | Sensitive nodes render generalized context, delayed context, redacted context, or deny; no precise protected disclosure |
-| `focus_context_bounded` | Focus output can appear only with finite outcome, validated citations, policy, and limitations |
-| `accessibility_motion_safe` | Reduced motion, keyboard playback, state announcements, non-map alternatives, and focus safety are first-class |
-| `safe_telemetry_only` | Telemetry records playback events only, never raw claims, prompts, raw evidence, restricted geometry, secrets, or model outputs |
-| `no_authority_fork` | Feature code does not redefine evidence, citation, policy, release, renderer, schema, contract, source, story policy, or model authority |
+| `already_governed_input_only` | Consumer accepts a candidate; it does not fetch or widen it. |
+| `closed_profile` | Unknown fields and malformed boundary flags return `INVALID_PAYLOAD`. |
+| `finite_outcomes` | Every result is `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` with a bounded code. |
+| `no_nodes_on_failure` | Non-eligible, denied, errored, missing, and malformed paths expose no node playback list. |
+| `public_safe_ready_only` | Nodes appear only for the exact local READY/ANSWER trust/support posture. |
+| `2d_only` | Output mode is fixed to `"2D"`; no renderer is imported. |
+| `non_authoritative` | Output is always `authoritative: false`. |
+| `no_ref_resolution` | Evidence, citation, policy, release, review, correction, and replacement refs remain opaque. |
+| `no_mutation` | The feature cannot approve, override, release, deploy, or publish. |
+| `no_direct_store_or_model_access` | Focused source checks deny transport, lifecycle-store, renderer, and model seams. |
+| `visible_correction_posture` | A valid superseded projection may carry only its public replacement-manifest ref while withholding nodes. |
+
+Future UI work must add accessibility, evidence inspection, map/time continuity, correction visibility, and safe finite-state rendering without weakening these obligations.
+
+[Back to top](#top)
+
+---
 
 ## 11. Per-module contract
 
-Every long-lived Story Player module should document or encode:
+Any new long-lived module in this directory must state and test:
 
-- whether it is manifest loading, node rendering, transition control, evidence gate, 3D handoff, playback control, sensitivity guard, receipt/lineage display, or telemetry;
-- governed API envelope dependency;
-- StoryManifest/StoryNode/StoryTransition/StoryEvidenceGate schema dependency;
-- finite outcome and negative-state behavior;
-- EvidenceRef, EvidenceBundle, citation, policy, release, review, correction, rollback, freshness, version, and limitation behavior;
-- 2D/3D fallback and evidence-parity behavior;
-- sensitive-domain generalization, redaction, delay, suppression, denial, and no-exposure-hint behavior;
-- Focus context behavior, if present;
-- accessibility behavior for reduced motion, keyboard, focus, screen reader announcements, state cards, compressed layouts, and non-map alternatives;
-- telemetry emitted, if any;
-- tests and fixtures proving trust-membrane, evidence gate, finite outcomes, 2D-first, 3D fallback, sensitive disclosure, Focus boundedness, safe telemetry, and accessibility constraints.
+- whether it consumes an already-governed projection, performs governed transport, renders finite states, or coordinates a downstream handoff;
+- the exact contract/schema/envelope it accepts and the authority that validates it;
+- behavior for missing, malformed, abstained, denied, errored, stale, unreleased, restricted, corrected, and superseded inputs;
+- whether it dereferences StoryNode, EvidenceBundle, citation, policy, review, release, correction, or rollback refs;
+- the browser trust-membrane and direct-store denial behavior;
+- any map/runtime dependency and proof that renderer imports remain behind the accepted adapter boundary;
+- accessibility behavior for motion, keyboard, focus, announcements, and non-map alternatives;
+- telemetry fields, redaction, purpose, retention, and proof that telemetry remains non-authoritative;
+- release/publication non-effects and rollback of the code change itself.
+
+A module that cannot identify these dependencies remains outside the feature.
+
+[Back to top](#top)
+
+---
 
 ## 12. Runtime anti-bypass matrix
 
-| Bypass risk | Required behavior | Review signal |
+| Risk | Current proof or required behavior | Status |
 |---|---|---|
-| Story node renders without evidence closure | Render `ABSTAIN` with typed reason | Missing-evidence fixture blocks claim text |
-| Story policy denies node | Render `DENY` without protected payload | Policy-denied fixture hides sensitive detail |
-| Malformed manifest partially plays | Render `ERROR`; no partial node playback | Invalid-manifest fixture blocks sequence |
-| 3D path becomes alternate truth | Require 2D parity, evidence parity, release parity, asset integrity, and a11y fallback | 3D parity-fail fixture falls back/abstains |
-| Sensitive detail leaks through camera path, thumbnail, animation, or telemetry | Generalize/redact/delay/suppress/deny before browser render and event emission | Sensitive fixture proves no protected geometry or identifiers reach UI/telemetry |
-| Focus model text becomes story truth | Require finite Focus outcome, citations, policy, and limitations | Focus-context fixture cannot render uncited output |
-| Browser reads lifecycle/canonical data directly | Deny at import/build/test review; route through governed API | No direct `data/`, canonical, graph, vector, or object-store imports/fetches |
-| Renderer APIs imported by story feature code | Route through `MapRuntimePort` and accepted adapter only | Import scan proves renderer imports are isolated |
-| Telemetry captures raw claims/evidence/prompts/model outputs | Emit non-secret event metadata only | Telemetry fixture excludes raw claims, prompts, evidence, model outputs, restricted geometry, secrets |
-| Player authors or publishes story bundle | Deny; authoring/release lives elsewhere | No create/edit/publish/promote controls or calls in player |
+| Missing governed response becomes optimistic playback | `resolveStoryPlayer()` returns `NO_GOVERNED_RESPONSE / ABSTAIN` with no nodes. | **Tested** |
+| Malformed or open payload reflects untrusted content | Closed-key checks return `INVALID_PAYLOAD`; canary content is not reflected. | **Tested** |
+| READY label bypasses stale/unreleased posture | `canPlay` remains false unless every local public-safe condition passes. | **Tested** |
+| Denied rights or restricted sensitivity exposes nodes | Denied/blocked paths return no nodes. | **Tested** |
+| Duplicate or unsorted constituents create ambiguous order | Candidate is rejected as invalid. | **Tested** |
+| Superseded projection continues playback | Consumer abstains, withholds nodes, and may expose only the public replacement ref. | **Tested** |
+| Feature performs transport or reads lifecycle stores | Focused source test denies `fetch`, XHR, WebSocket, and lifecycle-root seams. | **Tested for current source** |
+| Feature mutates approval/release/publication state | Focused source test denies approval, override, publish, release, and deploy call seams. | **Tested for current source** |
+| Feature imports MapLibre, Cesium, or a model client | Focused source test denies `maplibre`, `cesium`, and `ollama` seams. | **Tested for current source; renderer/3D HOLD remains** |
+| Evidence refs are treated as resolved evidence | Refs are copied only; no resolution/authentication is performed. | **Boundary preserved; live resolution HOLD** |
+| `canPlay` is treated as release/publication approval | Documentation and types keep output non-authoritative. | **Boundary preserved; release/publication HOLD** |
+
+Source-text anti-bypass checks are bounded guards, not a substitute for full dependency, bundle, browser, policy, or security validation.
+
+[Back to top](#top)
+
+---
 
 ## 13. Inspection path
 
-Story Player implementation files, route wiring, tests, fixtures, governed API envelopes, Story schemas, evidence gates, story policy, 3D runtime probes, accessibility behavior, telemetry, package scripts, and downstream handoffs remain `NEEDS VERIFICATION`.
-
 ```bash
-find apps/explorer-web/src/features/story_player -maxdepth 5 -type f | sort
-find apps/explorer-web/src apps/governed-api docs/architecture/ui docs/architecture/story docs/architecture/governed-ai packages/ui packages/maplibre packages/maplibre-runtime schemas contracts policy release data tests fixtures tools -maxdepth 6 -type f 2>/dev/null | grep -Ei 'story|StoryManifest|StoryNode|StoryTransition|StoryEvidenceGate|EvidenceBundle|EvidenceRef|DecisionEnvelope|CitationValidationReport|MapRuntimePort|Focus|3d|runtime.?probe|release|rollback|correction|sensitivity|redaction|generalization|suppression|a11y|accessibility|telemetry' | sort
-find data/raw data/work data/quarantine data/processed data/catalog data/triplets data/published data/receipts data/proofs -maxdepth 2 -type f 2>/dev/null | sort
+find apps/explorer-web/src/features/story_player -maxdepth 2 -type f | sort
+sed -n '1,260p' apps/explorer-web/src/features/story_player/index.tsx
+sed -n '1,260p' apps/explorer-web/tests/story-player.test.ts
+sed -n '1,220p' contracts/ui/story_manifest.md
+python tools/validators/ui/validate_story_manifest.py
 ```
+
+Expected current inventory:
+
+```text
+apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+apps/explorer-web/src/features/story_player/README.md
+apps/explorer-web/src/features/story_player/index.tsx
+```
+
+Repository search should continue to show no live Story Player call site, transport, renderer import, or publication mutation unless a later dependency-closed change deliberately adds and proves one.
+
+[Back to top](#top)
+
+---
 
 ## 14. Validation expectations
 
-Useful validation for this feature boundary should cover:
+### Current focused proof
 
-- no Story Player feature imports or reads lifecycle/canonical data roots directly;
-- no browser-side model runtime calls or provider SDK use;
-- story state consumes governed API envelopes only;
-- malformed story manifests render `ERROR`, never partial nodes;
-- each consequential claim without EvidenceBundle/citation closure renders `ABSTAIN`;
-- policy/sensitivity/rights denial renders `DENY` without protected payload;
-- 3D request without runtime probe, evidence parity, release parity, checksums, or accessibility fallback stays in 2D or abstains;
-- sensitive nodes do not expose precise coordinates, living-person identifiers, sovereign identifiers, DNA/genomic markers, rare-species locations, archaeology locations, or restricted infrastructure detail;
-- Focus-derived narrative context preserves finite outcome, citations, policy, limitations, and no-chain-of-thought posture;
-- story playback cannot create, edit, approve, publish, promote, or release story bundles;
-- telemetry never includes raw story claims, raw evidence, prompt text, model outputs, exact restricted coordinates, PII, sovereign identifiers, DNA markers, secrets, internal handles, or full bundle copies;
-- accessibility tests cover reduced motion, keyboard controls, focus management, screen-reader state announcements, non-map alternatives, and compressed layouts.
+The existing app suite should continue to prove:
+
+- one fully public-safe READY fixture yields `STORY_READY`, ordered refs, `canPlay=true`, `mode="2D"`, and `authoritative=false`;
+- stale and unreleased inputs abstain and expose no nodes;
+- unresolved rights and restricted sensitivity deny and expose no nodes;
+- upstream error and malformed payload paths fail closed;
+- supersession withholds nodes and exposes only the public replacement ref;
+- optimistic READY posture cannot bypass freshness/release checks;
+- unknown fields, invalid projection flags, duplicate refs, and unsorted order are rejected;
+- missing input abstains explicitly;
+- current source contains no network, lifecycle-store, mutation, renderer, or model seams.
+
+### Proof not yet present
+
+Do not claim completion for live transport, route authentication, StoryNode-body resolution, Evidence Drawer integration, policy execution, map/time continuity, accessibility interaction behavior, telemetry, browser playback, conditional 3D, release, deployment, or publication until focused and aggregate evidence exists for each.
+
+### Documentation validation for this file
+
+A documentation-only change should at minimum verify:
+
+- one metadata block and one H1;
+- balanced fenced blocks;
+- unique explicit anchors and resolving internal links;
+- valid repository-relative links;
+- no placeholder claim for the implemented consumer;
+- explicit retention of every HOLD named above;
+- no app, contract, schema, policy, release, data, workflow, or repository-setting change.
+
+[Back to top](#top)
+
+---
 
 ## 15. Safe change pattern
 
-For Story Player feature changes:
+1. Refresh exact main and confirm no overlapping open PR owns this path.
+2. Classify the requested behavior as projection consumption, transport, ref resolution, rendering, map/runtime, accessibility, telemetry, release, or publication.
+3. Change only the smallest dependency-closed layer; do not smuggle a later layer into an earlier one.
+4. Add finite negative fixtures before widening an accepted input or exposing new output.
+5. Preserve the governed-interface-only browser boundary and renderer import isolation.
+6. Update this README, `CURRENT_IMPLEMENTATION.md`, focused tests, and architecture docs only where the actual behavior changed.
+7. Keep release, deployment, publication, source activation, policy activation, and repository settings outside an ordinary feature PR.
 
-1. Add or update module inventory and per-module contract.
-2. Add fixtures for `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, missing citation, stale evidence, restricted sensitivity, invalid schema, 3D probe fail, 3D parity fail, 3D a11y fail, Focus-context denied, telemetry-denied, reduced-motion, loading, cancelled, timeout, and empty states.
-3. Test lifecycle/canonical-data denial, no-browser-model behavior, governed API-only behavior, renderer import isolation, story-policy denial, sensitivity guard, telemetry guard, and no-authoring/no-publication behavior.
-4. Preserve story ids, node ids, evidence refs, drawer refs, citation reports, policy state, release refs, freshness, correction lineage, rollback targets, version stamps, sensitivity transforms, and accessibility state through playback.
-5. Test keyboard/screen-reader/reduced-motion paths before claiming Story Player usability.
-6. Update this README, parent `features/README.md`, Story Player architecture docs, UI README, Evidence Drawer docs, Map Runtime Boundary docs, Accessibility docs, Telemetry docs, story policy docs, and parent app README when public behavior changes.
+[Back to top](#top)
+
+---
 
 ## 16. Definition of done
 
-- [ ] Owners are confirmed and `OWNER_TBD` is replaced.
-- [ ] Evidence basis is refreshed when parent README, Story Player docs, GovernedShell docs, Evidence Drawer docs, Map Runtime Boundary docs, Accessibility docs, Telemetry docs, story policy, governed API, schema, release, telemetry, or fixture evidence changes.
-- [ ] Story Player feature file inventory and route/module ownership are documented.
-- [ ] Governed API and adapter dependencies are explicit.
-- [ ] StoryManifest, StoryNode, StoryTransition, and StoryEvidenceGate schema bindings are verified.
-- [ ] Story finite outcomes and negative states are represented in UI fixtures.
-- [ ] Direct lifecycle/canonical-data import/read checks are covered.
-- [ ] Browser model-runtime denial is tested.
-- [ ] Evidence gate, citation closure, policy denial, and stale evidence states are tested.
-- [ ] 2D-first and conditional 3D fallback behavior is tested.
-- [ ] Sensitive disclosure denial/generalization/redaction/suppression behavior is tested.
-- [ ] Focus-derived story context is tested as finite, cited, policy-preserved, and not chain-of-thought-bearing.
-- [ ] Story Player has no authoring, approval, publication, promotion, or release mutation path.
-- [ ] Safe telemetry constraints are tested.
-- [ ] Evidence Drawer, Focus, Export, Map Runtime, and Shell handoffs are tested for safe governed refs if present.
-- [ ] Accessibility behavior is tested for reduced motion, keyboard, focus, ARIA, state announcements, non-map alternatives, compressed layouts, and non-color badges.
+### Bounded projection consumer — current status
+
+- [x] App-local source exists under the accepted `story_player/` path.
+- [x] Exact public-safe StoryManifest profile and fixed boundary flags are checked defensively.
+- [x] Finite result codes and outcomes are returned.
+- [x] Nodes are withheld for every non-eligible path.
+- [x] Eligible output is 2D-only and non-authoritative.
+- [x] Missing, malformed, stale, unreleased, denied, errored, superseded, duplicate, unsorted, and anti-bypass cases are covered by focused app tests.
+- [x] Current code performs no transport, direct lifecycle read, renderer/model import, or release/publication mutation.
+
+### Live governed Story playback — not done
+
+- [ ] Accountable Story/UI/evidence/policy/release/accessibility owners and independent reviewers are confirmed.
+- [ ] Governed Story route, response envelope, authentication, and Explorer adapter are implemented and tested.
+- [ ] StoryNode bodies and EvidenceBundle/citation refs are resolved through governed interfaces.
+- [ ] Policy, review, release, correction, and rollback state is authenticated rather than trusted from declarations alone.
+- [ ] Finite rendered states, Evidence Drawer handoff, and correction visibility are accessible and browser-tested.
+- [ ] Map/time/layer continuity is implemented only through an accepted runtime port.
+- [ ] MapLibre or any renderer dependency is admitted and isolated; direct feature imports remain prohibited.
+- [ ] 3D has evidence/release parity, asset integrity, policy, accessibility, deterministic 2D fallback, and human approval.
+- [ ] Telemetry is safe, minimized, non-authoritative, and reviewed.
+- [ ] Story release, deployment, rollback, and publication are separately governed and proven.
+
+[Back to top](#top)
+
+---
 
 ## 17. Open verification items
 
-| Item | Why it matters |
-|---|---|
-| Confirm Story Player implementation files beyond README | Prevents overclaiming feature maturity |
-| Confirm route inventory and launch surfaces | Required for UI boundary review |
-| Confirm governed API story manifest/node endpoint or equivalent | Required for trust membrane enforcement |
-| Confirm StoryManifest/StoryNode schemas and fixtures | Required before playback behavior claims |
-| Confirm `story_player` vs `story` app path decision | Required to avoid parallel feature homes |
-| Confirm `policy/story/` executable bundle beyond stub | Required before story-policy wiring claims |
-| Confirm StoryEvidenceGate finite outcome fixtures | Required before claim-bearing story UI claims |
-| Confirm 2D-first and conditional 3D probe/fallback tests | Required before 3D path claims |
-| Confirm `packages/maplibre-runtime/` placement or replacement | Required before runtime-package claims |
-| Confirm sensitive-domain policy behavior | Required before public story releases |
-| Confirm Evidence Drawer and Focus handoffs | Required before claim-support inspection claims |
-| Confirm accessibility tests | Required because narrative motion is high-risk UI |
-| Confirm telemetry is safe and non-secret | Required before diagnostics/observability claims |
-| Confirm package scripts beyond TODO | Required before build/test claims |
-| Confirm architecture-doc links and relative paths after recursive inventory | Required before treating all related paths as current implementation evidence |
+| Priority | Open item | Why it blocks wider claims |
+|---:|---|---|
+| P0 | Confirm accountable owner roles and independent review | CODEOWNERS routing is not completed stewardship or approval. |
+| P0 | Define/adopt governed Story transport and response envelope | Current consumer receives a candidate but fetches nothing. |
+| P0 | Authenticate evidence, citation, policy, review, release, correction, and rollback refs | Current consumer treats refs and declarations as opaque inputs. |
+| P1 | Add a non-map rendered finite-state player | `canPlay` is a view-model flag, not visible playback. |
+| P1 | Resolve StoryNode bodies through governed interfaces | Current output exposes refs only. |
+| P1 | Prove accessibility behavior and Evidence Drawer integration | Narrative interaction and evidence inspection are absent. |
+| P2 | Bind governed map/time/layer continuity through the accepted runtime port | No map is rendered and no renderer is imported. |
+| P2 | Define safe telemetry and export/correction lineage | Current consumer emits no telemetry and creates no export. |
+| P3 | Resolve MapLibre/renderer admission and conditional 3D | Renderer ADRs and 3D proof remain HOLD. |
+| P3 | Establish Story release, deployment, rollback rehearsal, and publication authorization | No Story public state exists. |
+
+---
 
 <details>
-<summary>Appendix A — no-loss preservation note</summary>
+<summary>Appendix A — no-loss reconciliation ledger</summary>
 
-The previous README already contained a strong bounded Story Player feature contract. This revision preserves that contract, refreshes metadata, adds a current evidence-basis section, strengthens evidence-gate, 2D-first, conditional-3D, sensitivity, telemetry, accessibility, Focus-context, no-authoring/no-publication, and anti-bypass safeguards, and keeps implementation claims bounded. It does not claim story player components, routes, hooks, adapters, fixtures, tests, package scripts, governed API envelopes, schemas, story manifests, evidence gates, 3D probe behavior, accessibility behavior, telemetry behavior, export behavior, Focus handoff, or Evidence Drawer handoff are implemented.
+| v0.2 posture | v0.3 disposition |
+|---|---|
+| Feature described broadly as `NEEDS VERIFICATION` | **Narrowed:** the projection consumer and its focused app tests are confirmed; live playback remains unverified. |
+| Directory described as a proposed future home | **Corrected:** `story_player/` is the implemented app-local home. |
+| Implementation files and tests said to be unknown | **Corrected:** `index.tsx`, `CURRENT_IMPLEMENTATION.md`, and the 10-case app test are recorded. |
+| Candidate modules treated as the feature map | **Replaced:** current files are separated from held future capabilities. |
+| Story schemas pointed toward `schemas/contracts/v1/story/` | **Corrected:** the current executable projection lives under `schemas/contracts/v1/ui/`. |
+| `packages/maplibre-runtime/` treated as an expected home | **Removed as current placement:** no package authority is created here. |
+| Evidence gate described as a current separate module | **Narrowed:** current code checks bounded StoryManifest eligibility but resolves no evidence. |
+| 2D-first and conditional 3D safeguards | **Retained:** current output is 2D-only; renderer and 3D remain HOLD. |
+| Governed API-only, no direct stores/models | **Retained and tied to current source anti-bypass tests.** |
+| Sensitivity, rights, correction, accessibility, telemetry, release, and publication safeguards | **Retained as current boundaries or future gates without claiming implementation.** |
+| Stable numbered headings and `top` anchor | **Preserved.** |
 
 </details>
 
 ## Status summary
 
-`apps/explorer-web/src/features/story_player/` should contain Story Player feature modules only after route contracts, governed API story envelopes, schema bindings, negative-state fixtures, evidence-gate tests, story-policy tests, 2D-first/3D-fallback tests, sensitive-disclosure tests, accessibility tests, safe telemetry constraints, no-authoring/no-publication tests, and downstream handoffs are verified.
-
-It must preserve the trust membrane and story boundary: Story Player may render released, evidence-bearing narrative sequences, but it must not author stories, publish story bundles, bypass evidence gates, treat 3D as alternate truth, hide sensitivity, read lifecycle/canonical stores, call model runtimes, expose protected detail through motion/thumbnails/telemetry, or become a direct model-output surface.
+The current Story Player feature is an **implemented, bounded, app-local projection consumer**. It can defensively produce a finite 2D view model from one already-governed public-safe StoryManifest candidate, and its focused tests prove the local fail-closed boundary. It is **not** a live player, transport client, evidence resolver, policy engine, renderer, 3D runtime, release mechanism, deployment, or publication surface.
 
 <p align="right"><a href="#top">Back to top</a></p>
