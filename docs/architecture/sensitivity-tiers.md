@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/sensitivity-tiers
 title: Sensitivity and Release-Tier Architecture — Current Repository Boundary and Graduation Plan
-type: architecture-reference; sensitivity; release-tier-boundary
+type: architecture-reference
 version: v2.0-draft
 status: "draft; repository-grounded; T0-T4-proposed; no-adoption; no-active-general-bundle; no-runtime-enforcement; no-release; no-publication"
 owners:
