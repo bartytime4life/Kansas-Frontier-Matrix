@@ -1,522 +1,712 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/standards/iiif
-title: IIIF — International Image Interoperability Framework (KFM conformance profile)
-type: standard
-version: v1-draft
-status: draft
-owners: <TODO — Docs steward + Map / Story Node owner>
+doc_id: kfm://doc/standards-iiif
+title: IIIF — KFM Consumption and Historic-Overlay Boundary
+type: standard; interoperability-guidance
+version: v2.0-draft
+status: "draft; repository-grounded; upstream-currentness-refreshed; bounded-fixture-profile; case-collision-hold"
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — IIIF/archives, map, evidence, rights/CARE, accessibility, security, and release reviewers"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
+updated: 2026-08-18
+policy_label: repository-facing
+owning_root: docs/
+current_path: docs/standards/IIIF.md
+responsibility: >
+  Explain current IIIF specifications, KFM's bounded fixture-only historic-overlay
+  readiness implementation, georeference quality boundaries, and the evidence
+  required before source admission, runtime use, release, publication, or
+  interoperability may be claimed.
+truth_posture: >
+  CONFIRMED repository paths and bytes, case-colliding lowercase sibling,
+  fixture-only readiness profile, adjacent georeference profiles, focused tests
+  and workflow, and LOC connector scaffold state / CONFIRMED official IIIF
+  current-specification snapshot dated 2026-08-18 / PROPOSED live source,
+  canonical overlay object, policy integration, Allmaps runtime, Evidence Drawer,
+  release, and publication / UNKNOWN external interoperability and any deployed
+  IIIF-backed layer.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: f9a515a1124f9f5397996f6bc7cb3fd1a3534c40
+  target_prior_blob: 699555ea1b37c28dceb932aab247cb90bbeaadc2
+  standards_readme_blob: a8cbe5d183448d5f0de37f8a4eacd6fcaca0d71b
+  readiness_contract_blob: 4b3f92879186d73c449282a4f0e9c8e05f758f15
+  readiness_schema_blob: 0b3108eebd257a804cbf5116a4f8c3f3f8bd2a8f
+  readiness_validator_blob: cce4fedffb73b5e3ae454758eae132affb574ccd
+  readiness_test_blob: 0a6ac3077f615500735739af73d001fd1ff6759f
+  readiness_fixture_blob: a7182f9286d4f7d43385ebc8361c3b080fc32caf
+  readiness_workflow_blob: b3e24709488cd8b096760945970d1e0e1c150859
+  readiness_receipt_blob: 3a5b460600c5805cac4a483a174f1359a3cda929
+  transform_quality_contract_blob: 4fbab9697ef4f838747d9c9d18eaa5f6922bd36f
+  spatial_distribution_contract_blob: 1577902afa7420c3b05874d17661f02a52b64647
+  loc_connector_readme_blob: a7678979965e9e6bc5389870f425bdced3a77fa9
+external_currentness_review:
+  access_date: 2026-08-18
+  issuer: IIIF Consortium
+  current_stable:
+    - "Image API 3.0.0"
+    - "Presentation API 3.0.0"
+    - "Authorization Flow API 2.0.0"
+    - "Change Discovery API 1.0.0"
+    - "Content Search API 2.0.0"
+    - "Content State API 1.0.0"
+  draft:
+    - "Presentation API 4.0.0 — release candidate"
+  approved_extensions:
+    - "navPlace"
+    - "Text Granularity"
+    - "Georeference"
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/architecture/map-shell.md
-  - docs/standards/STAC.md             # TODO confirm exists
-  - docs/standards/DCAT.md             # TODO confirm exists
-  - docs/standards/PROV.md             # TODO confirm exists
-  - policy/rights/                     # rights enforcement
-  - policy/sensitivity/                # CARE / sovereignty
-tags: [kfm, standards, iiif, allmaps, historic-maps, map-shell, story-nodes]
+  - ./README.md
+  - ./iiif.md
+  - ./STAC.md
+  - ./DCAT.md
+  - ./PROV.md
+  - ./DUBLIN-CORE.md
+  - ./ARCHIVAL-STANDARDS.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../architecture/map-shell.md
+  - ../sources/catalog/loc/loc-iiif-presentations.md
+  - ../../contracts/map/iiif_historic_overlay_readiness.md
+  - ../../schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json
+  - ../../fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json
+  - ../../tools/validators/map/validate_iiif_historic_overlay_readiness.py
+  - ../../tests/map/test_iiif_historic_overlay_readiness.py
+  - ../../.github/workflows/map-iiif-historic-overlay-readiness.yml
+  - ../../contracts/map/georeference_transform_quality.md
+  - ../../contracts/map/georeference_spatial_distribution.md
+  - ../../connectors/loc/README.md
+tags: [kfm, standards, iiif, image-api, presentation-api, georeference, allmaps, historic-maps, rights, care, maplibre, evidence]
 notes:
-  - Implementation maturity in the mounted repo is UNKNOWN this session.
-  - All KFM-side governance shown here is PROPOSED doctrine derived from
-    Master MapLibre Components-Functions-Features (SRC-064 / SRC-P18-039)
-    and the KFM Components Pass 18 idea cards (KFM-P18-INV-074 / -425 / -449).
+  - "Same-path documentation-only update; no contract, schema, policy, source, fixture, validator, workflow, dependency, runtime, release, or publication change."
+  - "The merged readiness profile remains PROPOSED_INACTIVE and fixture-only."
+  - "The IIIF.md/iiif.md case collision remains HOLD; this change does not rename, delete, redirect, or supersede the lowercase sibling."
+  - "Presentation API 4.0 is now an upstream release candidate while the current readiness schema still names 4.0-preview."
 [/KFM_META_BLOCK_V2] -->
 
-# IIIF — International Image Interoperability Framework
+<a id="top"></a>
+<a id="iiif--international-image-interoperability-framework"></a>
+<a id="iiif--kfm-conformance-profile"></a>
 
-> KFM's conformance posture for IIIF-served images and IIIF-anchored historic-map overlays, and the governance any IIIF-sourced asset must clear before it touches a public surface.
+# IIIF — KFM Consumption and Historic-Overlay Boundary
 
-[![Standard: External — KFM conformance profile](https://img.shields.io/badge/standard-external%20%E2%80%A2%20KFM%20profile-blue)](#)
-[![Status: Draft (PROPOSED)](https://img.shields.io/badge/status-draft%20%E2%80%A2%20PROPOSED-orange)](#)
-[![Authority: Tertiary (external standard)](https://img.shields.io/badge/authority-tertiary%20%E2%80%A2%20external%20standard-lightgrey)](#)
-[![IIIF Image API: 3.0](https://img.shields.io/badge/IIIF%20Image%20API-3.0-success)](https://iiif.io/api/image/3.0/)
-[![IIIF Presentation API: 3.0](https://img.shields.io/badge/IIIF%20Presentation%20API-3.0-success)](https://iiif.io/api/presentation/3.0/)
-[![Georeference Extension: adopted (Allmaps)](https://img.shields.io/badge/IIIF%20Georef%20Ext-adopted-informational)](https://iiif.io/api/extension/georef/)
-[![Last updated: 2026-05-14](https://img.shields.io/badge/last%20updated-2026--05--14-lightblue)](#)
-[![Build / CI: TODO](https://img.shields.io/badge/build-TODO-lightgrey)](#)
+> **Operating rule.** IIIF can make attributed digital objects and georeferenced historic maps interoperable. It cannot make a source authoritative, a georeference accurate, rights resolved, evidence complete, policy satisfied, or a layer released.
 
-| Field | Value |
-|---|---|
-| **Document type** | Standard (external standard — KFM conformance profile) |
-| **Authority of this doc** | Tertiary: documents an external standard. **Does not** override KFM doctrine. |
-| **Authority of IIIF specs themselves** | External — versioned and maintained by the IIIF Consortium. |
-| **Status of KFM conformance claims** | **PROPOSED** — see §11 and §13. |
-| **Owners** | _TODO — Docs steward + Map / Story Node owner_ |
-| **Last reviewed** | 2026-05-14 (draft creation) |
-| **Lifecycle anchor** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-
----
-
-## Quick jump
-
-- [1. Scope](#1-scope)
-- [2. Why IIIF matters to KFM](#2-why-iiif-matters-to-kfm)
-- [3. IIIF in one minute](#3-iiif-in-one-minute)
-- [4. Specifications KFM tracks](#4-specifications-kfm-tracks)
-- [5. The Georeference Extension and Allmaps](#5-the-georeference-extension-and-allmaps)
-- [6. How IIIF fits the KFM trust spine](#6-how-iiif-fits-the-kfm-trust-spine)
-- [7. KFM doctrine for IIIF-sourced content](#7-kfm-doctrine-for-iiif-sourced-content)
-- [8. Object families and manifest fields](#8-object-families-and-manifest-fields)
-- [9. Rights, sensitivity, and CARE](#9-rights-sensitivity-and-care)
-- [10. Validation checklist](#10-validation-checklist)
-- [11. Anti-patterns and failure modes](#11-anti-patterns-and-failure-modes)
-- [12. Conformance levels (KFM-defined)](#12-conformance-levels-kfm-defined)
-- [13. Open questions and verification backlog](#13-open-questions-and-verification-backlog)
-- [14. Related docs](#14-related-docs)
-- [15. Appendices](#15-appendices)
-
----
-
-## 1. Scope
-
-This document defines **how the Kansas Frontier Matrix uses IIIF as an external standard**, and the governance every IIIF-sourced asset MUST satisfy before it appears on a public KFM surface — the Map Shell, Story Nodes, the Evidence Drawer, Focus Mode, or any published export.
-
-In scope:
-
-- The IIIF specifications KFM tracks and the versions KFM targets.
-- The IIIF Georeference Extension and Allmaps as the path for **historic-map overlays**.
-- How IIIF-sourced artifacts attach to KFM object families (`SourceDescriptor`, `EvidenceBundle`, `LayerManifest`, `MapReleaseManifest`, `RunReceipt`, `PromotionDecision`, `RollbackCard`).
-- Rights, sensitivity, and CARE handling for IIIF-served cultural materials.
-- The validation any IIIF-anchored layer or overlay MUST pass to be **released**.
-
-Out of scope:
-
-- The IIIF specs themselves — KFM does not fork or redefine IIIF. We link to the upstream and conform.
-- Internal IIIF *hosting* by KFM. KFM is principally an **IIIF consumer**, not a publisher. Any future IIIF hosting decision is deferred to an ADR.
-- General STAC, DCAT, or W3C PROV conformance — see the sibling docs under `docs/standards/`.
-
-> [!NOTE]
-> Every KFM-side claim in this document is **PROPOSED** unless explicitly labeled CONFIRMED. The doctrinal anchor is the Master MapLibre Components-Functions-Features cumulative master (SRC-064) and the KFM Components Pass 18 idea cards keyed `MAP — Map Artifacts, Tiles, Raster/Vector Delivery, and Renderer Boundaries`. The current-session repository was **not mounted**; nothing about live implementation, schema files, or CI gates is verified here.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 2. Why IIIF matters to KFM
-
-**CONFIRMED (KFM doctrine).** The Kansas archives stack named in the KFM Encyclopedia includes **LOC IIIF presentations** alongside KSHS Kansas Memory, KHRI, KU Spencer, KSU Special Collections, WSU, and county societies. IIIF is the federal-level discovery surface for that corpus and the interchange format for many institutional partners.
-
-**CONFIRMED (KFM doctrine).** Pass 18 idea cards `KFM-P18-INV-074`, `KFM-P18-INV-425`, and `KFM-P18-INV-449`, and the Master MapLibre entries `ML-064-036` / `ML-064-037`, jointly establish KFM's posture: historic-map overlays from IIIF / Allmaps (or analogous systems) are **interpretive georeferenced artifacts requiring source rights, control points, and uncertainty metadata** — never rights-free or lineage-free GIS layers.
-
-What IIIF buys KFM in practice:
-
-- **One interchange format** for historic maps, archival photographs, scanned manuscripts, and digitized atlases — across institutions that otherwise expose very different APIs.
-- **A standard way to reference the same image at deep zoom** without rehosting the pixels (`Image API`).
-- **A standard way to describe a compound object** — book, atlas, scrapbook, photo series — for narrative use in Story Nodes (`Presentation API`).
-- **A standardized georeferencing surface** via the IIIF Georeference Extension (Allmaps), so historic maps can warp onto MapLibre / Leaflet without forking GeoTIFFs from every archive.
+[![upstream](https://img.shields.io/badge/upstream-IIIF_current_specs-0969da?style=flat-square)](#3-official-iiif-snapshot)
+[![repository](https://img.shields.io/badge/repository_evidence-CONFIRMED-1a7f37?style=flat-square)](#2-current-repository-state)
+[![profile](https://img.shields.io/badge/readiness-PROPOSED__INACTIVE-d4a72c?style=flat-square)](#5-current-iiif-readiness-profile)
+[![network](https://img.shields.io/badge/live_network-NOT__ESTABLISHED-8250df?style=flat-square)](#2-current-repository-state)
+[![release](https://img.shields.io/badge/release-none-6e7781?style=flat-square)](#9-validation-and-maturity)
+[![collision](https://img.shields.io/badge/path_collision-HOLD-bf8700?style=flat-square)](#10-case-collision)
 
 > [!IMPORTANT]
-> IIIF is a **discovery and access** standard. It is **not** an evidence standard. A IIIF manifest, by itself, never satisfies KFM's truth posture. Every IIIF-anchored claim still resolves through `EvidenceRef → EvidenceBundle`, `PolicyDecision`, and `PromotionDecision`. The trust path is the trust path.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 3. IIIF in one minute
-
-IIIF is a family of open standards for delivering high-quality digital images and compound objects on the web, maintained by the IIIF Consortium. The two core APIs are the **Image API** (how to request an image, region, size, rotation, and quality) and the **Presentation API** (how to describe a compound object — its Manifests, Canvases, and Annotations). Specifications and extensions are listed at `https://iiif.io/api/`. Current IIIF specifications should be used for all new work; older versions are retained for reference but are not guaranteed to be maintained across new major versions. 
-
-```mermaid
-flowchart LR
-    subgraph IIIF["IIIF (external)"]
-        IM["Image API 3.0<br/><i>pixels: region, size, rotation, quality, format</i>"]
-        PR["Presentation API 3.0<br/><i>Manifest → Canvas → Annotation</i>"]
-        EXT["Extensions<br/><i>Georeference (adopted)</i><br/><i>navPlace (adopted)</i>"]
-    end
-    SERVER["IIIF server<br/>(institutional)"] -- info.json --> IM
-    SERVER -- manifest.json --> PR
-    PR -- references --> IM
-    PR -. extended by .-> EXT
-```
-
-The shape readers should hold in their head: **a Manifest describes the object, a Canvas is a virtual page, an Annotation places content on a Canvas, and the Image API serves the pixels behind any Canvas at any tile / region / scale.**
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 4. Specifications KFM tracks
-
-The table lists the IIIF specifications and adopted extensions in scope for KFM, the versions KFM targets, and the KFM doctrine each interacts with. Versions and links are **EXTERNAL** (consulted from `iiif.io`).
-
-| Specification | Current stable version | KFM target | Used for | KFM doctrine touchpoint |
-|---|---|---|---|---|
-| [Image API](https://iiif.io/api/image/3.0/) | **3.0** | **3.0** (accept 2.1.1 from legacy hosts) | Delivering image pixels at scale | `LayerManifest`, `EvidenceBundle` |
-| [Presentation API](https://iiif.io/api/presentation/3.0/) | **3.0** | **3.0** (accept 2.1.1 from legacy hosts) | Describing compound objects, Manifests, Canvases, Annotations | `SourceDescriptor`, Story Node references |
-| [Presentation API 4.0](https://preview.iiif.io/api/prezi-4/presentation/4.0/) | **preview / draft** | **monitor only** | Future model refinements | _Re-evaluate after stable release._ The Presentation API 4.0 document is published under `preview.iiif.io` as the introductory and data-model spec for that version  |
-| [Georeference Extension](https://iiif.io/api/extension/georef/) | **adopted (2023)** | **adopted** | Warping historic maps onto modern web maps | `historic_overlay_manifest` (PROPOSED), Story Node map panels |
-| [navPlace Extension](https://iiif.io/community/groups/maps-tsg/) | **adopted** | **adopted (optional)** | Locating a Manifest / Canvas on a web map | Story Node spatial anchoring |
-| [Authentication API](https://iiif.io/api/) | n/a today | **not in scope (v1)** | Gated content from partners | Defer to an ADR if needed |
-| [Search API](https://iiif.io/api/) | n/a today | **not in scope (v1)** | In-Manifest text search | Defer to an ADR if needed |
-
-> [!NOTE]
-> IIIF technical resources and reference implementations of older versions are not guaranteed to be maintained across new major versions.  KFM SHOULD treat IIIF Image / Presentation 2.x responses from upstream partners as **legacy-compatibility input**, normalized into KFM object families against the 3.0 model where feasible.
-
-### 4.1 Version drift and graceful intake
-
-Many partner archives still serve Image API 2.1 / Presentation 2.1 alongside 3.0. The KFM intake posture is:
-
-- **MUST** record the *served* IIIF version in the `SourceDescriptor` (PROPOSED field: `iiif_api_versions`).
-- **MUST NOT** silently coerce 2.x to 3.0 in catalog records — keep the as-delivered shape in `data/raw/` and normalize downstream.
-- **SHOULD** prefer the 3.0 representation when both are offered.
-- **SHOULD** record an explicit `iiif_profile_url` for Image API responses so renderers can negotiate.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 5. The Georeference Extension and Allmaps
-
-**PROPOSED.** The Georeference Extension is KFM's preferred path for historic-map overlays — both because it is the IIIF-native answer and because Allmaps gives a working open-source implementation across MapLibre, OpenLayers, and Leaflet.
-
-What the Georeference Extension is, in one paragraph: A way to store the metadata needed to georeference a IIIF resource in a Georeference Annotation, so that images such as digitized maps and aerial photographs can be converted into geospatial assets. It extends the IIIF Presentation API with vocabulary and a JSON-LD 1.1 context, building on the W3C Web Annotation Data Model.  It builds on Presentation API 3.0 and unlocks browser-based warping of map images from a IIIF item URL plus a few control points. 
-
-What Allmaps adds: All components of Allmaps use Georeference Annotations that hold each map's georeference data; Georeference Annotations are based on W3C's Web Annotation standard and are an approved extension to the IIIF Presentation API. Allmaps can warp maps on-the-fly in the browser, using the IIIF Image API to download only the portion of the image needed, in the right scale.  The annotation itself carries the IIIF Image URI and dimensions, a polygonal mask defining the cartographic part of the image, and a list of ground control points mapping pixel coordinates to spatial coordinates. A Georeference Annotation contains the URI of an IIIF Image with its pixel dimensions, a polygonal resource mask for the cartographic part of the image, and a list of ground control points mapping resource coordinates to geospatial coordinates. 
-
-```mermaid
-flowchart TB
-    classDef ext fill:#eef5ff,stroke:#3b78c2,color:#0b3a6b;
-    classDef kfm fill:#f3e9ff,stroke:#7c3aed,color:#3a1668;
-    classDef policy fill:#fff7e6,stroke:#d97706,color:#6b3a00;
-
-    IIIFIMG["IIIF Image (institution)"]:::ext
-    GA["Georeference Annotation<br/>(IIIF + W3C Web Annotation)"]:::ext
-    WL["WarpedMapLayer<br/>(Allmaps · MapLibre)"]:::ext
-
-    SD["SourceDescriptor"]:::kfm
-    EB["EvidenceBundle"]:::kfm
-    LM["LayerManifest"]:::kfm
-    HOM["historic_overlay_manifest<br/>(PROPOSED)"]:::kfm
-
-    POL["PolicyDecision<br/>rights · sensitivity · CARE · plugin allowlist"]:::policy
-    PD["PromotionDecision"]:::policy
-    RM["MapReleaseManifest"]:::policy
-
-    IIIFIMG --> GA --> WL
-    IIIFIMG --> SD
-    GA --> HOM
-    SD --> EB --> LM
-    HOM --> LM
-    LM --> POL --> PD --> RM
-    WL -. only after .-> RM
-```
-
-> [!IMPORTANT]
-> **The render plugin is a downstream consumer, not an authority.** Allmaps' `WarpedMapLayer` is a conditional overlay plugin — see `ML-064-037` — and rides under the same **plugin allowlist** that governs every other third-party MapLibre extension. A Georeference Annotation that has not cleared rights, GCP provenance, and annotation-digest validation MUST NOT reach the public Map Shell, even if it renders cleanly in development.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 6. How IIIF fits the KFM trust spine
-
-IIIF-served images are **observations** the same way any other upstream raster is an observation: they enter under a `SourceDescriptor`, settle into `RAW`, get characterized in `WORK` or `QUARANTINE`, accumulate `EvidenceBundle` and policy decisions, and only then become `CATALOG`-listed and `PUBLISHED`. The IIIF-ness adds three concerns layered on top of the normal flow:
-
-1. **Identity persistence** — IIIF resource URIs are the upstream identity; KFM `SourceDescriptor` records MUST preserve them verbatim and record `iiif_api_versions`, `info_json_url`, and (for Presentation) `manifest_url`.
-2. **Georeferencing provenance** — when a Georeference Annotation is involved, the GCP set, polygonal mask, and resulting transform parameters MUST travel with the artifact as evidence, not as render hints.
-3. **Rights propagation** — IIIF Presentation 3.0 `rights` and `requiredStatement` MUST flow through to the KFM rights record; they are evidence of the upstream rights position, not a substitute for KFM review.
-
-```mermaid
-flowchart LR
-    A["RAW<br/>captured IIIF response<br/>(info.json / manifest.json / annotation)"] --> B["WORK / QUARANTINE<br/>schema, rights, sensitivity, evidence review"]
-    B --> C["PROCESSED<br/>canonical candidate + transforms<br/>(e.g., warp, generalization)"]
-    C --> D["CATALOG / TRIPLET<br/>LayerManifest + historic_overlay_manifest<br/>EvidenceBundle"]
-    D --> E["PUBLISHED<br/>MapReleaseManifest<br/>rollback target<br/>correction path"]
-```
+> **This page is guidance, not conformance proof.** It does not adopt IIIF, activate an archive source, validate a live Manifest or Image Service, authenticate rights or CARE state, enable Allmaps, authorize a release, or prove interoperability.
 
 > [!CAUTION]
-> Promotion is a **governed state transition, not a file move.** A IIIF asset that lands in `data/raw/` is not "available." A IIIF asset that renders in a dev environment is not "released." Until `PromotionDecision` is recorded and `MapReleaseManifest` lists the layer, the Map Shell MUST NOT fetch it.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 7. KFM doctrine for IIIF-sourced content
-
-These rules are **PROPOSED** doctrine derived from Pass 18 cards and the Master MapLibre cumulative master. They are doctrine that the schema, policy, and validator implementations SHOULD enforce; they are not (yet) verified as enforced in the live repo.
-
-### 7.1 Identity and provenance
-
-- **MUST** capture the IIIF `id` (Presentation) or service `id` (Image API) verbatim in the `SourceDescriptor`.
-- **MUST** preserve the unmodified `manifest.json` and/or `info.json` in `data/raw/` with capture metadata (fetch time, `ETag`, `Last-Modified`, response status).
-- **MUST** record the *served* IIIF API version(s). If both 2.x and 3.0 are served, record both.
-- **SHOULD** record the IIIF profile URL declared in the Image API response so renderers can negotiate level features.
-- **MUST NOT** rewrite or re-serialize the upstream JSON in the canonical record. Normalize into KFM shapes downstream and keep as-delivered evidence intact.
-
-### 7.2 Georeferencing
-
-- **MUST** treat a Georeference Annotation as **evidence**, not as a render asset. It is stored, hashed, and referenced from the `EvidenceBundle`.
-- **MUST** record GCP count, the polygonal resource mask, the original CRS (or `UNKNOWN`), and the chosen transformation method, on the PROPOSED `historic_overlay_manifest` (and/or extended `LayerManifest`).
-- **SHOULD** record an `overlay_uncertainty` field — qualitative and, where possible, quantitative (e.g., RMS error of the chosen transform).
-- **MUST** require explicit rights review before the warped overlay is exposed in any public Story Node.
-
-### 7.3 Rights, sensitivity, and CARE
-
-- **MUST** carry forward IIIF Presentation `rights` and `requiredStatement` into the KFM rights record. Where the upstream rights are `UNKNOWN`, the asset stays at **default-deny** for public exposure.
-- **MUST** route any IIIF-anchored asset that touches sensitive cultural, archaeological, tribal, or sovereignty-implicating material through the CARE-bound policy lane before promotion. See §9.
-
-### 7.4 Plugins and renderers
-
-- **MUST** restrict in-browser warping plugins (e.g., Allmaps `WarpedMapLayer`) to the project plugin allowlist.
-- **MUST** validate the annotation digest (sha256 of the canonical-serialized Georeference Annotation) at promotion and at runtime fetch.
-- **MUST NOT** rely on a CDN copy or browser-cache of the annotation as authoritative — the catalog-referenced copy is the truth.
-
-### 7.5 Lifecycle
-
-- IIIF-sourced rasters and overlays follow the same `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` lifecycle as every other observation.
-- Promotion is a **governed state transition**, recorded in `PromotionDecision` with a citation back to the `EvidenceBundle` and rights / sensitivity decisions.
-- Every published IIIF-anchored layer **MUST** have a named rollback target — the prior `MapReleaseManifest` entry, or a documented "no prior" rollback that returns the layer to `unreleased`.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 8. Object families and manifest fields
-
-These are the KFM object families IIIF-sourced material attaches to, and the PROPOSED fields each MUST carry. None of the field paths below is verified against the live repo this session — see §13.
-
-| KFM object family | Role for IIIF content | PROPOSED fields (selected) |
-|---|---|---|
-| `SourceDescriptor` | Upstream identity, rights, capture metadata | `iiif_manifest_url`, `iiif_info_json_url`, `iiif_api_versions[]`, `iiif_profile_url`, `served_etag`, `fetched_at`, `rights_statement`, `required_statement` |
-| `EvidenceBundle` | Resolves `EvidenceRef` to the actual evidence | references to: raw `manifest.json`, raw `info.json`, georeference annotation JSON, all under content-addressed digests |
-| `historic_overlay_manifest` *(PROPOSED — new)* | Per-overlay record for IIIF + Georeference Extension assets | `iiif_image_uri`, `image_width_px`, `image_height_px`, `resource_mask` (polygon), `gcps[]`, `gcp_count`, `original_crs` *or* `UNKNOWN`, `transform_method`, `transform_rms`, `annotation_sha256`, `overlay_uncertainty` |
-| `LayerManifest` | The shape of a renderable map layer | inherit IIIF identity from `SourceDescriptor`; reference `historic_overlay_manifest`; declare allowed tile attributes; declare `tileProtocol` family |
-| `MapReleaseManifest` | What is actually allowed in the public Map Shell | enumerate every released IIIF-anchored layer with `release_state`, `policy_decision_id`, `rollback_target` |
-| `PolicyDecision` | rights / sensitivity / CARE / plugin allowlist outcome | `decision ∈ {ALLOW, DENY, ABSTAIN, ERROR}`, reason codes, evidence references |
-| `PromotionDecision` | Governed state transition record | inputs: validators passed, policy decision, evidence closure, reviewer state |
-| `RollbackCard` | The reversible-change posture | named rollback target, replay plan, correction-notice linkage |
-| `RunReceipt` | Reproducible run identity for ingestion / warping | `spec_hash`, tool versions, IIIF source response hashes |
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 9. Rights, sensitivity, and CARE
-
-**PROPOSED.** IIIF makes the *form* of rights metadata standardizable; it does not make the *substance* of rights judgments standardizable. KFM's CARE-aware policy lane runs independently of, and after, the IIIF-declared rights.
-
-| Upstream signal | KFM treatment |
-|---|---|
-| `rights` URI is a Creative Commons or RightsStatements.org URI | Record verbatim; **does not** automatically license public exposure. CARE review still applies. |
-| `rights` URI is custom / institutional | Record verbatim; treat as **rights = controlled** by default; promote only after review. |
-| `rights` absent | Treat as **rights = UNKNOWN**; default-deny public exposure. |
-| `requiredStatement` present | Propagate to attribution chrome, layer manifest, Evidence Drawer payload, and any Story Node citing the asset. |
-| Content references tribal, sacred, sensitive archaeological, or sovereignty-implicating material | Route through the CARE-bound policy lane; require steward sign-off; default to generalized or denied public exposure regardless of upstream rights. |
+> KFM's present executable IIIF proof is a no-network, fixture-only `IIIFHistoricOverlayReadinessAssessment` plus separate synthetic georeference-quality profiles. Those checks do not fetch IIIF, warp imagery, authenticate evidence, run policy, or publish a layer.
 
 > [!WARNING]
-> **A permissive upstream IIIF `rights` URI does not authorize KFM publication.** The Master MapLibre doctrine is explicit on this point: rendered tiles, popups, manifests, and AI answers are **not sovereign truth**. Every release runs through the trust spine. IIIF rights metadata is *evidence* of the institutional position; it is *not* a substitute for a `PolicyDecision`.
+> Both `docs/standards/IIIF.md` and `docs/standards/iiif.md` exist. This update changes only the uppercase file requested by the user. Identity, inbound links, supersession, and case-safe migration remain unresolved.
 
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 10. Validation checklist
-
-The validation suite for any IIIF-anchored layer or overlay before it is `released`. Items below are PROPOSED; specific validator names and CI workflow files are **NEEDS VERIFICATION**.
-
-- [ ] **Source identity.** `SourceDescriptor` records `iiif_manifest_url` and/or `iiif_info_json_url` verbatim from the upstream.
-- [ ] **As-delivered preservation.** `manifest.json` / `info.json` / Georeference Annotation are present in `data/raw/` with capture metadata and content-addressed digests.
-- [ ] **API version recorded.** `iiif_api_versions` is populated; mixed 2.x / 3.0 partner responses are recorded as-served.
-- [ ] **Schema validation.** Raw IIIF JSON validates against the relevant IIIF JSON-LD context (`iiif_profile_url` resolves; required `type` properties present per the spec major version).
-- [ ] **Georeference (if applicable).** Annotation digest matches the catalog-referenced copy; GCP count is non-zero; resource mask is a closed polygon; transform method is recorded.
-- [ ] **Rights closure.** `rights` and `requiredStatement` are propagated, or rights are explicitly `UNKNOWN` with default-deny.
-- [ ] **Sensitivity / CARE closure.** CARE classification is recorded; if `authority_to_control` is non-empty, a valid consent grant is on file.
-- [ ] **Plugin allowlist.** Any browser-side warping plugin (Allmaps `WarpedMapLayer` or analog) is on the allowlist; version is pinned.
-- [ ] **No public raw path.** No public route exposes `data/raw/` or `data/work/` IIIF copies.
-- [ ] **No unreleased tile load.** Map Shell only fetches IIIF-anchored layers listed in `MapReleaseManifest`.
-- [ ] **Click-to-EvidenceBundle.** Clicking the overlay in the Map Shell resolves to the `EvidenceBundle` and, where relevant, to the Georeference Annotation evidence.
-- [ ] **Citation validation.** Story Nodes citing the overlay resolve to released `MapReleaseManifest` entries.
-- [ ] **Rollback rehearsed.** Rollback target replays cleanly to a prior released state (or `unreleased`).
-- [ ] **Negative-state coverage.** Fixtures exercise the DENY / ABSTAIN / ERROR paths for missing rights, missing GCPs, unknown CARE state, stale upstream.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 11. Anti-patterns and failure modes
-
-The Master MapLibre doctrine flags a set of recurring traps. The IIIF-specific shape of each:
-
-| Anti-pattern | IIIF-specific shape |
+| Field | Current bounded result |
 |---|---|
-| Treating a render as truth | Treating an Allmaps `WarpedMapLayer` overlay as a surveyed alignment. |
-| Treating a popup as evidence | Treating Manifest `label` / `summary` text as a citable claim. The popup is a launch point, not an answer. |
-| Skipping the trust membrane | Letting the public Map Shell fetch a partner's IIIF tile endpoint directly, bypassing `MapReleaseManifest`. |
-| Style filters as policy | "Hiding" a sensitive historic overlay with a `display: none` instead of withholding it from the release manifest. |
-| Convenience caching as authority | Treating a CDN'd copy of a Georeference Annotation as authoritative. |
-| Lineage erasure | Stripping `provider`, `rights`, or `requiredStatement` during downstream normalization. |
-| Permissive-license shortcut | Inferring CARE-acceptable publication from a CC-BY URI on the IIIF manifest. |
-| Source-snippet-as-proof | Treating "this archive publishes IIIF" as proof that KFM has ingested or released anything from it. |
+| **Evidence snapshot** | `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40` |
+| **Placement** | `PLACE` at the existing path under the accepted ADR-0029 standards lane |
+| **Upstream stable baseline** | Image `3.0.0`; Presentation `3.0.0`; Authorization Flow `2.0.0`; Change Discovery `1.0.0`; Content Search `2.0.0`; Content State `1.0.0` |
+| **Upstream draft** | Presentation `4.0.0` release candidate; stable remains `3.0.0` |
+| **KFM executable profile** | `kfm.iiif.historic-overlay-readiness.v1`, `PROPOSED_INACTIVE`, fixture-only, no-network |
+| **Readiness outcomes** | `READY`, `HOLD`, `DENY`, `ERROR`; precedence `ERROR > DENY > HOLD > READY` |
+| **Live source** | Not established; LOC remains a deferred greenfield connector family |
+| **Map runtime** | No supported deployed or released Allmaps/MapLibre IIIF overlay established |
+| **Conformance claim** | Not established |
+| **Review route** | `@bartytime4life`; specialist and independent review need verification |
+| **Release/publication effect** | None |
+
+**Quick navigation:** [Authority](#1-authority-and-non-effects) · [Repository](#2-current-repository-state) · [Upstream](#3-official-iiif-snapshot) · [Trust model](#4-core-model-and-trust-path) · [Readiness](#5-current-iiif-readiness-profile) · [Georeference](#6-georeference-and-quality-separation) · [Rights/runtime](#7-rights-care-and-renderer-boundary) · [Objects](#8-object-and-authority-map) · [Validation](#9-validation-and-maturity) · [Collision](#10-case-collision) · [Backlog](#11-backlog-and-next-slice) · [References](#12-references-terms-and-rollback)
+
+---
+
+<a id="1-authority-and-non-effects"></a>
+
+## 1. Authority and non-effects
+
+### 1.1 This page owns
+
+- the current IIIF API/extension snapshot relevant to KFM;
+- KFM's repository relationship to IIIF;
+- the boundary between upstream IIIF resources and KFM source, evidence, policy, review, release, and correction objects;
+- the current fixture-only historic-overlay readiness profile;
+- the separate transform-quality and GCP-distribution profiles;
+- rights, attribution, Authorization Flow, CARE, and plugin concerns;
+- validation evidence and its limits; and
+- explicit drift and graduation requirements.
+
+### 1.2 Other authorities remain separate
+
+| Question | Authority |
+|---|---|
+| Where this page belongs | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), [`directory-rules.md`](../doctrine/directory-rules.md), and [`docs/standards/README.md`](./README.md) |
+| What a KFM object means | `contracts/`; the current readiness contract is `PROPOSED_INACTIVE` |
+| What machine shape is valid | `schemas/`, including the closed readiness schema |
+| Whether a source may be fetched | Source registry/admission, connector controls, terms, rights, sensitivity, and accountable review |
+| Whether evidence supports a claim | `EvidenceRef -> EvidenceBundle` resolution |
+| What may be exposed | `policy/`, rights/CARE controls, review, and release state |
+| Whether a georeference is fit | GCP evidence, quality assessments, declared fitness criteria, and qualified review |
+| Whether KFM conforms to IIIF | A dated profile, producer/consumer fixtures, validators, observed interoperability, and authorized adoption |
+| Whether publication is allowed | Proof closure, policy, authorized review, release, correction, withdrawal, and rollback |
+| What IIIF normatively means | Official IIIF specifications |
+
+### 1.3 This update does not
+
+- choose between `IIIF.md` and `iiif.md`;
+- create, rename, delete, redirect, or supersede a path;
+- adopt IIIF, Allmaps, or a KFM IIIF profile;
+- amend contract, schema, fixtures, validator, tests, workflow, or receipt;
+- change the `4.0-preview` enum or rights-URI constraint;
+- add a source descriptor, connector, network request, cache, or captured source bytes;
+- create a canonical historic-overlay manifest;
+- calculate a georeference or execute a warp;
+- authenticate rights, consent, CARE, evidence, review, or release;
+- add a MapLibre plugin or route;
+- promote lifecycle state; or
+- release, deploy, publish, or change repository settings.
+
+---
+
+<a id="2-current-repository-state"></a>
+
+## 2. Current repository state
+
+The May 2026 page described implementation as unknown. Current repository evidence supports a narrow fixture implementation, but not a live source or public overlay.
+
+### 2.1 Proof matrix
+
+| Surface | CONFIRMED evidence | Safe conclusion |
+|---|---|---|
+| Standards pages | [`IIIF.md`](./IIIF.md) and [`iiif.md`](./iiif.md) | Guidance exists; document identity is conflicted |
+| Readiness meaning | [`iiif_historic_overlay_readiness.md`](../../contracts/map/iiif_historic_overlay_readiness.md) | Fixture preflight only; no source/evidence/policy/release authority |
+| Readiness shape | [`iiif_historic_overlay_readiness.schema.json`](../../schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json) | Closed Draft 2020-12 shape with fixed no-network/no-authority fields |
+| Cases | [`cases.json`](../../fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json) | Eleven mutation-derived cases cover all readiness outcomes |
+| Validator | [`validate_iiif_historic_overlay_readiness.py`](../../tools/validators/map/validate_iiif_historic_overlay_readiness.py) | Deterministic declaration/integrity checks without network |
+| Tests | [`test_iiif_historic_overlay_readiness.py`](../../tests/map/test_iiif_historic_overlay_readiness.py) | Focused regression coverage |
+| Workflow | [`map-iiif-historic-overlay-readiness.yml`](../../.github/workflows/map-iiif-historic-overlay-readiness.yml) | Read-only focused CI; no live IIIF access |
+| Receipt | [`genrec-iiif-historic-overlay-readiness-20260806.json`](../../data/receipts/generated/genrec-iiif-historic-overlay-readiness-20260806.json) | Authored hashes/local validation recorded; not review, proof, or release |
+| Transform quality | [`georeference_transform_quality.md`](../../contracts/map/georeference_transform_quality.md) | Separate inactive synthetic affine-fit profile |
+| GCP distribution | [`georeference_spatial_distribution.md`](../../contracts/map/georeference_spatial_distribution.md) | Separate inactive synthetic control-coverage profile |
+| LOC source family | [`connectors/loc/README.md`](../../connectors/loc/README.md) | `0.0.0` greenfield scaffold; fetch/admit placeholders; access denied by default |
+| LOC product page | [`loc-iiif-presentations.md`](../sources/catalog/loc/loc-iiif-presentations.md) | Documentation scaffold only |
+| Live capture/parser | No admitted run established | Not supported as a proven path |
+| Allmaps runtime | No released/deployed integration established | Not supported as a proven path |
+| Evidence/release closure | No IIIF-specific end-to-end released flow established | Deferred |
+
+Merged PR [`#2077`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/2077) added the readiness slice. Its focused exact-head workflow succeeded with eleven tests and eleven fixture-polarity cases. That proves the tested fixture boundary only—not a live server, source rights, georeference execution, policy, runtime, release, or external interoperability.
+
+### 2.2 Confirmed mismatches
+
+| Mismatch | Evidence | Disposition |
+|---|---|---|
+| Presentation 4 vocabulary | Upstream lists `4.0.0` as release candidate; KFM schema still uses `4.0-preview` | Update executable profile separately or keep unsupported |
+| Minimum warp GCPs | Official Georeference Extension requires at least three GCPs to enable warping; current readiness validator holds only at zero | Correct or explicitly model “valid annotation” vs “warp ready” |
+| Rights URI scheme | Presentation 3 notes machine-actionable CC/RightsStatements values use `http`; current readiness schema accepts `https://` only | Decide lossless acceptance/canonicalization and test it |
+| Image API profile | Old page required a profile URL; Image API 3 commonly uses compact profile values | Preserve exact as-served profile representation |
+| Overlay object | Old page proposed `historic_overlay_manifest`; merged PR intentionally did not create it | Remains a decision, not a repo fact |
+| Release binding | Release ref is nullable; all authority booleans are false | Correct for inactive preflight; no release claim |
+
+---
+
+<a id="3-official-iiif-snapshot"></a>
+
+## 3. Official IIIF snapshot
+
+Official currentness review accessed **2026-08-18**:
+
+| Surface | Official state | Current KFM relationship |
+|---|---|---|
+| [Image API](https://iiif.io/api/image/3.0/) | Stable `3.0.0`; previous `2.1.1` | Fixture declarations only; no live consumer proven |
+| [Presentation API](https://iiif.io/api/presentation/3.0/) | Stable `3.0.0` | Fixture declarations only; no live parser proven |
+| [Authorization Flow API](https://iiif.io/api/auth/2.0/) | Stable `2.0.0` | No KFM implementation established |
+| [Change Discovery API](https://iiif.io/api/discovery/1.0/) | Stable `1.0.0` | No admitted IIIF watcher established |
+| [Content Search API](https://iiif.io/api/search/2.0/) | Stable `2.0.0` | No IIIF search consumer established |
+| [Content State API](https://iiif.io/api/content-state/1.0/) | Stable `1.0.0` | No governed deep-link integration established |
+| [Presentation API 4.0](https://iiif.io/api/presentation/4.0/) | `4.0.0` release candidate; stable remains `3.0.0` | Monitor only; current KFM enum is stale/inexact |
+| [Extension registry](https://iiif.io/api/extension/) | navPlace, Text Granularity, and Georeference formally published | No complete KFM extension profile adopted |
+| [Georeference Extension](https://iiif.io/api/extension/georef/) | Published; document not semantically versioned | Primary historic-overlay reference |
+
+> [!NOTE]
+> Stable upstream does not equal KFM support. A new API or extension enters KFM only through a bounded contract/schema/fixture/validator/consumer decision with rights, policy, correction, and rollback implications visible.
+
+### 3.1 Version intake
+
+A future consumer should:
+
+- preserve exact upstream bytes, contexts, service types, and profile values;
+- record Image and Presentation versions independently;
+- prefer stable `3.0.0` for new integration;
+- accept `2.1.1` only through explicit, tested normalization;
+- keep Authorization, Search, Change Discovery, and Content State as separate capabilities;
+- hold unsupported/mixed versions rather than silently coerce; and
+- avoid claiming Presentation 4 support until schema, fixtures, parser, and consumers move together.
+
+---
+
+<a id="4-core-model-and-trust-path"></a>
+
+## 4. Core model and trust path
+
+### 4.1 IIIF model
+
+```mermaid
+flowchart LR
+    P["Presentation API<br/>Collection · Manifest · Canvas · Range"] --> A["Annotation Page"]
+    A --> N["Annotation<br/>painting · commenting · georeferencing"]
+    N --> I["Image API<br/>info.json + pixel requests"]
+    P -. may declare .-> S["Authorization · Search · Content State · extensions"]
+```
+
+| IIIF term | Upstream role | KFM interpretation |
+|---|---|---|
+| `Collection` | Groups resources | Discovery/context carrier; not a release |
+| `Manifest` | Describes one compound object | Captured source and descriptive context |
+| `Canvas` | Virtual presentation surface | Not canonical geography |
+| `Range` | Logical navigation grouping | Human navigation context |
+| `AnnotationPage` | Groups annotations | Preserve as delivered |
+| `Annotation` | Places content or a statement on a target | Source evidence candidate |
+| `ImageService` / `info.json` | Pixel-service identity/capabilities | Upstream source capability |
+| `rights` | Rights-statement URI | Input to KFM rights review |
+| `requiredStatement` | Required attribution/use text | Obligation to preserve in released projection |
+| `provider` | Structured provider contribution | Provenance context, not KFM authority |
+| `navPlace` | Geographic navigation metadata | Context candidate, not surveyed geometry |
+| Georeference Annotation | Maps resource coordinates to geographic coordinates | Georeference evidence candidate plus uncertainty |
+
+Presentation labels, summaries, metadata entries, and thumbnails do not become KFM claims merely because they are JSON-LD.
+
+### 4.2 KFM lifecycle
+
+```mermaid
+flowchart LR
+    U["Upstream IIIF<br/>Manifest · info.json · annotation"] --> R["RAW<br/>exact bytes + source head"]
+    R --> W["WORK / QUARANTINE<br/>identity · version · rights · CARE · quality"]
+    W --> P["PROCESSED candidate"]
+    P --> C["CATALOG / TRIPLET"]
+    C --> G["Policy · review · proof · rollback"]
+    G --> B["PUBLISHED public-safe derivative"]
+    B --> D["Governed API / Map shell / Evidence Drawer"]
+    W -- unresolved --> H["HOLD / DENY / ERROR"]
+```
+
+Required separations:
+
+- upstream identity from deterministic KFM identity;
+- raw bytes from normalization;
+- GCP evidence from transform residuals and GCP distribution;
+- technical validity from rights/CARE;
+- renderer behavior from evidence/policy/release;
+- EvidenceRef from rendered pixels;
+- release from a successful fetch or green test.
+
+A future public client may contact an approved Image Service only when a released public-safe manifest and policy permit it. The browser does not admit the source.
+
+---
+
+<a id="5-current-iiif-readiness-profile"></a>
+
+## 5. Current IIIF readiness profile
+
+```text
+IIIFHistoricOverlayReadinessAssessment
+profile: kfm.iiif.historic-overlay-readiness.v1
+status: PROPOSED_INACTIVE
+fixture_only: true
+network_access: forbidden
+```
+
+This is a preflight assessment, not a source record, canonical overlay, policy decision, or release.
+
+### 5.1 Outcomes
+
+| Outcome | Current meaning | Not equivalent to |
+|---|---|---|
+| `READY` | Committed declarations satisfy the inactive fixture profile | Source admission, policy allow, review approval, release, or public use |
+| `HOLD` | A prerequisite remains unresolved | Runtime `ABSTAIN` |
+| `DENY` | Explicit public-boundary, rights/CARE, or plugin-trust violation | Full policy evaluation |
+| `ERROR` | Shape, integrity, geometry declaration, or claimed decision is inconsistent | Source-quality judgment |
+
+Precedence:
+
+```text
+ERROR > DENY > HOLD > READY
+```
+
+### 5.2 Checked groups
+
+| Group | Current checks |
+|---|---|
+| Source | Descriptor ref, Manifest/info URLs, versions, legacy normalization, freshness |
+| Capture | Digests, embedded annotation UTF-8, annotation SHA-256, capture declarations |
+| Overlay | GCP parity, closed mask, transform, CRS posture, RMS declaration, uncertainty |
+| Rights/CARE | URI/state declarations, propagation, authority-to-control, consent ref |
+| Renderer | Plugin-required/name/version/allowlist declarations |
+| Public boundary | RAW exposure, unreleased fetch, EvidenceBundle ref, release ref, rollback |
+| Governance | Authority booleans fixed false; `release_ref` null |
+
+Current cases include legacy/stale/unknown-rights `HOLD`, RAW/CARE/plugin `DENY`, and digest/GCP/mask/decision `ERROR`.
+
+### 5.3 What it does not do
+
+- parse a real Manifest or `info.json`;
+- validate remote or vendored JSON-LD;
+- enforce all Georeference Extension rules;
+- require three GCPs for warp readiness;
+- authenticate source, rights, attribution, CARE, consent, evidence, or rollback;
+- compute RMS or inspect GCP spatial distribution;
+- activate a plugin; or
+- bind to a released layer.
+
+---
+
+<a id="6-georeference-and-quality-separation"></a>
+
+## 6. Georeference and quality separation
+
+The official Georeference Extension uses Web Annotation plus GeoJSON to relate a Canvas or Image Service—and optionally a selected region—to geographic coordinates.
+
+It carries or references:
+
+- one target resource;
+- optional mask/selector;
+- a GeoJSON `FeatureCollection`;
+- point features pairing WGS84 coordinates with `resourceCoords`;
+- `motivation: georeferencing`; and
+- an optional preferred transformation.
+
+Important upstream limits:
+
+- at least three GCPs are needed to enable warping;
+- fewer than three can still form a structurally valid but incomplete annotation;
+- original projection/CRS is outside the extension vocabulary;
+- altitude/elevation and extraterrestrial locations are out of scope;
+- target projection is not declared; and
+- a Manifest or Range may require multiple annotations.
+
+The KFM readiness field `original_crs` is therefore a KFM declaration, not an IIIF field. Its provenance must be explicit.
+
+### 6.1 Three separate questions
+
+| Question | Current surface | Cannot prove |
+|---|---|---|
+| Are declarations coherent enough for later review? | `IIIFHistoricOverlayReadinessAssessment` | Source authenticity, fit quality, rights, release |
+| Does a synthetic affine transform fit supplied GCPs? | `GeoreferenceTransformQualityAssessment` | GCP truth, historical accuracy, rights, release |
+| Are GCPs distributed across the resource mask? | `GeoreferenceSpatialDistributionAssessment` | GCP truth, transform correctness, rights, release |
+
+A future integration may require all three, but no current integration is release authority. Low RMS is not historical or geodetic truth.
+
+Public uncertainty should distinguish source/date uncertainty, GCP provenance, residuals, extrapolation risk, cartographic limits, rights/CARE, and correction state.
+
+---
+
+<a id="7-rights-care-and-renderer-boundary"></a>
+
+## 7. Rights, CARE, and renderer boundary
+
+### 7.1 Presentation rights
+
+Presentation API 3 provides `rights`, `requiredStatement`, and `provider`.
+
+| Signal | KFM treatment |
+|---|---|
+| Recognized rights URI | Preserve raw value; map through reviewed vocabulary; do not auto-release |
+| Custom/unknown URI | Preserve; hold until reviewed |
+| Missing rights | Hold or deny public exposure |
+| `requiredStatement` | Preserve language map and carry the display obligation |
+| `provider` | Preserve as context; do not infer KFM authority |
+| Upstream change | New source version/correction event |
 
 > [!CAUTION]
-> The Allmaps in-browser warp is fast and looks beautiful. That is exactly what makes it a governance hazard: a visually persuasive overlay is the kind of thing the public reads as truth. Georeference uncertainty, rights bounds, and interpretive uncertainty MUST be inspectable in the Map Shell — see PROPOSED `overlay_uncertainty`.
+> IIIF notes that machine-actionable Creative Commons and RightsStatements values use `http` URIs. The current KFM readiness schema accepts `https://` only. Resolve that deliberately with fixtures rather than silently rewriting values.
 
-[Back to top ↑](#iiif--international-image-interoperability-framework)
+### 7.2 Authorization Flow
+
+Authorization Flow API `2.0.0` is stable upstream, but KFM support is not established. Any future implementation must keep access-control state out of public artifacts and logs, use secure transport, prevent restricted originals from leaking through substitutes/caches, and require a separate source/security decision.
+
+### 7.3 CARE and cultural authority
+
+A permissive license does not resolve Indigenous data sovereignty, authority to control, sacred/cultural sensitivity, archaeology location exposure, living-person privacy, donor restrictions, or derivative georeference harms. Unknowns fail closed through quarantine, generalization, staged/delayed access, abstention, or denial.
+
+### 7.4 Allmaps/MapLibre
+
+Allmaps can parse Georeference Annotations and its MapLibre `WarpedMapLayer` can use WebGL to render IIIF images. Upstream capability is not KFM admission.
+
+| Capability | KFM gate |
+|---|---|
+| Annotation parser | Pinned dependency, accepted shape, deterministic fixtures |
+| Warped layer | Plugin admission, version/license/SBOM/security/accessibility review |
+| Image requests | Released source allowlist, rights/public-use decision, cache controls |
+| Browser warp | Visible uncertainty and no authority upgrade |
+| Map interaction | Governed context and EvidenceBundle resolution |
+| Export | Attribution, release ID, uncertainty, correction state |
+
+Current Allmaps docs state MapLibre pitch is not supported. Test the admitted version and provide a flat/2D fallback.
+
+No current evidence reviewed here establishes an installed Allmaps dependency, plugin allowlist, runtime adapter, IIIF Evidence Drawer flow, released overlay, or deployment.
 
 ---
 
-## 12. Conformance levels (KFM-defined)
+<a id="8-object-and-authority-map"></a>
 
-KFM does not declare conformance levels on the IIIF spec — IIIF defines its own compliance profiles. These are **KFM-internal** maturity levels for our handling of IIIF-sourced material.
+## 8. Object and authority map
 
-| Level | What it requires | Status |
+| Surface | Authority | Current state |
 |---|---|---|
-| **L0 — Source captured** | `SourceDescriptor` exists, raw IIIF JSON preserved, rights propagated, no public exposure. | PROPOSED |
-| **L1 — Evidence-resolved** | `EvidenceBundle` resolves; click-to-evidence works in non-public surfaces. | PROPOSED |
-| **L2 — Cataloged** | `LayerManifest` present; CARE / rights / sensitivity decisions on file; not yet in `MapReleaseManifest`. | PROPOSED |
-| **L3 — Released** | Listed in `MapReleaseManifest`; rollback rehearsed; correction path in place; Story Nodes may cite. | PROPOSED |
-| **L4 — Released + georeferenced overlay** | L3 plus `historic_overlay_manifest` with GCPs, mask, transform, RMS, and `overlay_uncertainty`; Allmaps plugin on allowlist. | PROPOSED |
+| `IIIFHistoricOverlayReadinessAssessment` | Fixture metadata/integrity preflight | `PROPOSED_INACTIVE` |
+| `GeoreferenceTransformQualityAssessment` | Synthetic affine-fit calculation | `PROPOSED_INACTIVE` |
+| `GeoreferenceSpatialDistributionAssessment` | Synthetic GCP coverage calculation | Inactive fixture-first |
+| `SourceDescriptor` | Source identity/admission | General family exists; no admitted IIIF product established |
+| `EvidenceBundle` | Evidence resolution | Readiness carries only an unauthenticated reference |
+| `PolicyDecision` / rights/CARE review | Admissibility | No authenticated IIIF-specific path established |
+| `ReleaseManifest` / map release | Release authority | No IIIF-backed release established |
 
-[Back to top ↑](#iiif--international-image-interoperability-framework)
+The old page proposed `historic_overlay_manifest`. PR #2077 intentionally did not create it. Before adding a family, prove that existing layer/map/release/representation objects are insufficient, identify its lifecycle plane and owner, define correction/rollback, and avoid parallel authority.
 
----
+Candidate ownership:
 
-## 13. Open questions and verification backlog
-
-These items are **NEEDS VERIFICATION** or **OPEN**; track in `docs/registers/VERIFICATION_BACKLOG.md` (path PROPOSED per Directory Rules §18).
-
-- **NEEDS VERIFICATION** — Does a `schemas/contracts/v1/.../historic_overlay_manifest.schema.json` exist in the mounted repo today, or is this a wholly PROPOSED contract?
-- **NEEDS VERIFICATION** — Do `policy/rights/` and `policy/sensitivity/` (or `policies/` mirrors) currently include IIIF-aware rules, or are the rules generic?
-- **NEEDS VERIFICATION** — Is Allmaps on a documented plugin allowlist anywhere in the repo today? If so, which version is pinned?
-- **NEEDS VERIFICATION** — Are any IIIF-anchored sources already in `data/raw/` or `data/registry/`? KSHS Kansas Memory, KHRI, KU Spencer, LOC are named in the KFM Encyclopedia C10-07 stack as in-scope source families; ingestion status is not visible this session.
-- **NEEDS VERIFICATION** — What is the policy posture toward IIIF Authentication API gated content from partner archives? Is anything gated today?
-- **OPEN** — Should KFM ever *host* IIIF (versus only consume)? If so, under which `apps/` or `runtime/` lane, and behind which governed API surface? This is an ADR-level decision.
-- **OPEN** — How should georeference uncertainty be **visually disclosed** in the Map Shell without making the overlay unreadable? `KFM-P18-INV-425` flags this as unresolved.
-- **OPEN** — When the upstream IIIF version changes (e.g., a partner moves from 2.1 to 3.0), what is the re-ingestion trigger? Does `ETag` / `Last-Modified` cover the case, or does KFM need a profile-aware watcher?
-- **OPEN** — IIIF Presentation API 4.0 is in preview today (per upstream). When and how does KFM cut over? Presentation API 4.0 is published under preview.iiif.io as the introductory and data-model spec for that version. 
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
-
----
-
-## 14. Related docs
-
-- `docs/doctrine/directory-rules.md` — §6.1 places `docs/standards/` and confirms this file's home.
-- `docs/doctrine/authority-ladder.md` — IIIF is tertiary external; KFM doctrine outranks it for KFM-specific claims.
-- `docs/doctrine/truth-posture.md` — `cite-or-abstain`; an IIIF render is never a sovereign claim.
-- `docs/doctrine/trust-membrane.md` — release rules; IIIF-anchored layers cross the membrane only via `MapReleaseManifest`.
-- `docs/doctrine/lifecycle-law.md` — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`.
-- `docs/architecture/map-shell.md` — where IIIF-anchored layers actually surface.
-- `docs/standards/STAC.md` — _TODO confirm exists_ — IIIF asset roles and PMTiles / COG asset roles in STAC.
-- `docs/standards/DCAT.md` — _TODO confirm exists_ — DCAT distribution mapping.
-- `docs/standards/PROV.md` — _TODO confirm exists_ — generation lineage for warped overlays.
-- `contracts/source/`, `contracts/evidence/`, `contracts/release/` — object meaning.
-- `schemas/contracts/v1/...` — machine-checkable shape (per ADR-0001).
-- `policy/rights/`, `policy/sensitivity/`, `policy/release/` — admissibility rules.
-
-[Back to top ↑](#iiif--international-image-interoperability-framework)
+| Information | Likely owner | Status |
+|---|---|---|
+| Upstream IDs | Source capture/descriptor | IIIF binding proposed |
+| Exact bytes/digests | RAW capture/receipt | Live capture absent |
+| GCPs/mask | Georeference evidence | Canonical home needs verification |
+| Residuals | Transform-quality assessment | Inactive implementation exists |
+| GCP coverage | Spatial-distribution assessment | Inactive implementation exists |
+| Rights/attribution | Source/rights + policy obligations | Integration absent |
+| CARE/consent | Policy/review authorities | Authentication absent |
+| Render config | Layer/runtime manifest | Runtime absent |
+| Public membership | Release manifest | No release |
+| Citations/limits | EvidenceBundle/UI projection | End-to-end flow absent |
 
 ---
 
-## 15. Appendices
+<a id="9-validation-and-maturity"></a>
 
-<details>
-<summary><strong>A. Illustrative Georeference Annotation skeleton</strong> (illustrative — not from KFM repo)</summary>
+## 9. Validation and maturity
 
-The example below is an **illustrative skeleton** based on the IIIF Georeference Extension's published structure. It is **not** drawn from KFM repository content. Field shapes follow the upstream spec.
+### 9.1 Current truth table
+
+| Check | Pass proves | Does not prove |
+|---|---|---|
+| Schema meta-validation | Valid Draft 2020-12 schema | IIIF conformance |
+| Fixture polarity | Declared cases resolve correctly | Live behavior |
+| Annotation SHA-256 | Embedded fixture text matches digest | Remote identity/JSON-LD equivalence |
+| GCP parity | Declared count matches list | Warp fitness/GCP truth |
+| Closed mask | Basic closure/nondegeneracy | Full selector conformance |
+| Rights/CARE declarations | Expected HOLD/DENY | Authentic rights/consent |
+| Plugin declarations | Coherent fields | Supply-chain/runtime admission |
+| Public-boundary declarations | Candidate says no RAW/unreleased fetch | Deployment isolation |
+| No-network source scan | Validator lacks listed imports | Runtime/repo-wide isolation |
+| Focused workflow | Tests/fixtures/receipt ran at PR #2077 exact head | Current-main aggregate health/release |
+
+Current focused commands:
+
+```bash
+python -m pytest -q tests/map/test_iiif_historic_overlay_readiness.py
+python tools/validators/map/validate_iiif_historic_overlay_readiness.py --fixtures
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/genrec-iiif-historic-overlay-readiness-20260806.json \
+  --repo-root .
+```
+
+They must not be marketed as a general IIIF validator or publication gate.
+
+### 9.2 Independent maturity axes
+
+| Axis | Current result |
+|---|---|
+| Path present | Yes—two case-colliding pages |
+| Upstream reviewed | Yes—2026-08-18 snapshot |
+| KFM profile adopted | No/unknown |
+| Fixture contract/schema | Yes |
+| Focused fixture validation | Yes at merged PR #2077 exact head |
+| Live source admitted | No evidence |
+| Live capture/parser | No supported implementation established |
+| Rights/CARE evaluation | No authenticated IIIF path |
+| Georeference execution | No |
+| Allmaps runtime | No supported implementation established |
+| Evidence Drawer/release flow | No |
+| External interoperability | No |
+| Correction/rollback rehearsal | No IIIF release exists |
+
+Graduation should proceed: documentation -> profile correction -> captured-byte parser fixtures -> source-family decision -> no-network adapter -> evidence/quality binding -> policy/review -> renderer adapter -> released synthetic proof -> live pilot -> interoperability evidence.
+
+---
+
+<a id="10-case-collision"></a>
+
+## 10. Case collision
+
+Confirmed paths:
+
+```text
+docs/standards/IIIF.md
+docs/standards/iiif.md
+```
+
+They overlap in identity and responsibility but differ in content. This creates a case-insensitive checkout hazard.
+
+Current disposition:
+
+- update the requested uppercase path only;
+- do not declare either sole canonical authority;
+- do not rename/delete/redirect;
+- hold migration until inbound links, fragments, generated indexes, external consumers, and case-insensitive checkout behavior are inventoried.
+
+A later atomic migration must choose identity through accepted authority, preserve unique content and legacy fragments, repair links/generators/tests/receipts, record supersession, prove case-safe checkout, and define rollback.
+
+---
+
+<a id="11-backlog-and-next-slice"></a>
+
+## 11. Backlog and next slice
+
+| Item | Status | Closure evidence |
+|---|---|---|
+| Upper/lowercase identity | HOLD | Accepted disposition + reference/fragment inventory + migration plan |
+| Presentation 4 vocabulary | NEEDS VERIFICATION | Contract/schema/fixtures/tests or explicit unsupported behavior |
+| Canonical rights URIs | NEEDS VERIFICATION | Reviewed acceptance/canonicalization rule and fixtures |
+| Three-GCP warp readiness | NEEDS VERIFICATION | Explicit valid-vs-warp-ready model and tests |
+| JSON-LD strategy | OPEN | Vendored/pinned contexts or another deterministic design |
+| Overlay object family | OPEN | ADR/contract decision showing need |
+| Source family/product | DEFERRED | Accepted archive product, terms, owner, SourceDescriptor, fixtures |
+| Authorization Flow | OPEN | Security/identity decision and threat model |
+| Allmaps dependency | OPEN | Exact version, license/SBOM/security/accessibility admission |
+| Evidence binding | OPEN | Synthetic EvidenceRef-to-EvidenceBundle closure |
+| Runtime/release | OPEN | Governed adapter, synthetic release, correction/rollback rehearsal |
+
+### Smallest coherent implementation follow-up
+
+A bounded correction packet should:
+
+1. decide/test canonical rights URI handling;
+2. enforce or explicitly model the three-GCP warp-readiness threshold;
+3. update Presentation 4 release-candidate vocabulary while remaining fail-closed;
+4. preserve compatible fixtures;
+5. update contract, schema, validator, tests, workflow paths if needed, and generated receipt together; and
+6. keep authority/public-use booleans false.
+
+It should not activate a source, plugin, or public route.
+
+---
+
+<a id="12-references-terms-and-rollback"></a>
+
+## 12. References, terms, and rollback
+
+### 12.1 KFM references
+
+- [`docs/standards/README.md`](./README.md)
+- [`docs/standards/iiif.md`](./iiif.md) — conflicting sibling; not superseded here
+- [`STAC.md`](./STAC.md), [`DCAT.md`](./DCAT.md), [`PROV.md`](./PROV.md), [`DUBLIN-CORE.md`](./DUBLIN-CORE.md), [`ARCHIVAL-STANDARDS.md`](./ARCHIVAL-STANDARDS.md)
+- [`directory-rules.md`](../doctrine/directory-rules.md)
+- [`map-shell.md`](../architecture/map-shell.md)
+- [`loc-iiif-presentations.md`](../sources/catalog/loc/loc-iiif-presentations.md)
+- [`iiif_historic_overlay_readiness.md`](../../contracts/map/iiif_historic_overlay_readiness.md)
+- [`iiif_historic_overlay_readiness.schema.json`](../../schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json)
+- [`georeference_transform_quality.md`](../../contracts/map/georeference_transform_quality.md)
+- [`georeference_spatial_distribution.md`](../../contracts/map/georeference_spatial_distribution.md)
+- [`connectors/loc/README.md`](../../connectors/loc/README.md)
+
+### 12.2 Official sources
+
+Accessed 2026-08-18:
+
+- [IIIF APIs](https://iiif.io/api/)
+- [Image API 3.0](https://iiif.io/api/image/3.0/)
+- [Presentation API 3.0](https://iiif.io/api/presentation/3.0/)
+- [Presentation API 4.0](https://iiif.io/api/presentation/4.0/)
+- [Authorization Flow 2.0](https://iiif.io/api/auth/2.0/)
+- [Change Discovery 1.0](https://iiif.io/api/discovery/1.0/)
+- [Content Search 2.0](https://iiif.io/api/search/2.0/)
+- [Content State 1.0](https://iiif.io/api/content-state/1.0/)
+- [Extension registry](https://iiif.io/api/extension/)
+- [Georeference Extension](https://iiif.io/api/extension/georef/)
+- [Allmaps annotation](https://allmaps.org/docs/packages/annotation/)
+- [Allmaps MapLibre](https://allmaps.org/docs/packages/maplibre/)
+- [Allmaps WarpedMapLayer](https://allmaps.org/docs/packages/warpedmaplayer/)
+
+### 12.3 Terms
+
+| Term | Bounded meaning |
+|---|---|
+| Manifest | Presentation resource describing one compound object |
+| Canvas | Virtual presentation surface/page |
+| Annotation | Web Annotation associating content/meaning with a target |
+| Image Service | Parameterized pixel-delivery endpoint family |
+| Georeference Annotation | Pattern connecting resource coordinates to WGS84 coordinates |
+| GCP | Ground control point pairing resource and geographic coordinates |
+| Resource mask | Polygon/rectangle selecting cartographic image area |
+| `navPlace` | Earthbound geographic navigation extension |
+| WarpedMapLayer | Allmaps MapLibre custom layer for georeferenced IIIF images |
+| Readiness assessment | KFM fixture declaration check; not conformance/policy/release |
+| Transform-quality assessment | Synthetic affine fit/residual calculation |
+| Spatial-distribution assessment | Synthetic GCP coverage/extrapolation calculation |
+
+### 12.4 Illustrative annotation
+
+Illustrative only; validate against the official extension:
 
 ```json
 {
   "@context": [
-    "http://www.w3.org/ns/anno.jsonld",
-    "http://iiif.io/api/extension/georef/1/context.json"
+    "http://iiif.io/api/extension/georef/1/context.json",
+    "http://iiif.io/api/presentation/3/context.json"
   ],
+  "id": "https://example.invalid/annotation/georef-001",
   "type": "Annotation",
-  "id": "https://example.org/georef/annotation-001",
   "motivation": "georeferencing",
   "target": {
     "type": "SpecificResource",
     "source": {
-      "id": "https://iiif.example.org/iiif/3/historic-map-001",
+      "id": "https://example.invalid/iiif/3/map-001",
       "type": "ImageService3",
       "height": 9000,
       "width": 12000
     },
     "selector": {
       "type": "SvgSelector",
-      "value": "<svg ...polygonal resource mask...></svg>"
+      "value": "<svg><polygon points=\"0,0 12000,0 12000,9000 0,9000\" /></svg>"
     }
   },
   "body": {
     "type": "FeatureCollection",
-    "transformation": {
-      "type": "polynomial",
-      "options": { "order": 2 }
-    },
+    "transformation": {"type": "polynomial", "options": {"order": 1}},
     "features": [
       {
         "type": "Feature",
-        "properties": {
-          "resourceCoords": [3421, 5678]
-        },
-        "geometry": {
-          "type": "Point",
-          "coordinates": [-98.4842, 38.8403]
-        }
+        "properties": {"resourceCoords": [1000, 1000]},
+        "geometry": {"type": "Point", "coordinates": [-98.4, 38.8]}
+      },
+      {
+        "type": "Feature",
+        "properties": {"resourceCoords": [11000, 1000]},
+        "geometry": {"type": "Point", "coordinates": [-97.4, 38.8]}
+      },
+      {
+        "type": "Feature",
+        "properties": {"resourceCoords": [1000, 8000]},
+        "geometry": {"type": "Point", "coordinates": [-98.4, 37.8]}
       }
     ]
   }
 }
 ```
 
-</details>
+KFM source identity, exact-byte digests, rights/CARE, quality, evidence, policy, review, release, correction, and rollback remain separate objects.
 
-<details>
-<summary><strong>B. IIIF terminology cheatsheet</strong></summary>
+### 12.5 Modernization and rollback
 
-| Term | Short definition |
-|---|---|
-| **Manifest** | The compound-object description (Presentation API). One Manifest typically = one digital object. |
-| **Canvas** | A virtual page or surface inside a Manifest. |
-| **Annotation** | A statement attached to a Canvas (image, text, georeference, etc.), per W3C Web Annotation. |
-| **Annotation Page / List** | A collection of Annotations. |
-| **info.json** | The Image API descriptor for a single image: dimensions, supported features, profile. |
-| **profile** | A named feature-set conformance level on the Image API. |
-| **Range** | A logical grouping of Canvases (e.g., a chapter). |
-| **navPlace** | Presentation extension placing a Manifest / Canvas on a web map. |
-| **Georeference Annotation** | Annotation per the IIIF Georeference Extension carrying GCPs, mask, and transform metadata. |
-| **GCP** | Ground Control Point — pixel-to-spatial coordinate pair used to warp the image. |
-| **WarpedMapLayer** | Allmaps' MapLibre plugin that consumes a Georeference Annotation and warps the IIIF image client-side. |
+The prior purpose, IIIF model, georeference/Allmaps discussion, lifecycle, provenance, rights, validation, anti-patterns, open questions, terminology, example, and placement guidance are retained or reconciled. Stale API status, proposal-only repo posture, placeholder owners/build badge, missing links, and false single-axis “conformance” framing are replaced.
 
-</details>
-
-<details>
-<summary><strong>C. Why this file lives at <code>docs/standards/IIIF.md</code></strong> (Directory Rules basis)</summary>
-
-Directory Rules §6.1 lists `docs/standards/` as the home for "external standards KFM conforms to (STAC, DCAT, PROV, etc.)" — exactly the responsibility this document carries.
-
-Per §3 (the Deeper Rule), a folder appears at repo root only if it carries one or more repo-wide responsibilities; `docs/` carries the "governs truth, evidence, release, or policy" responsibility for the human-facing control plane. `docs/standards/` is therefore the right responsibility root for a conformance document like this one.
-
-This file is **not**:
-
-- A README-like landing doc (no directory tree, no inputs / exclusions section); it is a standard doc with the KFM Meta Block v2.
-- A doctrine doc — it does not define a KFM invariant. It documents an external standard and how KFM conforms.
-- A schema or policy file — those live under `schemas/contracts/v1/` and `policy/` respectively, with this doc as their human-facing reference.
-
-The filename uses the uppercase acronym (`IIIF.md`) as requested in the task. Whether the surrounding `docs/standards/` folder uses uppercase or lowercase filenames is **NEEDS VERIFICATION** against the live repo; rename if local convention says otherwise (an alternate is `iiif.md`).
-
-</details>
-
-<details>
-<summary><strong>D. External sources consulted</strong></summary>
-
-External sources consulted are listed inline in Section 2 of the change notes that accompany this draft (and in `` tags throughout the body). The triggers were:
-
-- IIIF spec versions and adopted extensions (**version-sensitive external standards**).
-- The Georeference Extension and Allmaps technical surface (**current syntax / behavior of external tools the doc must describe accurately**).
-
-No external sources were consulted for any KFM-specific claim (repo state, paths, schemas, policy enforcement). Those remain governed by project knowledge and labeled PROPOSED / UNKNOWN / NEEDS VERIFICATION as appropriate.
-
-</details>
+This is one documentation file. Before merge, close the draft PR and abandon the branch. After merge, revert the content commit or restore prior blob `699555ea1b37c28dceb932aab247cb90bbeaadc2`. No source, data, schema, dependency, runtime, cache, release, or publication cleanup is required.
 
 ---
 
-**Related docs:** [Directory Rules](../doctrine/directory-rules.md) · [Authority Ladder](../doctrine/authority-ladder.md) · [Truth Posture](../doctrine/truth-posture.md) · [Trust Membrane](../doctrine/trust-membrane.md) · [Lifecycle Law](../doctrine/lifecycle-law.md) · [Map Shell](../architecture/map-shell.md) · STAC _(TODO)_ · DCAT _(TODO)_ · PROV _(TODO)_
-
-**Last updated:** 2026-05-14 · [Back to top ↑](#iiif--international-image-interoperability-framework)
+**Last evidence review:** 2026-08-18 against `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40` · [Back to top](#top)
