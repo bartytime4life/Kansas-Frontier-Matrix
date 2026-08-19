@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/architecture-ui-review-console
+doc_id: kfm://doc/architecture-review-console
 title: Review Console — Architecture
 type: architecture-reference
 version: v2.0
