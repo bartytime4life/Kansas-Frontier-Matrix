@@ -41,12 +41,14 @@ related:
   - ../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py
   - ../../../.github/workflows/map-context-evidence-drawer-admission.yml
   - ../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json
+  - ../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json
   - ../../../apps/explorer-web/src/adapters/GovernedClient.ts
 tags: [kfm, architecture, ui, map-context, evidence-drawer, anticorruption-layer, decision-envelope, finite-outcomes, no-network, fail-closed]
 notes:
   - "v2.0-draft replaces the proposal-era summary with a current repository-grounded architecture reference at the same path."
   - "The helper and its focused fixture/test/validator/workflow packet are present, but no apps/ caller or deployed route invocation is established."
   - "The original feature receipt remains immutable process memory; it is not updated or treated as review, release, or publication authority."
+  - "This maintenance slice repoints the path-scoped workflow from the immutable 2026 feature receipt to the current docs-and-workflow authoring receipt; validation scope and permissions remain unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -171,8 +173,9 @@ The helper is an **anticorruption adapter** between bounded models. It must not 
 | Fixture packet | [`cases.json`](../../../fixtures/ui/map_context_evidence_drawer_admission/cases.json) defines exactly eight expected cases. | Synthetic declarations only. |
 | Replay validator | The UI validator safely parses bounded local JSON, restricts fixture paths, replays cases, and validates candidate shape. | No evidence dereference, policy execution, or release lookup. |
 | Focused tests | Tests cover exact outcomes, schema conformance, deterministic replay, immutability, no content copying, ambiguous selection, governance overclaim, unpublished declaration, invalid build inputs, and socket denial. | Source-level assertions; exact-current-head execution remains a separate check. |
-| Workflow | A path-scoped workflow uses read-only contents permission, pinned actions, Python 3.11, the repository lock installer, source validators, focused tests, case replay, and receipt validation. | Workflow configuration is not proof of required-check coupling or a current passing run. |
+| Workflow | A path-scoped workflow uses read-only contents permission, pinned actions, Python 3.11, the repository lock installer, source validators, focused tests, case replay, and current authoring-receipt validation. | The maintenance slice changes only the receipt target and digest reporting; executable admission scope and permissions are unchanged. |
 | Original generated receipt | The merged feature packet has an immutable authoring receipt with human review recorded as `pending`. | Process memory only; not approval, proof, release, or publication authority. |
+| Current maintenance receipt | The docs-and-workflow receipt binds the current documentation and path-scoped workflow bytes with human review recorded as `pending`. | Authoring provenance only; not approval, proof, release, or publication authority. |
 
 ### Current HOLDs
 
@@ -498,8 +501,8 @@ Accepted ADR-0029 adopts Directory Rules v2 and makes `docs/` the human-readable
 | Synthetic examples | `fixtures/ui/map_context_evidence_drawer_admission/` | Existing eight-case packet. |
 | Operational fixture replay | `tools/validators/ui/` | Existing deterministic validator. |
 | Package behavior tests | `tests/packages/envelopes/` | Existing focused tests. |
-| Read-only hosted validation | `.github/workflows/` | Existing path-scoped workflow. |
-| AI authoring provenance | `data/receipts/generated/` | Existing immutable feature receipt plus a separate receipt for any new AI-authored documentation change. |
+| Read-only hosted validation | `.github/workflows/` | Existing path-scoped workflow; this maintenance slice updates only its current receipt pointer and digest reporting. |
+| AI authoring provenance | `data/receipts/generated/` | Immutable feature receipt plus a separate current docs-and-workflow receipt. |
 | Policy, evidence, review, release, correction, rollback | Their owning roots and object families | Not created or modified here. |
 
 The placement creates no new root and no parallel contract, schema, policy, evidence, source, registry, proof, receipt, release, correction, rollback, or publication authority.
@@ -533,7 +536,7 @@ python tools/validators/ui/validate_map_context_evidence_drawer_admission.py \
   --cases
 
 python tools/validators/validate_generated_receipt.py \
-  data/receipts/generated/<current-doc-receipt>.json \
+  data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json \
   --repo-root .
 ```
 
@@ -552,11 +555,24 @@ The current source files show that focused validation is designed to check:
 - no-network behavior;
 - generated-receipt integrity.
 
+### Exact-head maintenance repair
+
+The first hosted run for this maintenance pull request proved the source validators, all `10` focused tests, and all `8` exact replay cases, then failed only at generated-receipt integrity. The workflow was still validating the immutable 2026 feature receipt, whose original artifact set included the prior bytes of this documentation page. Updating the page therefore made that historical digest mismatch by design.
+
+The bounded repair is to:
+
+1. keep the original feature receipt immutable as lineage;
+2. point the path-scoped workflow at the current docs-and-workflow authoring receipt;
+3. bind both changed artifacts in that new receipt; and
+4. preserve the same permissions, input validators, focused tests, replay, no-network posture, and trust-boundary summary.
+
+This correction does not weaken the receipt gate. It restores the gate to the current authoring artifact set instead of rewriting history or pretending old bytes remain current.
+
 ### Needs verification for this documentation update
 
-- exact-head hosted outcomes after the draft pull request is opened;
+- exact-head hosted outcomes after the receipt-pointer repair;
 - whether every relevant aggregate workflow is triggered and completes;
-- whether any failure is introduced, inherited, or external;
+- whether any residual failure is introduced, inherited, or external;
 - required-check and branch/ruleset coupling;
 - human architecture, runtime, evidence, policy, release, accessibility, security, and validation review;
 - host-rendered Markdown appearance.
@@ -608,9 +624,10 @@ Documentation, a passing fixture, or a merged pull request cannot advance these 
 
 - The document ID, path, and H1 remain stable.
 - The original headings `Why this boundary exists`, `Inputs and output`, `Admission checks`, `Finite outcomes`, `Non-effects`, `Directory Rules basis`, `Validation`, and `Rollback` remain present so existing generated GitHub fragments continue to resolve.
-- No contract, schema, code, fixture, validator, test, workflow, package export, application, or runtime behavior changes in this documentation-only update.
+- No contract, schema, code, fixture, validator, test, package export, application, or runtime behavior changes in this maintenance slice.
+- The only workflow delta repoints authoring-receipt validation from the immutable original feature receipt to the current docs-and-workflow receipt and records deterministic artifact digests; its permissions and admission-validation scope remain unchanged.
 - The original feature receipt remains immutable and continues to describe the feature packet it hashed.
-- A new documentation receipt must bind only the newly authored document bytes and remain `human_review: pending` until an authorized reviewer acts.
+- The new docs-and-workflow receipt binds only the current documentation and workflow bytes and remains `human_review: pending` until an authorized reviewer acts.
 
 ### Documentation correction
 
@@ -638,12 +655,13 @@ Before merge:
 
 After an authorized merge:
 
-- revert the documentation commit or merge commit through a reviewed pull request;
+- revert the maintenance commits or merge commit through a reviewed pull request;
 - restore prior target blob `32a9d4da2d778014e88033ab205ba08491c43ca0`;
-- remove only the companion documentation authoring receipt introduced by the same change; and
+- restore the workflow's original historical-receipt validation target;
+- remove only the companion docs-and-workflow authoring receipt introduced by the same change; and
 - rerun the same Markdown, metadata, link, generated-receipt, topology, security, and aggregate checks.
 
-No data migration, source deactivation, lifecycle reprocessing, renderer rollback, API rollback, cache invalidation, release correction, withdrawal, public notice, or publication rollback is required because this update changes documentation and authoring provenance only.
+No data migration, source deactivation, lifecycle reprocessing, renderer rollback, API rollback, cache invalidation, release correction, withdrawal, public notice, or publication rollback is required because this update changes documentation, a validation receipt pointer, and authoring provenance only.
 
 [Back to top](#top)
 
@@ -663,5 +681,6 @@ No data migration, source deactivation, lifecycle reprocessing, renderer rollbac
 - [Focused package tests](../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py)
 - [Path-scoped workflow](../../../.github/workflows/map-context-evidence-drawer-admission.yml)
 - [Original feature authoring receipt](../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json)
+- [Current docs-and-workflow authoring receipt](../../../data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json)
 
 [Back to top](#top)

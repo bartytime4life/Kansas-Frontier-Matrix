@@ -45,6 +45,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  CURRENT_AUTHORING_RECEIPT: data/receipts/generated/genrec-map-context-evidence-drawer-admission-doc-workflow-20260819.json
   KFM_NO_NETWORK: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_INPUT: "1"
@@ -95,10 +96,19 @@ jobs:
           python -m pytest             tests/packages/envelopes/test_map_context_evidence_drawer_admission.py             -q --strict-config --strict-markers
           python tools/validators/ui/validate_map_context_evidence_drawer_admission.py             --cases
 
-      - name: Validate generated authoring receipt
+      - name: Record current maintenance artifact digests
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-map-context-evidence-drawer-admission-20260807.json             --repo-root .
+          sha256sum \
+            docs/architecture/ui/map-context-evidence-drawer-admission.md \
+            .github/workflows/map-context-evidence-drawer-admission.yml
+
+      - name: Validate current generated authoring receipt
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_generated_receipt.py \
+            "$CURRENT_AUTHORING_RECEIPT" \
+            --repo-root .
 
       - name: Record trust boundary
         if: always()
@@ -107,6 +117,7 @@ jobs:
             echo "### Map context to Evidence Drawer admission"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: existing input validators, selected-feature evidence binding, context expiry, declared release alignment, finite outcome propagation, DecisionEnvelope schema conformance, no-leak behavior, and authoring receipt integrity."
+            echo "- Scope: existing input validators, selected-feature evidence binding, context expiry, declared release alignment, finite outcome propagation, DecisionEnvelope schema conformance, no-leak behavior, and current authoring receipt integrity."
+            echo "- Historical receipt: the immutable 2026 feature receipt remains lineage and is not rewritten to match later documentation bytes."
             echo "- Boundary: a green result does not resolve evidence, evaluate policy, authenticate review, establish release state, authorize public use, or prove deployed API/UI invocation."
           } >> "$GITHUB_STEP_SUMMARY"
