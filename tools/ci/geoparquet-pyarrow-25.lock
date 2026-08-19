@@ -1,0 +1,3 @@
+--only-binary=:all:
+pyarrow==25.0.0 \
+    --hash=sha256:5d1dbf24e151042f2fa3c129563f65d66674128868496fb008c4272b16bdf778
