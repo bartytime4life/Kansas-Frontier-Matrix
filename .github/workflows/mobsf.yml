@@ -1,36 +1,44 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
+# KFM MobSF static mobile-source scan.
+# The workflow is read-only except for SARIF upload, uses immutable action pins,
+# never persists checkout credentials, and has one bounded job timeout.
 name: MobSF
 
-on:
+"on":
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
   schedule:
-    - cron: '36 8 * * 4'
+    - cron: "36 8 * * 4"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: mobsf-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   mobile-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    runs-on: ubuntu-latest
-
+      actions: read
+      contents: read
+      security-events: write
     steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup python
-        uses: actions/setup-python@v7
+      - name: Check out the triggering revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python-version: 3.8
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.8"
 
       - name: Run mobsfscan
         uses: MobSF/mobsfscan@2659f2ac6d185f0c60ce2eb754f5f48b683f73fb
@@ -38,6 +46,7 @@ jobs:
           args: . --sarif --output results.sarif || true
 
       - name: Upload mobsfscan report
-        uses: github/codeql-action/upload-sarif@v4
+        if: always() && hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4.37.7
         with:
           sarif_file: results.sarif
