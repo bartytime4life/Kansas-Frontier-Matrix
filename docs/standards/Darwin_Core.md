@@ -191,7 +191,7 @@ A Darwin Core-valid record can still be inadmissible, under-supported, rights-re
 | Current vocabulary version | [`http://rs.tdwg.org/version/dwc/2026-05-26`](http://rs.tdwg.org/version/dwc/2026-05-26) | Candidate version pin for any future KFM mapping profile |
 | Conceptual Model | [`http://rs.tdwg.org/dwc/doc/cm/2026-05-26`](http://rs.tdwg.org/dwc/doc/cm/2026-05-26) | Technology-neutral class relationship guidance |
 | Data Package Guide | [`http://rs.tdwg.org/dwc/doc/dp/2026-05-26`](http://rs.tdwg.org/dwc/doc/dp/2026-05-26) | Normative DwC-DP package requirements except sections marked non-normative |
-| Text Guide | [`http://rs.tdwg.org/dwc/doc/text/2023-09-13`](http://rs.tdwg.org/dwc/doc/text/2023-09-13) | Current dated guidance for Darwin Core text / archive implementation |
+| Text Guide | [`http://rs.tdwg.org/dwc/terms/guides/text/2023-09-13`](http://rs.tdwg.org/dwc/terms/guides/text/2023-09-13) | Current dated guidance for Darwin Core text / archive implementation |
 | Humboldt Extension | [`http://rs.tdwg.org/dwc/doc/eco/2024-03-26`](http://rs.tdwg.org/dwc/doc/eco/2024-03-26) | Official vocabulary for ecological inventories and survey context; KFM adoption not established |
 
 The official term list contains recommended terms from `dwc:`, `dwciri:`, `dc:`, and `dcterms:` namespaces. Deprecation and replacement metadata matter: a KFM profile must not treat every historical term as current merely because it can be resolved.
