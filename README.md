@@ -6,7 +6,7 @@ version: v2.0.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-08-01
+updated: 2026-08-19
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -101,7 +101,7 @@ The following are narrow statements about bytes and configured entry points in t
 
 | Surface | Confirmed repository state | Evidence boundary |
 |---|---|---|
-| Python distribution | [pyproject.toml](pyproject.toml) defines a Python 3.11+ `kfm` scaffold and packages [src/kfm](src/kfm/) | The manifest explicitly says the namespace is a scaffold, not a public API or release authority |
+| Python distribution | [pyproject.toml](pyproject.toml) declares a Python 3.11+ `kfm` scaffold and still references `src/kfm`, while the current physical root has no `src/` directory | The manifest/path mismatch is configuration drift; a declaration is not proof of a present package, working build, public API, or release authority |
 | Governed API | [apps/governed-api](apps/governed-api/) contains an application README, source, and tests | Presence is not deployment or public-release evidence |
 | Explorer Web | [apps/explorer-web](apps/explorer-web/) contains a Vite/TypeScript application, tests, and its own README | Presence is not hosted-service evidence |
 | Schema and contract baseline | `make validate` invokes the aggregate validators plus schema and contract tests | Passing proves only the configured check scope |
@@ -111,7 +111,7 @@ The following are narrow statements about bytes and configured entry points in t
 
 ## Repository map
 
-This direct-child map was verified at the evidence checkpoint listed in [Last evidence review](#last-evidence-review). Child READMEs own deeper detail.
+This direct-child map reflects the physical root at `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb`. Conditional root policy is described below and does not imply physical presence. Child READMEs own deeper detail.
 
 ~~~text
 Kansas-Frontier-Matrix/
@@ -137,7 +137,6 @@ Kansas-Frontier-Matrix/
 ├── runtime/               # bounded runtime composition and local adapters
 ├── schemas/               # machine-checkable shapes
 ├── scripts/               # thin non-authoritative operator wrappers
-├── src/                   # conditional root distribution facade; decision held
 ├── tests/                 # executable conformance evidence
 └── tools/                 # validators, generators, builders, and operators
 ~~~
@@ -146,7 +145,7 @@ The 22 canonical or platform roots are defined by [Directory Rules §7](docs/doc
 
 - `artifacts/` as a compatibility and generated-output transition;
 - `catalog/` as a deprecated containment root frozen to new writes;
-- `src/` as conditional and unresolved while the minimal Python facade remains in place.
+- `src/` as conditional; it is absent from the current physical root, and this README does not authorize creating it or resolving the separate packaging drift.
 
 Do not create a new root, revive a deprecated root, or turn a compatibility path into a writable authority without an adopted decision and migration plan.
 
@@ -270,6 +269,7 @@ This same-path replacement preserves `kfm://doc/root-readme` while restoring the
 | Base commit | `86985a48b15a3ad3a26fbfdcbfc7a09ad1779bd0` |
 | Review method | Complete prior root README read; direct-child inventory; governing Directory Rules and ADR review; current manifests, Makefile, CODEOWNERS, contribution, security, app, validator, and workflow entry-point inspection |
 | Confirmed scope | Root identity, current direct children, linked file presence, configured commands, and stated governance boundaries |
+| Focused topology correction | 2026-08-19 at `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb`: reconciled physical root presence, conditional `src/` policy, and the still-stale `pyproject.toml` path declaration without changing implementation |
 | Not proved | Full repository correctness, every workflow result, deployment, runtime operation, external services, release, promotion, publication, or administrator settings |
 
 Re-review this README when root topology, authority, package metadata, owner routing, public exposure, validation entry points, or the governing Directory Rules change.

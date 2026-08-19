@@ -17,7 +17,7 @@ current_path: docs/architecture/map-master/2D_3D_PARITY.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: ad999842764bd5e361c5b73add7ae04b64bb5c5a
+  base_commit: 996b7e16d46a703c9436b26ef74ed0ecaf87796a
   target_prior_blob: c74f083feb456959d41e4c70e039a240bf4f6387
   directory_rules_decision: ADR-0029 accepted
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -95,7 +95,7 @@ notes:
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@ad999842764bd5e361c5b73add7ae04b64bb5c5a` |
+| **Evidence snapshot** | `main@996b7e16d46a703c9436b26ef74ed0ecaf87796a` |
 | **Tracked path** | `docs/architecture/map-master/2D_3D_PARITY.md` |
 | **Owning root** | `docs/` — human-readable architecture explanation |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts Directory Rules v2 |
