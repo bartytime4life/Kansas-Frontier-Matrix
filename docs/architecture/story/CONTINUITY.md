@@ -1,51 +1,162 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-story-continuity
 title: Story Subsystem — Continuity Notes
-type: standard
-version: v1
-status: draft
-owners: Docs steward + Story subsystem owner (TODO: confirm CODEOWNERS)
+type: architecture-reference
+version: v2.0.0
+prior_version: v1
+status: draft; repository-grounded; implementation-partial; projection-only; no-live-story-route; no-publication
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "Story, UI, evidence, policy, release, accessibility, security, and independent-review stewardship NEEDS VERIFICATION"
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-19
 policy_label: public
+owning_root: docs/
+current_path: docs/architecture/story/CONTINUITY.md
+responsibility: >-
+  Explain which Story lineage is retained, which repository-present public-safe
+  projection and player slices now exist, which continuity obligations remain
+  unimplemented, and how Story changes graduate, correct, or roll back without
+  creating truth, policy, review, release, deployment, or publication authority.
+truth_posture: >-
+  CONFIRMED commit-pinned Story contracts, schemas, synthetic fixtures,
+  validators, workflows, app-local consumer, policy stub, route absence, and
+  active document consumers; PROPOSED future governed playback and integration;
+  UNKNOWN deployed behavior and operational release; cite-or-abstain.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: d639f9ff40288d12244cd7bc84af538652f6dfb1
+  target_prior_blob: 37ead349bfe0c0ec77634d8c77197dfe4849362c
+  story_readme_blob: e5b22c5ad324dfbbd4482ca4da0c854e1bc46260
+  story_player_architecture_blob: 526d4e0500b686f18a05426059471d5f6cc65b69
+  ui_continuity_blob: 2bc35905935d289fc4a7c9548ed03f0e10ebb7ab
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_index_blob: 419ebd60db28404edb0d363125c85f6f15deaec0
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  story_manifest_contract_blob: e0365d00a36f1aef57ed7dd1a051b4c70dec09b2
+  story_node_contract_blob: 694cbe4833d785f25f55f3def2b8fdfad7b98b78
+  story_manifest_schema_blob: 67fa2fae5534ffc7a277fae8adfcb9afb81e9fc0
+  story_node_schema_blob: fd2e40bb8a5167bb592dbb9c42e0219565bf4b48
+  story_manifest_fixture_blob: 98e1ce24cacae42a19134c45ed3158a724282684
+  story_manifest_workflow_blob: 6ef97ac0adb3207d92ed8e421a022e578825ce7d
+  story_node_workflow_blob: 8e30f4ceee7dac109a1e53b2aba00281c9721bfd
+  story_player_entry_blob: 6c3b3e63b28027e9f21f859beed791e2dd16879d
+  story_player_test_blob: 54195d2676ca6f125b8c661c5c52c3adb4c2b16a
+  story_player_current_implementation_blob: 7566f69f0a7ff87b461b54098fb00f0c41deed63
+  story_policy_readme_blob: 2de5f876fdbd481254d493e967613c4ba2a7647d
+  story_policy_stub_blob: 9f3791db0da8a91ef3d10c7152fc738eb53139c3
+  noncanonical_story_manifest_lane_blob: d602f7438dd8c3a56d64164962acfe3c33a7841b
+  open_pull_requests_touching_target_at_preflight: 0
 related:
-  - docs/architecture/story/README.md
-  - docs/architecture/ui/CONTINUITY_NOTES.md
-  - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-story-node-3d-boundary.md
-  - contracts/OBJECT_MAP.md
-  - schemas/contracts/v1/story/story_manifest.schema.json
-  - schemas/contracts/v1/story/story_node.schema.json
-  - tests/fixtures/story/README.md
-  - policy/story/README.md
-tags: [kfm, architecture, story, continuity, narrative, story-node, story-manifest, 3d, cesium]
+  - README.md
+  - ../ui/STORY_PLAYER.md
+  - ../ui/CONTINUITY_NOTES.md
+  - ../ui/EVIDENCE_DRAWER.md
+  - ../ui/MAP_RUNTIME_BOUNDARY.md
+  - ../document-convergence-plan.md
+  - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../adr/INDEX.md
+  - ../../doctrine/directory-rules.md
+  - ../../../contracts/ui/story_manifest.md
+  - ../../../contracts/ui/story_node.md
+  - ../../../schemas/contracts/v1/ui/story_manifest.schema.json
+  - ../../../schemas/contracts/v1/ui/story_node.schema.json
+  - ../../../fixtures/ui/story_manifest/cases.json
+  - ../../../tools/validators/ui/validate_story_manifest.py
+  - ../../../tools/validators/ui/validate_story_node.py
+  - ../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - ../../../apps/explorer-web/src/features/story_player/index.tsx
+  - ../../../apps/explorer-web/tests/story-player.test.ts
+  - ../../../policy/story/README.md
+  - ../../../data/manifests/story/README.md
+tags:
+  - kfm
+  - architecture
+  - story
+  - continuity
+  - story-manifest
+  - story-node
+  - story-player
+  - evidence
+  - finite-outcomes
+  - correction
+  - 2d-only
 notes:
-  - All paths are PROPOSED until verified against mounted-repo evidence.
-  - Filename CONTINUITY.md follows the user-supplied path; sibling subsystems use CONTINUITY_NOTES.md — reconcile via ADR or DRIFT_REGISTER entry.
+  - "Same-path documentation modernization only; no move, rename, alias, contract, schema, policy, code, workflow, data, release, deployment, or publication transition."
+  - "The current executable Story surface is a closed synthetic public-safe projection family plus a defensive 2D-only app-local consumer of an already-governed StoryManifest."
+  - "No Story API route, StoryNode body dereference, EvidenceBundle resolution, Story policy evaluation, map/time/Drawer composition, renderer execution, 3D handoff, release, deployment, or publication is established."
+  - "The former story-specific schema and fixture paths are replaced by confirmed UI-family homes; data/manifests/story remains non-canonical compatibility documentation."
+  - "Legacy major-section anchors are preserved."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="story-subsystem--continuity-notes"></a>
 
 # Story Subsystem — Continuity Notes
 
-> How prior Story Node doctrine, conditional-3D posture, and PDF lineage are carried forward into the governed Story subsystem without being mistaken for mounted implementation.
+> **Operating rule.** Story continuity is the survival of evidence, finite outcome,
+> public-safe trust posture, correction lineage, and accessibility context across
+> narrative ordering. Story order, polished prose, map state, screenshots, motion,
+> or a `canPlay` flag never creates authority.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![authority](https://img.shields.io/badge/authority-implementation--bearing-blueviolet)
-![truth](https://img.shields.io/badge/repo--state-PROPOSED-orange)
-![lineage](https://img.shields.io/badge/lineage-Whole--UI%20%2B%20Governed%20AI%20Expansion-informational)
-![policy](https://img.shields.io/badge/policy-public-brightgreen)
-![last--updated](https://img.shields.io/badge/last--updated-2026--05--14-lightgrey)
-
-| Status | Owners | Last reviewed |
-|---|---|---|
-| Draft (PROPOSED — repo not mounted in this session) | Docs steward + Story subsystem owner *(TODO: confirm CODEOWNERS)* | 2026-05-14 |
+[![status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-checkpoint)
+[![projection proof: bounded](https://img.shields.io/badge/projection%20proof-bounded-2da44e?style=flat-square)](#3-continuity-classifications)
+[![Story consumer: 2D only](https://img.shields.io/badge/Story%20consumer-2D%20only-0969da?style=flat-square)](#4-narrative-continuity-invariants)
+[![Story route: absent](https://img.shields.io/badge/Story%20route-absent-b42318?style=flat-square)](#7-boundary-diagram)
+[![Story policy: non-enforcing](https://img.shields.io/badge/Story%20policy-non--enforcing-b42318?style=flat-square)](#8-schema-contract-and-policy-dependencies)
+[![3D: HOLD](https://img.shields.io/badge/3D-HOLD-b42318?style=flat-square)](#5-3d-handoff-continuity-rule)
+[![publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#current-repository-checkpoint)
 
 > [!IMPORTANT]
-> This document is **lineage and design pressure**, not a description of mounted repo state. Every concrete path, schema name, route, fixture, or test name below is **PROPOSED** until verified against current repository evidence per Directory Rules §2.5 and the Whole-UI + Governed AI Expansion Report §10.
+> **Current implementation is narrower than the prior continuity prose.** KFM
+> has closed, synthetic, public-safe `StoryNode` and `StoryManifest` projection
+> profiles and a deterministic app-local function that converts one
+> already-governed `StoryManifest` into a fail-closed 2D view model. It does not
+> fetch a story, dereference node bodies, resolve evidence, execute policy,
+> render a map, expose a Story route, release a Story artifact, or publish
+> narrative truth.
 
----
+> [!CAUTION]
+> **Continuity cannot upgrade trust.** A composite Story inherits the
+> least-permissive constituent posture. Missing, stale, unreleased, restricted,
+> superseded, malformed, or errored support withholds playback through
+> `ABSTAIN`, `DENY`, or `ERROR`; it is never repaired by narrative fluency.
+
+## Current repository checkpoint
+
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@d639f9ff40288d12244cd7bc84af538652f6dfb1` |
+| **Tracked path** | `docs/architecture/story/CONTINUITY.md` |
+| **Owning root** | `docs/` — human-readable cross-root architecture explanation |
+| **Placement authority** | Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the adopted [`Directory Rules v2`](../../doctrine/directory-rules.md) |
+| **Same-path result** | `PLACE` for this update: the path already exists, has five non-self repository consumers, and remains the Story continuity explanation |
+| **Structural disposition** | No move or rename. The earlier convergence-plan `HOLD` on possible history-lane migration is not silently resolved by this content update |
+| **Current Story object proof** | Closed synthetic UI-family `StoryNode` and `StoryManifest` projections with contracts, schemas, fixtures, validators, tests, and focused no-network workflows |
+| **Current app proof** | `resolveStoryPlayer()` defensively consumes one already-governed StoryManifest and emits a non-authoritative, 2D-only `StoryPlayerProjection` |
+| **Current live playback** | Not established; no transport, call-site composition beyond focused tests, node-body resolver, browser route, map, time, Drawer, or telemetry integration |
+| **Current Story policy** | `policy/story/` exists, but its Rego file is a non-enforcing proposal stub |
+| **Current Story API** | No Story route appears in the inspected direct Governed API route directory |
+| **Current renderer / 3D** | No renderer or Story-specific 3D decision is accepted; the current consumer is fixed to `mode: "2D"` and its test prohibits renderer imports |
+| **Release / publication** | None established |
+| **Review route** | `.github/CODEOWNERS` routes review to `@bartytime4life`; specialist stewardship and independent review remain **NEEDS VERIFICATION** |
+| **Change effect** | Documentation only |
+
+### Truth labels used here
+
+- **CONFIRMED** — exact repository bytes, accepted ADR-0029, current file or
+  directory presence, or bounded executable behavior visible in current code and
+  tests.
+- **PROPOSED** — future Story transport, playback, integration, policy, release,
+  export, renderer, or 3D behavior not established by the current evidence.
+- **UNKNOWN** — deployed behavior, external consumers, or operational state not
+  observable from the inspected repository surfaces.
+- **NEEDS VERIFICATION** — a concrete owner, decision, check, integration test,
+  runtime trace, release record, or public probe remains.
 
 ## Quick jump
 
@@ -63,430 +174,810 @@ notes:
 12. [Verification backlog](#12-verification-backlog)
 13. [Related docs](#13-related-docs)
 14. [Appendix A — Source lineage](#appendix-a--source-lineage)
-15. [Appendix B — PROPOSED file/folder anchors](#appendix-b--proposed-filefolder-anchors)
+15. [Appendix B — Current file and folder anchors](#appendix-b--proposed-filefolder-anchors)
+16. [Appendix C — No-loss modernization ledger](#appendix-c--no-loss-modernization-ledger)
 
 ---
+
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-This document records the **continuity rules** for the Story Node subsystem: the narrative surface that links datasets, scenes, 2D maps, timeline frames, and AI-generated insights into governed, evidence-bearing narrative units.
+This document owns the **continuity and lineage explanation** for the Story
+subsystem. It answers:
 
-It answers four questions:
+1. Which prior Story design gains remain useful?
+2. Which bounded Story profiles and consumer behavior are now present?
+3. Which continuity obligations remain unimplemented or held?
+4. How must a material Story change propagate, fail closed, correct, and roll
+   back?
 
-- What prior Story Node material is **kept** and how is it framed forward?
-- What is **deferred** (conditional 3D, Cesium runtime) and under what gate?
-- What invariants must a Story Node preserve as it moves the user through camera, time, layers, and panels?
-- What is the rollback target if Story routes, the StoryManifest schema, or 3D handoff destabilize evidence continuity?
+### In scope
 
-It is **not** a route map, state-ownership doc, or boundary doc — those live as siblings under `docs/architecture/story/` *(PROPOSED)*. It also is **not** the StoryManifest schema definition; the canonical machine shape lives under `schemas/contracts/v1/story/` *(PROPOSED, per ADR-0001 schema-home convention).*
+- the current UI-family `StoryNode` and `StoryManifest` projection profiles;
+- their least-permissive trust inheritance and finite outcomes;
+- the current app-local `resolveStoryPlayer()` consumer;
+- evidence, citation, rights, sensitivity, review, release, freshness,
+  correction, and supersession continuity;
+- lineage from older Story, screenshot, preview, map, timeline, and 3D ideas;
+- current placement drift and authority boundaries;
+- dependency-ordered graduation and rollback.
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+### Out of scope
+
+This file does not:
+
+- define a Story contract or JSON Schema;
+- execute policy or evidence resolution;
+- define a public Story API route;
+- implement browser playback, map/time state, the Evidence Drawer, telemetry,
+  export, renderer, or 3D behavior;
+- accept an ADR or decide renderer/package ownership;
+- approve a Story release, correction, withdrawal, rollback, deployment, or
+  publication.
+
+### Relationship to sibling pages
+
+| Page | Responsibility |
+|---|---|
+| [`README.md`](./README.md) | Story subsystem architecture landing page and maturity overview |
+| [`../ui/STORY_PLAYER.md`](../ui/STORY_PLAYER.md) | Current Story Player UI architecture and app-consumer boundary |
+| [`../ui/CONTINUITY_NOTES.md`](../ui/CONTINUITY_NOTES.md) | Cross-surface UI continuity, including map, Drawer, Focus, Story, export, and release transitions |
+| This page | Story-specific lineage, retained invariants, current/future classification, propagation, and rollback |
+
+[Back to top](#top)
 
 ---
+
+<a id="2-authority-and-source-basis"></a>
 
 ## 2. Authority and source basis
 
-Per the project's authority order *(KFM core invariants → accepted ADRs → Directory Rules → per-root READMEs → dossiers → mounted-repo convention)*, this document is **doctrine carried forward from indexed lineage**, not a description of current code. Its claims are bounded accordingly.
+### Authority order
 
-| Source class | Document | Role here |
+1. KFM trust, lifecycle, evidence, public-boundary, correction, and rollback
+   invariants.
+2. Accepted, unsuperseded ADRs within their scope.
+3. Adopted Directory Rules for placement.
+4. Contracts, schemas, policy, current code/configuration, tests/workflows,
+   receipts/proofs, and release records for their owned questions.
+5. Current commit-pinned repository evidence.
+6. This explanatory document.
+7. Older manuals, atlases, packets, screenshots, and prior proposals as lineage.
+
+Only `ADR-0029` is accepted in the current numbered ADR index. Renderer,
+MapLibre-boundary, schema-home, receipt/catalog separation, and other numbered
+ADRs remain proposed unless their source records and index later change.
+
+### Directory Rules basis
+
+The artifact is a human architecture explanation under `docs/`. It defines no
+machine shape, policy rule, data instance, release decision, or executable
+behavior. The existing path is therefore placement-safe for a same-path content
+update.
+
+**Placement outcome for this change: `PLACE`.** The content update does not
+resolve the architecture-convergence plan's separate structural `HOLD`; a future
+move or retirement would still require identity, inbound-link, no-loss,
+consumer, destination, validation, compatibility, and rollback closure.
+
+### Evidence basis
+
+| Evidence family | What it supports | Limit |
 |---|---|---|
-| Doctrinal baseline | **Whole-UI + Governed AI Expansion Report** | Defines the Story Node design posture, schema-first approach, conditional 3D, and update-propagation matrix that names this continuity-notes file. |
-| Doctrinal baseline | **Directory Rules** | Establishes the `docs/architecture/<subsystem>/` placement, the §15 README contract for sibling READMEs, and the schema-home convention `schemas/contracts/v1/<…>` per ADR-0001. |
-| Lineage / design pressure | **Master MapLibre Components-Functions-Features (Pass 18, v1.5–v1.9 update packets)** | Provides the Story Node metadata model (spatial, temporal, entity, provenance, governance fields), assets-index discipline, hybrid 2D/3D handoff records, and version-lock semantics. |
-| Lineage / design pressure | **Pass 18 Idea Index** | Records Story Nodes and preview renderers as evidence-bearing outputs tied to pinned styles, sources, cameras, renderer versions, and artifact digests. |
-| Lineage / design pressure | **Unified Implementation Architecture Build Manual** | Anchors the schema-and-contract plan under which `StoryManifest` and `StoryNode` are PROPOSED. |
+| Story contracts and schemas | Exact bounded projection meaning and shape | Contract status remains proposed; no ref resolution or runtime authority |
+| Synthetic fixtures, validators, tests, workflows | Deterministic local conformance, finite trust inheritance, identity, correction, and anti-bypass expectations | File and workflow presence is not live playback, policy, release, or publication |
+| App-local Story source and test | Exact `resolveStoryPlayer()` behavior, 2D-only output, negative states, and prohibited seams | No external call site, transport, route, map, body dereference, or deployment |
+| Story policy README and Rego source | Policy boundary exists and currently does not enforce Story evidence continuity | No accepted input/output contract, evaluator, native tests, decision record, or consumer |
+| Governed API route inventory | No Story route is present in the direct inspected route directory | Does not prove an external or uninspected deployment has no route |
+| Story architecture and UI continuity docs | Current explanatory boundaries and maturity distinctions | Documentation does not prove behavior |
+| Historical KFM manuals and atlases | Story, preview, screenshot, map/time, correction, accessibility, and conditional-3D design pressure | Lineage does not create current implementation or authority |
 
-> [!NOTE]
-> Repository state is **not** verified in this session. The repo is not mounted. Path, package, route, schema, fixture, test, workflow, and enforcement claims remain **PROPOSED / UNKNOWN** until inspected.
+### Current conflict rule
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+When old Story prose conflicts with current repository bytes, current behavior
+claims follow current code, contracts, schemas, and tests. Unique historical
+intent remains visible as lineage, but it does not override the current boundary.
+
+[Back to top](#top)
 
 ---
+
+<a id="3-continuity-classifications"></a>
 
 ## 3. Continuity classifications
 
-Prior gains are not discarded. Each is classified by how it enters the next phase. The classifications mirror the Whole-UI Expansion Report's lineage table and remain PROPOSED design pressure for the Story subsystem until repo evidence ratifies them.
-
-| Prior gain | Classification | Continuity behavior |
+| Story surface or prior gain | Current classification | Continuity treatment |
 |---|---|---|
-| Story Node concept (atomic narrative unit linking maps, scenes, timelines, AI insights) | **KEEP AND EXTEND** | Carry forward as governed surface. Define `StoryManifest` and `StoryNode` schemas before any runtime widening. |
-| Conditional 3D / Cesium runtime | **DEFER** | 3D is conditional, not default spectacle. Add only after 2D evidence continuity, drawer continuity, release state, and policy gates are proven. |
-| Hybrid MapLibre 2D + Cesium 3D Story Node pattern | **KEEP AS LINEAGE, DEFER RUNTIME** | Preserve the handoff design (2D → 3D → 2D) and return-to-timeline behavior; do not treat the prior demo as repo implementation. |
-| Story Node metadata fields (spatial footprint, temporal interval, entities, provenance, citations, CARE, lineage, visualization links) | **KEEP AND EXTEND** | Fold into `StoryManifest`/`StoryNode` schema work; keep paths PROPOSED pending Directory Rules and repo verification. |
-| Story Node version + lineage fields (`version`, `deprecated`, `predecessor`/`successor`/`latest`) | **KEEP AND EXTEND** | Required for reproducibility and version-locked Focus Mode flows. |
-| Preview renderer / screenshot provenance as evidence carriers | **KEEP AND EXTEND** | Bind preview hashes, style digests, camera state, and renderer version into export and Story Node assets. |
-| Assets-index discipline (every referenced asset has path, checksum, provenance, citations, CARE status, update timestamp) | **KEEP AS LINEAGE** | Adopt within Story manifest/sidecar validators when the schema lands. |
-| Story Node 3D assets under `web/story_nodes/` vs `data/manifests/story/` *(prior conflicted location)* | **CONFLICTED LINEAGE** | Separate UI code/assets from data manifests; 3D runtime integration requires ADR (PROPOSED: `ADR-story-node-3d-boundary`). |
-| Prior Story Node demo content and PDF screenshots | **LINEAGE ONLY** | Treat as historical evidence of intent, never as current implementation or release proof. |
+| Public-safe `StoryNode` projection | **CONFIRMED bounded implementation / contract status PROPOSED** | Keep. It carries finite state, public-safe text, governed references, trust posture, correction/supersession, and fixed non-authority flags. |
+| Public-safe `StoryManifest` composite | **CONFIRMED bounded implementation / contract status PROPOSED** | Keep. It orders bounded node snapshots and reduces every trust dimension to the least-permissive constituent posture. |
+| Story Player projection consumer | **CONFIRMED bounded implementation** | Keep and extend only through dependency-closed slices. It converts one already-governed manifest into a non-authoritative 2D view model. |
+| Story Player live route and transport | **NOT ESTABLISHED / PROPOSED** | Hold until a governed route, response contract, authorization, safe transport, and negative cases are implemented. |
+| StoryNode body dereference | **NOT ESTABLISHED / PROPOSED** | Hold. Current manifest constituents are opaque bounded references; the player does not fetch or expose node bodies. |
+| Evidence Drawer, map, and time continuity | **PROPOSED / NEEDS VERIFICATION** | Preserve as graduation obligations. No current Story call site composes these surfaces. |
+| Story policy | **CONFIRMED lane / non-enforcing implementation** | Keep the policy boundary, but do not claim evidence-continuity enforcement until a versioned input/output contract, evaluator, tests, and governed consumer exist. |
+| 2D posture | **CONFIRMED current consumer behavior** | Keep. `mode` is fixed to `"2D"` and the focused app test rejects MapLibre, Cesium, model-client, transport, internal-store, and mutation seams. |
+| Conditional 3D / prior Cesium handoff | **LINEAGE / HOLD** | Preserve the continuity burden, not a runtime promise. No Story-specific 3D ADR exists at the formerly linked path, and renderer ADRs remain proposed. |
+| Story schemas under `schemas/contracts/v1/story/` | **STALE CURRENT-PATH CLAIM** | Replace with the confirmed UI-family schema homes. Do not create a mirror or second writable authority. |
+| Story fixtures under `tests/fixtures/story/` | **STALE CURRENT-PATH CLAIM** | Current reusable fixture homes are under `fixtures/ui/story_manifest/` and `fixtures/ui/story_node/`; tests live under their current test lanes. |
+| `data/manifests/story/` as StoryManifest authority | **NON-CANONICAL COMPATIBILITY** | Do not write new Story projection or release authority there. The lane is a routing and retirement boundary only. |
+| Preview renders, screenshots, asset indexes, camera paths, and export receipts | **LINEAGE / PROPOSED** | Retain as future integrity and accessibility obligations; no current public Story export or preview-receipt requirement is established. |
+| Prior Story demos and PDF screenshots | **LINEAGE ONLY** | Preserve as historical intent, never as implementation, evidence, review, release, or publication proof. |
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+### Architecture, projection proof, playback, and release remain distinct
+
+| State | Current result |
+|---|---|
+| Architecture explanation | **CONFIRMED present** |
+| Synthetic projection profiles | **CONFIRMED executable; semantic status remains PROPOSED** |
+| App-local manifest consumer | **CONFIRMED executable** |
+| Live Story playback | **NOT ESTABLISHED** |
+| Governed Story release | **NONE ESTABLISHED** |
+
+[Back to top](#top)
 
 ---
+
+<a id="4-narrative-continuity-invariants"></a>
 
 ## 4. Narrative continuity invariants
 
-A Story Node may move the user through camera, time, layers, and panels — but each transition is governed. The following invariants are **doctrinal** and survive every refactor unless an ADR explicitly bends them.
+### 4.1 Story order cannot create authority
 
-> [!IMPORTANT]
-> A Story Node is a narrative chapter that **resolves to evidence**, not a guided scene. If evidence continuity cannot be preserved at any step, the node ABSTAINs or falls back to 2D rather than continuing.
+- `StoryManifest.constituents` defines presentation order only.
+- Narrative sequence cannot re-rank evidence or make a weaker node authoritative.
+- The effective Story posture is the least-permissive constituent state and
+  dimensionwise trust posture.
+- Limiting node references and reason codes remain visible.
 
-### 4.1 Evidence continuity
+### 4.2 Evidence and citation continuity
 
-- Every **consequential narrative claim** in a Story Node MUST resolve to an `EvidenceBundle` through one or more `EvidenceRef` entries — surfaced via the Evidence Drawer.
-- A Story Node MUST NOT make a claim that depends only on rendered features, popups, screenshots, tile contents, graph projections, or AI-generated text. None of those is sovereign truth.
-- A Story Node MAY carry **illustrative** assets (screenshots, captions, sketches), but illustrative content is labeled as such and never displaces drawer evidence.
+- A `READY / ANSWER` projection requires non-empty evidence-bundle and
+  citation-validation references.
+- Current validation treats those references as opaque identifiers; it does not
+  prove that they resolve or that citations are true.
+- Future playback must resolve support through the Governed API and must fail
+  closed if a reference is missing, stale, mismatched, restricted, or
+  superseded.
+- Story prose, a screenshot, map pixel, tile, graph edge, search hit, or model
+  answer cannot replace that support.
 
-### 4.2 Layer continuity
+### 4.3 Rights, sensitivity, policy, review, and release continuity
 
-- A Story Node MUST declare its required layers as `LayerDescriptor` references with release state, valid-time semantics, sensitivity, rights, and source-role badges visible at point of use.
-- Layer loading goes through the `MapRuntimePort` / `MapLibreAdapter` boundary. The Story player does not import MapLibre runtime APIs directly.
-- A node MUST NOT silently swap an unreleased or quarantined layer in. If a required release-state layer is missing, the node returns a negative state.
+Playback is eligible only when the current manifest declares:
 
-### 4.3 Time continuity
+```text
+rights      = CLEARED
+sensitivity = PUBLIC
+policy      = ALLOW
+review      = REVIEWED
+release     = RELEASED
+freshness   = CURRENT
+correction  != SUPERSEDED
+```
 
-- Each node declares a **time window** (`valid_time`, `observed_time`, and freshness expectations) consistent with the `TimeState` contract.
-- Transitions between nodes update `TimeState` through the governed shell, not by directly mutating MapLibre internals.
-- A Story Node operating under a **version lock** (per the Focus Mode reproducibility primitive) MUST freeze layer versions, disable auto-updating datasets, and emit a `version_locked` telemetry event when the lock engages.
+Generalized, unresolved, restricted, pending, stale, unreleased, withdrawn, or
+superseded states cannot become `READY / ANSWER` through client logic.
 
-### 4.4 Panel / drawer continuity
+> [!NOTE]
+> These are the current player consumer's declared eligibility checks over an
+> already-governed projection. They are not a substitute for authoritative
+> policy, review, release, evidence, or correction evaluation.
 
-- The Evidence Drawer is the resolution surface. A Story Node may open, focus, or pre-populate the drawer, but it never authors drawer payload bypass paths.
-- Drawer payloads conform to `EvidenceDrawerPayload` and surface negative drawer states (`evidence_missing`, `restricted`, `stale`, `conflict`, `invalid_payload`, `policy_denied`) explicitly.
-- A Story Node does not re-rank evidence and does not synthesize new claims client-side.
+### 4.4 Finite-outcome continuity
 
-### 4.5 Finite-outcome continuity
+| Input posture | Current consumer output | Playback |
+|---|---|---|
+| Fully public-safe `READY / ANSWER` | `ANSWER / STORY_READY` | Ordered node refs exposed |
+| Stale, unreleased, partial, abstained, or superseded | `ABSTAIN / STORY_ABSTAINED` | Withheld |
+| Blocked rights, sensitivity, or explicit denial | `DENY / STORY_DENIED` | Withheld |
+| Upstream or malformed profile error | `ERROR / STORY_ERROR` or `INVALID_PAYLOAD` | Withheld |
+| No governed projection | `ABSTAIN / NO_GOVERNED_RESPONSE` | Withheld |
 
-- Story Node transitions ride on the same finite outcome envelope as the rest of the governed UI: **ANSWER, ABSTAIN, DENY, ERROR**.
-- `ABSTAIN` is used for insufficient evidence; `DENY` for policy; `ERROR` for system faults.
-- Cancellation, timeout, stale evidence, restricted material, and invalid citation states render explicitly and are never collapsed into a generic failure or a "spinner that resolves to silence."
+The consumer does not silently coerce a negative state into playback.
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+### 4.5 Closed-profile and non-leakage continuity
+
+- `authoritative` must be `false` and `projection_only` must be `true`.
+- Unknown fields, malformed flags, duplicate node references, or unsorted
+  constituents fail closed.
+- The focused test injects an untrusted-body canary and verifies that invalid
+  content is not reflected into the output.
+- Blocked and errored postures must not expose protected body or support
+  material.
+
+### 4.6 Correction and supersession continuity
+
+- Corrected and superseded postures retain governed correction references where
+  the profile requires them.
+- A superseded manifest cannot play and may expose only its public-safe
+  replacement-manifest reference and note.
+- A replacement is validated independently; trust does not transfer silently.
+- Future caches, routes, exports, search, maps, and AI surfaces must propagate
+  correction and withdrawal state before public use.
+
+### 4.7 Identity and deterministic replay continuity
+
+- Current Story profiles use closed shapes and deterministic identity rules.
+- Constituent and governed-reference arrays are duplicate-safe and ordered where
+  required.
+- A replay mismatch is an error, not a new Story version.
+- The client consumer must not recompute authority or rewrite upstream identity.
+
+### 4.8 Accessibility continuity
+
+Current projection fields include public-safe accessibility summaries or labels.
+That is necessary but insufficient for playback. Future UI composition must also
+prove keyboard operation, focus return, reduced motion, pause/stop controls,
+finite-outcome announcement, non-map alternatives, and safe denial/error copy.
+
+- Current code does not establish those interactive behaviors.
+
+### 4.9 Map, time, and Evidence Drawer continuity
+
+These are **graduation obligations**, not current implementation claims:
+
+- a Story transition must preserve released layer identity and time scope;
+- evidence inspection must use the governed Evidence Drawer path;
+- browser-local camera and panel state must remain distinct from authority;
+- missing evidence, policy, release, or correction support must fail closed;
+- a Story route must not read canonical or lifecycle stores directly.
+
+[Back to top](#top)
 
 ---
+
+<a id="5-3d-handoff-continuity-rule"></a>
 
 ## 5. 3D handoff continuity rule
 
-3D is a **burden-bearing mode**, not the default. The 3D handoff exists to serve evidence, not the other way around.
+**Current result: HOLD.** The repository proves no Story 3D handoff. The current
+consumer emits `mode: "2D"`, and its focused test prohibits MapLibre, Cesium,
+model-client, transport, internal-store, and publication seams.
 
-> [!WARNING]
-> If the 3D renderer cannot preserve evidence, release, drawer, and policy continuity, the node MUST fall back to 2D or ABSTAIN. There is no exception for cinematic value.
+The previous edition linked a proposed
+`docs/adr/ADR-story-node-3d-boundary.md`; that path is absent at the current
+snapshot. This update removes the broken authority claim rather than inventing
+an ADR.
 
-| Concern | Continuity requirement |
+Renderer-related ADR-0006 and ADR-0007 remain proposed. Therefore this page
+does not select MapLibre, Cesium, another renderer, a plugin set, a package
+home, or a 3D asset profile.
+
+### Minimum future admission burden
+
+A later 3D Story slice must close all of the following before it can move from
+`HOLD`:
+
+| Concern | Required evidence |
 |---|---|
-| Evidence resolution | EvidenceRef → EvidenceBundle resolution behaves identically in 3D and 2D. Drawer payloads are unchanged. |
-| Release state | All 3D assets (terrain tilesets, geometry models, volumetric layers, camera paths, scene metadata) carry release state, checksums, STAC extensions, temporal anchors, and rollback targets. |
-| Policy gates | Rights, sensitivity, sovereignty/CARE labels, source roles, and review state apply to 3D scenes exactly as to 2D layers. |
-| Return path | A 3D node MUST have a defined return to the 2D MapLibre timeline. The default route is always preserved as the rollback route. |
-| Asset standards | 3D Tiles, CZML, GLB/GLTF, and camera-path JSON are admitted only as **governed assets** — never as inline scene definitions sourced from the UI. |
-| 3D-specific gates | Generalization, alt text, accessibility metadata, and conditional-3D gates apply before any 3D layer is loaded. |
-| Failure posture | If a 3D scene cannot satisfy any of the above, the Story Node renders the 2D fallback or returns `ABSTAIN` with a visible reason code. |
+| Renderer authority | Accepted renderer and adapter decisions with one accountable implementation boundary |
+| Evidence parity | The same consequential claim resolves to the same admissible evidence in 2D and 3D |
+| Asset identity | Content-addressed, versioned, provenance-linked 3D assets and camera/view state |
+| Rights and sensitivity | Redaction, generalization, consent/sovereignty, and harmful-precision policy before delivery |
+| Reality boundary | Visible distinction among observation, reconstruction, model, scenario, and illustration |
+| Accessibility | Equivalent non-3D route, keyboard controls, reduced motion, descriptions, and alternate content |
+| Runtime safety | Plugin/dependency admission, CSP/CORS, resource budgets, safe errors, and no direct internal-store path |
+| Release parity | Release, correction, withdrawal, supersession, cache invalidation, and rollback behavior for every asset |
+| Negative cases | Missing evidence, denied policy, stale assets, invalid digest, unsupported renderer, and fallback behavior |
 
-The 3D handoff boundary is an ADR-level concern: PROPOSED home is `docs/adr/ADR-story-node-3d-boundary.md`.
+A cinematic or technically successful scene does not satisfy these gates.
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+[Back to top](#top)
 
 ---
+
+<a id="6-prior-gains-carried-forward"></a>
 
 ## 6. Prior gains carried forward
 
-The Story subsystem inherits design pressure from several indexed lineage sources. Treat each as **doctrine and proposed design pressure** until repo evidence confirms or contradicts it.
+Historical Story material still supplies useful design pressure when clearly
+separated from current implementation.
 
-<details>
-<summary><strong>Lineage items (click to expand)</strong></summary>
+### Keep and ground in current evidence
 
-- **Story Nodes unify narrative, spatial, temporal, provenance, and CARE metadata.** Story Nodes are explainable links between datasets, scenes, maps, timeline frames, and AI-generated insights, with spatial footprints, temporal coverage, provenance, citations, and CARE flags. *(Master MapLibre PDF, v1.6 update packet.)*
-- **Story Nodes link directly to 2D maps, 3D scenes, and timeline frames.** Node structures include links to `map_2d`, `scene_3d`, and `timeline_frame` assets; Focus Mode may use them as narrative chapters and AI reference units. *(Master MapLibre PDF, v1.6 update packet.)*
-- **Story Node schema needs version and lineage fields.** Additions include `version`, `deprecated`, and `predecessor`/`successor`/`latest` lineage references. *(Master MapLibre PDF, v1.6 update packet.)*
-- **STAC versioning becomes a Focus Mode reproducibility primitive.** STAC version fields, predecessor/successor/latest links, lineage APIs, diffs, version locks, and telemetry are wired into Story Node and Focus Mode flows.
-- **Story Nodes enforce context-only spatial disclosure for sensitive narratives.** Provenance, citations, and lineage are required, while precise site disclosure is avoided through context-only spatial footprints.
-- **Story Node examples carry citations and dataset lineage**, reinforcing cite-or-abstain behavior for Focus Mode narrative cards.
-- **Story Node assets root requires indexed maps, legends, overlays, 3D scenes, and thumbnails.** Every asset referenced by a Story Node must have an `assets_index` record with path, checksum, provenance, citations, CARE status, and update timestamp.
-- **Story Nodes must reference cataloged checksum-inventoried Items.** No Story Node should cite a tile/scene as evidence without catalog/proof closure.
-- **Story Nodes and Focus Mode consume preview evidence** — Evidence Drawer can link preview screenshot, style digest, and artifact digest. *(Master MapLibre PDF, v1.9 update packet.)*
-- **LiDAR/GLO Story Nodes link STAC/DCAT, Neo4j, and document IDs.** Evidence Drawer payloads should include catalog, graph, and documentation references.
-- **Story Node v3 and Focus Mode v3 require derived-layer evidence metadata** (`derived_layer_id`, QA status, PROV, policy notes).
-- **Static maps and screenshots remain downstream carriers.** Focus Mode screenshots, static maps, and previews require checksums, provenance, alt text, and citations; they do not substitute for released evidence or citation-preserving exports.
-- **Static map resolution minimum is an export quality gate** (e.g., minimum 2048 px width with sibling STAC metadata).
-- **Preview renderer and Story Nodes as evidence-bearing outputs** tied to pinned styles, sources, cameras, renderer versions, and artifact digests. *(Pass 18 Idea Index, KFM-P18-INV-049.)*
+- Story is an evidence-dependent ordered projection, not narrative truth.
+- StoryNode and StoryManifest need stable identity, finite outcomes, public-safe
+  display fields, support references, trust posture, correction, and
+  supersession.
+- Composite Story trust is limited by its least-permissive constituent.
+- Static maps, screenshots, previews, 3D scenes, timelines, and AI summaries are
+  downstream carriers.
+- Public Story content needs visible caveats and accessibility context.
+- Story release and correction must remain separate from playback code.
 
-</details>
+### Retain as future obligations
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+- map, time, layer, Evidence Drawer, Focus, and export continuity;
+- deterministic preview or export receipts;
+- Story assets with identity, checksum, provenance, citations, rights,
+  sensitivity, and release linkage;
+- version lock and reproducible playback;
+- public-safe correction and replacement notices;
+- non-map and reduced-motion presentation;
+- conditional 3D with evidence and release parity.
+
+### Retire as current claims
+
+| Prior claim | Current correction |
+|---|---|
+| Repository state is unverified because no repo is mounted | Current repository evidence is available and pinned in this document |
+| Story schemas belong under `schemas/contracts/v1/story/` | **Corrected for the current executable profile** to `schemas/contracts/v1/ui/` |
+| Story fixtures belong under `tests/fixtures/story/` | Reusable Story projection fixtures currently live under `fixtures/ui/`; validator/app tests remain in their verified test lanes |
+| A Story route exists or is named by this document | No Story route appears in the inspected Governed API route directory |
+| Story policy enforces evidence continuity | Current Rego source is a non-enforcing proposal stub |
+| Cesium is the deferred Story runtime | **Narrowed to historical lineage**; no renderer or Story 3D runtime is accepted |
+| A Story-specific 3D ADR governs the boundary | The formerly linked path is absent; no decision is invented |
+| `data/manifests/story/` may own StoryManifest authority | It is explicitly non-canonical compatibility and retirement documentation |
+
+### Source-lineage rule
+
+Older manuals, atlases, and Story demos remain source lineage for desired
+architecture. Source lineage remains evidence of design history, not proof of
+current contracts, implementation, policy, release, deployment, or
+publication.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-boundary-diagram"></a>
 
 ## 7. Boundary diagram
 
-The diagram shows what a Story Node is allowed to touch and what it must route through governed surfaces. It reflects **doctrine**, not verified runtime wiring.
-
-> [!NOTE]
-> NEEDS VERIFICATION — diagram reflects the doctrinal Story subsystem boundary as described in the Whole-UI + Governed AI Expansion Report (§§17–19) and Master MapLibre PDF (Sections N, O, W). Adjust once the mounted repository's component tree, route map, and StoryManifest schema are verified.
-
 ```mermaid
 flowchart LR
-  subgraph Browser["Browser (governed UI)"]
-    SP["StoryNodePlayer<br/>(2D-first narrative)"]
-    SH["GovernedShell<br/>+ TimeState"]
-    DR["EvidenceDrawer"]
-    MA["MapLibreAdapter<br/>(MapRuntimePort)"]
-    C3["Conditional 3D Node<br/>(gated)"]
+  subgraph Current["Current bounded repository proof"]
+    SM["Closed StoryManifest projection"]
+    SN["Closed StoryNode projection"]
+    VAL["Synthetic validators and tests"]
+    PLAYER["resolveStoryPlayer()<br/>2D-only view model"]
   end
 
-  subgraph Governed["Governed API"]
-    SR["GET /api/v1/stories/{id}"]
-    CR["POST /api/v1/claims/resolve"]
-    EV["GET /api/v1/evidence/{bundle_id}"]
-    LM["GET /api/v1/layers/{id}/manifest"]
+  subgraph Future["Future governed playback — PROPOSED / HOLD"]
+    API["Governed Story transport"]
+    BODY["StoryNode body resolver"]
+    DRAWER["Evidence Drawer"]
+    MAP["Map and time continuity"]
+    POLICY["Story policy evaluation"]
+    RELEASE["Release / correction / rollback"]
+    VIEW["Accessible Story UI"]
   end
 
-  subgraph Truth["Evidence + policy plane"]
-    EB["EvidenceBundle"]
-    LD["LayerDescriptor /<br/>LayerManifest"]
-    PG["Policy gates<br/>(rights, sensitivity, CARE)"]
-    RS["Release state /<br/>correction lineage"]
-  end
+  SM --> PLAYER
+  SN -. "opaque node refs only" .-> SM
+  VAL --> SM
+  VAL --> SN
 
-  SP -->|"declares scope, layers,<br/>time window, evidence refs"| SR
-  SP -->|"consequential claim →<br/>governed resolution"| CR
-  SP -->|"opens / focuses"| DR
-  SP -->|"camera / time / layer"| SH
-  SH --> MA
-  SP -.->|"3D handoff under gate"| C3
-  C3 -->|"asset manifests,<br/>release state, gates"| LM
-  C3 -. fallback or ABSTAIN .-> SP
+  API -.-> PLAYER
+  API -.-> BODY
+  BODY -.-> DRAWER
+  POLICY -.-> API
+  RELEASE -.-> API
+  PLAYER -.-> VIEW
+  PLAYER -.-> MAP
 
-  CR --> EB
-  CR --> PG
-  DR --> EB
-  LM --> LD
-  LM --> RS
-  PG -. DENY / ABSTAIN .-> SP
-  PG -. DENY / ABSTAIN .-> DR
-
-  classDef forbidden fill:#fee,stroke:#900,color:#900;
-  classDef governed fill:#eef,stroke:#339;
-  class C3 forbidden
+  PLAYER -. "DENY: direct" .-> INTERNAL["RAW / WORK / QUARANTINE<br/>canonical stores / model runtime"]
 ```
 
-The Story Node surface **never** reads RAW, WORK, QUARANTINE, canonical stores, graph stores, object stores, vector indexes, model runtimes, unpublished candidates, credentials, or internal service handles. *(Doctrine: Whole-UI + Governed AI Expansion Report §25.)*
+### Reading the diagram
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+- Solid lines are current bounded code/profile relationships.
+- Dashed lines are future composition, not current behavior.
+- `StoryManifest` contains bounded constituent snapshots and opaque node
+  references; the player does not dereference them.
+- `resolveStoryPlayer()` is referenced only by its focused test and current
+  architecture documentation; no application call site is established.
+- The inspected Governed API route directory contains no Story route.
+- No current path in this flow resolves an `EvidenceRef`, executes policy,
+  renders a map, calls a model, releases a Story, or publishes.
+
+[Back to top](#top)
 
 ---
+
+<a id="8-schema-contract-and-policy-dependencies"></a>
 
 ## 8. Schema, contract, and policy dependencies
 
-Continuity depends on the underlying object families being defined, validated, and fixture-backed.
+### Current confirmed homes
 
-| Family | PROPOSED home | Role for Story continuity |
+| Responsibility | Current path | Current bounded state |
 |---|---|---|
-| `StoryManifest` | `schemas/contracts/v1/story/story_manifest.schema.json` | Story-level sequence, scope, required layers, time windows, drawer refs, optional 3D constraints, version/lineage fields. |
-| `StoryNode` | `schemas/contracts/v1/story/story_node.schema.json` | Node-level camera/time/layer/evidence continuity and transition requirements. |
-| `EvidenceDrawerPayload` | `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Drawer payload resolved by node-level evidence refs. |
-| `EvidenceBundle` | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | Backing truth object for every consequential narrative claim. |
-| `LayerDescriptor` / `LayerManifest` | `schemas/contracts/v1/layers/*.schema.json` | Layer admissibility, release state, integrity, valid-time, rights, sensitivity. |
-| `DecisionEnvelope` / `RuntimeResponseEnvelope` | `schemas/contracts/v1/runtime/*.schema.json` | Finite ANSWER/ABSTAIN/DENY/ERROR outcome and governed response wrapper. |
-| `CitationValidationReport` | `schemas/contracts/v1/focus/citation_validation_report.schema.json` | Used when Story Node content is consumed by Focus Mode synthesis. |
-| Policy bundle | `policy/story/` | DENY / ABSTAIN cases for rights, sensitivity, CARE status, stale or missing evidence, and 3D-gate failures. |
-| Story fixtures | `tests/fixtures/story/` | Contract-valid positive cases plus negative-state fixtures (`evidence_missing`, `restricted`, `stale`, `policy_denied`, 3D-fallback). |
-| Object map crosswalk | `contracts/OBJECT_MAP.md` | Crosswalk from Story families to schemas, fixtures, policy, and emitted artifacts. |
-| ADR | `docs/adr/ADR-story-node-3d-boundary.md` | Records the 3D handoff trust-boundary decision. |
+| StoryManifest semantic meaning | [`contracts/ui/story_manifest.md`](../../../contracts/ui/story_manifest.md) | Proposed fixture-only public-safe composite contract |
+| StoryManifest machine shape | [`schemas/contracts/v1/ui/story_manifest.schema.json`](../../../schemas/contracts/v1/ui/story_manifest.schema.json) | Closed Draft 2020-12 profile |
+| StoryManifest synthetic cases | [`fixtures/ui/story_manifest/cases.json`](../../../fixtures/ui/story_manifest/cases.json) | Public-safe base plus positive and negative trust-inheritance cases |
+| StoryManifest validation | [`tools/validators/ui/validate_story_manifest.py`](../../../tools/validators/ui/validate_story_manifest.py) | Deterministic no-network schema, semantic, identity, correction, and replay checks |
+| StoryManifest focused CI | [`story-manifest-trust-inheritance.yml`](../../../.github/workflows/story-manifest-trust-inheritance.yml) | Read-only focused workflow with `KFM_NO_NETWORK=1`; no authority effect |
+| StoryNode semantic meaning | [`contracts/ui/story_node.md`](../../../contracts/ui/story_node.md) | Proposed closed public-safe projection contract |
+| StoryNode machine shape | [`schemas/contracts/v1/ui/story_node.schema.json`](../../../schemas/contracts/v1/ui/story_node.schema.json) | Closed profile |
+| StoryNode fixtures / validation | [`fixtures/ui/story_node/`](../../../fixtures/ui/story_node/) and [`validate_story_node.py`](../../../tools/validators/ui/validate_story_node.py) | Deterministic synthetic trust-inheritance proof |
+| StoryNode focused CI | [`story-node-trust-inheritance.yml`](../../../.github/workflows/story-node-trust-inheritance.yml) | Read-only focused workflow; no policy, release, or publication effect |
+| App-local Story consumer | [`index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) | Pure 2D-only `resolveStoryPlayer()` projection consumer |
+| App-local proof | [`story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) | READY and negative-state behavior plus anti-bypass source checks |
+| Current implementation note | [`CURRENT_IMPLEMENTATION.md`](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md) | Records the bounded consumer and explicit non-effects |
+| Story policy boundary | [`policy/story/README.md`](../../../policy/story/README.md) | Current lane documented; policy semantics and evaluator remain unestablished |
+| Story Rego source | [`evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) | Proposal stub with no operative deny rule |
+| Historical manifest lane | [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) | Non-canonical compatibility and retirement boundary |
+| Story API | `apps/governed-api/src/governed_api/routes/` | Direct inventory contains no Story route |
+| Story release sublane | **NEEDS VERIFICATION** | No release or publication claim is made by this document |
 
-> [!NOTE]
-> All paths above are **PROPOSED** per Directory Rules §0. Per ADR-0001, the default schema-home convention is `schemas/contracts/v1/<…>`. If the mounted repo uses `contracts/v1/<…>` or another arrangement, raise a `docs/registers/DRIFT_REGISTER.md` entry and reconcile via ADR rather than silently mirroring.
+### Authority split
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+```text
+docs/         = human explanation and continuity
+contracts/    = semantic meaning
+schemas/      = machine-valid shape
+policy/       = admissibility rule source
+fixtures/     = synthetic reusable cases
+tools/        = reusable deterministic validation
+tests/        = executable proof
+apps/         = app-local consumption and interaction
+data/         = lifecycle and accountability records
+release/      = release, correction, withdrawal, rollback decisions
+```
+
+No Story implementation should create a parallel contract, schema, policy,
+source, evidence, manifest, receipt, proof, release, or publication home inside
+the player feature or this documentation lane.
+
+### Present conflicts and drift
+
+1. `contracts/ui/` and `contracts/story/` both discuss Story concerns. The
+   executable public-safe profiles currently live in the UI family; broader
+   semantic convergence remains **NEEDS VERIFICATION**.
+2. The Story landing page's repository checkpoint predates the later app-local
+   consumer slice and still describes the entrypoint as a placeholder. Current
+   code, the implementation note, and UI Story Player architecture provide newer
+   evidence; the landing page should be refreshed separately.
+3. `data/manifests/story/` uses overloaded manifest terminology but is explicitly
+   non-canonical.
+4. The prior continuity edition linked an absent Story-specific 3D ADR and
+   proposed paths that do not match the current executable profile.
+5. The document-convergence plan recorded this file on `HOLD` pending proof of
+   active maintenance value. Current inbound references and the executable Story
+   slices demonstrate continuing value, but this update does not rewrite that
+   separate plan or authorize a move.
+
+[Back to top](#top)
 
 ---
+
+<a id="9-update-propagation"></a>
 
 ## 9. Update propagation
 
-Material changes to Story Node behavior, schemas, or 3D handoff propagate per the Whole-UI + Governed AI Expansion Report's update-propagation matrix. This subsystem inherits the **`StoryManifest schema`** row:
+Story continuity is a dependency-closure responsibility, not a request to edit
+every related file on every change. Update the smallest set needed to keep
+meaning, machine shape, behavior, proof, and public explanation coherent.
 
-| Owning README | Object map | Fixtures / tests | Runbook | Continuity notes | Rollback notes | Verification backlog |
-|---|---|---|---|---|---|---|
-| `docs/architecture/story/README.md` | `contracts/OBJECT_MAP.md` | `tests/fixtures/story` | `ui_VALIDATION` | **this document** (`docs/architecture/story/CONTINUITY.md`) | Disable story route | Track 3D conditionality |
+| Change | Required inspection and likely updates |
+|---|---|
+| StoryManifest meaning or fields | Contract, schema, fixtures, validator, validator tests, focused workflow, generated authoring receipt, Story landing page, UI Story Player architecture, this continuity page, app consumer compatibility |
+| StoryNode meaning or fields | Contract, schema, fixtures, validator, tests, workflow, StoryManifest constituent profile, player compatibility, this continuity page |
+| `resolveStoryPlayer()` behavior | App source, focused app tests, current implementation note, UI Story Player architecture, Story landing page maturity statement, this page |
+| Story transport or API route | Governed API contract/schema, authorization and policy, route tests, response envelope, app transport, negative cases, security review, docs and runbooks |
+| Story policy | Versioned input/output contract, policy source, engine-native tests, evaluator binding, decision mapping, receipts/audit, player/API behavior, correction and rollback |
+| Map, time, Drawer, Focus, export, or permalink integration | UI contracts, app composition, accessibility, telemetry, anti-bypass tests, correction propagation, release/citation continuity |
+| Renderer or 3D admission | Accepted decisions, package/plugin review, asset contracts, policy, accessibility, evidence/release parity, performance/security tests, 2D fallback, rollback |
+| Story release or correction profile | Release authority, public carrier, evidence/proof closure, manifests, review, correction/withdrawal, caches, UI/search/AI propagation, rollback drill |
 
-When a Story-relevant schema, contract, policy bundle, or fixture set changes:
+### Finite continuity decision for a material change
 
-1. Update **this continuity file** with the lineage classification (KEEP / KEEP AND EXTEND / DEFER / CONFLICTED).
-2. Update `docs/architecture/story/README.md` and any sibling architecture files affected.
-3. Update `contracts/OBJECT_MAP.md` so the family crosswalk reflects the new shape and home.
-4. Update or add fixtures under `tests/fixtures/story/`, including negative-state fixtures.
-5. Update validators under `tools/validators/story/` *(PROPOSED)*.
-6. Update the `ui_VALIDATION` runbook if validation steps change.
-7. Open or update an ADR if a §2.4 Directory Rules condition is met (new canonical root, schema-home change, lifecycle phase change, parallel-home creation, invariant bend).
-8. Add a `docs/registers/VERIFICATION_BACKLOG.md` entry for any UNKNOWN or NEEDS VERIFICATION item left after the PR.
+| Result | Meaning |
+|---|---|
+| `KEEP` | Current behavior and authority remain valid; reverify affected evidence |
+| `KEEP_AND_EXTEND` | Preserve current behavior and add one bounded compatible capability |
+| `DEFER` | Retain the requirement but do not implement until prerequisites close |
+| `HOLD` | Ownership, authority, evidence, sensitivity, or migration state is unresolved |
+| `CORRECT` | Current documentation or implementation conflicts with stronger evidence and needs a reviewed fix |
+| `SUPERSEDE` | Replace through explicit version, correction, consumer, and rollback handling; never silent overwrite |
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+[Back to top](#top)
 
 ---
+
+<a id="10-rollback-path"></a>
 
 ## 10. Rollback path
 
-The Story subsystem rollback strategy mirrors the Whole-UI + Governed AI Expansion Report §26 doctrine: prefer the smallest reversible step that preserves trust.
+Rollback depends on what changed. A documentation edit, projection contract,
+consumer implementation, policy rule, route, released Story, and deployed
+surface have different rollback burdens.
 
-```text
-Story rollback (in order of preference):
+### Documentation-only rollback
 
-1. Feature-flag the story route off in the governed shell.
-2. Keep StoryManifest fixtures and schemas in catalog as DEFERRED;
-   do not delete published manifests.
-3. If a StoryManifest schema change has shipped, deprecate with a
-   versioned successor rather than deleting silently.
-4. If the 3D handoff destabilized continuity, disable the conditional-3D
-   branch first; the 2D MapLibre fallback remains the default route.
-5. Open a correction notice if any released Story Node referenced
-   evidence that has since been corrected, redacted, or withdrawn.
-6. Record the rollback in docs/registers/DRIFT_REGISTER.md and update
-   docs/registers/VERIFICATION_BACKLOG.md with the residual unknowns.
-```
+- Before merge: close the draft pull request.
+- After an authorized merge: revert the documentation commit or restore prior
+  blob `37ead349bfe0c0ec77634d8c77197dfe4849362c`.
+- Rerun documentation metadata, link, graph, topology, accessibility, and
+  aggregate checks appropriate to the change.
 
-> [!CAUTION]
-> Do **not** rebuild Story routes around uncited or weakly supported claims as a recovery measure. ABSTAIN with a visible reason is always preferable to a confidently rendered Story Node lacking drawer evidence.
+### Projection or consumer rollback
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+1. Revert the dependency-closed contract/schema/fixture/validator/test/consumer
+   packet that introduced the behavior.
+2. Keep historical generated receipts immutable; add a successor receipt for the
+   correction rather than rewriting history.
+3. Preserve `ABSTAIN`, `DENY`, `ERROR`, and supersession behavior while the
+   positive path is disabled.
+4. Do not restore an earlier permissive profile or direct-store/browser shortcut.
+
+### Released Story rollback — future obligation
+
+A released Story needs a governed correction or withdrawal path that:
+
+- names the affected Story and release identity;
+- preserves prior history;
+- identifies the correction, withdrawal, supersession, or rollback target;
+- invalidates or updates public caches, search, maps, exports, and AI projections;
+- leaves safe public notice where appropriate;
+- is independently reviewable for policy-significant releases.
+
+No operational Story rollback is currently claimed because no governed Story
+release is established by the inspected evidence.
+
+[Back to top](#top)
 
 ---
+
+<a id="11-anti-patterns"></a>
 
 ## 11. Anti-patterns
 
-Continuity is violated, not just degraded, when any of the following appear. Each is a drift candidate worthy of a `DRIFT_REGISTER` entry.
+- treating Story order, prose, screenshots, maps, animation, 3D, generated text,
+  or `canPlay=true` as evidence or release authority;
+- rendering a Story body because a reference string exists without governed
+  dereference, policy, citation, and release checks;
+- calling the app-local consumer a Story API, player runtime, or public route;
+- reading RAW, WORK, QUARANTINE, processed, catalog, triplet, proof, registry,
+  published, model, or canonical stores directly from the browser;
+- converting stale, pending, generalized, restricted, unresolved, unreleased,
+  withdrawn, or superseded state into `READY / ANSWER`;
+- leaking protected body, denial reasons, internal identifiers, paths,
+  credentials, or precise restricted geometry through a negative state;
+- treating `policy/story/` as enforcing because a Rego filename exists;
+- placing UI StoryManifest or ReleaseManifest authority under
+  `data/manifests/story/`;
+- reviving `schemas/contracts/v1/story/` or `tests/fixtures/story/` as parallel
+  current homes without a governed migration;
+- treating proposed renderer ADRs or historical Cesium prose as accepted Story
+  3D authority;
+- loading 3D or renderer plugins before evidence, policy, accessibility,
+  performance, security, release, parity, fallback, and rollback gates close;
+- rewriting generated receipts or release history to hide a correction;
+- resolving the convergence plan's structural `HOLD` merely by polishing this
+  document;
+- turning a passing workflow, generated receipt, merge, or polished document
+  into KFM publication.
 
-- Treating MapLibre features, tiles, screenshots, popups, STAC records, graph projections, or AI text as sovereign truth inside a Story Node.
-- Letting a 3D scene become canonical truth or bypass the Evidence Drawer.
-- Authoring a Story Node that fetches RAW/WORK/QUARANTINE, calls model runtimes directly, or reads canonical/internal stores from the browser.
-- Routing a Story Node's consequential claim through a popup rather than `POST /api/v1/claims/resolve` and the Evidence Drawer.
-- Using preview screenshots or generated illustrations as proof rather than as illustrative carriers with checksums, provenance, and citations.
-- Loading 3D assets that lack release state, checksums, STAC extensions, temporal anchors, or rollback targets.
-- Hiding sensitive geometry with a style filter rather than a policy gate.
-- Allowing Focus Mode "version lock" to be silently broken by a Story transition.
-- Promoting a Story demo or prior-pass PDF screenshot as if it were a mounted, released subsystem.
-
-[↑ Back to top](#story-subsystem--continuity-notes)
+[Back to top](#top)
 
 ---
+
+<a id="12-verification-backlog"></a>
 
 ## 12. Verification backlog
 
-These items are **explicitly open** and should be tracked in `docs/registers/VERIFICATION_BACKLOG.md` until resolved.
+| ID | Item | Current label | Closure evidence |
+|---|---|---|---|
+| `STORY-CONT-001` | Refresh the Story landing page's maturity checkpoint against the implemented 2D consumer slice. | NEEDS VERIFICATION | Same-path documentation update grounded in current source/test evidence |
+| `STORY-CONT-002` | Define the first governed Story transport and response envelope without exposing internal stores. | PROPOSED / HOLD | Contract, schema, authorization, route, fixtures, finite outcomes, no-network tests |
+| `STORY-CONT-003` | Define and implement governed StoryNode body dereference. | PROPOSED / HOLD | Public-safe body contract, resolver, evidence/citation checks, policy and release binding |
+| `STORY-CONT-004` | Prove `EvidenceRef -> EvidenceBundle` and citation resolution for Story claims. | NEEDS VERIFICATION | Resolver evidence, digest/identity binding, positive and fail-closed tests |
+| `STORY-CONT-005` | Graduate Story policy from stub to accepted, versioned, testable evaluation. | HOLD | Input/output contract, Rego tests, evaluator binding, finite decision mapping, audit/receipt |
+| `STORY-CONT-006` | Compose Story Player with Explorer routing and shell without bypassing the governed API. | PROPOSED / HOLD | Call site, route integration, transport tests, anti-bypass proof |
+| `STORY-CONT-007` | Implement map, time, Evidence Drawer, correction, and accessibility continuity. | PROPOSED / HOLD | Integrated tests, keyboard/reduced-motion proof, negative states, correction propagation |
+| `STORY-CONT-008` | Define a Story release, correction, withdrawal, supersession, and rollback profile. | PROPOSED / HOLD | Release authority, manifests, review, public-safe carrier, rollback drill |
+| `STORY-CONT-009` | Decide whether every released public Story needs a preview/export render receipt. | NEEDS VERIFICATION | Accountable release/evidence decision, receipt contract, deterministic render tests |
+| `STORY-CONT-010` | Resolve broader `contracts/ui/` versus `contracts/story/` semantic ownership without parallel authority. | NEEDS VERIFICATION | Accepted decision or bounded migration with consumer and rollback closure |
+| `STORY-CONT-011` | Decide Story 3D admission only after renderer, asset, policy, accessibility, parity, and rollback closure. | HOLD | Accepted decisions plus complete dependency-closed proof |
+| `STORY-CONT-012` | Reconcile the convergence plan's earlier maintenance/migration HOLD with current active consumers before any structural move. | NEEDS VERIFICATION | Identity, inbound links, no-loss content, consumer closure, destination, validation, rollback |
+| `STORY-CONT-013` | Verify exact-head documentation, metadata, links, graph, topology, security, and aggregate checks for this update. | NEEDS VERIFICATION | Hosted run results on the final PR head |
 
-| ID | Item | Label |
-|---|---|---|
-| STORY-CONT-001 | Verify whether the mounted repo already contains a Story subsystem app surface, route, or fixtures. | UNKNOWN |
-| STORY-CONT-002 | Verify the canonical schema-home location for `StoryManifest` and `StoryNode` against ADR-0001 and any divergent repo state. | NEEDS VERIFICATION |
-| STORY-CONT-003 | Reconcile the filename `CONTINUITY.md` (used here) with the propagation-matrix label `story/CONTINUITY_NOTES.md` and sibling-subsystem files (`ui/CONTINUITY_NOTES.md`, `governed-ai/CONTINUITY_NOTES.md`). | NEEDS VERIFICATION |
-| STORY-CONT-004 | Verify whether `policy/story/` exists as a policy lane or whether Story policy lives inside a broader UI/evidence bundle. | UNKNOWN |
-| STORY-CONT-005 | Confirm acceptance of `ADR-story-node-3d-boundary` and that it explicitly governs the 3D conditional-handoff continuity rule. | NEEDS VERIFICATION |
-| STORY-CONT-006 | Confirm whether prior Story Node 3D assets actually existed under `web/story_nodes/` (CONFLICTED lineage) or whether this is purely documentary. | UNKNOWN |
-| STORY-CONT-007 | Verify Story export paths and screenshot quality gates (e.g., minimum 2048 px width, sibling STAC metadata) against current export tooling. | NEEDS VERIFICATION |
-| STORY-CONT-008 | Open a public-story preview-render-receipt decision: should every public Story Node ship with a preview-render receipt? *(See KFM-P18-INV-049.)* | OPEN |
-
-[↑ Back to top](#story-subsystem--continuity-notes)
+[Back to top](#top)
 
 ---
+
+<a id="13-related-docs"></a>
 
 ## 13. Related docs
 
-These links are **PROPOSED** relative paths consistent with the Whole-UI + Governed AI Expansion Report's path-by-path change table; they assume the file lives at `docs/architecture/story/CONTINUITY.md`.
+### Story and UI architecture
 
-- [`../story/README.md`](./README.md) — Story subsystem overview *(PROPOSED).*
-- [`../ui/CONTINUITY_NOTES.md`](../ui/CONTINUITY_NOTES.md) — UI subsystem continuity *(PROPOSED).*
-- [`../governed-ai/CONTINUITY_NOTES.md`](../governed-ai/CONTINUITY_NOTES.md) — Governed AI continuity *(PROPOSED).*
-- [`../review/README.md`](../review/README.md) — Review/steward surface *(PROPOSED).*
-- [`../../adr/ADR-story-node-3d-boundary.md`](../../adr/ADR-story-node-3d-boundary.md) — 3D handoff boundary ADR *(PROPOSED).*
-- [`../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home decision record (status `proposed`).
-- [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (placement law).
-- [`../../registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) — Canon vs lineage vs exploratory register *(PROPOSED).*
-- [`../../registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift register *(PROPOSED).*
-- [`../../registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Open verification items *(PROPOSED).*
+- [Story subsystem architecture](./README.md)
+- [Story Player architecture](../ui/STORY_PLAYER.md)
+- [UI continuity notes](../ui/CONTINUITY_NOTES.md)
+- [Evidence Drawer architecture](../ui/EVIDENCE_DRAWER.md)
+- [Map runtime boundary](../ui/MAP_RUNTIME_BOUNDARY.md)
+- [Architecture convergence plan](../document-convergence-plan.md)
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+### Governance and decisions
+
+- [Accepted ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [ADR index](../../adr/INDEX.md)
+- [Proposed ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
+- [Proposed ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>)
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+
+### Current Story implementation and authority surfaces
+
+- [StoryManifest contract](../../../contracts/ui/story_manifest.md)
+- [StoryNode contract](../../../contracts/ui/story_node.md)
+- [StoryManifest schema](../../../schemas/contracts/v1/ui/story_manifest.schema.json)
+- [StoryNode schema](../../../schemas/contracts/v1/ui/story_node.schema.json)
+- [StoryManifest fixtures](../../../fixtures/ui/story_manifest/cases.json)
+- [StoryNode fixtures](../../../fixtures/ui/story_node/)
+- [StoryManifest validator](../../../tools/validators/ui/validate_story_manifest.py)
+- [StoryNode validator](../../../tools/validators/ui/validate_story_node.py)
+- [Story Player implementation note](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md)
+- [Story Player consumer](../../../apps/explorer-web/src/features/story_player/index.tsx)
+- [Story Player focused test](../../../apps/explorer-web/tests/story-player.test.ts)
+- [Story policy boundary](../../../policy/story/README.md)
+- [Historical Story manifest compatibility lane](../../../data/manifests/story/README.md)
+
+[Back to top](#top)
 
 ---
+
+<a id="appendix-a--source-lineage"></a>
 
 ## Appendix A — Source lineage
 
-<details>
-<summary><strong>Indexed source documents that anchor this file (click to expand)</strong></summary>
+### Current implementation sources
 
-- **KFM Whole-UI + Governed AI Expansion Report** — §§5 (lineage classification table), 7 (whole-UI expansion map), 8 (proposed architecture and increment sequence), 11 (required next files), 17 (routes and component families), 19 (Evidence Drawer / Focus Mode / Story Node / review plan), 24 (update-propagation matrix), 25 (security and governed-AI boundary), 26 (rollback path), 29 (Appendix A file/folder tree), 30 (Appendix B path-by-path change table). **Doctrinal baseline.**
-- **Directory Rules** — §0 (status and authority), §2 (authority order and ADR triggers), §3 (root-folder responsibilities), §6 (`docs/` control plane), §7.4 (schema-home convention), §13 (drift patterns), §14 (migration discipline), §15 (README contract for sibling READMEs), §18 (open verification items).
-- **Master MapLibre Components-Functions-Features** — Section N (Evidence Drawer payloads and click resolution), Section O (Focus Mode and governed AI map context), Section W (3D / Cesium / Deck.gl / Overlay interoperability), v1.5–v1.6 update packets (Story Node metadata, version/lineage fields, hybrid 2D/3D handoff), v1.9 update packet (preview evidence, derived-layer metadata, export quality gates).
-- **KFM Pass 18 Idea Index / Category Atlas** — KFM-P18-INV-049 (preview renderer and Story Nodes as evidence-bearing outputs), KFM-P18-INV-063 (bitemporal claim history) for the Story version-lock posture.
-- **KFM Unified Implementation Architecture Build Manual** — §§9–10 (repository architecture plan and schema-and-contract plan), §14 (UI, MapLibre, Evidence Drawer, Focus Mode), §15 (governed AI architecture).
+| Source | Current use |
+|---|---|
+| UI StoryNode contract, schema, fixtures, validator, tests, workflow | Bounded node projection meaning, finite trust inheritance, correction/supersession, and local enforceability |
+| UI StoryManifest contract, schema, cases, validator, tests, workflow | Least-permissive composite trust reduction and deterministic identity |
+| Story Player source, test, and current implementation note | Defensive 2D-only consumption and anti-bypass behavior |
+| Story policy README and Rego source | Current policy lane and non-enforcement boundary |
+| Governed API direct route inventory | Current absence of a Story route in the inspected package |
+| Story subsystem and UI Story Player architecture | Current explanatory boundaries, maturity distinctions, and next gates |
+| `data/manifests/story/README.md` | Non-canonical compatibility and retirement posture |
 
-</details>
+### Retained planning lineage
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+The following older source families remain useful for design history and future
+acceptance criteria:
+
+- Whole-UI and Governed-AI expansion reports;
+- Master MapLibre components/functions/features editions;
+- Pass 18 and Pass 20 Story, preview, export, and continuity ideas;
+- whole-system build and implementation manuals;
+- domain atlases where Story Nodes are proposed as evidence-bearing narrative
+  carriers.
+
+### Lineage limits
+
+- A proposal repeated across multiple PDFs does not become current code or an
+  accepted decision.
+- Old paths do not outrank current repository homes.
+- Old route names do not prove current API behavior.
+- Historical screenshot, Cesium, or Story demo material is illustrative lineage,
+  not a released KFM Story.
+- Current behavior claims must be reverified at the applicable commit.
+
+[Back to top](#top)
 
 ---
 
-## Appendix B — PROPOSED file/folder anchors
+<a id="appendix-b--proposed-filefolder-anchors"></a>
 
-PROPOSED relative anchors used throughout this file. Treat as design pressure, not as verified repo state.
+## Appendix B — Current file and folder anchors
+
+The legacy anchor name is preserved for inbound compatibility. The table now
+separates current confirmed homes from future held work.
+
+### Current confirmed homes
 
 ```text
-docs/
-  architecture/
-    story/
-      README.md                # subsystem overview (PROPOSED)
-      CONTINUITY.md            # this file
-      # sibling subsystems use CONTINUITY_NOTES.md — reconcile via ADR
-    ui/
-      CONTINUITY_NOTES.md      # PROPOSED
-    governed-ai/
-      CONTINUITY_NOTES.md      # PROPOSED
-    review/
-      README.md                # PROPOSED
-  adr/
-    ADR-story-node-3d-boundary.md   # PROPOSED
-    ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md # referenced
-  registers/
-    CANONICAL_LINEAGE_EXPLORATORY.md  # PROPOSED
-    DRIFT_REGISTER.md                 # PROPOSED
-    VERIFICATION_BACKLOG.md           # PROPOSED
-  doctrine/
-    directory-rules.md                # canonical doctrine
+docs/architecture/story/
+├── README.md
+└── CONTINUITY.md
 
-contracts/
-  OBJECT_MAP.md                       # PROPOSED crosswalk
+contracts/ui/
+├── story_manifest.md
+└── story_node.md
 
-schemas/
-  contracts/
-    v1/
-      story/
-        story_manifest.schema.json    # PROPOSED
-        story_node.schema.json        # PROPOSED
-      ui/
-        evidence_drawer_payload.schema.json  # PROPOSED
-      runtime/
-        decision_envelope.schema.json        # PROPOSED
-        runtime_response_envelope.schema.json # PROPOSED
-      layers/
-        layer_descriptor.schema.json         # PROPOSED
-        layer_manifest.schema.json           # PROPOSED
-      evidence/
-        evidence_bundle.schema.json          # PROPOSED
-      focus/
-        citation_validation_report.schema.json # PROPOSED
+schemas/contracts/v1/ui/
+├── story_manifest.schema.json
+└── story_node.schema.json
 
-policy/
-  story/                                # PROPOSED policy lane
+fixtures/ui/
+├── story_manifest/
+└── story_node/
 
-tests/
-  fixtures/
-    story/                              # PROPOSED, includes negative-state fixtures
+tools/validators/ui/
+├── validate_story_manifest.py
+└── validate_story_node.py
 
-tools/
-  validators/
-    story/                              # PROPOSED
+apps/explorer-web/src/features/story_player/
+├── README.md
+├── CURRENT_IMPLEMENTATION.md
+└── index.tsx
+
+apps/explorer-web/tests/
+└── story-player.test.ts
+
+policy/story/
+├── README.md
+└── evidence_continuity_required.rego
+
+data/manifests/story/
+└── README.md  # non-canonical compatibility/retirement boundary
 ```
 
-[↑ Back to top](#story-subsystem--continuity-notes)
+### Future work — do not create from this document
+
+```text
+Governed Story transport and route       HOLD
+StoryNode body resolver                  HOLD
+Operational Story policy input/output    HOLD
+Story release/correction profile         HOLD
+Map/time/Evidence Drawer integration     HOLD
+Story export/preview receipt profile     NEEDS VERIFICATION
+Story renderer or 3D handoff             HOLD
+Contract-family convergence/migration    NEEDS VERIFICATION
+```
+
+[Back to top](#top)
 
 ---
 
-**Related docs:** [`README.md`](./README.md) · [`../ui/CONTINUITY_NOTES.md`](../ui/CONTINUITY_NOTES.md) · [`../governed-ai/CONTINUITY_NOTES.md`](../governed-ai/CONTINUITY_NOTES.md) · [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../adr/ADR-story-node-3d-boundary.md`](../../adr/ADR-story-node-3d-boundary.md)
+<a id="appendix-c--no-loss-modernization-ledger"></a>
 
-**Last updated:** 2026-05-14 · **Authority:** doctrine carried forward (PROPOSED for repo state) · [↑ Back to top](#story-subsystem--continuity-notes)
+## Appendix C — No-loss modernization ledger
+
+| v1 content or posture | v2 disposition |
+|---|---|
+| Existing path and document identity | Preserved |
+| All prior major-section anchors | Preserved through unchanged headings or explicit anchors |
+| Story as evidence-dependent narrative | Preserved and grounded in current contracts and code |
+| Finite outcomes and fail-closed behavior | Preserved and tied to current Story profiles and player tests |
+| Version, correction, supersession, and rollback | Preserved and strengthened |
+| 2D-first / conditional-3D burden | Preserved; runtime claim narrowed to current 2D-only consumer and 3D HOLD |
+| No-mounted-repository posture | Retired; replaced with commit-pinned current evidence |
+| `schemas/contracts/v1/story/` and `tests/fixtures/story/` as current homes | Corrected to current UI-family homes |
+| `data/manifests/story/` as a possible authority | Corrected to its tracked non-canonical compatibility posture |
+| Proposed concrete Story API routes | Removed as current claims; route absence recorded |
+| Story-specific 3D ADR link | Removed because the path is absent; no decision invented |
+| Cesium runtime as deferred current plan | Narrowed to historical lineage; no renderer is accepted here |
+| Story policy as executable gate | Corrected to non-enforcing stub |
+| Full map/time/Drawer/player continuity | Retained as future graduation criteria, not current behavior |
+| Prior source-lineage section | Preserved with a clearer implementation-evidence boundary |
+| Proposed file-tree appendix | Replaced by confirmed current homes plus explicit future holds |
+
+### Inbound-link and fragment posture
+
+- Repository search found five non-self files that reference this exact path.
+- No repository link using `CONTINUITY.md#...` was found during preflight.
+- The path and `doc_id` are retained.
+- No redirect, alias, filename normalization, move, or retirement occurs.
+
+### Non-effects
+
+This update does not:
+
+- accept, reject, supersede, or amend an ADR;
+- change a contract, schema, policy, fixture, validator, test, workflow, app,
+  source, route, lifecycle record, receipt, proof, release, correction, or
+  rollback object;
+- activate a Story route, policy evaluator, renderer, model, source, or 3D path;
+- expose internal stores;
+- release, deploy, publish, or change repository settings;
+- resolve the convergence plan's separate structural HOLD.
+
+### Rollback
+
+Before merge, close the draft pull request. After an authorized merge, revert
+the documentation commit or restore prior blob
+`37ead349bfe0c0ec77634d8c77197dfe4849362c`. Because this change is
+documentation-only, no runtime, source, data, cache, release, deployment, or
+public artifact needs operational rollback.
+
+[Back to top](#top)
+
+---
+
+**Last reviewed:** 2026-08-19 · **Evidence base:** `main@d639f9ff40288d12244cd7bc84af538652f6dfb1` · **Authority:** explanatory Story continuity only · **Publication effect:** none · [Back to top](#top)
