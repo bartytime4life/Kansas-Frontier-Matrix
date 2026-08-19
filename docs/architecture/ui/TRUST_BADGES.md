@@ -1,43 +1,85 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/trust-badges
 title: Trust-Visible Badges — UI Architecture
-type: standard
-version: v1
-status: draft
-owners: <UI subsystem owner> + <Docs steward>   # PLACEHOLDER — verify against CODEOWNERS
+type: architecture-reference
+version: v2.0-draft
+status: draft; repository-grounded; non-authoritative; same-path-convergence
+owners:
+  - "@bartytime4life — CODEOWNERS review route only"
+  - "NEEDS VERIFICATION — accountable Explorer UI, evidence, policy, rights, sensitivity, accessibility, review, release, correction, and operations stewardship"
 created: 2026-05-14
-updated: 2026-05-14
+updated: 2026-08-19
 policy_label: public
+owning_root: docs/
+current_path: docs/architecture/ui/TRUST_BADGES.md
+responsibility: Explain how compact Explorer trust projections relate to governed evidence, policy, review, release, freshness, correction, attestation, accessibility, and inspection without becoming a semantic contract, machine schema, policy source, EvidenceBundle, receipt, proof, review record, release decision, or runtime authority.
+truth_posture: CONFIRMED current repository files and bounded fixture/test surfaces at the pinned snapshot / PROPOSED cross-surface integration target / CONFLICTED proposal-era universal badge vocabulary and implementation claims / HOLD on a canonical cross-surface TrustBadgeState profile, live transport, MapLibre binding, export binding, and policy-significant stewardship
+evidence_base: bartytime4life/Kansas-Frontier-Matrix main@452835c2cf8258ed920c69c917ce5a8814c9a9b0; prior target blob 96f65d1cde10b058fd3ae55f20071cd037dbbc63; accepted ADR-0029
 related:
-  - docs/architecture/ui/README.md
-  - docs/architecture/ui/BOUNDARIES.md
-  - docs/architecture/ui/STATE_OWNERSHIP.md
-  - docs/architecture/governed-ai/README.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - schemas/contracts/v1/runtime/decision_envelope.schema.json
-tags: [kfm, ui, trust, badges, evidence, accessibility]
+  - ./README.md
+  - ./BOUNDARIES.md
+  - ./GOVERNED_SHELL.md
+  - ../../standards/MAP_TRUST_STATES.md
+  - ../evidence-drawer.md
+  - ../document-convergence-plan.md
+  - ../sovereignty-care.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../contracts/ui/trust_badge_state.md
+  - ../../../schemas/contracts/v1/ui/trust_badge_state.schema.json
+  - ../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
+  - ../../../apps/explorer-web/src/features/trust_header/index.tsx
+  - ../../../apps/explorer-web/src/features/attestation_badge/README.md
+tags:
+  - kfm
+  - ui
+  - trust
+  - badge
+  - evidence
+  - finite-outcomes
+  - accessibility
+  - public-safe
+  - repository-grounded
 notes:
-  - All implementation paths are PROPOSED until verified against a mounted repo.
-  - Doctrinal claims trace to SRC-061 (Master MapLibre, v1.7+), SRC-WHOLE-UI, and SRC-DIRRULES.
+  - "This document coordinates existing authorities; it does not define a new badge contract, schema, policy, or release rule."
+  - "A compact visual signal is never proof. Current component and fixture evidence is bounded to the repository snapshot named above."
+  - "All former major section headings and fragments are retained for compatibility."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="trust-visible-badges--ui-architecture"></a>
 
 # Trust-Visible Badges — UI Architecture
 
-> Badges expose **trust state**, not evidence. They route to proof; they never stand in for it.
+> **Operating rule:** a badge may project a bounded, validated, public-safe state. It never creates evidence, verification, rights, consent, review, release, correction, or authority.
 
-<!-- Top badge row — replace placeholder targets after mounting CI and badge endpoints. -->
-![Status: Draft](https://img.shields.io/badge/status-draft-yellow)
-![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)
-![Implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-orange)
-![Policy: public](https://img.shields.io/badge/policy-public-green)
-![Version: v1](https://img.shields.io/badge/version-v1-informational)
-![Last updated](https://img.shields.io/badge/updated-2026--05--14-lightgrey)
+> [!IMPORTANT]
+> **Current determination.** KFM does not currently have one implemented, canonical, universal “trust badge system.” The repository contains several deliberately bounded projection surfaces with different vocabularies and proof burdens:
+>
+> 1. a `Trust Header` component over the closed Evidence Drawer public-safe projection;
+> 2. a fixture-first attestation badge with its own strict app-local parser;
+> 3. a draft semantic `TrustBadgeState` contract paired with a permissive schema stub; and
+> 4. a repository-grounded map-trust standard that explicitly rejects one universal trust enum.
+>
+> These surfaces are related, but they are not interchangeable and must not be silently collapsed.
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** UI subsystem owner + Docs steward *(placeholder — verify)* &nbsp;·&nbsp; **Updated:** 2026-05-14
-
----
+| Field | Repository-grounded status |
+|---|---|
+| Document role | Human-readable UI architecture map; non-authoritative |
+| Placement | **CONFIRMED** same-path `PLACE` disposition under `docs/architecture/ui/` |
+| Directory authority | **CONFIRMED** accepted ADR-0029 and `docs/doctrine/directory-rules.md` |
+| Current review route | **CONFIRMED** `@bartytime4life` through CODEOWNERS; routing is not substantive approval |
+| Universal `TrustVisibleState` implementation | **NOT FOUND** at the pinned snapshot |
+| Universal `TrustBadges.tsx` implementation | **NOT FOUND** at the pinned snapshot |
+| Draft semantic contract | **CONFIRMED** `contracts/ui/trust_badge_state.md`; status `PROPOSED` |
+| Paired machine schema | **CONFIRMED** permissive stub; only `id` required and `additionalProperties: true` |
+| Trust Header | **CONFIRMED** bounded component and deterministic tests |
+| Attestation badge | **CONFIRMED** fixture-first component, strict app-local projection, unit/browser evidence |
+| Default Explorer composition | **CONFIRMED** repository-grounded synthetic shell; dedicated Trust Header and attestation badge are not proven composed into the default entrypoint |
+| MapLibre runtime | **HOLD**; no admitted dependency or runtime integration is established by this document |
+| Live badge transport | **UNKNOWN / NOT PROVED** |
+| Export preservation | **PROPOSED / NOT PROVED** |
+| Public release or deployment | **UNKNOWN**; this documentation change creates neither |
 
 ## Quick jump
 
@@ -60,446 +102,1048 @@ notes:
 - [17. Related docs](#17-related-docs)
 - [Appendix A: terminology](#appendix-a-terminology)
 - [Appendix B: evidence basis](#appendix-b-evidence-basis)
+- [Appendix C: disposition of proposal-era claims](#appendix-c-disposition-of-proposal-era-claims)
 
 ---
 
 ## 1. Purpose & scope
 
-This document defines the **trust-visible badge system** rendered across KFM's UI surfaces — the MapLibre map, Layer Catalog, Evidence Drawer, Focus panel, Story Node player, and export/screenshot pipeline. It specifies what trust badges are, what they are not, the finite states they may take, how they bind to data, and the governance and accessibility obligations that follow from displaying them.
+This document explains the **UI projection boundary** for compact trust-visible signals in Explorer Web. Its purpose is to help maintainers, reviewers, and UI implementers answer five questions without inventing authority:
 
-It does **not** specify visual design tokens (colors, spacing, typography). Those live with the design tokens / styles authority; see [§17 Related docs](#17-related-docs).
+1. Which upstream object or validated projection supplies the displayed state?
+2. Which vocabulary applies to this particular component?
+3. What may be shown for positive and negative outcomes?
+4. Which inspection action is allowed?
+5. Which evidence, policy, review, release, correction, and runtime claims remain outside the badge?
 
-| Field | Value |
-|---|---|
-| Doctrine status | **CONFIRMED** — SRC-061 §S, SRC-WHOLE-UI §17, SRC-061 ML-061-138/139/140 |
-| Implementation status | **PROPOSED** — no `apps/explorer-web/src/features/evidence/TrustBadges.tsx` verified in this session |
-| Schema home (PROPOSED) | `schemas/contracts/v1/ui/` per ADR-0001 (schema home) |
-| Trust-membrane class | **Public-facing UI surface** — must route to governed API; must not access RAW / WORK / QUARANTINE / canonical stores |
-| Lifecycle invariant | Badges may **only** carry state derived from `PUBLISHED` artifacts and their attached receipts |
+The durable public unit remains the inspectable claim. Badges, headers, chips, labels, icons, colors, screenshots, and status boards are downstream projections. They are useful only when their inputs and limits are explicit.
 
-> [!IMPORTANT]
-> A badge is a **pointer** to verification, not the verification itself. Removing or styling badges does not change rights, sensitivity, freshness, review state, or release state — those live in `SourceDescriptor`, `EvidenceBundle`, `PolicyDecision`, `ReviewRecord`, `ReleaseManifest`, and receipts.
+### 1.1 In scope
+
+- the current Trust Header and attestation-badge boundaries;
+- the draft `TrustBadgeState` contract and its schema gap;
+- the relationship between badge vocabularies and the Evidence Drawer public-safe projection;
+- safe positive, negative, malformed, and unavailable behavior;
+- inspection callbacks and drawer-launch boundaries;
+- accessibility and non-color requirements;
+- map, freshness, export, and live-transport holds;
+- verification and graduation evidence for future cross-surface convergence.
+
+### 1.2 Out of scope
+
+This page does not:
+
+- define contract semantics;
+- define or amend JSON Schema;
+- decide policy, rights, consent, sovereignty, sensitivity, review, or release;
+- verify signatures, digests, receipts, attestations, or EvidenceBundles;
+- name or authenticate a steward or authority;
+- activate a source, API route, stream, renderer, or model;
+- establish visual token values;
+- create an export or publication profile;
+- prove deployment, production composition, or public operation.
+
+### 1.3 Owning root and placement basis
+
+The file explains cross-file UI architecture to humans, so `docs/` owns it. The existing same-path home under `docs/architecture/ui/` is supported by accepted ADR-0029, the current Directory Rules authority, the UI documentation index, and the convergence plan’s `PLACE` disposition.
+
+No new root, sibling “v2,” parallel badge standard, contract, schema, or policy home is created.
+
+### 1.4 Current evidence limit
+
+The claims marked `CONFIRMED` below are bounded to repository files, tests, and generated artifacts visible at:
+
+```text
+bartytime4life/Kansas-Frontier-Matrix
+main@452835c2cf8258ed920c69c917ce5a8814c9a9b0
+```
+
+A source file proves that code or documentation exists at that commit. It does not by itself prove deployment, production traffic, policy approval, release, or publication.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Truth posture (read this first)
 
-Three rules govern every line of this document.
+Four rules govern every trust-visible surface.
 
-1. **Badges expose trust state visibly without substituting UI badges for evidence.** (CONFIRMED doctrine — SRC-061 ML-061-138, ML-061-090.)
-2. **Badge clicks open proof details rather than replacing the Evidence Drawer.** (CONFIRMED doctrine — SRC-061 ML-061-139.)
-3. **Unknown, stale, or failed verification states need distinct visual treatment.** (CONFIRMED doctrine — SRC-061 ML-061-140.)
+1. **Projection is not authority.** A badge reports a validated projection supplied by an upstream authority-bearing flow. It does not create or upgrade that state.
+2. **Profiles remain bounded.** `ANSWER`, `SUPPORTED`, `VERIFIED`, `STALE`, `UNKNOWN`, and `FAILED` belong to different profiles unless an accepted adapter contract explicitly relates them.
+3. **Negative states fail safely.** A denied, abstained, failed, malformed, or unavailable payload must not leak references, protected reasons, internal paths, free-form diagnostics, or stale positive content.
+4. **Inspection outranks decoration.** A positive compact signal may offer a path to inspect supporting references or the Evidence Drawer. The visual signal never substitutes for that inspection surface.
 
-If a badge cannot satisfy all three, it MUST NOT ship. The compliant fallback is: **render the badge in `UNKNOWN` state and abstain from making a trust claim.**
+> [!CAUTION]
+> `UNKNOWN`, hidden, unavailable, `ABSTAIN`, `DENY`, `FAILED`, and `ERROR` are not synonyms. Do not “simplify” them into one generic success/failure boolean. Each profile owns its finite vocabulary and no translation is authoritative unless it is explicit, validated, and tested.
+
+### 2.1 Truth labels used here
+
+| Label | Meaning in this page |
+|---|---|
+| **CONFIRMED** | Verified at the pinned repository snapshot from a file, schema, test, or generated artifact |
+| **PROPOSED** | A target design or future integration not proved as current |
+| **UNKNOWN** | Evidence is insufficient to establish the claim |
+| **NEEDS VERIFICATION** | A concrete check remains before the claim can be relied on |
+| **CONFLICTED** | Current repository evidence and proposal-era wording do not agree |
+| **HOLD** | Do not graduate or converge the surface until named evidence closes |
+
+### 2.2 Badge non-effects
+
+Rendering, hiding, clicking, restyling, or exporting a badge does not mutate:
+
+- `EvidenceRef` or `EvidenceBundle`;
+- source role or source authority;
+- rights, consent, sovereignty, or sensitivity;
+- `PolicyDecision`;
+- review state;
+- release or publication state;
+- correction, supersession, withdrawal, or rollback state;
+- receipt, proof, signature, digest, or attestation validity.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Doctrinal foundations
 
-CONFIRMED in attached project knowledge:
+The repository’s current trust model is distributed across distinct authority roots. This page coordinates those roots; it does not absorb them.
 
-- **`TrustVisibleState`** is a required contract object for the Accessibility / UX / Trust-Visible States category (SRC-061 §S). It is paired with `EvidenceDrawerPayload`, `StaleSourceFixture`, and `VerifyReceipt`.
-- **Public UI surfaces** must show released, policy-safe, versioned, and citation-capable state; **popups and badges cannot substitute for the Evidence Drawer.** (SRC-061 §S.)
-- **Policy implication** for badge display: fail closed for rights uncertainty, unverified signatures, missing provenance, stale source state, sensitive geometry, and incomplete citation support.
-- **CARE labels and sovereignty notice chips are required in UI** for culturally sensitive and sovereignty-bearing content (SRC-061 ML-061-160).
-- **FAIR+CARE badges are not release authority.** A green CARE badge does not promote, publish, or supersede a `PolicyDecision` (SRC-MapLibre v1.6 ML-059-063).
+### 3.1 Authority split
 
-PROPOSED in attached project knowledge:
+| Responsibility | Current owning surface | This page’s relationship |
+|---|---|---|
+| Cross-map trust vocabulary and anti-collapse rules | [`docs/standards/MAP_TRUST_STATES.md`](../../standards/MAP_TRUST_STATES.md) | References; does not redefine |
+| Candidate badge semantics | [`contracts/ui/trust_badge_state.md`](../../../contracts/ui/trust_badge_state.md) | Reports draft status and open naming question |
+| Machine-checkable badge shape | [`schemas/contracts/v1/ui/trust_badge_state.schema.json`](../../../schemas/contracts/v1/ui/trust_badge_state.schema.json) | Reports current permissive shape; does not strengthen it in prose |
+| Evidence Drawer public-safe projection | [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) | Supplies the current closed projection consumed by the Trust Header |
+| Policy and admissibility | `policy/` and policy decision objects | Upstream; never inferred by a badge |
+| Evidence, receipts, proofs, releases, corrections | Their governing contract/schema/data/release roots | Upstream; badges only point or project |
+| UI rendering and strict app-local adapters | `apps/explorer-web/` | Current implementation evidence |
+| Visual tokens and microcopy | Brand/design-system surfaces where accepted | Separate; current visual document remains draft |
+| This document | `docs/architecture/ui/TRUST_BADGES.md` | Human architecture map only |
 
-- A `TrustBadges` component is enumerated in the Whole-UI Expansion Report at `apps/explorer-web/src/features/evidence/TrustBadges.tsx` covering **source role, rights, sensitivity, review, freshness, release, and correction** badges. *Path PROPOSED; component status PROPOSED.*
-- An `AutomationBadgePayload` projection — distinct from `EvidenceBundle` — is described for attestation/SBOM/manifest/log references on automation badges (SRC-MapLibre v1.5 ML-057-014).
+### 3.2 Stable doctrine retained
+
+The following principles remain supported:
+
+- badges are compact, trust-visible projections rather than evidence;
+- the browser must not invent authoritative trust state;
+- public clients use governed, public-safe projections rather than internal lifecycle stores;
+- malformed or negative input must fail closed;
+- evidence-dependent claims require resolvable support or abstention;
+- sensitive detail is denied or transformed upstream, not hidden through styling alone;
+- status must remain understandable without color;
+- inspection, correction, and release context should remain visible where the profile supports them.
+
+### 3.3 Proposal-era doctrine demoted
+
+The earlier edition treated these as current or universal when repository evidence does not support that conclusion:
+
+- one required `TrustVisibleState` object for every badge;
+- one universal `VERIFIED | STALE | UNKNOWN | FAILED` state machine;
+- nine mandatory badge families on every released layer;
+- a universal `TrustBadges.tsx` component;
+- a mandatory `ui.badge_click` event;
+- an admitted MapLibre feature-join implementation;
+- a live SSE/WebSocket stream with a fixed polling fallback;
+- a concrete governed attestation proxy route;
+- an implemented export sidecar and PDF metadata profile;
+- a universal CARE or sovereignty chip assignment.
+
+Those ideas remain proposal lineage where useful. They are not current-system facts.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Finite trust-visible states
 
-Every badge MUST resolve to exactly one of four finite states. Color alone MUST NOT distinguish them; each state has a required text label and a required non-color indicator (icon shape, hatching, or border treatment).
+### 4.1 There is no universal trust enum
 
-| State | Meaning | Required indicators | Click target | Default policy posture |
-|---|---|---|---|---|
-| **VERIFIED** | The category check passed: receipts resolve, signatures validate, freshness is within tolerance, review is current, release is `PUBLISHED`. | Text label + filled icon + accessible name | Opens Evidence Drawer; **does not** replace it. | Allow display |
-| **STALE** | The artifact is released but a freshness, schema, geography, model, review, rights, or policy tolerance has aged past its declared limit. | Text label + outlined icon + non-color marker (e.g., dashed border) | Opens Evidence Drawer with stale-source detail and superseded-by link (if any). | Show with caveat; Focus Mode **abstains** on consequential claims |
-| **UNKNOWN** | A required check could not be performed in the current session (receipt unresolved, signature unfetched, drawer payload incomplete). This is the **default fallback** state. | Text label + question-mark icon + non-color marker | Opens Evidence Drawer to the "evidence unresolved" panel. | Show as caveat; gated routes **abstain** |
-| **FAILED** | A required check ran and **failed** (digest mismatch, signature invalid, citation invalid, rights revoked, sensitive-geometry deny). | Text label + alert icon + non-color marker | Opens Evidence Drawer to the failure reason with `PolicyDecision` reference. | **DENY** public display where the layer's release tier requires verification |
+The current map-trust standard explicitly treats trust as a **multi-axis projection**, not one badge and not one universal enum. Current repository vocabularies include:
 
-> [!CAUTION]
-> `UNKNOWN` is not "OK by default." It is "**we have not verified this**." UI surfaces MUST treat `UNKNOWN` as a caveat, not a pass. Focus Mode MUST `ABSTAIN` when a consequential evidence chain resolves to `UNKNOWN`.
+| Profile or surface | Finite vocabulary | Current status |
+|---|---|---|
+| Evidence Drawer response | `ANSWER | ABSTAIN | DENY | ERROR` | Closed schema and bounded implementation surface |
+| Trust Header view | `SUPPORTED | ABSTAIN | DENY | ERROR` plus `VISIBLE | HIDDEN` | Implemented component and deterministic tests |
+| Trust Header positive dimensions | outcome, policy, review, release, freshness, correction | Implemented only for a valid supported projection |
+| Attestation projection outcome | `ANSWER | ABSTAIN | DENY | ERROR` | Strict app-local parser and fixture family |
+| Attestation badge view | `VERIFIED | INCOMPLETE | FAILED | ERROR` plus `VISIBLE | HIDDEN` | Fixture-first component and browser test |
+| Draft `TrustBadgeState` semantics | `VERIFIED | STALE | UNKNOWN | FAILED` | Proposal only |
+| Draft `TrustBadgeState` schema | no state enum | Permissive stub; does not enforce the semantic vocabulary |
+| Policy dimension | `ALLOW | ABSTAIN | DENY | ERROR` | Upstream projection dimension |
+| Review dimension | `REVIEWED | PENDING | NOT_APPLICABLE` | Upstream projection dimension |
+| Release dimension | `RELEASED | UNRELEASED | WITHDRAWN` | Upstream projection dimension |
+| Freshness dimension | `CURRENT | STALE | UNKNOWN` | Upstream projection dimension |
+| Correction dimension | `NONE | CURRENT | CORRECTED | SUPERSEDED` | Upstream projection dimension |
+| Historical evidence disposition | `HELD | DENIED | SUPERSEDED | REVOKED | WITHDRAWN` | Historical context, not current response outcome |
 
-Evidence basis: SRC-061 ML-061-138, ML-061-140; SRC-MapLibre v1.5 ML-057-016 (stream degradation surfaces `STALE`).
+### 4.2 Translation rule
+
+A component may translate an upstream projection into a local view vocabulary only when all of the following are true:
+
+1. the source profile is exact and versioned;
+2. the parser rejects unknown or contradictory shape;
+3. the mapping is explicit in code;
+4. positive and negative branches are tested;
+5. negative branches cannot carry positive-only references;
+6. the resulting label is described as a **view state**, not upstream authority;
+7. malformed input does not default to success.
+
+The current attestation adapter satisfies this pattern for its bounded fixture profile. That does not make the mapping globally reusable.
+
+### 4.3 Positive-state burden
+
+A positive compact signal is allowed only when its own profile’s required support is present.
+
+For the current surfaces:
+
+- a Trust Header `SUPPORTED` view requires a valid `ANSWER` Evidence Drawer projection;
+- the positive Trust Header renders six dimensions from that projection;
+- an attestation `VERIFIED` view requires `ANSWER / CHECKS_VERIFIED` and all profile-required reference handles;
+- the badge text still states that rendering is not proof or release authority.
+
+### 4.4 Negative-state burden
+
+Negative states must be **less revealing**, not more diagnostic.
+
+Current safe patterns are:
+
+- one generic outcome signal rather than six misleading dimension badges;
+- fixed public-safe copy;
+- no evidence, attestation, receipt, release, or internal-reference handles on negative attestation projections;
+- no internal canaries, lifecycle paths, or protected reason details;
+- no “last known good” badge left visible after malformed replacement input;
+- hidden component state when the profile cannot be parsed safely.
+
+> [!NOTE]
+> A future profile may choose an explicit visible `ERROR` instead of hiding malformed input, but that behavior must be part of the accepted contract and tested. Current components must not be rewritten by this document.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Badge category families
 
-CONFIRMED categories from KFM doctrine. PROPOSED component-level grouping mirrors the Whole-UI Expansion Report's `TrustBadges.tsx` enumeration.
+“Badge family” is a presentation concept. It does not establish a new object family or one mandatory row across all KFM surfaces.
 
-| # | Family | What it surfaces | Source object | Doctrine basis |
-|---|---|---|---|---|
-| 1 | **Source role** | Whether the layer's evidence is `observed`, `derived`, `modeled`, `regulatory`, `historical`, etc. — never collapses roles. | `SourceDescriptor`, `EvidenceRef.source_role` | SRC-061 §S; SRC-WHOLE-UI §18 |
-| 2 | **Rights** | Open / controlled / restricted / unknown. Drives DENY on `unknown`. | `SourceDescriptor.rights_status` | SRC-061 §Q; ADR-0001-style schema home |
-| 3 | **Sensitivity** | Public / generalized / restricted / review_required. Drives generalization for archaeology, fauna, people-land. | `ReleaseManifest.sensitivity`, `SensitiveGeometryTransform` | SRC-061 §Q; ML-061-158/159 |
-| 4 | **Review** | Reviewed / aged-out / under-review / not-required. | `ReviewRecord` | Domains Atlas §24.8.1 |
-| 5 | **Freshness** | Fresh / stale / unknown vs declared cadence in `SourceDescriptor`. | `SourceDescriptor.cadence` + `RunReceipt.retrieved_at` | SRC-061 ML-061-094; ML-061-118 |
-| 6 | **Release** | DRAFT / REVIEW / PUBLISHED / REVOKED / SUPERSEDED. | `ReleaseManifest.release_state` | New Ideas 5-8-26 (ReleaseManifest schema) |
-| 7 | **Correction** | None / corrected / superseded — links to `CorrectionNotice`. | `CorrectionNotice` | Domains Atlas §24.8.2 |
-| 8 | **CARE / sovereignty chip** | CARE label + sovereignty notice for culturally sensitive content. **MANDATORY** where the source descriptor declares CARE applicability. | `SourceDescriptor.care_label`, sovereignty register | SRC-061 ML-061-160; Pass 10 §6.15 |
-| 9 | **Attestation / automation badge** (optional) | Build/SBOM/attestation link with finite status enum. **Distinct projection from `EvidenceBundle`.** | `AutomationBadgePayload` | SRC-MapLibre v1.5 ML-057-013/014/017 |
+### 5.1 Current bounded families
 
-> [!NOTE]
-> Categories 1–7 form the **default badge set** for every released layer. Category 8 is **mandatory when applicable** and MUST be visually prominent — not buried in a tooltip. Category 9 is optional and **only ever a pointer**; it never carries the citation surface.
+| Surface | Displayed signals | What is not claimed |
+|---|---|---|
+| **Trust Header — supported** | `Outcome`, `Policy`, `Review`, `Release`, `Freshness`, `Correction` | Source authority, rights clearance, consent, sovereignty, receipt validity, or publication |
+| **Trust Header — negative** | One generic `Outcome` signal with fixed no-leak copy | The six positive dimensions; evidence details |
+| **Attestation badge — positive** | `VERIFIED` plus an inspection affordance | Signature verification by the browser, evidence closure, review, release approval, or publication |
+| **Attestation badge — negative** | `INCOMPLETE`, `FAILED`, or `ERROR` with fixed copy | Reference handles or internal diagnostics |
+| **Evidence Drawer** | Source role, policy, review, release, freshness, correction, evidence references, citations, limitations, and bounded history where allowed | A universal badge object |
+
+### 5.2 Candidate future families
+
+The following may be useful, but remain `PROPOSED` until their owning authority, shape, and policy are accepted:
+
+- rights status;
+- sensitivity or generalization status;
+- consent or permission status;
+- CARE applicability or community-governance notice;
+- source role beyond the current Drawer projection;
+- correction or withdrawal at additional surfaces;
+- automated-check or supply-chain status outside the bounded attestation component;
+- layer-level freshness;
+- reviewer-only restricted-detail state.
+
+### 5.3 Rights, consent, CARE, and sovereignty
+
+A UI indicator must never infer authority from geography, place name, source custody, metadata, institutional prestige, a model classification, or another badge.
+
+Any rights, consent, CARE, sovereignty, or culturally sensitive indicator requires:
+
+- an accepted upstream authority model;
+- a verified assignment or applicable policy decision;
+- public-safe wording and scope;
+- qualified review appropriate to the affected community or rightsholder;
+- correction and withdrawal behavior;
+- proof that hiding or generalizing detail does not get misrepresented as consent or clearance.
+
+The current repository does not establish one universal CARE badge catalog or a general authority-resolution protocol. This remains `HOLD`.
+
+### 5.4 No default badge row
+
+The earlier “categories 1–7 form the default badge set for every released layer” rule is withdrawn as a current claim. A surface displays only the dimensions defined by its accepted projection profile and appropriate to its audience.
+
+Too many badges can hide uncertainty as effectively as too few. Compactness must never collapse distinct meanings, and density must never simulate assurance.
+
+[Back to top](#top)
 
 ---
 
 ## 6. State machine
 
-The badge state machine is intentionally narrow. Every transition is driven by a governed event, not by client-side inference.
+### 6.1 Current parser-to-view behavior
+
+There is no repository-proved universal badge state machine. The current common pattern is narrower:
 
 ```mermaid
-stateDiagram-v2
-    [*] --> UNKNOWN: badge mounted, payload not yet resolved
-    UNKNOWN --> VERIFIED: all category checks resolve;\nreceipts present; release PUBLISHED;\nfreshness within tolerance
-    UNKNOWN --> STALE: receipts resolve but freshness /\nschema / geography / model / review /\nrights / policy tolerance exceeded
-    UNKNOWN --> FAILED: digest mismatch, invalid signature,\ncitation invalid, rights revoked,\nsensitive-geometry DENY
-    VERIFIED --> STALE: tolerance crossed at runtime
-    VERIFIED --> FAILED: revocation / correction supersedes release
-    STALE --> VERIFIED: re-admission / supersession publishes\nwith fresh receipts
-    STALE --> FAILED: receipt invalidation or rights revocation
-    FAILED --> UNKNOWN: payload re-requested\n(transitional, brief)
-    note right of UNKNOWN
-      Default fallback.
-      Gated routes ABSTAIN.
-    end note
-    note right of FAILED
-      Public-tier layers in this state
-      MUST be hidden or denied.
-    end note
+flowchart LR
+    A[Supplied public-safe projection] --> B{Exact profile parser}
+    B -->|Malformed or missing| C[HIDDEN]
+    B -->|Valid positive outcome| D[Positive bounded view]
+    B -->|Valid negative outcome| E[Generic no-leak view]
+    D --> F[Optional inspection callback]
+    E --> G[No positive-only inspection data]
+    C --> H[No stale badge or prior detail retained]
+
+    classDef neutral fill:#eef2f7,stroke:#445,color:#111
+    classDef hold fill:#fff7d6,stroke:#8a6d1d,color:#111
+    classDef safe fill:#e8f5e9,stroke:#2f6f44,color:#111
+    classDef deny fill:#f8e7e7,stroke:#8b2f2f,color:#111
+    class A,B neutral
+    class C,H hold
+    class D,F safe
+    class E,G deny
 ```
 
-> [!NOTE]
-> The diagram is **structural** (CONFIRMED doctrine), not a runtime spec. Concrete transition wiring (event names, debounce windows, retry semantics) is **PROPOSED** until a mounted repo is verified. See [§16 Open verification items](#16-open-verification-items).
+The diagram describes observed component structure. It does not create an application-wide contract.
+
+### 6.2 Trust Header mapping
+
+```text
+missing or malformed projection
+  -> HIDDEN
+
+valid ANSWER projection
+  -> VISIBLE / SUPPORTED
+  -> six text-first dimensions
+  -> supporting-evidence callback allowed
+
+valid ABSTAIN | DENY | ERROR projection
+  -> VISIBLE / corresponding negative view
+  -> one generic Outcome signal
+  -> no positive-dimension disclosure
+```
+
+### 6.3 Attestation badge mapping
+
+```text
+missing or malformed projection
+  -> HIDDEN
+
+ANSWER / CHECKS_VERIFIED with all required refs
+  -> VISIBLE / VERIFIED
+  -> inspection callback allowed
+
+ABSTAIN / CHECKS_INCOMPLETE
+  -> VISIBLE / INCOMPLETE
+  -> no refs
+
+DENY / CHECKS_FAILED
+  -> VISIBLE / FAILED
+  -> no refs
+
+ERROR / UPSTREAM_ERROR
+  -> VISIBLE / ERROR
+  -> no refs
+```
+
+### 6.4 Client-side transition limits
+
+Current browser components do not have authority to:
+
+- turn `CURRENT` into `STALE` using a locally invented timer;
+- promote `UNKNOWN`, `INCOMPLETE`, or `ABSTAIN` to success;
+- reclassify policy or release state;
+- recover reference handles from negative copy;
+- keep a positive signal after replacement input fails parsing;
+- merge several dimensions into one “green” trust score;
+- persist authoritative state in browser storage.
+
+A future live transition profile requires an accepted contract, explicit time semantics, deterministic fixtures, no-leak negative tests, and correction/rollback handling.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Click resolution: badge → Evidence Drawer
 
-A click on **any** badge follows the same governed path. Badges never carry the citation surface themselves.
+### 7.1 Current Trust Header action
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant U as User
-    participant B as Trust Badge
-    participant SH as GovernedShell
-    participant API as Governed API client
-    participant ED as Evidence Drawer
-    U->>B: click / Enter / Space
-    B->>SH: dispatch "open-drawer" intent (no payload)
-    SH->>API: resolveClaim({ layer_id, feature_ref, category })
-    API-->>SH: DecisionEnvelope + EvidenceDrawerPayload\n(or negative state)
-    SH->>ED: render payload at requested category panel
-    ED-->>U: show EvidenceBundle, receipts, source roles,\nreview / rights / freshness / release / correction
+For a valid supported Evidence Drawer projection, the Trust Header may invoke a caller-supplied drawer callback using the already parsed projection.
+
+The component does not:
+
+- fetch evidence;
+- resolve `EvidenceRef`;
+- call an external model;
+- read lifecycle stores;
+- decide policy;
+- alter review or release state;
+- create a receipt or proof.
+
+Negative Trust Header outcomes do not expose the positive inspection path.
+
+### 7.2 Current attestation action
+
+For a valid positive attestation projection, the badge offers **Inspect supporting references** and delegates the parsed projection to a caller-supplied callback.
+
+The callback is an intent boundary. The badge itself does not verify the referenced attestation, receipt, EvidenceBundle, or release manifest.
+
+Negative and malformed attestation inputs expose no reference handles.
+
+### 7.3 Event vocabulary status
+
+No `ui.badge_click` event implementation or accepted event contract was found at the pinned snapshot. This document therefore does not require that event name.
+
+A future cross-surface event may be introduced only after:
+
+- the owning event contract is verified;
+- payload minimization and no-leak rules are defined;
+- component and shell ownership are clear;
+- telemetry does not capture evidence or protected detail;
+- tests prove that the event cannot mutate trust or release state.
+
+### 7.4 Target governed flow
+
+The intended higher-level flow remains useful as a **PROPOSED** target:
+
+```text
+validated compact projection
+  -> user requests inspection
+  -> shell invokes a governed, profile-specific resolver or drawer action
+  -> public-safe finite response
+  -> Evidence Drawer or bounded reference inspector
 ```
 
-Rules (CONFIRMED doctrine):
+Do not substitute this architecture diagram for proof that a governed API route or live resolver is deployed.
 
-- A badge **MUST NOT** display feature properties as claims; the click creates a **governed claim-resolution request** that returns `DecisionEnvelope` and `EvidenceDrawerPayload` or a negative state (SRC-WHOLE-UI §18).
-- Negative drawer states — `evidence_missing`, `restricted`, `stale`, `conflict`, `invalid_payload`, `policy_denied` — are **first-class** display targets, not error pages (SRC-WHOLE-UI §19.1).
-- If a popup precedes the drawer, the popup MUST be a launch point, **not** the evidence substitute (SRC-064 ML-064-080; SRC-MapLibre v1.6 ML-059-061).
+[Back to top](#top)
 
 ---
 
 ## 8. Data model
 
-### 8.1 `TrustVisibleState` (PROPOSED schema home: `schemas/contracts/v1/ui/trust_visible_state.schema.json`)
+### 8.1 No new `TrustVisibleState` is defined here
 
-Conceptually, `TrustVisibleState` is the projection that drives a single badge instance. Field set below is **PROPOSED** — derived from CONFIRMED doctrine for each badge family. Final shape requires ADR + schema work.
+The proposal-era illustrative JSON block has been removed because it looked like a current machine contract while no corresponding tracked schema or implementation was found.
 
-```jsonc
-// PROPOSED — illustrative only. Do not treat as the canonical schema.
-{
-  "object_type": "TrustVisibleState",
-  "schema_version": "v1",
-  "layer_id": "kfm://layer/...",
-  "feature_ref": "kfm://feature/...",            // optional; layer-level if absent
-  "category": "freshness",                        // one of: source_role | rights | sensitivity |
-                                                  //         review | freshness | release |
-                                                  //         correction | care | automation
-  "state": "STALE",                               // VERIFIED | STALE | UNKNOWN | FAILED
-  "label_text": "Stale (cadence exceeded)",       // required, non-color
-  "reason_codes": ["source_cadence_exceeded"],
-  "drawer_target": {
-    "drawer_panel": "freshness",
-    "evidence_drawer_payload_ref": "kfm://drawer/..."
-  },
-  "evidence_refs": ["kfm://evidence/ref/..."],    // never inlined claims
-  "release_manifest_ref": "kfm://release/...",
-  "checked_at": "2026-05-14T00:00:00Z",
-  "tolerance": { "expected_cadence": "P7D", "last_seen": "2026-04-20T00:00:00Z" }
-}
+The current candidate semantic object is named `TrustBadgeState`, and even that name remains open in its draft contract.
+
+### 8.2 Current draft semantic contract
+
+[`contracts/ui/trust_badge_state.md`](../../../contracts/ui/trust_badge_state.md) currently describes a compact UI projection and proposes four semantic states:
+
+```text
+VERIFIED | STALE | UNKNOWN | FAILED
 ```
 
-### 8.2 Relationship to surrounding objects
+It also states that a badge is not evidence, policy, review, release, or proof. The contract records an unresolved naming choice between `TrustBadgeState` and `TrustVisibleState`.
 
-| Object | Relationship | Authority |
+This is proposal evidence, not an accepted cross-surface contract.
+
+### 8.3 Current paired schema
+
+[`schemas/contracts/v1/ui/trust_badge_state.schema.json`](../../../schemas/contracts/v1/ui/trust_badge_state.schema.json) currently:
+
+- requires only `id`;
+- permits `spec_hash`, `id`, and `version`;
+- permits additional properties;
+- defines no `state` enum;
+- defines no category enum;
+- defines no positive-reference closure;
+- defines no negative no-leak constraints.
+
+Therefore, “valid against the current schema” does **not** prove conformance with the proposed semantic states.
+
+> [!WARNING]
+> Do not build a general-purpose UI consumer against the current permissive schema and then claim the four-state contract is enforced. Close the semantic, schema, fixture, validator, and compatibility packet first.
+
+### 8.4 Current closed public-safe projection
+
+The Evidence Drawer payload schema is materially stronger. It closes the top-level shape, defines finite outcomes and reason codes, provides six trust dimensions, and binds positive, negative, historical, citation, and correction behavior.
+
+The current Trust Header correctly consumes that bounded projection rather than the permissive general badge stub.
+
+### 8.5 Current attestation projection
+
+The attestation badge uses a strict **app-local** profile:
+
+```text
+kfm.explorer.attestation-badge.public-safe.v1
+```
+
+Its parser:
+
+- rejects unknown fields;
+- requires exact outcome/reason-code pairings;
+- requires all supporting references only for the verified positive case;
+- requires null reference fields for negative cases;
+- validates canonical timestamps and reference patterns;
+- performs no external fetch or cryptographic verification.
+
+This is a bounded implementation seam, not a canonical repository-wide badge schema.
+
+### 8.6 Convergence options
+
+The future architecture has three legitimate options:
+
+| Option | Description | Tradeoff |
 |---|---|---|
-| `EvidenceBundle` | `TrustVisibleState.evidence_refs` resolve into bundles via the governed API. Never inlined. | CONFIRMED doctrine |
-| `EvidenceDrawerPayload` | The click target. `TrustVisibleState.drawer_target.evidence_drawer_payload_ref` points to it; the drawer carries the citation surface. | CONFIRMED doctrine (SRC-WHOLE-UI §19.1) |
-| `DecisionEnvelope` | Wraps the badge-click response (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`). A `DENY` produces a `FAILED` badge state for the affected category. | CONFIRMED doctrine |
-| `ReleaseManifest` | Supplies `release_state`, `policy_label`, `rights_status`, `sensitivity`. | CONFIRMED (New Ideas 5-8-26 ReleaseManifest schema) |
-| `VerifyReceipt` | Required artifact backing the `VERIFIED` state for category 9 (attestation). | CONFIRMED (SRC-061 §S required objects) |
-| `AutomationBadgePayload` | Projection for category 9 only; **MUST NOT** be conflated with `EvidenceBundle`. | CONFIRMED (SRC-MapLibre v1.5 ML-057-014) |
+| **A — Keep profiles separate** | Trust Header, attestation, consent, denial, and other compact views retain exact local/public-safe profiles | Lowest authority-collision risk; more adapters |
+| **B — Adopt a small shared base** | A closed common envelope defines only identity, visibility, finite outcome, public copy, and inspection capability; profile extensions remain separate | Moderate convergence; requires compatibility design |
+| **C — Adopt one broad badge schema** | One schema owns every category and state | Highest coupling and greatest risk of semantic collapse |
 
-> [!IMPORTANT]
-> `TrustVisibleState` is **read-only at the client**. Browsers MUST NOT mutate it, derive new trust states locally, or merge multiple states into a "summary" badge that hides reasons.
+**Recommended disposition:** `HOLD` option C. Prefer A until a concrete repeated shape justifies B through an accepted contract/schema change.
+
+[Back to top](#top)
 
 ---
 
 ## 9. MapLibre adapter binding
 
-CONFIRMED doctrine: MapLibre is a disciplined 2D renderer; only the `MapLibreAdapter` may import MapLibre runtime APIs (SRC-WHOLE-UI §18).
+### 9.1 Current state
 
-- Badges that overlay map features bind to a MapLibre GeoJSON source via **`sourceId` + `featureIdProp`**, using `promoteId` / deterministic feature IDs where practical (SRC-MapLibre v1.5 ML-057-015).
-- Badge joins **MUST NOT drift** from layer feature IDs. CI MUST include a join-drift test.
-- The MapLibre adapter MAY pin overlay badges on Cesium scenes when 3D is conditionally enabled, but the adapter does **not** become the source of truth for badge state (SRC-MapLibre v1.5 ML-057-013).
+Neither the Trust Header nor the attestation badge imports MapLibre. Their current behavior is renderer-independent.
 
-```text
-Feature click
-  → MapLibreAdapter.queryRenderedFeatureAtPoint()
-  → governed claim-resolution request (NOT direct feature property display)
-  → DecisionEnvelope + EvidenceDrawerPayload (or negative state)
-  → Trust Badge updates from VERIFIED|STALE|UNKNOWN|FAILED via TrustVisibleState
-```
+The default Explorer site mounts a repository-grounded synthetic shell and a renderer-neutral map-selection-to-Evidence-Drawer fixture. The site catalog records the MapLibre runtime as `HOLD`, with dependency admission and runtime implementation false.
+
+No current evidence establishes:
+
+- a trust-badge overlay joined to rendered features;
+- `promoteId` badge joins;
+- badge-derived map filtering;
+- a live MapLibre source carrying trust state;
+- a Cesium synchronization path;
+- browser renderer proof for trust badges.
+
+### 9.2 Target rule
+
+A future map-attached compact signal should:
+
+1. receive a public-safe projection from a governed boundary;
+2. use stable released feature identity only as a lookup key;
+3. avoid treating rendered properties as evidence;
+4. remain renderer-neutral above the admitted adapter seam;
+5. expose a non-map alternative;
+6. preserve negative no-leak behavior;
+7. prove join parity, correction propagation, and rollback behavior.
+
+### 9.3 Prohibited shortcuts
+
+- deriving “verified” from a feature property;
+- loading internal receipt or policy data into vector-tile attributes;
+- using client-side filters as redaction;
+- exposing exact sensitive reasons through hover state;
+- admitting MapLibre merely to obtain badge placement;
+- calling a map screenshot or pixel state proof of release.
+
+MapLibre admission remains a separate governed decision. This page neither advances nor relaxes that hold.
+
+[Back to top](#top)
 
 ---
 
 ## 10. Stream / freshness behavior
 
-CONFIRMED doctrine (SRC-MapLibre v1.5 ML-057-016):
+### 10.1 Current state
 
-- Badge / automation streams MAY use SSE or WebSocket with **fallback polling every ~15s** and redraw debouncing.
-- When the stream fails over to polling — or polling itself ages out — the UI MUST visibly surface the **degraded** state. In trust-badge terms, the affected categories transition to `STALE`.
-- Stream outage **MUST NOT** be silent. Tests MUST cover both happy-path and outage-with-polling-fallback latency.
+No SSE, WebSocket, polling, fixed 15-second fallback, or badge-specific live transport is established by the current Trust Header or attestation badge code.
 
-> [!TIP]
-> Treat the freshness badge as the canonical surface for "the data behind this layer just got older while you were looking at it." Don't hide it in a tooltip.
+The current Trust Header renders the `freshness` value supplied by a valid Evidence Drawer projection. It does not calculate freshness from the browser clock.
+
+The attestation badge renders the supplied evaluated state. It does not poll, fetch, or re-verify.
+
+### 10.2 Time authority
+
+Freshness must remain upstream and profile-specific. A future implementation must distinguish, where material:
+
+- observed time;
+- valid time;
+- source publication time;
+- retrieval time;
+- evaluation time;
+- release time;
+- correction time;
+- client receipt time.
+
+A browser clock may support display formatting. It must not become source or release authority.
+
+### 10.3 Future transport requirements
+
+A live update mechanism remains `PROPOSED` and must define:
+
+- the exact governed source of state;
+- reconnection and replay semantics;
+- sequence or version identity;
+- stale thresholds owned by the source/profile, not the component;
+- fixed negative and outage behavior;
+- no stale-positive retention after malformed input;
+- telemetry minimization;
+- accessibility of state changes;
+- deterministic no-network fixtures;
+- correction and rollback propagation.
+
+No transport protocol or polling interval is selected by this document.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Security boundary
 
-CONFIRMED doctrine (SRC-MapLibre v1.5 ML-057-017):
+### 11.1 Current no-network posture
 
-- The browser **MUST NOT fetch untrusted attestations directly.** Remote attestations are **proxied through the governed API**, which verifies signatures and strips secrets before returning a sanitized projection.
-- CORS allowlists and content types MUST be enforced at the proxy.
-- Badge components MUST NOT import a signature-verification crypto stack into the browser bundle for the purpose of replacing this proxy.
+The current bounded components provide strong negative evidence:
 
-| Boundary rule | Status |
-|---|---|
-| Browser fetches `https://attestation.example.com/...` directly | **PROHIBITED** |
-| Browser fetches `/<governed-api>/attestations/<id>` | **REQUIRED PATH** |
-| Browser displays `AutomationBadgePayload` with stripped, validated links | **ALLOWED** |
-| Browser persists or caches raw attestation blobs | **PROHIBITED** |
+- Trust Header tests assert that its source contains no `fetch`, `localStorage`, `sessionStorage`, internal lifecycle paths, or model-runtime access.
+- The attestation component README states that the browser performs no network access, cryptography, evidence resolution, lifecycle-store reads, persistence, promotion, release, or publication.
+- The attestation parser rejects unknown fields and prevents reference handles from appearing in negative projections.
+- Browser tests prove malformed attestation detail renders no badge and does not reflect an internal canary.
+- Negative Trust Header tests prove generic copy does not expose evidence, sensitive, or internal canaries.
 
-> [!WARNING]
-> The badge UI is a high-trust surface. A "useful" shortcut that calls a third-party attestation host from the browser collapses the trust membrane and turns the badge into a credentialed export channel. Do not add it.
+### 11.2 Required no-leak behavior
+
+A compact trust surface must not expose:
+
+- raw attestations or signatures;
+- tokens, credentials, headers, or storage identifiers;
+- internal lifecycle paths;
+- unpublished evidence references;
+- protected denial reasons;
+- exact sensitive geometry;
+- free-form upstream errors;
+- model prompts or generated reasoning;
+- reviewer-private notes;
+- stale positive content after parser failure.
+
+### 11.3 Future governed transport
+
+If a future component obtains remote state, the normal public path must use a governed, public-safe interface. The exact route, authentication model, cache behavior, CORS policy, and attestation-verification service remain `UNKNOWN`.
+
+The previous edition’s sample route was not verified and is no longer presented as a required current path.
+
+### 11.4 Browser cryptography
+
+The current attestation badge deliberately does not verify signatures in the browser. A future client-verification feature would require a separate threat model, accepted trust root, algorithm and key policy, failure semantics, supply-chain review, performance tests, and no-confusion UI. It must not be smuggled into a badge component.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Accessibility requirements
 
-CONFIRMED doctrine: **Keyboard, contrast, badge-state, and screen-reader checks** are the required validation set for all trust-visible states (SRC-061 §S). The Whole-UI Expansion Report adds non-color-only and reduced-motion obligations.
+### 12.1 Current proven behavior
 
-Minimums:
+The current Trust Header:
 
-1. **No color-only signal.** Every state has a text label and a non-color indicator (icon shape, hatching, border).
-2. **Keyboard reachable.** Every badge is in tab order; `Enter` and `Space` both invoke the drawer click handler.
-3. **ARIA labeling.** Each badge exposes `role`, accessible name (state + category + layer), and `aria-describedby` pointing to the rendered reason text.
-4. **Focus management.** Drawer open from a badge moves focus into the drawer's first interactive element and traps it until close; close returns focus to the badge.
-5. **Reduced motion.** Stream transitions (e.g., `VERIFIED → STALE`) MUST NOT animate in `prefers-reduced-motion: reduce`.
-6. **Map-alternative listing.** Badges associated with on-map features MUST also be reachable from a keyboard-accessible list/table (SRC-WHOLE-UI §20.1).
-7. **Visual regression.** Playwright + axe-like snapshot coverage for each `(category × state)` cell (SRC-MapLibre v1.5 ML-057-018).
-8. **Contrast.** All state indicators meet WCAG AA contrast at the rendered size on both light and dark themes.
+- renders text-first badges as a definition list;
+- uses a status region and live-region semantics;
+- exposes visible labels for each supported dimension;
+- reduces negative outcomes to one generic text signal;
+- offers the drawer action only for the supported positive state;
+- hides malformed or missing projections.
+
+The attestation browser test verifies:
+
+- a status region with an accessible name;
+- visible text status;
+- an explicit inspection button;
+- no raw `kfm://` references in rendered badge text;
+- no component or button for malformed input.
+
+### 12.2 Required target behavior
+
+Any graduated compact trust surface must provide:
+
+1. **Text, not color alone.** The state is readable in plain text.
+2. **Programmatic name.** Category and view state are available to assistive technology.
+3. **Keyboard-equivalent inspection.** Any inspection action is a real control reachable without a pointer.
+4. **Stable focus.** Opening and closing an inspector or drawer follows the owning surface’s focus contract.
+5. **No motion dependency.** State meaning survives reduced motion and static capture.
+6. **Non-map alternative.** Map-associated status is available through an equivalent list, table, drawer, or detail view.
+7. **Zoom and reflow safety.** Labels do not truncate into ambiguous initials.
+8. **No hidden positive state.** A tooltip-only success or stale signal is insufficient.
+9. **Negative-state clarity.** `ABSTAIN`, `DENY`, and `ERROR` remain distinguishable in text.
+10. **Localization tolerance.** Layout does not assume English label length.
+
+### 12.3 Visual-token authority
+
+The existing trust-state visual guide is draft and contains proposal-era universal vocabulary. Its token names, colors, glyphs, and metrics are not accepted by this page.
+
+Before visual graduation, verify:
+
+- the current design-system owner and token home;
+- contrast in actual themes;
+- high-contrast and print behavior;
+- icon licensing and semantics;
+- screenshots in grayscale;
+- reduced-motion behavior;
+- human accessibility review.
+
+A green badge is not a stronger truth claim than a text badge.
+
+[Back to top](#top)
 
 ---
 
 ## 13. Exports & screenshots
 
-CONFIRMED doctrine (SRC-061 ML-061-141; SRC-MapLibre v1.6 ML-059-064):
+### 13.1 Current state
 
-- Exports and screenshots that include trust badges **MUST preserve verification badge state and the linked manifest / proof ID.**
-- Static maps and screenshots remain **downstream carriers**, not citation surfaces. Required preservation: checksums, provenance, alt text, citation references.
-- A badge captured in an export is a **snapshot at export time**. The export pipeline MUST stamp `exported_at` and the `release_manifest_ref` into the export receipt so a viewer can detect drift between the snapshot and current state.
+No current repository evidence inspected for this page proves that PNG, PDF, GeoJSON, vector-tile, story, or Focus Mode exports preserve trust-badge projections through an accepted export contract.
 
-| Export type | Badge preservation requirement |
-|---|---|
-| PNG / static map | Burn-in badge + sidecar JSON with `TrustVisibleState` snapshot, `release_manifest_ref`, `exported_at` |
-| PDF report | Embedded badge image + machine-readable trust block in document metadata |
-| GeoJSON / vector tile export | Properties MUST NOT inline trust state as a "verified" flag without a `release_manifest_ref` and `exported_at` |
-| Focus Mode answer export | Citations + badge snapshot + `AIReceipt` reference; uncited or trust-stripped exports MUST be denied |
+The proposal-era sidecar JSON, PDF metadata block, and `TrustVisibleState` snapshot requirements are therefore not described as implemented.
+
+### 13.2 Target export rule
+
+A governed export that carries a consequential claim should preserve the authority-bearing context appropriate to that export, such as:
+
+- release identity;
+- evidence or citation references;
+- temporal and spatial scope;
+- rights and sensitivity posture;
+- correction or withdrawal state;
+- generation time;
+- profile and version;
+- rollback or current-status locator where appropriate.
+
+A rendered badge may be included for human readability, but the pixel is not the machine or evidentiary record.
+
+### 13.3 Screenshot limits
+
+A screenshot:
+
+- freezes a view at one time;
+- may omit interaction and correction state;
+- may be separated from its source;
+- can preserve stale or withdrawn appearance;
+- cannot prove the underlying projection was valid;
+- cannot substitute for an export receipt or release manifest.
+
+Do not burn protected reasons or exact sensitive detail into a screenshot merely because the live component would have hidden them.
+
+### 13.4 Graduation evidence
+
+Export preservation remains `HOLD` until a bounded profile proves:
+
+- exact exported fields;
+- public-safe transformation;
+- positive and negative fixtures;
+- deterministic identity;
+- current/withdrawn interpretation;
+- correction propagation;
+- accessible alternative text;
+- no secret or protected-detail leakage;
+- rollback behavior.
+
+[Back to top](#top)
 
 ---
 
 ## 14. Anti-patterns
 
-> [!CAUTION]
-> These patterns have been **explicitly named** as failure modes in attached project knowledge. Each one collapses the trust membrane.
-
-| Anti-pattern | Doctrine reference | Why it fails |
+| Anti-pattern | Why it fails | Safe disposition |
 |---|---|---|
-| Badge as proof substitute | SRC-061 §S anti-patterns; ML-061-090 | Visual trust theater. A badge without resolvable receipts is decoration. |
-| Badge replacing the Evidence Drawer | SRC-061 ML-061-139 | The drawer is the citation surface. The badge is the pointer. |
-| Color-only state distinction | SRC-WHOLE-UI §20.1; SRC-061 §S validation | Inaccessible. Fails WCAG. Fails non-color screen capture. |
-| Summary badge that hides multi-category reasons | This document §8.2 | Hides governance signals; reviewers can't see why something is stale. |
-| Direct browser fetch of remote attestations | SRC-MapLibre v1.5 ML-057-017 | Collapses trust membrane; loses signature verification and secret stripping. |
-| Treating FAIR+CARE badges as release authority | SRC-MapLibre v1.6 ML-059-063 | Badges describe state; release authority lives in `PolicyDecision` + `PromotionDecision`. |
-| Inlining trust state on features without a `release_manifest_ref` | SRC-061 ML-061-141 | Exports lose audit chain; viewers can't detect drift. |
-| Style-filter "redaction" for sensitive geometry | SRC-061 §Q anti-patterns | Style filters are reversible client-side; redaction requires server-side generalization with a `SensitiveGeometryTransform`. |
-| Promoting `UNKNOWN` to `VERIFIED` by client retry alone | This document §4 | Verification is a governed event; client retries surface the same state until the server resolves it. |
+| **Badge as proof** | Visual output cannot verify evidence, signature, policy, review, or release | Offer bounded inspection; keep upstream authority visible |
+| **One green trust score** | Collapses independent policy, review, release, freshness, and correction axes | Show only profile-defined dimensions |
+| **Universal enum by prose** | Documentation cannot make a permissive schema enforce a state machine | Close contract, schema, fixtures, validator, and compatibility packet |
+| **Negative reference leakage** | Exposes protected or internal handles precisely when access is denied or failed | Fixed copy; null/absent positive-only refs |
+| **Malformed input defaults to prior success** | Preserves stale assurance after validation failure | Hide or render contract-defined error; clear prior detail |
+| **Client-derived trust** | Browser feature properties, timers, or retries do not create authority | Consume a governed public-safe projection |
+| **Direct attestation fetch** | Expands network, credential, CORS, parsing, and trust-root exposure | Governed service with a separately reviewed contract |
+| **Browser signature verification hidden in UI code** | Makes a badge an undeclared security verifier | Separate threat model, package, contract, and tests |
+| **Badge-only redaction** | CSS and client filters are reversible and do not transform data | Redact/generalize upstream and record the transform |
+| **CARE/sovereignty inference from geography** | Geographic relevance is not authority, consultation, permission, or consent | Qualified authority resolution and policy review |
+| **Mandatory badge density** | More labels can simulate certainty and obscure the actual negative outcome | Audience- and profile-specific compact projection |
+| **Tooltip-only stale state** | Inaccessible and easy to miss | Text-visible status in an equivalent non-map surface |
+| **Screenshot as release evidence** | Pixels lose profile, correction, and authority chain | Governed export metadata and current-status locator |
+| **Documentation badge as CI proof** | A static shield can be stale or unrelated | Cite exact checks and exact head in the pull request |
+| **Map renderer as trust source** | Rendering is downstream of evidence and policy | Keep renderer behind the governed projection seam |
+
+[Back to top](#top)
 
 ---
 
 ## 15. Validation tests
 
-CONFIRMED required test families (from SRC-061 §S, SRC-MapLibre v1.5 ML-057-018, SRC-WHOLE-UI §20). Concrete test paths are **PROPOSED** until a mounted repo is verified.
+### 15.1 Current repository evidence
 
-<details>
-<summary><strong>Schema & contract tests</strong></summary>
+| Surface | Evidence present at the pinned snapshot | What it proves |
+|---|---|---|
+| Trust Header | component source and unit tests | Positive six-dimension rendering, generic negative states, hidden malformed/missing input, bounded drawer action, source-boundary assertions |
+| Evidence Drawer projection | closed schema, fixtures, validator, adapter, UI resolver, tests | One bounded public-safe profile and finite outcome behavior |
+| Attestation badge | strict adapter, component, valid/invalid fixtures, unit/browser tests, component README | Exact projection mapping, positive-only refs, negative no-leak behavior, hidden malformed input, inspection callback |
+| Explorer site | repository-grounded catalog and synthetic composition | Fixture-first shell and renderer-neutral evidence bridge; not live map or release proof |
+| Draft general badge state | semantic contract and permissive schema | Proposal lineage and current schema gap; not enforceable universal behavior |
 
-- `TrustVisibleState` schema validates against positive fixtures for each `(category × state)` cell.
-- Invalid fixtures (missing `release_manifest_ref` for `VERIFIED`; missing `reason_codes` for `FAILED`; stale `checked_at` for `VERIFIED`) **MUST** fail closed.
-- `AutomationBadgePayload` validates separately from `EvidenceBundle`; cross-contamination fixtures fail.
+### 15.2 Repository-native focused commands
 
-</details>
+The Explorer package currently declares:
 
-<details>
-<summary><strong>Click-resolution tests</strong></summary>
+```bash
+pnpm --filter explorer-web run test:unit
+pnpm --filter explorer-web run test:browser
+pnpm --filter explorer-web run build
+```
 
-- Badge click produces a governed `claim-resolution` request and returns `DecisionEnvelope` + `EvidenceDrawerPayload` **or** a negative state.
-- Negative-state fixtures (`evidence_missing`, `restricted`, `stale`, `conflict`, `invalid_payload`, `policy_denied`) each render their own drawer panel.
-- A badge click MUST NOT mutate `TrustVisibleState` client-side.
+The component README notes that local browser execution may require Chromium. Report browser tests as `NOT RUN` rather than passed when the browser is unavailable.
 
-</details>
+### 15.3 Documentation validation for this page
 
-<details>
-<summary><strong>Stale-source & stream fixtures</strong></summary>
+A change to this page should verify:
 
-- `StaleSourceFixture` exercises `STALE` for cadence-exceeded, schema-drift, geography-drift, time-out-of-support, model-superseded, review-aged-out, rights-changed, and policy-version-changed cases.
-- Stream outage fixture: SSE/WebSocket drop triggers polling fallback within budget; affected categories surface `STALE` within debounce window.
+- one H1;
+- valid metadata YAML;
+- balanced fences and HTML tags;
+- preserved former major section headings and fragments;
+- repository-relative links at the exact head;
+- no proposed route or path presented as current;
+- no secret, protected location, or sensitive detail;
+- no universal schema invented in prose;
+- generated-work receipt with pending human review;
+- exact base/head diff and rollback target.
 
-</details>
+### 15.4 Future cross-surface acceptance matrix
 
-<details>
-<summary><strong>Security & boundary tests</strong></summary>
+A new or graduated badge profile should include at least:
 
-- Browser bundle MUST NOT import a model runtime, vector DB client, object store SDK, or third-party attestation fetcher.
-- Static import-boundary test fails the build if `TrustBadges` directly imports a remote-fetch library targeting an external attestation host.
-- CORS allowlist enforcement at the governed API proxy (positive + negative fixtures).
+| Test family | Required cases |
+|---|---|
+| Shape | valid positive, every finite negative, missing field, extra field, wrong profile/version |
+| Semantics | positive support closure; contradictory outcome/reason; stale/current distinction |
+| No leak | protected reason, evidence ref, internal path, free-form error, canary |
+| Accessibility | text label, accessible name, keyboard action, focus return, zoom/reflow, reduced motion |
+| Browser boundary | no direct internal store, model runtime, external attestation fetch, or persistence |
+| Inspection | positive callback exactly once; negative and malformed cases cannot expose positive data |
+| Correction | corrected, superseded, withdrawn, and stale replacement behavior |
+| Map | stable identity, no property-as-proof, equivalent non-map access, renderer adapter isolation |
+| Export | profile/version, release/citation context, no badge-pixel-as-proof |
+| Replay | deterministic result for the same validated projection |
 
-</details>
+### 15.5 Proof limits
 
-<details>
-<summary><strong>Accessibility & visual regression</strong></summary>
+A passing component test does not prove:
 
-- Keyboard-only walkthrough of every `(category × state)` cell.
-- Axe-like rule set: no critical violations on shell + badges + drawer.
-- Playwright snapshots per state cell, both light and dark themes.
-- Reduced-motion snapshot proves transitions are disabled.
-- Map-alternative list/table contains the same trust state as the on-map badge.
+- upstream evidence is true;
+- policy is accepted;
+- signatures are valid;
+- release occurred;
+- the component is composed in production;
+- deployment is healthy;
+- public users can access the surface;
+- a screenshot is current.
 
-</details>
-
-<details>
-<summary><strong>Export-preservation tests</strong></summary>
-
-- PNG / PDF export carries a sidecar with `TrustVisibleState`, `release_manifest_ref`, and `exported_at`.
-- Vector export MUST NOT inline a `verified: true` property without the required references.
-- Drift detection: viewer rendering an old export warns when `release_manifest_ref` no longer matches current release.
-
-</details>
+[Back to top](#top)
 
 ---
 
 ## 16. Open verification items
 
-| # | Item | Status | Resolves when |
-|---|---|---|---|
-| 1 | `apps/explorer-web/src/features/evidence/TrustBadges.tsx` exists | **UNKNOWN** | Repo mounted; file present; imports respect MapLibre adapter boundary |
-| 2 | `schemas/contracts/v1/ui/trust_visible_state.schema.json` exists | **PROPOSED** | ADR accepted; schema added; fixtures present |
-| 3 | Concrete event names + debounce windows for §6 state transitions | **PROPOSED** | UI subsystem owner ratifies in `STATE_OWNERSHIP.md` |
-| 4 | Final visual treatment per state (icon shape, border, hatching) | **NEEDS VERIFICATION** | Design tokens authority (in `packages/ui/` or styles authority) confirms non-color indicators |
-| 5 | Stream protocol selection (SSE vs WebSocket vs both) | **NEEDS VERIFICATION** | Governed API spec finalizes |
-| 6 | Attestation proxy route under governed API | **PROPOSED** | `apps/governed-api/` route present; security review passed |
-| 7 | CARE / sovereignty chip catalog (which sources require it) | **NEEDS VERIFICATION** | `data/registry/` sovereignty register lists CARE-applicable sources |
-| 8 | Export pipeline preservation contract | **PROPOSED** | Export route + receipt schema landed |
-| 9 | CODEOWNERS for `docs/architecture/ui/` and `apps/explorer-web/src/features/evidence/` | **UNKNOWN** | Repo mounted; CODEOWNERS file inspected |
+### P0 — authority and safe semantics
+
+| Item | Current status | Closure evidence |
+|---|---|---|
+| Canonical object name: `TrustBadgeState` vs `TrustVisibleState` | **HOLD** | Accepted semantic contract decision |
+| General badge schema closure | **HOLD** | Closed schema, enums, profile/version, positive/negative invariants, fixtures, validator, compatibility note |
+| Rights, consent, CARE, sovereignty, and sensitivity indicator authority | **HOLD** | Qualified stewardship and policy decision; no geography inference |
+| Cross-profile translation law | **HOLD** | Accepted adapter contract or explicit decision to keep profiles separate |
+| Negative no-leak baseline | **PARTIALLY CONFIRMED** | Extend deterministic canary tests to every new profile |
+| Review and release responsibility | **NEEDS VERIFICATION** | Accountable human assignments; CODEOWNERS alone is insufficient |
+
+### P1 — usable Explorer integration
+
+| Item | Current status | Closure evidence |
+|---|---|---|
+| Default-shell composition of Trust Header | **NEEDS VERIFICATION** | Explicit import/composition, browser test, failure behavior |
+| Default-shell composition of attestation badge | **NEEDS VERIFICATION** | Explicit use case, composition, browser test, audience decision |
+| Evidence Drawer action wiring | **PARTIALLY CONFIRMED** | Prove current composed route and all negative outcomes at exact head |
+| Accepted visual tokens | **HOLD** | Design-system home, contrast, grayscale, high-contrast, print, reduced-motion review |
+| Stable event/telemetry vocabulary | **PROPOSED** | Contract, minimization policy, no protected payload, tests |
+| Governed export profile | **HOLD** | Contract/schema/fixtures/receipt/correction tests |
+| Documentation crosswalk | **OPEN** | Reconcile this page, `MAP_TRUST_STATES.md`, brand visuals, and component READMEs without parallel authority |
+
+### P2 — live, map, and operational maturity
+
+| Item | Current status | Closure evidence |
+|---|---|---|
+| MapLibre badge binding | **HOLD** | Renderer admission, one adapter seam, stable join tests, non-map parity |
+| Live freshness transport | **HOLD** | Source-owned thresholds, sequence/replay, outage tests, telemetry minimization |
+| Remote attestation service | **UNKNOWN** | Accepted API/security contract, threat model, deployment and health evidence |
+| Client-side verification | **HOLD** | Separate ADR/security design; not hidden inside UI |
+| Correction propagation through caches and exports | **UNKNOWN** | Deterministic drill with withdrawal and rollback |
+| Operations and observability | **UNKNOWN** | Public-safe metrics, alerts, runbooks, incident/correction responsibilities |
+
+### Stop conditions
+
+Do not graduate a profile when any of these remain unresolved:
+
+- positive state can be produced without profile-required support;
+- negative input can leak positive-only references or protected reasons;
+- malformed input retains a prior positive signal;
+- the browser derives policy, review, release, or rights state;
+- an exact sensitive location or internal path reaches public copy;
+- schema and semantic contract disagree materially;
+- the profile has no correction or withdrawal behavior where public consequence is material;
+- human review or authority is implied by CODEOWNERS or a badge.
+
+[Back to top](#top)
 
 ---
 
 ## 17. Related docs
 
-- [`docs/architecture/ui/README.md`](./README.md) — UI subsystem index *(PROPOSED)*
-- [`docs/architecture/ui/STATE_OWNERSHIP.md`](./STATE_OWNERSHIP.md) — map/time/layer/drawer/focus state ownership *(PROPOSED)*
-- [`docs/architecture/ui/BOUNDARIES.md`](./BOUNDARIES.md) — browser allowed/forbidden operations and MapLibre adapter boundary *(PROPOSED)*
-- [`docs/architecture/ui/ROUTE_MAP.md`](./ROUTE_MAP.md) — shell route families and continuity rules *(PROPOSED)*
-- [`docs/architecture/governed-ai/README.md`](../governed-ai/README.md) — Focus Mode and adapter-first runtime boundary *(PROPOSED)*
-- [`docs/architecture/contract-schema-policy-split.md`](../contract-schema-policy-split.md) — how meaning, shape, and policy split across roots
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public path discipline
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement, README contract, anti-patterns
+### Governing and coordination documents
 
-[Back to top](#trust-visible-badges--ui-architecture)
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — current writable Directory Rules authority
+- [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted adoption decision
+- [`docs/architecture/document-convergence-plan.md`](../document-convergence-plan.md) — same-path `PLACE` disposition
+- [`docs/architecture/ui/README.md`](./README.md) — UI documentation index and current bounded posture
+- [`docs/standards/MAP_TRUST_STATES.md`](../../standards/MAP_TRUST_STATES.md) — current cross-map trust-state profile and anti-collapse rules
+- [`docs/architecture/sovereignty-care.md`](../sovereignty-care.md) — authority, CARE, geography, consent, and safe-exposure limits
+
+### Contracts and schemas
+
+- [`contracts/ui/trust_badge_state.md`](../../../contracts/ui/trust_badge_state.md) — draft semantic candidate
+- [`schemas/contracts/v1/ui/trust_badge_state.schema.json`](../../../schemas/contracts/v1/ui/trust_badge_state.schema.json) — current permissive stub
+- [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) — closed bounded public-safe projection
+- [`docs/architecture/contract-schema-policy-split.md`](../contract-schema-policy-split.md) — meaning, shape, admissibility, and proof separation
+
+### Current Explorer implementation evidence
+
+- [`apps/explorer-web/src/features/trust_header/index.tsx`](../../../apps/explorer-web/src/features/trust_header/index.tsx)
+- [`apps/explorer-web/tests/trust-header.test.ts`](../../../apps/explorer-web/tests/trust-header.test.ts)
+- [`apps/explorer-web/src/adapters/AttestationBadgeProjection.ts`](../../../apps/explorer-web/src/adapters/AttestationBadgeProjection.ts)
+- [`apps/explorer-web/src/features/attestation_badge/README.md`](../../../apps/explorer-web/src/features/attestation_badge/README.md)
+- [`apps/explorer-web/tests/browser/attestation-badge.spec.ts`](../../../apps/explorer-web/tests/browser/attestation-badge.spec.ts)
+- [`apps/explorer-web/src/site/catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts)
+- [`apps/explorer-web/src/site/mountExplorerSite.ts`](../../../apps/explorer-web/src/site/mountExplorerSite.ts)
+
+### UI boundaries
+
+- [`docs/architecture/ui/BOUNDARIES.md`](./BOUNDARIES.md)
+- [`docs/architecture/ui/GOVERNED_SHELL.md`](./GOVERNED_SHELL.md)
+- [`docs/architecture/evidence-drawer.md`](../evidence-drawer.md)
+- [`docs/architecture/ui/ACCESSIBILITY.md`](./ACCESSIBILITY.md)
+
+[Back to top](#top)
 
 ---
 
 ## Appendix A: terminology
 
-<details>
-<summary>Click to expand</summary>
-
-| Term | Meaning |
+| Term | Bounded meaning |
 |---|---|
-| **TrustVisibleState** | Required contract object that projects a single badge's category, state, reason codes, and drawer target. (CONFIRMED — SRC-061 §S required objects/contracts.) |
-| **EvidenceBundle** | Resolved bundle of evidence references that supports a claim. Never inlined into a badge. |
-| **EvidenceRef** | Pointer that resolves into an `EvidenceBundle` via the governed API. |
-| **EvidenceDrawerPayload** | Payload that drives the Evidence Drawer; the citation surface for clicked claims. |
-| **DecisionEnvelope** | Finite-outcome wrapper around a governed response (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`). |
-| **ReleaseManifest** | Versioned release decision with `release_state`, `policy_label`, `rights_status`, `sensitivity`, `artifacts`, `evidence_refs`, `rollback`. (CONFIRMED schema in New Ideas 5-8-26 packet.) |
-| **VerifyReceipt** | Receipt produced by a device or server verifying an artifact (e.g., BLAKE3-verified PMTiles chunk + DSSE signature). |
-| **AutomationBadgePayload** | Projection for build / SBOM / attestation badges. Distinct from `EvidenceBundle`. |
-| **CARE label** | Indicator that a source falls under CARE principles; pairs with sovereignty notice chips. |
-| **TrustVisibleState category** | One of source_role, rights, sensitivity, review, freshness, release, correction, care, automation. |
-| **State** | One of `VERIFIED`, `STALE`, `UNKNOWN`, `FAILED`. |
+| **Badge** | Compact text-visible UI projection; never evidence or authority |
+| **Trust Header** | Current component that projects six dimensions for a valid supported Evidence Drawer projection and one generic signal for negative outcomes |
+| **Attestation badge** | Current fixture-first component that projects a strict app-local automated-check status |
+| **View state** | Component-local rendering state derived from a validated profile |
+| **Response outcome** | Finite result such as `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; not the same as a visual badge state |
+| **Trust dimension** | Independent projected axis such as policy, review, release, freshness, or correction |
+| **`TrustBadgeState`** | Draft semantic candidate; not accepted as universal |
+| **`TrustVisibleState`** | Proposal-era alternate name; no tracked implementation or schema found at the snapshot |
+| **Evidence Drawer projection** | Closed public-safe payload profile carrying finite outcome, trust dimensions, citations, limitations, and bounded history |
+| **Inspection callback** | Component-owned delegation point; not evidence resolution or verification by itself |
+| **No-leak negative state** | Fixed public-safe negative rendering that excludes positive-only refs and protected details |
+| **Hidden** | Component renders nothing because input is missing or malformed; not a policy outcome |
+| **Verified view** | Local attestation-badge state for one exact positive profile; not global verification |
+| **Stale** | Profile-specific freshness state supplied by an upstream time authority; not inferred from browser time |
+| **CARE indicator** | Potential public notice only after qualified authority and policy establish applicability; never inferred from geography |
+| **Release** | Upstream governed state transition; never caused by rendering a badge |
 
-</details>
-
-[Back to top](#trust-visible-badges--ui-architecture)
+[Back to top](#top)
 
 ---
 
 ## Appendix B: evidence basis
 
-<details>
-<summary>Click to expand — sources consulted</summary>
+### B.1 Repository evidence inspected
 
-**Primary (KFM project knowledge):**
+| Path | Evidence used |
+|---|---|
+| `docs/architecture/ui/TRUST_BADGES.md` | Prior document identity, anchors, proposal-era claims, prior blob |
+| `docs/architecture/ui/README.md` | Bounded UI posture and map/runtime hold |
+| `docs/architecture/document-convergence-plan.md` | `PLACE` disposition for this page |
+| `docs/standards/MAP_TRUST_STATES.md` | Multi-axis model; current vocabulary crosswalk; readiness limits |
+| `contracts/ui/trust_badge_state.md` | Draft semantics, four proposed states, naming question |
+| `schemas/contracts/v1/ui/trust_badge_state.schema.json` | Only `id` required; additional properties allowed; no state enum |
+| `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` | Closed public-safe finite-outcome and six-dimension projection |
+| `apps/explorer-web/src/features/trust_header/index.tsx` | Current component mapping, generic negative states, hidden malformed input |
+| `apps/explorer-web/tests/trust-header.test.ts` | Positive, negative, malformed, no-leak, and browser-boundary tests |
+| `apps/explorer-web/src/adapters/AttestationBadgeProjection.ts` | Exact app-local parser and positive/negative reference rules |
+| `apps/explorer-web/src/features/attestation_badge/index.ts` | Local view vocabulary and inspection boundary |
+| `apps/explorer-web/src/features/attestation_badge/README.md` | Fixture-first non-effects and validation commands |
+| `apps/explorer-web/tests/browser/attestation-badge.spec.ts` | Accessible status, inspection delegation, malformed no-leak behavior |
+| `apps/explorer-web/src/site/catalog.ts` | Descriptive feature maturity and MapLibre HOLD metadata |
+| `apps/explorer-web/src/main.ts` and `src/site/mountExplorerSite.ts` | Current default site composition boundary |
+| `apps/explorer-web/package.json` | Exact build and test scripts |
+| `.github/CODEOWNERS` | Current review routing and explicit non-authority warning |
+| `CONTRIBUTING.md` | Documentation, AI receipt, validation, PR, and rollback requirements |
+| `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` | Accepted Directory Rules adoption |
+| `docs/doctrine/directory-rules.md` | Placement authority |
+| `docs/architecture/sovereignty-care.md` | CARE, authority, geography, consent, and exposure limits |
 
-- `Master_MapLibre_Components-Functions-Features_compressed.pdf` (SRC-061 §S "Accessibility, UX, and Trust-Visible States"; ML-061-138, ML-061-139, ML-061-140, ML-061-141, ML-061-090, ML-061-094, ML-061-118, ML-061-160) — CONFIRMED doctrine for trust badge purpose, finite states, click resolution, export preservation, and CARE/sovereignty requirements.
-- `Master_MapLibre_Components-Functions-Features_compressed.pdf` (SRC-MapLibre v1.5 ML-057-013, ML-057-014, ML-057-015, ML-057-016, ML-057-017, ML-057-018) — CONFIRMED doctrine for `AutomationBadgePayload`, MapLibre adapter binding, stream/polling degradation, security boundary, and a11y/snapshot test requirements.
-- `Master_MapLibre_Components-Functions-Features_compressed.pdf` (SRC-MapLibre v1.6 ML-059-061, ML-059-063, ML-059-064) — CONFIRMED that popups are launch points (not evidence substitutes); FAIR+CARE badges are not release authority; static exports are downstream carriers.
-- `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` (§§17.2, 18, 19, 20) — CONFIRMED component family of `TrustBadges` (categories: source role, rights, sensitivity, review, freshness, release, correction); MapLibre adapter boundary rules; Evidence Drawer payload fields; accessibility smoke criteria.
-- `KFM_Whole_UI_Governed_AI_Expansion_Report.pdf` (Appendix B path tables) — PROPOSED path `apps/explorer-web/src/features/evidence/TrustBadges.tsx` and PROPOSED docs path `docs/architecture/ui/*`.
-- `KFM_Domains_Culmination_Atlas_v1_1.pdf` (§24.8 Stale-State and Supersession Reference) — CONFIRMED markers and triggers for the `STALE` state.
-- `New_Ideas_5-8-26.pdf` — CONFIRMED `ReleaseManifest` schema enums (`release_state`, `policy_label`, `rights_status`, `sensitivity`).
-- `KFM_Components_Pass_10_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf` (§6.15 FAIR + CARE Reconciliation) — CONFIRMED FAIR + CARE pairing; supports CARE chip mandate.
-- `directory-rules.md` (§§5, 6, 8, 15) — CONFIRMED placement convention for `docs/architecture/ui/*`; CONFIRMED README contract and ADR triggers; CONFIRMED `schemas/contracts/v1/...` as schema home per ADR-0001.
+### B.2 Evidence ranking
 
-**No external research was performed.** No external-research trigger applied: every claim in this document is grounded in attached project knowledge or in clearly labeled PROPOSED implementation extensions of that doctrine.
+1. accepted decisions and current repository files;
+2. current schemas, tests, fixtures, and generated artifacts;
+3. repository documentation describing bounded behavior;
+4. attached KFM doctrine and planning lineage;
+5. this document’s proposed integration targets.
 
-</details>
+Planning reports that explicitly label their paths and implementation as proposed remain useful lineage. They do not override current repository evidence.
 
-[Back to top](#trust-visible-badges--ui-architecture)
+### B.3 What was not proved
+
+This inspection did not prove:
+
+- a deployed Explorer instance;
+- public traffic;
+- a live governed API badge route;
+- source activation;
+- runtime MapLibre use;
+- live freshness updates;
+- production signature verification;
+- accepted rights/CARE/sovereignty assignments;
+- export preservation;
+- release or publication;
+- branch-protection enforcement;
+- independent human review.
+
+[Back to top](#top)
 
 ---
 
-**Last updated:** 2026-05-14 &nbsp;·&nbsp; **Doctrine:** CONFIRMED &nbsp;·&nbsp; **Implementation:** PROPOSED &nbsp;·&nbsp; [Back to top](#trust-visible-badges--ui-architecture)
+## Appendix C: disposition of proposal-era claims
+
+| Prior claim | Current disposition | Reason |
+|---|---|---|
+| `TrustVisibleState` is a required implemented object | **CONFLICTED / demoted to proposal lineage** | Current candidate is draft `TrustBadgeState`; no general implementation found |
+| One four-state enum governs every badge | **WITHDRAWN as current claim** | Current profiles use independent finite vocabularies |
+| Nine categories form the default row for every released layer | **WITHDRAWN** | No accepted universal profile; current Trust Header has six positive dimensions |
+| CARE/sovereignty chip is universally mandatory | **HOLD** | Applicability and authority cannot be inferred; qualified review required |
+| Universal `TrustBadges.tsx` exists or is the implementation target | **NOT FOUND / no path created** | Avoid parallel or speculative implementation |
+| Every badge click dispatches `ui.badge_click` | **NOT FOUND / PROPOSED** | No accepted event implementation located |
+| Click always calls a governed API | **PARTIAL target only** | Current components delegate callbacks; live route not proved |
+| MapLibre `promoteId` joins drive badges | **NOT PROVED / HOLD** | Current components are renderer-independent; MapLibre runtime remains held |
+| SSE/WebSocket with ~15-second polling is current doctrine | **WITHDRAWN as current claim** | No transport selected or implemented by current badge surfaces |
+| Browser route `/<governed-api>/attestations/<id>` is required | **WITHDRAWN as concrete path** | Future governed transport is required in principle; route is unknown |
+| PNG/PDF sidecar profile is implemented | **NOT PROVED / HOLD** | No accepted export contract inspected |
+| Browser may verify attestation state through the badge | **DENIED for current component** | Current implementation explicitly performs no cryptography |
+| Badge pixels preserve proof in screenshots | **DENIED** | Screenshots are downstream, staleable carriers |
+| Badge removal changes trust state | **DENIED** | Upstream authority-bearing objects own state |
+| A positive badge proves release | **DENIED** | Badge is non-authoritative and may only point to support |
+
+[Back to top](#top)
+
+---
+
+## Rollback
+
+The prior document remains recoverable at Git blob:
+
+```text
+96f65d1cde10b058fd3ae55f20071cd037dbbc63
+```
+
+Rollback is a normal reviewed revert of the documentation commit, followed by the same metadata, link, and structure checks. Reverting this page must not mutate contracts, schemas, policy, evidence, receipts, proofs, review, release, runtime, correction, or publication state.
+
+---
+
+**Document state:** repository-grounded draft · **Current-system claims:** bounded to the pinned snapshot · **Cross-surface convergence:** HOLD pending accepted semantic and machine authority · [Back to top](#top)
