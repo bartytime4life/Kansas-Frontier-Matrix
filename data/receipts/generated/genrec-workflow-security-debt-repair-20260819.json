@@ -5,7 +5,7 @@
     ".github/workflows/mobsf.yml"
   ],
   "artifact_hashes": {
-    ".github/workflows/mobsf.yml": "sha256:893eb3726a6446aa95e2d524d53de95a686b5031d8daacdb8f648b1b5d66f9db"
+    ".github/workflows/mobsf.yml": "sha256:b2415ec0538b7cfd23d284a26c28662feabda57275801dc697dc30fe5f171370"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -33,6 +33,8 @@
     "evidence_refs": [
       "repo:main@12401d5094a7be3f0aa803b40c479a222cbe2068",
       "repo:actions/run/32249159727#job-96056117861",
+      "repo:actions/run/32275285697#job-96141151412",
+      "upstream:MobSF/mobsfscan/setup.py@2659f2ac6d185f0c60ce2eb754f5f48b683f73fb",
       "repo:pull/2999",
       "repo:pull/3001",
       "repo:pull/3072",
@@ -71,6 +73,11 @@
       "reason": "Workflow scope remains contents-read; job write authority is limited to security-events with actions/content read, and the job has one 20-minute timeout."
     },
     {
+      "gate": "mobsf-runtime-compatibility",
+      "outcome": "PASS",
+      "reason": "The pinned mobsfscan revision declares python_requires >=3.10. Exact-head job 96141151412 proved Python 3.8 cannot install its requirements; the corrected workflow selects Python 3.10 without changing scanner semantics."
+    },
+    {
       "gate": "artifact-byte-binding",
       "outcome": "PASS",
       "reason": "The MobSF workflow SHA-256 was recomputed over the finalized UTF-8 bytes."
@@ -78,7 +85,7 @@
     {
       "gate": "hosted-exact-head-checks",
       "outcome": "SKIPPED",
-      "reason": "Hosted validation starts after the draft pull request opens."
+      "reason": "The first draft head closed the workflow-security ratchet but exposed the upstream Python >=3.10 requirement. Hosted validation for the corrected successor head starts after this update."
     },
     {
       "gate": "human-review",
@@ -94,6 +101,16 @@
       "id": "workflow-security-failure",
       "validated": true,
       "evidence_ref": "repo:actions/run/32249159727#job-96056117861"
+    },
+    {
+      "id": "mobsf-python-compatibility-failure",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/32275285697#job-96141151412"
+    },
+    {
+      "id": "mobsf-python-requirement",
+      "validated": true,
+      "evidence_ref": "upstream:MobSF/mobsfscan/setup.py@2659f2ac6d185f0c60ce2eb754f5f48b683f73fb"
     },
     {
       "id": "temporary-wrapper-lineage",
@@ -120,9 +137,9 @@
   "created_at": "2026-08-19T16:15:55Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 3075,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Retires a completed temporary write-capable reconstruction surface and its encoded payload chunks, and hardens the surviving MobSF workflow. This does not weaken or baseline the workflow-security ratchet, approve a review, release, deploy, publish, or change repository settings."
+  "notes": "Retires a completed temporary write-capable reconstruction surface and its encoded payload chunks, hardens the surviving MobSF workflow, and aligns its Python runtime with the pinned upstream scanner. This does not weaken or baseline the workflow-security ratchet, approve a review, release, deploy, publish, or change repository settings."
 }
