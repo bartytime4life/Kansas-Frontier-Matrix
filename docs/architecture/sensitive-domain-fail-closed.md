@@ -1,519 +1,861 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-sensitive-domain-fail-closed
-title: Sensitive-Domain Fail-Closed — Architecture
-type: standard
-version: v1
-status: draft
-owners: <Sensitivity reviewer + Rights-holder reps + Docs steward — TBD>
+title: Sensitive-Domain Fail-Closed — Current Architecture and Enforcement Boundary
+type: architecture-reference
+version: v2.0-draft
+status: "draft; repository-grounded; mixed-maturity; fail-closed; no-policy-authority; no-release; no-publication"
+owners:
+  - "@bartytime4life — verified GitHub review route through CODEOWNERS"
+  - "NEEDS VERIFICATION — architecture, policy, privacy/genomics, cultural-sovereignty, biodiversity, infrastructure-security, evidence, governed-API, release, correction, and independent-review stewards"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-19
+policy_label: "public; architecture; sensitivity; fail-closed; default-hold; release-gated"
+owning_root: docs/
+current_path: docs/architecture/sensitive-domain-fail-closed.md
+responsibility: >
+  Explain the cross-root closure required before KFM may expose a sensitive or
+  harmful-precision object, derivative, join, claim, map carrier, export, or AI
+  response, while distinguishing current repository evidence from proposed
+  policy, evaluator, consumer, review, release, and publication behavior.
+truth_posture: >
+  CONFIRMED same-path architecture placement, accepted Directory Rules,
+  CODEOWNERS review route, proposed ADR-0010 status, mixed sensitivity-policy
+  scaffold corpus, proposed SensitivityLabel contract/schema, a deterministic
+  fixture-only RedactionReceipt profile and validator, a greenfield redaction
+  package, and a fail-closed Governed API scaffold / PROPOSED operation-specific
+  sensitive-domain closure, obligation enforcement, reviewer separation,
+  composition lint, and graduation plan / CONFLICTED sensitivity vocabulary,
+  profile-catalog authority, and documentation-to-machine mappings / UNKNOWN
+  accepted cross-domain decision, active bundle and evaluator, authenticated
+  specialist review, functional protective transform, governed consumer
+  enforcement, release integration, correction propagation, deployed behavior,
+  and operational effectiveness.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 7ef1597779774d80346f81ecd8104b720797c587
+  target_prior_blob: 2daac2b4aff483e63c80451b69e9c4cc47928786
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  policy_sensitivity_readme_blob: 06197c7a7255264b94fb9dd8d7f73844cfa35682
+  sensitivity_label_contract_blob: d6ddf1eb7db9bc955e56de76a0d997b6e4ecd231
+  sensitivity_label_schema_blob: 3955c7046b50fa7fbdfb9fadf75121fd08a1a39b
+  policy_vocabulary_contract_blob: 51158caefd7b440851fb37489c511a5c710bed2b
+  policy_vocabulary_registry_blob: ae68a9f3cf80308f18bd04207ef2c85057750f12
+  redaction_receipt_contract_blob: c686cdf5c79a8b99ac66d4b01cd30d2f450f645f
+  redaction_receipt_schema_blob: 7806abb702accd70dd17e947858c5768cc3eddae
+  redaction_receipt_validator_blob: b6d22549a8b043d89ee9c1af658f1662ada70ee5
+  redaction_receipt_fixtures_blob: a13adcae4e2fbcb3fa8a42dae8aba510a6ea31e3
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
 related:
-  - docs/architecture/README.md
-  - docs/architecture/release-discipline.md
-  - docs/architecture/release-model.md
-  - docs/architecture/governed-api.md
-  - docs/architecture/planetary-3d.md
-  - docs/architecture/people-place-joins.md
-  - docs/architecture/maplibre-3d.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/truth-posture.md
-  - docs/doctrine/authority-ladder.md
-  - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/standards/REDACTION_DETERMINISM.md
-  - docs/standards/PROV.md
-  - docs/runbooks/revocation.md
-  - docs/domains/archaeology/README.md
-  - docs/domains/fauna/README.md
-  - docs/domains/flora/README.md
-  - docs/domains/people-dna-land/README.md
-  - docs/domains/settlements-infrastructure/README.md
-  - docs/domains/hazards/README.md
-tags: [kfm, architecture, sensitivity, fail-closed, deny-by-default, redaction, geoprivacy, sovereignty, consent]
+  - ./README.md
+  - ./sensitivity.md
+  - ./sensitivity-tiers.md
+  - ./critical-asset-exposure.md
+  - ./cross-lane-join-policy.md
+  - ./data-classification-framework.md
+  - ./governed-api.md
+  - ./TRUST_MEMBRANE.md
+  - ../standards/SENSITIVITY_RUBRIC.md
+  - ../standards/REDACTION_PROFILES.md
+  - ../standards/REDACTION_DETERMINISM.md
+  - ../security/DATA_CLASSIFICATION.md
+  - ../security/EXPOSURE_PLAN.md
+  - ../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../doctrine/directory-rules.md
+  - ../runbooks/revocation.md
+  - ../../policy/sensitivity/README.md
+  - ../../policy/decision/vocabulary.v1.json
+  - ../../contracts/policy/sensitivity_label.md
+  - ../../schemas/contracts/v1/policy/sensitivity_label.schema.json
+  - ../../contracts/shared/redaction_receipt.md
+  - ../../schemas/contracts/v1/receipts/redaction_receipt.schema.json
+  - ../../fixtures/contracts/v1/receipts/redaction_receipt/cases.json
+  - ../../tools/validators/receipts/validate_redaction_receipt.py
+  - ../../packages/redaction/README.md
+  - ../../apps/governed-api/src/governed_api/main.py
+  - ../../apps/governed-api/src/governed_api/stub.py
+  - ../../release/README.md
+tags: [kfm, architecture, sensitivity, fail-closed, harmful-precision, redaction, geoprivacy, consent, sovereignty, policy, evidence, governed-api, release, rollback]
 notes:
-  - Repo not mounted in authoring session; all path claims are PROPOSED.
-  - Open ADR-S-05 ("Sensitivity tier scheme (T0–T4) — adopt as canonical or revise") is the unresolved tension between the Pass-10 C6-01 rubric (0–5) and the Atlas §24.5 tier scheme (T0–T4); both are surfaced here, neither is silently chosen.
-  - PROV.md / PROVENANCE.md naming variance tracked at directory-rules §18 OPEN-DR-01.
+  - "Same-path architecture-document modernization only; no policy, contract, schema, profile, fixture, validator, package, API, data, release, deployment, or publication mutation."
+  - "ADR-0010 remains proposed. This page explains the architecture and current evidence; it does not accept the decision or claim enforcement."
+  - "Legacy title and numbered-section anchors are retained explicitly for inbound compatibility."
+  - "No real protected payload, exact sensitive location, genomic material, private join, infrastructure detail, or reversal-enabling transform parameter is included."
 [/KFM_META_BLOCK_V2] -->
 
-# Sensitive-Domain Fail-Closed — Architecture
+<a id="top"></a>
+<a id="sensitive-domain-fail-closed--architecture"></a>
 
-> Across KFM's sensitive lanes — archaeology, sensitive fauna, rare flora, critical infrastructure, living-person and DNA, private land joins, hazards-as-authority — the public surface **fails closed by default**. This doc consolidates the rules, the deny lanes, the allowed transforms, the required artifacts, the side-channel disciplines, and the open governance questions into one cross-cutting reference.
+# Sensitive-Domain Fail-Closed — Current Architecture and Enforcement Boundary
 
-![status: draft](https://img.shields.io/badge/status-draft-blue)
-![doc class: architecture](https://img.shields.io/badge/class-architecture-6f42c1)
-![default: deny](https://img.shields.io/badge/default-deny-b22222)
-![posture: cite--or--abstain](https://img.shields.io/badge/posture-cite--or--abstain-228b22)
-![transforms: deterministic · receipted](https://img.shields.io/badge/transforms-deterministic%20%C2%B7%20receipted-1f6feb)
-![side-channels: linted](https://img.shields.io/badge/side--channels-linted-bf8700)
-![TODO: ci-badge-target](https://img.shields.io/badge/CI-TODO-lightgrey)
+> **Operating rule.** A sensitive or harmful-precision operation may become a public or semi-public `ANSWER` only after its evidence, source role, rights or consent, sensitivity, policy, protective transform, validation, review, release, correction, and rollback context closes for the exact object, audience, operation, precision, time, and composition. Missing, stale, conflicted, untrusted, or unevaluated context never becomes implicit permission.
 
-**Status** · draft &nbsp;·&nbsp; **Owners** · *Sensitivity reviewer + Rights-holder reps + Docs steward — TBD* &nbsp;·&nbsp; **Updated** · 2026-05-25
+[![Document: architecture](https://img.shields.io/badge/document-architecture--reference-0969da?style=flat-square)](#0-current-status-and-authority)
+[![Repository evidence: confirmed](https://img.shields.io/badge/repository%20evidence-CONFIRMED-2da44e?style=flat-square)](#3-current-repository-state)
+[![ADR-0010: proposed](https://img.shields.io/badge/ADR--0010-proposed-d4a72c?style=flat-square)](#0-current-status-and-authority)
+[![Policy runtime: unbound](https://img.shields.io/badge/policy%20runtime-unbound-b42318?style=flat-square)](#3-current-repository-state)
+[![Redaction proof: fixture-only](https://img.shields.io/badge/redaction%20proof-fixture--only-f59e0b?style=flat-square)](#9-required-artifacts-at-each-transition)
+[![Public API: abstain/error scaffold](https://img.shields.io/badge/public%20API-ABSTAIN%20%2F%20ERROR%20scaffold-f59e0b?style=flat-square)](#6-the-fail-closed-decision-flow)
+[![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#18-non-effects-correction-and-rollback)
+
+> [!IMPORTANT]
+> **The repository contains real control surfaces, not a complete sensitive-domain control path.** Current evidence establishes explanatory documents, proposed contracts and schemas, mixed policy scaffolds, a closed deterministic fixture-only `RedactionReceipt` validator, and a Governed API scaffold that returns `ABSTAIN` or safe `ERROR`. It does **not** establish an accepted cross-domain decision, active policy bundle, general evaluator, authenticated specialist review, functional redaction executor, governed consumer enforcement, release integration, or public protection.
+
+> [!CAUTION]
+> **Source-code polarity is not runtime protection.** Eleven generated sensitivity Rego scaffolds use `default allow := false`; five greenfield stubs use `default deny := false` and contain no operative denial rule. Neither pattern proves bundle selection, evaluator behavior, normalized outcomes, obligation enforcement, consumer binding, or release gating.
+
+> [!WARNING]
+> **Client-side hiding is never the control.** Map styling, popup omission, default zoom, a hidden property, a private-looking route, an AI refusal prompt, or an export checkbox cannot make restricted bytes public-safe. Protection must occur before public delivery, and the delivered bytes and their compositions must be tested.
+
+**Quick navigation:** [Status](#0-current-status-and-authority) · [Scope](#1-scope-and-posture) · [Meaning](#2-what-fail-closed-means) · [Repository](#3-current-repository-state) · [Vocabularies](#4-current-sensitivity-vocabularies-and-unresolved-mapping) · [Register](#5-the-deny-by-default-register) · [Decision flow](#6-the-fail-closed-decision-flow) · [Domain table](#7-per-domain-fail-closed-table) · [Transitions](#8-tier-transitions) · [Artifacts](#9-required-artifacts-at-each-transition) · [Inference](#10-side-channel-and-inference-risk) · [Renderer](#11-style-only-hiding-is-forbidden) · [AI](#12-ai-surface-in-sensitive-domains) · [Health](#13-health-indicators) · [Anti-patterns](#14-anti-patterns) · [Backlog](#15-verification-backlog) · [Related](#16-related-docs) · [Review](#17-validation-and-review-checklist) · [Rollback](#18-non-effects-correction-and-rollback)
+
+---
+
+<a id="0-current-status-and-authority"></a>
+
+## 0. Current status and authority
+
+| Field | Current bounded result |
+|---|---|
+| **Document role** | Human-readable cross-root architecture reference under `docs/architecture/`; not policy source, schema authority, a data-classification decision, a vulnerability assessment, release authority, or implementation proof. |
+| **Evidence snapshot** | `main@7ef1597779774d80346f81ecd8104b720797c587`. |
+| **Directory result** | **PLACE** at existing `docs/architecture/sensitive-domain-fail-closed.md`. Accepted ADR-0029 assigns human-readable architecture to `docs/`; no move, alias, new root, or authority migration is required. |
+| **Review route** | Current CODEOWNERS routes review to `@bartytime4life`; accountable specialist stewardship, independent review, quorum, and release authority remain **NEEDS VERIFICATION**. |
+| **Cross-domain decision** | [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) remains `draft` / effectively **proposed**, not accepted. |
+| **Policy source** | [`policy/sensitivity/`](../../policy/sensitivity/README.md) is a real but mixed proposed-scaffold corpus; no accepted general bundle, selector, evaluator, or consumer binding is established. |
+| **Sensitivity shape** | The proposed [`SensitivityLabel`](../../contracts/policy/sensitivity_label.md) schema currently exposes `public`, `generalized`, `restricted`, and `quarantine`; it is context, not a policy or release decision. |
+| **Protective-transform proof** | One deterministic, no-network, **fixture-only** `RedactionReceipt` schema/validator/case family exists. Its schema freezes policy execution, authenticated review, lifecycle mutation, release authorization, and publication authorization to `false`. |
+| **Transform runtime** | [`packages/redaction/`](../../packages/redaction/README.md) remains a `0.0.0` greenfield package scaffold without a supported API or functional executor. |
+| **Dynamic public boundary** | The current Governed API scaffold serves three GET routes that return `ABSTAIN / NOT_IMPLEMENTED`; unsupported methods and routes return safe `ERROR` envelopes. No sensitive-domain `ANSWER` route is established. |
+| **Release and publication** | None established by this document or the reviewed policy, schema, fixture, validator, package, or API surfaces. |
+
+### Authority by question
+
+| Question | Owning authority | This page's role |
+|---|---|---|
+| Where this explanation belongs | Accepted ADR-0029 and [`directory-rules.md`](../doctrine/directory-rules.md) | Record the same-path architecture boundary. |
+| What a sensitivity label, policy decision, receipt, review, or release object means | Accepted contracts under `contracts/` | Cite current semantics; do not redefine them. |
+| What fields and values are machine-valid | Accepted schemas under `schemas/` | Report current shapes and conflicts. |
+| Which operation is denied, held, restricted, or allowed | Accepted policy source plus a bound evaluator | State prerequisites; never issue a decision. |
+| Whether a protective transform is sufficient | Security/privacy/domain review plus measured validation | Define proof burden; never certify. |
+| Whether a derivative may be released | Governed evidence, policy, review, validation, receipt/proof, and `release/` records | Keep the release boundary visible. |
+| Whether a public request may return `ANSWER` | Governed API and exact runtime evidence | Define closure; do not claim deployment. |
+| How correction, withdrawal, and rollback propagate | Owning correction/release mechanisms and affected consumers | Require handoffs; do not mutate lifecycle. |
+
+[Back to top](#top)
 
 ---
 
-## Quick jump
-
-- [1. Scope and posture](#1-scope-and-posture)
-- [2. What "fail-closed" means](#2-what-fail-closed-means)
-- [3. The sensitive-domain list](#3-the-sensitive-domain-list)
-- [4. Two sensitivity schemes — and an open ADR](#4-two-sensitivity-schemes--and-an-open-adr)
-- [5. The deny-by-default register](#5-the-deny-by-default-register)
-- [6. The fail-closed decision flow](#6-the-fail-closed-decision-flow)
-- [7. Per-domain fail-closed table](#7-per-domain-fail-closed-table)
-- [8. Tier transitions](#8-tier-transitions)
-- [9. Required artifacts at each transition](#9-required-artifacts-at-each-transition)
-- [10. Side-channel and inference risk](#10-side-channel-and-inference-risk)
-- [11. Style-only hiding is forbidden](#11-style-only-hiding-is-forbidden)
-- [12. AI surface in sensitive domains](#12-ai-surface-in-sensitive-domains)
-- [13. Health indicators](#13-health-indicators)
-- [14. Anti-patterns](#14-anti-patterns)
-- [15. Verification backlog](#15-verification-backlog)
-- [16. Related docs](#16-related-docs)
-
----
+<a id="1-scope-and-posture"></a>
 
 ## 1. Scope and posture
 
-### 1.1 What this doc is
+### 1.1 What this document owns
 
-This document consolidates the **cross-cutting fail-closed posture** that KFM applies to its sensitive domains. Per-domain READMEs (`docs/domains/archaeology/`, `docs/domains/fauna/`, etc., all PROPOSED) hold the domain-specific rules; this doc holds the rules that apply *uniformly* across them and that downstream surfaces — governed API, MapLibre runtime, Focus Mode AI, story/export exports — must enforce identically.
+This page owns one responsibility: explain the **operation-specific closure boundary** for sensitive or harmful-precision material across source admission, evidence, policy, transforms, review, release, public delivery, correction, and rollback.
+
+It covers:
+
+- protected or potentially harmful precision in data, geometry, identity, time, joins, and derived carriers;
+- finite failure outcomes and safe public reasons;
+- the difference between a protected source object, a public-safe derivative candidate, a released artifact, and a runtime response;
+- the responsibilities of contracts, schemas, policy, validators, reviewers, release records, governed clients, and AI;
+- side-channel and composition risk; and
+- the evidence required to graduate from documentation and synthetic fixtures to enforceable behavior.
+
+It does not replace the umbrella [`sensitivity.md`](./sensitivity.md), draft tier and rubric documents, domain sensitivity pages, policy source, contracts, schemas, runbooks, tests, or release records.
 
 ### 1.2 The posture in one sentence
 
-**CONFIRMED doctrine** (Atlas Appendix F self-check; Atlas §20.5 *Deny-by-Default Register*): *Archaeology, rare fauna/flora, infrastructure, living-person and DNA controls are deny-by-default.* The public surface emits **DENY** for these lanes unless an explicit, evidenced, receipted, reviewed, and policy-allowed transform has produced a public-safe derivative — and even then, the derivative is what ships, never the original.
+**Fail closed at every authority transition:** when an operation depends on unresolved evidence, rights, consent, sovereignty, sensitivity, review, evaluator state, transform sufficiency, release state, correction state, or harmful precision, the operation returns a bounded negative outcome or remains on internal hold; it does not silently proceed.
 
-### 1.3 Non-goals
+### 1.3 Operation-specific, not domain-secret-by-name
 
-- This document does **not** define the wire format of `RedactionReceipt`, `AggregationReceipt`, `PolicyDecision`, `ReviewRecord`, or `ConsentMetadata`; those live in `schemas/contracts/v1/receipts/...` and `schemas/contracts/v1/policy/...` (PROPOSED paths; **NEEDS VERIFICATION** in mounted repo).
-- This document does **not** describe per-domain source families; those live in each `docs/domains/<domain>/README.md` (PROPOSED).
-- This document does **not** name redaction-profile parameter values (radius, jitter seed, epsilon, etc.); those live in `docs/standards/REDACTION_DETERMINISM.md` (PROPOSED in corpus Pass-10 C6-02..06; not yet authored).
-- This document does **not** describe the governed-API request/response shape; see `docs/architecture/governed-api.md` (PROPOSED).
+A domain label alone does not decide exposure. The same domain may contain:
 
-> [!IMPORTANT]
-> Fail-closed is a default, not a ceiling. Domains and surfaces are free to be *more* restrictive than this doc requires. They are not free to be less.
+- public reference material;
+- a generalized public-safe derivative;
+- restricted source detail;
+- steward-only review context;
+- a claim that must abstain because evidence is insufficient; and
+- a composition that becomes sensitive only after a join.
+
+The decision key is the exact **object + operation + audience + purpose + precision + time + composition + release state**, not merely the folder or domain name.
+
+### 1.4 Non-goals
+
+This document does not:
+
+- accept ADR-0010 or any sensitivity-tier scheme;
+- classify a real record, source, place, person, species, site, asset, or relationship;
+- disclose real protected values, exact locations, genomic material, private joins, security-sensitive detail, or reversal-enabling transform parameters;
+- select or activate a redaction profile;
+- define an evaluator input DTO, package API, route, or deployment;
+- authenticate a reviewer or rights holder;
+- authorize source activation, lifecycle promotion, release, deployment, or publication; or
+- claim that documentation, a schema pass, policy file, fixture, validator, workflow, pull request, or merge proves operational protection.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-what-fail-closed-means"></a>
 
 ## 2. What "fail-closed" means
 
-### 2.1 The four invariants
+### 2.1 Closure invariants
 
-| Invariant | What it means |
+| Invariant | Required meaning |
 |---|---|
-| **Deny by default.** | The starting answer for any sensitive-lane request is DENY. Transforms, reviews, and policy decisions move it toward ALLOW; their absence keeps it at DENY. |
-| **No silent allow.** | An ALLOW outcome is always backed by a recorded PolicyDecision, a ReviewRecord where required, and one or more transform/redaction/aggregation receipts. There is no "default permitted" lane. |
-| **No style-as-policy.** | Public surfaces never *hide* sensitive geometry with paint properties, opacity, or zoom thresholds. Public-safe geometry is produced upstream and is *all* the public surface ever sees. |
-| **No carrier as evidence.** | Tiles, maps, scenes, popups, AI prose, screenshots, and exports are **carriers**. None of them is the source of an allow decision. The allow decision lives in the policy bundle, on the policy decision, against the EvidenceBundle. |
+| **No implicit permission** | Absence of a denial, missing context, a parser failure, or an unavailable evaluator never becomes `ANSWER`. |
+| **Finite outcomes** | A trust-bearing operation resolves to one bounded outcome. Current KFM runtime vocabulary is `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; internal workflows may additionally record `HOLD` or review-required state without presenting it as success. |
+| **Evidence before claim** | Claim-bearing `ANSWER` requires resolvable, admissible `EvidenceRef → EvidenceBundle` support and citation closure. Missing or stale support normally yields `ABSTAIN`, not fabricated certainty. |
+| **Policy before exposure** | Rights, consent, sensitivity, audience, purpose, precision, review, release, and correction context are evaluated by the accepted policy path. Missing or unsafe context yields `DENY` or `ERROR`. |
+| **Obligations are executable** | An `ANSWER` with obligations is not complete until generalization, redaction, delay, export restriction, citation, review, or rollback obligations are enforced and verified. |
+| **Server-side public safety** | Restricted input is transformed or withheld before public carriers are generated; clients never receive exact protected bytes and then hide them. |
+| **No authority collapse** | A label, policy source file, receipt, validator pass, reviewer note, release manifest, map, or AI answer cannot substitute for the other required object families. |
+| **Fast retreat, slow exposure** | Correction, withdrawal, restriction, and cache invalidation may retreat immediately; motion toward broader exposure requires complete positive closure. |
 
-### 2.2 The closed-system corollary
+### 2.2 Outcome selection
 
-**CONFIRMED doctrine** (Atlas §24.6.2 universal closure rule, applied to sensitivity gates): a sensitive-lane transition is closed only when:
+The current proposed-inactive policy vocabulary provides useful, bounded semantics without proving a live evaluator:
 
-1. The required artifacts for the transition exist (RedactionReceipt and/or AggregationReceipt; ReviewRecord; PolicyDecision; sometimes ConsentMetadata, RepresentationReceipt, RealityBoundaryNote).
-2. Every required artifact **resolves** the artifacts it depends on (`EvidenceRef → EvidenceBundle`, `policy_id → policy bundle`, `reviewer → identity`).
-3. The policy gate evaluated and recorded its decision with a reason code.
+| Condition | Safe outcome | Example current vocabulary code |
+|---|---|---|
+| Required evidence is unresolved | `ABSTAIN` | `EVIDENCE_UNRESOLVED` |
+| Evidence is outside the admitted freshness window | `ABSTAIN` | `EVIDENCE_STALE` |
+| Rights are unresolved | `DENY` | `RIGHTS_UNKNOWN` |
+| Sensitivity or required public-safe transform is unresolved | `DENY` | `SENSITIVITY_UNRESOLVED` |
+| Requested public precision is unsafe | `DENY` | `PUBLIC_PRECISION_UNSAFE` |
+| Required consent is absent, expired, revoked, or out of scope | `DENY` | `CONSENT_REQUIRED` |
+| Policy input or evaluator context is incomplete | `ERROR` | `POLICY_INPUT_INCOMPLETE` |
+| Selected bundle or evaluator cannot be verified | `ERROR` | `POLICY_BUNDLE_UNAVAILABLE` |
+| Operation is supported only with enforceable obligations | `ANSWER` after obligations close | `OPERATION_ALLOWED_WITH_OBLIGATIONS` |
 
-Missing any of these means the transition fails closed and the prior state — the denied state — is preserved.
+These codes are currently `PROPOSED_INACTIVE`. They are a fixture-first vocabulary, not live policy behavior.
+
+### 2.3 Closed-system test
+
+A sensitive operation is closed only when:
+
+1. every required input and authority reference exists and resolves;
+2. the exact policy source, bundle, evaluator, vocabulary, and effective version are verifiable;
+3. the finite result is normalized without collapsing `ABSTAIN`, `DENY`, `ERROR`, or review-required state;
+4. every attached obligation is executed before exposure;
+5. protective transforms are validated without revealing protected or reversal-enabling material;
+6. required specialist and independent review is authenticated for the exact candidate version;
+7. the exact derivative has a governed release, correction, withdrawal, and rollback path; and
+8. the public carrier, API response, export, search result, graph projection, cache, and AI prose all preserve the same public-safe boundary.
+
+Missing any required step preserves the more restrictive state.
+
+[Back to top](#top)
 
 ---
+
+<a id="3-the-sensitive-domain-list"></a>
+<a id="3-current-repository-state"></a>
 
 ## 3. The sensitive-domain list
 
-**CONFIRMED doctrine** (AI Build Operating Contract §23.1; Atlas §20.5; KFM Encyclopedia §11). When involved in any flow, the lanes below require heightened caution:
+The following **candidate sensitivity families** repeatedly carry elevated harm, privacy, sovereignty, rights, or public-safety risk. Inclusion here does not classify every object in the family as secret; it means operations involving these families require explicit context and fail-closed review.
 
-- Archaeology — exact sites, burial, human remains, sacred sites, looting-risk detail.
-- Cultural heritage — Indigenous knowledge, treaty, oral-history, or steward-controlled records.
-- Sensitive fauna — exact sensitive occurrences; nests, dens, roosts, hibernacula, spawning sites.
-- Rare flora — exact rare, protected, or culturally sensitive plant locations.
-- Critical infrastructure — assets, dependencies, condition / vulnerability detail.
-- Living people — identifiers, private-output identity.
-- Genealogy and DNA / genomic data — raw DNA ids, DNA segments, kit-level records.
-- Private land and land-ownership joins — private person-parcel joins; private operator-parcel joins.
-- Hazards and emergency-adjacent content — alert-authority claims; instruction framing.
-- Restricted source terms — sources whose rights or sovereignty status forbid public surface.
-- Exact coordinates that could enable harm — irrespective of which domain owns them.
+- **Living-person information** — private identifiers, contact or residence detail, sensitive relationships, and re-identifying combinations.
+- **DNA and genomic material** — raw segments, genotypes, kit or vendor identifiers, private matches, and derived relationship claims involving living people.
+- **Rare or protected biodiversity** — exact occurrence, nest, den, roost, hibernaculum, spawning, rare-plant, or culturally sensitive ecological locations.
+- **Archaeology and cultural heritage** — exact site, burial, human-remains, sacred, looting-risk, or community-controlled knowledge.
+- **Critical or security-relevant infrastructure** — exploit-enabling precision, operational relationships, condition, dependency, access, or vulnerability context.
+- **Private person-to-place or person-to-parcel joins** — combinations that expose an individual even when contributing datasets are individually public.
+- **Rights-, consent-, or sovereignty-constrained sources** — material whose storage, transformation, redistribution, attribution, or public use is unresolved or controlled.
+- **Hazard and emergency-adjacent claims** — any request that would present KFM as the issuing alert, instruction, or emergency authority.
+- **Cross-domain composition and inference** — joins, deltas, search, graph, AI, exports, and surrounding layers that reveal more than any input alone.
+- **Any exact precision that could enable harm** — regardless of which domain owns the record.
 
-### 3.1 The "sensitive by composition" rule
+### 3.1 Current repository state
 
-A lane may be sensitive even when no single contributing input is sensitive by itself. **CONFIRMED risk** (Atlas §24.10 *Living-person data exposed via inference*): an aggregate + context join can re-identify, even when each input is open. The composition is what fails closed, not the inputs.
-
----
-
-## 4. Two sensitivity schemes — and an open ADR
-
-### 4.1 The two schemes
-
-KFM has **two** sensitivity vocabularies in active doctrine. This is a real, unresolved tension — explicitly tracked under **ADR-S-05** ("Sensitivity tier scheme (T0–T4) — adopt as canonical or revise").
-
-| Scheme | Source | Status | Range |
-|---|---|---|---|
-| **Pass-10 sensitivity rubric** | Pass-10 C6-01 | **CONFIRMED** | `sensitivity_rank` ∈ {0, 1, 2, 3, 4, 5} |
-| **Atlas tier scheme** | Atlas §24.5.1 | **PROPOSED** | `T0`, `T1`, `T2`, `T3`, `T4` |
-
-> [!CAUTION]
-> Until ADR-S-05 resolves, **do not silently map between schemes**. The two are similar in intent but not identical in granularity. The Pass-10 rubric distinguishes rank 4 (threatened/rare) from rank 5 (sacred/critical / fail-closed); the Atlas tier scheme collapses both into T4. Both schemes recognize public/open as the lowest level and fail-closed as the highest, but the meaning of intermediate ranks differs.
-
-### 4.2 Pass-10 rubric (CONFIRMED, Pass-10 C6-01)
-
-| Rank | Label | Default posture |
+| Surface | Confirmed current state | Safe conclusion |
 |---|---|---|
-| 0 | public / open | open by default |
-| 1 | common non-sensitive | open by default |
-| 2 | watchlist | profile-required generalization |
-| 3 | SINC / locally sensitive | default profile `profile:sinc-obscure-10km` |
-| 4 | threatened / rare | strict mask or embargo |
-| 5 | sacred / critical | fail-closed; no map / timeline exposure |
+| [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | Source metadata `draft`; effective status `proposed` | Cross-domain deny-by-default decision is not accepted. |
+| [`policy/sensitivity/README.md`](../../policy/sensitivity/README.md) | Sixteen Rego files, eleven YAML files, six Markdown files, and eighteen placeholder files; mixed default polarity; no accepted evaluator/bundle binding | Real source inventory, not coherent runtime enforcement. |
+| Greenfield top-level sensitivity stubs | Archaeology, DNA, rare-species, living-person, and infrastructure files use `default deny := false` with no operative denial rule | Their names do not protect anything. |
+| Generated fauna sensitivity scaffolds | Selected files use `default allow := false` | Fail-closed-looking source bytes, still proposed and evaluator-unbound. |
+| [`SensitivityLabel`](../../contracts/policy/sensitivity_label.md) | Draft semantic contract paired to a proposed four-level schema | Useful context shape; not a decision or release. |
+| Policy reason/obligation vocabulary | Closed, deterministic, `PROPOSED_INACTIVE` registry and validator surfaces | Useful normalized terms; no evaluator or authority. |
+| [`RedactionReceipt`](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) profile | Closed `PROPOSED_INACTIVE` fixture-only schema, validator, and synthetic case matrix | Proves bounded receipt validation and negative polarity only. |
+| Redaction profile catalogs | `policy/redaction/profiles.yaml` and `policy/sensitivity/profiles.yaml` are parallel empty proposed placeholders | Catalog authority and accepted profiles remain on HOLD. |
+| [`packages/redaction/`](../../packages/redaction/README.md) | `0.0.0` greenfield package, empty initializer, comment-only core, no supported API or package behavior | No functional protective transform. |
+| Governed API | Three GET stubs return `ABSTAIN / NOT_IMPLEMENTED`; unsupported routes/methods return safe `ERROR` | Fail-closed scaffold, not sensitive-domain enforcement. |
+| Revocation runbook | [`docs/runbooks/revocation.md`](../runbooks/revocation.md) is a short proposed scaffold | Correction/revocation operations are not closed. |
 
-### 4.3 Atlas tier scheme (PROPOSED, Atlas §24.5.1)
-
-| Tier | Name | Definition | Default audience |
-|---|---|---|---|
-| **T0** | Open | Public-safe with no transforms; no rights/sensitivity/steward gating beyond standard release | Any public client via governed API |
-| **T1** | Generalized | Public-safe only after generalization, fuzzing, aggregation, or redaction; transform reviewed and recorded | Any public client via governed API |
-| **T2** | Reviewer | Released only to authenticated reviewers or domain stewards; policy-bounded; correction path active | Stewards, reviewers, named research collaborators |
-| **T3** | Restricted | Released only under named agreement (rights, sovereignty, consent) and recorded | Named authorized parties only |
-| **T4** | Denied | Not released to any audience; existence of a record may be released only as steward review permits | — |
-
-### 4.4 How this doc handles the tension
-
-This doc presents both schemes verbatim. Where the per-domain table (§7) uses one or the other, it uses the **Atlas tier scheme** because that is the form the Atlas §24.5.2 *Per-domain tier matrix* uses; the Pass-10 rubric is referenced where it is the authoritative source (e.g., the redaction-profile lookup in `docs/standards/REDACTION_DETERMINISM.md`, PROPOSED). Mapping is **deferred to ADR-S-05**.
+[Back to top](#top)
 
 ---
+
+<a id="4-two-sensitivity-schemes--and-an-open-adr"></a>
+<a id="4-current-sensitivity-vocabularies-and-unresolved-mapping"></a>
+
+## 4. Current sensitivity vocabularies and unresolved mapping
+
+The prior edition described two schemes. Current repository evidence exposes **several overlapping vocabularies** with no accepted, machine-enforced crosswalk.
+
+| Surface | Vocabulary | Current status | What it answers |
+|---|---|---|---|
+| [`SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) | numeric `0..5` | Draft standards page | Intended content-sensitivity ranking. |
+| [`docs/doctrine/sensitivity.md`](../doctrine/sensitivity.md) | `S0..S5`, `C0..C5`, `T0..T4` | Draft doctrine page | Proposed separation of sensitivity, access, and release questions. |
+| [`sensitivity-tiers.md`](./sensitivity-tiers.md) | `T0..T4` | Draft architecture page | Proposed release/audience tiers and transitions. |
+| [`SensitivityLabel` schema](../../schemas/contracts/v1/policy/sensitivity_label.schema.json) | `public`, `generalized`, `restricted`, `quarantine` | `PROPOSED` machine shape | Current finite exposure-posture context. |
+| Fixture-only [`RedactionReceipt` schema](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) | `T0..T4` input/output sensitivity | `PROPOSED_INACTIVE`, authority `NONE`, fixture-only | Synthetic receipt validation profile. |
+
+### 4.1 Current disposition
+
+- No accepted ADR or machine registry was verified that makes any one vocabulary globally canonical.
+- The current `SensitivityLabel` schema does not encode numeric rank or `T0..T4` tier.
+- The fixture-only `RedactionReceipt` profile uses `T0..T4`, but it explicitly cannot execute policy, authenticate review, mutate lifecycle, authorize release, or publish.
+- Documentation may explain each scheme, but code, policy, fixtures, receipts, and public payloads must not silently coerce between them.
+- A translation that is missing, ambiguous, or based only on prose must return `DENY`, `ABSTAIN`, `ERROR`, or internal `HOLD` as appropriate; it must not choose the more-public interpretation.
+
+### 4.2 Decision packet required
+
+A governance decision should establish:
+
+1. which question each vocabulary answers;
+2. whether the vocabularies remain orthogonal or one is retired;
+3. one accepted machine crosswalk, if translation is permitted;
+4. object-family ownership and canonical fields;
+5. versioning, aliases, migration, fixtures, and negative cases;
+6. policy-selector and receipt bindings;
+7. correction behavior when classification changes; and
+8. public API semantics that do not confuse sensitivity context with release approval.
+
+Until then, vocabulary convergence remains **CONFLICTED / HOLD**.
+
+[Back to top](#top)
+
+---
+
+<a id="5-the-deny-by-default-register"></a>
 
 ## 5. The deny-by-default register
 
-**CONFIRMED doctrine** (Atlas §20.5; KFM Encyclopedia §11.1). The register below is doctrinal; it is what gates against by default.
+This register states the **architecture posture and current implementation gap**. It does not accept ADR-0010, classify real objects, or activate policy.
 
-| Domain / surface | Denied by default | Allowed only when |
-|---|---|---|
-| **Archaeology** | Exact sites, burial, human remains, sacred sites, looting-risk detail | Steward / cultural review + transform receipt + EvidenceBundle |
-| **Fauna** | Exact sensitive occurrences; nests, dens, roosts, hibernacula, spawning sites | Geoprivacy generalization + RedactionReceipt + public-safe derivative |
-| **Flora** | Exact rare, protected, or culturally sensitive plant locations | Steward review + generalized / withheld geometry + RedactionReceipt |
-| **Critical infrastructure** | Critical assets, dependencies, condition detail | Steward review + public-safe generalization |
-| **People / DNA / Land** | Living-person private output; raw DNA ids; DNA segments; private person-parcel joins | Consent + policy + restricted authorized surface |
-| **Hazards** | Emergency instructions; KFM as alert authority | **Never allowed as KFM authority** |
-| **Governed AI** | RAW / WORK access; uncited claims; direct model-to-public traffic | Released EvidenceBundle + policy-safe context + AIReceipt |
-| **Planetary / 3D scenes** | Sensitive 3D scene content | Steward review + generalization / clipping / withholding + RealityBoundaryNote + RepresentationReceipt |
-| **Restricted source terms** | Sources whose rights are unresolved or unknown | Rights-holder review + SourceDescriptor update + admission gate pass |
+| Sensitive operation | Safe default | Candidate bounded derivative | Current repository support | Graduation hold |
+|---|---|---|---|---|
+| Living-person private identity, residence, or re-identifying join | `DENY` public exposure; restricted review or quarantine | De-identified or sufficiently aggregated candidate, if rights/consent/review support it | Proposed label/schema; greenfield living-person stub | Consent/rights authority, accepted policy/evaluator, transform, specialist review, consumer and release proof absent |
+| Raw DNA/genomic material or private match detail | `DENY`; do not place real payloads in repo, fixtures, logs, receipts, search, map, or AI | No public derivative by default; research access requires separate named authority | Greenfield DNA stub only | ADR, consent/privacy/genomics authority, restricted runtime, audit, correction, and revocation unproved |
+| Exact rare-species or rare-plant location | `DENY` exact public precision | Generalized, aggregated, delayed, or withheld candidate after domain review | Proposed fauna/flora policy scaffolds; fixture-only generic RedactionReceipt | Accepted profile, functional transform, domain evaluator, source-rights review, consumer and release proof absent |
+| Archaeology, burial, sacred, or cultural-sensitive location/identity | `DENY` exact public precision and sensitive existence disclosure where applicable | Generalized or withheld candidate only after cultural/sovereignty and rights review | Greenfield archaeology stub; documentation and receipt lanes | Qualified authority, accepted policy, transform, protected review, correction/revocation, and release proof absent |
+| Exploit-enabling infrastructure precision or composition | `DENY` public exactness and operational detail | Generalized, delayed, aggregated, or withheld candidate after security/domain review | Greenfield infrastructure stub; modernized critical-asset architecture page | Exposure contract/evaluator, security review, transform, negative bytes test, and release proof absent |
+| Private person-to-parcel or person-to-place composition | `DENY` unless an operation-specific restricted path is accepted | Coarsened statistics only when re-identification risk is measured and reviewed | Cross-lane docs and proposed policy surfaces | Join evaluator, minimum-group/precision policy, composition fixtures, consumer enforcement absent |
+| Rights-, consent-, source-term-, or sovereignty-uncertain material | `DENY` storage/use/exposure action that exceeds proven authority; quarantine or hold | Public-safe derivative only within verified terms and obligations | Source/evidence/policy docs; no complete sensitivity evaluator | Dated authority evidence, effective-time handling, review, release and revocation propagation absent |
+| KFM as emergency-alert or instruction authority | `DENY` | Contextual citation to official channels may be possible; KFM never becomes the issuing authority | Architecture/doctrine language | This boundary is not transformed into authority by a map, AI answer, feed, or disclaimer |
+| Public AI access to restricted content or unsupported precision | `DENY` or `ABSTAIN`; direct model-to-public path prohibited | Evidence-bounded explanation over released public-safe representations | Governed API `ABSTAIN/ERROR` scaffold; AI lanes are not proof | Accepted evidence/policy binding, receipt/audit, precision parity, red-team and runtime proof absent |
 
-### 5.1 The Hazards rule is permanent
+### 5.1 Real protected data posture
 
-**CONFIRMED doctrine** (Atlas §24.5.2): *No transform permits KFM to act as an emergency-alert authority. The boundary holds.* This is the one row in the register that **never** has an allow path — it is a doctrinal floor, not a starting posture.
+Until the relevant operation graduates, real sensitive payloads must remain outside:
+
+- the public repository and documentation;
+- synthetic fixtures and example values;
+- public or broadly retained logs, traces, error messages, receipts, screenshots, and generated artifacts;
+- public map, tile, export, search, graph, vector-index, cache, and AI paths; and
+- any normal client path that bypasses an accepted governed interface.
+
+Synthetic fixtures may model outcomes and references, but must not encode realistic protected values or operational protection parameters.
+
+[Back to top](#top)
 
 ---
+
+<a id="6-the-fail-closed-decision-flow"></a>
 
 ## 6. The fail-closed decision flow
 
-The flow below applies to every request the governed API receives for a sensitive lane. It is uniform across domains.
+Sensitive exposure has two separate decision points:
+
+1. **Release-candidate preparation** decides whether a safe derivative candidate may be reviewed and released.
+2. **Runtime request enforcement** decides whether an exact client request may receive that released derivative.
+
+Passing the first does not bypass the second.
 
 ```mermaid
 flowchart TD
-  classDef start fill:#eef6ff,stroke:#1f6feb,color:#0b3d91
-  classDef check fill:#fff7e6,stroke:#bf8700,color:#6c4a00
-  classDef deny  fill:#fdecea,stroke:#b22222,color:#7a0e0e
-  classDef ok    fill:#f0fff4,stroke:#1a7f37,color:#0b4a2a
-
-  REQ["Request<br/>(governed API · public client)"]:::start
-  LANE{"Sensitive lane?"}:::check
-  EB{"EvidenceBundle resolves?"}:::check
-  POL{"PolicyDecision = allow?"}:::check
-  REL{"Release state = PUBLISHED?"}:::check
-  REV{"ReviewRecord present<br/>where required?"}:::check
-  CONS{"Consent / sovereignty<br/>satisfied where applicable?"}:::check
-  XFM{"Required transform receipt<br/>(Redaction · Aggregation ·<br/>Representation) present?"}:::check
-  SC{"Side-channel lint passes<br/>(label · popup · AI prose)?"}:::check
-
-  ANSWER["ANSWER<br/>(public-safe derivative · receipts attached)"]:::ok
-  DENY1["DENY · MISSING_EVIDENCE"]:::deny
-  DENY2["DENY · POLICY"]:::deny
-  DENY3["DENY · NOT_RELEASED"]:::deny
-  DENY4["DENY · REVIEW_INSUFFICIENT"]:::deny
-  DENY5["DENY · CONSENT / SOVEREIGNTY"]:::deny
-  DENY6["DENY · TRANSFORM_RECEIPT_MISSING"]:::deny
-  DENY7["DENY · SIDE_CHANNEL_LEAK_RISK"]:::deny
-
-  REQ --> LANE
-  LANE -- "No" --> ANSWER
-  LANE -- "Yes" --> EB
-  EB -- "No" --> DENY1
-  EB -- "Yes" --> POL
-  POL -- "No" --> DENY2
-  POL -- "Yes" --> REL
-  REL -- "No" --> DENY3
-  REL -- "Yes" --> REV
-  REV -- "No" --> DENY4
-  REV -- "Yes" --> CONS
-  CONS -- "No" --> DENY5
-  CONS -- "Yes" --> XFM
-  XFM -- "No" --> DENY6
-  XFM -- "Yes" --> SC
-  SC -- "No" --> DENY7
-  SC -- "Yes" --> ANSWER
+  A["Governed object or request"] --> B{"Input contract complete?"}
+  B -- "No" --> E1["ERROR / POLICY_INPUT_INCOMPLETE"]
+  B -- "Yes" --> C{"EvidenceBundle resolved and fresh?"}
+  C -- "No" --> E2["ABSTAIN / evidence reason"]
+  C -- "Yes" --> D{"Rights, consent, sovereignty, source role known?"}
+  D -- "No or unsafe" --> E3["DENY / rights-or-consent reason"]
+  D -- "Yes" --> F{"Sensitivity vocabulary and operation mapping accepted?"}
+  F -- "No" --> E4["DENY or HOLD / sensitivity unresolved"]
+  F -- "Yes" --> G{"Accepted policy bundle and evaluator verifiable?"}
+  G -- "No" --> E5["ERROR / POLICY_BUNDLE_UNAVAILABLE"]
+  G -- "Yes" --> H{"Normalized policy outcome"}
+  H -- "ABSTAIN" --> E6["ABSTAIN"]
+  H -- "DENY" --> E7["DENY"]
+  H -- "ERROR" --> E8["ERROR"]
+  H -- "ANSWER + obligations" --> I{"All obligations executed?"}
+  I -- "No" --> E9["DENY / HOLD"]
+  I -- "Yes" --> J{"Transform receipt, validation, and review close?"}
+  J -- "No" --> E10["DENY / HOLD"]
+  J -- "Yes" --> K{"Exact derivative released with correction and rollback?"}
+  K -- "No" --> E11["DENY / not released"]
+  K -- "Yes" --> L{"Composition, carrier, export, cache, and prose checks pass?"}
+  L -- "No" --> E12["DENY / exposure risk"]
+  L -- "Yes" --> M["ANSWER — released public-safe representation only"]
 ```
 
-> [!NOTE]
-> The order of checks is illustrative; in practice the governed API may evaluate them in parallel or in a different ordering for performance. What matters is that **every** check must pass; any failure produces a finite DENY (or ABSTAIN) outcome with a reason code (see `docs/architecture/release-discipline.md` §6).
+### 6.1 Current runtime evidence
+
+The current Governed API scaffold does not implement this flow end to end. Its verified behavior is intentionally narrower:
+
+- `GET /bootstrap`, `GET /layers`, and `GET /evidence` return `ABSTAIN` with `NOT_IMPLEMENTED`;
+- unsupported methods on known routes return safe `ERROR`;
+- unknown routes return safe `ERROR`; and
+- no sensitive-domain `ANSWER`, active policy evaluation, EvidenceBundle-backed claim, redaction obligation, release lookup, or correction propagation is established.
+
+That scaffold is a useful fail-closed baseline. It is not enforcement graduation.
+
+### 6.2 Public-safe reasons
+
+A public reason should explain the finite outcome without exposing:
+
+- the protected value or exact location;
+- the existence of a restricted record when existence is itself sensitive;
+- private person, genomic, cultural, or source identifiers;
+- internal policy source paths, evaluator internals, stack traces, or operational security detail; or
+- transform parameters that enable reversal, triangulation, or protection weakening.
+
+Detailed reasons belong only in an authorized, audited review context.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-per-domain-fail-closed-table"></a>
 
 ## 7. Per-domain fail-closed table
 
-**CONFIRMED doctrine / PROPOSED tier labels** (Atlas §24.5.2 *Per-domain tier matrix*; §20.5 *Deny-by-Default Register*). Tier values use the Atlas T0–T4 scheme pending ADR-S-05 resolution.
+This table avoids assigning unaccepted global tiers. It describes operation-level defaults and the evidence needed before a bounded derivative may graduate.
 
-| Domain / object class | Default tier | Allowed transforms | Required gates |
-|---|---|---|---|
-| Archaeology — site location | **T4** | Steward + cultural review + generalized geometry (coarse cell) + RedactionReceipt → T2 or T1 | RedactionReceipt + ReviewRecord + PolicyDecision |
-| Archaeology — human remains / sacred sites | **T4** | No transform releases this to T0; T3 only under explicit named authorization | Sovereignty review + ReviewRecord + PolicyDecision |
-| Fauna — sensitive occurrence | **T4** | Geoprivacy generalization + RedactionReceipt → T1 | RedactionReceipt + ReviewRecord + PolicyDecision |
-| Fauna — range polygon | T1 | Aggregate / generalized public-safe layer | AggregationReceipt or RedactionReceipt |
-| Flora — rare or culturally sensitive plant location | **T4** | Generalized geometry + steward review → T2 or T1 | RedactionReceipt + ReviewRecord |
-| People / DNA — living-person fields | **T4** | Aggregation by tract or county + AggregationReceipt → T1 | Consent or aggregation gate + ReviewRecord |
-| People / DNA — raw DNA segment data | **T4** | No transform releases this to a public tier; T3 only under explicit research agreement | Named consent + ReviewRecord + PolicyDecision |
-| People / Land — private person-parcel join | **T4** | Generalized parcel + de-identified person → T2 only | RedactionReceipt + ReviewRecord |
-| Infrastructure — critical asset detail | **T4** | Generalized facility footprint + suppressed dependency → T1 | Steward review + RedactionReceipt |
-| Infrastructure — condition / vulnerability | **T4** | T3 to named authorities only; **never T0 / T1** | Steward review + named-party agreement |
-| Hazards — KFM as alert authority | **T4 forever** | **No transform permits KFM to act as an emergency-alert authority. The boundary holds.** | Policy boundary; deny at runtime |
-| Governed AI — RAW / WORK access via AI surface | **T4** | AI never reads RAW or WORK content; only released EvidenceBundle | PolicyDecision + AIReceipt |
-| Planetary / 3D — sensitive 3D scene content | **T4** | Generalization / clipping / withholding + RealityBoundaryNote + RepresentationReceipt → T1 or T2 where steward review supports | Steward review + RedactionReceipt + RepresentationReceipt |
+| Domain / operation | Default disposition | Potential public-safe candidate | Minimum additional closure | Current maturity |
+|---|---|---|---|---|
+| Archaeology — exact site or culturally controlled identity | Withhold / deny public precision; existence disclosure is review-dependent | Coarsened or withheld representation with public-safe limitations | Cultural/sovereignty and rights authority; policy; transform; receipt; validation; authenticated review; release; rollback | Documentation and scaffolds; no end-to-end enforcement |
+| Fauna — sensitive occurrence or site | Withhold exact point | Generalized, aggregated, delayed, or range-level representation | Source-role and rights review; accepted profile; deterministic transform; receipt; domain validation; review; release | Generated scaffolds plus generic fixture receipt proof |
+| Flora — rare or culturally sensitive location | Withhold exact point and revealing attributes | Generalized or withheld representation | Domain/cultural review; accepted profile; transform; receipt; validation; release | Documentation/scaffolds; no active profile or executor |
+| People — living-person private fields or joins | Deny public record-level exposure | De-identified aggregate only if re-identification risk and consent/rights close | Consent/rights; join policy; minimum-group/precision proof; review; release; revocation | Proposed contract/policy surfaces; no governed consumer proof |
+| DNA / genomics — raw or private match data | Deny public and ordinary semi-public exposure | None by default; separately governed restricted research access is outside the public path | Named legal/privacy/consent authority, restricted runtime, audit, retention, correction, revocation | Greenfield stub only |
+| Settlements / infrastructure — exploit-enabling precision | Deny exact operational representation | Generalized, delayed, aggregated, or withheld public-safe derivative | Security/domain review; exposure policy; transform; negative delivered-byte test; release | Architecture/docs/scaffolds; no active evaluator or route |
+| Hazards — alert or instruction authority | Deny KFM authority role | Contextual, cited official-source information with visible limitations | Source authority, evidence, non-authority wording, release, stale/correction behavior | Doctrine/architecture pressure; not alert authority |
+| Cross-domain join — re-identifying composition | Deny until composition is evaluated | Coarsened or suppressed derived statistic | Join identity; sensitivity inheritance; inference tests; review; export/search/graph parity | Documentation pressure; complete evaluator absent |
+| 3D / scene — sensitive geometry or synthetic reconstruction | Deny exact or misleading public scene | Public-safe geometry with explicit representation limitations | Same 2D evidence parity; transform; representation/reality notes as accepted; review; release | Documentation and renderer boundaries; no sensitive-scene release proof |
+| Governed AI — sensitive-lane question | Deny or abstain when support or permission is insufficient | Bounded explanation over released public-safe EvidenceBundles | Policy pre/post-check, citations, precision parity, finite envelope, audit-safe receipt/reference | Public API remains `ABSTAIN/ERROR` scaffold |
 
-### 7.1 What this table does not do
+### 7.1 No one-size-fits-all transform
 
-- It does **not** enumerate every domain object family. See per-domain READMEs.
-- It does **not** specify redaction-profile parameters (radius, cell size, jitter seed, DP epsilon). See `docs/standards/REDACTION_DETERMINISM.md` (PROPOSED).
-- It does **not** establish a final tier-scheme vocabulary. See ADR-S-05.
+A transform that is sufficient for one object, audience, time, or composition may be insufficient for another. Public documentation must not publish a universal radius, grid, threshold, seed, salt, or minimum count as though it were safe for every domain. Operational parameters require accepted profile authority, classification, threat review, controlled storage where appropriate, and versioned validation.
+
+[Back to top](#top)
 
 ---
+
+<a id="8-tier-transitions"></a>
 
 ## 8. Tier transitions
 
-**CONFIRMED doctrine** (Atlas §24.5.3 *Tier transitions*): tier movement is asymmetric — moving toward *more public* always requires both a transform receipt and a review record; moving toward *less public* never requires both.
+The vocabulary for tiers is unresolved, so this section defines **authority transitions** without silently choosing a rank or tier scheme.
 
-| From → To | Required artifact | Required reviewer | Reversibility |
-|---|---|---|---|
-| **T4 → T3** | PolicyDecision + ReviewRecord + agreement | Steward + rights-holder where applicable | Reversible: agreement revocation returns object to T4 with CorrectionNotice |
-| **T4 → T2** | PolicyDecision + ReviewRecord | Steward | Reversible: review revocation returns object to T4 |
-| **T4 → T1** | RedactionReceipt + ReviewRecord | Steward | Reversible: redaction can be re-evaluated; correction may demote a published T1 to T4 |
-| **T3 → T2** | PolicyDecision + ReviewRecord | Steward | Reversible |
-| **T2 → T1** | RedactionReceipt + ReviewRecord | Steward | Reversible |
-| **T1 → T0** | ReleaseManifest + ReviewRecord | Steward + release authority | Reversible: rollback supported via RollbackCard |
-| **Any tier → T4 (downgrade)** | CorrectionNotice + ReviewRecord | Steward + rights-holder where applicable | Always permitted; precedes derivative invalidation |
+| Transition | Minimum closure | What does not suffice |
+|---|---|---|
+| Restricted source object → public-safe derivative candidate | Stable input identity/digest; source and evidence refs; rights/consent/sensitivity context; accepted policy result; accepted profile; transform output; receipt; validation | A filename, profile label, style filter, schema pass, or generic reviewer note |
+| Derivative candidate → reviewed release candidate | Exact candidate digest; authenticated domain/sensitivity/security/rights review as applicable; unresolved-risk record; correction and rollback target | Receipt validity alone or the author's approval |
+| Release candidate → released public-safe artifact | Governed release decision, manifest, proof/receipt closure, audience and obligations, retention/correction/withdrawal/rollback support | Pull request, merge, CI success, GitHub release, or copied bytes |
+| Released artifact → runtime `ANSWER` | Request schema; actor/audience/purpose; current policy; current release/correction state; evidence/citations; enforced obligations; safe envelope | Client possession of a URL or a `public` sensitivity label |
+| Public/semi-public → restricted, withdrawn, or corrected | Immediate safe-state change; correction/withdrawal record; cache/index/search/graph/map/AI invalidation; preserved audit lineage | Waiting for a new transform or silently editing history |
+| Sensitivity vocabulary or classification change | New versioned decision/label; affected-object inventory; migration or re-evaluation; consumer compatibility; correction and rollback | In-place field rewrite with no supersession or receipt |
 
-### 8.1 The reading rule
+### 8.1 Asymmetric safety rule
 
-A tier *upgrade* (toward more public) always needs both a transform receipt and a review record. A tier *downgrade* (toward less public) never needs both — **correction alone is sufficient to remove or restrict**. This asymmetry is intentional and load-bearing: it makes restricting *fast* and exposing *slow*.
+Motion toward broader exposure requires complete positive closure. Motion toward less exposure may proceed immediately when credible risk, rights change, correction, revocation, or control failure is identified. The later audit record must preserve why the retreat occurred, but lack of a completed replacement must not keep unsafe material exposed.
+
+### 8.2 No automatic declassification
+
+A successful transform can create a **candidate derivative**. It does not automatically:
+
+- change the canonical source object's sensitivity;
+- establish rights or consent;
+- prove residual risk is acceptable;
+- authenticate review;
+- approve release; or
+- make the public request eligible for `ANSWER`.
+
+[Back to top](#top)
 
 ---
+
+<a id="9-required-artifacts-at-each-transition"></a>
 
 ## 9. Required artifacts at each transition
 
-The artifacts below carry the audit trail for every sensitive-lane transition. They are the same artifacts named in the receipt catalog (`docs/architecture/release-model.md` §4), specialized to sensitive use.
+| Object family | Current repository posture | Required role in a mature flow | Must not be mistaken for |
+|---|---|---|---|
+| `SourceDescriptor` | Existing source/evidence architecture; exact live-source coverage varies | Identity, source role, rights/terms, access, cadence, authority, sensitivity caveats | Evidence sufficiency or release approval |
+| `EvidenceRef` / `EvidenceBundle` | Resolver and fixture work exists elsewhere; coverage is bounded | Claim support, scope, provenance, citations, limitations | Policy, review, transform, or release |
+| `SensitivityLabel` | Draft contract + `PROPOSED` four-level schema | Explicit exposure context with safe reason and time | Access grant or publication approval |
+| Policy input and `PolicyDecision` | Draft/proposed contracts and inactive vocabulary; evaluator unbound | Evaluate exact operation/audience/context and emit finite outcome plus obligations | Transform execution or release |
+| Redaction/profile selection | Two empty proposed catalog placeholders; no accepted profile | Bind immutable profile identity, scope, parameter-handling classification, implementation, and validator | A free-form method name or inline secret |
+| `RedactionReceipt` | Deterministic `PROPOSED_INACTIVE` fixture-only profile and validator | Record protective transform or withholding without protected/reversal material | Proof of sufficiency, authenticated review, or release |
+| Validation report / proof | Generic and domain validators vary | Prove schema, identity, determinism, obligation, leakage, and negative cases for exact candidate | Rights, consent, policy authority, or human review |
+| `ReviewRecord` or accepted equivalent | Specialist/authentication binding unverified | Record qualified review for exact version, scope, residual risk, and decision | CODEOWNERS route or author self-approval |
+| `ReleaseManifest`, correction, withdrawal, rollback | Separate release root and object families; sensitive binding unproved | Authorize exact derivative/audience and preserve retreat/correction path | Documentation, receipt, CI, merge, or deployment |
+| `RuntimeResponseEnvelope` | Governed API `ABSTAIN/ERROR` scaffold | Return exactly one bounded runtime outcome with safe reasons and support refs | Raw model output or direct store response |
+| AI audit/receipt reference | AI object surfaces exist in broader repo; sensitive binding unproved here | Bind model/adapter, prompt policy, evidence, decision, output, citation validation, and correction linkage where AI is used | Evidence or approval |
 
-| Artifact | What it pins for sensitive lanes |
-|---|---|
-| **SourceDescriptor** | Source role, rights, sensitivity, cadence at admission — fixed; never edited in place |
-| **RedactionReceipt** | The exact public-safe transformation: profile, parameters, seeding rule, kept / removed fields, reviewer |
-| **AggregationReceipt** | The geometry scope and time scope of any aggregation; the suppression rule that protected underlying records |
-| **RepresentationReceipt** | Where surface fidelity differs from evidence fidelity (3D scene from 2D evidence, synthetic terrain, tile downsampling) — with `reality_boundary_note_ref` populated |
-| **RealityBoundaryNote** | The narrative statement of what is real and what is reconstructed, when the carrier is synthetic or interpretive |
-| **ReviewRecord** | Steward, sensitivity reviewer, rights-holder rep, or release-authority decision, with role and reason |
-| **PolicyDecision** | The policy bundle's evaluation: rule id, target, decision, reason code, time, evidence refs |
-| **ConsentMetadata** | Pointer-only consent proof (no raw PII in tile sidecars or public artifacts); revocation endpoint referenced |
-| **AIReceipt** | When any AI surface produced output bearing on the sensitive lane: prompt scope, evidence refs, policy decision, outcome, reason code |
-| **CorrectionNotice / RollbackCard** | When a sensitive-lane release is corrected or rolled back; lists invalidated derivatives |
+### 9.1 What the fixture-only RedactionReceipt proof establishes
 
-### 9.1 Named redaction profiles
+The current synthetic profile is meaningful but deliberately bounded. It establishes:
 
-**CONFIRMED doctrine** (Pass-10 C6-02 *Named Redaction Profiles*): Redactions reference a named profile (e.g. `profile:sinc-obscure-10km`) rather than inline parameters. Each profile ships its method documentation, its Rego fixture stating which sensitivity ranks it satisfies, and a verifier that re-runs the transform from the receipt's parameters and checks determinism.
+- Draft 2020-12 schema validation;
+- canonical `spec_hash` and deterministic receipt identity checks;
+- finite `PASS`, `ABSTAIN`, `DENY`, and `ERROR` validator outcomes;
+- public-candidate requirements for policy, review, validation, evidence, release-candidate, and rollback refs;
+- withholding semantics;
+- negative cases for missing closure, unsafe output tier, result mismatch, hash/id mismatch, protected-value leakage, and authority overreach; and
+- safe non-effects: no restricted input, no policy execution, no authenticated review, no lifecycle mutation, no release, and no publication.
 
-The corpus shows three canonical profiles plus a no-op:
+It does **not** establish that the referenced policy, review, evidence, release, or rollback objects exist, are authentic, or authorize anything. The fixture uses synthetic references and freezes all authority flags to `false`.
 
-| Profile (PROPOSED naming) | Method |
-|---|---|
-| `point_10km_hex_seeded_v1` | Hex-grid seeded generalization at 10 km |
-| `point_3km_jitter_v1` | Seeded jitter at 3 km |
-| `centroid_1km_v1` | Centroid + 1 km coarse time bucket |
-| `kfm:redact:none` | No-op (recorded explicitly for auditability) |
+### 9.2 Documentation drift to preserve, not hide
 
-Parameter values, seeding rules, and per-profile fixtures live in `docs/standards/REDACTION_DETERMINISM.md` (PROPOSED in corpus; not yet authored).
+The shared `RedactionReceipt` contract still describes the schema as empty/permissive, while the current schema has since become a closed fixture-only profile. That documentation-to-machine drift requires a separately scoped correction; this page records it but does not silently rewrite either authority surface.
+
+[Back to top](#top)
 
 ---
+
+<a id="10-side-channel-and-inference-risk"></a>
 
 ## 10. Side-channel and inference risk
 
-### 10.1 The side-channel catalog
+Protection is evaluated over the **delivered system**, not only the geometry field.
 
-**CONFIRMED risk** (Atlas §24.10): sensitive coordinates can leak through carriers other than the geometry. Side-channel lint must cover at least:
-
-| Channel | Leak vector | Counter-rule |
+| Channel | Failure mode | Required control and proof |
 |---|---|---|
-| **Tile field allowlist** | A tile carries a field whose value reveals the redacted location (place name; school district; survey ID) | Tile schema declares attribute allowlist; validator rejects fields not on the list |
-| **Popup text** | A popup shows the original coordinate, address, or revealing free text | Popups derived from public-safe payload only; popup text is a *carrier*, not the source of an allow decision |
-| **Label / glyph density** | Label placement reveals exact locations even when the underlying geometry is generalized | Label density is part of the StyleManifest; review covers density, not just colors |
-| **AI prose** | A Focus Mode answer paraphrases the precise location it should have abstained on | AI surface enforces cite-or-abstain; AIReceipt records the evidence the answer cited |
-| **Export / screenshot** | A user exports a screenshot or PDF that includes uncited or precise content | Exports carry release id, artifact digest, citations, limitations; uncited export is forbidden |
-| **Aggregate + context join** | Two open inputs join to re-identify a sensitive record | Minimum-cell suppression; person-parcel join denial; periodic threat modeling of joins |
-| **Stale-vs-fresh delta** | A diff between releases reveals what changed in a sensitive layer | Stale-state markers + Correction discipline; diffs themselves are receipted |
+| Geometry and tile bytes | Exact or near-exact location remains recoverable | Generate public-safe derivative upstream; inspect delivered bytes at all supported zooms/representations |
+| Attributes and free text | Names, IDs, descriptions, addresses, timestamps, or source fields reveal protected context | Explicit allowlist; synthetic negative fixtures; payload and tile inspection |
+| Labels, popups, legends, tooltips | UI text discloses more precision than the carrier | Derive only from public-safe payload; cross-surface parity tests |
+| Search, graph, index, vector store | Restricted relation or text remains discoverable after map redaction | Sensitivity inheritance; projection-specific deny/generalization; correction propagation tests |
+| Cross-lane joins | Two ordinary inputs re-identify a person, site, species, or asset | Operation-specific join policy; group/precision/inference tests; steward review |
+| Time and release deltas | Changes, rescissions, or before/after views reveal protected state | Safe diff policy; delayed release or suppression; correction-aware comparison |
+| Exports, screenshots, offline bundles | Data escapes API/UI constraints or loses release/citation state | Server-generated bounded export; release/digest/citation refs; export-specific policy and tests |
+| Logs, telemetry, errors, denial reasons | Protected values or internal controls leak through observability | Value-safe reason codes; structured redaction; retention/access controls; negative log tests |
+| Cache, CDN, object storage, source maps | Corrected or withdrawn bytes remain retrievable | Versioned immutable release refs plus invalidation/withdrawal verification |
+| AI prose and tool traces | Model restates exact detail, infers beyond evidence, or records protected prompts | Released public-safe context only; precision parity; safe audit references; no protected chain-of-thought or prompt logging |
+| 3D, terrain, scenes, and imagery | Perspective, mesh, texture, or surrounding context reconstructs precise location | Same sensitivity policy as 2D; representation-specific threat review and parity tests |
 
-### 10.2 Inference risk grows with cross-lane joins
+### 10.1 Composition is a new operation
 
-**CONFIRMED risk** (Atlas §24.10 *Living-person data exposed via inference (e.g., aggregate + context join)*): the inference risk surface is **the join**, not the inputs. Cross-lane joins involving People / DNA / Land are governed in `docs/architecture/people-place-joins.md`; the rules there apply at admission time and at composition time, before the joined claim becomes a release.
+Every join, overlay, compare, story, export, AI prompt context, or search result set is a new operation with its own audience and inference risk. Upstream `public` labels do not automatically make the composition public-safe.
 
-> [!WARNING]
-> An aggregate that is safe to publish alone may become unsafe to publish next to a context layer that, together with the aggregate, re-identifies. This is not a flaw in the aggregate — it is a flaw in the composition. The fix is at the join, not at the inputs.
+### 10.2 Delivered-byte test
+
+Before release, validation should inspect the actual public carrier or a byte-equivalent fixture—not only source rows or style configuration. A safe style over unsafe tile bytes is a failure.
+
+[Back to top](#top)
 
 ---
+
+<a id="11-style-only-hiding-is-forbidden"></a>
 
 ## 11. Style-only hiding is forbidden
 
-### 11.1 The rule
+### 11.1 Boundary
 
-**CONFIRMED doctrine** (Master MapLibre Category Q; `docs/architecture/maplibre-3d.md` §8.2; Atlas §29.2 anti-patterns):
+MapLibre, styles, UI components, search clients, and AI presentation layers are downstream carriers. They may display trust state and suppress unavailable controls, but they must never receive protected exact bytes and rely on presentation logic as the only barrier.
 
-*No sensitive geometry hidden only by style: archaeology, species, living-person, infrastructure, and culturally sensitive geometry must be generalized, redacted, delayed, or denied before public tile production.*
+```mermaid
+flowchart LR
+  Restricted["Restricted governed input"] --> Policy["Policy + rights + sensitivity context"]
+  Policy --> Transform["Accepted transform or WITHHOLD"]
+  Transform --> Validate["Leakage + determinism + obligation validation"]
+  Validate --> Review["Authenticated specialist review"]
+  Review --> Release["Governed release + correction + rollback"]
+  Release --> Carrier["Public-safe API / tile / export / search / AI context"]
+  Carrier --> UI["MapLibre / Evidence Drawer / Focus Mode"]
 
-### 11.2 What the right pattern looks like
+  Restricted -. "DENY direct public path" .-> UI
+```
 
-A CARE-masked archaeology layer reaching the renderer has already been transformed upstream:
+### 11.2 Why presentation controls fail
 
-1. Original coordinates remain canonical, **not public** — they live under `data/processed/<domain>/...` (PROPOSED).
-2. A generalization pipeline produces a published, transformed derivative under `data/published/layers/<domain>/<dataset>-<profile>.pmtiles` (PROPOSED).
-3. The `LayerManifest` declares the transform (`sensitivity.transform = "<profile_id>"`) and references the authorizing `PolicyDecision`.
-4. The renderer (MapLibre + plugins) only ever sees the generalized version.
+- Style documents and browser state are inspectable and modifiable.
+- Hidden attributes may still be present in network payloads or tiles.
+- Zoom and filter controls can be bypassed or reimplemented.
+- Export, cache, search, graph, and AI paths may not share the same UI filter.
+- A later style change can accidentally reveal already-delivered bytes.
+- Client-side policy cannot safely authenticate restricted review or bind release/correction state.
 
-### 11.3 Why style-as-policy fails
+### 11.3 Current implementation limit
 
-Public clients can read style JSON. Devtools can re-enable hidden layers. Zoom thresholds can be overridden. Opacity can be flipped. Tile sets stream at every zoom they were generated at, regardless of style. Style filters and paint properties are *display* primitives — they have no security or sensitivity meaning. Treating them as policy is a CONFIRMED anti-pattern; the geometry must be public-safe **at the carrier layer**, not at the renderer.
+The current redaction package is not functional, no active profile catalog is accepted, and the Governed API has no sensitive-domain `ANSWER` path. Therefore this section is a graduation requirement—not a claim that upstream transformation currently occurs.
+
+[Back to top](#top)
 
 ---
+
+<a id="12-ai-surface-in-sensitive-domains"></a>
 
 ## 12. AI surface in sensitive domains
 
-**CONFIRMED doctrine** (Atlas §20.5 deny-by-default for Governed AI; per-domain L. sections "AI may summarize released … EvidenceBundles, compare evidence, explain limitations, and draft steward-review notes; AI must ABSTAIN when evidence is insufficient and DENY where policy, rights, sensitivity, or release state blocks the request"):
+AI remains an interpretive consumer behind the same trust membrane. It receives no special permission because it can generate fluent text.
 
-### 12.1 What the AI may do
+### 12.1 Allowed bounded role
 
-- Summarize released EvidenceBundles for the domain.
-- Compare evidence across released bundles.
-- Explain limitations cited in the bundles.
-- Draft steward-review notes for human review.
+A governed AI surface may, after all required controls graduate:
 
-### 12.2 What the AI must do
+- summarize released public-safe `EvidenceBundle` representations;
+- explain public-safe limitations, redaction, stale state, or correction state;
+- compare released artifacts within their supported spatial and temporal scope; and
+- draft review notes for an authorized human without deciding policy or release.
 
-| Trigger | Required outcome |
+### 12.2 Required behavior
+
+| Condition | Required behavior |
 |---|---|
-| Evidence is insufficient | ABSTAIN with reason code; AIReceipt emitted |
-| Policy, rights, sensitivity, or release state blocks the request | DENY with reason code; AIReceipt emitted |
-| AI cannot cite | ABSTAIN; never invents a citation |
-| Synthetic content would be presented as observed reality | DENY; RealityBoundaryNote referenced |
+| Evidence missing, stale, conflicting, or outside scope | `ABSTAIN`; do not infer the protected fact. |
+| Rights, consent, sensitivity, audience, precision, or release blocks the request | `DENY` with a public-safe reason. |
+| Policy bundle/evaluator, adapter, citation validator, or runtime is unavailable | `ERROR`; never fall back to raw model output. |
+| Released representation supports only generalized precision | Answer only at that precision; do not reconstruct or describe a narrower location. |
+| User asks for restricted source, exact coordinates, private joins, or hidden operational detail | `DENY`; do not disclose through explanation, tools, citations, or error text. |
+| Synthetic or reconstructed content is involved | Label the representation and cite its evidence/limitations; do not present it as observation. |
 
-### 12.3 What the AI must never do
+### 12.3 Required separation
 
-- Read RAW or WORK content. The AI surface sees only released EvidenceBundle.
-- Cross the trust membrane: no direct model-to-public traffic, no admin path acting as the normal public path.
-- Summarize a sensitive-lane location to a precision the underlying public-safe carrier does not support. Cite-or-abstain holds in prose, not just in tile output.
+- Browsers and ordinary clients must not call the model runtime or canonical/internal stores directly.
+- Evidence retrieval, policy checks, sensitivity checks, citation validation, and release/correction checks occur before and after model invocation as required.
+- Prompts, tool traces, embeddings, caches, telemetry, and receipts must not store real protected values unless an accepted restricted-data design explicitly authorizes and audits that use.
+- A model refusal prompt is defense in depth, not policy enforcement.
+- An AI receipt or accepted equivalent is a **graduation requirement** where AI participates; current repository evidence reviewed here does not prove a sensitive-domain receipt is bound to the public runtime.
 
-### 12.4 AIReceipt is mandatory
-
-Every Focus Mode answer touching a sensitive lane carries an AIReceipt. The receipt is **never superseded retroactively** — a new answer is a new receipt, with cross-reference (`docs/architecture/release-model.md` §10.1).
+[Back to top](#top)
 
 ---
+
+<a id="13-health-indicators"></a>
 
 ## 13. Health indicators
 
-**PROPOSED indicators** (Atlas §24.11.3 *Sensitivity and rights*). These are reported, not enforced; enforcement is the validator's job.
+These are **PROPOSED operational indicators**, not current measurements.
 
-| Indicator | What it measures | Healthy posture |
-|---|---|---|
-| **Sensitive-lane fail-closed rate** | % of unauthorized sensitive-lane requests that DENY at the first gate | **100% at the first gate** |
-| **RedactionReceipt coverage** | % of public-safe transformations that emit a RedactionReceipt | **100% for sensitive lanes** |
-| **Review-aged-out incidence** | Number of sensitive-lane claims past their review cadence | Visibly tracked; trend not regressing |
-| **Rights-change response time** | Median time from rights-change detection to tier reassignment | Within stated tolerance per source family |
-| **Sensitive-content side-channel audit** | Frequency of automated checks for label / popup / AI-text leaks | Periodic; documented |
-| **Synthetic-claim incidence** | % of audited AI answers flagged for presenting synthetic content as observed | Approaches zero; never silently |
-| **ABSTAIN rate by template** | How often each Focus Mode template abstains on sensitive-lane prompts | Visibly tracked; very low ABSTAIN suggests over-fitting; very high suggests evidence gaps |
-| **DENY reason distribution** | Reason codes returned by sensitive-lane denials | Stable; large new-reason spikes investigated |
+| Indicator | What it measures | Target posture | Evidence needed |
+|---|---|---|---|
+| Negative sensitive-case pass rate | Representative `ABSTAIN`, `DENY`, and `ERROR` cases across policy, transform, consumer, and release paths | 100% of required negative cases match expected outcome/reason | Exact fixtures, test reports, required checks |
+| Obligation enforcement coverage | `ANSWER` cases whose citation, transform, delay, export, review, and rollback obligations are actually enforced | 100% for admitted operations | Consumer integration and post-condition tests |
+| Restricted-value carrier leakage | Protected values or reversal material found in public API, tile, export, search, graph, logs, or AI output | Zero | Delivered-byte and observability scans |
+| Bundle/evaluator verification | Decisions bound to accepted policy bundle, evaluator identity/version, and explicit input profile | 100% for policy-significant operations | Decision receipts and runtime evidence |
+| Review authenticity and separation | Sensitive releases with authenticated qualified review independent of author where required | 100% of applicable releases | Review records and identity evidence |
+| Redaction receipt closure | Public-safe transform candidates with valid receipt, output digest, evidence, validation, release-candidate, and rollback refs | 100% of applicable candidates | Receipt and cross-reference validation |
+| Correction propagation latency | Time for withdrawal/restriction to reach API, map, search, graph, cache, export, and AI surfaces | Within accepted incident/runbook objective | Rehearsal and observed telemetry |
+| Vocabulary drift | Objects or consumers using unmapped sensitivity/rank/tier values | Zero unreviewed coercions | Registry/crosswalk validator and inventory |
+| Sensitive join review coverage | New or changed cross-domain compositions evaluated for inference risk | 100% of policy-significant joins | Join registry, tests, review evidence |
+| Public finite-envelope coverage | Trust-bearing public routes returning exactly one valid finite outcome | 100% | Runtime conformance and hosted checks |
+
+A dashboard is a projection of these records. It is not evidence unless its underlying runs, receipts, tests, and artifacts resolve.
+
+[Back to top](#top)
 
 ---
+
+<a id="14-anti-patterns"></a>
 
 ## 14. Anti-patterns
 
-<details>
-<summary><strong>Click to expand: catalog of sensitive-domain fail-closed anti-patterns</strong></summary>
-
-| Anti-pattern | Why it fails | Counter-rule |
+| Anti-pattern | Why it fails | Required correction |
 |---|---|---|
-| **Style-only hiding of sensitive geometry** | Public client devtools / zoom override reveal "hidden" data | Transform, redact, generalize, or deny **upstream** of the renderer (§11) |
-| **Treating popup text as policy** | Popups derived from canonical fields leak the data they pretend to summarize | Popups derived only from public-safe payload; popup text is a carrier, not the allow decision |
-| **Aggregate-as-per-place truth** | Source-role collapse from aggregate → observed | DENY cell→single-record join; AggregationReceipt with geometry-scope guard |
-| **Living-person fields joined opportunistically** | Inference risk; rights violation | Default T4; consent + policy + restricted authorized surface required |
-| **Person-parcel join from private records** | Discloses ownership + identity simultaneously | DENY by default; restricted authorized surface only |
-| **DNA segment join inferred via name + place co-occurrence** | Re-identifies kit holders | DENY raw segments; consent + policy + restricted surface |
-| **Style filter or zoom threshold used as redaction** | Display primitive masquerading as security primitive | Sensitivity transforms happen at the carrier layer, not the renderer |
-| **AI prose paraphrasing a redacted location to a precision the carrier does not support** | Cite-or-abstain violated in prose where it would not be in tile output | AIReceipt + CitationValidationReport; ABSTAIN when paraphrase would over-disclose |
-| **Synthetic content presented as observed reality** | Reconstruction read as observation | RealityBoundaryNote + RepresentationReceipt; DENY without |
-| **KFM acting as alert / instruction authority** | Out-of-scope life-safety use | DENY forever — no transform permits this (§5.1) |
-| **Tile carries an attribute not on the allowlist** | Side-channel leak via vector tile properties | Tile schema declares allowlist; validator rejects unknown fields |
-| **Export without citations or release-id pinning** | Sensitive content escapes the audit trail | Exports carry release id, digests, citations; uncited export forbidden |
-| **Reviewer same as author on a sensitive-lane release** | Self-approval defeats separation of duties | Tooling-enforced separation; sensitive-lane release requires author + sensitivity reviewer + release authority + rights-holder rep |
-| **Rights change in upstream source not propagated to public surface** | Rights-revoked content continues to ship | Rights-change response time tracked; CorrectionNotice emitted; tier downgrade does not wait |
-| **Tombstoned bundle still pointed at by manifest** | Bundle hidden but still authoritative-by-pointer | Tombstone resolution surfaces at request time; manifest using tombstoned bundle fails closed |
-| **"We caught it later" framing** | Implies fail-open as default with retroactive fix | Default is closed. Catching it later is correction; it is not the operating model |
-| **Aggregate + context join not threat-modeled** | Inference risk grows quietly | Periodic join threat-modeling; minimum-cell suppression; person-parcel denial by default |
+| Treating ADR-0010 as accepted because many docs repeat it | Repetition is not governance adoption | Keep decision `proposed`; obtain reviewed acceptance separately |
+| Treating `default allow := false` as active protection | Source bytes do not prove bundle, evaluator, input, result normalization, or consumer binding | Prove the full evaluator-to-consumer path with native and integration tests |
+| Treating `default deny := false` as deny-by-default | The stub denies nothing | Keep it inactive; replace only through reviewed policy implementation |
+| Treating a `public` SensitivityLabel as publication approval | Label expresses context only | Require evidence, policy, review, release, correction, and rollback closure |
+| Treating a valid RedactionReceipt as proof that an output is safe | Receipt records a declared transform; current profile is fixture-only and authority-free | Require accepted profile, executor, validation, review, and release |
+| Silently mapping `0..5`, `S/C/T`, T0–T4, and four label values | More-public meaning may be chosen accidentally | HOLD translation until an accepted machine crosswalk exists |
+| Publishing exact protection parameters in public docs or reasons | Parameters may enable reversal, triangulation, or weakening | Publish only public-safe method classes and obligations; control operational values |
+| Style, popup, zoom, filter, feature flag, or AI prompt used as primary redaction | Protected bytes already crossed the boundary | Transform or withhold before carrier generation |
+| Domain-wide secrecy or openness by folder name | Sensitivity is operation-, precision-, audience-, time-, and composition-dependent | Evaluate the exact object and operation |
+| Schema validity treated as policy or rights approval | Shape does not establish admissibility | Preserve contract/schema/policy/evidence/review/release separation |
+| PR, merge, badge, workflow success, receipt, or GitHub release treated as publication | Repository events are not governed release state | Require exact release records and public-carrier evidence |
+| Free-text denial reasons include protected detail | The denial leaks what it protects | Use stable public-safe reason codes; keep restricted detail in audited review context |
+| Aggregate or public inputs assumed safe after composition | Join/delta/context may re-identify | Re-evaluate each composition as a new operation |
+| AI paraphrases more precision than the released carrier | Prose bypasses geometry redaction | Enforce evidence and precision parity; abstain or deny |
+| Author self-approves a policy-significant sensitive release | Separation of duties is lost | Require authenticated qualified and independent review where adopted |
+| Correction waits for a replacement artifact | Unsafe material remains exposed | Retreat first; preserve correction lineage; rebuild later |
+| Real protected values used in fixtures, logs, examples, or receipts | Testing and documentation become disclosure paths | Use synthetic safe values and non-reversible references only |
 
-</details>
+[Back to top](#top)
 
 ---
+
+<a id="15-verification-backlog"></a>
 
 ## 15. Verification backlog
 
-| Item | Evidence that would settle it | Status |
+### 15.1 Priority closure register
+
+| Priority | Item | Current result | Evidence required to close |
+|---|---|---|---|
+| **P0** | Accept, revise, or reject ADR-0010 with named decision authority and review quorum | **HOLD — proposed** | Accepted ADR and matching index/status record |
+| **P0** | Reconcile sensitivity/rank/access/release vocabularies and machine mappings | **CONFLICTED / HOLD** | Accepted contract/schema/registry/crosswalk, migrations, fixtures, consumer tests |
+| **P0** | Name accountable privacy/genomics, cultural-sovereignty, biodiversity, infrastructure-security, policy, evidence, release, correction, and independent reviewers | **NEEDS VERIFICATION** | Accepted ownership/review records and escalation path |
+| **P0** | Establish one accepted policy input profile, bundle/selector, evaluator, normalized outcomes, and obligation contract | **HOLD — unbound** | Native policy tests, evaluator tests, digest/version binding, failure modes |
+| **P0** | Keep real sensitive material outside public/repo paths until controls graduate | **Required safe posture** | Source-specific authority, restricted storage design, audit, retention, incident controls |
+| **P1** | Resolve redaction-profile catalog home and accept one inactive profile before implementation | **CONFLICTED / HOLD** | Single-writer decision, profile contract/schema, classified parameters, threat review, fixtures |
+| **P1** | Implement one smallest no-network synthetic sensitive-operation slice | **PROPOSED** | Accepted profile, functional transform, receipt writer, validator, negative cases; no real data |
+| **P1** | Bind policy outcomes and obligations to one governed consumer without public `ANSWER` over real data | **PROPOSED** | Consumer integration, schema validation, safe reasons, audit refs, no-network tests |
+| **P1** | Prove release denial, correction, withdrawal, cache/index invalidation, and rollback for the synthetic slice | **PROPOSED** | Release dry run and correction/rollback rehearsal |
+| **P1** | Modernize the revocation runbook from scaffold to reviewed procedure | **PROPOSED scaffold** | Owners, triggers, steps, affected surfaces, rehearsal, rollback |
+| **P2** | Add domain-specific profiles and specialist review only after shared closure | **DEFERRED** | Domain contracts/policy/fixtures/tests and qualified review |
+| **P2** | Add composition, delivered-byte, search/graph, export, logging, and AI side-channel suites | **DEFERRED** | Representative negative fixtures and required workflow checks |
+| **P2** | Measure operational health and correction latency | **UNKNOWN** | Deployed instrumentation, dashboards tied to runs/receipts, incident/rehearsal evidence |
+
+### 15.2 Maturity ladder
+
+| Level | Meaning | Current posture |
 |---|---|---|
-| ADR-S-05 — Sensitivity tier scheme (T0–T4 vs Pass-10 rubric 0–5) resolved | Accepted ADR | **PROPOSED open** |
-| `docs/standards/SENSITIVITY_RUBRIC.md` authored (Pass-10 C6-01 expansion) | Mounted doc | **PROPOSED; not yet authored** |
-| `docs/standards/REDACTION_DETERMINISM.md` authored (Pass-10 C6-02..06 expansion) | Mounted doc | **PROPOSED; not yet authored** |
-| Named redaction profiles catalog (`policy/redaction/profiles.yaml`) present | Mounted file + per-profile verifier | **NEEDS VERIFICATION** |
-| `policy/sensitivity/<domain>/*.rego` present for archaeology, fauna, flora, infrastructure, people, consent | Mounted policy bundle + Conftest fixtures | **NEEDS VERIFICATION** |
-| Tile attribute allowlist enforced by validator (§10.1) | Mounted validator + sample failing fixture | **PROPOSED** |
-| Side-channel lint job (label / popup / AI prose) wired in CI | Workflow file + sample failing fixture | **PROPOSED** |
-| Cross-lane join threat model (§10.2) authored | `docs/architecture/people-place-joins.md` §10 verification backlog already references this | **PROPOSED** |
-| Cite-or-abstain enforcement for AI surface in sensitive lanes (§12) | OPA policy + AIReceipt sampling job | **NEEDS VERIFICATION** |
-| Consent token / GA4GH Passport gatehouse for People / DNA lanes | Mounted runtime + sample failing fixture | **NEEDS VERIFICATION** |
-| Rights-change detection automation for third-party sources (Atlas §24.10) | Watcher / monitor for upstream rights changes | **PROPOSED open** |
-| Sensitive-lane fail-closed rate measurement (§13) | Dashboard / report from governed API logs | **PROPOSED** |
-| RedactionReceipt coverage measurement (§13) | Dashboard / report from receipt store | **PROPOSED** |
-| Revocation runbook (`docs/runbooks/revocation.md`) | Mounted runbook (Pass-10 C5-09 expansion) | **PROPOSED; not yet authored** |
-| Tombstone vs erasure boundary documented | Mounted runbook | **PROPOSED open** |
-| This file's canonical path `docs/architecture/sensitive-domain-fail-closed.md` | Mounted `docs/architecture/` tree + README index | **PROPOSED** |
+| **1. Architecture and boundaries** | Docs, ADR identity, responsibility roots, contracts, and review language exist | **CONFIRMED / broad** |
+| **2. Machine shape and fixture validation** | Closed schemas, deterministic synthetic fixtures, validators, and negative outcomes exist | **PARTIAL** — strongest in fixture-only RedactionReceipt profile |
+| **3. Evaluator-backed policy and transform** | Accepted input/bundle/evaluator, functional transform, receipt writer, native tests | **HELD / not established** |
+| **4. Governed consumer enforcement** | API, map, export, search, graph, AI, cache, and logs enforce outcomes/obligations | **HELD / not established** |
+| **5. Release-significant operation** | Authenticated review, release dry run, correction, withdrawal, rollback, required checks, observed operation | **UNKNOWN / not established** |
 
-> [!NOTE]
-> All file paths in this document are **PROPOSED** per directory-rules. Verify against a mounted repo before linking from neighboring docs.
+### 15.3 Definition of done for a bounded synthetic slice
 
-[Back to top](#sensitive-domain-fail-closed--architecture)
+A slice is reviewable only when it proves, without network access or real protected data:
+
+- deterministic identity and schema validation;
+- explicit finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` cases;
+- policy-bundle and evaluator failure cannot become allow;
+- required obligations are enforced before any candidate output;
+- protected values and reversal material cannot enter receipt, response, log, or carrier;
+- authenticated-review fields remain synthetic and non-authoritative until a real review system exists;
+- no lifecycle, release, or publication authority is implied by fixtures;
+- correction, withdrawal, and rollback references are validated; and
+- the PR description records exact non-effects and rollback.
+
+[Back to top](#top)
 
 ---
+
+<a id="16-related-docs"></a>
 
 ## 16. Related docs
 
-- `docs/architecture/README.md` — architecture index *(TODO: link verify)*
-- `docs/architecture/release-discipline.md` — process: gates, separation of duties, reason codes *(authored prior; PROPOSED path)*
-- `docs/architecture/release-model.md` — data model: receipts, manifests, references *(authored prior; PROPOSED path)*
-- `docs/architecture/governed-api.md` — the surface fail-closed is enforced through *(PROPOSED)*
-- `docs/architecture/planetary-3d.md` — 3D admission gate; Reality Boundary Note discipline *(authored prior; PROPOSED path)*
-- `docs/architecture/people-place-joins.md` — cross-lane join sensitivity; inference-risk threat model *(authored prior; PROPOSED path)*
-- `docs/architecture/maplibre-3d.md` — renderer-side enforcement; §8 default-deny matrix; §8.2 upstream transform *(authored prior; PROPOSED path)*
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED governance *(PROPOSED)*
-- `docs/doctrine/trust-membrane.md` — public-path constraints *(PROPOSED)*
-- `docs/doctrine/truth-posture.md` — cite-or-abstain default *(PROPOSED)*
-- `docs/doctrine/authority-ladder.md` — source-role discipline *(PROPOSED)*
-- `docs/standards/SENSITIVITY_RUBRIC.md` — Pass-10 C6-01 rubric *(PROPOSED in corpus; not yet authored)*
-- `docs/standards/REDACTION_DETERMINISM.md` — named profiles, seeded transforms *(PROPOSED in corpus; not yet authored)*
-- `docs/standards/PROV.md` — W3C PROV-O + PAV profile *(authored prior; naming variance vs `PROVENANCE.md` tracked at directory-rules §18 OPEN-DR-01)*
-- `docs/runbooks/revocation.md` — tombstone vs erasure operating procedure *(PROPOSED; not yet authored)*
-- Per-domain READMEs under `docs/domains/<domain>/` *(PROPOSED)*
-- `directory-rules.md` — root-folder authority boundaries
+### Current architecture and doctrine
+
+- [`README.md`](./README.md) — architecture-folder authority and convergence context.
+- [`sensitivity.md`](./sensitivity.md) — umbrella sensitivity architecture; broad and still proposal-heavy.
+- [`sensitivity-tiers.md`](./sensitivity-tiers.md) — draft T0–T4 architecture and transitions; not accepted machine authority.
+- [`critical-asset-exposure.md`](./critical-asset-exposure.md) — current repository-grounded critical-asset exposure architecture.
+- [`cross-lane-join-policy.md`](./cross-lane-join-policy.md) — join and composition boundary.
+- [`data-classification-framework.md`](./data-classification-framework.md) — data classification architecture.
+- [`governed-api.md`](./governed-api.md) and [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — governed delivery and trust boundary.
+- [`directory-rules.md`](../doctrine/directory-rules.md) and accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — placement authority.
+- Proposed [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) — cross-domain decision under review.
+
+### Standards, contracts, policy, and validation
+
+- [`SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) — draft numeric rubric; not accepted runtime mapping.
+- [`REDACTION_PROFILES.md`](../standards/REDACTION_PROFILES.md) — current repository-grounded profile boundary and graduation standard.
+- [`REDACTION_DETERMINISM.md`](../standards/REDACTION_DETERMINISM.md) — draft deterministic-transform proposal; implementation parity unproved.
+- [`policy/sensitivity/README.md`](../../policy/sensitivity/README.md) — current mixed-scaffold policy inventory and limitations.
+- [`SensitivityLabel`](../../contracts/policy/sensitivity_label.md) and [paired schema](../../schemas/contracts/v1/policy/sensitivity_label.schema.json) — proposed exposure context.
+- [`PolicyDecision` vocabulary](../../contracts/policy/policy_decision_vocabulary.md) and [inactive registry](../../policy/decision/vocabulary.v1.json) — finite public-safe reason and obligation candidates.
+- Shared [`RedactionReceipt`](../../contracts/shared/redaction_receipt.md), [fixture-only schema](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json), [cases](../../fixtures/contracts/v1/receipts/redaction_receipt/cases.json), and [validator](../../tools/validators/receipts/validate_redaction_receipt.py) — bounded synthetic proof.
+- [`packages/redaction/README.md`](../../packages/redaction/README.md) — greenfield transform-package boundary.
+- [`release/README.md`](../../release/README.md) — release, correction, withdrawal, and rollback authority.
+- [`revocation.md`](../runbooks/revocation.md) — current proposed runbook scaffold.
+
+### Domain lanes
+
+- [`docs/domains/archaeology/`](../domains/archaeology/README.md)
+- [`docs/domains/fauna/`](../domains/fauna/README.md)
+- [`docs/domains/flora/`](../domains/flora/README.md)
+- [`docs/domains/people-dna-land/`](../domains/people-dna-land/README.md)
+- [`docs/domains/settlements-infrastructure/`](../domains/settlements-infrastructure/README.md)
+- [`docs/domains/hazards/`](../domains/hazards/README.md)
+
+Per-domain documentation supplies domain context. It does not override shared contracts, accepted policy, or release authority.
+
+[Back to top](#top)
 
 ---
 
-<sub>Last updated · 2026-05-25 &nbsp;·&nbsp; Doc class · architecture &nbsp;·&nbsp; Status · draft &nbsp;·&nbsp; <a href="#sensitive-domain-fail-closed--architecture">Back to top ↑</a></sub>
+<a id="17-validation-and-review-checklist"></a>
+
+## 17. Validation and review checklist
+
+### Documentation integrity
+
+- [ ] KFM Meta Block v2 parses as YAML and records the exact evidence snapshot.
+- [ ] Legacy H1 and numbered-section anchors remain resolvable.
+- [ ] Every repository-relative link resolves at the pinned base or is explicitly labeled as a scaffold/current limitation.
+- [ ] No placeholder owner is presented as accepted stewardship.
+- [ ] No proposed ADR, tier, profile, route, evaluator, or runbook is described as accepted or operational.
+- [ ] No real protected value, precise location, genomic material, private join, infrastructure detail, or reversal-enabling parameter appears.
+
+### Architecture correctness
+
+- [ ] Contract, schema, policy, validator, review, release, consumer, and publication responsibilities remain separate.
+- [ ] The document distinguishes source-code defaults from accepted bundle/evaluator behavior.
+- [ ] The vocabulary conflict is visible and no silent mapping is introduced.
+- [ ] The fixture-only RedactionReceipt proof is represented with its authority flags and non-effects intact.
+- [ ] `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, and internal `HOLD` are not collapsed.
+- [ ] Client-side hiding is rejected as the primary control.
+- [ ] Correction/withdrawal may retreat before a replacement is ready.
+
+### Repository and hosted validation
+
+- [ ] Documentation build, metadata, link, fragment, citation, and stale-language checks pass for the exact head.
+- [ ] Architecture/document-graph and changed-scope checks show only intended dependencies.
+- [ ] Schema, contract, policy-boundary, receipt, release, and validator suites are classified as passed, introduced failure, inherited failure, or pending.
+- [ ] Hosted CI status is reported separately from source-level validation; a pending check is not presented as passed.
+
+[Back to top](#top)
+
+---
+
+<a id="18-non-effects-correction-and-rollback"></a>
+
+## 18. Non-effects, correction, and rollback
+
+### 18.1 Non-effects
+
+Updating this page does **not**:
+
+- accept ADR-0010 or any sensitivity vocabulary;
+- activate, repair, select, or bundle sensitivity policy;
+- define or approve a redaction profile or operational parameter;
+- implement a transform, evaluator, reviewer identity system, API route, cache, export, search, graph, or AI control;
+- open restricted input or create a real sensitive record;
+- change a contract, schema, fixture, validator, workflow, application, package, data object, receipt, proof, manifest, or release record;
+- authorize source activation, lifecycle promotion, release, deployment, or publication; or
+- prove that any public client is currently protected end to end.
+
+### 18.2 Correction rule
+
+If this page overstates current behavior, exposes unsafe detail, invents authority, or conflicts with accepted repository evidence, correct it through a scoped documentation change. If operational evidence shows a released surface is unsafe, restrict or withdraw the surface first through the owning release/correction mechanism; documentation correction alone is insufficient.
+
+### 18.3 Rollback
+
+Before merge, close the draft pull request and delete the feature branch. After an authorized merge, revert the single documentation commit or restore prior target blob:
+
+```text
+2daac2b4aff483e63c80451b69e9c4cc47928786
+```
+
+No data migration, policy deactivation, source shutdown, release withdrawal, deployment rollback, or cache invalidation is required for the documentation-only revert.
+
+---
+
+<sub>Evidence snapshot · `main@7ef1597779774d80346f81ecd8104b720797c587` &nbsp;·&nbsp; Document status · repository-grounded draft &nbsp;·&nbsp; Publication authority · none &nbsp;·&nbsp; <a href="#top">Back to top ↑</a></sub>
