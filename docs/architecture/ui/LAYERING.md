@@ -1,38 +1,114 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/layering
 title: Layer Architecture — KFM Map Shell Layering
-type: standard
-version: v1
-status: draft
-owners: <Docs steward + UI subsystem owner — TODO confirm CODEOWNERS>
+type: architecture-reference
+version: v2.0-draft
+status: draft; repository-grounded; mixed-maturity; renderer-hold; non-publisher
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent layer, data, UI, map-runtime, evidence, policy, release, accessibility, and security stewardship"
 created: 2026-05-14
-updated: 2026-05-14
-policy_label: public
-related: [docs/architecture/ui/README.md, docs/architecture/ui/BOUNDARIES.md, docs/architecture/map-shell.md, docs/doctrine/directory-rules.md, contracts/OBJECT_MAP.md]
-tags: [kfm, ui, maplibre, layers, layer-manifest, trust-membrane]
-notes: [PROPOSED canonical home; expansion of docs/architecture/ beyond §11 of Directory Rules — see §11 of this file]
+updated: 2026-08-19
+policy_label: public; architecture; ui; layers; map-shell; trust-membrane; no-release; no-publication
+owning_root: docs/
+responsibility: Explain current KFM layer object roles, lifecycle boundaries, validation and runtime-admission evidence, map-shell consumption rules, repository drift, and graduation requirements without becoming semantic-contract, machine-schema, policy, release, or runtime authority.
+truth_posture: cite-or-abstain; current-state claims are pinned to repository evidence; proposals, decisions, release, deployment, and public-operation claims remain visibly bounded
+current_path: docs/architecture/ui/LAYERING.md
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 68603b748d859884f5e140467285b5ae71d093a9
+  target_prior_blob: cb9f83cb9a4ae03e397deb03510fa2ab4e87191c
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  layer_manifest_contract_blob: 234dca70e768ee744f7d78109afc6e0dc745af1b
+  layer_descriptor_contract: current draft at pinned base
+  layer_catalog_item_contract: current draft at pinned base
+  data_layer_manifest_schema_blob: abca306cb271ed75127a83dd05b73830ba20773b
+  layers_layer_manifest_schema_blob: 81b6872fa7f9c843adb8432f28aa306ab8d272f6
+  layer_manifest_validator_blob: 577d31795caaf6712132e73189af18d318ac0e8a
+  layer_manifest_runtime_admission_blob: 895100728c9eb676b9e2aef84680073142694b27
+  maplibre_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
+  explorer_package_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  maplibre_package_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
+  governed_layers_route_blob: eaddcc9bfe066aea29178f3973275bd7e0932284
+related:
+  - ./README.md
+  - ./BOUNDARIES.md
+  - ./MAP_RUNTIME_BOUNDARY.md
+  - ./EVIDENCE_DRAWER.md
+  - ../map-shell.md
+  - ../contract-schema-policy-split.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - ../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
+  - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../contracts/data/layer_manifest.md
+  - ../../../contracts/data/layer_descriptor.md
+  - ../../../contracts/data/layer_catalog_item.md
+  - ../../../contracts/runtime/layer_manifest_admission.md
+  - ../../../contracts/layers/README.md
+  - ../../../schemas/contracts/v1/data/layer_manifest.schema.json
+  - ../../../schemas/contracts/v1/layers/layer_manifest.schema.json
+  - ../../../policy/layers/README.md
+  - ../../../fixtures/data/layer_manifest/README.md
+  - ../../../tools/validators/data/validate_layer_manifest.py
+  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
+  - ../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
+  - ../../../apps/governed-api/src/governed_api/routes/layers.py
+tags: [kfm, architecture, ui, layers, layer-manifest, layer-descriptor, layer-catalog-item, map-runtime, maplibre, evidence, policy, release, rollback]
+notes:
+  - "v2.0-draft replaces proposal-era and unmounted-repository claims with a same-path current-state reconciliation."
+  - "ADR-0029 is accepted and makes this existing docs/architecture/ui/ lane placement-safe; ADR-0001 and the UI/renderer ADRs remain proposed or draft."
+  - "Current semantic contracts live under contracts/data/; contracts/layers/ is a compatibility/orientation lane, not a second writable contract authority."
+  - "The data LayerManifest pair has a real dual-profile schema, deterministic validator, fixtures, and a fixture-only runtime-admission projection. The parallel schemas/contracts/v1/layers/ files remain open proposal scaffolds."
+  - "No live layer registry, reference resolver, operative layer-policy evaluator, released-layer loader, MapLibre runtime, public layer flow, release, deployment, or publication is established."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+<a id="-layer-architecture--kfm-map-shell-layering"></a>
 
 # 🗺️ Layer Architecture — KFM Map Shell Layering
 
-Canonical doctrine for what a **layer** is in the KFM map shell — how it is described, released, rendered, and unreleased — and where its meaning, shape, fixtures, policy, and emitted records live.
+> **Operating rule.** A KFM layer is a versioned, derived representation carried to a map or other public surface only after the appropriate evidence, policy, review, release, integrity, correction, and rollback state has been resolved. A layer, tile, style, legend, feature property, catalog entry, screenshot, or rendered pixel is never sovereign truth.
 
-[![Status: draft](https://img.shields.io/badge/status-draft-lightgrey.svg)](#)
-[![Authority: doctrine](https://img.shields.io/badge/authority-doctrine-blue.svg)](#)
-[![Lifecycle: PROPOSED](https://img.shields.io/badge/lifecycle-PROPOSED-yellow.svg)](#)
-[![Trust membrane](https://img.shields.io/badge/trust--membrane-deny--by--default-critical.svg)](#)
-[![License: TODO](https://img.shields.io/badge/license-TODO-lightgrey.svg)](#)
-[![Last reviewed: TODO](https://img.shields.io/badge/last%20reviewed-TODO-lightgrey.svg)](#)
+![status](https://img.shields.io/badge/status-draft-d4a72c)
+![repository evidence](https://img.shields.io/badge/repository%20evidence-CONFIRMED-2ea44f)
+![layer validation](https://img.shields.io/badge/layer%20validation-fixture--only-8250df)
+![runtime admission](https://img.shields.io/badge/runtime%20admission-proposed--inactive-0969da)
+![MapLibre runtime](https://img.shields.io/badge/MapLibre%20runtime-HOLD-b42318)
+![publication](https://img.shields.io/badge/publication-none-6e7781)
 
-> **Status:** draft · **Owners:** Docs steward + UI subsystem owner (TODO confirm) · **Updated:** 2026-05-14
+| Field | Current bounded result |
+|---|---|
+| **Evidence snapshot** | `main@68603b748d859884f5e140467285b5ae71d093a9` |
+| **Document role** | Human-readable UI/layer architecture reference; not a semantic contract, schema, policy rule, release record, registry, runtime implementation, or publication authority |
+| **Placement authority** | **CONFIRMED:** accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [`Directory Rules v2`](../../doctrine/directory-rules.md); the existing `docs/architecture/ui/` lane is placement-safe |
+| **Current semantic contracts** | **CONFIRMED / DRAFT:** [`LayerManifest`](../../../contracts/data/layer_manifest.md), [`LayerDescriptor`](../../../contracts/data/layer_descriptor.md), and [`LayerCatalogItem`](../../../contracts/data/layer_catalog_item.md) live under `contracts/data/` |
+| **Compatibility lane** | **CONFIRMED:** [`contracts/layers/README.md`](../../../contracts/layers/README.md) is an orientation/compatibility boundary and explicitly does not resolve contract or schema authority |
+| **Machine-shape state** | **MIXED / CONFLICTED:** `schemas/contracts/v1/data/` contains the paired schemas; the `LayerManifest` data schema has a closed inactive fixture profile, while descriptor/catalog schemas remain permissive placeholders. Parallel `schemas/contracts/v1/layers/` files are open proposal scaffolds |
+| **Candidate validation** | **CONFIRMED / BOUNDED:** a no-network `LayerManifest` validator, positive and negative fixtures, deterministic identity checks, and finite `PASS` / `FAIL` / `ERROR` outcomes exist |
+| **Runtime-admission projection** | **CONFIRMED / BOUNDED:** a fixture-only evaluator returns `PASS`, `HOLD`, `DENY`, or `ERROR`; it always creates no authority, registry mutation, or MapLibre source |
+| **Layer policy** | **INACTIVE:** `policy/layers/` contains a no-op proposed Rego stub with no evaluator, bundle, operative decision output, or governed consumer |
+| **Governed `/layers` route** | **CONFIRMED / NEGATIVE SCAFFOLD:** the current route delegates to an `ABSTAIN` envelope; it does not resolve or serve released layers |
+| **Map shell** | **CONFIRMED / BOUNDED:** the Explorer composition includes a synthetic map-evidence laboratory and renderer-neutral selection bridge, not a real layer loader |
+| **Concrete renderer** | **HOLD:** Explorer has no `maplibre-gl` dependency, `packages/maplibre/` is a private `0.0.0` scaffold, and `MapLibreAdapter.ts` is one comment |
+| **Release/publication effect** | None |
 
 > [!IMPORTANT]
-> **The renderer is downstream of trust, never upstream of it.**
-> A layer is a *derived surface*. It carries proof, release, freshness, rights, and sensitivity references at the point of use. It is **not** the source of truth, the policy engine, the citation authority, or the AI authority.
+> **Validation is not release.** The strict `LayerManifest` profile is `PROPOSED_INACTIVE` and `FIXTURE_ONLY`. A validator `PASS` proves only declared local shape and deterministic invariants. It does not resolve references, execute policy, authenticate review, verify artifact bytes or signatures, approve release, register a layer, create a renderer source, or authorize public use.
+
+> [!CAUTION]
+> **The layer home question remains open.** Current object-level contracts and their paired schemas use `contracts/data/` and `schemas/contracts/v1/data/`. Parallel `contracts/layers/` and `schemas/contracts/v1/layers/` surfaces exist as compatibility or proposal scaffolds. This page records that drift; it does not select a winner, move files, or create another authority.
+
+> [!WARNING]
+> **Style is not access control.** A filter, opacity setting, hidden popup, zoom threshold, or invisible layer does not protect sensitive geometry or fields already delivered to the browser. Redaction, generalization, aggregation, withholding, or denial must happen before public artifact or response delivery.
 
 ---
 
-## 📑 Contents
+## Contents
 
 1. [Scope](#1-scope)
 2. [Repo fit and canonical homes](#2-repo-fit-and-canonical-homes)
@@ -52,346 +128,719 @@ Canonical doctrine for what a **layer** is in the KFM map shell — how it is de
 
 ## 1. Scope
 
-This document is the **canonical semantic home** for everything about layers in the KFM map shell:
+This page explains how KFM's layer-related artifacts and decisions relate at the UI/map boundary. It covers:
 
-- What a `LayerCatalogItem`, `LayerDescriptor`, `LayerManifest`, `KFMGeoManifest`, and `LegendDescriptor` *mean*.
-- How layer payloads are bound to `EvidenceBundle`, `SourceDescriptor`, `ReleaseManifest`, `PromotionDecision`, and a `RollbackCard`.
-- How a layer's release, freshness, rights, sensitivity, and review state surface at the point of use.
-- Where the *shape*, *policy*, *fixtures*, *validators*, and *emitted instances* live, separately from this semantic doc.
+- what a layer is and is not;
+- the current repository homes and their unresolved conflicts;
+- the distinction among catalog metadata, renderer-facing descriptors, manifests, artifacts, policy decisions, release decisions, and runtime admission;
+- the current no-network validation and fixture-only admission evidence;
+- the rule that public clients consume governed responses or released public-safe carriers;
+- finite negative states, sensitive-geometry treatment, correction, withdrawal, and rollback;
+- what must be proved before KFM can claim a live released-layer path.
 
-> [!NOTE]
-> Meaning lives in `contracts/` (object families) and here in `docs/architecture/`; shape lives in `schemas/`; admissibility lives in `policy/`; proof lives in `data/proofs/`; release decisions live in `release/`. These four authority surfaces MUST NOT collapse into one another. (Directory Rules §6.1, CONFIRMED doctrine.)
+This page does **not** define field-level object meaning or machine shape. Those authorities remain with `contracts/` and `schemas/`. It does not activate policy, choose a canonical schema lane, accept a renderer ADR, install a dependency, register a layer, serve an artifact, approve release, or publish.
 
-This file does **not** declare runtime behavior of any specific app, framework, or package. Implementation maturity, route names, DTO field lists, branch state, and test results remain bounded until repository evidence verifies them.
+### 1.1 Authority by question
+
+| Question | Controlling evidence |
+|---|---|
+| Where does this page belong? | Accepted ADR-0029, adopted Directory Rules v2, and the existing UI architecture lane |
+| What does a layer object mean? | The relevant semantic contract under `contracts/` |
+| What shape is accepted? | The exact paired schema plus any registered validator profile |
+| May an operation occur? | Applicable policy decision, caller, purpose, audience, rights, sensitivity, review, release, correction, and rollback state |
+| What exists now? | Pinned repository files, tests, workflows, manifests, logs, and emitted artifacts |
+| Is a layer released or published? | A governed release decision and active released artifact state—not a schema, fixture, validator, route, README, commit, pull request, or render |
+| May the browser show it? | Governed response or already released public-safe carrier, with obligations the browser can enforce |
+| Does a click establish a claim? | No. A click produces a candidate context for governed claim/evidence resolution |
+
+### 1.2 Current-state versus target-state language
+
+- **CONFIRMED** means the file, code, fixture, test, or accepted decision was inspected at the pinned snapshot.
+- **PROPOSED** describes a future architecture or decision that is not current behavior.
+- **NEEDS VERIFICATION** names a concrete check still required.
+- **UNKNOWN** means current evidence is insufficient.
+
+A repository path can be confirmed while the behavior described by its filename remains inactive. A green workflow can confirm a bounded check while release, deployment, and public operation remain unproved.
+
+[Back to top](#top)
 
 ---
 
 ## 2. Repo fit and canonical homes
 
-`docs/architecture/ui/LAYERING.md` is the *semantic* home for the layering object family. Each related authority surface has a separate home:
+The path of this page is no longer a proposal. Accepted ADR-0029 makes `docs/doctrine/directory-rules.md` the single writable Directory Rules authority and confirms `docs/` as the human-facing explanation root. The current `docs/architecture/ui/` lane is an existing architecture home.
 
-| Authority surface | Path | Status | Source |
-|---|---|---|---|
-| Semantic doctrine (this file) | `docs/architecture/ui/LAYERING.md` | **PROPOSED** | Whole-UI Expansion Report §14, §24 |
-| Subsystem index | `docs/architecture/ui/README.md` | **PROPOSED** | Whole-UI Expansion Report §11 |
-| MapLibre adapter boundary | `docs/architecture/ui/BOUNDARIES.md` | **PROPOSED** | Whole-UI Expansion Report §24 |
-| Object meaning | `contracts/OBJECT_MAP.md` (layering entries) | **PROPOSED** | Whole-UI Expansion Report §16 |
-| `LayerCatalogItem` schema | `schemas/contracts/v1/layers/layer_catalog_item.schema.json` | **PROPOSED** | Whole-UI Expansion Report §16 |
-| `LayerDescriptor` schema | `schemas/contracts/v1/layers/layer_descriptor.schema.json` | **PROPOSED** | Whole-UI Expansion Report §16 |
-| `LayerManifest` schema | `schemas/contracts/v1/layers/layer_manifest.schema.json` | **PROPOSED** | Whole-UI Expansion Report §16 |
-| `KFMGeoManifest` schema (PMTiles/COG) | `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` | **PROPOSED** | Whole-UI Expansion Report §16 |
-| Layer-admissibility policy | `policy/layers/` | **PROPOSED** | Whole-UI Expansion Report §14 |
-| Fixtures (positive + negative) | `tests/fixtures/layers/` | **PROPOSED** | Whole-UI Expansion Report Appendix A |
-| Validators | `tools/validators/layers/`, `tools/validators/geo_manifest/` | **PROPOSED** | Whole-UI Expansion Report Appendix B |
-| Layer registry (append-only) | `data/registry/layers/`, `data/registry/datasets/` | **CONFIRMED** doctrine | Directory Rules §9.1 |
-| Published layer artifacts | `data/published/layers/`, `data/published/pmtiles/`, `data/published/geoparquet/` | **CONFIRMED** doctrine | Directory Rules §9.1 |
-| Release decisions and manifests | `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/`, `release/correction_notices/` | **CONFIRMED** doctrine | Directory Rules §9.2 |
-| Receipts | `data/receipts/release/`, `data/receipts/pipeline/`, `data/receipts/validation/` | **CONFIRMED** doctrine | Directory Rules §9.1 |
-| Proof objects | `data/proofs/evidence_bundle/`, `data/proofs/proof_pack/`, `data/proofs/validation_report/` | **CONFIRMED** doctrine | Directory Rules §9.1 |
+The **layer object-family placement**, however, is not fully converged.
 
-> [!CAUTION]
-> **Path conflict to resolve via ADR.** Directory Rules §11 (CONFIRMED doctrine) names `docs/architecture/map-shell.md` as the architecture doc for the map shell and does **not** currently list a `docs/architecture/ui/` subtree. The placement of this file at `docs/architecture/ui/LAYERING.md` follows the Whole-UI Expansion Report's PROPOSED expansion (Appendix A). Until an ADR (e.g., `ADR-ui-schema-home`, `ADR-maplibre-adapter-boundary`) reconciles the two, treat the *path* of this doc as **PROPOSED** while its *content* (the doctrine) stands.
+| Responsibility | Current repository surface | Current posture |
+|---|---|---|
+| Human layer architecture | `docs/architecture/ui/LAYERING.md` | **CONFIRMED** existing path; this page |
+| Object-level semantic contracts | `contracts/data/layer_manifest.md`, `layer_descriptor.md`, `layer_catalog_item.md` | **CONFIRMED / DRAFT** current contracts |
+| Layer contract orientation | `contracts/layers/README.md` | **CONFIRMED / COMPATIBILITY**; not a second contract authority |
+| Paired machine schemas | `schemas/contracts/v1/data/` | **CONFIRMED / MIXED:** active repository pair; `LayerManifest` strict fixture profile is implemented; descriptor/catalog shapes remain placeholders |
+| Parallel layer schemas | `schemas/contracts/v1/layers/` | **CONFIRMED / PROPOSED SCAFFOLDS:** open shapes, no contract binding for inspected files |
+| Candidate examples | `fixtures/data/layer_manifest/` | **CONFIRMED:** synthetic valid/invalid fixture profile |
+| Candidate validator | `tools/validators/data/validate_layer_manifest.py` | **CONFIRMED:** no-network shape and deterministic semantic checks |
+| Runtime admission meaning | `contracts/runtime/layer_manifest_admission.md` | **CONFIRMED / PROPOSED-INACTIVE:** fixture-only eligibility semantics |
+| Runtime admission implementation | `apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts` | **CONFIRMED / BOUNDED:** finite evaluator; no side effects |
+| Layer-policy source | `policy/layers/` | **CONFIRMED / INACTIVE:** boundary README plus no-op Rego stub |
+| Governed route | `apps/governed-api/.../routes/layers.py` | **CONFIRMED / ABSTAIN-ONLY:** no released-layer resolver |
+| Renderer adapter | `apps/explorer-web/src/adapters/MapLibreAdapter.ts` | **CONFIRMED / PLACEHOLDER:** comment-only |
+| Renderer package | `packages/maplibre/` | **CONFIRMED / PLACEHOLDER:** private `0.0.0`, no runtime dependency |
+| Browser shell | `apps/explorer-web/` | **CONFIRMED / BOUNDED:** executable synthetic map-evidence laboratory; no real layer loading |
+| Release records | `release/` layer-manifest lanes | **CONFIRMED path family / DRAFT guidance:** no active layer release is established here |
+| Published carriers | governed `data/published/` lanes | **NEEDS VERIFICATION per layer:** path presence does not prove an active released carrier |
+
+### 2.1 Directory Rules result
+
+For this documentation-only change, the placement outcome is `PLACE` at the existing path:
+
+- `artifact_kind`: human architecture document;
+- `authority_owner`: `docs/`;
+- `scope_kind`: cross-cutting UI/layer boundary;
+- `exposure`: public documentation;
+- `mutability`: versioned replacement;
+- `retention`: durable.
+
+The same decision does **not** resolve the data-versus-layers contract/schema seam. That seam remains `CONFLICTED` / `NEEDS VERIFICATION` and may require an accepted ADR, explicit migration record, compatibility plan, link repair, validator/fixture updates, and rollback.
+
+### 2.2 Dependency direction
+
+The intended dependency direction is:
+
+```text
+domain/source evidence
+  -> processed representation candidate
+  -> semantic contract + machine schema
+  -> deterministic validation
+  -> evidence/source/reference resolution
+  -> policy + rights + sensitivity
+  -> review + promotion + release
+  -> released public-safe carrier / governed response
+  -> runtime admission
+  -> renderer adapter
+  -> map shell / Evidence Drawer / export / Focus request
+```
+
+The browser must not reverse this flow by treating rendered properties, style state, catalog metadata, or a client-side badge as upstream authority.
+
+[Back to top](#top)
 
 ---
 
 ## 3. The layer doctrine
 
-A KFM map layer is a **derived surface**. It is one carrier through which evidence reaches a viewer, alongside Evidence Drawer payloads, Focus Mode answers, Story Nodes, exports, screenshots, and graph projections. None of these carriers replace `EvidenceBundle`, source authority, policy decision, review state, release state, or citation validation.
+A **layer** is a named, versioned, spatial representation intended for governed discovery, rendering, interaction, comparison, export, or interpretation.
 
-The core interaction slice is:
+A layer is downstream of:
 
-> **released layer → selected feature candidate → governed API → `EvidenceBundle` → Evidence Drawer → bounded Focus Mode `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`**
+- one or more sources and source roles;
+- a processed representation or artifact build;
+- evidence support;
+- machine validation;
+- rights and sensitivity assessment;
+- policy and review state;
+- release, correction, withdrawal, and rollback state.
 
-This slice is **CONFIRMED doctrine** in the Whole-UI Expansion Report and the Master MapLibre Components dossier. The renderer participates by *displaying* released artifacts and *forwarding* clicks; it does not resolve evidence, fetch from canonical/internal stores, call model runtimes, or filter by sensitivity itself.
+A layer is not:
 
-> [!NOTE]
-> **Two trust properties every layer must carry.**
-> - **Visibility of state at the point of use** — release state, stale/degraded state, freshness, rights, sensitivity, source roles, review state, correction lineage, and policy state are all readable from the layer payload without a second round trip.
-> - **Resolvability** — every `EvidenceRef` on the layer resolves to an `EvidenceBundle` through the governed API; references that do not resolve, or that fail policy, surface as `ABSTAIN` or `DENY`, not as silent omission.
+- RAW, WORK, QUARANTINE, or canonical source data;
+- an `EvidenceBundle`;
+- a `SourceDescriptor`;
+- a `PolicyDecision`;
+- a review approval;
+- a `ReleaseManifest` or `PromotionDecision`;
+- a renderer implementation;
+- a map click, popup, style, legend, screenshot, or AI answer;
+- proof that an underlying claim is current, complete, accurate, or safe for the requested purpose.
+
+### 3.1 Core invariants
+
+1. **Renderer downstream of trust.** The renderer receives only a governed response or already released public-safe carrier.
+2. **One role per object.** Catalog, source, evidence, policy, review, promotion, release, artifact, correction, and rollback references remain distinct.
+3. **No direct internal path.** Ordinary clients do not read RAW, WORK, QUARANTINE, candidate, canonical, proof, registry, graph/vector-index, or model-runtime stores directly.
+4. **Validation is bounded.** Shape and deterministic checks do not authorize exposure.
+5. **Policy is operation-specific.** Permission to inspect metadata does not imply permission to render, identify, query, export, cache, use in AI, promote, or publish.
+6. **Temporal states remain explicit.** Valid time, source-update time, evaluation time, release time, freshness, correction time, and withdrawal time stay distinct where material.
+7. **Sensitive transformation precedes delivery.** Style-only hiding is denied as a privacy or sensitivity control.
+8. **Correction is visible.** Superseded, withdrawn, stale, degraded, corrected, and rolled-back states propagate to clients.
+9. **A client unable to enforce obligations must not proceed.** Attribution, citation, no-cache, audience, field allowlist, geometry generalization, and retention obligations are part of the decision.
+10. **No document creates publication.** This page can explain the layer path; it cannot make a layer active.
+
+### 3.2 Representation and claim separation
+
+A layer may carry or imply claims, but the claim remains inspectable only through its evidence and release chain.
+
+| Carrier | What it may do | What it must not do |
+|---|---|---|
+| Layer catalog item | List a layer and expose bounded trust metadata | Act as renderer config or release approval |
+| Layer descriptor | Provide renderer-safe source and interaction references | Resolve evidence, decide policy, or publish |
+| Layer manifest | Bind one versioned representation to role-specific references | Collapse evidence, policy, review, release, and artifact authority |
+| PMTiles / MVT / COG / GeoParquet / GeoJSON fixture | Deliver spatial bytes | Become the semantic or release authority |
+| Style / legend | Explain visual encoding | Hide delivered sensitive data or establish truth |
+| Map selection | Scope a governed request | Become evidence or an authoritative claim |
+| Evidence Drawer | Project public-safe evidence and negative states | Authenticate evidence merely by displaying it |
+| Focus Mode | Interpret released evidence | Create source truth, policy, review, or release authority |
+
+[Back to top](#top)
 
 ---
 
 ## 4. Object families
 
-The layering family in `contracts/OBJECT_MAP.md` covers five objects. Their *meaning* is summarized here; their *shape* is defined by the JSON Schemas under `schemas/contracts/v1/layers/` and `schemas/contracts/v1/evidence/`.
+### 4.1 Current layer object family
 
-| Object | Purpose | Schema home (PROPOSED) | Bound to |
-|---|---|---|---|
-| **`LayerCatalogItem`** | List-level layer metadata and trust-badge inputs for catalog panels, comparison views, and filters. | `schemas/contracts/v1/layers/layer_catalog_item.schema.json` | `LayerManifest`, `ReleaseManifest`, `PolicyDecision` |
-| **`LayerDescriptor`** | Renderer-facing source/layer descriptor with release/proof/manifest refs and policy labels. The adapter consumes this; component code does not. | `schemas/contracts/v1/layers/layer_descriptor.schema.json` | `LayerManifest`, `StyleManifest`, `TileArtifactManifest` |
-| **`LayerManifest`** | Versioned layer payload with valid time, freshness, provenance, release state, integrity references, and source roles. The governed contract for "a layer was released." | `schemas/contracts/v1/layers/layer_manifest.schema.json` | `SourceDescriptor`, `EvidenceBundle`, `PromotionDecision`, `RollbackCard`, `spec_hash` |
-| **`KFMGeoManifest`** | PMTiles/COG/GeoParquet release-candidate manifest for asset digest and signature validation. | `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` | `TileArtifactManifest`, `MapReleaseManifest`, `RunReceipt` |
-| **`LegendDescriptor`** | Evidence-aware legend payload: classes, ramps, colorbars, units, scale dependencies, and trust state. | (PROPOSED — co-located with style) | `StyleManifest`, `LayerManifest` |
+| Object | Current semantic home | Current machine-shape state | Primary responsibility | Current maturity |
+|---|---|---|---|---|
+| `LayerManifest` | `contracts/data/layer_manifest.md` | Paired data schema has legacy compatibility plus a closed strict fixture profile | Bind a specific layer representation to separate catalog, source, evidence, policy, review, release, artifact, exposure, runtime, provenance, correction, and rollback references | **BOUNDED / FIXTURE-ONLY** |
+| `LayerDescriptor` | `contracts/data/layer_descriptor.md` | Paired data schema is an `id`-required permissive placeholder | Renderer-facing descriptor and safe interaction handoff | **DRAFT / SHAPE INCOMPLETE** |
+| `LayerCatalogItem` | `contracts/data/layer_catalog_item.md` | Paired data schema is an `id`-required permissive placeholder | List/discovery metadata and trust-state summary | **DRAFT / SHAPE INCOMPLETE** |
+| Runtime admission projection | `contracts/runtime/layer_manifest_admission.md` | App-local exact input parser and finite evaluator | Decide only whether a closed synthetic runtime projection is eligible for a future loader | **PROPOSED-INACTIVE / FIXTURE-ONLY** |
 
-Adjacent families this layering doctrine depends on (defined elsewhere):
+### 4.2 Current strict `LayerManifest` profile
 
-| Family | Role | Home |
+The strict fixture profile keeps these concerns visible without claiming their authorities:
+
+- deterministic `id` and `spec_hash`;
+- stable layer identity and explicit version;
+- catalog, release-manifest, promotion-decision, style, source, evidence, policy, review, artifact, run-receipt, correction, and rollback references;
+- renderer/protocol/source-layer/zoom/bounds/attribution representation data;
+- valid-time and evaluation/source-update times;
+- audience, rights, sensitivity, field allowlist, geometry transformation, and transform receipts;
+- stale behavior, Evidence Drawer/Focus flags, and candidate performance budgets;
+- explicit false-valued governance non-effects.
+
+Its enforced state remains:
+
+```text
+profile_status = PROPOSED_INACTIVE
+execution_mode = FIXTURE_ONLY
+lifecycle_state = CANDIDATE
+authority created = false
+```
+
+### 4.3 Proposed or unresolved companions
+
+The following remain **PROPOSED**, **CONFLICTED**, or **NEEDS VERIFICATION** unless a current contract and shape prove otherwise:
+
+| Object or seam | Needed role | Current result |
 |---|---|---|
-| `SourceDescriptor` | Source identity, role, rights, cadence, license | `schemas/contracts/v1/source/`, doctrine in `docs/sources/` |
-| `EvidenceBundle` / `EvidenceRef` | Resolvable evidence backing a claim | `schemas/contracts/v1/evidence/` |
-| `StyleManifest` | Style, sprites, glyphs, legends, sensitive-styling constraints | `schemas/contracts/v1/layers/` (or adjacent) — PROPOSED |
-| `TileArtifactManifest` | Tile/raster/array artifact contract (PMTiles, COG, MVT, MLT, 3D Tiles, Zarr) | PROPOSED |
-| `MapReleaseManifest` | Binds layer/style/tile manifests, evidence, policy, promotion, rollback | `release/manifests/` (CONFIRMED home) |
-| `PolicyDecision` | `ALLOW` / `ABSTAIN` / `DENY` with reasons, obligations, CARE labels | `policy/` |
-| `PromotionDecision`, `RunReceipt`, `RollbackCard`, `CorrectionNotice` | Governed state transition records | `release/`, `data/receipts/`, `release/rollback_cards/`, `release/correction_notices/` |
+| `LegendDescriptor` | Units, classes, scales, uncertainty, sensitivity-safe legend disclosure | Proposed |
+| `StyleManifest` | Immutable style/sprite/glyph references and presentation constraints | Proposed or distributed across compatibility surfaces |
+| `TileArtifactManifest` | Exact carrier bytes, digests, range support, format metadata, and attestation refs | Contract surfaces exist; active canonical/runtime binding needs verification |
+| `KFMGeoManifest` | Proposal-era PMTiles/COG/GeoParquet release-candidate manifest vocabulary | **PROPOSED / NEEDS VERIFICATION:** determine whether it remains distinct, aliases `TileArtifactManifest`, or is superseded |
+| `MapReleaseManifest` | Release-level closure across layer, style, artifacts, policy, proof, correction, and rollback | Release family exists; active layer release not established |
+| Reference resolver | Authenticate role-specific refs carried by a manifest | Not implemented in the inspected layer path |
+| Layer registry writer | Append governed active-layer registration after release | Not implemented |
+| Released-layer loader | Load a validated, admitted, active released layer into the renderer | Not implemented |
+| Operative policy evaluator | Emit normalized layer `PolicyDecision` with obligations | Not bound |
+| Signature/attestation verifier | Verify artifact and manifest integrity | Not bound |
+| Performance probe | Measure real browser/device budgets | Not established |
 
-> [!TIP]
-> Treat the schema names as **stable vocabulary** even before the schemas land. Renaming `LayerManifest` to a generic equivalent (`map_layer.json`, `tile_set.yaml`) collapses the trust signal that makes manifests *governed*.
+### 4.4 Anti-collapse rule
+
+No object in this family may stand in for another authority merely because it carries a reference to it.
+
+```text
+LayerManifest != EvidenceBundle
+LayerManifest != PolicyDecision
+LayerManifest != ReleaseManifest
+LayerManifest != artifact bytes
+runtime admission PASS != registry mutation
+registry presence != public release
+rendered layer != authoritative claim
+```
+
+[Back to top](#top)
 
 ---
 
 ## 5. Lifecycle of a layer
 
-A layer's life follows the **KFM lifecycle invariant** (CONFIRMED doctrine, Directory Rules §9.1):
+KFM's canonical lifecycle remains:
 
-> **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
 
-Promotion is a **governed state transition, not a file move**. Validators, policy gates, evidence resolution, catalog closure, and a release decision must all clear before a layer becomes loadable by the renderer.
+A layer-specific flow crosses that lifecycle but does not replace it:
 
 ```mermaid
 flowchart LR
-  classDef raw fill:#fdecea,stroke:#c0392b,color:#000
-  classDef work fill:#fff5e1,stroke:#d39e00,color:#000
-  classDef proc fill:#e8f4fd,stroke:#1f6feb,color:#000
-  classDef cat fill:#e7f8ee,stroke:#1a7f37,color:#000
-  classDef pub fill:#e0f2f1,stroke:#0a7d6d,color:#000
-  classDef gate fill:#f0e7fa,stroke:#6f42c1,color:#000
-
-  S[SourceDescriptor]:::raw --> R[data/raw/&lt;domain&gt;/]:::raw
-  R --> W[data/work/&lt;domain&gt;/]:::work
-  R -. failed checks .-> Q[data/quarantine/]:::work
-  W --> P[data/processed/&lt;dataset&gt;/&lt;version&gt;/]:::proc
-  P --> C[data/catalog/ &amp; data/registry/layers/]:::cat
-
-  C --> G{Gates: validation,<br/>policy, evidence<br/>resolution, catalog<br/>closure, signing}:::gate
-  G -- ALLOW --> RM[release/manifests/<br/>+ ReleaseManifest + PromotionDecision]:::gate
-  G -- DENY / ABSTAIN --> H[HOLD — fail closed,<br/>no public surface change]:::gate
-  RM --> PUB[data/published/layers/<br/>data/published/pmtiles/<br/>data/published/geoparquet/]:::pub
-  PUB --> LM[LayerManifest + LayerDescriptor]:::pub
-  LM --> RENDER[(MapLibre adapter<br/>renders the released layer)]:::pub
-  RENDER -. correction / rollback .-> RB[release/rollback_cards/<br/>release/correction_notices/]:::gate
+  S[Source material] --> R[RAW]
+  R --> W[WORK / QUARANTINE]
+  W --> P[PROCESSED representation]
+  P --> C[LayerManifest candidate]
+  C --> V[Schema + deterministic validation]
+  V --> E[Evidence and reference resolution]
+  E --> O[Policy, rights, sensitivity, obligations]
+  O --> H[Human review and promotion decision]
+  H --> M[Release manifest and verified carrier]
+  M --> G[Governed catalog / API / static edge]
+  G --> A[Runtime admission]
+  A --> X[Renderer adapter]
+  X --> U[Map shell / Evidence Drawer / export]
+  M --> L[Correction / withdrawal / rollback]
+  L --> G
 ```
 
-### Phase-by-phase posture
+> **Diagram status:** architecture flow. Only the candidate-validation and fixture-only runtime-admission slices are proved by the inspected layer implementation. Reference resolution, operative policy, release closure, registration, concrete rendering, and public delivery remain unestablished.
 
-| Phase | Allowed for layers | MUST NOT |
+### 5.1 Separate state axes
+
+Do not compress these axes into one field or one “ready” badge.
+
+| Axis | Current vocabulary or example | Owner |
 |---|---|---|
-| `raw/` | Source-edge captures, immutable, with retrieval metadata and checksums | Public clients, AI context, UI layers, normalized records |
-| `work/` | Normalized intermediates, candidate descriptors | Public API/UI, release aliases |
-| `quarantine/` | Failed validation, unresolved rights/sensitivity, schema drift, over-precise geometry | Promotion candidates without remediation |
-| `processed/` | Validated canonical records that *may* underwrite a layer | Assumption of public/release status |
-| `catalog/` + `data/registry/layers/` | STAC/DCAT/PROV records, layer registry entries | Uncited claims, unclosed identifiers |
-| `data/published/layers/` (and `pmtiles/`, `geoparquet/`) | Released, public-safe layer artifacts | Raw, work, quarantine, exact restricted geometry |
-| `release/manifests/` | `MapReleaseManifest` bundles binding layer/style/tile manifests, evidence, policy, promotion, rollback | File-copy logs, render hints, public artifacts |
+| KFM lifecycle | RAW, WORK, QUARANTINE, PROCESSED, CATALOG/TRIPLET, PUBLISHED | Data lifecycle and governed promotion |
+| Strict manifest profile | `PROPOSED_INACTIVE`, `FIXTURE_ONLY`, `CANDIDATE` | LayerManifest contract/schema |
+| Manifest trust metadata | `CANDIDATE`, `DEGRADED`, `STALE`, `HELD` | Manifest candidate semantics |
+| Validator result | `PASS`, `FAIL`, `ERROR` | Validator |
+| Runtime admission | `PASS`, `HOLD`, `DENY`, `ERROR` | Admission projection |
+| Policy result | Allow/restrict/hold/deny/abstain plus obligations | Policy evaluator |
+| Release state | Candidate, approved, published, superseded, withdrawn, corrected, rolled back—as defined by release authority | Release system |
+| Public response | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Governed response envelope |
+| UI view state | loading, ready, stale, denied, abstained, withdrawn, corrected, error | UI projection |
 
-CONFIRMED doctrine source: Directory Rules §9.1, §9.2.
+### 5.2 Current runtime-admission proof
 
-### Catalog closure as a release gate
+The current evaluator is intentionally side-effect free:
 
-A release candidate **must not** reach `PUBLISHED` until the following all agree:
+- it parses an exact fixture profile;
+- it rejects authority-overclaiming inputs;
+- it denies non-governed source URL classes;
+- it holds legacy, inactive, non-published, stale, superseded, or unresolved inputs;
+- it denies withdrawn, policy-denied, subject-mismatched, or internal-source inputs;
+- it returns `PASS` only when the supplied synthetic release projection reports all required release/evidence/review/promotion/artifact/signature/rollback conditions.
 
-1. `LayerManifest` validates against schema, with a `spec_hash` excluded from itself.
-2. Every `EvidenceRef` resolves to an admissible `EvidenceBundle` under current policy.
-3. `SourceDescriptor` references are admissible (rights, license, sensitivity, role).
-4. STAC / DCAT / PROV catalog records are present and link to artifact digests.
-5. `KFMGeoManifest` digests match the actual `TileArtifactManifest` payloads (PMTiles / COG / GeoParquet / 3D Tiles).
-6. `PolicyDecision` is recorded with a non-failing outcome for the intended exposure tier.
-7. `PromotionDecision` and a `RollbackCard` exist and point at a viable prior release.
-8. `MapReleaseManifest` is signed; mutable tags are not accepted as release references.
+Every result still declares:
 
-Missing any item: **fail closed, preserve prior state, do not advance to `PUBLISHED`**. (Whole-UI Expansion Report §14, §25; Unified Implementation Architecture §28; Master MapLibre v1.8 §10.)
+```text
+authority = NONE
+registryMutated = false
+maplibreSourceCreated = false
+holds = [RUNTIME_REGISTRATION_NOT_EXECUTED]
+```
+
+A future active loader must re-evaluate current support rather than treating an old fixture `PASS` as durable authority.
+
+### 5.3 Correction, withdrawal, and rollback
+
+A mature layer path must:
+
+1. preserve prior manifest and artifact identity;
+2. link correction, supersession, withdrawal, and rollback records;
+3. invalidate cached admission and public catalog state when support changes;
+4. remove or replace affected renderer sources without hiding the correction;
+5. propagate the active state to API, map, Evidence Drawer, exports, search, stories, and AI;
+6. preserve a public-safe notice where policy permits;
+7. retain enough evidence to reproduce why the prior state changed.
+
+This page does not prove that end-to-end propagation exists.
+
+[Back to top](#top)
 
 ---
 
 ## 6. MapLibre adapter boundary
 
-The MapLibre runtime is the disciplined 2D renderer and interaction surface. It MUST NOT be the source of truth, the policy engine, or the AI authority. (Directory Rules §11, CONFIRMED.)
+Current repository evidence supports a **boundary**, not a functioning MapLibre runtime.
 
-> [!IMPORTANT]
-> **`MapLibreAdapter` is the only module permitted to import MapLibre runtime APIs.** Component code talks to a renderer-agnostic `MapRuntimePort`, not to MapLibre directly. This boundary is enforced architecturally so that Cesium / 3D, where introduced, consumes the **same `EvidenceBundle` and `DecisionEnvelope`** as 2D — an alternate renderer, not an alternate truth path.
-
-### `MapRuntimePort` (PROPOSED interface)
-
-| Method | Purpose | Notes |
+| Surface | Current evidence | Safe conclusion |
 |---|---|---|
-| `setCamera` | Apply camera/viewport state | No filtering of unpublished data |
-| `setTimeContext` | Apply `TimeState` | Synchronizes timeline with valid-time semantics |
-| `loadValidatedLayer` | Accept a validated `LayerDescriptor` and prepared asset URLs | Inputs must already carry release/proof refs |
-| `removeLayer` | Tear down a layer | Cache invalidation receipt expected on release/rollback |
-| `setLayerVisibility` | Toggle visibility | MUST NOT be used to hide sensitive geometry — see §8 |
-| `queryRenderedFeatureAtPoint` | Convert a click to a candidate | Returns candidate identity only; resolution is governed |
-| `destroy` | Tear down the runtime | Clean handle release |
+| `apps/explorer-web/package.json` | Vite/TypeScript/Vitest/Playwright only; no `maplibre-gl` dependency | Explorer does not currently boot MapLibre |
+| `packages/maplibre/package.json` | Private package, version `0.0.0`, no dependencies | Package home exists as a scaffold |
+| `MapLibreAdapter.ts` | One boundary comment | No adapter implementation exists |
+| LayerManifest strict schema | `renderer: MAPLIBRE_GL_JS` in inactive fixture profile | The fixture shape names a target renderer; it does not accept a renderer ADR or activate a runtime |
+| Explorer site | Synthetic SVG map stage and fixture-driven selection laboratory | Real source/layer registration is absent |
+| Runtime admission evaluator | `maplibreSourceCreated: false` in every result | Admission proof intentionally stops before renderer mutation |
 
-(Method names from Whole-UI Expansion Report §18 — **PROPOSED** until landed.)
+ADR-0005, ADR-0006, and ADR-0007 remain proposed or draft. This page may explain their intended seams but must not write them as accepted architecture.
 
-### What the adapter does — and does not
+### 6.1 Intended seam
 
-| Does | Does not |
-|---|---|
-| Consume validated `LayerDescriptor` payloads | Read RAW / WORK / QUARANTINE / canonical / internal stores |
-| Synchronize camera and time state | Resolve `EvidenceBundle` from feature properties |
-| Forward feature clicks as governed claim-resolution requests | Call model runtimes, vector indexes, or graph stores |
-| Render released artifacts and prepared asset URLs | Filter unpublished data, hide sensitive geometry, or substitute for `PolicyDecision` |
-| Expose stale / degraded / denied / abstained state in trust-visible UI | Treat popups as Evidence Drawer substitutes |
+The intended architecture remains:
 
-A click on a layer produces a **governed claim-resolution request** that returns either:
+```text
+Governed shell and feature modules
+  -> renderer-neutral MapRuntimePort
+  -> one admitted MapLibre adapter
+  -> MapLibre runtime
+```
 
-- a `DecisionEnvelope` with an `EvidenceDrawerPayload` (`ANSWER`), or
-- a `DecisionEnvelope` with `ABSTAIN`, `DENY`, or `ERROR` and a reason code.
+Outside the admitted adapter, UI code should not import MapLibre APIs or construct source access from ad hoc URLs and feature properties.
 
-The Evidence Drawer payload is built by the governed API from `EvidenceBundle` resolution, **not** by the renderer from raw feature properties. (Whole-UI Expansion Report §18; Master MapLibre v1.6 §10.)
+### 6.2 Loader preconditions
+
+Before a future adapter may create a source or layer, the loader must prove at least:
+
+- exact active manifest identity and digest;
+- active release binding to the same manifest subject;
+- resolved evidence and source roles;
+- operative policy decision and enforceable obligations;
+- approved rights and public-safe sensitivity posture;
+- verified carrier bytes and required signature/attestation;
+- current review, promotion, release, correction, and rollback state;
+- governed or approved static source class;
+- allowed fields and pre-delivery geometry transformation;
+- renderer/plugin/protocol admission;
+- current freshness and stale behavior;
+- accessibility-safe controls and non-map alternatives;
+- performance-budget measurements appropriate to the target environment.
+
+A validator or runtime-admission `PASS` can be one input to this decision. It is never the whole decision.
+
+### 6.3 Feature selection
+
+A rendered feature remains a **candidate**. The adapter may forward a bounded context such as layer identity, feature identity, geometry reference, screen point, and time context to a governed resolver. It must not:
+
+- use arbitrary tile properties as an authoritative claim;
+- resolve `EvidenceBundle` from internal stores in the browser;
+- expose hidden restricted fields through click payloads;
+- call a model runtime directly;
+- infer release or policy from visual presence;
+- silently fall back from a failed governed response to feature properties.
+
+[Back to top](#top)
 
 ---
 
 ## 7. Finite outcomes and negative states
 
-Every interaction that may produce a claim — a layer load, a click, a Focus query, an export — has a finite outcome grammar. For layers specifically:
+KFM uses different finite outcomes at different layers. They must remain distinguishable.
 
-| State | Where it fires | UI obligation | Backing object |
-|---|---|---|---|
-| **Released** | `LayerManifest` validates, `EvidenceBundle` resolves, policy `ALLOW`, catalog closed | Render with trust badges (source role, freshness, review, rights, sensitivity, release) | `MapReleaseManifest` + `LayerManifest` |
-| **Stale** | Source freshness exceeds threshold but evidence still admissible | Show stale badge; allow read with caveat; pair with `ABSTAIN` for claims that require currency | `LayerManifest.freshness` + `PolicyDecision` |
-| **Degraded** | Graph health, source health, or tile-service health below SLO; cached fallback in use | Show degraded badge; permit cached read where allowed; route material claims through Focus `ABSTAIN` | `RunReceipt` + cache invalidation record |
-| **Denied** | Rights, sensitivity, CARE/sovereignty tag, or sensitive-geometry rule blocks exposure | Show deny reason; do **not** hide via style alone; surface deny in trust panel | `PolicyDecision` with reason code |
-| **Abstain** | Required evidence missing, unresolved `EvidenceRef`, missing review state, or invalid catalog closure | Show abstain reason; do not fabricate or fall back silently | `DecisionEnvelope` + `CitationValidationReport` |
-| **Error** | Invalid payload, schema mismatch, contract drift, manifest digest mismatch | Show typed error; fail closed; emit safe diagnostic | `ErrorEnvelope` |
-| **Withdrawn / Rolled back** | Post-publication failure, correction with no replacement | Remove from public surfaces; emit withdrawal notice; preserve lineage | `RollbackCard` + `CorrectionNotice` |
+### 7.1 Validator outcomes
 
-(Outcome families from the Whole-UI Expansion Report §17–§18, the Unified Implementation Architecture §24, and Master MapLibre v1.6/v1.8 §10.)
+| Outcome | Meaning | Authority limit |
+|---|---|---|
+| `PASS` | Shape and applicable local deterministic checks succeeded | No evidence, policy, review, release, signature, registry, rendering, or public-use authority |
+| `FAIL` | Readable input violated schema or semantic invariants | Candidate must not progress as conformant |
+| `ERROR` | Input, parser, schema, hashing dependency, or safe evaluation failed | Fail closed; do not coerce to pass |
 
-> [!NOTE]
-> No-data, unverifiable, stale, deny, abstain, and error are **UI requirements**, not edge cases. Silent blank maps are a governance failure. (`ML-S-063`, Master MapLibre v1.3.)
+### 7.2 Runtime-admission outcomes
+
+| Outcome | Example meaning | Required posture |
+|---|---|---|
+| `PASS` | Synthetic projection is eligible for a future governed loader | Still no mutation; re-check at execution |
+| `HOLD` | Inactive, candidate, stale, superseded, unresolved, or incomplete support | Do not register or render |
+| `DENY` | Withdrawn, policy denied, internal source, binding mismatch, or authority overclaim | Refuse the operation |
+| `ERROR` | Input carrier is invalid or cannot be evaluated safely | Refuse and surface a bounded diagnostic |
+
+### 7.3 Public response outcomes
+
+| Outcome | Layer/UI behavior |
+|---|---|
+| `ANSWER` | Render or explain only released, policy-safe, evidence-supported content with citations and visible trust state |
+| `ABSTAIN` | Show that support is missing, stale, unresolved, conflicted, or out of scope; do not invent |
+| `DENY` | Withhold or generalize according to policy; do not leak protected reasoning or precision |
+| `ERROR` | Show a finite diagnostic and no claim-bearing fallback |
+
+### 7.4 Required visible layer states
+
+Where material and public-safe, the UI should distinguish:
+
+- active/released;
+- stale or degraded;
+- candidate/held;
+- denied or restricted;
+- abstained/unresolved;
+- superseded;
+- withdrawn;
+- corrected or rolled back;
+- runtime error.
+
+Absence from the map is ambiguous and must not be the only signal for denial, withdrawal, stale state, or unavailable evidence.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Sensitive geometry, rights, and CARE
 
-> [!CAUTION]
-> **Sensitivity MUST NOT be implemented by style filters alone.** Exact coordinates for archaeological sites, cultural-heritage features, rare-species locations, living-person data, DNA/genomic data, infrastructure exposure, or sovereign-sensitive content must be transformed, generalized, delayed, redacted, or denied **before public tile generation**. Style-level hiding leaks via map state, network requests, source data, query APIs, and downstream caches.
+Sensitive handling—including CARE, sovereignty, consent, cultural authority, source terms, and harmful precision—is an upstream artifact and policy concern, not a styling trick.
 
-A `LayerManifest` carries the trust signals that make this enforceable:
+### 8.1 Pre-delivery rule
 
-- **Source role** (authority / observation / context / model)
-- **Rights** and license state, including CARE-bound metadata (consent, authority, locality restrictions, review expiry)
-- **Sensitivity tier** (public / generalized / restricted) with a transform record
-- **Review state** and reviewer notes (`ReviewRecord` references)
-- **Valid time** and **freshness** (source, observed, valid, retrieval, release, correction times stay distinct where material)
-- **Release state** and a viable rollback target
+Before bytes reach an ordinary client, the governed path must decide whether to:
 
-Sensitive layers fail closed at the gate when:
+- allow exact geometry;
+- generalize or aggregate;
+- redact fields;
+- replace geometry with a coarse public-safe representation;
+- delay release;
+- restrict by audience or purpose;
+- suppress interaction or export;
+- quarantine;
+- deny.
 
-- License or use terms are absent or unverifiable.
-- A geometry transform appropriate to the sensitivity tier is missing.
-- Review state is `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, or `REVIEW_REJECTED`.
-- CARE / sovereignty tags are unresolved.
+The transform should be attributable to a reviewed rule and, where required, a transform or redaction receipt.
 
-(Failure-mode catalog: Unified Implementation Architecture §24.6.3; Master MapLibre v1.5/v1.8 §Q.)
+### 8.2 Current strict-profile checks
+
+The inactive strict `LayerManifest` fixture profile currently proves only bounded candidate rules, including:
+
+- a public audience requires `rights_status: APPROVED`;
+- a public audience requires `PUBLIC_SAFE` or `TRANSFORM_REQUIRED` sensitivity;
+- public candidates require a non-empty field allowlist;
+- `TRANSFORM_REQUIRED` requires generalized geometry and at least one transform-receipt reference;
+- references must not use floating `latest` locators;
+- governance-authority flags must remain false.
+
+These checks do not establish real rights, CARE/sovereignty obligations, consent, source terms, steward authority, public-safe geometry, or receipt authenticity.
+
+### 8.3 Fail-closed domains and contexts
+
+Extra review is required where a layer could expose:
+
+- precise rare-species or habitat locations;
+- archaeology, burial, sacred, cultural, or tribal information;
+- critical infrastructure or vulnerability details;
+- living-person, genealogy, land/title, private-property, or genomic information;
+- private wells or other sensitive environmental points;
+- security-sensitive facilities;
+- source-restricted, licensed, embargoed, or non-redistributable material.
+
+When the applicable authority or rights are unclear, the correct layer outcome is hold, quarantine, generalize, restrict, abstain, or deny—not a visually hidden public layer.
+
+[Back to top](#top)
 
 ---
 
 ## 9. Validation
 
-Layers are validated at **schema**, **fixture**, **catalog**, **policy**, **runtime**, and **release** levels. Each level has a different home and a different failure mode.
+This documentation update changes no contract, schema, policy rule, fixture, validator, test, workflow, route, dependency, artifact, or runtime behavior. The commands below describe current relevant proof surfaces and the checks expected for future layer work.
 
-| Level | Validates | Home | Fails when |
-|---|---|---|---|
-| Schema | Shape of `LayerCatalogItem`, `LayerDescriptor`, `LayerManifest`, `KFMGeoManifest`, `LegendDescriptor` | `schemas/contracts/v1/layers/`, `schemas/contracts/v1/evidence/` | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` |
-| Fixture | Positive (`*.valid.json`) and negative (`*.invalid.json`) instances match the contract | `tests/fixtures/layers/` | Missing negative coverage; positive fixture rejected; negative fixture accepted |
-| Catalog closure | STAC / DCAT / PROV records resolve; artifact digests match | `tools/validators/geo_manifest/`, catalog tests | `MISSING_RECEIPT`, `MISSING_EVIDENCE` |
-| Policy | Rights, sensitivity, CARE, source role, review state, release state | `policy/layers/` | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED`, `ROLE_COLLAPSE`, `REVIEW_INSUFFICIENT` |
-| Adapter / runtime | Renderer receives only released artifacts; clicks emit governed requests; trust state is visible | `tools/validators/layers/`, `tests/ui/`, `tests/e2e/` | Unreleased tile load, popup-as-drawer, sensitive-style hiding, no-citation export |
-| Release | `MapReleaseManifest` is signed; `PromotionDecision` records gate results; `RollbackCard` is viable | `release/`, `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/` | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING`, mutable-tag references |
+### 9.1 Current focused layer checks
 
-> [!TIP]
-> **Every surface needs both positive and negative fixtures.** The Whole-UI Expansion Report Appendix C names representative fixture types: `answer.valid.json`, `deny_restricted.valid.json`, `abstain_missing_evidence.valid.json`, `error_invalid_payload.invalid.json`. Layers should mirror this pattern: `layer_released.valid.json`, `layer_stale.valid.json`, `layer_denied_sensitive.valid.json`, `layer_manifest_missing_evidence.invalid.json`, `layer_manifest_mutable_tag.invalid.json`.
+The current `LayerManifest` contract documents these repository-native checks:
+
+```bash
+python -m unittest tests.validators.test_validate_layer_manifest --verbose
+python tools/validators/data/validate_layer_manifest.py --fixtures
+python tools/validate_all.py --validate-registry
+python tools/validate_all.py --profile release-dry-run --validator layer-manifest
+```
+
+The runtime-admission lane has app-local fixture tests and a dedicated workflow. Those tests prove the finite, no-side-effect admission projection only.
+
+### 9.2 What current validation proves
+
+| Check family | Proves | Does not prove |
+|---|---|---|
+| JSON Schema | Carrier shape for the selected profile | Semantic truth, rights, policy, release |
+| Deterministic validator | Hash/ID reproduction and named local invariants | Reference existence or authenticity |
+| Valid/invalid fixture polarity | Reviewed expected cases remain stable | Production data or live-source quality |
+| Runtime-admission tests | Finite fail-closed eligibility decisions and no side effects | Registry, renderer, API, or deployed behavior |
+| Documentation checks | Source structure, links, anchors, and bounded claims | Implementation or publication |
+| Hosted workflows | Exact configured jobs ran at a commit | Branch-protection requirement, release, deployment, or public operation unless separately proved |
+
+### 9.3 Required graduation evidence
+
+A real released-layer path must add or verify:
+
+- canonical contract/schema authority and migration closure;
+- resolved reference and identity bindings;
+- operative layer policy with normalized decision and obligations;
+- authenticated review and promotion records;
+- verified carrier bytes, signatures/attestations, and immutable addressing;
+- release manifest and rollback target;
+- active registry semantics and correction propagation;
+- implemented loader and adapter with import-boundary enforcement;
+- no direct internal-store access;
+- sensitive-field and geometry negative tests;
+- stale, withdrawn, superseded, and rollback browser tests;
+- accessibility and non-map alternatives;
+- real performance probes;
+- deployment/network/credential isolation;
+- public-surface parity across map, drawer, export, search, story, and AI.
+
+### 9.4 Documentation checks for this page
+
+At minimum, a change to this page should verify:
+
+- one H1;
+- balanced fenced blocks and HTML comments;
+- no heading-level skips;
+- stable top and legacy anchors;
+- no duplicate explicit anchors;
+- repository-relative link closure;
+- readable tables;
+- no trailing whitespace or placeholder-owner invention;
+- no secret or protected location;
+- final newline;
+- generated receipt and artifact hash for substantive AI authorship;
+- exact changed-path set and base drift.
+
+[Back to top](#top)
 
 ---
 
 ## 10. Anti-patterns
 
-| Anti-pattern | Why it fails | What to do instead |
+| Anti-pattern | Why it fails | Corrective posture |
 |---|---|---|
-| Treating a tile, PMTiles, COG, screenshot, or graph projection as sovereign truth | Downstream carriers do not carry release authority, policy state, or `EvidenceBundle` resolution | Tie every layer to `LayerManifest` + `MapReleaseManifest` + `EvidenceBundle` |
-| Hiding sensitive geometry with a style filter | Leaks via source data, network requests, query APIs, and downstream caches | Transform / generalize / delay / deny **before** tile generation |
-| Using a popup as the Evidence Drawer | Popups can preview; they cannot carry resolved `EvidenceRef` and citation validation | Route material claims through `EvidenceDrawerPayload` and `EvidenceBundle` resolution |
-| Importing MapLibre APIs from component code | Couples components to a renderer and bypasses the trust membrane | Speak to `MapRuntimePort`; only `MapLibreAdapter` imports MapLibre |
-| Loading unreleased tiles or candidate data in the browser | Bypasses validation, policy, and release gates | Renderer accepts only validated `LayerDescriptor` and released asset URLs |
-| Releasing a layer with mutable OCI tags or symbolic refs instead of digests | Release references become non-reproducible; rollback breaks | Reference immutable digests; deny mutable-tag manifests |
-| Treating uploaded PDFs, prior reports, or workspace scans as proof of current repo state | Confuses lineage with implementation; flattens uncertainty | Mark unverified items **PROPOSED** / **UNKNOWN** / **NEEDS VERIFICATION** |
-| Splitting layer authority across `ui/`, `web/`, `packages/ui/`, and a topic root | Creates competing shell homes and parallel authority | Use the migration target tree (Directory Rules §11) and one authority per surface |
-| Mixing `data/published/` (artifacts) with `release/` (decisions) | Confuses what consumers read with what was decided | `data/published/` = artifacts; `release/` = decisions, manifests, rollback, signatures |
+| Calling this page the canonical semantic layer authority | `docs/` explains; `contracts/` owns meaning | Link to current contracts and keep this page architectural |
+| Selecting `data/` or `layers/` schema home by prose | Creates or ratifies parallel shape authority without decision/migration | Preserve the conflict; resolve through accepted authority |
+| Treating a validator `PASS` as release | Confuses bounded conformance with evidence, policy, review, and release | Keep state axes separate |
+| Treating runtime-admission `PASS` as registration | Current evaluator explicitly performs no mutation | Require a separately governed loader |
+| Treating `renderer: MAPLIBRE_GL_JS` in a fixture schema as accepted renderer policy | Inactive shape does not accept ADR-0007 or install a dependency | Keep renderer decision and runtime HOLD visible |
+| Loading direct object-store, internal, candidate, or canonical URLs in the browser | Bypasses the trust membrane | Use governed API or approved released static edge |
+| Using style filters as redaction | Sensitive bytes still reach the client | Transform or withhold before delivery |
+| Treating feature properties as claims | Renderer data is a carrier, not evidence authority | Resolve through governed claim/evidence path |
+| Combining catalog, evidence, policy, review, release, artifact, and rollback refs into one token | Destroys role-specific audit and correction | Preserve separate identities |
+| Using floating `latest` artifact references | Breaks replay and rollback | Use immutable digest/version bindings |
+| Hiding stale, denied, withdrawn, or corrected state by removing a layer silently | Makes absence ambiguous and correction invisible | Show a public-safe finite state and lineage |
+| Caching old policy/admission success as permanent authority | Rights, sensitivity, correction, and release can change | Re-evaluate and invalidate dependent caches |
+| Allowing AI to infer missing layer trust fields | Generated language cannot create evidence or policy state | Abstain, deny, or narrow |
+| Treating uploaded reports or old workspace scans as current implementation proof | Confuses lineage with repository state | Pin current code/config/test evidence |
+| Creating another `LayerManifest` home to “clean up” drift | Adds parallel authority | Use ADR/migration/compatibility discipline |
+| Mixing published carrier bytes with release decisions | Blurs artifact versus authorization | Keep `data/published/` and `release/` responsibilities distinct |
 
-CONFIRMED doctrine sources: Directory Rules §11, §13; Master MapLibre v1.8 §X; Whole-UI Expansion Report §25.
+[Back to top](#top)
 
 ---
 
 ## 11. Inputs and exclusions
 
-### Inputs to layer release
+### 11.1 Inputs to a mature layer-release and runtime path
 
-- Validated `SourceDescriptor` entries from `data/registry/sources/` (CONFIRMED home).
-- Normalized records from `data/processed/<domain>/<dataset>/<version>/`.
-- Catalog records from `data/catalog/stac/`, `data/catalog/dcat/`, `data/catalog/prov/`, `data/catalog/domain/`.
-- `EvidenceBundle` objects from `data/proofs/evidence_bundle/`.
-- `RunReceipt` from `data/receipts/pipeline/` and `data/receipts/validation/`.
-- Tile / raster / array artifacts from a governed publication pipeline (PMTiles, COG, GeoParquet, MVT; MLT pilot; 3D Tiles where evidence-bearing).
-- `PromotionDecision` and signed `MapReleaseManifest` from `release/`.
+A mature implementation may consume role-specific objects such as:
 
-### Out of scope for this document
+- `SourceDescriptor` and immutable source/version identity;
+- processed spatial representation metadata;
+- `LayerManifest`, `LayerDescriptor`, and `LayerCatalogItem`;
+- EvidenceRef/EvidenceBundle support;
+- validation reports and run receipts;
+- policy decisions and enforceable obligations;
+- rights, sensitivity, sovereignty, and transform records;
+- review and promotion decisions;
+- artifact manifests, digests, and attestations;
+- release manifest and active release state;
+- correction, supersession, withdrawal, and rollback records;
+- current time/freshness context;
+- renderer/plugin/protocol admission;
+- accessibility and performance evidence.
 
-- **What a layer is** in a non-KFM sense (a generic web-map cartography overview). Out of scope: see external standards docs and `docs/standards/`.
-- **Style design** beyond release implications. Style tokens, cartographic theory, and design rationale live in style-doc neighbors (e.g., a future `STYLES.md`).
-- **Story Node 3D handoff details.** 3D scene continuity has its own doctrine under `docs/architecture/story/` (PROPOSED).
-- **Focus Mode answer composition.** Focus has its own doctrine under `docs/architecture/governed-ai/` (PROPOSED).
-- **Per-package implementation choices** (framework, bundler, package manager). These are settled in `docs/architecture/system-context.md` and per-app READMEs, not here.
+Each input retains its own authority and failure behavior.
+
+### 11.2 Outputs
+
+A mature path may emit:
+
+- released public-safe carrier references;
+- governed layer catalog entries;
+- finite runtime-admission decisions;
+- renderer source/layer state;
+- public-safe map selection context;
+- Evidence Drawer payloads;
+- export eligibility;
+- correction or withdrawal UI state;
+- validation, runtime, and audit receipts.
+
+None of these outputs replaces the underlying evidence or release authority.
+
+### 11.3 Out of scope for this page
+
+- Field-by-field normative contract definitions.
+- JSON Schema authoring.
+- Rego policy implementation or activation.
+- Source ingestion and live-source terms.
+- Artifact build pipelines.
+- Registry mutation.
+- MapLibre dependency admission or adapter implementation.
+- Route/API implementation.
+- Authentication, authorization, CSP, CORS, hosting, CDN, or object-store configuration.
+- Release approval, deployment, publication, source activation, correction execution, or rollback execution.
+- Choosing the canonical contract/schema lane.
+- Moving, renaming, deleting, or consolidating current layer homes.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Open questions and verification backlog
 
-<details>
-<summary><strong>Verification items (click to expand)</strong></summary>
-
-| Item | Truth label | Where to verify |
+| Item | Current status | Closure evidence required |
 |---|---|---|
-| Path of this doc reconciled with Directory Rules §11 (currently names `docs/architecture/map-shell.md` only) | **NEEDS VERIFICATION** | New or amending ADR |
-| Whole-UI Expansion Report proposes `data/manifests/layers/` as an emitted-instance home; Directory Rules §9.2 places release manifests at `release/manifests/` and §9.1 places layer registry at `data/registry/layers/` | **CONFLICT** | Resolve via ADR; default to Directory Rules until ADR overrides |
-| Existence and adoption of `schemas/contracts/v1/layers/*.schema.json` and `schemas/contracts/v1/evidence/kfm_geo_manifest.schema.json` | **PROPOSED** | Mount repo; verify file presence and `spec_hash` |
-| Existence and policy rules in `policy/layers/` | **PROPOSED** | Mount repo; verify policy bundle + negative fixtures |
-| Existence of `tools/validators/layers/` and `tools/validators/geo_manifest/` | **PROPOSED** | Mount repo; verify validator binaries and test coverage |
-| App home for `MapLibreAdapter` and `MapRuntimePort` (`apps/explorer-web/src/map/`?) | **PROPOSED / NEEDS VERIFICATION** | Mount repo; confirm framework, app path, and import allowlist |
-| MapLibre package version, plugin status, MLT readiness, PMTiles tooling, hosting headers, browser/device performance, mobile/native parity | **NEEDS VERIFICATION** | Version-sensitive; environment- and release-specific |
-| CARE / sovereignty label vocabulary and its policy bundle | **PROPOSED** | `policy/evidence/`, `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` |
-| `LegendDescriptor` schema home (co-located with style or in `layers/`?) | **OPEN** | ADR or schema-home decision |
-| `TileArtifactManifest` and `StyleManifest` schema homes | **PROPOSED** | Whole-UI Expansion Report and Master MapLibre dossiers — confirm placement |
-| Tag-mutation deny test, unsigned-artifact deny test, mutable OCI tag deny test | **PROPOSED** | `tests/fixtures/layers/`, `tools/validators/geo_manifest/` |
+| Canonical contract lane: `contracts/data/` versus `contracts/layers/` | **CONFLICTED / NEEDS VERIFICATION** | Accepted decision or verified existing authority plus migration/compatibility record |
+| Canonical schema lane: `schemas/contracts/v1/data/` versus `schemas/contracts/v1/layers/` | **CONFLICTED / NEEDS VERIFICATION** | Accepted schema-home decision, consumer inventory, `$id` migration, fixture/validator/test updates, rollback |
+| Descriptor and catalog-item shape completeness | **PROPOSED / INCOMPLETE** | Closed schemas, fixtures, validators, tests, compatibility plan |
+| Shared vocabulary across manifest, descriptor, catalog item, release manifest, and admission | **NEEDS VERIFICATION** | Contract crosswalk and negative anti-collapse tests |
+| Reference resolver for source/evidence/policy/review/release/artifact/correction roles | **UNKNOWN / NOT ESTABLISHED** | Repository implementation, no-network fixtures, deterministic outcomes, boundary tests |
+| Operative layer policy evaluator | **INACTIVE** | Accepted scope, bundle, evaluator, `PolicyDecision` contract, obligations, tests, consumer binding |
+| Release-manifest lane and active-layer release procedure | **CONFLICTED / DRAFT** | Canonical release home, manifest contract/schema, review/promotion binding, correction and rollback drill |
+| Artifact signature and byte verification | **NOT ESTABLISHED in layer path** | Attestation profile, immutable refs, verifier, negative tests |
+| Active registry writer and read model | **NOT IMPLEMENTED** | Governed state transition, receipts, idempotency, correction invalidation, rollback |
+| Released-layer loader | **NOT IMPLEMENTED** | Exact input contract, policy/release checks, no-side-effect negatives, integration tests |
+| `MapRuntimePort` and `MapLibreAdapter` | **PROPOSED / HOLD** | Accepted decision, actual implementation, import-boundary tests, browser probes |
+| MapLibre dependency and version admission | **HOLD** | Accepted decision, pinned dependency/lock evidence, license/security review, renderer tests, rollback |
+| Live `/layers` route | **ABSTAIN-ONLY** | Governed resolver, response contract, evidence/policy/release binding, negative tests |
+| Domain-specific field allowlists and geometry transforms | **NEEDS VERIFICATION** | Domain steward policy, fixtures, transform receipts, byte-level leakage tests |
+| Correction/withdrawal/rollback propagation | **UNKNOWN end to end** | Release drill across registry, API, cache, map, drawer, export, search, story, and AI |
+| Real performance budgets | **UNMEASURED** | Device/browser matrix, representative released carriers, recorded probes |
+| Accessibility parity | **NEEDS VERIFICATION for real map** | Keyboard controls, screen-reader path, alternative feature list, focus/reduced-motion tests |
+| Deployment/network isolation | **UNKNOWN** | Runtime configuration, network policy, credentials, CSP/CORS, logs, security review |
+| Independent stewardship and separation of duties | **NEEDS VERIFICATION** | Named accepted roles and review evidence |
 
-</details>
+The smallest dependency-closed next implementation is not a live MapLibre load. It is a maintainer decision on the contract/schema lane or a bounded resolver/policy/release dependency that closes one currently explicit HOLD without creating parallel authority.
+
+[Back to top](#top)
 
 ---
 
 ## 13. Related docs and ADRs
 
-| Surface | Path | Status |
+### Architecture and doctrine
+
+| Surface | Link | Current posture |
 |---|---|---|
-| UI subsystem index | `docs/architecture/ui/README.md` | PROPOSED |
-| MapLibre adapter boundary | `docs/architecture/ui/BOUNDARIES.md` | PROPOSED |
-| UI state ownership | `docs/architecture/ui/STATE_OWNERSHIP.md` | PROPOSED |
-| UI continuity notes | `docs/architecture/ui/CONTINUITY_NOTES.md` | PROPOSED |
-| Map shell architecture (per Directory Rules §11) | `docs/architecture/map-shell.md` | CONFIRMED doctrine path |
-| Contract / schema / policy split | `docs/architecture/contract-schema-policy-split.md` | CONFIRMED doctrine path |
-| Object map crosswalk | `contracts/OBJECT_MAP.md` | PROPOSED |
-| Directory Rules | `docs/doctrine/directory-rules.md` | CONFIRMED (mounted) |
-| Trust membrane doctrine | `docs/doctrine/trust-membrane.md` | CONFIRMED doctrine path |
-| Lifecycle law | `docs/doctrine/lifecycle-law.md` | CONFIRMED doctrine path |
-| Source descriptor standard | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | PROPOSED |
-| UI runbooks | `docs/runbooks/ui_LOCAL_DEV.md`, `docs/runbooks/ui_VALIDATION.md`, `docs/runbooks/ui_ROLLBACK.md` | PROPOSED |
-| ADR: schema home | `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` (CONFIRMED file; decision `proposed`) and `docs/adr/ADR-ui-schema-home.md` (PROPOSED) | mixed |
-| ADR: MapLibre adapter boundary | `docs/adr/ADR-maplibre-adapter-boundary.md` | PROPOSED |
-| ADR: Story Node 3D boundary | `docs/adr/ADR-story-node-3d-boundary.md` | PROPOSED |
+| UI subsystem index | [`ui/README.md`](./README.md) | Repository-grounded architecture landing page |
+| UI trust boundaries | [`BOUNDARIES.md`](./BOUNDARIES.md) | Repository-grounded bounded boundary map |
+| Map-runtime boundary | [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) | Proposal-era lineage; current-state rows need separate reconciliation |
+| Evidence Drawer | [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) | Bounded UI projection architecture |
+| Map shell | [`map-shell.md`](../map-shell.md) | Current executable synthetic composition and renderer HOLD |
+| Contract/schema/policy split | [`contract-schema-policy-split.md`](../contract-schema-policy-split.md) | Responsibility split reference |
+| Directory Rules | [`directory-rules.md`](../../doctrine/directory-rules.md) | Accepted exact bytes through ADR-0029 |
+
+### Contracts, schemas, policy, fixtures, and implementation
+
+| Surface | Link | Current posture |
+|---|---|---|
+| LayerManifest contract | [`contracts/data/layer_manifest.md`](../../../contracts/data/layer_manifest.md) | Draft, dual-profile, fixture-only strict profile |
+| LayerDescriptor contract | [`contracts/data/layer_descriptor.md`](../../../contracts/data/layer_descriptor.md) | Draft; paired shape incomplete |
+| LayerCatalogItem contract | [`contracts/data/layer_catalog_item.md`](../../../contracts/data/layer_catalog_item.md) | Draft; paired shape incomplete |
+| Layer contracts compatibility lane | [`contracts/layers/README.md`](../../../contracts/layers/README.md) | Orientation only; authority conflict preserved |
+| Runtime admission contract | [`contracts/runtime/layer_manifest_admission.md`](../../../contracts/runtime/layer_manifest_admission.md) | Proposed-inactive, fixture-only |
+| Data LayerManifest schema | [`schemas/.../data/layer_manifest.schema.json`](../../../schemas/contracts/v1/data/layer_manifest.schema.json) | Closed strict fixture profile plus legacy compatibility |
+| Parallel layers schema | [`schemas/.../layers/layer_manifest.schema.json`](../../../schemas/contracts/v1/layers/layer_manifest.schema.json) | Open proposal scaffold |
+| Layer policy boundary | [`policy/layers/README.md`](../../../policy/layers/README.md) | Inactive no-op rule lane |
+| LayerManifest fixtures | [`fixtures/data/layer_manifest/README.md`](../../../fixtures/data/layer_manifest/README.md) | Synthetic no-network profile |
+| LayerManifest validator | [`validate_layer_manifest.py`](../../../tools/validators/data/validate_layer_manifest.py) | Bounded deterministic validator |
+| Runtime admission evaluator | [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Side-effect-free fixture evaluator |
+| MapLibre adapter | [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only placeholder |
+| Governed layers route | [`layers.py`](../../../apps/governed-api/src/governed_api/routes/layers.py) | ABSTAIN scaffold |
+
+### Decisions
+
+| ADR | Link | Current status |
+|---|---|---|
+| Schema home | [`ADR-0001`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | Proposed |
+| Explorer shell | [`ADR-0005`](../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | Proposed |
+| MapLibre adapter seam | [`ADR-0006`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Draft / effectively proposed |
+| Sole browser renderer | [`ADR-0007`](../../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | Proposed |
+| Directory Governance Standard v2 | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted |
 
 ---
 
-> _Last reviewed:_ 2026-05-14 · _Doc id:_ `kfm://doc/architecture/ui/layering` · _Authority:_ semantic (doctrine) · _Shape lives in:_ `schemas/contracts/v1/layers/`, `schemas/contracts/v1/evidence/`
+## Rollback
 
-[⬆ Back to top](#-layer-architecture--kfm-map-shell-layering)
+This is a same-path documentation-only revision.
+
+- Before merge: close the draft pull request and delete the feature branch.
+- After an authorized merge: revert the documentation commit and its generated authoring receipt, restoring prior blob `cb9f83cb9a4ae03e397deb03510fa2ab4e87191c`.
+- Re-run the same documentation, link, metadata, and receipt checks.
+- No source deactivation, data migration, registry change, renderer rollback, cache invalidation, release correction, withdrawal, or public rollback is required because this page changes no trust-bearing behavior or released artifact.
+
+> **Non-effect:** Updating this page does not accept an ADR, resolve the layer-home conflict, activate a policy, register or load a layer, install MapLibre, release, deploy, promote, publish, correct, withdraw, or roll back any KFM data or public claim.
+
+<p align="right"><a href="#top">Back to top</a></p>
