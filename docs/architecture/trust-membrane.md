@@ -58,7 +58,7 @@ notes:
 
 | Field | Repository-grounded result |
 |---|---|
-| Evidence snapshot | `main@8d2535d3231c81b3d7bc32dff660ad8cc7983f64` |
+| Evidence snapshot | `main@45fc45556a007196aa29e725f3a4b9fe9af8294e` |
 | Prior lowercase blob | `40602152f13044fa87d57c73c71d797f95afa61e` |
 | Uppercase sibling blob | `e260a1dbe20ec011901fbe8fb752cd3bb66a9eeb` |
 | Placement authority | Accepted ADR-0029 and adopted Directory Rules v2 |
@@ -766,7 +766,7 @@ This documentation update does not:
 
 ## Last reviewed and rollback
 
-**Last reviewed:** 2026-08-19 against `main@8d2535d3231c81b3d7bc32dff660ad8cc7983f64`.
+**Last reviewed:** 2026-08-19 against `main@45fc45556a007196aa29e725f3a4b9fe9af8294e`.
 
 **Rollback:** Before merge, close the draft pull request and abandon its branch. After an authorized merge, revert the documentation commit or restore prior blob `40602152f13044fa87d57c73c71d797f95afa61e`. No data migration, source deactivation, cache invalidation, correction notice, release rollback, deployment rollback, or public withdrawal is required because this page changes explanatory Markdown only.
 
