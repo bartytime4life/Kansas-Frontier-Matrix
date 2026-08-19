@@ -338,8 +338,8 @@ flowchart LR
     UI[Focus panel + Evidence Drawer]
 
     U --> C --> Q --> API --> PE --> E --> CP --> UI
-    API -. no current Focus route .- Q
-    PE -. not implemented by current client slice .- CP
+    Q -. "no current Focus route" .-> API
+    PE -. "not implemented by current client slice" .-> CP
 ```
 
 The target flow may use different DTO names after contract/schema convergence. This page does not make `POST /focus`, `FocusModeRequest`, `FocusModeResponse`, or any route authoritative.
