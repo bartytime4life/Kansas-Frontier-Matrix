@@ -1,355 +1,986 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-governed-api-threat-model
 title: Governed API — Threat Model
-type: standard
-version: v0.1
-status: draft
-owners: API steward + Security steward · NEEDS VERIFICATION
+type: architecture-standard; threat-model; current-state-and-graduation-boundary
+version: v0.2
+status: draft; repository-grounded; scaffold-guards-partial; composed-trust-boundaries-held; non-release; non-publication
+owners: "@bartytime4life via CODEOWNERS; API, security, privacy, runtime, evidence, policy, release, and independent-review ownership NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-05-24
-policy_label: public
+updated: 2026-08-19
+policy_label: public; architecture; no-secrets; no-restricted-payloads; no-operational-endpoints
+owning_root: docs/
+current_path: docs/architecture/governed-api/THREAT_MODEL.md
+responsibility: Explain the Governed API threat boundary, distinguish current executable safeguards from target mitigations, and define the evidence required before a boundary may be called enforced.
+authority_limit: Human architecture guidance only; does not create authentication, authorization, policy, evidence, release, adapter, provider, citation, telemetry, audit, deployment, incident, or publication authority.
+truth_posture: CONFIRMED pinned repository evidence / PROPOSED target controls / UNKNOWN deployed behavior / NEEDS VERIFICATION named owners, settings, and operational proof
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0a547c12e7965565d397fcad46d94c1c7b41f0c7
+  prior_target_blob: 1e30edf28991ad558e206d5f53d9cec81083c387
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  app_entry_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  route_registry_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+  stub_builder_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+  abstain_test_blob: 2be20f5d93c03da7677c34b11a31875a00b2ed28
+  boundary_test_blob: 4035e537e6c52194928df5ab8ceb41a35f5f30ca
+  runtime_envelope_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  envelopes_document_blob: 4c80f1d1808d5bed8f56bc2fd1fb73222d65ee42
+  runtime_proof_readme_blob: 23a259513a25ec43922f4767de8d5c05c8302ee6
+  api_workflow_blob: 84ba16a3c36a1d58b2f6f1059a31ed6354063357
 related:
   - README.md
   - ../governed-api.md
-  - ../cross-domain/trust-membrane.md
+  - ../../security/THREAT_MODEL.md
+  - ../../security/AUDIT_INVARIANTS.md
+  - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - ../../adr/ADR-0016-telemetry-redaction-posture.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
   - AUDIENCE_CLASSES.md
   - ENVELOPES.md
   - LIFECYCLE_GATES.md
+  - ERROR_CODES.md
   - DEPLOYMENT_RULES.md
-tags: [kfm, architecture, governed-api, threat-model, trust-boundary, doctrine]
+  - ../../../apps/governed-api/src/governed_api/main.py
+  - ../../../apps/governed-api/src/governed_api/routes/registry.py
+  - ../../../apps/governed-api/src/governed_api/stub.py
+  - ../../../apps/governed-api/tests/test_abstain_routes.py
+  - ../../../apps/governed-api/tests/test_boundary_guards.py
+  - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - ../../../policy/access/README.md
+  - ../../../packages/evidence-resolver/README.md
+  - ../../../runtime/model_adapters/README.md
+  - ../../../tools/validators/citation/README.md
+  - ../../../tests/runtime_proof/README.md
+  - ../../../.github/workflows/api-test.yml
+tags: [kfm, architecture, governed-api, threat-model, trust-boundary, fail-closed, finite-outcomes, evidence, policy, release, runtime, telemetry, audit]
 notes:
-  - PROPOSED. Expands docs/architecture/governed-api.md §8 (internal layering) and §7 (deny-by-default).
-  - Required negative-state fixtures live under tests/runtime_proof/ (PROPOSED layout).
+  - "v0.2 preserves the nine-boundary vocabulary as a target threat inventory while correcting the prior implication that all nine are current runtime crossings."
+  - "The executable app currently proves a small WSGI route/method/error scaffold and static boundary guards; it does not prove authentication, policy, release, evidence, adapter, provider, citation, telemetry, audit, or deployment enforcement."
+  - "The legacy tests/runtime_proof/<boundary>/ fixture tree is not represented as implemented; the confirmed root currently contains shared finite-envelope and mock-selector suites plus domain routing surfaces."
+  - "Accepted ADR-0029 resolves the same-path docs placement; the former OPEN-DR-12 path hold no longer applies to this edit."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Governed API — Threat Model
 
-> *Nine trust boundaries × threats × mitigations × fixtures. The negative-state proof surface that verifies the deny-by-default posture works.*
+> **Purpose.** Define what the Governed API must protect, show which safeguards are actually present in the current scaffold, and keep every unproved trust crossing on an explicit `HOLD`.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED%20(spine)-blue)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![posture](https://img.shields.io/badge/posture-deny--by--default-success)
-
-**Status:** draft · **Owners:** API steward + Security steward *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-determination)
+[![Current routes: 3 ABSTAIN stubs](https://img.shields.io/badge/current%20routes-3%20ABSTAIN%20stubs-0969da?style=flat-square)](#current-repository-determination)
+[![Current errors: finite 404 and 405](https://img.shields.io/badge/current%20errors-finite%20404%20%2F%20405-1f6feb?style=flat-square)](#boundary-1-current-evidence)
+[![Authentication: not established](https://img.shields.io/badge/authentication-not%20established-b42318?style=flat-square)](#boundary-1-held-controls)
+[![Composed trust path: HOLD](https://img.shields.io/badge/composed%20trust%20path-HOLD-b42318?style=flat-square)](#graduation-holds)
+[![Release and publication: none](https://img.shields.io/badge/release%20%2F%20publication-none-6e7781?style=flat-square)](#authority-and-non-effects)
 
 > [!IMPORTANT]
-> **A trust boundary is not a wish.** It is a point in the architecture where one component's assumptions about another are **checked at runtime**, not implied by deployment. The nine boundaries below name where the governed API turns trust posture into an executable check.
+> **A threat model is not enforcement evidence.** This document can name a control, failure posture, test, or target sequence. Only current code, configuration, contracts, schemas, policy, tests, workflows, emitted artifacts, deployment evidence, and runtime observations can prove that a boundary is enforced.
 
 > [!CAUTION]
-> **An API that can only produce `ANSWER` is mis-classified as healthy.** The trust membrane is verified by the rejection paths *(`governed-api.md` §10)*. Every mitigation below is paired with a required `runtime_proof/` fixture.
+> **A boundary that the current scaffold does not cross is `NOT_CROSSED`, not “mitigated.”** The current app never calls policy, release, evidence, model-provider, citation, telemetry, or audit services. That small attack surface is useful, but it does not prove the controls required when those dependencies are introduced.
+
+> [!WARNING]
+> **Do not put exploit payloads, credentials, private endpoints, restricted source names, protected coordinates, raw evidence, prompts, or production diagnostics in this public document or its fixtures.** Reproduction details for a real vulnerability belong in the repository's private security-reporting and incident process, not in public architecture prose.
+
+**Quick navigation:** [Scope](#1-scope) · [Boundaries](#2-the-nine-trust-boundaries) · [Ingress](#3-boundary-1--client--api-ingress) · [Policy](#4-boundary-2--api--policy) · [Release](#5-boundary-3--api--release-manifest) · [Evidence](#6-boundary-4--api--evidence-resolver) · [Adapter](#7-boundary-5--api--runtime-adapter) · [Provider](#8-boundary-6--runtime-adapter--external-provider) · [Citation](#9-boundary-7--api--citation-validator) · [Telemetry](#10-boundary-8--api--telemetry) · [Audit](#11-boundary-9--api--audit--receipts-store) · [Proof](#12-fixture-coverage-matrix) · [Anti-patterns](#13-anti-patterns) · [Decisions](#14-open-questions-and-adr-triggers) · [References](#15-related-docs) · [Appendix](#16-appendix)
 
 ---
 
-## Table of contents
-
-1. [Scope](#1-scope)
-2. [The nine trust boundaries](#2-the-nine-trust-boundaries)
-3. [Boundary 1 — Client ↔ API ingress](#3-boundary-1--client--api-ingress)
-4. [Boundary 2 — API ↔ Policy](#4-boundary-2--api--policy)
-5. [Boundary 3 — API ↔ Release manifest](#5-boundary-3--api--release-manifest)
-6. [Boundary 4 — API ↔ Evidence resolver](#6-boundary-4--api--evidence-resolver)
-7. [Boundary 5 — API ↔ Runtime adapter](#7-boundary-5--api--runtime-adapter)
-8. [Boundary 6 — Runtime adapter ↔ External provider](#8-boundary-6--runtime-adapter--external-provider)
-9. [Boundary 7 — API ↔ Citation validator](#9-boundary-7--api--citation-validator)
-10. [Boundary 8 — API ↔ Telemetry](#10-boundary-8--api--telemetry)
-11. [Boundary 9 — API ↔ Audit / Receipts store](#11-boundary-9--api--audit--receipts-store)
-12. [Fixture coverage matrix](#12-fixture-coverage-matrix)
-13. [Anti-patterns](#13-anti-patterns)
-14. [Open questions and ADR triggers](#14-open-questions-and-adr-triggers)
-15. [Related docs](#15-related-docs)
-16. [Appendix](#16-appendix)
-
----
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-This doc names every boundary the governed API crosses on a single request, the threats that boundary defends, the mitigations that enforce the defense, and the fixtures that prove the mitigations work.
+This is the **Governed API-specific** threat model. The broader [`docs/security/THREAT_MODEL.md`](../../security/THREAT_MODEL.md) remains the system-wide planning view; this page narrows the analysis to the public trust membrane represented by `apps/governed-api/`, its intended dependencies, its finite response boundary, and the proof needed before substantive exposure.
 
-> [!TIP]
-> **When this doc binds.** Adding a new route, adding a new envelope shape, adding a new adapter, or hardening an existing route. Reviewers compare the route's behavior to this doc's boundaries before approving.
+### Current repository determination
+
+At `main@0a547c12e7965565d397fcad46d94c1c7b41f0c7`, the inspected executable surface is a deliberately small standard-library WSGI scaffold:
+
+```text
+GET /bootstrap | /layers | /evidence
+        |
+        v
+exact in-process route registry
+        |
+        v
+ABSTAIN / NOT_IMPLEMENTED
+
+unknown route
+        |
+        v
+404 + ERROR / SAFE_RUNTIME_ERROR
+
+unsupported method on a registered route
+        |
+        v
+405 + ERROR / SAFE_RUNTIME_ERROR
+```
+
+| Surface | Current evidence | Safe conclusion |
+|---|---|---|
+| WSGI entry point | [`main.py`](../../../apps/governed-api/src/governed_api/main.py) | Reads `PATH_INFO` and `REQUEST_METHOD`, dispatches an exact route map, serializes JSON, and defaults `serve()` to loopback. This is source evidence, not deployment proof. |
+| Route inventory | [`routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly `/bootstrap`, `/layers`, and `/evidence` are registered. |
+| Registered GET behavior | [`stub.py`](../../../apps/governed-api/src/governed_api/stub.py) and route tests | All three routes return `ABSTAIN / NOT_IMPLEMENTED`, empty evidence refs, and a placeholder `sha256:aaaa...` spec hash. |
+| Negative HTTP behavior | [`test_boundary_guards.py`](../../../apps/governed-api/tests/test_boundary_guards.py) | Unknown paths return HTTP 404 and unsupported methods return HTTP 405, each with the generic finite `ERROR / SAFE_RUNTIME_ERROR` body and no raw `detail`. |
+| Static boundary checks | same test module | Checks the exact route set, a narrow forbidden-import prefix list, and forbidden internal-store path literals in app source. |
+| Response machine profile | [`runtime_response_envelope.schema.json`](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Closed proposed schema with `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`; `ANSWER` requires evidence and `precision_actually_used`. |
+| App workflow | [`api-test.yml`](../../../.github/workflows/api-test.yml) | Runs the app smoke suite and focused ABSTAIN shape test. A workflow file or green run is test evidence only. |
+| Deployment, identity provider, proxy, policy engine, data stores, network egress, observability, audit sink | Not established by the inspected app path | Remain `UNKNOWN` or `NEEDS VERIFICATION`; do not infer them from architecture docs. |
+
+### Authority and non-effects
+
+Accepted ADR-0029 adopts Directory Rules v2. This existing file is human architecture guidance under `docs/`; it receives the same-path `PLACE` outcome. It does not own executable app behavior, contract meaning, schema shape, policy, fixtures, tests, telemetry instances, receipts, release decisions, infrastructure, credentials, or public state.
+
+This update does **not**:
+
+- accept or amend ADR-0004, ADR-0016, or another proposed decision;
+- add a route, middleware, authentication provider, access grant, policy evaluator, resolver, adapter, provider, validator consumer, telemetry emitter, audit writer, proxy, deployment, or secret;
+- change contracts, schemas, policy, fixtures, tests, workflows, runtime, infrastructure, configuration, release objects, or repository settings;
+- transition lifecycle state, approve release, deploy, promote, publish, or activate a source; or
+- claim that current source files are running in a production environment.
+
+### Protected assets
+
+| Asset | Threat consequence |
+|---|---|
+| Evidence and source-role integrity | Unsupported, mixed-role, stale, or fabricated support becomes an apparent public fact. |
+| Rights, sensitivity, sovereignty, consent, and precision posture | Protected content or harmful inference becomes recoverable from an API response, error, cache, log, or derivative. |
+| Caller and workload identity context | An unauthenticated or mis-bound subject receives a capability intended for another actor or service. |
+| Policy, review, release, correction, withdrawal, and rollback state | A stale or bypassed decision exposes material that is unreleased, corrected, withdrawn, or outside its authorized audience. |
+| Request and response integrity | Ambiguous parsing, schema drift, replay, or partial serialization changes the meaning of a finite outcome. |
+| Secrets and operational configuration | Credentials, internal endpoints, provider keys, or deployment details escape through code, logs, errors, traces, or receipts. |
+| Availability and bounded resource use | Resource exhaustion disables the trust membrane or pressures operators to bypass checks. |
+| Audit and correction lineage | A consequential request cannot be reconstructed, challenged, corrected, or attributed without over-collecting sensitive content. |
+| Software and workflow integrity | A dependency, action, generated file, configuration change, or bypass alters the boundary without review. |
+
+### Threat actors and failure sources
+
+This model covers malicious clients, compromised clients, malformed or adversarial source content, buggy internal components, stale caches and manifests, compromised dependencies or providers, over-privileged operators, accidental disclosure, configuration drift, rollback races, and insider misuse. It does not assume that every failure is hostile; a fail-closed system must handle mistakes and outages without silently widening access.
+
+### Maturity vocabulary
+
+| State | Meaning |
+|---|---|
+| `NOT_CROSSED` | Current app path does not invoke the dependency. No composed control is proved. |
+| `SCAFFOLD_GUARD` | A narrow local guard or negative behavior is implemented and tested. |
+| `COMPONENT_PROOF` | A separate component has bounded fixture/test evidence but is not integrated into the API path. |
+| `COMPOSED_PROOF` | The API and dependency are exercised together with positive, negative, failure, and non-leakage tests. |
+| `OPERATIONAL_PROOF` | Deployment configuration and observed runtime evidence demonstrate the control in the intended environment. |
+| `HOLD` | Required evidence is missing or a governing decision is unresolved. |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="2-the-nine-trust-boundaries"></a>
 
 ## 2. The nine trust boundaries
 
-> **Evidence basis:** `governed-api.md` §6 *(request → response flow)*, §8 *(internal layering, CONFIRMED)*, §7 *(deny-by-default rules)*; `kfm_unified_doctrine_synthesis.md` §11.
+The nine names from v0.1 are retained as a useful **target threat inventory**. They are not nine current runtime crossings.
+
+### Current flow
 
 ```mermaid
 flowchart LR
-  classDef api fill:#1e7f4a,stroke:#1e7f4a,color:#fff
-  classDef ext fill:#444,stroke:#444,color:#fff
-  classDef in fill:#0b3d91,stroke:#0b3d91,color:#fff
+    client["Untrusted client"] --> wsgi["WSGI app"]
+    wsgi --> routes{"Exact route + method checks"}
+    routes -->|registered GET| abstain["ABSTAIN / NOT_IMPLEMENTED"]
+    routes -->|unknown path| error404["404 + safe ERROR"]
+    routes -->|unsupported method| error405["405 + safe ERROR"]
 
-  C["Client"]:::ext
-  IN["1 · Ingress"]:::api
-  POL["2 · Policy"]:::in
-  REL["3 · Release manifest"]:::in
-  EV["4 · Evidence resolver"]:::in
-  ADP["5 · Adapter port"]:::api
-  EXT["6 · External provider"]:::ext
-  CIT["7 · Citation validator"]:::api
-  TEL["8 · Telemetry"]:::api
-  AUD["9 · Audit / receipts"]:::in
-
-  C --> IN --> POL --> REL --> EV --> ADP --> EXT
-  EV --> CIT
-  CIT --> AUD
-  C -. observable .-> TEL --> AUD
+    wsgi -. "NOT CROSSED" .-> policy["Policy"]
+    wsgi -. "NOT CROSSED" .-> release["Release / correction"]
+    wsgi -. "NOT CROSSED" .-> evidence["Evidence resolver"]
+    wsgi -. "NOT CROSSED" .-> adapter["Runtime adapter"]
+    wsgi -. "NOT CROSSED" .-> citation["Citation validator"]
+    wsgi -. "NOT CROSSED" .-> telemetry["Telemetry sink"]
+    wsgi -. "NOT CROSSED" .-> audit["Audit / receipt sink"]
 ```
 
-| # | Boundary | Trust direction | Primary threats |
-|---|---|---|---|
-| **1** | Client ↔ API ingress | Untrusted → governed | Injection, schema spoofing, replay, oversize payload, auth bypass. |
-| **2** | API ↔ Policy | Governed → governed | Policy bypass, stale policy, denial reasoning leak. |
-| **3** | API ↔ Release manifest | Governed → governed | Unreleased layer exposure, stale manifest, rollback skew. |
-| **4** | API ↔ Evidence resolver | Governed → governed | Unresolved reference accepted, internal id leakage. |
-| **5** | API ↔ Runtime adapter | Governed → governed | Adapter bypass at route level, raw evidence passed to adapter. |
-| **6** | Runtime adapter ↔ External provider | Governed → untrusted | Prompt injection, exfiltration via context, credential leak. |
-| **7** | API ↔ Citation validator | Governed → governed | `ANSWER` with unresolved citations, validator skipped. |
-| **8** | API ↔ Telemetry | Governed → semi-trusted | Raw evidence in events, restricted coords in events, secret leak. |
-| **9** | API ↔ Audit / receipts | Governed → trusted | Missing receipts, tamperable receipts, PII in receipts. |
+### Target flow — proposed, not implemented
+
+```mermaid
+flowchart LR
+    client["Client"] --> ingress["1 · Parse and bound request"]
+    ingress --> identity["Authenticated identity + capability context"]
+    identity --> prepolicy["2 · Pre-resolution policy"]
+    prepolicy --> release["3 · Release / correction / rollback"]
+    release --> evidence["4 · Evidence resolution"]
+    evidence --> postpolicy["Policy obligations on resolved projection"]
+    postpolicy --> optional{"Model-mediated request?"}
+    optional -->|no| citation["7 · Citation validation"]
+    optional -->|yes| adapter["5 · Provider-neutral adapter"]
+    adapter --> provider["6 · Admitted provider"]
+    provider --> citation
+    citation --> envelope["Finite response envelope"]
+    envelope --> client
+
+    ingress -. minimized event .-> telemetry["8 · Governed telemetry"]
+    envelope -. audit reference .-> audit["9 · Durable audit / receipts"]
+```
+
+The exact evaluation order, including pre-resolution versus post-resolution policy, is a contract and architecture decision. The ordering above expresses two safety goals: prevent unauthorized reads before resolution and enforce obligations against the actual resolved projection before exposure.
+
+### Boundary register
+
+| # | Boundary | Current state | Highest evidence level | First material threat if activated |
+|---:|---|---|---|---|
+| 1 | Client ↔ API ingress | `SCAFFOLD_GUARD` | Exact route/method and safe error tests | Ambiguous or unbounded input, unauthenticated capability, replay, resource exhaustion. |
+| 2 | API ↔ Policy | `NOT_CROSSED / HOLD` | Documentation and fixture-only policy components elsewhere | Policy bypass, stale bundle, obligation omission, sensitive denial leakage. |
+| 3 | API ↔ Release manifest | `NOT_CROSSED / HOLD` | Release objects and validators may exist elsewhere; no app binding | Unreleased, withdrawn, corrected, or rollback-stale content served. |
+| 4 | API ↔ Evidence resolver | `NOT_CROSSED`; separate `COMPONENT_PROOF` | Internal no-network resolver candidate | Candidate resolution promoted directly to public `ANSWER`; reference or role confusion. |
+| 5 | API ↔ Runtime adapter | `NOT_CROSSED`; narrow static guard and separate selector proof | App import/path checks; mock selector component | Route bypasses adapter boundary, over-shares context, or treats output as authority. |
+| 6 | Runtime adapter ↔ External provider | `NOT_CROSSED / HOLD` | No provider call in inspected app path | Prompt/tool injection, data exfiltration, credential leakage, provider-output authority drift. |
+| 7 | API ↔ Citation validator | `NOT_CROSSED`; separate `COMPONENT_PROOF` | Declaration-only CitationValidationReport validator | `ANSWER` emitted with unresolved, mismatched, stale, or rights-unsafe support. |
+| 8 | API ↔ Telemetry | `NOT_CROSSED / HOLD` | Separate fixture-only telemetry profiles; proposed ADR-0016 | Sensitive content, prompts, secrets, coordinates, or high-cardinality identifiers emitted. |
+| 9 | API ↔ Audit / receipts | `NOT_CROSSED / HOLD` | Authoring receipts and trust-object schemas are separate families | Missing, tamperable, over-collected, or non-replayable request history. |
+
+### Cross-cutting surfaces
+
+The nine request-time boundaries do not replace these additional threat reviews:
+
+- dependency and workflow supply chain;
+- deployment, reverse proxy, network, TLS, CORS, cache, and secret configuration;
+- source and artifact integrity;
+- database/object-store permissions;
+- correction, withdrawal, rollback, and cache invalidation;
+- denial-of-service and capacity;
+- incident detection and response;
+- client rendering, export, screenshot, search, and inference leakage; and
+- branch/ruleset/required-check enforcement.
+
+Those controls live in their owning roots and need their own evidence. This document only records their relationship to the API boundary.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="3-boundary-1--client--api-ingress"></a>
 
 ## 3. Boundary 1 — Client ↔ API ingress
 
-| Aspect | Detail |
-|---|---|
-| Direction | Untrusted client → governed API |
-| Threats | Schema-spoofed request; injection into query / header / path; oversize payload; replay; auth bypass; CORS abuse; rate exhaustion. |
-| Mitigations | Inbound schema validation; strict content-type; size limits; rate limits per audience class *(`AUDIENCE_CLASSES.md`)*; TLS-only; CORS allowlist *(`DEPLOYMENT_RULES.md`)*; auth at edge for non-`public` classes. |
-| Outcome on failure | `ERROR` envelope with stable error code *(`ERROR_CODES.md`)*; never partial leakage. |
-| Required fixtures | `tests/runtime_proof/ingress/schema_spoof_*.json`; `tests/runtime_proof/ingress/oversize_*.json`; `tests/runtime_proof/ingress/auth_bypass_*.json`; `tests/runtime_proof/ingress/cors_violation_*.json`. |
+<a id="boundary-1-current-evidence"></a>
+
+### Current evidence
+
+| Confirmed safeguard | What it proves | What it does not prove |
+|---|---|---|
+| Exact in-process route registry | Requests outside the three registered paths do not reach a route handler. | Reverse-proxy routing, path normalization, host validation, query parsing, mounted prefixes, or deployment parity. |
+| Registered routes accept only `GET` | `POST`, `PUT`, and `DELETE` to the current paths return HTTP 405. | Complete method coverage, `HEAD`/`OPTIONS` semantics, CSRF posture, mutation-route safety, or intermediary behavior. |
+| Unknown route returns finite error | HTTP 404 uses the generic schema-backed `ERROR / SAFE_RUNTIME_ERROR` body. | Stable public error taxonomy, request correlation, localization, cache headers, or operational observability. |
+| No raw `detail` field in focused negative tests | The current 404/405 bodies avoid one framework-style diagnostic field. | Absence of every sensitive header, stack trace, server banner, proxy error, or deployment diagnostic. |
+| JSON serialization sets content type and length | Current response bytes are encoded consistently by the local app. | Request content-type validation, body limits, compression, streaming, character-set negotiation, or response security headers. |
+| `serve()` defaults to `127.0.0.1:8000` | The source default is loopback. | Actual bind address, container/network exposure, proxy, TLS, firewall, or public deployment. |
+
+<a id="boundary-1-held-controls"></a>
+
+### Threats and held controls
+
+| Threat | Required control before exposure | Current status |
+|---|---|---|
+| Ambiguous path, method, header, query, or body parsing | Accepted request contract, canonicalization rules, strict parser behavior, duplicate-key handling, content-type and encoding rules | `HOLD` |
+| Oversized or expensive requests | Bounded headers/body/query/collections, timeouts, concurrency and work budgets, back-pressure, 413/429 semantics | `HOLD` |
+| Authentication or subject confusion | Accepted identity context, credential verification, issuer/audience binding, freshness/revocation, workload identity | `HOLD` |
+| Authorization bypass | Capability-specific authorization tied to object, purpose, interface, audience, time, and obligations | `HOLD` |
+| Replay or duplicate side effects | Request identity, idempotency contract for mutations, replay window, nonce or equivalent where justified | `HOLD`; current routes are read-only stubs |
+| CORS, CSRF, host, proxy, or TLS misconfiguration | Environment-specific ingress configuration and negative tests at the actual proxy/deployment boundary | `HOLD` |
+| Error-based disclosure or enumeration | Stable public-safe reasons, constant-detail denial posture where material, no internal identifiers, bounded timing analysis | `PARTIAL` for raw `detail`; broader proof held |
+| Cache confusion | Explicit cache policy by outcome, audience, release, correction, and authorization context | `HOLD` |
+
+### Required proof
+
+Before calling ingress enforced, prove at least:
+
+1. exact request parsing and schema behavior for path, query, headers, and any body;
+2. duplicate, malformed, oversized, unsupported-media, and resource-budget negatives;
+3. authentication failure, expiry, revocation, subject mismatch, and capability denial;
+4. proxy/TLS/CORS/host behavior in the intended environment;
+5. safe 4xx/5xx envelopes with no sensitive reflection;
+6. request identity and cache separation; and
+7. tests that fail when a route bypasses the common ingress chain.
+
+**Failure posture:** preserve HTTP semantics and return a finite public-safe negative outcome. Do not map every client fault to generic `ERROR` indefinitely; the accepted HTTP-to-outcome and reason-code contract remains unresolved.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="4-boundary-2--api--policy"></a>
 
 ## 4. Boundary 2 — API ↔ Policy
 
-| Aspect | Detail |
+### Current evidence
+
+- The current route path does not import or call a policy evaluator.
+- `policy_state` in the scaffold envelope is a fixed reporting string, not an authenticated `PolicyDecision`.
+- [`policy/access/README.md`](../../../policy/access/README.md) describes a repository-grounded, README-only access lane with no active authentication provider, access bundle, general evaluator, obligation interpreter, audit sink, revocation service, or production consumer.
+- Separate contracts, schemas, vocabularies, validators, and fixture-only assessments prove bounded declaration consistency; they do not authorize a request.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → governed *(API → `policy/`)* |
-| Threats | Route handler emits `ANSWER` before policy evaluation; stale policy bundle; denial reason leaks evidence or identifiers. |
-| Mitigations | Policy evaluator invoked before resolution *(`governed-api.md` §6 guarantee)*; policy bundle pinned to release; reason codes only *(`ERROR_CODES.md`)*, never free text from policy internals. |
-| Outcome on failure | `DENY` envelope with stable reason code; alternative surface may be suggested if the policy provides one. |
-| Required fixtures | `tests/runtime_proof/policy/precedes_resolution_*.json`; `tests/runtime_proof/policy/sensitive_lane_denied_*.json`; `tests/runtime_proof/policy/reason_code_only_*.json`. |
+| Route emits substantive output before policy evaluation | Protected or unreleased fields escape before a denial can act. |
+| Client supplies or overrides policy state | Untrusted input becomes apparent authorization. |
+| Stale, unpinned, or wrong-scope bundle | A request is decided under rules that do not match the release, audience, domain, or time. |
+| Obligation is returned but not enforced | A nominal `ALLOW` bypasses required redaction, generalization, field suppression, delay, or audit. |
+| Denial reason exposes protected facts | The refusal itself confirms a sensitive object's existence, location, identity, or status. |
+| Authentication, role, audience, review, and release are collapsed | One label becomes an unintended universal grant. |
+| Fail-open evaluator outage | Dependency failure widens access. |
+| Cached decision survives revocation or correction | A previously valid decision authorizes stale exposure. |
+
+### Target control contract — proposed
+
+A composed policy boundary needs:
+
+- verified caller/workload identity context separate from role and audience;
+- one capability, governed object, purpose, interface, scope, and effective time;
+- evidence, rights, sensitivity, review, release, freshness, correction, and withdrawal context appropriate to the operation;
+- a pinned policy bundle or equivalent deterministic decision identity;
+- finite decision, stable public-safe reason, and enforceable obligations;
+- pre-resolution protection against unauthorized reads and post-resolution checks against the actual projection;
+- obligation enforcement before serialization;
+- revocation and cache-invalidation semantics; and
+- audit-safe decision references without raw protected input.
+
+### Required proof
+
+| Proof family | Minimum negative cases |
+|---|---|
+| Ordering | Handler cannot emit substantive bytes before the required policy stages. |
+| Missing/stale policy | Missing bundle, unknown version, failed evaluator, stale context, and unsupported family fail closed. |
+| Identity/capability | Unauthenticated, expired, revoked, wrong subject, wrong capability, wrong object, wrong purpose, and wrong interface do not proceed. |
+| Obligations | Redact/generalize/suppress/delay obligations are applied and verified, not merely returned. |
+| Non-leakage | Denial body, timing, count, cache, and audit record do not reveal protected facts. |
+| Replay | Same inputs and pinned policy produce reproducible decision identity; changed policy does not reuse stale cache. |
+
+**Current finite posture:** all registered routes remain `ABSTAIN / NOT_IMPLEMENTED`; no app route emits `DENY` from policy. The schema's ability to represent `DENY` is shape capacity, not policy enforcement.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="5-boundary-3--api--release-manifest"></a>
 
 ## 5. Boundary 3 — API ↔ Release manifest
 
-| Aspect | Detail |
+### Current evidence
+
+The current app does not import or resolve a `ReleaseManifest`, `PromotionDecision`, correction notice, withdrawal record, rollback card, or published carrier. `/layers` is an `ABSTAIN / NOT_IMPLEMENTED` stub. The current machine envelope has no required `release_ref` field. The repository-grounded [`ENVELOPES.md`](ENVELOPES.md) reconciliation confirms that the current closed profile has no `release_ref`, nested `DecisionEnvelope`, citation-validation member, payload, reason object, or trace member.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → governed *(API → `release/`)* |
-| Threats | Unreleased layer served; manifest stale during rollback; manifest skewed between resolver and renderer. |
-| Mitigations | `ReleaseManifest` resolved before evidence; manifest hash in `trace.spec_hash`; rollback target preloaded; LIFECYCLE_GATES rules enforced *(`LIFECYCLE_GATES.md`)*. |
-| Outcome on failure | `ABSTAIN` if manifest missing; `DENY` if state is `WORK` / `QUARANTINE`. |
-| Required fixtures | `tests/runtime_proof/release/unreleased_layer_*.json`; `tests/runtime_proof/release/stale_manifest_*.json`; `tests/runtime_proof/release/rollback_skew_*.json`. |
+| Unreleased or candidate artifact served | `WORK`, `QUARANTINE`, or review-only material crosses the public membrane. |
+| Manifest points to different bytes than served | Integrity and provenance claims no longer match the response. |
+| Rollback, withdrawal, or correction races with caches | A superseded or unsafe artifact remains reachable after state changes. |
+| Release and policy use different subject identity | Approval for one artifact/version is applied to another. |
+| Stale current pointer | Client receives a no-longer-current release without visible stale/correction state. |
+| Partial release composition | Metadata, tile, evidence, and citation projections refer to different releases. |
+| Manifest absence treated as legacy allow | Missing governance becomes implicit publication. |
+
+### Target control contract — proposed
+
+Before an `ANSWER` or released carrier projection:
+
+1. resolve one immutable release identity;
+2. verify subject, version, artifact digest, manifest integrity, review and promotion state;
+3. verify correction, supersession, withdrawal, and rollback posture as of the request;
+4. bind policy and evidence checks to the same subject;
+5. apply audience-specific public-safe transforms and verify their receipts;
+6. set cache identity and invalidation from release/correction state; and
+7. expose only public-safe release metadata appropriate to the caller.
+
+### Required proof
+
+- missing, malformed, unapproved, stale, corrected, withdrawn, superseded, and digest-mismatched manifests;
+- rollback race and cache invalidation;
+- mixed-release composition denial;
+- subject/version mismatch among manifest, evidence, policy, and served bytes;
+- no direct fallback to filesystem, object store, candidate catalog, or “latest” pointer; and
+- replay from immutable release and correction records.
+
+**Failure posture:** missing or unresolved release support should prevent substantive output. Whether a specific condition maps to `ABSTAIN`, `DENY`, or `ERROR` must be defined by accepted semantics rather than improvised per route.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="6-boundary-4--api--evidence-resolver"></a>
 
 ## 6. Boundary 4 — API ↔ Evidence resolver
 
-| Aspect | Detail |
+### Current evidence
+
+- `/evidence` does not resolve evidence; it returns the same stub `ABSTAIN`.
+- The current RuntimeResponseEnvelope schema can carry `evidence_refs`, and an `ANSWER` must carry at least one, but no app route produces `ANSWER`.
+- [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) implements a standard-library, no-network, non-authoritative candidate profile. It evaluates caller-supplied objects and returns internal `RESOLVED`, `UNRESOLVED`, `DENIED`, or `ERROR` candidate states with `authoritative: false`.
+- `RESOLVED` means only “continue governed checks.” It is not a public answer, evidence truth, policy approval, or release readiness.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → governed |
-| Threats | Unresolved `EvidenceRef` slips through as `ANSWER`; internal index ids leak in response or error; resolver returns mixed-role bundle without flagging. |
-| Mitigations | Resolver returns either resolved bundle or `unresolved` marker; envelope assembler refuses `ANSWER` if marker present; internal ids never appear outside `kfm://evidence/<bundle_id>` URI scheme. |
-| Outcome on failure | `ABSTAIN` envelope with citation report referenced. |
-| Required fixtures | `tests/runtime_proof/evidence/unresolved_ref_*.json`; `tests/runtime_proof/evidence/internal_id_leak_*.json`; `tests/runtime_proof/evidence/mixed_role_bundle_*.json`. |
+| Caller-supplied candidate treated as canonical lookup | Untrusted data self-attests its evidence closure. |
+| Reference resolves to wrong subject, time, geography, or source role | A real bundle supports the wrong claim. |
+| Mixed-role or synthetic support loses its role | Interpretation or model output masquerades as observation. |
+| Internal identifiers or store paths leak | Clients can enumerate or bypass the governed resolver. |
+| Recursive, cyclic, oversized, or fan-out references | Resolver becomes a denial-of-service or data-exfiltration surface. |
+| Rights/sensitivity filtered after disclosure | Protected evidence is fetched or serialized before obligations act. |
+| Stale, corrected, withdrawn, or revoked evidence passes | Public output cites invalid support. |
+| Partial resolution becomes `ANSWER` | Cite-or-abstain is violated. |
+
+### Target control contract — proposed
+
+The API integration must distinguish:
+
+```text
+candidate profile passed
+        ≠
+authoritative lookup completed
+        ≠
+claim-scope closure
+        ≠
+policy-safe projection
+        ≠
+released, citation-valid ANSWER
+```
+
+A sound resolver boundary requires an authoritative registry or lookup snapshot, deterministic subject binding, bounded recursion/fan-out, source-role preservation, temporal and correction state, rights/sensitivity-aware projection, no internal locator leakage, and a stable handoff that can only continue to later gates.
+
+### Required proof
+
+- missing, malformed, unknown, duplicate, cyclic, excessive-fan-out, stale, superseded, corrected, withdrawn, and revoked refs;
+- subject, claim-scope, time, geography, source-role, digest, and lookup-snapshot mismatch;
+- internal path/id/URL non-leakage in response, error, telemetry, and audit;
+- denied evidence never fetched or serialized beyond what policy permits;
+- resolver outage fails closed;
+- candidate `RESOLVED` cannot directly select `ANSWER`; and
+- no network or model call in fixture-only proof unless a separately admitted integration test explicitly owns it.
+
+**Current state:** `NOT_CROSSED` in the API and `COMPONENT_PROOF` in the separate package. Integration remains `HOLD`.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="7-boundary-5--api--runtime-adapter"></a>
 
 ## 7. Boundary 5 — API ↔ Runtime adapter
 
-| Aspect | Detail |
+### Current evidence
+
+- The app does not call a runtime adapter.
+- The app-local boundary test rejects source lines beginning with a narrow list of direct `maplibre`, `cesium`, and `ollama` imports and rejects configured internal-store path literals.
+- [`runtime/model_adapters/`](../../../runtime/model_adapters/README.md) is the documented provider-neutral lane. A bounded `MockAdapter.py` selector and finite-envelope tests exist, but semantic request handling, evidence resolution, policy, citation, provider admission, receipt persistence, client integration, and deployment remain unproved.
+- A static string-prefix scan is a useful regression guard; it is not a complete import graph, egress, capability, or process-isolation control.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → governed *(API → `runtime/`)* |
-| Threats | Route imports provider SDK directly; raw bundle / raw evidence passed to adapter; adapter sees more context than the call requires. |
-| Mitigations | Provider SDKs imported only in `runtime/`; adapter port API accepts `EvidenceRef` / resolved fields only — never raw store handles; least-context principle enforced by adapter contract. |
-| Outcome on failure | Build-time: code review and import-graph check fails. Runtime: adapter rejects oversized context; `ERROR` envelope. |
-| Required fixtures | `tests/runtime_proof/adapter/route_imports_sdk_*.spec` *(static)*; `tests/runtime_proof/adapter/oversized_context_*.json`; `tests/runtime_proof/adapter/raw_bundle_passed_*.json`. |
+| Route imports or calls provider-specific SDK directly | Governed orchestration and provider admission are bypassed. |
+| Adapter receives raw stores, credentials, unrestricted bundles, or unnecessary context | Least-context and data-minimization boundaries collapse. |
+| Adapter can mutate canonical or release state | Interpretive runtime gains truth or publication authority. |
+| Adapter outcome is accepted without policy/citation checks | Generated output becomes authoritative by placement. |
+| Timeout, cancellation, or retry is unbounded | Resource exhaustion, duplicate effects, or inconsistent receipts. |
+| Adapter errors expose internals | Provider names, prompts, paths, stack traces, or secrets leak. |
+| Multiple adapter lanes diverge | Compatibility path becomes a second authority. |
+
+### Target control contract — proposed
+
+- one accepted provider-neutral request/response contract;
+- one canonical adapter registry and provider/model admission record;
+- minimum necessary, already-authorized context;
+- no direct canonical-store handles or release mutation capability;
+- explicit timeout, cancellation, retry, concurrency, and output limits;
+- deterministic mock-first proof;
+- stable mapping from adapter-local result to later governed checks;
+- safe error normalization;
+- AI/runtime receipt reference where applicable; and
+- static plus runtime enforcement of allowed imports, egress, tools, files, and secrets.
+
+### Required proof
+
+1. route cannot instantiate or import a provider client outside the admitted adapter boundary;
+2. only allowlisted fields and references cross the port;
+3. raw evidence/store handles, secrets, protected coordinates, prompts, and hidden internal context are rejected;
+4. adapter cannot write canonical, policy, review, or release state;
+5. timeout, cancellation, retry, and oversized output remain bounded;
+6. mock selector behavior does not substitute for semantic orchestration;
+7. adapter failure maps to a finite safe result without bypass; and
+8. correction/withdrawal invalidates any derived cached output.
+
+**Current state:** API crossing `NOT_CROSSED`; static guard `SCAFFOLD_GUARD`; mock selector `COMPONENT_PROOF`; composed adapter path `HOLD`.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="8-boundary-6--runtime-adapter--external-provider"></a>
 
 ## 8. Boundary 6 — Runtime adapter ↔ External provider
 
-| Aspect | Detail |
+### Current evidence
+
+No external model/provider call is made by the inspected Governed API path. Provider/model approval, credential custody, egress policy, tool permissions, runtime network controls, response sanitizer, operational receipt emission, and deployed provider behavior remain `UNKNOWN` or `NEEDS VERIFICATION`.
+
+### Threats
+
+- adversarial instructions or content embedded in evidence, metadata, retrieved text, provider output, tool results, or prior messages;
+- context, prompt, evidence, identity, or protected-location exfiltration;
+- credentials or private endpoints exposed in configuration, logs, exceptions, telemetry, or receipts;
+- server-side request forgery or unbounded URL/tool access;
+- provider/model substitution, version drift, or unreviewed fallback;
+- training, retention, or secondary use inconsistent with rights and policy;
+- generated output cited as source evidence;
+- non-deterministic or unavailable provider behavior becoming an availability dependency;
+- tool invocation mutating files, networks, policy, release, or public state; and
+- cross-tenant or session context contamination.
+
+### Target control contract — proposed
+
+| Control family | Required posture |
 |---|---|
-| Direction | Governed adapter → untrusted external provider |
-| Threats | Prompt injection in provider response; exfiltration via context window; credential leak via misconfigured client; provider returns content cited as evidence by client. |
-| Mitigations | Provider output passes through adapter sanitizer; `AIReceipt` records adapter, model id, hashes; provider response is NOT evidence — `EvidenceBundle` is; secrets sourced from secret store at request time, never logged. |
-| Outcome on failure | `ABSTAIN` envelope; `AIReceipt` records refusal reason. |
-| Required fixtures | `tests/runtime_proof/provider/prompt_injection_*.json`; `tests/runtime_proof/provider/cite_provider_output_*.json`; `tests/runtime_proof/provider/secret_in_log_*.json`. |
+| Admission | Provider, model, version, endpoint class, terms, data-use posture, capability, and fallback policy explicitly reviewed. |
+| Egress | Deny by default; destination, DNS/proxy path, request fields, size, timeout, and tools allowlisted. |
+| Secrets | Inject at runtime from approved custody; never in repo, prompt, client response, telemetry, or receipt payload. |
+| Context | Minimum necessary released/evidence-safe projection; protected content remains redacted/generalized or withheld. |
+| Prompt/tool safety | Treat all external and source-derived content as untrusted data; tools are capability-scoped and non-publishing. |
+| Output | Provider output remains interpretive; validate structure, policy, citations, precision, and prohibited content after return. |
+| Accountability | Record provider/model identity and safe hashes/references without retaining sensitive prompts or hidden reasoning. |
+| Failure | No fallback that weakens policy, evidence, provider admission, or citation closure. |
+
+### Required proof
+
+Use synthetic, non-sensitive fixtures to prove prompt/tool injection refusal, URL/egress denial, secret non-disclosure, context minimization, provider/model pinning, timeout/cancellation, output-bound enforcement, no generated-evidence substitution, no tool mutation beyond capability, safe logs/receipts, and deterministic finite failure mapping. Operational proof must additionally inspect real network policy, secret injection, provider configuration, retention terms, and runtime observations without publishing sensitive details.
+
+**Current state:** `NOT_CROSSED`. The absence of a provider call is the current safety property; provider-bound mitigation remains `HOLD`.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="9-boundary-7--api--citation-validator"></a>
 
 ## 9. Boundary 7 — API ↔ Citation validator
 
-| Aspect | Detail |
+### Current evidence
+
+- The current API does not call a citation validator or emit a CitationValidationReport reference.
+- No app route emits `ANSWER`, so the current path cannot demonstrate citation closure.
+- [`tools/validators/citation/`](../../../tools/validators/citation/README.md) contains a bounded, no-network CitationValidationReport declaration validator with synthetic fixtures and focused tests.
+- That validator checks shape, declared consistency, finite precedence, identity replay, and authority effects. It explicitly does **not** contact sources, resolve evidence, authenticate bundles, evaluate rights/policy, verify release, or make a public answer safe.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → governed |
-| Threats | Validator skipped under load; validator returns "ok" on partial resolution; cited refs differ from resolved bundle. |
-| Mitigations | Citation validator is **last gate before envelope assembly** *(`governed-api.md` §6 third guarantee)*; non-resolution forces `ABSTAIN`; validator emits `CitationValidationReport` referenced by envelope. |
-| Outcome on failure | `ABSTAIN` envelope with report reference; alert if validator unavailable. |
-| Required fixtures | `tests/runtime_proof/citation/skipped_validator_*.json`; `tests/runtime_proof/citation/partial_resolution_*.json`; `tests/runtime_proof/citation/cited_vs_resolved_mismatch_*.json`. |
+| Validator omitted, skipped, or bypassed under load | Uncited output becomes substantive `ANSWER`. |
+| Declaration-only PASS treated as authenticated truth | Caller-supplied states self-authorize. |
+| Cited refs differ from resolved support or output claim | Citation is present but irrelevant or bound to another subject. |
+| Partial, stale, rights-unclear, restricted, corrected, or withdrawn citation passes | Public answer looks supported while violating evidence or policy. |
+| Citation text or locator leaks protected detail | The citation channel bypasses redaction/generalization. |
+| Validator outage fails open | Availability pressure weakens cite-or-abstain. |
+| Generated provider output becomes a citation | Model language displaces EvidenceBundle authority. |
+
+### Target control contract — proposed
+
+A public `ANSWER` needs a composed validation step over the exact response claims and exact resolved/released support, after transforms and before serialization. The report must bind subject, evidence refs, bundle state, source role, time, geography, rights, sensitivity, policy, review, release, correction, precision, and output citations without copying restricted content into public diagnostics.
+
+### Required proof
+
+- validator missing, unavailable, timed out, or returns malformed report;
+- zero, partial, duplicate, irrelevant, mismatched, stale, corrected, withdrawn, restricted, rights-unclear, unreviewed, or unreleased support;
+- response claim or precision exceeds cited evidence;
+- citation locator reveals internal path, restricted coordinate, or hidden evidence;
+- declaration-only component PASS cannot substitute for authoritative resolution;
+- provider output cannot become root citation; and
+- no bypass on overload.
+
+**Failure posture:** cite or abstain. Operational faults may be `ERROR`; evidence insufficiency normally remains `ABSTAIN`; policy-prohibited disclosure remains `DENY`. Exact reason semantics require accepted vocabulary.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="10-boundary-8--api--telemetry"></a>
 
 ## 10. Boundary 8 — API ↔ Telemetry
 
-| Aspect | Detail |
-|---|---|
-| Direction | Governed → semi-trusted *(telemetry sink)* |
-| Threats | Raw evidence / prompts / secrets in events; restricted coordinates in events *(geoprivacy violation)*; PII in events; high-cardinality identifiers used as labels. |
-| Mitigations | Telemetry schema validation at boundary; redaction at boundary, not at sink; allowlist of event types; bounded label cardinality. |
-| Outcome on failure | Event dropped at boundary; `ERROR` for `POST /telemetry` if event violates schema. |
-| Required fixtures | `tests/runtime_proof/telemetry/raw_evidence_event_*.json`; `tests/runtime_proof/telemetry/restricted_coord_*.json`; `tests/runtime_proof/telemetry/secret_in_label_*.json`. |
+### Current evidence
+
+The inspected API has no telemetry route, event emitter, event schema binding, redactor, sink client, receipt writer, retention configuration, or dashboard integration. The v0.1 claim about `POST /telemetry` is unsupported by the current route registry.
+
+ADR-0016 remains proposed. Separate telemetry contracts, schemas, fixture-only profiles, validators, policy-shaped files, and workflows exist, but repository evidence described there keeps the general emitter, redactor, sink, receipt, retention, and incident integration held or unknown.
+
+### Threats
+
+- raw evidence, prompts, query strings, response payloads, identities, tokens, secrets, internal paths, or protected coordinates emitted;
+- denial reason or metric confirms existence of a restricted object;
+- high-cardinality labels enable reconstruction or create cost/availability risk;
+- third-party SDK adds fields or destinations outside the approved profile;
+- telemetry emitted before redaction or policy;
+- event and request IDs permit cross-surface re-identification;
+- retention, export, dashboard, alert, or support tooling widens audience;
+- debug mode becomes a permanent bypass;
+- sink outage blocks safety-critical API decisions or silently drops required audit; and
+- telemetry is misrepresented as evidence, proof, or publication.
+
+### Target control contract — proposed
+
+Telemetry is a governed egress. Define one admitted event profile per purpose, with source-side minimization, field classification, stable low-cardinality vocabulary, no raw protected values, policy-bound redaction or suppression, explicit destination and retention, access controls, safe correlation, SDK/version pinning, failure semantics, and incident/correction handling.
+
+Operational metrics and durable audit are separate responsibilities. Do not put request reconstruction duties into lossy metrics, and do not turn a durable audit record into a high-volume analytics stream.
+
+### Required proof
+
+- field allowlist and unknown-field denial;
+- raw evidence, prompt, token, secret, private endpoint, internal path, protected coordinate, identity, and sensitive reason suppression;
+- low-cardinality label enforcement and bounded event size/rate;
+- source-side redaction before transport;
+- destination, transport, SDK, access, retention, and deletion controls in the target environment;
+- sink outage and back-pressure behavior;
+- no telemetry effect on evidence, policy, review, release, or publication; and
+- correction/incident flow for an emitted unsafe event.
+
+**Current state:** API crossing `NOT_CROSSED`; separate profiles `COMPONENT_PROOF`; general telemetry boundary and deployment `HOLD`.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="11-boundary-9--api--audit--receipts-store"></a>
 
 ## 11. Boundary 9 — API ↔ Audit / Receipts store
 
-| Aspect | Detail |
+### Current evidence
+
+- The current app does not create a request ID, transaction record, PolicyDecision, AIReceipt, CitationValidationReport reference, runtime receipt, or persistent audit event.
+- `data/receipts/generated/` contains authoring provenance for repository artifacts. Those generated receipts are not request-time API audit records.
+- The API workflow emits GitHub logs and step summaries only; it explicitly creates no receipt, proof, release record, deployment, or published artifact.
+- The v0.1 claim that the envelope assembler writes all required receipts before responding is not implemented by the inspected app.
+
+### Threats
+
+| Threat | Consequence |
 |---|---|
-| Direction | Governed → trusted *(`data/receipts/`)* |
-| Threats | Receipts not emitted; receipts incomplete *(missing `PolicyDecision`, `AIReceipt`, `CitationValidationReport`)*; receipts tamperable; receipts contain PII. |
-| Mitigations | Envelope assembler emits all required receipts before response sent; receipts append-only and content-addressed; receipt schemas validate at write; PII redaction at write. |
-| Outcome on failure | `ERROR` envelope at request *(API should not respond without emitting required receipts)*; operations alert on partial receipt write. |
-| Required fixtures | `tests/runtime_proof/audit/missing_policy_receipt_*.json`; `tests/runtime_proof/audit/missing_ai_receipt_*.json`; `tests/runtime_proof/audit/pii_in_receipt_*.json`. |
+| Consequential request has no durable reference | Reviewers cannot reconstruct decision, subject, release, evidence, or correction state. |
+| Receipt/audit record is mutable, partial, or detached | A later actor can change or deny the decision history. |
+| Raw payload, PII, prompt, token, protected coordinate, or internal path is retained | Accountability store becomes a disclosure source. |
+| Request and receipt use different subject/spec identity | Audit appears complete but refers to another operation. |
+| Partial multi-record write | Policy, citation, adapter, and response records disagree. |
+| Audit sink outage either fails open or causes unsafe global outage | Failure semantics become a hidden availability/security tradeoff. |
+| Generated authoring receipt is treated as runtime approval | Process provenance becomes evidence, policy, review, or release authority. |
+| Retention and access are undefined | Sensitive operational history persists too long or reaches the wrong audience. |
+
+### Target control contract — proposed
+
+A request accountability design needs:
+
+- one accepted audit-event and request-correlation identity;
+- minimal references to caller context, capability, governed subject, policy decision, release/correction state, evidence/citation report, adapter receipt, response outcome, and timing as applicable;
+- content-addressing or append-only integrity appropriate to significance;
+- atomicity, durable outbox, or another explicit partial-write strategy;
+- no raw protected payloads or private reasoning;
+- field-level access, retention, legal/privacy posture, correction and incident handling;
+- replay and cross-record subject verification; and
+- a documented distinction among logs, metrics, traces, runtime receipts, generated authoring receipts, proof packs, review records, and release records.
+
+### Required proof
+
+- missing required reference, mismatched subject/spec/release, duplicate event, partial write, tamper, replay, sink outage, and retention-expiry cases;
+- no raw payload, evidence, prompt, credential, protected coordinate, internal path, or sensitive denial reason;
+- authorized retrieval and denied retrieval;
+- correlation without public enumeration;
+- correction and incident linkage without rewriting prior history; and
+- response failure semantics tested under audit unavailability.
+
+The prior rule “never respond without every receipt” is not adopted here. Some operations may require fail-closed durable accountability; others may safely use an outbox or bounded degraded mode. That significance-based decision must be explicit, tested, and reviewed rather than assumed in architecture prose.
+
+**Current state:** `NOT_CROSSED / HOLD`.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="12-fixture-coverage-matrix"></a>
 
 ## 12. Fixture coverage matrix
 
-> **Evidence basis:** `governed-api.md` §10 *(validators, observability, proof, CONFIRMED)*; `directory-rules.md` §6.6 *(test homes, PROPOSED layout)*.
+The previous checkmark matrix implied complete fixtures under `tests/runtime_proof/<boundary>/`. The confirmed [`tests/runtime_proof/`](../../../tests/runtime_proof/README.md) root currently contains shared finite-envelope and deterministic mock-selector suites plus domain routing surfaces; the nine boundary-specific directories and wildcard fixture families named in v0.1 are not established by the inspected root inventory.
 
-| Boundary | `ANSWER` fixture | `ABSTAIN` fixture | `DENY` fixture | `ERROR` fixture |
-|---|---|---|---|---|
-| 1 · Ingress | ✓ | — | — | ✓ |
-| 2 · Policy | ✓ | — | ✓ | — |
-| 3 · Release | ✓ | ✓ | ✓ | — |
-| 4 · Evidence | ✓ | ✓ | — | — |
-| 5 · Adapter | ✓ | — | — | ✓ |
-| 6 · Provider | ✓ | ✓ | — | ✓ |
-| 7 · Citation | ✓ | ✓ | — | — |
-| 8 · Telemetry | ✓ | — | — | ✓ |
-| 9 · Audit | ✓ | — | — | ✓ |
+### Current executable proof
 
-> [!IMPORTANT]
-> **Coverage means every cell has a fixture, not just the happy path.** A boundary without `ABSTAIN`/`DENY`/`ERROR` fixtures *(where applicable)* is not verified.
+| Proof surface | Positive or bounded case | Negative case | Scope limit |
+|---|---|---|---|
+| App route manifest | Exact three-route set | Unexpected route set fails test | Source-level registry only |
+| Registered GET stubs | `ABSTAIN / NOT_IMPLEMENTED` and required fields | Shape/key drift fails test | No substantive route or dependency |
+| Unknown path | HTTP 404 + generic finite `ERROR` | Raw `detail` forbidden | No proxy/deployment proof |
+| Unsupported method | HTTP 405 + generic finite `ERROR` | POST/PUT/DELETE on registered paths | Does not cover every HTTP method/intermediary |
+| Forbidden imports | Current app source lacks listed MapLibre/Cesium/Ollama import prefixes | Matching source line fails test | Narrow static string check, not complete dependency/egress proof |
+| Internal-store literals | Configured forbidden path markers absent from app source | Matching literal fails test | Static source scan only |
+| RuntimeResponseEnvelope fixtures | Four finite shape outcomes in shared runtime proof | Unknown/malformed shape cases | Schema/profile proof, not request composition |
+| MockAdapter selector | Deterministic isolated selection over synthetic envelopes | Missing/malformed configuration and no-I/O checks | Selector proof, not semantic runtime |
+| Evidence resolver candidate | Bounded no-network candidate evaluation | Negative fixtures remain non-`RESOLVED` | Internal non-authoritative component |
+| Citation report validator | Declaration-consistent synthetic report | Missing/stale/denied/error and identity negatives | No source/evidence authentication |
+| Telemetry profiles | Selected fixture-only profile checks | Selected prohibited-field cases | No general emitter, sink, or deployment |
+
+### Boundary closure matrix
+
+| Boundary | Current app crossing | Component proof elsewhere | Composed proof | Operational proof | Required before first relevant exposure |
+|---:|---|---|---|---|---|
+| 1 · Ingress | `SCAFFOLD_GUARD` | Some related schema/policy profiles | No | No | Request contract, identity/capability, limits, proxy/deployment negatives |
+| 2 · Policy | No | Partial declaration profiles | No | No | Active evaluator, pinned policy, obligations, denial non-leakage |
+| 3 · Release | No | Release object/validator surfaces not composed here | No | No | Immutable manifest and correction/rollback binding |
+| 4 · Evidence | No | Candidate resolver | No | No | Authoritative lookup and claim-scope closure |
+| 5 · Adapter | No | Mock selector; static app guards | No | No | Accepted port, context minimization, timeout/egress/tool controls |
+| 6 · Provider | No | No provider-bound proof claimed here | No | No | Provider/model admission, egress, secrets, prompt/tool safety |
+| 7 · Citation | No | Declaration validator | No | No | Exact-response citation closure over resolved/released evidence |
+| 8 · Telemetry | No | Fixture-only profiles | No | No | Admitted emitter/redactor/sink/retention and incident controls |
+| 9 · Audit | No | Separate receipt schemas/authoring receipts | No | No | Request audit contract, integrity, minimization, sink/failure semantics |
+
+<a id="graduation-holds"></a>
+
+### Graduation holds
+
+| Proposed capability | Blocking boundaries and evidence |
+|---|---|
+| First substantive non-sensitive `ANSWER` | Request schema, policy, release/correction, authoritative evidence, citation, exact envelope composition, negative non-leakage |
+| Sensitive or role-gated response | All above plus verified identity/capability, obligations, precision/generalization, anti-inference, independent review |
+| Model-mediated response | All `ANSWER` gates plus adapter and provider admission, egress/tool/secret controls, AIReceipt behavior, post-model policy/citation checks |
+| Public deployment | Ingress/proxy/TLS/CORS/host/cache/resource controls, operational telemetry and audit decisions, incident/runbook evidence, current vulnerability/dependency review |
+| Mutation route | Accepted command contract, CSRF/replay/idempotency, stronger authorization, durable audit, separation of duties, correction/rollback |
+| Boundary called “enforced” | At least `COMPOSED_PROOF`; operational claims additionally require `OPERATIONAL_PROOF` |
+
+### Test-placement rule
+
+- App-local request and serializer behavior belongs with the app's confirmed test lane under `apps/governed-api/tests/`.
+- Shared cross-application runtime proof may use the confirmed `tests/runtime_proof/` root.
+- Domain-specific runtime-proof placement is currently conflicted according to that root README; do not add a new domain child until the placement decision closes.
+- Fixtures belong in the accepted fixture responsibility root and must be synthetic, bounded, non-sensitive, deterministic, and no-network unless an explicit integration profile says otherwise.
+- A test path, fixture name, green workflow, or checkmark does not prove the control beyond what the test actually executes.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="13-anti-patterns"></a>
 
 ## 13. Anti-patterns
 
-| Anti-pattern | Mitigation |
-|---|---|
-| **Boundary check moved into the adapter layer** *(e.g., adapter calls policy)* | Policy evaluated by the policy evaluator before resolution; adapter receives already-permitted requests. |
-| **Boundary skipped under high load** *(e.g., citation validator bypassed when slow)* | No bypass: degraded → `ABSTAIN`, not bypass → `ANSWER`. |
-| **Fixture covers happy path only** | Negative-state fixtures required per matrix; reviewers check absences. |
-| **Threat-model exception** *(e.g., "we allow raw evidence in telemetry for debug")* | No exception: `DRIFT_REGISTER.md` entry + ADR; not a one-off bypass. |
-| **External provider response cited as evidence** | Provider response goes into `AIReceipt`; `EvidenceBundle` is unchanged. |
+| Anti-pattern | Why it is unsafe | Required correction |
+|---|---|---|
+| **Architecture prose treated as middleware** | A documented gate may never execute. | Trace route code and tests to the actual common chain. |
+| **`policy_state: baseline` treated as a PolicyDecision** | Static reporting text self-authorizes. | Bind an authenticated, replayable policy decision and enforce obligations. |
+| **`ABSTAIN` stub treated as evidence or release checking** | The route does not resolve anything. | Keep maturity bounded until composed tests exist. |
+| **Schema enum treated as implemented outcome** | `DENY` or `ANSWER` may be representable but never emitted correctly. | Prove route behavior and semantics, not only shape. |
+| **Loopback source default treated as secure deployment** | Runtime configuration can expose a different bind/proxy path. | Inspect deployed ingress, network, TLS, and config evidence. |
+| **CORS or TLS declared in docs** | Browser and transport controls are environment-specific. | Verify actual proxy/service configuration and negative tests. |
+| **No provider import treated as provider isolation** | Dynamic imports, HTTP clients, subprocesses, tools, or egress can bypass a prefix scan. | Combine static dependency policy with runtime egress/tool controls. |
+| **Component PASS promoted to composed trust** | Resolver, citation, telemetry, or mock tests do not prove API integration. | Require cross-component subject binding and negative flow tests. |
+| **Boundary skipped on timeout or load** | Availability pressure becomes an authorization bypass. | Degrade to the correct finite negative result; never preserve `ANSWER` by bypass. |
+| **Denial explains the protected fact** | Refusal leaks existence, location, identity, or reason. | Use public-safe stable reasons and anti-enumeration tests. |
+| **Debug telemetry or audit captures raw payload** | Accountability surface becomes a secondary breach. | Minimize at source; prohibit secrets, prompts, evidence, and protected precision. |
+| **Generated receipt treated as request audit or approval** | Authoring provenance is not runtime decision evidence. | Keep receipt families and authority effects separate. |
+| **Green CI treated as deployment/security proof** | Workflow scope may be narrow and required-check settings unknown. | Report exact test scope and obtain operational evidence separately. |
+| **Current non-crossing called mitigation** | Future implementation may introduce the threat without its control. | Keep the boundary `NOT_CROSSED / HOLD` until composed proof exists. |
+| **One “admin” label bypasses capability checks** | Role collapses purpose, object, interface, time, and obligations. | Use explicit least-privilege capabilities and audited exceptional paths. |
+| **Silent fallback to internal store or stale cache** | Trust membrane and correction state are bypassed. | Fail closed and test direct-path denial plus cache invalidation. |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="14-open-questions-and-adr-triggers"></a>
 
 ## 14. Open questions and ADR triggers
 
-| Open item | Class | Suggested ADR title |
+Only ADR-0029 is accepted among the numbered ADRs referenced here. The rest remain proposals unless a later accepted record says otherwise.
+
+| Open item | Why it matters | Decision or evidence needed |
 |---|---|---|
-| Boundary 5 — should the adapter port be a hard process boundary *(IPC)*, or in-process with import-graph enforcement? | Architecture | "Adapter port process boundary". |
-| Boundary 6 — sanitizer scope: same sanitizer for all providers or per-provider? | Implementation | "Provider sanitizer scope". |
-| Fixture organization — `tests/runtime_proof/<boundary>/` vs `tests/runtime_proof/<outcome>/`? | Layout | "Negative-state fixture layout". |
-| Should Boundary 6 break out a sub-boundary for tile / vector / graph providers vs model providers? | Granularity | "Provider sub-boundary split". |
+| Governed API trust-membrane decision | ADR-0004 remains effectively proposed even though the boundary is established doctrine. | Decide accepted scope without turning docs or scaffold presence into deployment authority. |
+| Request and HTTP semantics | Current code has three GET routes and generic 404/405 errors only. | Accept request envelopes, canonicalization, body/header/query limits, status/outcome/reason mapping, cache rules. |
+| Authentication and capability model | No current provider or runtime grant path is established. | Decide identity claims, credential verification, workload identity, revocation, capability/object/purpose/interface/time binding. |
+| Audience/role vocabulary | Candidate vocabularies conflict and `DENY` is not an audience. | Reconcile through contract/schema/policy decision, not this threat model. |
+| Policy evaluation order and obligations | Unauthorized reads must be prevented while obligations must apply to resolved output. | Define pre- and post-resolution gates, bundle identity, cache and revocation behavior. |
+| Release/evidence/policy subject identity | Cross-object mismatch can authorize the wrong bytes or claim. | Adopt deterministic binding and composed replay tests. |
+| RuntimeResponseEnvelope composition | The grounded envelope reconciliation confirms two separate closed proposed profiles, no nested composition, no current answer payload member, and conflicted reason/HTTP vocabularies. | Reconcile semantic contract, machine schema, composition, builders, fixtures, reason/HTTP vocabularies, and consumers. |
+| Adapter boundary | In-process versus process-isolated, allowed code home, egress/tool/filesystem capability, timeout/retry and context contract remain open. | Architecture decision plus negative proof. |
+| Provider/model admission | Terms, data use, retention, model/version identity, fallback, secret custody and operational network policy are unverified. | Security/privacy/rights review and admitted provider/model records. |
+| Citation closure | Declaration validation is not authoritative source/evidence verification. | Define exact-response claim binding and fail-closed runtime consumer. |
+| Telemetry posture | ADR-0016 is proposed; general emitter/redactor/sink are held. | Accept event profiles, destinations, retention, access, incidents, and failure behavior before instrumentation. |
+| Audit and receipt semantics | “All writes before response” may create unsafe availability coupling; silent loss is also unsafe. | Classify operations by consequence and choose atomic/outbox/fail-closed behavior with tests. |
+| Threat-proof placement | Shared runtime root exists; domain-child placement is conflicted. | Reconcile placement before new domain proof lanes; keep app-local tests app-local. |
+| Public deployment ownership | Source defaults do not identify real proxy, TLS, CORS, network, secrets, cache, SLO, or incident ownership. | Current infrastructure/configuration/runtime evidence and named accountable roles. |
+| Denial and error disclosure | Stable reason vocabulary and anti-enumeration posture are incomplete. | Accept public-safe codes, diagnostic separation, logging/audit policy, and compatibility rules. |
+| Supply-chain and workflow significance | Workflow files exist, but required-check/ruleset coupling and operational dependency posture can change. | Current repository settings, pinning, provenance, vulnerability, and deployment evidence. |
+| Correction and rollback propagation | API, cache, search, map, AI, export, telemetry, and audit may retain stale state. | One correction/withdrawal invalidation contract and rehearsal across consumers. |
+| Independent security review | CODEOWNERS routes to one verified account; functional ownership and independent review remain unestablished. | Assign verified people/teams and enforce appropriate separation for high-risk changes. |
+
+### ADR triggers
+
+Open or amend an ADR when work would:
+
+- accept the Governed API as a concrete trust-membrane architecture beyond existing doctrine;
+- define a new public request/response profile or incompatible envelope evolution;
+- choose identity, capability, policy, adapter, provider, telemetry, or audit authority;
+- authorize direct public access to an internal/canonical store;
+- change release, correction, withdrawal, or rollback semantics;
+- admit a new root or parallel contract/schema/policy/test/receipt home;
+- change sensitive-location or denial-disclosure posture;
+- introduce an operational external provider or public deployment; or
+- change separation-of-duties or required-review policy.
+
+A routine implementation that conforms to an already accepted contract and stays inside an existing responsibility root may not need a new ADR, but it still needs code, fixtures, tests, review, and rollback.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="15-related-docs"></a>
 
 ## 15. Related docs
 
-| Reference | Role | Truth label |
+| Reference | Current role | Use with this document |
 |---|---|---|
-| `README.md` *(this folder)* | Landing | CONFIRMED doctrine |
-| `../governed-api.md` §6, §7, §8, §10 | Doctrine spine | CONFIRMED doctrine |
-| `AUDIENCE_CLASSES.md` | Boundary 1 audience-based rate limits | PROPOSED |
-| `ENVELOPES.md` | Outcomes referenced at each boundary | PROPOSED |
-| `LIFECYCLE_GATES.md` | Boundary 3 release-state enforcement | PROPOSED |
-| `ERROR_CODES.md` | Stable reason / error codes at every boundary | PROPOSED |
-| `DEPLOYMENT_RULES.md` | Boundaries 1, 8 operational hardening | PROPOSED |
-| `directory-rules.md` §6.6 | Test home for `runtime_proof/` | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §11 | Finite outcome envelope | CONFIRMED doctrine |
+| [`README.md`](README.md) | Repository-grounded folder boundary and direct-child index | Parent authority and current maturity context |
+| [`../governed-api.md`](../governed-api.md) | Grounded flat architecture spine | Current three-route scaffold and trust-membrane invariants |
+| [`../../security/THREAT_MODEL.md`](../../security/THREAT_MODEL.md) | Broader draft system threat posture | System-wide risk families; not current API enforcement proof |
+| [`../../security/AUDIT_INVARIANTS.md`](../../security/AUDIT_INVARIANTS.md) | Human audit guidance | Audit-family constraints; verify current implementation separately |
+| [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) | Repository-grounded audience/capability boundary | Prevent role/audience/outcome collapse |
+| [`ENVELOPES.md`](ENVELOPES.md) | Repository-grounded profile reconciliation | Confirms the two separate closed proposed profiles, current schema-shaped scaffold, composition gaps, and reason/HTTP conflicts; not wire authority by itself |
+| [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) | Proposal-era per-request lifecycle mapping | Design input; verify current release/runtime evidence |
+| [`ERROR_CODES.md`](ERROR_CODES.md) | Proposal-era reason/error catalog | Current app uses `NOT_IMPLEMENTED` and `SAFE_RUNTIME_ERROR`; compatibility decision pending |
+| [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md) | Deployment hardening guidance | Target posture only unless matched to current infra/config/runtime evidence |
+| [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Proposed trust-membrane decision | Doctrinal alignment without acceptance claim |
+| [`ADR-0016`](../../adr/ADR-0016-telemetry-redaction-posture.md) | Proposed telemetry decision | Current fixture-only telemetry evidence and operational holds |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted Directory Rules v2 decision | Same-path placement authority |
+| [`Directory Rules`](../../doctrine/directory-rules.md) | Adopted placement doctrine through ADR-0029 | Keeps docs, app, contracts, schemas, policy, tests, data, runtime, infra, and release responsibilities separate |
+| [`main.py`](../../../apps/governed-api/src/governed_api/main.py) | Current executable dispatcher | Primary current request-path evidence |
+| [`routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Current route inventory | Exact three-route boundary |
+| [`stub.py`](../../../apps/governed-api/src/governed_api/stub.py) | Current finite negative response builder | ABSTAIN and generic ERROR behavior |
+| [`test_abstain_routes.py`](../../../apps/governed-api/tests/test_abstain_routes.py) | Focused app test | Registered-route shape evidence |
+| [`test_boundary_guards.py`](../../../apps/governed-api/tests/test_boundary_guards.py) | Focused negative guards | 404/405, route manifest, import and internal-path checks |
+| [`RuntimeResponseEnvelope` schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Proposed closed machine profile | Current machine shape and finite outcome constraints |
+| [`policy/access/README.md`](../../../policy/access/README.md) | Grounded access-policy boundary | Shows active authentication/evaluator/obligation gaps |
+| [`packages/evidence-resolver/README.md`](../../../packages/evidence-resolver/README.md) | Internal alpha candidate resolver | Component proof that must not be promoted directly to `ANSWER` |
+| [`runtime/model_adapters/README.md`](../../../runtime/model_adapters/README.md) | Provider-neutral runtime lane | Mock-first component evidence and provider/admission holds |
+| [`tools/validators/citation/README.md`](../../../tools/validators/citation/README.md) | Citation declaration validator | Component proof, not source/evidence authentication |
+| [`tests/runtime_proof/README.md`](../../../tests/runtime_proof/README.md) | Shared runtime-proof root | Current proof inventory and domain-placement conflict |
+| [`api-test.yml`](../../../.github/workflows/api-test.yml) | Focused app workflow | Exact test orchestration; not release/deployment authority |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="16-appendix"></a>
 
 ## 16. Appendix
 
 <details>
-<summary><strong>16.1 Trust-boundary checklist — at-a-glance</strong></summary>
+<summary><strong>16.1 Threat-review checklist</strong></summary>
 
-```text
-Per request, the governed API SHOULD cross every applicable boundary:
+For every new or materially changed route:
 
-  1 · Ingress         — schema · size · auth · rate
-  2 · Policy          — PolicyDecision before resolution
-  3 · Release         — ReleaseManifest pinned
-  4 · Evidence        — refs resolve to bundle
-  5 · Adapter         — least-context to runtime
-  6 · Provider        — sanitize + receipt
-  7 · Citation        — last gate before ANSWER
-  8 · Telemetry       — redact at boundary
-  9 · Audit           — receipts emitted before response
-
-Skipping any boundary degrades the outcome (ABSTAIN/DENY/ERROR);
-never bypass to preserve ANSWER under load.
-```
+1. Pin the exact base, route code, request/response contract, schema, policy, fixtures, tests, configuration, and workflow evidence.
+2. List the assets, caller classes, capabilities, lifecycle/release subjects, sensitive fields, external dependencies, caches, logs, telemetry, and audit effects.
+3. Mark each of the nine boundaries `NOT_CROSSED`, `SCAFFOLD_GUARD`, `COMPONENT_PROOF`, `COMPOSED_PROOF`, `OPERATIONAL_PROOF`, or `HOLD`.
+4. Prove malformed, missing, stale, denied, unavailable, mismatched, corrected, withdrawn, oversized, replayed, and unauthorized cases as applicable.
+5. Prove no leakage through body, headers, status, timing, cache, telemetry, logs, receipts, citations, exports, or client rendering.
+6. Verify direct internal-store, provider, model, filesystem, and network bypasses are denied.
+7. Verify evidence, policy, review, release, correction, and rollback identities bind to the same subject/version.
+8. Verify failure never widens access or promotes a negative state to `ANSWER`.
+9. Record exact test and hosted-run evidence without claiming more than their scope.
+10. Keep human review, deployment, release, publication, and repository-setting transitions separate.
 
 </details>
 
 <details>
-<summary><strong>16.2 Truth-label legend</strong></summary>
+<summary><strong>16.2 Minimal review packet before first substantive ANSWER</strong></summary>
 
-- **CONFIRMED** — verified this session from attached docs.
-- **PROPOSED** — design / placement / inference not yet verified in implementation.
-- **INFERRED** — derivable from confirmed evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
+A review packet should identify:
+
+- exact route and request/response profiles;
+- authenticated caller/workload and capability semantics;
+- authoritative evidence-resolution snapshot;
+- policy bundle/decision and enforced obligations;
+- release, correction, withdrawal, and rollback subjects;
+- citation-validation report bound to exact response claims;
+- precision actually used and any generalization/redaction receipts;
+- cache and invalidation rules;
+- safe telemetry and audit decisions;
+- positive, negative, outage, tamper, replay, and non-leakage tests;
+- dependency, provider, network, secret, and deployment posture where applicable;
+- correction and rollback procedure; and
+- named reviewers and unresolved holds.
+
+A checklist item may reference an owning artifact; it must not duplicate or replace that artifact's authority.
 
 </details>
 
+<details>
+<summary><strong>16.3 Legacy v0.1 claim reconciliation</strong></summary>
+
+| v0.1 statement | v0.2 disposition |
+|---|---|
+| Nine boundaries are where the API “turns posture into an executable check.” | Retained as target inventory; only ingress has bounded scaffold guards, while other crossings are not composed. |
+| Every mitigation has a `tests/runtime_proof/<boundary>/` fixture family. | Corrected. The root exists, but the named boundary subtrees are not established by the inspected inventory. |
+| Ingress has schema, content-type, size, rate, TLS, CORS, and auth controls. | Reclassified `PROPOSED / HOLD`; current code proves exact route/method and finite error behavior only. |
+| Policy is evaluated before resolution and pinned to release. | Reclassified `NOT_CROSSED / HOLD`. |
+| Release manifest resolves before evidence and binds trace hash. | Reclassified `NOT_CROSSED / HOLD`; current schema has no such required field. |
+| Evidence resolver returns authoritative bundle/marker to the API. | Replaced with current internal non-authoritative candidate component boundary. |
+| Routes cannot bypass an adapter port and use least-context. | Static guards retained as partial evidence; composed port remains held. |
+| Provider output is sanitized and AIReceipt emitted. | Reclassified `NOT_CROSSED / HOLD`. |
+| Citation validation is the last gate before ANSWER. | Retained as target safety property; current component is declaration-only and unbound. |
+| `POST /telemetry` rejects unsafe events. | Removed as current claim; no such route is registered. |
+| All required receipts are written before response. | Removed as current claim; significance-based failure semantics require decision and proof. |
+| Path status is PROPOSED under OPEN-DR-12. | Corrected: accepted ADR-0029 supports this existing same-path human architecture document. |
+| API/Security steward ownership is assigned. | Corrected to the verified CODEOWNERS route; functional ownership and independent review remain unverified. |
+
+</details>
+
+<details>
+<summary><strong>16.4 Truth-label legend</strong></summary>
+
+- **CONFIRMED** — verified from the pinned repository files, tests, workflow source, accepted decision, or supplied source.
+- **PROPOSED** — a target control, path, behavior, or decision not accepted and proved.
+- **UNKNOWN** — available evidence does not establish the answer.
+- **NEEDS VERIFICATION** — a concrete repository, settings, deployment, runtime, legal, rights, or review check remains.
+- **CONFLICTED** — current sources define incompatible authority, shape, vocabulary, or behavior.
+- **HOLD** — work must not advance across the named boundary until required evidence closes.
+- **NOT_CROSSED**, **SCAFFOLD_GUARD**, **COMPONENT_PROOF**, **COMPOSED_PROOF**, and **OPERATIONAL_PROOF** are maturity states, not replacements for the core truth labels.
+
+</details>
+
+### Maintenance and correction triggers
+
+Update this document when any of these materially changes:
+
+- route registry, methods, request parser, middleware, envelope builder, or error behavior;
+- authentication, authorization, policy, release, evidence, adapter, provider, citation, telemetry, or audit integration;
+- RuntimeResponseEnvelope, reason-code, audience/capability, policy, release, evidence, receipt, or telemetry contracts;
+- test placement or runtime-proof profile;
+- reverse proxy, network, cache, secret, deployment, observability, or incident posture;
+- accepted ADR status or Directory Rules;
+- correction, withdrawal, rollback, or public-client behavior; or
+- a real incident demonstrates a missing threat or failed mitigation.
+
+Corrections should preserve prior history. A security-sensitive finding may require a restricted incident record first and a later public-safe documentation correction.
+
+### Rollback
+
+Before merge, close the draft pull request and abandon the feature branch. After an authorized merge, revert the documentation commit and remove or supersede its generated authoring receipt through normal reviewed history. No app, credential, policy, data, cache, release, deployment, or public-state rollback is required because this update changes documentation and authoring provenance only.
+
 ---
 
-**Related (mini)** · [`README.md`](README.md) · [`../governed-api.md`](../governed-api.md) · [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
+**Related (mini):** [`README.md`](README.md) · [`../governed-api.md`](../governed-api.md) · [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
 
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-12 META)*
+**Last updated:** 2026-08-19 · **Doc version:** v0.2 · **Doc status:** repository-grounded draft · **Path:** accepted same-path placement under ADR-0029
 
 [↑ Back to top](#top)
