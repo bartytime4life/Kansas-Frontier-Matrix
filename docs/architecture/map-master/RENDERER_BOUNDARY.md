@@ -35,7 +35,8 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 996b7e16d46a703c9436b26ef74ed0ecaf87796a
+  base_commit: 1bdc5fe5819a90d20c611246cdcbf34d9c61aec7
+  authoring_base_commit: 996b7e16d46a703c9436b26ef74ed0ecaf87796a
   target_prior_blob: 5bb5d7fd37ac0279e3097c5fe830a79480d73cb0
   lane_readme_blob: e26f81e3452b812b70ef25b4b7f791be72e88154
   map_shell_blob: b0ae23f2399c019a737a27c6aaaf0d34323b1fb7
@@ -57,9 +58,12 @@ evidence_snapshot:
   acquisition_workflow_blob: cb29f58a74cf298c651e724242818cddd1d120f0
   readiness_validator_blob: d9f189fd6f726ff6085371f7d69f2b035474e3fc
   legacy_adapter_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  two_d_three_d_parity_blob: 0c56d7a27a1d26d34779b4a40f576e06d79a6c6a
+  layer_lifecycle_blob: 630557b79421e70033a9a2d906c3c472be714ecb
 inspection_boundary: >-
   Current-session GitHub reads covered the complete prior target, its parent
-  lane README, the current map-shell and MapLibre master references, accepted
+  lane README, the current map-shell and MapLibre master references, the
+  repository-grounded 2D/3D parity and layer-lifecycle companions, accepted
   Directory Rules and CODEOWNERS, ADR-0006 and ADR-0007, open issues 2957 and
   2906, package and app manifests, placeholder package and adapter code, the
   renderer-neutral map-selection bridge and tests, fixture-only admission and
@@ -101,6 +105,7 @@ notes:
   - "The concrete MapLibre runtime remains unadmitted: no maplibre-gl dependency, no functional package export, no functional Explorer adapter, and no authenticated 6.4.0 probe packet are established."
   - "ADR-0006 and ADR-0007 remain proposed; this document does not accept them or turn their proposed seam into current authority."
   - "Current executable evidence is renderer-neutral or fixture-only and creates no evidence, policy, review, release, publication, cache, registry, or MapLibre-source authority."
+  - "The branch was reconciled with the same-day 2D/3D parity and layer-lifecycle modernizations; no target overlap occurred, and their repository-grounded HOLD posture is reflected here."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -139,7 +144,7 @@ notes:
 | **Document identity** | `kfm://doc/architecture-map-master-renderer-boundary` |
 | **Owning root** | `docs/` — human-readable architecture and boundary explanation |
 | **Placement** | **CONFIRMED / PLACE** under accepted ADR-0029 and Directory Rules v2 |
-| **Repository evidence base** | `main@996b7e16d46a703c9436b26ef74ed0ecaf87796a` |
+| **Repository evidence base** | `main@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7`; authored from `996b7e16d46a703c9436b26ef74ed0ecaf87796a` and reconciled without target overlap |
 | **Prior target blob** | `5bb5d7fd37ac0279e3097c5fe830a79480d73cb0` |
 | **Review route** | `@bartytime4life` through current CODEOWNERS |
 | **Independent specialist review** | **NEEDS VERIFICATION** |
@@ -753,7 +758,7 @@ Repository-native and hosted checks remain separate execution evidence.
 | Implement a released public-safe layer loader | **PROPOSED** | After architecture and dependency admission |
 | Authenticate live evidence, policy, review, release, and correction transport | **UNKNOWN** | Governed API/runtime integration |
 | Prove alias, cache, tile, drawer, search, export, AI, and graph invalidation | **NEEDS VERIFICATION** | Correction/rollback rehearsal |
-| Reconcile `2D_3D_PARITY.md` dual-renderer lineage with proposed ADR-0007 | **CONFLICTED / HOLD** | Separate no-loss document and decision review |
+| Integrate fixture-first 3D admission, reality-boundary, and representation-receipt evidence with any future renderer loader | **PROPOSED / HOLD** | After ADR, dependency, runtime, policy, review, and release closure |
 | Decide whether renderer telemetry is opt-in, class-allowlisted, or both | **PROPOSED** | Privacy/operations decision |
 | Decide whether `MapRuntimePort` stays in-process or gains worker/iframe isolation | **PROPOSED** | Architecture/security decision |
 | Encode the seven negative authorities as machine data | **PROPOSED after ADR closure** | Do not create a new policy or contract home from this docs change |
@@ -786,10 +791,10 @@ An accepted ADR or amendment is required before:
 | [`../maplibre-master.md`](../maplibre-master.md) | MapLibre component/function/feature and graduation register | Repository-grounded; decisions and runtime held |
 | [`../ui/MAP_RUNTIME_BOUNDARY.md`](../ui/MAP_RUNTIME_BOUNDARY.md) | Detailed proposed port/adapter lineage | Proposal-era and partially stale; useful design input |
 | [`VIEWER_VERIFICATION.md`](VIEWER_VERIFICATION.md) | Verification-before-render guidance | Draft; browser enforcement requires current evidence |
-| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Layer lifecycle and release/correction concepts | Draft guidance |
+| [`LAYER_LIFECYCLE.md`](LAYER_LIFECYCLE.md) | Layer, manifest, runtime-admission, release, correction, and rollback boundaries | Repository-grounded; fixture-first and operational loader/release held |
 | [`EVIDENCE_DRAWER.md`](EVIDENCE_DRAWER.md) | Click-to-evidence presentation boundary | Draft guidance; current Explorer has a bounded implementation slice |
 | [`TILE_ARTIFACTS.md`](TILE_ARTIFACTS.md) | Tile carrier and integrity concepts | Draft guidance |
-| [`2D_3D_PARITY.md`](2D_3D_PARITY.md) | Cross-view parity | Stale/conflicted dual-renderer lineage |
+| [`2D_3D_PARITY.md`](2D_3D_PARITY.md) | Renderer-neutral trust parity across 2D, 2.5D, globe, and 3D candidates | Repository-grounded; candidate admission is fixture-first and renderer/runtime release remains held |
 | [`../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Adapter/acquisition decision | Proposed |
 | [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Renderer-family decision | Proposed |
 | [`../../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement authority | Accepted |
@@ -876,7 +881,7 @@ UNKNOWN:
 | Gate-letter and authority-home certainty | Replaced with current object-family and decision boundaries |
 | `MapLibreAdapter` as current enforced sole importer | Corrected to proposed ADR seam; current code and guards are incomplete |
 | Browser routes, CSP, runtime, release, and cache behavior implied as current | Bounded as PROPOSED, HOLD, UNKNOWN, or fixture-only |
-| Cesium parity question | Reframed as unresolved document/ADR compatibility work |
+| Cesium peer-renderer assumption | Corrected in the repository-grounded 2D/3D companion to renderer-neutral trust parity; ADR-0007 still remains proposed |
 | Truth-label legend with `INFERRED` replacing a core label | Replaced with the core four labels |
 | Related links and relative paths | Corrected to repository-present targets |
 | Publication or authority effect | Explicitly none |
