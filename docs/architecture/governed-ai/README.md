@@ -2,56 +2,62 @@
 doc_id: kfm://doc/architecture-governed-ai-readme
 title: Governed AI Subsystem — Architecture README
 type: architecture-readme
-version: v2.0
-status: draft; repository-grounded; explanatory; no-runtime-authority
+version: v2.1.0-draft
+status: draft; repository-grounded; active-landing-page; explanatory; no-runtime-authority
 owners:
   - '@bartytime4life — verified CODEOWNERS review route'
-owner_status: 'CODEOWNERS routing is confirmed; governed-AI, API, evidence, policy, citation, security, correction, and release stewardship assignments and independent review remain NEEDS VERIFICATION.'
+owner_status: 'CODEOWNERS routing is confirmed; governed-AI, Governed API, evidence, policy, citation, security, privacy, correction, release, UI, and accessibility stewardship assignments and independent review remain NEEDS VERIFICATION.'
 created: 2026-05-15
-updated: 2026-08-14
+updated: 2026-08-20
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
-responsibility: 'Explain how governed-AI responsibilities compose across the Governed API, runtime adapters, contracts, schemas, policy, evidence, receipts, clients, correction, and release without becoming decision, semantic, machine-shape, policy, runtime, or publication authority.'
+responsibility: 'Provide the current human landing page for the governed-AI subsystem and explain how Governed API, evidence, policy, citation, adapters, finite envelopes, receipts, clients, correction, and release responsibilities compose without becoming decision, semantic, machine-shape, policy, runtime, review, release, or publication authority.'
 current_path: docs/architecture/governed-ai/README.md
-canonical_relationship: 'CONFLICTED — this folder README and docs/architecture/governed-ai.md are parallel human overviews; no accepted disposition was established in this revision.'
+canonical_relationship: 'CONFIRMED CURRENT TOPOLOGY — same-path survivor and active subsystem landing page after merged PR #3149 removed docs/architecture/governed-ai.md; this status is a repository-navigation fact, not runtime, semantic, policy, or release authority.'
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 710173d51a3a6bf288997df6f3eb4bf7f4da1ef6
-  target_prior_blob: 718282655d5752351d46122af1620e37c2bf05c6
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  base_commit: 21cdb5ff7d630a39f70fc03d44b31b91eb63b1aa
+  target_prior_blob: 9e1071bb69910bde3f364d319923c4db00637639
+  retired_flat_overview_path: docs/architecture/governed-ai.md
+  retired_flat_overview_pr: 3149
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adoption_adr_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
-  mock_adapter_proof_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
-  runtime_response_contract_blob: 5060aaaa30fea37b6eeea6e1428b9effa6a163bd
-  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
-  runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
-  ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
-  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
-  ai_receipt_validator_blob: eb80e77aed15f478c32215c8f773f308a87a092a
+  adapter_architecture_blob: d38351198939b63a57e583cb404a0daf379fa3a4
+  ai_receipts_architecture_blob: 721bf4647f49a510a597d7b3c4d305bc70fa3097
+  boundaries_architecture_blob: 6bd100cfe7a7727df9d729bf211e24c2303c7974
+  continuity_architecture_blob: f99bf873de43433af6b427278e96d2af4e436f61
+  focus_flow_architecture_blob: 6f6d98f4101acfe686d20d31665317240d705f42
+  mock_first_architecture_blob: 7d123cab64a6da5dd6a191dd5b42d44418f3da23
+  ollama_architecture_blob: 1a2c8445d8ad87ca1a012d8f284c38d907cd7c71
+  prompt_injection_architecture_blob: ebc8af5bf8d9937ee0c387b3c022bead10ac8e3c
+  route_map_architecture_blob: d7284c1129629925e2c54b90382932d7775581d6
   governed_api_routes_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
-  governed_api_stub_blob: 5d7c137d2e78ddfca35a1356a96333ac2e84952b
-  explorer_focus_resolver_blob: 45aa4e7479a8c95138f98cc48c846f39a16aec2d
-  focus_request_schema_blob: a2f298f014fa299bdec03afbf14ba9937aa95ef8
-  focus_response_schema_blob: fd109e4a3c859115d4ad138e9303cf8c5bdd8873
-  focus_worker_placeholder_blob: 7715d01fc585b03dedae7bb535591064bd6d055c
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
+  ai_receipt_builder_blob: 5fe03c96f22ea99b3e8689b92c7ee23d4fc12a65
+  evidence_resolver_readme_blob: d64f112e9fe6538178c74dd31cc751235781c7f3
+  citation_validation_contract_blob: 29c507e76a9c15c44f2c195b7342e93630cdc701
+  generated_receipt_lane_blob: 5a67f8d743306799a014590ccb45fa9f1177f16a
+  generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
 inspection_boundary: >
-  Current-session GitHub reads covered the complete target, its history and direct-child
-  architecture inventory, the parallel flat governed-AI overview, accepted Directory Rules
-  placement authority, current governed-AI ADR proposals and the unassigned Focus-boundary
-  candidate, runtime adapter inventory and implementations, RuntimeResponseEnvelope and
-  AIReceipt contracts/schemas/validators/proofs, Governed API route registration and AI
-  source subtree, Explorer Focus resolution, Focus schemas, runtime policy documentation,
-  the Focus worker entrypoint, CODEOWNERS, and bounded repository search for citation
-  validation. No model daemon, provider endpoint, credential, live evidence resolver,
-  policy evaluator, citation service, AIReceipt emitter or store, end-to-end Focus route,
-  runtime deployment, public client session, release, correction propagation, rollback
-  drill, or publication was exercised.
+  Current-session GitHub reads covered the complete prior README; current main;
+  the governed-AI direct-child inventory; merged PR #3149 and its one-file deletion;
+  accepted Directory Rules v2 and ADR-0029; current governed-AI companions;
+  Governed API route registration and fail-closed stubs; Focus request/response
+  scaffolds; model-adapter implementations; RuntimeResponseEnvelope and AIReceipt
+  schemas; the AIReceipt candidate builder; the internal non-authoritative evidence
+  resolver; CitationValidationReport meaning; and generated-receipt requirements.
+  No model daemon, provider endpoint, credential, authenticated AI route, grant store,
+  authoritative evidence service, active policy evaluator, composed citation service,
+  AIReceipt emitter or durable store, deployed Focus operation, runtime log, release
+  environment, correction propagation, rollback drill, or publication was exercised.
 related:
   - docs/architecture/README.md
-  - docs/architecture/governed-ai.md
   - docs/architecture/governed-ai/ADAPTER_CONTRACT.md
   - docs/architecture/governed-ai/AI_RECEIPTS.md
   - docs/architecture/governed-ai/BOUNDARIES.md
@@ -74,160 +80,188 @@ related:
   - apps/governed-api/src/ai/README.md
   - apps/explorer-web/src/features/focus_panel/resolver.ts
   - apps/workers/src/ai_focus_worker/main.py
-  - runtime/model_adapters/README.md
   - runtime/model_adapters/MockAdapter.py
   - runtime/model_adapters/OllamaAdapter.py
   - contracts/runtime/runtime_response_envelope.md
   - contracts/runtime/ai_receipt.md
+  - contracts/evidence/citation_validation_report.md
   - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - schemas/contracts/v1/runtime/ai_receipt.schema.json
   - schemas/contracts/v1/focus/focus_request.schema.json
   - schemas/contracts/v1/focus/focus_response.schema.json
-  - packages/envelopes/src/envelopes/runtime_response.py
-  - tools/validators/validate_ai_receipt.py
-  - tests/runtime_proof/test_mock_adapter_finite_outcomes.py
-  - policy/runtime/README.md
-  - .github/workflows/focus-mock-test.yml
-tags: [kfm, architecture, governed-ai, focus-mode, model-adapter, runtime-response-envelope, ai-receipt, citation-validation, policy, mock-first, ollama, finite-outcomes, trust-membrane, cite-or-abstain]
+  - packages/envelopes/src/envelopes/ai_receipt.py
+  - packages/evidence-resolver/README.md
+  - data/receipts/generated/README.md
+  - schemas/contracts/v1/receipts/generated_receipt.schema.json
+tags: [kfm, architecture, governed-ai, focus-mode, model-adapter, evidence-resolver, runtime-response-envelope, ai-receipt, citation-validation, policy, mock-first, ollama, finite-outcomes, trust-membrane, cite-or-abstain]
 notes:
-  - 'v2.0 is a same-path repository-grounded rewrite; it changes no runtime, contract, schema, policy, fixture, test, workflow, receipt, release, or publication behavior.'
-  - 'Architecture documentation is explanatory. Accepted Directory Rules govern placement; the governed-AI ADRs remain proposed, and the Focus-boundary candidate remains unassigned.'
-  - 'MockAdapter and RuntimeResponseEnvelope now have bounded executable proof surfaces, but end-to-end governed AI orchestration remains on HOLD.'
-  - 'The former README speculative AIReceipt field list and replay claims were replaced with the current schema-paired field surface and verified implementation limits.'
-  - 'The missing STATE_OWNERSHIP.md reference was removed; no replacement file was created.'
+  - 'v2.1.0-draft closes the README-local navigation and authority fallout from merged PR #3149 without recreating the retired flat overview.'
+  - 'The same-path landing page remains explanatory; accepted Directory Rules govern placement, while governed-AI route, adapter, and provider decisions remain proposed or unassigned.'
+  - 'Eight companions now carry repository-grounded updates from 2026-08-19 or 2026-08-20; PROMPT_INJECTION.md remains proposal-era and ROUTE_MAP.md retains known stale flat-overview metadata.'
+  - 'Current bounded proof includes the internal evidence-resolver candidate, CitationValidationReport fixture profile, RuntimeResponseEnvelope helpers, MockAdapter selector, and AIReceipt builders and validators; no end-to-end AI operation is established.'
+  - 'This revision changes documentation and its generated authoring receipt only.'
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Governed AI Subsystem — Architecture README
 
 > **Governed AI is an interpretive subsystem, not a truth source or publication path.** Its intended role is to turn already-governed context into bounded language behind the Governed API while preserving evidence, policy, citation, precision, freshness, correction, receipt, and finite-outcome boundaries. Current repository evidence proves several bounded components, not an operational end-to-end AI route.
 
-[![status](https://img.shields.io/badge/status-draft-d4a72c?style=flat-square)](#2--authority-level)
-[![evidence](https://img.shields.io/badge/evidence-repository--grounded-0969da?style=flat-square)](#5--repo-fit)
-[![decisions](https://img.shields.io/badge/governed--AI%20ADRs-proposed-6e7781?style=flat-square)](#24--adrs)
-[![MockAdapter](https://img.shields.io/badge/MockAdapter-bounded%20selector-2da44e?style=flat-square)](#13--adapter-boundary)
+[![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#2--authority-level)
+[![landing page](https://img.shields.io/badge/landing%20page-current%20survivor-0969da?style=flat-square)](#current-canonicality-conflict)
+[![runtime](https://img.shields.io/badge/runtime-PARTIAL%20%2F%20HOLD-d4a72c?style=flat-square)](#5--repo-fit)
 [![API route](https://img.shields.io/badge/governed%20AI%20route-absent-b42318?style=flat-square)](#12--the-governed-ai-request-flow)
 [![provider](https://img.shields.io/badge/live%20provider-none%20admitted-6e7781?style=flat-square)](#13--adapter-boundary)
 [![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#17--trust-membrane-and-exposure-controls)
 
 > [!IMPORTANT]
-> **Architecture explanation is not decision or runtime authority.** This README explains current repository relationships. `contracts/` owns semantic meaning, `schemas/` owns machine shape, `policy/` owns admissibility rule source, implementation roots own executable behavior, and `release/` owns release/correction/rollback decisions. Accepted ADR-0029 and the adopted Directory Rules govern placement; ADR-0008 and ADR-0019 remain proposed.
+> **Architecture explanation is not decision or runtime authority.** This README explains current repository relationships. `contracts/` owns semantic meaning, `schemas/` owns machine shape, `policy/` owns admissibility rule source, implementation roots own executable behavior, and `release/` owns release, correction, withdrawal, and rollback decisions. Accepted ADR-0029 and the adopted Directory Rules govern placement; the governed-AI route, adapter, provider, and Focus-boundary decisions remain proposed or unassigned.
 
 > [!CAUTION]
-> **Bounded proofs must not be promoted into an AI-integration claim.** The repository has a deterministic no-I/O `MockAdapter`, four-outcome `RuntimeResponseEnvelope` fixtures and proof tests, a local AIReceipt validator, and a defensive Explorer Focus projection. It does not have a verified governed-AI API route, executing runtime policy bundle, citation-validation service, evidence-resolution composition, AIReceipt emitter/store, admitted provider, or public AI release.
+> **Bounded proofs must not be promoted into an AI-integration claim.** The repository has a deterministic no-I/O `MockAdapter`, a closed four-outcome `RuntimeResponseEnvelope`, an internal non-authoritative evidence-resolver candidate, a fixture-first `CitationValidationReport` profile, AIReceipt candidate builders and validation, and defensive Explorer Focus projection. It does not have a verified governed-AI API route, active composed policy/evidence/citation transaction, AIReceipt emitter/store, admitted provider, deployed Focus operation, or public AI release.
 
 > [!WARNING]
-> **Parallel and overlapping authorities remain unresolved.** This folder README and [`docs/architecture/governed-ai.md`](../governed-ai.md) are competing human overviews. The unassigned [`ADR-focus-model-adapter-boundary`](../../adr/ADR-focus-model-adapter-boundary.md) overlaps the broader proposed [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md). This revision records those conflicts; it does not settle them by documentation fiat.
+> **The flat overview has been retired.** Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md`; this README is now the tracked subsystem landing page and same-path survivor. That repository-topology fact does not accept an ADR or create runtime authority. Stale references to the retired path elsewhere in the repository remain inherited documentation debt and require a separate bounded cleanup.
 
 **Quick navigation:** [Purpose](#1--purpose) · [Authority](#2--authority-level) · [Belongs](#3--what-belongs-here) · [Exclusions](#4--what-does-not-belong-here) · [Repo fit](#5--repo-fit) · [Tree](#6--proposed-directory-tree) · [Inputs](#7--inputs) · [Outputs](#8--outputs) · [Doctrine](#9--core-doctrine) · [Objects](#10--object-families-and-homes) · [Outcomes](#11--finite-outcomes--the-trust-grammar) · [Flow](#12--the-governed-ai-request-flow) · [Adapters](#13--adapter-boundary) · [Citations](#14--citation-validation) · [Policy](#15--policy-precheck-and-postcheck) · [Receipts](#16--aireceipt-and-replay-discipline) · [Exposure](#17--trust-membrane-and-exposure-controls) · [Validation](#18--validation) · [Siblings](#19--sibling-docs-in-this-folder) · [Anti-patterns](#20--anti-patterns) · [Propagation](#21--update-propagation) · [Rollback](#22--rollback) · [Review](#23--review-burden) · [ADRs](#24--adrs) · [Open work](#25--open-questions-and-verification-backlog) · [Related](#26--related-folders) · [Evidence](#27--last-reviewed)
 
 ---
 
+<a id="1--purpose"></a>
 ## 1 · Purpose
 
 This README is the human architecture entry point for the **governed-AI responsibility seam**. It explains how KFM intends to compose:
 
 1. a caller-facing Focus or AI-assisted request;
-2. governed scope, identity, release, evidence, policy, and sensitivity checks;
+2. governed scope, identity, release, evidence, policy, rights, and sensitivity checks;
 3. minimized admissible context;
 4. a provider-neutral model-adapter boundary;
 5. an untrusted structured candidate;
 6. structured-output and citation validation;
-7. policy postcheck, precision/freshness/correction disclosure, and finite outcome selection;
-8. `RuntimeResponseEnvelope` assembly; and
-9. `AIReceipt` accountability where an accepted operation requires one.
+7. policy postcheck, precision, freshness, and correction disclosure;
+8. one finite `RuntimeResponseEnvelope`; and
+9. separate `AIReceipt` accountability when an accepted operation requires it.
 
-This page may explain responsibility, dependency direction, current maturity, conflicts, validation, and rollback. It must not accept an ADR, define canonical object meaning, amend a schema, activate policy, admit a provider, authorize a route, or turn a bounded component test into a public runtime claim.
+This page may explain responsibility, dependency direction, current maturity, conflicts, validation, correction, and rollback. It must not accept an ADR, define canonical object meaning, amend a schema, activate policy, admit a provider, authorize a route, approve review, release an artifact, or turn a bounded component test into a public runtime claim.
 
-The former README described this subsystem as the only path for all model-mediated language. That remains an architectural direction, not an accepted repository-wide decision, because the relevant ADRs remain proposed.
+The governing sequence is:
+
+```text
+scope
+  -> authenticate and authorize
+  -> resolve release, evidence, freshness, and correction state
+  -> policy precheck and context minimization
+  -> provider-neutral adapter
+  -> structured candidate validation
+  -> citation validation
+  -> policy postcheck and precision enforcement
+  -> finite RuntimeResponseEnvelope
+  -> separate AIReceipt accountability
+  -> governed client projection
+```
+
+Every step remains subordinate to evidence, policy, review, release, correction, and rollback.
 
 ---
 
+<a id="2--authority-level"></a>
 ## 2 · Authority level
 
 | Field | Current value |
 |---|---|
 | **Path** | `docs/architecture/governed-ai/README.md` — confirmed tracked file |
 | **Owning root** | `docs/` |
-| **Responsibility** | Cross-root explanatory architecture for the governed-AI subsystem |
-| **Authority kind** | Explanatory; not decision, contract, schema, policy, evidence, receipt, runtime, release, or publication authority |
-| **Placement basis** | Accepted ADR-0029 adopts Directory Rules v2; existing same-path documentation is retained without structural change |
+| **Responsibility** | Current human landing page and cross-root architecture explanation for the governed-AI subsystem |
+| **Authority kind** | Explanatory; not decision, contract, schema, policy, evidence, receipt, runtime, review, release, or publication authority |
+| **Placement basis** | Accepted ADR-0029 adopts Directory Rules v2; this existing same-path architecture document receives `PLACE` |
+| **Current topology** | Same-path survivor after merged PR #3149 removed the former flat overview |
 | **Verified review route** | `.github/CODEOWNERS` routes the repository and relevant roots to `@bartytime4life` |
-| **Stewardship** | Governed-AI/API/evidence/policy/citation/security/correction/release stewardship remains `NEEDS VERIFICATION` |
-| **Decision status** | ADR-0008 and ADR-0019 are `proposed`; the Focus adapter-boundary candidate is `not-assigned` |
+| **Stewardship** | Governed-AI, API, evidence, policy, citation, security, privacy, correction, release, UI, and accessibility stewardship remains `NEEDS VERIFICATION` |
+| **Decision status** | Governed-AI route, adapter, provider, and Focus-boundary decisions remain proposed or unassigned |
 | **Runtime status** | `PARTIAL / HOLD`: bounded component proofs exist; end-to-end governed orchestration is not established |
 | **Release/publication effect** | None |
 
-Architecture prose cannot override current contracts, schemas, policy, implementation, or accepted decisions. Conversely, checked-in implementation does not silently accept a proposed ADR.
+Architecture prose cannot override current contracts, schemas, policy, implementation, evidence, review, or release records. Conversely, checked-in implementation does not silently accept a proposed ADR.
 
-### Current canonicality conflict
+<a id="current-canonicality-conflict"></a>
+### Current landing-page relationship
 
-Two tracked human overviews currently describe governed AI:
+The previous edition correctly recorded a conflict between two tracked overviews. That conflict changed when merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) deleted `docs/architecture/governed-ai.md` as a one-file retirement. Current repository topology therefore has one governed-AI subsystem landing page: this README.
 
-- this folder landing page, `docs/architecture/governed-ai/README.md`; and
-- the flat note, [`docs/architecture/governed-ai.md`](../governed-ai.md).
+The safe conclusion is bounded:
 
-Both contain substantive architecture material. No accepted ADR, migration note, tombstone, or parent-index disposition was established in the inspected evidence. Their relationship is therefore **CONFLICTED / HOLD**.
+- **CONFIRMED:** this README is the surviving tracked landing page and folder entrypoint.
+- **CONFIRMED:** the deleted flat file is no longer a current repository path.
+- **NEEDS VERIFICATION:** all inbound links, prose references, document registries, and cached or external consumers have not been closed by this README update.
+- **PROPOSED / HOLD:** any broader claim of architectural canonicality beyond current navigation still depends on accepted decisions and consumer closure.
+
+This revision does not recreate the retired file, add an alias, rewrite every stale reference, or change another document's authority.
 
 ---
 
+<a id="3--what-belongs-here"></a>
 ## 3 · What belongs here
 
-This directory may contain human architecture documents that explain distinct governed-AI concerns across responsibility roots.
+This directory contains human architecture documents that explain distinct governed-AI concerns across responsibility roots.
 
 Current tracked siblings:
 
-- [`ADAPTER_CONTRACT.md`](./ADAPTER_CONTRACT.md) — provider-neutral adapter architecture.
-- [`AI_RECEIPTS.md`](./AI_RECEIPTS.md) — receipt/accountability architecture.
-- [`BOUNDARIES.md`](./BOUNDARIES.md) — trust and forbidden-path boundaries.
-- [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — lineage notes.
-- [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) — proposed end-to-end Focus flow.
-- [`MOCK_FIRST.md`](./MOCK_FIRST.md) — mock-first posture.
-- [`OLLAMA_INTEGRATION.md`](./OLLAMA_INTEGRATION.md) — deferred Ollama posture.
-- [`PROMPT_INJECTION.md`](./PROMPT_INJECTION.md) — untrusted-content boundaries.
-- [`ROUTE_MAP.md`](./ROUTE_MAP.md) — proposed route-family map.
-- `README.md` — this repository-grounded landing page.
+- [`ADAPTER_CONTRACT.md`](./ADAPTER_CONTRACT.md) — repository-grounded provider-neutral adapter boundary and current mock proof.
+- [`AI_RECEIPTS.md`](./AI_RECEIPTS.md) — repository-grounded AIReceipt architecture and accountability boundary.
+- [`BOUNDARIES.md`](./BOUNDARIES.md) — repository-grounded trust-membrane and forbidden-path reference.
+- [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) — repository-grounded continuity, lineage, and correction limits.
+- [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) — current client proof and proposed server-side Focus flow.
+- [`MOCK_FIRST.md`](./MOCK_FIRST.md) — deterministic mock-first sequencing and proof boundary.
+- [`OLLAMA_INTEGRATION.md`](./OLLAMA_INTEGRATION.md) — deferred provider-specific local-runtime boundary.
+- [`PROMPT_INJECTION.md`](./PROMPT_INJECTION.md) — proposal-era security doctrine requiring evidence refresh and broken-reference repair.
+- [`ROUTE_MAP.md`](./ROUTE_MAP.md) — repository-grounded executable route inventory with known stale flat-overview metadata.
+- `README.md` — this landing page and subsystem map.
 
 A new sibling should be added only when the concern cannot be handled accurately by this page, an existing sibling, a per-root README, a contract, policy documentation, a runbook, or an ADR.
 
 ---
 
+<a id="4--what-does-not-belong-here"></a>
 ## 4 · What does NOT belong here
 
 | Responsibility | Owning surface |
 |---|---|
 | Adapter, provider, route, or finite-envelope decisions | `docs/adr/` |
 | AI-as-assistant, cite-or-abstain, trust membrane, or lifecycle doctrine | `docs/doctrine/` |
-| RuntimeResponseEnvelope, AIReceipt, PolicyDecision, EvidenceBundle, or Focus object meaning | `contracts/` |
+| RuntimeResponseEnvelope, AIReceipt, PolicyDecision, EvidenceBundle, CitationValidationReport, or Focus object meaning | `contracts/` |
 | Machine-checkable fields and compatibility constraints | `schemas/contracts/v1/` |
 | Allow, deny, abstain, restrict, redact, or obligation rules | `policy/` |
 | Executable model adapters | `runtime/model_adapters/` |
 | Governed API orchestration and route registration | `apps/governed-api/` |
 | Browser projection and accessibility behavior | `apps/explorer-web/` |
 | Worker execution | `apps/workers/` |
+| Reusable evidence or envelope implementation | `packages/` |
 | Synthetic proof candidates and executable tests | `fixtures/` and `tests/` |
-| Receipt instances and runtime accountability records | accepted `data/` lanes |
-| Release, correction, withdrawal, and rollback decisions | `release/` |
-| Secrets, credentials, model weights, protected source content, restricted geometry, or private chain-of-thought | never this public documentation path |
+| Receipt instances and process-accountability records | governed `data/receipts/` lanes |
+| Release, correction, withdrawal, and rollback decisions | `release/` and their governing object families |
+| Secrets, credentials, model weights, protected source content, restricted geometry, private review notes, or private chain-of-thought | never this public documentation path |
 
 Examples here must remain compact, synthetic, public-safe, and explicitly non-authoritative.
 
 ---
 
+<a id="5--repo-fit"></a>
 ## 5 · Repo fit
 
-The subsystem spans several responsibility roots. Current evidence does **not** prove they are composed into one operational transaction.
+The subsystem spans several responsibility roots. Current evidence does **not** prove that they are composed into one operational transaction.
 
 ```text
 Explorer Focus projection         PARTIAL — defensive client logic, injected resolver
-  -> Governed API                 PARTIAL — bootstrap/layers/evidence only; no AI route
-  -> Governed API AI subtree      PLACEHOLDER — README and .gitkeep
-  -> runtime policy               HOLD — non-enforcing Rego scaffolds
-  -> evidence resolution          NOT COMPOSED into an AI route
+  -> Governed API                 PARTIAL — /bootstrap, /layers, /evidence only
+  -> Governed API AI subtree      PLACEHOLDER — documentation/scaffold only
+  -> evidence resolution          BOUNDED INTERNAL CANDIDATE — non-authoritative
+  -> runtime policy               HOLD — no composed evaluator binding proved
   -> MockAdapter                  BOUNDED PROOF — deterministic no-I/O selector
-  -> OllamaAdapter                PLACEHOLDER
-  -> citation validation          NOT ESTABLISHED as executable service
-  -> RuntimeResponseEnvelope      BOUNDED PROOF — schema, builder, fixtures, tests
-  -> AIReceipt                    BOUNDED SHAPE — schema and validator; no emitter/store
+  -> OllamaAdapter                PLACEHOLDER — one comment line
+  -> citation report              BOUNDED PROFILE — contract/schema/validator, not a service
+  -> RuntimeResponseEnvelope      BOUNDED PROOF — closed schema, helpers, fixtures, tests
+  -> AIReceipt                    BOUNDED SHAPE/BUILD — no emitter or durable store
   -> ai_focus_worker              PLACEHOLDER
   -> public governed AI answer    NOT ESTABLISHED
 ```
@@ -236,22 +270,25 @@ Explorer Focus projection         PARTIAL — defensive client logic, injected r
 
 | Surface | Confirmed state | Safe conclusion |
 |---|---|---|
-| Governed-AI folder | Ten tracked Markdown files including this README | Documentation exists; sibling accuracy is not implied by presence |
-| Parallel flat overview | `docs/architecture/governed-ai.md` exists | Human-overview authority is conflicted |
+| Governed-AI folder | Ten tracked Markdown files including this README | Documentation exists; presence does not prove every statement current |
+| Retired flat overview | Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md` | This README is the current same-path survivor; stale consumers remain separate debt |
+| Modernized companions | Eight companions were repository-grounded on 2026-08-19 or 2026-08-20 | Their evidence snapshots are bounded and do not create runtime authority |
+| `PROMPT_INJECTION.md` | Proposal-era May 2026 document with a missing `STATE_OWNERSHIP.md` reference and speculative fields | Useful doctrine lineage; current repo claims need refresh |
+| `ROUTE_MAP.md` | Current route inventory, but metadata still references the retired flat overview | Route facts are useful; document-relationship text needs later correction |
 | `MockAdapter.py` | Deterministic no-I/O selector for prevalidated complete synthetic envelopes | Fixture-selection proof, not semantic adapter or model integration |
-| MockAdapter proof | Covers four outcomes, determinism, isolation, malformed configuration, unknown scenario, and no-I/O imports | Component responsibility has bounded proof |
-| RuntimeResponseEnvelope | Proposed contract/schema, fixtures, validator, builder, and proof tests | Shape and local candidate-building proof only |
-| AIReceipt | Proposed contract/schema plus local validator | Shape/local consistency proof only |
+| RuntimeResponseEnvelope | Closed proposed schema, fixtures, validators, helpers, and proof tests | Shape and local candidate-building proof only |
+| AIReceipt | Closed proposed nine-field schema, validator, candidate builder, and mock-outcome projection | Bounded construction proof; no runtime emitter/store |
 | Governed API registry | `/bootstrap`, `/layers`, `/evidence` | No AI or Focus route is registered |
-| Governed API stub | Deterministic `ABSTAIN` with `NOT_IMPLEMENTED` | Trust-membrane placeholder, not an AI route |
-| Governed API AI subtree | README and `.gitkeep` | No orchestration implementation |
-| Explorer Focus resolver | Defensive projection over an injected resolver and allowlisted evidence refs | Client projection boundary; no direct model, policy, evidence, or store access |
-| Focus request/response schemas | Empty permissive proposed scaffolds with `additionalProperties: true` | No usable Focus wire contract is established |
-| Runtime policy | Non-enforcing scaffolds; no accepted evaluator or API binding | Policy pre/postcheck is not executable in this path |
+| Governed API stubs | Deterministic `ABSTAIN / NOT_IMPLEMENTED`, with fail-closed error shape | Trust-membrane scaffold, not an AI route |
+| Governed API AI subtree | Documentation and scaffold only | No composed orchestration implementation |
+| Explorer Focus resolver | Defensive projection over an injected resolver and allowlisted evidence refs | Client projection boundary; no direct model or store authority |
+| Focus request/response schemas | Empty permissive proposed scaffolds with `additionalProperties: true` | No stable Focus wire contract is established |
+| Internal evidence resolver | Standard-library `v1alpha1` candidate with `authoritative: false` | `RESOLVED` only continues governed checks; no public answer or AI composition |
+| CitationValidationReport | Proposed fixture-first contract/schema/validator family over declared states | Internal consistency proof; no source/evidence/policy/release authentication |
+| Runtime policy | Repository policy surfaces exist; composed evaluator binding is not proved | Policy precheck/postcheck remains `HOLD` for an AI transaction |
 | `OllamaAdapter.py` | One-line placeholder | No provider is admitted or invoked |
-| `ai_focus_worker/main.py` | One-line placeholder | No worker execution path |
-| Citation validator | Bounded repository search surfaced architecture references but no executable service | Implementation remains `NOT ESTABLISHED`; absence claim is search-bounded |
-| Focus mock workflow | Exercises bounded envelope and MockAdapter proof and explicitly retains HOLD | Green component proof would not prove runtime integration |
+| `ai_focus_worker/main.py` | Placeholder | No worker execution path |
+| Hosted workflows | Component-focused workflows exist for mock, envelope, receipt, evidence, and citation surfaces | A green component workflow would not prove end-to-end runtime or release |
 
 ### State distinctions
 
@@ -261,7 +298,7 @@ Keep these separate:
 - **shape proof** — schema/validator accepts and rejects reviewed cases;
 - **component proof** — one bounded implementation behaves deterministically;
 - **orchestration proof** — components compose in the intended order;
-- **policy/evidence closure** — referenced authority resolves and is applicable;
+- **policy/evidence/citation closure** — referenced authorities resolve and are applicable;
 - **runtime proof** — a known revision executed in a controlled environment;
 - **release/publication** — a separately authorized outward transition occurred.
 
@@ -269,32 +306,36 @@ No state implies the next.
 
 ---
 
+<a id="6--proposed-directory-tree"></a>
 ## 6 · Proposed directory tree
 
 This heading is retained for inbound compatibility. The tree below is a **current responsibility map**, not a proposal to create paths.
 
 ```text
-docs/architecture/governed-ai/            explanatory subsystem documents
+docs/architecture/governed-ai/            subsystem explanation and navigation
 apps/governed-api/                         public trust membrane and future orchestration
 apps/explorer-web/                         caller projection and trust-visible UI
 apps/workers/src/ai_focus_worker/          worker placeholder
 runtime/model_adapters/                    provider-neutral adapter lane
-runtime/ollama/                            deferred local-provider lane
+runtime/ollama/                            deferred provider-specific runtime lane
 contracts/runtime/                         RuntimeResponseEnvelope and AIReceipt meaning
-schemas/contracts/v1/runtime/              machine shapes
-schemas/contracts/v1/focus/                current permissive Focus scaffolds
-policy/runtime/                             current non-enforcing policy scaffolds
-packages/envelopes/                        bounded envelope helper implementation
-fixtures/contracts/v1/runtime/             reviewed synthetic envelope cases
-tests/runtime_proof/                       bounded runtime-envelope and adapter proof
-data/receipts/                             process memory, not truth or release authority
-release/                                   release/correction/rollback decision plane
+contracts/evidence/                        evidence and citation-report meaning
+schemas/contracts/v1/runtime/              runtime machine shapes
+schemas/contracts/v1/focus/                permissive Focus scaffolds
+schemas/contracts/v1/evidence/             evidence and citation-report machine shapes
+policy/runtime/ and policy/focus/           admissibility rule sources and documentation
+packages/envelopes/                        bounded envelope/receipt candidate helpers
+packages/evidence-resolver/                internal non-authoritative resolver candidate
+fixtures/ and tests/                        synthetic cases and bounded proof
+sites under data/receipts/                  process memory; never truth or release authority
+release/                                   release/correction/withdrawal/rollback decisions
 ```
 
-Directory Rules basis: this README stays under `docs/architecture/` because it explains a cross-root subsystem to humans. It does not create a new root, move authority, or convert a compatibility path into canon.
+Directory Rules basis: this README remains under `docs/architecture/` because it explains a cross-root subsystem to humans. It does not create a new root, move authority, or convert a compatibility path into canon.
 
 ---
 
+<a id="7--inputs"></a>
 ## 7 · Inputs
 
 A mature governed-AI operation should accept only explicit, validated, bounded inputs. Current repository support varies.
@@ -302,10 +343,10 @@ A mature governed-AI operation should accept only explicit, validated, bounded i
 | Input family | Required meaning | Current posture |
 |---|---|---|
 | Caller request | Requested task, selected scope, locale, interaction identity, and caller capabilities | Focus schemas are permissive scaffolds; wire contract unresolved |
-| Scope context | Geography, time, feature/layer identity, release identity, and precision ceiling | Partially represented across UI/Focus documents; no end-to-end contract proof |
-| Evidence context | Allowlisted `EvidenceRef`s that resolve to admissible `EvidenceBundle`s | Explorer projection checks allowlisted refs; runtime resolution not composed |
-| Policy context | Effective bundle/version, caller role, sensitivity, rights, and obligations | Runtime Rego is non-enforcing; evaluator binding absent |
-| Freshness/correction context | `as_of`, freshness state, supersession, correction, and withdrawal state | Envelope fields exist; source authority and computation remain external |
+| Scope context | Geography, time, feature/layer identity, release identity, and precision ceiling | Partially represented; no end-to-end contract proof |
+| Evidence context | Allowlisted `EvidenceRef`s that resolve to admissible `EvidenceBundle`s | Internal candidate exists; authoritative service composition absent |
+| Policy context | Effective bundle/version, caller role, sensitivity, rights, consent, sovereignty, and obligations | Composed runtime evaluation not established |
+| Freshness/correction context | `as_of`, freshness, supersession, correction, withdrawal, and release state | Envelope fields and evidence-history objects exist; transaction binding absent |
 | Adapter request | Minimized provider-neutral context and output constraints | Proposed by architecture/ADR material; no accepted machine contract established |
 | Provider configuration | Explicit provider/model allowlist and resource/security limits | No live provider admitted |
 
@@ -313,41 +354,43 @@ A mature governed-AI operation should accept only explicit, validated, bounded i
 
 1. Client-provided evidence references are candidates, not resolved truth.
 2. Context minimization happens before the adapter boundary.
-3. Raw, quarantine, canonical/internal, restricted, and unpublished stores are not adapter inputs.
-4. Prompt text never carries authority merely because it is labeled system or trusted.
-5. Unknown rights, sensitivity, release, or correction state fails closed.
+3. RAW, WORK, QUARANTINE, canonical/internal, restricted, and unpublished stores are not normal adapter inputs.
+4. Prompt text never carries authority merely because it is labeled system, trusted, or policy.
+5. Unknown rights, sensitivity, release, review, or correction state fails closed.
 6. Private chain-of-thought is neither an input requirement nor a receipt field.
+7. Untrusted text from users, evidence, connectors, tools, and model output remains data, never instructions to the control plane.
 
 ---
 
+<a id="8--outputs"></a>
 ## 8 · Outputs
 
-The only intended outward response family is the finite `RuntimeResponseEnvelope`. An `AIReceipt` is separate process memory and never substitutes for the response, evidence, policy, review, release, or publication state.
+The intended outward response family is the finite `RuntimeResponseEnvelope`. An `AIReceipt` is separate process memory and never substitutes for the response, evidence, policy, review, release, correction, or publication state.
 
-### Current RuntimeResponseEnvelope shape
+### Current RuntimeResponseEnvelope profile
 
-The current schema requires:
+The current closed schema requires:
 
 | Field | Current rule |
 |---|---|
-| `id` | Required string |
+| `id` | Required string with bounded identity pattern |
 | `spec_hash` | Required `sha256:` identity |
 | `version` | Required version string |
 | `issued_at` | Required date-time |
 | `outcome` | Exactly `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
 | `reason_code` | Required finite reason string |
-| `evidence_refs` | Required unique array |
+| `evidence_refs` | Required unique array; at least one for `ANSWER` |
 | `policy_state` | Required policy posture |
 | `freshness` | Required freshness posture |
 | `correction_state` | Required correction posture |
-| `precision_actually_used` | Required for `ANSWER`; forbidden for non-ANSWER outcomes |
-| additional properties | Closed at the top level |
+| `precision_actually_used` | Required for `ANSWER`; forbidden for non-`ANSWER` outcomes |
+| additional properties | Denied at the top level |
 
 The bounded builder validates local shape/profile rules. It does not resolve evidence, evaluate policy, calculate freshness, authorize precision, approve correction closure, or release a response.
 
-### Current AIReceipt shape
+### Current AIReceipt profile
 
-The current AIReceipt schema requires exactly these top-level fields:
+The closed AIReceipt schema requires exactly these top-level fields:
 
 - `id`
 - `run_id`
@@ -359,18 +402,19 @@ The current AIReceipt schema requires exactly these top-level fields:
 - `citation_validation_ref`
 - `outcome`
 
-The schema is closed. The local validator proves bounded shape and consistency only. Runtime emission, persistence, reference resolution, retention, signing, replay, correction propagation, and public exposure are not established.
+The candidate builder performs bounded local checks over caller-supplied values. The validator and focused tests prove shape and limited consistency only. Runtime emission, persistence, reference resolution, retention, signing, replay, correction propagation, and public exposure are not established.
 
 ### Output rules
 
-- `ANSWER` must still be bounded by evidence, policy, freshness, correction, and precision.
+- `ANSWER` must be bounded by resolved evidence, allowed policy, validated citations, current or declared freshness, correction state, and supported precision.
 - `ABSTAIN`, `DENY`, and `ERROR` are successful finite responses when their conditions apply.
-- A provider candidate is untrusted until validation and postcheck complete.
+- A provider candidate is untrusted until structured validation and postcheck complete.
 - A receipt records a process; it does not prove the answer true or publishable.
 - Debug traces, raw prompts, private reasoning, credentials, internal paths, and protected payloads do not belong in outward envelopes.
 
 ---
 
+<a id="9--core-doctrine"></a>
 ## 9 · Core doctrine
 
 The subsystem inherits these rules:
@@ -380,58 +424,81 @@ The subsystem inherits these rules:
 3. **Public clients use governed interfaces.** No direct browser-to-model or browser-to-canonical-store path.
 4. **AI is interpretive.** It does not decide source authority, rights, sensitivity, review, release, correction, or rollback.
 5. **Finite outcomes are first class.** Failure must not degrade into unsupported prose.
-6. **Derived stays derived.** Summaries, embeddings, indexes, graphs, and model output remain downstream carriers.
+6. **Derived stays derived.** Summaries, embeddings, indexes, graphs, maps, and model output remain downstream carriers.
 7. **Correction history is preserved.** A later answer does not erase an earlier released state.
-8. **Promotion is a governed transition.** A commit, PR, merge, passing test, receipt, or deployment is not publication.
-9. **Sensitive context fails closed.** Harmful precision and unclear rights trigger denial, abstention, generalization, staged access, or review.
+8. **Promotion is a governed transition.** A commit, pull request, merge, passing test, receipt, deployment, or badge is not publication.
+9. **Sensitive context fails closed.** Harmful precision and unclear rights trigger denial, abstention, generalization, staged access, delay, or review.
 10. **Determinism is preferred where practical.** Identity, fixtures, diagnostics, and replay inputs should be inspectable.
+11. **Receipts, proofs, reports, decisions, releases, and publications remain separate object families.**
+12. **Documentation states boundaries; it does not execute them.**
 
 ---
 
+<a id="10--object-families-and-homes"></a>
 ## 10 · Object families and homes
 
 | Object or responsibility | Semantic home | Machine/implementation home | Current posture |
 |---|---|---|---|
 | RuntimeResponseEnvelope | `contracts/runtime/` | runtime schema, envelope package, validators, fixtures, tests | Bounded proof; proposed profile |
-| AIReceipt | `contracts/runtime/` | runtime schema and local validator | Shape proof only |
-| Focus request/response | Focus contracts are not established in the inspected path | permissive Focus schemas and UI projection | HOLD |
-| Adapter boundary | proposed ADR and architecture docs | `runtime/model_adapters/` | Mock selector proven; live provider absent |
-| EvidenceRef/EvidenceBundle | evidence contracts | evidence resolver and governed API composition | Runtime AI composition absent |
-| PolicyDecision | policy/decision contracts | evaluator and policy bundle | Runtime binding absent |
-| CitationValidationReport | architecture/contract direction | executable service not surfaced in bounded search | NOT ESTABLISHED |
+| AIReceipt | `contracts/runtime/` | strict schema, validator, candidate builders, focused tests | Bounded shape/build proof; no emitter/store |
+| Focus request/response | No accepted semantic contract established in the inspected path | permissive Focus schemas and client projection | `HOLD` |
+| Adapter boundary | proposed ADR and architecture docs | `runtime/model_adapters/` | Mock selector proven; production seam and live provider absent |
+| EvidenceRef/EvidenceBundle | `contracts/evidence/` | internal evidence-resolver candidate and validators | Non-authoritative internal alpha; not composed into AI route |
+| VerificationStateHistory | `contracts/evidence/` | schema, validator, and bounded resolver replay | Bounded evidence-history support; no operational store |
+| PolicyDecision | policy/decision contracts | evaluator and policy bundle | Runtime AI binding absent |
+| CitationValidationReport | `contracts/evidence/` | strict proposed schema, fixture validator, tests, workflow | Declaration-consistency proof; no composed citation service |
+| GENERATED_RECEIPT | generated-receipt contract/schema | `data/receipts/generated/` and validator | Authoring provenance only; not runtime AIReceipt or review authority |
 | Release/correction/rollback records | release contracts and decisions | `release/` and accountability lanes | Not exercised by this documentation update |
 
 Do not duplicate one of these object families inside this directory. Architecture pages link to the authority surface; they do not redefine it.
 
+### Non-collapse rules
+
+- `EvidenceRef` is not `EvidenceBundle`.
+- Resolver `RESOLVED` is not `ANSWER`, policy `ALLOW`, review approval, or release.
+- Citation `PASS` is not evidence truth, source admission, rights clearance, or public authorization.
+- `AIReceipt` is not a `GENERATED_RECEIPT`, EvidenceBundle, proof, policy decision, review record, release manifest, or publication record.
+- RuntimeResponseEnvelope is not an answer store, canonical evidence object, or release manifest.
+- A browser projection, fixture, test, workflow, commit, or merge is not release or publication.
+
 ---
 
+<a id="11--finite-outcomes--the-trust-grammar"></a>
 ## 11 · Finite outcomes — the trust grammar
 
 | Outcome | Use | Minimum safe posture |
 |---|---|---|
-| `ANSWER` | Admissible, in-scope response | Resolved evidence, allowed policy, validated citations, current/declared freshness, visible correction and precision state |
-| `ABSTAIN` | Evidence missing, stale, conflicted, unsupported, or scope too broad | Stable reason code and no fabricated answer |
-| `DENY` | Policy, rights, sensitivity, caller capability, or precision blocks exposure | Stable reason code; do not leak protected details through explanation |
+| `ANSWER` | Admissible, in-scope response | Resolved evidence, allowed policy, validated citations, current or declared freshness, visible correction state, supported precision |
+| `ABSTAIN` | Evidence missing, stale, conflicted, unsupported, unresolved, or scope too broad | Stable reason code and no fabricated answer |
+| `DENY` | Policy, rights, sensitivity, caller capability, consent, sovereignty, or precision blocks exposure | Stable reason code; do not leak protected details through explanation |
 | `ERROR` | Tool, resolver, policy, adapter, validator, receipt, or orchestration failure | Stable reason code; no unsafe fallback |
 
-The existing MockAdapter scenario matrix proves selection of all four complete envelope outcomes. It does not prove that real evidence or policy selected the correct outcome.
+A safe default precedence is:
+
+1. malformed input or failed component state -> `ERROR`;
+2. explicit rights, sensitivity, access, consent, sovereignty, or purpose prohibition -> `DENY`;
+3. unresolved, stale, conflicted, corrected, withdrawn, or inadequate support -> `ABSTAIN`;
+4. `ANSWER` only after every required positive gate closes.
+
+The MockAdapter scenario matrix proves selection of all four complete synthetic envelope outcomes. It does not prove that real evidence or policy selected the correct outcome.
 
 ---
 
+<a id="12--the-governed-ai-request-flow"></a>
 ## 12 · The governed AI request flow
 
 ### Target architecture
 
 ```text
 caller request
-  -> validate caller-facing request and scope
-  -> authenticate/authorize caller
+  -> validate request and scope
+  -> authenticate and authorize caller
   -> resolve release, evidence, freshness, correction, rights, and sensitivity
   -> policy precheck and context minimization
   -> build provider-neutral adapter request
   -> invoke admitted adapter
   -> parse untrusted structured candidate
-  -> structured-output and citation validation
+  -> validate structure and citations
   -> policy postcheck and precision enforcement
   -> assemble RuntimeResponseEnvelope
   -> emit/store AIReceipt when required
@@ -443,17 +510,19 @@ caller request
 | Stage | Current result |
 |---|---|
 | Caller Focus projection | Partial defensive TypeScript logic exists |
-| Stable Focus wire contract | HOLD; schemas are permissive scaffolds |
+| Stable Focus wire contract | `HOLD`; schemas are permissive scaffolds |
 | Governed API AI route | Absent from route registry |
 | AI orchestration | Placeholder subtree only |
-| Evidence/policy composition | Not established |
-| Context minimization contract | Proposed in docs/ADR material |
+| Evidence resolution | Internal non-authoritative candidate exists; authoritative service composition absent |
+| Policy composition | Not established |
+| Context minimization contract | Proposed in docs and ADR material |
 | Mock candidate selection | Implemented bounded proof |
 | Live adapter invocation | Absent |
 | Structured candidate parsing | Not established end to end |
-| Citation validation | Executable service not established |
+| Citation validation | Fixture-first report validation exists; composed service absent |
 | Policy postcheck | Not established |
 | Final envelope assembly | Local builder exists; orchestration integration absent |
+| AIReceipt candidate construction | Bounded helper and tests exist |
 | AIReceipt emission/store | Not established |
 | Public governed answer | Not established |
 
@@ -461,17 +530,18 @@ The correct operational classification is **PARTIAL / HOLD**, not implemented an
 
 ---
 
+<a id="13--adapter-boundary"></a>
 ## 13 · Adapter boundary
 
-The adapter boundary should remain provider neutral and narrow.
+The adapter boundary should remain provider-neutral and narrow.
 
 ### Confirmed current implementations
 
 **MockAdapter**
 
-- loads a predefined scenario matrix;
-- requires complete synthetic envelopes for all four outcomes;
-- returns deep copies deterministically;
+- loads a caller-supplied fixed scenario matrix;
+- requires complete synthetic envelopes covering all four finite outcomes;
+- returns isolated deep copies deterministically;
 - rejects malformed configuration and unknown scenarios;
 - performs no network, subprocess, socket, model, file-write, evidence, policy, citation, receipt, or release operation.
 
@@ -481,32 +551,33 @@ It is therefore a **bounded selector**, not a semantic model adapter.
 
 - is a one-line placeholder;
 - proves only that a path and filename exist;
-- does not establish model discovery, invocation, timeout, resource limits, structured output, health checks, provider identity, or security controls.
+- does not establish model discovery, invocation, timeout, resource limits, structured output, health checks, provider identity, receipt generation, or security controls.
 
 ### Required provider-admission evidence
 
 Before a live provider can graduate, require at least:
 
 - an accepted adapter boundary and finite-envelope decision;
-- explicit provider/model allowlisting and immutable or traceable model identity;
+- explicit provider/model allowlisting and traceable model identity;
 - no direct client access;
-- bounded input/output sizes and timeouts;
-- no uncontrolled tool or filesystem access;
+- bounded input/output sizes, timeouts, cancellation, and resource limits;
+- no uncontrolled tool, network, subprocess, or filesystem access;
 - deterministic negative fixtures and failure mapping;
 - structured-output parsing that fails closed;
-- evidence/citation/policy integration outside provider authority;
+- evidence, citation, and policy integration outside provider authority;
 - AIReceipt emission and retention rules;
-- security, privacy, resource, and rollback review.
+- security, privacy, rights, operations, correction, and rollback review.
 
 Provider availability is a runtime fact, not architecture authority.
 
 ---
 
+<a id="14--citation-validation"></a>
 ## 14 · Citation validation
 
 Citation validation is a trust-bearing responsibility independent of model fluency.
 
-A mature validator must verify, as applicable:
+A mature operation must verify, as applicable:
 
 1. every consequential claim has a citation or the response abstains;
 2. references are allowlisted for the current request;
@@ -518,59 +589,63 @@ A mature validator must verify, as applicable:
 
 ### Current implementation boundary
 
-The inspected repository search surfaced citation-validation architecture references and AIReceipt fields, but no executable `CitationValidator` service was established. This is a bounded search result, not a byte-complete proof of global absence.
+The repository now contains a proposed, closed `CitationValidationReport` contract/schema, deterministic fixture validator, negative and positive cases, focused tests, and workflow wiring. That bounded profile derives `PASS`, `ABSTAIN`, `DENY`, or `ERROR` from caller-declared upstream states. It does not contact a source, resolve an EvidenceRef, authenticate an EvidenceBundle, evaluate policy, authenticate review, verify release, or authorize publication.
 
-Until executable behavior is verified:
+No composed citation-validation service was established in the inspected governed-AI route because no such route exists. Until composition is proved:
 
-- do not claim citation closure;
+- do not claim citation closure for a live answer;
 - do not emit `ANSWER` merely because references are syntactically present;
 - do not treat `citation_validation_ref` as resolved authority;
-- prefer `ABSTAIN` or `ERROR` when the required validation service is unavailable.
+- prefer `ABSTAIN` or `ERROR` when required validation is unavailable.
 
 ---
 
+<a id="15--policy-precheck-and-postcheck"></a>
 ## 15 · Policy precheck and postcheck
 
 Policy must surround provider invocation rather than live inside the provider.
 
 ### Precheck responsibilities
 
-- authenticate/authorize caller and operation;
+- authenticate and authorize caller and operation;
 - verify release, rights, sensitivity, consent, sovereignty, and access posture;
 - restrict evidence set and precision;
-- minimize prompt/context content;
-- deny raw, quarantine, canonical/internal, and unpublished material;
+- minimize prompt and context content;
+- deny RAW, WORK, QUARANTINE, canonical/internal, and unpublished material;
 - determine whether provider invocation is allowed at all.
 
 ### Postcheck responsibilities
 
 - validate finite outcome and reason code;
 - enforce allowed evidence and citation set;
-- enforce precision/generalization obligations;
+- enforce precision and generalization obligations;
 - screen prohibited disclosures and protected details;
-- preserve freshness, correction, supersession, and withdrawal state;
+- preserve freshness, correction, supersession, withdrawal, and release state;
 - decide whether the candidate may become a RuntimeResponseEnvelope.
 
 ### Current policy state
 
-The runtime policy README records non-enforcing Rego scaffolds. No accepted bundle, evaluator, version binding, Governed API consumer, or end-to-end allow/deny proof was established. Policy precheck/postcheck therefore remains **HOLD**.
+Repository policy surfaces and documentation exist, but no accepted effective bundle, evaluator binding, Governed API consumer, or end-to-end AI allow/deny proof was established. Policy precheck and postcheck therefore remain **HOLD** for an operational AI transaction.
 
-A policy stub, schema, README, or green syntax test is not a policy decision.
+A Rego file, schema, README, or green syntax test is not a PolicyDecision.
 
 ---
 
+<a id="16--aireceipt-and-replay-discipline"></a>
 ## 16 · AIReceipt and replay discipline
 
 AIReceipt is process memory. It is not evidence truth, policy approval, review approval, release authority, correction closure, or publication.
 
 ### Current proven boundary
 
-- semantic contract exists;
-- closed machine schema exists;
-- local validator exists;
-- runtime emitter/store/resolver is not established;
-- reference targets are not proven resolved;
-- signing, retention, replay, correction, and deletion behavior are not established.
+- proposed semantic contract exists;
+- closed nine-field machine schema exists;
+- deterministic candidate builder exists;
+- MockAdapter-outcome-to-receipt candidate projection and focused tests exist;
+- local validator and path-scoped workflow exist;
+- runtime emitter, durable store, resolver, and query surface are not established;
+- referenced policy and citation records are not proven resolved by receipt validation;
+- signing, retention, replay, correction, supersession, and deletion behavior are not established.
 
 ### Minimum future replay packet
 
@@ -579,21 +654,24 @@ A replayable operation should bind, through accepted contracts and referenced re
 - exact caller/request identity and scope;
 - evidence and release identities used;
 - policy decision and effective policy version;
-- adapter/model identity;
-- deterministic input/output digests;
+- adapter and model identity;
+- deterministic input and output digests;
 - citation-validation result;
 - finite outcome;
-- correction/supersession relationship;
+- correction or supersession relationship;
 - environment or nondeterminism disclosures needed to interpret replay.
+
+The current AIReceipt schema does not carry all of those fields. Future expansion requires contract/schema/consumer compatibility work; documentation must not invent them as present.
 
 Do not place raw prompts, full sensitive context, credentials, private chain-of-thought, or protected evidence in a receipt merely to make replay easier.
 
 ### Correction behavior
 
-A corrected answer should preserve prior receipt identity, identify the corrected or superseding operation, update outward release/correction state through the owning authority, and invalidate affected caches or derived surfaces where applicable. Silent overwrite is not correction.
+A corrected operation should preserve prior receipt identity, identify the correcting or superseding operation through the owning object families, update outward release/correction state, and invalidate affected caches or derived surfaces where applicable. Silent overwrite is not correction.
 
 ---
 
+<a id="17--trust-membrane-and-exposure-controls"></a>
 ## 17 · Trust membrane and exposure controls
 
 ### Allowed public path
@@ -601,7 +679,7 @@ A corrected answer should preserve prior receipt identity, identify the correcte
 ```text
 public client
   -> Governed API
-  -> released/public-safe evidence and policy context
+  -> released and public-safe evidence/policy context
   -> admitted adapter behind the API, when allowed
   -> validation and finite envelope
   -> public client
@@ -613,16 +691,21 @@ public client
 - browser directly to RAW, WORK, QUARANTINE, canonical/internal, proof, or steward stores;
 - provider directly reading repository paths or source stores;
 - client-supplied references becoming authoritative without resolution;
-- model output bypassing citation/policy postcheck;
+- model output bypassing citation or policy postcheck;
 - debug/error output leaking prompts, evidence excerpts, policy internals, restricted reasons, or precise protected geometry;
-- worker, watcher, receipt, test, or merge writing `PUBLISHED` state by implication.
+- worker, watcher, receipt, test, commit, merge, or deployment writing `PUBLISHED` state by implication.
 
 ### Local exposure
 
 A local provider must still use deny-by-default network exposure, explicit binding, least privilege, authenticated API mediation, bounded resources, auditable configuration, and no direct public client traffic. Local does not mean trusted or public-safe.
 
+### Sensitive contexts
+
+Archaeology, cultural and sacred places, rare species, living-person and genomic data, private land, critical infrastructure, hazards, and unclear-rights material remain denied, generalized, quarantined, staged, delayed, or abstained until qualified authority supports exposure. Aggregation, embeddings, graph projection, maps, tiles, or generated summaries do not automatically declassify the source.
+
 ---
 
+<a id="18--validation"></a>
 ## 18 · Validation
 
 Validation claims must name the layer they prove.
@@ -631,28 +714,29 @@ Validation claims must name the layer they prove.
 
 | Proof surface | Current coverage | Does not prove |
 |---|---|---|
-| RuntimeResponseEnvelope schema/fixtures/tests | Four outcomes, required fields, precision profile, negative cases | Evidence truth, policy choice, citation support, release |
-| Envelope builder | Deterministic local candidate assembly and invariants | Governed orchestration or outcome authorization |
-| MockAdapter tests | Four scenarios, determinism, isolation, malformed config, unknown scenario, no-I/O | Provider behavior, evidence/policy/citation integration |
-| AIReceipt validator | Local shape and cross-field consistency | Emission, storage, reference resolution, retention, replay, signing |
-| Explorer Focus resolver tests/logic | Defensive projection and finite client failure posture | Server route, model invocation, evidence resolution, policy enforcement |
-| Focus mock workflow | Runs bounded component proof | Whole-system Focus runtime or publication |
+| RuntimeResponseEnvelope schema, fixtures, validators, helpers, and tests | Four outcomes, required fields, precision profile, negative cases, deterministic candidate assembly | Evidence truth, policy choice, citation support, release |
+| MockAdapter tests | Four scenarios, determinism, isolation, malformed configuration, unknown scenario, no-I/O | Provider behavior, evidence/policy/citation integration |
+| AIReceipt schema, validator, builders, projection, and tests | Closed nine-field candidates and bounded consistency | Emission, storage, reference resolution, retention, replay, signing |
+| Evidence-resolver fixtures and tests | Internal deterministic candidate resolution, verification-history replay, no-network negatives | Authoritative evidence closure, policy, public outcome, release |
+| CitationValidationReport fixtures and validator | Closed report shape, declared-state consistency, finite results, deterministic identity | Source contact, evidence authentication, rights/policy/review/release authority |
+| Explorer Focus resolver tests and logic | Defensive projection and finite client failure posture | Server route, model invocation, authoritative evidence resolution, policy enforcement |
+| Component workflows | Path-scoped no-network checks | Whole-system Focus runtime, deployment, release, or publication |
 
 ### Graduation gates
 
 End-to-end governed AI remains on HOLD until the repository proves at least:
 
 - [ ] accepted adapter/finite-envelope decision and resolved overlap with the unassigned Focus candidate;
-- [ ] non-permissive caller and adapter wire contracts;
+- [ ] non-permissive caller, adapter-request, adapter-candidate, and final-response contracts;
 - [ ] registered Governed API route with authentication and authorization;
-- [ ] evidence resolution and allowlist enforcement;
-- [ ] executable policy precheck/postcheck with version binding;
+- [ ] authoritative EvidenceRef-to-EvidenceBundle resolution and allowlist enforcement;
+- [ ] executable policy precheck/postcheck with effective-version binding;
 - [ ] structured candidate parser and stable failure codes;
-- [ ] executable citation validation with negative fixtures;
-- [ ] precision, freshness, correction, and supersession enforcement;
+- [ ] composed citation validation with negative fixtures;
+- [ ] precision, freshness, correction, supersession, withdrawal, and release enforcement;
 - [ ] AIReceipt emission, validation, storage, resolution, retention, and correction behavior;
 - [ ] provider admission or explicit mock-only scope;
-- [ ] no-direct-client, no-raw-path, prompt-injection, leakage, timeout, and resource-limit tests;
+- [ ] no-direct-client, no-internal-store, prompt-injection, leakage, timeout, cancellation, and resource-limit tests;
 - [ ] hosted exact-head evidence and required-check posture appropriate to risk;
 - [ ] rollback and correction drill;
 - [ ] release decision for any outward use.
@@ -661,26 +745,26 @@ A green component test is necessary evidence for that component and nothing more
 
 ---
 
+<a id="19--sibling-docs-in-this-folder"></a>
 ## 19 · Sibling docs in this folder
 
-Sibling documents remain useful lineage and design aids, but several predate current implementation evidence. Read them with these bounds:
-
-| Document | Current use | Do not infer |
+| Document | Current use | Current caution |
 |---|---|---|
-| `ADAPTER_CONTRACT.md` | Proposed adapter/orchestration model | Accepted contract or live provider |
-| `AI_RECEIPTS.md` | Receipt design intent | Current schema fields beyond the canonical schema or runtime persistence |
-| `BOUNDARIES.md` | Trust-boundary guidance | Enforced policy or route behavior |
-| `CONTINUITY_NOTES.md` | Historical continuity | Current authority or implementation |
-| `FOCUS_FLOW.md` | Target flow | Registered route or working Focus runtime |
-| `MOCK_FIRST.md` | Bounded implementation sequencing | Mock proof equals provider readiness |
-| `OLLAMA_INTEGRATION.md` | Deferred provider plan | Ollama admission or current daemon state |
-| `PROMPT_INJECTION.md` | Security requirements | Complete executable coverage |
-| `ROUTE_MAP.md` | Proposed route map | Current route registration |
+| `ADAPTER_CONTRACT.md` | Repository-grounded adapter seam and bounded mock proof | Production seam and provider admission remain proposed |
+| `AI_RECEIPTS.md` | Current schema-paired receipt architecture, builders, validator, and proof | No operational emitter, store, retention, or correction path |
+| `BOUNDARIES.md` | Current trust boundaries, API stubs, resolver candidate, object-family separation | Bounded guards are not deployed end-to-end enforcement |
+| `CONTINUITY_NOTES.md` | Current continuity and lineage architecture | No live continuity runtime or durable AIReceipt store |
+| `FOCUS_FLOW.md` | Current client proof and proposed server orchestration | No registered Focus route or public operation |
+| `MOCK_FIRST.md` | Current deterministic mock proof and sequencing | Mock proof does not establish provider readiness |
+| `OLLAMA_INTEGRATION.md` | Current repository-grounded deferred provider plan | OllamaAdapter remains a placeholder; daemon/model state unknown |
+| `PROMPT_INJECTION.md` | Useful security doctrine and threat vocabulary | Proposal-era evidence, missing `STATE_OWNERSHIP.md` reference, and speculative receipt fields require modernization |
+| `ROUTE_MAP.md` | Current executable route inventory and legacy taxonomy crosswalk | Metadata and prose still reference the retired flat overview |
 
-The former README referenced `STATE_OWNERSHIP.md`, which is not a tracked sibling in the current directory. This revision removes the broken reference rather than inventing the file.
+Read each page within its declared evidence snapshot. A newer date or larger document does not automatically outrank contracts, schemas, policy, code, tests, or accepted decisions.
 
 ---
 
+<a id="20--anti-patterns"></a>
 ## 20 · Anti-patterns
 
 Do not:
@@ -688,67 +772,72 @@ Do not:
 - call bounded envelope proof an operational AI system;
 - place model invocation in the browser;
 - let a provider select authoritative evidence or policy;
-- treat a citation string as evidence resolution;
-- treat an AIReceipt as proof of truth or release;
+- treat resolver `RESOLVED` as `ANSWER`;
+- treat a citation string or report `PASS` as evidence resolution or release;
+- treat an AIReceipt or GENERATED_RECEIPT as truth, review, or publication authority;
 - accept permissive Focus scaffolds as a stable wire contract;
 - expose raw prompts, private reasoning, credentials, repository paths, or restricted evidence;
 - silently map provider failures to `ANSWER`;
 - hide stale, corrected, superseded, withdrawn, denied, or generalized states;
 - copy architecture prose into contracts or schemas as a parallel authority;
 - use a documentation update to accept an ADR or provider;
-- let watchers, workers, tests, commits, PRs, merges, or deployments publish by implication;
-- add a second governed-AI overview without a documented authority relationship;
-- fabricate replay from file mtimes, commit times, or missing records.
+- let watchers, workers, tests, commits, pull requests, merges, deployments, or receipts publish by implication;
+- recreate the retired flat overview or add a second landing page without an explicit authority, migration, consumer, and rollback decision;
+- fabricate replay from file modification times, commit times, or missing records.
 
 ---
 
+<a id="21--update-propagation"></a>
 ## 21 · Update propagation
 
 Update this README when a material governed-AI surface changes, but update the owning authority first or in the same coherent reviewed packet.
 
 | Change | Required companion review |
 |---|---|
-| RuntimeResponseEnvelope fields/outcomes | Contract, schema, builder, fixtures, tests, compatibility notes |
-| AIReceipt fields or lifecycle | Contract, schema, validator, emitter/store, retention/correction docs, tests |
+| RuntimeResponseEnvelope fields or outcomes | Contract, schema, builder, fixtures, tests, compatibility notes |
+| AIReceipt fields or lifecycle | Contract, schema, validator, builders/emitter/store, retention/correction docs, tests |
+| Evidence resolver behavior | Evidence contracts, schemas, fixtures, validator, consumers, policy/release boundaries |
+| Citation report or service behavior | Contract, schema, validator, fixtures, reason codes, policy/release integration |
 | Adapter interface or provider admission | ADR, adapter contract, runtime implementation, tests, security/runbook |
 | Governed API route | Route registry, request/response contracts, authorization, policy, tests, route map |
-| Evidence or citation behavior | Evidence contracts/resolver, citation validator, fixtures, reason codes, receipts |
 | Policy behavior | Policy source, evaluator/bundle version, fixtures, tests, obligations, rollback |
 | Focus client behavior | Focus contracts/schemas, Explorer implementation, accessibility and negative-state tests |
 | Release/publication posture | Release manifest/decision, correction, rollback, cache and client behavior |
-| Canonical overview disposition | ADR or migration note, parent navigation, inbound links, tombstone/rollback plan |
+| Landing-page or path retirement | Parent navigation, inbound links, registries, aliases/tombstones if required, validation, rollback |
 
-Do not update this page first and then cite it as authority for the behavior change.
+Do not update this page first and then cite it as authority for a behavior change.
 
 ---
 
+<a id="22--rollback"></a>
 ## 22 · Rollback
 
 ### Documentation rollback
 
-Restore prior blob:
+Restore immediate prior target blob:
 
 ```text
-718282655d5752351d46122af1620e37c2bf05c6
+9e1071bb69910bde3f364d319923c4db00637639
 ```
 
-This reverses the README text only. It does not change adapters, routes, contracts, schemas, policy, tests, receipts, release state, deployment, or public behavior.
+and remove only the generated authoring receipt added with this revision. That reverses the README refresh without recreating `docs/architecture/governed-ai.md` or changing adapters, routes, contracts, schemas, policy, tests, evidence, receipts, release state, deployment, or public behavior.
 
 ### Implementation rollback expectations
 
 Future runtime changes must define their own rollback unit. At minimum preserve:
 
 - previous compatible request/response and adapter contract versions;
-- provider disable/deny path;
+- provider disable or deny path;
 - prior policy bundle and decision references;
-- receipt and correction lineage;
+- evidence, receipt, and correction lineage;
 - cache invalidation and client finite-failure behavior;
 - no fallback to direct model or internal-store access.
 
-Rollback must not erase evidence of an earlier released answer or receipt.
+Rollback must not erase evidence of an earlier released answer, receipt, correction, or withdrawal.
 
 ---
 
+<a id="23--review-burden"></a>
 ## 23 · Review burden
 
 | Change class | Minimum review posture |
@@ -756,15 +845,17 @@ Rollback must not erase evidence of an earlier released answer or receipt.
 | Editorial clarification in this README | Docs/architecture review route |
 | Repository-evidence refresh | Docs plus affected implementation owner |
 | Contract/schema field or enum change | Contract/schema/consumer/compatibility review |
+| Evidence or citation behavior | Evidence, citation, policy, validation, and affected consumer review |
 | Policy or sensitivity behavior | Policy, security/privacy, affected-domain, and negative-test review |
-| New provider or model | Runtime, security, evidence, policy, API, resource, and rollback review |
-| New public AI route | API, auth, evidence, policy, citation, UI, accessibility, correction, release review |
-| Canonical overview migration | Architecture/docs decision plus link and rollback review |
+| New provider or model | Runtime, security, evidence, policy, API, resource, operations, and rollback review |
+| New public AI route | API, authentication, evidence, policy, citation, UI, accessibility, correction, and release review |
+| Landing-page retirement or path migration | Architecture/docs decision plus consumer, fragment, link, and rollback review |
 
 CODEOWNERS routing is not proof that these reviews occurred or that separation of duties exists.
 
 ---
 
+<a id="24--adrs"></a>
 ## 24 · ADRs
 
 | Record | Current status | Relevance |
@@ -778,29 +869,31 @@ CODEOWNERS routing is not proof that these reviews occurred or that separation o
 | ADR-0035 — repository-wide ADR identity/numbering | Proposed | Does not assign or accept the Focus boundary candidate |
 | ADR-focus-model-adapter-boundary | Not assigned | Overlaps ADR-0019; requires fold-in or explicit non-overlap before assignment |
 
-This README does not change any status.
+Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) retired a duplicate documentation path. It did not accept or reject any governed-AI ADR. This README changes no decision status.
 
 ---
 
+<a id="25--open-questions-and-verification-backlog"></a>
 ## 25 · Open questions and verification backlog
 
 ### P0 — authority and trust closure
 
-- Resolve the parallel `governed-ai.md` versus folder-README authority relationship.
 - Resolve ADR-0019 overlap with the unassigned Focus adapter-boundary candidate.
 - Define accepted caller, adapter-request, adapter-candidate, and final-envelope boundaries.
 - Replace permissive Focus scaffolds before declaring a stable wire contract.
-- Establish executable evidence, policy, and citation composition before any `ANSWER` route.
-- Define AIReceipt emission, storage, resolution, retention, correction, and access policy.
+- Establish authoritative evidence, executable policy, and composed citation validation before any `ANSWER` route.
+- Define AIReceipt emission, storage, resolution, retention, correction, access, and deletion policy.
+- Repair remaining active references to retired `docs/architecture/governed-ai.md` through a separately bounded consumer-aware cleanup.
 
-### P1 — bounded implementation
+### P1 — bounded implementation and documentation closure
 
-- Register an authenticated mock-only Governed API route with explicit non-public/release posture.
-- Implement orchestration over existing synthetic envelope proofs without a live provider.
-- Add deterministic citation-validator fixtures and finite reason codes.
+- Register an authenticated mock-only Governed API route with explicit non-public and no-release posture.
+- Implement orchestration over existing synthetic proof surfaces without a live provider.
 - Bind policy precheck/postcheck to a versioned executable bundle.
-- Prove no-direct-client, no-internal-store, evidence-allowlist, prompt-injection, leakage, timeout, and error mapping.
+- Prove no-direct-client, no-internal-store, evidence-allowlist, prompt-injection, leakage, timeout, cancellation, and error mapping.
 - Implement or explicitly retire the AI Focus worker placeholder.
+- Modernize `PROMPT_INJECTION.md` against current contracts, schemas, paths, receipts, and tests.
+- Refresh `ROUTE_MAP.md` metadata and relationship prose after flat-overview retirement.
 
 ### P2 — provider and operational maturity
 
@@ -814,13 +907,14 @@ This README does not change any status.
 
 - accepted governed-AI and provider stewards;
 - independent review and separation of duties;
-- production provider/model selection;
+- production provider and model selection;
 - deployed route, runtime, and network topology;
 - public release scope;
 - retention jurisdiction and operational incident response.
 
 ---
 
+<a id="26--related-folders"></a>
 ## 26 · Related folders
 
 - [`docs/architecture/README.md`](../README.md)
@@ -833,39 +927,47 @@ This README does not change any status.
 - [`runtime/model_adapters/README.md`](../../../runtime/model_adapters/README.md)
 - [`runtime/ollama/README.md`](../../../runtime/ollama/README.md)
 - [`contracts/runtime/README.md`](../../../contracts/runtime/README.md)
+- [`contracts/evidence/README.md`](../../../contracts/evidence/README.md)
 - [`schemas/contracts/v1/runtime/README.md`](../../../schemas/contracts/v1/runtime/README.md)
 - [`schemas/contracts/v1/focus/README.md`](../../../schemas/contracts/v1/focus/README.md)
+- [`schemas/contracts/v1/evidence/README.md`](../../../schemas/contracts/v1/evidence/README.md)
 - [`policy/runtime/README.md`](../../../policy/runtime/README.md)
+- [`policy/focus/README.md`](../../../policy/focus/README.md)
 - [`packages/envelopes/README.md`](../../../packages/envelopes/README.md)
+- [`packages/evidence-resolver/README.md`](../../../packages/evidence-resolver/README.md)
 - [`tests/runtime_proof/README.md`](../../../tests/runtime_proof/README.md)
 - [`data/receipts/README.md`](../../../data/receipts/README.md)
+- [`data/receipts/ai/README.md`](../../../data/receipts/ai/README.md)
+- [`data/receipts/generated/README.md`](../../../data/receipts/generated/README.md)
 - [`release/README.md`](../../../release/README.md)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md)
 
 ---
 
+<a id="27--last-reviewed"></a>
 ## 27 · Last reviewed
 
-**Reviewed:** 2026-08-14 against `main@710173d51a3a6bf288997df6f3eb4bf7f4da1ef6`.
+**Reviewed:** 2026-08-20 against `main@21cdb5ff7d630a39f70fc03d44b31b91eb63b1aa`.
 
 ### Evidence ledger
 
 | Evidence class | Included | Excluded conclusion |
 |---|---|---|
-| Current repository bytes | Target, sibling inventory, ADRs, routes, implementations, contracts, schemas, policy docs, tests, workflows | Does not prove deployment or release |
-| Bounded component tests | Envelope, MockAdapter, Focus projection, local validators | Does not prove orchestration or authority closure |
-| Hosted evidence | Prior workflow surfaces were inspected only where explicitly cited by governing ADRs/docs | No exact-head runtime claim for this README update |
-| External provider/runtime | Not exercised | No provider availability, security, or performance claim |
-| Release/publication | Not exercised | No KFM publication claim |
+| Current repository topology | Target, ten-file folder inventory, merged PR #3149 deletion, current main | Does not prove every stale consumer is repaired |
+| Current repository bytes | Companions, routes, stubs, adapters, contracts, schemas, policy docs, packages, tests, and receipt requirements | Does not prove deployment or release |
+| Bounded component proof | Envelope, MockAdapter, AIReceipt builders/validator, evidence resolver, citation report, Focus projection | Does not prove orchestration or authority closure |
+| Hosted exact-head evidence | Pending after feature-branch and draft-PR creation | No hosted result is claimed here before it exists |
+| External provider/runtime | Not exercised | No provider availability, security, performance, or model-rights claim |
+| Release/publication | Not exercised | No KFM release or publication claim |
 
 ### Non-effects of this revision
 
 This documentation-only update does not:
 
+- recreate the retired flat overview, rewrite all remaining stale consumers, or change another document's authority;
 - accept or reject an ADR;
-- choose a canonical overview;
-- alter a contract, schema, policy rule, fixture, test, workflow, route, adapter, worker, receipt, release, correction, or rollback object;
-- invoke a provider, resolve evidence, evaluate policy, validate citations, or emit an AIReceipt;
-- release, deploy, publish, or change repository settings.
+- alter a contract, schema, policy rule, fixture, test, workflow, route, adapter, worker, package, evidence object, runtime receipt, release, correction, or rollback record;
+- invoke a provider, resolve authoritative evidence, evaluate policy, compose citation validation, or emit a runtime AIReceipt;
+- release, deploy, publish, activate a source or provider, or change repository settings.
 
-A future revision should update the evidence snapshot rather than preserving stale implementation claims.
+Future revisions should refresh the pinned evidence snapshot rather than preserving stale implementation claims.
