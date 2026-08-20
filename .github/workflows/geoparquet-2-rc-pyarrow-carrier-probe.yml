@@ -83,7 +83,7 @@ jobs:
           KFM_NO_NETWORK: "1"
         run: |
           set -euo pipefail
-          python tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py \
+          python -m tools.validators.release.validate_geoparquet_2_rc_pyarrow_carriers \
             --root artifacts/qa/geoparquet-2-rc-pyarrow-carriers \
             --manifest artifacts/qa/geoparquet-2-rc-pyarrow-carriers/manifest.json
 

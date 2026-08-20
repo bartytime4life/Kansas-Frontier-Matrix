@@ -120,8 +120,16 @@ def validate(root: Path, manifest_path: Path) -> Result:
         schema = _json(SCHEMA)
         Draft202012Validator.check_schema(schema)
         manifest = _json(manifest_path)
-        if list(Draft202012Validator(schema).iter_errors(manifest)):
-            return Result("ERROR", ("SCHEMA_INVALID",))
+        schema_errors = list(Draft202012Validator(schema).iter_errors(manifest))
+        if schema_errors:
+            schema_reasons = {"SCHEMA_INVALID"}
+            for error in schema_errors:
+                error_path = list(error.absolute_path)
+                if error_path and error_path[0] == "governance":
+                    schema_reasons.add("GOVERNANCE_BOUNDARY_VIOLATION")
+                if error_path == ["outcome"]:
+                    schema_reasons.add("DECLARED_OUTCOME_MISMATCH")
+            return Result("ERROR", tuple(sorted(schema_reasons)))
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
         return Result("ERROR", ("INPUT_UNAVAILABLE",))
 
@@ -145,6 +153,8 @@ def validate(root: Path, manifest_path: Path) -> Result:
         return Result("ERROR", tuple(sorted(set([*reasons, "CARRIER_MISSING"]))))
 
     try:
+        if any(entry["sha256"] != _digest(path) for entry, path in zip(entries, paths)):
+            reasons.append("CARRIER_DIGEST_MISMATCH")
         files = tuple(pq.ParquetFile(path) for path in paths)
         tables = tuple(pq.read_table(path) for path in paths)
     except Exception:
@@ -159,6 +169,11 @@ def validate(root: Path, manifest_path: Path) -> Result:
         reasons.append("RC_GEOMETRY_LOGICAL_TYPE_MISSING")
     if not all(_declared(entry, path, file) for entry, path, file in zip(entries, paths, files)):
         reasons.append("CARRIER_DECLARATION_MISMATCH")
+    if any(
+        entry["geo_metadata"] != _metadata(file)[0]
+        for entry, file in zip(entries, files)
+    ):
+        reasons.append("CARRIER_METADATA_DECLARATION_MISMATCH")
     if any(file.metadata.num_row_groups != 2 for file in files):
         reasons.append("ROW_GROUP_LAYOUT_MISMATCH")
     if any(table.column("feature_id").to_pylist() != IDS for table in tables):
