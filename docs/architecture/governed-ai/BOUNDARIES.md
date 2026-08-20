@@ -1,621 +1,1159 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-governed-ai-boundaries
-title: Governed AI — Boundaries
-type: standard
-version: v0.1
-status: draft
-owners: <AI-SURFACE-STEWARD> · NEEDS VERIFICATION
+title: Governed AI — Boundary and Trust-Membrane Reference
+type: architecture-reference
+version: v2.0.0-draft
+status: draft; repository-grounded; bounded-guards-present; end-to-end-runtime-hold; non-authoritative; no-release; no-publication
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — independent Governed API, governed-AI, runtime, evidence, policy, citation, security, privacy, contracts, schemas, validation, correction, release, UI, and accessibility stewardship"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-20
 policy_label: public
+truth_posture: cite-or-abstain
+owning_root: docs/
+current_path: docs/architecture/governed-ai/BOUNDARIES.md
+responsibility: >-
+  Explain the current governed-AI trust boundaries, the bounded repository
+  guards that exist, the target evidence-to-model-to-client flow, the object
+  families that must not collapse, and the proof required before a live
+  governed-AI operation may cross the trust membrane.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 4592507a4698a08b74bf154d1249e2ce0bf1592a
+  target_prior_blob: 5364452ed999cd79154afcfa7bf8bd50379a944b
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
+  governed_ai_readme_blob: 9e1071bb69910bde3f364d319923c4db00637639
+  adapter_architecture_blob: d38351198939b63a57e583cb404a0daf379fa3a4
+  ai_receipts_architecture_blob: 721bf4647f49a510a597d7b3c4d305bc70fa3097
+  focus_flow_blob: 6f6d98f4101acfe686d20d31665317240d705f42
+  mock_first_blob: 7d123cab64a6da5dd6a191dd5b42d44418f3da23
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  governed_api_registry_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+  governed_api_boundary_test_blob: 4035e537e6c52194928df5ab8ceb41a35f5f30ca
+  governed_api_abstain_test_blob: 2be20f5d93c03da7677c34b11a31875a00b2ed28
+  explorer_focus_types_blob: 919ba17b92405d0998689ca8579fa42e74f4df60
+  explorer_focus_parser_blob: 35f068145735430ad05d7bd7e4db6c4fe017a19b
+  explorer_focus_resolver_blob: 45aa4e7479a8c95138f98cc48c846f39a16aec2d
+  explorer_boundary_test_blob: 97d44069b0a5ab4a82b1e1fc48665e905c08a287
+  boundary_constants_blob: 6c61f8e9160faa6d91b9c3e0cb6713dad153d9b5
+  evidence_resolver_readme_blob: d64f112e9fe6538178c74dd31cc751235781c7f3
+  evidence_runtime_projection_blob: af3fe40b628e15530878e4bbe0449e5d61827442
+  runtime_response_contract_blob: 5060aaaa30fea37b6eeea6e1428b9effa6a163bd
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
+  ai_receipt_schema_blob: 2e0bebdb3a38acbc3c58a919db46970c6e829b4a
+inspection_boundary: >-
+  Current-session GitHub reads covered the complete prior target, accepted
+  Directory Rules and ADR-0029, the governed-AI folder inventory and current
+  companions, current Governed API dispatcher, registry, stubs, route and
+  boundary tests, Explorer Focus request/projection types, parser, resolver,
+  policy boundary tests, the internal evidence-resolver package and runtime
+  projection, model-adapter documentation and Mock/Ollama implementations,
+  RuntimeResponseEnvelope and AIReceipt contracts/schemas/validators, current
+  route and decision ADRs, generated-receipt requirements, current main, and
+  exact-target open-PR overlap. No authenticated identity provider, grant
+  store, active Focus policy evaluator, authoritative evidence service,
+  citation service, AIReceipt emitter or durable store, provider endpoint,
+  model daemon, deployed Focus route, public client session, runtime log,
+  release environment, correction propagation, rollback drill, or publication
+  was exercised.
 related:
-  - directory-rules.md#12
-  - ai-build-operating-contract.md#14
-  - ai-build-operating-contract.md#15
-  - ai-build-operating-contract.md#21
-  - ai-build-operating-contract.md#34
-  - kfm_unified_doctrine_synthesis.md#11
-  - kfm_unified_doctrine_synthesis.md#20
-  - kfm_unified_doctrine_synthesis.md#21
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#19
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#205
-  - KFM_Unified_Implementation_Architecture_Build_Manual.md#15
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md#10
-  - docs/architecture/cross-domain/README.md
-tags: [kfm, architecture, governed-ai, boundaries, trust-membrane, cite-or-abstain, ai-receipt]
+  - README.md
+  - ADAPTER_CONTRACT.md
+  - AI_RECEIPTS.md
+  - CONTINUITY_NOTES.md
+  - FOCUS_FLOW.md
+  - MOCK_FIRST.md
+  - OLLAMA_INTEGRATION.md
+  - PROMPT_INJECTION.md
+  - ROUTE_MAP.md
+  - ../TRUST_MEMBRANE.md
+  - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - ../../adr/ADR-0008-ollama-subordinate-to-governed-api.md
+  - ../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - ../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../../apps/governed-api/src/governed_api/main.py
+  - ../../../apps/governed-api/src/governed_api/routes/registry.py
+  - ../../../apps/governed-api/tests/test_boundary_guards.py
+  - ../../../apps/explorer-web/src/features/focus_panel/resolver.ts
+  - ../../../packages/evidence-resolver/README.md
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/runtime/ai_receipt.md
+  - ../../../data/receipts/generated/README.md
+tags: [kfm, architecture, governed-ai, boundaries, trust-membrane, public-client, evidence, policy, model-adapter, citation, finite-outcomes, ai-receipt, runtime-response-envelope, cite-or-abstain]
 notes:
-  - PROPOSED. Folder-vs-flat-file placement diverges from directory-rules.md §12 pattern (same family as OPEN-DR-10).
-  - ALL-CAPS filename is a deliberate "foundational doc" signal; not a KFM-wide convention. Flagged as OPEN-DR-11 (PROPOSED).
-  - This doc is an architectural view; ai-build-operating-contract.md remains canonical for builder behavior.
-  - No mounted repo evidence in this session; all repo-shaped claims labeled PROPOSED.
+  - "v2.0.0-draft is a same-path repository-grounded rewrite; it changes documentation and its required generated authoring receipt only."
+  - "The former OPEN-DR-11 placement discussion is obsolete for this file: accepted ADR-0029 supports PLACE at the existing docs/architecture/governed-ai/ path."
+  - "The previous page mixed builder-AI and runtime-AI receipt requirements and named speculative schema homes; this revision separates current object families and removes unverified paths."
+  - "Current source-level and fixture-level guards are bounded proof, not deployed network, identity, policy, evidence, citation, release, or publication enforcement."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="governed-ai-boundaries"></a>
+<a id="governed-ai--boundaries"></a>
 
 # Governed AI — Boundaries
 
-> *The architectural view of what AI may and may not do inside KFM — across both the builder surface (AI authoring code, docs, schemas) and the runtime surface (Focus Mode answering over evidence). One set of boundaries; two contexts where they apply.*
+> **Operating boundary.** KFM may use generated language only as a bounded interpretation of governed context. Public clients, model providers, receipts, projections, schemas, tests, and documents do not create evidence truth, policy permission, review approval, release authority, or publication state.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED%20(spine)-blue)
-![directory-rules](https://img.shields.io/badge/directory--rules-v1.2%20%C2%A712-informational)
-![truth-posture](https://img.shields.io/badge/posture-cite--or--abstain-success)
-![ai-receipt](https://img.shields.io/badge/AIReceipt-mandatory-success)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft · **Owners:** `<AI-SURFACE-STEWARD>` *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
+| Field | Current repository-grounded result |
+|---|---|
+| **Evidence snapshot** | `main@4592507a4698a08b74bf154d1249e2ce0bf1592a` |
+| **Placement** | Existing architecture reference under `docs/architecture/governed-ai/`; `PLACE` under accepted ADR-0029 and adopted Directory Rules v2 |
+| **Current dynamic API surface** | Three `GET` routes: `/bootstrap`, `/layers`, and `/evidence`; all return deterministic `ABSTAIN / NOT_IMPLEMENTED` scaffold responses |
+| **Governed-AI / Focus HTTP route** | **Absent from the current registry** |
+| **Current Explorer Focus surface** | Fixture-first, no-network, strict app-local request and public-safe projection parsing through an injected resolver |
+| **Current evidence resolution** | Internal, non-authoritative `v1alpha1` candidate check; `RESOLVED` means continue governed checks, not `ANSWER` |
+| **Current model adapter** | Deterministic no-I/O `MockAdapter` selector; Ollama implementation remains a placeholder |
+| **Current policy and citation composition** | Not established as an executing end-to-end Focus flow |
+| **Current runtime accountability** | Proposed nine-field `AIReceipt` shape with bounded candidate builders and validator; no emitter or durable store verified |
+| **Current client envelope** | Proposed schema-paired `RuntimeResponseEnvelope`; no answer text, citations, or AIReceipt reference in its current machine shape |
+| **Current boundary proof** | Selected source-level import/path guards, strict client parsers, finite-envelope fixtures, validators, and focused tests |
+| **End-to-end governed-AI operation** | **Not established / HOLD** |
+| **Release or publication effect** | None |
 
 > [!IMPORTANT]
-> **AI is an interpretive layer, never the root truth source.** `EvidenceBundle` outranks generated language. Generated text never substitutes for evidence, policy, review state, source authority, or release state. This is **CONFIRMED doctrine** *(KFM Operating Law §1.8; `kfm_unified_doctrine_synthesis.md` §20; `ai-build-operating-contract.md` §1)*. Every other rule in this doc derives from it.
+> **A boundary is an authority separation, not a slogan.** “No direct model client” does not mean governed orchestration can never consult internal authority services. It means the browser and provider do not receive direct store access. Evidence, policy, release, and correction services may be consulted only through bounded internal interfaces; the provider receives minimized admissible context, and the client receives only an accepted public-safe response profile.
 
 > [!CAUTION]
-> **Path placement diverges from Directory Rules v1.2 §12** in two ways: §12 shows the convention as `docs/architecture/<topic>.md` *(flat file)*, and this file uses a **subfolder** plus an **ALL-CAPS filename**. Recorded as **OPEN-DR-11 (PROPOSED)** below. The ALL-CAPS form is intentional — it signals a foundational doc the way `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`, and `CODEOWNERS` do — but it is not a KFM-wide convention. See [§2 — Repo fit](#2-repo-fit--directory-rules-basis).
+> **Current guards are deliberately narrow.** Import scans, forbidden path-literal scans, strict TypeScript parsers, fixture tests, and a no-I/O mock selector prove selected properties of source and synthetic inputs. They do not prove deployed network isolation, authentication, authorization, secret handling, egress control, policy execution, evidence authority, citation closure, receipt persistence, release binding, or public safety.
 
-> [!NOTE]
-> **What this doc is and is not.** It is the **architectural** statement of the AI surface boundaries. It is **not** the AI builder operating contract *(that is `ai-build-operating-contract.md` — canonical)*; it is **not** the runtime envelope schema *(those are `schemas/contracts/v1/runtime/` and `schemas/contracts/v1/ai/`)*; it is **not** the per-domain sensitivity matrix *(that is `kfm_unified_doctrine_synthesis.md` §15–16 + Atlas §20.5)*. It points to all of them and consolidates the boundary view.
+> [!WARNING]
+> **Do not collapse current object families.** The app-local Focus projection is not the canonical runtime envelope. An evidence-resolver `RESOLVED` candidate is not an `ANSWER`. An `AIReceipt` is not evidence or release proof. A generated authoring receipt is not a runtime `AIReceipt`. A passing workflow, pull request, merge, deployment, or polished document is not publication.
+
+**Quick navigation:** [Checkpoint](#0-current-repository-checkpoint) · [Scope](#1-scope) · [Placement](#2-repo-fit--directory-rules-basis) · [Two AI contexts](#3-two-surfaces-one-set-of-boundaries) · [Boundary picture](#4-the-boundary-picture) · [Principles](#5-first-principles) · [Boundary set](#6-the-five-canonical-boundaries) · [Crossings](#7-trust-membrane-crossings--what-may-pass-in-and-out) · [Outcomes](#8-finite-outcomes--the-only-legal-ai-return-values) · [Focus flow](#9-runtime-contract-focus-mode-flow) · [Adapters](#10-adapter-discipline--mockadapter-first-provider-neutral) · [Denials](#11-hard-denials--when-ai-must-deny-or-error) · [Sensitivity](#12-sensitive-domain-denial-defaults) · [Reasoning](#13-no-chain-of-thought-as-evidence) · [Object homes](#14-schema-and-contract-homes) · [Anti-patterns](#15-anti-patterns) · [Open work](#16-open-questions-and-adr-triggers) · [Related](#17-related-docs) · [Appendix](#18-appendix--glossary-and-quick-reference)
+
+---
+
+<a id="0-current-repository-checkpoint"></a>
+
+## 0. Current repository checkpoint
+
+The prior edition was useful doctrine, but it was authored before current repository evidence was available. It treated paths and controls as proposed, kept an obsolete Directory Rules divergence discussion, named speculative schema locations, and implied a more complete receipt and runtime flow than the current repository proves.
+
+Current evidence supports a narrower and more useful split.
+
+### 0.1 Confirmed bounded surfaces
+
+| Surface | What current bytes prove | What they do **not** prove |
+|---|---|---|
+| [`apps/governed-api/src/governed_api/main.py`](../../../apps/governed-api/src/governed_api/main.py) | Small WSGI dispatcher, bounded JSON responses, `404` for unknown paths, and `405` for unsupported methods on registered paths | Authentication, authorization, policy, evidence resolution, citation validation, model invocation, release binding, or deployment |
+| [`routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly `/bootstrap`, `/layers`, and `/evidence` are registered | A Focus/model/AI route or a complete public API |
+| [`test_abstain_routes.py`](../../../apps/governed-api/tests/test_abstain_routes.py) | Every registered route returns schema-shaped `ABSTAIN / NOT_IMPLEMENTED` scaffold state | Evidence-backed `ANSWER`, accepted policy, or production behavior |
+| [`test_boundary_guards.py`](../../../apps/governed-api/tests/test_boundary_guards.py) | Selected forbidden imports, route manifest, safe `404`/`405`, and forbidden internal path literals are checked | Complete dependency, network, credential, data-flow, or deployment isolation |
+| [`types.ts`](../../../apps/explorer-web/src/features/focus_panel/types.ts) | Closed app-local Focus request/projection vocabulary and finite client states | Canonical semantic or schema authority |
+| [`parsers.ts`](../../../apps/explorer-web/src/features/focus_panel/parsers.ts) | Exact-field parsing, bounded text, HTTPS citation syntax, answer/negative-state coherence, and Evidence Drawer parity | Authentication of evidence, policy, review, release, freshness, citation, or receipt declarations |
+| [`resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Injected-resolver boundary, empty-scope abstention, identity binding, and EvidenceRef allowlist enforcement without browser transport or store access | Governed API transport, EvidenceBundle resolution, policy execution, model inference, or receipt emission |
+| [`test_explorer_web_adapter_boundary.py`](../../../tests/policy/test_explorer_web_adapter_boundary.py) | Selected map-import placement and forbidden store-literal checks | Complete browser dependency graph, network egress, or deployed isolation |
+| [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) | Pure internal candidate evaluation with finite local statuses and no I/O | Authoritative lookup, source admission, policy, review, release, public answer, or publication |
+| [`runtime_projection.py`](../../../packages/evidence-resolver/src/evidence_resolver/runtime_projection.py) | `RESOLVED` projects only to `CONTINUE_GOVERNED_CHECKS`; other candidate states fail closed | Final runtime outcome or render authority |
+| [`MockAdapter.py`](../../../runtime/model_adapters/MockAdapter.py) | Deterministic deep-copy selection from a complete synthetic four-outcome matrix without I/O | Request interpretation, evidence resolution, policy, citations, provider calls, outcome authority, or receipt emission |
+| [`OllamaAdapter.py`](../../../runtime/model_adapters/OllamaAdapter.py) | Placeholder file exists | An admitted or executable local provider |
+| [`RuntimeResponseEnvelope`](../../../contracts/runtime/runtime_response_envelope.md) and [schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Proposed closed finite client-envelope profile and `ANSWER`-only precision disclosure | Answer payload, citations, receipt reference, semantic outcome selection, or release |
+| [`AIReceipt`](../../../contracts/runtime/ai_receipt.md) and [schema](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | Proposed closed nine-field accountability profile and bounded local validation/building | Runtime emission, persistence, reference resolution, retention, signing, correction, approval, or release |
+| [`data/receipts/generated/`](../../../data/receipts/generated/README.md) | Separate process-memory lane for AI-authored repository artifacts | Runtime AI accountability, factual proof, human approval, or publication |
+
+### 0.2 Current maturity statement
+
+**CONFIRMED:** KFM has meaningful boundary primitives: a fail-closed API scaffold, strict fixture-first client projection, internal evidence-candidate check, deterministic mock selector, finite envelope profile, receipt profile, and selected negative tests.
+
+**CONFIRMED:** those pieces are not composed into a live governed-AI transaction.
+
+**PROPOSED:** the target boundary model in this page defines how a complete transaction should separate authority and fail safely.
+
+**UNKNOWN:** deployed network paths, live identities, effective grants, provider processes, operational policy, authoritative evidence lookup, citation service, receipt storage, correction propagation, and public behavior.
+
+**NEEDS VERIFICATION:** accepted decision status, canonical request/response composition, executing controls, independent review, exact-head hosted checks, release binding, and rollback rehearsal.
+
+[Back to top](#top)
 
 ---
 
-## Table of contents
-
-1. [Scope](#1-scope)
-2. [Repo fit — Directory Rules basis](#2-repo-fit--directory-rules-basis)
-3. [Two surfaces, one set of boundaries](#3-two-surfaces-one-set-of-boundaries)
-4. [The boundary picture](#4-the-boundary-picture)
-5. [First principles](#5-first-principles)
-6. [The five canonical boundaries](#6-the-five-canonical-boundaries)
-7. [Trust-membrane crossings — what may pass in and out](#7-trust-membrane-crossings--what-may-pass-in-and-out)
-8. [Finite outcomes — the only legal AI return values](#8-finite-outcomes--the-only-legal-ai-return-values)
-9. [Runtime contract (Focus Mode flow)](#9-runtime-contract-focus-mode-flow)
-10. [Adapter discipline — MockAdapter-first; provider-neutral](#10-adapter-discipline--mockadapter-first-provider-neutral)
-11. [Hard denials — when AI MUST `DENY` or `ERROR`](#11-hard-denials--when-ai-must-deny-or-error)
-12. [Sensitive-domain denial defaults](#12-sensitive-domain-denial-defaults)
-13. [No chain-of-thought as evidence](#13-no-chain-of-thought-as-evidence)
-14. [Schema and contract homes](#14-schema-and-contract-homes)
-15. [Anti-patterns](#15-anti-patterns)
-16. [Open questions and ADR triggers](#16-open-questions-and-adr-triggers)
-17. [Related docs](#17-related-docs)
-18. [Appendix — glossary and quick reference](#18-appendix--glossary-and-quick-reference)
-
----
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-This doc states **what the boundaries of governed AI are in KFM**, architecturally. It applies to two contexts simultaneously:
+This page explains the architecture boundaries that govern model-mediated and AI-assisted behavior in KFM.
 
-- **Builder context** — an AI system *(Claude, Cursor, Copilot, custom agents, AI-assisted maintainers)* proposing, creating, editing, validating, or explaining KFM repository content.
-- **Runtime context** — an AI system *(Focus Mode, governed-API AI surfaces, local model adapters)* answering questions over released evidence at runtime.
+### In scope
 
-> [!TIP]
-> **The boundaries are the same in both contexts.** AI's role does not change: interpret, summarize, draft, propose — never publish, never decide truth, never bypass evidence, never read internal stores. The implementation surfaces differ; the boundaries do not.
+- the public-client, Governed API, evidence, policy, provider, output, receipt, correction, and release separations;
+- current repository-present guards and their proof limits;
+- the target sequence from bounded request to finite client outcome;
+- the distinction between runtime AI and repository-authoring AI;
+- provider context minimization and prompt-injection containment;
+- finite outcomes and fail-closed precedence;
+- sensitive-domain, precision, data-minimization, telemetry, and chain-of-thought rules;
+- current contract, schema, package, app, policy, receipt, and release homes;
+- validation, graduation, rollback, and open verification.
 
-[↑ Back to top](#top)
+### Out of scope
+
+This page does not:
+
+- accept [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md), [`ADR-0008`](../../adr/ADR-0008-ollama-subordinate-to-governed-api.md), [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md), or [`ADR-0025`](../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md);
+- define a new semantic contract, JSON Schema, policy rule, route, provider profile, fixture, validator, workflow, data object, or release record;
+- authenticate current declarations embedded in fixtures;
+- claim a live provider, Focus route, evidence service, citation service, receipt store, release, deployment, or publication;
+- make documentation the source of runtime authority.
+
+### Authority rule
+
+Architecture prose may explain and reconcile current evidence. It cannot override:
+
+1. accepted decisions;
+2. semantic contracts;
+3. machine schemas;
+4. policy source;
+5. implementation and observed runtime behavior;
+6. evidence, review, release, correction, and rollback records.
+
+When those surfaces conflict, this page records the conflict and keeps the operation on `HOLD`; it does not choose a winner silently.
+
+[Back to top](#top)
 
 ---
+
+<a id="2-repo-fit--directory-rules-basis"></a>
 
 ## 2. Repo fit — Directory Rules basis
 
-### 2.1 Path divergence (to reconcile)
+### Placement outcome: `PLACE`
 
-| Concern | Requested path | Canonical pattern *(`directory-rules.md` §12)* | Recommended resolution |
-|---|---|---|---|
-| Folder vs flat file | `docs/architecture/governed-ai/BOUNDARIES.md` *(folder)* | `docs/architecture/<topic>.md` *(flat file)* | If the `governed-ai/` lane needs ≥3 sibling docs, keep the folder. Otherwise flatten to `docs/architecture/governed-ai.md`. **PROPOSED.** |
-| ALL-CAPS filename | `BOUNDARIES.md` | KFM convention is kebab-case for most docs; ALL-CAPS reserved for `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, etc. | Decide via ADR whether `BOUNDARIES.md` joins the "foundational doc" ALL-CAPS family. The ALL-CAPS signal is intentional *(this is doctrine, not narrative)*; the convention is just unspecified for non-standard names. **PROPOSED.** |
+Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) as the writable placement authority. This target is an existing human-readable architecture reference under `docs/architecture/governed-ai/`; it remains at the same path.
 
-> [!IMPORTANT]
-> **OPEN-DR-11 (PROPOSED).** Resolve folder-vs-flat-file *and* ALL-CAPS-filename-convention in one ADR. Companion to OPEN-DR-10 *(cross-domain folder)*. Resolution lands as either an amendment to `directory-rules.md §12` *(extending the convention)* or as a clarification stating both patterns are acceptable when the doc carries a foundational role.
+The former `OPEN-DR-11` treatment is not current placement authority for this file. No new root, parallel architecture home, contract home, schema home, policy home, receipt family, or release lane is created.
 
-### 2.2 Where this folder sits
+| Responsibility | Owning root or surface | Role of this page |
+|---|---|---|
+| Human boundary explanation | `docs/architecture/governed-ai/` | Current owning lane |
+| Binding decisions | `docs/adr/` | Report status and dependencies; never accept by prose |
+| Semantic meaning | `contracts/` | Link and summarize |
+| Machine shape | `schemas/` | Link and report exact current fields |
+| Admissibility and obligations | `policy/` | Report current scaffolds and target gates |
+| Deployable API and clients | `apps/` | Report current executable evidence |
+| Provider-neutral runtime lane | `runtime/model_adapters/` | Report current selector/placeholder evidence |
+| Reusable evidence and envelope code | `packages/` | Report bounded package behavior |
+| Fixtures, validators, and tests | `fixtures/`, `tools/`, `tests/` | Bound proof claims to exact scope |
+| Process-memory receipt instances | governed `data/receipts/` lanes | Preserve object-family separation |
+| Release, correction, withdrawal, rollback | `release/` and accepted companion families | Never decide here |
 
-```mermaid
-flowchart TB
-  subgraph DOCS["docs/architecture/  ✅ canonical (directory-rules.md §12)"]
-    THIS["governed-ai/  ⚠ PROPOSED · folder vs flat"]
-    CROSS["cross-domain/  ⚠ PROPOSED · OPEN-DR-10"]
-    OTHER["<topic>.md (flat)"]
-  end
-  subgraph AIBOC["ai-build-operating-contract.md  ✅ canonical"]
-    BUILD["builder behavior · §§13–19 · §21"]
-  end
-  subgraph SCHEMAS["schemas/contracts/v1/  ✅ canonical"]
-    AI_S["ai/ · runtime/  (envelopes, receipts)"]
-  end
-  subgraph POLICY["policy/  ✅ canonical"]
-    AI_P["<topic>/  (AI gates, pre/post checks)"]
-  end
-  THIS -. architectural view of .-> BUILD
-  THIS -. architectural view of .-> AI_S
-  THIS -. architectural view of .-> AI_P
-  classDef warn fill:#fff4e0,stroke:#d97706,color:#7c2d12;
-  classDef canon fill:#e1f5fe,stroke:#01579b;
-  class THIS warn;
-  class CROSS warn;
-  class BUILD,AI_S,AI_P,OTHER canon;
-```
+### Decision status
 
-> **Doctrine basis.** `directory-rules.md` §12: *"Cross-domain doctrine → `docs/architecture/<topic>.md`, not under `docs/domains/<picked-one>/`"* — **CONFIRMED**. This doc is cross-domain doctrine *(governed AI applies to every domain)* and therefore correctly lives under `docs/architecture/`; the only divergence is folder + filename style.
+| Decision | Current source posture | Boundary consequence |
+|---|---|---|
+| ADR-0029 — Directory Rules v2 | **Accepted** | Governs placement |
+| ADR-0004 — Governed API as dynamic membrane | **Draft / effectively proposed** | Current app is a candidate scaffold, not an accepted complete membrane |
+| ADR-0008 — Ollama subordinate to Governed API | **Draft / effectively proposed** | Consistent with current structure; no provider admission |
+| ADR-0019 — provider-neutral adapter and finite envelopes | **Draft / effectively proposed** | Bounded code exists; production seam remains unaccepted |
+| ADR-0025 — public client store isolation | **Draft / effectively proposed** | Selected guards exist; deployed isolation remains unproved |
 
-[↑ Back to top](#top)
+Implementation can be consistent with a proposed decision without accepting it. Conversely, accepting a decision would not prove complete enforcement.
+
+[Back to top](#top)
 
 ---
 
-## 3. Two surfaces, one set of boundaries
+<a id="3-two-surfaces-one-set-of-boundaries"></a>
 
-| Surface | What it does | Where its rules live | Where its schemas live |
-|---|---|---|---|
-| **Builder** | AI proposes/creates/edits/validates KFM repo content *(docs, schemas, fixtures, validators, policies, ADRs, runbooks, UI payloads, API contracts)*. | `ai-build-operating-contract.md` §§13–19 *(preflight, allowed, denied, response posture, file creation/edit/move contracts)*; §34 *(`GENERATED_RECEIPT`)* | `schemas/contracts/v1/ai/generated_receipt.schema.json` *(PROPOSED)* |
-| **Runtime** | AI answers questions at runtime via Focus Mode or governed-API AI routes, over released `EvidenceBundle`. | `ai-build-operating-contract.md` §21 *(Governed AI runtime contract)*; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15 *(governed AI and Focus Mode)*; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(governance and trust-membrane chapter)* | `schemas/contracts/v1/ai/focus_mode_request.schema.json` · `focus_mode_response.schema.json` · `ai_receipt.schema.json` · `evidence/citation_validation_report.schema.json` · `runtime/decision_envelope.schema.json` *(all PROPOSED)* |
+## 3. Two AI contexts, one trust posture—not one contract
 
-> [!IMPORTANT]
-> **Same boundaries; different shapes of receipt.** The builder emits `GENERATED_RECEIPT.json`; the runtime emits `AIReceipt`. Both record context + provider/model + inputs/outputs + policy decisions + citations. **Both are mandatory whenever AI participates.**
+The prior page described “builder AI” and “runtime AI” as two surfaces using one set of boundaries. The useful idea remains, but the object families and authority paths must stay distinct.
 
-[↑ Back to top](#top)
+| Context | What it does | Evidence source | Receipt family | Terminal authority |
+|---|---|---|---|---|
+| **Repository-authoring AI** | Inspects authorized repository evidence, proposes or writes bounded changes, runs available validation, and opens reviewable work | Current user authority, attached sources, repository bytes, tests, checks, and generated artifacts | [`GENERATED_RECEIPT`](../../../data/receipts/generated/README.md) when required for AI-authored diffs | Human review and repository governance; never release/publication by the receipt |
+| **Runtime governed AI** | Interprets a bounded request over admitted context and returns a candidate inside governed orchestration | Resolved and policy-admissible evidence, release/correction state, request scope, and accepted runtime controls | Proposed [`AIReceipt`](../../../contracts/runtime/ai_receipt.md) where an accepted operation requires it | Governed orchestration plus separate evidence, policy, citation, review, release, correction, and rollback authority |
+
+Shared posture:
+
+- generated language is never root truth;
+- authority-bearing refs must resolve or the operation fails closed;
+- no secret or protected payload is exposed to the wrong surface;
+- finite outcomes replace improvisational fallback;
+- receipts preserve process memory but do not approve their own subject;
+- changes and runtime operations remain reviewable and reversible.
+
+Non-collapse rules:
+
+- a generated authoring receipt is not an AI runtime receipt;
+- a repository tool may read files within authorized task scope; that does not authorize a runtime model to read lifecycle stores;
+- runtime orchestration may consult internal authority services; the provider receives only minimized context;
+- a runtime receipt may record an event; it does not make the event's answer true or releasable.
+
+[Back to top](#top)
 
 ---
+
+<a id="4-the-boundary-picture"></a>
 
 ## 4. The boundary picture
 
-> **Evidence basis:** Atlas §19 *(Cross-Domain Systems — Governed AI runtime and AIReceipt)*; `kfm_unified_doctrine_synthesis.md` §§20–21; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15. **CONFIRMED doctrine.**
+### 4.1 CONFIRMED current disconnected proof surfaces
 
 ```mermaid
 flowchart TB
-  subgraph PUBLIC["Public side of the trust membrane"]
-    USER["User or system request<br/><i>+ MapContextEnvelope</i>"]
-    UI["Public UI / Evidence Drawer / Focus Mode"]
+  subgraph CLIENT["Explorer fixture-first Focus surface"]
+    FR["Strict app-local request parser"]
+    IR["Injected resolver function"]
+    FP["Strict public-safe projection parser"]
+    SC["Request / claim / EvidenceRef scope checks"]
+    UI["Finite view + Evidence Drawer parity"]
+    FR --> IR --> FP --> SC --> UI
   end
-  subgraph GOV["Governed boundary (where AI lives)"]
-    SCOPE["Scope classification"]
-    PRE["Policy precheck"]
-    EVD["EvidenceRef → EvidenceBundle resolution"]
-    CTX["Released-only context assembly"]
-    ADAPT["Provider-neutral model adapter"]
-    OUTV["Structured output validation"]
-    CITV["Citation validation"]
-    POST["Policy postcheck"]
-    ENV["RuntimeResponseEnvelope<br/><i>ANSWER · ABSTAIN · DENY · ERROR</i>"]
-    REC["AIReceipt + RunReceipt"]
+
+  subgraph API["Governed API scaffold"]
+    REG["/bootstrap · /layers · /evidence"]
+    NEG["ABSTAIN / NOT_IMPLEMENTED"]
+    SAFE["404 / 405 safe ERROR"]
+    REG --> NEG
+    REG --> SAFE
   end
-  subgraph INTERNAL["Internal side — AI may NEVER read directly"]
-    RAW["RAW · WORK · QUARANTINE"]
-    CANON["Canonical / internal stores"]
-    SOURCE["Live source APIs"]
-    MODEL["Direct model runtime"]
+
+  subgraph EVIDENCE["Internal evidence candidate"]
+    ERC["EvidenceRef + supplied bundle candidate"]
+    RP["RESOLVED → CONTINUE_GOVERNED_CHECKS"]
+    ERC --> RP
   end
-  USER --> SCOPE
-  SCOPE --> PRE
-  PRE -- "deny" --> ENV
-  PRE -- "allow" --> EVD
-  EVD -- "no closure" --> ENV
-  EVD -- "closure ok" --> CTX
-  CTX --> ADAPT
-  ADAPT --> OUTV
-  OUTV --> CITV
-  CITV -- "fail" --> ENV
-  CITV -- "pass" --> POST
-  POST --> ENV
-  ENV --> REC
-  REC --> UI
-  INTERNAL -. NEVER reached by AI .- ADAPT
-  classDef pub fill:#c8e6c9,stroke:#1b5e20;
-  classDef gov fill:#e1f5fe,stroke:#01579b;
-  classDef int fill:#ffebee,stroke:#b71c1c;
-  class USER,UI pub;
-  class SCOPE,PRE,EVD,CTX,ADAPT,OUTV,CITV,POST,ENV,REC gov;
-  class RAW,CANON,SOURCE,MODEL int;
+
+  subgraph RUNTIME["Runtime proof primitives"]
+    MOCK["MockAdapter: synthetic envelope selector"]
+    ENV["RuntimeResponseEnvelope fixtures / validator / builder"]
+    REC["AIReceipt candidate builders / validator"]
+    MOCK --> ENV
+    MOCK -. "bounded projection helper" .-> REC
+  end
+
+  API -. "no AI route" .- CLIENT
+  EVIDENCE -. "no governed API composition" .- API
+  RUNTIME -. "no provider or policy/citation composition" .- API
 ```
 
-> [!NOTE]
-> **Read the picture as a containment statement.** Everything between the user and the UI passes through the governed boundary. The internal stores at the bottom *(RAW/WORK/QUARANTINE, canonical/internal stores, live source APIs, direct model runtimes)* are not on any path AI may take. The boundary is what makes them unreachable; bypassing the boundary is the canonical anti-pattern.
+The absence of connecting arrows is material. Current pieces exercise boundaries separately. They do not establish a live request path.
 
-[↑ Back to top](#top)
+### 4.2 PROPOSED target governed runtime flow
+
+```mermaid
+flowchart LR
+  C["Governed client request"] --> A["Authentication, capability, audience, purpose, scope"]
+  A --> P1["Policy / rights / sensitivity precheck"]
+  P1 -->|blocked| O["Finite outcome selection"]
+  P1 --> E["EvidenceRef resolution through authority service"]
+  E -->|unresolved / denied / error| O
+  E --> R["Release, correction, withdrawal, freshness, precision checks"]
+  R -->|blocked| O
+  R --> M["Minimized admissible context"]
+  M --> AD["Provider-neutral adapter"]
+  AD --> UC["Untrusted structured candidate"]
+  UC --> SV["Structured-output validation"]
+  SV --> CV["Citation / support validation"]
+  CV --> P2["Policy postcheck and disclosure obligations"]
+  P2 --> O
+  O --> AR["AIReceipt candidate and persistence if required"]
+  AR --> RESP["Accepted public-safe response composition"]
+  RESP --> G["Governed API"]
+  G --> CL["Strict client projection"]
+```
+
+The target sequence preserves three hard facts:
+
+1. evidence and permission are determined outside the provider;
+2. provider output is still untrusted after generation;
+3. final client state is selected by orchestration, not by fluent text.
+
+The exact request contract, response payload, route, receipt sequencing, and envelope composition remain **PROPOSED / NEEDS VERIFICATION**.
+
+[Back to top](#top)
 
 ---
+
+<a id="5-first-principles"></a>
 
 ## 5. First principles
 
-> **Evidence basis:** `ai-build-operating-contract.md` §1.8; `kfm_unified_doctrine_synthesis.md` §§20–21; Atlas §19; SRC-GAI doctrine. **CONFIRMED doctrine throughout.**
+### 5.1 Evidence outranks generation
 
-1. **AI is interpretive, not the truth source.** Generated text never substitutes for evidence, policy, review state, source authority, or release state.
-2. **`EvidenceBundle` outranks generated language.** A cited bundle is authoritative; a fluent paragraph is not.
-3. **Cite-or-abstain is the default truth posture.** If the AI surface cannot cite resolved evidence, it MUST `ABSTAIN`.
-4. **Memory is not evidence.** Recollection, guessed paths, likely behavior, and generic best practice are not facts. Confidence is not a substitute for verification.
-5. **AI runs behind the governed API boundary, never as a direct public surface.** Browser-to-model traffic without the governed boundary is a hard denial.
-6. **AI may not bypass policy, rights, sensitivity, or release state.** Urgency is not an exception; convenience is not an exception.
-7. **Every AI inference emits a receipt.** Builder → `GENERATED_RECEIPT`; runtime → `AIReceipt`. No receipt, no inference.
-8. **Private chain-of-thought is never persisted as evidence.** KFM may store auditable summaries, inputs, outputs, hashes, citations, policy decisions, validation reports, and receipts — never the model's hidden reasoning.
+A consequential claim must depend on admitted support appropriate to its scope. A model may summarize, compare, classify, translate, or draft from that support. It cannot create the missing authority.
 
-[↑ Back to top](#top)
+Failure posture:
+
+- unresolved or inadequate support → `ABSTAIN`;
+- explicit rights, sensitivity, or access prohibition → `DENY`;
+- failed service or malformed state → `ERROR`.
+
+### 5.2 Public clients use governed interfaces
+
+The browser must not address lifecycle stores, canonical stores, evidence-internal stores, release-internal stores, graph/search internals, provider endpoints, or credentials directly.
+
+A separately governed static edge may eventually serve immutable released public-safe carriers. Placement under `data/published/` alone is not public routing or release authority.
+
+### 5.3 Orchestration is allowed to mediate; providers are not
+
+A safe system must be able to resolve evidence, policy, review, release, correction, and freshness. Those internal authority calls belong to governed orchestration or dedicated services.
+
+The provider adapter must not receive:
+
+- store handles, database credentials, service tokens, or unrestricted network tools;
+- raw lifecycle paths or arbitrary internal queries;
+- unresolved or out-of-scope EvidenceRefs;
+- hidden policy source or protected denial rationale;
+- more precise or sensitive context than the approved operation needs.
+
+### 5.4 Candidate output is not a final response
+
+Adapter output remains untrusted. Structured parsing, citation validation, evidence-scope checks, policy postcheck, precision/freshness/correction review, and finite outcome selection occur after generation.
+
+### 5.5 Receipts are accountability, not truth
+
+A receipt records provenance or process state. It cannot replace:
+
+- an EvidenceBundle;
+- a PolicyDecision;
+- citation validation;
+- human review;
+- release or correction authority;
+- observed runtime behavior.
+
+### 5.6 Boundaries fail closed
+
+Unknown authority does not become permissive because the system can produce plausible language. Missing, malformed, stale, corrected, withdrawn, denied, or operationally unavailable state yields a finite negative outcome.
+
+### 5.7 Boundaries are reversible
+
+A provider, route, policy profile, response version, released answer, or cached projection must be independently disableable, supersedable, correctable, and rollback-bound. Current repository evidence does not yet prove this operationally for Focus.
+
+[Back to top](#top)
 
 ---
 
-## 6. The five canonical boundaries
+<a id="6-the-five-canonical-boundaries"></a>
 
-> **Doctrine status:** the five boundaries below are CONFIRMED individually across the corpus *(citations in each row)*. The grouping under "five canonical boundaries" is a **PROPOSED naming** for this architectural view; the rules themselves are CONFIRMED.
+## 6. The five boundary families
 
-| # | Boundary | What AI MUST NOT cross | Doctrine source |
-|---|---|---|---|
-| 1 | **Truth boundary** | AI MUST NOT decide truth. `EvidenceBundle` is authoritative; generated language is not. | `kfm_unified_doctrine_synthesis.md` §20; Atlas §19 |
-| 2 | **Trust-membrane boundary** | AI MUST NOT read `RAW` / `WORK` / `QUARANTINE`, canonical/internal stores, live source APIs, or feed those into prompts. | Atlas §24.9.2; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15.5 |
-| 3 | **Citation boundary** | AI MUST NOT emit consequential claims without resolved citations. If citation validation fails, AI MUST `ABSTAIN`. | `kfm_unified_doctrine_synthesis.md` §21; `ai-build-operating-contract.md` §21 |
-| 4 | **Receipt boundary** | AI MUST NOT operate without emitting `AIReceipt` *(runtime)* or `GENERATED_RECEIPT` *(builder)*. Private chain-of-thought MUST NOT be persisted as evidence. | `ai-build-operating-contract.md` §21.4, §34 |
-| 5 | **Authority boundary** | AI MUST NOT publish, promote, approve releases, set policy, decide source role, or change review state. AI proposes; humans + policy decide. | `ai-build-operating-contract.md` §15; Atlas §19 |
+The old section name is retained for anchor compatibility. “Canonical” here does not mean these prose labels are accepted contract or ADR authority.
 
-> [!IMPORTANT]
-> **A violation of any one is a violation of all five — because they are inter-locked.** Reading `RAW` *(boundary 2)* would let AI emit uncited claims *(boundary 3)* that become truth *(boundary 1)* without a receipt *(boundary 4)* and effectively bypass authority *(boundary 5)*. The boundaries are a single membrane viewed from five angles.
+### 6.1 Truth and evidence boundary
 
-[↑ Back to top](#top)
+**Question:** What can support a consequential claim?
+
+| May support progression | Cannot create support |
+|---|---|
+| Admitted source roles, resolvable EvidenceRefs, admissible EvidenceBundles, valid temporal/spatial scope, correction-aware verification state | Model confidence, repeated generated wording, map pixels, search ranking, graph centrality, receipt presence, or schema validity alone |
+
+Current nuance: the evidence-resolver package evaluates one caller-supplied candidate and returns `authoritative: false`. Its `RESOLVED` state permits remaining governed checks; it does not authorize rendering.
+
+### 6.2 Public-client and trust-membrane boundary
+
+**Question:** Which interfaces may public or ordinary clients use?
+
+Allowed target:
+
+- a governed dynamic API response;
+- an approved static release-resolved carrier;
+- a strict app-local projection derived from one of those surfaces.
+
+Forbidden target:
+
+- direct lifecycle/canonical/evidence-internal/release-internal/model-runtime access;
+- browser-held provider credentials;
+- browser-side policy or release authority;
+- raw provider streams rendered as answers.
+
+Current nuance: source-level guards and fixture-only clients exist; deployed network and static-edge enforcement remain unverified.
+
+### 6.3 Provider and context boundary
+
+**Question:** What may enter or leave a provider adapter?
+
+The adapter may receive a bounded internal request and minimized context after prechecks. It may return a structured candidate plus provider-local status and bounded usage metadata.
+
+It must not own evidence admission, policy, citations, final outcomes, public envelope assembly, receipts as approval, release, correction, or rollback.
+
+Current nuance: `MockAdapter` does not implement this semantic seam; it selects already complete synthetic envelopes. Ollama remains a placeholder.
+
+### 6.4 Output, citation, and accountability boundary
+
+**Question:** What must happen before candidate language can become a client-visible answer?
+
+Target gates:
+
+1. structured-output validation;
+2. claim-to-support and citation checks;
+3. EvidenceRef scope and authority checks;
+4. policy postcheck;
+5. precision, freshness, correction, and withdrawal checks;
+6. finite outcome selection;
+7. required accountability record assembly and persistence.
+
+Current nuance: isolated envelope, receipt, and citation-report profiles exist, but no service composes them end to end. The current `RuntimeResponseEnvelope` machine shape has no answer text, citation array, or AIReceipt reference; that composition must be decided explicitly.
+
+### 6.5 Authority, release, correction, and publication boundary
+
+**Question:** Who decides that a response or carrier may be exposed?
+
+Neither a model, adapter, resolver candidate, receipt, validator, document, pull request, merge, workflow, nor deployment can decide publication alone.
+
+A claim-bearing public path requires support appropriate to consequence, including:
+
+- identity and request authority;
+- evidence and source role;
+- rights and sensitivity;
+- validation and citation closure;
+- review and release state;
+- correction, withdrawal, and rollback behavior;
+- current response/profile compatibility.
+
+Current nuance: no Focus release or public operation is established.
+
+[Back to top](#top)
 
 ---
+
+<a id="7-trust-membrane-crossings--what-may-pass-in-and-out"></a>
 
 ## 7. Trust-membrane crossings — what may pass in and out
 
-> **Evidence basis:** Atlas §19, §24.9.2; `kfm_unified_doctrine_synthesis.md` §20; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10. **CONFIRMED doctrine.**
+### 7.1 Browser to Governed API
 
-### 7.1 What may cross **inward** (toward the AI adapter)
+A future request may carry only accepted, bounded client state such as:
 
-| Inward crossing | Allowed | Required gating |
-|---|---|---|
-| `MapContextEnvelope` *(camera, layers, features, time, evidence refs)* | ✅ | Envelope admission check; release-ref binding required. |
-| Released `EvidenceBundle`(s) resolved from `EvidenceRef` | ✅ | Citation closure verified before context assembly. |
-| User question text *(prompt)* | ✅ | Anti-prompt-injection scan *(see `ai-build-operating-contract.md` §12)*; scope classification. |
-| Policy context *(decision IDs, sensitivity tier, audience class)* | ✅ | `PolicyDecision` references; not raw policy bytes. |
-| RAW / WORK / QUARANTINE bytes | ❌ | Hard denial *(boundary 2)*. |
-| Canonical / internal store content | ❌ | Hard denial. |
-| Live source API responses *(unfetched, ungoverned)* | ❌ | Hard denial; sources cross the membrane via the connector + intake lifecycle, not via AI context. |
-| Hidden feature properties not in `LayerManifest` | ❌ | Hard denial. |
-| Unreleased candidate artifacts | ❌ | Hard denial. |
+- request/correlation identity;
+- question or requested transform;
+- audience, purpose, and capability context;
+- map, feature, domain, spatial, temporal, and release scope;
+- allowed EvidenceRefs or a governed scope selector;
+- requested output profile and precision.
 
-### 7.2 What may cross **outward** (toward the UI)
+It must not carry or request:
 
-| Outward crossing | Allowed | Required gating |
-|---|---|---|
-| `RuntimeResponseEnvelope` with `outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}` | ✅ | Structured output validation; citation validation report attached on `ANSWER`. |
-| `EvidenceDrawerPayload` *(governed projection of `EvidenceBundle`)* | ✅ | Policy postcheck; sensitivity-redacted projection. |
-| Reason codes *(abstain reason, denial reason, error code)* | ✅ | Bounded vocabulary; no free-text leak of internal state. |
-| `AIReceipt` ID *(reference)* | ✅ | Full receipt persisted internally; reference exposed for audit. |
-| Raw fluent prose without envelope | ❌ | Hard denial *(no envelope = no exit)*. |
-| Private chain-of-thought | ❌ | Hard denial *(never persisted as evidence)*. |
-| Citations to unresolved `EvidenceRef` | ❌ | `ABSTAIN`, not `ANSWER`. |
-| Synthetic content presented as observed | ❌ | Hard denial; `Reality Boundary Note` required. |
+- provider credentials or direct endpoint selection;
+- internal filesystem/database paths;
+- unrestricted store or tool access;
+- authority expansion hidden in free text;
+- sensitive precision outside the caller's capability.
 
-[↑ Back to top](#top)
+Current app-local request shape is smaller: profile, request ID, claim ID, question, and allowed EvidenceRefs.
+
+### 7.2 Governed orchestration to authority services
+
+Internal orchestration may request:
+
+- EvidenceRef resolution and candidate/bundle state;
+- rights, sensitivity, role, purpose, and policy evaluation;
+- review, release, correction, withdrawal, and freshness state;
+- citation and support validation;
+- required receipt persistence.
+
+Those calls must be explicit, authenticated where required, scope-bound, observable without leaking protected content, and fail closed.
+
+No current Focus composition proves these calls.
+
+### 7.3 Governed orchestration to provider adapter
+
+Allowed target context:
+
+- minimized public-safe or role-authorized excerpts;
+- stable evidence identifiers needed for candidate citation mapping;
+- explicit limitations and unavailable dependencies;
+- accepted prompt/profile identity;
+- bounded output schema;
+- cancellation, timeout, and provider-safe request metadata.
+
+Forbidden context:
+
+- credentials or secret-bearing configuration;
+- raw source archives or arbitrary canonical-store handles;
+- unresolved, denied, withdrawn, or out-of-scope evidence;
+- hidden chain-of-thought from earlier runs;
+- protected exact geometry when generalized context is sufficient;
+- internal policy source or confidential review rationale.
+
+### 7.4 Provider adapter to orchestration
+
+Allowed output:
+
+- one untrusted structured candidate;
+- provider/model identity and version/digest where available;
+- bounded usage, timing, timeout, or cancellation state;
+- safe provider error classification.
+
+Forbidden output path:
+
+- raw token stream directly to browser;
+- invented evidence authority;
+- final policy decision;
+- self-approved citation;
+- final `RuntimeResponseEnvelope`;
+- release/publication decision.
+
+### 7.5 Governed API to client
+
+A target response may contain only an accepted public-safe response composition, potentially including:
+
+- finite outcome and safe reason;
+- answer payload only for `ANSWER`;
+- validated citations and public-safe EvidenceRefs;
+- actual supported precision;
+- limitations and obligations;
+- freshness/correction/withdrawal posture;
+- safe process references where disclosure is allowed.
+
+Current unresolved seam: the canonical-looking `RuntimeResponseEnvelope` does not contain answer text, citations, or receipt reference, while the app-local Focus projection does. A versioned decision is required before live integration.
+
+### 7.6 Logs, telemetry, receipts, and diagnostics
+
+May record:
+
+- stable request/run/profile identifiers;
+- outcome and safe reason code;
+- component/version/digest references;
+- timing and bounded counts;
+- policy/citation/receipt references where allowed;
+- correction and rollback correlation.
+
+Must not record:
+
+- secrets or credentials;
+- private prompts or hidden chain-of-thought;
+- full raw evidence or restricted payloads;
+- exact protected locations;
+- confidential policy rationale;
+- living-person or genomic detail beyond an approved purpose;
+- unsanitized provider output.
+
+[Back to top](#top)
 
 ---
 
-## 8. Finite outcomes — the only legal AI return values
+<a id="8-finite-outcomes--the-only-legal-ai-return-values"></a>
 
-> **Evidence basis:** `kfm_unified_doctrine_synthesis.md` §11; Atlas §24.3.1; `ai-build-operating-contract.md` §21.2. **CONFIRMED doctrine.**
+## 8. Finite outcomes — the only legal client results
 
-Every governed-AI response — builder or runtime — terminates in exactly one outcome from the finite set. **No silent fall-through to a different outcome.**
+| Outcome | Meaning | Typical causes | Client rule |
+|---|---|---|---|
+| `ANSWER` | A bounded answer may be rendered under the accepted response profile | Evidence, policy, citation, review, release, freshness, correction, precision, and required accountability gates all pass | Render only the validated public-safe payload and obligations |
+| `ABSTAIN` | The system cannot support the requested claim without guessing or overreaching | Missing/unresolved/stale/conflicted evidence, unsupported scope, citation insufficiency, or incomplete context | Show insufficiency or narrower scope; no inferred answer |
+| `DENY` | The operation or detail is prohibited | Rights, sensitivity, access, purpose, release, withdrawal, or harmful-precision rule | Withhold restricted payload and expose only approved safe reason/alternative |
+| `ERROR` | The transaction could not complete safely or deterministically | Malformed state, unavailable service, invalid candidate, receipt failure where required, timeout, or internal fault | Show bounded error; no stale/model fallback |
 
-| Outcome | When *(CONFIRMED doctrine)* | Required artifacts |
+### 8.1 States that are not fifth client outcomes
+
+| State | Meaning | Required treatment |
 |---|---|---|
-| **`ANSWER`** | Evidence sufficient · policy permits · release state allows · review *(if required)* recorded. | Resolved `EvidenceBundle`; `PolicyDecision = ALLOW`; `ReleaseManifest` applies; `AIReceipt` emitted; `CitationValidationReport` PASS. |
-| **`ABSTAIN`** | Evidence insufficient · cannot cite · evidence stale and no released alternative · citation validation fails. | `AIReceipt` with reason; **no claim emitted**. |
-| **`DENY`** | Policy · rights · sensitivity · or release state forbids the answer. Sensitive lanes default here. | `PolicyDecision = DENY` + reason code; `AIReceipt` records denial. |
-| **`ERROR`** | Governed API cannot evaluate — missing schema, malformed query, contract violation, infra failure. | Error envelope with diagnostic code; **no claim leakage**. |
+| `RESOLVED` evidence candidate | The bounded candidate check passed | Continue evidence-authority, rights, sensitivity, policy, review, release, citation, and correction checks |
+| `ALLOW` policy result | A named policy evaluation permits a bounded operation | Continue remaining gates; not an answer |
+| Citation report `PASS` | Declared or resolved citation checks passed for its profile | Continue policy/release/outcome selection; not an answer |
+| Closure `SUPPORTED` / `QUALIFIED` | App-local composed-claim support state | Maps to app-local `ANSWER`; not a fifth runtime outcome |
+| `HOLD` | Implementation/review graduation is blocked | Do not expose as a client runtime outcome unless a future contract defines it |
+| `NARROWED` / `BOUNDED` | Descriptive qualifier in some doctrine | Do not emit as a fifth outcome without contract/schema change |
 
-Optional extensions: `NARROWED` or `BOUNDED` if and only if contract schemas define them *(`ai-build-operating-contract.md` §21.2)*.
+### 8.2 Outcome precedence
 
-> [!CAUTION]
-> **`HOLD` is a release-state, not an AI runtime outcome.** When promotion is held *(steward/policy review pending)*, the AI runtime sees the artifact as **not-yet-released** and `ABSTAIN`s. `HOLD` proper lives in the promotion gate, not in the runtime envelope.
+A future accepted contract should define exact precedence. The safe current architecture rule is:
 
-[↑ Back to top](#top)
+1. malformed or failed component state → `ERROR`;
+2. explicit policy/access prohibition → `DENY`;
+3. insufficient or unresolved support → `ABSTAIN`;
+4. `ANSWER` only after every required positive gate closes.
+
+A provider's preference, confidence, or fluent completion cannot upgrade a negative state.
+
+[Back to top](#top)
 
 ---
 
-## 9. Runtime contract (Focus Mode flow)
+<a id="9-runtime-contract-focus-mode-flow"></a>
 
-> **Evidence basis:** `ai-build-operating-contract.md` §21.1; `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15.3; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10. **CONFIRMED doctrine.**
+## 9. Runtime contract: Focus Mode flow
 
-The runtime flow is fixed; the order is doctrine. Each step is **gated**, and any failure produces a finite outcome.
+### 9.1 Current confirmed client flow
 
 ```text
-User question + MapContextEnvelope
-  → scope classification
-  → policy precheck                 (DENY here exits as DENY)
-  → EvidenceRef → EvidenceBundle resolution   (no closure exits as ABSTAIN)
-  → released-only context assembly  (sensitivity redaction applies)
-  → provider-neutral ModelAdapter   (NOT a public client; behind governed API)
-  → structured output validation    (malformed exits as ERROR)
-  → CitationValidator               (fail exits as ABSTAIN)
-  → policy postcheck                (DENY here exits as DENY)
-  → RuntimeResponseEnvelope         (ANSWER | ABSTAIN | DENY | ERROR)
-  → AIReceipt + RunReceipt          (persisted internally)
-  → governed client response        (envelope-shaped; no raw fluent prose)
+unknown request input
+  -> exact app-local request parser
+  -> empty EvidenceRef scope => ABSTAIN without resolver call
+  -> injected resolver
+  -> exact public-safe projection parser
+  -> request/claim identity check
+  -> returned EvidenceRef subset check
+  -> finite view model + Evidence Drawer parity
 ```
 
-> [!IMPORTANT]
-> **The order is not optional.** Resolution before context assembly; output validation before citation validation; citation validation before policy postcheck; envelope before receipt; receipt before response. A reorder is a contract change and ADR-class *(`ai-build-operating-contract.md` §28)*.
+This flow is useful because it proves the browser can reject malformed, over-scoped, or incoherent fixture projections without direct provider or lifecycle-store access.
 
-[↑ Back to top](#top)
+It does not prove the injected resolver is a Governed API, that declarations are authentic, or that any upstream evidence/policy/citation/release work occurred.
+
+### 9.2 Target governed server transaction
+
+```text
+validate request and profile
+  -> authenticate identity and capability
+  -> bind audience, purpose, spatial/temporal/release scope
+  -> policy / rights / sensitivity precheck
+  -> resolve allowed EvidenceRefs through authority services
+  -> apply verification, review, release, correction, withdrawal, freshness, precision checks
+  -> assemble minimized admissible context
+  -> invoke provider-neutral adapter
+  -> reject malformed or out-of-contract candidate
+  -> validate citations and support
+  -> policy postcheck and disclosure obligations
+  -> choose ANSWER / ABSTAIN / DENY / ERROR
+  -> persist required AIReceipt or fail closed
+  -> compose accepted public-safe payload and RuntimeResponseEnvelope relationship
+  -> return through Governed API
+  -> strict client parser and renderer
+```
+
+### 9.3 Unresolved contract seam
+
+Three current profiles cannot be silently treated as one:
+
+1. app-local Explorer Focus request/projection types;
+2. generic permissive Focus request/response schemas;
+3. proposed `RuntimeResponseEnvelope`.
+
+A live route requires an accepted composition or versioned migration that answers:
+
+- where answer text and citations live;
+- how an AIReceipt is referenced;
+- which object carries policy/citation references and obligations;
+- which identity binds request, claim, envelope, payload, receipt, evidence, and release;
+- which client versions may render which response;
+- how correction, withdrawal, and rollback invalidate cached answers.
+
+Until then, the end-to-end Focus route remains on `HOLD`.
+
+[Back to top](#top)
 
 ---
 
-## 10. Adapter discipline — MockAdapter-first; provider-neutral
+<a id="10-adapter-discipline--mockadapter-first-provider-neutral"></a>
 
-> **Evidence basis:** `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15.2; `ai-build-operating-contract.md` §21.3, §21.5. **CONFIRMED doctrine.**
+## 10. Adapter discipline — MockAdapter first, provider neutral
 
-| Adapter | Role | Build phase |
+### 10.1 Current `MockAdapter`
+
+The executable mock is a deterministic selector over caller-supplied complete synthetic envelopes.
+
+It proves:
+
+- all four finite outcomes can be represented;
+- configuration fails when the matrix is incomplete;
+- selection is deterministic;
+- returned values are isolated copies;
+- no provider/file/network/clock/secret I/O is required for the selected proof.
+
+It does not prove:
+
+- request or prompt parsing;
+- semantic outcome selection;
+- evidence, policy, citation, precision, freshness, or correction logic;
+- provider behavior;
+- AIReceipt emission;
+- Governed API or client integration.
+
+### 10.2 Proposed production adapter seam
+
+A production adapter should translate between one accepted internal admissible request and provider-specific mechanics. Provider vocabulary must not leak into public contracts.
+
+The adapter may own:
+
+- provider request translation;
+- invocation within an approved profile;
+- response parsing into an internal candidate;
+- provider-local timeout, cancellation, and bounded usage state;
+- safe provider failure classification.
+
+The adapter must not own:
+
+- evidence or source authority;
+- policy, rights, sensitivity, or access;
+- citation validation;
+- final finite outcome;
+- public response or envelope construction;
+- receipt approval;
+- release, correction, rollback, or publication.
+
+### 10.3 Provider admission gates
+
+Before a live provider/profile may be used:
+
+1. the adapter decision and semantic interface are accepted;
+2. exact provider/model/version/profile identity is pinned;
+3. license, terms, privacy, security, and data-use posture are reviewed;
+4. credentials and network egress are least-privilege and non-browser;
+5. timeout, cancellation, concurrency, and resource budgets are defined;
+6. prompt-injection and structured-output negative tests pass;
+7. evidence, policy, citation, receipt, and response composition are already proven with mocks;
+8. telemetry and logs exclude protected content;
+9. provider disablement and safe fallback are rehearsed;
+10. release and rollback bind the exact operation.
+
+Current provider posture: none admitted; Ollama remains a placeholder.
+
+[Back to top](#top)
+
+---
+
+<a id="11-hard-denials--when-ai-must-deny-or-error"></a>
+
+## 11. Hard denials — when AI must abstain, deny, or error
+
+The old heading is retained for anchor compatibility. The outcome must match the owning failure, not be forced into `DENY`.
+
+| Condition | Target outcome | Reason |
 |---|---|---|
-| **`MockAdapter`** | Deterministic fixture adapter; **no network, no model**. | **First** implementation. Proves the entire boundary works before any live model touches it. |
-| **`NullAdapter`** | Explicit disabled/offline adapter returning `ABSTAIN` / `ERROR`. | With `MockAdapter`. |
-| **`OllamaAdapter`** | Local/private runtime behind the governed API only. | **After** contracts, policy, citation tests are green. |
-| **`OpenAICompatibleAdapter`** *(or any hosted)* | Provider-compatible runtime behind the same internal contract. | **After** adapter contract and external provider verification. |
+| Request or response shape malformed | `ERROR` | The transaction cannot be interpreted safely |
+| Required EvidenceRef scope absent | `ABSTAIN` | No governed support was supplied |
+| Evidence unresolved, stale, contradicted, corrected-away, or insufficient | `ABSTAIN` | Cite-or-abstain |
+| Evidence authority service unavailable | `ERROR` | Do not call the provider without evidence |
+| Caller lacks capability or purpose is prohibited | `DENY` | Access/purpose policy blocks the operation |
+| Rights, sovereignty, sensitivity, or harmful precision explicitly blocks exposure | `DENY` | Protected material must not cross |
+| Policy evaluator unavailable | `ERROR` or accepted fail-closed policy result | No permissive fallback |
+| Provider unavailable or times out | `ERROR` | No fabricated answer |
+| Provider candidate violates structured contract | `ERROR` | Raw candidate must not cross |
+| Candidate support or citations are incomplete | `ABSTAIN` | No unsupported answer |
+| Candidate contains restricted detail | `DENY` | Withhold or offer an approved generalized alternative |
+| Required receipt cannot be assembled or persisted | `ERROR` / block `ANSWER` | Accountability requirement is unmet |
+| Release withdrawn or response invalidated by correction | `ABSTAIN` or `DENY` according to accepted state semantics | Never serve affected answer as current |
+| All required gates pass | `ANSWER` | Render only the bounded public-safe response |
 
-**The MockAdapter slice MUST prove:**
+### 11.1 Current fail-closed behavior
 
-- cited answer flow; missing-evidence abstention; stale-evidence abstention; policy denial; sensitive-geometry denial; citation failure abstention; runtime error; `AIReceipt` emitted; **no direct model client path**.
+Current Governed API routes already demonstrate one safe posture: unimplemented operations return `ABSTAIN`, unknown paths and disallowed methods return safe `ERROR`, and no route emits an evidence-backed `ANSWER`.
 
-> [!WARNING]
-> **Provider neutrality is not negotiable.** The first governed-AI slice MUST NOT start with a specific provider, a browser chat panel, or UI polish *(`ai-build-operating-contract.md` §21.5)*. Provider choice — including Ollama, OpenAI-compatible runtimes, anthropic-compatible, etc. — is admissible **only behind the governed boundary**: adapter contract, evidence gates, finite envelopes, citation validation, receipts.
+That is useful negative proof. It is not proof of the target matrix above.
 
-[↑ Back to top](#top)
-
----
-
-## 11. Hard denials — when AI MUST `DENY` or `ERROR`
-
-> **Evidence basis:** `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15.5; `ai-build-operating-contract.md` §15; Atlas §20.5. **CONFIRMED doctrine.**
-
-The runtime MUST `DENY` or `ERROR` *(never `ANSWER`)* when:
-
-- A browser calls a model runtime directly *(boundary 2 violation)*.
-- Context includes `RAW` / `WORK` / `QUARANTINE` / private / canonical direct access *(boundary 2)*.
-- Evidence is not published / cataloged / proof-backed *(boundary 1)*.
-- Sensitive precise geometry would leak *(boundary 5; sensitivity matrix §12)*.
-- Rights are unknown *(boundary 5)*.
-- Citation validator fails *(boundary 3 → `ABSTAIN`)*.
-- Source ledger is missing *(boundary 1)*.
-- Policy engine is unavailable *(fail-closed; `ERROR`)*.
-- Model output includes uncited consequential claims *(boundary 3)*.
-- KFM is used as an emergency/alert/life-safety authority *(out-of-scope use; Atlas §20.4)*.
-- Synthetic content would be presented without `Reality Boundary Note` *(boundary 1)*.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="12-sensitive-domain-denial-defaults"></a>
 
 ## 12. Sensitive-domain denial defaults
 
-> **Evidence basis:** Atlas §20.5 *(Deny-by-Default Register and Sensitivity Matrix)*. **CONFIRMED doctrine.**
+KFM's fail-closed posture applies before context reaches a provider and again before output reaches a client.
 
-| Domain / surface | Denied by default | Allowed only when |
+| Material | Default boundary posture | Evidence needed to relax |
 |---|---|---|
-| **Archaeology** | exact sites, burials, human remains, sacred sites, looting-risk detail | steward / cultural review + transform receipt + `EvidenceBundle` |
-| **Fauna** | exact sensitive occurrences, nests / dens / roosts / hibernacula / spawning | geoprivacy + `RedactionReceipt` + public-safe derivative |
-| **Flora** | exact rare / protected / culturally sensitive plant locations | review + generalized / withheld geometry + `RedactionReceipt` |
-| **Settlements / Infrastructure** | critical assets, dependencies, condition detail | steward review + public-safe generalization |
-| **People / DNA / Land** | living-person private output, raw DNA IDs, DNA segments, private person-parcel joins | consent + policy + restricted authorized surface |
-| **Hazards** | emergency instructions or KFM as alert authority | **not allowed** as KFM authority |
-| **Governed AI** *(meta)* | `RAW` / `WORK` access, uncited claims, direct model-public traffic | released `EvidenceBundle` + policy-safe context + `AIReceipt` |
+| Archaeological, cultural, sacred, or sovereignty-sensitive locations | Withhold or generalize exact detail; stage access | Qualified stewardship, rights/sovereignty review, approved transform, review and release record |
+| Rare or vulnerable species locations | Generalize, delay, or deny exact geometry | Domain policy, geoprivacy transform, reviewer approval, public-safe release |
+| Living-person, genealogy, genomic, consent, or private-land data | Deny broad public/model exposure unless a lawful, consented, purpose-bound operation is accepted | Legal/privacy/consent authority, minimization, access control, retention and correction plan |
+| Critical infrastructure or exploitable operational detail | Generalize or role-gate | Security review, purpose/capability binding, approved disclosure profile |
+| Hazard, health, or public-safety material | Never imply alert authority; preserve source time and official-channel direction | Official source role, freshness, disclaimers, release and correction behavior |
+| Unknown source terms, rights, or redistribution posture | Quarantine or deny exposure | Verified terms and source admission record |
+| Precision beyond supporting evidence | Reduce to supported precision or abstain | Evidence-bound precision profile and transform receipts where required |
 
-> [!CAUTION]
-> **Sensitive-lane defaults are not overridden by aggregation.** Aggregating to county or state scale does NOT lower sensitivity *(`docs/architecture/cross-domain/README.md` §7 — invariant 3)*. AI answering at any scale follows the same defaults.
+### 12.1 Aggregation is not automatic declassification
 
-[↑ Back to top](#top)
+Summaries, embeddings, indexes, graph projections, tiles, generalized prose, and model context can still leak protected information. Every transform needs its own policy and disclosure review appropriate to consequence.
+
+### 12.2 Provider minimization
+
+Sensitive handling is not delegated to the model. Redaction, generalization, role filtering, release checks, and scope minimization occur before provider invocation. Postcheck remains required because generated candidates may recombine or infer restricted detail.
+
+### 12.3 Current enforcement status
+
+These are governing defaults and target controls. No active end-to-end Focus policy evaluator or sensitive-domain provider flow was exercised in this session.
+
+[Back to top](#top)
 
 ---
+
+<a id="13-no-chain-of-thought-as-evidence"></a>
 
 ## 13. No chain-of-thought as evidence
 
-> **Evidence basis:** `ai-build-operating-contract.md` §21.4; `kfm_unified_doctrine_synthesis.md` §21. **CONFIRMED doctrine.**
+KFM needs inspectable decisions, not private hidden reasoning.
 
-KFM **MAY** store, as governed audit material:
+### May be recorded when safe and required
 
-- auditable summaries; inputs; outputs; hashes; citations; policy decisions; validation reports; receipts.
+- request and scope identifiers;
+- accepted prompt/profile identity or hash;
+- model/provider identity and version/digest;
+- input/output digests;
+- EvidenceRefs and authority-bearing decision references;
+- finite outcome and safe reason codes;
+- validation findings and limitations;
+- concise public rationale tied to evidence;
+- correction, supersession, withdrawal, and rollback correlation.
 
-KFM **MUST NOT** store, as evidence / proof / publication justification:
+### Must not be treated as evidence or stored in public/accountability objects
 
-- private chain-of-thought; the model's hidden reasoning trace; speculative deliberation; "thinking-out-loud" tokens.
+- private chain-of-thought;
+- hidden scratchpads;
+- raw system prompts;
+- credentials or secrets;
+- unrestricted provider traces;
+- full protected evidence payloads;
+- confidential review or policy rationale;
+- exact sensitive locations not authorized for the object.
 
-> [!NOTE]
-> **The distinction matters because audit ≠ evidence.** A receipt records *that* an inference happened and *what* it bound to; it does not record *how* the model reasoned. The model's reasoning is irreproducible across runs and providers; treating it as evidence would let one model's idiosyncrasy become repository truth.
+A concise explanation of why an outcome occurred is allowed when it is evidence-linked and policy-safe. That explanation is not a substitute for the underlying evidence, policy decision, validation report, or release record.
 
-[↑ Back to top](#top)
+[Back to top](#top)
+
+---
+
+<a id="14-schema-and-contract-homes"></a>
+
+## 14. Contract, schema, policy, code, and receipt homes
+
+The prior edition listed several speculative paths as though they were the target architecture. This revision reports current repository surfaces and leaves missing authority explicit.
+
+| Object or behavior | Current home | Current status | Boundary note |
+|---|---|---|---|
+| Runtime client outcome semantics | [`contracts/runtime/runtime_response_envelope.md`](../../../contracts/runtime/runtime_response_envelope.md) | **PROPOSED; schema-paired** | Ten unconditional fields; `ANSWER` requires evidence and precision disclosure |
+| Runtime client outcome shape | [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | **PROPOSED; fixture/validator backed** | No answer text, citations, or AIReceipt ref |
+| Runtime AI accountability semantics | [`contracts/runtime/ai_receipt.md`](../../../contracts/runtime/ai_receipt.md) | **PROPOSED; schema-paired** | Nine fields; accountability only |
+| Runtime AI accountability shape | [`schemas/contracts/v1/runtime/ai_receipt.schema.json`](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | **PROPOSED; bounded validator/builders** | No emitter/store/retention/correction proof |
+| Citation-readiness profile | [`contracts/evidence/citation_validation_report.md`](../../../contracts/evidence/citation_validation_report.md) and paired schema | **PROPOSED; fixture-first** | Declaration consistency is not live evidence authentication |
+| Explorer Focus request/projection | [`apps/explorer-web/src/features/focus_panel/`](../../../apps/explorer-web/src/features/focus_panel/) | **CONFIRMED app-local implementation** | Strict local profile; not canonical semantic/schema authority |
+| Generic Focus schemas | `schemas/contracts/v1/focus/` | **PROPOSED permissive scaffolds** | Must not silently replace app-local strict profile or runtime envelope |
+| Evidence candidate resolver | [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) | **CONFIRMED internal alpha** | Non-authoritative, no I/O, no public API |
+| Provider-neutral runtime lane | [`runtime/model_adapters/`](../../../runtime/model_adapters/README.md) | **CONFIRMED lane; mixed implementation** | Mock selector exists; provider adapter absent |
+| Focus/runtime policy | [`policy/focus/`](../../../policy/focus/README.md), [`policy/runtime/`](../../../policy/runtime/README.md) | **Scaffold / non-enforcing for composed Focus flow** | No current end-to-end evaluator proof |
+| Governed-AI HTTP transport | [`apps/governed-api/`](../../../apps/governed-api/) | **Current non-AI scaffold** | No AI/Focus route |
+| AI-authored repository provenance | [`data/receipts/generated/`](../../../data/receipts/generated/README.md) | **CONFIRMED separate process-memory lane** | Not runtime AIReceipt, review, proof, or release |
+
+### 14.1 Current exact object-field references
+
+#### `RuntimeResponseEnvelope`
+
+Unconditional current schema fields:
+
+```text
+id
+spec_hash
+version
+issued_at
+outcome
+reason_code
+evidence_refs
+policy_state
+freshness
+correction_state
+```
+
+Conditional rule:
+
+```text
+ANSWER     -> requires precision_actually_used and at least one EvidenceRef
+non-ANSWER -> forbids precision_actually_used
+```
+
+#### `AIReceipt`
+
+Current schema fields:
+
+```text
+id
+run_id
+adapter
+model_ref
+inputs_digest
+outputs_digest
+policy_decision_ref
+citation_validation_ref
+outcome
+```
+
+Do not invent absent timestamp, prompt, EvidenceRef, token, cost, signature, retention, correction, supersession, or release fields in architecture prose.
+
+### 14.2 Object-family non-collapse
+
+| Object/state | Not equivalent to |
+|---|---|
+| `EvidenceRef` | `EvidenceBundle` or resolved authority |
+| Resolver `RESOLVED` | `ANSWER`, policy clearance, citation pass, review, release, or render authority |
+| Policy `ALLOW` | Evidence truth, citation closure, release, or answer |
+| Citation report `PASS` | Source admission, evidence authority, policy, or publication |
+| `AIReceipt` | Evidence, proof pack, policy decision, review, release manifest, or publication |
+| `GENERATED_RECEIPT` | Runtime `AIReceipt`, human approval, factual proof, or merge authorization |
+| `RuntimeResponseEnvelope` | Answer payload store, EvidenceBundle, release manifest, or publication |
+| App-local Focus projection | Canonical runtime envelope |
+| Fixture/test/workflow pass | Deployment, release, or publication |
+| Merge/deployment | Governed promotion or KFM publication |
+
+[Back to top](#top)
 
 ---
 
-## 14. Schema and contract homes
-
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §9 *(component table)*; `ai-build-operating-contract.md` §47; `directory-rules.md` §6.4 *(schema home)*. **CONFIRMED doctrine for the schema-home rule; PROPOSED for specific file presence.**
-
-| Object | Purpose | Canonical home *(PROPOSED — verify at next mounted-repo session)* |
-|---|---|---|
-| `FocusModeRequest` | Structured request for governed synthesis. | `schemas/contracts/v1/ai/focus_mode_request.schema.json` |
-| `FocusModeResponse` | Finite-outcome envelope for the response. | `schemas/contracts/v1/ai/focus_mode_response.schema.json` |
-| `AIReceipt` | Audit trail for runtime model execution. | `schemas/contracts/v1/ai/ai_receipt.schema.json` |
-| `MapContextEnvelope` | Bounded map context sent to governed API / Focus Mode. | `schemas/contracts/v1/ui/map_context_envelope.schema.json` |
-| `CitationValidationReport` | Validates cite-or-abstain before display / export. | `schemas/contracts/v1/evidence/citation_validation_report.schema.json` |
-| `DecisionEnvelope` | Generic policy/governed-API outcome envelope. | `schemas/contracts/v1/runtime/decision_envelope.schema.json` |
-| `GENERATED_RECEIPT` | Builder-side receipt for AI-authored artifacts. | `schemas/contracts/v1/ai/generated_receipt.schema.json` |
-| `RunReceipt` | Process memory for the runtime inference *(non-AI-specific)*. | `schemas/contracts/v1/proofs/run_receipt.schema.json` |
-| `PolicyDecision` | Policy verdict and obligations. | `schemas/contracts/v1/policy/policy_decision.schema.json` |
-| AI-builder Rego policy | Builder-time AI gates *(allowed / denied actions, GENERATED_RECEIPT presence)*. | `policy/ai_builder/operating_contract.rego` *(or `policy/<topic>/...`)* |
-| AI-runtime Rego policy | Runtime gates *(precheck, postcheck, sensitivity, citation)*. | `policy/governed_ai/...` *(PROPOSED)* |
-
-> [!IMPORTANT]
-> **Schema home rule is ADR-class.** Per `directory-rules.md` §6.4 and `ADR-0001`, `.schema.json` files live under `schemas/contracts/v1/<...>`. Authoring them elsewhere *(under `docs/`, under `contracts/`, under `jsonschema/`)* is drift.
-
-[↑ Back to top](#top)
-
----
+<a id="15-anti-patterns"></a>
 
 ## 15. Anti-patterns
 
-> **Evidence basis:** Atlas §24.9.2; `ai-build-operating-contract.md` §38; `kfm_unified_doctrine_synthesis.md` §21. **CONFIRMED doctrine.**
+| Anti-pattern | Why it fails |
+|---|---|
+| Browser calls Ollama, OpenAI, or another provider directly | Bypasses identity, evidence, policy, citation, receipt, release, correction, and safe failure |
+| Provider receives database handles or unrestricted tools | Provider behavior becomes an authority and exfiltration path |
+| Model output streams directly to the UI | Unvalidated candidate crosses the membrane |
+| `RESOLVED`, `ALLOW`, schema-valid, or citation `PASS` is treated as `ANSWER` | Collapses independent gates |
+| App-local Focus fields are copied into RuntimeResponseEnvelope by prose | Creates a parallel, unversioned contract |
+| AIReceipt is required rhetorically but no emitter/store exists | Documentation claims accountability that runtime cannot perform |
+| AIReceipt or generated receipt is displayed as proof or approval | Receipt presence is process memory, not truth/release authority |
+| A fixture declares `REVIEWED`, `RELEASED`, or `CURRENT` and the browser treats it as authenticated | Client parser validates shape/coherence, not upstream authority |
+| Missing policy/evidence/citation service falls back to model text | Fail-open behavior |
+| Unknown rights or sensitive precision are left for the model to “avoid” | Safety is delegated to an untrusted candidate generator |
+| Hidden chain-of-thought is stored as evidence | Private reasoning is unverifiable and may expose protected content |
+| Logs capture prompts, raw evidence, exact locations, or credentials | Creates a second uncontrolled data path |
+| Green workflow, PR, merge, deployment, or badge is described as publication | Collapses engineering delivery and governed release |
+| Documentation selects a provider, route, policy, schema, or release authority without accepted decision and implementation proof | Prose becomes false authority |
+| Boundary tests scan only literals but are described as full information-flow proof | Overstates the test's declared scope |
 
-| Anti-pattern | Why it breaks the boundary | Mitigation |
-|---|---|---|
-| **AI returns uncited language.** | Generated text substitutes for evidence; boundary 3 broken. | Citation validator; `ABSTAIN` on failure; `AIReceipt` records reason. |
-| **AI answers from `RAW` / `WORK` rather than `EvidenceBundle`.** | AI becomes its own truth source; boundaries 1 and 2 broken. | Released-only context assembly; runtime denies on non-released refs. |
-| **Browser calls model runtime directly.** | Trust membrane bypassed; boundary 2 broken. | Governed-API boundary; no direct public model traffic. |
-| **Generated text published without receipt.** | Boundary 4 broken; inference is unauditable. | `AIReceipt` *(runtime)* / `GENERATED_RECEIPT` *(builder)* MANDATORY. |
-| **Private chain-of-thought stored as evidence.** | Boundary 4 + 1 broken; irreproducible reasoning becomes truth. | Persist auditable summaries only; never hidden tokens. |
-| **AI generation routed through admin shortcut.** | Admin bypass becomes a normal-path public route; boundary 5 broken. | Trust-membrane audit; infra denies direct model traffic; admin paths documented, constrained, kept out of normal public path. |
-| **AI suggestion treated as approval.** | Boundary 5 broken; review state silently set by AI. | AI suggestions are draft; `ReviewRecord` requires human reviewer. |
-| **Specific provider chosen before MockAdapter green.** | Provider neutrality lost before the boundary is proven. | MockAdapter-first rule; provider adapter behind same contract. |
-| **AI bypasses policy "because of urgency".** | Boundary 5 broken; fail-closed inverted. | Operating contract §15 #11: never bypass policy for urgency or convenience. |
-| **Source-role collapsed by AI** *(e.g., AI synthesizes "observed" from modeled inputs)*. | Boundary 1 broken via source-role anti-collapse *(`docs/architecture/cross-domain/README.md` §6.2)*. | Role-preserving DTO field; AI MUST preserve source role across summary. |
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="16-open-questions-and-adr-triggers"></a>
 
 ## 16. Open questions and ADR triggers
 
-| Open item | Class | Suggested ADR title *(PROPOSED)* |
-|---|---|---|
-| **OPEN-DR-11** — Reconcile `docs/architecture/governed-ai/` *(folder)* vs `docs/architecture/governed-ai.md` *(flat)*; reconcile ALL-CAPS `BOUNDARIES.md` filename convention. | Directory Rules §2.4 *(structural + naming)* | "Architecture lane — folder vs flat; ALL-CAPS doctrine docs". |
-| Which local or hosted model adapters are admissible behind the governed boundary, and how are they verified? *(`KFM-P1-FEAT-0066` open question)* | Runtime | "Governed AI adapter allowlist". |
-| Should `NARROWED` / `BOUNDED` outcomes ship in v1 of the envelope, or stay deferred? | Vocabulary | "Finite outcome v1 — NARROWED/BOUNDED inclusion". |
-| Where does AI-runtime Rego policy live — `policy/governed_ai/` vs `policy/ai_runtime/` vs `policy/ai/`? | Schema/policy home | "Governed AI policy home". |
-| Should `Reality Boundary Note` apply to **AI-summary outputs** as well as Planetary/3D scenes? | Object family | "Reality Boundary Note for AI outputs". |
-| Receipt schema layout — `schemas/contracts/v1/ai/receipts/` vs `schemas/contracts/v1/receipts/ai/` vs flat? | Schema home | ADR-S-03 *(Atlas §24.12 — PROPOSED)*. |
-| What is the SLA on the citation validator? *(Pass 10 C5-01 open question for promotion gates also applies here.)* | Operations | "Citation validator SLA and failure modes". |
+| Priority | Item | Current status | Closure evidence |
+|---|---|---|---|
+| P0 | Reconcile and decide ADR-0004, ADR-0008, ADR-0019, ADR-0025, and the overlapping Focus-specific adapter candidate | **PROPOSED / CONFLICTED / HOLD** | Accepted decisions with explicit relationships and supersession |
+| P0 | Select canonical Focus request, answer-payload, runtime-envelope, citation, and receipt composition | **CONFLICTED / NEEDS VERIFICATION** | Versioned semantic contracts, schemas, fixtures, validators, consumers, migration note |
+| P0 | Define authenticated Governed API Focus route, audience, purpose, capability, rate, and safe error model | **PROPOSED** | Route code, contract binding, auth tests, no-bypass proof |
+| P0 | Integrate authoritative EvidenceRef-to-EvidenceBundle lookup and current verification/correction state | **PROPOSED** | Positive and exact-negative integration fixtures, replay/correction tests, observed consumer |
+| P0 | Activate complete Focus policy precheck/postcheck and sensitivity controls | **PROPOSED / HOLD** | Reviewed policy bundle, entrypoints, tests, identity, runtime binding |
+| P0 | Integrate citation validation against authenticated evidence and scope | **PROPOSED** | Service/validator composition, fail-closed tests, stable report identity |
+| P0 | Decide AIReceipt applicability, sequencing, persistence, retention, access, correction, signing, and response linkage | **PROPOSED / HOLD** | Accepted contract evolution or companion objects, emitter, durable store, tests, runbook |
+| P0 | Establish provider/model admission and egress/credential isolation | **HOLD** | Approved provider card, pinned model/profile, security/privacy review, negative tests, disablement |
+| P1 | Mount Focus in the normal Explorer composition behind governed transport | **PROPOSED** | Strict client integration, accessibility/browser tests, no direct model/store path |
+| P1 | Define telemetry and diagnostics without prompts, raw evidence, hidden reasoning, or protected precision | **PROPOSED** | Contract/schema/policy, negative tests, retention review |
+| P1 | Propagate correction, withdrawal, supersession, stale state, and cache invalidation | **PROPOSED** | End-to-end rehearsal and rollback evidence |
+| P1 | Define operational kill switch and safe degradation independent of non-AI map/evidence functions | **PROPOSED** | Config/route/client controls and restoration drill |
+| P1 | Name independent stewards and separation-of-duties reviewers | **NEEDS VERIFICATION** | Accepted ownership and review records |
+| P1 | Modernize and reconcile stale prompt-injection companion claims with current repository evidence | **NEEDS VERIFICATION** | Same-path evidence-backed update without importing speculative fields |
+| P2 | Establish latency, context, concurrency, cost, timeout, retry, and load budgets | **UNKNOWN** | Measured tests and operational SLOs |
+| P2 | Prove deployed network isolation, CSP/CORS, secret handling, incident response, and observability | **UNKNOWN** | Named-environment configuration, tests, logs, and rehearsal |
 
-> [!IMPORTANT]
-> **Until OPEN-DR-11 resolves, this doc is doctrinally usable but structurally provisional.** Cite it as `kfm://doc/architecture-governed-ai-boundaries` *(stable `doc_id`)*, not as a path.
+### ADR triggers
 
-[↑ Back to top](#top)
+An accepted decision or migration record is required before:
+
+- selecting or changing the dynamic public AI trust boundary;
+- creating a canonical provider-neutral request/candidate contract;
+- changing finite outcome vocabulary;
+- adding answer/citation/receipt fields to RuntimeResponseEnvelope;
+- making AIReceipt mandatory for a runtime operation or changing its field semantics;
+- admitting a provider/model/profile;
+- creating a second public API, provider path, schema home, policy home, or receipt family;
+- exposing released static carriers through a new public edge;
+- weakening direct-client/store/provider prohibitions;
+- changing correction, withdrawal, rollback, or release authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="17-related-docs"></a>
 
 ## 17. Related docs
 
-| Reference | Role | Truth label |
-|---|---|---|
-| `ai-build-operating-contract.md` *(full text)* | **Canonical** builder behavior; §§13–19 *(preflight, allowed, denied, response, file contracts)*; §21 *(runtime contract)*; §34 *(`GENERATED_RECEIPT`)* | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §11 *(finite outcome envelope vocabulary)* | Outcome semantics | CONFIRMED doctrine |
-| `kfm_unified_doctrine_synthesis.md` §§20–21 *(governed AI and local model runtimes; citation validation and AIReceipt discipline)* | First-principles source | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §19 *(Cross-Domain Systems — Governed AI runtime and AIReceipt)* | Cross-domain system view | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §20.5 *(Deny-by-Default Register and Sensitivity Matrix)* | Per-domain denial defaults | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.9.2 *(Trust-membrane anti-patterns)* | Anti-pattern register | CONFIRMED doctrine |
-| `KFM_Unified_Implementation_Architecture_Build_Manual.md` §15 *(Governed AI and Focus Mode)* | Build manual — adapter order, flow, envelope sketch | CONFIRMED doctrine |
-| `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(Governance and Trust-Membrane Chapter)* | Renderer-side trust-membrane rules | CONFIRMED doctrine |
-| `docs/architecture/cross-domain/README.md` *(or `cross-domain.md` per OPEN-DR-10)* | Cross-domain doctrine landing | PROPOSED placement |
-| `directory-rules.md` §12 *(Domain Placement Law; cross-domain doctrine home)* | Placement authority | CONFIRMED doctrine |
-| `directory-rules.md` §6.4 + ADR-0001 *(schema home)* | Schema-home authority | CONFIRMED doctrine |
+| Path | Current role |
+|---|---|
+| [`README.md`](./README.md) | Governed-AI subsystem entry point and maturity map |
+| [`ADAPTER_CONTRACT.md`](./ADAPTER_CONTRACT.md) | Current mock proof and proposed provider-neutral seam |
+| [`AI_RECEIPTS.md`](./AI_RECEIPTS.md) | Current nine-field AIReceipt architecture and operational HOLDs |
+| [`FOCUS_FLOW.md`](./FOCUS_FLOW.md) | Current client proof and proposed end-to-end Focus sequence |
+| [`MOCK_FIRST.md`](./MOCK_FIRST.md) | Deterministic mock proof and provider graduation gates |
+| [`ROUTE_MAP.md`](./ROUTE_MAP.md) | Current executable route inventory and absent AI route |
+| [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) | Cross-request/version/correction continuity |
+| [`OLLAMA_INTEGRATION.md`](./OLLAMA_INTEGRATION.md) | Local-provider integration posture; implementation remains held |
+| [`PROMPT_INJECTION.md`](./PROMPT_INJECTION.md) | Threat-doctrine companion; implementation claims require current reconciliation |
+| [`../TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md) | Cross-root membrane architecture and current bounded enforcement map |
+| [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Proposed dynamic trust-boundary decision |
+| [`ADR-0008`](../../adr/ADR-0008-ollama-subordinate-to-governed-api.md) | Proposed provider subordination decision |
+| [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Proposed provider-neutral adapter and finite-envelope decision |
+| [`ADR-0025`](../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md) | Proposed public-client information-flow decision |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement authority |
+| [`Directory Rules`](../../doctrine/directory-rules.md) | Writable repository placement law |
+| [`RuntimeResponseEnvelope`](../../../contracts/runtime/runtime_response_envelope.md) | Proposed client-facing runtime posture contract |
+| [`AIReceipt`](../../../contracts/runtime/ai_receipt.md) | Proposed runtime accountability contract |
+| [`Evidence resolver`](../../../packages/evidence-resolver/README.md) | Internal non-authoritative candidate resolver |
+| [`Generated work receipts`](../../../data/receipts/generated/README.md) | Separate repository-authoring process-memory lane |
 
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="18-appendix--glossary-and-quick-reference"></a>
 
 ## 18. Appendix — glossary and quick reference
 
-<details>
-<summary><strong>18.1 Glossary of governed-AI vocabulary</strong></summary>
+### 18.1 Boundary glossary
 
-| Term | Definition *(CONFIRMED doctrine unless noted)* |
+| Term | Meaning |
 |---|---|
-| **Governed AI** | Doctrine + implementation interface that places AI behind evidence, policy, release, finite outcomes, and audit. AI is downstream of KFM evidence and policy, not a peer. |
-| **Cite-or-abstain** | Default truth posture: an AI surface that cannot cite resolved evidence MUST `ABSTAIN`. |
-| **`AIReceipt`** | Runtime audit record: context + provider/model + inputs/outputs + policy decisions + citations. Mandatory for every runtime inference. |
-| **`GENERATED_RECEIPT`** | Builder audit record: scope + truth labels + directory rules basis + evidence inspected + validation + rollback. Mandatory for every AI-authored artifact. |
-| **`MapContextEnvelope`** | Bounded context the AI sees of the map *(camera + layers + features + time + evidence refs)*. |
-| **`FocusModeRequest` / `FocusModeResponse`** | Structured request/response envelope for governed runtime AI. |
-| **`CitationValidationReport`** | Pass/fail closure for citations; AI `ABSTAIN`s on fail. |
-| **`Reality Boundary Note`** | Marker that distinguishes synthetic / reconstructed / AI-generated content from observed reality. |
-| **`Representation Receipt`** | Companion to `Reality Boundary Note`; records the transform that produced a synthetic surface. |
-| **`MockAdapter` / `NullAdapter` / `OllamaAdapter` / `OpenAICompatibleAdapter`** | Adapter family enforcing provider neutrality. `MockAdapter` ships first. |
-| **`NARROWED` / `BOUNDED`** | Optional finite-outcome extensions; admissible only if contract schemas define them. |
-| **Trust membrane** | Doctrine boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth. |
+| **Trust membrane** | Composition of evidence, policy, review, release, delivery, and client refusal controls separating internal/unwarranted state from bounded public-safe use |
+| **Governed orchestration** | Internal coordination that may consult authority services, minimize context, call an adapter, validate the candidate, and select a finite outcome |
+| **Provider-neutral adapter** | Anticorruption seam translating an admissible internal request to provider mechanics and returning an untrusted candidate |
+| **Public-safe projection** | Strict client-consumable shape that carries no more data or authority than its accepted profile permits |
+| **Evidence candidate** | Non-authoritative result of bounded checks over caller-supplied evidence objects |
+| **Finite outcome** | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` |
+| **AIReceipt** | Proposed nine-field runtime accountability object; not evidence or release authority |
+| **GENERATED_RECEIPT** | Repository-authoring provenance record; not runtime AIReceipt, human approval, or publication |
+| **Precision actually used** | Structured disclosure of the spatial, temporal, and attribute precision supported for an `ANSWER` |
+| **HOLD** | Graduation status indicating named evidence is missing; not a fifth runtime outcome |
 
-</details>
+### 18.2 Current exact boundary matrix
 
-<details>
-<summary><strong>18.2 Allowed vs Denied — quick reference</strong></summary>
+| Boundary | Current proof | Missing proof |
+|---|---|---|
+| Public client → provider | No direct provider code in current Focus resolver; source-level guards | Full dependency graph, network policy, deployed egress |
+| Public client → internal stores | Forbidden path-literal tests and no-store-access resolver design | Runtime/browser/network enforcement |
+| Governed API route surface | Exact three-route registry, safe negative tests | Auth, policy, evidence, AI route, deployment |
+| Evidence resolution | Internal deterministic candidate package and runtime projection | Authoritative lookup and governed consumer |
+| Provider seam | Mock selector and proposed architecture | Accepted request/candidate contract and live adapter |
+| Finite envelope | Closed schema, fixtures, validator, builder, tests | Semantic selection and route/client integration |
+| AI accountability | Closed schema, builders, validator, fixtures | Emitter, store, retention, reference resolution, correction |
+| Citation boundary | Fixture-first report profile elsewhere in repo | Live authenticated citation service |
+| Release/correction | Separate repository families and doctrine | Focus release, propagation, rollback rehearsal |
+| Publication | None | Governed release and observed public operation |
 
-**AI MAY:**
+### 18.3 Documentation rollback
 
-1. Summarize attached or mounted evidence with citations.
-2. Compare doctrine and implementation, labeling conflicts.
-3. Draft proposed docs, schemas, fixtures, validators, policies, ADRs, tests, runbooks.
-4. Generate no-network fixtures.
-5. Propose minimal PR plans.
-6. Write deterministic validation scripts when scoped.
-7. Draft policy tests that fail closed.
-8. Generate migration notes and rollback plans.
-9. Explain why a claim should be `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`.
-10. Suggest source descriptors and source-role taxonomies.
-11. Generate public-safe mock data.
-12. Propose `EvidenceBundle`, `EvidenceRef`, `RuntimeResponseEnvelope`, `AIReceipt`, `CitationValidationReport` fixture shapes.
-13. Draft bounded Focus Mode answers over provided evidence.
-14. Draft corrections, withdrawal notes, and rollback cards.
-15. Emit a `GENERATED_RECEIPT.json` companion for AI-authored artifacts.
-16. Surface detected prompt-injection signals to the reviewer.
+This same-path documentation slice is reversible:
 
-**AI MUST NOT:**
+1. close the draft pull request before merge, or revert the reviewed change after an authorized merge;
+2. restore prior target blob `5364452ed999cd79154afcfa7bf8bd50379a944b`;
+3. remove only the paired generated authoring receipt;
+4. rerun Markdown, link, metadata, receipt, and aggregate checks.
 
-1. Treat generated text as truth.
-2. Treat memory as evidence.
-3. Claim a repo contains a file without verifying it.
-4. Claim tests passed unless it ran or inspected them.
-5. Claim runtime behavior without logs, screenshots, emitted artifacts, or source-execution evidence.
-6. Invent citations, source IDs, registry entries, or release IDs.
-7. Create root-level domain folders by topic.
-8. Create parallel schema, policy, proof, source, release, or catalog homes.
-9. Publish or promote directly.
-10. Move RAW/WORK/QUARANTINE material to PUBLISHED.
-11. Bypass policy due to urgency or convenience.
-12. Persist private chain-of-thought as evidence.
+No runtime, provider, evidence, policy, release, deployment, cache, or public-state rollback is required because this change modifies documentation and authoring provenance only.
 
-*(Per `ai-build-operating-contract.md` §§14–15, CONFIRMED.)*
+### 18.4 Future operational rollback requirement
 
-</details>
+A live Focus operation should be independently disableable while preserving non-AI map browsing and Evidence Drawer access. Provider deactivation must not create a direct fallback. Affected cached answers must be invalidated when evidence, policy, release, correction, or withdrawal state changes.
 
-<details>
-<summary><strong>18.3 Schema map (PROPOSED homes)</strong></summary>
+This is a **PROPOSED requirement**, not current kill-switch proof.
 
-```text
-schemas/contracts/v1/
-├── ai/
-│   ├── focus_mode_request.schema.json
-│   ├── focus_mode_response.schema.json
-│   ├── ai_receipt.schema.json
-│   └── generated_receipt.schema.json
-├── ui/
-│   └── map_context_envelope.schema.json
-├── evidence/
-│   └── citation_validation_report.schema.json
-├── runtime/
-│   └── decision_envelope.schema.json
-├── policy/
-│   └── policy_decision.schema.json
-└── proofs/
-    └── run_receipt.schema.json
+### 18.5 No-loss reconciliation ledger
 
-policy/
-├── ai_builder/
-│   └── operating_contract.rego        # builder-time AI gates
-└── governed_ai/                        # PROPOSED home
-    ├── precheck.rego                   # runtime precheck
-    ├── postcheck.rego                  # runtime postcheck
-    ├── citation.rego                   # citation gate
-    └── sensitivity.rego                # sensitivity gate
-```
-
-All paths PROPOSED — verify at next mounted-repo session.
-
-</details>
-
-<details>
-<summary><strong>18.4 Truth-label legend</strong></summary>
-
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests, logs, or generated artifacts.
-- **PROPOSED** — design, recommendation, file path, placement, or inference not yet verified in implementation.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **UNKNOWN** — not resolvable without more evidence.
-- **EXTERNAL** — sourced from authoritative external research *(not applied in this doc; no external research was triggered)*.
-
-</details>
+| Prior material | v2.0 disposition |
+|---|---|
+| Builder AI and runtime AI both need governance | Preserved, with separate object and authority paths |
+| Evidence-first, policy pre/postcheck, citation validation, finite outcomes | Preserved and grounded |
+| Five boundary framing | Preserved as five modernized boundary families |
+| “AI never reads internal stores” | Corrected: public clients/providers do not; governed orchestration mediates authority services |
+| AIReceipt + RunReceipt every runtime call | Retired as unsupported universal current behavior; exact AIReceipt profile and missing emitter/store recorded |
+| Generated receipt for builder work | Preserved as separate authoring provenance where repository rules require it |
+| Focus request/response examples and speculative schema homes | Replaced with current app-local profiles, current schemas, and explicit gaps |
+| `OPEN-DR-11` placement issue | Retired for this path under accepted ADR-0029 |
+| Prompt-schema hashes, NullAdapter, provider matrix, and unverified routes as current facts | Removed or bounded as future decision work |
+| Sensitive-domain fail-closed posture | Preserved without inventing operational thresholds |
+| No chain-of-thought as evidence | Preserved and clarified for receipts, logs, diagnostics, and public explanations |
+| Anti-patterns, open questions, glossary | Preserved and expanded with current repository evidence |
+| Publication language | Tightened: no document, receipt, test, PR, merge, deployment, or provider result is publication authority |
 
 ---
 
-**Related (mini)** · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`kfm_unified_doctrine_synthesis.md` §§11, 20–21](../../../kfm_unified_doctrine_synthesis.md) · [`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §§19, 20.5, 24.9.2](../../../Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md) · [`KFM_Unified_Implementation_Architecture_Build_Manual.md` §15](../../../KFM_Unified_Implementation_Architecture_Build_Manual.md) · [`docs/architecture/cross-domain/README.md`](../cross-domain/README.md)
+**Last reviewed:** 2026-08-20 against `main@4592507a4698a08b74bf154d1249e2ce0bf1592a`. Human review and hosted exact-head validation for this revision remain pending until the draft pull request is created.
 
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-11)*
-
-[↑ Back to top](#top)
+[Back to top](#top)
