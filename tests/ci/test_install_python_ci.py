@@ -101,6 +101,19 @@ class InstallPythonCiTests(unittest.TestCase):
             self.assertIs(call.kwargs["check"], True)
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
 
+    def test_workflows_do_not_install_python_dependencies_directly(self) -> None:
+        workflows = sorted(
+            path
+            for pattern in ("*.yml", "*.yaml")
+            for path in (REPO_ROOT / ".github/workflows").glob(pattern)
+        )
+        offenders = [
+            workflow.relative_to(REPO_ROOT).as_posix()
+            for workflow in workflows
+            if "python -m pip install" in workflow.read_text(encoding="utf-8")
+        ]
+        self.assertEqual([], offenders)
+
     def test_each_migrated_workflow_selects_one_known_profile(self) -> None:
         counts: dict[str, int] = {}
         for workflow in sorted((REPO_ROOT / ".github/workflows").glob("*.yml")):
