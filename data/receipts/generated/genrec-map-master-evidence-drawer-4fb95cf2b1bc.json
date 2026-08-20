@@ -1,11 +1,11 @@
 {
-  "receipt_id": "genrec:map-master-evidence-drawer:1733dbf933ce",
+  "receipt_id": "genrec:map-master-evidence-drawer:4fb95cf2b1bc",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/architecture/map-master/EVIDENCE_DRAWER.md"
   ],
   "artifact_hashes": {
-    "docs/architecture/map-master/EVIDENCE_DRAWER.md": "sha256:1733dbf933ce4f3e8e473efebff33edd4a14cb3860b0e3d96786a9303bd7a834"
+    "docs/architecture/map-master/EVIDENCE_DRAWER.md": "sha256:4fb95cf2b1bc5a7afbc25369b1fc7fbe85ce62d3aa5badd2783ef23a6b6a7dfc"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -97,9 +97,9 @@
       "reason": "The document replaces unsupported active-route and MapLibre claims with bounded fixture evidence, preserves no-leak behavior, introduces no credential, protected location, private payload, or restricted operational detail, and makes release/publication non-effects explicit."
     },
     {
-      "gate": "artifact-hash-binding",
+      "gate": "remote-git-blob-and-artifact-hash-binding",
       "outcome": "PASS",
-      "reason": "Final document SHA-256 is 1733dbf933ce4f3e8e473efebff33edd4a14cb3860b0e3d96786a9303bd7a834."
+      "reason": "The reconstructed UTF-8 bytes are 49,153 bytes, produce Git blob d9991838883d9eeb618a880025f658fb710c92a1 matching the remote branch blob, and produce document SHA-256 4fb95cf2b1bc5a7afbc25369b1fc7fbe85ce62d3aa5badd2783ef23a6b6a7dfc."
     },
     {
       "gate": "generated-receipt-required-surface-check",
@@ -107,14 +107,19 @@
       "reason": "Required fields, allowed truth labels, finite validation outcomes, digest patterns, pending human review, and artifact path/hash closure were checked locally."
     },
     {
-      "gate": "repository-native-documentation-and-receipt-validation",
-      "outcome": "SKIPPED",
-      "reason": "No mounted repository checkout or repository-native dependency environment was available. No schema, validator, Explorer, or aggregate command is represented as executed."
+      "gate": "opening-head-schema-validation",
+      "outcome": "PASS",
+      "reason": "Hosted schema-validation run 32315148189 completed successfully for opening exact head a47b7fd5e776582284f0e4cbc7812d969c7bbfe7. The later receipt correction requires a fresh exact-head run."
     },
     {
-      "gate": "hosted-exact-head-checks",
+      "gate": "repository-native-documentation-and-receipt-validation",
       "outcome": "SKIPPED",
-      "reason": "The draft pull request had not yet been created when this receipt was emitted. Hosted exact-head results remain separate evidence."
+      "reason": "No mounted repository checkout or repository-native dependency environment was available. No local schema, validator, Explorer, or aggregate command is represented as executed."
+    },
+    {
+      "gate": "hosted-final-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR #3133 is open. Hosted checks must rerun for the final receipt-correction head and remain separate execution evidence."
     },
     {
       "gate": "human-review",
@@ -181,10 +186,10 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-19T23:42:50Z",
+  "created_at": "2026-08-19T23:58:40Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
   "links": {
-    "pr_number": null,
+    "pr_number": 3133,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
