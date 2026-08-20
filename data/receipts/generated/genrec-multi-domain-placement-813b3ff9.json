@@ -1,0 +1,191 @@
+{
+  "receipt_id": "genrec-multi-domain-placement-813b3ff9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/cross-domain/multi-domain-placement.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/cross-domain/multi-domain-placement.md": "sha256:813b3ff937a6cb7a6c1729dc1aafa9d1f7f3eabe5c966405842d4e03b868938e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:e8639f839b44a60021108659145962339a49235434c134b735f42d2e673d13f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "file_search",
+      "user_info"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a3997250437a7fb4ecbf14946490f6e382809fd94c89338217ea0dbdd9500897",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 (turn336file0)"
+    ],
+    "evidence_refs": [
+      "user-request:update-docs-architecture-cross-domain-multi-domain-placement",
+      "attachment:turn336file0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3eb81c41f425d2fbe2c16a46fe0444b1a9173691",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@c548707635d015863cbcdf325fb7102d8e73cf7d",
+      "path:docs/architecture/cross-domain/multi-domain-placement.md@blob:12ba496e89b1a2bb5e1009080e4d611c7fb369d0",
+      "path:docs/architecture/cross-domain/multi-domain-placement.md@blob:ab0ec2500a69ab3ae39d6e55d4b1fdae9aef9c06",
+      "path:docs/doctrine/directory-rules.md@blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "path:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "path:control_plane/root_registry.yaml@blob:024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "path:control_plane/domain_lane_register.yaml@blob:1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "path:control_plane/cross_domain_seam_register.yaml@blob:dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29",
+      "path:.github/CODEOWNERS@blob:dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "path:contracts/cross_domain/README.md",
+      "path:contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md@blob:6e1e977da9086ef35d5ce3ba04865e0f8bb12215",
+      "path:contracts/cross_domain/soil_agriculture/public_safe_context_profile.md@blob:f68251208a3ed2c911087c553dbad6bb548643a2",
+      "path:tools/validators/cross_domain/",
+      "path:tools/validators/cross-domain-joins/README.md@blob:06873dea443c02aa0b70425a981a66b5cd79f365",
+      "path:pipelines/cross_lane/README.md@blob:bef088f3064a49832d8b1b370ac7668c46325c26",
+      "path:tests/cross_domain/",
+      "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@blob:fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "path:tools/validators/validate_generated_receipt.py",
+      "pull-request:3165",
+      "workflow-run:32405461821",
+      "workflow-job:96543382760"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/cross-domain/multi-domain-placement.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current repository target, accepted ADR-0029, adopted Directory Rules v2, machine governance projections, CODEOWNERS, sibling architecture documents, and representative cross-domain implementation lanes were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Existing same-path human architecture reference remains under docs/architecture/cross-domain/ with no new authority root or structural migration."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "Hosted target-byte diagnostic confirmed one H1, balanced fences, one metadata block, final newline, no tabs or trailing whitespace, and 17 unique explicit anchors."
+    },
+    {
+      "gate": "repository-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "Authored navigation fragments map to explicit anchors, and repository-relative targets cited by the document were verified in the bounded current-session repository reads."
+    },
+    {
+      "gate": "evidence-and-claim-reconciliation",
+      "outcome": "PASS",
+      "reason": "The document distinguishes accepted placement doctrine, current tracked topology, proposed seam identity, held public joins, compatibility paths, and unknown runtime/public behavior."
+    },
+    {
+      "gate": "sensitivity-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "The document contains no protected payloads or exact sensitive locations and explicitly denies source activation, relation truth, policy approval, release, deployment, and publication effects."
+    },
+    {
+      "gate": "target-byte-integrity",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 32405461821 job 96543382760 verified SHA-256 813b3ff937a6cb7a6c1729dc1aafa9d1f7f3eabe5c966405842d4e03b868938e, 43,409 bytes, 798 lines, and 17 unique anchors."
+    },
+    {
+      "gate": "generated-receipt-shape-and-integrity",
+      "outcome": "PASS",
+      "reason": "Receipt fields were prepared against GENERATED_RECEIPT contract version 3.0.0 with artifact hash and truth-label keys exactly matching artifact_paths; hosted repository validation remains separate."
+    },
+    {
+      "gate": "repository-native-regression-suite",
+      "outcome": "SKIPPED",
+      "reason": "No complete local checkout was available; exact-head hosted checks are reported separately from authoring validation."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and authoring provenance only; no runtime, API, source, policy evaluator, release, deployment, or public-client behavior changed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by authoring, validation, commit, pull request, or merge state."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "kfm-repository-build-out-v6",
+      "validated": true,
+      "evidence_ref": "attachment:turn336file0"
+    },
+    {
+      "id": "accepted-directory-governance-v2",
+      "validated": true,
+      "evidence_ref": "path:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "adopted-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "path:docs/doctrine/directory-rules.md@blob:fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "current-root-registry",
+      "validated": true,
+      "evidence_ref": "path:control_plane/root_registry.yaml@blob:024f668b5f0a9239bafa4f8b09e2afd86300ff8c"
+    },
+    {
+      "id": "held-cross-domain-seam-register",
+      "validated": true,
+      "evidence_ref": "path:control_plane/cross_domain_seam_register.yaml@blob:dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29"
+    },
+    {
+      "id": "bounded-fauna-habitat-profile",
+      "validated": true,
+      "evidence_ref": "path:contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md@blob:6e1e977da9086ef35d5ce3ba04865e0f8bb12215"
+    },
+    {
+      "id": "generic-cross-domain-join-boundary",
+      "validated": true,
+      "evidence_ref": "path:tools/validators/cross-domain-joins/README.md@blob:06873dea443c02aa0b70425a981a66b5cd79f365"
+    },
+    {
+      "id": "cross-lane-pipeline-compatibility-boundary",
+      "validated": true,
+      "evidence_ref": "path:pipelines/cross_lane/README.md@blob:bef088f3064a49832d8b1b370ac7668c46325c26"
+    },
+    {
+      "id": "target-byte-diagnostic",
+      "validated": true,
+      "evidence_ref": "workflow-run:32405461821#job:96543382760"
+    },
+    {
+      "id": "merged-document-state",
+      "validated": true,
+      "evidence_ref": "pull-request:3165"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T18:58:14Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": 3165,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward provenance closure after PR #3165 was merged by the repository owner before the temporary diagnostic workflow was removed and before this receipt was added. The follow-up correction removes only that temporary workflow and adds this receipt; it does not alter the merged document bytes. Prior target blob for rollback: 12ba496e89b1a2bb5e1009080e4d611c7fb369d0. Merged target blob: ab0ec2500a69ab3ae39d6e55d4b1fdae9aef9c06. This receipt records authoring provenance only and does not authenticate human approval or grant truth, policy, release, deployment, or publication authority."
+}
