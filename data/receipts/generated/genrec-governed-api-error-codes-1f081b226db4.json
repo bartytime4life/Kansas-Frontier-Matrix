@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-governed-api-error-codes-1f081b226db4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-api/ERROR_CODES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-api/ERROR_CODES.md": "sha256:1f081b226db4f8c7b8d07db80cafa3fe54eec79668d96ed7ea7d11985d4b61c4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, catalogue-count, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:commit/46f0b173bee0d43e5aa241044a86ece94f39314c",
+      "repo:blob/55c0d8bc3bc97490397bf1d0407a58a27958b715",
+      "repo:branch/agent/ground-governed-api-error-codes-20260819",
+      "repo:docs/architecture/governed-api/ERROR_CODES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/THREAT_MODEL.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/LIFECYCLE_GATES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/DEPLOYMENT_RULES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/README.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/doctrine/directory-rules.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:contracts/runtime/runtime_response_envelope.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:contracts/runtime/runtime_response_http_binding_v1.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:packages/envelopes/src/envelopes/runtime_response.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:tools/validators/validate_runtime_response_envelope.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/governed_api/main.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/governed_api/stub.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:fixtures/contracts/v1/runtime/runtime_response_envelope/valid/valid_4.json@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-api/ERROR_CODES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned the target and dependencies, verified prior target blob ae59686dfea140866e9b6194bb9964ade629e020, and found no open pull request or branch claiming the exact target before opening this task."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced through adjacent Governed API documentation merges to e13f99b623e53d710d64dc2328eeb1471abf7f84. THREAT_MODEL.md, LIFECYCLE_GATES.md, and DEPLOYMENT_RULES.md were re-read, and current main was merged into the task branch without force-push."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support the existing docs/architecture/governed-api/ placement while contracts, schemas, policy, runtime, clients, observability, receipts, release, correction, and rollback retain their owning responsibilities."
+    },
+    {
+      "gate": "runtime-error-behavior-reconciliation",
+      "outcome": "PASS",
+      "reason": "The schema, candidate builder, validator, fixtures, WSGI dispatcher, stub builder, route tests, and boundary tests establish three ABSTAIN / NOT_IMPLEMENTED GET stubs and coarse ERROR / SAFE_RUNTIME_ERROR responses for 404 and 405 only."
+    },
+    {
+      "gate": "reason-code-vocabulary-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision records the conflict among the unconstrained top-level reason_code string, upper-snake executable literals, the v0.1 lower-case slash catalogue, and the inactive HTTP binding without promoting any of them into an accepted public registry."
+    },
+    {
+      "gate": "legacy-catalogue-no-loss",
+      "outcome": "PASS",
+      "reason": "Retained all nine v0.1 classes and exactly 33 distinct slash-namespaced identifiers as PROPOSED_LINEAGE while correcting unsupported canonical, nested-shape, retry, severity, stability, and implementation claims."
+    },
+    {
+      "gate": "markdown-structure-anchor-link-and-table-check",
+      "outcome": "PASS",
+      "reason": "Verified one H1, a YAML-readable KFM meta block, 21 unique explicit anchors, 41 local fragment references with no unresolved target, 14 balanced code-fence markers, 22 structurally consistent Markdown tables, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "catalogue-count-check",
+      "outcome": "PASS",
+      "reason": "A deterministic parser expanded the compact appendix catalogue to 33 distinct identifiers: schema 4 + rate 3 + upstream 4 + internal 3 + timeout 4 + storage 3 + adapter 4 + audit 4 + contract 4."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 55c0d8bc3bc97490397bf1d0407a58a27958b715 matches the locally computed Git blob; final document SHA-256 is 1f081b226db4f8c7b8d07db80cafa3fe54eec79668d96ed7ea7d11985d4b61c4."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked against the current generated-receipt field set, enums, hash patterns, artifact path/hash closure, pending-review state, timestamp shape, and additional-property constraints."
+    },
+    {
+      "gate": "repository-native-documentation-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; deterministic source checks, current-repository reads, branch reconciliation, and remote blob verification were completed instead."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions are expected to rerun after final receipt delivery; exact-head conclusions were pending at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no reason-code registry adoption, runtime, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "reconciled-current-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-envelope-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-runtime-error-stubs",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-boundary-tests",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/tests/test_boundary_guards.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "inactive-http-binding",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/runtime_response_http_binding_v1.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "grounded-adjacent-boundaries",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/governed-api/THREAT_MODEL.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T00:08:15Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 3134,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It replaces proposal-era claims that ERROR_CODES.md already defines a canonical public slash registry and nested reason object; grounds current behavior to the top-level reason_code plus SAFE_RUNTIME_ERROR on 404/405; preserves all nine legacy classes and 33 codes as proposal lineage; separates HTTP, finite outcome, safe reason, response identity, local validator findings, and restricted operational diagnostics; records explicit compatibility, disclosure, retry, correction, and rollback HOLDs; and changes no contract, schema, policy, route, runtime, client, release, deployment, source activation, publication, or repository setting."
+}
