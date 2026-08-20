@@ -1,0 +1,230 @@
+{
+  "receipt_id": "genrec-cross-domain-shared-kernel-dab142dc214d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/cross-domain/shared-kernel.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/cross-domain/shared-kernel.md": "sha256:dab142dc214dc319fe57de26090dbe94f0b2de5cba10711a5e49b2e1a4ceded0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write feature branch and draft-PR action surface)",
+      "attached-file evidence",
+      "local deterministic Markdown, metadata, anchor, fence, table, link, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55",
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639",
+      "sha256:1eb07fe8cceed546a1d26bdca8b542f8d96a197d799e66a3b47c75102f40d76b"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "Domain-Driven Design Reference",
+      "KFM Domains v1.1 + Pass 23/32 Consolidated Atlas",
+      "KFM Unified Doctrine Synthesis"
+    ],
+    "evidence_refs": [
+      "repo:commit/dcd405579dd0b135435102e075be83d28f2bdf63",
+      "repo:commit/465c19cada9491cf24a291664a8fdaebec22a862",
+      "repo:branch/docs-modernize-cross-domain-shared-kernel-20260820",
+      "repo:docs/architecture/cross-domain/shared-kernel.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=4b6e37b446c7f63bee02a966c8c0a0c8d9d05a37",
+      "repo:docs/architecture/cross-domain/shared-kernel.md@465c19cada9491cf24a291664a8fdaebec22a862#blob=88397872eb400d72af9dcfec3890e01d62af1a18",
+      "repo:docs/architecture/cross-domain/README.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=3353a0a0ab5fe3f8f5fdea937b8eecfa34b81032",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:contracts/governance/domain_context_map_assessment.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=baba984fbab331550f14a49f0713866d5178072f",
+      "repo:schemas/contracts/v1/governance/domain_context_map_assessment.schema.json@dcd405579dd0b135435102e075be83d28f2bdf63#blob=f91db6efd377b6440d4061bae7b9dc9e359d7151",
+      "repo:control_plane/object_family_register.yaml@dcd405579dd0b135435102e075be83d28f2bdf63#blob=8673b21ea49cb4a2852595208efdb206ed040690",
+      "repo:contracts/OBJECT_MAP.md@dcd405579dd0b135435102e075be83d28f2bdf63",
+      "repo:contracts/source/source_descriptor.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=b57ae5ccc042c1423b75c168438800384c9b6713",
+      "repo:contracts/evidence/evidence_ref.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=afd3a964435445edbb694b5edf16e2b6ddd49a92",
+      "repo:contracts/evidence/evidence_bundle.md@dcd405579dd0b135435102e075be83d28f2bdf63",
+      "repo:contracts/policy/policy_decision.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=ebfe97f98263e6309db6d2772cb2c5e548819650",
+      "repo:contracts/runtime/policy_decision.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=810433540004e4e7f407a64ea75685d9fcb61860",
+      "repo:contracts/runtime/decision_envelope.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=b5120a208910f5e2907874b03af1fc8c7f43363d",
+      "repo:contracts/runtime/runtime_response_envelope.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=5060aaaa30fea37b6eeea6e1428b9effa6a163bd",
+      "repo:contracts/runtime/ai_receipt.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=f4d8183dbed38f83144f6d9dbde30ae02a01edb8",
+      "repo:contracts/release/release_manifest.md@dcd405579dd0b135435102e075be83d28f2bdf63",
+      "repo:contracts/release/rollback_card.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=c6d3c35c56b064e04c3a2532f4709d938d7b0c1a",
+      "repo:contracts/ui/map_context_envelope.md@dcd405579dd0b135435102e075be83d28f2bdf63#blob=c6367306f14f9da56b3e3cbe7fad9d5545a0cdbf",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1",
+      "attachment:Domain-Driven Design Reference",
+      "attachment:KFM Domains v1.1 + Pass 23/32 Consolidated Atlas",
+      "attachment:KFM Unified Doctrine Synthesis"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/cross-domain/shared-kernel.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at dcd405579dd0b135435102e075be83d28f2bdf63, confirmed target prior blob 4b6e37b446c7f63bee02a966c8c0a0c8d9d05a37, and found no open branch or pull request for the exact target."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules bytes support same-path PLACE under docs/architecture/cross-domain/ while contracts, schemas, policy, registers, implementation, instances, and release remain separate authorities."
+    },
+    {
+      "gate": "ddd-shared-kernel-pattern-alignment",
+      "outcome": "PASS",
+      "reason": "The revision treats Shared Kernel as an explicit, small, jointly maintained model-and-implementation subset with consultation and continuous integration rather than a universal vocabulary or object list."
+    },
+    {
+      "gate": "context-map-candidate-boundary",
+      "outcome": "PASS",
+      "reason": "The page records the current fixture-only DomainContextMapAssessmentCandidate, including REVIEW_REQUIRED, participant EvidenceBundle, source-role, most-restrictive policy/sensitivity, per-participant release, no-public-join, and all-false authority controls."
+    },
+    {
+      "gate": "object-family-current-state-reconciliation",
+      "outcome": "PASS",
+      "reason": "Named source, evidence, policy, runtime, AI, release, rollback, and map-context families are classified against current contracts and machine projections without upgrading draft/proposed packets into adopted Shared Kernel membership or runtime proof."
+    },
+    {
+      "gate": "unsupported-receipt-authority-term",
+      "outcome": "PASS",
+      "reason": "Current repository search returned no ReceiptAuthority contract, schema, register entry, validator, test, or implementation surface, so the term is retained only as an unsupported historical heading and explicitly not admitted."
+    },
+    {
+      "gate": "legacy-identity-anchor-and-content-preservation",
+      "outcome": "PASS",
+      "reason": "The same path, doc_id, H1, top anchor, and all thirteen numbered H2 headings are preserved while stale OPEN-DR-10, universal-catalog, and implementation assumptions are corrected."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-link-check",
+      "outcome": "PASS",
+      "reason": "Verified 47,775 UTF-8 bytes, 758 lines, one H1, parseable KFM metadata, fifteen H2 headings including all thirteen legacy numbered headings, six unique explicit anchors, ten balanced fence markers including one Mermaid block, 81 Markdown links, 27 resolving local fragments, 29 unique repository-relative destinations, consistent tables, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 88397872eb400d72af9dcfec3890e01d62af1a18 equals the locally computed Git blob; final document SHA-256 is dab142dc214dc319fe57de26090dbe94f0b2de5cba10711a5e49b2e1a4ceded0."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt is checked against the current closed GENERATED_RECEIPT schema, exact artifact path/hash closure, SHA-256 artifact bytes, truth-label closure, citation requirement, pending-review state, and date-time formats."
+    },
+    {
+      "gate": "repository-native-focused-context-map-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; the existing focused packet is inspected as repository evidence but no new exact-head execution is claimed for this documentation-only change."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted pull-request checks run after final branch delivery; exact-head conclusions were pending when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no Shared Kernel adoption, membership, policy decision, review approval, shared mutation, release, deployment, publication, merge, or repository-setting authority."
+    },
+    {
+      "gate": "runtime-release-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes architecture documentation and authoring provenance only; no doctrine, ADR, register, contract, schema, policy, fixture, validator, test, workflow, runtime, source, lifecycle state, release, correction, deployment, publication, or repository setting changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "cross-domain-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/cross-domain/README.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "ddd-shared-kernel-reference",
+      "validated": true,
+      "evidence_ref": "attachment:Domain-Driven Design Reference#Shared-Kernel"
+    },
+    {
+      "id": "context-map-assessment-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/domain_context_map_assessment.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "context-map-assessment-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/governance/domain_context_map_assessment.schema.json@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "partial-object-family-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/object_family_register.yaml@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "contract-object-map",
+      "validated": true,
+      "evidence_ref": "repo:contracts/OBJECT_MAP.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "evidence-pointer-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_ref.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "canonical-policy-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/policy/policy_decision.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "runtime-response-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/runtime_response_envelope.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "rollback-card-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/release/rollback_card.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    },
+    {
+      "id": "map-context-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/map_context_envelope.md@dcd405579dd0b135435102e075be83d28f2bdf63"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T20:24:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro — KFM repository build-out agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path modernization. The receipt binds the final shared-kernel document bytes and records pending human review. It does not adopt a Shared Kernel relationship, create membership, authenticate reviewer authority, validate deployed runtime behavior, approve release, or publish anything."
+}
