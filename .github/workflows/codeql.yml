@@ -6,6 +6,8 @@
 #   source with GitHub CodeQL's security-extended query suite.
 # - Run for pull requests to main, pushes to main, merge-queue checks, a weekly
 #   full scan, and explicit maintainer dispatch.
+# - Fail early when a configured language has no matching tracked source or the
+#   checkout does not materialize any matching regular source file.
 # Authority:
 # - A successful run means the configured CodeQL analysis completed for the
 #   checked revision. It is not proof that the repository is vulnerability-free,
@@ -18,8 +20,8 @@
 # - GitHub-hosted actions and CodeQL bundles may use GitHub-managed network
 #   access. This workflow does not call KFM source systems or public data APIs.
 # Outputs:
-# - Code-scanning results managed by GitHub. It creates no KFM proof, receipt,
-#   release, lifecycle, catalog, triplet, or published artifact.
+# - Code-scanning results and bounded job summaries managed by GitHub. It creates
+#   no KFM proof, receipt, release, lifecycle, catalog, triplet, or published artifact.
 # Compatibility:
 # - Workflow name `codeql` and job id `codeql-scan` are retained because
 #   branch-protection dependencies have not been verified in this session.
@@ -61,19 +63,68 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # These patterns are an early repository/checkout drift guard, not
+        # replacements for CodeQL's language detection or extractor result.
+        # Current entries intentionally use build-mode none. A future compiled
+        # language needs a clean build between CodeQL init and analyze.
         include:
           - language: actions
             build-mode: none
+            source_pattern: '^\.github/(workflows/.+\.ya?ml|actions/.+/action\.ya?ml)$'
           - language: javascript-typescript
             build-mode: none
+            source_pattern: '\.(cjs|cts|js|jsx|mjs|mts|ts|tsx)$'
           - language: python
             build-mode: none
+            source_pattern: '\.(py|pyi|pyw)$'
 
     steps:
       - name: Check out analyzed revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Verify tracked source family
+        shell: bash
+        env:
+          CODEQL_LANGUAGE: ${{ matrix.language }}
+          SOURCE_PATTERN: ${{ matrix.source_pattern }}
+        run: |
+          set -euo pipefail
+
+          tracked_count=0
+          materialized_count=0
+
+          while IFS= read -r -d '' path; do
+            if [[ "${path}" =~ ${SOURCE_PATTERN} ]]; then
+              tracked_count=$((tracked_count + 1))
+              if [[ -f "${path}" && ! -L "${path}" ]]; then
+                materialized_count=$((materialized_count + 1))
+              fi
+            fi
+          done < <(git ls-files -z)
+
+          if (( tracked_count == 0 )); then
+            printf '%s\n' \
+              "::error title=CodeQL source census failed::No tracked source files matched the configured ${CODEQL_LANGUAGE} source family. Check the language matrix and repository source placement."
+            exit 1
+          fi
+
+          if (( materialized_count == 0 )); then
+            printf '%s\n' \
+              "::error title=CodeQL source census failed::Tracked ${CODEQL_LANGUAGE} source exists in the Git index, but no matching regular file is materialized in the checkout. Check checkout and sparse-checkout scope."
+            exit 1
+          fi
+
+          {
+            printf '## CodeQL source census — `%s`\n\n' "${CODEQL_LANGUAGE}"
+            printf -- '- Outcome: `SOURCE_PRESENT`\n'
+            printf -- '- Matching tracked files: `%d`\n' "${tracked_count}"
+            printf -- '- Materialized regular files: `%d`\n\n' "${materialized_count}"
+            printf '%s\n' \
+              'This is an early matrix and checkout drift guard.' \
+              'The CodeQL analysis result remains the authoritative extractor outcome.'
+          } >> "${GITHUB_STEP_SUMMARY}"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4.37.7
