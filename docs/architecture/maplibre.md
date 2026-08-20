@@ -18,36 +18,18 @@ owning_root: docs/
 responsibility: "Provide the repository-grounded entry point for MapLibre architecture, implementation evidence, unresolved renderer decisions, validation gates, and direct task navigation without creating runtime, contract, schema, policy, release, or publication authority."
 authority_posture: "Explanatory architecture entry point subordinate to accepted ADRs, adopted Directory Rules, semantic contracts, machine schemas, policy, current code/configuration, tests/workflows, receipts/proofs/manifests, release records, and runtime evidence."
 truth_posture: "CONFIRMED current repository paths and bounded implementation surfaces at the evidence snapshot / PROPOSED architecture decisions and future runtime integration / UNKNOWN production behavior, deployment, public reliance, and independent stewardship / NEEDS VERIFICATION hosted exact-head checks and any later dependency admission"
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 5451e5bc1ae7ffd8d721197b930cadd827fbbd7f
-  target_prior_blob: ff4b4754e5dc7beae22620ee669d3fdc240c44d7
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  directory_rules_decision: ADR-0029 accepted
+evidence_snapshot: "repository=bartytime4life/Kansas-Frontier-Matrix; base_ref=main; base_commit=5451e5bc1ae7ffd8d721197b930cadd827fbbd7f; target_prior_blob=ff4b4754e5dc7beae22620ee669d3fdc240c44d7; directory_rules_blob=fd49a0b83e55cef52c1124281f093e263526898d; directory_rules_decision=ADR-0029 accepted"
 related:
-  - ../doctrine/directory-rules.md
-  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ./map-master/README.md
-  - ./maplibre-master.md
-  - ./map-shell.md
-  - ./planetary-3d.md
-  - ./ui/MAP_RUNTIME_BOUNDARY.md
-  - ./contract-schema-policy-split.md
-  - ./identity-and-spec-hash.md
-  - ../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
-  - ../../packages/maplibre/package.json
-  - ../../packages/maplibre/src/index.ts
-  - ../../apps/explorer-web/package.json
-  - ../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
-  - ../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - ../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
-  - ../../configs/maplibre/README.md
-  - ../../tools/validators/maplibre/validate_v6_readiness.py
-  - ../../tests/maplibre/test_validate_v6_readiness.py
-  - ../../scripts/maplibre-smoke-perf.mjs
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/architecture/map-master/README.md
+  - docs/architecture/maplibre-master.md
+  - docs/architecture/map-shell.md
+  - docs/architecture/planetary-3d.md
+  - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
+  - docs/architecture/map-master/RENDERER_BOUNDARY.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
 tags: [kfm, architecture, maplibre, map-master, explorer-web, renderer-boundary, evidence-drawer, pmtiles, validation]
 notes:
   - "This revision preserves the document identity and stable legacy anchors while replacing proposal-era repository assumptions with current pinned evidence."
