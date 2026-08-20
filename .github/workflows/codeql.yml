@@ -6,6 +6,8 @@
 #   source with GitHub CodeQL's security-extended query suite.
 # - Run for pull requests to main, pushes to main, merge-queue checks, a weekly
 #   full scan, and explicit maintainer dispatch.
+# - Fail before CodeQL initialization when a matrix cell lacks checked-out,
+#   tracked source or an explicit repository source policy.
 # Authority:
 # - A successful run means the configured CodeQL analysis completed for the
 #   checked revision. It is not proof that the repository is vulnerability-free,
@@ -18,6 +20,7 @@
 # - GitHub-hosted actions and CodeQL bundles may use GitHub-managed network
 #   access. This workflow does not call KFM source systems or public data APIs.
 # Outputs:
+# - The source-boundary preflight emits diagnostic JSON and a job summary only.
 # - Code-scanning results managed by GitHub. It creates no KFM proof, receipt,
 #   release, lifecycle, catalog, triplet, or published artifact.
 # Compatibility:
@@ -74,6 +77,23 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Test CodeQL source boundary helper
+        if: ${{ matrix.language == 'python' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests/ci/test_validate_codeql_source_boundary.py -v
+
+      - name: Validate CodeQL source boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/ci/validate_codeql_source_boundary.py \
+            --repo-root . \
+            --workflow .github/workflows/codeql.yml \
+            --language "${{ matrix.language }}" \
+            --build-mode "${{ matrix.build-mode }}"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4.37.7

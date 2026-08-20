@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-codeql-source-boundary-f673edecaf87d9d2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/codeql.yml",
+    "tests/ci/test_validate_codeql_source_boundary.py",
+    "tools/ci/validate_codeql_source_boundary.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/codeql.yml": "sha256:72a37a65d68f5917c1b4bcdad14182e8a931cfb3fb0d00d020b6ccb90168bb56",
+    "tests/ci/test_validate_codeql_source_boundary.py": "sha256:21f741cc74553b38b4c167ba812f1e01168be41e2df027d8713dbbad261023df",
+    "tools/ci/validate_codeql_source_boundary.py": "sha256:dbaddb3969914a0972a08f71038add29add9645fadb3057f9f94805c7670730c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:3ddfb60986b88d35ab69423c231813f5e3cf022052b96312dc9dbe47301e41d5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "web",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:repo:bartytime4life/Kansas-Frontier-Matrix@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:.github/workflows/codeql.yml@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:.github/workflows/README.md@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:tools/ci/README.md@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:tests/ci/test_install_python_ci.py@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:CONTRIBUTING.md@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:SECURITY.md@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:path:docs/doctrine/directory-rules.md@9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "github:workflow-run:codeql:32400977573@2e9ef91d1ca8842b360538a7bd706b165f1b8427",
+      "web:github-docs:no-source-code-seen-during-build:2026-08-20"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/codeql.yml": "CONFIRMED",
+    "tests/ci/test_validate_codeql_source_boundary.py": "CONFIRMED",
+    "tools/ci/validate_codeql_source_boundary.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "official-guidance-review",
+      "outcome": "PASS",
+      "reason": "GitHub's current troubleshooting page was reviewed; the slice targets explicit language selection, checked-out source presence, and fail-fast diagnostics without adding unsupported build behavior."
+    },
+    {
+      "gate": "directory-and-workflow-boundary-review",
+      "outcome": "PASS",
+      "reason": "Accepted Directory Rules and repository workflow guidance place orchestration in .github/workflows, reusable CI helpers in tools/ci, and deterministic proof in tests/ci."
+    },
+    {
+      "gate": "python-stdlib-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight no-network unittest cases passed, including missing source, unsupported language, inadmissible build mode, ignored generated/vendor paths, Actions path scope, workflow ordering, and tracked-file inventory."
+    },
+    {
+      "gate": "matrix-cell-smoke",
+      "outcome": "PASS",
+      "reason": "The helper returned PASS for actions, javascript-typescript, and python against a deterministic synthetic tracked checkout."
+    },
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "Both new Python modules parsed successfully with the Python AST parser."
+    },
+    {
+      "gate": "workflow-contract-parser",
+      "outcome": "PASS",
+      "reason": "The repository-owned parser confirmed the exact three-cell matrix, matrix-bound invocation, and checkout/test/preflight/init/analyze order."
+    },
+    {
+      "gate": "actionlint",
+      "outcome": "SKIPPED",
+      "reason": "actionlint was not available in the document-only local workspace."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "SKIPPED",
+      "reason": "The receipt was authored to the inspected canonical schema and parsed as JSON; the repository schema runner remains hosted exact-head evidence."
+    },
+    {
+      "gate": "hosted-codeql-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CodeQL starts after the draft pull request is opened."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github-docs-no-source-code-seen-during-build",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/reference/code-scanning/troubleshoot-analysis-errors/no-source-code-seen-during-build"
+    },
+    {
+      "id": "kfm-codeql-workflow-base",
+      "validated": true,
+      "evidence_ref": "github:path:.github/workflows/codeql.yml@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "kfm-codeql-successful-baseline-run",
+      "validated": true,
+      "evidence_ref": "github:workflow-run:32400977573@2e9ef91d1ca8842b360538a7bd706b165f1b8427"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T18:39:46Z",
+  "emitter": "ChatGPT GitHub implementation agent",
+  "notes": "Preventive CodeQL hardening only. The current CodeQL workflow is already healthy for actions, JavaScript/TypeScript, and Python. This slice adds a read-only, standard-library preflight that fails early with finite diagnostics when a configured matrix cell has no checked-out tracked source or lacks an explicit source/build-mode policy. It preserves workflow name, job identity, triggers, permissions, action pins, query suite, release state, and publication boundaries. Future compiled-language admission remains fail-closed until its build policy and tests are added. This receipt is provenance only; human review is pending."
+}
