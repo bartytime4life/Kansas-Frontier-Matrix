@@ -1,0 +1,48 @@
+# Temporary exact-head diagnostic. Remove after recording target digest and structure.
+name: diagnostic-multi-domain-placement-hash
+
+"on":
+  push:
+    branches:
+      - agent/refresh-multi-domain-placement-20260820
+    paths:
+      - ".github/workflows/diagnostic-multi-domain-placement-hash.yml"
+      - "docs/architecture/cross-domain/multi-domain-placement.md"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-target:
+    name: inspect-target
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Report exact target digest and bounded Markdown checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="docs/architecture/cross-domain/multi-domain-placement.md"
+          sha256sum "$target"
+          wc -c -l "$target"
+          python - <<'PY'
+          import pathlib
+          import re
+
+          path = pathlib.Path("docs/architecture/cross-domain/multi-domain-placement.md")
+          text = path.read_text(encoding="utf-8")
+          assert text.count("<!-- [KFM_META_BLOCK_V2]") == 1
+          assert text.count("[/KFM_META_BLOCK_V2] -->") == 1
+          assert len(re.findall(r"^# ", text, re.MULTILINE)) == 1
+          assert text.count("```") % 2 == 0
+          assert "\t" not in text
+          assert text.endswith("\n")
+          assert not any(line.rstrip("\n\r") != line.rstrip() for line in text.splitlines(True))
+          anchors = re.findall(r'<a id="([^"]+)"></a>', text)
+          assert len(anchors) == len(set(anchors))
+          print(f"KFM_DIAGNOSTIC_PASS anchors={len(anchors)} bytes={len(text.encode('utf-8'))} lines={text.count(chr(10))}")
+          PY
