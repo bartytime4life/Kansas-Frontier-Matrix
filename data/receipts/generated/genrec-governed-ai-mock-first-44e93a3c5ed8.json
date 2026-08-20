@@ -1,0 +1,174 @@
+{
+  "receipt_id": "genrec:governed-ai:mock-first:44e93a3c5ed8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-ai/MOCK_FIRST.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-ai/MOCK_FIRST.md": "sha256:44e93a3c5ed8511e7f988bc4cba0b686872965ef80fe408655512bb4d3d05ec4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20-session"
+  },
+  "prompt_or_contract": "sha256:69b101aeca2f4ce10bdb87c06e94675ff9f688679180c5190eaf6a3736ce505d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:69b101aeca2f4ce10bdb87c06e94675ff9f688679180c5190eaf6a3736ce505d"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/architecture/governed-ai/MOCK_FIRST.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/architecture/governed-ai/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/architecture/governed-ai/ADAPTER_CONTRACT.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/architecture/governed-ai/AI_RECEIPTS.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#.github/CODEOWNERS",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#runtime/model_adapters/MockAdapter.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#tests/runtime_proof/test_mock_adapter_finite_outcomes.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#contracts/runtime/runtime_response_envelope.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#tools/validators/validate_runtime_response_envelope.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#packages/envelopes/src/envelopes/runtime_response.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#packages/envelopes/src/envelopes/mock_adapter_receipt.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#tests/packages/envelopes/test_mock_adapter_ai_receipt_candidate.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#.github/workflows/focus-mock-test.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#.github/workflows/ai-receipt.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#schemas/contracts/v1/focus/focus_request.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#schemas/contracts/v1/focus/focus_response.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#apps/governed-api/src/governed_api/routes/registry.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#runtime/model_adapters/OllamaAdapter.py"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-ai/MOCK_FIRST.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap",
+      "outcome": "PASS",
+      "reason": "Pinned main at 3295d5faf38c521e8cc5f4544dc9920a7b17efc1, verified prior target blob 742cb7092f8e877b874b8ba1f0d13e4a3c55c54d, and found no open MOCK_FIRST pull request or matching task branch before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 support same-path PLACE for an existing human architecture document under docs/architecture/governed-ai/; the receipt uses the existing generated-receipt lane."
+    },
+    {
+      "gate": "metadata-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "Local deterministic checks found one H1, balanced metadata and fenced blocks, no heading-level jumps, no tabs or trailing whitespace, and a final newline; markdown-it parsed the complete document."
+    },
+    {
+      "gate": "anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "Twenty-one explicit anchors are unique, every internal fragment resolves, and the prior top-level section identities plus the historical mock-marker appendix fragment remain available."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "All nineteen unique relative destinations were confirmed in current-session GitHub reads at the pinned base."
+    },
+    {
+      "gate": "stale-claim-correction",
+      "outcome": "PASS",
+      "reason": "Removed invented app-local mock paths, fixed-PR sequencing, missing related-doc links, unconditional receipt-emission claims, and unsupported live-provider implications; narrowed MockAdapter to the verified selector boundary."
+    },
+    {
+      "gate": "schema-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves the current closed RuntimeResponseEnvelope and AIReceipt shapes, explicitly rejects ad hoc mock-marker fields, and keeps evidence, policy, citation, receipt, release, correction, and publication authority outside mocks and documentation."
+    },
+    {
+      "gate": "local-byte-and-remote-blob-binding",
+      "outcome": "PASS",
+      "reason": "Final document SHA-256 is 44e93a3c5ed8511e7f988bc4cba0b686872965ef80fe408655512bb4d3d05ec4; local Git blob 7d123cab64a6da5dd6a191dd5b42d44418f3da23 matches the GitHub write response content blob."
+    },
+    {
+      "gate": "repository-native-local-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; repository-native tests and aggregate validators are deferred to hosted exact-head CI."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "This receipt was emitted before draft pull-request creation; hosted results are reported separately on the pull request."
+    },
+    {
+      "gate": "release-and-publication-side-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes one architecture document and this authoring receipt only; no contract, schema, policy, code, fixture, test, workflow, runtime, source, lifecycle, release, deployment, publication, or repository-setting mutation occurs."
+    }
+  ],
+  "policy_decisions": [
+    "directory-rules:PLACE:same-path human architecture under docs/architecture/governed-ai/",
+    "authority:DRAFT_PR_ONLY:no merge, release, deployment, publication, source activation, or settings action",
+    "schema-discipline:PRESERVE_CLOSED_SHAPES:no ad hoc mock_marker or parallel payload shape",
+    "truth-boundary:MOCK_PROVES_BOUNDED_BEHAVIOR_ONLY:not evidence, policy, citation, receipt emission, release, or public truth"
+  ],
+  "citations": [
+    {
+      "id": "prior-target",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/architecture/governed-ai/MOCK_FIRST.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "mock-adapter-implementation",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#runtime/model_adapters/MockAdapter.py"
+    },
+    {
+      "id": "mock-adapter-proof",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#tests/runtime_proof/test_mock_adapter_finite_outcomes.py"
+    },
+    {
+      "id": "runtime-envelope-shape",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    },
+    {
+      "id": "mock-receipt-projection",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#packages/envelopes/src/envelopes/mock_adapter_receipt.py"
+    },
+    {
+      "id": "focus-workflow-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#.github/workflows/focus-mock-test.yml"
+    },
+    {
+      "id": "governed-api-route-inventory",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@3295d5faf38c521e8cc5f4544dc9920a7b17efc1#apps/governed-api/src/governed_api/routes/registry.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-20T16:14:14Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "notes": "Documentation modernization and provenance only. The receipt does not approve the document, authenticate repository references beyond the recorded reads, establish runtime behavior, admit a provider, or authorize merge, release, deployment, or publication."
+}
