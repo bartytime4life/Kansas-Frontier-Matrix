@@ -12,6 +12,7 @@ name: geoparquet-2-rc-pyarrow-carrier-probe
       - "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
       - "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py"
       - "tools/ci/geoparquet-pyarrow-25.lock"
+      - "tools/ci/install_python_ci.py"
       - "data/receipts/generated/genrec-geoparquet-2-rc-pyarrow-carrier-*.json"
   push:
     branches: [main]
@@ -24,6 +25,7 @@ name: geoparquet-2-rc-pyarrow-carrier-probe
       - "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
       - "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py"
       - "tools/ci/geoparquet-pyarrow-25.lock"
+      - "tools/ci/install_python_ci.py"
       - "data/receipts/generated/genrec-geoparquet-2-rc-pyarrow-carrier-*.json"
   workflow_dispatch:
 
@@ -64,8 +66,7 @@ jobs:
       - name: Install exact PyArrow wheel with hash verification
         run: |
           set -euo pipefail
-          python -m pip install --no-deps --require-hashes \
-            -r tools/ci/geoparquet-pyarrow-25.lock
+          python tools/ci/install_python_ci.py geoparquet-pyarrow-25
           python -c 'import pyarrow; assert pyarrow.__version__ == "25.0.0"'
 
       - name: Generate actual synthetic carrier bytes

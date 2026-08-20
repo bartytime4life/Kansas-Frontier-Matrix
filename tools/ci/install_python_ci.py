@@ -90,6 +90,9 @@ PROFILES = {
     "connectors-core": InstallProfile(
         "tools/ci/python-test.lock", ("./packages/connectors-core",)
     ),
+    "geoparquet-pyarrow-25": InstallProfile(
+        "tools/ci/geoparquet-pyarrow-25.lock"
+    ),
     "project-runtime": InstallProfile("tools/ci/python-test.lock", (".",)),
     "project-test": InstallProfile("tools/ci/python-test.lock", (".[test]",)),
     "project-test-hashing": InstallProfile(

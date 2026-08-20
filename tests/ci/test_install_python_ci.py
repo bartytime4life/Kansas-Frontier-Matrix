@@ -24,6 +24,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "all-local-test",
                 "audit-tool",
                 "connectors-core",
+                "geoparquet-pyarrow-25",
                 "project-runtime",
                 "project-test",
                 "project-test-hashing",
@@ -66,6 +67,10 @@ class InstallPythonCiTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("pip-audit==2.10.1", audit_lock.lower())
+        geoparquet_lock = (
+            REPO_ROOT / "tools/ci/geoparquet-pyarrow-25.lock"
+        ).read_text(encoding="utf-8")
+        self.assertIn("pyarrow==25.0.0", geoparquet_lock.lower())
 
     def test_migration_manifest_is_finite_and_exact(self) -> None:
         manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
@@ -122,6 +127,7 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertGreaterEqual(sum(counts.values()), 388)
         self.assertEqual(1, counts["audit-tool"])
         self.assertEqual(1, counts["all-local-test"])
+        self.assertEqual(1, counts["geoparquet-pyarrow-25"])
 
 
 if __name__ == "__main__":
