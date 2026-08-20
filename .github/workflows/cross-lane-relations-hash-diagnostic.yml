@@ -1,0 +1,48 @@
+# Temporary read-only diagnostic used to bind the cross-lane relations authoring receipt.
+# Delete this workflow before the draft pull request reaches its final review state.
+name: cross-lane-relations-hash-diagnostic
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/cross-lane-relations-hash-diagnostic.yml"
+      - "docs/architecture/cross-domain/cross-lane-relations.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cross-lane-relations-hash-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hash:
+    name: hash-authored-document
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Emit exact SHA-256 binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="docs/architecture/cross-domain/cross-lane-relations.md"
+          test -f "$target"
+          digest="$(sha256sum "$target" | awk '{print $1}')"
+          bytes="$(wc -c < "$target" | tr -d '[:space:]')"
+          lines="$(wc -l < "$target" | tr -d '[:space:]')"
+          echo "KFM_CROSS_LANE_RELATIONS_SHA256=${digest}"
+          echo "KFM_CROSS_LANE_RELATIONS_BYTES=${bytes}"
+          echo "KFM_CROSS_LANE_RELATIONS_LINES=${lines}"
+          {
+            echo "### Cross-lane relations authoring diagnostic"
+            echo
+            echo "- SHA-256: \`${digest}\`"
+            echo "- Bytes: \`${bytes}\`"
+            echo "- Lines: \`${lines}\`"
+            echo "- Authority: hash and size evidence only; no review, release, or publication effect."
+          } >> "$GITHUB_STEP_SUMMARY"
