@@ -15,6 +15,7 @@ from jsonschema import Draft202012Validator
 from tools.experiments.geoparquet.run_gdal_3_13_2_consumer_probe import (
     COORDINATES,
     GDAL_VERSION,
+    GDAL_VERSION_RE,
     GEOMETRY_TYPES,
     IDS,
     IMAGE_REFERENCE,
@@ -219,7 +220,7 @@ def validate(root: Path, packet_path: Path) -> Result:
             toolchain["image_id"] is None
             or not toolchain["repo_digests"]
             or toolchain["gdal_version_output"] is None
-            or re.match(r"^GDAL 3\.13\.2(?:,|$)", toolchain["gdal_version_output"]) is None
+            or re.match(GDAL_VERSION_RE, toolchain["gdal_version_output"]) is None
             or toolchain["gdal"] != GDAL_VERSION
         ):
             reasons.append("GDAL_IMAGE_IDENTITY_MISMATCH")

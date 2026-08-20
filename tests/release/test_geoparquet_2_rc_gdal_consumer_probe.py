@@ -121,7 +121,7 @@ def _write_packet(root: Path) -> tuple[Path, dict[str, object]]:
         },
         "toolchain": {
             "gdal": "3.13.2",
-            "gdal_version_output": "GDAL 3.13.2, released 2026/07/14",
+            "gdal_version_output": "GDAL 3.13.2 \"Iowa City\", released 2026/07/20",
             "gdal_source_tag_commit": GDAL_SOURCE_TAG_COMMIT,
             "image_reference": IMAGE_REFERENCE,
             "image_index_sha256": IMAGE_INDEX_SHA256,

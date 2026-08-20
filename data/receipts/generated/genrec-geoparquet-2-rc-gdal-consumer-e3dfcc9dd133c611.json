@@ -13,9 +13,9 @@
     ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml": "sha256:e93619358c657375fbc1a5a6031e2c959801f692318ee8f71d498fbdd743c39c",
     "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "sha256:a79efd3886904606b06cd12e5c1462d5fa041a8b7049fdaf91662bc8bcfe05e1",
     "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json": "sha256:59d45d56f7968c690948bf8e8aca6b88d2ab5893410cf1a6394058e4d6e2d70b",
-    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:29be6c32db7e79cf2a9e64cd4c8cfca716086543a1780939c111e74a42410a69",
-    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "sha256:a0c648f5e257e4bdea9d03be9e3f3428f755b358b6e18d26030f99d1ad8a28af",
-    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:b00e5d81329e57d9347a578816e0f74b8bb042f7e3d27cd6f95065004d4bb891"
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:f35260cd6c0cdd5aafaab5a84f6fb2a74efda5490c47ac2c3c4daf6c1c723c83",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "sha256:b409341473822aafea47f7f9fabab532320c6d9215763e5ffb146b98f24fd6b4",
+    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:8202d20b1412cab297b9de8b931e6d3c0edb660ac6048cb76f0f02f7febbf36e"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -42,6 +42,8 @@
       "github:pull:bartytime4life/Kansas-Frontier-Matrix#3156@641aec8571e7c9c0bcd831809f31e71c71f2aa6a",
       "github:actions:run:32387029048",
       "github:actions:artifact:9413335518",
+      "github:actions:run:32418861888",
+      "github:actions:artifact:9424945296",
       "repo:docs/adr/ADR-0033-geoparquet-version-readiness.md@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
       "repo:tools/experiments/geoparquet/generate_pyarrow_25_carriers.py@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
       "repo:tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
@@ -92,9 +94,14 @@
       "reason": "The scratch runtime does not include the repository's jsonschema/PyArrow test environment. The additive hosted workflow installs the declared profiles and runs both the existing source tests and the new consumer tests at the exact PR head."
     },
     {
-      "gate": "real-gdal-container-probe",
+      "gate": "first-hosted-container-identity",
+      "outcome": "PASS",
+      "reason": "Exact-head run 32418861888 passed both locked installs, regenerated and validated the source carriers, pulled and authenticated the exact GDAL image, and recorded the official version output. It then exposed one bounded version-banner parser mismatch before carrier reads."
+    },
+    {
+      "gate": "final-gdal-consumer-probe",
       "outcome": "SKIPPED",
-      "reason": "Docker is unavailable in the scratch runtime. The exact digest-pinned container execution is intentionally delegated to the exact-head hosted workflow."
+      "reason": "The correction admits the exact official banner observed in run 32418861888. Carrier reads, result validation, and focused tests remain pending on the corrected exact head."
     },
     {
       "gate": "human-review",
@@ -121,6 +128,11 @@
       "id": "KFM-actions-run-32387029048",
       "validated": true,
       "evidence_ref": "github:actions/run/32387029048"
+    },
+    {
+      "id": "KFM-actions-run-32418861888",
+      "validated": true,
+      "evidence_ref": "github:actions/run/32418861888"
     },
     {
       "id": "GDAL-official-Parquet-driver-documentation",

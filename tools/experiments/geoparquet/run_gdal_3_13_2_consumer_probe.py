@@ -15,6 +15,7 @@ PROFILE = "kfm.geoparquet-2-rc-gdal-consumer-probe.v1"
 SOURCE_PROFILE = "kfm.geoparquet-2-rc-pyarrow-carrier-probe.v1"
 SCOPE = "pyarrow-25-producer-to-gdal-3.13.2-consumer-read"
 GDAL_VERSION = "3.13.2"
+GDAL_VERSION_RE = r"^GDAL 3\.13\.2(?:\s|,|$)"
 GDAL_SOURCE_TAG_COMMIT = "b40672525acf3f5c4f29d8541aa7dcff1e18eb92"
 IMAGE_INDEX_SHA256 = (
     "sha256:6960891693c3463b8e2b498a915c7c9b10eeb93f155d5be14c2e3ffbede9fbb1"
@@ -335,7 +336,7 @@ def run(root: Path, manifest_path: Path, output: Path) -> dict[str, Any]:
         for key, entry in entries.items():
             result["carriers"][key] = _empty_carrier(entry, version_command, version.stderr)
         return result
-    if re.match(r"^GDAL 3\.13\.2(?:,|$)", version_output) is None:
+    if re.match(GDAL_VERSION_RE, version_output) is None:
         result["reason_codes"] = ["GDAL_VERSION_MISMATCH"]
         for key, entry in entries.items():
             result["carriers"][key] = _empty_carrier(entry, version_command, version_output)
