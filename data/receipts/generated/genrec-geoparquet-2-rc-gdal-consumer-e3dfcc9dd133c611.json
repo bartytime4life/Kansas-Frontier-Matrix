@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-geoparquet-2-rc-gdal-consumer-e3dfcc9dd133c611",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml",
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md",
+    "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py",
+    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml": "sha256:e93619358c657375fbc1a5a6031e2c959801f692318ee8f71d498fbdd743c39c",
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "sha256:a79efd3886904606b06cd12e5c1462d5fa041a8b7049fdaf91662bc8bcfe05e1",
+    "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json": "sha256:59d45d56f7968c690948bf8e8aca6b88d2ab5893410cf1a6394058e4d6e2d70b",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:29be6c32db7e79cf2a9e64cd4c8cfca716086543a1780939c111e74a42410a69",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "sha256:a0c648f5e257e4bdea9d03be9e3f3428f755b358b6e18d26030f99d1ad8a28af",
+    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:b00e5d81329e57d9347a578816e0f74b8bb042f7e3d27cd6f95065004d4bb891"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:e3dfcc9dd133c611e3c8bb0669c6e930136f8e9227c49396a1551406b348f3a6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "local deterministic syntax and unit validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github:repo:bartytime4life/Kansas-Frontier-Matrix@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
+      "github:issue:bartytime4life/Kansas-Frontier-Matrix#2907",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3155@94a20b76e9bd8d1432db41079d065152738050fa",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3156@641aec8571e7c9c0bcd831809f31e71c71f2aa6a",
+      "github:actions:run:32387029048",
+      "github:actions:artifact:9413335518",
+      "repo:docs/adr/ADR-0033-geoparquet-version-readiness.md@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
+      "repo:tools/experiments/geoparquet/generate_pyarrow_25_carriers.py@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
+      "repo:tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973",
+      "https://gdal.org/en/stable/download.html",
+      "https://gdal.org/en/stable/drivers/vector/parquet.html",
+      "https://github.com/orgs/OSGeo/packages/container/gdal/1056283224?tag=alpine-normal-3.13.2",
+      "github:repo:OSGeo/gdal@b40672525acf3f5c4f29d8541aa7dcff1e18eb92",
+      "github:repo:apache/arrow@apache-arrow-25.0.0"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geoparquet-2-rc-gdal-consumer-probe.yml": "PROPOSED",
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "PROPOSED",
+    "schemas/contracts/v1/release/geoparquet_2_rc_gdal_consumer_probe.schema.json": "PROPOSED",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "PROPOSED",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "PROPOSED",
+    "tools/validators/release/validate_geoparquet_2_rc_gdal_consumer_probe.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-merged-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "Issue #2907, current main, merged PRs #3155 and #3156, exact-head run 32387029048, and artifact 9413335518 were inspected before selecting the follow-up."
+    },
+    {
+      "gate": "historical-workflow-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The merged PyArrow carrier workflow and its generated receipt remain byte-for-byte untouched; the GDAL lane is an additive workflow with its own receipt."
+    },
+    {
+      "gate": "bounded-interoperability-scope",
+      "outcome": "PASS",
+      "reason": "The patch adds only a PyArrow 25.0.0 producer to GDAL 3.13.2 consumer-read edge over the two retained carriers. GDAL production, the wider engine matrix, projected/conflicting CRS, GEOGRAPHY, and pruning remain deferred."
+    },
+    {
+      "gate": "exact-toolchain-identity",
+      "outcome": "PASS",
+      "reason": "The repository-owned PyArrow profile preserves the exact wheel hash; the official GDAL image is bound by immutable multi-architecture digest, linux/amd64 platform digest, expected version, and runtime image inspection."
+    },
+    {
+      "gate": "python-json-yaml-static-validation",
+      "outcome": "PASS",
+      "reason": "Both Python modules and the focused test parse successfully, the JSON schema parses, and the additive workflow parses as YAML with read-only contents permission and pinned actions."
+    },
+    {
+      "gate": "focused-local-unit-validation",
+      "outcome": "SKIPPED",
+      "reason": "The scratch runtime does not include the repository's jsonschema/PyArrow test environment. The additive hosted workflow installs the declared profiles and runs both the existing source tests and the new consumer tests at the exact PR head."
+    },
+    {
+      "gate": "real-gdal-container-probe",
+      "outcome": "SKIPPED",
+      "reason": "Docker is unavailable in the scratch runtime. The exact digest-pinned container execution is intentionally delegated to the exact-head hosted workflow."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending. This draft packet creates no ADR acceptance, adoption, merge, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-ADR-0033-geoparquet-version-readiness",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0033-geoparquet-version-readiness.md@fe8f47635cec65b56a1cd5a1c6ed288e2d5a8973"
+    },
+    {
+      "id": "KFM-merged-PR-3156-exact-head",
+      "validated": true,
+      "evidence_ref": "github:pull/3156@641aec8571e7c9c0bcd831809f31e71c71f2aa6a"
+    },
+    {
+      "id": "KFM-actions-run-32387029048",
+      "validated": true,
+      "evidence_ref": "github:actions/run/32387029048"
+    },
+    {
+      "id": "GDAL-official-Parquet-driver-documentation",
+      "validated": true,
+      "evidence_ref": "https://gdal.org/en/stable/drivers/vector/parquet.html"
+    },
+    {
+      "id": "OSGeo-official-GDAL-container-digest",
+      "validated": true,
+      "evidence_ref": "https://github.com/orgs/OSGeo/packages/container/gdal/1056283224?tag=alpine-normal-3.13.2"
+    },
+    {
+      "id": "Apache-Arrow-25-Parquet-Geometry-CRS-default",
+      "validated": true,
+      "evidence_ref": "github:repo:apache/arrow@apache-arrow-25.0.0:cpp/src/parquet/geospatial/util_json_internal.cc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T21:16:15Z",
+  "emitter": "ChatGPT GitHub implementation agent",
+  "notes": "Dependency-closed authoring receipt for one additive, draft-only interoperability probe. It reuses the exact generator and validator proven by merged PR #3156, then consumes the two resulting carriers with one immutable official GDAL 3.13.2 image. Outcomes are finite PARTIAL, HOLD, FAIL, or ERROR; INTEROPERABLE_CANDIDATE is impossible. GeoParquet 1.1.0 remains the default. ADR acceptance, adoption, migration, release, deployment, publication, public use, repository settings, and the receipt-bound merged PyArrow workflow are untouched."
+}
