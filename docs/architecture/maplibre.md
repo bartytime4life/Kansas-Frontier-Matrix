@@ -5,60 +5,77 @@ doc_id: kfm://doc/architecture/maplibre
 title: MapLibre in KFM — Architecture Lane Entry Point
 type: architecture
 subtype: lane-entry-point
-version: v1 (draft)
-status: draft
-owners: <architecture-stewards>  # PLACEHOLDER — assign before review
+version: v2.0-draft
+status: draft; repository-grounded; runtime-HOLD; decision-pending; non-release; non-publication
+owners:
+  - "@bartytime4life — current CODEOWNERS route for docs/architecture/**"
+  - "NEEDS VERIFICATION — independent architecture, map-runtime, release, and policy stewards"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-20
+policy_label: public; architecture; maplibre; renderer-downstream; cite-or-abstain; no-release-authority
+current_path: docs/architecture/maplibre.md
+owning_root: docs/
+responsibility: "Provide the repository-grounded entry point for MapLibre architecture, implementation evidence, unresolved renderer decisions, validation gates, and direct task navigation without creating runtime, contract, schema, policy, release, or publication authority."
+authority_posture: "Explanatory architecture entry point subordinate to accepted ADRs, adopted Directory Rules, semantic contracts, machine schemas, policy, current code/configuration, tests/workflows, receipts/proofs/manifests, release records, and runtime evidence."
+truth_posture: "CONFIRMED current repository paths and bounded implementation surfaces at the evidence snapshot / PROPOSED architecture decisions and future runtime integration / UNKNOWN production behavior, deployment, public reliance, and independent stewardship / NEEDS VERIFICATION hosted exact-head checks and any later dependency admission"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 5451e5bc1ae7ffd8d721197b930cadd827fbbd7f
+  target_prior_blob: ff4b4754e5dc7beae22620ee669d3fdc240c44d7
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  directory_rules_decision: ADR-0029 accepted
 related:
-  - docs/architecture/map-master.md                                 # [MAP-MASTER] citation anchor (abstract)
-  - docs/architecture/maplibre-master.md                            # per-component CFF register
-  - docs/architecture/maplibre-3d.md                                # sole-renderer ADR + 3D feature surface
-  - docs/architecture/map-shell.md                                  # UI shell wiring (Evidence Drawer, Focus Mode)
-  - docs/architecture/governed-api.md                               # trust-membrane boundary
-  - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/identity-and-spec-hash.md
-  - docs/doctrine/directory-rules.md                                # v1.3 — placement authority
-  - docs/standards/PMTILES.md
-  - docs/standards/OGC-API-TILES.md
-  - docs/atlases/Master_MapLibre_Components-Functions-Features_v2.1.pdf  # PROPOSED; NEEDS VERIFICATION
-  - schemas/contracts/v1/maplibre/
-  - schemas/contracts/v1/3d/
-  - policy/maplibre/
-  - packages/maplibre-runtime/
-  - apps/explorer-web/
-authority_posture: lane entry point — subordinate to docs/doctrine/, the renderer-decision ADR, and the deeper docs in this same lane.
-tags: [kfm, architecture, maplibre, landing, orientation, navigation]
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ./map-master/README.md
+  - ./maplibre-master.md
+  - ./map-shell.md
+  - ./planetary-3d.md
+  - ./ui/MAP_RUNTIME_BOUNDARY.md
+  - ./contract-schema-policy-split.md
+  - ./identity-and-spec-hash.md
+  - ../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../packages/maplibre/package.json
+  - ../../packages/maplibre/src/index.ts
+  - ../../apps/explorer-web/package.json
+  - ../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
+  - ../../apps/explorer-web/src/features/map_runtime/index.tsx
+  - ../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
+  - ../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
+  - ../../configs/maplibre/README.md
+  - ../../tools/validators/maplibre/validate_v6_readiness.py
+  - ../../tests/maplibre/test_validate_v6_readiness.py
+  - ../../scripts/maplibre-smoke-perf.mjs
+tags: [kfm, architecture, maplibre, map-master, explorer-web, renderer-boundary, evidence-drawer, pmtiles, validation]
 notes:
-  - "This file is the entry point for the MapLibre architecture lane. It routes readers to deeper docs and does not duplicate them."
-  - "MapLibre GL JS is KFM's sole browser-side renderer (directory-rules.md v1.3; docs/architecture/maplibre-3d.md). Cesium is retired."
-  - "No mounted repo was inspected. Every path PROPOSED unless explicitly CONFIRMED at doctrine level."
+  - "This revision preserves the document identity and stable legacy anchors while replacing proposal-era repository assumptions with current pinned evidence."
+  - "The accepted Directory Rules bytes are the v2.0.0-draft.1 text adopted by ADR-0029; the word draft in that source version does not make the accepted decision provisional."
+  - "ADR-0006 and ADR-0007 remain proposed. This file does not accept them, retire another renderer, admit maplibre-gl, or authorize release or publication."
+  - "The verified current package is packages/maplibre/. The proposal-era paths docs/architecture/maplibre-3d.md and packages/maplibre-runtime/ were not present at the evidence snapshot and are not cited as current authorities."
 [/KFM_META_BLOCK_V2] -->
 
 # MapLibre in KFM — Architecture Lane Entry Point
 
-> *Front door for the MapLibre architecture cluster in `docs/architecture/`. Defines what MapLibre is in KFM, names the five non-negotiables that span the lane, and routes contributors to the right deeper doc for their task.*
+> **Purpose.** Start here for KFM's MapLibre architecture lane: what is implemented, what remains proposed, which trust boundaries apply, where current files live, and what evidence is required before a concrete browser renderer can graduate from `HOLD`.
 
-![Status: draft](https://img.shields.io/badge/status-draft-orange?style=flat-square)
-![Type: lane-entry-point](https://img.shields.io/badge/type-lane--entry--point-blue?style=flat-square)
-![Renderer: MapLibre GL JS](https://img.shields.io/badge/renderer-MapLibre%20GL%20JS-1f6feb?style=flat-square)
-![Cesium: retired](https://img.shields.io/badge/Cesium-retired-cf222e?style=flat-square)
-![Doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-success?style=flat-square)
-![Implementation: UNKNOWN](https://img.shields.io/badge/implementation-UNKNOWN-lightgrey?style=flat-square)
-<!-- TODO — wire CI badge once docs-lint workflow is named -->
-![CI: TODO](https://img.shields.io/badge/CI-TODO-lightgrey?style=flat-square)
-
-| Field | Value |
+| Field | Current status |
 |---|---|
-| **Status** | `draft` |
-| **Owners** | `<architecture-stewards>` *(PLACEHOLDER — assign before review)* |
-| **Last reviewed** | 2026-05-25 |
-| **Role** | Architecture-lane entry point. Read me first; then go deeper into one of four sibling docs. |
-| **Doctrine basis** | `directory-rules.md` v1.3 §0 / §11 / §13.5 · `docs/architecture/maplibre-3d.md` (PROPOSED renderer-decision ADR) · *Master MapLibre Components-Functions-Features* v2.1 |
-| **Implementation maturity** | `UNKNOWN` — no mounted repo, runtime, CI logs, or dashboards inspected this session |
+| **Document state** | `draft · repository-grounded · explanatory` |
+| **Placement** | `CONFIRMED PLACE` — same-path architecture documentation under the adopted `docs/` responsibility root |
+| **Current package state** | `CONFIRMED scaffold` — `@kfm/maplibre` exists without a `maplibre-gl` dependency |
+| **Concrete browser runtime** | `HOLD` — no admitted MapLibre GL JS runtime is proven in Explorer Web |
+| **Renderer decision** | `PROPOSED` — ADR-0006 and ADR-0007 are not accepted decisions |
+| **Publication state** | `NONE` — this document, branch, commit, or pull request is not a release or publication event |
+| **Review route** | `CONFIRMED` CODEOWNERS route to `@bartytime4life`; independent steward roles remain `NEEDS VERIFICATION` |
+| **Evidence read** | Repository `main` at `5451e5bc1ae7ffd8d721197b930cadd827fbbd7f` |
 
----
+> [!IMPORTANT]
+> **The renderer is downstream of trust.** MapLibre may render and interact with public-safe released artifacts, but it cannot become the source registry, canonical evidence store, policy engine, citation authority, review authority, promotion authority, release authority, or AI authority.
+
+> [!CAUTION]
+> The repository contains a real Explorer Web shell, renderer-neutral map-runtime helpers, fixture-driven admission and cache planning, a MapLibre readiness validator, focused tests, and a placeholder package seam. It does **not** currently prove a concrete MapLibre GL JS runtime, a completed v6 probe record, release-backed map sources, production operation, deployment, or public reliance.
 
 ## Quick jump
 
@@ -72,6 +89,9 @@ notes:
 - [8. Required objects — short reminder](#8-required-objects--short-reminder)
 - [9. Open questions](#9-open-questions)
 - [10. Related docs](#10-related-docs)
+- [11. Validation and graduation gate](#11-validation-and-graduation-gate)
+- [12. Change boundary and rollback](#12-change-boundary-and-rollback)
+- [13. Modernization ledger](#13-modernization-ledger)
 
 ---
 
@@ -79,23 +99,42 @@ notes:
 
 ## 1. What MapLibre is in KFM
 
-`CONFIRMED` doctrine — *Master MapLibre Components-Functions-Features* v2.1 Executive Determination (paraphrased):
+KFM's architectural direction treats MapLibre as a **browser-side rendering and interaction runtime inside a governed shell**. The current repository proves only part of that direction.
 
-> *MapLibre is a disciplined renderer and interaction runtime. Tiles, PMTiles, MVT, MLT, COGs, style JSON, sprites, glyphs, popups, screenshots, scenes, exports, summaries, graph projections, catalog records, and AI answers are downstream carriers — not sovereign truth.*
+| Architectural responsibility | Current evidence | Status |
+|---|---|---|
+| Render released vector, raster, terrain, or other public-safe artifacts | Architecture documents and bounded helper surfaces describe this responsibility; no admitted concrete runtime is present | `PROPOSED implementation` |
+| Maintain camera, viewport, layer interaction, and clicked-feature candidate state | Explorer Web contains a renderer-neutral map stage and fixture-driven selection flow | `CONFIRMED bounded implementation` |
+| Route a selected candidate toward governed evidence resolution | The map-runtime flow accepts an injected resolver and preserves finite negative outcomes | `CONFIRMED bounded implementation` |
+| Import and own MapLibre GL JS through one adapter seam | `MapLibreAdapter.ts` and `packages/maplibre/` exist as placeholders; ADR-0006 proposes the seam | `PROPOSED decision · scaffold present` |
+| Decide whether a claim, source, layer, or geometry may be exposed | No renderer surface is authorized to make that decision | `DENY` |
+| Promote, release, publish, or correct canonical truth | No renderer surface is authorized to perform those transitions | `DENY` |
 
-In one line: **MapLibre draws released artifacts; it does not decide what is true.**
+### MapLibre may carry evidence; it does not create authority
 
-| MapLibre **is** | MapLibre **is not** |
+| MapLibre may do | MapLibre must not do |
 |---|---|
-| A 2D / 2.5D / 3D rendering substrate | The canonical truth store |
-| An interaction runtime (camera · time · click candidates) | The source registry |
-| A consumer of **released** layer / style / tile artifacts | The policy engine |
-| A reader of governed APIs and `EvidenceBundle` resolutions | The citation authority |
-| A surface that emits `RenderReceipt` / `RepresentationReceipt` records | The review authority |
-| A trust-visible negative-state display | The publication authority |
-| Subject to admission gates before terrain / globe / plugin-hosted layers | The AI authority |
+| Render an already governed and public-safe representation | Read RAW, WORK, QUARANTINE, or canonical internal stores as the normal public path |
+| Emit camera, time, selection, and representation context | Treat a click, pixel, popup, screenshot, tile, or style as proof |
+| Surface `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` states supplied through governed interfaces | Convert missing evidence, policy failure, or runtime error into a permissive fallback |
+| Display evidence, freshness, review, release, correction, and rollback cues | Hide sensitivity through style-only filtering or client-only opacity changes |
+| Support deterministic, testable adapter behavior after dependency admission | Infer architecture acceptance from a package name, absent competitor, green badge, or prose claim |
 
-[↑ back to top](#top)
+### Current repository boundary
+
+`CONFIRMED` from the pinned repository snapshot:
+
+- [`packages/maplibre/package.json`](../../packages/maplibre/package.json) defines the private `@kfm/maplibre` package at version `0.0.0` but does not declare `maplibre-gl`.
+- [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) is a placeholder export, not a renderer implementation.
+- [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) defines the current Explorer Web application but does not declare `maplibre-gl`.
+- [`MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) contains only a placeholder comment.
+- [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) provides a renderer-neutral, fixture-driven selection profile with an injected resolver.
+- [`layer_manifest_admission.ts`](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) evaluates bounded admission inputs but does not mutate a registry or call `addSource`.
+- [`pmtiles_release_cache.ts`](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) plans release-scoped cache behavior but performs no fetch or cache operation.
+
+That is meaningful implementation surface, but it is not a concrete MapLibre runtime and it is not publication evidence.
+
+[Back to top](#top)
 
 ---
 
@@ -105,47 +144,58 @@ In one line: **MapLibre draws released artifacts; it does not decide what is tru
 
 ```mermaid
 flowchart TD
-  ML["docs/architecture/<br/>maplibre.md<br/>(this file · entry point)"]:::entry
-  MM["docs/architecture/<br/>map-master.md<br/>[MAP-MASTER] anchor"]:::doctrine
-  MLM["docs/architecture/<br/>maplibre-master.md<br/>component register"]:::register
-  M3D["docs/architecture/<br/>maplibre-3d.md<br/>sole-renderer ADR + 3D"]:::renderer
-  MS["docs/architecture/<br/>map-shell.md<br/>UI shell wiring"]:::shell
-  GA["docs/architecture/<br/>governed-api.md<br/>trust membrane"]:::api
-  IDH["docs/architecture/<br/>identity-and-spec-hash.md"]:::id
-  DR["docs/doctrine/<br/>directory-rules.md v1.3"]:::law
+    Entry["maplibre.md\nthis entry point"]
+    Rules["Directory Rules\nadopted by ADR-0029"]
+    Master["map-master/README.md\ncurrent lane index"]
+    Register["maplibre-master.md\ncomponent/function/feature register"]
+    Shell["map-shell.md\nExplorer shell and evidence flow"]
+    Planetary["planetary-3d.md\nconditional 3D boundary"]
+    Boundary["map-master/RENDERER_BOUNDARY.md\nrenderer trust boundary"]
+    ADR6["ADR-0006\nproposed import seam"]
+    ADR7["ADR-0007\nproposed sole-renderer decision"]
+    Code["packages/maplibre + Explorer Web\ncurrent bounded implementation"]
+    Ready["validate_v6_readiness.py\nreadiness gate"]
 
-  DR -.governs.-> ML
-  ML --> MM
-  ML --> MLM
-  ML --> M3D
-  ML --> MS
-  MM -.cited as [MAP-MASTER] by atlas.-> MLM
-  MM -.cited as [MAP-MASTER] by atlas.-> M3D
-  MLM -.delegates 3D to.-> M3D
-  ML  -.reads through.-> GA
-  ML  -.consumes identity from.-> IDH
-
-  classDef entry    fill:#1f6feb,stroke:#0a2e6b,color:#fff;
-  classDef doctrine fill:#6f42c1,stroke:#2b1259,color:#fff;
-  classDef register fill:#bf8700,stroke:#5c4400,color:#fff;
-  classDef renderer fill:#1a7f37,stroke:#053a1a,color:#fff;
-  classDef shell    fill:#cf222e,stroke:#5c0010,color:#fff;
-  classDef api      fill:#0a2540,stroke:#0a2540,color:#fff;
-  classDef id       fill:#bf8700,stroke:#5c4400,color:#fff;
-  classDef law      fill:#fff4cf,stroke:#bf8700,color:#3b2f00;
+    Rules --> Entry
+    Entry --> Master
+    Entry --> Register
+    Entry --> Shell
+    Entry --> Planetary
+    Master --> Boundary
+    Boundary --> ADR6
+    Boundary --> ADR7
+    Entry --> Code
+    Code --> Ready
 ```
 
-The five MapLibre-touching architecture docs in clean separation:
-
-| Doc | What it owns | What it does **not** own |
+| Surface | Current role | Authority or maturity |
 |---|---|---|
-| **`maplibre.md`** *(this file)* | Lane orientation; routing; the five non-negotiables; quick start. | Per-component governance; 3D specifics; UI shell wiring; ADR text. |
-| **`map-master.md`** | Abstract `[MAP-MASTER]` citation anchor; renderer-boundary doctrine; v2.1 category map; three-column discipline. | Per-component rows; 3D feature surface; UI shell wiring. |
-| **`maplibre-master.md`** | Per-component CFF register — renderers, style language, sources/layers/expressions, sprites/glyphs, tile formats, plugins, dependencies. | Abstract doctrine; 3D feature surface; UI shell; ADR text. |
-| **`maplibre-3d.md`** | Sole-renderer ADR (PROPOSED); 3D capability surface — terrain, globe, 3D Tiles, glTF, point clouds, plugin pin list. | 2D component register; UI shell wiring. |
-| **`map-shell.md`** | UI shell — Evidence Drawer, Focus Mode wiring, time interaction, exports, story surfaces. | Renderer adapter internals; tile format admission. |
+| [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Writable human placement authority | `CONFIRMED adopted` through [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
+| [`map-master/README.md`](./map-master/README.md) | Current Map Master lane index and direct-child navigation | `CONFIRMED repository-grounded draft` |
+| [`maplibre-master.md`](./maplibre-master.md) | Repository-grounded MapLibre component/function/feature register | `CONFIRMED file · draft authority` |
+| [`map-shell.md`](./map-shell.md) | Current Explorer shell, map-selection, Evidence Drawer, and finite-state boundary | `CONFIRMED bounded implementation evidence` |
+| [`planetary-3d.md`](./planetary-3d.md) | Conditional 3D, terrain, globe, scene, and reality-boundary guidance | `CONFIRMED current doc · mixed maturity` |
+| [`map-master/RENDERER_BOUNDARY.md`](./map-master/RENDERER_BOUNDARY.md) | Renderer trust membrane and implementation boundary | `CONFIRMED current doc` |
+| [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposed single-import seam | `PROPOSED decision` |
+| [ADR-0007](../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | Proposed sole browser-renderer disposition | `PROPOSED decision` |
+| [`map-master.md`](./map-master.md) | Proposal-era lineage and abstract architecture material | `RETAINED lineage`; use `map-master/README.md` for the current lane index |
 
-[↑ back to top](#top)
+> [!NOTE]
+> The proposal-era paths `docs/architecture/maplibre-3d.md` and `packages/maplibre-runtime/` were not present at the evidence snapshot. Do not use them as current implementation or navigation authorities. Current 3D guidance is in [`planetary-3d.md`](./planetary-3d.md), and the verified package seam is [`packages/maplibre/`](../../packages/maplibre/).
+
+### Map Master direct-child navigation
+
+The current lane index routes detailed responsibilities to:
+
+- [2D / 3D parity](./map-master/2D_3D_PARITY.md)
+- [Evidence Drawer](./map-master/EVIDENCE_DRAWER.md)
+- [Layer lifecycle](./map-master/LAYER_LIFECYCLE.md)
+- [Performance budgets](./map-master/PERFORMANCE_BUDGETS.md)
+- [Renderer boundary](./map-master/RENDERER_BOUNDARY.md)
+- [Tile artifacts](./map-master/TILE_ARTIFACTS.md)
+- [Viewer verification](./map-master/VIEWER_VERIFICATION.md)
+
+[Back to top](#top)
 
 ---
 
@@ -153,20 +203,20 @@ The five MapLibre-touching architecture docs in clean separation:
 
 ## 3. The five non-negotiables
 
-`CONFIRMED` doctrine — every MapLibre-touching change has to clear all five.
+These rules apply whether the runtime remains synthetic, adopts MapLibre later, or changes implementation detail through an accepted ADR.
 
-| # | Rule | Where it's enforced | Source |
-|---|---|---|---|
-| **N-1** | **The renderer is downstream.** MapLibre is never truth, source, policy, citation, review, publication, or AI authority. | `policy/maplibre/*.rego`; layer manifest resolver; `apps/governed-api/` boundary. | `map-master.md` §2; v2.1 Category A. |
-| **N-2** | **Released artifacts only.** Public clients cannot resolve RAW / WORK / QUARANTINE / candidate URLs. Promotion is a governed state transition, not a file move. | `MapReleaseManifest` + promotion-gate (Pass-10 C5-04 spec-hash match); no-public-RAW path test. | `directory-rules.md` v1.3; `identity-and-spec-hash.md` §7. |
-| **N-3** | **Verify before `addSource`.** MapLibre fetches sidecar, verifies DSSE / cosign signature, checks `spec_hash` / `tiling_scheme` / `tile_format`, samples ranges, *then* calls `addSource`. | `packages/maplibre-runtime/sidecar-verifier.ts` *(`PROPOSED`)*; CI gates for `invalid_spec_hash`, `unsigned_release_manifest`, `unverified_tile_chunk`, `public_unsigned_delta`, `rollback_root_mismatch`, `missing_run_receipt`. | `maplibre-master.md` §11; v2.1 ML-058-018 / ML-058-020. |
-| **N-4** | **Sensitive geometry is transformed before rendering — never hidden by style.** Generalization, jitter, aggregation, omission, or denial happen in the tile build; record in `RedactionReceipt`. | `policy/sensitivity/care-terrain-generalization.rego` and similar; tile build pipeline. | `map-master.md` §7; v2.1 Category X anti-pattern *"Style-filter geoprivacy"*. |
-| **N-5** | **MapLibre GL JS is the sole browser-side renderer.** No `packages/cesium*`, `policy/cesium*`, `schemas/contracts/v1/cesium*`, or second-renderer adapter as a peer to `packages/maplibre-runtime/`. | `directory-rules.md` v1.3 §13.5 anti-pattern; renderer-decision ADR. | `maplibre-3d.md` §0.1 + Appendix B (PROPOSED ADR). |
+| # | Rule | Required consequence |
+|---|---|---|
+| **N-1** | **The renderer is downstream of trust.** | Renderer code may consume governed decisions and released artifacts; it cannot become truth, policy, evidence, review, release, or AI authority. |
+| **N-2** | **Public rendering requires governed inputs.** | A layer, style, tile archive, terrain source, scene, or plugin reference needs the appropriate identity, provenance, policy, review, release, correction, and rollback support before public exposure. Fixture eligibility is not release. |
+| **N-3** | **Selection narrows scope; it does not prove a claim.** | A click or spatial query produces a candidate context. Consequential answers require `EvidenceRef` resolution to an admissible `EvidenceBundle`, or a finite `ABSTAIN`, `DENY`, or `ERROR` outcome. |
+| **N-4** | **Styling is not policy.** | Sensitive geometry must be omitted, generalized, aggregated, delayed, or denied upstream with an auditable transform. Client styling cannot be the only protection. |
+| **N-5** | **Decision state must stay visible.** | Proposed ADRs remain proposed; a readiness `READY` result means only eligibility for a later governed decision; a branch, PR, test, package scaffold, absent competitor, or documentation statement does not admit, release, deploy, publish, or retire architecture. |
 
 > [!IMPORTANT]
-> **N-1 through N-5 are doctrinal floors, not optional polish.** Any PR that violates one needs an ADR that explicitly supersedes the relevant doctrine — not a workaround.
+> A concrete MapLibre integration that cannot preserve all five rules must remain `HOLD` or be narrowed. The correct response to unresolved evidence, rights, sensitivity, review, release, or runtime state is never a persuasive renderer fallback.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -174,27 +224,31 @@ The five MapLibre-touching architecture docs in clean separation:
 
 ## 4. Capability surface, in one screen
 
-| Capability | MapLibre realization | Status |
+This table reports **current repository maturity**, not the broader capabilities of the upstream MapLibre ecosystem.
+
+| Capability or surface | Verified current evidence | Current posture |
 |---|---|---|
-| 2D vector / raster rendering | Style JSON + sources + layers | `CONFIRMED native` |
-| Interaction (click · camera · time) | `MapContextEnvelope` from runtime | `CONFIRMED` doctrine |
-| 3D terrain mesh | `raster-dem` + `setTerrain` | `CONFIRMED native` |
-| Hillshade / shaded relief | `hillshade` layer | `CONFIRMED native` |
-| Globe projection + sky / atmosphere | `setProjection({type:'globe'})` + `sky` + `GlobeControl` *(MapLibre 5.0+, Jan 2025)* | `CONFIRMED native` |
-| 2.5D extruded buildings | `fill-extrusion` with evidence-bearing `height_m` / `base_m` | `CONFIRMED native` — **2.5D label only; not true-3D evidence** |
-| Custom WebGL layers (globe-aware) | `type: 'custom'` with `projectTile` shader contract | `CONFIRMED native` |
-| OGC 3D Tiles | `3d-tiles-renderer` + three.js custom layer | `CONFIRMED plugin` |
-| glTF assets | `maplibre-three-plugin` or three.js | `CONFIRMED plugin` |
-| LAS / LAZ / COPC / EPT point clouds | `maplibre-gl-lidar` (deck.gl-based) | `CONFIRMED plugin` |
-| PMTiles delivery | `pmtiles` protocol handler + verify-before-`addSource` | `CONFIRMED plugin` |
-| COG raster delivery | `maplibre-cog-protocol` | `CONFIRMED plugin` |
-| Mobile / native | MapLibre Native | **Parity-gated**; `NEEDS VERIFICATION` |
-| Experimental | MapLibre RS | Sandbox only; `UNKNOWN` |
+| MapLibre package seam | `packages/maplibre/package.json` and one placeholder export | `SCAFFOLD` |
+| Explorer Web application | Vite/TypeScript/Vitest/Playwright application exists; no `maplibre-gl` dependency | `IMPLEMENTED SHELL · RENDERER-NEUTRAL` |
+| MapLibre adapter | Placeholder file exists | `SCAFFOLD` |
+| Map selection and evidence-resolution bridge | Fixture-driven profile with injected resolver and finite outcomes | `IMPLEMENTED BOUNDED SLICE` |
+| Layer-manifest admission evaluation | Deterministic fixture-only evaluator; no registry mutation or source creation | `IMPLEMENTED BOUNDED SLICE` |
+| PMTiles release-cache planning | Deterministic fixture-only planner; no fetch or cache side effects | `IMPLEMENTED BOUNDED SLICE` |
+| Readiness validator | Exact candidate `6.4.0`, import-boundary checks, TypeScript/module checks, and twelve named runtime probes | `IMPLEMENTED VALIDATOR` |
+| Readiness tests | Synthetic positive and exact-negative unit coverage | `IMPLEMENTED TESTS` |
+| Committed v6 probe result | `configs/maplibre/v6-probe-results.json` not present at the evidence snapshot | `HOLD` |
+| Admitted MapLibre GL JS dependency | No current inspected manifest declares it | `HOLD` |
+| Standalone performance harness | `scripts/maplibre-smoke-perf.mjs` exists and independently acquires MapLibre `5.5.0` from a public CDN | `DRIFT / NON-HERMETIC · NOT ADMISSION` |
+| MapLibre configuration lane | README plus a performance-envelope payload; not a live viewer config or source registry | `BOUNDED CONFIG SUPPORT` |
+| Production 2D / terrain / globe / 3D runtime | No current code, runtime trace, release manifest, deployment record, or hosted result inspected proves it | `UNKNOWN / NOT PROVEN` |
 
-> [!NOTE]
-> **For the deep table** (per-capability inputs, outputs, governance hooks, plugin pins, status), see `docs/architecture/maplibre-3d.md` §0.4 *(3D)* and `docs/architecture/maplibre-master.md` Appendix A *(2D + tile formats)*.
+### Why the readiness posture is `HOLD`
 
-[↑ back to top](#top)
+Static repository evidence is enough to show that the validator exists and what it requires. It is also enough to show that the current inspected manifests do not pin `maplibre-gl` and that the required v6 probe result is absent. The validator's own contract therefore prevents a false `READY` claim.
+
+A later `READY` result would still mean only that the pinned candidate satisfies the repository-owned readiness profile. It would **not** accept ADR-0006 or ADR-0007, authorize dependency admission, change public behavior, approve a release, or publish a viewer.
+
+[Back to top](#top)
 
 ---
 
@@ -202,21 +256,29 @@ The five MapLibre-touching architecture docs in clean separation:
 
 ## 5. Renderer disposition
 
-`CONFIRMED` at doctrine level (`directory-rules.md` v1.3 §0, §7.2.a, §13.5); ADR `PROPOSED` in `maplibre-3d.md` Appendix B.
+The repository currently contains a **MapLibre-oriented architecture direction** and a **proposed sole-renderer decision**, not an accepted renderer admission.
 
-> [!IMPORTANT]
-> **Cesium is retired from KFM's architecture.** All browser-side rendering flows through MapLibre GL JS plus its plugin ecosystem. The renderer-decision ADR is `PROPOSED`, not filed — number pending against the live ADR set (OPEN-DR-10). Until filed, every "supersedes Cesium" claim downstream is `PROPOSED-SUPERSEDED`.
-
-| Element | Pre-v1.3 | v1.3 + onward |
+| Question | Current answer | Evidence needed to change it |
 |---|---|---|
-| Browser-side renderer | Dual: MapLibre (2D) + Cesium (3D) | **MapLibre as sole renderer** |
-| Cesium edition question (CesiumJS open-source vs Cesium Ion) | Open `NEEDS VERIFICATION` | **Moot** — Cesium itself is not adopted |
-| `packages/cesium*` | Allowed | **Retired** |
-| `schemas/contracts/v1/cesium*` | Allowed | **Not admitted** |
-| `policy/cesium*` | Allowed | **Not admitted** |
-| 3D object families *(Scene Manifest, Terrain Model, 3D Tile Set, glTF Asset, Point Cloud, Digital Twin View, ViewState, Representation Receipt, Reality Boundary Note, 3D Admission Decision)* | Renderer-agnostic | **Unchanged** — all implementable on MapLibre + plugins |
+| Is MapLibre the intended browser-renderer direction? | `CONFIRMED architecture direction` | Existing architecture lane and package naming |
+| Is the one-import adapter boundary accepted? | `PROPOSED` | Acceptance or supersession of ADR-0006 plus enforceable implementation |
+| Is MapLibre GL JS the accepted sole browser-side renderer? | `PROPOSED` | Acceptance or supersession of ADR-0007 |
+| Is Cesium formally retired by an accepted decision? | `NO` | Accepted supersession or retirement decision; absence from manifests is not enough |
+| Is `maplibre-gl` admitted and pinned? | `NO` at the evidence snapshot | Exact dependency selection, synchronized lockfile, complete probes, review, and bounded implementation |
+| Is there a concrete production renderer? | `NOT PROVEN` | Current code, tests, hosted checks, release state, deployment evidence, and runtime traces |
+| Are 3D plugins admitted? | `NO GENERAL ADMISSION` | Per-plugin rights, security, performance, compatibility, evidence-parity, and rollback review |
 
-[↑ back to top](#top)
+### Bounded decision posture
+
+Until the renderer ADRs are accepted or superseded:
+
+1. preserve the existing `packages/maplibre/` and `MapLibreAdapter.ts` seams as scaffolds, not proof;
+2. keep application code renderer-neutral where the current boundary requires it;
+3. do not add a peer renderer or declare one retired by documentation alone;
+4. do not allow standalone benchmark tooling to become the production dependency path by accident;
+5. treat each terrain, globe, 3D, point-cloud, custom-layer, or protocol integration as a separately governed capability rather than automatic inheritance from the renderer choice.
+
+[Back to top](#top)
 
 ---
 
@@ -224,45 +286,34 @@ The five MapLibre-touching architecture docs in clean separation:
 
 ## 6. Repo placement at a glance
 
-`CONFIRMED` placement authority — `directory-rules.md` v1.3 §0 / §6.4 / §6.5 / §7.2.a / §11. Paths below are `PROPOSED` until verified in a mounted repo.
+### Directory Rules basis
 
-```text
-docs/architecture/
-  maplibre.md                                 # this file (lane entry)
-  map-master.md                               # [MAP-MASTER] anchor
-  maplibre-master.md                          # component register
-  maplibre-3d.md                              # sole-renderer ADR + 3D surface
-  map-shell.md                                # UI shell wiring
+This update stays at `docs/architecture/maplibre.md`. Under the accepted Directory Rules, `docs/` owns human-readable architecture explanation, while executable code, machine schemas, policy, tests, configuration, data, and release records remain in their own responsibility roots. No new path, root, authority surface, or migration is created by this document.
 
-docs/atlases/
-  Master_MapLibre_Components-Functions-Features_v2.1.*   # the indexed source dossier
+| Verified current path | Owning responsibility | What its presence proves | What it does not prove |
+|---|---|---|---|
+| [`docs/architecture/maplibre.md`](./maplibre.md) | Human-readable lane entry point | Architecture documentation exists | Accepted renderer decision or runtime |
+| [`docs/architecture/map-master/`](./map-master/README.md) | Map Master architecture sublane | Current navigation and bounded doctrine exist | Production viewer or release |
+| [`packages/maplibre/`](../../packages/maplibre/) | Reusable package seam | Package scaffold exists | `maplibre-gl` admission or working adapter |
+| [`apps/explorer-web/`](../../apps/explorer-web/) | Explorer Web application | Current browser application and bounded shell code exist | Concrete MapLibre runtime or published site |
+| [`configs/maplibre/`](../../configs/maplibre/) | Commit-safe configuration support | README and bounded performance input exist | Live style/layer/source registry |
+| [`tools/validators/maplibre/`](../../tools/validators/maplibre/) | Repository validation tooling | Readiness logic exists | A passing current repository result unless executed against current bytes |
+| [`tests/maplibre/`](../../tests/maplibre/) | Focused test ownership | Synthetic validator tests exist | Browser/runtime parity or hosted success |
+| [`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Standalone script | A performance harness exists | Accepted package seam, hermetic operation, or release eligibility |
 
-schemas/contracts/v1/
-  maplibre/                                   # renderer/scene schemas
-  3d/                                         # 3D-asset schemas (plugins)
-  policy/
-    3d_admission_decision.schema.json
-    plugin_admission.schema.json
+### Placement rules for future work
 
-contracts/
-  maplibre/                                   # semantic meaning (Markdown)
-  3d/
+Any later concrete integration must:
 
-policy/
-  maplibre/                                   # 3d_admission · plugin_admission · sky-and-light-defaults · globe-projection-admission
-  sensitivity/                                # care-terrain-generalization · others
+- keep semantic meaning, machine shape, admissibility, reusable fixtures, executable tests, and runtime implementation in their respective responsibility roots;
+- use the verified current package and application roots unless an accepted ADR and migration say otherwise;
+- update direct documentation, tests, configuration, lockfiles, and generated outputs required by the actual change;
+- avoid recreating absent proposal-era paths as parallel authorities;
+- preserve correction, rollback, and compatibility boundaries for any public or persisted behavior.
 
-packages/
-  maplibre-runtime/                           # sole governed renderer adapter
+The exact future file set is `NEEDS VERIFICATION` until a scoped implementation task inspects current main, accepted ADRs, consumers, and repository-owned validation.
 
-apps/
-  explorer-web/                               # the map-first shell
-```
-
-> [!CAUTION]
-> **`packages/maplibre/`** — if present from pre-v1.3 lineage, it is a transitional name for `packages/maplibre-runtime/` and must be reconciled via routine PR alongside the renderer-decision ADR. *(`directory-rules.md` v1.3 §18.e OPEN-DR-11.)*
-
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -270,26 +321,23 @@ apps/
 
 ## 7. Quick start by task
 
-The most useful section of this file for new contributors. Find your task, read the right doc(s) first.
-
-| If you're doing… | Read first | Then read |
+| Task | Start here | Then inspect |
 |---|---|---|
-| **Citing `[MAP-MASTER]` from a domain doc or atlas** | `map-master.md` | — |
-| **Adding a new MapLibre component** (renderer / format / plugin) | `maplibre-master.md` Appendix A | `maplibre.md` §3 (the five non-negotiables) |
-| **Building a new 2D layer or style** | `maplibre-master.md` §4 + §6 | `maplibre.md` §3 |
-| **Building a 3D scene** (terrain · globe · 3D Tiles · glTF · point cloud) | `maplibre-3d.md` | `maplibre-master.md` §7 |
-| **Building or modifying the Evidence Drawer / Focus Mode wiring** | `map-shell.md` | `governed-api.md` |
-| **Publishing a PMTiles archive** | `docs/standards/PMTILES.md` | `maplibre-master.md` §6 + §11 (verify-before-`addSource`) |
-| **Admitting a new plugin** | `maplibre-master.md` §8 | `policy/maplibre/plugin-admission.rego` *(`PROPOSED`)* |
-| **Wiring a `RenderReceipt`** | `maplibre-master.md` §9 | `identity-and-spec-hash.md` |
-| **Defining a sensitivity transform** | `map-master.md` §7 (three-column discipline) | the relevant domain doc under `docs/domains/<domain>/` |
-| **Filing the renderer-decision ADR** | `maplibre-3d.md` Appendix B | `directory-rules.md` v1.3 §18.e OPEN-DR-10 |
-| **Renaming `packages/maplibre/` → `packages/maplibre-runtime/`** | `directory-rules.md` v1.3 §7.2.a, §18.e OPEN-DR-11 | `docs/registers/DRIFT_REGISTER.md` |
-| **Removing a Cesium reference** | `maplibre-3d.md` §0.1 + `directory-rules.md` v1.3 §13.5 anti-pattern | This file §5 |
-| **Writing a test for a no-public-RAW path** | `maplibre-master.md` §13 | `map-master.md` §7 |
-| **Investigating a rendering bug** | `maplibre-master.md` §9 (runtime probes) | `map-shell.md` |
+| Understand the whole Map Master lane | [Map Master README](./map-master/README.md) | [MapLibre register](./maplibre-master.md) |
+| Change or review the renderer trust boundary | [Renderer Boundary](./map-master/RENDERER_BOUNDARY.md) | [UI Map Runtime Boundary](./ui/MAP_RUNTIME_BOUNDARY.md) and [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) |
+| Review the sole-renderer proposal | [ADR-0007](../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | [Renderer disposition](#5-renderer-disposition) |
+| Work on Explorer shell behavior | [Map Shell](./map-shell.md) | [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) |
+| Work on selection and Evidence Drawer behavior | [Evidence Drawer](./map-master/EVIDENCE_DRAWER.md) | [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) |
+| Work on layer admission or lifecycle | [Layer Lifecycle](./map-master/LAYER_LIFECYCLE.md) | [`layer_manifest_admission.ts`](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) |
+| Work on PMTiles or tile release behavior | [Tile Artifacts](./map-master/TILE_ARTIFACTS.md) | [`pmtiles_release_cache.ts`](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) |
+| Work on performance | [Performance Budgets](./map-master/PERFORMANCE_BUDGETS.md) | [MapLibre config boundary](../../configs/maplibre/README.md) and the [performance harness](../../scripts/maplibre-smoke-perf.mjs) |
+| Work on 2D / 3D evidence parity | [2D / 3D Parity](./map-master/2D_3D_PARITY.md) | [Planetary / 3D](./planetary-3d.md) |
+| Verify viewer behavior and negative states | [Viewer Verification](./map-master/VIEWER_VERIFICATION.md) | Current Explorer tests and exact-head hosted checks |
+| Evaluate the v6 candidate | [Readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py) | [Focused tests](../../tests/maplibre/test_validate_v6_readiness.py) |
+| Change object meaning, shape, or admissibility | [Contract / Schema / Policy / Test Split](./contract-schema-policy-split.md) | Current contracts, schemas, policy, fixtures, validators, and tests for the exact object family |
+| Change identity or digest handling | [Identity and `spec_hash`](./identity-and-spec-hash.md) | Current object-family contracts, schemas, validators, and migration evidence |
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -297,19 +345,22 @@ The most useful section of this file for new contributors. Find your task, read 
 
 ## 8. Required objects — short reminder
 
-`CONFIRMED` — every MapLibre-touching PR must thread these. Full table with `spec_hash` carriage in **`maplibre-master.md` §10**.
+This entry point does not establish canonical object names or machine shapes. It records the minimum **responsibilities** that a concrete renderer flow must be able to carry or resolve.
 
-```text
-SourceDescriptor · LayerManifest · StyleManifest · TileArtifactManifest ·
-MapReleaseManifest · EvidenceBundle · EvidenceRef · DecisionEnvelope ·
-PolicyDecision · PromotionDecision · RunReceipt · RenderReceipt ·
-AIReceipt · ValidationReport · rollback target · cache-invalidation record
-```
+| Responsibility | Minimum information needed before consequential public use | Failure posture |
+|---|---|---|
+| Layer or representation identity | Stable identity, version, spatial/temporal scope, source role, and content digest where applicable | `ABSTAIN` or `ERROR` when identity cannot be resolved |
+| Evidence support | Resolvable `EvidenceRef` to an admissible `EvidenceBundle` for claims that depend on evidence | `ABSTAIN` when support is absent, stale, conflicted, or out of scope |
+| Policy and sensitivity | Applicable access, rights, sensitivity, precision, and transform decision | `DENY` when exposure is unsafe or unresolved |
+| Review and release | Review state, release identity, release decision, and public-safe artifact binding | `DENY` or `HOLD` when not released for the requested surface |
+| Selection context | Geometry or candidate identity, camera/viewport, time state, layer identity, and requested operation | Narrow the request; never infer proof from a click |
+| Representation metadata | Style/layer/source version, renderer capability, degradation state, and any transformation or reality-boundary note | Make uncertainty and synthetic/derived status visible |
+| Correction and rollback | Supersession/correction lineage, rollback target, and cache or client invalidation instructions where public reliance exists | `ERROR` rather than silently serving stale or withdrawn state |
+| Finite runtime outcome | `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` plus stable reason information suitable for the caller | Never convert a negative state into implicit allow |
 
-> [!TIP]
-> **The renderer reads identity; it never mints identity.** Every object above carries `spec_hash` (`jcs:sha256:<hex>`). Compare-don't-trust — the renderer recomputes the digest from canonical bytes and compares it to the declared value; mismatch is `DENY`. See `docs/architecture/identity-and-spec-hash.md`.
+Before creating or changing a concrete object family, verify its semantic contract, canonical schema, policy, fixture, validator, tests, identity grammar, consumers, and release/correction obligations. The architecture docs do not substitute for those authorities.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -317,24 +368,22 @@ AIReceipt · ValidationReport · rollback target · cache-invalidation record
 
 ## 9. Open questions
 
-Lane-level open questions live in the deeper docs. The headline items:
+| ID | Question | Current status | Evidence or decision needed |
+|---|---|---|---|
+| `ML-OPEN-01` | Will ADR-0006's one-import seam be accepted, amended, or superseded? | `NEEDS VERIFICATION` | Architecture decision plus enforceable import-boundary tests |
+| `ML-OPEN-02` | Will ADR-0007's sole-renderer proposal be accepted, amended, or superseded? | `NEEDS VERIFICATION` | Accepted ADR with explicit consequences and migration/rollback |
+| `ML-OPEN-03` | Is `6.4.0` still the candidate when dependency admission is actually attempted? | `NEEDS VERIFICATION` | Current authoritative upstream review plus exact repository compatibility evidence |
+| `ML-OPEN-04` | Who owns the package seam, Explorer adapter, performance profile, and release decision independently? | `UNKNOWN` | Accepted stewardship and review routing beyond the current CODEOWNERS fallback |
+| `ML-OPEN-05` | How will the standalone `5.5.0` CDN performance harness be reconciled with the package seam and no-network test posture? | `CONFLICTED` | Small dependency-closed design decision, hermetic fixture strategy, and focused validation |
+| `ML-OPEN-06` | Which current contracts and schemas canonically carry layer, tile, selection, representation, and release metadata? | `NEEDS VERIFICATION` | Current object-family inventory and accepted contract/schema authority |
+| `ML-OPEN-07` | What exact probe artifact and browser matrix are required for candidate readiness? | `PARTIALLY CONFIRMED` | Twelve-probe profile exists; concrete execution environment and committed result remain absent |
+| `ML-OPEN-08` | Which terrain, globe, custom-layer, point-cloud, or 3D plugins are admissible? | `UNKNOWN` | Per-capability security, rights, compatibility, performance, accessibility, evidence-parity, and rollback review |
+| `ML-OPEN-09` | Which hosted workflows are required for a concrete runtime PR? | `NEEDS VERIFICATION` | Current workflow inventory and exact-head repository policy at implementation time |
+| `ML-OPEN-10` | What proves public-safe operation after dependency admission? | `UNKNOWN` | Released fixtures/artifacts, policy outcomes, browser tests, accessibility/performance evidence, correction/rollback rehearsal, and runtime traces |
 
-| OQ | Status | Where it's tracked |
-|---|---|---|
-| Renderer-decision ADR number pending | `NEEDS VERIFICATION` | `directory-rules.md` v1.3 §18.e OPEN-DR-10; `maplibre-3d.md` Appendix B |
-| `packages/maplibre/` → `packages/maplibre-runtime/` rename status | `NEEDS VERIFICATION` | `directory-rules.md` v1.3 §18.e OPEN-DR-11; `DRIFT_REGISTER.md` |
-| Schema-home segment naming (`maplibre/` vs `3d/` boundary) | `NEEDS VERIFICATION` | `directory-rules.md` v1.3 §18.e OPEN-DR-13 |
-| MapLibre GL JS pinned version | `UNKNOWN` | `maplibre-master.md` §15 OQ-MLM-01 |
-| `RenderReceipt` runtime emission wired? | `UNKNOWN` | `maplibre-master.md` §15 OQ-MLM-04 |
-| Plugin-admission Rego live in CI + runtime parity? | `NEEDS VERIFICATION` | `maplibre-master.md` §15 OQ-MLM-05 |
-| MLT pilot status | `UNKNOWN` | `maplibre-master.md` §15 OQ-MLM-06 |
-| MapLibre Native parity matrix | `NEEDS VERIFICATION` | `maplibre-master.md` §15 OQ-MLM-07 |
-| PMTiles hosting Range / CORS profile | `NEEDS VERIFICATION` | `maplibre-master.md` §15 OQ-MLM-08 |
-| Plugin pin versions | `UNKNOWN` | `maplibre-master.md` §15 OQ-MLM-09 |
-| Canonical home of the v2.1 dossier | `NEEDS VERIFICATION` | `map-master.md` §13 OQ-MM-01 |
-| Category W renaming (drop "Cesium") in canonical dossier | `NEEDS VERIFICATION` | `map-master.md` §13 OQ-MM-10 |
+These questions do not block this documentation correction. They do block any claim that the renderer is admitted, production-ready, released, deployed, or published.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
 
@@ -342,29 +391,155 @@ Lane-level open questions live in the deeper docs. The headline items:
 
 ## 10. Related docs
 
-| Doc | Role | Status |
-|---|---|---|
-| `docs/architecture/map-master.md` | Abstract `[MAP-MASTER]` doctrine anchor. | `CONFIRMED` authored. |
-| `docs/architecture/maplibre-master.md` | Per-component CFF register. | `CONFIRMED` authored. |
-| `docs/architecture/maplibre-3d.md` | Sole-renderer ADR + 3D feature surface. | `CONFIRMED` authored; ADR `PROPOSED`. |
-| `docs/architecture/map-shell.md` | UI shell wiring (Evidence Drawer, Focus Mode, time, exports). | `NEEDS VERIFICATION`. |
-| `docs/architecture/governed-api.md` | Trust membrane the renderer reads through. | `NEEDS VERIFICATION`. |
-| `docs/architecture/identity-and-spec-hash.md` | Identity, `spec_hash`, JCS+SHA-256, replay, promotion gate. | Authored prior turn; `NEEDS VERIFICATION` in repo. |
-| `docs/architecture/contract-schema-policy-split.md` | Meaning · shape · admissibility split. | `NEEDS VERIFICATION`. |
-| `docs/doctrine/directory-rules.md` (v1.3) | Placement authority. | `CONFIRMED` doctrine. |
-| `docs/standards/PMTILES.md` | PMTiles v3 governance profile. | Authored prior session. |
-| `docs/standards/OGC-API-TILES.md` | OGC API Tiles integration. | Authored prior session. |
-| `docs/atlases/Master_MapLibre_Components-Functions-Features_v2.1.*` | The indexed dossier this lane orbits. | `CONFIRMED` exists in corpus; `PROPOSED` placement under `docs/atlases/`. |
-| `docs/adr/ADR-NNNN-maplibre-sole-renderer.md` | Renderer-decision ADR — number pending OPEN-DR-10. | `PROPOSED`. |
-| `docs/registers/DRIFT_REGISTER.md` | `packages/maplibre/` transitional state; renderer-decision migration. | `NEEDS VERIFICATION`. |
-| `docs/registers/VERIFICATION_BACKLOG.md` | All OQ-* items across this lane. | `NEEDS VERIFICATION`. |
+### Governing placement and responsibility boundaries
 
-[↑ back to top](#top)
+- [Directory Rules](../doctrine/directory-rules.md)
+- [ADR-0029 — adopt Directory Governance Standard v2](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Contract / Schema / Policy / Test Split](./contract-schema-policy-split.md)
+- [Identity and `spec_hash`](./identity-and-spec-hash.md)
+
+### Map and UI architecture
+
+- [Map Master lane index](./map-master/README.md)
+- [MapLibre component/function/feature register](./maplibre-master.md)
+- [Map Shell](./map-shell.md)
+- [Planetary / 3D](./planetary-3d.md)
+- [UI Map Runtime Boundary](./ui/MAP_RUNTIME_BOUNDARY.md)
+- [Renderer Boundary](./map-master/RENDERER_BOUNDARY.md)
+- [Layer Lifecycle](./map-master/LAYER_LIFECYCLE.md)
+- [Tile Artifacts](./map-master/TILE_ARTIFACTS.md)
+- [Evidence Drawer](./map-master/EVIDENCE_DRAWER.md)
+- [2D / 3D Parity](./map-master/2D_3D_PARITY.md)
+- [Performance Budgets](./map-master/PERFORMANCE_BUDGETS.md)
+- [Viewer Verification](./map-master/VIEWER_VERIFICATION.md)
+
+### Decisions and current implementation evidence
+
+- [ADR-0006 — proposed MapLibre import boundary](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md)
+- [ADR-0007 — proposed sole browser-side renderer](../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md)
+- [`@kfm/maplibre` package manifest](../../packages/maplibre/package.json)
+- [Explorer Web manifest](../../apps/explorer-web/package.json)
+- [MapLibre adapter placeholder](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
+- [Renderer-neutral map runtime](../../apps/explorer-web/src/features/map_runtime/index.tsx)
+- [Layer-manifest admission evaluator](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts)
+- [PMTiles release-cache planner](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts)
+- [MapLibre configuration boundary](../../configs/maplibre/README.md)
+- [v6 readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py)
+- [v6 readiness tests](../../tests/maplibre/test_validate_v6_readiness.py)
+- [Standalone performance harness](../../scripts/maplibre-smoke-perf.mjs)
+
+[Back to top](#top)
 
 ---
 
-<!-- ---------------------------------------------------------------- -->
+<a id="11-validation-and-graduation-gate"></a>
 
-> **Last updated:** 2026-05-25 · **Status:** draft · **Doctrine basis:** `directory-rules.md` v1.3; `docs/architecture/maplibre-3d.md`; *Master MapLibre Components-Functions-Features* v2.1.
+## 11. Validation and graduation gate
 
-[↑ Back to top](#top)
+### Documentation changes to this file
+
+A same-path documentation update should prove at least:
+
+1. GFM source is structurally valid enough for repository rendering;
+2. explicit legacy anchors remain unique;
+3. local Markdown links resolve to current repository paths;
+4. no absent proposal-era path is presented as current;
+5. current behavior claims are pinned to repository evidence;
+6. proposed decisions remain visibly proposed;
+7. no runtime, dependency, schema, contract, policy, release, deployment, or publication state changes are implied.
+
+### Concrete runtime changes
+
+The focused repository-owned validator supports three explicit modes:
+
+```bash
+python tools/validators/maplibre/validate_v6_readiness.py --scan-root .
+python tools/validators/maplibre/validate_v6_readiness.py --manifest configs/maplibre/v6-probe-results.json
+python tools/validators/maplibre/validate_v6_readiness.py --fixtures
+```
+
+Focused unit coverage lives at:
+
+```bash
+python -m unittest tests.maplibre.test_validate_v6_readiness
+```
+
+The validator returns:
+
+- exit `0` for `READY`;
+- exit `3` for `HOLD`;
+- exit `1` for `ERROR`.
+
+> [!IMPORTANT]
+> `READY` is an **eligibility result**, not dependency admission, ADR acceptance, release, deployment, or publication. A concrete runtime PR must also close the adapter, application, lockfile, browser-probe, negative-state, accessibility, performance, evidence, policy, release, correction, and rollback dependencies introduced by that change.
+
+### Minimum graduation sequence
+
+```text
+scaffold
+  -> exact dependency candidate
+  -> one enforced import seam
+  -> deterministic fixtures and negative cases
+  -> complete browser probes
+  -> governed layer/evidence/release binding
+  -> accessibility and performance evidence
+  -> review and accepted decision state
+  -> release-eligible artifact set
+  -> separate governed release/deployment/publication transitions
+```
+
+Skipping a step requires an explicit accepted decision and a documented tradeoff; documentation alone cannot waive the gate.
+
+[Back to top](#top)
+
+---
+
+<a id="12-change-boundary-and-rollback"></a>
+
+## 12. Change boundary and rollback
+
+This document revision:
+
+- updates one existing Markdown file at the same path;
+- changes no application or package code;
+- adds or updates no dependency or lockfile;
+- changes no contract, schema, policy, fixture, validator, test, workflow, configuration, generated output, receipt, proof, manifest, source registry, release record, or runtime state;
+- activates no source, network integration, renderer, plugin, release, deployment, promotion, or publication;
+- creates no new authority surface.
+
+**Before merge**, rollback is to close or abandon the draft pull request and leave `main` unchanged. **After merge**, rollback is a normal Git revert of the documentation commit. Because this change creates no public runtime behavior or published artifact, no data correction, cache invalidation, or public withdrawal workflow is required for the documentation rollback itself.
+
+A later concrete runtime change needs its own compatibility, correction, rollback, and public-reliance analysis.
+
+[Back to top](#top)
+
+---
+
+<a id="13-modernization-ledger"></a>
+
+## 13. Modernization ledger
+
+The prior edition contained useful architecture intent but mixed it with unverified repository paths, stale governance labels, external capability claims, and proposed decisions presented too strongly. This revision preserves the useful intent while making current evidence and uncertainty inspectable.
+
+| Prior material | Disposition in this edition |
+|---|---|
+| Renderer-downstream principle | `RETAINED` and strengthened as N-1 |
+| Released/public-safe input rule | `RETAINED` and bounded to current implementation evidence |
+| Evidence Drawer and Focus Mode routing | `RETAINED` through current Map Master and Map Shell links |
+| Sensitive geometry must be transformed upstream | `RETAINED` as N-4 without inventing current policy paths |
+| Capability overview | `REPLACED` with a repository-maturity table; upstream ecosystem details remain in deeper docs and require current verification |
+| Repository placement table | `CORRECTED` to verified current paths and accepted Directory Rules |
+| Quick-start task routing | `EXPANDED` to current Map Master child documents and implementation files |
+| Required object reminder | `RETAINED` as responsibility requirements without claiming unverified canonical names or schema homes |
+| Open-question register | `EXPANDED` around current decisions, package admission, probes, ownership, and public-safety proof |
+| Directory Rules v1.3 claim | `CORRECTED` to the exact Directory Rules bytes accepted through ADR-0029 |
+| `docs/architecture/maplibre-3d.md` navigation | `REMOVED AS CURRENT PATH`; current 3D guidance is `planetary-3d.md` |
+| `packages/maplibre-runtime/` placement | `REMOVED AS CURRENT PATH`; verified package seam is `packages/maplibre/` |
+| “Cesium retired” badge and settled-disposition language | `CORRECTED` to a proposed decision pending ADR acceptance |
+| “No mounted repo inspected” limitation | `SUPERSEDED` by current commit-pinned repository evidence |
+| “Implementation UNKNOWN” as a blanket claim | `NARROWED` into confirmed scaffolds, bounded implemented slices, `HOLD` gates, and remaining unknowns |
+| CI TODO badge | `REMOVED`; hosted status belongs to actual PR/workflow evidence, not a decorative placeholder |
+
+No prior proposal is silently upgraded to current fact, and no current repository scaffold is represented as a released runtime.
+
+[Back to top](#top)
