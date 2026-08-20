@@ -3,15 +3,17 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml",
-    "tools/ci/install_python_ci.py",
+    "tests/ci/test_install_python_ci.py",
     "tools/ci/geoparquet-pyarrow-25.lock",
-    "tests/ci/test_install_python_ci.py"
+    "tools/ci/install_python_ci.py",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
   ],
   "artifact_hashes": {
     ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml": "sha256:b1b8d048fc9c76c3524e845da342fda0c23b7dac6247129cada31a938c91b709",
     "tools/ci/install_python_ci.py": "sha256:72f6983a46b7bf53c62919b82d9625c09f94599fb594e700b9397773b4702a7c",
     "tools/ci/geoparquet-pyarrow-25.lock": "sha256:3448392e420d16cfbfdf233f714b30e0452ae818147fbdb4faf760065eec41b1",
-    "tests/ci/test_install_python_ci.py": "sha256:fad96f8ae49b3f98eb4544af083a02f3cdb453cf229130661a9b854e898a73fd"
+    "tests/ci/test_install_python_ci.py": "sha256:fad96f8ae49b3f98eb4544af083a02f3cdb453cf229130661a9b854e898a73fd",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "sha256:f5fcfd609559330e84e1aa49b3ddd47328d58051b9a2ef871f64d9031ed76c8c"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -39,14 +41,17 @@
       "github:path:tools/ci/geoparquet-pyarrow-25.lock@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
       "github:path:tests/ci/test_install_python_ci.py@cadfb652d6e6963c8fb60a8977aeb0ca82b916d6",
       "github:actions:run:32385969493",
-      "github:actions:run:32385969977"
+      "github:actions:run:32385969977",
+      "github:actions:run:32386683234",
+      "github:path:tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py@84d3ab93ec541641d572d5bd64336022f1ab88b8"
     ]
   },
   "truth_labels": {
     ".github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml": "CONFIRMED",
     "tools/ci/install_python_ci.py": "CONFIRMED",
     "tools/ci/geoparquet-pyarrow-25.lock": "CONFIRMED",
-    "tests/ci/test_install_python_ci.py": "CONFIRMED"
+    "tests/ci/test_install_python_ci.py": "CONFIRMED",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -95,9 +100,14 @@
       "reason": "The workflow now invokes the repository validator as a module so its repository-root tools namespace import resolves deterministically."
     },
     {
+      "gate": "geoparquet-reason-code-specificity",
+      "outcome": "PASS",
+      "reason": "The validator retains SCHEMA_INVALID while adding specific governance/outcome reasons, records digest mismatch before carrier parsing, and distinguishes declared metadata from actual carrier metadata."
+    },
+    {
       "gate": "geoparquet-complete-hosted-run",
       "outcome": "SKIPPED",
-      "reason": "The amended exact-head workflow run remains required before this draft is ready for review."
+      "reason": "Run 32386683234 confirmed the locked install, carrier generation, and module-invoked validator; four focused negative tests then exposed missing reason-code specificity that this amendment corrects without relaxing schema validation or assertions."
     },
     {
       "gate": "hosted-code-scanning",
@@ -113,7 +123,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-20T15:29:09.102Z",
+  "created_at": "2026-08-20T15:34:26.849Z",
   "emitter": "ChatGPT GitHub implementation agent",
-  "notes": "Security and CI follow-up only. The remaining direct workflow pip invocation is routed through one fixed repository-owned profile while preserving exact dependency bytes and the PyArrow 25.0.0 assertion. The focused exact-head run confirmed the locked install and exposed a pre-existing validator import-path defect in the same job; invoking that validator as a module is the smallest dependency-closed correction. No alert is dismissed or suppressed; no action pin, permission, security gate, migration ledger, release, deployment, publication, or repository setting is changed."
+  "notes": "Security and CI follow-up only. The direct workflow pip invocation is routed through one fixed repository-owned profile while preserving the exact PyArrow 25.0.0 artifact hash. Hosted runs confirmed the locked install, generation, and module-invoked validator, then exposed four pre-existing reason-code specificity defects. The validator amendment preserves schema rejection and negative assertions while adding specific diagnostic reasons. No alert is dismissed or suppressed; no schema const, action pin, permission, security gate, migration ledger, release, deployment, publication, or repository setting is changed."
 }
