@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec:map-master-evidence-drawer:4fb95cf2b1bc",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/map-master/EVIDENCE_DRAWER.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/map-master/EVIDENCE_DRAWER.md": "sha256:4fb95cf2b1bc5a7afbc25369b1fc7fbe85ce62d3aa5badd2783ef23a6b6a7dfc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b746292c1a870514fcd5822956add4dc856cc234583798f419d14ec02649e012",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "attached KFM implementation prompt",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    ],
+    "evidence_refs": [
+      "repo:commit/0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:commit/091c128261d0bec26de36d9df7a549c4f3402777",
+      "repo:docs/architecture/map-master/EVIDENCE_DRAWER.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/map-master/README.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/map-shell.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/evidence-drawer.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/ui/EVIDENCE_DRAWER.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/map-master/RENDERER_BOUNDARY.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/architecture/map-master/VIEWER_VERIFICATION.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:docs/doctrine/directory-rules.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:.github/CODEOWNERS@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:contracts/ui/evidence_drawer_payload.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:contracts/evidence/evidence_drawer_payload.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/src/features/map_runtime/index.tsx@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/tests/evidence-drawer.test.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/tests/browser/evidence-drawer.spec.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/tests/map-evidence-drawer.test.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:tools/validators/ui/validate_evidence_drawer_payload.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:tests/validators/test_validate_evidence_drawer_payload.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "repo:.github/workflows/evidence-drawer-payload.yml@0a547c12e7965565d397fcad46d94c1c7b41f0c7",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1",
+      "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/map-master/EVIDENCE_DRAWER.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 091c128261d0bec26de36d9df7a549c4f3402777, verified prior target blob ac76d6ff7b2231182908e5f615035600b5172ea6, found no open pull request claiming the exact target, then refreshed to main@0a547c12e7965565d397fcad46d94c1c7b41f0c7."
+    },
+    {
+      "gate": "same-day-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "The intervening main delta modified only docs/architecture/governed-api/ENVELOPES.md and its generated receipt. The Evidence Drawer target and inspected implementation dependencies did not overlap."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support same-path placement under docs/architecture/map-master/ while preserving contracts, schemas, policy, apps, evidence, release, correction, rollback, and publication authority boundaries."
+    },
+    {
+      "gate": "repository-evidence-crosswalk",
+      "outcome": "PASS",
+      "reason": "Inspected the complete prior target, parent and adjacent architecture pages, UI and evidence contract surfaces, closed UI schema, Explorer parser and drawer implementation, renderer-neutral selection bridge, focused unit/browser test sources, validator, validator tests, workflow, and CODEOWNERS review route."
+    },
+    {
+      "gate": "markdown-structure-anchor-table-and-link-check",
+      "outcome": "PASS",
+      "reason": "The metadata block parsed as YAML; the complete source parsed as CommonMark with table support; one H1, no heading-level jumps, 16 unique explicit anchors, all 28 internal fragment references resolved, 6 balanced fence markers, 17 stable tables, 21 unique repository-relative targets, no tabs or trailing whitespace, and a final newline were verified."
+    },
+    {
+      "gate": "claim-boundary-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The document replaces unsupported active-route and MapLibre claims with bounded fixture evidence, preserves no-leak behavior, introduces no credential, protected location, private payload, or restricted operational detail, and makes release/publication non-effects explicit."
+    },
+    {
+      "gate": "remote-git-blob-and-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "The reconstructed UTF-8 bytes are 49,153 bytes, produce Git blob d9991838883d9eeb618a880025f658fb710c92a1 matching the remote branch blob, and produce document SHA-256 4fb95cf2b1bc5a7afbc25369b1fc7fbe85ce62d3aa5badd2783ef23a6b6a7dfc."
+    },
+    {
+      "gate": "generated-receipt-required-surface-check",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed truth labels, finite validation outcomes, digest patterns, pending human review, and artifact path/hash closure were checked locally."
+    },
+    {
+      "gate": "opening-head-schema-validation",
+      "outcome": "PASS",
+      "reason": "Hosted schema-validation run 32315148189 completed successfully for opening exact head a47b7fd5e776582284f0e4cbc7812d969c7bbfe7. The later receipt correction requires a fresh exact-head run."
+    },
+    {
+      "gate": "repository-native-documentation-and-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout or repository-native dependency environment was available. No local schema, validator, Explorer, or aggregate command is represented as executed."
+    },
+    {
+      "gate": "hosted-final-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR #3133 is open. Hosted checks must rerun for the final receipt-correction head and remain separate execution evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human and independent specialist review remain pending; this receipt creates no authority, release, deployment, publication, correction, or rollback effect."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:current-map-shell",
+      "validated": true,
+      "evidence_ref": "docs/architecture/map-shell.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:current-ui-drawer-contract",
+      "validated": true,
+      "evidence_ref": "contracts/ui/evidence_drawer_payload.md@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:closed-ui-drawer-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:drawer-parser-and-view",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/features/evidence_drawer/index.tsx@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:renderer-neutral-selection-bridge",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/features/map_runtime/index.tsx@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:drawer-test-surface",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/tests/evidence-drawer.test.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:map-drawer-test-surface",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/tests/map-evidence-drawer.test.ts@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "repo:drawer-validator",
+      "validated": true,
+      "evidence_ref": "tools/validators/ui/validate_evidence_drawer_payload.py@0a547c12e7965565d397fcad46d94c1c7b41f0c7"
+    },
+    {
+      "id": "attachment:implementation-agent-v6",
+      "validated": true,
+      "evidence_ref": "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T23:58:40Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 3133,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. The same-path documentation modernization grounds the map-selection-to-Evidence-Drawer boundary in the current renderer-neutral synthetic bridge and closed fixture-first UI projection, removes unsupported active route and MapLibre claims, preserves finite no-leak outcomes, records the UI/evidence contract-home seam and documentation overlap, and changes no contract, schema, policy, implementation, source, lifecycle, release, deployment, publication, or repository setting."
+}
