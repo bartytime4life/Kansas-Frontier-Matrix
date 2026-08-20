@@ -63,20 +63,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # These patterns are an early repository/checkout drift guard, not
-        # replacements for CodeQL's language detection or extractor result.
         # Current entries intentionally use build-mode none. A future compiled
         # language needs a clean build between CodeQL init and analyze.
         include:
           - language: actions
             build-mode: none
-            source_pattern: '^\.github/(workflows/.+\.ya?ml|actions/.+/action\.ya?ml)$'
           - language: javascript-typescript
             build-mode: none
-            source_pattern: '\.(cjs|cts|js|jsx|mjs|mts|ts|tsx)$'
           - language: python
             build-mode: none
-            source_pattern: '\.(py|pyi|pyw)$'
 
     steps:
       - name: Check out analyzed revision
@@ -88,15 +83,31 @@ jobs:
         shell: bash
         env:
           CODEQL_LANGUAGE: ${{ matrix.language }}
-          SOURCE_PATTERN: ${{ matrix.source_pattern }}
         run: |
           set -euo pipefail
+
+          case "${CODEQL_LANGUAGE}" in
+            actions)
+              source_pattern='^\.github/(workflows/.+\.ya?ml|actions/.+/action\.ya?ml)$'
+              ;;
+            javascript-typescript)
+              source_pattern='\.(cjs|cts|js|jsx|mjs|mts|ts|tsx)$'
+              ;;
+            python)
+              source_pattern='\.(py|pyi|pyw)$'
+              ;;
+            *)
+              printf '%s\n' \
+                "::error title=CodeQL source census configuration failed::No tracked-source policy is defined for ${CODEQL_LANGUAGE}. Add an explicit policy before expanding the matrix."
+              exit 2
+              ;;
+          esac
 
           tracked_count=0
           materialized_count=0
 
           while IFS= read -r -d '' path; do
-            if [[ "${path}" =~ ${SOURCE_PATTERN} ]]; then
+            if [[ "${path}" =~ ${source_pattern} ]]; then
               tracked_count=$((tracked_count + 1))
               if [[ -f "${path}" && ! -L "${path}" ]]; then
                 materialized_count=$((materialized_count + 1))
