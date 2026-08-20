@@ -1,619 +1,1001 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture-governed-ai-route-map
 title: Governed AI — Route Map
-type: standard
-version: v0.1
-status: draft
-owners: <AI-SURFACE-STEWARD> · NEEDS VERIFICATION
+type: architecture-standard
+version: v0.2
+status: draft; repository-grounded; route-lineage-reconciled; governed-ai-route-absent; non-authoritative
+maturity: bounded WSGI scaffold plus no-network client and adapter proofs; no end-to-end governed-AI transport
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — Governed API maintainer"
+  - "NEEDS VERIFICATION — governed-AI, evidence, citation, policy, security, review, correction, and release stewards"
 created: 2026-05-24
-updated: 2026-05-24
+updated: 2026-08-19
 policy_label: public
+truth_posture: cite-or-abstain
+owning_root: docs/
+current_path: docs/architecture/governed-ai/ROUTE_MAP.md
+responsibility: "Explain the current executable route surface, bounded governed-AI client/runtime components, legacy six-family route taxonomy, ownership boundaries, forbidden paths, and graduation evidence without defining routes, contracts, schemas, policy, release state, or public exposure."
+authority_class: explanatory architecture guidance
+authority_limit: "This page does not register an endpoint, authenticate a caller, grant a capability, resolve evidence, execute policy, validate citations, invoke a provider, emit an AIReceipt, approve review, release an artifact, deploy a service, or publish a claim."
+canonical_relationship: "CONFIRMED existing same-path companion under docs/architecture/governed-ai/; the flat docs/architecture/governed-ai.md overview and folder README remain a separately recorded CONFLICTED/HOLD relationship."
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: e13f99b623e53d710d64dc2328eeb1471abf7f84
+  target_prior_blob: c99296e4676e6a587ae6e6d003d163d31e217ee4
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  parent_readme_blob: 9e1071bb69910bde3f364d319923c4db00637639
+  flat_overview_blob: f387e7709aab9f16f21fff18c18531fa250d710b
+  governed_api_main_blob: 4eb335c7c0b27f62c7419c478542e8fe40e1ff38
+  governed_api_registry_blob: 3418168d0b267160d6ad6dd87f289e880ef4a024
+  governed_api_stub_blob: 371e60d9f96c78e31c8a1e6109d19dee5da4213b
+  governed_api_envelopes_doc_blob: 4c80f1d1808d5bed8f56bc2fd1fb73222d65ee42
+  governed_api_audience_doc_blob: 28662c84ac1347cd63f0246fc47d418f76b7ec0b
+  governed_api_ai_readme_blob: cd38e803fa21262303ace292a1300e53a3e7ef7e
+  runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
+  mock_adapter_blob: 04d37e59b14c9e3b85126cb3380b6221b44e26d1
+  mock_adapter_test_blob: be1b1d2b4178b30ce9be754671a2c42271ad91bc
+  ollama_adapter_blob: 1769a719d6a6df53e001abbc4c67ad486ab5c944
+  ai_receipt_contract_blob: f4d8183dbed38f83144f6d9dbde30ae02a01edb8
+  focus_request_schema_blob: a2f298f014fa299bdec03afbf14ba9937aa95ef8
+  focus_response_schema_blob: fd109e4a3c859115d4ad138e9303cf8c5bdd8873
+  focus_worker_blob: 7715d01fc585b03dedae7bb535591064bd6d055c
+  explorer_focus_resolver_blob: 45aa4e7479a8c95138f98cc48c846f39a16aec2d
+  explorer_focus_types_blob: 919ba17b92405d0998689ca8579fa42e74f4df60
+  explorer_focus_test_blob: c32dbb2ccfa73b0b195aff3c231c19c5e8a19333
+  explorer_governed_client_blob: 21f6e4d1225ab0427ecb689d6782f4b56fc25ea2
+  focus_mock_workflow_blob: fbd56c7cda991ff8f3b804cc0c278e62daaa7abf
+inspection_boundary: >-
+  Current-session GitHub reads covered the complete prior target, the governed-AI
+  folder inventory and repository-grounded parent/flat overviews, accepted Directory
+  Rules placement authority, the current Governed API dispatcher/registry/stubs and
+  app-local tests, modernized envelope and audience companions, the Governed API AI
+  subtree inventory, RuntimeResponseEnvelope and AIReceipt surfaces, MockAdapter and
+  proof tests, Ollama and worker placeholders, permissive Focus schemas, Explorer
+  Focus composed-claim source/tests, the fixture-only GovernedClient, and the bounded
+  focus-mock workflow. No authentication provider, grant store, active access bundle,
+  EvidenceRef-to-EvidenceBundle service, citation service, AIReceipt emitter/store,
+  model daemon, provider endpoint, governed-AI HTTP route, review mutation route,
+  deployment, live request, release, correction propagation, rollback drill, or
+  publication was exercised.
 related:
-  - directory-rules.md#7
-  - directory-rules.md#12
-  - ai-build-operating-contract.md#21
-  - ai-build-operating-contract.md#22
-  - kfm_unified_doctrine_synthesis.md#11
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#203
-  - Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md#2432
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md#10
-  - docs/architecture/governed-ai/BOUNDARIES.md
-  - docs/architecture/governed-ai/CONTINUITY_NOTES.md
-  - docs/architecture/cross-domain/README.md
-tags: [kfm, architecture, governed-ai, routes, api-surface, audience-class, structural]
+  - README.md
+  - ../governed-ai.md
+  - BOUNDARIES.md
+  - CONTINUITY_NOTES.md
+  - FOCUS_FLOW.md
+  - ADAPTER_CONTRACT.md
+  - AI_RECEIPTS.md
+  - MOCK_FIRST.md
+  - OLLAMA_INTEGRATION.md
+  - PROMPT_INJECTION.md
+  - ../governed-api/README.md
+  - ../governed-api/ENVELOPES.md
+  - ../governed-api/AUDIENCE_CLASSES.md
+  - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
+  - ../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../doctrine/directory-rules.md
+  - ../../../apps/governed-api/src/governed_api/main.py
+  - ../../../apps/governed-api/src/governed_api/routes/registry.py
+  - ../../../apps/governed-api/src/governed_api/stub.py
+  - ../../../apps/explorer-web/src/features/focus_panel/resolver.ts
+  - ../../../runtime/model_adapters/MockAdapter.py
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/runtime/ai_receipt.md
+  - ../../../schemas/contracts/v1/focus/focus_request.schema.json
+  - ../../../schemas/contracts/v1/focus/focus_response.schema.json
+tags: [kfm, architecture, governed-ai, route-map, governed-api, focus-mode, evidence, finite-outcomes, audience, trust-membrane, repository-grounded]
 notes:
-  - PROPOSED. Third substantive sibling under docs/architecture/governed-ai/; with three siblings, OPEN-DR-11 recommendation tips toward "keep folder".
-  - Atlas §20.3 Master API Surface Table is the CONFIRMED doctrinal source for the six API families listed here.
-  - All concrete route names ("/v1/evidence/{id}", etc.) are PROPOSED — Atlas §20.3 names families, not paths.
-  - No mounted repo evidence in this session; all repo-shaped and route-shaped claims labeled PROPOSED.
+  - "v0.2 replaces the May 2026 proposal-era route catalogue with current repository evidence while preserving the document ID, path, H1, top anchor, numbered sections, and legacy section anchors."
+  - "The executable Governed API registry contains only /bootstrap, /layers, and /evidence; all three are GET-only ABSTAIN / NOT_IMPLEMENTED stubs, with safe 404/405 ERROR behavior."
+  - "The former six-family table is retained as architecture lineage and a migration crosswalk, not represented as an accepted enum, current router contract, or complete runtime surface."
+  - "The Explorer Focus composed-claim projection and MockAdapter provide bounded no-network component proofs; neither establishes HTTP transport, evidence resolution, model inference, policy execution, citation validation, AIReceipt emission, release, deployment, or public AI operation."
+  - "This documentation-only revision changes no route, app, package, contract, schema, policy, fixture, validator, test, workflow, provider, receipt, release, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Governed AI — Route Map
 
-> *The structural inventory of every governed-AI runtime surface — which routes exist, what they return, what they forbid, who they're for, and where they sit in the apps tree. Atlas §20.3 names the API families; this doc consolidates them into a map.*
+> **One-line purpose.** Reconcile the governed-AI route taxonomy with the repository's actual executable surface, distinguish routes from app-local projections and runtime components, and keep every unimplemented trust step on an explicit `HOLD`.
 
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-CONFIRMED%20(families)-blue)
-![surfaces](https://img.shields.io/badge/API%20families-6-informational)
-![envelope](https://img.shields.io/badge/envelope-finite%20outcomes-success)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![open-dr-11](https://img.shields.io/badge/OPEN--DR--11-3rd%20sibling-orange)
-![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft · **Owners:** `<AI-SURFACE-STEWARD>` *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
+[![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#1-scope)
+[![current routes](https://img.shields.io/badge/current%20routes-3%20ABSTAIN%20stubs-6e7781?style=flat-square)](#4-the-route-map-at-a-glance)
+[![governed AI route](https://img.shields.io/badge/governed--AI%20HTTP%20route-absent-b42318?style=flat-square)](#6-per-route-inventory)
+[![legacy families](https://img.shields.io/badge/six%20families-lineage%20only-8250df?style=flat-square)](#5-the-six-api-families-confirmed--atlas-203)
+[![Focus client](https://img.shields.io/badge/Focus%20client-bounded%20no--network-2da44e?style=flat-square)](#12-ui-negative-states--the-routes-contract-with-the-renderer)
+[![provider](https://img.shields.io/badge/admitted%20provider-none-6e7781?style=flat-square)](#9-app-to-route-mapping)
+[![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#1-scope)
 
 > [!IMPORTANT]
-> **Routes are doctrine, paths are PROPOSED.** Atlas §20.3 *(Master API Surface Table)* names the **six API families** that constitute the governed-AI runtime — Source summary resolver, Domain feature/detail lookup, Layer manifest resolver, Evidence resolver, Focus Mode runtime, Review queue surface — and gives each one its DTO/schema and finite outcomes. **CONFIRMED doctrine.** This doc consolidates them; concrete URL paths *(`/v1/evidence/{id}`, etc.)* are PROPOSED examples.
-
-> [!NOTE]
-> **OPEN-DR-11 — three-sibling threshold reached.** This is the third substantive sibling under `docs/architecture/governed-ai/`:
->
-> 1. `BOUNDARIES.md` *(spatial — what AI may and may not touch)*
-> 2. `CONTINUITY_NOTES.md` *(temporal — how AI work persists across time)*
-> 3. `ROUTE_MAP.md` *(structural — which routes comprise the AI surface — this doc)*
->
-> Per the OPEN-DR-11 recommendation in `BOUNDARIES.md` §2.1 *(keep the folder if ≥3 siblings)*, the threshold for "keep folder" is now met. **Final resolution still pending ADR** — the recommendation is now affirmative, but `directory-rules.md` §12 amendment is still required to make the folder pattern canonical.
+> **The current executable route map is small and non-AI.** `apps/governed-api/src/governed_api/routes/registry.py` registers exactly three paths—`/bootstrap`, `/layers`, and `/evidence`. Each accepts `GET` only and returns a schema-shaped `ABSTAIN / NOT_IMPLEMENTED` scaffold response. Unknown paths and disallowed methods return bounded `ERROR` envelopes. No Focus, model, source-summary, domain-feature, review-queue, authentication, authorization, or AIReceipt route is registered.
 
 > [!CAUTION]
-> **Path placement still diverges from Directory Rules v1.2 §12** *(folder + ALL-CAPS filename — same OPEN-DR-11 family)*. The 3-sibling milestone strengthens the case for resolution but does not itself resolve it.
+> **The historical six-family table is architecture lineage, not a current router contract.** It remains useful as a planning crosswalk, but current repository evidence does not establish it as an accepted enum, a complete public API, or six implemented endpoints. In particular, a route named `/layers` is not proof of manifest resolution, and `/evidence` is not proof of `EvidenceRef → EvidenceBundle` resolution.
+
+> [!WARNING]
+> **A bounded component is not an end-to-end route.** The repository has a no-I/O `MockAdapter`, a deterministic RuntimeResponseEnvelope candidate builder, proposed AIReceipt contract/schema support, and a fixture-first Explorer Focus composed-claim projection. Those surfaces are intentionally disconnected from provider, policy, evidence, citation, receipt-storage, and HTTP transport authority.
+
+**Quick navigation:** [Scope](#1-scope) · [Placement](#2-repo-fit--open-dr-11-status-update) · [Architecture views](#3-the-three-axes-of-governed-ai-architecture) · [Current map](#4-the-route-map-at-a-glance) · [Legacy families](#5-the-six-api-families-confirmed--atlas-203) · [Inventory](#6-per-route-inventory) · [Trust flow](#7-the-click-to-truth-flow) · [Audience](#8-audience-classes) · [Apps](#9-app-to-route-mapping) · [Forbidden paths](#10-forbidden-routes-and-shortcuts) · [Contracts](#11-schema-and-contract-homes) · [UI states](#12-ui-negative-states--the-routes-contract-with-the-renderer) · [Anti-patterns](#13-anti-patterns) · [Open work](#14-open-questions-and-adr-triggers) · [Related](#15-related-docs) · [Appendix](#16-appendix--glossary-and-quick-reference)
 
 ---
 
-## Table of contents
-
-1. [Scope](#1-scope)
-2. [Repo fit — OPEN-DR-11 status update](#2-repo-fit--open-dr-11-status-update)
-3. [The three axes of governed-AI architecture](#3-the-three-axes-of-governed-ai-architecture)
-4. [The route map at a glance](#4-the-route-map-at-a-glance)
-5. [The six API families *(CONFIRMED — Atlas §20.3)*](#5-the-six-api-families-confirmed--atlas-203)
-6. [Per-route inventory](#6-per-route-inventory)
-7. [The click-to-truth flow](#7-the-click-to-truth-flow)
-8. [Audience classes](#8-audience-classes)
-9. [App-to-route mapping](#9-app-to-route-mapping)
-10. [Forbidden routes and shortcuts](#10-forbidden-routes-and-shortcuts)
-11. [Schema and contract homes](#11-schema-and-contract-homes)
-12. [UI negative states — the route's contract with the renderer](#12-ui-negative-states--the-routes-contract-with-the-renderer)
-13. [Anti-patterns](#13-anti-patterns)
-14. [Open questions and ADR triggers](#14-open-questions-and-adr-triggers)
-15. [Related docs](#15-related-docs)
-16. [Appendix — glossary and quick reference](#16-appendix--glossary-and-quick-reference)
-
----
+<a id="1-scope"></a>
 
 ## 1. Scope
 
-This doc is the **structural inventory** of the governed-AI runtime surface. It answers four questions for every route AI participates in:
+This page is the human-readable route and boundary map for governed-AI-adjacent behavior. It answers five questions:
 
-1. **What family is it?** *(per Atlas §20.3 — six families)*
-2. **What's the contract?** *(request DTO + response envelope + finite outcomes)*
-3. **Who is it for?** *(audience class — public · partner · steward · internal · denied)*
-4. **Where does it live?** *(which app under `apps/` serves it; schema home; policy home)*
+1. Which paths are executable in the current Governed API registry?
+2. Which bounded AI/Focus components exist without transport?
+3. Which historical route families remain useful only as planning lineage?
+4. Which contracts, schemas, policies, receipts, and applications own each responsibility?
+5. What evidence must exist before a governed-AI route can be described as implemented, deployed, or public?
 
-> [!TIP]
-> **What this doc is not.** It is not the schema itself *(those live under `schemas/contracts/v1/`)*; not the policy *(`policy/governed_ai/`)*; not the route implementation *(`apps/governed-api/`)*. It is the **map** that tells implementers where each piece belongs and what shape it takes.
+It does **not** define a route, URL convention, payload, audience enum, capability grant, policy bundle, review authority, deployment profile, or release state. Those remain in their owning roots and require their own evidence.
+
+### 1.1 Current safe determination
+
+| Claim | Status | Evidence-bounded conclusion |
+|---|---|---|
+| Target path and placement | **CONFIRMED** | This existing architecture page is under `docs/architecture/governed-ai/`; accepted ADR-0029 and Directory Rules v2 support human architecture guidance here. |
+| Governed API executable paths | **CONFIRMED** | Exactly `/bootstrap`, `/layers`, and `/evidence` are registered. |
+| Current registered-route outcome | **CONFIRMED / bounded** | Every registered route returns `ABSTAIN / NOT_IMPLEMENTED`; no substantive `ANSWER` is emitted. |
+| Safe unknown/method behavior | **CONFIRMED / bounded** | Unknown path → `404` + safe `ERROR`; non-`GET` on a registered path → `405` + safe `ERROR`. |
+| Governed-AI or Focus HTTP route | **CONFIRMED absent from the inspected registry** | No Focus/model/AI path is registered. |
+| Route metadata | **CONFIRMED absent from the inspected registry** | No audience, purpose, capability, request/response profile, rate, release, or policy metadata is attached to route entries. |
+| AI orchestration source | **CONFIRMED absent in the inspected app-local subtree** | `apps/governed-api/src/ai/` contains only `.gitkeep` and explanatory `README.md`. |
+| Explorer Focus projection | **CONFIRMED / bounded** | A fixture-first, injected-resolver client projection parses strict app-local profiles, enforces EvidenceRef scope, renders finite outcomes, and performs no network/model/lifecycle-store access. |
+| Mock adapter | **CONFIRMED / bounded** | A deterministic no-I/O selector returns isolated copies from a prevalidated four-outcome scenario matrix. It does not interpret, resolve evidence, execute policy, call a model, or emit a receipt. |
+| Live provider | **CONFIRMED not established** | `OllamaAdapter.py` remains a one-line placeholder; no provider endpoint or admitted model was exercised. |
+| Focus worker | **CONFIRMED placeholder** | The worker entrypoint is a one-line greenfield placeholder. |
+| Authentication/authorization | **NOT PROVED** | No active provider, claim verifier, grant store, authorization middleware, capability binding, or revocation path was established. |
+| Deployment/public exposure | **UNKNOWN / HOLD** | No live environment, ingress, observed request, service identity, log, dashboard, release binding, or publication decision was inspected. |
+| Effect of this document | **None** | Documentation cannot register, release, deploy, or publish a route. |
+
+### 1.2 Terms that must remain separate
+
+| Term | Meaning here | Current example |
+|---|---|---|
+| **API family** | A planning or contract taxonomy grouping related operations. | The historical six-family atlas list. |
+| **Executable route** | A path/method pair dispatched by current code. | `GET /bootstrap`, `GET /layers`, `GET /evidence`. |
+| **Route declaration** | Metadata binding a route to capability, contracts, audience/exposure, policy, lifecycle, audit, and rollback. | **Not established** in the current registry. |
+| **Client projection** | A browser-side, public-safe shape consumed or rendered after validation. | Explorer Focus composed-claim and Evidence Drawer fixture profiles. |
+| **Semantic contract** | Human meaning of a trust-bearing object. | `contracts/runtime/runtime_response_envelope.md`. |
+| **Machine schema** | Machine-valid shape. | `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`. |
+| **Runtime component** | A reusable executable unit that may eventually participate behind a route. | `MockAdapter`; RuntimeResponseEnvelope candidate builder. |
+| **Worker** | Background process boundary. | Current Focus worker is a placeholder, not a route implementation. |
+| **Deployed endpoint** | Observed route in a named environment, bound to exact released bytes/configuration. | **UNKNOWN / not proved**. |
 
 [↑ Back to top](#top)
 
 ---
 
-## 2. Repo fit — OPEN-DR-11 status update
+<a id="2-repo-fit--open-dr-11-status-update"></a>
 
-### 2.1 The three-sibling milestone
+## 2. Repo fit — current placement and authority
 
-| # | Sibling | Axis | Status |
-|---|---|---|---|
-| 1 | `BOUNDARIES.md` | Spatial — what AI may / may not touch | draft *(prior turn)* |
-| 2 | `CONTINUITY_NOTES.md` | Temporal — how AI work persists across time | draft *(prior turn)* |
-| 3 | `ROUTE_MAP.md` *(this file)* | Structural — which routes comprise the AI surface | draft *(this turn)* |
+### 2.1 Directory Rules basis
 
-**Recommendation shift:** with three substantive siblings — each addressing a *distinct architectural axis* — the OPEN-DR-11 recommendation moves from "PROPOSED" to "**RECOMMEND keep folder**". The folder is now earning its placement: it groups three orthogonal architectural views that would not be coherent as flat siblings of unrelated `<topic>.md` files under `docs/architecture/`.
+The prior edition treated this folder as a three-sibling proposal pending `OPEN-DR-11`. That framing is stale.
 
-### 2.2 Still PROPOSED until ADR
+Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts Directory Rules v2. The current directory contains a landing page plus nine topic companions. This same-path update receives **`PLACE`** because it edits an existing human architecture document under the `docs/` responsibility root. It creates no root, route, object family, schema, policy lane, runtime surface, or authority migration.
 
-> [!IMPORTANT]
-> **The recommendation is not the resolution.** Per `directory-rules.md` §2.4, a structural deviation requires an ADR. The ADR for OPEN-DR-11 SHOULD now be drafted, citing the three-sibling milestone as the justifying material. Suggested ADR title *(PROPOSED)*: **"Architecture lane — folder vs flat; ALL-CAPS doctrine docs"**. Until accepted, the path remains PROPOSED.
+### 2.2 Current sibling inventory
+
+| Document | Primary explanatory concern | Current authority |
+|---|---|---|
+| [`README.md`](README.md) | Repository-grounded subsystem inventory and maturity boundary | Explanatory only |
+| [`ADAPTER_CONTRACT.md`](ADAPTER_CONTRACT.md) | Provider-neutral adapter architecture | Explanatory only |
+| [`AI_RECEIPTS.md`](AI_RECEIPTS.md) | Receipt/accountability architecture | Explanatory only |
+| [`BOUNDARIES.md`](BOUNDARIES.md) | Trust and forbidden-path boundaries | Explanatory only |
+| [`CONTINUITY_NOTES.md`](CONTINUITY_NOTES.md) | Lineage and continuity notes | Explanatory only |
+| [`FOCUS_FLOW.md`](FOCUS_FLOW.md) | Proposed end-to-end Focus flow | Explanatory; older evidence assumptions require care |
+| [`MOCK_FIRST.md`](MOCK_FIRST.md) | Mock-first architecture | Explanatory only |
+| [`OLLAMA_INTEGRATION.md`](OLLAMA_INTEGRATION.md) | Deferred provider posture | Explanatory only |
+| [`PROMPT_INJECTION.md`](PROMPT_INJECTION.md) | Untrusted-content boundaries | Explanatory only |
+| `ROUTE_MAP.md` | Current route inventory, lineage crosswalk, and graduation map | This page; explanatory only |
+
+The existence of a topic document does not prove its described implementation. Architecture pages may define target constraints while code, contracts, schemas, policy, tests, deployment records, and observed behavior decide current state.
+
+### 2.3 Unresolved overview relationship
+
+This folder's [`README.md`](README.md) and the flat [`docs/architecture/governed-ai.md`](../governed-ai.md) remain overlapping human overviews. Current documentation narrows the flat page to a cross-cutting overview and the folder README to a detailed inventory, but no accepted decision establishes precedence, retirement, redirect, or canonicality. This page does not resolve that separate **CONFLICTED / HOLD**.
+
+### 2.4 Responsibility split
+
+| Responsibility | Owning surface | This page's role |
+|---|---|---|
+| Human architecture explanation | `docs/architecture/` | Explain current and target relationships. |
+| Binding architecture decisions | `docs/adr/` | Report status; never accept by implication. |
+| Semantic route/object meaning | `contracts/` | Link current contracts; never redefine them here. |
+| Machine shape | `schemas/` | Report exact current maturity; never fork a schema. |
+| Route dispatch and app behavior | `apps/governed-api/` | Read current code and tests. |
+| Client composition | `apps/explorer-web/` | Report bounded projection behavior. |
+| Provider-neutral adapters | `runtime/` | Report component proof and limits. |
+| Admissibility, access, sensitivity | `policy/` | No active evaluator is inferred. |
+| Evidence resolution | evidence contracts/packages/data surfaces | No resolver service is inferred. |
+| Receipts and proofs | their distinct `data/` lanes | A schema or ref is not emitted history. |
+| Review and release | review/release owning surfaces | A route or UI action is not approval or publication. |
+| Deployment and exposure | `infra/`, app/config/runtime records | No environment is inferred from source presence. |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="3-the-three-axes-of-governed-ai-architecture"></a>
 
 ## 3. The three axes of governed-AI architecture
 
-> **Doctrine status:** the three-axis framing is **INFERRED from the structure of the corpus**, not asserted by any single carrier. The individual content of each axis is CONFIRMED doctrine.
+The prior spatial/temporal/structural framing is retained as a useful reading aid, not as a claim that three documents exhaust the subsystem.
+
+| Axis | Question | Current architecture companion | What proves implementation |
+|---|---|---|---|
+| Spatial/trust boundary | What may model-mediated behavior read, transform, or expose? | [`BOUNDARIES.md`](BOUNDARIES.md) | Pinned code/configuration, negative tests, policy, and observed deployment boundaries |
+| Temporal/continuity boundary | How are versions, receipts, corrections, supersessions, and replay relationships retained? | [`CONTINUITY_NOTES.md`](CONTINUITY_NOTES.md), [`AI_RECEIPTS.md`](AI_RECEIPTS.md) | Emitted records, validated references, storage behavior, correction/rollback evidence |
+| Structural/route boundary | Which operation is reachable through which governed interface and profile? | `ROUTE_MAP.md`, [`FOCUS_FLOW.md`](FOCUS_FLOW.md) | Route registry, route declarations, contracts/schemas, tests, deployed probes |
+
+A fourth practical distinction is essential: **component proof versus composed flow**. The current repository proves selected components but not the end-to-end sequence.
 
 ```mermaid
-flowchart TB
-  AI["Governed AI surface"]
-  AI --> SP["Spatial axis<br/><i>What AI may /<br/>may not touch</i><br/>→ BOUNDARIES.md"]
-  AI --> TM["Temporal axis<br/><i>How AI work persists<br/>across time</i><br/>→ CONTINUITY_NOTES.md"]
-  AI --> ST["Structural axis<br/><i>Which routes comprise<br/>the AI surface</i><br/>→ ROUTE_MAP.md"]
-  SP -. depends on .-> KERNEL["Five boundaries:<br/>Truth · Trust-membrane ·<br/>Citation · Receipt · Authority"]
-  TM -. depends on .-> SUBS["Five substrates:<br/>Receipts · ADRs · Drift register ·<br/>Supersession links · Version pins"]
-  ST -. depends on .-> FAM["Six API families<br/>(Atlas §20.3):<br/>Source · Feature · Layer ·<br/>Evidence · Focus Mode · Review"]
-  classDef ax fill:#e1f5fe,stroke:#01579b;
-  classDef kernel fill:#c8e6c9,stroke:#1b5e20;
-  class SP,TM,ST ax;
-  class KERNEL,SUBS,FAM kernel;
+flowchart LR
+  DOC["Architecture guidance"] --> DEC["Accepted decisions"]
+  DEC --> PROFILE["Contracts · schemas · policy profiles"]
+  PROFILE --> CODE["Route + orchestration code"]
+  CODE --> TEST["Positive + fail-closed tests"]
+  TEST --> DEPLOY["Named released deployment"]
+  DEPLOY --> OBSERVE["Observed route behavior"]
+
+  COMPONENT["Bounded component proof"] -. "does not skip" .-> CODE
+  COMPONENT -. "does not imply" .-> DEPLOY
+
+  classDef held fill:#fff4e0,stroke:#d97706;
+  classDef confirmed fill:#e6ffed,stroke:#1f883d;
+  class DOC,DEC,PROFILE,CODE,DEPLOY,OBSERVE held;
+  class TEST,COMPONENT confirmed;
 ```
 
-The three views compose. A change to the AI surface that does not affect all three axes is unusual; a change that affects only one is suspicious. Reviewers SHOULD read all three docs when assessing a non-trivial AI-surface PR.
+For the current governed-AI route, the chain stops before route/orchestration code. A green component test cannot bridge the missing stages.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="4-the-route-map-at-a-glance"></a>
 
 ## 4. The route map at a glance
 
+### 4.1 Current executable and bounded-component map
+
 ```mermaid
-flowchart LR
-  subgraph PUB["Public clients (browser, public partner)"]
-    EX["apps/explorer-web/"]
+flowchart TB
+  subgraph API["apps/governed-api/ — current WSGI scaffold"]
+    REG["route registry"]
+    B["GET /bootstrap"]
+    L["GET /layers"]
+    E["GET /evidence"]
+    N["unknown path / unsupported method"]
+    REG --> B
+    REG --> L
+    REG --> E
+    B --> AB["ABSTAIN · NOT_IMPLEMENTED"]
+    L --> AB
+    E --> AB
+    N --> ER["ERROR · SAFE_RUNTIME_ERROR"]
   end
-  subgraph STEW["Steward clients"]
-    RC["apps/review-console/"]
+
+  subgraph CLIENT["apps/explorer-web/ — bounded local projections"]
+    FP["Focus composed-claim parser/resolver"]
+    ED["Evidence Drawer projection parser"]
+    FP --> FX["injected fixture/governed resolver boundary"]
+    ED --> FX2["fixture-only payload boundary"]
   end
-  subgraph CLI["Operator / maintainer"]
-    OP["apps/cli/"]
+
+  subgraph RUNTIME["runtime/ and workers — bounded or placeholder"]
+    MOCK["MockAdapter<br/>deterministic no-I/O selector"]
+    OLL["OllamaAdapter<br/>placeholder"]
+    WORK["AI Focus worker<br/>placeholder"]
   end
-  subgraph MEMBRANE["apps/governed-api/ — the trust membrane in executable form"]
-    R1["Source summary resolver"]
-    R2["Domain feature/detail lookup"]
-    R3["Layer manifest resolver"]
-    R4["Evidence resolver"]
-    R5["Focus Mode runtime"]
-    R6["Review queue surface"]
-  end
-  subgraph INTERNAL["Internal — never the public path"]
-    RAW["RAW · WORK · QUARANTINE"]
-    CANON["Canonical / internal stores"]
-    MODEL["Direct model runtime"]
-  end
-  EX --> R1
-  EX --> R2
-  EX --> R3
-  EX --> R4
-  EX --> R5
-  RC --> R6
-  RC --> R4
-  OP -. dry-run / inspect .-> MEMBRANE
-  MEMBRANE -. NEVER reaches .- INTERNAL
-  classDef pub fill:#c8e6c9,stroke:#1b5e20;
-  classDef stew fill:#e1f5fe,stroke:#01579b;
-  classDef cli fill:#fff4e0,stroke:#d97706;
-  classDef mem fill:#e8eaf6,stroke:#283593;
-  classDef int fill:#ffebee,stroke:#b71c1c;
-  class EX pub;
-  class RC stew;
-  class OP cli;
-  class R1,R2,R3,R4,R5,R6 mem;
-  class RAW,CANON,MODEL int;
+
+  FP -. "no verified browser transport" .-> API
+  API -. "no governed-AI route" .-> MOCK
+  MOCK -. "no provider call" .-> OLL
+  API -. "no worker orchestration" .-> WORK
+
+  classDef current fill:#e6ffed,stroke:#1f883d;
+  classDef held fill:#fff4e0,stroke:#d97706;
+  classDef absent fill:#ffebe9,stroke:#cf222e;
+  class REG,B,L,E,N,AB,ER,FP,ED,MOCK current;
+  class FX,FX2 held;
+  class OLL,WORK absent;
 ```
 
-> **Reading the picture.** Every client routes through `apps/governed-api/`. The six route families inside the membrane are the entire governed-AI runtime surface. Internal stores at the bottom are unreachable by any client; routes that would expose them are forbidden *(§10)*.
+**Reading rule:** solid arrows show current local code relationships. Dotted arrows show expected seams whose transport or orchestration is **not verified**. The diagram does not represent a deployed topology.
 
-[↑ Back to top](#top)
+### 4.2 Current executable route matrix
 
----
-
-## 5. The six API families *(CONFIRMED — Atlas §20.3)*
-
-This is **CONFIRMED doctrine — preserved verbatim from Atlas §20.3 Master API Surface Table**. Concrete route paths are PROPOSED examples; the families themselves are the contract.
-
-| # | API family | Domains | DTO / schema | Outcomes |
+| Path or condition | Method | Current HTTP result | Current envelope outcome | Governed-AI binding |
 |---|---|---|---|---|
-| 1 | **Source summary resolver** | All domains | `SourceDescriptor` projection | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| 2 | **Domain feature/detail lookup** | All domain lanes | `DomainFeatureEnvelope` + `DecisionEnvelope` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| 3 | **Layer manifest resolver** | All map domains | `LayerManifest` / `GeoManifest` | `ANSWER` / `DENY` / `ERROR` |
-| 4 | **Evidence resolver** | All domains | `EvidenceBundle` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| 5 | **Focus Mode runtime** | All domains | `RuntimeResponseEnvelope` + `AIReceipt` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| 6 | **Review queue surface** | Sensitive / release-significant domains | `ReviewRecord` + `PolicyDecision` | `ALLOW` / `RESTRICT` / `DENY` / `ERROR` |
+| `/bootstrap` | `GET` | `200` | `ABSTAIN / NOT_IMPLEMENTED` | None |
+| `/layers` | `GET` | `200` | `ABSTAIN / NOT_IMPLEMENTED` | None; no manifest resolution |
+| `/evidence` | `GET` | `200` | `ABSTAIN / NOT_IMPLEMENTED` | None; no EvidenceRef resolution |
+| Registered path | non-`GET` | `405` | `ERROR / SAFE_RUNTIME_ERROR` | Not applicable |
+| Unknown path | any | `404` | `ERROR / SAFE_RUNTIME_ERROR` | Not applicable |
+| Focus/model/review/source-summary/domain-feature path | any | Not registered | Not applicable | **ABSENT / HOLD** |
 
-> [!CAUTION]
-> **Don't expand the list silently.** Adding a seventh API family is an ADR-class change *(`ai-build-operating-contract.md` §28; `directory-rules.md` §2.4)*. The Atlas explicitly states *(§24.3.1 verbatim)*: *"every governed API surface … returns a finite outcome from a small, well-known set."* A new family means a new outcome × surface row, a new schema home, a new policy home, and a new audit gate.
+### 4.3 What the current map proves
+
+It proves bounded dispatch, deterministic finite negative envelopes, a closed route set, method rejection, and safe errors in the inspected scaffold. It does not prove HTTP authentication, authorization, evidence resolution, policy execution, substantive content, release binding, AI orchestration, provider invocation, receipt persistence, deployment, or public availability.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="5-the-six-api-families-confirmed--atlas-203"></a>
+
+## 5. The six API families — lineage crosswalk
+
+The v0.1 page promoted the atlas's six-family planning table into “CONFIRMED doctrine” and treated it as the entire governed-AI runtime. Current repository evidence requires a narrower statement:
+
+- the six labels are **CONFIRMED as historical repository/corpus lineage**;
+- they remain a useful architecture crosswalk;
+- they are **not established as an accepted canonical enum**;
+- they are **not the current route registry**; and
+- several named DTOs or bindings remain proposal-only, permissive, absent, or uncomposed.
+
+| Historical family | Current executable relationship | Current profile evidence | Safe status |
+|---|---|---|---|
+| Source summary resolver | No registered source-summary route | Source-related contracts may exist elsewhere, but no binding was found in the inspected registry | **LINEAGE / route absent** |
+| Domain feature/detail lookup | No registered domain-feature route | `DomainFeatureEnvelope` remains proposal lineage; the bounded envelope review found no paired governed profile | **LINEAGE / profile HOLD** |
+| Layer manifest resolver | Name-adjacent `/layers` stub only | The route returns `ABSTAIN / NOT_IMPLEMENTED`; no release-manifest lookup is performed | **BOUNDED stub, not resolver** |
+| Evidence resolver | Name-adjacent `/evidence` stub only | The route returns `ABSTAIN / NOT_IMPLEMENTED`; no `EvidenceRef → EvidenceBundle` resolution is performed | **BOUNDED stub, not resolver** |
+| Focus Mode runtime | No registered Focus route | App-local no-network projection and MockAdapter proofs exist; Focus schemas are permissive scaffolds; no provider or orchestration | **BOUNDED components / route HOLD** |
+| Review queue surface | No registered review route | Review Console documentation describes a proposed role-gated surface; no queue/decision route is proved | **LINEAGE / route absent** |
+
+### 5.1 Taxonomy change discipline
+
+Changing a route taxonomy may require an ADR when it creates a durable cross-system architecture, new public compatibility promise, new authority-bearing object family, or breaking migration. It is not accurate to say that any seventh label automatically requires an ADR merely because the prior atlas listed six. The controlling questions are authority, compatibility, ownership, exposure, and migration consequence.
+
+### 5.2 No silent aliasing
+
+The following pairs are not aliases without a reviewed crosswalk:
+
+- route family ↔ URL path;
+- `/layers` ↔ `LayerManifest` resolver;
+- `/evidence` ↔ EvidenceBundle resolver;
+- Explorer Focus projection ↔ Governed API Focus response;
+- `MockAdapter` scenario selector ↔ model inference adapter;
+- AIReceipt contract/schema ↔ emitted receipt;
+- Review Console app boundary ↔ review mutation API;
+- legacy audience label ↔ capability authorization.
+
+[↑ Back to top](#top)
+
+---
+
+<a id="6-per-route-inventory"></a>
 
 ## 6. Per-route inventory
 
-Each row below expands one of the six families into a per-route operational view. **PROPOSED implementation throughout** *(per Atlas §20.3)*; doctrine for families and outcomes is CONFIRMED.
+This section preserves the v0.1 family subsections for backlink compatibility while correcting each one to current evidence.
+
+### 6.0 Current non-family route: bootstrap
+
+`GET /bootstrap` is executable and returns `ABSTAIN / NOT_IMPLEMENTED`. The historical six-family list did not account for this current scaffold route. That mismatch is another reason to treat the list as lineage rather than the executable register.
 
 ### 6.1 Source summary resolver
 
-| Field | Value |
+| Field | Current conclusion |
 |---|---|
-| Purpose | Project a `SourceDescriptor` to a public-safe summary *(who, what, rights, sensitivity, cadence, release class)*. |
-| Audience | **Public** *(after rights/sensitivity gates)* |
-| Request DTO | `{ source_id }` |
-| Response envelope | `DecisionEnvelope` wrapping `SourceDescriptor` projection |
-| Outcomes | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| Suggested route *(PROPOSED)* | `GET /v1/sources/{source_id}` |
-| Forbidden behavior *(Atlas §24.3.2)* | Returning raw source bytes; returning quarantined source as `ANSWER`. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/sources/source_descriptor.schema.json`; `schemas/contracts/v1/runtime/decision_envelope.schema.json` |
-| Policy home *(PROPOSED)* | `policy/governed_ai/source_summary.rego` |
+| Registered path | **None found** |
+| Request/response binding | **Not established** |
+| Authentication/capability binding | **Not established** |
+| Current outcome | Not applicable |
+| What remains useful | The idea of a public-safe SourceDescriptor projection remains a proposal to reconcile with current contracts, rights, sensitivity, and exposure profiles. |
+| HOLD | Do not publish a concrete URL, field list, or public audience claim until a route declaration, contract/schema, policy, tests, and deployment evidence agree. |
 
 ### 6.2 Domain feature/detail lookup
 
-| Field | Value |
+| Field | Current conclusion |
 |---|---|
-| Purpose | Resolve a clicked or queried feature in a domain *(hydrology stream, archaeology candidate, fauna occurrence, etc.)* to a governed envelope. |
-| Audience | **Public** *(with per-domain sensitivity gates)* |
-| Request DTO | `{ feature_id, layer_id, time_window? }` |
-| Response envelope | `DomainFeatureEnvelope` + `DecisionEnvelope` |
-| Outcomes | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| Suggested route *(PROPOSED)* | `GET /v1/domains/{domain}/features/{feature_id}` |
-| Forbidden behavior *(Atlas §24.3.2)* | Returning an unreleased candidate as `ANSWER`; exposing internal store identifiers. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/domains/<domain>/feature_envelope.schema.json` |
-| Policy home *(PROPOSED)* | `policy/domains/<domain>/feature_lookup.rego` |
+| Registered path | **None found** |
+| `DomainFeatureEnvelope` | Proposal lineage; no current paired governed profile was established by the bounded envelope review |
+| Browser feature support | Domain/UI features may consume fixture projections, but that is not this route |
+| Current outcome | Not applicable |
+| HOLD | Define semantic payload composition, field authorization, release/correction behavior, and sensitivity negatives before route registration. |
 
 ### 6.3 Layer manifest resolver
 
-| Field | Value |
+| Field | Current conclusion |
 |---|---|
-| Purpose | Resolve which layers a client may load *(public-safe; released-only)*. |
-| Audience | **Public** *(release-state gated)* |
-| Request DTO | `{ layer_id }` or `{ scope, time_window? }` *(list form)* |
-| Response envelope | `LayerManifest` *(or `GeoManifest`)* |
-| Outcomes | `ANSWER` / `DENY` / `ERROR` *(note: no `ABSTAIN` — layers either resolve or are denied)* |
-| Suggested route *(PROPOSED)* | `GET /v1/layers/{layer_id}` · `GET /v1/layers?scope=...` |
-| Forbidden behavior *(Atlas §24.3.2)* | Returning a layer that lacks a `ReleaseManifest`; serving `WORK` or `CATALOG` layers to public clients. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/map/layer_manifest.schema.json` · `map_release_manifest.schema.json` |
-| Policy home *(PROPOSED)* | `policy/governed_ai/layer_manifest.rego` |
+| Registered path | `GET /layers` |
+| Current response | Schema-shaped `ABSTAIN / NOT_IMPLEMENTED` |
+| Manifest lookup | **Not implemented in the inspected route** |
+| Release binding | **Not implemented in the inspected route** |
+| Audience/auth metadata | **Absent from registry** |
+| HOLD | Do not call `/layers` a released manifest resolver until exact manifest contracts, release/correction checks, app behavior, tests, and observed transport prove it. |
+
+The prior claim that this family cannot return `ABSTAIN` is not current runtime truth. The current `/layers` scaffold does return `ABSTAIN`. Future outcome semantics require an accepted route/profile decision; architecture prose cannot outlaw a current safe-held outcome.
 
 ### 6.4 Evidence resolver
 
-| Field | Value |
+| Field | Current conclusion |
 |---|---|
-| Purpose | Resolve an `EvidenceRef` to a full `EvidenceBundle` with citations, source roles, review state, release state, correction lineage. |
-| Audience | **Public** *(sensitivity-redacted projection)*; **steward** *(full projection)* |
-| Request DTO | `{ evidence_ref }` or `{ feature_id, layer_id }` *(via Evidence Drawer)* |
-| Response envelope | `EvidenceBundle` *(or `EvidenceDrawerPayload` for UI-side projection)* |
-| Outcomes | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
-| Suggested route *(PROPOSED)* | `GET /v1/evidence/{evidence_ref}` · `POST /v1/evidence-drawer` |
-| Forbidden behavior *(Atlas §24.3.2)* | Returning a payload that includes restricted geometry or uncited claim text. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` · `schemas/contracts/v1/ui/evidence_drawer_payload.schema.json` |
-| Policy home *(PROPOSED)* | `policy/governed_ai/evidence_resolver.rego` *(redaction & sensitivity)* |
+| Registered path | `GET /evidence` |
+| Current response | Schema-shaped `ABSTAIN / NOT_IMPLEMENTED` |
+| EvidenceRef resolution | **Not implemented in the inspected route** |
+| EvidenceBundle projection | **Not implemented in the inspected route** |
+| Redaction/field authorization | **Not implemented in the inspected route** |
+| HOLD | Require resolver integration, evidence/ref scope tests, rights/sensitivity projection, correction/withdrawal behavior, and release-aware negative cases before `ANSWER`. |
 
 ### 6.5 Focus Mode runtime
 
-| Field | Value |
-|---|---|
-| Purpose | Bounded AI answer over map context + released `EvidenceBundle`. The canonical AI runtime surface. |
-| Audience | **Public** *(cite-or-abstain enforced; sensitivity-gated; AIReceipt mandatory)* |
-| Request DTO | `FocusModeRequest = { question, map_context_envelope, evidence_refs?, policy_context?, user_role? }` |
-| Response envelope | `FocusModeResponse` *(extends `RuntimeResponseEnvelope`)* + `AIReceipt` reference |
-| Outcomes | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` *(optionally `NARROWED` / `BOUNDED` if contract permits)* |
-| Suggested route *(PROPOSED)* | `POST /v1/focus-mode` |
-| Forbidden behavior *(Atlas §24.3.2)* | Generating uncited language as `ANSWER`; substituting model output for `EvidenceBundle`. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/ai/focus_mode_request.schema.json` · `focus_mode_response.schema.json` · `ai_receipt.schema.json` · `schemas/contracts/v1/ui/map_context_envelope.schema.json` · `schemas/contracts/v1/evidence/citation_validation_report.schema.json` |
-| Policy home *(PROPOSED)* | `policy/governed_ai/precheck.rego` · `postcheck.rego` · `citation.rego` · `sensitivity.rego` |
-| **Cross-ref** | See `BOUNDARIES.md` §9 for the full runtime flow; this row is the route-level view. |
+| Surface | Current evidence | Limit |
+|---|---|---|
+| Governed API route | No Focus path in current registry | No HTTP transport or server orchestration |
+| `apps/governed-api/src/ai/` | `.gitkeep` + explanatory README | No implementation modules |
+| Focus request/response schemas | PROPOSED empty-property scaffolds with `additionalProperties: true` | No closed runtime contract |
+| Explorer Focus request/projection | Strict app-local profiles, injected resolver, EvidenceRef scope checks, fixed no-leak states | Browser transport and server semantics not supplied |
+| Focus fixtures/tests | Supported, qualified, abstain, deny, malformed, mismatch, no-leak, and no-network cases | Synthetic projection proof only |
+| `MockAdapter` | Four-outcome deterministic no-I/O selector | Does not interpret, call a model, resolve evidence, execute policy, validate citations, or emit receipt |
+| `OllamaAdapter` | One-line placeholder | No provider |
+| Focus worker | One-line placeholder | No worker behavior |
+| AIReceipt contract/schema/validator | Proposed accountability profile exists | No verified emitter/store or route binding |
+
+A fixture projection with `outcome = ANSWER` proves that the client can validate and render a bounded synthetic answer shape. It does **not** prove model inference, evidence closure, citation validation, policy allowance, receipt emission, release, deployment, or public AI operation.
 
 ### 6.6 Review queue surface
 
-| Field | Value |
+| Field | Current conclusion |
 |---|---|
-| Purpose | Steward / reviewer surface for promotion, correction, sensitivity, and AI-receipt auditing. |
-| Audience | **Steward** / **internal** *(role-gated; never public)* |
-| Request DTO | varies by action: `{ candidate_id, gate }` *(promotion)*; `{ correction_target, notice }` *(correction)*; `{ ai_receipt_id }` *(audit)* |
-| Response envelope | `ReviewRecord` + `PolicyDecision` |
-| Outcomes | `ALLOW` / `RESTRICT` / `DENY` / `HOLD` / `ERROR` |
-| Suggested route *(PROPOSED)* | `POST /v1/review/{action}` · `GET /v1/review/queue` |
-| Forbidden behavior *(Atlas §24.3.2)* | Mixing review and publication duties on the same actor when separation is required; bypassing logging. |
-| Schema home *(PROPOSED)* | `schemas/contracts/v1/policy/policy_decision.schema.json` · `schemas/contracts/v1/release/review_record.schema.json` *(PROPOSED)* |
-| Policy home *(PROPOSED)* | `policy/governed_ai/review_queue.rego` *(SoD enforcement)* |
-| **Cross-ref** | Separation-of-duties matrix per Atlas §24.7.2 / AIBOC §33. |
+| Registered path | **None found** |
+| Review Console | App README defines a proposed role-gated boundary |
+| Decision recorder | **Not proved** |
+| Reviewer identity/authorization | **Not proved** |
+| Separation of duties | Architecture requirement; no route enforcement proved |
+| Release authority | Remains separate; no console or route self-authorizes publication |
+| HOLD | Require accepted decision vocabulary, ReviewRecord profile, actor authority, audit persistence, fail-closed tests, and release handoff before mutation. |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="7-the-click-to-truth-flow"></a>
 
 ## 7. The click-to-truth flow
 
-> **Evidence basis:** `connected-dots-architecture-brief.md` §8.1; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(Governance and Trust-Membrane Chapter)*; `ai-build-operating-contract.md` §22.1. **CONFIRMED doctrine.**
+### 7.1 Current bounded client behavior
+
+The Explorer Focus component currently accepts an app-local request containing a `request_id`, `claim_id`, bounded question, and `allowed_evidence_refs`. It validates an injected projection, rejects unknown fields and identity/scope drift, and renders fixed `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` views. Its source contains no `fetch()` call and no provider, renderer, or lifecycle-store import.
+
+The Explorer `GovernedClient` is also fixture-only and explicitly performs no network or lifecycle-store access.
+
+Therefore the current flow is:
+
+```text
+synthetic/app-local request
+  -> strict browser parser
+  -> injected resolver boundary
+  -> strict public-safe projection parser
+  -> EvidenceRef scope check
+  -> finite UI view
+```
+
+It is not:
+
+```text
+browser -> deployed Governed API -> evidence -> policy -> model -> citation -> receipt
+```
+
+### 7.2 Proposed governed target flow
+
+The target sequence remains a useful architecture requirement, but every arrow below is **PROPOSED / HOLD** until its owning evidence exists:
 
 ```mermaid
 flowchart LR
-  L["released layer<br/>(via Layer manifest resolver §6.3)"] --> CLK["user click<br/>or time selection"]
-  CLK --> API["governed-api/<br/>(membrane)"]
-  API --> EB["Evidence resolver §6.4<br/>→ EvidenceBundle"]
-  EB --> DRW["Evidence Drawer payload<br/>(governed projection)"]
-  DRW --> FM{"Focus Mode<br/>requested?"}
-  FM -->|yes| FMR["Focus Mode runtime §6.5<br/>→ FocusModeResponse:<br/>ANSWER · ABSTAIN · DENY · ERROR"]
-  FM -->|no| DONE["display drawer"]
-  FMR --> RCPT["AIReceipt persisted<br/>(audit trail)"]
-  RCPT -.->|"if correction needed"| ROLL["correction /<br/>rollback lineage"]
-  classDef route fill:#e8eaf6,stroke:#283593;
-  classDef public fill:#c8e6c9,stroke:#1b5e20;
-  classDef governed fill:#e1f5fe,stroke:#01579b;
-  class L,CLK,DONE public;
-  class API,EB,DRW,FMR,RCPT governed;
+  REQ["bounded request"] --> DECL["admitted route declaration"]
+  DECL --> AUTH["identity · capability · purpose · object"]
+  AUTH --> PRE["policy / rights / sensitivity precheck"]
+  PRE --> EV["EvidenceRef → EvidenceBundle resolution"]
+  EV --> CTX["minimized admissible context"]
+  CTX --> ADP["provider-neutral adapter"]
+  ADP --> CAND["structured untrusted candidate"]
+  CAND --> CIT["citation validation"]
+  CIT --> POST["policy postcheck"]
+  POST --> ENV["validated RuntimeResponseEnvelope"]
+  ENV --> REC["AIReceipt emission when required"]
+  REC --> CLIENT["governed client projection"]
+
+  classDef hold fill:#fff4e0,stroke:#d97706;
+  class REQ,DECL,AUTH,PRE,EV,CTX,ADP,CAND,CIT,POST,ENV,REC,CLIENT hold;
 ```
 
-> [!IMPORTANT]
-> **The flow composes routes from §6.** A user-visible "click on a feature → see evidence → ask AI" interaction is **never one route call** — it's three: layer resolution *(§6.3)*, evidence resolution *(§6.4)*, optional Focus Mode *(§6.5)*. Each emits its own envelope and audit record. Skipping a step *(e.g., asking Focus Mode without first resolving evidence)* is a contract violation.
+### 7.3 Graduation evidence by edge
+
+| Edge | Minimum evidence before calling it implemented |
+|---|---|
+| Request → route | Closed semantic request contract, closed schema, route registration, method and size bounds, negative tests |
+| Route → identity/capability | Auth provider/profile, issuer/audience checks, grants, expiry/revocation, purpose/object binding, audit |
+| Capability → policy | Accepted input profile, active bundle identity, evaluator binding, obligations, fail-safe tests |
+| Policy → evidence | Resolver implementation, deterministic identity, admissibility, sensitivity, stale/conflict/correction tests |
+| Evidence → adapter | Context-minimization contract, no-secret/no-raw-store checks, provider-neutral adapter contract |
+| Adapter → candidate | Structured-output profile, provider fault handling, timeout/cancellation, no hidden fallback |
+| Candidate → citations | Citation report contract, exact support validation, unsupported-claim negatives |
+| Citations → postcheck | Output sensitivity/rights/precision checks and fail-closed denial |
+| Postcheck → envelope | Current RuntimeResponseEnvelope composition decision and validator |
+| Envelope → receipt | Accepted AIReceipt emission trigger, canonicalization, persistence, reference closure, correction semantics |
+| Receipt → client | Public-safe projection, accessibility, telemetry minimization, transport/integration tests |
+| Client → deployed claim | Exact release/environment identity, final-edge probes, correction and rollback rehearsal |
+
+Skipping an unresolved edge is not optimization; it is a trust-membrane defect.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="8-audience-classes"></a>
 
 ## 8. Audience classes
 
-> **Evidence basis:** Pass 32 idea card `KFM-P9-PROG-0069` *(API audience class as a contract and exposure field)*. **PROPOSED doctrine** *(the five-class vocabulary is from the seed-card, not yet accepted via ADR)*; the underlying principle *(API exposure is a reviewable governance decision)* is CONFIRMED.
+The prior edition presented `public`, `partner`, `steward`, `internal`, and `denied` as one route-class system. The current [`Governed API audience reconciliation`](../governed-api/AUDIENCE_CLASSES.md) establishes a safer conclusion:
 
-Every governed-AI route SHOULD declare its audience class on the contract. The five classes:
+> No canonical audience-class enum is accepted or enforced by the inspected repository evidence.
 
-| Class | Definition | Example routes |
+The five literals remain migration lineage only. In particular, `denied` is not a caller class; `DENY` is a finite decision outcome.
+
+### 8.1 Axes that must remain separate
+
+| Axis | Question | Current route evidence |
 |---|---|---|
-| **public** | Open to any client of the public governed API. | `GET /v1/sources/{id}`; `GET /v1/layers/{id}`; `GET /v1/evidence/{ref}` *(public-safe projection)*; `POST /v1/focus-mode`. |
-| **partner** | Open to named partner organizations under agreement. | Partner-tier feature lookups for restricted data sets; aggregated time-series feeds. |
-| **steward** | Restricted to authenticated stewards / domain owners. | `POST /v1/review/{action}`; `GET /v1/review/queue`; `GET /v1/evidence/{ref}?projection=full`. |
-| **internal** | Restricted to KFM internal infra and audit clients; never public. | Receipt audit; drift register query; sensitive-domain steward-only views. |
-| **denied** | Documented as **never to be exposed** by any audience class. | `GET /v1/raw/{...}`; `GET /v1/quarantine/{...}`; any direct model runtime. |
+| Authentication | Who or what was verified, by which provider and assurance? | Not implemented in inspected dispatcher |
+| Caller/workload role | Which bounded role is asserted? | No registry metadata |
+| Capability | May this principal perform this operation on this object for this purpose/time? | No route-capability binding |
+| Exposure posture | Internal-only, public candidate, unresolved, retired, prohibited? | No accepted route profile |
+| Field projection | Which fields may leave the membrane? | No server-side route projection binding |
+| Lifecycle/release | Which state may be returned? | Current stubs return no content |
+| Finite outcome | What did this exact evaluation return? | `ABSTAIN` or safe `ERROR` today |
+| Rate/availability | What budget and abuse controls apply? | No current route-bound profile |
+| Review authority | Who may review or decide? | No review route or actor binding |
 
-> [!NOTE]
-> **Why audience class is on the contract, not on the route.** A route's path may be the same across audiences *(e.g., `/v1/evidence/{ref}`)* but its projection MUST change based on audience class. Putting the class on the contract makes the projection a **reviewable governance decision**, not an implicit middleware behavior *(per `KFM-P9-PROG-0069`)*.
+### 8.2 Current app-local vocabularies are not authorization
+
+The Explorer Focus projection carries policy, review, release, and freshness labels so the browser can fail closed on a governed projection. Those labels do not authenticate the caller, grant access, execute policy, or make the projection released.
+
+### 8.3 Documentation rule
+
+Do not attach an audience label to a current route as factual until executable route metadata, identity/capability policy, field projection, tests, deployment configuration, and observed behavior agree. `UNBOUND` means no binding was verified; it does not mean public.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="9-app-to-route-mapping"></a>
 
 ## 9. App-to-route mapping
 
-> **Evidence basis:** `directory-rules.md` §7.1 *(`apps/` — deployable applications and roles)*. **CONFIRMED doctrine.**
+### 9.1 Current responsibility map
 
-Each governed-AI route is **served by exactly one app**, and each public-facing app **reads via `apps/governed-api/` only**. The mapping:
+| Surface | Current repository evidence | Current route relationship |
+|---|---|---|
+| `apps/governed-api/` | Small WSGI dispatcher, three GET stubs, safe 404/405, app-local tests | Only current executable HTTP surface inspected |
+| `apps/governed-api/src/ai/` | `.gitkeep` and README only | No AI orchestration route implementation |
+| `apps/explorer-web/src/features/focus_panel/` | App-local parser/resolver/view code and focused fixture tests | Injected resolver boundary; no network transport |
+| `apps/explorer-web/src/adapters/GovernedClient.ts` | Strict fixture-only Evidence Drawer projection parser | No network or lifecycle-store access |
+| `apps/review-console/` | Architecture/app README and proposed surface map | No review route or decision recorder proved |
+| `apps/workers/src/ai_focus_worker/` | Placeholder entrypoint | No route or worker behavior |
+| `runtime/model_adapters/MockAdapter.py` | Deterministic no-I/O scenario selector with proof tests | Component only; not registered behind API |
+| `runtime/model_adapters/OllamaAdapter.py` | Placeholder | No provider binding |
+| `packages/envelopes/` | Deterministic RuntimeResponseEnvelope candidate builder and tests | Reusable candidate construction; not transport authority |
+| `contracts/runtime/ai_receipt.md` + paired schema/validator | Proposed accountability profile | No emitter/store/route binding |
 
-| App | Role | Audience classes served | Route families served |
-|---|---|---|---|
-| **`apps/governed-api/`** | Trust membrane in executable form. Returns `RuntimeResponseEnvelope` with finite outcomes. **The only public trust path.** | public; partner; steward; internal | All six families *(§6.1–6.6)* |
-| **`apps/explorer-web/`** | Map-first public UI; reads via `apps/governed-api/`; **never** directly from `data/raw\|work\|quarantine`. | public *(client of `governed-api/`)* | Consumes §6.1–6.5 |
-| **`apps/review-console/`** | Steward / reviewer surface; role-gated; audited. | steward; internal | Consumes §6.4 *(full projection)*, §6.6 |
-| **`apps/cli/`** | Operator CLI; validation, release dry-runs, reports. | internal | Reads §6.1–6.6 via dry-run paths |
-| **`apps/workers/`** | Background pipeline workers; **watcher-as-non-publisher** — emit receipts and candidate decisions; never publish or rewrite catalog. | internal | Emits candidates that §6.6 then promotes |
-| **`apps/admin/`** | Restricted admin. **MUST NOT become the normal public path.** Justified, constrained, documented, audited. | internal *(narrowly)* | Out-of-band; not part of the route map |
+### 9.2 Target dependency direction
 
-> [!WARNING]
-> **`apps/admin/` is not a shortcut.** Per `directory-rules.md` §7.1, `apps/admin/` is restricted and **must never become the normal public path**. An AI generation route that goes through `apps/admin/` to bypass the governed membrane is the canonical "AI generation through admin shortcut" anti-pattern *(Atlas §24.9.2; `BOUNDARIES.md` §15)*.
+```text
+public or role-gated client
+  -> admitted Governed API route
+  -> policy/evidence/citation/runtime dependencies behind the membrane
+  -> validated finite envelope
+  -> public-safe client projection
+
+never:
+client
+  -> model adapter
+  -> RAW / WORK / QUARANTINE / canonical store
+  -> unreviewed review mutation
+  -> release-state toggle
+```
+
+### 9.3 Route ownership rule
+
+A route belongs to the deployable application that owns its behavior. Shared contracts, schemas, policy, adapters, evidence resolvers, and client projections remain separate dependencies. This page must not move implementation into `docs/` or turn a runtime package into public route authority.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="10-forbidden-routes-and-shortcuts"></a>
 
 ## 10. Forbidden routes and shortcuts
 
-> **Evidence basis:** Atlas §24.3.2 *(outcome × surface mapping — forbidden behavior column)*; `directory-rules.md` §13.5 *(placement anti-patterns)*; `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §10 *(trust-membrane chapter — "no public RAW path", "no direct model client", "no unreleased tile load", "no sensitive geometry hidden only by style")*. **CONFIRMED doctrine.**
+The path strings below are examples of prohibited capabilities, not claims that these routes currently exist.
 
-These are the routes that **MUST NOT exist** in `apps/governed-api/` *(or any public-facing app)*. Each is a hard denial.
-
-| Forbidden route shape | Why it's forbidden | Counter-rule |
+| Prohibited capability | Why it fails | Required posture |
 |---|---|---|
-| `GET /v1/raw/{...}` · `GET /v1/work/{...}` · `GET /v1/quarantine/{...}` | Bypasses the lifecycle and trust membrane. | Public clients receive **`PUBLISHED` released artifacts only** *(`directory-rules.md` §9.2 lifecycle invariant)*. |
-| `POST /v1/model/completion` *(or any direct LLM-style endpoint)* | Direct model traffic from a public client; bypasses evidence gates. | Model adapters live **behind** the governed membrane; never expose them directly *(`BOUNDARIES.md` §10)*. |
-| `GET /v1/canonical/{...}` *(direct canonical store access)* | Renderer/AI bypasses governance and becomes its own truth source. | Canonical reads are internal; public surfaces consume `EvidenceBundle` *(§6.4)*. |
-| `GET /v1/tiles/{unreleased_artifact_id}` | Serves unreleased tile artifacts. | Tile load requires `ReleaseManifest`, policy, rights, sensitivity, evidence refs, hashes, and rollback *(MapLibre §10)*. |
-| `POST /v1/focus-mode/raw-prompt` *(any route accepting freeform model context)* | Allows context to bypass `MapContextEnvelope` admission. | Focus Mode accepts only the admitted envelope *(§6.5)*; freeform context is denied. |
-| Any route returning **uncited prose** | `ANSWER` without citations breaks the cite-or-abstain rule. | `ABSTAIN` if citations fail; the envelope MUST carry `citation_validation_report_id`. |
-| Any route serving **chain-of-thought** as response | Private chain-of-thought MUST NOT be persisted or transmitted as evidence. | Responses carry envelopes + reason codes + receipt references; never hidden reasoning *(`BOUNDARIES.md` §13)*. |
-| `GET /v1/admin/...` exposed to public clients | `apps/admin/` is restricted; exposing it normalizes the bypass. | `apps/admin/` is justified, constrained, documented, audited *(directory-rules §7.1)*. |
-| Any route that lets a client toggle `release_state` | Promotion is a governed transition, not a client action. | Promotion goes through §6.6 review queue + separation of duties. |
+| Public read of RAW, WORK, QUARANTINE, or canonical/internal stores | Bypasses lifecycle, evidence, policy, release, and correction controls | Serve only governed projections or released public-safe artifacts |
+| Browser-to-model or public completion endpoint | Lets model traffic bypass evidence, policy, citation, and receipt boundaries | Model adapters remain server-side behind admitted routes |
+| Unreleased layer/tile/artifact lookup | Reachability is not release authorization | Require exact released artifact identity, policy, correction, rollback |
+| Freeform prompt/context pass-through | Bypasses bounded request and context-minimization profiles | Accept only closed, validated, policy-bounded inputs |
+| Client-controlled audience, role, policy, or release state | Lets an untrusted caller widen its own authority | Derive trusted context server-side and evaluate exact capability |
+| Public review/admin mutation shortcut | Collapses review, release, and administrative duties | Role-gated, audited, policy-bound interfaces with separation where required |
+| Route returning uncited authoritative prose | Breaks cite-or-abstain | `ABSTAIN` unless support validates |
+| Route exposing chain-of-thought, provider traces, prompts, secrets, or protected diagnostics | Creates a new sensitive data surface | Return bounded reason codes and protected audit references only |
+| AIReceipt used as EvidenceBundle or release proof | Receipt records process, not truth or approval | Keep evidence, policy, receipt, review, and release objects distinct |
+| Silent fallback from failed policy/evidence/provider to a generic answer | Converts failure into privilege and truth widening | Return the appropriate finite negative outcome |
+| Documentation-only endpoint catalogue treated as live | Replaces implementation evidence with prose | Verify registry, code, tests, deployment, and probes |
+
+Current code is safely narrower than this target map. A future route change must preserve that fail-closed baseline rather than using documentation as permission to expand.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="11-schema-and-contract-homes"></a>
 
 ## 11. Schema and contract homes
 
-> **Evidence basis:** `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §9 *(component table with PROPOSED schema homes)*; `directory-rules.md` §6.4 + ADR-0001 *(schema home rule)*. **CONFIRMED doctrine for the schema-home rule; PROPOSED for specific file presence.**
+### 11.1 Current profile register
+
+| Object/profile | Current evidence | Current limit |
+|---|---|---|
+| `RuntimeResponseEnvelope` | Semantic contract, closed schema, validator, fixtures, deterministic candidate builder, proof tests, and schema-shaped API stubs | No substantive answer-body composition, evidence/policy/release binding, or deployed transport |
+| `DecisionEnvelope` | Separate semantic contract, closed schema, fixtures, and bounded semantic validator | Not nested in or referenced by the current RuntimeResponseEnvelope profile |
+| `AIReceipt` | Proposed semantic contract, closed paired schema, local validator, and receipt architecture docs | No verified runtime emitter, persistence, resolver, route binding, or public exposure |
+| Focus request schema | Permissive PROPOSED scaffold with empty `properties` and `additionalProperties: true` | Not a closed request contract |
+| Focus response schema | Permissive PROPOSED scaffold with empty `properties` and `additionalProperties: true` | Not a closed response contract |
+| Explorer Focus composed-claim request | Strict app-local TypeScript profile | Client profile, not canonical HTTP contract/schema |
+| Explorer Focus public-safe projection | Strict app-local TypeScript profile and fixtures | Client projection, not server route contract |
+| Evidence Drawer projection | Strict fixture-only browser profile | Canonical schema-home decision and live transport remain outside this adapter |
+| `DomainFeatureEnvelope` | Proposal references and historical taxonomy | No paired governed contract/schema/validator/fixture implementation established by the bounded envelope review |
+
+### 11.2 Current exact homes used by this page
 
 ```text
-schemas/contracts/v1/
-├── sources/
-│   └── source_descriptor.schema.json          # §6.1 Source summary resolver
-├── domains/<domain>/
-│   └── feature_envelope.schema.json           # §6.2 Domain feature/detail lookup
-├── map/
-│   ├── layer_manifest.schema.json             # §6.3 Layer manifest resolver
-│   ├── style_manifest.schema.json
-│   ├── tile_artifact_manifest.schema.json
-│   └── map_release_manifest.schema.json
-├── evidence/
-│   ├── evidence_bundle.schema.json            # §6.4 Evidence resolver
-│   └── citation_validation_report.schema.json
-├── ai/
-│   ├── focus_mode_request.schema.json         # §6.5 Focus Mode runtime
-│   ├── focus_mode_response.schema.json
-│   ├── ai_receipt.schema.json
-│   └── generated_receipt.schema.json          # (builder-side; not a route)
-├── ui/
-│   ├── map_context_envelope.schema.json       # §6.5 input (FocusModeRequest)
-│   └── evidence_drawer_payload.schema.json    # §6.4 UI projection
-├── runtime/
-│   └── decision_envelope.schema.json          # all routes
-├── policy/
-│   └── policy_decision.schema.json            # all routes
-├── proofs/
-│   └── run_receipt.schema.json                # all governed runs
-└── release/
-    └── review_record.schema.json              # §6.6 Review queue surface
+contracts/runtime/
+├── runtime_response_envelope.md
+├── decision_envelope.md
+└── ai_receipt.md
 
-policy/
-└── governed_ai/                                # PROPOSED home
-    ├── source_summary.rego                     # §6.1
-    ├── feature_lookup.rego                     # §6.2 (or under policy/domains/)
-    ├── layer_manifest.rego                     # §6.3
-    ├── evidence_resolver.rego                  # §6.4
-    ├── precheck.rego                           # §6.5 input gate
-    ├── postcheck.rego                          # §6.5 output gate
-    ├── citation.rego                           # §6.5 citation gate
-    ├── sensitivity.rego                        # §6.5 sensitivity gate
-    └── review_queue.rego                       # §6.6 separation-of-duties
+schemas/contracts/v1/runtime/
+├── runtime_response_envelope.schema.json
+├── decision_envelope.schema.json
+└── ai_receipt.schema.json
 
-apps/
-└── governed-api/                               # the only public trust path
+schemas/contracts/v1/focus/
+├── focus_request.schema.json       # permissive PROPOSED scaffold
+└── focus_response.schema.json      # permissive PROPOSED scaffold
+
+apps/governed-api/src/governed_api/
+├── main.py
+├── stub.py
+└── routes/
+    ├── registry.py
+    ├── bootstrap.py
+    ├── layers.py
+    └── evidence.py
+
+apps/explorer-web/src/features/focus_panel/
+├── parsers.ts
+├── resolver.ts
+├── types.ts
+└── panel.ts
+
+runtime/model_adapters/
+├── MockAdapter.py
+└── OllamaAdapter.py
 ```
 
-All paths PROPOSED — verify at next mounted-repo session.
+### 11.3 Placement rule for future work
+
+Before adding route metadata, a request/response profile, receipt binding, policy module, or new object family:
+
+1. identify the primary responsibility and owning root;
+2. inspect current contracts, schemas, policy, registries, generators, and consumers;
+3. avoid a parallel authority home;
+4. record compatibility and migration consequences;
+5. add positive and fail-closed fixtures/tests;
+6. keep review, release, correction, rollback, and deployment state separate.
+
+A proposed tree in architecture prose does not reserve a path.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="12-ui-negative-states--the-routes-contract-with-the-renderer"></a>
 
 ## 12. UI negative states — the route's contract with the renderer
 
-> **Evidence basis:** `ai-build-operating-contract.md` §22.2; `connected-dots-architecture-brief.md` §8.3. **CONFIRMED doctrine.**
+The prior edition described negative states as if they were already shared server-route reason codes. Current evidence supports a narrower, useful claim: the Explorer implements bounded app-local Focus and Evidence Drawer negative-state handling.
 
-The route map is incomplete without the UI's side of the contract. Every governed-AI route MUST be able to return a **negative state** that the UI surfaces as a first-class state — not as an error toast, not as missing content, not silently.
+### 12.1 Current Focus composed-claim behavior
 
-| Negative state | Surfaced by route family | Meaning |
-|---|---|---|
-| `MISSING_EVIDENCE` | §6.2 · §6.4 · §6.5 | `EvidenceRef` did not resolve to an admissible `EvidenceBundle`. |
-| `SOURCE_STALE` | §6.1 · §6.4 | `SourceDescriptor.cadence` passed without re-admission. |
-| `DENIED_BY_POLICY` | All families | `PolicyDecision = DENY`. |
-| `GENERALIZED_GEOMETRY` | §6.2 · §6.3 · §6.4 | Sensitivity-redacted projection applied. |
-| `RESTRICTED_ACCESS` | §6.2 · §6.4 · §6.6 | Audience class does not match required tier. |
-| `CONFLICTED_SUPPORT` | §6.4 · §6.5 | Multiple `EvidenceRef`s resolve with material disagreement. |
-| `CITATION_FAILED` | §6.5 | `CitationValidationReport.verdict = FAIL`. |
-| `RELEASE_WITHDRAWN` | §6.3 · §6.4 | `ReleaseManifest` superseded; rollback target active. |
-| `RUNTIME_ERROR` | All families | Governed API cannot evaluate; envelope carries diagnostic code. |
+| Condition | Current local result | Transport invoked? |
+|---|---|---:|
+| Request fails strict parse | `ERROR / REQUEST_INVALID` with fixed safe copy | No |
+| No allowed EvidenceRef scope | `ABSTAIN / MISSING_EVIDENCE_SCOPE` | No |
+| Injected resolver throws | `ERROR / GOVERNED_RESOLVER_ERROR` with no exception echo | Injected boundary called; no built-in network |
+| Projection malformed | `ERROR / PROJECTION_INVALID` | Injected boundary called |
+| Request/response identity mismatch | `ERROR / RESPONSE_SCOPE_MISMATCH` | Injected boundary called |
+| Projection references evidence outside request | `ERROR / EVIDENCE_OUTSIDE_REQUEST` | Injected boundary called |
+| Synthetic support closes | `ANSWER / COMPOSED_CLAIM_SUPPORTED` | Fixture/injected projection only |
+| Synthetic support is qualified | `ANSWER / COMPOSED_CLAIM_QUALIFIED` with limitations | Fixture/injected projection only |
+| Synthetic dependency unresolved | `ABSTAIN` with fixed non-substantive copy | Fixture/injected projection only |
+| Synthetic policy denial | `DENY` with no citations/evidence leaked | Fixture/injected projection only |
 
-> [!IMPORTANT]
-> **Negative states are not error pages.** They are part of the route's contract. A `RuntimeResponseEnvelope` with `outcome = ABSTAIN` and `reason = MISSING_EVIDENCE` is a **valid, finite, successful** response — it just isn't an `ANSWER`. The UI MUST surface it accordingly *(per `BOUNDARIES.md` §8)*.
+The tests also reject unknown request/projection fields, duplicate evidence refs, unsafe control characters, citation drift, Evidence Drawer drift, private reasoning fields, provider imports, direct `fetch()`, renderer imports, and lifecycle-store imports.
+
+### 12.2 Evidence Drawer projection boundary
+
+The fixture-only `GovernedClient` validates finite outcomes, reason codes, trust state, negative history, correction chains, HTTPS citations, bounded text, exact fields, and no current-resolution use of held/superseded/withdrawn/revoked evidence. This is meaningful client-side fail-closed proof. It is not EvidenceBundle resolution, server policy, or a live API client.
+
+### 12.3 Accessibility and disclosure
+
+The Focus view selects `polite` or `assertive` live-region behavior by finite outcome, exposes fixed human-readable negative states, and labels an AIReceipt reference as a **process receipt, not release proof**. These are bounded UI behaviors, not proof that the referenced receipt exists or that the response was released.
+
+### 12.4 Integration HOLD
+
+Before these app-local states can be called route-contract behavior, KFM still needs:
+
+- one accepted request/response and reason-code profile;
+- a real Governed API transport binding;
+- server-side identity/capability/policy/evidence/citation behavior;
+- response validation at the trust boundary;
+- AIReceipt emission and reference resolution where required;
+- integration and browser tests against the exact route;
+- deployment and final-edge observations;
+- correction/withdrawal propagation and rollback evidence.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="13-anti-patterns"></a>
 
 ## 13. Anti-patterns
 
-| Anti-pattern | Why it breaks the route map | Mitigation |
+| Anti-pattern | Why it fails | Correction |
 |---|---|---|
-| **Adding a seventh API family without ADR** | The six families are CONFIRMED doctrine *(Atlas §20.3)*; a new family is a contract-level change. | ADR required; `directory-rules.md` §2.4; AIBOC §28. |
-| **Putting a route in `apps/admin/` to "ship faster"** | `apps/admin/` is restricted; normalizing the bypass breaks the membrane. | Route lives in `apps/governed-api/` with proper gates *(§9)*. |
-| **Returning uncited prose from §6.5** | Cite-or-abstain rule broken; `ANSWER` without citations is forbidden. | `ABSTAIN` when citations fail; `CitationValidationReport` attached on `ANSWER`. |
-| **Skipping `EvidenceBundle` resolution before Focus Mode** | Focus Mode answers from raw map state alone; trust membrane bypassed. | The click-to-truth flow §7 is sequential: layer → evidence → optional Focus Mode. |
-| **Route returning raw `EvidenceBundle` projection to public** | Sensitivity / rights / restricted geometry leaks. | Audience-class-aware projection *(§8)*; sensitivity redaction enforced at policy postcheck. |
-| **One-shot endpoint that bundles all six families** | Loses the per-route audit trail; impossible to enforce per-family gates. | Each family is its own route with its own envelope and receipt. |
-| **Layer resolver returning `ABSTAIN`** | `ABSTAIN` is not a valid outcome for layer resolution *(per Atlas §20.3 / §24.3.2 — only `ANSWER` / `DENY` / `ERROR`)*. | Layers either resolve or are denied; no abstention. |
-| **AI route exposed without `AIReceipt` emission** | Receipt boundary broken *(`BOUNDARIES.md` §6 boundary 4)*. | `AIReceipt` MANDATORY on every Focus Mode response. |
-| **`apps/explorer-web/` calling internal stores directly** | Renderer becomes its own trust path; governance bypassed. | All reads via `apps/governed-api/`. |
-| **Route accepting freeform `prompt` parameter** | Bypasses `MapContextEnvelope` admission. | Focus Mode accepts only the admitted envelope *(§6.5)*. |
+| Treating the six-family atlas list as the current registry | Taxonomy and executable paths are different evidence classes | Show the exact registry, then crosswalk lineage separately |
+| Treating a familiar path name as implemented semantics | `/layers` and `/evidence` are abstention stubs | Inspect handler behavior and tests |
+| Treating `DomainFeatureEnvelope` as current because docs mention it | No paired governed profile was established | Keep it proposal-only until contract/schema/validator/fixtures exist |
+| Treating a fixture `ANSWER` as public AI operation | Synthetic client projection does not prove evidence/policy/model/receipt/release | Label scope and require composed runtime evidence |
+| Treating `MockAdapter` as a model runtime | It selects prevalidated fixture envelopes and performs no I/O | Call it a deterministic scenario selector |
+| Treating an AIReceipt schema as emitted accountability | Shape presence is not emission, persistence, or reference closure | Verify producer, store, resolver, tests, and correction behavior |
+| Treating legacy audience labels as authentication or grants | Vocabulary is conflicted and no enforcement exists | Separate identity, role, capability, purpose, field, lifecycle, and outcome |
+| Treating `DENY` as an audience | Outcome and caller class collapse | Use a finite outcome plus separate route/exposure state |
+| Publishing concrete URL paths from architecture prose as current | Creates a false compatibility promise | Mark proposals and cite exact executable registration |
+| Letting Explorer call internal stores or model providers | Browser becomes a parallel trust path | Keep injected/governed boundary and server-side dependencies |
+| Adding AI source code under a documentation or policy root | Ownership and authority collapse | Use the responsible implementation root after placement review |
+| Combining review and publication in one unreviewed route | Separation, audit, correction, and rollback become opaque | Keep review record and release decision distinct |
+| Returning hidden diagnostics or chain-of-thought | Leaks sensitive implementation/model state | Fixed public copy plus protected audit reference |
+| Calling a workflow green result an admitted route | CI proves only its declared checks | Require runtime/deployment evidence separately |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="14-open-questions-and-adr-triggers"></a>
 
 ## 14. Open questions and ADR triggers
 
-| Open item | Class | Suggested ADR title *(PROPOSED)* |
-|---|---|---|
-| **OPEN-DR-11** *(now at 3-sibling milestone)* — Reconcile `docs/architecture/governed-ai/` *(folder)* + ALL-CAPS filename convention. Recommendation tips toward "keep folder". | Directory Rules §2.4 *(structural + naming)* | "Architecture lane — folder vs flat; ALL-CAPS doctrine docs" |
-| Concrete URL path conventions for the six families *(e.g., `/v1/sources/{id}` vs `/v1/source-summary/{id}`)*. | API design | "Governed AI route naming convention v1" |
-| Whether `partner` audience class needs its own auth/rate-limit infrastructure separate from `public`. | API operations | "Audience-class infrastructure tiering" |
-| Whether `apps/governed-api/` is a single deployable or fans out into per-family microservices. | Deployment | "Governed-api deployment topology" |
-| Whether the Focus Mode runtime *(§6.5)* should be sync only, or also expose an async/job route for long-running requests. | API design | "Focus Mode sync vs async contract" |
-| Whether `LayerManifest` and `MapReleaseManifest` should share a single resolver or split. | API design | "Layer vs release manifest resolver split" |
-| `apps/governed-api/` vs `apps/api/` boundary — if both exist *(per `directory-rules.md` §7.1)*, declare canonical role per ADR. | Apps placement | OPEN-DR-06 *(referenced from prior turns)* |
-| Whether `ConsentSidecar` *(per `KFM-P5-PROG-0005`)* introduces a seventh route family or composes into §6.6. | Object family | "ConsentSidecar route admission" |
+### 14.1 Route and integration HOLD register
 
-> [!IMPORTANT]
-> **The 3-sibling milestone is the trigger to draft the OPEN-DR-11 ADR.** Recommendation in §2.1 is now affirmative; the next step is the ADR itself. Until accepted, cite this doc as `kfm://doc/architecture-governed-ai-route-map`.
+| ID | Decision or proof needed | Current state | Closure evidence |
+|---|---|---|---|
+| `AIR-01` | Is the six-family taxonomy retained, revised, or retired? | **LINEAGE / unresolved** | Accepted architecture/profile crosswalk with compatibility notes |
+| `AIR-02` | Where does authoritative route declaration metadata live? | **UNKNOWN** | Directory Rules placement decision plus contract/schema/validator/tests |
+| `AIR-03` | How does substantive answer content compose with the current RuntimeResponseEnvelope, which has no payload member? | **HOLD** | Accepted composition profile and migration tests |
+| `AIR-04` | What is the canonical Focus request/response semantic contract? | **HOLD** | Contracts plus closed schemas replacing permissive scaffolds |
+| `AIR-05` | Which reason-code grammar and HTTP/outcome mapping apply? | **CONFLICTED** | Accepted binding across app, contracts, schemas, validators, clients |
+| `AIR-06` | Which identity, role, capability, purpose, object, field, and revocation model applies? | **UNKNOWN / HOLD** | Security/access decision, active config/policy, positive and negative tests |
+| `AIR-07` | Which EvidenceRef resolver and admissibility profile serve the route? | **HOLD** | Integrated resolver, EvidenceBundle closure, stale/conflict/sensitivity tests |
+| `AIR-08` | Which policy precheck/postcheck bundle is active? | **HOLD** | Accepted policy, exact bundle identity, evaluator binding, receipts/tests |
+| `AIR-09` | Which citation report profile and validator gate `ANSWER`? | **HOLD** | Exact support validator, unsupported-claim negatives, runtime binding |
+| `AIR-10` | When is AIReceipt required, who emits it, where is it stored, and how is it corrected? | **HOLD** | Producer/store/resolver/canonicalization/correction tests |
+| `AIR-11` | Which provider/adapter is admitted? | **HOLD** | Provider decision, pinned model/profile, security/rights review, fault tests |
+| `AIR-12` | Is Focus synchronous, asynchronous, or both? | **UNKNOWN** | Accepted transport/job semantics and cancellation/idempotency tests |
+| `AIR-13` | What is the review queue mutation contract and actor authority? | **HOLD** | ReviewRecord profile, named/verified roles, SoD, audit store, fail-closed tests |
+| `AIR-14` | How do correction, withdrawal, stale evidence, and rollback propagate to AI responses and receipts? | **HOLD** | Integrated lineage test and rollback rehearsal |
+| `AIR-15` | What deployed route inventory exists? | **UNKNOWN** | Exact released digest/config, ingress inventory, probes, logs, rollback target |
+| `AIR-16` | How are the flat governed-AI overview and folder README governed long term? | **CONFLICTED / HOLD** | Reviewed documentation disposition; no silent deletion |
+
+### 14.2 ADR triggers
+
+An ADR or accepted successor decision is appropriate when work:
+
+- establishes or replaces the cross-system route taxonomy;
+- creates a new trust-bearing route declaration object family or authority home;
+- selects a durable authentication/capability or provider architecture;
+- creates a public or semi-public model-mediated path;
+- changes the RuntimeResponseEnvelope compatibility profile;
+- changes review/release separation;
+- retires or redirects a documented compatibility surface; or
+- permits non-released or sensitive material to leave through an ordinary client path.
+
+A small implementation that conforms to already accepted contracts and architecture may be an ordinary reviewed PR. Do not use an ADR merely to restate current code, and do not use an ordinary PR to smuggle in a new authority boundary.
+
+### 14.3 Smallest coherent next route-proof slice
+
+Before registering a governed-AI route, the smallest safe repository-owned slice is a deterministic, no-network route-inventory and declaration candidate:
+
+1. read the current registry and enumerate exactly `/bootstrap`, `/layers`, and `/evidence`;
+2. bind each to a candidate declaration with route/method identity and `UNRESOLVED` exposure/capability fields;
+3. prove that missing identity, capability, evidence, policy, release, or field projection cannot produce `ANSWER`;
+4. preserve the existing `ABSTAIN / NOT_IMPLEMENTED` responses;
+5. emit no model call, network call, source activation, review decision, release, or publication;
+6. add focused negative tests and a pending-review receipt;
+7. use the result to decide whether route declarations belong in an existing contract family or require a new reviewed profile.
+
+That slice proves inventory and fail-closed metadata only. It does not implement Focus, authentication, evidence resolution, policy, citation validation, provider invocation, or public exposure.
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="15-related-docs"></a>
 
 ## 15. Related docs
 
-| Reference | Role | Truth label |
+| Reference | Role | Current bounded status |
 |---|---|---|
-| `docs/architecture/governed-ai/BOUNDARIES.md` | **Companion** — spatial axis | PROPOSED placement; CONFIRMED doctrine |
-| `docs/architecture/governed-ai/CONTINUITY_NOTES.md` | **Companion** — temporal axis | PROPOSED placement; CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §20.3 *(Master API Surface Table)* | **Canonical** for the six families | CONFIRMED doctrine |
-| `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §24.3 *(Master Decision Outcome Envelope Reference; §24.3.2 outcome × surface mapping)* | **Canonical** for finite outcomes per surface | CONFIRMED doctrine |
-| `directory-rules.md` §7.1 *(`apps/` and roles)* | App-to-route mapping authority | CONFIRMED doctrine |
-| `directory-rules.md` §12 *(cross-domain doctrine home; Domain Placement Law)* | Placement authority | CONFIRMED doctrine |
-| `ai-build-operating-contract.md` §21 *(governed AI runtime contract)*, §22 *(map, UI, renderer contract)*, §22.2 *(UI negative states)* | Runtime contract; UI states | CONFIRMED doctrine |
-| `Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §9 *(component table — schema homes)*, §10 *(governance and trust-membrane chapter)* | Schema-home table; click-to-truth flow rules | CONFIRMED doctrine |
-| `connected-dots-architecture-brief.md` §8 *(MapLibre, Evidence Drawer, and Focus Mode — surface table, runtime flow)* | Surface table and runtime flow | CONFIRMED doctrine |
-| Pass 32 idea card `KFM-P9-PROG-0069` *(API audience class as a contract and exposure field)* | Audience class vocabulary | PROPOSED doctrine |
+| [`README.md`](README.md) | Governed-AI subsystem inventory | Repository-grounded; no end-to-end route |
+| [`../governed-ai.md`](../governed-ai.md) | Cross-cutting governed-AI overview | Repository-grounded; overlapping overview relationship remains HOLD |
+| [`FOCUS_FLOW.md`](FOCUS_FLOW.md) | Target Focus request flow | Architecture target; several implementation assumptions are not current proof |
+| [`BOUNDARIES.md`](BOUNDARIES.md) | Forbidden paths and trust boundaries | Explanatory; implementation requires code/policy/tests |
+| [`ADAPTER_CONTRACT.md`](ADAPTER_CONTRACT.md) | Adapter responsibility | Explanatory; current MockAdapter proof is narrower |
+| [`AI_RECEIPTS.md`](AI_RECEIPTS.md) | Receipt architecture | Explanatory; emission/storage not proved |
+| [`../governed-api/README.md`](../governed-api/README.md) | Governed API architecture boundary | Current app is a three-route fail-closed scaffold |
+| [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) | Current envelope profiles and composition gaps | Repository-grounded; governed `ANSWER` remains HOLD |
+| [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) | Audience/capability vocabulary reconciliation | No canonical or enforced audience enum |
+| [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Governed API trust-membrane proposal | Proposed; not accepted by this page |
+| [`ADR-0019`](../../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md) | Adapter/envelope proposal | Proposed; not accepted by this page |
+| [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Directory Rules v2 adoption | Accepted placement authority |
+| [`Directory Rules`](../../doctrine/directory-rules.md) | Responsibility-root and placement law | Accepted through ADR-0029 |
+| [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exact executable route set | Three GET paths |
+| [`Governed API dispatcher`](../../../apps/governed-api/src/governed_api/main.py) | Exact method/path behavior | GET dispatch plus safe 404/405 |
+| [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | App-local injected-resolver boundary | Bounded no-network client proof |
+| [`Focus tests`](../../../apps/explorer-web/tests/focus-composed-claim.test.ts) | Focus projection positive/negative proof | Synthetic and fixture-first |
+| [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py) | Deterministic scenario selector | No-I/O component proof only |
+| [`MockAdapter proof`](../../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py) | Four-outcome/isolation/no-I/O tests | Does not start a runtime |
+| [`AIReceipt contract`](../../../contracts/runtime/ai_receipt.md) | Proposed AI accountability meaning | No emitter/store/route binding |
+| [`Focus mock workflow`](../../../.github/workflows/focus-mock-test.yml) | Bounded static/mock proof orchestration | Explicit runtime HOLD; no model output or route |
 
 [↑ Back to top](#top)
 
 ---
+
+<a id="16-appendix--glossary-and-quick-reference"></a>
 
 ## 16. Appendix — glossary and quick reference
 
 <details>
-<summary><strong>16.1 Glossary of route vocabulary</strong></summary>
+<summary><strong>16.1 Current route inventory</strong></summary>
 
-| Term | Definition *(CONFIRMED doctrine unless noted)* |
-|---|---|
-| **API family** | One of the six categories named in Atlas §20.3 *(source / feature / layer / evidence / focus-mode / review)*. Each family has its own DTO, envelope, and finite outcomes. |
-| **Route** | A specific URL/method endpoint within an API family *(e.g., `GET /v1/evidence/{ref}`)*. Routes are PROPOSED; families are doctrine. |
-| **Audience class** | Contract-level declaration of who may call a route *(public / partner / steward / internal / denied)*. PROPOSED vocabulary per `KFM-P9-PROG-0069`. |
-| **`RuntimeResponseEnvelope`** | Finite-outcome wrapper returned by every governed API surface *(`ai-build-operating-contract.md` §21.2)*. |
-| **`DecisionEnvelope`** | Generic policy/governed-API outcome envelope *(MapLibre §9)*. |
-| **`DomainFeatureEnvelope`** | Per-domain feature payload, wrapped in `DecisionEnvelope` for the §6.2 route *(per Atlas §20.3)*. |
-| **`MapContextEnvelope`** | Bounded map context sent to governed API / Focus Mode *(camera + layers + features + time + evidence refs)*. |
-| **`FocusModeRequest` / `FocusModeResponse`** | Per-call envelopes for §6.5 Focus Mode runtime. |
-| **`AIReceipt`** | Runtime audit record for every Focus Mode inference *(`BOUNDARIES.md` §3, §6 boundary 4)*. |
-| **`EvidenceDrawerPayload`** | UI-side projection of `EvidenceBundle` returned by §6.4. |
-| **Trust membrane** | The boundary that prevents raw, unreviewed, restricted, or generated state from becoming public truth *(`directory-rules.md` §19)*. `apps/governed-api/` is the trust membrane in executable form. |
-| **`apps/admin/`** | Restricted admin app; **MUST NOT become the normal public path** *(`directory-rules.md` §7.1)*. Not part of the route map. |
-| **Negative state** | A finite, non-`ANSWER` outcome with a defined reason code that the UI surfaces as first-class. |
+| Route | Handler class | Outcome today | AI? | Content authority? |
+|---|---|---|---:|---:|
+| `GET /bootstrap` | scaffold | `ABSTAIN / NOT_IMPLEMENTED` | No | No |
+| `GET /layers` | scaffold | `ABSTAIN / NOT_IMPLEMENTED` | No | No |
+| `GET /evidence` | scaffold | `ABSTAIN / NOT_IMPLEMENTED` | No | No |
+| unknown | safe error | `ERROR / SAFE_RUNTIME_ERROR` | No | No |
+| registered non-GET | safe error | `ERROR / SAFE_RUNTIME_ERROR` | No | No |
 
 </details>
 
 <details>
-<summary><strong>16.2 The six families × finite outcomes matrix *(CONFIRMED — Atlas §20.3 + §24.3.2)*</strong></summary>
+<summary><strong>16.2 Legacy family status matrix</strong></summary>
 
-| Family | `ANSWER` | `ABSTAIN` | `DENY` | `ERROR` | Other |
-|---|---|---|---|---|---|
-| §6.1 Source summary | ✅ | ✅ | ✅ | ✅ | — |
-| §6.2 Feature/detail | ✅ | ✅ | ✅ | ✅ | — |
-| §6.3 Layer manifest | ✅ | — | ✅ | ✅ | — |
-| §6.4 Evidence | ✅ | ✅ | ✅ | ✅ | — |
-| §6.5 Focus Mode | ✅ | ✅ | ✅ | ✅ | `NARROWED` / `BOUNDED` *(if contract permits)* |
-| §6.6 Review queue | — | — | ✅ | ✅ | `ALLOW` / `RESTRICT` / `HOLD` |
-
-</details>
-
-<details>
-<summary><strong>16.3 Quick reference — "where does this kind of request go?"</strong></summary>
-
-| User intent | Route family |
-|---|---|
-| "Tell me about this data source." | §6.1 Source summary |
-| "What's at this feature on the map?" | §6.2 Feature/detail |
-| "Which layers can I load right now?" | §6.3 Layer manifest |
-| "Show me the evidence behind this claim." | §6.4 Evidence resolver |
-| "AI: explain what I'm looking at, citing sources." | §6.5 Focus Mode |
-| "Promote this candidate to PUBLISHED." | §6.6 Review queue |
-| "Correct this published claim." | §6.6 Review queue |
-| "Show me the AI receipt for that answer." | §6.6 Review queue *(audit)* |
+| Family | Current route | Bounded component | Live service | Status |
+|---|---|---|---|---|
+| Source summary | None | Not established here | Not proved | `LINEAGE / HOLD` |
+| Domain feature/detail | None | Proposal references only | Not proved | `LINEAGE / HOLD` |
+| Layer manifest | `/layers` stub | Finite negative envelope | Not proved | `STUB / HOLD` |
+| Evidence | `/evidence` stub | Finite negative envelope; fixture-only client projection elsewhere | Not proved | `STUB / HOLD` |
+| Focus Mode | None | Explorer projection + MockAdapter proofs | Not proved | `COMPONENT PROOF / HOLD` |
+| Review queue | None | App/architecture docs only | Not proved | `LINEAGE / HOLD` |
 
 </details>
 
 <details>
-<summary><strong>16.4 Truth-label legend</strong></summary>
+<summary><strong>16.3 Repository-owned validation entrypoints</strong></summary>
 
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests, logs, or generated artifacts.
-- **PROPOSED** — design, recommendation, file path, placement, or inference not yet verified in implementation.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **UNKNOWN** — not resolvable without more evidence.
-- **EXTERNAL** — sourced from authoritative external research *(not applied in this doc; no external research was triggered)*.
+```bash
+# Governed API registry and schema-shaped ABSTAIN/ERROR behavior
+make governed-api-smoke
+
+python -m pytest \
+  apps/governed-api/tests/test_abstain_routes.py \
+  apps/governed-api/tests/test_boundary_guards.py \
+  -q \
+  --strict-config \
+  --strict-markers
+
+# Explorer fixture-first Focus projection
+pnpm --dir apps/explorer-web run test:unit
+
+# Deterministic no-I/O MockAdapter proof
+python -m unittest discover \
+  --start-directory tests/runtime_proof \
+  --pattern 'test_mock_adapter_finite_outcomes.py' \
+  --verbose
+
+# Current bounded mock/finite-envelope workflow logic, when run by GitHub Actions
+# .github/workflows/focus-mock-test.yml
+
+# Documentation diff hygiene
+git diff --check
+```
+
+These commands prove only their declared scopes. They do not prove authentication, evidence resolution, policy execution, citation validation, provider operation, AIReceipt persistence, release, deployment, or publication.
+
+</details>
+
+<details>
+<summary><strong>16.4 Definition of done for one governed-AI route</strong></summary>
+
+A route is not complete until:
+
+- its exact path/method and stable route identity are registered;
+- semantic request/response contracts and closed schemas agree;
+- route declaration metadata binds capability, exposure, lifecycle, field projection, policy, audit, and rollback;
+- caller/workload identity and authorization are implemented and negatively tested;
+- EvidenceRefs resolve to admissible EvidenceBundles;
+- rights, sensitivity, freshness, review, release, correction, and withdrawal are enforced;
+- provider-neutral adapter input is minimized and output is treated as untrusted;
+- structured output and every consequential citation validate;
+- policy postcheck runs before `ANSWER`;
+- RuntimeResponseEnvelope composition is accepted and validated;
+- AIReceipt is emitted, persisted, resolvable, redacted, and corrected when required;
+- Explorer/consumer behavior handles every finite outcome accessibly;
+- logs, metrics, traces, caches, and errors do not leak protected content;
+- exact released bytes/configuration are deployed to a named environment;
+- positive, denied, abstained, error, replay, revocation, stale, correction, and rollback probes pass; and
+- qualified human review is recorded without treating CI or the authoring receipt as approval.
+
+</details>
+
+<details>
+<summary><strong>16.5 Truth-label legend</strong></summary>
+
+- **CONFIRMED** — verified from pinned repository bytes, accepted decisions, deterministic tests, or named evidence inspected for this revision.
+- **PROPOSED** — design or future state not verified as current implementation.
+- **UNKNOWN** — evidence is insufficient to determine the answer.
+- **NEEDS VERIFICATION** — a concrete check remains before relying on the claim.
+- **HOLD** — graduation or exposure must stop until named evidence closes; it refines but does not replace a core truth label.
+- **CONFLICTED** — current surfaces make incompatible claims or profiles and require reconciliation.
+- **LINEAGE** — retained historical taxonomy or wording that is not represented as current authority.
+
+</details>
+
+<details>
+<summary><strong>16.6 Change history and rollback</strong></summary>
+
+| Version | Date | Change |
+|---|---|---|
+| `v0.1` | 2026-05-24 | Proposal-era six-family route map, audience classes, concrete URL examples, and three-sibling placement framing. |
+| `v0.2` | 2026-08-19 | Grounds the page in the exact three-route WSGI scaffold; reclassifies six families as lineage; records bounded Explorer/MockAdapter proofs; removes unsupported route, audience, DTO, receipt, and provider claims; adds integration HOLDs and graduation evidence. |
+
+**Rollback:** revert this documentation commit, restore prior target blob `c99296e4676e6a587ae6e6d003d163d31e217ee4`, and remove or supersede the paired generated authoring receipt through reviewed history. No route, process, deployment, release, cache, or public rollback is required because this revision changes no operational state.
 
 </details>
 
 ---
 
-**Related (mini)** · [`BOUNDARIES.md`](./BOUNDARIES.md) · [`CONTINUITY_NOTES.md`](./CONTINUITY_NOTES.md) · [`Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md` §§20.3, 24.3](../../../Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md) · [`directory-rules.md` §7.1](../../../directory-rules.md) · [`ai-build-operating-contract.md` §21–22](../../../ai-build-operating-contract.md) · [`Master_MapLibre_Components-Functions-Features_v2.1_FULL.md` §§9–10](../../../Master_MapLibre_Components-Functions-Features_v2.1_FULL.md)
+**Related (mini)** · [`README.md`](README.md) · [`../governed-ai.md`](../governed-ai.md) · [`FOCUS_FLOW.md`](FOCUS_FLOW.md) · [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) · [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) · [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) · [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) · [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py)
 
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-11, 3-sibling milestone reached)*
+**Last updated:** 2026-08-19 · **Doc version:** v0.2 · **Doc status:** repository-grounded draft · **Governed-AI HTTP route:** ABSENT / HOLD
 
 [↑ Back to top](#top)
