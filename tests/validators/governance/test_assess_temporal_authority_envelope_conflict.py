@@ -125,13 +125,16 @@ class TemporalAuthorityEnvelopeSplitAssessmentTests(unittest.TestCase):
         self.assertTrue(any(item["code"] == "KFM-TAE-FAMILY-001" for item in report["findings"]))
 
     def test_report_is_deterministic_and_value_minimized(self) -> None:
-        secret = "ghp_do_not_echo"
-        self._write("docs/secret.md", f"{secret} TemporalAuthorityEnvelope\n")
+        value_minimization_canary = "KFM_TEST_VALUE_MINIMIZATION_CANARY"
+        self._write(
+            "docs/value-minimization-canary.md",
+            f"{value_minimization_canary} TemporalAuthorityEnvelope\n",
+        )
         first_code, first = module.assess(self.root, revision="fixed")
         second_code, second = module.assess(self.root, revision="fixed")
         self.assertEqual(first_code, second_code)
         self.assertEqual(first, second)
-        self.assertNotIn(secret, json.dumps(first, sort_keys=True))
+        self.assertNotIn(value_minimization_canary, json.dumps(first, sort_keys=True))
         self.assertEqual(first["report_sha256"], module._report_hash(first))
 
     def test_cli_emits_hold_json_and_exit_three(self) -> None:
