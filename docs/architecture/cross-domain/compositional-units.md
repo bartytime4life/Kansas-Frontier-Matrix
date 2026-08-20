@@ -2,31 +2,45 @@
 doc_id: kfm://doc/architecture-cross-domain-compositional-units
 title: Cross-Cutting Compositional Units
 type: standard
-version: v0.2.0
-prior_version: v0.1
-status: draft; repository-grounded architecture reference; non-authoritative
-owners: "NEEDS VERIFICATION - CODEOWNERS routes the default pattern to @bartytime4life; no dedicated cross-domain architecture steward or independent approval control was verified"
+version: v0.3.0
+prior_version: v0.2.0
+status: draft; repository-grounded architecture reference; bounded implementation; non-authoritative; non-publisher
+owners: "@bartytime4life via CODEOWNERS; independent cross-domain, evidence, policy, sensitivity, release, Focus Mode, Frontier Matrix, and Planetary/3D stewardship NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-07-26
-policy_label: public
+updated: 2026-08-19
+policy_label: public; architecture; cross-domain; composition; cite-or-abstain; non-release; non-publication
 responsibility_root: docs/
 canonical_relationship: same-path architecture reference; no sibling authority created
-truth_posture: "CONFIRMED current repository paths and source classifications / CONFLICTED compositional-unit versus domain classification for Frontier Matrix and Planetary-3D / PROPOSED exact lane homes and implementation / UNKNOWN operational conformance / NEEDS VERIFICATION accountable stewardship, accepted classification decisions, registered scope and seam IDs, contract-schema-policy closure, tests, release records, correction drills, and rollback drills"
+truth_posture: >-
+  CONFIRMED accepted Directory Rules v2, current repository paths, proposed
+  domain-lane and cross-domain seam projections, bounded Focus Mode, Frontier
+  Matrix, and Planetary/3D implementation surfaces, and the named focused
+  FrontierClassification workflow result / PROPOSED three-part compositional
+  taxonomy and final classifications / CONFLICTED stale domain-named lineage
+  versus current cross-cutting projections / UNKNOWN deployed runtime, public
+  releases, correction propagation, and rollback execution / NEEDS VERIFICATION
+  accepted classifications, accountable stewardship, registered composition
+  identities, complete seam contracts, policy and review closure, required-check
+  coupling, and public parity.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
-  base_commit: 59194561bc6f0813fe6fb3cc505d042747c86948
-  target_prior_blob: 02e8964847b4a059631e6ce7d08f05c381bcca47
-  parent_readme_blob: b8c7396aed20a14c54a011a02b8ded78839868f3
+  base_commit: 5451e5bc1ae7ffd8d721197b930cadd827fbbd7f
+  target_prior_blob: 60fd278707d3773e2361e34d7f75f8a798d81838
+  parent_readme_blob: 3353a0a0ab5fe3f8f5fdea937b8eecfa34b81032
   directory_rules_v2_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: cd044a38047cc9b3725d2e083eb201eb86109308
-  directory_rules_legacy_blob: 18653c00ba193a4afaa3e07a0924452807fb98ef
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  focus_docs_blob: 008cf7b3496fdfe56ff3a23b12cb470c27dcf76e
-  focus_contract_readme_blob: cf6faac30891f3f874f37a011b123bb6d473214e
-  planetary_domain_readme_blob: a0eea744a6dd249903720cf1599ee14420a0b25c
-  maplibre_package_readme_blob: 3ba48e7d61b013a659ed51b9336eee788d06b8f2
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
+  cross_domain_seam_register_blob: dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29
+  focus_docs_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
+  frontier_definition_blob: 066976e0b859474191548d8ef06ad328c1c78299
+  county_year_panel_blob: 6c8ea550ce9c550539d00bf677e0d8485c759b52
+  frontier_classification_blob: 0c178ec594043119790200b5f4f0df541cc8bfeb
+  frontier_classification_workflow_blob: b74d891cc04f1aa004c6c9117aef9645936a7a8b
+  planetary_3d_architecture_blob: 41e26697a05c9479fc78b43d5112279d9125a492
+  three_d_admission_contract_blob: e71692ce8897596e3477a8dafc0ef5c12fcd130a
+  representation_receipt_contract_blob: 4e4a7e4d1d98c8592a76d0d3127eb90233906614
 related:
   - ./README.md
   - ./cross-lane-relations.md
@@ -38,58 +52,65 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../focus-mode/README.md
-  - ../../domains/planetary-3d/README.md
-  - ../../../contracts/focus_mode/README.md
-  - ../../../packages/maplibre/README.md
+  - ../../registers/DOMAIN_LANE.md
+  - ../planetary-3d.md
+  - ../../../control_plane/domain_lane_register.yaml
+  - ../../../control_plane/cross_domain_seam_register.yaml
+  - ../../../contracts/evidence/frontier_definition.md
+  - ../../../contracts/data/county_year_panel.md
+  - ../../../contracts/evidence/frontier_classification.md
+  - ../../../contracts/map/three_d_admission_decision.md
+  - ../../../contracts/receipts/representation_receipt.md
 tags: [kfm, architecture, cross-domain, composition, focus-mode, frontier-matrix, planetary-3d, evidence, governance]
 notes:
-  - "Same-path Markdown modernization only; no doctrine, ADR status, domain classification, contract, schema, policy, implementation, release, promotion, or publication state changed."
-  - "The prior universal claim that none of the three units is a domain conflicts with the supplied consolidated Atlas, whose chapters 17 and 18 explicitly classify Frontier Matrix and Planetary-3D as domains."
-  - "At the pinned base, ADR-0029 is accepted and adopts the exact v2 bytes at docs/doctrine/directory-rules.md even though their pinned internal artifact label remains PROPOSED_FOR_ADOPTION."
-  - "The architecture-side v1.3.1 body is restored as a read-only legacy compatibility surface; tombstoning, reference migration, and physical deletion remain separately gated and unauthorized by this page."
+  - "v0.3.0 is a same-path repository-grounded modernization; it creates no doctrine, ADR, domain, scope, seam, contract, schema, policy, runtime, release, promotion, deployment, or publication authority."
+  - "Accepted Directory Rules v2 classify geography and Focus Mode as composition scopes and require registered seam IDs for cross-domain artifacts."
+  - "The proposed machine domain-lane projection lists 13 domains and explicitly excludes matrix, scene, and spatial; that projection is evidence, not an accepted reclassification decision."
+  - "Frontier Matrix has fixture-first definition, county-year panel, and classification packets with deterministic validation, but no real county classification or release."
+  - "Planetary/3D has bounded admission and representation-receipt profiles while renderer and release surfaces remain held or incomplete."
+  - "All five current cross-domain seam-register entries remain HOLD_UNRESOLVED, disallow public joins, and have no seam contract path."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Cross-Cutting Compositional Units
 
-Focus Mode, Frontier Matrix, and Planetary/3D connect multiple KFM lanes, but
-their classifications are not interchangeable: composition behavior, domain
-ownership, renderer behavior, and repository placement must be decided
-separately.
+Focus Mode, Frontier Matrix, and Planetary/3D connect KFM material across
+bounded contexts, but they do so through different responsibilities:
+**scope composition**, **analytical composition**, and **representation
+composition**. Composition never transfers source, evidence, policy, review,
+release, correction, rollback, or publication authority.
 
 [![Document: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status)
 [![Evidence: repository grounded](https://img.shields.io/badge/evidence-repository%20grounded-1f6feb?style=flat-square)](#status-and-evidence-boundary)
-[![Classification: conflicted](https://img.shields.io/badge/classification-CONFLICTED-b54708?style=flat-square)](#classification-conflict)
-[![Truth posture: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-1a7f37?style=flat-square)](./README.md#truth-posture)
+[![Classification: bounded](https://img.shields.io/badge/classification-bounded%20%2F%20decision%20pending-b54708?style=flat-square)](#classification-conflict)
+[![Seams: held](https://img.shields.io/badge/cross--domain%20seams-HOLD-8250df?style=flat-square)](#cross-domain-seam-interaction)
+[![Truth: cite or abstain](https://img.shields.io/badge/truth-cite--or--abstain-1a7f37?style=flat-square)](./README.md#truth-posture)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-boundary)
 
 > [!IMPORTANT]
-> A composition may join domain evidence or render released domain products
-> without acquiring their truth, policy, review, or publication authority.
-> Every participating object keeps its owner, source role, sensitivity,
-> evidence support, temporal scope, and release lineage.
+> **Composition preserves authority; it does not absorb it.** Every participating
+> object retains its owner, source role, evidence support, spatial and temporal
+> scope, rights and sensitivity posture, review state, release lineage,
+> correction lineage, and rollback target.
 
-**Classification warning.** The previous statement that all three units are
-non-domains is not supportable. The supplied consolidated Atlas names Frontier
-Matrix and Planetary/3D as domains and assigns them object families. Until a
-reviewed decision reconciles that lineage with the cross-domain composition
-model, implementations must preserve both the domain-ownership and composition
-boundaries.
+> [!WARNING]
+> **No compositional unit authorizes a public join.** The current proposed seam
+> register is partial. All five entries are `HOLD_UNRESOLVED`, set
+> `public_join_allowed: false`, and have no seam contract path.
 
 ## Table of contents
 
-1. [Scope](#1-scope)
-2. [The three compositional units](#2-the-three-compositional-units)
-3. [Focus Modes](#3-focus-modes)
+1. [Scope and authority](#1-scope-and-authority)
+2. [Classification model](#2-classification-model)
+3. [Focus Mode](#3-focus-mode)
 4. [Frontier Matrix](#4-frontier-matrix)
 5. [Planetary / 3D / Digital Twin](#5-planetary--3d--digital-twin)
-6. [What none of them are](#6-what-none-of-them-are)
-7. [Shared rules across all three](#7-shared-rules-across-all-three)
+6. [Shared trust and seam rules](#6-shared-trust-and-seam-rules)
+7. [Placement](#7-placement)
 8. [Anti-patterns](#8-anti-patterns)
-9. [Open questions and ADR triggers](#9-open-questions-and-adr-triggers)
-10. [Related docs](#10-related-docs)
-11. [Appendix](#11-appendix)
+9. [Open decisions and validation](#9-open-decisions-and-validation)
+10. [Related documentation](#10-related-documentation)
 
 ---
 
@@ -97,57 +118,49 @@ boundaries.
 
 ## Status and evidence boundary
 
-This page is a draft, repository-grounded architecture reference. It explains
-boundaries and records unresolved classification work. It is not a domain
-register, path registry, semantic contract, schema, policy decision, review
-record, release manifest, implementation proof, or publication decision.
+This page is a draft, repository-grounded architecture reference. It is not a
+domain or scope register, semantic contract, schema, policy decision, review
+record, release manifest, runtime receipt, or publication decision.
 
-| Evidence | Confirmed at `main@5919456` | Limit |
+| Evidence | Bounded finding at `main@5451e5b` | Limit |
 |---|---|---|
-| This target | Present at the same path; prior blob `02e8964`; version `v0.1`; 297 lines | Presence proves documentation only |
-| Parent lane | [`README.md`](./README.md) and all seven sibling pages exist | The parent snapshot predates ADR-0029 acceptance; all siblings remain draft documentation and runtime conformance is not established |
-| Directory Rules | [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact v2 blob `fd49a0b` at [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md); [`docs/architecture/directory-rules.md`](../directory-rules.md) is restored at legacy blob `18653c0` | The v2 artifact's internal `PROPOSED_FOR_ADOPTION` label is part of the adopted bytes; the legacy body is compatibility evidence, not a second writable authority |
-| Adoption decision | ADR-0029 is `accepted` and effective on the pinned base | It authorizes one writable doctrine path and controlled migration; it does not authorize the legacy tombstone, reference migration, or physical deletion |
-| Focus Mode evidence | [`docs/focus-mode/README.md`](../../focus-mode/README.md) and [`contracts/focus_mode/README.md`](../../../contracts/focus_mode/README.md) exist | The docs path is singular while its H1 and many internal claims use plural; implementation and schema/policy closure remain unverified |
-| Frontier Matrix evidence | The supplied consolidated Atlas chapter 17 defines a domain and county-year object family | Candidate repository lane paths checked for this update did not establish implementation |
-| Planetary/3D evidence | [`docs/domains/planetary-3d/README.md`](../../domains/planetary-3d/README.md) exists; [`packages/maplibre/README.md`](../../../packages/maplibre/README.md) records a private `0.0.0` scaffold and placeholder export | The named domain and renderer carrier are related but not the same authority |
-| Review routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes the default pattern to `@bartytime4life` | Routing is not a StewardshipAssignment, independent review, approval, release, or publication authority |
-| Documentation automation | [`docs-build.yml`](../../../.github/workflows/docs-build.yml) and [`link-check.yml`](../../../.github/workflows/link-check.yml) are read-only readiness holds | They do not render this page or validate its local links and fragments |
+| Target | Same-path file exists at prior blob `60fd278`; prior version `v0.2.0` | Presence proves documentation only |
+| Directory authority | [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact bytes at [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | The pinned artifact retains its internal proposal label; follow-on structural changes remain separately gated |
+| Composition rule | Directory Rules v2 §12.4 classifies a county, corridor, watershed, region, or Focus Mode as a composition scope, not a domain or root | It does not settle every legacy name or runtime profile |
+| Domain projection | [`domain_lane_register.yaml`](../../../control_plane/domain_lane_register.yaml) proposes 13 lanes and excludes `matrix`, `scene`, and `spatial` as cross-cutting | The projection declares non-effects and is not an accepted domain decision |
+| Seam projection | [`cross_domain_seam_register.yaml`](../../../control_plane/cross_domain_seam_register.yaml) contains five held high-risk seams | It is partial, navigational, and not join or publication authority |
+| Focus Mode | [`docs/focus-mode/README.md`](../../focus-mode/README.md) records bounded Explorer projection, synthetic tests, inactive policy, and naming/placement holds | No authenticated service, live policy, release, or public operation is established |
+| Frontier Matrix | Fixture-first definition, panel, classification, validators, tests, and a focused workflow exist | No real county classification, source activation, API, map layer, or release is established |
+| Planetary/3D | [`planetary-3d.md`](../planetary-3d.md) records bounded admission and representation-receipt profiles | Renderer, scene release, live policy, and browser runtime remain held or incomplete |
+| Review routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) routes the default pattern to `@bartytime4life` | Routing is not independent approval or release authority |
 
 ### Truth posture
 
-- **CONFIRMED:** the pinned paths, blobs, declared states, and bounded source
-  classifications recorded above.
-- **PROPOSED:** exact implementation lanes, contracts, schemas, policy,
-  registries, runtime bindings, release profiles, and validation behavior not
-  established by current evidence.
-- **UNKNOWN:** operational conformance, external consumers, released instances,
-  and runtime behavior beyond the inspected evidence.
-- **NEEDS VERIFICATION:** accountable stewardship, accepted classification
-  decisions, registered scope/seam IDs, implementation closure, correction
-  propagation, and rollback drills.
-- **CONFLICTED:** singular/plural Focus Mode documentation identity and
-  domain-versus-composition classification for Frontier Matrix and
-  Planetary/3D.
+- **CONFIRMED:** the accepted placement decision, current tracked paths and
+  blobs, proposed register contents, bounded fixture-first profiles, and named
+  focused workflow result inspected for this revision.
+- **PROPOSED:** the three-class taxonomy, final identities, complete seam and
+  scope registries, operational contracts, policy, routes, release profiles,
+  and public products not established by accepted decisions and evidence.
+- **UNKNOWN:** deployed runtime, external consumers, public release state,
+  correction propagation, and rollback execution.
+- **NEEDS VERIFICATION:** accountable stewardship, accepted classifications,
+  registered composition IDs, contract/schema/policy closure, negative-path
+  tests, required-check coupling, correction drills, and public parity.
+- **CONFLICTED:** older Atlas and stale domain-named lineage versus current
+  cross-cutting projections and architecture boundaries.
 
 [Back to top](#top)
 
 ---
 
-## 1. Scope
+## 1. Scope and authority
 
-This document helps an implementer decide what kind of thing a proposed
-cross-cutting unit is before assigning paths or authority. It covers:
-
-- geographic or interaction scopes that compose evidence from several domains;
-- comparative views that align domain measures across place and time;
-- 3D, scene, and digital-twin object families and their renderer carrier;
-- the trust, placement, validation, correction, and rollback boundaries shared
-  by those compositions.
-
-It does not define a new domain, close a domain-classification dispute, admit a
-root or lane, invent a scope/seam ID, standardize an object family, or authorize
-publication.
+This page classifies a cross-cutting composition before paths, joins, or public
+behavior are assigned. It covers geographic and interaction scopes, analytical
+alignments across geography and time, and 2D/2.5D/3D representation assemblies.
+It does not register a domain, scope, seam, object family, source, policy,
+release, or route.
 
 <a id="authority-boundary"></a>
 
@@ -155,409 +168,315 @@ publication.
 
 | This page may | This page may not |
 |---|---|
-| Explain current evidence and conflicts | Create, supersede, or reinterpret an ADR |
-| Compare domain, scope, view, and carrier roles | Create or retire a domain |
-| Preserve cross-domain trust invariants | Define contract or schema fields |
-| Route readers to owning responsibility roots | Make a candidate path canonical |
-| State validation and migration prerequisites | Approve policy, release, deployment, or publication |
+| Explain evidence, bounds, and conflicts | Accept or reinterpret an ADR |
+| Distinguish domain, scope, analytical, and carrier roles | Add, remove, rename, or merge a domain |
+| Preserve trust and source-role invariants | Define contract, schema, policy, or register fields |
+| Route artifacts to an owning responsibility root | Make an alias, path, package, seam, or scope canonical |
+| Name validation, correction, and rollback prerequisites | Approve a join, review, release, deployment, or publication |
 
-When classification or ownership is unresolved, the safe result is **HOLD**:
-do not create a second authority surface merely to keep implementation moving.
-
-[Back to top](#top)
+When classification, ownership, sensitivity, or join authority is unresolved,
+the safe result is **HOLD**. Do not create a second writable authority merely to
+keep implementation moving.
 
 ---
 
-## 2. The three compositional units
-
-The three names describe different kinds of composition. Treating them as one
-uniform architectural class hides the most important distinction: some evidence
-describes a **scope**, some describes a **domain/object family**, and some
-describes a **downstream view or carrier**.
+## 2. Classification model
 
 <a id="classification-conflict"></a>
 
-### Classification matrix
+| Unit | Proposed class | Strongest current evidence | Safe statement | Decision still open |
+|---|---|---|---|---|
+| Focus Mode | Scope composition | Accepted Directory Rules §12.4; current bounded Focus docs and Explorer projection | A governed geographic or interaction scope that composes released evidence without becoming a domain | Final singular/plural identity, scope registry, stewardship, policy profile, and runtime contract |
+| Frontier Matrix | Analytical composition | Current fixture-first `FrontierDefinition`, `CountyYearPanel`, and `FrontierClassification` families | A versioned analytical composition over governed observations; not a flat truth table | Accepted domain-versus-cross-cutting classification, authority owner, real source admissions, release profile, and public projection |
+| Planetary/3D | Representation composition | Current Planetary/3D architecture plus bounded admission and representation receipts | A downstream representation and delivery composition; reconstruction is not observation | Accepted naming/classification, renderer admission, scene family, public-safe release, and correction parity |
 
-| Unit | Strongest inspected evidence | Supportable current statement | Classification work still open |
-|---|---|---|---|
-| **Focus Mode** | Adopted Directory Rules v2 §12.4 calls a Focus Mode a composition scope, not a domain or root; the MapLibre manual describes evidence-bounded AI inside the shell | A downstream geographic/interaction scope over governed evidence | Exact docs slug, registered scope IDs, payload boundaries, and implementation closure |
-| **Frontier Matrix** | The supplied consolidated Atlas chapter 17 explicitly calls it a domain and assigns county-year object families; this lane also describes a comparative view | A domain-bounded matrix model may feed one or more comparative views | Whether domain semantics and view composition need separate registered identities and contracts |
-| **Planetary / 3D / Digital Twin** | The supplied Atlas chapter 18 and the repository domain README assign scene/3D object families; the MapLibre package is a downstream renderer scaffold | Domain-owned scene/representation semantics may be carried by a separate renderer/runtime boundary | Domain/scene slug, object-family authority, renderer package home, and accepted renderer decision |
-
-> [!NOTE]
-> "Composes across domains" and "is a domain" are not logical opposites. A domain
-> can own scene or matrix semantics while a view built from those semantics
-> composes released evidence from many other domains. The repository must name
-> and validate those two roles instead of collapsing them.
+The current machine projection narrows the dispute by excluding `matrix`,
+`scene`, and `spatial` from its proposed 13-domain set. That evidence does not
+supersede older Atlas lineage or make this document an accepted classifier.
 
 ```mermaid
-flowchart TD
-    REQUEST["Proposed composed unit"] --> CLASSIFY["Classify scope, object ownership, and carrier"]
-    CLASSIFY --> DOMAIN["Domain or object-family semantics"]
-    CLASSIFY --> VIEW["Composition scope or derived view"]
-    DOMAIN --> ROOTS["Owning responsibility roots"]
-    VIEW --> ROOTS
-    ROOTS --> GATES["Evidence, policy, review, release, correction, rollback"]
-    GATES --> SURFACE["Governed API, UI, matrix, or renderer surface"]
+flowchart LR
+    D[Governed domain objects] --> E[Evidence and policy closure]
+    E --> F[Focus scope composition]
+    E --> M[Frontier analytical composition]
+    E --> P[Planetary/3D representation composition]
+    F --> G[Governed API / released carriers]
+    M --> G
+    P --> G
+    G --> U[MapLibre / UI / exports]
 ```
-
-The diagram is a decision boundary, not implementation proof. A renderer or
-matrix surface remains downstream even when a named domain owns the object
-semantics it consumes.
-
-[Back to top](#top)
 
 ---
 
-## 3. Focus Modes
+## 3. Focus Mode
 
-A Focus Mode is best supported as a bounded composition scope and governed
-interaction surface, not as an independent domain or repository root.
+Focus Mode answers a bounded question for a place, corridor, watershed, region,
+or interaction context. It is a composition scope, not a parallel domain or a
+shortcut around evidence resolution.
 
-### Focus Mode evidence-backed boundary
+### Current repository boundary
 
-| Aspect | Current evidence | Safe conclusion |
+| Surface | Current state | Consequence |
 |---|---|---|
-| Scope classification | Adopted Directory Rules v2 §12.4: geography and Focus Mode are composition scopes | Do not model Focus Mode as a root or use geography to select an authority root |
-| UI/AI behavior | Supplied MapLibre manual: `MapContextEnvelope -> policy -> EvidenceRef/EvidenceBundle -> bounded synthesis -> citation validation` | Focus Mode remains evidence-subordinate with finite `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` behavior where the governing contract uses those outcomes |
-| Repository docs | `docs/focus-mode/README.md` exists, but its H1 and proposed tree say `docs/focus-modes/` | Treat the dossier slug as **CONFLICTED**; do not add a second docs lane |
-| Semantic contract | `contracts/focus_mode/README.md` and its payload contract exist | Contract presence establishes prose semantics only, not schema, route, policy, test, release, or runtime closure |
-| Publication | Draft sources describe release-aware payloads and rollback references | A Focus Mode is not published merely because its UI, payload, branch, or manifest-shaped file exists |
+| Documentation | [`docs/focus-mode/README.md`](../../focus-mode/README.md) is the current singular lane and records migration holds | Maintain same-path documentation; do not create a competing plural tree |
+| Contracts and schema | `contracts/focus_mode/`, `contracts/focus/`, and schema surfaces coexist | Treat the family and ownership seam as unresolved, not silently canonical |
+| Policy | [`policy/focus/README.md`](../../../policy/focus/README.md) is inactive | No live policy or public authorization claim |
+| Workflow | [`focus-mock-test.yml`](../../../.github/workflows/focus-mock-test.yml) is read-only and synthetic | A green fixture test does not prove live evidence, policy, review, release, or deployment |
+| Explorer | Bounded composed-claim and Evidence Drawer tests are documented | App-local projection does not become canonical truth or a release decision |
 
-### Minimum safe composition
+### Minimum safe Focus packet
 
-1. Accept a bounded map, place, time, audience, and release context.
-2. Resolve requested claims through governed interfaces to admissible
-   `EvidenceBundle` support.
-3. Apply rights, source-role, sensitivity, review, freshness, and release checks
-   before interpretation.
-4. Emit only the finite outcome allowed by the applicable contract.
-5. Keep citations, withheld/generalized state, correction lineage, and rollback
-   references visible to the consuming surface.
+A Focus composition must carry, directly or through resolvable references:
 
-> [!CAUTION]
-> Do not copy domain records into a Focus Mode merely to populate an area folder.
-> A Focus Mode references or projects domain-owned released evidence; it does not
-> acquire canonical ownership of that evidence.
+- stable composition and geography identities;
+- requested spatial and temporal scope;
+- participating domain object IDs and source roles;
+- `EvidenceRef` resolution state and released `EvidenceBundle` support;
+- policy, sensitivity, consent, rights, and generalization outcomes;
+- finite runtime outcome: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`;
+- release, correction, supersession, and rollback references;
+- representation and citation metadata sufficient for the Evidence Drawer.
 
-[Back to top](#top)
+Missing evidence, policy, review, or release closure must narrow the request or
+produce `ABSTAIN`/`DENY`; it must not be replaced with a model-generated answer.
 
 ---
 
 ## 4. Frontier Matrix
 
-The inspected Atlas describes the Frontier Matrix as a domain governing
-county-year panels, geography versions, frontier definitions, observations,
-crosswalks, uncertainty, thresholds, and matrix releases. The previous version
-of this page reduced it to a view and declared it non-domain; that reduction is
-now recorded as unsupported.
+Frontier Matrix aligns versioned observations across geography and time under a
+named analytical definition. It is a derived composition, not a source and not a
+flat spreadsheet of sovereign truth.
 
-### Domain semantics versus matrix view
+### Current bounded object flow
 
-| Concern | Domain-semantic role | Composition/view role |
+```mermaid
+flowchart LR
+    FD[FrontierDefinition] --> FC[FrontierClassification]
+    CY[CountyYearPanel] --> FC
+    ER[EvidenceRef resolution] --> FC
+    FC --> O{Outcome}
+    O -->|supported| A[ALLOW]
+    O -->|insufficient| B[ABSTAIN]
+    O -->|blocked| D[DENY]
+    O -->|failure| X[ERROR]
+```
+
+| Surface | Current bounded evidence | Does not prove |
 |---|---|---|
-| Identity | County-year panel, geography version, frontier definition, and owned observation identities | Selection of place, time, and visible comparison dimensions |
-| Evidence | Each owned or referenced claim preserves source role, time, geography, and evidence support | The view exposes citations and distinct support per cell or panel |
-| Aggregation | Defines domain-specific interpretation and uncertainty rules | Must not infer per-place facts from aggregates or merge unlike source roles |
-| Sensitivity | Applies source and join-specific restrictions | Uses the most restrictive participating posture; generalization is a governed transform |
-| Release | Matrix release semantics belong to the owning release model | A rendered table, dashboard, export, or API response is not itself a release decision |
+| [`FrontierDefinition`](../../../contracts/evidence/frontier_definition.md) | Proposed inactive deterministic classification-method declaration | Accepted definition authority or real classification |
+| [`CountyYearPanel`](../../../contracts/data/county_year_panel.md) | Proposed fixture-first aggregate with explicit no-values boundary | Real county-year data, public product, or canonical store |
+| [`FrontierClassification`](../../../contracts/evidence/frontier_classification.md) | Synthetic-only evidence assessment with finite outcomes | Policy approval, release, or public truth |
+| [`frontier-classification.yml`](../../../.github/workflows/frontier-classification.yml) | Read-only focused workflow; run `31961861956` succeeded on PR #2977 head `d1fec315` | Whole-repo health, required-check status, release readiness, or attribution of broader failures |
 
-### Current implementation boundary
+### Graduation requirements
 
-Bounded checks at the pinned base did not establish README-backed lanes at the
-previously proposed `contracts/frontier-matrix/`,
-`schemas/contracts/v1/frontier-matrix/`, `policy/frontier-matrix/`,
-`data/published/frontier-matrix/`, or
-`release/manifests/frontier-matrix/` paths. Absence of those checked READMEs is
-not a complete recursive tree inventory, but it is enough to reject the prior
-page's unqualified placement claims.
-
-Until a domain/seam register, owning contracts, schemas, policy, fixtures,
-validators, tests, releases, and consumers are verified:
-
-- keep exact lane paths **PROPOSED**;
-- preserve the Atlas domain lineage rather than relabeling it silently;
-- separate domain-owned matrix semantics from downstream visual composition;
-- use **HOLD** when ownership or sensitivity cannot be resolved.
-
-[Back to top](#top)
+A real Frontier Matrix product still requires accepted ownership and definition
+versioning; admitted source descriptors; geography-version and temporal rules;
+evidence and uncertainty closure; policy/review/release decisions; deterministic
+rebuilds; public-safe API/map contracts; correction propagation; and a tested
+rollback target.
 
 ---
 
 ## 5. Planetary / 3D / Digital Twin
 
-Planetary/3D has two connected but distinct boundaries:
+Planetary/3D composes released carriers into terrain, extrusions, point clouds,
+meshes, scenes, globe views, or synthetic reconstructions. It is a representation
+layer and must preserve the difference between observation, inference, model,
+and reconstruction.
 
-1. a draft domain/object-family boundary for scene manifests, terrain models,
-   3D tile sets, glTF assets, point clouds, digital-twin views, synthetic
-   surfaces, view state, representation receipts, reality-boundary notes, and
-   admission decisions; and
-2. a downstream renderer/runtime carrier that may display released,
-   policy-allowed representations without becoming truth authority.
+### Current repository boundary
 
-### 3D evidence-backed boundary
-
-| Surface | Confirmed repository state | Safe conclusion |
+| Surface | Current state | Consequence |
 |---|---|---|
-| Domain documentation | `docs/domains/planetary-3d/README.md` exists as a `draft` and explicitly labels its slug and implementation paths proposed | Preserve its domain lineage, but do not infer adoption or implementation |
-| Renderer package | `packages/maplibre/README.md` exists; its evidence snapshot records a private `0.0.0` manifest and placeholder export | Package documentation and scaffolding do not prove a functioning adapter |
-| Alternative package homes | Checked `packages/maplibre-runtime/README.md` and `packages/renderer/README.md` were not found | Do not present either as a current implemented home |
-| Scene publication lanes | Checked `data/published/scenes/README.md` and `release/manifests/scenes/README.md` were not found | Keep those exact lanes proposed pending responsibility and release evidence |
-| Reality boundary | The supplied Atlas and 3D sources require synthetic/reconstructed/interpolated content to remain distinguishable from observed evidence | Require a visible reality-boundary statement and the governed receipt/object defined by accepted contracts before public reliance |
+| Architecture | [`planetary-3d.md`](../planetary-3d.md) is repository-grounded v2.0 | Use as the current architecture explanation, not release proof |
+| Admission | [`ThreeDAdmissionDecision`](../../../contracts/map/three_d_admission_decision.md) is fixture-only | No renderer, asset, policy, review, or public-use authorization |
+| Process memory | [`RepresentationReceipt`](../../../contracts/receipts/representation_receipt.md) records transform intent | A receipt is not evidence, proof, review, release, or publication authority |
+| Scene schema | [`schemas/contracts/v1/scene/README.md`](../../../schemas/contracts/v1/scene/README.md) is guardrail documentation | No accepted scene schema family is established |
+| Released scene lane | [`data/published/layers/scene/README.md`](../../../data/published/layers/scene/README.md) is a hold surface | No released scene artifact is established |
+| Older domain doc | [`docs/domains/planetary-3d/README.md`](../../domains/planetary-3d/README.md) remains lineage | Do not treat stale domain naming as current implementation authority |
 
-> [!IMPORTANT]
-> 3D is a carrier, not sovereign truth. A successful render, screenshot, scene
-> manifest, package build, or visual match cannot prove evidence closure, rights,
-> sensitivity clearance, review, release, or publication.
+### Minimum admission packet
 
-### Admission rule
+A 3D or synthetic carrier needs asset identity and digest, source/evidence refs,
+representation class, transform chain, uncertainty and reality-boundary notes,
+rights and sensitivity review, geometry generalization where required, renderer
+and performance constraints, release manifest, correction behavior, and rollback
+target. Missing closure yields `HOLD`, `ABSTAIN`, or `DENY`.
 
-A 3D or digital-twin representation is eligible for a public-facing carrier only
-when the applicable contracts and policy establish:
-
-- released and integrity-bound source artifacts;
-- evidence references and source-role preservation;
-- explicit observed, modeled, reconstructed, interpolated, or synthetic status;
-- rights, sensitivity, geoprivacy, and audience decisions;
-- safe geometry and attribute precision;
-- review and release state;
-- correction, cache invalidation, withdrawal, and rollback targets.
-
-Missing or conflicting support yields the applicable fail-closed result. This
-architecture page does not invent a universal outcome enum for every 3D surface.
-
-[Back to top](#top)
+> [!CAUTION]
+> A photorealistic or immersive view can increase persuasive force without
+> increasing evidence quality. Visual realism must never be presented as
+> observational certainty.
 
 ---
 
-## 6. What none of them are
+## 6. Shared trust and seam rules
 
-The domain-classification dispute does not weaken these shared negatives.
+All three compositions must preserve these rules:
 
-| Forbidden interpretation | Boundary |
-|---|---|
-| A new repository root justified by the unit's name | Domain, geography, renderer, feature, or view names do not create responsibility roots |
-| A replacement for participating domain truth | Compositions reference or project domain-owned evidence; ownership does not transfer |
-| Evidence, policy, review, or release authority | Those duties remain with their owning object families and responsibility roots |
-| A bypass around the trust membrane | Ordinary public surfaces use governed APIs and released public-safe carriers |
-| A reason to fork shared objects | Do not create unit-local `EvidenceBundle`, `PolicyDecision`, release, receipt, or rollback variants without an accepted versioned decision |
-| Proof of implementation | A README, Atlas chapter, badge, diagram, branch, pull request, package scaffold, or rendered scene is not runtime evidence |
-| Automatic publication | Promotion is a governed state transition, not a file move, commit, merge, build, or display action |
+1. `EvidenceBundle` outranks generated language, map pixels, analytical scores,
+   scene realism, and UI state.
+2. Source roles remain explicit: observed, modeled, forecast, interpreted,
+   administrative, aggregate, and synthetic support are not interchangeable.
+3. Geography and time are versioned inputs, not display-only filters.
+4. Rights, sensitivity, sovereignty, consent, and harmful precision fail closed.
+5. Public clients consume governed APIs or released public-safe carriers, never
+   canonical/internal stores as the normal path.
+6. Receipts, proofs, catalogs, manifests, reviews, decisions, corrections,
+   rollback records, and published artifacts remain distinct object families.
+7. Promotion is a governed state transition, not a file move, workflow pass,
+   commit, pull request, merge, or render.
+8. Corrections and withdrawals propagate to every derived composition and
+   carrier that depended on the superseded support.
 
-[Back to top](#top)
+<a id="cross-domain-seam-interaction"></a>
+
+### Cross-domain seam interaction
+
+Directory Rules v2 §12.5 routes a cross-domain semantic contract to
+`contracts/cross_domain/<seam_id>/`, seam tests to
+`tests/cross_domain/<seam_id>/`, seam validation to
+`tools/validators/cross_domain/<seam_id>/`, and explanation to
+`docs/architecture/cross-domain/<seam_id>.md`. These are responsibility lanes,
+not permission to create an unregistered seam.
+
+The current seam register is a proposed control-plane projection. Until a seam
+has accepted identity, owning and contributing lanes, relation vocabulary,
+evidence and temporal rules, policy/review closure, contract path, tests, and a
+public-join decision, the outcome remains **HOLD**.
 
 ---
-
-## 7. Shared rules across all three
-
-| Rule | Required effect |
-|---|---|
-| One authority owner per artifact | Mixed-authority objects are split; a convenient producer or filename does not select the home |
-| Domain ownership preserved | A composition names participating owners and never silently rebinds their objects |
-| Source role preserved | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles remain distinguishable |
-| Sensitivity fails closed | The combined surface cannot be more permissive than its most restrictive admissible input |
-| Evidence resolves | Consequential claims resolve through `EvidenceRef` to admissible `EvidenceBundle` support or narrow/abstain |
-| Space and time remain explicit | Geography versions, valid/observed/retrieval/release/correction time, and aggregation scope do not collapse |
-| Derived stays derived | Matrix cells, scenes, tiles, summaries, graph projections, and AI responses do not replace canonical evidence |
-| Public clients stay downstream | UI and renderer surfaces consume governed interfaces and released carriers, not RAW, WORK, QUARANTINE, restricted, or canonical stores |
-| Promotion stays governed | Evidence, rights, sensitivity, validation, review, release, correction, and rollback close before public reliance |
-| Watchers and AI do not publish | They may propose, interpret, or report; they do not approve or perform publication |
 
 <a id="placement-and-authority"></a>
 
-### Placement and authority
+## 7. Placement
 
-For this document, the current responsibility signature is:
+A compositional unit spans responsibility roots; it does not receive a new root.
+Place each artifact by the responsibility that owns it.
 
-| Axis | Value |
-|---|---|
-| Artifact kind | Human architecture reference |
-| Authority owner | Architecture explanation only |
-| Lifecycle stage | Not applicable |
-| Scope kind | Cross-domain architecture |
-| Exposure | Public |
-| Mutability | Versioned replacement |
-| Current path outcome | Preserve the existing same path; no move or new authority surface |
+| Artifact responsibility | Owning root | Rule |
+|---|---|---|
+| Human explanation | `docs/` | Same-path architecture or scope documentation; no duplicate canon |
+| Semantic meaning | `contracts/` | One owning contract family; cross-domain seams require a registered seam ID |
+| Machine shape | `schemas/` | Schema mirrors an accepted semantic owner; it does not create meaning |
+| Policy decision logic | `policy/` | Fail closed for unknown rights, sensitivity, consent, or review state |
+| Reusable implementation | `packages/` | No evidence, policy, release, or publication authority |
+| Deployable service/UI | `apps/` | Consume governed interfaces; no direct canonical-store or model path |
+| Validation | `tools/validators/` and `tests/` | Include exact-negative, stale, denied, and correction cases |
+| Lifecycle material | `data/` | Preserve RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED |
+| Release decision and manifest | `release/` | Keep separate from receipts, proofs, catalogs, and temporary artifacts |
+| Build/QA output | `artifacts/` | Non-canonical and disposable; never a release authority shortcut |
 
-For implementation artifacts, select the responsibility root before adding a
-unit, domain, source, geography, scene, matrix, or seam segment:
-
-| Artifact responsibility | Owning root |
-|---|---|
-| Human doctrine, decisions, architecture, and guidance | `docs/` |
-| Semantic meaning | `contracts/` |
-| Machine-checkable shape | `schemas/` |
-| Allow, deny, restrict, hold, or abstain decisions | `policy/` |
-| Deployable app behavior | `apps/` |
-| Reusable implementation | `packages/` |
-| Tests and reusable fixtures | `tests/`, `fixtures/` |
-| Lifecycle data and released carriers | `data/<phase>/` |
-| Release, correction, withdrawal, and rollback decisions | `release/` |
-
-ADR-0029 is accepted at the pinned base: the doctrine-side v2 bytes are the sole
-writable human Directory Rules authority, while the restored architecture-side
-body is a read-only legacy compatibility surface. Follow the adopted standard,
-avoid parallel writers, and preserve the legacy path until a separately
-reviewed tombstone and reference-migration change satisfies its gates. Physical
-deletion remains on hold.
-
-### Trust flow
-
-```mermaid
-flowchart LR
-    RAW["RAW"] --> WQ["WORK / QUARANTINE"]
-    WQ --> PROC["PROCESSED"]
-    PROC --> PROJ["CATALOG / TRIPLETS"]
-    PROJ --> REL["Governed release"]
-    REL --> API["Governed API / released carrier"]
-    API --> COMP["Focus, matrix, or 3D surface"]
-    COMP -. "correction or withdrawal" .-> REL
-```
-
-The final surface is interpretive or representational. It does not become the
-canonical store or the release decision that authorized its inputs.
-
-[Back to top](#top)
+`docs/architecture/cross-domain/compositional-units.md` remains the correct
+same-path explanation because the artifact explains a cross-domain architecture
+boundary. This update creates no new root, authority home, or parallel document.
 
 ---
 
 ## 8. Anti-patterns
 
-| Anti-pattern | Why it breaks KFM | Safe response |
-|---|---|---|
-| `focus_modes/`, `frontier_matrix/`, `planetary_3d/`, or `scenes/` as a new repository root | Topic or feature name displaces responsibility-root ownership | **DENY** the root; classify each artifact by responsibility |
-| Declaring all three non-domains | Erases explicit Atlas domain ownership for Frontier Matrix and Planetary/3D | **HOLD** classification; preserve both source positions |
-| Unit-local kernel variants | Fragments object meaning and cross-surface interoperability | Reuse accepted object families or open a versioned decision |
-| Matrix aggregation that drops geography, time, uncertainty, or source roles | Derived comparison is presented as homogeneous truth | Preserve per-input context and emit a governed aggregation record |
-| Synthetic or reconstructed 3D presented as observed | Crosses the reality boundary and misstates evidence | Fail closed; show the accepted boundary note and receipt |
-| Renderer, matrix, or Focus payload reading internal stores directly | Bypasses policy, release, and evidence resolution | Route through governed APIs and released carriers |
-| Unit policy overriding participating domain restrictions | The composition becomes a hidden policy authority | Combine applicable decisions without weakening the strictest input |
-| Proposed paths described as implemented | Documentation outruns current repository evidence | Label paths **PROPOSED** and verify exact consumers before use |
-| Branch, PR, merge, badge, or render treated as publication | GitHub or UI state is mistaken for governed release state | Require release, correction, and rollback evidence |
+Reject these patterns:
 
-[Back to top](#top)
-
----
-
-## 9. Open questions and ADR triggers
-
-| Open item | Current state | Evidence or decision required |
-|---|---|---|
-| Directory Rules compatibility migration | **ACCEPTED / MIGRATION OPEN:** v2 exact bytes are adopted; the legacy body is restored read-only; tombstone, reference migration, and deletion remain held | A separate migration change with consumer and fragment inventory, redirect or tombstone mapping, zero-writer enforcement, link closure, rollback, and explicit later deletion authority |
-| Focus Mode docs slug | **CONFLICTED:** path `docs/focus-mode/`; H1 and proposed references use `docs/focus-modes/` | Accepted path/alias decision, consumer inventory, one-writer rule, and migration/rollback plan |
-| Focus Mode scope and implementation profile | **NEEDS VERIFICATION** | Registered scope IDs, semantic contract, schema, policy, fixtures, validators, routes, release profile, and finite-outcome tests |
-| Frontier Matrix classification | **CONFLICTED / LINEAGE** | Decision separating or unifying domain semantics, object ownership, comparative view identity, contracts, and release model |
-| Planetary/3D classification | **CONFLICTED / NARROWED** | Decision separating domain/scene semantics from renderer/runtime carrier and selecting registered slugs |
-| Renderer package boundary | **NEEDS VERIFICATION** | Accepted renderer ADR, one canonical package home, dependency/import policy, functioning adapter, consumers, tests, CI, correction, and software rollback |
-| Scene and matrix publication lanes | **PROPOSED** | Directory authority, object-family registry, contract/schema/policy closure, release manifests, corrections, and rollback evidence |
-| Cross-domain seam registry | **NEEDS VERIFICATION** | Stable IDs, owners, aliases, schemas, fixtures, validator, negative tests, migration rules, and machine-register parity |
-
-### Decision triggers
-
-Open or update an ADR when work would:
-
-- accept, reject, split, merge, or rename a domain or object-family identity;
-- choose a canonical or compatibility path, alias, or package home;
-- introduce a cross-domain seam or scope identifier with repository-wide effect;
-- fork a shared contract, schema, policy vocabulary, receipt, or release family;
-- change public finite outcomes or the trust membrane;
-- weaken rights, sensitivity, source-role, evidence, correction, or rollback
-  requirements.
-
-[Back to top](#top)
+- creating `focus-mode/`, `frontier-matrix/`, `planetary-3d/`, `matrix/`,
+  `scene/`, or `spatial/` as a new repository root;
+- treating a county, watershed, corridor, region, or view as a domain because it
+  spans several lanes;
+- letting an analytical panel overwrite source observations or uncertainty;
+- treating a scene, tile, graph, score, screenshot, or AI answer as sovereign
+  truth;
+- joining held seams because matching identifiers or geometry appear plausible;
+- inventing a lead domain that absorbs evidence, policy, or release duties from
+  contributing lanes;
+- allowing a passing synthetic workflow to imply source activation, production
+  readiness, release, or publication;
+- exposing exact sensitive geometry or denial reasons through public clients;
+- creating parallel contract, schema, policy, registry, receipt, proof, release,
+  or documentation authorities to avoid resolving a conflict;
+- generating a composition without correction, withdrawal, cache invalidation,
+  and rollback behavior.
 
 ---
 
-## 10. Related docs
+## 9. Open decisions and validation
 
-| Reference | Role | Current evidence state |
+### Open decisions
+
+| Decision | Current state | Required closure |
 |---|---|---|
-| [Cross-domain architecture index](./README.md) | Parent scope, lane map, evidence boundary, and open-work register | Repository-grounded draft whose pinned authority snapshot predates ADR-0029 acceptance |
-| [Cross-lane relations](./cross-lane-relations.md) | Draft treatment of ownership, role, sensitivity, and evidence invariants | `v0.1` draft; implementation claims need independent verification |
-| [Multi-domain placement](./multi-domain-placement.md) | Responsibility-first routing guidance | `v0.1` draft |
-| [Shared kernel](./shared-kernel.md) | Draft object-family catalog | `v0.1` draft; accepted object registry remains unverified |
-| [Source-role anti-collapse](./source-role-anti-collapse.md) | Draft source-role separation guidance | `v0.1` draft |
-| [Trust membrane](./trust-membrane.md) | Public-versus-internal boundary | `v0.1` draft |
-| [Responsibility layers](./responsibility-layers.md) | Evidence, policy, catalog, release, API, UI, AI, and operations separation | `v0.1` draft |
-| [Directory Rules v2](../../doctrine/directory-rules.md) | Adopted responsibility, scope, placement, and migration standard | Exact blob `fd49a0b` adopted by ADR-0029 at `main@5919456`; its internal `PROPOSED_FOR_ADOPTION` label is retained as part of the pinned bytes |
-| [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adoption and compatibility-migration decision | `accepted`; legacy tombstone, reference migration, and deletion remain separately gated |
-| [Focus Mode docs](../../focus-mode/README.md) | Draft proof-slice/control-plane design | Existing path; singular/plural identity conflict |
-| [Focus Mode contracts](../../../contracts/focus_mode/README.md) | Payload semantic meaning | Existing draft lane; implementation closure unverified |
-| [Planetary/3D domain](../../domains/planetary-3d/README.md) | Draft domain and object-family treatment | Existing; slug and implementation proposed |
-| [MapLibre package](../../../packages/maplibre/README.md) | Renderer package and compatibility boundary | Existing private package scaffold; functional adapter not established |
+| Focus naming and identity | Singular/plural and family seams remain | Accepted scope identity, compatibility plan, and accountable owner |
+| Frontier Matrix classification | Analytical surface exists; final domain/cross-cutting authority remains open | Accepted decision or ADR with owner, definition/version rules, and migration impact |
+| Planetary/3D classification | Current architecture treats it as cross-domain representation; stale domain lineage remains | Accepted decision preserving object lineage and renderer boundary |
+| Seam coverage | Five high-risk seams are registered and held; coverage is partial | Registered IDs, contracts, validators, tests, policy/review state, and explicit public-join decisions |
+| Public parity | No complete correction/rollback parity proof was inspected | Fixture-driven propagation and rollback rehearsal across API, map, UI, export, and AI surfaces |
 
-[Back to top](#top)
+### ADR triggers
+
+An ADR or accepted equivalent is required when a change adds/removes/renames a
+domain; creates or retires an authority root; changes canonical ownership;
+changes contract/schema/policy responsibility; makes a compatibility path
+canonical; authorizes a new public join; changes the renderer boundary; or
+changes release, correction, or rollback semantics.
+
+### Validation for this revision
+
+The source artifact was checked for KFM meta-block YAML, stable `doc_id`, one H1,
+legacy explicit anchors, balanced fences, internal fragment resolution,
+repository-relative target presence, Mermaid source structure, UTF-8/LF text,
+no trailing whitespace or tabs, and a final newline. These checks validate the
+Markdown source only. They do not prove GitHub host rendering, accepted
+classification, runtime correctness, policy enforcement, release readiness,
+correction propagation, or rollback execution.
+
+### Rollback
+
+Rollback is a same-path revert of this Markdown file and its generated authoring
+receipt. No schema, contract, policy, source, runtime, lifecycle, release, or
+published object is migrated by this change.
 
 ---
 
-## 11. Appendix
+## 10. Related documentation
+
+| Document | Relationship | Authority note |
+|---|---|---|
+| [Cross-domain index](./README.md) | Parent architecture lane and seam-register index | Repository-grounded documentation, non-publisher |
+| [Cross-lane relations](./cross-lane-relations.md) | Relation and join boundary | Does not authorize a held seam |
+| [Multi-domain placement](./multi-domain-placement.md) | Responsibility-root placement | Draft architecture guidance |
+| [Shared kernel](./shared-kernel.md) | Shared vocabulary and contract discipline | No domain-specific authority transfer |
+| [Source-role anti-collapse](./source-role-anti-collapse.md) | Source-role preservation | Cite-or-abstain boundary |
+| [Trust membrane](./trust-membrane.md) | Governed client boundary | Public clients remain downstream |
+| [Responsibility layers](./responsibility-layers.md) | Authority separation | Draft architecture guidance |
+| [Directory Rules v2](../../doctrine/directory-rules.md) | Accepted placement and composition-scope standard | Exact bytes accepted by ADR-0029 |
+| [Domain Lane Register](../../registers/DOMAIN_LANE.md) | Human-facing lane lineage | Read with the current machine projection and accepted doctrine |
+| [Focus Mode](../../focus-mode/README.md) | Scope-composition boundary | Bounded implementation; operational state held |
+| [FrontierClassification](../../../contracts/evidence/frontier_classification.md) | Analytical composition packet | Synthetic-only and inactive |
+| [Planetary/3D architecture](../planetary-3d.md) | Representation-composition boundary | Bounded profiles; renderer/release held |
 
 <details>
-<summary><strong>11.1 Implementation admission card</strong></summary>
+<summary><strong>v0.2.0 → v0.3.0 material changes</strong></summary>
 
-Before implementing a Focus, matrix, or 3D artifact:
-
-1. Freeze the accepted Directory Rules and ADR baseline.
-2. Classify scope, object-family ownership, carrier behavior, lifecycle, exposure,
-   and retention separately.
-3. Select one owning responsibility root.
-4. Verify registered domain, scope, seam, source, and object-family IDs.
-5. Resolve contracts, schemas, policy, fixtures, validators, and negative tests.
-6. Preserve evidence, source role, geography, time, rights, and sensitivity.
-7. Keep public consumers behind governed interfaces and released carriers.
-8. Define correction, withdrawal, cache invalidation, and rollback behavior.
-9. Reject parallel writers, placeholder authority, and path-by-topic shortcuts.
-10. Record **PLACE**, **SPLIT**, **MIGRATE**, **MIRROR**, **HOLD**, or **DENY**
-    only when the governing placement vocabulary is effective.
-
-</details>
-
-<details>
-<summary><strong>11.2 Truth-label legend</strong></summary>
-
-- **CONFIRMED** - verified from the pinned repository evidence or supplied source
-  inspected for this update.
-- **PROPOSED** - a design, path, classification, or behavior not established as
-  current authority or implementation.
-- **UNKNOWN** - available evidence is insufficient to determine the state.
-- **NEEDS VERIFICATION** - a concrete repository, governance, test, runtime,
-  release, correction, or rollback check is still required.
-
-Qualifiers such as **CONFLICTED**, **NARROWED**, and **LINEAGE** explain why a
-core truth label is constrained; they do not replace the four core labels.
-
-</details>
-
-<details>
-<summary><strong>11.3 Validation and maintenance</strong></summary>
-
-Update this page when:
-
-- the Directory Rules or ADR-0029 authority state changes;
-- a domain, scope, seam, scene, matrix, or renderer identity is accepted,
-  superseded, or migrated;
-- implementation-bearing contracts, schemas, policy, tests, releases, or
-  rollback records replace a proposal;
-- correction or withdrawal behavior changes the public composition boundary.
-
-Source validation for this revision checks Markdown structure, anchors,
-repository-relative links, Mermaid syntax, badge construction, sensitive
-content, and semantic no-loss. A passing source check does not prove GitHub
-rendering, accepted doctrine, implementation, test coverage, operational
-health, release, publication, correction propagation, or rollback readiness.
+- Replaced stale planning-only statements with current repository evidence.
+- Classified the three units as scope, analytical, and representation
+  compositions while preserving unresolved authority decisions.
+- Added the current 13-lane projection and its `matrix`, `scene`, and `spatial`
+  exclusions without treating the proposal as adopted doctrine.
+- Added the five held seam entries and no-public-join posture.
+- Grounded Focus Mode in its bounded Explorer, synthetic-test, inactive-policy,
+  and migration-hold state.
+- Grounded Frontier Matrix in its fixture-first definition, county-year panel,
+  classification, and focused hosted workflow evidence.
+- Grounded Planetary/3D in its admission and representation-receipt profiles,
+  renderer/release holds, and stale domain-named lineage.
+- Preserved the H1, section order, explicit legacy anchors, truth labels,
+  anti-collapse rules, and no-publication boundary.
 
 </details>
 
 ---
 
-**Related:** [Cross-domain index](./README.md) ·
-[Focus Mode](../../focus-mode/README.md) ·
-[Planetary/3D domain](../../domains/planetary-3d/README.md) ·
-[Directory Rules v2](../../doctrine/directory-rules.md) ·
-[ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
-
-**Last updated:** 2026-07-26 · **Doc version:** v0.2.0 ·
-**Doc status:** draft · **Authority:** architecture explanation only
+**Last updated:** 2026-08-19 · **Doc version:** v0.3.0 ·
+**Status:** draft · **Authority:** architecture explanation only
 
 [Back to top](#top)
