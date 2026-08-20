@@ -19,11 +19,15 @@ responsibility: "Explain current error-code evidence, preserve the v0.1 catalogu
 authority_limit: "This document does not define machine shape, activate a registry or HTTP binding, configure retry behavior, execute policy, deploy a service, or publish a claim."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 0a547c12e7965565d397fcad46d94c1c7b41f0c7
+  authoring_base_commit: 0a547c12e7965565d397fcad46d94c1c7b41f0c7
+  reconciled_main_commit: e13f99b623e53d710d64dc2328eeb1471abf7f84
   target_prior_blob: ae59686dfea140866e9b6194bb9964ade629e020
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   envelopes_doc_blob: 4c80f1d1808d5bed8f56bc2fd1fb73222d65ee42
+  threat_model_blob: 583db17425073995b25828818ef63b4cc7d1db73
+  lifecycle_gates_blob: 29b5a82fc058c7eb66228c77edf9a9a9f4d567ee
+  deployment_rules_blob: 863ce5b35138f3f8a817bbe85a89a923892215e5
   runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
   runtime_response_builder_blob: 5dacededc1bda64292259ba39b6387facafbd1e8
   runtime_response_validator_blob: 44ce7d51038a9adf9fcbdb18108cc27da8381e33
@@ -33,11 +37,14 @@ evidence_snapshot:
   governed_api_boundary_test_blob: 4035e537e6c52194928df5ab8ceb41a35f5f30ca
   runtime_http_binding_blob: bccf51983d1818e74528b83d1f8f425488608d1e
 inspection_boundary: >-
-  Current-session GitHub reads covered the prior page, accepted Directory Rules,
-  the grounded ENVELOPES companion, RuntimeResponseEnvelope contract and schema,
+  Current-session GitHub reads covered the complete prior page, accepted Directory
+  Rules, the grounded ENVELOPES, THREAT_MODEL, LIFECYCLE_GATES, and
+  DEPLOYMENT_RULES companions, RuntimeResponseEnvelope contract and schema,
   candidate builder, validator, fixtures, WSGI dispatcher, stub builder, route
-  tests, boundary tests, and inactive HTTP binding. No mounted checkout,
-  deployed service, browser client, live dependency, or operational log was used.
+  tests, boundary tests, inactive HTTP binding, open overlap, and post-authoring
+  main advancement. No mounted checkout, deployed service, browser client, live
+  dependency, identity provider, policy evaluator, receipt sink, or operational
+  log was used.
 related:
   - README.md
   - ENVELOPES.md
@@ -46,12 +53,18 @@ related:
   - LIFECYCLE_GATES.md
   - DEPLOYMENT_RULES.md
   - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../contracts/runtime/runtime_response_http_binding_v1.md
   - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - ../../../packages/envelopes/src/envelopes/runtime_response.py
+  - ../../../tools/validators/validate_runtime_response_envelope.py
+  - ../../../apps/governed-api/src/governed_api/main.py
+  - ../../../apps/governed-api/src/governed_api/stub.py
+  - ../../../apps/governed-api/tests/test_boundary_guards.py
 tags: [kfm, architecture, governed-api, error-codes, reason-codes, finite-outcomes, compatibility, repository-grounded]
 notes:
   - "The current wire profile has a top-level reason_code string and no nested reason object."
   - "The current app emits ERROR / SAFE_RUNTIME_ERROR for unknown routes and unsupported methods."
-  - "All v0.1 error/<class>/<detail> identifiers remain proposal lineage, not an accepted enum."
+  - "All nine v0.1 classes and 33 error/<class>/<detail> identifiers remain proposal lineage, not an accepted enum."
   - "This documentation-only change has no runtime, release, deployment, or publication effect."
 [/KFM_META_BLOCK_V2] -->
 
@@ -59,7 +72,10 @@ notes:
 
 # Governed API — Error Codes
 
-> **Operating boundary.** KFM has a finite `ERROR` outcome and a bounded fail-closed scaffold. It does **not** yet have an accepted public error-code registry. The current app emits `SAFE_RUNTIME_ERROR`; the v0.1 `error/<class>/<detail>` catalogue remains proposal lineage.
+> **Operating boundary.** KFM has a finite `ERROR` outcome and a bounded
+> fail-closed scaffold. It does **not** yet have an accepted public
+> error-code registry. The current app emits `SAFE_RUNTIME_ERROR`; the v0.1
+> `error/<class>/<detail>` catalogue remains proposal lineage.
 
 [![status](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status-and-authority)
 [![placement](https://img.shields.io/badge/path-confirmed-0969da?style=flat-square)](#directory-rules-basis)
@@ -68,12 +84,31 @@ notes:
 [![publisher](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#status-and-authority)
 
 > [!IMPORTANT]
-> **The current machine profile uses a top-level `reason_code` string.** It does not define the v0.1 nested `reason` object, `severity`, `retryable`, `retry_after_seconds`, `correlation_id`, `human_hint`, `trace`, or a slash-namespace pattern.
+> **The current machine profile uses a top-level `reason_code` string.** It
+> does not define the v0.1 nested `reason` object, `severity`, `retryable`,
+> `retry_after_seconds`, `correlation_id`, `human_hint`, `trace`, or a
+> slash-namespace pattern.
 
 > [!CAUTION]
-> **HTTP status, finite outcome, reason code, response identity, and internal diagnostics are separate.** None alone proves evidence, policy, release state, or retry safety.
+> **HTTP status, finite outcome, reason code, response identity, and internal
+> diagnostics are separate channels.** None alone proves evidence, policy,
+> release state, resource existence, or retry safety.
 
-**Quick navigation:** [Status](#status-and-authority) · [Scope](#1-scope) · [Shape](#2-code-shape) · [Classes](#3-classes--at-a-glance) · [`schema`](#4-class--errorschema) · [`rate`](#5-class--errorrate) · [`upstream`](#6-class--errorupstream) · [`internal`](#7-class--errorinternal) · [`timeout`](#8-class--errortimeout) · [`storage`](#9-class--errorstorage) · [`adapter`](#10-class--erroradapter) · [`audit`](#11-class--erroraudit) · [`contract`](#12-class--errorcontract) · [Stability](#13-stability-discipline) · [Anti-patterns](#14-anti-patterns) · [Decisions](#15-open-questions-and-adr-triggers) · [Related](#16-related-docs) · [Appendix](#17-appendix)
+> [!WARNING]
+> **Do not treat the v0.1 catalogue as deployed behavior.** Its nine classes
+> and 33 slash-namespaced codes are not constrained by the current
+> RuntimeResponseEnvelope schema or emitted by the inspected app.
+
+**Quick navigation:** [Status](#status-and-authority) · [Scope](#1-scope) ·
+[Shape](#2-code-shape) · [Classes](#3-classes--at-a-glance) ·
+[`schema`](#4-class--errorschema) · [`rate`](#5-class--errorrate) ·
+[`upstream`](#6-class--errorupstream) · [`internal`](#7-class--errorinternal) ·
+[`timeout`](#8-class--errortimeout) · [`storage`](#9-class--errorstorage) ·
+[`adapter`](#10-class--erroradapter) · [`audit`](#11-class--erroraudit) ·
+[`contract`](#12-class--errorcontract) · [Stability](#13-stability-discipline) ·
+[Anti-patterns](#14-anti-patterns) ·
+[Decisions](#15-open-questions-and-adr-triggers) · [Related](#16-related-docs) ·
+[Appendix](#17-appendix)
 
 ---
 
@@ -92,12 +127,14 @@ notes:
 | Are the v0.1 slash codes current? | **Not established.** They remain `PROPOSED_LINEAGE`. |
 | Is retryability or severity current wire behavior? | **No.** Those fields are absent from the current schema. |
 | Is the separate HTTP binding active? | **No.** It is `PROPOSED_INACTIVE` and fixture-oriented. |
+| Did adjacent Governed API docs advance during authoring? | **CONFIRMED.** `THREAT_MODEL.md`, `LIFECYCLE_GATES.md`, and `DEPLOYMENT_RULES.md` were grounded on main; the target and runtime-envelope implementation evidence were unchanged. |
 
 <a id="directory-rules-basis"></a>
 
 ### Directory Rules basis
 
-Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules](../../doctrine/directory-rules.md).
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+adopts [Directory Rules](../../doctrine/directory-rules.md).
 
 | Responsibility | Owning surface |
 |---|---|
@@ -108,6 +145,7 @@ Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 | HTTP behavior | Active profile, route implementation, and tests |
 | Client compatibility | Client code and focused tests |
 | Operational detail | Authorized runtime, observability, receipt, and incident surfaces |
+| Release, correction, and rollback | Their distinct governed object families and state-transition surfaces |
 
 [Back to top](#top)
 
@@ -125,7 +163,9 @@ This page records:
 4. minimum safety rules before registry adoption;
 5. open compatibility decisions and graduation evidence.
 
-This page does **not** change contracts, schemas, policy, fixtures, validators, tests, code, routes, clients, HTTP behavior, release state, deployment, or publication.
+This page does **not** change contracts, schemas, policy, fixtures, validators,
+tests, code, routes, clients, HTTP behavior, release state, deployment, or
+publication.
 
 ### 1.1 Authority order
 
@@ -137,13 +177,18 @@ This page does **not** change contracts, schemas, policy, fixtures, validators, 
 | Builder rejection | Pinned package implementation and tests |
 | Public/stable code | Future adopted registry/profile plus client compatibility proof |
 | Retry safety | Operation idempotency, transport profile, runtime behavior, and tests |
+| Public detail | Threat, privacy, sensitivity, audience, and anti-enumeration review |
 | Release eligibility | Evidence, policy, review, release, correction, and rollback records |
 
 ### 1.2 Evidence boundary
 
-**CONFIRMED:** current scaffold routes, 404/405 behavior, exact response-field tests, current schema, candidate builder, validator, fixtures, and inactive HTTP profile.
+**CONFIRMED:** current scaffold routes, 404/405 behavior, exact response-field
+tests, current schema, candidate builder, validator, fixtures, inactive HTTP
+profile, and grounded adjacent architecture boundaries.
 
-**UNKNOWN / not proved:** production registry, public-client fallback, rate limiting, live dependencies, storage, provider adapters, audit persistence, global exception handling, deployment, and incidents.
+**UNKNOWN / not proved:** production registry, public-client fallback, rate
+limiting, live dependencies, storage, provider adapters, audit persistence,
+global exception handling, deployment, or incidents.
 
 [Back to top](#top)
 
@@ -155,7 +200,8 @@ This page does **not** change contracts, schemas, policy, fixtures, validators, 
 
 ### 2.1 Current field
 
-The complete closed RuntimeResponseEnvelope includes ten unconditional required fields:
+The complete closed RuntimeResponseEnvelope includes ten unconditional required
+fields:
 
 ```text
 id · spec_hash · version · issued_at · outcome · reason_code
@@ -168,7 +214,9 @@ The current schema rule is:
 "reason_code": { "type": "string" }
 ```
 
-It does not define a pattern, enum, outcome pairing, retry rule, severity, deprecation, or client fallback. The candidate builder adds a bounded non-empty-string check; that is not a global registry.
+It does not define a pattern, enum, outcome pairing, retry rule, severity,
+deprecation, or client fallback. The candidate builder adds a bounded
+non-empty-string check; that is not a global registry.
 
 <a id="current-runtime-boundary"></a>
 
@@ -182,7 +230,24 @@ It does not define a pattern, enum, outcome pairing, retry rule, severity, depre
 | Unknown path | `404` | `ERROR` | `SAFE_RUNTIME_ERROR` | `stub:error:route-not-found` |
 | Unsupported method | `405` | `ERROR` | `SAFE_RUNTIME_ERROR` | `stub:error:method-not-allowed` |
 
-### 2.3 Prior nested proposal
+The current app exposes one coarse ERROR reason while retaining a bounded
+distinction in response identity. That is executable scaffold behavior, not an
+accepted public taxonomy.
+
+### 2.3 Channels that remain separate
+
+| Channel | Current purpose | Must not be inferred |
+|---|---|---|
+| HTTP status | Transport result | KFM truth, policy verdict, evidence state, or retry safety |
+| `outcome` | Finite response posture | Detailed root cause or HTTP mapping |
+| `reason_code` | Safe high-level discriminator | Internal diagnostic, evidence, or policy proof |
+| Envelope `id` | Response identity | Public registry or authorization fact |
+| `policy_state` | Envelope posture string | Proof that a policy engine ran |
+| `freshness` | Envelope posture string | Source-currentness proof |
+| `correction_state` | Envelope posture string | CorrectionNotice, WithdrawalNotice, or RollbackCard |
+| Logs, receipts, incidents | Authorized operational detail | A field to expose automatically on the public wire |
+
+### 2.4 Prior nested proposal
 
 v0.1 proposed:
 
@@ -191,9 +256,11 @@ reason.reason_code · reason.severity · reason.retryable
 reason.retry_after_seconds · reason.correlation_id · reason.human_hint
 ```
 
-**Disposition:** `PROPOSED_LINEAGE / incompatible with the current closed profile`. A future version must coordinate contract, schema, validator, runtime, client, disclosure, and rollback.
+**Disposition:** `PROPOSED_LINEAGE / incompatible with the current closed
+profile`. A future version must coordinate contract, schema, validator, runtime,
+client, disclosure, migration, and rollback.
 
-### 2.4 Repository-present literals
+### 2.5 Repository-present literals
 
 | Literal | Surface | Status |
 |---|---|---|
@@ -211,7 +278,8 @@ reason.retry_after_seconds · reason.correlation_id · reason.human_hint
 
 ## 3. Classes — at-a-glance
 
-All nine v0.1 classes are retained as `PROPOSED_LINEAGE`.
+All nine v0.1 classes and 33 v0.1 codes are retained as
+`PROPOSED_LINEAGE`.
 
 | Legacy class | Intended concern | Current proof gap |
 |---|---|---|
@@ -225,7 +293,8 @@ All nine v0.1 classes are retained as `PROPOSED_LINEAGE`.
 | `error/audit` | Required audit artifact failure | No inspected durable audit sink |
 | `error/contract` | Invariant or profile failure | Current findings are local validator/builder output |
 
-A class name does not decide whether the finite outcome is `ABSTAIN`, `DENY`, or `ERROR`.
+A class name does not decide whether the finite outcome is `ABSTAIN`, `DENY`,
+or `ERROR`.
 
 [Back to top](#top)
 
@@ -242,9 +311,12 @@ A class name does not decide whether the finite outcome is `ABSTAIN`, `DENY`, or
 | `error/schema/unknown-version` | Unsupported contract version | `PROPOSED_LINEAGE` |
 | `error/schema/oversized-payload` | Input exceeds size cap | `PROPOSED_LINEAGE` |
 
-Current builder/validator findings such as `FIELD_INVALID` and `SCHEMA_INVALID` are local diagnostics, not automatic wire codes.
+Current builder/validator findings such as `FIELD_INVALID` and
+`SCHEMA_INVALID` are local diagnostics, not automatic wire codes.
 
-**Graduation:** define request boundaries, safe disclosure, HTTP/outcome mapping, schema enforcement, version negotiation, size accounting, client fallback, and rollback.
+**Graduation:** define request boundaries, safe disclosure, HTTP/outcome
+mapping, schema enforcement, version negotiation, size accounting, client
+fallback, and rollback.
 
 [Back to top](#top)
 
@@ -260,9 +332,11 @@ Current builder/validator findings such as `FIELD_INVALID` and `SCHEMA_INVALID` 
 | `error/rate/burst-exhausted` | Burst budget exhausted | `PROPOSED_LINEAGE` |
 | `error/rate/global-cap` | Service-wide cap reached | `PROPOSED_LINEAGE` |
 
-No inspected surface proves caller identity, canonical audience classes, quotas, `Retry-After`, counters, or idempotency.
+No inspected surface proves caller identity, canonical audience classes,
+quotas, `Retry-After`, counters, or idempotency.
 
-**HOLD:** do not promise retry until operation-specific idempotency and transport behavior are proved.
+**HOLD:** do not promise retry until operation-specific idempotency and
+transport behavior are proved.
 
 [Back to top](#top)
 
@@ -279,7 +353,9 @@ No inspected surface proves caller identity, canonical audience classes, quotas,
 | `error/upstream/policy-bundle-unavailable` | Policy dependency unavailable | `PROPOSED_LINEAGE` |
 | `error/upstream/dependency-degraded` | Required dependency degraded | `PROPOSED_LINEAGE` |
 
-Future handling must not reveal protected topology, imply a protected resource exists, or fall back to internal, privileged, unreleased, or model-only material.
+Future handling must not reveal protected topology, imply that a protected
+resource exists, or fall back to internal, privileged, unreleased, or
+model-only material.
 
 [Back to top](#top)
 
@@ -295,9 +371,12 @@ Future handling must not reveal protected topology, imply a protected resource e
 | `error/internal/inconsistency` | Runtime inconsistency | `PROPOSED_LINEAGE` |
 | `error/internal/feature-disabled` | Capability disabled | `PROPOSED_LINEAGE` |
 
-Current executable ERROR behavior is the coarse literal `SAFE_RUNTIME_ERROR` for 404 and 405. Response identity distinguishes the two conditions. This does not prove a general exception fallback.
+Current executable ERROR behavior is the coarse literal `SAFE_RUNTIME_ERROR`
+for 404 and 405. Response identity distinguishes the two conditions. This does
+not prove a general exception fallback.
 
-A future fallback must remain non-leaky, never imply requested facts are false, and never authorize a less-governed content path.
+A future fallback must remain non-leaky, must not imply requested facts are
+false, and must not authorize a less-governed content path.
 
 [Back to top](#top)
 
@@ -314,7 +393,9 @@ A future fallback must remain non-leaky, never imply requested facts are false, 
 | `error/timeout/adapter` | Adapter budget exceeded | `PROPOSED_LINEAGE` |
 | `error/timeout/citation` | Citation budget exceeded | `PROPOSED_LINEAGE` |
 
-A timeout may require `ABSTAIN`, `DENY`, or `ERROR` depending on the operation. Define budgets, cancellation, cleanup, idempotency, client behavior, and test clocks before adoption.
+A timeout may require `ABSTAIN`, `DENY`, or `ERROR` depending on the
+operation. Define budgets, cancellation, cleanup, idempotency, client behavior,
+and test clocks before adoption.
 
 [Back to top](#top)
 
@@ -330,7 +411,9 @@ A timeout may require `ABSTAIN`, `DENY`, or `ERROR` depending on the operation. 
 | `error/storage/content-unavailable` | Released content unavailable | `PROPOSED_LINEAGE` |
 | `error/storage/integrity-mismatch` | Content digest mismatch | `PROPOSED_LINEAGE` |
 
-A storage code is not a receipt, proof, release decision, correction record, or rollback record. The v0.1 claim that all receipt-write failures refuse responses remains proposed, not current behavior.
+A storage code is not a receipt, proof, release decision, correction record,
+or rollback record. The v0.1 claim that all receipt-write failures refuse
+responses remains proposed, not current behavior.
 
 [Back to top](#top)
 
@@ -347,7 +430,8 @@ A storage code is not a receipt, proof, release decision, correction record, or 
 | `error/adapter/secret-missing` | Required runtime credential unavailable | `PROPOSED_LINEAGE` |
 | `error/adapter/sdk-bypass-detected` | Governed adapter boundary bypassed | `PROPOSED_LINEAGE` as wire code; current import guard is a test concern |
 
-Build-time boundary violations, runtime provider failures, governance admission, and outward response codes are different surfaces.
+Build-time boundary violations, runtime provider failures, governance
+admission, and outward response codes are different surfaces.
 
 [Back to top](#top)
 
@@ -364,7 +448,9 @@ Build-time boundary violations, runtime provider failures, governance admission,
 | `error/audit/missing-ai-receipt` | AI receipt unavailable | `PROPOSED_LINEAGE` |
 | `error/audit/pii-in-receipt` | Receipt redaction rejected content | `PROPOSED_LINEAGE` |
 
-A reason code does not prove the required artifact, write attempt, response refusal, review, incident, correction, or rollback. Those require separate governed records.
+A reason code does not prove the required artifact, write attempt, response
+refusal, review, incident, correction, or rollback. Those require separate
+governed records.
 
 [Back to top](#top)
 
@@ -381,7 +467,9 @@ A reason code does not prove the required artifact, write attempt, response refu
 | `error/contract/receipt-shape-invalid` | Receipt profile violation | `PROPOSED_LINEAGE` |
 | `error/contract/spec-hash-mismatch` | Spec pin mismatch | `PROPOSED_LINEAGE`; current `spec_hash` is top-level |
 
-Local findings including `PRECISION_INTERVAL_INVERTED`, `GENERALIZATION_RECEIPT_REQUIRED`, and `SCHEMA_INVALID` must not become public wire codes without a reviewed safe translation.
+Local findings including `PRECISION_INTERVAL_INVERTED`,
+`GENERALIZATION_RECEIPT_REQUIRED`, and `SCHEMA_INVALID` must not become public
+wire codes without a reviewed safe translation.
 
 [Back to top](#top)
 
@@ -391,7 +479,8 @@ Local findings including `PRECISION_INTERVAL_INVERTED`, `GENERALIZATION_RECEIPT_
 
 ## 13. Stability discipline
 
-**Current status:** no accepted registry or versioning guarantee was established.
+**Current status:** no accepted registry or versioning guarantee was
+established.
 
 Before declaring codes stable, a reviewed profile must define:
 
@@ -406,9 +495,11 @@ Before declaring codes stable, a reviewed profile must define:
 | Unknown codes | Generic safe client fallback |
 | Versioning | Add, deprecate, replace, retire, and mixed versions |
 | Enforcement | Schema, semantic validator, runtime, and client tests |
-| Rollback | Alias window, revert target, and correction behavior |
+| Correction and rollback | Alias window, revert target, and public correction behavior |
 
-Until then, clients should trust `outcome` over the code text, show a generic safe state, avoid guessing retry or policy, and never fall back to less-governed content.
+Until then, clients should trust `outcome` over the code text, show a generic
+safe state, avoid guessing retry or policy, and never fall back to
+less-governed content.
 
 [Back to top](#top)
 
@@ -428,9 +519,10 @@ Until then, clients should trust `outcome` over the code text, show a generic sa
 | Converting validator findings directly to public codes | Add a reviewed translation |
 | Marking all transient failures retryable | Prove idempotency and backoff |
 | Retrying mutations on generic ERROR | Require operation-specific replay controls |
+| Returning detail that reveals a protected resource exists | Use non-enumerating fail-closed behavior |
 | Crashing on unknown codes | Render a generic safe state |
 | Falling back to internal, privileged, withdrawn, or model-only content | Fail closed |
-| Treating a fixture, receipt, PR, or merge as registry adoption | Keep governance transitions separate |
+| Treating a fixture, receipt, PR, merge, release, or deployment as registry adoption | Keep governance transitions separate |
 | Removing old identifiers without lineage | Record supersession and rollback |
 
 [Back to top](#top)
@@ -458,7 +550,21 @@ Until then, clients should trust `outcome` over the code text, show a generic sa
 
 ### 15.1 Smallest graduation slice
 
-A future no-network slice could constrain only `NOT_IMPLEMENTED` and `SAFE_RUNTIME_ERROR`, define outcome compatibility, add unknown-code client tests, preserve 404/405 non-leakage, and leave richer classes held until their dependencies exist. This page does not implement that slice.
+A future no-network slice could:
+
+1. choose one registry authority and version;
+2. constrain `reason_code` grammar without adding a nested reason object;
+3. define only the already executable `NOT_IMPLEMENTED` and
+   `SAFE_RUNTIME_ERROR` literals, or explicitly version replacements;
+4. bind allowed outcome/code pairs;
+5. add positive and negative fixtures;
+6. test unknown-code client behavior, 404/405 non-leakage, and no-detail
+   exposure;
+7. activate the HTTP binding only after implementation parity; and
+8. preserve rollback to the current coarse literals.
+
+Rate, upstream, storage, adapter, audit, and richer internal classes remain
+held until their dependencies exist. This page does not implement the slice.
 
 [Back to top](#top)
 
@@ -473,9 +579,9 @@ A future no-network slice could constrain only `NOT_IMPLEMENTED` and `SAFE_RUNTI
 | [`README.md`](README.md) | Governed API architecture boundary | Repository-grounded guidance |
 | [`ENVELOPES.md`](ENVELOPES.md) | Current envelope profiles and reason conflict | Repository-grounded guidance |
 | [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) | Audience/auth/capability boundary | Repository-grounded guidance |
-| [`THREAT_MODEL.md`](THREAT_MODEL.md) | Threat hypotheses | Mixed maturity |
-| [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) | Gate target design | Mixed maturity |
-| [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md) | Exposure/deployment boundary | Operational proof required |
+| [`THREAT_MODEL.md`](THREAT_MODEL.md) | Current scaffold safeguards and held threat boundaries | Repository-grounded guidance |
+| [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) | Current readiness evidence and request-time transition HOLDs | Repository-grounded guidance |
+| [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md) | Deployment preparation and operational-proof boundary | Repository-grounded guidance |
 | [RuntimeResponseEnvelope contract](../../../contracts/runtime/runtime_response_envelope.md) | Semantic profile | Draft / proposed |
 | [RuntimeResponseEnvelope schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Machine shape | Draft / proposed |
 | [HTTP binding profile](../../../contracts/runtime/runtime_response_http_binding_v1.md) | Proposed status/outcome mapping | `PROPOSED_INACTIVE` |
@@ -498,11 +604,11 @@ A future no-network slice could constrain only `NOT_IMPLEMENTED` and `SAFE_RUNTI
 ### 17.1 Current executable quick reference
 
 ```text
-GET /bootstrap  -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
-GET /layers     -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
-GET /evidence   -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
-unknown path    -> 404 -> ERROR   -> SAFE_RUNTIME_ERROR
-unsupported verb->405 -> ERROR   -> SAFE_RUNTIME_ERROR
+GET /bootstrap   -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
+GET /layers      -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
+GET /evidence    -> 200 -> ABSTAIN -> NOT_IMPLEMENTED
+unknown path     -> 404 -> ERROR   -> SAFE_RUNTIME_ERROR
+unsupported verb -> 405 -> ERROR   -> SAFE_RUNTIME_ERROR
 ```
 
 ### 17.2 Full v0.1 catalogue retained without adoption
@@ -520,6 +626,13 @@ error/audit/{missing-policy-receipt, missing-citation-report,
              missing-ai-receipt, pii-in-receipt}
 error/contract/{envelope-malformed, invariant-violation, receipt-shape-invalid,
                 spec-hash-mismatch}
+```
+
+Count check:
+
+```text
+schema 4 + rate 3 + upstream 4 + internal 3 + timeout 4
++ storage 3 + adapter 4 + audit 4 + contract 4 = 33
 ```
 
 Every identifier above is `PROPOSED_LINEAGE`.
@@ -545,11 +658,12 @@ Every identifier above is `PROPOSED_LINEAGE`.
 | Path marked proposed | Corrected to confirmed same-path docs placement |
 | Canonical public vocabulary claim | Corrected to non-authoritative, unratified guidance |
 | Nested reason shape | Retained as incompatible proposal lineage |
-| Nine classes and 34 codes | Retained in full as proposal lineage |
+| Nine classes and 33 codes | Retained in full as proposal lineage |
 | Retry/severity guarantees | Held pending implementation and client proof |
 | `error/internal/unhandled` fallback | Corrected to current coarse 404/405 behavior |
 | Validator findings | Separated from wire reasons |
 | Stability guarantee | Held until registry adoption |
+| Adjacent docs advanced during authoring | Re-read and reconciled before final exact-head delivery |
 | Rollback | Prior blob retained below |
 
 ### 17.5 Rollback
@@ -560,10 +674,14 @@ Prior target blob:
 ae59686dfea140866e9b6194bb9964ade629e020
 ```
 
-Before merge, close the draft PR and delete the feature branch. After an authorized merge, revert the documentation commit and remove or supersede its generated authoring receipt. No service, release, deployment, or public state changes.
+Before merge, close the draft PR and delete the feature branch. After an
+authorized merge, revert the documentation commit and remove or supersede its
+generated authoring receipt. No service, release, deployment, or public state
+changes.
 
 ---
 
-**Last updated:** 2026-08-19 · **Version:** v0.2 · **Status:** repository-grounded draft · **Registry:** not adopted
+**Last updated:** 2026-08-19 · **Version:** v0.2 ·
+**Status:** repository-grounded draft · **Registry:** not adopted
 
 [Back to top](#top)
