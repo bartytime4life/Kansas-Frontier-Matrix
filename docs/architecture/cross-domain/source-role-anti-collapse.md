@@ -59,7 +59,7 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d97706?style=flat-square)](#status-and-evidence-boundary)
 [![Placement: confirmed](https://img.shields.io/badge/placement-ADR--0029%20PLACE-1a7f37?style=flat-square)](#directory-rules-basis)
 [![Cross-profile vocabulary: hold](https://img.shields.io/badge/vocabulary%20crosswalk-HOLD-b42318?style=flat-square)](#current-vocabulary-surfaces)
-[![Public seam: hold](https://img.shields.io/badge/public%20seam-HOLD-b42318?style=flat-square)](#11-per-surface-enforcement)
+[![Public seam: hold](https://img.shields.io/badge/public%20seam-HOLD-b42318?style=flat-square)](#4-guardrails--where-the-rules-execute)
 [![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-6e7781?style=flat-square)](#authority-boundary)
 
 > [!IMPORTANT]
