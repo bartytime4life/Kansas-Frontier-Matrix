@@ -14,7 +14,7 @@ owning_root: docs/
 responsibility_root: docs/
 responsibility: Explain the current county Focus Mode template directory, its authoring contract, its unresolved convergence boundary, and the checks required before a template copy can become a governed county plan.
 current_path: docs/focus-mode/counties/_template/README.md
-base_commit: 1788dad6c30adede09343370e520115da807c885
+base_commit: 8f37e036864ae8ee6702a3e9321e6bb2fda7d257
 prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
 directory_governance: "ADR-0029 accepts the exact Directory Rules v2 bytes at docs/doctrine/directory-rules.md. Sections 12.4 and 16 classify Focus Mode as a composition scope and require a BOUNDARY_COMPACT README where ownership or lifecycle behavior changes."
 canonical_relationship: "Current tracked template boundary. The surviving county-control-plane path and any singular-to-plural migration remain HOLD because ADR-0027 is proposed and no accepted Focus Mode alias or migration record was verified."
@@ -35,11 +35,13 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
   base_ref: main
-  base_commit: 1788dad6c30adede09343370e520115da807c885
+  base_commit: 8f37e036864ae8ee6702a3e9321e6bb2fda7d257
+  initial_authoring_base: 1788dad6c30adede09343370e520115da807c885
   target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
-  sibling_template_blob: 327c6304cd5301a38c9e086610be12725f3fabf7
+  sibling_template_blob: 520922bf756ff5e75f927c5d0dc9cc81e65ca3e0
+  sibling_template_receipt_blob: fa51cf6535da7c71cce36cbcf5061c5b25d2a3e3
   county_parent_readme_blob: 48621badd51614db7bff0882c19096fa388234ac
-  county_index_blob: ba888a806148866501bf1f6c730a7b411ca67277
+  county_index_blob: c97b7792974b5aafc059a78849e545df1934f984
   adr_0027_blob: 4dfb29c963cd5662265d3cb97f98be82212d5e08
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -51,16 +53,17 @@ evidence_snapshot:
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 inspection_boundary: >-
   Current-session GitHub reads covered the exact target and sibling tree; the complete
-  sibling build-plan template in bounded chunks; the current county parent README and
-  county index; accepted ADR-0029 and adopted Directory Rules sections governing
-  composition scopes, README profiles, compatibility, migration, and rollback;
+  v2.0-draft sibling build-plan template and its generated receipt after merged PR #3180;
+  the repository-grounded v1.0 county index and its full-tree inventory findings; the
+  current county parent README; accepted ADR-0029 and adopted Directory Rules sections
+  governing composition scopes, README profiles, compatibility, migration, and rollback;
   proposed ADR-0027; the FocusModePayload semantic contract path; the county index
   validator; the real validator entrypoint, orchestrator, and registry; CODEOWNERS;
   exact absence checks for the expected FocusModePayload schema and payload validator;
-  open pull-request overlap; and matching task branches. No mounted checkout, local
-  validator execution, full recursive county migration inventory, schema/policy
-  evaluation, Governed API request, Explorer Web render, release packet, correction
-  cascade, cache invalidation, deployment, or rollback drill was exercised.
+  open pull-request overlap; matching task branches; and current-main reconciliation.
+  No mounted checkout, local validator execution, schema/policy evaluation, Governed API
+  request, Explorer Web render, release packet, correction cascade, cache invalidation,
+  deployment, or rollback drill was exercised.
 related:
   - ../README.md
   - ../COUNTY_INDEX.md
@@ -113,15 +116,15 @@ notes:
 
 This page replaces a one-byte blank placeholder at the same path. It documents current repository evidence and the smallest safe operating boundary for the sibling template. It does not resolve the wider county-control-plane migration.
 
-| Surface | Confirmed state at `main@1788dad6c30adede09343370e520115da807c885` | Safe interpretation |
+| Surface | Confirmed state at `main@8f37e036864ae8ee6702a3e9321e6bb2fda7d257` | Safe interpretation |
 |---|---|---|
 | This README | Existing path; prior blob `8b137891791fe96927ad78e64b0aad7bded08bdc`; one newline only. | Same-path documentation implementation; no new authority home. |
 | Direct-child tree | Exactly `README.md` and `county-build-plan.md`. | The map below is current and bounded to this directory. |
-| Sibling scaffold | [`county-build-plan.md`](county-build-plan.md), blob `327c6304cd5301a38c9e086610be12725f3fabf7`, is a substantive draft template with doc metadata, narrative prompts, promotion guidance, and one marked structured YAML block. | It is usable as planning lineage, but not proof of validator compatibility, accepted placement, or release readiness. |
+| Sibling scaffold | [`county-build-plan.md`](county-build-plan.md), blob `520922bf756ff5e75f927c5d0dc9cc81e65ca3e0`, is a repository-grounded `v2.0-draft` compatibility-lane authoring aid. It explicitly labels its fenced plan-data block as **not currently admitted** and records the validator mismatch. | It is the current human scaffold, not proof of parser compatibility, accepted destination placement, payload admission, policy enforcement, or release readiness. |
 | Directory governance | [ADR-0029](../../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact [Directory Rules v2](../../../doctrine/directory-rules.md) bytes. | Focus Mode is a composition scope; this local boundary inherits `docs/` authority and the `BOUNDARY_COMPACT` README profile. |
 | County-control-plane ADR | [ADR-0027](../../../adr/ADR-0027-county-focus-mode-control-plane.md) is `proposed`. | Its plural convergence target and migration design are not accepted implementation authority. |
 | County parent README | [`../README.md`](../README.md) contains substantial control-plane prose but also carries older singular/plural and retirement claims. | Use as lineage and local navigation; do not let it override accepted Directory Rules or ADR status. |
-| County index | [`../COUNTY_INDEX.md`](../COUNTY_INDEX.md) enumerates 105 counties as a collision-prevention register and marks repository implementation `NEEDS_VERIFICATION`. | County-series coverage is not validator success, payload readiness, or release. |
+| County index | [`../COUNTY_INDEX.md`](../COUNTY_INDEX.md), blob `c97b7792974b5aafc059a78849e545df1934f984`, is a repository-grounded v1.0 inventory of 105 county-shaped directories. It records 104 exact snake_case directory names, 70 one-byte README-like files, 0 seven-file validator layouts, and 0 executable lifecycle validations. | Current-path inventory prevents duplicate first-time generation; it does not prove semantic correctness, validator success, payload readiness, release, or publication. |
 | Semantic contract | [`FocusModePayload`](../../../../contracts/focus_mode/focus_mode_payload.md) exists as a semantic contract. | Meaning does not prove a current machine schema, validator, runtime binding, or release. |
 | Index validator | [`validate_focus_mode_index.py`](../../../../tools/validators/validate_focus_mode_index.py) exists and is marked proposed. | Its expected plural tree, table grammar, filenames, and front-matter model do not match all current legacy materials. |
 | Validator orchestration | `tools/validate_all.py` delegates to a real deterministic orchestrator. | The older “placeholder orchestrator” claim is stale. |
@@ -289,10 +292,10 @@ Do not copy one block's values into the other mechanically. Document metadata an
 The sibling currently contains one fenced `yaml` block whose first line is:
 
 ```text
-# === KFM Focus Mode Build Plan: structured plan data (REQUIRED) ===
+# === KFM Focus Mode Build Plan: compatibility plan data (NOT CURRENTLY ADMITTED) ===
 ```
 
-A copied plan must preserve exactly one such marker and one intended plan-data block until an accepted schema/parser change says otherwise. Additional YAML examples should use `text` fences or be kept outside the parser's search boundary.
+A copied plan must preserve exactly one such marker and one intended plan-data block until an accepted schema/parser change says otherwise. Preserve the explicit non-admission wording; do not relabel the block as validator input. Additional YAML examples should use `text` fences or be kept outside the parser's search boundary.
 
 ### 3. Resolve authoring placeholders without inventing authority
 
@@ -333,10 +336,10 @@ The current county Focus Mode surfaces do not form one accepted, internally cons
 | Dimension | Current evidence | Result |
 |---|---|---|
 | Human docs lane | Tracked singular `docs/focus-mode/counties/`; ADR-0027 proposes plural convergence. | **HOLD** — no accepted survivor/migration packet verified. |
-| County lane naming | Existing county folders and filenames vary; proposed validator expects kebab-case scope suffix and seven fixed filenames. | **CONFLICTED / NEEDS VERIFICATION**. |
-| Build-plan data grammar | Sibling template uses a marked fenced YAML block in section 12. | Useful authoring profile; not current parser proof. |
+| County lane naming | The current index verifies 105 county-shaped directories, 104 exact snake_case names, multiple filename anomalies, and 0 directories with the proposed seven-file layout; the validator expects kebab-case scope suffixes and seven fixed filenames. | **CONFLICTED / NEEDS VERIFICATION**. |
+| Build-plan data grammar | The revised sibling deliberately retains a marked fenced YAML **compatibility authoring scaffold** in section 12 and states that it is not current validator input. | Useful migration target; not current parser or payload-admission proof. |
 | Validator data grammar | Index validator searches a YAML-like `---` front-matter block with top-level keys. | **CONFLICTED** with sibling template's current structure. |
-| County index grammar | Current index uses `Series state` and `Repo implementation status`; validator expects a different eight-column master table. | **CONFLICTED**. |
+| County index grammar | The revised index intentionally uses repository-inventory columns and findings, while the validator expects an eight-column lifecycle/planning table headed `County`, `Lane`, and `Status`. | **CONFLICTED**, now explicitly documented rather than hidden. |
 | Semantic meaning | `contracts/focus_mode/focus_mode_payload.md` exists. | **PARTIAL** — meaning only. |
 | Machine shape | Expected FocusModePayload schema not found. | **ABSENT / NEEDS VERIFICATION**. |
 | Payload validator | Expected payload validator not found. | **ABSENT / NEEDS VERIFICATION**. |
@@ -378,7 +381,7 @@ Resolving these dimensions requires coordinated changes across documentation, co
 |---|---|---|
 | Copy target placement | **HOLD** | No accepted county-control-plane migration decision or alias record verified. |
 | Sibling template against index validator | **NEEDS VERIFICATION / expected conflict** | Current structured-block and validator front-matter models differ. |
-| County index against validator | **NEEDS VERIFICATION / expected conflict** | Current table grammar differs from validator requirements. |
+| County index against validator | **NEEDS VERIFICATION / expected conflict** | The repository-grounded inventory table intentionally differs from the validator's lifecycle/planning table grammar. |
 | FocusModePayload machine schema | **NOT AVAILABLE at checked path** | No schema instance to validate against. |
 | Payload validator | **NOT AVAILABLE at checked path** | No executable payload admission surface found. |
 | Aggregate validator discovery | **NOT WIRED** | Focus Mode index validator is absent from the current registry. |
@@ -489,8 +492,8 @@ Do not:
 |---|---|---|---|
 | P0 | Decide whether and how ADR-0027 advances, is revised, or is superseded under accepted Directory Rules v2. | **PROPOSED / HOLD** | Accepted decision with exact scope and migration obligations. |
 | P0 | Select the surviving county Focus Mode docs identity and record compatibility mappings. | **UNKNOWN** | Accepted ADR plus schema-backed migration/alias record. |
-| P0 | Reconcile sibling template structured data with the validator's parser contract. | **CONFLICTED** | One accepted grammar, valid/invalid fixtures, focused tests, migration note. |
-| P0 | Reconcile the 105-county index grammar with validator expectations without losing collision-prevention state. | **CONFLICTED** | No-loss migration and passing deterministic index tests. |
+| P0 | Reconcile the sibling v2 compatibility plan-data block with the validator's front-matter parser contract. | **CONFLICTED** | One accepted grammar, valid/invalid fixtures, focused tests, and a no-loss migration note. |
+| P0 | Reconcile the repository-grounded 105-county inventory grammar with validator expectations without losing exact path/anomaly evidence. | **CONFLICTED** | No-loss crosswalk or versioned migration plus passing deterministic index tests. |
 | P1 | Add or verify the FocusModePayload machine schema in the accepted schema lane. | **NOT FOUND** | Closed schema, semantic crosswalk, fixtures, validator, tests. |
 | P1 | Add or verify a payload validator that cannot grant policy, release, or publication authority. | **NOT FOUND** | Deterministic finite outcomes and negative fixtures. |
 | P1 | Register the index/payload validators in the real orchestrator only after their contracts converge. | **UNREGISTERED** | Registry entry, path globs, focused and changed-area tests. |
@@ -502,7 +505,7 @@ Do not:
 
 ### Smallest sound next implementation slice
 
-**PROPOSED:** after accountable review of this boundary, reconcile the sibling template's structured-data grammar with the current index validator in a fixture-only, no-network packet. That slice should not move paths, activate policy, create public `ANSWER`, or release a county product. If the grammar cannot be reconciled without selecting a canonical lane, keep implementation on `HOLD` and resolve ADR-0027 first.
+**PROPOSED:** after accountable review of this boundary, reconcile the sibling template's explicit compatibility plan-data grammar with the current index validator's front-matter grammar in a fixture-only, no-network packet. That slice should not move paths, activate policy, create public `ANSWER`, or release a county product. If the grammar cannot be reconciled without selecting a canonical lane, keep implementation on `HOLD` and resolve ADR-0027 first.
 
 [Back to top](#top)
 
@@ -512,9 +515,9 @@ Do not:
 
 | Surface | Relationship |
 |---|---|
-| [`county-build-plan.md`](county-build-plan.md) | Current sibling authoring scaffold. |
+| [`county-build-plan.md`](county-build-plan.md) | Current v2.0-draft sibling compatibility-lane authoring scaffold; its fenced data block is explicitly not current validator input. |
 | [`../README.md`](../README.md) | Current county-lane orientation; contains lineage and convergence claims requiring current-authority review. |
-| [`../COUNTY_INDEX.md`](../COUNTY_INDEX.md) | Current 105-county collision-prevention register. |
+| [`../COUNTY_INDEX.md`](../COUNTY_INDEX.md) | Current repository-grounded 105-county inventory and collision-prevention register. |
 | [`../../README.md`](../../README.md) | Current singular Focus Mode orientation. |
 | [ADR-0027](../../../adr/ADR-0027-county-focus-mode-control-plane.md) | Proposed county-control-plane convergence decision. |
 | [ADR-0029](../../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted Directory Rules v2 adoption decision. |
