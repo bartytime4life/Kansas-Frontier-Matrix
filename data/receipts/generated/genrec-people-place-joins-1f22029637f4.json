@@ -1,0 +1,276 @@
+{
+  "receipt_id": "genrec-people-place-joins-1f22029637f4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/people-place-joins.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/people-place-joins.md": "sha256:1f22029637f400770d85a6cbbb69cddd1786d16ee650b4d8abaa33566835b419"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (current repository evidence, exact feature-branch write, and draft-PR delivery)",
+      "attached-file evidence",
+      "local deterministic Markdown, metadata, anchor, fence, table, link, Git-blob, SHA-256, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:commit/675301fe4f925425af1803fec57a164b4d142e1f",
+      "repo:branch/docs-modernize-people-place-joins-20260820",
+      "repo:docs/architecture/people-place-joins.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=7e428017d0a0a3b75cbf01424f34bfbe356e8e6d",
+      "repo:docs/architecture/people-place-joins.md@675301fe4f925425af1803fec57a164b4d142e1f#blob=74b396526dc2265e290c4c2bc858da1e8b21cbbe",
+      "repo:docs/architecture/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=0b92d8d809b25a5b39c19bc0fa7e94f98ea499b9",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:contracts/joins/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:contracts/joins/people-settlements/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=c4b109e85af72ad6d1ff3f9499d124e733672815",
+      "repo:contracts/joins/cross_lane_join_assessment.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=2d78246d66d64d69413686e460321635adfc6170",
+      "repo:schemas/contracts/v1/joins/cross_lane_join_assessment.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:tools/joins/join_candidates.py@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:tests/joins/test_join_candidates.py@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:.github/workflows/cross-lane-join-assessment.yml@18da9e4700f930776340367f4a5c8ffc3dbb5781",
+      "repo:contracts/domains/people-dna-land/historical_person_place_event_resolution.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=7382ae1ef339df51fa9777f26a6f26d57b8009f5",
+      "repo:schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=0a1cd4d6fcd0d80a45b88bf679dd7beb3f9ad4d6",
+      "repo:tools/validators/validate_historical_person_place_event_resolution.py@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=3ce791ef6b04a87807146675a7d1536ee6c713bc",
+      "repo:fixtures/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=cdb60340b8484b4a6ca40bec5b7245192b8ec22a",
+      "repo:tests/validators/test_validate_historical_person_place_event_resolution.py@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=9c98ad5b6b4e11ed6625305121e0e39026eac1c1",
+      "repo:.github/workflows/historical-person-place-event-resolution.yml@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=729b2f7189f146ea17c809a506a8f429f1f9fb81",
+      "repo:contracts/domains/settlements-infrastructure/place-identity.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=8f315a9e07e6230188243e6476abc263a390922e",
+      "repo:contracts/evidence/evidence_ref.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=afd3a964435445edbb694b5edf16e2b6ddd49a92",
+      "repo:contracts/evidence/evidence_bundle.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=731c348832add23cddd14e796aa56ce2b9268259",
+      "repo:policy/joins/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=98b0a4e55007786039690a54be8f19b1bb0d2aec",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=1472d26a42c73f17545b4464a275412ffa1d098e",
+      "repo:control_plane/cross_domain_seam_register.yaml@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29",
+      "repo:control_plane/policy_gate_register.yaml@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=10e66eb9d587797a3f12e2aaac00fb4e60ec7fa2",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:tools/validators/validate_generated_receipt.py@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=f5cbcec72a4217190c5e88711cc70975688dd275",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/people-place-joins.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-overlap-and-concurrency-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 18da9e4700f930776340367f4a5c8ffc3dbb5781, confirmed prior target blob 7e428017d0a0a3b75cbf01424f34bfbe356e8e6d, found no open pull request or matching branch for the target before work, and created the feature branch from the exact current head."
+    },
+    {
+      "gate": "directory-rules-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and adopted Directory Rules v2 support same-path PLACE for this existing explanatory architecture document under docs/architecture/ while contracts, schemas, policy, registers, tools, fixtures, tests, data, release, runtime, and publication remain separate authorities."
+    },
+    {
+      "gate": "current-repository-people-place-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the generic fixture-only CrossLaneJoinAssessment packet, draft People-Settlements semantic lane, and fixture-only HistoricalPersonPlaceEventResolutionCandidate packet without fusing their vocabularies or upgrading candidate validity into identity, relationship truth, policy permission, review approval, release, or publication."
+    },
+    {
+      "gate": "policy-seam-and-public-use-boundary",
+      "outcome": "PASS",
+      "reason": "Recorded that policy/joins is inactive, PolicyDecision has no joins family, the proposed policy-gate register is empty, People-Place is absent from the partial Cross-Domain Seam Register, and no substantive Governed API People-Place ANSWER or released public carrier was verified."
+    },
+    {
+      "gate": "sensitivity-consent-rights-and-harmful-composition-boundary",
+      "outcome": "PASS",
+      "reason": "The revision fails closed for living-person location, private family and parcel context, raw or inferred DNA, exact burial and archaeology locations, reservation-community and cultural-affiliation context, small-cohort re-identification, harmful precision, unknown rights, and unsupported public composition."
+    },
+    {
+      "gate": "legacy-identity-heading-and-content-preservation",
+      "outcome": "PASS",
+      "reason": "Preserved the same path, doc_id, H1, top anchor, and all eleven numbered H2 headings while retaining the event-first model, authority anchoring, lifecycle, finite outcomes, sensitivity, anti-pattern, verification, and related-document intent."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified 53,371 UTF-8 bytes, 760 lines, one H1, parseable KFM metadata, nineteen H2 headings, all eleven legacy numbered H2 headings, one unique explicit top anchor, five balanced code blocks including two Mermaid graphs, fourteen consistent tables, 87 Markdown links across 54 unique targets and 28 repository-relative destinations, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 74b396526dc2265e290c4c2bc858da1e8b21cbbe equals the locally reconstructed Git blob; final document SHA-256 is 1f22029637f400770d85a6cbbb69cddd1786d16ee650b4d8abaa33566835b419."
+    },
+    {
+      "gate": "generated-receipt-shape-and-closure-preflight",
+      "outcome": "PASS",
+      "reason": "Verified parseable JSON, contract version 3.0.0, exact artifact-path/hash/truth-label key closure, non-empty document citations, pending-review posture, no self-binding, and exact document SHA-256 before branch emission."
+    },
+    {
+      "gate": "repository-native-focused-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted dependency-complete checkout was available. Current contracts, schemas, validators, fixtures, tests, and workflows were inspected as repository evidence, but no new local execution of their commands is claimed for this documentation-only slice."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks begin after final branch delivery; exact-head hosted outcomes were pending when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing does not create domain stewardship, identity adjudication, consent, qualified sensitivity review, policy approval, release approval, publication authority, or merge authority."
+    },
+    {
+      "gate": "runtime-release-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes one architecture document and one generated authoring receipt only; no doctrine, ADR, register, contract, schema, policy, source, fixture, validator, test, workflow, package, app, runtime, lifecycle state, release, deployment, publication, or repository setting changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "document-commit",
+      "validated": true,
+      "evidence_ref": "repo:commit/675301fe4f925425af1803fec57a164b4d142e1f"
+    },
+    {
+      "id": "prior-target",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/people-place-joins.md@18da9e4700f930776340367f4a5c8ffc3dbb5781#blob=7e428017d0a0a3b75cbf01424f34bfbe356e8e6d"
+    },
+    {
+      "id": "final-target",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/people-place-joins.md@675301fe4f925425af1803fec57a164b4d142e1f#blob=74b396526dc2265e290c4c2bc858da1e8b21cbbe"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "people-settlements-boundary",
+      "validated": true,
+      "evidence_ref": "repo:contracts/joins/people-settlements/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "generic-join-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/joins/cross_lane_join_assessment.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "historical-resolution-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/people-dna-land/historical_person_place_event_resolution.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "historical-resolution-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/people-dna-land/historical_person_place_event_resolution.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "historical-resolution-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_historical_person_place_event_resolution.py@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "historical-resolution-tests",
+      "validated": true,
+      "evidence_ref": "repo:tests/validators/test_validate_historical_person_place_event_resolution.py@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "historical-resolution-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/historical-person-place-event-resolution.yml@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "place-identity-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/settlements-infrastructure/place-identity.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "evidence-ref-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_ref.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "evidence-bundle-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_bundle.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "join-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/joins/README.md@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "policy-decision-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "partial-seam-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/cross_domain_seam_register.yaml@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "empty-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_generated_receipt.py@18da9e4700f930776340367f4a5c8ffc3dbb5781"
+    },
+    {
+      "id": "attached-authoring-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "attached-directory-standard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T22:46:34Z",
+  "emitter": "OpenAI GPT-5.6 Pro KFM repository implementation agent",
+  "notes": "Documentation-only modernization emitted from current repository evidence and the attached v6 implementation prompt. People-Place public use remains held; no seam, policy, source, identity, relation, lifecycle, release, deployment, publication, merge, or repository-setting authority is created."
+}
