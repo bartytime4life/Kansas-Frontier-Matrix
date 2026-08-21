@@ -1,0 +1,176 @@
+{
+  "receipt_id": "genrec-agriculture-dashboard-spec-v1-0d98b4713821",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/agriculture.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/agriculture.md": "sha256:0d98b47138215c72a0c96d6fabcc2ecdb0ddb54e4466dd099f2e8d198a50387c",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:98a9f2f361e35519d288dd5894752cb0f52bf9d3adbcc0ab3a0c5fbf2dc47cb9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "deterministic local Markdown, link, anchor, receipt, SHA-256, and Git-blob validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(20260821-015931).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit/51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:pull/3193",
+      "repo:docs/dashboards/domain/agriculture.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=b641f57a3fd22fe088727663f8e44a503626ee92",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe",
+      "repo:docs/dashboards/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3",
+      "repo:docs/dashboards/domain/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=fc18e269e8f674688ea580ac384ba46c40304840",
+      "repo:.github/CODEOWNERS@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:docs/doctrine/directory-rules.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:data/registry/sources/agriculture/nass_quickstats.yaml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=7e2d31a23f5a4bc5e5a30b62b5cc814359a05566",
+      "repo:policy/sensitivity/agriculture/aggregation_thresholds.yaml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=31947ca3e468a967aed3fc5d44699130b7d588fd",
+      "repo:policy/sensitivity/agriculture/farm_operator_join.rego@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=1b6128c4e2470f198edb6464424c6effc9d246dd",
+      "repo:tests/domains/agriculture/test_nass_aggregate_only.py@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=97939b939122f029f35ecf12c81f5989df00ae63",
+      "repo:tests/domains/agriculture/test_policy_denial_field_level_nass.py@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=06e3abeabc57b01d8073dc614cace9b404e204db",
+      "repo:.github/workflows/domain-agriculture.yml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=d89d5db8861812f7b0a1024ae37a23ed5bd61354",
+      "attachment:Pasted text(20260821-015931).txt"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/agriculture.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "scope-base-overlap-and-current-main-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned authoring base 51d45e45a56d19961a3014009b80c2c94b1107ee, reconciled current main 464148b8b1b3dff558086b23fc5ec8fb16d60572, verified the target prior blob, and found no overlapping open pull request or task branch before delivery."
+    },
+    {
+      "gate": "directory-rules-and-same-path-placement",
+      "outcome": "PASS",
+      "reason": "Kept the tracked dashboard specification and catalog under docs/, added one receipt in the established generated-receipt family, and created no new authority root, move, rename, or structural migration."
+    },
+    {
+      "gate": "repository-evidence-and-direct-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the specification against current Agriculture source, contract, schema, policy, test, workflow, UI/API documentation and the current-main dashboard catalog. The catalog retains all 33 specification rows and replaces only the stale Agriculture summary/control claims."
+    },
+    {
+      "gate": "unsupported-claim-correction",
+      "outcome": "PASS",
+      "reason": "Removed the unverified n<3/complementary-suppression formula, >99.9% threshold, and fixed review cadence. The revised text preserves source-native withheld states and requires accepted policy and evidence before a positive disclosure or health claim."
+    },
+    {
+      "gate": "metadata-grammar-repair",
+      "outcome": "PASS",
+      "reason": "The KFM meta-block type is the validator-compatible token standard; the prior multi-value semicolon form that caused the first hosted docs-meta-block failure is no longer present."
+    },
+    {
+      "gate": "markdown-structure-anchor-link-whitespace-and-secret-check",
+      "outcome": "PASS",
+      "reason": "Both documents have one H1, one meta block, balanced fences, final newlines, no tabs or trailing whitespace; the Agriculture specification preserves top and eight legacy anchors; repository-relative paths and same-document fragments were checked; no secret, private endpoint, operator identity, parcel payload, precise protected location, or invented disclosure threshold was introduced."
+    },
+    {
+      "gate": "prepared-artifact-sha256-and-git-blob-binding",
+      "outcome": "PASS",
+      "reason": "Prepared bytes bind to sha256:0d98b47138215c72a0c96d6fabcc2ecdb0ddb54e4466dd099f2e8d198a50387c (Git blob ca5d7bb4110b1b62fe433b52e1e75fb018add9b0) and sha256:98a9f2f361e35519d288dd5894752cb0f52bf9d3adbcc0ab3a0c5fbf2dc47cb9 (Git blob 8dfc8539a96d9f2062d3ec114200aea37c97ba4c)."
+    },
+    {
+      "gate": "generated-receipt-shape-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "Receipt carries contract version 3.0.0, artifact/hash/truth-label key parity, supported SHA-256 values, evidence citations, pending human review, canonical repository-relative paths, and no receipt self-reference."
+    },
+    {
+      "gate": "repository-native-runtime-source-and-policy-execution",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only slice. No live source, untrusted repository code, production data, policy evaluator, browser, telemetry store, release producer, deployment, or publication was executed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted checks start after the reconciliation commit is pushed; results are recorded in the draft pull request and handoff."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending. A receipt, test, badge, commit, or pull request does not grant approval, release, publication, or merge authority."
+    },
+    {
+      "gate": "runtime-release-deployment-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes one dashboard specification, its catalog row/control metadata, and one generated authoring receipt. It does not admit or activate a source, decide policy, create telemetry or a route, release, deploy, promote, publish, merge, or change repository settings."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-agriculture-dashboard",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/agriculture.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=b641f57a3fd22fe088727663f8e44a503626ee92"
+    },
+    {
+      "id": "current-main-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "nass-source-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/agriculture/nass_quickstats.yaml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=7e2d31a23f5a4bc5e5a30b62b5cc814359a05566"
+    },
+    {
+      "id": "aggregation-threshold-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:policy/sensitivity/agriculture/aggregation_thresholds.yaml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=31947ca3e468a967aed3fc5d44699130b7d588fd"
+    },
+    {
+      "id": "farm-operator-join-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:policy/sensitivity/agriculture/farm_operator_join.rego@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=1b6128c4e2470f198edb6464424c6effc9d246dd"
+    },
+    {
+      "id": "nass-test-placeholders",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/agriculture/test_policy_denial_field_level_nass.py@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=06e3abeabc57b01d8073dc614cace9b404e204db"
+    },
+    {
+      "id": "agriculture-workflow-bounded-maturity",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-agriculture.yml@51d45e45a56d19961a3014009b80c2c94b1107ee#blob=d89d5db8861812f7b0a1024ae37a23ed5bd61354"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T14:42:05Z",
+  "emitter": "openai/chatgpt-github-connector",
+  "links": {
+    "pr_number": 3193,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored same-path Agriculture dashboard documentation modernization and current-main catalog reconciliation. This receipt records provenance, source selection, validation, and unresolved review; it is not correctness proof, policy approval, source admission, dashboard implementation, release authority, deployment, or publication."
+}
