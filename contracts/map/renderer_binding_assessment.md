@@ -16,7 +16,7 @@ related:
   - ../data/layer_manifest.md
   - ../ui/renderer_capability_profile.md
   - ./renderer_plugin_admission_assessment.md
-  - ../../docs/architecture/map-master/README.md
+  - ../../docs/architecture/map-master.md
   - ../../docs/doctrine/directory-rules.md
   - ../../schemas/contracts/v1/map/renderer_binding_assessment.schema.json
   - ../../fixtures/contracts/v1/map/renderer_binding_assessment/cases.json
