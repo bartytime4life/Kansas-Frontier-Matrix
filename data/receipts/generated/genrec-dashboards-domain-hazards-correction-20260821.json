@@ -1,0 +1,262 @@
+{
+  "receipt_id": "genrec-dashboards-domain-hazards-correction-20260821",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/hazards.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/hazards.md": "sha256:532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector for current repository inspection, guarded branch/file/tree/commit mutation, draft pull-request delivery, and exact-head workflow evidence",
+      "deterministic local Markdown, YAML, anchor, fence, link-manifest, catalog, receipt, whitespace, and SHA-256 validation",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "Pasted text(20260820-020439).txt — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf — proposal consulted alongside accepted repository ADR-0029 and current directory-rules bytes"
+    ],
+    "evidence_refs": [
+      "repo:commit/0511e13521aabae18dc74f5f1ee7a618396bd737",
+      "repo:prepared-base/0bcae3f30f682c4bcd0694f0f97deced6f4c5e0e",
+      "repo:docs/dashboards/domain/hazards.md@0511e13521aabae18dc74f5f1ee7a618396bd737#blob=249c22050dcb22746813895d92ad113a9d77c7f9",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@0511e13521aabae18dc74f5f1ee7a618396bd737#blob=3b9ee1b34a8278fbabe04145a99a37e4d6214838",
+      "repo:docs/dashboards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3",
+      "repo:docs/dashboards/domain/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fc18e269e8f674688ea580ac384ba46c40304840",
+      "repo:docs/dashboards/INDICATOR_CATALOG.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=4fe3d6be5b0b6ba6359a301942c01d713c8e970f",
+      "repo:docs/dashboards/governance/RELEASE_CORRECTION_ROLLBACK.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=9da1c925c65d2008669650a44bab47b04055d44d",
+      "repo:docs/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=8aeff8396db3e38f71999a61c42fb94c39f2d579",
+      "repo:docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=62c06931cd832a1fbaf1d0e909bc80532bebca30",
+      "repo:docs/domains/hazards/SOURCE_ROLE_MATRIX.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=412130e2fac611f39e05558daced8ba7fc1000cd",
+      "repo:docs/domains/hazards/DROUGHT_ANTI_COLLAPSE.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=ea25a635a8fba36c80e0ecfc246a2f23ea7753d7",
+      "repo:docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=ba1be240eb1b5502f8101f2ef49cb4f53d3b6e22",
+      "repo:docs/architecture/hazards-trust-membrane.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=ad7b4d01df88c91c7c42a6f26a9e3f9255dc2c80",
+      "repo:contracts/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=9e042fab5bfb1b6c9659aba030f072e0033e4e9b",
+      "repo:schemas/contracts/v1/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=2e8fa3c0cd987936d0bdd07024a41c78247d02a0",
+      "repo:policy/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=b77040cbd1c7989f6fdddc474becc57bc29870dc",
+      "repo:data/registry/sources/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=bed3a870b83afce8a461a152e782c7a1e1897be6",
+      "repo:tools/validators/domains/hazards/validate_usdm_materiality.py@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dac5f56560f40e725c4d8924d8d20138ae5708fd",
+      "repo:fixtures/domains/hazards/usdm_materiality/cases.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=86041228885e993b7b0f8da79e5b3cceadced4ed",
+      "repo:tests/domains/hazards/test_validate_usdm_materiality.py@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dc71faa0667b8817abe070a7fef08361c9ddc743",
+      "repo:.github/workflows/domain-hazards.yml@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a77b7d7e926a375a1d8bc29a0d2609c0d619e068",
+      "repo:apps/explorer-web/src/features/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=91b1445f3e6f8f6b244cfc902853c5e18524746b",
+      "repo:apps/review-console/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=02512b6b8d16a8f1dfcd4c564f8b6d68b61b49e3",
+      "repo:control_plane/domain_lane_register.yaml@977bd5219b2002bab647792606c862ebc3b6bd85#blob=1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "repo:.github/CODEOWNERS@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:docs/doctrine/directory-rules.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:main/3be831bf4d202b6bc6493109810352dad591ae24",
+      "repo:pr/3217",
+      "repo:commit/6e21f6f7db137dbe8e95974f02fb3fe987408968",
+      "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@3be831bf4d202b6bc6493109810352dad591ae24#blob=95261baed0987f664af73749e4e8b3a968f7437e",
+      "repo:.github/ISSUE_TEMPLATE/README.md@3be831bf4d202b6bc6493109810352dad591ae24#blob=f689cad3a3c66e4e201208c66bbe4e218c5edea5",
+      "repo:review-thread/PRRT_kwDOPyBy4c6bPpl3",
+      "repo:workflow/make-hazards-validate@pr-3217"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/hazards.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-generated-receipt-byte-preservation",
+      "outcome": "PASS",
+      "reason": "The merged receipt genrec-dashboards-domain-hazards-532aeaa5a6fe remains at its exact main blob 95261baed0987f664af73749e4e8b3a968f7437e. This corrective receipt is a new append-only process record and does not rewrite prior provenance."
+    },
+    {
+      "gate": "current-main-merge-and-conflict-reconciliation",
+      "outcome": "PASS",
+      "reason": "Commit 6e21f6f7db137dbe8e95974f02fb3fe987408968 records current main 3be831bf4d202b6bc6493109810352dad591ae24 as a second parent and preserves unrelated current-main changes while selecting the reviewed Hazards specification, the concurrency-reconciled v0.6 Dashboard Catalog, and deletion of the temporary transfer objects."
+    },
+    {
+      "gate": "directory-rules-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The two documentation artifacts remain at existing docs-root paths. The prior generated receipt remains immutable, and this distinct corrective receipt uses the existing data/receipts/generated process-memory lane. No new authority root is created."
+    },
+    {
+      "gate": "repository-state-and-direct-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "The Hazards specification and Dashboard Catalog were reconciled against current domain, life-safety, source-role, drought anti-collapse, contract, schema, source, policy, fixture, validator, workflow, Explorer, Review Console, lane-register, CODEOWNERS, correction, and rollback evidence."
+    },
+    {
+      "gate": "hazards-life-safety-and-source-role-boundary",
+      "outcome": "PASS",
+      "reason": "The specification permits governed WarningContext and AdvisoryContext only as issuer-bound, time-bounded context while denying KFM alert authorship, protective-action advice, official-source substitution, expired-as-current presentation, and source-role collapse."
+    },
+    {
+      "gate": "bounded-usdm-fixture-proof",
+      "outcome": "PASS",
+      "reason": "The specification accurately bounds the existing deterministic, synthetic, no-network USDM materiality profile and does not inflate its finite states or PROMOTION_CANDIDATE disposition into live drought truth, source admission, evidence closure, policy approval, release, or publication."
+    },
+    {
+      "gate": "dashboard-catalog-concurrency-reconciliation",
+      "outcome": "PASS",
+      "reason": "The Dashboard Catalog advances to v0.6, retains 33 specifications, preserves current-main People/DNA/Land and Settlements/Infrastructure work, and updates the Hazards row without discarding unrelated catalog changes."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-secret-check",
+      "outcome": "PASS",
+      "reason": "The Hazards specification and reconciled catalog pass the prepared deterministic metadata, H1, anchor, fragment, fence, table, repository-relative link, UTF-8/LF, whitespace, final-newline, and secret-pattern checks."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The exact reviewed bytes bind to SHA-256 532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3 for the Hazards specification and 8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4 for the concurrency-reconciled Dashboard Catalog."
+    },
+    {
+      "gate": "corrective-generated-receipt-schema-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "This distinct receipt validates against the Draft 2020-12 generated-receipt schema, maintains exact artifact/hash/truth-label key parity, cites the immutable prior receipt and append-only rule, and carries pending human review without self-approval."
+    },
+    {
+      "gate": "repository-native-changed-area-validation",
+      "outcome": "PASS",
+      "reason": "The no-network repository-native make hazards-validate target completed successfully in a hosted corrective workflow before current-main reconciliation. Exact-head pull-request workflows were triggered again after reconciliation and are tracked separately."
+    },
+    {
+      "gate": "remote-feature-branch-and-pull-request-delivery",
+      "outcome": "PASS",
+      "reason": "PR #3217 exists on docs/ground-hazards-dashboard-20260821 and carries the bounded corrective change. Final draft-state and exact-head check settlement are verified outside this immutable emission record."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The exact-head pull-request workflow set for the current reconciled head was queued or in progress when this receipt was emitted. No hosted-settlement claim is made."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt, automated validation, or pull-request creation does not grant merge, release, deployment, promotion, publication, source-admission, policy, or emergency-authority approval."
+    },
+    {
+      "gate": "runtime-release-deployment-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes documentation and provenance and removes temporary transfer objects. It does not activate a source, ingest live hazard data, create telemetry or a route, change runtime/contract/schema/policy behavior, decide review, release, deploy, promote, publish, merge, or change repository settings."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/0511e13521aabae18dc74f5f1ee7a618396bd737"
+    },
+    {
+      "id": "prior-hazards-dashboard",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/hazards.md@0511e13521aabae18dc74f5f1ee7a618396bd737#blob=249c22050dcb22746813895d92ad113a9d77c7f9"
+    },
+    {
+      "id": "prior-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@0511e13521aabae18dc74f5f1ee7a618396bd737#blob=3b9ee1b34a8278fbabe04145a99a37e4d6214838"
+    },
+    {
+      "id": "hazards-domain-doctrine",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=8aeff8396db3e38f71999a61c42fb94c39f2d579"
+    },
+    {
+      "id": "life-safety-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=62c06931cd832a1fbaf1d0e909bc80532bebca30"
+    },
+    {
+      "id": "source-role-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/hazards/SOURCE_ROLE_MATRIX.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=412130e2fac611f39e05558daced8ba7fc1000cd"
+    },
+    {
+      "id": "usdm-materiality-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/hazards/validate_usdm_materiality.py@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dac5f56560f40e725c4d8924d8d20138ae5708fd"
+    },
+    {
+      "id": "usdm-materiality-fixtures",
+      "validated": true,
+      "evidence_ref": "repo:fixtures/domains/hazards/usdm_materiality/cases.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=86041228885e993b7b0f8da79e5b3cceadced4ed"
+    },
+    {
+      "id": "usdm-materiality-tests",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/hazards/test_validate_usdm_materiality.py@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dc71faa0667b8817abe070a7fef08361c9ddc743"
+    },
+    {
+      "id": "domain-hazards-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-hazards.yml@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a77b7d7e926a375a1d8bc29a0d2609c0d619e068"
+    },
+    {
+      "id": "hazards-policy-inactive-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=b77040cbd1c7989f6fdddc474becc57bc29870dc"
+    },
+    {
+      "id": "hazards-source-registry-boundary",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/hazards/README.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=bed3a870b83afce8a461a152e782c7a1e1897be6"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+    },
+    {
+      "id": "immutable-original-hazards-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@3be831bf4d202b6bc6493109810352dad591ae24#blob=95261baed0987f664af73749e4e8b3a968f7437e"
+    },
+    {
+      "id": "historical-generated-receipt-immutability-rule",
+      "validated": true,
+      "evidence_ref": "repo:.github/ISSUE_TEMPLATE/README.md@3be831bf4d202b6bc6493109810352dad591ae24#blob=f689cad3a3c66e4e201208c66bbe4e218c5edea5"
+    },
+    {
+      "id": "corrective-pull-request",
+      "validated": true,
+      "evidence_ref": "repo:pr/3217"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T18:08:54Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 3217,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only corrective authoring receipt for PR #3217. It preserves the historical bytes of genrec-dashboards-domain-hazards-532aeaa5a6fe and records the actual reviewed Hazards specification plus concurrency-reconciled Dashboard Catalog v0.6. The corrective branch also removes the temporary transfer archive and one-shot assembly workflow left by the earlier incomplete delivery. Repository-native make hazards-validate passed in the hosted corrective flow; exact-head workflow settlement and human review remain pending at emission. This receipt does not approve its artifacts or authorize source activation, live hazard claims, policy, evidence/proof closure, release, deployment, promotion, publication, merge, or repository-setting changes."
+}
