@@ -190,6 +190,7 @@ INTERNAL_STORE_CONSTRUCTION_RE = re.compile(
 )
 TRUST_ARTIFACT_RE = re.compile(r"(?i)(?:^|[_/.-])(?:release|proof|receipt|manifest|published|catalog|triplet)s?(?:[_/.-]|$)")
 PLACEHOLDER_NAMES = frozenset({"README.md", ".gitkeep"})
+ROOT_STATUSES = frozenset({"ACTIVE", "PROPOSED", "DEPRECATED", "RETIRED"})
 
 
 class TopologyError(ValueError):
@@ -470,6 +471,9 @@ def _registered_roots(
     blobs: Mapping[str, bytes],
 ) -> tuple[set[str], Mapping[str, Mapping[str, object]]]:
     data = _blob_json(blobs, "control_plane/root_registry.yaml")
+    raw_defaults = data.get("class_defaults")
+    if not isinstance(raw_defaults, dict):
+        raise TopologyError("root registry has no class_defaults object")
     raw_roots = data.get("roots")
     if not isinstance(raw_roots, list):
         raise TopologyError("root registry has no roots array")
@@ -480,7 +484,20 @@ def _registered_roots(
         path = str(entry["path"]).removesuffix("/")
         if not path or "/" in path or path in by_path:
             raise TopologyError("root registry contains a duplicate or invalid path")
-        by_path[path] = entry
+        root_class = entry.get("class")
+        if not isinstance(root_class, str) or not root_class:
+            raise TopologyError("root registry entry has no class")
+        status = entry.get("status")
+        if status is None:
+            defaults = raw_defaults.get(root_class)
+            if not isinstance(defaults, dict):
+                raise TopologyError("root registry class default is malformed")
+            status = defaults.get("status")
+        if not isinstance(status, str) or status not in ROOT_STATUSES:
+            raise TopologyError("root registry status is invalid")
+        normalized = dict(entry)
+        normalized["status"] = status
+        by_path[path] = normalized
     return set(by_path), by_path
 
 
@@ -559,7 +576,7 @@ def _path_findings(
         findings.append(_finding("KFM-TOPO-002", root + "/", "UNREGISTERED_ROOT"))
     for root in sorted(registered - observed_roots):
         entry = roots[root]
-        if entry.get("status") not in {"RETIRED"}:
+        if entry.get("status") == "ACTIVE":
             findings.append(_finding("KFM-TOPO-002", root + "/", "REGISTERED_ROOT_MISSING"))
 
     for path in paths:
