@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.3
+version: v0.4
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -22,7 +22,8 @@ tags: [kfm, docs, dashboards, catalog, index, governance-health, observability]
 notes:
   - "Every dashboard spec under docs/dashboards/ MUST appear in this catalog."
   - "Spec-file presence is separate from running-surface verification."
-  - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
+  - "The v0.3 refresh recorded 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaced a malformed raw-search evidence row with a pinned tree count."
+  - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -83,7 +84,7 @@ notes:
 | `docs/dashboards/DASHBOARD_CATALOG.md` exists in the accessible repo. | CONFIRMED | Direct fetch of current catalog. |
 | `docs/dashboards/README.md` says `docs/dashboards/` is a proposed documentation surface, not the running dashboard implementation. | CONFIRMED | Direct fetch of dashboard README. |
 | Category READMEs exist for governance, operational, domain, and observability. | CONFIRMED | Direct fetch/search of category README files. |
-| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@51d45e45a56d19961a3014009b80c2c94b1107ee` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
+| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@464148b8b1b3dff558086b23fc5ec8fb16d60572` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
 | Running dashboard surfaces exist and read the named receipts. | NEEDS VERIFICATION | No running app, telemetry stack, receipt source, or validator output was inspected here. |
 | `docs/dashboards/` is canonical placement under Directory Rules. | PROPOSED / NEEDS VERIFICATION | Dashboard README records placement drift / ADR need; this catalog does not resolve it. |
 
@@ -132,7 +133,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 | [`domain/soil.md`](domain/soil.md) | Per-domain instance of §24.11 for soil: evidence resolution, source-role drift, taxonomy-edition skew, MUKEY stability. | Atlas v1.1 §24.11.1 / §24.11.5 | Soil domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/habitat.md`](domain/habitat.md) | Per-domain instance of §24.11 for habitat: evidence integrity plus sensitive-lane gating on habitat × sensitive-species intersection. | Atlas v1.1 §24.11.1 / §24.11.3 | Habitat domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/fauna.md`](domain/fauna.md) | Per-domain instance of §24.11 for fauna (T4 defaults): fail-closed rate, redaction coverage, rights-change response, side-channel audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Fauna domain steward · Sensitivity reviewer · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/flora.md`](domain/flora.md) | Per-domain instance of §24.11 for flora (T4 defaults for poaching-vulnerable taxa): fail-closed, voucher coverage, poaching-pattern audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Flora domain steward · Sensitivity reviewer · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/flora.md`](domain/flora.md) | Flora evidence, source-role and taxonomy separation, bounded synthetic public-safe validation, inactive policy, proof/release holds, anti-inference, correction, and rollback; no dashboard route or telemetry is verified. | Current Flora docs, contracts, schema scaffolds, source registry, fixtures, validator, tests, workflow, policy, proof/release lanes, plus proposed Atlas §24.11.1 / §24.11.3 | Flora steward · Sensitivity/geoprivacy reviewer · Evidence/source steward · UI steward | No Flora dashboard route verified; review surface `UNKNOWN` | CONFIRMED | PROPOSED |
 | [`domain/agriculture.md`](domain/agriculture.md) | Per-domain instance of §24.11 for agriculture: evidence resolution, NASS suppression-rule compliance, CDL taxonomy skew, irrigation classification confidence. | Atlas v1.1 §24.11.1 / §24.11.5 | Agriculture domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/geology.md`](domain/geology.md) | Per-domain instance of §24.11 for geology / natural resources: source breadth, stratigraphic canonicalization, well-record identifiability gate. | Atlas v1.1 §24.11.1 | Geology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/atmosphere.md`](domain/atmosphere.md) | Atmosphere evidence, observed/model separation, finite outcomes, fixture-only PM trust dimensions, correction, and governed-AI posture; complete route and telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, plus proposed Atlas §24.11.1 / §24.11.4 | Atmosphere steward · UI steward · Evidence steward | `apps/explorer-web/` Evidence Drawer seam; review-console route UNKNOWN | CONFIRMED | PROPOSED |
@@ -211,4 +212,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.3 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.4 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
