@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/hazards.md": "sha256:532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -21,7 +21,7 @@
     "top_p": null,
     "max_tokens": null,
     "tools_enabled": [
-      "GitHub connector for current repository inspection, guarded branch/file mutation, draft pull-request delivery, and hosted exact-head evidence",
+      "GitHub connector for current repository, file, branch, workflow, pull-request, and overlap inspection",
       "deterministic local Markdown, YAML, anchor, fence, link-manifest, catalog, receipt, whitespace, and SHA-256 validation",
       "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
     ]
@@ -64,9 +64,7 @@
       "repo:.github/CODEOWNERS@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
       "repo:docs/doctrine/directory-rules.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fd49a0b83e55cef52c1124281f093e263526898d",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
-      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
-      "repo:pr/3217",
-      "repo:workflow/make-hazards-validate@pr-3217"
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
     ]
   },
   "truth_labels": {
@@ -77,7 +75,7 @@
     {
       "gate": "current-main-target-overlap-and-concurrency-preflight",
       "outcome": "PASS",
-      "reason": "Corrective draft PR #3217 was opened after verifying that merged transfer PRs left the prior Hazards specification, a stale Hazards catalog row, and temporary transfer paths on current main. The corrective branch preserves current-main People/DNA/Land and Settlements/Infrastructure catalog work while limiting the final tree delta to the Hazards specification, reconciled catalog, updated receipt, and removal of the two temporary transfer paths."
+      "reason": "Prepared against base 0bcae3f30f682c4bcd0694f0f97deced6f4c5e0e. Final recheck observed main at 0511e13521aabae18dc74f5f1ee7a618396bd737, a direct descendant of the prepared base, with the target and catalog still at exact blobs 249c22050dcb22746813895d92ad113a9d77c7f9 and 3b9ee1b34a8278fbabe04145a99a37e4d6214838. No exact-target open pull request or active Hazards dashboard task-branch collision was found."
     },
     {
       "gate": "directory-rules-placement-and-authority-boundary",
@@ -102,7 +100,7 @@
     {
       "gate": "dashboard-catalog-reconciliation",
       "outcome": "PASS",
-      "reason": "The Dashboard Catalog is advanced from v0.5 to v0.6, retaining 33 specifications, preserving the current People/DNA/Land and Settlements/Infrastructure rows, and replacing the Hazards row with the repository-grounded bounded specification posture."
+      "reason": "The current v0.4 Dashboard Catalog is preserved and advanced to v0.5 only to add the Hazards reconciliation note, replace the existing Hazards row in place, and update the footer. All other catalog rows remain byte-identical, including the previously grounded Flora row; the catalog still contains 33 specs."
     },
     {
       "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-secret-check",
@@ -112,7 +110,7 @@
     {
       "gate": "prepared-artifact-sha256-binding",
       "outcome": "PASS",
-      "reason": "The exact UTF-8 bytes bind to SHA-256 532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3 for the Hazards specification and 8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4 for the concurrency-reconciled Dashboard Catalog."
+      "reason": "The exact prepared UTF-8 bytes bind to SHA-256 532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3 and 85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f for the Hazards spec and Dashboard Catalog respectively."
     },
     {
       "gate": "generated-receipt-shape-and-cross-field-check",
@@ -121,18 +119,18 @@
     },
     {
       "gate": "repository-native-changed-area-validation",
-      "outcome": "PASS",
-      "reason": "The no-network repository-native `make hazards-validate` target completed successfully in the hosted one-shot corrective workflow immediately before this receipt update. The command exercises the deterministic Hazards unit tests and fixture validator; it does not establish live hazard truth, source admission, policy approval, release, or publication readiness."
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available, so repository-native aggregate checks and the actual make hazards-validate execution remain required after application to a verified checkout."
     },
     {
       "gate": "remote-feature-branch-and-draft-pr-delivery",
-      "outcome": "PASS",
-      "reason": "Draft PR #3217 exists on docs/ground-hazards-dashboard-20260821 and carries the bounded corrective tree. No merge, release, deployment, promotion, publication, source activation, or repository-setting change is claimed."
+      "outcome": "SKIPPED",
+      "reason": "The connected GitHub surface exposed current read and inspection actions but no repository mutation action in this session; no authenticated local GitHub CLI or mounted checkout was available. No branch, commit, or pull request is claimed."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks must settle on the final PR head after this corrective commit. This receipt records delivery but does not claim hosted exact-head success."
+      "reason": "Hosted checks require a pushed exact head; no remote head was created in this session."
     },
     {
       "gate": "human-review",
@@ -229,9 +227,9 @@
   "created_at": "2026-08-21T15:33:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
-    "pr_number": 3217,
+    "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Corrective authoring receipt for draft PR #3217. The reviewed Hazards specification remains bound to its prepared SHA-256, while the Dashboard Catalog is concurrency-reconciled as v0.6 to preserve current-main People/DNA/Land and Settlements/Infrastructure work. The PR removes the temporary transfer archive and one-shot assembly workflow left by earlier merged transfer PRs. Repository-native `make hazards-validate` completed successfully in the hosted corrective workflow; broader hosted exact-head checks and human review remain pending. No source activation, live hazard claim, policy decision, release, deployment, promotion, publication, merge, or repository-setting authority is asserted."
+  "notes": "Prepared same-path repository-grounded modernization of the Hazards dashboard specification, companion current v0.4-to-v0.5 Dashboard Catalog reconciliation, and this provenance record. The artifact was prepared against main@0bcae3f30f682c4bcd0694f0f97deced6f4c5e0e; a final recheck found main advanced to 0511e13521aabae18dc74f5f1ee7a618396bd737 through an unrelated Barton County documentation merge while both edited base blobs remained unchanged. The update preserves the dashboard-lane placement HOLD; corrects the stale all-warning-denied posture into governed operational context plus absolute KFM alert/life-safety denial and official referral; records current synthetic no-network USDM validation without inflating it into live conditions, source admission, evidence, policy, promotion, release, or publication; preserves legacy anchors; and leaves contracts, schemas, sources, policy, runtime, release, deployment, publication, and repository settings unchanged. Remote delivery is not claimed because the connected GitHub actions available in this session were read-only."
 }
