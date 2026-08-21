@@ -18,6 +18,9 @@ check. It inherits validator authority limits from
 - Exposure/retention: local/CI diagnostic only; nothing is persisted.
 - Rollback: revert the validator with its package, fixture, test, Make, and
   workflow surfaces.
+- Discovery: fixture-suite mode reads candidate cases only from the ratcheted
+  `valid/` and `invalid/` lanes. It deliberately excludes the sibling
+  `repository/` adapter configuration lane.
 
 ```text
 tools/validators/evidence_resolver/
