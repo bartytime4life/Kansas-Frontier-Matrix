@@ -1,26 +1,28 @@
 # Governed evidence resolver package
 
 `packages/evidence-resolver/` is a reusable, non-deployable implementation
-lane inherited from [`packages/`](../README.md). Its only implemented behavior
-is the internal, non-authoritative
-`kfm/evidence-ref-bundle-candidate/v1alpha1` check.
+lane inherited from [`packages/`](../README.md). Its implemented behavior is
+the internal, non-authoritative
+`kfm/evidence-ref-bundle-candidate/v1alpha1` check plus one issue-scoped,
+read-only Hydrology fixture adapter for the first #2975 lookup-and-integrity
+packet.
 
 ## Boundary contract
 
 | Field | Current boundary |
 |---|---|
-| Purpose | Evaluate one explicit `EvidenceRef`, one caller-supplied `EvidenceBundle` candidate, one lookup snapshot, and one validated `VerificationStateHistory` replay deterministically. |
-| Scope ID | `kfm/evidence-ref-bundle-candidate/v1alpha1` |
-| Local owner | Evidence/proof and package stewards — `OWNER_TBD`; human review pending. |
-| Belongs | Pure standard-library checks, bounded parsing, stable internal issue codes, and non-authoritative result carriers. |
-| Prohibited | Network/store access, registry lookup, claim-scope inference, source admission, evidence creation, policy evaluation, review/release decisions, public outcomes, or publication. |
-| Inputs | Current proposed `EvidenceRef`, `EvidenceBundle`, and `VerificationStateHistory` shapes plus explicit lookup and bitemporal as-of snapshots. |
+| Purpose | Evaluate one explicit candidate deterministically; for #2975 only, resolve stable ID `hb1` through one closed manifest to one synthetic Hydrology fixture before using that existing evaluator. |
+| Scope IDs | `kfm/evidence-ref-bundle-candidate/v1alpha1`; `kfm/hydrology-evidence-bundle-fixture-adapter/v1alpha1`; local digest profile `kfm/evidence-bundle-fixture-digest/v1alpha1`. |
+| Local owner | `@bartytime4life` is provisional accountable maintainer for the first #2975 packet only; package-wide `OWNER_TBD` and independent human review remain pending. |
+| Belongs | Pure standard-library checks, bounded parsing, one fixed read-only fixture manifest, complete-object local digest verification, stable internal issue codes, and non-authoritative result carriers. |
+| Prohibited | Caller paths, directory scanning, environment-selected paths, network or production-store access, registry/catalog/proof lookup, claim-scope inference, source admission, evidence creation, model invocation, policy evaluation, review/release decisions, public outcomes, deployment, or publication. |
+| Inputs | Current proposed `EvidenceRef`, `EvidenceBundle`, and `VerificationStateHistory` shapes plus explicit lookup and bitemporal as-of snapshots; the fixture adapter accepts a stable `bundle_id`, never a path or caller-supplied bundle. |
 | Policy projection | Caller supplies `policy_outcome` using the current proposed `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR` vocabulary plus a decision reference; the package does not evaluate policy. |
 | Output | Internal `RESOLVED`, `UNRESOLVED`, `DENIED`, or `ERROR` candidate result with `authoritative: false`. |
 | Exposure | Internal alpha only; `__init__.py` remains empty and no public package API or production consumer is declared. |
-| Mutation/retention | None. Evaluation is pure and retains no input or result. |
-| Runtime dependencies | Python standard library only; no hidden clock, environment, filesystem, DNS, socket, or service dependency in core evaluation. |
-| Rollback | Revert the bounded implementation, fixtures, tests, validator, Make targets, workflow wiring, and documentation together. |
+| Mutation/retention | None. Core evaluation is pure; the adapter performs bounded reads only and retains no input or result. |
+| Runtime dependencies | Python standard library only. Core evaluation has no filesystem dependency; the adapter can read only its fixed manifest, the allowlisted fixture, and no network, environment, clock, secret, model, socket, or service. |
+| Rollback | Revert the adapter, manifest, selected synthetic-ref/digest refresh, focused tests, validator fixture-lane filter, and boundary documentation together. Do not fall back to direct store access. |
 
 ## Authority and finite outcomes
 
@@ -38,8 +40,9 @@ Status precedence is fail-closed:
    closure context;
 4. `RESOLVED` only when the bounded checks have no issue.
 
-These names are package-local discussion vocabulary. Mapping them to governed
-runtime outcomes remains **PROPOSED / NEEDS VERIFICATION**.
+The existing runtime projection maps these names only to
+`CONTINUE_GOVERNED_CHECKS`, `ABSTAIN`, `DENY`, or `ERROR`. It has no `ANSWER`
+state and always returns `authoritative: false` and `renderable: false`.
 
 ## Current tree
 
@@ -59,9 +62,11 @@ make evidence-resolver
 make evidence-resolver-deny
 ```
 
-The first command runs 21 synthetic profile fixtures and 19 standard-library
-tests. The second requires every negative fixture to remain non-`RESOLVED`.
-Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
+The first command runs the ratcheted candidate fixtures and package tests,
+including the manifest-backed adapter proof. The second requires every
+negative candidate fixture and adapter condition to remain non-`RESOLVED`.
+Both commands set `KFM_NO_NETWORK=1`; tests also deny socket, DNS, URL, and
+process use around the adapter success path.
 
 ## Related surfaces
 
@@ -74,6 +79,10 @@ Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
   [`evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json),
   [`verification_state_history.schema.json`](../../schemas/contracts/v1/evidence/verification_state_history.schema.json)
 - fixtures: [`fixtures/packages/evidence_resolver/`](../../fixtures/packages/evidence_resolver/README.md)
+- closed fixture manifest:
+  [`hydrology_bundle_manifest.json`](../../fixtures/packages/evidence_resolver/v1alpha1/repository/hydrology_bundle_manifest.json)
+- sole payload:
+  [`valid_1.json`](../../fixtures/domains/hydrology/evidence_bundle/valid/valid_1.json)
 - validator: [`tools/validators/evidence_resolver/`](../../tools/validators/evidence_resolver/README.md)
 - tests: [`tests/packages/evidence_resolver/`](../../tests/packages/evidence_resolver/README.md)
 - CI: [`.github/workflows/evidence-resolver.yml`](../../.github/workflows/evidence-resolver.yml)
@@ -83,8 +92,10 @@ Both commands set `KFM_NO_NETWORK=1`; the tests also deny socket and DNS use.
 
 ## Open verification items
 
-The following remain held: named ownership; accepted resolver input/result
-contracts; a stable public outcome vocabulary; canonical claim-scope
-representation; authoritative registry, correction, and verification-history snapshots; rights and
-sensitivity semantics; hashing/canonicalization; governed consumers; package
-build/export/version policy; release integration; and production behavior.
+The following remain held: permanent named ownership; accepted public resolver
+input/result contracts; a public `ANSWER`; canonical claim-scope representation;
+authoritative production registry, correction, successor, withdrawal, review,
+release, and verification-history snapshots; rights and sensitivity semantics;
+universal EvidenceBundle hashing/canonicalization; governed public consumers;
+package build/export/version policy; source activation; release integration;
+deployment; publication; and production behavior.
