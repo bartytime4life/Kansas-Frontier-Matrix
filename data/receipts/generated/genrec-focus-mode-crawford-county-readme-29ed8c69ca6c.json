@@ -1,0 +1,168 @@
+{
+  "receipt_id": "genrec-focus-mode-crawford-county-readme-29ed8c69ca6c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/crawford_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/crawford_county/README.md": "sha256:29ed8c69ca6c450e0e375fe5728cadfae747ddc7037c8ff0ff7cc83d5104ee14"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:9b27039bda3040e26da33e37278fbd49ea6bfd9163816b90366edfe574ee84c6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9b27039bda3040e26da33e37278fbd49ea6bfd9163816b90366edfe574ee84c6"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 — normalized scoped task contract"
+    ],
+    "evidence_refs": [
+      "repo:commit/fd3992b9e0bf8e47d7370178b44b0c5480edcf6d",
+      "repo:commit/9b65916e77c6bae441796f324febcd0121bc8b9f",
+      "repo:docs/focus-mode/counties/crawford_county/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=6869d0388842c65293fe5ef712a23c9d927f79f5",
+      "repo:docs/focus-mode/counties/crawford_county/README.md@9b65916e77c6bae441796f324febcd0121bc8b9f#blob=58c4a47cd526e5354605d13c8f4caef4bb1b11b0",
+      "repo:docs/focus-mode/counties/crawford_county/crawford_county_focus_mode_build_plan.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=37c5332103b10fa7e70e72e5105b7fe6bab4624b",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=1a83417c8a3ff7b1c9d9ea302eb5dc47fc726e36",
+      "repo:docs/focus-mode/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:docs/focus-mode/counties/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=48621badd51614db7bff0882c19096fa388234ac",
+      "repo:docs/doctrine/directory-rules.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:contracts/focus_mode/focus_mode_payload.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:schemas/contracts/v1/focus/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33",
+      "repo:policy/focus/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=35001e958a6b51d2f22004d5e637d72baeab49af",
+      "repo:tools/validators/validate_focus_mode_index.py@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validators/validator_registry.json@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:.github/CODEOWNERS@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:CONTRIBUTING.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d#blob=de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "task-contract:crawford-county-readme-v6#sha256=9b27039bda3040e26da33e37278fbd49ea6bfd9163816b90366edfe574ee84c6"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/crawford_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-tree-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main at fd3992b9e0bf8e47d7370178b44b0c5480edcf6d; verified prior target blob 6869d0388842c65293fe5ef712a23c9d927f79f5, the exact two-file Crawford directory, sibling plan blob 37c5332103b10fa7e70e72e5105b7fe6bab4624b, and no open pull request or matching task branch at authoring start."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 keeps docs/ as the human-documentation owner; the change remains at the tracked path and explicitly leaves ADR-0027 path convergence on HOLD."
+    },
+    {
+      "gate": "repository-grounded-plan-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes the tracked Crawford plan from current repository evidence, preserves coal, mined-land, floodplain, parcel, archaeology, wildlife, transportation, currentness, and minimum-display boundaries, and does not promote source, payload, policy, runtime, release, or publication claims."
+    },
+    {
+      "gate": "markdown-metadata-heading-anchor-fence-table-and-whitespace-checks",
+      "outcome": "PASS",
+      "reason": "One H1, one bounded KFM Meta Block, 30 headings, 11 resolved unique internal fragments, balanced fence and comment pairs, consistent tables, no tabs or trailing whitespace, LF and final newline, 32536 bytes, 525 lines, Git blob 58c4a47cd526e5354605d13c8f4caef4bb1b11b0, and SHA-256 29ed8c69ca6c450e0e375fe5728cadfae747ddc7037c8ff0ff7cc83d5104ee14."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 13 unique repository-relative targets referenced by the README were confirmed through pinned repository reads or current path evidence; all 11 unique same-document fragments resolved."
+    },
+    {
+      "gate": "sensitive-content-and-non-effect-scan",
+      "outcome": "PASS",
+      "reason": "No coordinates, credentials, signed URLs, private endpoints, personal data, exact protected locations, or live operational payloads were introduced; mine hazard, floodplain, parcel, archaeology, wildlife, transportation, current-safety, and harmful-precision requests remain fail closed."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Receipt contract 3.0.0 binds the complete final README SHA-256 29ed8c69ca6c450e0e375fe5728cadfae747ddc7037c8ff0ff7cc83d5104ee14, aligns artifact and truth-label maps, records evidence and skipped checks, and leaves human review pending."
+    },
+    {
+      "gate": "county-index-snapshot-boundary",
+      "outcome": "PASS",
+      "reason": "COUNTY_INDEX.md remains unchanged as a pinned v1.2 inventory snapshot whose Crawford row already records TRACKED_PAIR; no lifecycle, validator, release, or publication meaning is inferred."
+    },
+    {
+      "gate": "repository-native-full-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full repository dependency environment was used; the current Focus index validator is incompatible with the singular snake_case two-file lane and is not registered. Hosted exact-head checks remain to be inspected after draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-county-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/COUNTY_INDEX.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-crawford-build-plan",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/crawford_county/crawford_county_focus_mode_build_plan.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-focus-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-county-control-plane-proposal",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-focus-payload-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/focus_mode/focus_mode_payload.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-focus-schema-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/focus/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "repo-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/README.md@fd3992b9e0bf8e47d7370178b44b0c5480edcf6d"
+    },
+    {
+      "id": "current-user-task-contract",
+      "validated": true,
+      "evidence_ref": "task-contract:crawford-county-readme-v6#sha256=9b27039bda3040e26da33e37278fbd49ea6bfd9163816b90366edfe574ee84c6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T20:43:57Z",
+  "emitter": "OpenAI Codex GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. The normalized scoped task-contract hash is not a stored prompt transcript. This receipt is not evidence authority, policy approval, path-migration authority, merge approval, release, deployment, or publication authority."
+}
