@@ -34,6 +34,57 @@ PROJJSON = {
     "name": "WGS 84 (CRS84)",
     "id": {"authority": "OGC", "code": "CRS84"},
 }
+LEGACY_PROJJSON = {
+    "$schema": "https://proj.org/schemas/v0.7/projjson.schema.json",
+    "type": "GeographicCRS",
+    "name": "WGS 84 (CRS84)",
+    "datum_ensemble": {
+        "name": "World Geodetic System 1984 ensemble",
+        "members": [
+            {"name": "World Geodetic System 1984 (Transit)", "id": {"authority": "EPSG", "code": 1166}},
+            {"name": "World Geodetic System 1984 (G730)", "id": {"authority": "EPSG", "code": 1152}},
+            {"name": "World Geodetic System 1984 (G873)", "id": {"authority": "EPSG", "code": 1153}},
+            {"name": "World Geodetic System 1984 (G1150)", "id": {"authority": "EPSG", "code": 1154}},
+            {"name": "World Geodetic System 1984 (G1674)", "id": {"authority": "EPSG", "code": 1155}},
+            {"name": "World Geodetic System 1984 (G1762)", "id": {"authority": "EPSG", "code": 1156}},
+            {"name": "World Geodetic System 1984 (G2139)", "id": {"authority": "EPSG", "code": 1309}},
+            {"name": "World Geodetic System 1984 (G2296)", "id": {"authority": "EPSG", "code": 1383}},
+        ],
+        "ellipsoid": {
+            "name": "WGS 84",
+            "semi_major_axis": 6378137,
+            "inverse_flattening": 298.257223563,
+        },
+        "accuracy": "2.0",
+        "id": {"authority": "EPSG", "code": 6326},
+    },
+    "coordinate_system": {
+        "subtype": "ellipsoidal",
+        "axis": [
+            {
+                "name": "Geodetic longitude",
+                "abbreviation": "Lon",
+                "direction": "east",
+                "unit": "degree",
+            },
+            {
+                "name": "Geodetic latitude",
+                "abbreviation": "Lat",
+                "direction": "north",
+                "unit": "degree",
+            },
+        ],
+    },
+    "scope": "Horizontal component of 3D system.",
+    "area": "World.",
+    "bbox": {
+        "south_latitude": -90,
+        "west_longitude": -180,
+        "north_latitude": 90,
+        "east_longitude": 180,
+    },
+    "id": {"authority": "OGC", "code": "CRS84"},
+}
 GEOMETRIES = (
     struct.pack("<BIdd", 1, 1, 0.0, 0.0),
     struct.pack("<BIdd", 1, 1, 1.0, 1.0),
@@ -83,7 +134,7 @@ def _register_geoarrow_type() -> GeoArrowWkbType:
     return value
 
 
-def _geo_metadata(version: str) -> bytes:
+def _geo_metadata(version: str, crs: dict[str, Any]) -> bytes:
     payload = {
         "version": version,
         "primary_column": "geometry",
@@ -91,19 +142,21 @@ def _geo_metadata(version: str) -> bytes:
             "geometry": {
                 "encoding": "WKB",
                 "geometry_types": ["Point"],
-                "crs": PROJJSON,
+                "crs": crs,
             }
         },
     }
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
-def _schema_metadata(version: str) -> dict[bytes, bytes]:
+def _schema_metadata(
+    version: str, *, crs: dict[str, Any], correction_identity: bytes
+) -> dict[bytes, bytes]:
     return {
-        b"geo": _geo_metadata(version),
+        b"geo": _geo_metadata(version, crs),
         b"kfm.synthetic": b"true",
         b"kfm.source": b"fixture-only:no-source",
-        b"kfm.correction_identity": b"synthetic-geoparquet-carriers-v1",
+        b"kfm.correction_identity": correction_identity,
     }
 
 
@@ -114,7 +167,13 @@ def _baseline_table() -> pa.Table:
             "label": pa.array(LABELS, type=pa.string()),
             "geometry": pa.array(GEOMETRIES, type=pa.binary()),
         }
-    ).replace_schema_metadata(_schema_metadata("1.1.0"))
+    ).replace_schema_metadata(
+        _schema_metadata(
+            "1.1.0",
+            crs=LEGACY_PROJJSON,
+            correction_identity=b"synthetic-geoparquet-1.1-crs-v2",
+        )
+    )
 
 
 def _rc_table() -> pa.Table:
@@ -128,7 +187,13 @@ def _rc_table() -> pa.Table:
             geometry,
         ],
         names=["feature_id", "label", "geometry"],
-    ).replace_schema_metadata(_schema_metadata("2.0.0-rc.1"))
+    ).replace_schema_metadata(
+        _schema_metadata(
+            "2.0.0-rc.1",
+            crs=PROJJSON,
+            correction_identity=b"synthetic-geoparquet-carriers-v1",
+        )
+    )
 
 
 def _write(table: pa.Table, path: Path) -> None:
@@ -206,6 +271,13 @@ def generate(output: Path) -> dict[str, Any]:
 
     baseline = _carrier_summary(baseline_path, "1.1.0")
     rc = _carrier_summary(rc_path, "2.0.0-rc.1")
+
+    baseline_crs = baseline["geo_metadata"]["columns"]["geometry"]["crs"]
+    rc_crs = rc["geo_metadata"]["columns"]["geometry"]["crs"]
+    if baseline_crs != LEGACY_PROJJSON or "datum_ensemble" not in baseline_crs:
+        raise RuntimeError("GeoParquet 1.1 baseline CRS PROJJSON is incomplete")
+    if rc_crs != PROJJSON:
+        raise RuntimeError("2.0-RC inline CRS metadata changed with the 1.1 correction")
 
     if baseline["geometry_column"]["physical_type"] != "BYTE_ARRAY":
         raise RuntimeError("baseline geometry physical type is not BYTE_ARRAY")
