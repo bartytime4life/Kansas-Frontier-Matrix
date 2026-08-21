@@ -63,6 +63,7 @@ notes:
   - "v0.1.0 replaces a one-byte placeholder with a same-path repository-grounded directory boundary."
   - "The sibling build plan remains unchanged, draft, proposed, and NOT_RELEASED."
   - "County themes, source seeds, layers, paths, objects, and milestones below remain plan-level statements unless independently verified."
+  - "COUNTY_INDEX.md remains unchanged as a pinned inventory snapshot; Clark row reconciliation is a separate follow-up."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -91,7 +92,7 @@ notes:
 | Target before this change | `CONFIRMED` one newline; blob `8b137891791fe96927ad78e64b0aad7bded08bdc` | The county directory lacked a usable local boundary. |
 | Directory contents | `CONFIRMED` `README.md` plus one 109,931-byte sibling plan | This README may explain the pair; it must not invent missing implementation. |
 | Sibling plan | `CONFIRMED` tracked planning artifact created in a docs-only session | Treat product shape, source seeds, repository paths, object names, tests, and milestones as `PROPOSED` unless independently verified. |
-| County index | `CONFIRMED` Clark is classified `README_1_BYTE` at the pinned base | This change must reconcile that direct inventory fact without assigning lifecycle state. |
+| County index | `CONFIRMED` Clark is classified `README_1_BYTE` at the pinned index snapshot | The index remains an immutable snapshot in this focused slice; this branch-local README makes that row stale until a separately reconciled inventory update. |
 | Placement | `CONFIRMED` same-path edit under `docs/` | No move, alias, root change, or parallel authority is introduced. |
 | Focus contract/schema/policy | `CONFIRMED` proposed or incomplete surfaces exist | Their presence does not prove a Clark payload, active evaluator, API route, or release. |
 | Lifecycle and public state | `UNKNOWN` / `NEEDS VERIFICATION` | Do not infer source admission, validation, release, deployment, or publication. |
@@ -314,7 +315,7 @@ Stop when the work would require unverified rights, current conditions, public/p
 
 ### Focused checks for this change
 
-The proposed README, synchronized county-index facts, and generated authoring receipt are checked for:
+The proposed README and generated authoring receipt are checked for:
 
 - exactly one H1 in each changed Markdown document;
 - one top-level `KFM_META_BLOCK_V2` envelope per changed Markdown document;
@@ -322,8 +323,7 @@ The proposed README, synchronized county-index facts, and generated authoring re
 - consistent Markdown tables;
 - resolving local fragments and repository-relative links;
 - no tabs, trailing whitespace, raw external URLs, credentials, coordinate-like harmful precision, or live-sensitive payloads;
-- Clark’s index row changing only from `README_1_BYTE` to `TRACKED_PAIR`;
-- recomputed county counts changing only by the Clark one-byte-to-substantive transition;
+- explicit disclosure that the pinned county index remains unchanged and becomes stale for Clark after this README repair;
 - final newline and deterministic SHA-256/Git-blob identity;
 - generated-receipt schema shape, path/hash parity, finite JSON, citation records, and final artifact integrity.
 
@@ -334,8 +334,7 @@ python tools/validators/docs/meta-block/check_meta_blocks.py \
   --repo-root . \
   --profile present \
   --registry control_plane/document_registry.yaml \
-  docs/focus-mode/counties/clark_county/README.md \
-  docs/focus-mode/counties/COUNTY_INDEX.md
+  docs/focus-mode/counties/clark_county/README.md
 
 python tools/validators/validate_generated_receipt.py \
   data/receipts/generated/genrec-focus-mode-clark-county-RECEIPT_HASH.json \
@@ -358,11 +357,11 @@ When this directory changes:
 2. Reconcile open pull requests and branch overlap before editing shared bytes.
 3. Keep this README synchronized only with confirmed directory and maturity state.
 4. Preserve plan proposals as proposals; correct overclaims rather than promoting them through prose.
-5. Recompute the county index when README byte classification or tracked paths change.
+5. Record the Clark index-row drift for a separately reconciled inventory pass; do not silently treat the pinned index as current after this README repair.
 6. Emit a receipt bound to the final authored bytes and leave human review pending.
 7. Re-run focused checks and inspect exact-head hosted results without weakening failures.
 
-**Before merge**, rollback is closing or abandoning the draft pull request and leaving `main` unchanged; remote branch deletion is separate authority. **After merge**, use a transparent revert or bounded forward-fix pull request for this README, the county-index reconciliation, and the generated receipt. Never force-push shared history, create a second writable county lane, or treat Git rollback as sufficient correction for separately released public artifacts.
+**Before merge**, rollback is closing or abandoning the draft pull request and leaving `main` unchanged; remote branch deletion is separate authority. **After merge**, use a transparent revert or bounded forward-fix pull request for this README and the generated receipt; a later county-index reconciliation is a separate rollback target only after it exists. Never force-push shared history, create a second writable county lane, or treat Git rollback as sufficient correction for separately released public artifacts.
 
 [Back to top](#top)
 
@@ -392,6 +391,6 @@ When this directory changes:
 
 | Version | Date | Change | Non-effect |
 |---|---|---|---|
-| `v0.1.0` | 2026-08-21 | Replaced the one-byte placeholder with a repository-grounded Clark County directory boundary, plan-reading rules, trust-boundary proof slice, public-safety limits, source-role separation, maturity gaps, validation, maintenance, correction, and rollback guidance. | No sibling-plan edit, source admission, path migration, contract/schema/policy/runtime change, live connector, release, deployment, publication, or settings mutation. |
+| `v0.1.0` | 2026-08-21 | Replaced the one-byte placeholder with a repository-grounded Clark County directory boundary, plan-reading rules, trust-boundary proof slice, public-safety limits, source-role separation, maturity gaps, validation, maintenance, correction, and rollback guidance. | No sibling-plan or county-index edit, source admission, path migration, contract/schema/policy/runtime change, live connector, release, deployment, publication, or settings mutation. |
 
 [Back to top](#top)
