@@ -1,9 +1,9 @@
 name: Reconcile Hazards dashboard catalog and receipt
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - docs/ground-hazards-dashboard-20260821
     paths:
       - .github/workflows/kfm-hazards-payload-assembly.yml
 
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      TARGET_BRANCH: ${{ github.head_ref }}
+      TARGET_BRANCH: ${{ github.ref_name }}
       KFM_NO_NETWORK: "1"
       PYTHONHASHSEED: "0"
       PYTHONDONTWRITEBYTECODE: "1"
