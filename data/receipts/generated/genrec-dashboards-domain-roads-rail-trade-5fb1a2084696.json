@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/roads-rail-trade.md": "sha256:da0162fa8827f658bdffa796c96c3afec67733aceacd649f78b1eb54128f77e8",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:b5f5c83e94e506edeb2c8def2b9b02e57bea24f263c48dfe08c67677434ad669"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -23,7 +23,7 @@
     "tools_enabled": [
       "GitHub connector",
       "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
-      "deterministic SHA-256 and Git-blob validation"
+      "deterministic metadata, SHA-256, and Git-blob validation"
     ]
   },
   "inputs": {
@@ -32,9 +32,12 @@
     ],
     "evidence_refs": [
       "repo:pull/3207",
+      "repo:pull/3209",
+      "repo:pull/3212",
       "repo:commit/8b9e457c1e59ef7a0813ef6407fee33f22d2a841",
+      "repo:commit/a490defd12608f4159544e717e38e7a8224d9cfe",
       "repo:docs/dashboards/domain/roads-rail-trade.md@8b9e457c1e59ef7a0813ef6407fee33f22d2a841#blob=9de95fff00c549156aa025cd62c75f13fd798d36",
-      "repo:docs/dashboards/DASHBOARD_CATALOG.md@8b9e457c1e59ef7a0813ef6407fee33f22d2a841#blob=9d371a4711e628f2a5af78dc306b677b5e64eeac",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@a490defd12608f4159544e717e38e7a8224d9cfe#blob=3824d114d3c85cb4a1dd3226d93abb8208b08922",
       "repo:.github/workflows/docs-meta-block.yml@8b9e457c1e59ef7a0813ef6407fee33f22d2a841#blob=c2054a053ba3050cf41b731d85a7a0996e9231f6",
       "repo:tools/validators/docs/meta-block/meta_block_validate.py@8b9e457c1e59ef7a0813ef6407fee33f22d2a841#blob=c091737dc9eeceb09371904cc879fa9672c92a2f",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@8b9e457c1e59ef7a0813ef6407fee33f22d2a841",
@@ -49,37 +52,42 @@
     {
       "gate": "merged-byte-and-failure-recheck",
       "outcome": "PASS",
-      "reason": "PR #3207 merged at 8b9e457c1e59ef7a0813ef6407fee33f22d2a841. The exact merged dashboard, catalog, receipt, docs-meta workflow, and metadata validator bytes were re-read before this forward correction."
+      "reason": "PR #3207 merged at 8b9e457c1e59ef7a0813ef6407fee33f22d2a841. The exact merged dashboard, catalog, receipt, docs-meta workflow, and metadata-validator bytes were re-read before this forward correction."
     },
     {
       "gate": "docs-meta-block-root-cause",
       "outcome": "PASS",
-      "reason": "The merged dashboard metadata block omitted three validator-required fields: owning_root, responsibility, and truth_posture. The follow-up adds only those bounded top-level fields; it does not alter domain claims, metrics, runtime, policy, release, deployment, or publication state."
+      "reason": "The merged dashboard omitted three validator-required fields: owning_root, responsibility, and truth_posture. The correction adds only those bounded top-level fields."
+    },
+    {
+      "gate": "concurrent-catalog-reconciliation",
+      "outcome": "PASS",
+      "reason": "PR #3209 subsequently advanced main and restored a stale Roads/Rail/Trade catalog row while adding the Settlements/Infrastructure reconciliation. Catalog v0.7 preserves the People/DNA/Land and Settlements/Infrastructure rows and restores only the grounded Roads/Rail/Trade row."
     },
     {
       "gate": "directory-rules-placement",
       "outcome": "PASS",
-      "reason": "The correction is a same-path edit under docs/ and a same-path receipt update under data/receipts/generated/. It creates no new authority root or parallel contract, schema, policy, source, proof, release, or publication home."
+      "reason": "The correction remains a same-path docs/ edit, a same-path dashboard catalog edit, and a same-path generated-receipt update; no new authority root or parallel contract, schema, policy, source, proof, release, or publication home is created."
     },
     {
       "gate": "metadata-field-shape",
       "outcome": "PASS",
-      "reason": "The added owning_root is docs/, matching the document path. Responsibility and truth_posture are non-empty bounded top-level strings containing recognized evidence labels and no unsupported nested mapping."
+      "reason": "owning_root is docs/, matching the target path. Responsibility and truth_posture are non-empty bounded strings, expose recognized evidence labels, and use no unsupported nested mapping."
     },
     {
       "gate": "artifact-binding",
       "outcome": "PASS",
-      "reason": "Corrected dashboard bytes bind to SHA-256 da0162fa8827f658bdffa796c96c3afec67733aceacd649f78b1eb54128f77e8 and Git blob 00a400370dedfebd719da8dac225eaad6957f96d. The unchanged catalog remains bound to SHA-256 f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e and Git blob 9d371a4711e628f2a5af78dc306b677b5e64eeac."
+      "reason": "Corrected dashboard bytes bind to SHA-256 da0162fa8827f658bdffa796c96c3afec67733aceacd649f78b1eb54128f77e8 and Git blob 00a400370dedfebd719da8dac225eaad6957f96d. Reconciled catalog bytes bind to SHA-256 b5f5c83e94e506edeb2c8def2b9b02e57bea24f263c48dfe08c67677434ad669 and Git blob 912b04224800a7d58a20893718c3364996993850."
     },
     {
       "gate": "historical-receipt-forward-correction",
       "outcome": "PASS",
-      "reason": "The pending-review receipt is updated in place so its current-path artifact binding remains exact. Git history preserves the originally merged receipt and dashboard hashes; this note records the reason for the forward correction."
+      "reason": "The pending-review receipt is updated in place so its current-path artifact bindings remain exact. Git history preserves the originally merged receipt and dashboard/catalog hashes."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks begin after the follow-up branch and draft pull request are delivered. Their exact-head results are reported separately and do not confer release or publication authority."
+      "reason": "Hosted checks start after the reconciled follow-up head is delivered. Exact-head results are reported separately and do not confer release or publication authority."
     },
     {
       "gate": "human-review",
@@ -89,7 +97,7 @@
     {
       "gate": "runtime-release-deployment-publication-non-effects",
       "outcome": "PASS",
-      "reason": "Only the dashboard metadata envelope and its generated authoring receipt change. No source, connector, contract, schema, policy, fixture, validator, test, workflow, runtime, telemetry, proof, release candidate, deployment, publication, or repository setting is changed."
+      "reason": "Only the dashboard metadata envelope, shared catalog reconciliation, and generated authoring receipt change. No source, connector, contract, schema, policy, fixture, validator, test, workflow, runtime, telemetry, proof, release candidate, deployment, publication, or repository setting is changed."
     }
   ],
   "policy_decisions": [
@@ -97,14 +105,19 @@
   ],
   "citations": [
     {
-      "id": "merged-pr",
+      "id": "merged-primary-pr",
       "validated": true,
       "evidence_ref": "repo:pull/3207"
     },
     {
-      "id": "merged-main",
+      "id": "concurrent-catalog-pr",
       "validated": true,
-      "evidence_ref": "repo:commit/8b9e457c1e59ef7a0813ef6407fee33f22d2a841"
+      "evidence_ref": "repo:pull/3209"
+    },
+    {
+      "id": "current-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/a490defd12608f4159544e717e38e7a8224d9cfe"
     },
     {
       "id": "metadata-validator",
@@ -128,12 +141,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-21T16:35:08Z",
+  "created_at": "2026-08-21T17:10:00Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
-    "pr_number": 3207,
+    "pr_number": 3212,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Forward correction after PR #3207 merged while hosted checks were settling. The original merged dashboard hash was sha256:5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed. The docs-meta-block failure exposed missing required metadata fields; the corrected artifact hash is authoritative for the current path. Git history retains the prior receipt and artifact bytes. Human review remains pending, and neither receipt revision constitutes release, deployment, publication, or approval."
+  "notes": "Forward correction after PR #3207 merged while hosted checks were settling and PR #3209 subsequently regressed the shared Roads/Rail/Trade catalog row. The original merged dashboard hash was sha256:5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed. The corrected dashboard and catalog hashes above are authoritative for the current paths. Git history retains prior receipt and artifact bytes. Human review remains pending, and this receipt constitutes neither approval nor release, deployment, promotion, publication, or merge authority."
 }
