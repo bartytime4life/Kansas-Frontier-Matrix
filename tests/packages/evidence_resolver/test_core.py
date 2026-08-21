@@ -25,10 +25,19 @@ from evidence_resolver.core import (  # noqa: E402
 FIXTURES = REPO_ROOT / "fixtures/packages/evidence_resolver/v1alpha1"
 
 
+def _candidate_fixture_paths() -> list[Path]:
+    return sorted(
+        [
+            *((FIXTURES / "valid").glob("*.json")),
+            *((FIXTURES / "invalid").glob("*.json")),
+        ]
+    )
+
+
 class EvidenceResolutionCandidateTests(unittest.TestCase):
     def _cases(self) -> list[tuple[Path, dict[str, object]]]:
         cases = []
-        for path in sorted(FIXTURES.rglob("*.json")):
+        for path in _candidate_fixture_paths():
             cases.append((path, json.loads(path.read_text(encoding="utf-8"))))
         self.assertTrue(cases)
         return cases

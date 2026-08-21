@@ -3,7 +3,7 @@
   "claim_scope": "hydrology feature",
   "evidence_refs": [
     {
-      "ref": "obs:1",
+      "ref": "kfm://synthetic/hydrology/observation-001",
       "kind": "measurement"
     }
   ],

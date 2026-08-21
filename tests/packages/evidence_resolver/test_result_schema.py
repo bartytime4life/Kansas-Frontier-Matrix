@@ -26,6 +26,15 @@ CONTRACT_FIXTURES = (
 RESOLVER_FIXTURES = REPO_ROOT / "fixtures/packages/evidence_resolver/v1alpha1"
 
 
+def _candidate_fixture_paths() -> list[Path]:
+    return sorted(
+        (
+            *((RESOLVER_FIXTURES / "valid").glob("*.json")),
+            *((RESOLVER_FIXTURES / "invalid").glob("*.json")),
+        )
+    )
+
+
 class RuntimeEvidenceResolutionSchemaTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -58,7 +67,7 @@ class RuntimeEvidenceResolutionSchemaTests(unittest.TestCase):
                 self.assertTrue(self._errors(payload))
 
     def test_every_checked_in_resolver_result_conforms(self) -> None:
-        paths = sorted(RESOLVER_FIXTURES.rglob("*.json"))
+        paths = _candidate_fixture_paths()
         self.assertTrue(paths)
         statuses: set[str] = set()
         for path in paths:
@@ -70,7 +79,7 @@ class RuntimeEvidenceResolutionSchemaTests(unittest.TestCase):
         self.assertEqual({"RESOLVED", "UNRESOLVED", "DENIED", "ERROR"}, statuses)
 
     def test_nonresolved_results_never_expose_bundle_identity(self) -> None:
-        for path in sorted(RESOLVER_FIXTURES.rglob("*.json")):
+        for path in _candidate_fixture_paths():
             case = json.loads(path.read_text(encoding="utf-8"))
             payload = evaluate_resolution_candidate(case["request"]).as_dict()
             if payload["status"] != "RESOLVED":

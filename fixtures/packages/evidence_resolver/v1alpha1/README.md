@@ -13,7 +13,8 @@ closed. It does not mean evidence truth,
 claim-scope equivalence, rights clearance, policy evaluation, human review,
 release approval, a public `ANSWER`, or publication authority.
 
-Each fixture has exactly two top-level members:
+Each candidate fixture under `valid/` or `invalid/` has exactly two top-level
+members:
 
 - `request` — the explicit candidate input;
 - `expected` — one internal status and the exact sorted issue-code set.
@@ -25,3 +26,11 @@ The inventory contains two positive fixtures (initially active and active
 after re-verification) plus exact negatives for all prior resolver outcomes and
 for corrected, superseded, revoked, unknown, per-event temporal inconsistency,
 effective-order inversion, and subject-mismatched verification history.
+
+`repository/hydrology_bundle_manifest.json` is separate adapter configuration,
+not a candidate fixture. Its one closed entry binds stable ID `hb1` to the sole
+allowlisted synthetic Hydrology payload and the packet-local complete-object
+digest profile. Candidate-suite discovery is restricted to `valid/` and
+`invalid/`; it cannot interpret this manifest as a resolver request. The
+manifest is not an evidence registry, catalog, proof store, policy record,
+source registry, release record, or production authority.

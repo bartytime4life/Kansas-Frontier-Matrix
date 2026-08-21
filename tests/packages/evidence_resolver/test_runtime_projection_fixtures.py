@@ -31,9 +31,18 @@ EXPECTED_DISPOSITIONS = {
 }
 
 
+def _candidate_fixture_paths() -> list[Path]:
+    return sorted(
+        (
+            *((FIXTURE_ROOT / "valid").glob("*.json")),
+            *((FIXTURE_ROOT / "invalid").glob("*.json")),
+        )
+    )
+
+
 class RuntimeProjectionFixtureIntegrationTests(unittest.TestCase):
     def test_every_resolver_fixture_projects_fail_closed(self) -> None:
-        paths = sorted(FIXTURE_ROOT.rglob("*.json"))
+        paths = _candidate_fixture_paths()
         self.assertTrue(paths, "expected resolver fixtures")
 
         observed_statuses: set[str] = set()

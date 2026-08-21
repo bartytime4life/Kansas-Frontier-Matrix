@@ -6,7 +6,8 @@ Tests for the internal
 
 ## Scope
 
-- Owner: evidence/proof, package, and validation stewards — `OWNER_TBD`.
+- Owner: `@bartytime4life` is provisional accountable maintainer for the first
+  #2975 fixture packet; package-wide `OWNER_TBD` remains.
 - Inputs: synthetic fixtures under
   [`fixtures/packages/evidence_resolver/v1alpha1/`](../../../fixtures/packages/evidence_resolver/v1alpha1/README.md).
 - Outputs: unittest pass/fail state and bounded subprocess output.
@@ -19,8 +20,12 @@ Tests for the internal
 ```text
 tests/packages/evidence_resolver/
 ├── README.md
-├── test_cli.py    # command, fixture polarity, and no-echo behavior
-└── test_core.py   # finite outcomes, bounds, determinism, and no-network checks
+├── test_cli.py                         # command and fixture inventory
+├── test_core.py                        # candidate bounds and finite outcomes
+├── test_hydrology_fixture_adapter.py   # lookup, digest, paths, and no-I/O proof
+├── test_result_schema.py               # existing result-contract conformance
+├── test_runtime_projection.py          # finite internal runtime map
+└── test_runtime_projection_fixtures.py # candidate-to-runtime integration
 ```
 
 Run:
@@ -30,8 +35,11 @@ make evidence-resolver
 make evidence-resolver-deny
 ```
 
-The suite checks exact fixture outcomes, deterministic serialization,
+The suite checks exact candidate outcomes, deterministic serialization,
 non-authority, safe diagnostics, duplicate/non-finite/size/depth rejection,
 standard-library-only imports, history-shape pinning, bitemporal replay,
-subject binding, finite-outcome precedence, and active denial of DNS/socket
-access.
+subject binding, finite-outcome precedence, complete-object digest binding,
+manifest misses, duplicate IDs, profile and schema failure, tamper detection,
+absolute/traversal/outside-root/non-allowlisted paths, symlinks, caller-bundle
+injection, no negative fall-through, and active denial of network, URL, and
+process access. Static imports exclude model clients.

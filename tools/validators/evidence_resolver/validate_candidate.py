@@ -54,6 +54,17 @@ EXPECTED_FIXTURES = frozenset(
 )
 
 
+def _candidate_fixture_files(root: Path) -> list[Path]:
+    """Return evaluator cases without treating repository config as input."""
+
+    return sorted(
+        [
+            *((root / "valid").glob("*.json")),
+            *((root / "invalid").glob("*.json")),
+        ]
+    )
+
+
 def _load(path: Path) -> object:
     if path.is_symlink() or not path.is_file():
         raise BoundedJSONError("input/unreadable")
@@ -87,7 +98,7 @@ def _evaluate_file(path: Path) -> tuple[str, tuple[str, ...], str]:
 
 
 def _run_fixtures(root: Path, *, negative_only: bool) -> int:
-    files = sorted(root.rglob("*.json"))
+    files = _candidate_fixture_files(root)
     observed = frozenset(path.relative_to(root).as_posix() for path in files)
     if observed != EXPECTED_FIXTURES:
         print("ERROR fixture/inventory-mismatch", file=sys.stderr)
