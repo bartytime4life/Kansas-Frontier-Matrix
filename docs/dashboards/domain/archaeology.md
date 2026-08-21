@@ -14,7 +14,9 @@ owning_root: docs/
 responsibility: Specify a public-safe, evidence-bounded archaeology governance-health dashboard without exposing protected records or claiming that panels, telemetry, policy enforcement, release, or publication exist.
 truth_posture: CONFIRMED current repository paths, source documents, fixture-only assessment contract, validator, and focused tests / PROPOSED dashboard indicators, panels, projection shape, and reviewer workflow / UNKNOWN deployed dashboard, telemetry, protected-policy evaluation, live review records, release integration, and public behavior / NEEDS VERIFICATION accountable stewards, approved measurement profiles, safe aggregation, runtime bindings, hosted exact-head checks, and qualified human review.
 current_path: docs/dashboards/domain/archaeology.md
-base_commit: 51d45e45a56d19961a3014009b80c2c94b1107ee
+base_commit: 464148b8b1b3dff558086b23fc5ec8fb16d60572
+initial_evidence_commit: 51d45e45a56d19961a3014009b80c2c94b1107ee
+base_drift: "main advanced through merged PR #3191; the three-path Atmosphere/dashboard-catalog change did not modify this target, and current main was merged into the feature branch without force"
 prior_blob: 0c5727e7b812b34889962e8158d4c3c51ca971df
 codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 placement_status: "CONFIRMED existing path under docs/; HOLD as part of the unadmitted docs/dashboards/ direct-child lane under adopted Directory Rules v2"
@@ -86,7 +88,7 @@ notes:
 
 This revision reconciles the existing May 2026 draft with the repository state pinned below. It preserves the same document identity, path, H1, domain boundary, and specification-only role.
 
-| Surface | Current-session evidence at `main@51d45e45a56d19961a3014009b80c2c94b1107ee` | Safe interpretation |
+| Surface | Current-session evidence at `main@464148b8b1b3dff558086b23fc5ec8fb16d60572` | Safe interpretation |
 |---|---|---|
 | This specification | Existing file at `docs/dashboards/domain/archaeology.md`; prior blob `0c5727e7b812b34889962e8158d4c3c51ca971df`. | **CONFIRMED path and prior bytes.** Content remains a review candidate, not runtime authority. |
 | Dashboard lane | [`../README.md`](../README.md) describes human-facing specifications and catalogs only. It records current path presence but keeps long-term placement on **HOLD**. | Preserve the path for this update; do not infer canonical admission or migrate the lane. |
