@@ -1,0 +1,155 @@
+name: Reconcile Hazards dashboard catalog and receipt
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/kfm-hazards-payload-assembly.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  reconcile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_BRANCH: ${{ github.head_ref }}
+      KFM_NO_NETWORK: "1"
+      PYTHONHASHSEED: "0"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      TZ: UTC
+    steps:
+      - name: Clone the exact feature branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TARGET_BRANCH" \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+
+      - name: Reconcile the catalog and generated receipt
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          from pathlib import Path
+
+          catalog_path = Path("docs/dashboards/DASHBOARD_CATALOG.md")
+          receipt_path = Path("data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json")
+          hazards_path = Path("docs/dashboards/domain/hazards.md")
+
+          def replace_one(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected exactly one match, observed {count}")
+              return text.replace(old, new, 1)
+
+          catalog = catalog_path.read_text(encoding="utf-8")
+          catalog = replace_one(catalog, "version: v0.5\n", "version: v0.6\n", "catalog version")
+          catalog = replace_one(
+              catalog,
+              '  - "This v0.5 refresh reconciles the Hazards row with current doctrine, source-role and life-safety boundaries, deterministic synthetic USDM materiality validation, inactive policy, and proof/release/runtime holds without claiming live alerting, telemetry, or a dashboard runtime."\n',
+              '  - "This v0.5 refresh reconciles the People/DNA/Land row with current domain, contract, closed fixture-schema, policy-maturity, synthetic validation, workflow, Explorer boundary, and proof/release-hold evidence without claiming real-person processing or a dashboard runtime."\n'
+              '  - "This v0.6 refresh reconciles the Hazards row with current doctrine, source-role and life-safety boundaries, deterministic synthetic USDM materiality validation, inactive policy, and proof/release/runtime holds without claiming live alerting, telemetry, or a dashboard runtime; it also preserves the v0.5 People/DNA/Land and current Settlements/Infrastructure catalog work already present on main."\n',
+              "catalog notes",
+          )
+          catalog = replace_one(
+              catalog,
+              '| [`domain/settlements-infrastructure.md`](domain/settlements-infrastructure.md) | Per-domain instance of §24.11 for settlements / infrastructure (critical-asset T4): fail-closed gate, redaction coverage, rollback coverage, service-area cascade. | Atlas v1.1 §24.11.3 / §24.11.2 | Settlements-infrastructure domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |',
+              '| [`domain/settlements-infrastructure.md`](domain/settlements-infrastructure.md) | Settlements / Infrastructure evidence, place-role and vintage separation, public-safe transformation, EvidenceBundle projection, condition/dependency exposure, proof/release holds, correction, and rollback posture; routed dashboard and production telemetry remain unverified. | Current domain docs, contracts, schemas, focused EvidenceBundle validator/test/workflow, policy/validator/test scaffolds, source registry, and domain readiness holds; proposed Atlas §24.11.1 / §24.11.2 / §24.11.3 | Settlements / Infrastructure steward · Sensitivity/security reviewer · Evidence/source steward · Metric/UI/release reviewers (identities unverified) | Explorer feature directory exists with placeholder EvidenceDrawer/layers; dashboard route, metric producer, telemetry, and deployment UNKNOWN | CONFIRMED | PROPOSED |',
+              "Settlements/Infrastructure row",
+          )
+          catalog = replace_one(
+              catalog,
+              '| [`domain/people-dna-land.md`](domain/people-dna-land.md) | Per-domain instance of §24.11 for people / genealogy / DNA / land ownership (living-person T4, DNA T4): fail-closed, rights-change response time, AIReceipt presence, synthetic-claim incidence (target zero). | Atlas v1.1 §24.11.3 / §24.11.4 / §24.11.1 | People-DNA-land domain steward · Sensitivity reviewer · AI-surface steward · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |',
+              '| [`domain/people-dna-land.md`](domain/people-dna-land.md) | Repository-grounded People/DNA/Land dashboard spec: documented T4/deny-default baseline, consent/revocation synthetic proof slice, unbound policy evaluator, source-role and title anti-collapse, sensitive-metric side-channel controls, finite states, and proof/release holds; no real-person processing or dashboard runtime is verified. | Current People/DNA/Land docs and contracts, three closed fixture-profile schemas, two substantive validators, 25 deterministic no-network tests across two profiles, the domain workflow, policy maturity boundary, Explorer feature README, plus proposed Atlas §24.11.1 / §24.11.3 / §24.11.4 | `@bartytime4life` review route; People/DNA/Land, privacy, consent, genomic, land/title, metric, policy, release, rights-holder/sovereignty, and independent stewards NEEDS VERIFICATION | Explorer People/DNA/Land README confirmed; no dashboard route, metric producer, telemetry feed, bound policy evaluator, proof/release producer, or deployed panel verified | CONFIRMED | NEEDS VERIFICATION |',
+              "People/DNA/Land row",
+          )
+          catalog = replace_one(
+              catalog,
+              "**Edition:** v0.5 (draft)",
+              "**Edition:** v0.6 (draft)",
+              "catalog footer",
+          )
+          catalog_path.write_text(catalog, encoding="utf-8", newline="\n")
+
+          catalog_sha = hashlib.sha256(catalog_path.read_bytes()).hexdigest()
+          hazards_sha = hashlib.sha256(hazards_path.read_bytes()).hexdigest()
+          expected_catalog_sha = "8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4"
+          expected_hazards_sha = "532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3"
+          if catalog_sha != expected_catalog_sha:
+              raise SystemExit(f"catalog SHA-256 mismatch: {catalog_sha}")
+          if hazards_sha != expected_hazards_sha:
+              raise SystemExit(f"Hazards SHA-256 mismatch: {hazards_sha}")
+
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          receipt["artifact_hashes"]["docs/dashboards/DASHBOARD_CATALOG.md"] = f"sha256:{catalog_sha}"
+          receipt["parameters"]["tools_enabled"][0] = (
+              "GitHub connector for current repository inspection, guarded branch/file mutation, draft pull-request delivery, and hosted exact-head evidence"
+          )
+          evidence_ref = "repo:pr/3217"
+          if evidence_ref not in receipt["inputs"]["evidence_refs"]:
+              receipt["inputs"]["evidence_refs"].append(evidence_ref)
+
+          gates = {gate["gate"]: gate for gate in receipt["validation_gates"]}
+          gates["current-main-target-overlap-and-concurrency-preflight"]["outcome"] = "PASS"
+          gates["current-main-target-overlap-and-concurrency-preflight"]["reason"] = (
+              "Corrective draft PR #3217 was opened after verifying that merged transfer PRs left the prior Hazards specification, a stale Hazards catalog row, and temporary transfer paths on current main. The corrective branch preserves current-main People/DNA/Land and Settlements/Infrastructure catalog work while limiting the final tree delta to the Hazards specification, reconciled catalog, updated receipt, and removal of the two temporary transfer paths."
+          )
+          gates["dashboard-catalog-reconciliation"]["outcome"] = "PASS"
+          gates["dashboard-catalog-reconciliation"]["reason"] = (
+              "The Dashboard Catalog is advanced from v0.5 to v0.6, retaining 33 specifications, preserving the current People/DNA/Land and Settlements/Infrastructure rows, and replacing the Hazards row with the repository-grounded bounded specification posture."
+          )
+          gates["prepared-artifact-sha256-binding"]["outcome"] = "PASS"
+          gates["prepared-artifact-sha256-binding"]["reason"] = (
+              f"The exact UTF-8 bytes bind to SHA-256 {hazards_sha} for the Hazards specification and {catalog_sha} for the concurrency-reconciled Dashboard Catalog."
+          )
+          gates["remote-feature-branch-and-draft-pr-delivery"]["outcome"] = "PASS"
+          gates["remote-feature-branch-and-draft-pr-delivery"]["reason"] = (
+              "Draft PR #3217 exists on docs/ground-hazards-dashboard-20260821 and carries the bounded corrective tree. No merge, release, deployment, promotion, publication, source activation, or repository-setting change is claimed."
+          )
+          gates["hosted-exact-head-ci"]["outcome"] = "SKIPPED"
+          gates["hosted-exact-head-ci"]["reason"] = (
+              "Hosted checks must settle on the final PR head after this corrective commit. This receipt records delivery but does not claim hosted exact-head success."
+          )
+          receipt["links"]["pr_number"] = 3217
+          receipt["notes"] = (
+              "Corrective authoring receipt for draft PR #3217. The reviewed Hazards specification remains bound to its prepared SHA-256, while the Dashboard Catalog is concurrency-reconciled as v0.6 to preserve current-main People/DNA/Land and Settlements/Infrastructure work. The PR removes the temporary transfer archive and one-shot assembly workflow left by earlier merged transfer PRs. Repository-native Hazards validation is executed in the corrective workflow; hosted exact-head checks and human review remain pending. No source activation, live hazard claim, policy decision, release, deployment, promotion, publication, merge, or repository-setting authority is asserted."
+          )
+
+          receipt_path.write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+
+          rebound = json.loads(receipt_path.read_text(encoding="utf-8"))
+          assert rebound["artifact_hashes"]["docs/dashboards/domain/hazards.md"] == f"sha256:{hazards_sha}"
+          assert rebound["artifact_hashes"]["docs/dashboards/DASHBOARD_CATALOG.md"] == f"sha256:{catalog_sha}"
+          assert rebound["links"]["pr_number"] == 3217
+          assert rebound["human_review"]["state"] == "pending"
+          print(f"Hazards SHA-256: {hazards_sha}")
+          print(f"Catalog SHA-256: {catalog_sha}")
+          print(f"Receipt SHA-256: {hashlib.sha256(receipt_path.read_bytes()).hexdigest()}")
+          PY
+
+          git diff --check
+          make hazards-validate
+
+          git rm .github/workflows/kfm-hazards-payload-assembly.yml
+          git add docs/dashboards/DASHBOARD_CATALOG.md
+          git add -f data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(dashboards): reconcile Hazards catalog and receipt"
+          git push origin "HEAD:${TARGET_BRANCH}"
