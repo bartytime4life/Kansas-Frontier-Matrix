@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-dashboards-domain-hazards-532aeaa5a6fe",
+  "receipt_id": "genrec-dashboards-domain-hazards-correction-20260821",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/dashboards/domain/hazards.md",
@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/hazards.md": "sha256:532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -21,8 +21,8 @@
     "top_p": null,
     "max_tokens": null,
     "tools_enabled": [
-      "GitHub connector for current repository, file, branch, workflow, pull-request, and overlap inspection",
-      "deterministic local Markdown, YAML, anchor, fence, link-manifest, catalog, receipt, whitespace, and SHA-256 validation",
+      "GitHub connector for current repository inspection, guarded branch/file/tree/commit mutation, draft pull-request delivery, and exact-head workflow evidence",
+      "deterministic local generated-receipt schema, cross-field, UTF-8/LF, SHA-256, and Git-blob validation",
       "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
     ]
   },
@@ -64,7 +64,15 @@
       "repo:.github/CODEOWNERS@977bd5219b2002bab647792606c862ebc3b6bd85#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
       "repo:docs/doctrine/directory-rules.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fd49a0b83e55cef52c1124281f093e263526898d",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
-      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:merged-pr/3217",
+      "repo:merge-commit/12466fcf0196af9917a26b0dc5251f56e742f506",
+      "repo:main/12466fcf0196af9917a26b0dc5251f56e742f506",
+      "repo:branch/docs/hazards-receipt-immutability-correction-20260821",
+      "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@3be831bf4d202b6bc6493109810352dad591ae24#blob=95261baed0987f664af73749e4e8b3a968f7437e",
+      "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@12466fcf0196af9917a26b0dc5251f56e742f506#blob=651eee73c1e1219e7e2ffed37cf4fc76c3d49353",
+      "repo:.github/ISSUE_TEMPLATE/README.md@12466fcf0196af9917a26b0dc5251f56e742f506#blob=f689cad3a3c66e4e201208c66bbe4e218c5edea5",
+      "repo:review-thread/PRRT_kwDOPyBy4c6bPpl3"
     ]
   },
   "truth_labels": {
@@ -73,74 +81,59 @@
   },
   "validation_gates": [
     {
-      "gate": "current-main-target-overlap-and-concurrency-preflight",
+      "gate": "merged-hazards-artifact-hash-verification",
       "outcome": "PASS",
-      "reason": "Prepared against base 0bcae3f30f682c4bcd0694f0f97deced6f4c5e0e. Final recheck observed main at 0511e13521aabae18dc74f5f1ee7a618396bd737, a direct descendant of the prepared base, with the target and catalog still at exact blobs 249c22050dcb22746813895d92ad113a9d77c7f9 and 3b9ee1b34a8278fbabe04145a99a37e4d6214838. No exact-target open pull request or active Hazards dashboard task-branch collision was found."
+      "reason": "Current main at merge commit 12466fcf0196af9917a26b0dc5251f56e742f506 contains the reviewed Hazards specification Git blob 81bacd5a9cf14594a62189edd892a41109ab658b and reconciled Dashboard Catalog Git blob f86b42f7bc6fd28de78e98f06cf1f89cc5af7d4c, matching the artifact SHA-256 values recorded here."
+    },
+    {
+      "gate": "historical-generated-receipt-immutability-drift-detection",
+      "outcome": "PASS",
+      "reason": "The merged PR changed the historical authoring receipt from prior blob 95261baed0987f664af73749e4e8b3a968f7437e to blob 651eee73c1e1219e7e2ffed37cf4fc76c3d49353. Repository guidance requires historical generated receipts to remain immutable and a new receipt for new authored bytes."
+    },
+    {
+      "gate": "append-only-corrective-receipt-plan",
+      "outcome": "PASS",
+      "reason": "The corrective branch restores the historical receipt to exact prior blob 95261baed0987f664af73749e4e8b3a968f7437e and adds this distinct receipt. It does not edit the merged Hazards specification or Dashboard Catalog."
     },
     {
       "gate": "directory-rules-placement-and-authority-boundary",
       "outcome": "PASS",
-      "reason": "Accepted ADR-0029 and current directory-rules bytes were inspected. The slice keeps two tracked documentation files at their existing docs-root paths, preserves the parent dashboard lane placement HOLD, and adds only the required generated authoring receipt under data/receipts/generated/."
+      "reason": "Both receipt paths remain under the established data/receipts/generated process-memory lane. No parallel receipt, proof, catalog, policy, release, or publication authority is created."
     },
     {
-      "gate": "repository-state-and-direct-dependency-reconciliation",
+      "gate": "corrective-generated-receipt-schema-and-cross-field-check",
       "outcome": "PASS",
-      "reason": "The complete Hazards dashboard specification was reconciled against current domain and life-safety doctrine, source-role and drought anti-collapse guidance, contracts, schema and source/policy inventories, deterministic USDM validator/fixtures/tests/workflow, Explorer feature boundary, Review Console boundary, domain-lane projection, and CODEOWNERS."
+      "reason": "This distinct receipt validates against the Draft 2020-12 generated-receipt schema, maintains exact artifact/hash/truth-label key parity, cites both historical and rewritten receipt blobs, and carries pending human review without self-approval."
     },
     {
-      "gate": "hazards-life-safety-and-source-role-boundary",
+      "gate": "historical-receipt-byte-and-git-blob-verification",
       "outcome": "PASS",
-      "reason": "The replacement permits WarningContext and AdvisoryContext only as governed issuer/issue/expiry/freshness/referral context while denying KFM alert authorship, protective-action advice, expired-as-current presentation, official-source substitution, and warning/event, declaration/impact, regulatory/observed, detection/confirmation, model/observation, aggregate/per-place, exposure/impact, and synthetic/released collapse."
+      "reason": "The restoration payload is SHA-256 7ddda6814eea45f357518cbd3c8f4f6d2b7055ca5eeba11b0b8821c1223198e7 and Git blob 95261baed0987f664af73749e4e8b3a968f7437e, matching the receipt bytes present before PR #3217 merged."
     },
     {
-      "gate": "bounded-usdm-fixture-proof",
+      "gate": "corrective-branch-delivery",
       "outcome": "PASS",
-      "reason": "The specification accurately bounds the existing kfm-usdm-materiality-v1 validator to deterministic, synthetic, no-network fixture comparison with UNCHANGED, SEMANTIC_NON_MATERIAL, MATERIAL, and UNDETERMINED states; it does not inflate PROMOTION_CANDIDATE into authority, promotion, release, publication, or current drought truth."
+      "reason": "The bounded branch docs/hazards-receipt-immutability-correction-20260821 was created from main@12466fcf0196af9917a26b0dc5251f56e742f506 for the two-path receipt correction."
     },
     {
-      "gate": "dashboard-catalog-reconciliation",
-      "outcome": "PASS",
-      "reason": "The current v0.4 Dashboard Catalog is preserved and advanced to v0.5 only to add the Hazards reconciliation note, replace the existing Hazards row in place, and update the footer. All other catalog rows remain byte-identical, including the previously grounded Flora row; the catalog still contains 33 specs."
-    },
-    {
-      "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-secret-check",
-      "outcome": "PASS",
-      "reason": "The prepared Hazards spec and catalog pass YAML metadata, one-H1, explicit compatibility-anchor, balanced-fence, Markdown parse, table-shape, internal-fragment, verified repository-relative destination, UTF-8/LF, final-newline, no-tab, no-trailing-whitespace, and secret-pattern checks."
-    },
-    {
-      "gate": "prepared-artifact-sha256-binding",
-      "outcome": "PASS",
-      "reason": "The exact prepared UTF-8 bytes bind to SHA-256 532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3 and 85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f for the Hazards spec and Dashboard Catalog respectively."
-    },
-    {
-      "gate": "generated-receipt-shape-and-cross-field-check",
-      "outcome": "PASS",
-      "reason": "This receipt uses contract version 3.0.0, exact artifact/hash/truth-label key parity, supported SHA-256 bindings, nonempty validated citations, pending human review, canonical repository-relative paths, and no receipt self-reference."
-    },
-    {
-      "gate": "repository-native-changed-area-validation",
+      "gate": "corrective-draft-pull-request-delivery",
       "outcome": "SKIPPED",
-      "reason": "No mounted repository checkout was available, so repository-native aggregate checks and the actual make hazards-validate execution remain required after application to a verified checkout."
-    },
-    {
-      "gate": "remote-feature-branch-and-draft-pr-delivery",
-      "outcome": "SKIPPED",
-      "reason": "The connected GitHub surface exposed current read and inspection actions but no repository mutation action in this session; no authenticated local GitHub CLI or mounted checkout was available. No branch, commit, or pull request is claimed."
+      "reason": "The corrective draft pull request is opened after this immutable receipt is emitted; its number and exact-head check settlement are tracked outside this receipt rather than rewriting it."
     },
     {
       "gate": "hosted-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks require a pushed exact head; no remote head was created in this session."
+      "reason": "Hosted checks require a pushed corrective head and opened pull request. No hosted-settlement claim is made at emission."
     },
     {
       "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Human review remains pending. Generated provenance, local checks, documentation, badges, or a future draft pull request do not grant approval, release, deployment, publication, merge, or settings authority."
+      "reason": "Human review remains pending. This receipt and corrective branch do not authorize merge, release, deployment, promotion, publication, source admission, policy, or emergency authority."
     },
     {
       "gate": "runtime-release-deployment-and-publication-non-effects",
       "outcome": "PASS",
-      "reason": "The slice is documentation and provenance only. It does not activate a source, create telemetry or a dashboard route, change a contract/schema/policy/runtime, decide review, assemble evidence/proof, release, deploy, promote, publish, merge, or change repository settings."
+      "reason": "The correction changes provenance records only. It does not modify the merged Hazards documentation bytes, activate a source, ingest data, change runtime/contract/schema/policy behavior, decide review, release, deploy, promote, publish, or change repository settings."
     }
   ],
   "policy_decisions": [
@@ -216,6 +209,26 @@
       "id": "generated-receipt-machine-shape",
       "validated": true,
       "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+    },
+    {
+      "id": "merged-hazards-correction-pr",
+      "validated": true,
+      "evidence_ref": "repo:merged-pr/3217"
+    },
+    {
+      "id": "historical-hazards-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@3be831bf4d202b6bc6493109810352dad591ae24#blob=95261baed0987f664af73749e4e8b3a968f7437e"
+    },
+    {
+      "id": "rewritten-hazards-authoring-receipt-on-merged-main",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json@12466fcf0196af9917a26b0dc5251f56e742f506#blob=651eee73c1e1219e7e2ffed37cf4fc76c3d49353"
+    },
+    {
+      "id": "historical-generated-receipt-immutability-rule",
+      "validated": true,
+      "evidence_ref": "repo:.github/ISSUE_TEMPLATE/README.md@12466fcf0196af9917a26b0dc5251f56e742f506#blob=f689cad3a3c66e4e201208c66bbe4e218c5edea5"
     }
   ],
   "human_review": {
@@ -224,12 +237,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-21T15:33:00Z",
+  "created_at": "2026-08-21T18:14:51Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Prepared same-path repository-grounded modernization of the Hazards dashboard specification, companion current v0.4-to-v0.5 Dashboard Catalog reconciliation, and this provenance record. The artifact was prepared against main@0bcae3f30f682c4bcd0694f0f97deced6f4c5e0e; a final recheck found main advanced to 0511e13521aabae18dc74f5f1ee7a618396bd737 through an unrelated Barton County documentation merge while both edited base blobs remained unchanged. The update preserves the dashboard-lane placement HOLD; corrects the stale all-warning-denied posture into governed operational context plus absolute KFM alert/life-safety denial and official referral; records current synthetic no-network USDM validation without inflating it into live conditions, source admission, evidence, policy, promotion, release, or publication; preserves legacy anchors; and leaves contracts, schemas, sources, policy, runtime, release, deployment, publication, and repository settings unchanged. Remote delivery is not claimed because the connected GitHub actions available in this session were read-only."
+  "notes": "Append-only corrective receipt emitted after PR #3217 merged. The Hazards specification and Dashboard Catalog v0.6 remain unchanged and are bound to their merged hashes. The corrective branch restores the original genrec-dashboards-domain-hazards-532aeaa5a6fe bytes and adds this distinct process-memory record because historical generated receipts must not be rewritten. The follow-up is receipt-only, human review remains pending, and no merge, release, deployment, promotion, publication, source-admission, policy, evidence/proof, or emergency-authority approval is asserted."
 }
