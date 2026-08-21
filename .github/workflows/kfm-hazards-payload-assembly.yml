@@ -7,22 +7,31 @@ on:
     paths:
       - .kfm-transfer/hazards_payload.tar.bz2
       - .github/workflows/kfm-hazards-payload-assembly.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .kfm-transfer/hazards_payload.tar.bz2
+      - .github/workflows/kfm-hazards-payload-assembly.yml
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
   assemble:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
       - name: Clone the exact feature branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git clone --depth 1 --branch "$GITHUB_REF_NAME" \
+          git clone --depth 1 --branch "$TARGET_BRANCH" \
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
 
       - name: Extract, verify, and commit the governed documentation payload
@@ -49,4 +58,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "docs(dashboards): ground Hazards specification"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${TARGET_BRANCH}"
