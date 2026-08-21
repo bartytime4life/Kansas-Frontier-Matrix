@@ -7,53 +7,288 @@ on:
     paths:
       - .kfm-transfer/hazards_payload.tar.bz2
       - .github/workflows/kfm-hazards-payload-assembly.yml
-  pull_request:
-    branches:
-      - main
-    paths:
-      - .kfm-transfer/hazards_payload.tar.bz2
-      - .github/workflows/kfm-hazards-payload-assembly.yml
 
 permissions:
   contents: write
-  pull-requests: read
 
 jobs:
   assemble:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
-      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+      TARGET_BRANCH: docs/ground-hazards-dashboard-20260821
+      PR_NUMBER: "3211"
+      EXPECTED_ARCHIVE_SHA256: f5da59e5323be88a61f8bbfce8b73ccdf938548e622dbc1c1320b4594a1613bc
+      EXPECTED_HAZARDS_SHA256: 532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3
+      EXPECTED_PRIOR_HAZARDS_BLOB: 249c22050dcb22746813895d92ad113a9d77c7f9
+      EXPECTED_PRIOR_CATALOG_BLOB: 9d371a4711e628f2a5af78dc306b677b5e64eeac
     steps:
-      - name: Clone the exact feature branch
+      - name: Clone branch and pin current main inputs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git clone --depth 1 --branch "$TARGET_BRANCH" \
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+          cd repo
+          git fetch --depth 1 origin main
 
-      - name: Extract, verify, and commit the governed documentation payload
+          BASE_SHA="$(git rev-parse origin/main)"
+          PRIOR_HAZARDS_BLOB="$(git rev-parse origin/main:docs/dashboards/domain/hazards.md)"
+          PRIOR_CATALOG_BLOB="$(git rev-parse origin/main:docs/dashboards/DASHBOARD_CATALOG.md)"
+
+          test "$PRIOR_HAZARDS_BLOB" = "$EXPECTED_PRIOR_HAZARDS_BLOB"
+          test "$PRIOR_CATALOG_BLOB" = "$EXPECTED_PRIOR_CATALOG_BLOB"
+
+          {
+            echo "BASE_SHA=$BASE_SHA"
+            echo "PRIOR_HAZARDS_BLOB=$PRIOR_HAZARDS_BLOB"
+            echo "PRIOR_CATALOG_BLOB=$PRIOR_CATALOG_BLOB"
+          } >> "$GITHUB_ENV"
+
+      - name: Extract exact Hazards artifact and reconcile the current catalog
         working-directory: repo
         run: |
           set -euo pipefail
 
-          echo "f5da59e5323be88a61f8bbfce8b73ccdf938548e622dbc1c1320b4594a1613bc  .kfm-transfer/hazards_payload.tar.bz2" | sha256sum -c -
+          echo "$EXPECTED_ARCHIVE_SHA256  .kfm-transfer/hazards_payload.tar.bz2" | sha256sum -c -
           tar -xjf .kfm-transfer/hazards_payload.tar.bz2
+          echo "$EXPECTED_HAZARDS_SHA256  docs/dashboards/domain/hazards.md" | sha256sum -c -
 
-          cat <<'EOF' | sha256sum -c -
-          532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3  docs/dashboards/domain/hazards.md
-          85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f  docs/dashboards/DASHBOARD_CATALOG.md
-          7ddda6814eea45f357518cbd3c8f4f6d2b7055ca5eeba11b0b8821c1223198e7  data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
-          EOF
+          git show origin/main:docs/dashboards/DASHBOARD_CATALOG.md > docs/dashboards/DASHBOARD_CATALOG.md
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("docs/dashboards/DASHBOARD_CATALOG.md")
+          text = path.read_text(encoding="utf-8")
+
+          if text.count("version: v0.6\n") != 1:
+              raise SystemExit("expected exactly one v0.6 metadata version")
+          text = text.replace("version: v0.6\n", "version: v0.7\n", 1)
+
+          v06_note = (
+              '  - "This v0.6 refresh preserves the merged People/DNA/Land reconciliation and adds the '
+              'Roads / Rail / Trade row reconciliation against bounded CorridorRoute, trust-projection, '
+              'Explorer, Evidence Drawer, policy, source-registry, proof, and release evidence without '
+              'claiming a routed dashboard or production telemetry."\n'
+          )
+          if text.count(v06_note) != 1:
+              raise SystemExit("v0.6 catalog note did not match current main exactly")
+          v07_note = (
+              '  - "This v0.7 refresh preserves the merged People/DNA/Land and Roads / Rail / Trade '
+              'reconciliations and adds the Hazards row reconciliation against current life-safety, '
+              'source-role, temporal, deterministic USDM fixture-validation, policy, proof, release, '
+              'correction, and rollback evidence without claiming live alerting, current conditions, '
+              'telemetry, or a dashboard runtime."\n'
+          )
+          text = text.replace(v06_note, v06_note + v07_note, 1)
+
+          lines = text.splitlines()
+          hazard_rows = [i for i, line in enumerate(lines) if line.startswith("| [`domain/hazards.md`]")]
+          if len(hazard_rows) != 1:
+              raise SystemExit(f"expected one Hazards catalog row, found {len(hazard_rows)}")
+          lines[hazard_rows[0]] = (
+              "| [`domain/hazards.md`](domain/hazards.md) | Repository-grounded Hazards dashboard spec: "
+              "life-safety denial and official referral, source-role/object-family anti-collapse, "
+              "time/freshness/expiry, bounded synthetic USDM materiality validation, finite states, and "
+              "evidence/policy/release/correction/rollback posture; running metrics remain unverified. | "
+              "Current Hazards doctrine, contracts, schemas, source/policy inventories, deterministic USDM "
+              "validator/fixtures/tests/workflow; proposed Atlas §24.11.1 / §24.11.2 / §24.11.3 / §24.11.5 | "
+              "`@bartytime4life` review route; Hazards, public-safety, metric/observability, evidence, policy, "
+              "and release/correction/rollback stewards NEEDS VERIFICATION | `apps/review-console/` and "
+              "Explorer Hazards README are proposed seams; no verified Hazards dashboard route, metric "
+              "producer, telemetry feed, or deployed panel | CONFIRMED | NEEDS VERIFICATION |"
+          )
+          text = "\n".join(lines) + "\n"
+
+          footer_pattern = re.compile(
+              r"(\*\*Last updated:\*\* 2026-08-21 · \*\*Edition:\*\* )v0\.6( \(draft\))"
+          )
+          text, count = footer_pattern.subn(r"\1v0.7\2", text)
+          if count != 1:
+              raise SystemExit(f"expected one v0.6 footer, replaced {count}")
+
+          spec_rows = [
+              line for line in text.splitlines()
+              if re.match(r"^\| \[`(?:governance|operational|domain|observability)/", line)
+          ]
+          if len(spec_rows) != 33:
+              raise SystemExit(f"expected 33 cataloged dashboard specs, found {len(spec_rows)}")
+
+          if text.count("This v0.7 refresh") != 1 or text.count("version: v0.7") != 1:
+              raise SystemExit("v0.7 reconciliation markers are not unique")
+
+          path.write_text(text, encoding="utf-8", newline="\n")
+          PY
+
+      - name: Run bounded Hazards validation and generate the authoring receipt
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          make hazards-validate
+
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from hashlib import sha256
+          from pathlib import Path
+          import json
+          import os
+
+          hazards_path = "docs/dashboards/domain/hazards.md"
+          catalog_path = "docs/dashboards/DASHBOARD_CATALOG.md"
+          receipt_path = Path("data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json")
+
+          def digest(path: str) -> str:
+              return sha256(Path(path).read_bytes()).hexdigest()
+
+          hazards_sha = digest(hazards_path)
+          catalog_sha = digest(catalog_path)
+          if hazards_sha != os.environ["EXPECTED_HAZARDS_SHA256"]:
+              raise SystemExit("Hazards specification digest drifted")
+
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          receipt["artifact_hashes"][hazards_path] = f"sha256:{hazards_sha}"
+          receipt["artifact_hashes"][catalog_path] = f"sha256:{catalog_sha}"
+
+          base_sha = os.environ["BASE_SHA"]
+          prior_hazards_blob = os.environ["PRIOR_HAZARDS_BLOB"]
+          prior_catalog_blob = os.environ["PRIOR_CATALOG_BLOB"]
+
+          retained_refs = [
+              ref for ref in receipt["inputs"]["evidence_refs"]
+              if not (
+                  ref.startswith("repo:commit/")
+                  or ref.startswith("repo:prepared-base/")
+                  or ref.startswith("repo:docs/dashboards/domain/hazards.md@")
+                  or ref.startswith("repo:docs/dashboards/DASHBOARD_CATALOG.md@")
+              )
+          ]
+          receipt["inputs"]["evidence_refs"] = [
+              f"repo:commit/{base_sha}",
+              f"repo:pull-request/{os.environ['PR_NUMBER']}",
+              f"repo:{hazards_path}@{base_sha}#blob={prior_hazards_blob}",
+              f"repo:{catalog_path}@{base_sha}#blob={prior_catalog_blob}",
+              *retained_refs,
+          ]
+
+          gates = {gate["gate"]: gate for gate in receipt["validation_gates"]}
+          gates["current-main-target-overlap-and-concurrency-preflight"].update({
+              "outcome": "PASS",
+              "reason": (
+                  f"Draft PR #{os.environ['PR_NUMBER']} was reconciled against current main@{base_sha}. "
+                  f"The prior Hazards and Dashboard Catalog blobs were pinned as {prior_hazards_blob} and "
+                  f"{prior_catalog_blob}; the Hazards source bytes remained unchanged and the current v0.6 "
+                  "catalog was used as the reconciliation base."
+              ),
+          })
+          gates["dashboard-catalog-reconciliation"].update({
+              "outcome": "PASS",
+              "reason": (
+                  "The current v0.6 Dashboard Catalog was advanced to v0.7 only by adding the Hazards "
+                  "reconciliation note, replacing the existing Hazards row in place, and updating the footer. "
+                  "The merged People/DNA/Land and Roads / Rail / Trade reconciliations are preserved; the "
+                  "catalog still contains exactly 33 specifications."
+              ),
+          })
+          gates["prepared-artifact-sha256-binding"].update({
+              "outcome": "PASS",
+              "reason": (
+                  f"The exact UTF-8 bytes bind to SHA-256 {hazards_sha} and {catalog_sha} for the Hazards "
+                  "specification and current-main-reconciled Dashboard Catalog respectively."
+              ),
+          })
+          gates["repository-native-changed-area-validation"].update({
+              "outcome": "PASS",
+              "reason": (
+                  "The branch-local no-network `make hazards-validate` target completed successfully before "
+                  "the final documentation commit. Broader hosted exact-head checks remain separate."
+              ),
+          })
+          gates["remote-feature-branch-and-draft-pr-delivery"].update({
+              "outcome": "PASS",
+              "reason": (
+                  f"Feature branch `{os.environ['TARGET_BRANCH']}` and draft PR #{os.environ['PR_NUMBER']} "
+                  "exist. The temporary checksum-bound assembly objects are removed in the final payload "
+                  "commit; no merge, release, deployment, promotion, publication, or settings change is claimed."
+              ),
+          })
+          gates["hosted-exact-head-ci"].update({
+              "outcome": "SKIPPED",
+              "reason": (
+                  "Hosted pull-request checks execute against the pushed exact head after this receipt is "
+                  "committed. Their final state is not predeclared by the authoring receipt."
+              ),
+          })
+
+          citation_map = {item["id"]: item for item in receipt["citations"]}
+          citation_map["authoring-main"]["evidence_ref"] = f"repo:commit/{base_sha}"
+          citation_map["prior-hazards-dashboard"]["evidence_ref"] = (
+              f"repo:{hazards_path}@{base_sha}#blob={prior_hazards_blob}"
+          )
+          citation_map["prior-dashboard-catalog"]["evidence_ref"] = (
+              f"repo:{catalog_path}@{base_sha}#blob={prior_catalog_blob}"
+          )
+
+          receipt["links"]["pr_number"] = int(os.environ["PR_NUMBER"])
+          receipt["created_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+          receipt["notes"] = (
+              f"Same-path repository-grounded modernization of the Hazards dashboard specification, current "
+              f"main@{base_sha} Dashboard Catalog v0.6-to-v0.7 reconciliation, and generated provenance record "
+              f"for draft PR #{os.environ['PR_NUMBER']}. The update preserves merged People/DNA/Land and "
+              "Roads / Rail / Trade catalog work; preserves the dashboard-lane placement HOLD; corrects the "
+              "stale all-warning-denied posture into governed operational context plus absolute KFM alert and "
+              "life-safety denial with official referral; records deterministic no-network USDM materiality "
+              "validation without inflating it into current conditions, source admission, evidence, policy, "
+              "promotion, release, or publication; and leaves contracts, schemas, sources, policy, runtime, "
+              "release, deployment, publication, and repository settings unchanged. Hosted exact-head checks "
+              "and human review remain independent pending evidence."
+          )
+
+          receipt_path.write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+
+          reread = json.loads(receipt_path.read_text(encoding="utf-8"))
+          if set(reread["artifact_paths"]) != set(reread["artifact_hashes"]):
+              raise SystemExit("artifact path/hash key mismatch")
+          if set(reread["artifact_paths"]) != set(reread["truth_labels"]):
+              raise SystemExit("artifact path/truth-label key mismatch")
+          for path, expected in reread["artifact_hashes"].items():
+              if expected != f"sha256:{digest(path)}":
+                  raise SystemExit(f"artifact digest mismatch: {path}")
+          if reread["links"]["pr_number"] != int(os.environ["PR_NUMBER"]):
+              raise SystemExit("PR binding mismatch")
+          if reread["human_review"]["state"] != "pending":
+              raise SystemExit("human review must remain pending")
+
+          print(f"hazards_sha256={hazards_sha}")
+          print(f"catalog_sha256={catalog_sha}")
+          print(f"receipt_sha256={digest(str(receipt_path))}")
+          PY
+
+      - name: Stage only the dependency-closed final change and push
+        working-directory: repo
+        run: |
+          set -euo pipefail
 
           git rm .kfm-transfer/hazards_payload.tar.bz2
           git rm .github/workflows/kfm-hazards-payload-assembly.yml
-          git add \
-            docs/dashboards/domain/hazards.md \
-            docs/dashboards/DASHBOARD_CATALOG.md \
-            data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+          git add docs/dashboards/domain/hazards.md docs/dashboards/DASHBOARD_CATALOG.md
+          git add -f data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+
+          expected="$(printf '%s\n' \
+            'data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json' \
+            'docs/dashboards/DASHBOARD_CATALOG.md' \
+            'docs/dashboards/domain/hazards.md' \
+            '.github/workflows/kfm-hazards-payload-assembly.yml' \
+            '.kfm-transfer/hazards_payload.tar.bz2' | sort)"
+          actual="$(git diff --cached --name-only | sort)"
+          test "$actual" = "$expected"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
