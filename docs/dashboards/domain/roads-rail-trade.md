@@ -8,6 +8,9 @@ owners: "@bartytime4life (CODEOWNERS review route); Roads/Rail/Trade, source/evi
 created: 2026-05-26
 updated: 2026-08-21
 policy_label: public
+owning_root: docs/
+responsibility: Dashboard specification and review guidance only; not source, evidence, policy, runtime, release, deployment, or publication authority.
+truth_posture: CONFIRMED current repository evidence / PROPOSED indicators and runtime bindings / UNKNOWN deployed dashboard and production telemetry / NEEDS VERIFICATION positive domain-health claims
 related:
   - ./README.md
   - ../README.md
