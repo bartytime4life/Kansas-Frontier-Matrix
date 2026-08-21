@@ -8,6 +8,9 @@ owners: OWNER_TBD  # NEEDS VERIFICATION: Atmosphere steward + UI steward + evide
 created: 2026-05-26
 updated: 2026-08-21
 policy_label: public
+owning_root: docs/
+responsibility: Dashboard specification and repository-state reporting only; not domain, policy, runtime, release, or publication authority.
+truth_posture: CONFIRMED repository evidence; PROPOSED or UNKNOWN implementation claims; cite or abstain.
 related:
   - ./README.md
   - ../DASHBOARD_CATALOG.md

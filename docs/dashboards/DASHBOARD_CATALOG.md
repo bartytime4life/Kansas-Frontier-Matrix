@@ -9,6 +9,9 @@ owners:
 created: 2026-05-20
 updated: 2026-08-21
 policy_label: public
+owning_root: docs/
+responsibility: Dashboard specification inventory only; not runtime, indicator, policy, release, or publication authority.
+truth_posture: CONFIRMED file presence at a pinned tree; runtime and placement remain PROPOSED or NEEDS VERIFICATION.
 related:
   - docs/dashboards/README.md
   - docs/dashboards/INDICATOR_CATALOG.md
@@ -22,7 +25,7 @@ tags: [kfm, docs, dashboards, catalog, index, governance-health, observability]
 notes:
   - "Every dashboard spec under docs/dashboards/ MUST appear in this catalog."
   - "Spec-file presence is separate from running-surface verification."
-  - "The v0.3 refresh recorded 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaced a malformed raw-search evidence row with a pinned tree count."
+  - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
   - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
@@ -84,7 +87,7 @@ notes:
 | `docs/dashboards/DASHBOARD_CATALOG.md` exists in the accessible repo. | CONFIRMED | Direct fetch of current catalog. |
 | `docs/dashboards/README.md` says `docs/dashboards/` is a proposed documentation surface, not the running dashboard implementation. | CONFIRMED | Direct fetch of dashboard README. |
 | Category READMEs exist for governance, operational, domain, and observability. | CONFIRMED | Direct fetch/search of category README files. |
-| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@464148b8b1b3dff558086b23fc5ec8fb16d60572` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
+| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@977bd5219b2002bab647792606c862ebc3b6bd85` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
 | Running dashboard surfaces exist and read the named receipts. | NEEDS VERIFICATION | No running app, telemetry stack, receipt source, or validator output was inspected here. |
 | `docs/dashboards/` is canonical placement under Directory Rules. | PROPOSED / NEEDS VERIFICATION | Dashboard README records placement drift / ADR need; this catalog does not resolve it. |
 
@@ -131,8 +134,8 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 |---|---|---|---|---|---|---|
 | [`domain/hydrology.md`](domain/hydrology.md) | Per-domain instance of §24.11 for hydrology: EvidenceRef resolution, rollback coverage, correction lead time, derivative invalidation, documentation drift. | Atlas v1.1 §24.11.1 / §24.11.2 / §24.11.5 | Hydrology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/soil.md`](domain/soil.md) | Per-domain instance of §24.11 for soil: evidence resolution, source-role drift, taxonomy-edition skew, MUKEY stability. | Atlas v1.1 §24.11.1 / §24.11.5 | Soil domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/habitat.md`](domain/habitat.md) | Per-domain instance of §24.11 for habitat: evidence integrity plus sensitive-lane gating on habitat × sensitive-species intersection. | Atlas v1.1 §24.11.1 / §24.11.3 | Habitat domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/fauna.md`](domain/fauna.md) | Per-domain instance of §24.11 for fauna (T4 defaults): fail-closed rate, redaction coverage, rights-change response, side-channel audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Fauna domain steward · Sensitivity reviewer · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/habitat.md`](domain/habitat.md) | Repository-grounded Habitat dashboard spec: evidence/source-role posture, model/observation separation, public-safe joins, finite states, and correction boundaries. | Current Habitat docs, contracts, schemas, synthetic validators/fixtures, workflows, and Explorer placeholder files | `@bartytime4life` review route; Habitat, metric, and sensitivity stewards NEEDS VERIFICATION | Explorer Habitat files are placeholders; no verified dashboard route, metric producer, telemetry feed, or deployed panel | CONFIRMED | NEEDS VERIFICATION |
+| [`domain/fauna.md`](domain/fauna.md) | Fauna evidence, sensitivity, source-role, public-safe transform, EvidenceBundle, tile-field, proof/release-hold, and correction posture; routed dashboard and production telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, and workflows; proposed Atlas §24.11.1 / §24.11.3 | Fauna steward · Sensitivity reviewer · Governance-health steward (identities unverified) | `apps/explorer-web/` Evidence Drawer seam; dashboard route and telemetry UNKNOWN | CONFIRMED | PROPOSED |
 | [`domain/flora.md`](domain/flora.md) | Flora evidence, source-role and taxonomy separation, bounded synthetic public-safe validation, inactive policy, proof/release holds, anti-inference, correction, and rollback; no dashboard route or telemetry is verified. | Current Flora docs, contracts, schema scaffolds, source registry, fixtures, validator, tests, workflow, policy, proof/release lanes, plus proposed Atlas §24.11.1 / §24.11.3 | Flora steward · Sensitivity/geoprivacy reviewer · Evidence/source steward · UI steward | No Flora dashboard route verified; review surface `UNKNOWN` | CONFIRMED | PROPOSED |
 | [`domain/agriculture.md`](domain/agriculture.md) | Per-domain instance of §24.11 for agriculture: evidence resolution, NASS suppression-rule compliance, CDL taxonomy skew, irrigation classification confidence. | Atlas v1.1 §24.11.1 / §24.11.5 | Agriculture domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/geology.md`](domain/geology.md) | Per-domain instance of §24.11 for geology / natural resources: source breadth, stratigraphic canonicalization, well-record identifiability gate. | Atlas v1.1 §24.11.1 | Geology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
