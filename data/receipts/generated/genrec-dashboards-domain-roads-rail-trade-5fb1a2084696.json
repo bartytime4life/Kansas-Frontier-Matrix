@@ -1,0 +1,261 @@
+{
+  "receipt_id": "genrec-dashboards-domain-roads-rail-trade-5fb1a2084696",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/roads-rail-trade.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/roads-rail-trade.md": "sha256:5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:601c4f4b701b1dfc47b635dde8567d598981aa77819873db0a2e6a9281336f34",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (current repository evidence, concurrency preflight, feature-branch writes, exact-head verification, and draft-PR delivery)",
+      "deterministic local Markdown, metadata, anchor, fence, table, link, whitespace, sensitive-pattern, SHA-256, and Git-blob validation",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:commit/02065d064dcf5813288b47a5d07169d8809a2e4b",
+      "repo:commit/b820a8a938db741018289c6131477f2ceaa052fc",
+      "repo:branch/docs/ground-roads-rail-trade-dashboard-20260821",
+      "repo:docs/dashboards/domain/roads-rail-trade.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=3a4ca7c5198efc8371a5a6f44978595afbdf89c2",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=3b9ee1b34a8278fbabe04145a99a37e4d6214838",
+      "repo:docs/dashboards/README.md@b820a8a938db741018289c6131477f2ceaa052fc",
+      "repo:docs/dashboards/domain/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=fc18e269e8f674688ea580ac384ba46c40304840",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b820a8a938db741018289c6131477f2ceaa052fc",
+      "repo:docs/doctrine/directory-rules.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc",
+      "repo:schemas/contracts/v1/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=09e5fb6d39662093a202d8aecc6d380452ceb093",
+      "repo:schemas/contracts/v1/domains/roads-rail-trade/frontier_route_trust_status.schema.json@b820a8a938db741018289c6131477f2ceaa052fc#blob=fdebf28006f4bcac3506140230b69236a609e23c",
+      "repo:tools/validators/domains/roads-rail-trade/validate_frontier_route_trust_status.py@b820a8a938db741018289c6131477f2ceaa052fc#blob=7526782f07e00f219da24dfc82d9ec8d1a047866",
+      "repo:.github/workflows/frontier-route-trust-status.yml@b820a8a938db741018289c6131477f2ceaa052fc#blob=780b55a271793d94637d8e65c25d39884fc83446",
+      "repo:apps/explorer-web/src/features/domains/roads_rail_trade/layers.ts@b820a8a938db741018289c6131477f2ceaa052fc#blob=a463b338af9f696e9c138cb51e0b5abdc7314fbe",
+      "repo:apps/explorer-web/src/features/domains/roads_rail_trade/EvidenceDrawer.tsx@b820a8a938db741018289c6131477f2ceaa052fc#blob=ce7594231ed59857ef9b3e37d7a0a9d1286866b4",
+      "repo:tests/validators/domains/roads-rail-trade/test_evidence_drawer_convergence.py@b820a8a938db741018289c6131477f2ceaa052fc#blob=72714d042c2c07b4a2e88da1c227f904d95d9778",
+      "repo:.github/workflows/roads-rail-trade-evidence-drawer-convergence.yml@b820a8a938db741018289c6131477f2ceaa052fc#blob=8837866d7f75c4359091ea645da2c7919d262b28",
+      "repo:.github/workflows/domain-roads-rail-trade.yml@b820a8a938db741018289c6131477f2ceaa052fc#blob=391fead3fdd0d7ecead6464be7946cbaf68247e0",
+      "repo:policy/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc",
+      "repo:data/registry/sources/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=54087e02e329b98c595807e4c9041c97972c0179",
+      "repo:connectors/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=20b94a2fa27844ae32da758c38f8570d016634ee",
+      "repo:data/proofs/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=91c109d463c45c925f1d104d4cd8aaf742cd28af",
+      "repo:release/candidates/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=c989bf2bed10472bc46a168231b2269f17bbda48",
+      "repo:.github/CODEOWNERS@b820a8a938db741018289c6131477f2ceaa052fc#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "repo:commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@5cf8f6eac5f7015f29d4b0547caffad903b269a4#blob=d508dd68ce4606ddb0986f11e5892b0d135f8073",
+      "repo:pull/3206",
+      "repo:pull/3207"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/roads-rail-trade.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "initial-target-overlap-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Initial inspection pinned main at 02065d064dcf5813288b47a5d07169d8809a2e4b, verified the target/catalog blobs, and found no open pull request or matching dashboard task branch for the exact Roads/Rail/Trade target."
+    },
+    {
+      "gate": "current-main-concurrency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main first advanced to b820a8a938db741018289c6131477f2ceaa052fc through unrelated Butler County documentation work, then to 5cf8f6eac5f7015f29d4b0547caffad903b269a4 when PR #3206 merged the People/DNA/Land dashboard. The Roads/Rail/Trade target remained blob 3a4ca7c5198efc8371a5a6f44978595afbdf89c2. The shared catalog was three-way reconciled to preserve the People/DNA/Land v0.5 delta and add the Roads/Rail/Trade v0.6 delta on the exact newer main."
+    },
+    {
+      "gate": "directory-rules-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2. The slice preserves two existing human-documentation paths under docs/, keeps the dashboard-lane placement HOLD visible, adds only the required generated receipt in its established data/receipts/generated family, and creates no parallel contract, schema, policy, source, proof, release, runtime, or publication authority."
+    },
+    {
+      "gate": "repository-state-and-direct-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the specification and catalog row with the bounded CorridorRoute profile, FrontierRouteTrustStatus schema/validator/fixtures/tests/workflow, pure Explorer trust overlay, shared Evidence Drawer convergence seam, inactive policy inventory, source-registry and connector boundary-only directories, and explicit proof/release holds."
+    },
+    {
+      "gate": "operational-authority-and-sensitive-context-boundary",
+      "outcome": "PASS",
+      "reason": "The revision prohibits current navigation, closure, detour, safe-passage, legal-access, bridge-condition, rail-status, emergency, dispatch, regulatory, operating, restricted-geometry, private-access, infrastructure, cultural-route, archaeological, living-person, and over-precise historic-route claims without competent evidence and governed review."
+    },
+    {
+      "gate": "dashboard-catalog-current-tree-parity",
+      "outcome": "PASS",
+      "reason": "Direct current-tree listings at main@5cf8f6eac5f7015f29d4b0547caffad903b269a4 confirm 5 governance, 4 operational, 13 domain, and 11 observability specifications excluding category READMEs. The reconciled catalog preserves the merged People/DNA/Land row, changes only the bounded Roads/Rail/Trade row, advances the edition note to v0.6, and updates the evidence pin."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-sensitive-pattern-check",
+      "outcome": "PASS",
+      "reason": "The Roads/Rail/Trade spec has one H1, one KFM Meta Block, the top anchor, all eight legacy numbered anchors, balanced fences, consistent tables, 50 Markdown links with resolving local fragments and repository-observed destinations, no tabs or trailing whitespace, a final newline, and no secret, credential, endpoint token, protected coordinate, operational instruction, or transformation-secret value. The catalog companion preserves its existing structure and changes only the bounded delta described above."
+    },
+    {
+      "gate": "prepared-artifact-sha256-and-git-blob-binding",
+      "outcome": "PASS",
+      "reason": "Prepared Roads/Rail/Trade bytes bind to SHA-256 5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed and Git blob 9de95fff00c549156aa025cd62c75f13fd798d36; reconciled catalog bytes bind to SHA-256 f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e and Git blob 9d371a4711e628f2a5af78dc306b677b5e64eeac."
+    },
+    {
+      "gate": "generated-receipt-shape-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "Receipt uses contract version 3.0.0, exact artifact/hash/truth-label key parity, supported SHA-256 bindings, core truth labels, nonempty citations, canonical repository-relative paths, pending human review, no override, and no receipt self-reference."
+    },
+    {
+      "gate": "post-pr-open-base-reconciliation",
+      "outcome": "PASS",
+      "reason": "PR #3207 opened after main advanced to 5cf8f6eac5f7015f29d4b0547caffad903b269a4. A non-force merge commit is prepared with current main as the second parent and current-main tree as its base, preserving PR #3206 while retaining exactly the Roads/Rail/Trade target, reconciled catalog, and generated receipt as the task delta."
+    },
+    {
+      "gate": "repository-native-runtime-and-domain-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted dependency-complete checkout was available. Current repository commands, schemas, validators, tests, fixtures, and workflow definitions were inspected, but no local exact-head runtime or domain-test execution is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks begin after final branch delivery. Exact-head hosted results were not available when this immutable authoring receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing, documentation, tests, workflows, and this generated receipt do not grant domain stewardship, policy approval, release approval, merge authority, deployment authority, or publication authority."
+    },
+    {
+      "gate": "runtime-release-deployment-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "This slice changes one dashboard specification, its catalog inventory row and evidence note, and one generated authoring receipt. It does not admit a source, execute a connector, change a contract/schema/policy/fixture/validator/test/workflow/runtime, write lifecycle state, create proof or release candidates, release, deploy, promote, publish, merge, or change repository settings."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "initial-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/02065d064dcf5813288b47a5d07169d8809a2e4b"
+    },
+    {
+      "id": "final-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4"
+    },
+    {
+      "id": "prior-dashboard",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/roads-rail-trade.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=3a4ca7c5198efc8371a5a6f44978595afbdf89c2"
+    },
+    {
+      "id": "current-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@5cf8f6eac5f7015f29d4b0547caffad903b269a4#blob=d508dd68ce4606ddb0986f11e5892b0d135f8073"
+    },
+    {
+      "id": "dashboard-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/README.md@b820a8a938db741018289c6131477f2ceaa052fc"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b820a8a938db741018289c6131477f2ceaa052fc"
+    },
+    {
+      "id": "roads-rail-trade-domain",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc"
+    },
+    {
+      "id": "corridor-route-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=09e5fb6d39662093a202d8aecc6d380452ceb093"
+    },
+    {
+      "id": "trust-projection-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/roads-rail-trade/frontier_route_trust_status.schema.json@b820a8a938db741018289c6131477f2ceaa052fc#blob=fdebf28006f4bcac3506140230b69236a609e23c"
+    },
+    {
+      "id": "trust-projection-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/roads-rail-trade/validate_frontier_route_trust_status.py@b820a8a938db741018289c6131477f2ceaa052fc#blob=7526782f07e00f219da24dfc82d9ec8d1a047866"
+    },
+    {
+      "id": "explorer-trust-overlay",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/domains/roads_rail_trade/layers.ts@b820a8a938db741018289c6131477f2ceaa052fc#blob=a463b338af9f696e9c138cb51e0b5abdc7314fbe"
+    },
+    {
+      "id": "evidence-drawer-convergence",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/roads-rail-trade-evidence-drawer-convergence.yml@b820a8a938db741018289c6131477f2ceaa052fc#blob=8837866d7f75c4359091ea645da2c7919d262b28"
+    },
+    {
+      "id": "domain-workflow-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-roads-rail-trade.yml@b820a8a938db741018289c6131477f2ceaa052fc#blob=391fead3fdd0d7ecead6464be7946cbaf68247e0"
+    },
+    {
+      "id": "inactive-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc"
+    },
+    {
+      "id": "source-registry-boundary",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=54087e02e329b98c595807e4c9041c97972c0179"
+    },
+    {
+      "id": "connector-boundary",
+      "validated": true,
+      "evidence_ref": "repo:connectors/domains/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=20b94a2fa27844ae32da758c38f8570d016634ee"
+    },
+    {
+      "id": "proof-and-release-holds",
+      "validated": true,
+      "evidence_ref": "repo:data/proofs/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=91c109d463c45c925f1d104d4cd8aaf742cd28af"
+    },
+    {
+      "id": "codeowners-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@b820a8a938db741018289c6131477f2ceaa052fc#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    },
+    {
+      "id": "attached-implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "people-dna-land-concurrent-catalog-delta",
+      "validated": true,
+      "evidence_ref": "repo:pull/3206"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T16:35:08Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 3207,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only authoring receipt, updated before human review to reconcile PR #3207 with current main after PR #3206 merged a concurrent People/DNA/Land catalog edit. The prompt_or_contract digest is the SHA-256 of a canonical descriptor containing the attached v6.0.0 contract identity and the current direct user request; it is not claimed as the raw attachment-byte digest. Final integration uses a non-force merge commit based on main@5cf8f6eac5f7015f29d4b0547caffad903b269a4 and preserves the concurrent catalog row. Human review and hosted exact-head CI remain pending. The receipt is provenance, not approval, release, deployment, publication, or merge authority."
+}
