@@ -32,10 +32,10 @@ current_path: docs/focus-mode/counties/COUNTY_INDEX.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: docs/allen-county-readme-boundary-20260820
-  base_commit: 72bbab7644dee8a2f58ca3ffb46858ec3f894bec
+  base_commit: 6bd7c63c0ac1a48a3503427af3c51cc67388f85a
   target_prior_blob: c97b7792974b5aafc059a78849e545df1934f984
-  county_tree: f8fc629b8561c2e39b1fd7841a90ffbc3cd96db9
-  allen_readme_blob: 9eb488cf2ac6675cfff8adff99b0696b90907263
+  county_tree: e628c77f75ec654a74acded49e6ffb25c5263fcb
+  allen_readme_blob: 9e2cd206273a58f114f580fc5f7cdcc0257094e4
   focus_mode_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
   county_readme_blob: 48621badd51614db7bff0882c19096fa388234ac
   county_template_blob: 520922bf756ff5e75f927c5d0dc9cc81e65ca3e0
@@ -83,7 +83,7 @@ notes:
 > **Purpose.** Navigate the 105 county planning entries currently tracked under `docs/focus-mode/counties/`, prevent accidental duplicate generation, and expose the repository drift that must be reconciled before any county can claim validated, payload-ready, released, or published state.
 
 > [!IMPORTANT]
-> **Every Kansas county has a current repository entry, but no county is proven ready.** At task-branch evidence commit `72bbab7644dee8a2f58ca3ffb46858ec3f894bec`, the complete county tree contains 105 county-shaped directories and at least one build artifact in each. That evidence is sufficient to stop first-time duplicate generation; it is not evidence of semantic correctness, source rights, evidence closure, policy approval, validator success, release, or publication.
+> **Every Kansas county has a current repository entry, but no county is proven ready.** At task-branch evidence commit `6bd7c63c0ac1a48a3503427af3c51cc67388f85a`, the complete county tree contains 105 county-shaped directories and at least one build artifact in each. That evidence is sufficient to stop first-time duplicate generation; it is not evidence of semantic correctness, source rights, evidence closure, policy approval, validator success, release, or publication.
 
 > [!CAUTION]
 > **Placement remains a compatibility question.** Accepted Directory Rules v2 defines a Focus Mode as a composition scope but does not select one exact documentation tree. The current singular path exists; proposed ADR-0027 describes a plural, kebab-case target but remains unaccepted. This same-path update therefore records the present tree and keeps any move, rename, or parallel-tree creation on **HOLD**.
@@ -124,7 +124,7 @@ The index uses inventory findings, not the dormant validator's lifecycle enum.
 
 ## 2. Repository snapshot
 
-The counts below come from non-truncated tree `f8fc629b8561c2e39b1fd7841a90ffbc3cd96db9` at task-branch evidence commit `72bbab7644dee8a2f58ca3ffb46858ec3f894bec`.
+The counts below come from non-truncated tree `e628c77f75ec654a74acded49e6ffb25c5263fcb` at task-branch evidence commit `6bd7c63c0ac1a48a3503427af3c51cc67388f85a`.
 
 | Measure | Count | Evidence and limit |
 |---|---:|---|
@@ -526,8 +526,8 @@ The prior index's lane IDs, P1/P2 cohort, sensitivity hints, and source-seed fam
 
 | Check | Result | Evidence |
 |---|---|---|
-| Evidence commit and prior index blob pinned | **PASS** | `72bbab7644dee8a2f58ca3ffb46858ec3f894bec`; prior index blob `c97b7792974b5aafc059a78849e545df1934f984`. |
-| County tree traversal complete | **PASS** | Recursive tree `f8fc629b8561c2e39b1fd7841a90ffbc3cd96db9`; `truncated: false`. |
+| Evidence commit and prior index blob pinned | **PASS** | `6bd7c63c0ac1a48a3503427af3c51cc67388f85a`; prior index blob `c97b7792974b5aafc059a78849e545df1934f984`. |
+| County tree traversal complete | **PASS** | Recursive tree `e628c77f75ec654a74acded49e6ffb25c5263fcb`; `truncated: false`. |
 | County universe | **PASS** | 105 unique rows exactly match the validator's 105-county reference list. |
 | Current county directory links | **PASS** | All 105 directory targets exist in the pinned tree. |
 | README/build-artifact links | **PASS** | Every table link resolves to a blob in the pinned tree. |
