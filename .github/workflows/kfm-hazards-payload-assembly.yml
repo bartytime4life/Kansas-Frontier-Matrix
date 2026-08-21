@@ -1,3 +1,4 @@
+# One-shot retrigger for the corrective Hazards payload assembly.
 name: Assemble Hazards dashboard PR payload
 
 on:
