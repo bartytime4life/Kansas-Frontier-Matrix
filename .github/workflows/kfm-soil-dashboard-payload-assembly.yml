@@ -1,0 +1,152 @@
+name: Assemble Soil dashboard documentation payload
+
+on:
+  push:
+    branches:
+      - docs/ground-soil-dashboard-20260821
+    paths:
+      - ".kfm-transfer/soil-dashboard/**"
+      - ".github/workflows/kfm-soil-dashboard-payload-assembly.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: kfm-soil-dashboard-payload-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  assemble:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: docs/ground-soil-dashboard-20260821
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Reassemble and verify governed payload
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t parts < <(find .kfm-transfer/soil-dashboard -maxdepth 1 -type f -name 'part*.b64' -print | sort)
+          test "${#parts[@]}" -eq 10
+          cat "${parts[@]}" | base64 --decode > /tmp/soil-dashboard-payload.tar.gz
+
+          echo "d106caabe1e8247b80b085064e9ba5f12d709bdbcaa530f7fcff3e43c78aafcf  /tmp/soil-dashboard-payload.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/soil-dashboard-payload.tar.gz
+
+          cat <<'EOF' | sha256sum -c -
+          a9aea40fa185e35d7038a899ae20fd69a1792d3a986b7e722b1abae1474b8420  docs/dashboards/domain/soil.md
+          a46cc4272ecdc9bae3517a67840b661d29db27bc3ac6b8d44ba01b893c4cd261  docs/dashboards/DASHBOARD_CATALOG.md
+          8c668d619e3b3310f416d7709c0f1a56f9f5433307b258a4da3d1b3e02699e2c  data/receipts/generated/genrec-dashboards-domain-soil-a9aea40fa185.json
+          EOF
+
+      - name: Validate bounded documentation payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path('.')
+          soil = root / 'docs/dashboards/domain/soil.md'
+          catalog = root / 'docs/dashboards/DASHBOARD_CATALOG.md'
+          receipt_path = root / 'data/receipts/generated/genrec-dashboards-domain-soil-a9aea40fa185.json'
+
+          for path in (soil, catalog):
+              text = path.read_text(encoding='utf-8')
+              assert text.count('[KFM_META_BLOCK_V2]') == 1, path
+              assert text.count('[/KFM_META_BLOCK_V2]') == 1, path
+              assert '\t' not in text, path
+              assert all(line == line.rstrip() for line in text.splitlines()), path
+
+          soil_text = soil.read_text(encoding='utf-8')
+          assert len(re.findall(r'^\| `SOIL-DB-\d{2}` \|', soil_text, flags=re.MULTILINE)) == 11
+          assert 'owning_root: docs/' in soil_text
+          assert 'truth_posture:' in soil_text
+
+          catalog_text = catalog.read_text(encoding='utf-8')
+          assert 'version: v0.8' in catalog_text
+          assert '**Edition:** v0.8 (draft)' in catalog_text
+          assert catalog_text.count('| [`domain/soil.md`](domain/soil.md) |') == 1
+          assert catalog_text.count('| [`domain/hazards.md`](domain/hazards.md) |') == 1
+          assert catalog_text.count('| [`domain/roads-rail-trade.md`](domain/roads-rail-trade.md) |') == 1
+
+          receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
+          for rel, expected in receipt['artifact_hashes'].items():
+              actual = 'sha256:' + hashlib.sha256((root / rel).read_bytes()).hexdigest()
+              assert actual == expected, (rel, expected, actual)
+          assert receipt['human_review']['state'] == 'pending'
+          PY
+
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-dashboards-domain-soil-a9aea40fa185.json \
+            --repo-root .
+
+      - name: Commit final documentation tree and remove transfer mechanism
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git rm -r .kfm-transfer/soil-dashboard
+          git rm .github/workflows/kfm-soil-dashboard-payload-assembly.yml
+          git add \
+            docs/dashboards/domain/soil.md \
+            docs/dashboards/DASHBOARD_CATALOG.md \
+            data/receipts/generated/genrec-dashboards-domain-soil-a9aea40fa185.json
+
+          cat > /tmp/expected-paths <<'EOF'
+          .github/workflows/kfm-soil-dashboard-payload-assembly.yml
+          .kfm-transfer/soil-dashboard/part00.b64
+          .kfm-transfer/soil-dashboard/part01.b64
+          .kfm-transfer/soil-dashboard/part02.b64
+          .kfm-transfer/soil-dashboard/part03.b64
+          .kfm-transfer/soil-dashboard/part04.b64
+          .kfm-transfer/soil-dashboard/part05.b64
+          .kfm-transfer/soil-dashboard/part06.b64
+          .kfm-transfer/soil-dashboard/part07.b64
+          .kfm-transfer/soil-dashboard/part08.b64
+          .kfm-transfer/soil-dashboard/part09.b64
+          data/receipts/generated/genrec-dashboards-domain-soil-a9aea40fa185.json
+          docs/dashboards/DASHBOARD_CATALOG.md
+          docs/dashboards/domain/soil.md
+          EOF
+          git diff --cached --name-only | sort > /tmp/actual-paths
+          sort -o /tmp/expected-paths /tmp/expected-paths
+          diff -u /tmp/expected-paths /tmp/actual-paths
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(dashboards): ground Soil specification"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Record boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Soil dashboard payload assembly"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: exact checksum-bound Soil specification, Dashboard Catalog reconciliation, and generated authoring receipt."
+            echo "- Boundary: this workflow creates no source admission, network ingestion, policy activation, proof, release, deployment, publication, or repository-setting change."
+          } >> "$GITHUB_STEP_SUMMARY"
