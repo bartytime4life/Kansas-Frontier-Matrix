@@ -2,17 +2,19 @@
   "receipt_id": "genrec-docs-dashboards-domain-fauna-331631df432e",
   "contract_version": "3.0.0",
   "artifact_paths": [
-    "docs/dashboards/domain/fauna.md"
+    "docs/dashboards/domain/fauna.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
   ],
   "artifact_hashes": {
-    "docs/dashboards/domain/fauna.md": "sha256:331631df432eba8508f8112ad9b68e8eece9e1d4429ff343d8e6c97674105635"
+    "docs/dashboards/domain/fauna.md": "sha256:331631df432eba8508f8112ad9b68e8eece9e1d4429ff343d8e6c97674105635",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:a05722ed9bc94aeed40fa5befda49c93389a86e0bf7196bf84a4252600e35267"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "Codex (GPT-5 family)",
     "version": "exact serving revision not exposed"
   },
-  "prompt_or_contract": "sha256:2d1f21a82064bbc8f79a69ee7d74c80446eb222adf31b491a8ca7f1e24168891",
+  "prompt_or_contract": "sha256:942cd6acfb14fb86ab6cb178939cf4c7a7ae34b4d7449a1061dd182c88ab0e26",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -27,14 +29,17 @@
   },
   "inputs": {
     "evidence_hashes": [
-      "sha256:2d1f21a82064bbc8f79a69ee7d74c80446eb222adf31b491a8ca7f1e24168891",
-      "sha256:331631df432eba8508f8112ad9b68e8eece9e1d4429ff343d8e6c97674105635"
+      "sha256:942cd6acfb14fb86ab6cb178939cf4c7a7ae34b4d7449a1061dd182c88ab0e26",
+      "sha256:331631df432eba8508f8112ad9b68e8eece9e1d4429ff343d8e6c97674105635",
+      "sha256:a05722ed9bc94aeed40fa5befda49c93389a86e0bf7196bf84a4252600e35267"
     ],
     "attached_docs": [],
     "evidence_refs": [
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/464148b8b1b3dff558086b23fc5ec8fb16d60572",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/domain/fauna.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/464148b8b1b3dff558086b23fc5ec8fb16d60572/docs/dashboards/DASHBOARD_CATALOG.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/domains/fauna/README.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/explorer-web/src/features/domains/fauna/FocusFlow.tsx",
@@ -51,7 +56,8 @@
     ]
   },
   "truth_labels": {
-    "docs/dashboards/domain/fauna.md": "PROPOSED"
+    "docs/dashboards/domain/fauna.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -75,9 +81,14 @@
       "reason": "Current Explorer Web Fauna files, occurrence contract/schema/validator/test surfaces, source registry, policy and sensitivity lanes, and Fauna workflows were inspected. The document distinguishes the Evidence Drawer adapter from placeholder FocusFlow/layer files and preserves explicit proof, release, telemetry, routing, and publication holds."
     },
     {
+      "gate": "base-drift-and-dashboard-catalog-reconciliation",
+      "outcome": "PASS",
+      "reason": "After draft PR creation, main advanced from 51d45e45a56d19961a3014009b80c2c94b1107ee to 464148b8b1b3dff558086b23fc5ec8fb16d60572 through the adjacent Atmosphere-dashboard merge. The Fauna target and governing evidence were unchanged, but the shared catalog became a current direct dependency. Its Fauna row was updated from current blob 207aa04e27f750570d80cb9d23c285e35cad60fe to describe the current Explorer Evidence Drawer seam, unresolved route/telemetry, current evidence families, and unverified steward identities; no other catalog text changed."
+    },
+    {
       "gate": "markdown-structure-and-diff-hygiene",
       "outcome": "PASS",
-      "reason": "The final document has one H1, ordered heading levels, balanced fences, one complete KFM metadata block, no trailing whitespace, and a final newline. The same-path replacement contains no unrelated file churn."
+      "reason": "The final Fauna document has one H1, ordered heading levels, balanced fences, one complete KFM metadata block, no trailing whitespace, and a final newline. The catalog dependency is a single existing-row replacement against current main; no unrelated catalog or repository churn is included."
     },
     {
       "gate": "repository-relative-target-closure",
@@ -102,7 +113,7 @@
     {
       "gate": "hosted-exact-head-workflows",
       "outcome": "SKIPPED",
-      "reason": "Hosted pull-request workflow results do not exist until the receipt commit and draft pull request are created. Workflow definitions are read-only for this change; their eventual results will be reported separately."
+      "reason": "Hosted workflows began for the pre-reconciliation draft head. Updating the branch with current main and the final catalog/receipt bytes creates a new exact head, whose workflow results remain pending and will be reported separately."
     },
     {
       "gate": "human-review",
@@ -116,6 +127,16 @@
       "id": "pinned-current-main",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "reconciled-current-main-after-atmosphere-merge",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "current-dashboard-catalog-dependency",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/464148b8b1b3dff558086b23fc5ec8fb16d60572/docs/dashboards/DASHBOARD_CATALOG.md"
     },
     {
       "id": "complete-base-fauna-dashboard-specification",
@@ -161,5 +182,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Modernizes only the existing Fauna dashboard specification. The parent dashboard index already links the target and remains semantically valid, so it is not changed. No application, contract, schema, policy, workflow, source activation, data, release, deployment, publication, or repository-setting state changes. The receipt is non-authoritative process memory and is excluded from its own artifact map; human review remains pending."
+  "notes": "Modernizes the existing Fauna dashboard specification and reconciles its single row in the current shared Dashboard Catalog after relevant main drift. The parent domain-dashboard README already links the target and remains semantically valid, so it is not changed. No application, contract, schema, policy, workflow, source activation, data, release, deployment, publication, or repository-setting state changes. The receipt is non-authoritative process memory and is excluded from its own artifact map; human review remains pending."
 }
