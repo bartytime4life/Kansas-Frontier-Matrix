@@ -1,53 +1,66 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/dashboards-domain-readme
-title: Per-Domain Dashboard Specifications (PROPOSED lane; specifications only, not implementations)
+title: Domain Dashboard Specifications — Repository-Grounded Boundary and Inventory
 type: standard
-version: v1
-status: draft
-owners: OWNER_TBD  # NEEDS VERIFICATION: docs steward + domain stewards + governance-health steward
+version: v2.0
+status: draft; repository-grounded; boundary-compact; specification-lane; runtime-unverified; non-release; non-publication
+owners:
+  - "@bartytime4life"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-21
+policy_label: repository-facing; dashboard-specifications; domain-health; sensitive-context; cite-or-abstain
+owning_root: docs/
+responsibility: Define the human-readable boundary, inventory, shared measurement contract, evidence limits, safety rules, validation expectations, maintenance duties, and review path for the thirteen domain dashboard specifications without creating domain, metric, runtime, policy, release, or publication authority.
+truth_posture: CONFIRMED current path, thirteen-spec directory inventory, catalog coverage, accepted Directory Rules v2, current child-file presence, and bounded documentation validators / PROPOSED dashboard measurements, panels, thresholds, joins, alerts, and implementation mappings / UNKNOWN running dashboard routes, production telemetry, active policy evaluation, complete evidence resolution, release integration, correction propagation, rollback execution, deployment, and public parity / NEEDS VERIFICATION accountable domain, measurement, sensitivity, policy, UI, release, and independent reviewers.
+current_path: docs/dashboards/domain/README.md
+evidence_snapshot: "repository=bartytime4life/Kansas-Frontier-Matrix; base=main@40f68c17b16cdc4219ea3d00756912f9fdb768b8; target_prior_blob=fc18e269e8f674688ea580ac384ba46c40304840; parent_readme_blob=c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3; dashboard_catalog_blob=f86b42f7bc6fd28de78e98f06cf1f89cc5af7d4c; generated_receipt_readme_blob=5a67f8d743306799a014590ccb45fa9f1177f16a; directory_rules_blob=fd49a0b83e55cef52c1124281f093e263526898d; metadata_validator_readme_blob=25be64b52c6fe74fbe0c167f32ba878280b11f5c"
 related:
-  - kfm://doc/directory-rules                                # CONFIRMED: docs/doctrine/directory-rules.md
-  - kfm://doc/atlas-v1-1                                     # PROPOSED: docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf §24.11
-  - kfm://doc/atlas-v1-1-ch24-5-sensitivity-tier-reference   # CONFIRMED authored sibling
-  - kfm://doc/atlas-v1-1-ch24-6-pipeline-gate-reference      # CONFIRMED authored sibling
-  - kfm://doc/backlog-navigation-index                       # CONFIRMED authored: docs/backlog/README.md
-  - kfm://adr/atlas-chapter-split-layout                     # PROPOSED candidate (paired ADR)
-  - kfm://adr/dashboards-lane-existence                      # PROPOSED candidate: OPEN-DASH-01
-tags: [kfm, dashboards, domain, specifications, governance-health, indicators, readme]
+  - docs/dashboards/README.md
+  - docs/dashboards/DASHBOARD_CATALOG.md
+  - docs/dashboards/INDICATOR_CATALOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - apps/review-console/README.md
+  - apps/explorer-web/README.md
+  - data/receipts/generated/README.md
+  - tools/validators/docs/meta-block/README.md
+tags: [kfm, dashboards, domain, specifications, measurement-contract, evidence, sensitivity, correction, rollback, cite-or-abstain]
 notes:
-  - This README sits at a PROPOSED lane (`docs/dashboards/`). The lane is not in the Directory Rules §6.1 `docs/` tree.
-  - This file is SPECIFICATIONS only — it documents what dashboards should exist per domain, what they should measure, who owns them. It does NOT implement dashboards (those live in `apps/`) and does NOT own indicator definitions (Atlas §24.11 does).
-  - Whether `docs/dashboards/` should exist as a lane is ADR-class per Directory Rules §2.4(5). Logged as OPEN-DASH-01.
+  - "v2.0 replaces the Atlas-first generated orientation with a same-path, repository-grounded boundary and exact thirteen-file domain inventory."
+  - "The current catalog records 33 dashboard specifications overall: 5 governance, 4 operational, 13 domain, and 11 observability."
+  - "The parent dashboard README still carries the superseded 34/14 counts from the removed domain/air sensor-review path; that inherited documentation drift is disclosed here and left for a focused parent reconciliation."
+  - "Child-document richness and synthetic validation do not prove production metrics, a dashboard route, source admission, policy enforcement, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
-
-# Per-Domain Dashboard Specifications
 
 <!-- [doc: kfm://doc/dashboards-domain-readme] -->
 <a id="top"></a>
 
-> Per-domain **dashboard specifications** — what each domain measures, the healthy postures, the ownership chain. **This folder specifies; it does not implement.** Implementations live in `apps/`; the master indicator set lives in Atlas v1.1 §24.11; per-domain instrumentation hints live in `docs/domains/<domain>/`.
+# Per-Domain Dashboard Specifications
+
+> **Purpose.** Orient maintainers to the thirteen domain dashboard specifications currently tracked under `docs/dashboards/domain/`, define the shared evidence and measurement boundary they inherit, and prevent documentation, telemetry, maps, or generated summaries from becoming domain truth or publication authority.
 
 <p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue">
-  <img alt="Lane: PROPOSED" src="https://img.shields.io/badge/lane-PROPOSED-orange">
-  <img alt="Scope: specifications only" src="https://img.shields.io/badge/scope-specifications%20only-informational">
-  <img alt="Domains: 13 of 13" src="https://img.shields.io/badge/domains-13%20of%2013-yellowgreen">
-  <img alt="Master indicators: Atlas §24.11" src="https://img.shields.io/badge/master%20indicators-Atlas%20%C2%A724.11-purple">
-  <img alt="ADR: OPEN-DASH-01" src="https://img.shields.io/badge/ADR-OPEN--DASH--01-yellow">
-  <img alt="Policy label: public" src="https://img.shields.io/badge/policy--label-public-lightgrey">
+  <img alt="Path: confirmed" src="https://img.shields.io/badge/path-CONFIRMED-1f6feb">
+  <img alt="Specifications: thirteen confirmed" src="https://img.shields.io/badge/specifications-13%20CONFIRMED-1a7f37">
+  <img alt="Placement: hold" src="https://img.shields.io/badge/placement-HOLD-b42318">
+  <img alt="Runtime: needs verification" src="https://img.shields.io/badge/runtime-NEEDS%20VERIFICATION-d4a72c">
+  <img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-8250df">
+  <img alt="Publication: none" src="https://img.shields.io/badge/publication-none-6e7781">
 </p>
 
 > [!IMPORTANT]
-> **Truth posture.** The **master governance health indicators** in Atlas §24.11 are PROPOSED doctrine — the indicator catalog is named in CONFIRMED Atlas v1.1 text but adoption as canonical is open per VB-11-08. The **per-domain specification pattern** in this folder is PROPOSED. The **lane `docs/dashboards/` itself** is PROPOSED per OPEN-DASH-01. Implementation status (whether any specified dashboard actually exists) is NEEDS VERIFICATION.
+> **Specification presence is not dashboard implementation.** Current repository evidence confirms this README and thirteen sibling domain specification files. It does not establish metric producers, query execution, telemetry stores, panel configurations, access controls, deployed routes, active policy evaluation, release integration, or public behavior.
 
 > [!CAUTION]
-> **Parallel-authority concern.** Atlas §24.11 owns the master indicator catalog. Per-domain dossiers in `docs/domains/<domain>/` already carry instrumentation hints in their `K. Validators, tests, fixtures` and `L. Governed AI behavior` sections. A file here that **redefines** an indicator — rather than specifying its per-domain instance — is parallel authority. See §4 (exclusions).
+> **A domain dashboard is a downstream review projection.** It may summarize released or otherwise authorized evidence, validation, policy, review, correction, and operational signals. It must not define canonical domain records, infer missing evidence, approve its own thresholds, authorize exposure, or turn a green visualization into a claim of domain health.
+
+> [!WARNING]
+> **Metrics can disclose protected information.** Counts, filters, small cells, map selections, labels, exports, logs, accessibility text, cache keys, repeated queries, and generated language can reconstruct rare-species locations, archaeology, living-person or genomic facts, private land or wells, critical infrastructure, or other harmful precision. Public and ordinary-user surfaces must fail closed before those dimensions reach the client.
 
 > [!NOTE]
-> **Anti-collapse rule.** A dashboard spec does not substitute for the underlying receipts, evidence bundles, policy decisions, or review records. Indicators are reported, not enforced. *(Atlas v1.1 §24.11, CONFIRMED.)*
+> The historical KFM Domains Atlas and its indicator discussions remain useful design lineage. Current repository files, accepted doctrine, contracts, schemas, policy, tests, workflows, receipts, and runtime evidence control current claims within their respective authority classes. This README does not promote the Atlas into a machine registry or current runtime authority.
 
 ---
 
@@ -70,18 +83,45 @@ notes:
 
 ## 1. Scope
 
-This folder hosts **per-domain dashboard specification files** — one file per KFM domain — describing:
+This folder is the human-readable specification lane for KFM's thirteen current domain dashboard documents. Each child file may describe candidate measurements, panels, finite states, review cues, accessibility behavior, evidence links, correction behavior, and implementation dependencies for one domain.
 
-- which **governance health indicators** (Atlas §24.11 categories) apply to the domain;
-- what the **healthy posture** looks like for each indicator at the domain scale;
-- which **receipts, policies, and validators** feed the indicator;
-- who **owns** the dashboard (domain steward + governance-health steward);
-- where the **implementation** lives (`apps/` path, dashboard URL, telemetry config).
+This folder owns:
 
-The specifications are **read-only references** for implementers. The receipts and evidence the indicators measure live in their normal homes (`data/receipts/`, `release/manifests/`, `policy/`, etc.). The dashboards themselves render in `apps/` (e.g., `apps/review-console/`, `apps/admin/`).
+- navigation to the current domain dashboard specification set;
+- the shared documentation contract inherited by child specifications;
+- explicit separation among file presence, measurement design, implementation, observation, enforcement, release, and publication;
+- source-role, claim-strength, spatial, temporal, uncertainty, sensitivity, and correction guardrails for dashboard design;
+- maintenance triggers and bounded validation expectations;
+- visible `CONFIRMED`, `PROPOSED`, `UNKNOWN`, and `NEEDS VERIFICATION` status.
 
-> [!TIP]
-> If you're looking for the master indicator catalog (what to measure system-wide), go to Atlas v1.1 §24.11. If you're looking for a specific domain's instrumentation context, start in `docs/domains/<domain>/`. If you're looking for the actual rendered dashboard, follow the implementation pointer in the per-domain spec to its `apps/` home.
+This folder does **not** own:
+
+- canonical domain semantics or records;
+- source admission, rights determinations, EvidenceBundles, policy decisions, or review records;
+- measurement execution, telemetry collection, operational stores, dashboard code, or application routes;
+- release, correction, withdrawal, rollback, deployment, or publication decisions.
+
+### 1.1 Shared dashboard posture
+
+| Question | Current bounded answer |
+|---|---|
+| Are thirteen domain specification files present? | **CONFIRMED** at the pinned repository snapshot. |
+| Are they cataloged? | **CONFIRMED** in [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md). |
+| Do all child specs use one mature contract and measurement vocabulary? | **NEEDS VERIFICATION.** The lane contains multiple documentation generations and maturity levels. |
+| Do production metric producers, queries, telemetry, and routed panels exist for every domain? | **UNKNOWN / NEEDS VERIFICATION.** |
+| Are numeric thresholds, cadences, and suppression rules adopted? | **PROPOSED or UNKNOWN** unless a child spec points to current governing evidence. |
+| Does a passing fixture or validator prove domain-wide health? | **No.** It proves only its bounded profile. |
+| Does this lane authorize a public dashboard? | **No.** Release and public exposure remain separately governed. |
+
+### 1.2 Measurement versus truth
+
+A dashboard measurement is a derived observation about a defined process, artifact set, or evidence population. It is not the underlying domain fact. For example:
+
+- Evidence-resolution rate measures whether references resolve under a declared scope; it does not establish that every resolved claim is true.
+- Source freshness measures age against a declared cadence; it does not establish current real-world conditions.
+- A synthetic public-safe fixture proves deterministic behavior for that fixture; it does not prove production geoprivacy enforcement.
+- A correction-latency metric reports workflow timing; it does not authorize the correction or establish that every derivative was invalidated.
+- A map count reports the released carrier available to that view; it does not prove absence outside the carrier or survey scope.
 
 [↑ back to top](#top)
 
@@ -89,37 +129,56 @@ The specifications are **read-only references** for implementers. The receipts a
 
 ## 2. Repo fit
 
+### 2.1 Placement result
+
+The target already exists under the `docs/` responsibility root and explains a human-facing documentation lane. The smallest safe result is a same-path **`PLACE`** update.
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md) as the current human placement authority. The rules recognize `docs/` as the human explanation surface and require nested lanes to declare their authority and exposure boundary. They do not automatically admit every existing direct child as a permanent canonical lane. Therefore:
+
+- same-path documentation maintenance is supported;
+- moving, renaming, splitting, deleting, or creating a parallel dashboard tree remains **`HOLD`**;
+- no source, contract, schema, policy, receipt, proof, catalog, release, or runtime authority is created here.
+
+### 2.2 Current repository inventory
+
+At `main@40f68c17b16cdc4219ea3d00756912f9fdb768b8`, the direct-child domain lane contains:
+
 ```text
-docs/
-└── dashboards/                       # PROPOSED lane (Directory Rules §6.1 does not list this)
-    ├── README.md                     # PROPOSED parent README (NEEDS VERIFICATION)
-    ├── domain/                       # THIS FOLDER — per-domain dashboard specifications
-    │   ├── README.md                 # THIS FILE
-    │   ├── hydrology.md              # ⏳ proposed per-domain spec
-    │   ├── soil.md                   # ⏳
-    │   └── …                         # ⏳ remaining domains listed in §5
-    ├── cross-domain/                 # PROPOSED sibling — release, AI, drift, governance-health
-    └── release/                      # PROPOSED sibling — release / rollback / correction
+docs/dashboards/domain/
+├── README.md
+├── agriculture.md
+├── archaeology.md
+├── atmosphere.md
+├── fauna.md
+├── flora.md
+├── geology.md
+├── habitat.md
+├── hazards.md
+├── hydrology.md
+├── people-dna-land.md
+├── roads-rail-trade.md
+├── settlements-infrastructure.md
+└── soil.md
 ```
 
-**Upstream authorities.**
+That is **one README plus thirteen dashboard specifications**. No nested `domain/air/` lane is present at the pinned snapshot.
 
-| Upstream | Relationship |
-|:---|:---|
-| `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` §24.11 | **Master governance health indicators** — the indicator catalog. Per-domain specs in this folder **instance** these indicators; they do not **redefine** them. |
-| `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` §24.10 | Risk register — drives which indicators are critical for each domain. |
-| `docs/domains/<domain>/` | Per-domain dossier — source of `K. Validators, tests, fixtures`, `M. Publication, correction, rollback`, and `N. Verification backlog` content that informs the per-domain dashboard spec. **Dossier always wins on conflict.** |
-| `docs/doctrine/directory-rules.md` | Places `docs/` lanes; this lane is not yet placed there. See §11 OPEN-DASH-01. |
+The current dashboard catalog records **33 specification files overall**: 5 governance, 4 operational, 13 domain, and 11 observability. The parent [`docs/dashboards/README.md`](../README.md) still reports the superseded 34/14 counts from the formerly tracked air sensor-review specification. That discrepancy is inherited documentation drift; this one-file lane modernization exposes it without silently changing a broader parent contract.
 
-**Downstream consumers.**
+### 2.3 Responsibility map
 
-| Downstream | Relationship |
-|:---|:---|
-| `apps/review-console/`, `apps/admin/`, `apps/explorer-web/`, future `apps/dashboards/` | **Implementations.** Each dashboard spec here points to its implementation home. |
-| `runtime/observability/` *(if it exists; NEEDS VERIFICATION)* | Telemetry plumbing — emits the signals the dashboards visualize. |
-| `schemas/contracts/v1/` | Receipt and report schemas — define the shape of the signals dashboards read. |
-| `policy/` | Policy bundles — emit `PolicyDecision` outcomes that several indicators count (DENY-reason distribution, ABSTAIN rate, etc.). |
-| `docs/registers/DRIFT_REGISTER.md` | When a domain's actual dashboard state diverges from spec, the divergence is logged here. |
+| Surface | Owns | Relationship to this README |
+|---|---|---|
+| [`docs/dashboards/README.md`](../README.md) | Parent lane boundary and whole-dashboard navigation | Inherited boundary; currently stale on aggregate counts. |
+| [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md) | Human specification inventory | Current count and row-level navigation; not runtime authority. |
+| [`INDICATOR_CATALOG.md`](../INDICATOR_CATALOG.md) | Human indicator mirror | Design and review aid; not metric storage or enforcement. |
+| Child domain specifications | Domain-specific dashboard intent | Must remain downstream of domain, evidence, policy, and release authorities. |
+| `docs/domains/<domain>/` | Human domain explanation | Supplies domain vocabulary and evidence limits where current. |
+| `contracts/`, `schemas/`, `policy/` | Meaning, machine shape, and admissibility | May be referenced; never redefined here. |
+| `data/receipts/`, `data/proofs/`, `release/` | Process memory, proof, and governed release/correction objects | Inputs to review projections when verified; not hosted here. |
+| `apps/`, `packages/`, `runtime/`, `infra/` | Executable dashboard, adapters, telemetry, storage, and deployment | Implementation must be verified separately. |
+| MapLibre and Explorer | Downstream map rendering and interaction | Renderer and UI only; neither is truth, evidence, policy, or release authority. |
+| Governed AI | Bounded explanation over resolved evidence | Interpretive only; cite, narrow, abstain, deny, or error. |
 
 [↑ back to top](#top)
 
@@ -127,19 +186,68 @@ docs/
 
 ## 3. Accepted inputs
 
-Files that belong in this folder:
+A child specification may reference an input only within that input's verified role and authority.
 
-- **One `<domain>.md` file per KFM domain**, following the template in §6 and the inventory in §5.
-- **This README** (`README.md`).
-- Optional `<domain>/figures/` sub-folder per domain spec for separately-versioned diagrams (PROPOSED; parallels the chapter-extract figures pattern).
+### 3.1 Input classes
 
-Each per-domain spec MUST:
+| Input class | Allowed use | Required boundary |
+|---|---|---|
+| Domain documentation and contracts | Define terms, scope, source roles, object meaning, and limitations | Documentation does not prove runtime implementation. |
+| Machine schemas and fixtures | Describe validated shape and bounded examples | Schema validity and fixture success do not establish truth, policy permission, or production parity. |
+| Validators and tests | Support a named deterministic behavior claim | State exact command/profile and limits; do not generalize beyond tested scope. |
+| Workflows and hosted checks | Show that configured checks ran for an exact revision | Workflow success is not source admission, policy approval, release, or deployment. |
+| Source registries and descriptors | Identify authority, rights, access, cadence, and source role when populated and reviewed | A connector or URL is not an admitted source. |
+| Evidence, policy, review, and release objects | Support a dashboard measurement or public-facing claim | References must resolve; missing closure produces a bounded negative state. |
+| Telemetry and operational records | Measure behavior of a declared producer over a declared interval | Minimize labels and prevent sensitive or high-cardinality leakage. |
+| Maps, tiles, reports, models, and AI output | Provide downstream context or interpretation | They remain derived carriers and cannot bootstrap their own evidence. |
 
-- declare the **indicator subset** (from Atlas §24.11) that applies to the domain;
-- declare the **healthy posture** per indicator at the domain scale;
-- name the **receipt / evidence source** for each indicator;
-- name the **dashboard owner** (domain steward + governance-health steward);
-- point to its **implementation home** in `apps/` (or note `UNKNOWN` if not yet implemented).
+### 3.2 Source-role anti-collapse
+
+A dashboard must keep materially different source characters distinct.
+
+| Source character | May support | Must not silently become |
+|---|---|---|
+| Direct observation | A bounded observation with time, place, method, unit, and quality context | Complete coverage, causation, warning authority, or forecast |
+| Administrative or regulatory record | Status or designation within the issuing authority's scope and effective period | Physical condition, title truth, exposure, or universal legal advice |
+| Statistical aggregate | A reported population-level measure with vintage and suppression rules | Individual, parcel, producer, household, or facility fact |
+| Model, forecast, interpolation, or classification | A method-bound estimate with uncertainty and evaluation context | Observation, current condition, causation, or decision authority |
+| Remote-sensing derivative | A sensor- and processing-bound representation | Ground truth, private-land fact, or exact sensitive occurrence |
+| Historical or archival record | A dated event or interpretation | Current operational status or present-day identity |
+| Context or educational source | Background and framing | Evidence closure for a consequential claim |
+| Generated interpretation | Plain-language explanation over resolved support | Evidence, review, policy, release, or correction authority |
+
+### 3.3 Minimum measurement contract
+
+Before a proposed indicator can be treated as implementation-ready, its child specification should identify:
+
+| Field | Minimum requirement |
+|---|---|
+| `measurement_id` | Stable identifier or explicit `NEEDS VERIFICATION` placeholder; do not invent registry state. |
+| Purpose and question | What review question the measurement answers and what it cannot answer. |
+| Numerator / denominator / population | Explicit inclusion, exclusion, and zero-denominator behavior. |
+| Unit and aggregation | Unit, grouping keys, allowed dimensions, and anti-double-counting rule. |
+| Spatial support | Geography type, version, generalization, join semantics, and no-data behavior. |
+| Temporal support | Observed/effective/retrieved/released/corrected times as applicable; window and freshness basis. |
+| Source roles | Source identifiers and role of each input; conflicting sources remain visible. |
+| Evidence and lineage | `EvidenceRef`/`EvidenceBundle`, run, artifact, receipt, proof, or release references appropriate to significance. |
+| Method and uncertainty | Method version, assumptions, confidence/quality fields, missingness, coverage, and known bias. |
+| Threshold profile | Versioned threshold or explicit absence; no magic number embedded only in prose or UI. |
+| Sensitivity and rights | Allowed dimensions, suppression/generalization duties, audience, access class, and side-channel analysis. |
+| Finite states | Supported, stale, missing, restricted, review-pending, corrected, withdrawn, and system-error behavior where applicable. |
+| Correction and rollback | How superseded values, caches, exports, maps, search, and generated summaries are invalidated or replaced. |
+| Owner and review | Accountable producer, domain reviewer, policy/sensitivity reviewer, and release/correction route—each verified or marked unresolved. |
+
+### 3.4 Claim-strength ladder
+
+A dashboard should not let visualization strength exceed evidence strength.
+
+| Level | Allowed presentation | Prohibited escalation |
+|---|---|---|
+| Context | Source coverage, inventory, age, or descriptive background | Inferring condition, risk, or causation |
+| Observation | Time- and scope-bounded observed value | Treating a sample or incomplete survey as exhaustive |
+| Derived indicator | Reproducible computation over declared inputs | Presenting method output as direct observation |
+| Association | Reviewed relationship with uncertainty and scope | Causal language without causal evidence |
+| Causal or prescriptive conclusion | Only with specifically adequate evidence, authority, review, and release support | Dashboard styling, correlation, or model score as a substitute |
 
 [↑ back to top](#top)
 
@@ -147,23 +255,23 @@ Each per-domain spec MUST:
 
 ## 4. Exclusions
 
-Files that do **not** belong here and where they should live instead:
+Files and responsibilities that do not belong in this lane:
 
-| ❌ Do not put here | ✅ Belongs in |
-|:---|:---|
-| Dashboard implementations (React components, configs, charts) | `apps/<dashboard-app>/` |
-| Telemetry plumbing or signal-emission code | `runtime/observability/` or per-package observability adapters |
-| Schema definitions for receipts / reports | `schemas/contracts/v1/<family>/` |
-| Policy bundles emitting denial reasons | `policy/<scope>/` |
-| **Redefinitions** of master indicators (drift from Atlas §24.11) | Atlas §24.11 — propose a change via ADR, not a redefinition here |
-| Cross-domain dashboards (release, AI, drift) | `docs/dashboards/cross-domain/` (PROPOSED sibling) |
-| Per-domain validator code | `tests/domains/<domain>/` or `tools/validators/` |
-| New backlog items | The canonical backlog homes — see `docs/backlog/README.md` |
-| ADRs about dashboard architecture | `docs/adr/` |
-| Operational dashboards' real-time data | Live telemetry stores; **never** mirrored as files here |
+| Do not place or decide here | Owning boundary or disposition |
+|---|---|
+| React components, panel JSON, queries, adapters, collectors, storage, alert rules, or deployment configuration | The verified `apps/`, `packages/`, `runtime/`, `infra/`, or governed external implementation surface |
+| Telemetry series, traces, logs, profiles, alert history, or user-event payloads | Governed operational storage with retention and access controls |
+| Canonical domain records, source payloads, EvidenceBundles, policy decisions, review records, or release objects | Their distinct domain, lifecycle, accountability, policy, or release roots |
+| Semantic contracts, JSON Schemas, validators, or policy source | `contracts/`, `schemas/`, `tools/validators/`, and `policy/` |
+| Master indicator or threshold authority created only by prose | A reviewed contract, registry, policy profile, or accepted decision in the owning root |
+| Unverified owner, route, package, service, cadence, threshold, SLO, or panel claim | Mark `UNKNOWN`, `NEEDS VERIFICATION`, or `PROPOSED` |
+| Protected payloads, exact harmful locations, living-person private data, genomics, private wells, title assertions, or critical-asset detail | Quarantine, redact, generalize, aggregate, delay, restrict, abstain, or deny under reviewed policy |
+| Direct browser access to RAW, WORK, QUARANTINE, internal canonical stores, model runtimes, or unreleased candidates | Deny; ordinary clients use governed interfaces and released public-safe carriers |
+| A dashboard-generated claim treated as proof of its own evidence or policy | Reject as circular support |
+| Release, deployment, promotion, publication, correction approval, or rollback authorization | `release/` and accountable human/governed decision processes |
 
 > [!WARNING]
-> **Redefinition watch.** If a per-domain spec finds itself rewriting an indicator definition, that's a signal that Atlas §24.11 is missing context. The correct response is **propose a §24.11 amendment via ADR**, not redefine the indicator at the domain scale. The Atlas is doctrine; this folder is documentation.
+> **Client-side filtering is not a security or sensitivity control.** Protected dimensions must be removed, transformed, or denied before delivery. Tooltips, legends, URLs, accessibility trees, exports, logs, search indexes, caches, and AI context require the same review as visible charts.
 
 [↑ back to top](#top)
 
@@ -171,40 +279,35 @@ Files that do **not** belong here and where they should live instead:
 
 ## 5. Per-domain inventory
 
-Atlas v1.0 chapters 4 – 16 carry per-domain `H. Pipeline shape`, `I. Sensitivity, rights, and publication posture`, `K. Validators, tests, fixtures`, and `M. Publication, correction, and rollback` sections. Each domain is a candidate target for a dashboard spec.
+Every row below confirms a tracked specification file and summarizes its bounded design focus. It does not confirm a running dashboard.
 
-### 5.1 Authored (✅) and proposed (⏳) status
+| Domain specification | Bounded focus | High-risk or non-collapse boundary | Current runtime conclusion |
+|---|---|---|---|
+| [`agriculture.md`](agriculture.md) | Evidence resolution, statistical suppression, land-cover taxonomy/version, irrigation or classification confidence | Aggregates must not become producer, parcel, yield, title, or individual-operation claims | **PROPOSED / NEEDS VERIFICATION** |
+| [`archaeology.md`](archaeology.md) | Aggregate-only governance health, cultural/sovereignty review, exact-location denial, side-channel controls | No exact or reconstructive site, burial, sacred-place, collection, private-land, or review-record exposure | **PROPOSED / NEEDS VERIFICATION** |
+| [`atmosphere.md`](atmosphere.md) | Observation/model/forecast separation, freshness, finite outcomes, correction, AI citation posture | Not an alert authority; forecasts and models must not become observations or emergency guidance | **PROPOSED / NEEDS VERIFICATION** |
+| [`fauna.md`](fauna.md) | Evidence, taxonomy, source role, geoprivacy, public-safe transform, proof/release and correction posture | No exact sensitive occurrence, nest, den, roost, lek, migration bottleneck, or small-cell reconstruction | **PROPOSED / NEEDS VERIFICATION** |
+| [`flora.md`](flora.md) | Evidence, taxonomy, occurrence roles, public-safe validation, policy/proof/release holds, anti-inference | No exact rare-plant, collection-vulnerable, culturally sensitive, or private-land reconstruction | **PROPOSED / NEEDS VERIFICATION** |
+| [`geology.md`](geology.md) | Source breadth, stratigraphic/lithologic normalization, well and resource-record identifiability | Educational/resource context is not mineral-rights, title, engineering, hazard, or exposure determination | **PROPOSED / NEEDS VERIFICATION** |
+| [`habitat.md`](habitat.md) | Evidence/source-role posture, observation/model separation, public-safe joins, finite states, correction | Habitat models and connectivity products are not occurrence truth; sensitive joins must fail closed | **PROPOSED / NEEDS VERIFICATION** |
+| [`hazards.md`](hazards.md) | Life-safety denial and official referral, event/advisory/model separation, freshness/expiry, correction/withdrawal | Never an alert, dispatch, evacuation, routing, or emergency-command authority | **PROPOSED / NEEDS VERIFICATION** |
+| [`hydrology.md`](hydrology.md) | Evidence resolution, source and time posture, correction/rollback coverage, documentation drift | Observations are not forecasts, flood determinations, water rights, or emergency guidance | **PROPOSED / NEEDS VERIFICATION** |
+| [`people-dna-land.md`](people-dna-land.md) | Consent/revocation, evidence and title anti-collapse, closed synthetic profiles, sensitive-metric controls | No real-person, genomic, kinship, owner, parcel, title, sovereignty, or identity inference without authority | **PROPOSED / NEEDS VERIFICATION** |
+| [`roads-rail-trade.md`](roads-rail-trade.md) | Source breadth, network/functional-class normalization, historic/current distinction, feed posture | Archives are not current closure or routing state; infrastructure and trade detail may be sensitive | **PROPOSED / NEEDS VERIFICATION** |
+| [`settlements-infrastructure.md`](settlements-infrastructure.md) | Place-role and vintage separation, condition/dependency posture, EvidenceBundle projection, correction | No vulnerability map, private facility/person detail, current service assurance, or security posture inference | **PROPOSED / NEEDS VERIFICATION** |
+| [`soil.md`](soil.md) | Evidence/source roles, taxonomy and interpretation versions, map-unit identity and stability | Survey/derivative products are not parcel truth, current moisture observation, engineering verdict, or prescription | **PROPOSED / NEEDS VERIFICATION** |
 
-Domain naming follows `docs/domains/<domain>/` convention from Directory Rules §6.1.
+### 5.1 Inventory interpretation
 
-| Atlas Ch. | Domain | File | Status | Indicator categories that primarily apply |
-|:---:|:---|:---|:---:|:---|
-| 4 | Hydrology | [`hydrology.md`](hydrology.md) | ✅ | Evidence-and-source; Release-correction-rollback; Documentation-and-drift |
-| 5 | Soil | [`soil.md`](soil.md) | ✅ | Evidence-and-source; Documentation-and-drift |
-| 6 | Habitat | [`habitat.md`](habitat.md) | ✅ | Evidence-and-source; Sensitivity-and-rights |
-| 7 | Fauna | [`fauna.md`](fauna.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
-| 8 | Flora | [`flora.md`](flora.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults)*; Evidence-and-source |
-| 9 | Agriculture | [`agriculture.md`](agriculture.md) | ✅ | Evidence-and-source; Documentation-and-drift |
-| 10 | Geology / Natural Resources | [`geology.md`](geology.md) | ✅ | Evidence-and-source |
-| 11 | Atmosphere / Air | [`atmosphere.md`](atmosphere.md) | ✅ | Evidence-and-source; **AI-surface-health** *(forecasting cite-or-abstain)* |
-| 12 | Hazards | [`hazards.md`](hazards.md) | ✅ | **Release-correction-rollback** *(alert-authority denial)*; Evidence-and-source |
-| 13 | Roads / Rail / Trade Routes | [`roads-rail-trade.md`](roads-rail-trade.md) | ✅ | Evidence-and-source; Documentation-and-drift |
-| 14 | Settlements / Infrastructure | [`settlements-infrastructure.md`](settlements-infrastructure.md) | ✅ | **Sensitivity-and-rights** *(critical-asset T4)*; Release-correction-rollback |
-| 15 | Archaeology / Cultural Heritage | [`archaeology.md`](archaeology.md) | ✅ | **Sensitivity-and-rights** *(T4 defaults, sovereignty)*; Evidence-and-source |
-| 16 | People / Genealogy / DNA / Land Ownership | [`people-dna-land.md`](people-dna-land.md) | ✅ | **Sensitivity-and-rights** *(living-person T4, DNA T4)*; AI-surface-health |
+- **File presence:** `CONFIRMED`.
+- **Specification intent:** generally `PROPOSED`, with child-specific repository evidence and bounded synthetic implementation recorded where available.
+- **Running route, telemetry producer, threshold evaluator, policy enforcement, and deployed panel:** `UNKNOWN` or `NEEDS VERIFICATION` unless the child document cites exact current evidence.
+- **Release or publication:** not established by any row.
+- **Owner identities:** GitHub review routing is not equivalent to domain, sensitivity, policy, release, or independent stewardship.
 
-> [!NOTE]
-> **Cross-domain systems** (Atlas Ch. 17 Frontier Matrix, Ch. 18 Planetary/3D, Ch. 19 Cross-Domain Systems) are **not** in this inventory — they belong in `docs/dashboards/cross-domain/` (PROPOSED sibling). Spatial Foundation (Ch. 3) is foundational, not a domain; its instrumentation rolls up into every domain's dashboard.
+### 5.2 Cross-domain placement
 
-### 5.2 Status legend
-
-| Symbol | Meaning |
-|:---:|:---|
-| ✅ | Authored in this folder. |
-| ⏳ | Proposed; not yet authored. |
-| 🛠️ | In progress. |
-| 🚫 | Withdrawn (not currently used). |
-| 🔄 | Superseded by a later spec (not currently used). |
+A cross-domain measurement belongs here only when one domain is clearly accountable for its semantics and review. Otherwise, use the existing cross-domain architecture and dashboard-governance surfaces after placement is verified. Do not create a new `cross-domain/`, `system/`, or topic-specific child merely because a metric reads multiple sources.
 
 [↑ back to top](#top)
 
@@ -212,62 +315,75 @@ Domain naming follows `docs/domains/<domain>/` convention from Directory Rules �
 
 ## 6. Specification template
 
-Each per-domain spec file SHOULD follow this skeleton.
+A new or materially revised child specification should use the repository's bounded metadata profile and the smallest complete structure appropriate to its risk. The following is a design template, not a generator or accepted machine contract.
 
 ```markdown
-<!-- KFM_META_BLOCK_V2 with type: standard, related: cross-references -->
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/dashboard/domain/<domain>
+title: <Domain> Dashboard Specification
+type: standard
+version: v0.x
+status: draft; repository-grounded-or-proposed; runtime-unverified; non-release; non-publication
+owners:
+  - "<verified GitHub route or NEEDS VERIFICATION>"
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: repository-facing; dashboard-specification; <sensitivity posture>
+owning_root: docs/
+responsibility: <human-readable dashboard-specification responsibility only>
+truth_posture: CONFIRMED <current evidence> / PROPOSED <design> / UNKNOWN <runtime> / NEEDS VERIFICATION <open gates>
+related:
+  - docs/dashboards/domain/README.md
+  - docs/dashboards/DASHBOARD_CATALOG.md
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # <Domain> Dashboard Specification
 
-> One-line scope statement.
-
-[badges: status, lane=PROPOSED, atlas chapter reference, indicator subset]
-
-> [!IMPORTANT]
-> Truth posture: indicator catalog from Atlas §24.11 (PROPOSED); per-domain instances PROPOSED.
-
-## 1. Domain scope
-- Atlas chapter reference (Ch. N)
-- Default sensitivity tier(s) — link to §24.5 chapter file
-- Pipeline shape — link to §24.6 chapter file
-
-## 2. Indicator subset
-Table: which §24.11 indicators apply, healthy posture for THIS domain, source of signal.
-
-| Indicator | §24.11 cat. | Domain-scale healthy posture | Receipt / signal source |
-|:---|:---|:---|:---|
-| EvidenceRef resolution rate | 24.11.1 | > 99.9% (matches master) | EvidenceBundle resolver logs |
-| Sensitive-lane fail-closed rate | 24.11.3 | 100% (T4 defaults apply) | PolicyDecision DENY counts |
-| …                              | …       | …                             | …                              |
-
-## 3. Domain-specific indicators (if any)
-Indicators NOT in §24.11 but specific to this domain. PROPOSED; surfaces candidate §24.11 amendment.
-
-## 4. Ownership
-- Domain steward: <name or OWNER_TBD>
-- Governance-health steward: <name or OWNER_TBD>
-- Implementation owner: <apps/ team or OWNER_TBD>
-
-## 5. Implementation pointer
-- Dashboard app: `apps/<path>/` or `UNKNOWN`
-- Telemetry: `runtime/observability/<adapter>/` or `UNKNOWN`
-- Schemas read: `schemas/contracts/v1/<families>/`
-- Policy bundles emitting signals: `policy/<scope>/`
-
-## 6. Review cadence
-How often the spec is reviewed; trigger events (e.g., domain dossier edition bump).
-
-## 7. Open questions
-Local `OPEN-DASH-<domain>-NN` items if any.
-
-## 8. Evidence basis & citations
-Standard source ledger.
-
-<sub>Anti-collapse footer.</sub>
+## 1. Purpose, authority, and current evidence
+## 2. Domain and claim-strength boundary
+## 3. Source-role, spatial, temporal, uncertainty, and no-data rules
+## 4. Candidate measurements and threshold profiles
+## 5. Proposed panels, filters, finite states, and accessibility
+## 6. Evidence, policy, sensitivity, rights, and anti-inference controls
+## 7. Governed API, MapLibre, export, and AI boundaries
+## 8. Validation, negative proof, correction, withdrawal, and rollback
+## 9. Implementation mapping, readiness, owners, and open questions
+## 10. Evidence ledger and maintenance triggers
 ```
 
-> [!TIP]
-> Keep specs **bounded**. A per-domain spec should fit in a single Markdown file with the indicator table as the centerpiece. If a domain's dashboard story requires multiple files, that's a signal to either reduce scope or escalate the multi-file pattern via an OPEN-DASH item.
+### 6.1 Candidate measurement row
+
+| Field | Example posture |
+|---|---|
+| Measurement | Human-readable name plus stable identifier when registered |
+| Review question | One bounded question |
+| Population | Exact eligible records or runs |
+| Computation | Numerator, denominator, unit, aggregation, and no-data behavior |
+| Dimensions | Finite, reviewed, low-cardinality labels only |
+| Spatial and temporal support | Versioned geography, time roles, window, and freshness |
+| Evidence and method | Source roles, EvidenceBundle or run/artifact lineage, method version, uncertainty |
+| Threshold | Versioned profile or `NOT ADOPTED` |
+| Sensitivity | Audience, suppression/generalization, anti-reconstruction controls |
+| Finite states | Supported, stale, missing, restricted, review-pending, corrected, withdrawn, error |
+| Correction | Replacement, invalidation, cache/export/search/AI propagation, rollback target |
+| Implementation | Producer/query/route/panel/test references, each verified or marked unresolved |
+
+### 6.2 Dashboard state contract
+
+A dashboard must distinguish at least:
+
+- **supported value** — computation completed over the declared population;
+- **no data / not measured** — no eligible input or producer result;
+- **stale** — freshness contract exceeded;
+- **partial / coverage limited** — declared population or spatial/temporal support is incomplete;
+- **restricted / generalized** — policy permits only a bounded projection;
+- **review pending** — evidence, policy, sensitivity, or release review has not closed;
+- **corrected / superseded / withdrawn** — prior value is no longer current;
+- **system error** — producer, resolver, validator, policy, or delivery failed.
+
+A missing or denied value must never be rendered as zero, healthy, or absent.
 
 [↑ back to top](#top)
 
@@ -275,25 +391,40 @@ Standard source ledger.
 
 ## 7. Integration with Atlas §24.11, dossiers, and `apps/`
 
-Each per-domain spec is a **three-way bridge**:
+The existing heading is retained for inbound compatibility. Its authority interpretation is updated.
 
-| Direction | What it consumes | What it produces |
-|:---|:---|:---|
-| **Up to Atlas §24.11** | The master indicator catalog (categories 24.11.1 – 24.11.5). | A statement of *which* §24.11 indicators apply to the domain and *why* the domain's healthy posture differs (if at all). |
-| **Sideways to `docs/domains/<domain>/`** | The dossier's `K.` validators, `M.` publication-correction-rollback context, `N.` verification backlog, `I.` sensitivity defaults. | A reference column in the spec table — the dossier supplies the *why* for each healthy posture. |
-| **Down to `apps/` & `runtime/`** | Nothing — the spec does not consume implementations. | The implementation pointer (§5 of the template) — tells the implementer which `apps/` path, telemetry adapter, schema, and policy bundle to wire up. |
+### 7.1 Atlas and dossier lineage
 
-### 7.1 Conflict resolution
+The KFM Domains Atlas and historical per-domain dossiers supplied the initial indicator and dashboard vocabulary. They remain design lineage and may identify useful review questions. They do not, by repetition or age, prove:
 
-| Conflict | Winner |
-|:---|:---|
-| Per-domain spec vs Atlas §24.11 indicator definition | **Atlas wins.** Propose a §24.11 amendment via ADR. |
-| Per-domain spec vs `docs/domains/<domain>/` dossier | **Dossier wins.** File a drift entry in `DRIFT_REGISTER.md`. |
-| Per-domain spec vs `apps/` actual implementation | **The implementation is the operational truth**, but the divergence is a **drift signal** — log it. Specs should never silently match implementations that violate doctrine. |
-| Per-domain spec vs `policy/` enforcement | **Policy wins.** A spec claiming an indicator measures a policy outcome must match the actual policy's `PolicyDecision` shape. |
+- current file placement or runtime implementation;
+- adopted indicator definitions or numeric thresholds;
+- current source rights, cadences, or endpoint behavior;
+- current policy, review, release, or publication state.
 
-> [!IMPORTANT]
-> Specs **describe**; doctrine **defines**; policy **enforces**; implementations **render**. When the specs in this folder forget that layering, parallel-authority drift follows.
+A child spec should cite current repository contracts, schemas, policies, validators, fixtures, tests, workflows, and emitted artifacts for current implementation claims. When source documents and implementation differ, record the difference explicitly instead of silently treating either as universal authority.
+
+### 7.2 Conflict and authority order
+
+| Conflict | Required treatment |
+|---|---|
+| Child spec versus accepted doctrine or ADR | Accepted authority controls; correct or hold the spec. |
+| Child spec versus domain semantic contract or schema | Meaning and shape remain in their owning roots; record and resolve drift. |
+| Child spec versus policy | Policy controls admissibility; the spec cannot weaken or reinterpret it. |
+| Child spec versus current implementation | Current bytes/tests/logs establish observed behavior, not automatic architectural legitimacy; record behavior and any governance conflict separately. |
+| Child spec versus catalog | Reconcile path, description, and status without turning the catalog into runtime authority. |
+| Atlas/dossier lineage versus current repository evidence | Use lineage for design history and current evidence for current implementation; preserve unresolved differences. |
+| Map or AI presentation versus EvidenceBundle | EvidenceBundle and governing release state outrank presentation. |
+
+### 7.3 Implementation relationship
+
+- `apps/` and `packages/` own executable UI and reusable implementation.
+- `runtime/` and `infra/` own runtime/operational concerns appropriate to their role.
+- Governed APIs mediate ordinary client access.
+- MapLibre renders approved carriers and interaction state; it does not query canonical truth directly.
+- Evidence Drawer surfaces support, limitations, source roles, time, policy, review, release, and correction state.
+- Governed AI may explain only the bounded evidence and state available to it; missing support produces a narrowed or finite negative outcome.
+- Documentation updates must accompany material behavior changes, but documentation cannot substitute for the change or its proof.
 
 [↑ back to top](#top)
 
@@ -303,36 +434,39 @@ Each per-domain spec is a **three-way bridge**:
 
 ```mermaid
 flowchart LR
-  ATLAS["Atlas §24.11<br/>Master Indicators<br/><i>indicator catalog</i>"]
-  DOSSIER["docs/domains/&lt;domain&gt;/<br/>Domain Dossier<br/><i>K. Validators · M. Pub/Correction · N. Backlog</i>"]
-  SPEC["docs/dashboards/domain/&lt;domain&gt;.md<br/><b>per-domain spec</b><br/><i>this folder</i>"]
-  POLICY["policy/&lt;scope&gt;/<br/><i>PolicyDecision emitter</i>"]
-  SCHEMA["schemas/contracts/v1/<br/><i>receipt shapes</i>"]
-  TELEMETRY["runtime/observability/<br/><i>telemetry adapter</i>"]
-  APP["apps/&lt;dashboard&gt;/<br/><b>implementation</b><br/><i>renders the dashboard</i>"]
-  USER([Reviewer / steward])
+  DOCS["Domain docs and semantic contracts"] --> DESIGN["Domain dashboard specification<br/>human design and boundary"]
+  SOURCES["Admitted source descriptors<br/>and source-role records"] --> EVIDENCE["EvidenceRef resolves to EvidenceBundle"]
+  RUNS["Validated runs, artifacts, telemetry,<br/>receipts, proofs, and corrections"] --> MEASURE["Metric producer and threshold profile<br/>NEEDS VERIFICATION per domain"]
+  EVIDENCE --> POLICY{"Rights, sensitivity, policy,<br/>review, and release allow?"}
+  POLICY -- "No / unresolved" --> NEGATIVE["ABSTAIN, DENY, HOLD,<br/>generalize, or ERROR"]
+  POLICY -- "Yes" --> API["Governed API or released carrier"]
+  API --> MEASURE
+  DESIGN -. "specifies expected contract" .-> MEASURE
+  MEASURE --> DASH["Dashboard projection<br/>panels, map, trends, finite states"]
+  DASH --> DRAWER["Evidence Drawer<br/>sources, limits, time, release, correction"]
+  DRAWER --> AI["Governed AI interpretation<br/>cite, narrow, abstain, deny, or error"]
+  CORRECT["Correction, withdrawal,<br/>rollback, recompile"] --> RUNS
+  CORRECT --> API
+  CORRECT --> DASH
 
-  ATLAS -- "indicator definitions" --> SPEC
-  DOSSIER -- "domain context · healthy posture" --> SPEC
-  SPEC -- "implementation pointer" --> APP
-  SPEC -. "names" .-> SCHEMA
-  SPEC -. "names" .-> POLICY
-  POLICY -- "emits PolicyDecision" --> TELEMETRY
-  SCHEMA -- "shapes receipts" --> TELEMETRY
-  TELEMETRY -- "signals" --> APP
-  APP --> USER
-
-  classDef doctrine fill:#d6eaf8,stroke:#21618c,color:#000,stroke-width:2px;
-  classDef spec fill:#fde2e2,stroke:#c0392b,color:#000,stroke-width:2px;
-  classDef machinery fill:#fcf3cf,stroke:#9a7d0a,color:#000;
-  classDef impl fill:#d5f5e3,stroke:#1e8449,color:#000;
-  class ATLAS,DOSSIER doctrine;
-  class SPEC spec;
-  class POLICY,SCHEMA,TELEMETRY machinery;
-  class APP impl;
+  classDef docs fill:#ddf4ff,stroke:#0969da,color:#24292f;
+  classDef trust fill:#ffebe9,stroke:#cf222e,color:#24292f;
+  classDef runtime fill:#fff8c5,stroke:#9a6700,color:#24292f;
+  classDef public fill:#dafbe1,stroke:#1a7f37,color:#24292f;
+  class DOCS,DESIGN docs;
+  class SOURCES,EVIDENCE,POLICY,NEGATIVE,CORRECT trust;
+  class RUNS,MEASURE,API runtime;
+  class DASH,DRAWER,AI public;
 ```
 
-*Doctrine (blue) drives specifications (red). Specifications point to implementations (green) and reference the machinery (yellow) that emits the signals. The reviewer reads the implementation, not the spec.*
+### 8.1 Flow invariants
+
+1. The specification does not create the source, EvidenceBundle, policy result, metric, or release.
+2. The metric producer does not decide rights, sensitivity, or public exposure.
+3. The dashboard does not infer a value when the producer returns no data, restriction, or error.
+4. The Evidence Drawer and AI projection do not reveal information withheld from the underlying public-safe carrier.
+5. Correction, withdrawal, and rollback must invalidate every affected derivative rather than merely updating dashboard prose.
+6. No loop promotes a dashboard or metric automatically; human/governed review remains separate.
 
 [↑ back to top](#top)
 
@@ -340,17 +474,52 @@ flowchart LR
 
 ## 9. Verification checklist
 
-Apply before merging a new per-domain spec or treating this folder as canonical.
+Apply the following checks to this README and to each material child-specification change.
 
-- [ ] Confirm target path `docs/dashboards/domain/<domain>.md` resolves under an accepted lane (OPEN-DASH-01).
-- [ ] Confirm each indicator referenced in the spec exists in Atlas §24.11 — or is labeled as a PROPOSED §24.11 amendment with an ADR pointer.
-- [ ] Confirm the spec's implementation pointer (§5 of template) resolves to a real `apps/` path or is honestly marked `UNKNOWN`.
-- [ ] Confirm the spec's receipt-shape references resolve to `schemas/contracts/v1/` paths or are marked `NEEDS VERIFICATION`.
-- [ ] Confirm the spec's policy-bundle references resolve to `policy/` paths or are marked `NEEDS VERIFICATION`.
-- [ ] Confirm no spec **redefines** a §24.11 indicator silently. Drift to Atlas → ADR.
-- [ ] Confirm domain dossier (`docs/domains/<domain>/`) has been consulted; healthy-posture values reflect dossier context.
-- [ ] Confirm owners (domain steward + governance-health steward + implementation owner) named in spec.
-- [ ] Confirm cross-reference back from `docs/domains/<domain>/README.md` to the spec (reciprocal linking).
+### 9.1 Repository and placement
+
+- [ ] Pin current `main`, target blob, catalog blob, and overlapping pull requests or branches.
+- [ ] Confirm same-path maintenance or record a reviewed `PLACE`, `SPLIT`, `MIGRATE`, `MIRROR`, `HOLD`, or `DENY` result.
+- [ ] Confirm the child filename and catalog row resolve with exact case.
+- [ ] Do not create a parallel dashboard, contract, schema, policy, source, registry, receipt, proof, or release home.
+- [ ] Reconcile parent/category counts when the file inventory changes; disclose inherited drift when it is out of scope.
+
+### 9.2 Documentation structure
+
+- [ ] Exactly one complete `KFM_META_BLOCK_V2`, one H1, and one stable `top` anchor.
+- [ ] Required metadata fields use the bounded top-level scalar/list profile; no unsupported nested mappings.
+- [ ] Existing stable headings, explicit anchors, and inbound fragments are preserved or migrated deliberately.
+- [ ] Tables and code fences are balanced; relative links and local fragments resolve.
+- [ ] UTF-8/LF, final newline, no tabs, no trailing whitespace, and `git diff --check`.
+- [ ] AI-authored files have one schema-valid, hash-exact generated receipt with human review pending.
+
+### 9.3 Measurement and trust boundary
+
+- [ ] Every indicator states purpose, population, computation, unit, dimensions, spatial/temporal support, source roles, uncertainty, and no-data behavior.
+- [ ] Numeric thresholds and cadences point to a versioned adopted profile or remain explicitly proposed.
+- [ ] Fixture-only, synthetic, local, or declaration-only evidence is not generalized into production or domain-wide health.
+- [ ] Source roles, observation/model/forecast/history distinctions, and claim strength remain visible.
+- [ ] Missing evidence, stale data, restriction, denial, review-pending state, correction, withdrawal, and system error are distinct.
+- [ ] Protected dimensions cannot leak through charts, maps, filters, URLs, exports, logs, accessibility text, caches, search, or AI context.
+- [ ] Public clients use governed interfaces or released public-safe carriers, not internal stores or direct model paths.
+- [ ] Correction and rollback behavior covers derived metrics, panels, maps, exports, caches, search, and generated summaries.
+
+### 9.4 Repository-owned bounded checks
+
+```bash
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --repo-root . \
+  --profile present \
+  docs/dashboards/domain/README.md
+
+python tools/validators/validate_generated_receipt.py \
+  data/receipts/generated/<receipt>.json \
+  --repo-root .
+
+git diff --check
+```
+
+These checks establish bounded structural and integrity results only. Hosted exact-head checks, domain review, sensitivity review, policy review, release review, and runtime proof remain separate evidence.
 
 [↑ back to top](#top)
 
@@ -358,16 +527,18 @@ Apply before merging a new per-domain spec or treating this folder as canonical.
 
 ## 10. Maintenance task list
 
-Gates / definition-of-done for keeping the folder healthy.
-
-- [ ] **Inventory sync.** §5.1 status column reflects actual files in this folder.
-- [ ] **Atlas §24.11 sync.** When Atlas §24.11 amends an indicator, every spec that references it is reviewed within one edition cycle.
-- [ ] **Dossier sync.** When `docs/domains/<domain>/` updates its `K.` / `M.` / `N.` sections, the corresponding dashboard spec is reviewed.
-- [ ] **Implementation drift watch.** When an `apps/<dashboard>/` implementation changes, the spec's implementation pointer is verified.
-- [ ] **Cross-domain promotion.** Indicators that prove broadly useful across multiple domain specs are surfaced as candidate §24.11 amendments.
-- [ ] **No redefinition.** Periodic check: no spec redefines a §24.11 indicator silently.
-- [ ] **Parallel-authority watch.** This folder does not grow non-spec content (no validator code, no schema definitions, no policy bundles).
-- [ ] **Owner roster updated.** Meta-block `owners:` reflects current docs steward + governance-health steward.
+- [ ] **Inventory parity.** Keep this thirteen-file inventory and the domain section of [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md) synchronized with the repository tree.
+- [ ] **Parent-count correction.** Reconcile the parent README's inherited 34/14 counts with the current 33/13 catalog and removed `domain/air/` path in a focused successor change.
+- [ ] **Child metadata convergence.** Bring child specs onto the bounded metadata profile when they are materially edited; do not perform formatting-only churn.
+- [ ] **Current-evidence refresh.** Reinspect domain docs, contracts, schemas, policies, fixtures, tests, workflows, and emitted objects before changing implementation status.
+- [ ] **Metric-contract closure.** Define or identify the owning contract/registry for measurement IDs, dimensions, threshold versions, finite states, and correction lineage.
+- [ ] **Runtime mapping.** Bind a child spec to exact producer/query/route/panel/test evidence before claiming implementation.
+- [ ] **Sensitive-domain review.** Require qualified review for archaeology, fauna, flora, people/DNA/land, settlements/infrastructure, and any other metric with harmful reconstruction risk.
+- [ ] **Source-currentness review.** Recheck external sources, terms, endpoints, cadences, and rights before live use; documentation lineage is not activation authority.
+- [ ] **No silent promotion.** A merge, green workflow, passing fixture, screenshot, badge, or generated receipt must not move a spec to released or public status.
+- [ ] **Correction propagation.** Re-review affected specs when a source, contract, schema, policy, EvidenceBundle, release, correction, or rollback object changes materially.
+- [ ] **Accessibility and anti-inference.** Test keyboard use, screen-reader state, non-color cues, table alternatives, small-cell disclosure, repeated-query differencing, and public-safe export.
+- [ ] **Review ownership.** Resolve actual domain, metric/observability, evidence, policy, sensitivity, UI, release/correction, and independent reviewer identities.
 
 [↑ back to top](#top)
 
@@ -375,16 +546,22 @@ Gates / definition-of-done for keeping the folder healthy.
 
 ## 11. Open questions & ADR cross-reference
 
-| # | Question | Class | Cross-reference |
-|:---|:---|:---|:---|
-| **OPEN-DASH-01** | Should `docs/dashboards/` exist as a lane? Or should dashboard specs live in `docs/domains/<domain>/dashboard.md` files (per-dossier), or in `docs/architecture/dashboards/`? | ADR-class | Directory Rules §2.4(5); §6.1 *(canonical `docs/` tree)*; parallels OPEN-BLOG-01. |
-| **OPEN-DASH-02** | Subfolder convention — `docs/dashboards/domain/<domain>.md` (flat per-domain files, current) vs `docs/dashboards/domain/<domain>/spec.md` (per-domain sub-folder)? | Naming class | Parallels OPEN-DR-02 *(`docs/runbooks/<domain>/` subfolder convention)*. |
-| **OPEN-DASH-03** | Where do **dashboard implementations** live? `apps/review-console/`, `apps/admin/`, a new `apps/dashboards/`, or scattered across feature apps? | Directory class | Directory Rules §7.1; relates to apps/web vs apps/explorer-web (OPEN-DR-06). |
-| **OPEN-DASH-04** | How does this folder relate to **telemetry contracts** in `schemas/contracts/v1/`? Does the dashboard spec reference an existing contract or does it surface a new one? | Contract class | Relates to §24.2 Receipt Catalog and `schemas/contracts/v1/` placement (ADR-S-03). |
-| **OPEN-DASH-05** | **Cross-domain dashboards** (Promotion gate status board, Drift Register Triage, AI surface health, Release/rollback timeline) — where do they live? `docs/dashboards/cross-domain/`, `docs/dashboards/system/`, or somewhere else? | Scoping class | Currently sibling of `domain/`; needs explicit sibling-README. |
-| **OPEN-DASH-06** | Should dashboard specs carry a **version** independent of the dossier edition, or follow the dossier? | Lifecycle class | Relates to Atlas v1.1 §24.8 (Stale-State & Supersession). |
-| **OPEN-DASH-07** | When a per-domain spec proposes a new indicator (not in Atlas §24.11), what is the **escalation path** — chapter file open item, candidate ADR, or both? | Process class | Relates to OPEN-BLOG-03 *(OPEN-XXX-NN lifecycle)*. |
-| **OPEN-DASH-08** | Should the **sensitive-domain** specs (fauna, flora, archaeology, people-dna-land, settlements-infrastructure) have stricter authoring controls — e.g., sensitivity-reviewer required on the PR? | Governance class | Relates to §24.5 *(T4 defaults)* and §24.7 *(Reviewer / SoD matrix)*. |
+| ID | Open question | Resolution mode |
+|---|---|---|
+| `OPEN-DASH-01` | Should the existing `docs/dashboards/` lane be formally admitted, migrated, split, or retained under a bounded compatibility decision? | Architecture / Directory Rules decision |
+| `OPEN-DASH-02` | Which machine authority owns dashboard measurement identity, field shape, dimensions, threshold versions, and lifecycle? | Contract/schema/registry decision |
+| `OPEN-DASH-03` | Which app and runtime surfaces actually implement domain dashboards, and what evidence is sufficient to claim parity? | Repository/runtime verification |
+| `OPEN-DASH-04` | How should the parent README's stale 34/14 inventory be corrected while preserving the removed air sensor-review lineage? | Focused documentation correction |
+| `OPEN-DASH-05` | Is Atlas §24.11 retained only as design lineage, or will a reviewed current indicator contract/registry supersede or formalize it? | Governance/documentation decision |
+| `OPEN-DASH-06` | What finite dashboard-state vocabulary is shared, and which states remain domain-specific projections? | Contract/policy/UI review |
+| `OPEN-DASH-07` | What source-role vocabulary and claim-strength rules are mandatory across every child spec? | Cross-domain semantic decision |
+| `OPEN-DASH-08` | Which dimensions, minimum cells, aggregation/generalization transforms, query budgets, and export rules prevent sensitive reconstruction without publishing control-defeating parameters? | Policy/sensitivity/security review |
+| `OPEN-DASH-09` | Who owns domain metrics, telemetry production, policy review, correction, release, and independent approval? | Stewardship decision |
+| `OPEN-DASH-10` | What exact negative fixtures and rollback/correction drills are required before any domain dashboard is treated as operational or public? | Test/release decision |
+| `OPEN-DASH-11` | How should dashboard metrics represent partial coverage, conflicting sources, source revisions, survey absence, and non-comparable vintages? | Domain/statistical review |
+| `OPEN-DASH-12` | Should domain dashboards remain flat files or eventually use a registered per-domain packet? No structural change is authorized here. | Architecture/migration decision |
+
+Accepted ADR-0029 establishes Directory Rules authority; it does **not** answer the dashboard-lane admission, measurement contract, runtime mapping, or sensitive-metric questions above. Any later decision must preserve source, evidence, policy, review, release, correction, and rollback separation.
 
 [↑ back to top](#top)
 
@@ -392,36 +569,45 @@ Gates / definition-of-done for keeping the folder healthy.
 
 ## 12. Evidence basis & citations
 
-<details>
-<summary><strong>Source ledger</strong></summary>
+### 12.1 Current-session repository evidence
 
-| Source | Status | Supports | Limits |
-|:---|:---|:---|:---|
-| Atlas v1.1 §24.11 — Master Governance Health Indicators (PDF, pp. 173–174) | CONFIRMED (manuscript) | §1 scope; §5.1 indicator categories; §6 template indicator-subset table. | Indicators labeled PROPOSED in source; instrumentation ownership is VB-11-08 NEEDS VERIFICATION. |
-| Atlas v1.1 §24.10 — Risk Register and Threat Posture | CONFIRMED (manuscript) | §5.1 sensitivity-emphasis for fauna, flora, archaeology, people-dna-land. | Risk severities are PROPOSED. |
-| Atlas v1.1 §G.7 VB-11-08 | CONFIRMED (manuscript) | §1 truth-posture statement that §24.11 instrumentation is NEEDS VERIFICATION. | Backlog item is open. |
-| `docs/doctrine/directory-rules.md` §6.1 (`docs/` tree) | CONFIRMED (prior-session authored) | §2 repo fit; OPEN-DASH-01 *(lane not in canonical tree)*. | `docs/dashboards/` does **not** appear in §6.1. |
-| `docs/doctrine/directory-rules.md` §2.4(5), §13.5 | CONFIRMED (prior-session authored) | §4 exclusions; parallel-authority caution; specification-lane framing. | Doctrinal anchor for "specifications, not authority." |
-| Atlas v1.0 ch. 3–18 (per-domain dossiers, `K.` / `M.` / `N.` sections) | CONFIRMED (manuscript) | §5.1 domain inventory; §7 dossier-as-context relationship. | Mounted-repo dossier presence NEEDS VERIFICATION. |
-| Pass 32 New Cards Register — KFM-P32-FEAT-0014 (Promotion gate status board) | CONFIRMED (corpus) | §11 OPEN-DASH-05 cross-domain dashboard examples. | Pass-card statements are PROPOSED. |
-| Pass 30 cards — KFM-P30-FEAT-0001 (PM Sensor Calibration Review Dashboard), KFM-P20-FEAT-0007 (Telemetry contract health dashboard) | CONFIRMED (corpus) | §1, §11 dashboard-as-specification precedent in the corpus. | Cards are PROPOSED; not implementation evidence. |
-| `docs/backlog/README.md` (prior-session authored) | CONFIRMED (prior-session authored) | §4 exclusion routing for backlog items; OPEN-DASH-01 paired-lane precedent. | Same parallel-authority pattern; same resolution model (pointer / specifications, not authority). |
+| Evidence surface | Confirmed result | Limit |
+|---|---|---|
+| `main@40f68c17b16cdc4219ea3d00756912f9fdb768b8` | Pinned current-main evidence snapshot for this modernization | Later main changes require reconciliation |
+| Prior target blob `fc18e269e8f674688ea580ac384ba46c40304840` | Existing v1 README, stable identity, H1, top anchor, headings, and Atlas-first design lineage | Its 2026-05 implementation and placement claims were stale |
+| [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md) blob `f86b42f7bc6fd28de78e98f06cf1f89cc5af7d4c` | 33 cataloged specs overall and thirteen domain rows | Cataloging does not prove runtime |
+| [`docs/dashboards/README.md`](../README.md) blob `c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3` | Parent boundary and placement hold | Its 34/14 inventory is stale relative to the current catalog/tree |
+| Current domain directory | README plus thirteen exact child spec paths; no nested `air/` lane | File presence does not prove semantic parity or implementation |
+| [Directory Rules v2](../../doctrine/directory-rules.md) blob `fd49a0b83e55cef52c1124281f093e263526898d` | `docs/` explanation authority, nested-lane boundary, finite placement outcomes | Does not admit sources, metrics, dashboards, or release |
+| [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted adoption of the pinned Directory Rules v2 bytes | Does not settle dashboard lane placement |
+| [`data/receipts/generated/README.md`](../../../data/receipts/generated/README.md) blob `5a67f8d743306799a014590ccb45fa9f1177f16a` | AI-authored artifact receipt requirement and non-authority boundary | Receipt is process memory, not approval or proof |
+| [Documentation metadata validator](../../../tools/validators/docs/meta-block/README.md) blob `25be64b52c6fe74fbe0c167f32ba878280b11f5c` | Bounded top-level metadata profile and changed-file ratchet | Structural QA does not establish truth or publication |
+| CODEOWNERS default route | Repository review routes to `@bartytime4life` | Routing is not domain, policy, sensitivity, release, or independent approval |
 
-</details>
+### 12.2 Child-document evidence boundary
 
-### 12.1 Citation key
+The thirteen child files were inspected for path presence and their current documentation posture through direct repository reads and the current catalog. Several record bounded synthetic validators, fixtures, workflows, or placeholder UI seams. Those are valid implementation facts only for the named profiles. No live source was fetched, no production metric was queried, no dashboard route was exercised, no policy evaluator was run, no release record was resolved, and no deployed panel or public endpoint was tested in this documentation change.
 
-| Tag | Refers to |
-|:---|:---|
-| `[ENCY]` | KFM Encyclopedia |
-| `[DIRRULES]` | Directory Rules |
-| `[ATLAS]` | KFM Domains Culmination Atlas (any edition) |
+### 12.3 Attached doctrine and prompt basis
+
+The repository update follows the supplied KFM implementation prompt's smallest coherent feature-branch, risk-proportionate validation, draft-PR, and non-publication boundaries. Attached architecture and atlas material informed terminology and design lineage only; current repository evidence controls current file and implementation claims.
+
+### 12.4 Evidence exclusions
+
+This README does not claim:
+
+- that every child specification is semantically correct, current, or mutually consistent;
+- that every repository-relative implementation pointer in a child spec resolves;
+- that a domain dashboard, metric producer, telemetry store, governed API response, map panel, or AI explanation is deployed;
+- that source rights, sensitivity transforms, policy decisions, review state, release state, correction propagation, or rollback execution are complete;
+- that the parent dashboard inventory has already been repaired;
+- that any child spec is released, public-safe, or KFM-published.
 
 > [!NOTE]
-> **Anti-collapse rule (reaffirmed).** A dashboard spec is one carrier of governance posture; the posture itself rests on the receipts, evidence bundles, policy decisions, and review records that the spec **points to**. Replacing those artifacts with the spec — or replacing the spec with the rendered dashboard — collapses the layering this entire folder exists to preserve.
+> **Anti-collapse rule reaffirmed.** A dashboard specification points to the evidence, policy, review, release, correction, and runtime objects needed to support a projection. It cannot replace them. The rendered dashboard is another downstream carrier and cannot replace the specification or the underlying trust objects.
 
 [↑ back to top](#top)
 
 ---
 
-<sub>Per-domain dashboard specifications. PROPOSED lane (`docs/dashboards/`) pending OPEN-DASH-01 ADR. **Specifications only — implementations live in `apps/`; indicator definitions live in Atlas §24.11; domain context lives in `docs/domains/<domain>/`.** Atlas v1.1 §24.11 wins on indicator conflicts; domain dossier wins on context conflicts.</sub>
+<sub>Domain dashboard specifications are human-readable, review-oriented projections. They do not create domain truth, source authority, metric authority, policy permission, runtime implementation, release state, deployment, or publication. Missing or unsafe support narrows, abstains, denies, holds, or errors rather than becoming a confident visualization.</sub>
