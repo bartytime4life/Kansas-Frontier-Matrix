@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.6
+version: v0.7
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -29,6 +29,7 @@ notes:
   - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
   - "This v0.5 refresh reconciles the People/DNA/Land row with current domain, contract, closed fixture-schema, policy-maturity, synthetic validation, workflow, Explorer boundary, and proof/release-hold evidence without claiming real-person processing or a dashboard runtime."
   - "This v0.6 refresh reconciles the Hazards row with current doctrine, source-role and life-safety boundaries, deterministic synthetic USDM materiality validation, inactive policy, and proof/release/runtime holds without claiming live alerting, telemetry, or a dashboard runtime; it also preserves the v0.5 People/DNA/Land and current Settlements/Infrastructure catalog work already present on main."
+  - "This v0.7 refresh reconciles the Hydrology row with current semantic contracts, mixed schema maturity, bounded Evidence Drawer convergence, the manifest-backed synthetic fixture adapter, unbound policy scaffolds, Explorer/API placeholders, and proof/release holds without claiming a routed dashboard or production telemetry."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -134,7 +135,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 
 | Spec file | Documents | Source | Owner (PROPOSED) | Runs on (PROPOSED) | File presence | Runtime status |
 |---|---|---|---|---|---|---|
-| [`domain/hydrology.md`](domain/hydrology.md) | Per-domain instance of §24.11 for hydrology: EvidenceRef resolution, rollback coverage, correction lead time, derivative invalidation, documentation drift. | Atlas v1.1 §24.11.1 / §24.11.2 / §24.11.5 | Hydrology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/hydrology.md`](domain/hydrology.md) | Repository-grounded Hydrology dashboard spec: source-role anti-collapse, EvidenceBundle closure, identity/crosswalk ambiguity, temporal/freshness and unit/datum integrity, public-safe geometry, correction/rollback, bounded Evidence Drawer and fixture-resolver proof, and explicit proof/release holds; no routed dashboard or production telemetry is verified. | Current Hydrology docs, 25 semantic contracts, mixed schema lane, bounded Evidence Drawer validator/test/workflow, manifest-backed synthetic resolver adapter, domain workflow, unbound policy scaffolds, Explorer placeholder layer, and proposed Atlas §24.11.1 / §24.11.2 / §24.11.5 | `@bartytime4life` review route; Hydrology, evidence/source, scientific/regulatory, policy, metric/UI, release/correction, and independent stewards NEEDS VERIFICATION | Explorer shared Evidence Drawer seam exists; Hydrology layer adapter is placeholder; dashboard/API route, metric producer, telemetry, release, deployment, and publication UNKNOWN | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/soil.md`](domain/soil.md) | Per-domain instance of §24.11 for soil: evidence resolution, source-role drift, taxonomy-edition skew, MUKEY stability. | Atlas v1.1 §24.11.1 / §24.11.5 | Soil domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/habitat.md`](domain/habitat.md) | Repository-grounded Habitat dashboard spec: evidence/source-role posture, model/observation separation, public-safe joins, finite states, and correction boundaries. | Current Habitat docs, contracts, schemas, synthetic validators/fixtures, workflows, and Explorer placeholder files | `@bartytime4life` review route; Habitat, metric, and sensitivity stewards NEEDS VERIFICATION | Explorer Habitat files are placeholders; no verified dashboard route, metric producer, telemetry feed, or deployed panel | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/fauna.md`](domain/fauna.md) | Fauna evidence, sensitivity, source-role, public-safe transform, EvidenceBundle, tile-field, proof/release-hold, and correction posture; routed dashboard and production telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, and workflows; proposed Atlas §24.11.1 / §24.11.3 | Fauna steward · Sensitivity reviewer · Governance-health steward (identities unverified) | `apps/explorer-web/` Evidence Drawer seam; dashboard route and telemetry UNKNOWN | CONFIRMED | PROPOSED |
@@ -217,4 +218,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.6 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.7 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
