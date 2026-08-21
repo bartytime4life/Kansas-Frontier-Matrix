@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.3
+version: v0.4
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -25,7 +25,8 @@ tags: [kfm, docs, dashboards, catalog, index, governance-health, observability]
 notes:
   - "Every dashboard spec under docs/dashboards/ MUST appear in this catalog."
   - "Spec-file presence is separate from running-surface verification."
-  - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
+  - "v0.3 recorded 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and repaired a malformed evidence row."
+  - "v0.4 retains the 33-spec inventory and reconciles the Agriculture row with its repository-grounded specification without asserting a running surface."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -86,7 +87,7 @@ notes:
 | `docs/dashboards/DASHBOARD_CATALOG.md` exists in the accessible repo. | CONFIRMED | Direct fetch of current catalog. |
 | `docs/dashboards/README.md` says `docs/dashboards/` is a proposed documentation surface, not the running dashboard implementation. | CONFIRMED | Direct fetch of dashboard README. |
 | Category READMEs exist for governance, operational, domain, and observability. | CONFIRMED | Direct fetch/search of category README files. |
-| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@51d45e45a56d19961a3014009b80c2c94b1107ee` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
+| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@977bd5219b2002bab647792606c862ebc3b6bd85` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
 | Running dashboard surfaces exist and read the named receipts. | NEEDS VERIFICATION | No running app, telemetry stack, receipt source, or validator output was inspected here. |
 | `docs/dashboards/` is canonical placement under Directory Rules. | PROPOSED / NEEDS VERIFICATION | Dashboard README records placement drift / ADR need; this catalog does not resolve it. |
 
@@ -136,7 +137,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 | [`domain/habitat.md`](domain/habitat.md) | Repository-grounded Habitat dashboard spec: evidence/source-role posture, model/observation separation, public-safe joins, finite states, and correction boundaries. | Current Habitat docs, contracts, schemas, synthetic validators/fixtures, workflows, and Explorer placeholder files | `@bartytime4life` review route; Habitat, metric, and sensitivity stewards NEEDS VERIFICATION | Explorer Habitat files are placeholders; no verified dashboard route, metric producer, telemetry feed, or deployed panel | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/fauna.md`](domain/fauna.md) | Fauna evidence, sensitivity, source-role, public-safe transform, EvidenceBundle, tile-field, proof/release-hold, and correction posture; routed dashboard and production telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, and workflows; proposed Atlas §24.11.1 / §24.11.3 | Fauna steward · Sensitivity reviewer · Governance-health steward (identities unverified) | `apps/explorer-web/` Evidence Drawer seam; dashboard route and telemetry UNKNOWN | CONFIRMED | PROPOSED |
 | [`domain/flora.md`](domain/flora.md) | Per-domain instance of §24.11 for flora (T4 defaults for poaching-vulnerable taxa): fail-closed, voucher coverage, poaching-pattern audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Flora domain steward · Sensitivity reviewer · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/agriculture.md`](domain/agriculture.md) | Per-domain instance of §24.11 for agriculture: evidence resolution, NASS suppression-rule compliance, CDL taxonomy skew, irrigation classification confidence. | Atlas v1.1 §24.11.1 / §24.11.5 | Agriculture domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/agriculture.md`](domain/agriculture.md) | Agriculture evidence resolution, source admission/role preservation, withheld-state continuity, temporal and class-map version pins, modeled-product disclosure, sensitive-join denial, correction, and implementation drift; runtime and policy binding remain unverified. | Current repository source, contract, schema, policy, test, and workflow surfaces; proposed Atlas v1.1 §24.11.1 / §24.11.3 / §24.11.5 | Agriculture steward · Source/rights steward · Privacy/sensitivity reviewer | `apps/review-console/` candidate; route UNKNOWN | CONFIRMED | PROPOSED |
 | [`domain/geology.md`](domain/geology.md) | Per-domain instance of §24.11 for geology / natural resources: source breadth, stratigraphic canonicalization, well-record identifiability gate. | Atlas v1.1 §24.11.1 | Geology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/atmosphere.md`](domain/atmosphere.md) | Atmosphere evidence, observed/model separation, finite outcomes, fixture-only PM trust dimensions, correction, and governed-AI posture; complete route and telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, plus proposed Atlas §24.11.1 / §24.11.4 | Atmosphere steward · UI steward · Evidence steward | `apps/explorer-web/` Evidence Drawer seam; review-console route UNKNOWN | CONFIRMED | PROPOSED |
 | [`domain/hazards.md`](domain/hazards.md) | Per-domain instance of §24.11 for hazards: rollback coverage, correction lead time, alert-authority DENY rate, derivative invalidation cascade. | Atlas v1.1 §24.11.2 / §24.11.1 | Hazards domain steward · Release steward | `apps/review-console/` | CONFIRMED | PROPOSED |
@@ -200,13 +201,13 @@ Vocabulary for the **File presence** column:
 
 ## 8. Open questions
 
-- [ ] **CAT-OQ-01 — Catalog completeness CI.** Add a check that every `.md` under `docs/dashboards/{governance,operational,domain,observability}/` has a row here, excluding folder READMEs unless the policy explicitly requires README rows.
-- [ ] **CAT-OQ-02 — Running-surface verification.** Confirm each "Runs on" value against mounted-repo state, receipts read, telemetry source, access control, and UI/API route.
+- [ ] **CAT-OQ-01 — Catalog completeness CI.** Add a check that every `.md` under `docs/dashboards/{governance,operational,domain,observability}/` has a row here, excluding folder READMEs unless policy requires them.
+- [ ] **CAT-OQ-02 — Running-surface verification.** Confirm each "Runs on" value against implementation state, receipts, telemetry, access control, and UI/API route.
 - [ ] **CAT-OQ-03 — Owner reconciliation.** Resolve every PROPOSED owner against steward assignments before review.
-- [ ] **CAT-OQ-04 — Placement drift / ADR.** Decide whether `docs/dashboards/` is canonicalized in Directory Rules, merged into `docs/reports/`, mirrored in `control_plane/`, or renamed/migrated.
-- [ ] **CAT-OQ-05 — Observability expansion reconciliation.** Reconcile the older one-card observability README inventory with the 11 observed observability spec files cataloged here.
-- [ ] **CAT-OQ-06 — OpenTelemetry duplicate naming.** Choose one canonical OpenTelemetry stack spec path and mark the other `SUPERSEDED`, `RETIRED`, or migrated via `git mv`.
-- [ ] **CAT-OQ-07 — Runtime proof contract.** Define what evidence is sufficient to move a dashboard from `PROPOSED` to `CONFIRMED`: route, panel config, fixture, receipt source, policy gate, access test, screenshot/artifact, and rollback path.
+- [ ] **CAT-OQ-04 — Placement drift / ADR.** Decide whether `docs/dashboards/` is canonicalized, merged into `docs/reports/`, mirrored in `control_plane/`, or migrated.
+- [ ] **CAT-OQ-05 — Observability expansion reconciliation.** Reconcile the older one-card observability README inventory with the 11 observed specifications.
+- [ ] **CAT-OQ-06 — OpenTelemetry duplicate naming.** Choose one canonical OpenTelemetry stack path and record supersession/migration.
+- [ ] **CAT-OQ-07 — Runtime proof contract.** Define evidence sufficient to move a dashboard from `PROPOSED` to `CONFIRMED`.
 
 [↑ back to top](#dashboard-catalog--docsdashboardsdashboard_catalogmd)
 
@@ -214,4 +215,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.3 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.4 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
