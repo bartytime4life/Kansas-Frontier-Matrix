@@ -1,0 +1,183 @@
+{
+  "receipt_id": "genrec-atmosphere-dashboard-spec-39f021f9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/atmosphere.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/atmosphere.md": "sha256:c2157f2134570ee548082018a5e68d7ac03588dcaa21b8833bd4902e5790f333"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current repository file, branch, pull-request, and workflow inspection",
+      "local deterministic Markdown, YAML, link, anchor, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260820-020439).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/domain/atmosphere.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/domain/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/dashboards/INDICATOR_CATALOG.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/domains/atmosphere/OBSERVED_MODELED_SEPARATION.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:contracts/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:schemas/contracts/v1/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:policy/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:fixtures/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:tests/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:tools/validators/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:.github/workflows/domain-atmosphere.yml@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:apps/review-console/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:apps/explorer-web/src/features/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:control_plane/domain_lane_register.yaml@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:.github/CODEOWNERS@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/doctrine/directory-rules.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@51d45e45a56d19961a3014009b80c2c94b1107ee",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/atmosphere.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main and inspected the complete target, parent dashboard boundary and catalogs, accepted ADR-0029 and Directory Rules v2, CODEOWNERS, Atmosphere domain/contract/schema/policy/fixture/test/workflow surfaces, implementation boundaries, exact-target open PRs, task branches, and the absent former PM-sensor dashboard sub-spec."
+    },
+    {
+      "gate": "same-path-directory-boundary",
+      "outcome": "PASS",
+      "reason": "The change updates the existing docs/dashboards/domain/atmosphere.md path under the docs responsibility root while retaining the parent dashboards lane placement HOLD; it creates no new documentation, schema, policy, evidence, release, or runtime authority."
+    },
+    {
+      "gate": "metadata-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "Exact remote blob 1533d88d24cc7bdf1cfaaa29de467e4dd456c98d was reconstructed and verified byte-for-byte through its Git blob identity; KFM_META_BLOCK_V2 parses as YAML; one H1, balanced fences, valid GFM parsing, UTF-8/LF, final newline, zero tabs, and zero trailing-whitespace lines pass."
+    },
+    {
+      "gate": "links-anchors-and-compatibility",
+      "outcome": "PASS",
+      "reason": "All internal fragments resolve, legacy section anchors remain available, all sixteen unique repository-relative targets were verified at the pinned base, and the broken live link to the deleted domain/air PM-sensor sub-spec was removed without restoring the deleted file."
+    },
+    {
+      "gate": "atmosphere-source-role-and-trust-boundary",
+      "outcome": "PASS",
+      "reason": "The specification keeps AQI separate from concentration, AOD from PM2.5, models from observations, low-cost sensors from reference-grade equivalence, and advisory context from official life-safety authority; it makes dashboard runtime and policy activation explicitly unverified."
+    },
+    {
+      "gate": "no-loss-modernization",
+      "outcome": "PASS",
+      "reason": "The prior domain scope, indicator subset, domain-specific indicators, ownership, implementation pointer, review cadence, open questions, and evidence sections remain represented through preserved legacy anchors, while stale implementation claims and the broken sub-spec reference are corrected."
+    },
+    {
+      "gate": "generated-receipt-json-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "This receipt is duplicate-free JSON, follows the current generated-receipt schema vocabulary, covers the sole AI-modified Markdown artifact, and binds exact remote SHA-256 c2157f2134570ee548082018a5e68d7ac03588dcaa21b8833bd4902e5790f333."
+    },
+    {
+      "gate": "repository-native-changed-area-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; hosted exact-head workflow results remain required for repository-native validation."
+    },
+    {
+      "gate": "runtime-dashboard-policy-release-and-publication",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no dashboard code, telemetry query, source activation, policy bundle, contract, schema, lifecycle data, release, deployment, publication, or public behavior is changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks started after draft PR #3195 opened; their exact-head conclusions are evaluated separately from authoring and provenance."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; generated provenance is not approval, release, deployment, publication, or merge authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/atmosphere.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "dashboard-parent-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "indicator-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/INDICATOR_CATALOG.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "atmosphere-domain-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "atmosphere-workflow-proof",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-atmosphere.yml@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "policy-inactive-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/atmosphere/README.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "directory-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@51d45e45a56d19961a3014009b80c2c94b1107ee"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T14:22:08Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 3195,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path repository-grounded modernization of the Atmosphere dashboard specification plus this provenance receipt. The update replaces stale planning-only claims with current bounded repository evidence, preserves the dashboard-lane placement HOLD, records fixture-first Atmosphere proof without inflating it into live runtime or policy maturity, removes the broken live reference to the deleted PM-sensor dashboard sub-spec, preserves legacy section anchors, and leaves contracts, schemas, policy, sources, runtime, release, deployment, publication, and repository settings unchanged. The artifact digest is bound to remote Git blob 1533d88d24cc7bdf1cfaaa29de467e4dd456c98d at PR #3195 head lineage."
+}
