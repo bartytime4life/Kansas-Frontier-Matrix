@@ -3,13 +3,11 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/dashboards/domain/atmosphere.md",
-    "docs/dashboards/DASHBOARD_CATALOG.md",
-    "contracts/domains/atmosphere/pm_sensor_trust_profile.md"
+    "docs/dashboards/DASHBOARD_CATALOG.md"
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/atmosphere.md": "sha256:720bb8dd3c7003aabbf5845c9a468ee4b2fed48f41a548bfb495fca8623515b9",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:de84669146815d060942b422b101772ceb4d7cf069742f29b58607c267ac75b7",
-    "contracts/domains/atmosphere/pm_sensor_trust_profile.md": "sha256:48b3d205348775529ee9885952dc212ded375540c7495b4db3ad27b6b36ba87f"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:de84669146815d060942b422b101772ceb4d7cf069742f29b58607c267ac75b7"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -58,8 +56,7 @@
   },
   "truth_labels": {
     "docs/dashboards/domain/atmosphere.md": "PROPOSED",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED",
-    "contracts/domains/atmosphere/pm_sensor_trust_profile.md": "PROPOSED"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -70,12 +67,12 @@
     {
       "gate": "directory-rules-placement-and-authority-boundary",
       "outcome": "PASS",
-      "reason": "Accepted ADR-0029 pins the current Directory Rules authority. The slice keeps three tracked canonical-looking files at their existing paths, repairs active references, adds only the required generated authoring receipt, and does not use the proposed dashboard lane as authority for a structural migration."
+      "reason": "Accepted ADR-0029 pins the current Directory Rules authority. The slice keeps two tracked canonical-looking documentation files at their existing paths, repairs the catalog reference, adds only the required generated authoring receipt, and does not use the proposed dashboard lane as authority for a structural migration."
     },
     {
       "gate": "repository-state-and-direct-dependency-reconciliation",
       "outcome": "PASS",
-      "reason": "Reconciled the complete dashboard spec against current Atmosphere contracts, schemas, policy, validators, tests, Explorer feature bytes, and PR #3188. Removed stale runtime and telemetry claims, retained visible unknowns, repaired the two active references to the deleted PM dashboard, and left the historical receipt reference immutable."
+      "reason": "Reconciled the complete dashboard spec against current Atmosphere contracts, schemas, policy, validators, tests, Explorer feature bytes, and PR #3188. Removed stale runtime and telemetry claims, retained visible unknowns, and repaired the catalog reference to the deleted PM dashboard. The current trust-profile link remains a disclosed follow-up because changing that contract requires a separate immutable-receipt and workflow migration."
     },
     {
       "gate": "dashboard-catalog-tree-inventory",
@@ -85,12 +82,12 @@
     {
       "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-secret-check",
       "outcome": "PASS",
-      "reason": "Atmosphere spec: 20,830 UTF-8 bytes, 272 lines, one H1, one KFM Meta Block, explicit compatibility anchors, balanced fences, valid GitHub alerts, consistent tables, 55 Markdown links with no unresolved repository destination, no tabs or trailing whitespace, final newline, and no secret-like pattern. Catalog and trust-profile companion edits pass the same changed-area structural, table, link, whitespace, and secret checks."
+      "reason": "Atmosphere spec: 20,830 UTF-8 bytes, 272 lines, one H1, one KFM Meta Block, explicit compatibility anchors, balanced fences, valid GitHub alerts, consistent tables, 55 Markdown links with no unresolved repository destination, no tabs or trailing whitespace, final newline, and no secret-like pattern. The catalog companion edit passes the same changed-area structural, table, link, whitespace, and secret checks."
     },
     {
       "gate": "prepared-artifact-sha256-binding",
       "outcome": "PASS",
-      "reason": "The exact prepared UTF-8 bytes bind to SHA-256 720bb8dd3c7003aabbf5845c9a468ee4b2fed48f41a548bfb495fca8623515b9, de84669146815d060942b422b101772ceb4d7cf069742f29b58607c267ac75b7, and 48b3d205348775529ee9885952dc212ded375540c7495b4db3ad27b6b36ba87f for the primary spec, catalog, and contract respectively."
+      "reason": "The exact prepared UTF-8 bytes bind to SHA-256 720bb8dd3c7003aabbf5845c9a468ee4b2fed48f41a548bfb495fca8623515b9 and de84669146815d060942b422b101772ceb4d7cf069742f29b58607c267ac75b7 for the primary spec and catalog respectively."
     },
     {
       "gate": "generated-receipt-shape-and-cross-field-check",
@@ -100,12 +97,12 @@
     {
       "gate": "workflow-trigger-safety-preflight",
       "outcome": "PASS",
-      "reason": "Applicable documentation, Atmosphere, PM-trust, contract, validator-suite, link, and release-dry-run workflows use read-only pull-request execution and declare validation or dry-run boundaries. The only pull_request_target workflow is repository-control, which fetches trusted-base validator bytes, has read-only contents/issues/pull-request permissions, and does not execute head code."
+      "reason": "Applicable documentation, Atmosphere, validator-suite, link, and release-dry-run workflows use read-only pull-request execution and declare validation or dry-run boundaries. The only pull_request_target workflow is repository-control, which fetches trusted-base validator bytes, has read-only contents/issues/pull-request permissions, and does not execute head code."
     },
     {
-      "gate": "focused-pm-trust-validator-execution",
+      "gate": "pm-trust-packet-change",
       "outcome": "SKIPPED",
-      "reason": "The contract change repairs documentation lineage only and does not change schema, validator, fixtures, tests, or assessment behavior. Focused no-network tests are left to the exact-head hosted domain workflow."
+      "reason": "The final slice leaves the PM trust contract, schema, fixtures, validator, tests, workflow, and historical receipt byte-identical. Its stale dashboard link is disclosed for a separate receipt-preserving migration."
     },
     {
       "gate": "remote-artifact-hash-readback",
@@ -125,7 +122,7 @@
     {
       "gate": "runtime-release-deployment-and-publication-non-effects",
       "outcome": "PASS",
-      "reason": "The slice changes one dashboard specification, its catalog inventory row/count, one active contract documentation link/version, and this authoring receipt. It does not activate a source, change PM trust behavior, create telemetry or a dashboard route, decide policy, release, deploy, promote, publish, merge, or change repository settings."
+      "reason": "The slice changes one dashboard specification, its catalog inventory row/count, and this authoring receipt. It does not change the PM trust packet, activate a source, create telemetry or a dashboard route, decide policy, release, deploy, promote, publish, merge, or change repository settings."
     }
   ],
   "policy_decisions": [],
@@ -216,5 +213,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Same-path Atmosphere dashboard modernization with direct catalog and PM-trust documentation reconciliation. Historical authoring receipts remain immutable. This receipt records AI authoring provenance only; live source admission, scientific fitness, evidence resolution, policy approval, runtime implementation, source activation, alert authority, release, deployment, publication, review approval, merge, and repository settings remain outside the change."
+  "notes": "Same-path Atmosphere dashboard modernization with direct catalog reconciliation. The current PM trust contract still links the deleted dashboard path; changing it is deferred because its workflow validates an immutable historical receipt that binds the contract bytes. Historical authoring receipts remain immutable. This receipt records AI authoring provenance only; live source admission, scientific fitness, evidence resolution, policy approval, runtime implementation, source activation, alert authority, release, deployment, publication, review approval, merge, and repository settings remain outside the change."
 }
