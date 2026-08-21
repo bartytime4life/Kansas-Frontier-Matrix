@@ -95,6 +95,11 @@
       "reason": "The receipt parses as JSON; artifact_paths, artifact_hashes, and truth_labels have identical keys; the artifact SHA-256 was recomputed; and the receipt is excluded from its own artifact map to avoid recursive self-hashing."
     },
     {
+      "gate": "draft-2020-12-generated-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The available local Python runtime does not provide the declared jsonschema dependency. No dependency was installed for this bounded no-network documentation slice; hosted or reviewer-side schema validation remains pending."
+    },
+    {
       "gate": "hosted-exact-head-workflows",
       "outcome": "SKIPPED",
       "reason": "Hosted pull-request workflow results do not exist until the receipt commit and draft pull request are created. Workflow definitions are read-only for this change; their eventual results will be reported separately."
