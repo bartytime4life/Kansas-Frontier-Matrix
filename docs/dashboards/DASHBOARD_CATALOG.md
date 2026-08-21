@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.4
+version: v0.5
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -27,6 +27,7 @@ notes:
   - "Spec-file presence is separate from running-surface verification."
   - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
   - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
+  - "This v0.5 refresh reconciles the Hazards row with current doctrine, source-role and life-safety boundaries, deterministic synthetic USDM materiality validation, inactive policy, and proof/release/runtime holds without claiming live alerting, telemetry, or a dashboard runtime."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -140,7 +141,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 | [`domain/agriculture.md`](domain/agriculture.md) | Per-domain instance of §24.11 for agriculture: evidence resolution, NASS suppression-rule compliance, CDL taxonomy skew, irrigation classification confidence. | Atlas v1.1 §24.11.1 / §24.11.5 | Agriculture domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/geology.md`](domain/geology.md) | Per-domain instance of §24.11 for geology / natural resources: source breadth, stratigraphic canonicalization, well-record identifiability gate. | Atlas v1.1 §24.11.1 | Geology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/atmosphere.md`](domain/atmosphere.md) | Atmosphere evidence, observed/model separation, finite outcomes, fixture-only PM trust dimensions, correction, and governed-AI posture; complete route and telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, plus proposed Atlas §24.11.1 / §24.11.4 | Atmosphere steward · UI steward · Evidence steward | `apps/explorer-web/` Evidence Drawer seam; review-console route UNKNOWN | CONFIRMED | PROPOSED |
-| [`domain/hazards.md`](domain/hazards.md) | Per-domain instance of §24.11 for hazards: rollback coverage, correction lead time, alert-authority DENY rate, derivative invalidation cascade. | Atlas v1.1 §24.11.2 / §24.11.1 | Hazards domain steward · Release steward | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/hazards.md`](domain/hazards.md) | Repository-grounded Hazards dashboard spec: life-safety denial and official referral, source-role/object-family anti-collapse, time/freshness/expiry, bounded synthetic USDM materiality validation, finite states, and evidence/policy/release/correction/rollback posture; running metrics remain unverified. | Current Hazards doctrine, contracts, schemas, source/policy inventories, deterministic USDM validator/fixtures/tests/workflow; proposed Atlas §24.11.1 / §24.11.2 / §24.11.3 / §24.11.5 | `@bartytime4life` review route; Hazards, public-safety, metric/observability, evidence, policy, and release/correction/rollback stewards NEEDS VERIFICATION | `apps/review-console/` and Explorer Hazards README are proposed seams; no verified Hazards dashboard route, metric producer, telemetry feed, or deployed panel | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/roads-rail-trade.md`](domain/roads-rail-trade.md) | Per-domain instance of §24.11 for roads / rail / trade routes: source breadth, functional-class canonicalization, historical-corpus edition pinning; rolls up transit SLOs. | Atlas v1.1 §24.11.1 / §24.11.5 | Roads-rail-trade domain steward · Source steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/settlements-infrastructure.md`](domain/settlements-infrastructure.md) | Per-domain instance of §24.11 for settlements / infrastructure (critical-asset T4): fail-closed gate, redaction coverage, rollback coverage, service-area cascade. | Atlas v1.1 §24.11.3 / §24.11.2 | Settlements-infrastructure domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/archaeology.md`](domain/archaeology.md) | Per-domain instance of §24.11 for archaeology / cultural heritage (T4 defaults, sovereignty): sovereignty review presence, NAGPRA-flag completeness, side-channel audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Archaeology domain steward · Sensitivity reviewer · Sovereignty rep | `apps/review-console/` | CONFIRMED | PROPOSED |
@@ -215,4 +216,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.4 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.5 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
