@@ -42,10 +42,11 @@ evidence_snapshot:
   focus_mode_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
   county_lane_readme_blob: 48621badd51614db7bff0882c19096fa388234ac
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0027_blob: 4dfb29c963cd5665d3cb97f98be82212d5e08
+  adr_0027_blob: 4dfb29c963cd5662265d3cb97f98be82212d5e08
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
   focus_schema_readme_blob: 2b75990b53dea2841c28410f0d9dc9fb10a60f33
+  focus_policy_readme_blob: 35001e958a6b51d2f22004d5e637d72baeab49af
 inspection_boundary: >-
   Current-session GitHub reads covered the complete prior README, complete
   Atchison County build plan, current county index, parent Focus Mode
@@ -67,6 +68,7 @@ related:
   - contracts/focus_mode/focus_mode_payload.md
   - schemas/contracts/v1/focus/README.md
   - policy/focus/README.md
+  - tools/validators/validate_focus_mode_index.py
 tags: [kfm, focus-mode, atchison-county, planning, missouri-river, floodplain, evidence, public-safety, compatibility, non-publication]
 notes:
   - "v1.0 replaces a brief orientation with a same-path, repository-grounded lane README."
@@ -224,7 +226,7 @@ An Atchison County public result must remain downstream of the governed KFM path
 | [`FocusModePayload` semantic contract](../../../../contracts/focus_mode/focus_mode_payload.md) | Present; `PROPOSED` semantic contract | A county plan is not a governed payload, and semantic prose does not prove machine closure |
 | [Focus schema-family README](../../../../schemas/contracts/v1/focus/README.md) | Present; mixed permissive scaffolds and compatibility alias; ownership overlap recorded | Schema path presence does not prove field completeness, admission, or public safety |
 | [Focus policy boundary](../../../../policy/focus/README.md) | Present; scaffold-only and explicitly inactive | No Focus policy bundle, evaluator binding, or end-to-end enforcement is inferred |
-| County index validator | Present in the repository, but not executed in this change | File presence is not a validator result, and current county-tree compatibility remains bounded |
+| [County index validator](../../../../tools/validators/validate_focus_mode_index.py) | Present in the repository, but not executed in this change | File presence is not a validator result, and current county-tree compatibility remains bounded |
 | Atchison build plan | Present and substantial | Planning depth does not establish source, evidence, policy, runtime, or release maturity |
 
 ### Readiness ledger
@@ -294,6 +296,7 @@ This README does not authorize that follow-up; it states the dependency-closed b
 - [`FocusModePayload` semantic contract](../../../../contracts/focus_mode/focus_mode_payload.md)
 - [Focus schema-family index](../../../../schemas/contracts/v1/focus/README.md)
 - [Focus runtime policy boundary](../../../../policy/focus/README.md)
+- [County index validator](../../../../tools/validators/validate_focus_mode_index.py)
 
 ### Update triggers
 
