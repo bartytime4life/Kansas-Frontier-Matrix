@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - build/maplibre-6-4-0-integrity-2906
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -17,6 +20,8 @@ jobs:
   assemble:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
     steps:
       - name: Check out transfer commit
         uses: actions/checkout@v4
@@ -76,6 +81,8 @@ jobs:
 
       - name: Remove transfer-only material and commit assembled files
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           rm -rf .kfm-transfer/maplibre-dependency-gate
@@ -86,4 +93,5 @@ jobs:
           git add --all
           git diff --cached --check
           git commit -m 'build(maplibre): assemble verified dependency gate payload'
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:${TARGET_BRANCH}"
