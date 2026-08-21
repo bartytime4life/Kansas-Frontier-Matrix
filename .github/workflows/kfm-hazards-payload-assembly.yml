@@ -1,0 +1,61 @@
+name: Assemble Hazards dashboard PR payload
+
+on:
+  push:
+    branches:
+      - docs/ground-hazards-dashboard-20260821
+    paths:
+      - .kfm-transfer/hazards_payload.tar.bz2
+      - .github/workflows/kfm-hazards-payload-assembly.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .kfm-transfer/hazards_payload.tar.bz2
+      - .github/workflows/kfm-hazards-payload-assembly.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  assemble:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
+    steps:
+      - name: Clone the exact feature branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TARGET_BRANCH" \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+
+      - name: Extract, verify, and commit the governed documentation payload
+        working-directory: repo
+        run: |
+          set -euo pipefail
+
+          echo "f5da59e5323be88a61f8bbfce8b73ccdf938548e622dbc1c1320b4594a1613bc  .kfm-transfer/hazards_payload.tar.bz2" | sha256sum -c -
+          tar -xjf .kfm-transfer/hazards_payload.tar.bz2
+
+          cat <<'EOF' | sha256sum -c -
+          532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3  docs/dashboards/domain/hazards.md
+          85123361b373d42f718b4754f7161ccec9f1f34be38fa7a56fdcc14de5040b6f  docs/dashboards/DASHBOARD_CATALOG.md
+          7ddda6814eea45f357518cbd3c8f4f6d2b7055ca5eeba11b0b8821c1223198e7  data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+          EOF
+
+          git rm .kfm-transfer/hazards_payload.tar.bz2
+          git rm .github/workflows/kfm-hazards-payload-assembly.yml
+          git add \
+            docs/dashboards/domain/hazards.md \
+            docs/dashboards/DASHBOARD_CATALOG.md \
+            data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(dashboards): ground Hazards specification"
+          git push origin "HEAD:${TARGET_BRANCH}"
