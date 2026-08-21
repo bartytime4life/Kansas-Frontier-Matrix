@@ -37,7 +37,7 @@ related:
   - ../../../../contracts/policy/
   - ../../../../docs/architecture/ui/FOCUS_FLOW.md
   - ../../../../docs/architecture/governed-ai/README.md
-  - ../../../../docs/architecture/governed-api.md
+  - ../../../../docs/architecture/governed-api/README.md
   - ../../../../policy/focus/
   - ../../../../policy/ui/
   - ../../../../policy/runtime/

@@ -12,7 +12,7 @@ owning_root: contracts/
 responsibility: Define the semantic meaning and fail-closed validation boundary of a fixture-only renderer capability declaration behind the accepted adapter seam.
 truth_posture: PROPOSED source-grounded adaptation / CONFIRMED deterministic fixture validation / no renderer admission, runtime probe, release, deployment, or publication authority
 related:
-  - ../../docs/architecture/map-master.md
+  - ../../docs/architecture/map-master/README.md
   - ../../docs/architecture/maplibre-master.md
   - ../../docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ./view_registry_profile.md

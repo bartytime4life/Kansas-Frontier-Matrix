@@ -649,7 +649,7 @@ Before this README is promoted from `draft` to `published`:
 - [`docs/domains/README.md`](../README.md) — domain index and lane register *(PROPOSED link target)*
 - [`docs/domains/habitat/README.md`](../habitat/README.md) — Habitat lane (adjacent domain) *(PROPOSED link target)*
 - [`docs/domains/fauna/README.md`](../fauna/README.md) — Fauna lane (adjacent domain) *(PROPOSED link target)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — trust membrane, public path *(PROPOSED link target)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — trust membrane, public path *(PROPOSED link target)*
 - TODO — `docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED future companion)
 
 [↑ Back to top](#top)

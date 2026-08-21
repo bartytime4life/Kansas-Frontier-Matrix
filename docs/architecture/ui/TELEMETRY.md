@@ -34,7 +34,7 @@ related:
   - docs/architecture/ui/BOUNDARIES.md
   - docs/architecture/ui/STATE_OWNERSHIP.md
   - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/governed-ai/README.md
   - docs/adr/ADR-0016-telemetry-redaction-posture.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -580,7 +580,7 @@ No one gate may be inferred from another. A schema does not prove policy; policy
 | [`UI Boundaries`](./BOUNDARIES.md) | Browser trust membrane, current Explorer/Governed API evidence, and negative states |
 | [`State Ownership`](./STATE_OWNERSHIP.md) | UI state ownership and non-authority boundaries |
 | [`Map Runtime Boundary`](./MAP_RUNTIME_BOUNDARY.md) | Renderer/runtime seam and map-selection limits |
-| [`Governed API architecture`](../governed-api.md) | Dynamic trust-membrane architecture; route maturity must be verified separately |
+| [`Governed API architecture`](../governed-api/README.md) | Dynamic trust-membrane architecture; route maturity must be verified separately |
 | [`Governed AI README`](../governed-ai/README.md) | Focus/AI boundary, finite outcomes, and no prompt/model-output leakage |
 | [`ADR-0016`](../../adr/ADR-0016-telemetry-redaction-posture.md) | Proposed telemetry minimization and redaction decision; not accepted |
 | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted placement authority for the responsibility-root split |

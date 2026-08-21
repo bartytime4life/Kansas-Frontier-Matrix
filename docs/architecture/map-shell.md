@@ -39,7 +39,7 @@ related:
   - docs/architecture/TRUST_MEMBRANE.md
   - docs/architecture/ui/BOUNDARIES.md
   - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
-  - docs/architecture/map-master.md
+  - docs/architecture/map-master/README.md
   - docs/architecture/maplibre.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
@@ -161,7 +161,7 @@ Current executable bytes outrank older documentation when describing what the en
 | [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Says the default entrypoint is still the earlier minimal fail-closed composition | Treat as **STALE current-state prose**; retain its trust-boundary guidance |
 | [`ui/BOUNDARIES.md`](./ui/BOUNDARIES.md) | Evidence snapshot predates the new site composition | Treat as a strong boundary reference with **NEEDS VERIFICATION** current-state rows |
 | [`ui/MAP_RUNTIME_BOUNDARY.md`](./ui/MAP_RUNTIME_BOUNDARY.md) | Proposal-era routes, owners, paths, and “canonical” language predate current repository reconciliation | Treat as design lineage; ADR-0006 and current code remain controlling evidence for decision and implementation state |
-| [`map-master.md`](./map-master.md) and [`maplibre.md`](./maplibre.md) | Claim sole-renderer/Cesium disposition as settled and use a non-current package name | Treat those claims as proposal-era drift until their own repository-grounded updates |
+| [`map-master/README.md`](./map-master/README.md) and [`maplibre.md`](./maplibre.md) | Separate current lane navigation from proposal-era renderer and package claims | Use the folder README as the Map Master landing page; evaluate MapLibre implementation claims against current repository evidence |
 | Site catalog snapshot | Intentionally pins an earlier repository commit and a `6.4.0` readiness candidate | Descriptive snapshot only; not upstream currentness or dependency admission |
 
 This one-file update does not silently rewrite those siblings. Their reconciliation is follow-up documentation work with its own review and rollback boundary.
@@ -868,7 +868,7 @@ No. It is a descriptive, repository-pinned presentation catalog with conservativ
 - [UI boundaries](./ui/BOUNDARIES.md) — strong boundary reference; current-state snapshot predates site composition
 - [Map runtime boundary](./ui/MAP_RUNTIME_BOUNDARY.md) — proposal-era design companion; current implementation/decision state must be rechecked
 - [Trust membrane](./TRUST_MEMBRANE.md)
-- [Map-master](./map-master.md) and [MapLibre lane entry](./maplibre.md) — known proposal-era decision/path drift; separate modernization required
+- [Map Master landing page](./map-master/README.md) and [MapLibre lane entry](./maplibre.md) — current navigation with renderer-admission and implementation maturity still evaluated separately
 
 ### Validation and tests
 

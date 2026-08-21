@@ -38,7 +38,7 @@ related:
   - kfm://doc/docs/doctrine/lifecycle-law.md
   - kfm://doc/docs/doctrine/truth-posture.md
   - kfm://doc/docs/doctrine/trust-membrane.md
-  - kfm://doc/docs/architecture/governed-api.md
+  - kfm://doc/docs/architecture/governed-api/README.md
   - kfm://doc/docs/architecture/map-shell.md
   - kfm://doc/docs/architecture/maplibre-3d.md
   - kfm://doc/docs/architecture/contract-schema-policy-split.md
@@ -259,7 +259,7 @@ This is a `docs/`-scoped README. It explains what the agriculture **lane** is an
 
 - **Doctrine** — `docs/doctrine/` (lifecycle law, truth posture, trust membrane, authority ladder, directory rules)
 - **Operating contract** — `docs/doctrine/ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`)
-- **Architecture** — `docs/architecture/` (`governed-api.md`, `map-shell.md`, `maplibre-3d.md`, `contract-schema-policy-split.md`)
+- **Architecture** — `docs/architecture/` (`governed-api/README.md`, `map-shell.md`, `maplibre-3d.md`, `contract-schema-policy-split.md`)
 - **ADRs** — `docs/adr/` (notably **`ADR-0001`** schema home)
 - **Sibling domains** — `docs/domains/{soil,hydrology,atmosphere,hazards,people-dna-land,flora,frontier-matrix}/`
 
@@ -693,7 +693,7 @@ Open and track these in `docs/registers/VERIFICATION_BACKLOG.md`.
 
 **Architecture**
 
-- [`../../architecture/governed-api.md`](../../architecture/governed-api.md) — finite-outcome envelope *(PROPOSED)*
+- [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelope *(PROPOSED)*
 - [`../../architecture/map-shell.md`](../../architecture/map-shell.md) — MapLibre is downstream of trust *(PROPOSED)*
 - [`../../architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre 3D / globe / terrain doctrine *(PROPOSED)*
 - [`../../architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — meaning / shape / decision split *(PROPOSED)*
@@ -894,7 +894,7 @@ Terms used here that live in other lanes or in cross-cutting doctrine:
 | `OQ-AG-02` | What k-cell / county / HUC aggregation threshold parameters apply for the first credible thin slice? | Agriculture domain steward + Release authority | ADR specifying thresholds; record in `policy/domains/agriculture/aggregation.rego` |
 | `OQ-AG-03` | Where do `DroughtStressIndicator` and `PestStressIndicator` sit on the *indicator-vs-advisory* boundary? Required disclaimer wording? | Agriculture domain steward + Hazards steward | ADR; runbook for non-emergency disclaimer text |
 | `OQ-AG-04` | Are `NASS CDL`, `NASS QuickStats`, `Kansas Mesonet`, `NOAA USCRN`, `NRCS SCAN`, `NASA SMAP`, and `NASA HLS / HLS-VI` terms reviewed and recorded as `SourceDescriptor` entries? | Source steward + Rights reviewer | `data/registry/sources/agriculture/` review; rights documents archived under `data/registry/sources/<source>/rights/` |
-| `OQ-AG-05` | What is the canonical governed-API route table for agriculture (feature/detail, layer manifest, Evidence Drawer payload, Focus Mode)? | Architecture steward + Agriculture domain steward | `contracts/api/` route table; `docs/architecture/governed-api.md` |
+| `OQ-AG-05` | What is the canonical governed-API route table for agriculture (feature/detail, layer manifest, Evidence Drawer payload, Focus Mode)? | Architecture steward + Agriculture domain steward | `contracts/api/` route table; `docs/architecture/governed-api/README.md` |
 | `OQ-AG-06` | Does this lane's documentation tree (`overview.md`, `ubiquitous-language.md`, etc., §6) match the realized repo, or does it diverge? | Docs steward | Mounted-repo inspection; drift register entry if divergence found |
 | `OQ-AG-07` | Should `IrrigationLink` be defined here or move to `docs/domains/hydrology/` as a Hydrology-owned cross-lane object? | Agriculture domain steward + Hydrology domain steward | ADR; cross-lane contract under `contracts/cross-lane/` |
 | `OQ-AG-08` | What is the rollback drill cadence (annual? release-gated?) for the first credible thin slice? | Release authority + Agriculture domain steward | Runbook under `docs/runbooks/agriculture/`; entry in `release/rollback_cards/` |
@@ -974,7 +974,7 @@ This README is done enough to enter the repository at `docs/domains/agriculture/
 - Dossier: `KFM_Agriculture_Domain_Implementation_Dossier_REVISED_2026-04-21.pdf` (SRC-028) `[DOM-AG]`
 - Doctrine: `docs/doctrine/ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`)
 - Doctrine: `docs/doctrine/directory-rules.md` §12 (Domain Placement Law), §15 (README Contract)
-- Architecture: `docs/architecture/governed-api.md`, `docs/architecture/map-shell.md`, `docs/architecture/maplibre-3d.md`, `docs/architecture/contract-schema-policy-split.md`
+- Architecture: `docs/architecture/governed-api/README.md`, `docs/architecture/map-shell.md`, `docs/architecture/maplibre-3d.md`, `docs/architecture/contract-schema-policy-split.md`
 - Sibling lane READMEs: `docs/domains/{soil,hydrology,atmosphere,hazards,people-dna-land,flora,frontier-matrix}/README.md` *(PROPOSED)*
 
 <a id="last-updated"></a>**Last updated:** `2026-05-26` · **Lane README version:** `v2 (PROPOSED)` · **Doctrine basis:** Atlas v1.1 (2026-05-12) · **Operating contract:** v3.0 (`CONTRACT_VERSION = "3.0.0"`)

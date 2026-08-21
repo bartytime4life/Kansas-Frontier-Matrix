@@ -178,7 +178,7 @@ flowchart TD
 | [`map-master/RENDERER_BOUNDARY.md`](./map-master/RENDERER_BOUNDARY.md) | Renderer trust membrane and implementation boundary | `CONFIRMED current doc` |
 | [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposed single-import seam | `PROPOSED decision` |
 | [ADR-0007](../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | Proposed sole browser-renderer disposition | `PROPOSED decision` |
-| [`map-master.md`](./map-master.md) | Proposal-era lineage and abstract architecture material | `RETAINED lineage`; use `map-master/README.md` for the current lane index |
+| Former flat `map-master.md` | Proposal-era lineage and abstract architecture material preserved in Git history and receipts | `RETIRED` by [PR #3151](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3151); use [`map-master/README.md`](./map-master/README.md) for the current lane index |
 
 > [!NOTE]
 > The proposal-era paths `docs/architecture/maplibre-3d.md` and `packages/maplibre-runtime/` were not present at the evidence snapshot. Do not use them as current implementation or navigation authorities. Current 3D guidance is in [`planetary-3d.md`](./planetary-3d.md), and the verified package seam is [`packages/maplibre/`](../../packages/maplibre/).

@@ -14,7 +14,7 @@ related:
   - docs/domains/roads-rail-trade/sublanes/rail.md
   - docs/domains/roads-rail-trade/sublanes/trade-routes.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, domain, roads, transport, sublane]
 notes:
@@ -412,7 +412,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 - Sibling sublane (PROPOSED): [`docs/domains/roads-rail-trade/sublanes/rail.md`](./rail.md)
 - Sibling sublane (PROPOSED): [`docs/domains/roads-rail-trade/sublanes/trade-routes.md`](./trade-routes.md)
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Domain Placement Law (§12), lifecycle invariant.
-- Architecture: [`docs/architecture/governed-api.md`](../../../architecture/governed-api.md) — trust-membrane definition.
+- Architecture: [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — trust-membrane definition.
 - ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §13 items, including the OPEN-ROADS-03 slug conflict. (`TODO` link targets — verify on mount.)
 - Atlas §24.13 — Responsibility-root crosswalk (source of the `transport` slug variance).

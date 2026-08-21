@@ -505,7 +505,7 @@ A rollback is not finished when the public surfaces revert. The following obliga
 | Doctrine | `docs/doctrine/trust-membrane.md` — public surfaces never reach internal stores | PROPOSED presence |
 | Doctrine | `docs/doctrine/truth-posture.md` — cite-or-abstain | PROPOSED presence |
 | Domain | `docs/domains/flora/README.md` — Flora doctrine, ubiquitous language, sources | PROPOSED presence |
-| Architecture | `docs/architecture/governed-api.md` | PROPOSED presence |
+| Architecture | `docs/architecture/governed-api/README.md` | PROPOSED presence |
 | Architecture | `docs/architecture/governed-ai/README.md` | PROPOSED presence |
 | Release plane | `release/README.md` — manifests, rollback cards, correction notices, withdrawal notices, signatures | PROPOSED presence |
 | Data plane | `data/published/layers/flora/README.md` | PROPOSED presence |

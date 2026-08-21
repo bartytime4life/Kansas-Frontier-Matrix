@@ -23,7 +23,7 @@ related:
   - ../../fixtures/contracts/v1/runtime/decision_envelope/
   - ../../tools/validators/validate_decision_envelope.py
   - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/architecture/governed-ai.md
+  - ../../docs/architecture/governed-ai/README.md
 notes:
   - "Expanded from existing schema-paired stub at `contracts/runtime/decision_envelope.md`."
   - "Paired schema verified at `schemas/contracts/v1/runtime/decision_envelope.schema.json`; schema status is PROPOSED."

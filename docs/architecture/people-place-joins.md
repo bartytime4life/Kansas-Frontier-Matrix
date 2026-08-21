@@ -10,7 +10,7 @@ updated: 2026-05-25
 policy_label: public
 related:
   - docs/architecture/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/domains/people-dna-land/README.md
   - docs/domains/settlements-infrastructure/README.md
@@ -384,7 +384,7 @@ flowchart LR
 ## 11. Related docs
 
 - `docs/architecture/README.md` — architecture index *(TODO: link verify)*
-- `docs/architecture/governed-api.md` — the trust-membrane surface joins are served through *(TODO: link verify)*
+- `docs/architecture/governed-api/README.md` — the trust-membrane surface joins are served through *(TODO: link verify)*
 - `docs/architecture/contract-schema-policy-split.md` — meaning vs shape vs admissibility *(TODO: link verify)*
 - `docs/domains/people-dna-land/README.md` — People/DNA/Land domain manual *(PROPOSED)*
 - `docs/domains/settlements-infrastructure/README.md` — Settlements/Infrastructure domain manual *(PROPOSED)*

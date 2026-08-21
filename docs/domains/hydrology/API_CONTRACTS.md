@@ -11,7 +11,7 @@ policy_label: public
 related:
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/trust-membrane.md
   - directory-rules.md                                  # placement authority (root file; docs/doctrine/ mirror is PROPOSED)
@@ -142,7 +142,7 @@ The table below enumerates the Hydrology-facing governed surfaces. **All endpoin
 | H-API-09 | Hydrology telemetry intake (safe UI events) | `POST` | telemetry payload | acknowledgement | ANSWER / DENY / ERROR | PROPOSED; no PII, no model prompts |
 
 > [!CAUTION]
-> The table above mirrors Atlas v1.1 §4(J) and the generic cross-domain envelope in Encyclopedia §7.2(J). **Specific URL shapes** (e.g., `/api/v1/domains/hydrology/features/{id}`) appear in source dossiers as illustrative examples and are explicitly **PROPOSED**; the canonical URL ontology is set by the governed-API steward in conjunction with `docs/architecture/governed-api.md`.
+> The table above mirrors Atlas v1.1 §4(J) and the generic cross-domain envelope in Encyclopedia §7.2(J). **Specific URL shapes** (e.g., `/api/v1/domains/hydrology/features/{id}`) appear in source dossiers as illustrative examples and are explicitly **PROPOSED**; the canonical URL ontology is set by the governed-API steward in conjunction with `docs/architecture/governed-api/README.md`.
 
 > [!NOTE]
 > `ANSWER / ABSTAIN / DENY / ERROR` are **answer-surface (runtime)** outcomes carried by `RuntimeResponseEnvelope`. `HOLD` (and the validator-class `PASS / FAIL`) are **gate-class** outcomes that govern promotion/release/correction, not the answer payload itself — see [§5](#5-finite-outcome-envelope).
@@ -611,7 +611,7 @@ The items below are NEEDS VERIFICATION until a mounted repository is inspected. 
 |---|---|---|---|
 | OQ-HYD-API-01 | Canonical home of doctrine files (`directory-rules.md`, `ai-build-operating-contract.md`): repo root vs `docs/doctrine/`. | Docs steward + Directory Rules owner | Mounted-repo inspection; the contract itself is PROPOSED at `docs/doctrine/ai-build-operating-contract.md`. Reconcile `related` links accordingly. |
 | OQ-HYD-API-02 | Single canonical fixture home for the lane (`fixtures/domains/hydrology/` vs `tests/fixtures/hydrology/`). | Contract-schema steward | Directory Rules §6.6 check + repo inspection; log drift in `DRIFT_REGISTER.md`. |
-| OQ-HYD-API-03 | Canonical URL ontology for Hydrology governed routes. | Governed-API owner | `docs/architecture/governed-api.md` + ADR; pin in §3 once set. |
+| OQ-HYD-API-03 | Canonical URL ontology for Hydrology governed routes. | Governed-API owner | `docs/architecture/governed-api/README.md` + ADR; pin in §3 once set. |
 | OQ-HYD-API-04 | `HydrologyDecisionEnvelope` field set and whether it carries optional `NARROWED` / `BOUNDED`. | Contract-schema steward | Schema authoring under `schemas/contracts/v1/domains/hydrology/`. |
 | OQ-HYD-API-05 | Receipt-schema home for `RedactionReceipt` / `GENERATED_RECEIPT` (shared vs per-domain). | Schema owner | Tracked as ADR-S-03 (receipt schema layout). |
 
@@ -644,7 +644,7 @@ This document is done enough to enter the repository when:
 
 - it is placed according to Directory Rules (under `docs/domains/hydrology/`) and the doctrine-file path question (OQ-HYD-API-01) is resolved;
 - a docs steward, the governed-API owner, and the contract-schema steward review it;
-- it is linked from `docs/domains/hydrology/README.md` and from `docs/architecture/governed-api.md`;
+- it is linked from `docs/domains/hydrology/README.md` and from `docs/architecture/governed-api/README.md`;
 - it does not conflict with accepted ADRs (esp. ADR-0001 schema home);
 - the fixture-home and doctrine-path questions are logged in `docs/registers/DRIFT_REGISTER.md` until resolved;
 - a `GENERATED_RECEIPT.json` is wired into CI with `human_review.state` transitioning from `pending` to `approved`;
@@ -660,7 +660,7 @@ This document is done enough to enter the repository when:
 
 - [`docs/domains/hydrology/README.md`](../README.md) — Hydrology domain index (PROPOSED).
 - [`docs/domains/hydrology/SOURCE_FAMILIES.md`](../SOURCE_FAMILIES.md) — Hydrology source families and role discipline (PROPOSED).
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Governed API trust membrane (PROPOSED).
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Governed API trust membrane (PROPOSED).
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / schema / policy split (PROPOSED).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine (PROPOSED).
 - `directory-rules.md` — Directory Rules (CONFIRMED doctrine; canonical path NEEDS VERIFICATION, OQ-HYD-API-01).

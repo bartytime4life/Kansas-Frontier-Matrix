@@ -26,7 +26,7 @@ related:
   - SYSTEM_MAP.md
   - SKELETON_MAP.md
   - trust-membrane.md
-  - governed-api.md
+  - governed-api/README.md
   - map-shell.md
   - contract-schema-policy-split.md
   - ../doctrine/trust-membrane.md
@@ -720,7 +720,7 @@ Use this checklist for any change that touches a crossing described here.
 - [`docs/architecture/README.md`](./README.md)
 - [`SYSTEM_MAP.md`](./SYSTEM_MAP.md)
 - [`SKELETON_MAP.md`](./SKELETON_MAP.md)
-- [`governed-api.md`](./governed-api.md)
+- [`governed-api/README.md`](./governed-api/README.md)
 - [`map-shell.md`](./map-shell.md)
 - [`contract-schema-policy-split.md`](./contract-schema-policy-split.md)
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md)

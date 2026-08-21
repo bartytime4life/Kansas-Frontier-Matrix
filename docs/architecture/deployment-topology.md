@@ -36,7 +36,7 @@ evidence_snapshot:
 related:
   - README.md
   - system-context.md
-  - governed-api.md
+  - governed-api/README.md
   - map-shell.md
   - contract-schema-policy-split.md
   - ../doctrine/directory-rules.md
@@ -176,7 +176,7 @@ The artifact kind is a human architecture explanation; its authority owner is `d
 | [`tests/infra/test_compose_static.py`](../../tests/infra/test_compose_static.py) | Build-context resolution, non-root final users, loopback ports, and selected forbidden-mount/escape checks | Runtime isolation, policy enforcement, secrets safety, or operating-system hardening |
 | [`infra-compose-smoke`](../../.github/workflows/infra-compose-smoke.yml) | Compose rendering and placeholder image builds without service start | A running stack, release, deployment, health, or publication |
 | [`security.yml`](../../.github/workflows/security.yml) | Declared dependency review, repository scan, container scan, and Scorecard orchestration | Current green status, vulnerability absence, runtime security, or release approval |
-| [`governed-api.md`](governed-api.md) and app bytes | WSGI scaffold and three GET routes returning finite negative envelopes | Substantive `ANSWER`, authentication, evidence/policy/release binding, or production service |
+| [`governed-api/README.md`](governed-api/README.md) and app bytes | WSGI scaffold and three GET routes returning finite negative envelopes | Substantive `ANSWER`, authentication, evidence/policy/release binding, or production service |
 | [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) and package manifest | Locked build/test workspace, fail-closed default entrypoint, bounded fixture-first UI slices | Admitted renderer, live API transport, hosted application, or public product |
 | [`runtime/README.md`](../../runtime/README.md) | Internal runtime boundary and no-direct-public-runtime rule | Accepted provider inventory, production isolation, model service health, or deployed composition |
 | [`release/README.md`](../../release/README.md) and release register | Canonical release-decision root, fixture-first validation, operational holds, empty proposed register | Assembled approved release, promotion execution, rollback execution, or production parity |
@@ -950,7 +950,7 @@ This page is not that packet.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle and promotion separation.
 - [`docs/architecture/README.md`](README.md) — architecture lane contract.
 - [`docs/architecture/system-context.md`](system-context.md) — outer system context.
-- [`docs/architecture/governed-api.md`](governed-api.md) — current executable membrane scaffold and next gates.
+- [`docs/architecture/governed-api/README.md`](governed-api/README.md) — current executable membrane scaffold and next gates.
 - [`docs/architecture/map-shell.md`](map-shell.md) — browser/renderer boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](contract-schema-policy-split.md) — meaning, shape, admissibility, and proof separation.
 

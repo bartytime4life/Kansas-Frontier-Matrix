@@ -13,7 +13,7 @@ related:
   - docs/domains/flora/README.md
   - docs/domains/flora/SOURCES.md
   - docs/domains/flora/SENSITIVITY.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/trust-membrane.md
   - docs/doctrine/ai-build-operating-contract.md
   - contracts/runtime/decision_envelope.md
@@ -510,7 +510,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain landing doc *(PROPOSED)*
 - [`docs/domains/flora/SOURCES.md`](./SOURCES.md) — Flora source families and source-role registry *(PROPOSED)*
 - [`docs/domains/flora/SENSITIVITY.md`](./SENSITIVITY.md) — Flora sensitivity tiers and redaction policy *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Trust membrane and governed-API doctrine *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Trust membrane and governed-API doctrine *(PROPOSED)*
 - [`docs/architecture/trust-membrane.md`](../../architecture/trust-membrane.md) — Trust-membrane reference *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement and lifecycle doctrine
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)

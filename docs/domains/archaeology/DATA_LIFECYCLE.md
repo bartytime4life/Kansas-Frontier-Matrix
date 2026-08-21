@@ -734,7 +734,7 @@ These items are explicitly **not resolved** by this document and should be track
   [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) ·
   [`docs/domains/archaeology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md)
 - **Architecture neighbors:**
-  [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — public trust path ·
+  [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — public trust path ·
   [`docs/architecture/cross-lane.md`](../../architecture/cross-lane.md) ·
   [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) ·
   [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — v1.3 sole-renderer doctrine

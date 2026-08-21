@@ -16,7 +16,7 @@ related:
   - docs/domains/geology/IDENTITY_MODEL.md
   - docs/domains/geology/FILE_SYSTEM_PLAN.md
   - docs/architecture/maplibre-master.md
-  - docs/architecture/governed-ai.md
+  - docs/architecture/governed-ai/README.md
   - docs/doctrine/ai-build-operating-contract.md       # CONTRACT_VERSION 3.0.0
   - docs/standards/PROV.md                              # or PROVENANCE.md — pending ADR (OPEN-DR-01)
   - docs/standards/PMTILES.md
@@ -103,7 +103,7 @@ This document specifies, for the **Geology and Natural Resources** domain, the s
 | **This file** | `docs/domains/geology/MAP_UI_CONTRACTS.md` (PROPOSED) |
 | **Owning root** | `docs/` (human explanation; [Directory Rules](../../doctrine/directory-rules.md)) |
 | **Domain segment** | `docs/domains/geology/` per Directory Rules §12 Domain Placement Law |
-| **Upstream doctrine** | `docs/architecture/maplibre-master.md` · `docs/architecture/governed-ai.md` · `docs/doctrine/trust-membrane.md` (paths PROPOSED) |
+| **Upstream doctrine** | `docs/architecture/maplibre-master.md` · `docs/architecture/governed-ai/README.md` · `docs/doctrine/trust-membrane.md` (paths PROPOSED) |
 | **Downstream consumers** | Geology layer registry; Evidence Drawer renderer; Focus Mode adapter; MapLibre/Cesium adapter packages |
 | **Contract-family schema homes (cross-cutting, CONFIRMED pattern)** | `schemas/contracts/v1/map/` (layer/style/tile/release manifests), `schemas/contracts/v1/ui/` (evidence-drawer payload, map-context envelope), `schemas/contracts/v1/sources/` (`SourceDescriptor`), `schemas/contracts/v1/evidence/` (`EvidenceBundle`) — per the Master MapLibre object map + ADR-0001 |
 | **Geology-profile schema homes (PROPOSED)** | `schemas/contracts/v1/domains/geology/` *(sub-path form CONFLICTED per CDR-GEOL-01 — see §15)* — only for Geology-specific object/profile schemas, not the manifest families |
@@ -514,7 +514,7 @@ This document is done enough to enter the repository when:
 - `docs/domains/geology/IDENTITY_MODEL.md` — Geology identity model (source roles, spec_hash, sensitivity carriers)
 - `docs/domains/geology/FILE_SYSTEM_PLAN.md` — Geology lane file-system plan
 - `docs/architecture/maplibre-master.md` — Cross-cutting MapLibre contract spine (PROPOSED path)
-- `docs/architecture/governed-ai.md` — Governed AI / Focus Mode doctrine (PROPOSED path)
+- `docs/architecture/governed-ai/README.md` — Governed AI / Focus Mode doctrine (PROPOSED path)
 - `docs/doctrine/ai-build-operating-contract.md` — Operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - `docs/doctrine/directory-rules.md` — Placement law
 - `docs/doctrine/trust-membrane.md` — Trust-membrane invariant
@@ -638,6 +638,6 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related docs:** [Geology README](./README.md) · [Identity Model](./IDENTITY_MODEL.md) · [MapLibre Master](../../architecture/maplibre-master.md) · [Governed AI](../../architecture/governed-ai.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Trust Membrane](../../doctrine/trust-membrane.md)
+**Related docs:** [Geology README](./README.md) · [Identity Model](./IDENTITY_MODEL.md) · [MapLibre Master](../../architecture/maplibre-master.md) · [Governed AI](../../architecture/governed-ai/README.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Trust Membrane](../../doctrine/trust-membrane.md)
 **Last updated:** 2026-06-04 · **Doc version:** v1.1 · **Status:** draft · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 **[⬆ Back to top](#top)**

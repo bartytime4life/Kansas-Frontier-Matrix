@@ -15,7 +15,7 @@ related:
   - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md       # companion — placement view
   - docs/domains/atmosphere/EXPANSION_BACKLOG.md      # companion — candidate register
   - docs/architecture/map-shell.md               # PROPOSED — verify presence
-  - docs/architecture/governed-api.md            # PROPOSED — verify presence
+  - docs/architecture/governed-api/README.md            # PROPOSED — verify presence
   - docs/adr/ADR-0001-schema-home.md             # CONFIRMED doctrine; verify file presence
   - ai-build-operating-contract.md               # CONFIRMED — operating contract
   - schemas/contracts/v1/map/                    # PROPOSED — verify presence per ADR-0001
@@ -605,7 +605,7 @@ This document is done enough to enter the repository when:
 - `docs/domains/atmosphere/SOURCES.md` — atmosphere source families and roles *(PROPOSED)*.
 - `docs/domains/atmosphere/POLICY.md` — atmosphere sensitivity, rights, publication posture *(PROPOSED)*.
 - `docs/architecture/map-shell.md` — map shell operating architecture *(PROPOSED; verify)*.
-- `docs/architecture/governed-api.md` — trust-membrane and finite-outcome contract *(PROPOSED; verify)*.
+- `docs/architecture/governed-api/README.md` — trust-membrane and finite-outcome contract *(PROPOSED; verify)*.
 - `docs/adr/ADR-0001-schema-home.md` — `schemas/contracts/v1` as canonical schema home *(CONFIRMED doctrine; verify file)*.
 - `ai-build-operating-contract.md` — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*.
 - `docs/standards/PROV.md` — provenance profile *(CONFIRMED file from project state; name vs. `PROVENANCE.md` is an open item)*.

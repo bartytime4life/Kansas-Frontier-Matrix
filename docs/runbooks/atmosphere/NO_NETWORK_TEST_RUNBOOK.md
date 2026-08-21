@@ -481,7 +481,7 @@ PROPOSED CI shape — adapt to the repo's actual workflow system.
 - `docs/doctrine/lifecycle-law.md` — `RAW → … → PUBLISHED` invariant.
 - `docs/doctrine/trust-membrane.md` — public-path discipline.
 - `docs/doctrine/truth-posture.md` — cite-or-abstain.
-- `docs/architecture/governed-api.md` — envelope and route boundaries.
+- `docs/architecture/governed-api/README.md` — envelope and route boundaries.
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — source descriptor fields.
 - `contracts/OBJECT_MAP.md` — object meaning crosswalk.
 - `docs/adr/` — file-home and trust-boundary ADRs.

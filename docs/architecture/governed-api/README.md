@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture-governed-api-readme
 title: Governed API Architecture Boundary
 type: architecture-readme
-version: v0.3
+version: v0.4
 status: draft
 maturity: repository-grounded; negative-envelope-executable; composed-trust-path-held; explanatory-only
 owners:
@@ -12,17 +12,17 @@ owners:
   - "NEEDS VERIFICATION — security and policy reviewer"
   - "NEEDS VERIFICATION — evidence, release, correction, and independent reviewer"
 created: 2026-05-24
-updated: 2026-08-19
+updated: 2026-08-20
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 owning_root: docs/
 current_path: docs/architecture/governed-api/README.md
 readme_profile: BOUNDARY_COMPACT
-responsibility: "Orient reviewers to the Governed API architecture boundary, current executable negative-envelope slice, direct-child documents, cross-root authorities, validation evidence, unresolved vocabularies, overlap, deployment limits, and reversible next work without creating runtime, policy, release, deployment, or publication authority."
+responsibility: "Orient reviewers to the Governed API architecture boundary, current executable negative-envelope slice, direct-child documents, cross-root authorities, validation evidence, unresolved vocabularies, landing-page lineage, deployment limits, and reversible next work without creating runtime, policy, release, deployment, or publication authority."
 authority_class: explanatory architecture boundary
 authority_limit: "This README explains current evidence and intended composition. It does not accept ADR-0004, define object meaning or machine shape, authenticate callers, evaluate policy, resolve evidence, authorize release, prove deployment, or publish."
-canonical_relationship: "CONFIRMED existing directory boundary under docs/architecture/; canonical prose ownership relative to docs/architecture/governed-api.md remains HOLD pending a reviewed overlap disposition."
+canonical_relationship: "CONFIRMED current topology — this README is the active Governed API architecture landing page after merged PR #3150 retired the former flat docs/architecture/governed-api.md entrypoint; the topology fact does not accept ADR-0004 or grant runtime authority."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -69,7 +69,6 @@ inspection_boundary: >-
   request was exercised.
 related:
   - ../README.md
-  - ../governed-api.md
   - ../deployment-topology.md
   - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -96,7 +95,7 @@ notes:
   - "The app now emits the exact required RuntimeResponseEnvelope field set for three ABSTAIN routes and safe 404/405 ERROR responses; the prior app-to-envelope HOLD is closed for bounded negative-envelope shape only."
   - "No substantive payload composition, evidence resolution, policy evaluation, audience enforcement, release/correction binding, live client transport, governed ANSWER path, deployment, or publication is established."
   - "Audience, public reason-code, HTTP-binding, and A-G gate vocabularies remain proposed, inactive, or conflicted as documented by their owning explanatory and contract surfaces."
-  - "The flat docs/architecture/governed-api.md document remains an unresolved overlapping prose surface; this change moves, deletes, redirects, or canonicalizes neither path."
+  - "Merged PR #3150 retired the former flat docs/architecture/governed-api.md entrypoint; this README is the active landing page, while immutable receipts, Git history, and the pinned convergence ledger preserve historical lineage."
   - "This documentation-and-receipt update changes no route, contract, schema, policy, fixture, validator, test, workflow, package, app, runtime, data, release, deployment, or publication behavior."
 [/KFM_META_BLOCK_V2] -->
 
@@ -122,9 +121,9 @@ notes:
 > **The current app proves a bounded negative-envelope slice, not a complete membrane.** Repository code registers exactly three `GET` routes—`/bootstrap`, `/layers`, and `/evidence`—and returns schema-backed `ABSTAIN / NOT_IMPLEMENTED` envelopes. Unknown paths return `404` and unsupported methods on registered paths return `405`, both with a schema-backed `ERROR / SAFE_RUNTIME_ERROR` envelope. No inspected path authenticates a caller, evaluates policy, resolves an EvidenceRef to an authoritative EvidenceBundle, binds an applied release, composes a substantive answer body, or emits `ANSWER`.
 
 > [!WARNING]
-> **Architecture prose still overlaps.** This directory README and the flat [`docs/architecture/governed-api.md`](../governed-api.md) both discuss the Governed API. No accepted migration, alias, supersession, or canonical-target record was verified. This update keeps the directory README as the boundary and direct-child index for the existing folder without silently demoting, deleting, redirecting, or canonicalizing the flat document.
+> **The flat entrypoint has been retired.** Merged [PR #3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150) removed the former flat `docs/architecture/governed-api.md` page. This README is the active architecture landing page and direct-child index. That repository-topology fact does not accept ADR-0004, prove a complete trust membrane, or create runtime, policy, release, deployment, or publication authority.
 
-**Quick navigation:** [Purpose](#1-purpose-authority-and-status) · [Evidence](#2-evidence-boundary) · [Directory map](#3-current-direct-child-map) · [Scope](#4-belongs-prohibited-inputs-and-outputs) · [Executable slice](#5-current-executable-slice) · [Contract stack](#6-contract-schema-validator-and-fixture-authority) · [Trust flow](#7-current-and-target-trust-flow) · [Exposure](#8-exposure-mutation-retention-and-review) · [Validation](#9-validation-and-negative-evidence) · [Graduation](#10-graduation-gates) · [Overlap](#11-overlap-migration-and-rollback-holds) · [Anti-patterns](#12-anti-patterns) · [Open work](#13-open-verification-backlog) · [Related](#14-related-surfaces) · [History](#15-change-history-and-documentation-rollback)
+**Quick navigation:** [Purpose](#1-purpose-authority-and-status) · [Evidence](#2-evidence-boundary) · [Directory map](#3-current-direct-child-map) · [Scope](#4-belongs-prohibited-inputs-and-outputs) · [Executable slice](#5-current-executable-slice) · [Contract stack](#6-contract-schema-validator-and-fixture-authority) · [Trust flow](#7-current-and-target-trust-flow) · [Exposure](#8-exposure-mutation-retention-and-review) · [Validation](#9-validation-and-negative-evidence) · [Graduation](#10-graduation-gates) · [Retirement](#11-overlap-migration-and-rollback-holds) · [Anti-patterns](#12-anti-patterns) · [Open work](#13-open-verification-backlog) · [Related](#14-related-surfaces) · [History](#15-change-history-and-documentation-rollback)
 
 ---
 
@@ -155,7 +154,7 @@ This is a same-path update to an existing directory boundary. It creates no root
 | Axis | Current state | Meaning |
 |---|---|---|
 | Document role | `BOUNDARY_COMPACT` architecture README | Human orientation, current-state map, and verification backlog only |
-| Placement | **CONFIRMED existing path** under `docs/architecture/` | Path presence is verified; prose canonicality versus the flat document is unresolved |
+| Placement | **CONFIRMED active landing path** under `docs/architecture/governed-api/` | The former flat entrypoint was retired by PR #3150; placement does not establish runtime or decision authority |
 | Directory Rules | **ACCEPTED** through ADR-0029 | Placement authority is in force |
 | ADR-0004 | Source `draft`; effective status `proposed` | The dynamic trust-membrane decision is not accepted |
 | App implementation | **PARTIAL / scaffold** | WSGI dispatcher, three `GET` routes, bounded negative responses, structural tests |
@@ -194,7 +193,7 @@ The repository observations below are pinned to `main@59fd6dff1a2015fac08fc1ccd8
 | Explorer adapter | `GovernedClient.ts` validates a fixture-only browser projection and performs no network or lifecycle-store access. | No live browser-to-API flow is proved. |
 | API workflow | `api-test` runs the app smoke suite and the focused schema-backed ABSTAIN route test with read-only contents permissions. | Workflow wiring or a green run is test evidence only, not release, deployment, or publication approval. |
 | Deployment preparation | A loopback-only Compose placeholder, non-root placeholder image, static boundary tests, and render/build workflow are documented by the grounded deployment companion. | The image does not package/start the app; health, ingress, TLS, CORS, auth, rate, secrets, network, and observability remain unproved. |
-| Flat architecture document | `docs/architecture/governed-api.md` exists alongside this directory. | No migration, generation, alias, or supersession decision is established. |
+| Retired flat architecture document | PR #3150 removed `docs/architecture/governed-api.md`; historical receipts and plans retain its lineage. | It is not an active navigation target, alias, redirect, or authority surface. |
 
 ### 2.1 Truth labels used here
 
@@ -538,7 +537,7 @@ The inspected Explorer `GovernedClient.ts` remains fixture-only. A future live t
 Re-review this boundary when:
 
 - ADR-0004 changes status, scope, or accepted alternative;
-- the flat-file/folder overlap is resolved;
+- a compatibility request proposes restoring or redirecting the retired flat entrypoint;
 - a route is added, removed, versioned, or graduates beyond the current negative scaffold;
 - RuntimeResponseEnvelope, DecisionEnvelope, payload composition, HTTP binding, or reason registry changes;
 - audience, identity, authorization, policy, evidence, release, correction, rollback, audit, or precision binding changes;
@@ -680,48 +679,30 @@ That slice would prove an app-to-component crossing without pretending that a ca
 
 <a id="11-overlap-migration-and-rollback-holds"></a>
 
-## 11. Overlap, migration, and rollback holds
+## 11. Landing-page retirement, lineage, and rollback
 
-### 11.1 Confirmed overlap
+### 11.1 Current topology
 
-Both paths exist:
-
-```text
-docs/architecture/governed-api.md
-docs/architecture/governed-api/README.md
-```
-
-They overlap in trust-membrane purpose, route and envelope discussion, current scaffold evidence, validation, and proposed implementation stages. The flat document predates this folder and retains inbound references. The directory contains seven substantive companions in addition to this README.
+Merged [PR #3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150) removed the former flat `docs/architecture/governed-api.md` entrypoint. The current architecture lane contains this README plus seven substantive companions. Active repository navigation must resolve here; immutable generated receipts, Git history, exploratory source maps, and the pinned Wave 0 convergence ledger may retain the former path as historical evidence.
 
 ### 11.2 Current disposition
 
 | Question | Current answer |
 |---|---|
-| Which path is canonical prose authority? | **HOLD — no reviewed disposition verified** |
-| Is either path a generated mirror? | **No generation relationship verified** |
-| Is the flat file a tombstone or redirect? | **No** |
-| Is the folder an accepted replacement? | **Not established by a path-specific decision** |
-| May this README silently delete or supersede the flat file? | **No** |
-| Does the overlap change app behavior? | **No; both are documentation surfaces** |
+| Which path is the active architecture landing page? | `docs/architecture/governed-api/README.md` |
+| Is the former flat path present, aliased, or redirected? | **No** at the pinned tree |
+| What records the retirement? | Merged PR #3150 and repository history |
+| Does landing-page survival accept ADR-0004? | **No** |
+| Does the retirement change app behavior or public authority? | **No; this is documentation topology only** |
+| Which residual mentions are valid? | Immutable receipts and explicit historical lineage, not live links or authority claims |
 
-### 11.3 Required future convergence evidence
+### 11.3 Consumer closure
 
-Before moving, flattening, redirecting, or retiring either surface:
-
-- inventory inbound links, anchors, external references, writers, generators, and consumers;
-- classify unique content, shared content, current conflicts, and stale claims document-by-document;
-- select one writable canonical target through a reviewed path decision or ADR where authority changes;
-- preserve stable links through a bounded tombstone or migration where required;
-- update parent navigation and every direct consumer;
-- validate links, anchors, documentation graph, metadata, stale scan, and topology;
-- record rollback or forward-fix behavior; and
-- prove the old path has zero writers before retirement.
+This correction updates active navigation, metadata, registers, runbooks, package documentation, security guidance, standards, examples, and fixture READMEs to the surviving landing page. It deliberately leaves commit-pinned receipts, exploratory source maps, and the Wave 0 disposition rows unchanged except for an explicit post-baseline note.
 
 ### 11.4 Documentation rollback
 
-This v0.3 README can be reverted independently to prior blob `09f9f95ce7400055b8018f9f159796ac35959fbb`. That restores v0.2 without changing the flat document, direct-child files, app code, contracts, schemas, policy, packages, fixtures, validators, tests, workflows, data, release state, deployment, or publication.
-
-The generated authoring receipt for this revision must be reverted with the README. Reverting either file alone leaves the authored-artifact binding incomplete.
+Revert this link-closure commit and its generated authoring receipt together to restore the prior documentation bytes. Rollback does not recreate the retired flat file and does not change app code, contracts, schemas, policy, packages, fixtures, validators, tests, workflows, data, release state, deployment, or publication.
 
 [Back to top](#top)
 
@@ -747,7 +728,7 @@ The generated authoring receipt for this revision must be reverted with the READ
 | Logging raw evidence, prompts, secrets, restricted coordinates, or policy internals | Turns observability into an exfiltration surface. | Allowlist, redact, test telemetry, and fail closed. |
 | Mutating a published carrier in place | Breaks release identity, correction, and rollback. | Create a new immutable identity and correction/rollback lineage. |
 | Letting the directory absorb schemas, policy, fixtures, tests, packages, or app code | Creates parallel authority inside `docs/`. | Keep each artifact in its responsibility root and link it here. |
-| Silently choosing between flat file and folder | Erases lineage and may break consumers. | Use governed migration with inventory, compatibility, validation, and rollback. |
+| Recreating a retired flat entrypoint as an unreviewed alias | Reintroduces competing navigation and obscures the recorded retirement. | Keep active consumers on the folder README; handle any compatibility need through explicit review, validation, and rollback. |
 
 [Back to top](#top)
 
@@ -759,7 +740,7 @@ The generated authoring receipt for this revision must be reverted with the READ
 
 ### P0 — boundary truth and safety
 
-- [ ] Resolve the flat-file/folder overlap through a reviewed path and migration decision.
+- [x] Record the flat-entrypoint retirement from merged PR #3150 and close active navigation on the surviving folder README.
 - [ ] Keep ADR-0004 source status, effective index status, evidence snapshot, and acceptance blockers synchronized; do not infer acceptance from implementation.
 - [ ] Decide the substantive response/content composition profile before any `ANSWER`.
 - [ ] Reconcile and version public reason-code, HTTP-binding, audience/authorization, and A–G gate vocabularies in their owning contract/schema/policy/decision surfaces.
@@ -804,7 +785,6 @@ The generated authoring receipt for this revision must be reverted with the READ
 ### 14.2 Architecture and direct companions
 
 - [Architecture root README](../README.md)
-- [Overlapping flat Governed API architecture document](../governed-api.md)
 - [Deployment topology](../deployment-topology.md)
 - [Audience Classes](./AUDIENCE_CLASSES.md)
 - [Deployment Rules](./DEPLOYMENT_RULES.md)
@@ -850,13 +830,14 @@ The generated authoring receipt for this revision must be reverted with the READ
 | 2026-05-24 | v0.1 | Created and updated the initial doctrine-heavy lane README. | Established orientation but relied on pre-adoption path assumptions and proposal-shaped implementation claims. |
 | 2026-08-14 | v0.2 | Reconciled the README to accepted Directory Rules v2, the then-current app/routes/tests, RuntimeResponseEnvelope family, overlap risk, validation, and graduation gates. | Documentation only; later app and companion changes made the app-to-envelope and sibling-status sections stale. |
 | 2026-08-19 | v0.3 | Reconciled the boundary to current schema-backed ABSTAIN and ERROR scaffold behavior, current envelope builder/tests, internal resolver limits, all seven grounded companions, deployment preparation limits, revised graduation gates, and immediate-prior rollback. | Documentation plus generated authoring receipt only; no runtime, policy, release, deployment, or publication change. |
+| 2026-08-20 | v0.4 | Reconciles merged PR #3150, makes this README the active navigation target, and preserves the former flat path only as explicit historical lineage. | Documentation link closure only; ADR-0004, runtime, policy, release, deployment, and publication remain unchanged. |
 
 ### Rollback target
 
 ```text
 path: docs/architecture/governed-api/README.md
-prior_blob: 09f9f95ce7400055b8018f9f159796ac35959fbb
-prior_content_commit: 1f8baf272db7df477ec0a1f95b6870e7f9433320
+prior_blob: dc4dfb2e420f28bbd39b61ef578af4de84d1b04c
+prior_base_commit: 930c31a1da9940fb21f0e060a6b0db6500d706b5
 ```
 
 Reverting this document and its generated authoring receipt must not be represented as reverting app behavior, policy, evidence, release state, deployment, or publication. Those are independent responsibility surfaces.

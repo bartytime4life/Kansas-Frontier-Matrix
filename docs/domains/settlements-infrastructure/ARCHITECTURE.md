@@ -22,7 +22,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
@@ -687,7 +687,7 @@ release/
 - `docs/doctrine/trust-membrane.md` — public clients enter via the governed API, never deeper.
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED as a governed state transition.
 - `docs/architecture/contract-schema-policy-split.md` — contract / schema / policy / tests separation.
-- `docs/architecture/governed-api.md` — trust membrane in executable form.
+- `docs/architecture/governed-api/README.md` — trust membrane in executable form.
 - `docs/architecture/map-shell.md` — MapLibre shell consumes released layers only.
 - `docs/architecture/settlements-infrastructure/README.md` — **separate** lane-architecture page (`PROPOSED`).
 - `docs/domains/settlements-infrastructure/README.md` — lane dossier landing (`PROPOSED`).

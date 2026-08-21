@@ -51,7 +51,7 @@ evidence_snapshot:
     checked: 2026-08-19
 related:
   - ./maplibre.md
-  - ./map-master.md
+  - ./map-master/README.md
   - ./map-shell.md
   - ./ui/MAP_RUNTIME_BOUNDARY.md
   - ../adr/INDEX.md
@@ -862,7 +862,7 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 ### 16.2 Architecture and runtime surfaces
 
 - [`maplibre.md`](./maplibre.md) — lane entry point; contains known proposal-era drift.
-- [`map-master.md`](./map-master.md) — renderer-boundary architecture anchor; contains known proposal-era drift.
+- [`map-master/README.md`](./map-master/README.md) — active Map Master renderer-boundary landing page.
 - [`map-shell.md`](./map-shell.md) — shell and trust-membrane lineage; reconcile current implementation claims separately.
 - [`ui/MAP_RUNTIME_BOUNDARY.md`](./ui/MAP_RUNTIME_BOUNDARY.md) — UI runtime boundary.
 - [`packages/maplibre/README.md`](../../packages/maplibre/README.md) — package boundary and current scaffold evidence.

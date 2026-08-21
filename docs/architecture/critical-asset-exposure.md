@@ -49,7 +49,7 @@ evidence_snapshot:
 related:
   - README.md
   - TRUST_MEMBRANE.md
-  - governed-api.md
+  - governed-api/README.md
   - cross-lane-join-policy.md
   - data-classification-framework.md
   - ../standards/SENSITIVITY_RUBRIC.md
@@ -923,7 +923,7 @@ Keep implementation or release on hold when any of the following is unresolved:
 ### Architecture, security, and standards companions
 
 - [`docs/architecture/TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md)
-- [`docs/architecture/governed-api.md`](./governed-api.md)
+- [`docs/architecture/governed-api/README.md`](./governed-api/README.md)
 - [`docs/architecture/cross-lane-join-policy.md`](./cross-lane-join-policy.md)
 - [`docs/architecture/data-classification-framework.md`](./data-classification-framework.md)
 - [`docs/security/EXPOSURE_PLAN.md`](../security/EXPOSURE_PLAN.md)

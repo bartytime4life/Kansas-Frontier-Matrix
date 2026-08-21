@@ -457,7 +457,7 @@ CONFIRMED doctrine (KFM-P26-IDEA-0012 Canonical DwC normalizer before dedupe; KF
 - `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` — operational refresh runbook (CONFIRMED authored prior session; mounted-repo presence NEEDS VERIFICATION)
 - `docs/doctrine/directory-rules.md` — governs path placement (this file)
 - `docs/doctrine/truth-posture.md` — governs the CONFIRMED/PROPOSED/EXTERNAL labels used here (PROPOSED)
-- `docs/architecture/governed-api.md` — the only public path for iDigBio-derived claims (PROPOSED)
+- `docs/architecture/governed-api/README.md` — the only public path for iDigBio-derived claims (PROPOSED)
 - `docs/standards/PROV.md` — W3C PROV-O profile (note: filename `PROV.md` vs corpus `PROVENANCE.md` is an open naming question — see `directory-rules.md §18` OPEN-DR-01)
 - `schemas/contracts/v1/source/source-descriptor.schema.json` — normative descriptor shape (PROPOSED home per ADR-0001)
 - `contracts/source/source_descriptor.md` — descriptor semantics (PROPOSED)

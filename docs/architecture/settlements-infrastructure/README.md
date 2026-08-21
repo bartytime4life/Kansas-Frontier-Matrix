@@ -49,7 +49,7 @@ related:
   - ../critical-asset-exposure.md
   - ../contract-schema-policy-split.md
   - ../evidence-drawer.md
-  - ../governed-api.md
+  - ../governed-api/README.md
   - ../map-shell.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
@@ -492,7 +492,7 @@ Schema validity or a green profile workflow alone is insufficient.
 - [`docs/architecture/critical-asset-exposure.md`](../critical-asset-exposure.md)
 - [`docs/architecture/contract-schema-policy-split.md`](../contract-schema-policy-split.md)
 - [`docs/architecture/evidence-drawer.md`](../evidence-drawer.md)
-- [`docs/architecture/governed-api.md`](../governed-api.md)
+- [`docs/architecture/governed-api/README.md`](../governed-api/README.md)
 - [`docs/architecture/map-shell.md`](../map-shell.md)
 - [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md)

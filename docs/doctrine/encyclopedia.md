@@ -18,7 +18,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/architecture/maplibre-3d.md                                  # v1.3 sole-renderer doctrine (renderer-decision ADR PROPOSED)
   - docs/encyclopedia/                                                # PROPOSED — planning-artifact encyclopedia (manuscript + index); NOT this file
@@ -206,7 +206,7 @@ These five rules are the load-bearing invariants of KFM. Every other rule in thi
 | # | Invariant | One-line statement | Canonical source |
 |---|---|---|---|
 | **I-1** | **Lifecycle** | Source material becomes public knowledge only by passing **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**, and each transition is a **governed state transition, not a file move**. | `docs/doctrine/lifecycle-law.md`; `directory-rules.md` §9.1 |
-| **I-2** | **Trust membrane** | Public clients read **only** through `apps/governed-api/`. Raw, work, quarantine, canonical, model-generated, and internal state MUST NOT be a public path. | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md`; `directory-rules.md` §7.1 |
+| **I-2** | **Trust membrane** | Public clients read **only** through `apps/governed-api/`. Raw, work, quarantine, canonical, model-generated, and internal state MUST NOT be a public path. | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md`; `directory-rules.md` §7.1 |
 | **I-3** | **Cite-or-abstain** | No public claim is asserted without a resolvable `EvidenceRef` → `EvidenceBundle`. When evidence is missing, sensitive, denied, or stale, the system **abstains**; it does not fall through to fluent text. | `docs/doctrine/truth-posture.md`; `kfm_unified_doctrine_synthesis.md` §2 |
 | **I-4** | **Watcher-as-non-publisher** | Connectors, watchers, workers, and AI runtimes emit **receipts and candidates**. They **never** publish, mutate canonical records, or bypass `PromotionDecision` review. | `directory-rules.md` §7.1 (`apps/workers/` role); §13.5 (anti-pattern *Watcher publishes*); `kfm_unified_doctrine_synthesis.md` §4 |
 | **I-5** | **Deterministic identity** | Every governed object carries a content-addressable identity (`spec_hash` via canonical JCS+SHA-256, content hash for binary artifacts, or equivalent) so that replay verification, supersession lineage, and rollback targets resolve unambiguously. | `kfm_unified_doctrine_synthesis.md` §13; `directory-rules.md` §6.2 (`control_plane/document_registry.yaml`) |
@@ -291,7 +291,7 @@ The **trust membrane** is the boundary that prevents raw, unreviewed, restricted
 
 A public route MUST go through `apps/governed-api/`. Direct reads from `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or `data/catalog/` by `apps/explorer-web/` or any feature code are trust-membrane violations (see §19 anti-pattern *Public route reads canonical store*).
 
-**Canonical source:** `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md`; `directory-rules.md` §7.1, §7.1.a, §13.5 (anti-pattern table).
+**Canonical source:** `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md`; `directory-rules.md` §7.1, §7.1.a, §13.5 (anti-pattern table).
 
 ---
 
@@ -726,7 +726,7 @@ Concept → owning canonical doctrine document. Use this index to find the **aut
 |---|---|
 | Placement (where files live) | `docs/doctrine/directory-rules.md` (v1.4) |
 | Lifecycle phases and promotion | `docs/doctrine/lifecycle-law.md`; `directory-rules.md` §9 |
-| Trust membrane and governed-API boundary | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api.md` |
+| Trust membrane and governed-API boundary | `docs/doctrine/trust-membrane.md`; `docs/architecture/governed-api/README.md` |
 | Authority order for resolving conflicts | `docs/doctrine/authority-ladder.md`; this file §7 |
 | Truth labels and cite-or-abstain | `docs/doctrine/truth-posture.md`; this file §4, §8 |
 | Schema home (`schemas/contracts/v1/`) | `docs/adr/ADR-0001-schema-home.md`; `directory-rules.md` §7.4 |
@@ -854,7 +854,7 @@ Concept → owning canonical doctrine document. Use this index to find the **aut
 - [`docs/doctrine/trust-membrane.md`](./trust-membrane.md) — `apps/governed-api/` boundary
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — RAW → … → PUBLISHED invariant
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — `contracts/` vs `schemas/` vs `policy/`
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — trust membrane in executable form
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — trust membrane in executable form
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — map-first shell architecture
 - [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — sole-renderer doctrine + 3D feature surface (v1.3)
 - [`docs/encyclopedia/README.md`](../encyclopedia/README.md) — planning-artifact encyclopedia master index *(distinct from this file; see §1.2)*

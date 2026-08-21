@@ -13,7 +13,7 @@ related:
   - ai-build-operating-contract.md
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - contracts/domains/atmosphere/
   - schemas/contracts/v1/domains/atmosphere/
   - policy/domains/atmosphere/
@@ -99,7 +99,7 @@ The domain participates in the KFM trust membrane the same way every other lane 
 | Direction | Counterpart | Status |
 |---|---|---|
 | **Upstream doctrine** | `docs/doctrine/directory-rules.md`, `docs/doctrine/lifecycle-law.md`, `docs/doctrine/trust-membrane.md` | CONFIRMED doctrine; **PROPOSED** path realization |
-| **Sibling docs** | `docs/domains/README.md`, `docs/architecture/governed-api.md`, `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | **PROPOSED** paths |
+| **Sibling docs** | `docs/domains/README.md`, `docs/architecture/governed-api/README.md`, `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | **PROPOSED** paths |
 | **Cross-domain peers** | `docs/domains/hazards/`, `docs/domains/agriculture/`, `docs/domains/hydrology/`, `docs/domains/{habitat,fauna,flora}/` | **PROPOSED** paths |
 | **Contracts** | `contracts/domains/atmosphere/` | **PROPOSED** |
 | **Schemas** | `schemas/contracts/v1/domains/atmosphere/` (per ADR-0001 default) | **PROPOSED** |
@@ -521,7 +521,7 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, v1.3 *(CONFIRMED present in project; PROPOSED in repo path)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle *(PROPOSED)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed surfaces *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `apps/governed-api/` architecture *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — `apps/governed-api/` architecture *(PROPOSED)*
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — `SourceDescriptor` contract *(PROPOSED)*
 - [`docs/standards/`](../../standards/) — external standards (STAC, DCAT, PROV, OAI-PMH, ISO-19115, PMTiles, OGC API Tiles) *(some entries CONFIRMED present; remaining PROPOSED)*
 - Sibling domains: [`hazards/`](../hazards/) · [`agriculture/`](../agriculture/) · [`hydrology/`](../hydrology/) · [`habitat/`](../habitat/) · [`fauna/`](../fauna/) · [`flora/`](../flora/) *(PROPOSED)*
@@ -621,7 +621,7 @@ These items are explicitly unresolved by this document and should be tracked in 
 > [!NOTE]
 > This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (Ch. 11), the KFM Encyclopedia (Atmosphere/Air/Climate), and Directory Rules v1.3. Implementation depth is **PROPOSED** until mounted-repo evidence is available. Operating contract `CONTRACT_VERSION = "3.0.0"`.
 
-**Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) · sibling domains under [`docs/domains/`](../)
+**Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) · sibling domains under [`docs/domains/`](../)
 
 **Last reviewed:** 2026-05-28 · **Next review:** within 6 months (per Directory Rules §15 README contract: docs older than 6 months are flagged for review)
 

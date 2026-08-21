@@ -568,7 +568,7 @@ PROPOSED. Final assignments require a CODEOWNERS entry verified against a mounte
 - [`docs/domains/archaeology/cross-lane-relations.md`](./cross-lane-relations.md) — cross-lane edges.
 - [`docs/domains/archaeology/governed-ai-behavior.md`](./governed-ai-behavior.md) — governed-AI posture.
 - [`docs/domains/archaeology/verification-backlog.md`](./verification-backlog.md) — open verification items.
-- `docs/architecture/governed-api.md` — `DecisionEnvelope`, `EvidenceBundle` surfaces (PROPOSED path).
+- `docs/architecture/governed-api/README.md` — `DecisionEnvelope`, `EvidenceBundle` surfaces (PROPOSED path).
 - `docs/standards/PROV.md` — provenance crosswalk (PROPOSED path).
 - `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide open verification items (PROPOSED path).
 - `contracts/domains/archaeology/` · `schemas/contracts/v1/domains/archaeology/` · `policy/domains/archaeology/` · `tests/domains/archaeology/` · `release/candidates/archaeology/` — TODO once present.

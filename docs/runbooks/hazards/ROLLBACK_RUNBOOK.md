@@ -118,7 +118,7 @@ Per the Directory Rules canonical tree, `docs/runbooks/` is the canonical home f
 - `docs/doctrine/truth-posture.md` — cite-or-abstain default.
 - `docs/doctrine/directory-rules.md` — placement law for release artifacts and runbooks.
 - `docs/domains/hazards/README.md` — Hazards domain identity, source families, object families, sensitivity posture.
-- `docs/architecture/governed-api.md` — the only public route through which a rolled-back state becomes visible.
+- `docs/architecture/governed-api/README.md` — the only public route through which a rolled-back state becomes visible.
 
 **Downstream artifacts** (produced or referenced when this procedure runs):
 
@@ -565,7 +565,7 @@ These are tracked here in addition to `docs/registers/VERIFICATION_BACKLOG.md`. 
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law
 - [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — Hazards domain identity, source families, sensitivity posture
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — governed API surface
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed API surface
 - [`docs/governance/separation-of-duties.md`](../../governance/separation-of-duties.md) — release authority, correction reviewer *(PROPOSED)*
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — open verification items
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — recorded conflicts between docs and repo state
@@ -659,6 +659,6 @@ data/rollback/hazards/operational-context-layer/<receipt_id>.json
 | **Last updated** | 2026-05-12 |
 | **Authority** | CONFIRMED doctrine; PROPOSED implementation; PROPOSED specific paths |
 
-**Related docs:** [`docs/runbooks/README.md`](../README.md) · [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) · [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`docs/architecture/governed-api.md`](../../architecture/governed-api.md)
+**Related docs:** [`docs/runbooks/README.md`](../README.md) · [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) · [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md)
 
 [Back to top](#quick-jump)

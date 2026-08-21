@@ -13,7 +13,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/runbooks/governed_ai_VALIDATION.md
   - contracts/governance/  # ReviewRecord, decision/correction families
   - schemas/contracts/v1/  # QuarantineRecord home — PROPOSED, ADR pending
@@ -426,7 +426,7 @@ Per Atlas §24.7 *(PROPOSED reference for ADR discussion; doctrine CONFIRMED for
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle invariant detail. *PROPOSED path.*
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain, fail-closed posture. *PROPOSED path.*
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — why quarantine is never public. *PROPOSED path.*
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — the only legitimate public surface. *PROPOSED path.*
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — the only legitimate public surface. *PROPOSED path.*
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../sources/SOURCE_DESCRIPTOR_STANDARD.md) — admission and source identity. *PROPOSED path.*
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — file here when this runbook conflicts with mounted repo state. *PROPOSED path.*
 - [`docs/runbooks/governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) — Focus Mode evidence/citation/policy validation. *PROPOSED (named in Whole-UI report).*

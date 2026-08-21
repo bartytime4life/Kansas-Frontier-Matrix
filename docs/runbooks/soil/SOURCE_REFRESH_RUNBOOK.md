@@ -670,7 +670,7 @@ KFM separates **stale** from **wrong**. Both have visible markers and traceable 
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant
 - `docs/doctrine/directory-rules.md` — placement authority
 - `docs/doctrine/trust-membrane.md` — public surfaces consume governed APIs, not raw
-- `docs/architecture/governed-api.md` — release-only public surface (PROPOSED)
+- `docs/architecture/governed-api/README.md` — release-only public surface (PROPOSED)
 - `control_plane/source_authority_register.yaml` — admitted source ledger
 - `schemas/contracts/v1/domains/soil/` — soil object shape (PROPOSED home)
 - `policy/domains/soil/` — soil policy bundle (PROPOSED home)

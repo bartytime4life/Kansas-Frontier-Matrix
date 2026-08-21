@@ -443,7 +443,7 @@ Files that touch hazards but live **outside** the domain segment (per Directory 
 | `packages/ui/` (hazards components) | Shared UI; map shell components for hazards stay in the UI package, not under `packages/domains/hazards/` | **PROPOSED** |
 | `packages/maplibre-runtime/` (hazards style fragments) | Sole governed renderer adapter (Directory Rules §7.2.a, v1.3) | **PROPOSED** |
 | `tools/validators/<topic>/` (cross-domain) | Cross-domain validators (e.g., temporal-role) go to a non-domain topic segment | **PROPOSED** |
-| `docs/architecture/governed-api.md` | Where the hazards governed-API contract lives | **PROPOSED** |
+| `docs/architecture/governed-api/README.md` | Where the hazards governed-API contract lives | **PROPOSED** |
 | `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` | Source descriptors are repo-wide, not hazards-specific | **PROPOSED** |
 
 > [!NOTE]
@@ -603,7 +603,7 @@ This file is a **planning inventory**. It does not enforce, validate, or promote
 - `docs/registers/VERIFICATION_BACKLOG.md` — Repo-wide verification backlog.
 - `docs/registers/DRIFT_REGISTER.md` — Drift entries from this lane (incl. ADR-HAZ-08 crosswalk reconciliation).
 - `docs/adr/README.md` — ADR index; ADR-HAZ-* entries (planned) will land here.
-- `docs/architecture/governed-api.md` — Governed API surface where hazards routes live.
+- `docs/architecture/governed-api/README.md` — Governed API surface where hazards routes live.
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` — Source-descriptor standard for connectors.
 - `docs/runbooks/` — Runbook home (hazards refresh runbook PROPOSED; subfolder vs. flat convention is ADR-class per §13.5 / §18 OPEN-DR-02).
 

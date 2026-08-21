@@ -15,7 +15,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/standards/PROV.md
   - docs/atlases/Kansas_Frontier_Matrix_Domains_v1_1.md
@@ -563,7 +563,7 @@ stateDiagram-v2
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lifecycle law, authority order (CONFIRMED authored; mounted-repo presence NEEDS VERIFICATION)
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-surface trust boundary (CONFIRMED in Directory Rules related-doctrine list)
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant (CONFIRMED in Directory Rules related-doctrine list)
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — finite-outcome envelopes, `AIReceipt`, `DecisionEnvelope`
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelopes, `AIReceipt`, `DecisionEnvelope`
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — meaning / shape / admissibility / proof split (CONFIRMED in Directory Rules §6.1)
 - [`docs/atlases/`](../../atlases/) — Atlas chapter 13, Roads / Rail / Trade Routes `[DOM-ROADS]`
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standard (naming variance vs `PROVENANCE.md` → Directory Rules §18 OPEN-DR-01)

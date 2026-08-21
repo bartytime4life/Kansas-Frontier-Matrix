@@ -13,7 +13,7 @@ related: [
   docs/doctrine/truth-posture.md,
   docs/doctrine/lifecycle-law.md,
   docs/doctrine/directory-rules.md,
-  docs/architecture/governed-api.md,
+  docs/architecture/governed-api/README.md,
   docs/security/THREAT_MODEL.md,
   docs/security/EXPOSURE_PLAN.md,
   docs/security/INCIDENT_RESPONSE.md,
@@ -578,7 +578,7 @@ A new deny test is acceptable when **every** box can be checked:
 - [docs/doctrine/truth-posture.md](../doctrine/truth-posture.md) *(PROPOSED)*
 - [docs/doctrine/lifecycle-law.md](../doctrine/lifecycle-law.md) *(PROPOSED)*
 - [docs/doctrine/directory-rules.md](../doctrine/directory-rules.md) — placement authority
-- [docs/architecture/governed-api.md](../architecture/governed-api.md) *(PROPOSED — finite-outcome envelopes)*
+- [docs/architecture/governed-api/README.md](../architecture/governed-api/README.md) *(PROPOSED — finite-outcome envelopes)*
 - [docs/security/THREAT_MODEL.md](./THREAT_MODEL.md) *(PROPOSED — sibling, may not yet exist)*
 - [docs/security/EXPOSURE_PLAN.md](./EXPOSURE_PLAN.md) — current tracked exposure guidance; document remains draft.
 - [docs/security/INCIDENT_RESPONSE.md](./INCIDENT_RESPONSE.md) *(PROPOSED — sibling, may not yet exist)*
@@ -664,6 +664,6 @@ Each entry `SHOULD` be accompanied by:
 ---
 
 <sub>
-**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api.md) · [Threat model](./THREAT_MODEL.md) · [Exposure plan](./EXPOSURE_PLAN.md) · [Incident response](./INCIDENT_RESPONSE.md)<br/>
+**Related docs:** [Trust membrane](../doctrine/trust-membrane.md) · [Directory Rules](../doctrine/directory-rules.md) · [Governed API](../architecture/governed-api/README.md) · [Threat model](./THREAT_MODEL.md) · [Exposure plan](./EXPOSURE_PLAN.md) · [Incident response](./INCIDENT_RESPONSE.md)<br/>
 **Last updated:** 2026-08-01 · **Version:** v1.1 (draft) · **Owners:** Docs / Security / Policy stewards *(TODO)* · [↑ Back to top](#kfm-deny-tests)
 </sub>

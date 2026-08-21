@@ -32,7 +32,7 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/architecture/evidence-identity.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/CANONICALIZATION.md
   - docs/standards/SIGNING.md
   - docs/standards/PROV.md
@@ -780,7 +780,7 @@ A proposal graduates only when its authority owner, contract, machine shape, pol
 - [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted placement decision.
 - [`contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — meaning, shape, and admissibility separation.
 - [`evidence-identity.md`](../architecture/evidence-identity.md) — cross-root composition and current resolver boundary.
-- [`governed-api.md`](../architecture/governed-api.md) — current fail-closed public interface posture.
+- [`governed-api/README.md`](../architecture/governed-api/README.md) — current fail-closed public interface posture.
 
 ### Meaning and shape
 

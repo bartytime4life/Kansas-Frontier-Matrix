@@ -15,7 +15,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/CANONICAL_PATHS.md          # path-namespace authority for this lane
   - docs/domains/archaeology/CONTINUITY_INVENTORY.md     # continuity register
@@ -804,7 +804,7 @@ This document is done enough to enter the repository when:
   [`CROSS_DOMAIN.md`](CROSS_DOMAIN.md) — cross-lane boundary register ·
   [`SENSITIVITY.md`](SENSITIVITY.md) · [`PIPELINE.md`](PIPELINE.md) · [`VIEWING_PRODUCTS.md`](VIEWING_PRODUCTS.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
 - **Architecture neighbors**:
-  [`../../architecture/governed-api.md`](../../architecture/governed-api.md) ·
+  [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) ·
   [`../../architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) ·
   [`../../architecture/map-shell.md`](../../architecture/map-shell.md)
 - **Runbooks** (PROPOSED, partly drafted):

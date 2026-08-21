@@ -478,7 +478,7 @@ Source: `[DOM-SETTLE]` §N (Atlas v1.0 p. 96).
 - Archaeology: [`docs/domains/archaeology/README.md`](../../archaeology/README.md) — historic-townsite cultural sensitivity.
 - Frontier Matrix: [`docs/domains/frontier-matrix/README.md`](../../frontier-matrix/README.md) — Settlement Status hand-off — `TODO`, **NEEDS VERIFICATION**.
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Domain Placement Law (§12), schema-home rule (§6.4).
-- Architecture: [`docs/architecture/governed-api.md`](../../../architecture/governed-api.md) — trust-membrane definition.
+- Architecture: [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — trust-membrane definition.
 - ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §O items. (`TODO` link targets — verify on mount.)
 

@@ -50,7 +50,7 @@ related:
   - ./MAP_RUNTIME_BOUNDARY.md
   - ./map-context-evidence-drawer-admission.md
   - ../map-shell.md
-  - ../governed-api.md
+  - ../governed-api/README.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
   - ../../../contracts/ui/map_context_envelope.md
@@ -821,7 +821,7 @@ No source deactivation, data migration, schema rollback, runtime restart, cache 
 - [Map runtime boundary](./MAP_RUNTIME_BOUNDARY.md)
 - [Map context to Evidence Drawer admission](./map-context-evidence-drawer-admission.md)
 - [Map shell](../map-shell.md)
-- [Governed API](../governed-api.md)
+- [Governed API](../governed-api/README.md)
 
 ### Governing placement
 

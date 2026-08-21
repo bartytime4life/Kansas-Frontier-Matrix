@@ -534,7 +534,7 @@ For any change to this matrix or to the policy bundles it specifies:
 - `docs/doctrine/trust-membrane.md` — public / restricted surface split
 - `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant
 - `docs/architecture/contract-schema-policy-split.md` — where meaning, shape, and decisions live
-- `docs/architecture/governed-api.md` — public surface contract
+- `docs/architecture/governed-api/README.md` — public surface contract
 </details>
 
 <details>

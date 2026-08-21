@@ -187,7 +187,7 @@ Domain material belongs in lanes inside the responsibility roots. A topic does n
 
 The root README and linked human documentation are orientation surfaces. They must not expose credentials, private services, production payloads, restricted sources, living-person or genomic records, harmful-precision locations, or security-sensitive details.
 
-Browser and ordinary UI traffic belongs behind the [governed API boundary](docs/architecture/governed-api.md). Sensitive or uncertain material follows the fail-closed posture in [SECURITY.md](SECURITY.md) and [sensitivity doctrine](docs/doctrine/sensitivity.md).
+Browser and ordinary UI traffic belongs behind the [governed API boundary](docs/architecture/governed-api/README.md). Sensitive or uncertain material follows the fail-closed posture in [SECURITY.md](SECURITY.md) and [sensitivity doctrine](docs/doctrine/sensitivity.md).
 
 ## Mutability, retention, generation, and storage
 

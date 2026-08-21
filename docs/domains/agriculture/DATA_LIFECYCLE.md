@@ -28,7 +28,7 @@ related:
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
   - docs/domains/agriculture/sublanes/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
 tags: [kfm, domain, agriculture, lifecycle, governance, evidence, doctrine-adjacent, contract-v3]
 notes:
@@ -865,7 +865,7 @@ A repository implementation of this document conforms when **all** of the follow
 
 ### 19.4 Architecture & runtime
 
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Governed API surface *(PROPOSED home)*.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Governed API surface *(PROPOSED home)*.
 - `docs/architecture/governed-ai/FOCUS_FLOW.md` — cross-cutting Focus Mode flow *(PROPOSED)*.
 - `docs/architecture/ui/EVIDENCE_DRAWER.md` — Evidence Drawer payload contract *(PROPOSED)*.
 

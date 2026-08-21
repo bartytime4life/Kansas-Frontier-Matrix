@@ -568,7 +568,7 @@ The following items are explicitly **PROPOSED** / **NEEDS VERIFICATION** in curr
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle invariant. *(PROPOSED path; CONFIRMED invariant.)*
 - [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — source-of-truth order. *(PROPOSED path; CONFIRMED concept.)*
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — cite-or-abstain. *(PROPOSED path; CONFIRMED concept.)*
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — operational form of the trust membrane. *(PROPOSED path.)*
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — operational form of the trust membrane. *(PROPOSED path.)*
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — meaning / shape / policy split. *(PROPOSED path.)*
 - [`docs/governance/separation-of-duties.md`](../governance/separation-of-duties.md) — full role and duty matrix. *(PROPOSED path.)*
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift entries that may concern this document. *(PROPOSED path.)*

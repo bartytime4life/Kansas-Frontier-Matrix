@@ -440,7 +440,7 @@ These are the specific failure modes this contract surface is designed to preven
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (placement and lifecycle authority).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine. *TODO confirm.*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle invariant. *TODO confirm.*
-- [`docs/architecture/map-master.md`](../../architecture/map-master.md) — Master MapLibre Components / Functions / Features. *TODO confirm path.*
+- [`docs/architecture/map-master/README.md`](../../architecture/map-master/README.md) — Master MapLibre Components / Functions / Features. *TODO confirm path.*
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) — Lane landing page. *TODO confirm exists.*
 - `contracts/domains/settlements-infrastructure/` — semantic contracts (Markdown).
 - `schemas/contracts/v1/domains/settlements-infrastructure/` — machine schemas (JSON Schema).
@@ -559,7 +559,7 @@ expected:
 
 ### Footer
 
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [DOM-SETTLE dossier](./README.md) · [Map Master](../../architecture/map-master.md) · ADR-0001 *(schema home)* · [Encyclopedia](../../doctrine/encyclopedia.md)
+**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [DOM-SETTLE dossier](./README.md) · [Map Master](../../architecture/map-master/README.md) · ADR-0001 *(schema home)* · [Encyclopedia](../../doctrine/encyclopedia.md)
 
 **Last updated:** 2026-05-19 · **Doc status:** `draft` · **Repo state:** `NEEDS VERIFICATION` · **Authority:** subordinate to Directory Rules, KFM Encyclopedia, [DOM-SETTLE], [MAP-MASTER], and `schemas/contracts/v1/`.
 

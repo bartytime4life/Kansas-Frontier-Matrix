@@ -539,7 +539,7 @@ ADR-linked rows reference the open-ADR backlog (Atlas §24.12, Directory Rules �
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — gates and lifecycle (companion)
 - [`docs/domains/hydrology/GLOSSARY.md`](./GLOSSARY.md) — ubiquitous-language glossary (companion)
 - `docs/architecture/map-shell.md` — map shell architecture (PROPOSED)
-- `docs/architecture/governed-api.md` — governed API trust membrane (PROPOSED)
+- `docs/architecture/governed-api/README.md` — governed API trust membrane (PROPOSED)
 - `docs/standards/MAP_TRUST_STATES.md` — trust-state vocabulary and composition rules (PROPOSED; resolves the §10 CONFLICTED enum)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standard profile
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles standard profile

@@ -527,7 +527,7 @@ Expected outcome: **`deny`** at Gate E (source-role anti-collapse). Remote-sensi
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed-API boundary
 - [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — Hazards domain README *(PROPOSED path)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — governed-API contract
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed-API contract
 - [`docs/runbooks/ui_VALIDATION.md`](../ui_VALIDATION.md) — UI validation runbook
 - [`docs/runbooks/ui_ROLLBACK.md`](../ui_ROLLBACK.md) — UI rollback runbook
 - [`docs/runbooks/governed_ai_VALIDATION.md`](../governed_ai_VALIDATION.md) — Focus Mode validation runbook

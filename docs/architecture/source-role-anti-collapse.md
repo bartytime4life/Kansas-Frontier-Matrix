@@ -58,7 +58,7 @@ related:
   - document-convergence-plan.md
   - sensitivity.md
   - contract-schema-policy-split.md
-  - governed-api.md
+  - governed-api/README.md
   - ../sources/source-roles.md
   - ../sources/SOURCE_DESCRIPTOR_STANDARD.md
   - ../doctrine/directory-rules.md
@@ -992,7 +992,7 @@ Before merge, close the draft pull request and delete the feature branch. After 
 | [`docs/architecture/document-convergence-plan.md`](./document-convergence-plan.md) | Provisional source-role convergence direction; no structural action authorized. |
 | [`docs/architecture/sensitivity.md`](./sensitivity.md) | Explains the independent relationship among source role, rights, sensitivity, transform, review, and release. |
 | [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) | Meaning, shape, admissibility, validation, and decision boundaries. |
-| [`docs/architecture/governed-api.md`](./governed-api.md) | Public trust membrane and finite response boundary; current source-role integration must be verified separately. |
+| [`docs/architecture/governed-api/README.md`](./governed-api/README.md) | Public trust membrane and finite response boundary; current source-role integration must be verified separately. |
 | [`docs/sources/source-roles.md`](../sources/source-roles.md) | Proposed human source-role and role-to-claim reference. |
 | [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../sources/SOURCE_DESCRIPTOR_STANDARD.md) | Proposal-era SourceDescriptor standard; current implementation statements need separate grounding. |
 | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Accepted placement authority under ADR-0029. |

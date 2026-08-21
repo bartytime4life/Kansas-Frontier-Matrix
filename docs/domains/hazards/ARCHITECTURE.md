@@ -15,7 +15,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/domains/hydrology/
   - docs/domains/atmosphere/
@@ -633,7 +633,7 @@ These items are **NEEDS VERIFICATION**, **PROPOSED**, or **OPEN** against mounte
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lane pattern, anti-patterns
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed API as trust path
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — finite-outcome envelopes
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelopes
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — MapLibre downstream of trust
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance profile *(filename `PROV.md` vs `PROVENANCE.md` is OPEN per Directory Rules OPEN-DR-01)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — geospatial metadata crosswalk

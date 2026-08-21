@@ -2,13 +2,13 @@
 doc_id: kfm://doc/architecture-document-convergence-plan
 title: KFM Architecture Documentation Convergence Plan
 type: architecture-convergence-plan
-version: v0.1
+version: v0.2
 status: draft; repository-grounded; non-authoritative; no-moves
 owners:
   - "@bartytime4life — CODEOWNERS review route"
   - "NEEDS VERIFICATION — architecture and documentation stewardship"
 created: 2026-08-18
-updated: 2026-08-18
+updated: 2026-08-20
 policy_label: public
 owning_root: docs/
 current_path: docs/architecture/document-convergence-plan.md
@@ -32,7 +32,7 @@ tags: [kfm, architecture, documentation, convergence, information-architecture, 
 notes:
   - "This first slice creates one planning document only. It moves, renames, deletes, redirects, or canonicalizes no existing architecture page."
   - "Every disposition is provisional until complete content comparison, inbound-link inventory, document-identity review, and applicable owner or ADR review close."
-  - "The census covers all 102 Markdown documents under docs/architecture at the pinned evidence base."
+  - "The census covers all 102 Markdown documents under docs/architecture at the pinned evidence base; it remains historical after later flat-entrypoint retirements."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,6 +46,9 @@ notes:
 
 > [!CAUTION]
 > **A provisional disposition is not a canonicality decision.** `PLACE`, `SPLIT`, `MIGRATE`, `MIRROR`, `HOLD`, and `DENY` below use the finite Directory Rules vocabulary. Any structural action still requires the evidence, review, reference closure, compatibility treatment, validation, and rollback named for that row.
+
+> [!NOTE]
+> **Post-baseline status (2026-08-20).** Merged PRs [#3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149), [#3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150), and [#3151](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3151) retired the flat Governed AI, Governed API, and Map Master entrypoints. Their rows and the 102-document census below remain the commit-pinned Wave 0 lineage; current navigation resolves to the corresponding folder READMEs. No other disposition is advanced by this note.
 
 ## Status and bounded result
 

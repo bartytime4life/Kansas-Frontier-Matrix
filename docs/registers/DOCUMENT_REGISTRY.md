@@ -318,7 +318,7 @@ draft ──▶ review ──▶ published ──▶ deprecated ──▶ supers
 |---|---|---|---|---|---|---|
 | Architecture Index | `docs/architecture/README.md` | readme | canonical | review* | public | PROPOSED |
 | System Context | `docs/architecture/system-context.md` | standard | canonical | review* | public | PROPOSED |
-| Governed API | `docs/architecture/governed-api.md` | standard | canonical | review* | public | PROPOSED |
+| Governed API | `docs/architecture/governed-api/README.md` | standard | canonical | review* | public | PROPOSED |
 | Map Shell | `docs/architecture/map-shell.md` | standard | canonical | review* | public | PROPOSED |
 | Contract / Schema / Policy Split | `docs/architecture/contract-schema-policy-split.md` | standard | canonical | review* | public | PROPOSED |
 

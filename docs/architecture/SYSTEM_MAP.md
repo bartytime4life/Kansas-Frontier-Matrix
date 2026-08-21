@@ -337,7 +337,7 @@ Normal public clients must not directly read:
 
 MapLibre, PMTiles, MVT, COG, GeoParquet, graph projections, search indexes, dashboards, scenes, screenshots, stories, exports, and AI answers are downstream carriers. Each consequential public claim must remain traceable to evidence, policy, review, release, correction, and rollback appropriate to significance.
 
-See [trust membrane](../doctrine/trust-membrane.md), [governed API](./governed-api.md), [map shell](./map-shell.md), and [governed AI](./governed-ai.md).
+See [trust membrane](../doctrine/trust-membrane.md), [governed API](./governed-api/README.md), [map shell](./map-shell.md), and [governed AI](./governed-ai/README.md).
 
 [Back to top](#top)
 
@@ -423,9 +423,9 @@ Record unresolved items in the [drift register](../registers/DRIFT_REGISTER.md),
 - [`SKELETON_MAP.md`](./SKELETON_MAP.md) — root, lifecycle, and authority orientation
 - [`system-context.md`](./system-context.md) — actors and external boundaries
 - [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) — meaning, shape, and admissibility split
-- [`governed-api.md`](./governed-api.md) — intended trust-membrane architecture
+- [`governed-api/README.md`](./governed-api/README.md) — intended trust-membrane architecture
 - [`map-shell.md`](./map-shell.md) — map shell and click-to-evidence design
-- [`governed-ai.md`](./governed-ai.md) — bounded AI design
+- [`governed-ai/README.md`](./governed-ai/README.md) — bounded AI design
 - [`deployment-topology.md`](./deployment-topology.md) — runtime and exposure design
 - [`spatial-foundation.md`](./spatial-foundation.md) — spatial representation foundation
 - [Directory Rules](../doctrine/directory-rules.md), [lifecycle law](../doctrine/lifecycle-law.md), [trust membrane](../doctrine/trust-membrane.md)

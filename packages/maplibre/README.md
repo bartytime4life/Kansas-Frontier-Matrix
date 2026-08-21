@@ -65,7 +65,7 @@ related:
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/map-first.md
   - ../../docs/architecture/maplibre.md
-  - ../../docs/architecture/map-master.md
+  - ../../docs/architecture/map-master/README.md
   - ../../docs/architecture/maplibre-master.md
   - ../../docs/architecture/map-shell.md
   - ../../docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md

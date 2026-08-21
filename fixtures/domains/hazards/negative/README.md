@@ -68,7 +68,7 @@ These families are currently indexed under `../invalid/` rather than here:
 - `../identity/README.md`
 - `../layer_manifest/README.md`
 - `../../README.md`
-- `../../../../docs/architecture/governed-api.md`
+- `../../../../docs/architecture/governed-api/README.md`
 - `../../../../docs/architecture/hazards-trust-membrane.md`
 - `../../../../docs/domains/hazards/API_CONTRACTS.md`
 - `../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md`

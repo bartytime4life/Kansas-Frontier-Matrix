@@ -542,7 +542,7 @@ These items remain **NEEDS VERIFICATION** (or **OPEN**) until mounted-repo evide
 | OQ-HYD-CP-03 | Is `fixtures/domains/hydrology/` or `tests/fixtures/domains/hydrology/` the authority? | NEEDS VERIFICATION | Settle the rule in `tests/README.md` and `fixtures/README.md`. |
 | OQ-HYD-CP-04 | Are any hydrology schemas already authored under `contracts/domains/hydrology/<x>.schema.json` (drift §13.1)? | NEEDS VERIFICATION | Inspect; if found, open ADR-0001 migration entry. |
 | OQ-HYD-CP-05 | Which hydrology connectors are activated (USGS, FEMA, NOAA, NRCS, state) and what are their rights/terms? | NEEDS VERIFICATION | Check `data/registry/sources/hydrology/` and connector READMEs. |
-| OQ-HYD-CP-06 | Does `apps/governed-api/` already expose hydrology routes, and under what shape? | NEEDS VERIFICATION | Inspect routes; record under `docs/architecture/governed-api.md`. |
+| OQ-HYD-CP-06 | Does `apps/governed-api/` already expose hydrology routes, and under what shape? | NEEDS VERIFICATION | Inspect routes; record under `docs/architecture/governed-api/README.md`. |
 | OQ-HYD-CP-07 | Renderer rename acceptance (`packages/maplibre/` → `packages/maplibre-runtime/`) and Cesium-retirement ADR. | NEEDS VERIFICATION | OPEN-DR-10 (sole-renderer ADR), OPEN-DR-12 (rename). |
 | OQ-HYD-CP-08 | Are hydrology release candidates currently produced under `release/candidates/hydrology/`? | NEEDS VERIFICATION | Inspect `release/`. |
 | OQ-HYD-CP-09 | Is there an ADR governing the hydrology-specific NFHL vs observed vs forecast separation? | NEEDS VERIFICATION | Search `docs/adr/`. |
