@@ -65,7 +65,8 @@
       "repo:docs/doctrine/directory-rules.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fd49a0b83e55cef52c1124281f093e263526898d",
       "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@977bd5219b2002bab647792606c862ebc3b6bd85#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
       "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@977bd5219b2002bab647792606c862ebc3b6bd85#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
-      "repo:pr/3217"
+      "repo:pr/3217",
+      "repo:workflow/make-hazards-validate@pr-3217"
     ]
   },
   "truth_labels": {
@@ -120,8 +121,8 @@
     },
     {
       "gate": "repository-native-changed-area-validation",
-      "outcome": "SKIPPED",
-      "reason": "No mounted repository checkout was available, so repository-native aggregate checks and the actual make hazards-validate execution remain required after application to a verified checkout."
+      "outcome": "PASS",
+      "reason": "The no-network repository-native `make hazards-validate` target completed successfully in the hosted one-shot corrective workflow immediately before this receipt update. The command exercises the deterministic Hazards unit tests and fixture validator; it does not establish live hazard truth, source admission, policy approval, release, or publication readiness."
     },
     {
       "gate": "remote-feature-branch-and-draft-pr-delivery",
@@ -232,5 +233,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Corrective authoring receipt for draft PR #3217. The reviewed Hazards specification remains bound to its prepared SHA-256, while the Dashboard Catalog is concurrency-reconciled as v0.6 to preserve current-main People/DNA/Land and Settlements/Infrastructure work. The PR removes the temporary transfer archive and one-shot assembly workflow left by earlier merged transfer PRs. Repository-native Hazards validation is executed in the corrective workflow; hosted exact-head checks and human review remain pending. No source activation, live hazard claim, policy decision, release, deployment, promotion, publication, merge, or repository-setting authority is asserted."
+  "notes": "Corrective authoring receipt for draft PR #3217. The reviewed Hazards specification remains bound to its prepared SHA-256, while the Dashboard Catalog is concurrency-reconciled as v0.6 to preserve current-main People/DNA/Land and Settlements/Infrastructure work. The PR removes the temporary transfer archive and one-shot assembly workflow left by earlier merged transfer PRs. Repository-native `make hazards-validate` completed successfully in the hosted corrective workflow; broader hosted exact-head checks and human review remain pending. No source activation, live hazard claim, policy decision, release, deployment, promotion, publication, merge, or repository-setting authority is asserted."
 }
