@@ -1,0 +1,162 @@
+name: Dispatch Hazards exact-head validation
+
+on:
+  push:
+    branches:
+      - docs/ground-hazards-dashboard-20260821
+    paths:
+      - .github/workflows/kfm-hazards-payload-assembly.yml
+
+permissions:
+  actions: write
+  contents: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  dispatch-and-record:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TARGET_BRANCH: ${{ github.ref_name }}
+      PR_NUMBER: "3217"
+      KFM_NO_NETWORK: "1"
+      PYTHONHASHSEED: "0"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      TZ: UTC
+    steps:
+      - name: Clone the exact feature branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TARGET_BRANCH" \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+
+      - name: Verify the final governed payload and remove the dispatcher
+        id: finalize
+        working-directory: repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          cat <<'EOF' | sha256sum -c -
+          532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3  docs/dashboards/domain/hazards.md
+          8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4  docs/dashboards/DASHBOARD_CATALOG.md
+          EOF
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          receipt_path = Path("data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json")
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          expected = {
+              "docs/dashboards/domain/hazards.md": "sha256:532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3",
+              "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4",
+          }
+          if receipt.get("artifact_hashes") != expected:
+              raise SystemExit("generated receipt artifact binding mismatch")
+          gates = {gate["gate"]: gate for gate in receipt["validation_gates"]}
+          if gates["repository-native-changed-area-validation"]["outcome"] != "PASS":
+              raise SystemExit("repository-native validation receipt gate is not PASS")
+          if receipt["links"].get("pr_number") != 3217:
+              raise SystemExit("receipt PR linkage mismatch")
+          if receipt["human_review"].get("state") != "pending":
+              raise SystemExit("human review must remain pending")
+          PY
+
+          test ! -e .kfm-transfer/hazards_payload.tar.bz2
+          git diff --check
+          make hazards-validate
+
+          git rm .github/workflows/kfm-hazards-payload-assembly.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(hazards): finalize exact-head validation dispatch"
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+          final_sha=$(git rev-parse HEAD)
+          echo "final_sha=$final_sha" >> "$GITHUB_OUTPUT"
+          echo "FINAL_HEAD_SHA=$final_sha"
+
+      - name: Dispatch and monitor exact-head workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FINAL_SHA: ${{ steps.finalize.outputs.final_sha }}
+        run: |
+          set -euo pipefail
+
+          api() {
+            curl --fail-with-body --silent --show-error \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$@"
+          }
+
+          workflows=(domain-hazards.yml validator-suite.yml)
+          for workflow in "${workflows[@]}"; do
+            payload=$(jq -n --arg ref "$TARGET_BRANCH" '{ref: $ref}')
+            api -X POST \
+              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/dispatches" \
+              -d "$payload" >/dev/null
+          done
+
+          encoded_branch=$(printf '%s' "$TARGET_BRANCH" | jq -sRr @uri)
+          report="### Exact-head validation dispatch\n\n- Head: \`${FINAL_SHA}\`\n- Focused pre-dispatch check: \`make hazards-validate\` passed.\n"
+          overall=success
+
+          for workflow in "${workflows[@]}"; do
+            run_json=""
+            for _ in $(seq 1 60); do
+              runs=$(api "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/runs?branch=${encoded_branch}&event=workflow_dispatch&per_page=20")
+              run_json=$(jq -c --arg sha "$FINAL_SHA" '.workflow_runs[] | select(.head_sha == $sha and .event == "workflow_dispatch")' <<<"$runs" | head -n 1)
+              if [[ -n "$run_json" ]]; then
+                break
+              fi
+              sleep 5
+            done
+
+            if [[ -z "$run_json" ]]; then
+              report+="- \`${workflow}\`: UNKNOWN — no exact-head dispatched run was discoverable within the bounded polling window.\n"
+              overall=failure
+              continue
+            fi
+
+            run_id=$(jq -r '.id' <<<"$run_json")
+            for _ in $(seq 1 90); do
+              run_json=$(api "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}")
+              status=$(jq -r '.status' <<<"$run_json")
+              if [[ "$status" == "completed" ]]; then
+                break
+              fi
+              sleep 10
+            done
+
+            status=$(jq -r '.status' <<<"$run_json")
+            conclusion=$(jq -r '.conclusion // "UNKNOWN"' <<<"$run_json")
+            html_url=$(jq -r '.html_url' <<<"$run_json")
+            if [[ "$status" != "completed" ]]; then
+              conclusion=UNKNOWN
+              overall=failure
+            elif [[ "$conclusion" != "success" ]]; then
+              overall=failure
+            fi
+            report+="- \`${workflow}\`: **${conclusion}** — ${html_url}\n"
+          done
+
+          report+="\nHuman review remains pending. These runs do not grant merge, release, deployment, promotion, publication, source-admission, policy, or emergency-authority approval."
+          body=$(printf '%b' "$report")
+          comment_payload=$(jq -n --arg body "$body" '{body: $body}')
+          api -X POST \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            -d "$comment_payload" >/dev/null
+
+          if [[ "$overall" != "success" ]]; then
+            echo "One or more exact-head workflows did not complete successfully." >&2
+            exit 1
+          fi
