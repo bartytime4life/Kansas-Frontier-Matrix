@@ -508,7 +508,7 @@ It corrects stale claims that the repository was not mounted, the tree was merel
 
 ### Rollback
 
-Before merge, close the draft PR and delete its scoped branch through normal controls. After an authorized merge, revert the focused documentation and generated-receipt commits, restore prior README blob `3749fc0099443c3c8b024357e0f1694253ff735e`, and rerun documentation and receipt checks. No runtime, telemetry, lifecycle, release, deployment, cache, or public artifact requires reversal.
+Before merge, close the draft PR and delete its scoped branch through normal controls. After an authorized merge, revert this focused correction and its generated receipt, restore prior README blob `c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3`, and rerun documentation and receipt checks. No runtime, telemetry, lifecycle, release, deployment, cache, or public artifact requires reversal.
 
 ---
 
