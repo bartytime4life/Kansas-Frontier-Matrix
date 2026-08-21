@@ -35,7 +35,7 @@
       "sha256:23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af"
     ],
     "attached_docs": [
-      "Pasted text(20260821-160507).txt"
+      "Pasted text(20260821-161458).txt"
     ],
     "evidence_refs": [
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4",
@@ -142,7 +142,7 @@
     {
       "id": "attached-implementation-prompt",
       "validated": true,
-      "evidence_ref": "attachment://Pasted text(20260821-160507).txt"
+      "evidence_ref": "attachment://Pasted text(20260821-161458).txt"
     },
     {
       "id": "pinned-current-main",
