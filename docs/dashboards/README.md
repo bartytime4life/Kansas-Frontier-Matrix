@@ -2,13 +2,13 @@
 doc_id: kfm://doc/dashboards-readme
 title: Dashboards — Human-facing dashboard specifications and indicator catalogs
 type: documentation-lane-readme
-version: v1.0
+version: v1.0.1
 status: "repository-grounded; active-path; placement-hold; runtime-needs-verification"
 owners:
   - "@bartytime4life"
 owner_status: "CONFIRMED GitHub review route through the repository default CODEOWNERS rule; dashboard, observability, domain, and independent-review stewardship assignments remain NEEDS VERIFICATION"
 created: 2026-05-20
-updated: 2026-08-14
+updated: 2026-08-21
 policy_label: repository-facing
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -19,18 +19,18 @@ runtime_status: "NEEDS VERIFICATION — specification presence is not running-da
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: dc30e1d38f9a4ecf45fd589d388886fc872dd189
-  target_prior_blob: 3749fc0099443c3c8b024357e0f1694253ff735e
+  base_commit: 075cbc5dbf9918ef0ce7719b24463d40f8ed09ef
+  target_prior_blob: c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3
   docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  dashboard_catalog_blob: 30b9d35ede3410a8d2f946279891ae5ec2482a62
+  dashboard_catalog_blob: 82c7859b2782c13e97b1b3d3d55cdf35400fe675
   indicator_catalog_blob: 4fe3d6be5b0b6ba6359a301942c01d713c8e970f
   governance_tree: 448e5614c90534266064dee9a218519876ca8b1c
   operational_tree: c24b6e74e62d0c895282a2e1d9defbe62750f62c
-  domain_tree: f27f67d3d13b1082a8edd06d464a36c116130805
+  domain_tree: 57d617906f292492c79f769e147e9716ab7fabb9
   observability_tree: d330bc33e5f94dd54f4d5487fe3ed30ac088f7c7
 related:
   - docs/README.md
@@ -51,7 +51,8 @@ related:
 tags: [kfm, docs, dashboards, specifications, governance-health, operational-health, domain-health, observability, cite-or-abstain]
 notes:
   - "v1.0 is a same-path repository reconciliation. It replaces the 2026-05 evidence boundary with a pinned current-tree inventory and adopted Directory Rules v2 posture."
-  - "The current dashboards subtree contains 34 specification files and seven lane/catalog navigation files, for 41 Markdown files total at the pinned base."
+  - "v1.0.1 reconciles the parent inventory to the current 33-spec catalog and thirteen-spec domain lane after removal of the air sensor-review path; it changes no catalog, runtime, policy, release, deployment, or publication authority."
+  - "The current dashboards subtree contains 33 specification files and seven lane/catalog navigation files, for 40 Markdown files total at the pinned base."
   - "Specification-file presence is CONFIRMED; running dashboards, telemetry production, query execution, metric computation, alerting, and deployed review-console integration remain NEEDS VERIFICATION."
   - "The dashboards lane reports posture. It does not create evidence, policy, review, release, correction, rollback, or publication authority."
   - "This documentation-only update does not settle the placement hold, migrate the lane, resolve duplicate observability filenames, or alter runtime behavior."
@@ -66,7 +67,7 @@ notes:
 <p>
   <img alt="Path: confirmed" src="https://img.shields.io/badge/path-CONFIRMED-1f6feb">
   <img alt="Placement: hold" src="https://img.shields.io/badge/placement-HOLD-b42318">
-  <img alt="Specifications: 34 confirmed" src="https://img.shields.io/badge/specifications-34%20CONFIRMED-1a7f37">
+  <img alt="Specifications: 33 confirmed" src="https://img.shields.io/badge/specifications-33%20CONFIRMED-1a7f37">
   <img alt="Runtime: needs verification" src="https://img.shields.io/badge/runtime-NEEDS%20VERIFICATION-d4a72c">
   <img alt="Truth posture: cite or abstain" src="https://img.shields.io/badge/truth-cite--or--abstain-8250df">
   <img alt="Publication: none" src="https://img.shields.io/badge/publication-none-6e7781">
@@ -125,11 +126,11 @@ The four complete subtree listings at the pinned base establish the following fi
 |---|---|---:|---|
 | Governance | [`governance/README.md`](governance/README.md) | 5 | Presence **CONFIRMED**; runtime **NEEDS VERIFICATION** |
 | Operational | [`operational/README.md`](operational/README.md) | 4 | Presence **CONFIRMED**; runtime **NEEDS VERIFICATION** |
-| Domain | [`domain/README.md`](domain/README.md) | 14 | Thirteen top-level domain specs plus one air sub-spec; runtime **NEEDS VERIFICATION** |
+| Domain | [`domain/README.md`](domain/README.md) | 13 | Thirteen top-level domain specs; the removed air sensor-review path is not counted; runtime **NEEDS VERIFICATION** |
 | Observability | [`observability/README.md`](observability/README.md) | 11 | Presence **CONFIRMED**; naming conflict and runtime unresolved |
-| **Total** | Four child lanes | **34** | Specification presence only |
+| **Total** | Four child lanes | **33** | Specification presence only |
 
-Together with this README, two catalogs, and four category READMEs, the subtree contains **41 Markdown files** at the evidence snapshot.
+Together with this README, two catalogs, and four category READMEs, the subtree contains **40 Markdown files** at the evidence snapshot.
 
 [↑ Back to top](#top)
 
@@ -157,7 +158,7 @@ Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) a
 |---|---|---|
 | **Tracked** | Path, indexes, category lanes, and spec files exist | **CONFIRMED** |
 | **Documented** | Lane boundaries and spec intent are written | **CONFIRMED**, with stale claims reconciled here |
-| **Indexed** | Specs appear in the current dashboard catalog | **CONFIRMED for 34 catalog rows; machine parity NEEDS VERIFICATION** |
+| **Indexed** | Specs appear in the current dashboard catalog | **CONFIRMED for 33 catalog rows; machine parity NEEDS VERIFICATION** |
 | **Implemented** | Queries, panels, adapters, access controls, and stores exist | **NEEDS VERIFICATION** |
 | **Observed** | Current telemetry or governed records feed a running surface | **UNKNOWN / NEEDS VERIFICATION** |
 | **Enforced** | Validators or policy fail closed on dashboard contracts | **NEEDS VERIFICATION** |
@@ -238,11 +239,11 @@ A child category README owns deeper lane detail. This parent lists only direct c
 ```text
 docs/dashboards/
 ├── README.md                    # this boundary contract
-├── DASHBOARD_CATALOG.md         # 34-spec cross-lane index
+├── DASHBOARD_CATALOG.md         # 33-spec cross-lane index
 ├── INDICATOR_CATALOG.md         # 23-indicator human mirror
 ├── governance/                  # README + 5 specs
 ├── operational/                 # README + 4 specs
-├── domain/                      # README + 14 specs
+├── domain/                      # README + 13 specs
 └── observability/               # README + 11 specs
 ```
 
@@ -263,7 +264,7 @@ Solid arrows show current documentation relationships. Dashed arrows show implem
 ```mermaid
 flowchart LR
   ATLAS["Atlas and source lineage"] --> IC["INDICATOR_CATALOG.md<br/>23 indicator mirror"]
-  TREE["Current repository tree"] --> DC["DASHBOARD_CATALOG.md<br/>34 spec index"]
+  TREE["Current repository tree"] --> DC["DASHBOARD_CATALOG.md<br/>33 spec index"]
   IC --> ROOT["docs/dashboards/README.md<br/>boundary contract"]
   DC --> ROOT
   ROOT --> GOV["governance/ specs"]
@@ -294,13 +295,13 @@ A specification can define intended panels, indicators, source records, negative
 
 ## 8. Dashboard catalog
 
-[`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md) is the current repository index for this lane. It records 34 specs and separates file presence from running-surface status.
+[`DASHBOARD_CATALOG.md`](DASHBOARD_CATALOG.md) is the current repository index for this lane. It records 33 specs and separates file presence from running-surface status.
 
 | Category | Category contract | Specs | Posture |
 |---|---|---:|---|
 | Governance | [`governance/README.md`](governance/README.md) | 5 | Files **CONFIRMED** |
 | Operational | [`operational/README.md`](operational/README.md) | 4 | Files **CONFIRMED** |
-| Domain | [`domain/README.md`](domain/README.md) | 14 | Files **CONFIRMED** |
+| Domain | [`domain/README.md`](domain/README.md) | 13 | Files **CONFIRMED** |
 | Observability | [`observability/README.md`](observability/README.md) | 11 | Files **CONFIRMED**; duplicate-name conflict open |
 
 ### Catalog rules
@@ -389,7 +390,7 @@ git diff --check
 | Criterion | Passing evidence |
 |---|---|
 | Same-path modernization | Only this README and its generated receipt change unless a direct dependency is admitted. |
-| Inventory accuracy | Four subtree counts reconcile to 34 specs and seven navigation/catalog files. |
+| Inventory accuracy | Four subtree counts reconcile to 33 specs and seven navigation/catalog files. |
 | Placement truth | Existing path confirmed; nested-lane status remains `HOLD`. |
 | Trust boundary | No runtime, evidence, policy, release, or publication authority moves into docs. |
 | Runtime claims | No running-dashboard claim is upgraded without evidence. |
@@ -458,7 +459,7 @@ No. Use registered identities. A new category, scope, or authority boundary requ
 | [`docs/README.md`](../README.md) | Parent documentation authority and exposure contract |
 | [`Directory Rules v2`](../doctrine/directory-rules.md) | Adopted placement and README-profile law |
 | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted adoption decision and migration boundary |
-| [`Dashboard Catalog`](DASHBOARD_CATALOG.md) | Current 34-spec index |
+| [`Dashboard Catalog`](DASHBOARD_CATALOG.md) | Current 33-spec index |
 | [`Indicator Catalog`](INDICATOR_CATALOG.md) | Current 23-row governance-health mirror |
 | [`Governance lane`](governance/README.md) | Governance-health category contract |
 | [`Operational lane`](operational/README.md) | Feed, artifact, and QC category contract |
@@ -511,6 +512,6 @@ Before merge, close the draft PR and delete its scoped branch through normal con
 
 ---
 
-**Current edition:** v1.0 · **Evidence review:** 2026-08-14 · **GitHub review route:** `@bartytime4life` · **Placement:** `HOLD` · **Runtime:** `NEEDS VERIFICATION`
+**Current edition:** v1.0.1 · **Evidence review:** 2026-08-21 · **GitHub review route:** `@bartytime4life` · **Placement:** `HOLD` · **Runtime:** `NEEDS VERIFICATION`
 
 [↑ Back to top](#top)
