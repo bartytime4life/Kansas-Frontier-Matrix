@@ -9,6 +9,9 @@ owners:
 created: 2026-05-20
 updated: 2026-08-21
 policy_label: public
+owning_root: docs/
+responsibility: Dashboard specification inventory only; not runtime, indicator, policy, release, or publication authority.
+truth_posture: CONFIRMED file presence at a pinned tree; runtime and placement remain PROPOSED or NEEDS VERIFICATION.
 related:
   - docs/dashboards/README.md
   - docs/dashboards/INDICATOR_CATALOG.md
