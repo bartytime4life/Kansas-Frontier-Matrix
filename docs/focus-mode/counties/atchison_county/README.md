@@ -313,6 +313,6 @@ Review this README when any of the following changes:
 
 This documentation update should be reviewed as a one-file, same-path change. Validation must confirm one H1, unique and resolving local anchors, resolving relative repository links, no accidental claim of implementation or publication, and an exact changed-path set containing only this README.
 
-Rollback is mechanical: before merge, close the draft pull request or delete its branch; after merge, revert the single documentation commit. Reverting this README changes no source, evidence, policy, runtime, release, deployment, or publication state.
+Rollback is mechanical: before merge, close the draft pull request or delete its branch; after merge, revert the merged pull request or its documentation commits. Reverting this README changes no source, evidence, policy, runtime, release, deployment, or publication state.
 
 [Back to top](#top)
