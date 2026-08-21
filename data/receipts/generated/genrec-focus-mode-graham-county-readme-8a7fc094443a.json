@@ -1,0 +1,185 @@
+{
+  "receipt_id": "genrec-focus-mode-graham-county-readme-8a7fc094443a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/graham_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/graham_county/README.md": "sha256:8a7fc094443ab74de9b8a8a2c3f8eb33283442444cf2b87acfdac9c88d6ac6a0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:ccc4182ae9d3f26b4b36ce9a4190dc94b30aca4265d5a77000abd05eaf1aa350",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ccc4182ae9d3f26b4b36ce9a4190dc94b30aca4265d5a77000abd05eaf1aa350"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 — normalized scoped task contract"
+    ],
+    "evidence_refs": [
+      "repo:commit/b28414d3e44781a70440be91bfacf61450155ccb",
+      "repo:commit/b10634519b73c4f3f299cbabc609cfee21211e08",
+      "repo:docs/focus-mode/counties/graham_county/README.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "repo:docs/focus-mode/counties/graham_county/README.md@b10634519b73c4f3f299cbabc609cfee21211e08#blob=5a6e3ec94cf59263c4b9130a6e1ae3275c0ee5fe",
+      "repo:docs/focus-mode/counties/graham_county/graham_county_focus_mode_build_plan.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=d83228010dcfe6a97452db6d56ccca78806b8166",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=c985d2f4dcb70cf05eb643f450c05d19a616e410",
+      "repo:docs/focus-mode/counties/_template/county-build-plan.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=520922bf756ff5e75f927c5d0dc9cc81e65ca3e0",
+      "repo:docs/focus-mode/README.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:docs/focus-mode/counties/README.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=48621badd51614db7bff0882c19096fa388234ac",
+      "repo:docs/doctrine/directory-rules.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:contracts/focus_mode/focus_mode_payload.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:schemas/contracts/v1/focus/README.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33",
+      "repo:policy/focus/README.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=35001e958a6b51d2f22004d5e637d72baeab49af",
+      "repo:tools/validators/validate_focus_mode_index.py@b28414d3e44781a70440be91bfacf61450155ccb#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validators/validator_registry.json@b28414d3e44781a70440be91bfacf61450155ccb#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:tools/validators/docs/meta-block/check_meta_blocks.py@b28414d3e44781a70440be91bfacf61450155ccb#blob=f5dfd61abf95f7f8d424ec7d8db4ed4fb9feae42",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@b28414d3e44781a70440be91bfacf61450155ccb#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:.github/CODEOWNERS@b28414d3e44781a70440be91bfacf61450155ccb#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:CONTRIBUTING.md@b28414d3e44781a70440be91bfacf61450155ccb#blob=de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "task-contract:kfm-focus-mode-graham-county-readme-20260821#sha256=ccc4182ae9d3f26b4b36ce9a4190dc94b30aca4265d5a77000abd05eaf1aa350"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/graham_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-tree-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main at b28414d3e44781a70440be91bfacf61450155ccb; verified prior target blob 8b137891791fe96927ad78e64b0aad7bded08bdc, the exact two-file Graham directory, sibling plan blob d83228010dcfe6a97452db6d56ccca78806b8166, and no open pull request or matching task branch before branch creation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main remained b28414d3e44781a70440be91bfacf61450155ccb from initial inspection through branch creation; the target and county-index blobs remained unchanged."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 keeps docs/ as the human-documentation owner; the change remains at the tracked path and explicitly leaves ADR-0027 path convergence on HOLD."
+    },
+    {
+      "gate": "repository-grounded-plan-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes the tracked Graham plan from current repository evidence, preserves living-community and descendant authority, oral-history rights, property and access, burial and archaeology, historical-groundwater currentness, district administration, aggregate-agriculture, minimum-display, correction, and rollback boundaries, and does not promote source, payload, policy, runtime, release, or publication claims."
+    },
+    {
+      "gate": "markdown-metadata-heading-anchor-fence-table-and-whitespace-checks",
+      "outcome": "PASS",
+      "reason": "One H1, one bounded KFM Meta Block, 30 headings, 11 resolved unique internal fragments, balanced fence and comment pairs, 12 consistent tables, no tabs or trailing whitespace, LF and final newline, 40544 bytes, 547 lines, Git blob 5a6e3ec94cf59263c4b9130a6e1ae3275c0ee5fe, and SHA-256 8a7fc094443ab74de9b8a8a2c3f8eb33283442444cf2b87acfdac9c88d6ac6a0."
+    },
+    {
+      "gate": "repository-metadata-validator",
+      "outcome": "PASS",
+      "reason": "Current-base validator sources were exercised locally against the final README with profile present: exit 0, one valid metadata block, zero invalid blocks, and zero fail findings. The 18 unsupported-nesting findings are non-blocking warnings for the rich evidence snapshot and do not establish broader repository conformance."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 13 unique repository-relative targets referenced by the README were confirmed through pinned repository reads or current path evidence; all 11 unique same-document fragments resolved."
+    },
+    {
+      "gate": "sensitive-content-and-non-effect-scan",
+      "outcome": "PASS",
+      "reason": "No coordinates, credentials, signed URLs, private endpoints, personal data, exact protected locations, or live operational payloads were introduced; living-descendant, kinship, oral-history, property, cemetery, burial, archaeology, current-groundwater, individual-water, and farm/family reconstruction requests remain fail closed."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Current PR-triggered validation uses read-only repository permissions for the inspected docs, validator, promotion-gate, and release-dry-run surfaces; the latter two explicitly emit no promotion, release, deployment, publication, or administrative mutation."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Receipt contract 3.0.0 binds the complete final README SHA-256 8a7fc094443ab74de9b8a8a2c3f8eb33283442444cf2b87acfdac9c88d6ac6a0, aligns artifact and truth-label maps, records evidence and skipped checks, and leaves human review pending."
+    },
+    {
+      "gate": "county-index-snapshot-boundary",
+      "outcome": "PASS",
+      "reason": "COUNTY_INDEX.md remains unchanged by this task; its pinned-base Graham README_1_BYTE row accurately describes the predecessor and is not pre-updated to a future merged-main fact. No lifecycle, validator, release, or publication meaning is inferred."
+    },
+    {
+      "gate": "repository-native-full-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full repository dependency environment was used; the current Focus index validator is incompatible with the singular snake_case two-file lane and is not registered. Hosted exact-head checks remain to be inspected after draft pull-request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-county-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/COUNTY_INDEX.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-graham-build-plan",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/graham_county/graham_county_focus_mode_build_plan.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-focus-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-county-control-plane-proposal",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-focus-payload-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/focus_mode/focus_mode_payload.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-focus-schema-boundary",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/focus/README.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "repo-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/README.md@b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "current-user-task-contract",
+      "validated": true,
+      "evidence_ref": "task-contract:kfm-focus-mode-graham-county-readme-20260821#sha256=ccc4182ae9d3f26b4b36ce9a4190dc94b30aca4265d5a77000abd05eaf1aa350"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T22:38:21Z",
+  "emitter": "OpenAI Codex GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. The normalized scoped task-contract hash is not a stored prompt transcript. This receipt is not evidence authority, community or descendant endorsement, policy approval, path-migration authority, merge approval, release, deployment, or publication authority."
+}
