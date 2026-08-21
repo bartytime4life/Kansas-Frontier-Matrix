@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-dashboards-domain-flora-6e0dcab38246",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/flora.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/flora.md": "sha256:6e0dcab3824638ceb657c3fee4c0663a6791e4d99cb4eaf49fe582dceea1aa07",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:f7e3699f447e1859e3a89fa32e27666721efdf7c3051a5d7b232a37b5e4ad426"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:31e30ea9148d7d69346796c5595a3f3b881764a4b9feb309efc6a6f9766821fe",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (current repository evidence, feature-branch writes, and draft-PR delivery)",
+      "deterministic local Markdown, metadata, anchor, fence, table, link, whitespace, sensitive-pattern, SHA-256, and Git-blob validation",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:branch/docs/ground-flora-dashboard-20260821",
+      "repo:docs/dashboards/domain/flora.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=79b3c8134494b394cbaa52e26f33adf98b8ba6a4",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe",
+      "repo:docs/dashboards/domain/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:docs/doctrine/directory-rules.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:docs/domains/flora/ARCHITECTURE.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:contracts/domains/flora/flora_occurrence.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:schemas/contracts/v1/domains/flora/flora_occurrence.schema.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=cc7d4447f92e9596bf1b533d37d7acffbb9117f4",
+      "repo:fixtures/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=d09d667a5493628284095941c7a930034dcb7433",
+      "repo:tools/validators/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=e752afff43c2f0f8fe5a2f055dc447a8c14f2378",
+      "repo:tests/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=9e651d5df4a03cf9aa2dd1ab5afcf44e4fdc8896",
+      "repo:.github/workflows/domain-flora.yml@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=3fe6b1ba8150960692b6b2fc764c6aa31d09565c",
+      "repo:policy/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:policy/sensitivity/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=4c65abec24135f7e4467fd108e163cdce594d5f9",
+      "repo:data/registry/sources/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=356cd29ca5a764ffe1e774fb565bce50bba46011",
+      "repo:data/registry/sources/flora/usda_plants.yaml@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=4cf877d234542990be382913d0ab0917f8fb3398",
+      "repo:connectors/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:data/proofs/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:release/candidates/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:.github/CODEOWNERS@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/flora.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-overlap-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 464148b8b1b3dff558086b23fc5ec8fb16d60572, verified target and catalog blobs, found no open pull request for the exact Flora dashboard target and no task-branch collision, and created docs/ground-flora-dashboard-20260821 from the exact base."
+    },
+    {
+      "gate": "directory-rules-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 pins the current Directory Rules authority. The slice keeps two existing human documentation files at their tracked paths, adds one generated authoring receipt, and creates no root, contract, schema, policy, runtime, data, proof, release, or publication authority."
+    },
+    {
+      "gate": "repository-state-and-direct-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the dashboard specification and catalog row with current Flora domain docs, contract/schema scaffolds, source registry and connector boundaries, bounded synthetic validator/tests/workflow, inactive policy, scaffold sensitivity policy, proof hold, release hold, CODEOWNERS, and the absence of a verified Flora-specific dashboard route or telemetry producer in the bounded inspection."
+    },
+    {
+      "gate": "sensitive-metric-and-anti-inference-boundary",
+      "outcome": "PASS",
+      "reason": "Removed unsupported T4, threshold, source-coverage, telemetry, and active-enforcement implications; the revision prohibits exact or reverse-engineerable sensitive Flora detail, small-cell and taxon-place-time inference, transform secrets, raw denial reasons, direct internal-store access, and unsafe export or AI parity gaps."
+    },
+    {
+      "gate": "dashboard-catalog-parity",
+      "outcome": "PASS",
+      "reason": "The catalog remains an exact reconstruction of current v0.3 bytes except the v0.4 metadata/evidence checkpoint, Flora row, and footer. Its reverse reconstruction reproduces prior Git blob 207aa04e27f750570d80cb9d23c285e35cad60fe exactly; the 33-file inventory is unchanged."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-sensitive-pattern-check",
+      "outcome": "PASS",
+      "reason": "Flora spec: 41,478 UTF-8 bytes, 497 lines, one H1, parseable metadata, all eight original numbered H2 headings, one top anchor plus the legacy evidence anchor, eight balanced fences including Mermaid, 13 consistent tables, 78 Markdown links, resolving local fragments, no tabs or trailing whitespace, final newline, and no source payload, coordinate, credential, or transform-secret value. Catalog companion: 22,311 bytes, 215 lines, preserved structure and existing compatibility anchors."
+    },
+    {
+      "gate": "prepared-artifact-sha256-and-git-blob-binding",
+      "outcome": "PASS",
+      "reason": "Prepared Flora bytes bind to SHA-256 6e0dcab3824638ceb657c3fee4c0663a6791e4d99cb4eaf49fe582dceea1aa07 and Git blob d1b8fc52b65accbb5b0da2cf731634be921fe2ae; prepared catalog bytes bind to SHA-256 f7e3699f447e1859e3a89fa32e27666721efdf7c3051a5d7b232a37b5e4ad426 and Git blob 416d8807af87fe72d6bb3a16f807330e2c133eec."
+    },
+    {
+      "gate": "generated-receipt-shape-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "Receipt object uses contract version 3.0.0, exact artifact/hash/truth-label key parity, supported SHA-256 bindings, core truth labels, pending human review, no override, and documentation-only non-effects."
+    },
+    {
+      "gate": "repository-native-flora-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted dependency-complete checkout was available. The existing focused validator, fixtures, tests, and workflow were inspected as repository evidence, but no local exact-head Flora execution is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks begin after final branch delivery. Exact-head hosted results were pending when this authoring receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not independent stewardship, sensitivity approval, rights-holder approval, policy approval, release approval, or publication authority."
+    },
+    {
+      "gate": "runtime-release-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "This slice changes one dashboard specification, its direct catalog row, and one generated authoring receipt only. It does not activate a source, change contract/schema/policy/fixture/validator/test/workflow/runtime behavior, write lifecycle state, create a proof or candidate, release, deploy, promote, publish, merge, or change repository settings."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "prior-flora-dashboard",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/flora.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=79b3c8134494b394cbaa52e26f33adf98b8ba6a4"
+    },
+    {
+      "id": "prior-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "flora-occurrence-contract-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/domains/flora/flora_occurrence.schema.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=cc7d4447f92e9596bf1b533d37d7acffbb9117f4"
+    },
+    {
+      "id": "flora-bounded-validator-profile",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=e752afff43c2f0f8fe5a2f055dc447a8c14f2378"
+    },
+    {
+      "id": "flora-bounded-tests",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=9e651d5df4a03cf9aa2dd1ab5afcf44e4fdc8896"
+    },
+    {
+      "id": "flora-workflow-holds",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-flora.yml@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=3fe6b1ba8150960692b6b2fc764c6aa31d09565c"
+    },
+    {
+      "id": "flora-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "flora-source-placeholder-boundary",
+      "validated": true,
+      "evidence_ref": "repo:data/registry/sources/flora/usda_plants.yaml@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=4cf877d234542990be382913d0ab0917f8fb3398"
+    },
+    {
+      "id": "flora-proof-release-holds",
+      "validated": true,
+      "evidence_ref": "repo:release/candidates/flora/README.md@464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "implementation-agent-v6",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T14:22:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path modernization of the Flora dashboard specification plus direct catalog parity. The revision grounds claims in one bounded synthetic validator slice, makes inactive policy and proof/release holds visible, removes unsupported thresholds and running-surface implications, and adds public-safe anti-inference, finite-state, correction, and rollback requirements. No runtime, source, policy, release, deployment, publication, or repository-setting state changes."
+}
