@@ -1,0 +1,232 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-gove-county-readme-8ce5a064739e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/gove_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/gove_county/README.md": "sha256:8ce5a064739e1d9f897c9a8f7711b34e043753d97a58720b76260a78a74d885c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5 family)",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:aa899f69053d3bc99ae79bba8318a1bfaae3198f2dd5b1673f5cb35ddfee2b59",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "local deterministic Markdown validation",
+      "repository generated-receipt schema constraint validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:aa899f69053d3bc99ae79bba8318a1bfaae3198f2dd5b1673f5cb35ddfee2b59",
+      "sha256:8ce5a064739e1d9f897c9a8f7711b34e043753d97a58720b76260a78a74d885c"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b28414d3e44781a70440be91bfacf61450155ccb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county/gove_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/gove_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main at b28414d3e44781a70440be91bfacf61450155ccb; read the complete one-byte target and full Gove build plan; inspected the current county index and supporting Focus authority surfaces; exact open-PR and task-branch searches found no overlapping Gove README work."
+    },
+    {
+      "gate": "same-path-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under the repository-present docs/focus-mode/counties/gove_county/ compatibility lane. Accepted ADR-0029 and proposed ADR-0027 were inspected; no move, rename, alias retirement, parallel Focus tree, or authority-root change is made."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target was exactly one newline. The replacement supplies a complete lane README with current repository evidence, legacy-source currentness, groundwater, well/privacy, scientific-locality, collecting/access, water-right, agriculture, flood/property, validation, correction, and rollback boundaries."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Gove build plan was reviewed and left byte-unchanged. Its no-plan and uncertain-path claims are marked superseded only for current repository presence; its dated external observations, proposed county proof, source roles, cards, interfaces, fixtures, and release ideas remain planning evidence and are not promoted."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The current index's Gove README_1_BYTE finding is disclosed as becoming stale after this leaf change. The shared index is deferred to a current-main repository-wide recomputation rather than partially rewritten in a high-churn county packet."
+    },
+    {
+      "gate": "legacy-source-and-currentness-boundary",
+      "outcome": "PASS",
+      "reason": "The README does not transform the plan's legacy geologic or geohydrologic source, 2022 aggregate agriculture table, dated source review, or administrative flood route into present groundwater, well, water-quality, irrigation, water-right, flood, insurance, permit, or safety truth."
+    },
+    {
+      "gate": "well-locality-property-and-access-boundary",
+      "outcome": "PASS",
+      "reason": "The authored bytes contain no real well, parcel, person, exact fossil locality, collecting target, private-access direction, active incident, credential, or control-defeating precision. Consequential well/property joins, land or collecting permission, harmful scientific targeting, and parcel-level conclusions remain denied or abstained."
+    },
+    {
+      "gate": "rights-sensitivity-and-public-safety-review",
+      "outcome": "PASS",
+      "reason": "Source rights, land access, paleontological-resource handling, private-well privacy, locality sensitivity, water governance, flood authority, and current public-safety questions remain explicit future gates; no release or public-safe claim is inferred."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The 42,989-byte README has one H1, one complete KFM metadata block, 17 unique explicit anchors, internally consistent tables, balanced fences, LF endings, no tabs or trailing whitespace, and a final newline. The ISO created date records this first substantive v1.0 README edition, not the one-byte placeholder's unknown origin."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All 13 distinct repository-relative targets were normalized from the README path and resolved through current-session GitHub reads; all same-document fragments match unique explicit anchors. No external network request was required."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The shared index requires a full current-main count and finding recomputation across a high-churn county inventory. This leaf packet discloses Gove's stale finding rather than making a partial shared-inventory edit."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current validator targets docs/focus-modes/, kebab-case lanes, and seven required files; it is not a valid passing gate for the singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 8ce5a064739e1d9f897c9a8f7711b34e043753d97a58720b76260a78a74d885c; Git blob 777ca9609713b25c4e5678014132454620c2f9d3; 42,989 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against every constraint used by schemas/contracts/v1/receipts/generated_receipt.schema.json; artifact-map parity, SHA-256 binding, canonical path form, citation shape, and pending-review state were recomputed."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Relevant pull-request workflows were inspected at the pinned base. They use GitHub-hosted runners, bounded timeouts, pinned actions, and read-only contents permission for untrusted PR code; no pull_request_target, workflow_run, self-hosted runner, OIDC, secret-bearing execution, deployment, release, publication, or administrative mutation was found for this path set."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created. Their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not hydrogeology, water governance, well/privacy, paleontology/locality, property/flood, rights, currentness, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-contract",
+      "validated": true,
+      "evidence_ref": "sha256:aa899f69053d3bc99ae79bba8318a1bfaae3198f2dd5b1673f5cb35ddfee2b59"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b28414d3e44781a70440be91bfacf61450155ccb"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county/README.md"
+    },
+    {
+      "id": "complete-gove-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county/gove_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-gove-direct-child-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/gove_county"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "focus-compatibility-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/focus-mode/README.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-payload-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-schema-family",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "inactive-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/policy/focus/README.md"
+    },
+    {
+      "id": "county-validator-layout-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/tools/validators/validate_focus_mode_index.py"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b28414d3e44781a70440be91bfacf61450155ccb/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T22:38:09Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-and-provenance-only leaf packet. It replaces a one-byte README, preserves the linked Gove build plan unchanged, discloses the stale shared county-index finding, and keeps structural migration, source activation, well or scientific-locality exposure, live GIS or operational integration, policy/runtime implementation, release, deployment, publication, repository settings, and administrative bypass outside scope."
+}
