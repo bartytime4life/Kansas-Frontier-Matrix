@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/focus-mode/counties/allen-county/readme # NEEDS VERIFICATION until registered
+doc_id: kfm://doc/focus-mode/counties/allen-county/readme
 title: Allen County Focus Mode Planning Lane
 type: readme
 version: v1.0
