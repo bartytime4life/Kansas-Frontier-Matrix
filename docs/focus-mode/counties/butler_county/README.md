@@ -21,17 +21,17 @@ authority: >-
   validate a payload, approve a release, deploy a product, or publish a claim.
 truth_posture: >-
   CONFIRMED current repository path, two-file directory inventory, one-byte
-  prior README, accepted Directory Rules v2, proposed ADR-0027, and the current
-  Focus semantic-contract, schema-family, policy-boundary, and validator
-  surfaces / PROPOSED the build plan's Butler County proof-slice thesis, source
-  seeds, layers, object families, interfaces, fixtures, milestones, and public
-  products / SUPERSEDED the build plan's no-repository-mutation and uncertain
-  landing-path statements only for current path and file-presence evidence /
-  UNKNOWN source admission, rights, semantic accuracy,
-  EvidenceRef-to-EvidenceBundle closure, policy outcomes, runtime behavior,
-  accountable owner, release, correction, rollback execution, deployment, and
-  public parity / NEEDS VERIFICATION every county lifecycle and public-use
-  claim.
+  prior README, the still-stale Butler row in the county index, accepted
+  Directory Rules v2, proposed ADR-0027, and the current Focus contract,
+  schema-family, policy-boundary, and validator surfaces / PROPOSED the build
+  plan's Butler County proof-slice thesis, source seeds, layers, object
+  families, interfaces, fixtures, milestones, and public products / SUPERSEDED
+  the build plan's no-repository-mutation and uncertain landing-path statements
+  only for current path and file-presence evidence / UNKNOWN source admission,
+  rights, semantic accuracy, EvidenceRef-to-EvidenceBundle closure, policy
+  outcomes, runtime behavior, accountable owner, release, correction, rollback
+  execution, deployment, and public parity / NEEDS VERIFICATION every county
+  lifecycle and public-use claim.
 current_path: docs/focus-mode/counties/butler_county/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -50,8 +50,8 @@ evidence_snapshot:
   focus_policy_readme_blob: 35001e958a6b51d2f22004d5e637d72baeab49af
   focus_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
 inspection_boundary: >-
-  Current-session GitHub reads covered the complete one-byte prior README,
-  substantial Butler County build plan, current county index, parent Focus Mode
+  Current-session GitHub reads covered the one-byte prior README, substantial
+  Butler County build plan, current county index, parent Focus Mode
   compatibility documentation, accepted Directory Rules v2 and ADR-0029,
   proposed ADR-0027, the FocusModePayload semantic contract, current Focus
   schema-family README, inactive Focus policy boundary, county index validator,
@@ -74,6 +74,7 @@ related:
 tags: [kfm, focus-mode, butler-county, planning, el-dorado, walnut-river, el-dorado-lake, oil-history, remediation, habitat, public-safety, compatibility, non-publication]
 notes:
   - "v1.0 replaces a one-byte placeholder with a same-path, repository-grounded lane README."
+  - "The county index remains unchanged in this one-file slice and therefore retains a stale README_1_BYTE Butler row pending separate reconciliation."
   - "The current edit does not decide singular-versus-plural Focus documentation placement or authorize migration."
   - "The linked build plan remains a planning artifact and is not silently promoted or rewritten by this README."
 [/KFM_META_BLOCK_V2] -->
@@ -91,7 +92,7 @@ notes:
 > **Placement remains unresolved.** This same-path update repairs the one-byte placeholder under `docs/focus-mode/counties/butler_county/`. Accepted Directory Rules v2 treats Focus Mode as a composition scope; proposed ADR-0027 describes a different plural, kebab-case control plane but remains unaccepted. No file is moved, renamed, copied into a parallel tree, or declared the final canonical county write target here.
 
 > [!WARNING]
-> **The build plan combines public context with sensitive or high-consequence subjects.** A historic petroleum source or official remediation record must not become a present exposure, health, compliance, liability, property-value, title, or safety judgment. Operational dam, water-system, refinery, energy, transportation, or facility-vulnerability detail; exact sensitive wildlife or cultural locations; private property detail; and stale recreation, flood, or water information must not reach an ordinary public client. Missing evidence, rights, safe resolution, policy, review, or release closure must produce a bounded `ABSTAIN`, `DENY`, or `ERROR` result rather than a fluent inference.
+> **Historic petroleum and official remediation sources must not become present personal judgments.** They cannot support exposure, health, compliance, liability, property-value, title, or safety conclusions without appropriately scoped evidence and authority. Operational infrastructure detail, exact sensitive wildlife or cultural locations, private property detail, and stale recreation, flood, or water information must not reach an ordinary public client. Missing evidence, rights, safe resolution, policy, review, or release closure must produce a bounded `ABSTAIN`, `DENY`, or `ERROR` result rather than a fluent inference.
 
 **Quick navigation:** [Status](#1-current-status) · [Responsibilities](#2-lane-responsibilities) · [Artifacts](#3-current-artifacts-and-reconciliation) · [Planning scope](#4-proposed-butler-county-proof-slice) · [Source roles](#5-source-role-and-cross-domain-boundaries) · [Safety](#6-public-safety-and-governed-outcomes) · [Readiness](#7-evidence-and-readiness-boundary) · [Next slice](#8-smallest-safe-follow-up) · [Open questions](#9-open-questions) · [References](#10-cross-references-and-maintenance)
 
@@ -106,15 +107,14 @@ notes:
 | Prior README state | One-byte placeholder at base blob `8b137891791fe96927ad78e64b0aad7bded08bdc` |
 | README role after this change | Human navigation, scope, evidence-limit, and public-safety boundary documentation |
 | Directory inventory | This README plus `butler_county_focus_mode_build_plan.md` |
-| County-index base finding | `README_1_BYTE` — the base index correctly records the pre-change placeholder |
-| County-index branch finding | `TRACKED_PAIR` after the index is reconciled in this documentation slice; presence only, not maturity |
+| County-index state | **STALE for Butler after this leaf change.** The unchanged v1.2 index still records the prior `README_1_BYTE` finding |
 | Build-plan state | Present; substantial; planning-only; source checks are dated 2026-05-23 and remain `NEEDS VERIFICATION` for current use |
 | County lifecycle | `NEEDS VERIFICATION` — no lifecycle state is assigned by this document |
 | Executable county validation | `NOT_RUN` — the current validator targets a different plural/kebab-case seven-file design and cannot be inferred to validate this lane |
 | Accountable owner and independent reviewers | `NEEDS VERIFICATION` |
 | Source, rights, evidence, policy, runtime, correction, rollback, release, deployment, publication | `NOT_RUN` or `UNKNOWN`; no positive state inferred |
 
-The [county master index](../COUNTY_INDEX.md) is a collision-prevention inventory. Its branch-local `TRACKED_PAIR` finding confirms only that a substantive `README.md` and the expected legacy build-plan filename are present. It is not a governed payload, validation result, maturity state, release, or publication record.
+The [county master index](../COUNTY_INDEX.md) is a collision-prevention inventory pinned before this README repair. Its Butler `README_1_BYTE` row is now stale relative to this branch and must not be treated as current file evidence. This one-file slice does not silently rewrite that shared inventory or its aggregate counts.
 
 [Back to top](#top)
 
@@ -153,13 +153,13 @@ A Focus Mode composes approved references across responsibility roots. It must n
 |---|---|---|
 | `README.md` | This lane orientation and boundary surface | Documentation only; no machine, policy, or release authority |
 | [`butler_county_focus_mode_build_plan.md`](./butler_county_focus_mode_build_plan.md) | Detailed proposed county proof-slice and implementation plan | Planning claims, external facts, source fitness, paths, owners, and release readiness require current verification |
-| [County master index](../COUNTY_INDEX.md) | Repository inventory and duplicate-prevention navigation | Presence and filename evidence only |
+| [County master index](../COUNTY_INDEX.md) | Shared repository inventory and duplicate-prevention navigation | Its Butler row is stale after this one-file branch edit; presence and filename evidence only |
 | [County lane README](../README.md) | Parent navigation for the tracked county corpus | Historical control-plane prose; it does not override accepted Directory Rules or current repository evidence |
 | [Focus Mode compatibility README](../../README.md) | Current repository-grounded Focus documentation boundary | Holds structural convergence on `HOLD` while proposed ADRs remain unaccepted |
 
 ### Build-plan reconciliation
 
-The linked build plan describes itself as a downloadable artifact generated outside the repository and records uncertainty about whether the Butler plan exists at its proposed landing path. Those statements are **SUPERSEDED for repository presence only**: this directory and plan are confirmed at the pinned base, and this README is being repaired in place.
+The linked build plan describes itself as a downloadable artifact generated outside the repository and records uncertainty about whether the Butler plan exists at its proposed landing path. Those statements are **SUPERSEDED for repository presence only**: this directory and plan are confirmed at the pinned base, and this README is repaired in place.
 
 The plan's dated official-source checks, county facts, rights assumptions, source-role judgments, proposed geometry, DTOs, endpoints, schemas, validators, policy files, fixtures, layers, reason codes, releases, and public products remain **PROPOSED** or **NEEDS VERIFICATION**. This README does not refresh its external pages, approve rights, admit a source, validate a semantic claim, or turn its proposed plural directory tree into current repository fact.
 
@@ -203,14 +203,14 @@ The build plan names source families that answer materially different questions.
 | Planned source or object class | Legitimate bounded role | Must not be treated as |
 |---|---|---|
 | County site, GIS, or geoportal | Source discovery, administrative context, and candidate geometry inventory after terms and rights review | Automatic reuse permission, title authority, evidence closure, or public release |
-| Federal reservoir or project material | Broad project, river, lake, and public-purpose context | Live operations, vulnerability analysis, current access or safety advice |
+| Federal reservoir or project material | Broad project, river, lake, and public-purpose context | Live operations, vulnerability analysis, current access, or safety advice |
 | Historic geological or petroleum publication | Time-bounded scientific and historical interpretation | Current production, active-well status, contamination, hazard, compliance, or property evidence |
 | Environmental regulatory or remediation record | Source-specific official record and bounded regulatory context | Personal exposure, health, liability, present compliance, parcel safety, or property-value judgment |
 | Wildlife-area or habitat material | Generalized public habitat and stewardship context after sensitivity review | Exact species, facility, movement, management, or operational precision |
 | Municipal or state water-planning narrative | Administrative, program, storage, sediment, or planning context | Water right, allocation, quality, present availability, engineering, or legal determination |
 | Hydrologic monitoring source | Time-stamped observation routing and later candidate observations through governed intake | Safety advice, causal interpretation, current-condition assurance, or emergency instruction |
 | Flood-hazard product source | Source-specific regulatory product routing, effective-date context, and supersession warning | Property-specific safety, insurance, legal, evacuation, or emergency advice |
-| Public history source | Source-specific civic interpretation with visible authority and time scope | Scientific proof, archaeology authority, current condition, or unreviewed cultural conclusion |
+| Public-history source | Source-specific civic interpretation with visible authority and time scope | Scientific proof, archaeology authority, current condition, or unreviewed cultural conclusion |
 | Generated explanation | Bounded interpretation of resolved, allowed, released evidence | Evidence, source authority, policy decision, review, or release approval |
 
 Cross-domain composition must keep at least these distinctions visible:
@@ -293,7 +293,7 @@ A Butler County public result must remain downstream of the governed KFM path:
 | Criterion | Current state | Closure required |
 |---|---|---|
 | Existing directory, README, and build-plan paths | `CONFIRMED` after this documentation repair | Recheck on base drift or path change |
-| County-index row and aggregate inventory | `CONFIRMED` only when reconciled to the branch-local substantive README | Recompute again whenever county files change |
+| County-index Butler row and aggregate inventory | `STALE` after this leaf edit | Recompute in a separate shared-index reconciliation against then-current main |
 | Build-plan semantic accuracy and stale-metadata repair | `NOT_RUN` | Complete evidence-backed plan review and focused revision |
 | Source identities, roles, terms, rights, access, cadence, and time coverage | `NOT_RUN` | Registry-backed source review with current authoritative checks |
 | Environmental and historic claim-scope controls | `NOT_RUN` | Domain, environmental, legal, policy, and independent review with negative proof |
@@ -313,18 +313,19 @@ A Butler County public result must remain downstream of the governed KFM path:
 
 ## 8. Smallest safe follow-up
 
-The smallest legitimate follow-up is the build plan's **Butler Environmental Boundary Proof Pack**, narrowed to one no-network, synthetic, reviewable packet:
+The smallest legitimate follow-up is a bounded **shared-index reconciliation**, followed by the build plan's Butler Environmental Boundary Proof Pack:
 
-1. reconcile the build plan against current repository paths and remove only claims proven stale;
-2. review the first source candidates for authority, rights, time basis, source role, geometry, sensitivity, correction behavior, and allowed claim scope;
-3. choose one current shared Focus or runtime contract profile rather than creating county-specific parallel meaning;
-4. create valid synthetic context for broad county, lake/river, historic petroleum, remediation-record, generalized habitat, and official-source-routing cards;
-5. create deterministic invalid cases for exposure, health, compliance, property, currentness, operations, precision, trust-membrane bypass, and missing rollback;
-6. exercise finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` outcomes through the existing governed evaluation and runtime projection seams where they are actually available;
-7. run repository-native focused and aggregate checks and separate introduced failures from inherited repository debt;
-8. keep live source activation, production ingest, public routing, release, deployment, and publication outside that packet.
+1. re-read current main and update the Butler county-index row and aggregate counts without overwriting unrelated county work;
+2. reconcile the build plan against current repository paths and remove only claims proven stale;
+3. review first source candidates for authority, rights, time basis, source role, geometry, sensitivity, correction behavior, and allowed claim scope;
+4. choose one current shared Focus or runtime contract profile rather than creating county-specific parallel meaning;
+5. create valid synthetic context for broad county, lake/river, historic petroleum, remediation-record, generalized habitat, and official-source-routing cards;
+6. create deterministic invalid cases for exposure, health, compliance, property, currentness, operations, precision, trust-membrane bypass, and missing rollback;
+7. exercise finite `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` outcomes through existing governed seams where they are actually available;
+8. run repository-native focused and aggregate checks and separate introduced failures from inherited repository debt;
+9. keep live source activation, production ingest, public routing, release, deployment, and publication outside that packet.
 
-This README does not authorize the follow-up. It records the dependency-closed boundary that a later implementation request must verify.
+This README does not authorize those follow-ups. It records their dependency order and fail-closed boundary.
 
 [Back to top](#top)
 
@@ -350,7 +351,7 @@ This README does not authorize the follow-up. It records the dependency-closed b
 ### Governing and connected surfaces
 
 - [Butler County Focus Mode build plan](./butler_county_focus_mode_build_plan.md)
-- [County Focus Mode master index](../COUNTY_INDEX.md)
+- [County Focus Mode master index](../COUNTY_INDEX.md) — Butler row is stale after this branch edit
 - [County planning-lane README](../README.md)
 - [Focus Mode documentation compatibility boundary](../../README.md)
 - [Accepted Directory Rules v2](../../../doctrine/directory-rules.md)
@@ -366,7 +367,7 @@ This README does not authorize the follow-up. It records the dependency-closed b
 Review this README when any of the following changes:
 
 - the Butler County build plan is corrected, renamed, superseded, or retired;
-- the county index changes the Butler inventory finding or aggregate counts;
+- the county index reconciles the Butler inventory finding or aggregate counts;
 - ADR-0027 or a successor changes effective status;
 - the Focus documentation lane moves under an accepted migration;
 - a Butler source is admitted, rejected, corrected, superseded, or changes terms;
@@ -375,8 +376,8 @@ Review this README when any of the following changes:
 
 ### Validation and rollback
 
-This documentation slice should be reviewed as a same-path README repair plus the minimum county-index reconciliation required by replacing a one-byte placeholder. Validation must confirm one H1 per changed document, unique and resolving local anchors, resolving relative repository links, internally consistent Butler inventory counts, no accidental claim of implementation or publication, and an exact changed-path set limited to the README and county index.
+Review this as a one-file, same-path README repair. Validation must confirm one H1, unique and resolving local anchors, resolving relative repository links, explicit disclosure of the stale Butler index row, no accidental claim of implementation or publication, and an exact changed-path set containing only this README.
 
-Rollback is mechanical: before merge, close the draft pull request or delete its branch; after merge, revert the README and county-index reconciliation together, or apply a bounded forward correction against the merged bytes. Reverting these documents changes no source, evidence, policy, runtime, release, deployment, or publication state.
+Rollback is mechanical: before merge, close the draft pull request or delete its branch; after merge, revert the single documentation commit or apply a bounded forward correction against the merged README bytes. Reverting this README changes no source, evidence, policy, runtime, release, deployment, publication, or shared county-index state.
 
 [Back to top](#top)
