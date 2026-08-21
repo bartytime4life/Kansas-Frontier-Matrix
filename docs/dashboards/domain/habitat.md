@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/dashboards-domain-habitat
 title: Habitat Dashboard Specification
-type: dashboard-spec; domain-health; boundary-compact
+type: standard
 version: v1.0
 status: repository-grounded; specification-only; placement-hold; runtime-needs-verification; non-release; non-publication
 owners:
@@ -19,28 +19,7 @@ responsibility: "Specify a Habitat domain-health dashboard boundary, metric inte
 current_path: docs/dashboards/domain/habitat.md
 placement_status: "CONFIRMED existing path under canonical docs/ root; HOLD as part of the unadmitted docs/dashboards/ direct-child lane"
 runtime_status: "NEEDS VERIFICATION — Explorer Habitat files are placeholders and no dashboard route, metric producer, telemetry series, query, deployed panel, or live feed was verified"
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 60714d75d7f2b578131204768d1ca6c4bb04b730
-  base_tree: 15f32e0e0f4587a89fe8e70433cedb73b6cae39d
-  target_prior_blob: 28d2905e89e945ebe37e390dc6d935fa87b69905
-  dashboard_root_blob: c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3
-  domain_index_blob: fc18e269e8f674688ea580ac384ba46c40304840
-  dashboard_catalog_blob: 3142b10a6bfea2d1f7c2bed51ca0f0859e77055f
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  habitat_domain_readme_blob: 3d01962ce5ba096af82e8563a5d7d176832c22e4
-  habitat_sensitivity_blob: b3427252fa4d7a137373b73e3e43b1e7e52c42db
-  habitat_map_ui_blob: e203e3be77a95f36986ff70abb9ffc256e29dbba
-  explorer_habitat_readme_blob: 79063a52860021aaca90953848682b7c7fe180b1
-  evidence_drawer_component_blob: d022c67b6f222184c84dcdb4966012a68947ce66
-  focus_flow_component_blob: f0963ae23b02a60d81d80498671b388fccb65fba
-  layer_adapter_blob: 38b63b0adf38affa0ed43a547838479f05695e10
-  habitat_workflow_blob: 59771c027f688d7028a46c4635c0ec710b34e3ab
-  fauna_habitat_profile_blob: 6e1e977da9086ef35d5ce3ba04865e0f8bb12215
-  fauna_habitat_tests_blob: bebb151a8244cb2d3e49da8108f6da32f2674a22
+evidence_snapshot: main@60714d75d7f2b578131204768d1ca6c4bb04b730; tree 15f32e0e0f4587a89fe8e70433cedb73b6cae39d; prior target blob 28d2905e89e945ebe37e390dc6d935fa87b69905; prior catalog blob 3142b10a6bfea2d1f7c2bed51ca0f0859e77055f.
 related:
   - ../README.md
   - ./README.md
