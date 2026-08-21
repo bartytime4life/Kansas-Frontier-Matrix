@@ -53,7 +53,8 @@ jobs:
           git rm .github/workflows/kfm-hazards-payload-assembly.yml
           git add \
             docs/dashboards/domain/hazards.md \
-            docs/dashboards/DASHBOARD_CATALOG.md \
+            docs/dashboards/DASHBOARD_CATALOG.md
+          git add -f \
             data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
 
           git config user.name "github-actions[bot]"
