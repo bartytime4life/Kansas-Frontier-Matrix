@@ -1,0 +1,101 @@
+name: Record Hazards validation evidence
+
+on:
+  push:
+    branches:
+      - docs/ground-hazards-dashboard-20260821
+    paths:
+      - .github/workflows/kfm-hazards-payload-assembly.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  record:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_BRANCH: ${{ github.ref_name }}
+      KFM_NO_NETWORK: "1"
+      PYTHONHASHSEED: "0"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      TZ: UTC
+    steps:
+      - name: Clone the exact feature branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$TARGET_BRANCH" \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" repo
+
+      - name: Validate and bind the successful repository-native check
+        working-directory: repo
+        run: |
+          set -euo pipefail
+          git diff --check
+          make hazards-validate
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import hashlib
+          import json
+          from pathlib import Path
+
+          receipt_path = Path("data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json")
+          hazards_path = Path("docs/dashboards/domain/hazards.md")
+          catalog_path = Path("docs/dashboards/DASHBOARD_CATALOG.md")
+
+          receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+          expected = {
+              "docs/dashboards/domain/hazards.md": "532aeaa5a6fe869dc34ec096de65ae6693ab30eb07d9ed383b89f14ede2b8af3",
+              "docs/dashboards/DASHBOARD_CATALOG.md": "8085d28868ab9d9587e83a941be9d8fbbd8ef19cc54b2dc3527f558047e081e4",
+          }
+          observed = {
+              "docs/dashboards/domain/hazards.md": hashlib.sha256(hazards_path.read_bytes()).hexdigest(),
+              "docs/dashboards/DASHBOARD_CATALOG.md": hashlib.sha256(catalog_path.read_bytes()).hexdigest(),
+          }
+          if observed != expected:
+              raise SystemExit(f"artifact digest mismatch: observed={observed}")
+          for path, digest in expected.items():
+              if receipt["artifact_hashes"].get(path) != f"sha256:{digest}":
+                  raise SystemExit(f"receipt binding mismatch for {path}")
+
+          gates = {gate["gate"]: gate for gate in receipt["validation_gates"]}
+          gate = gates["repository-native-changed-area-validation"]
+          gate["outcome"] = "PASS"
+          gate["reason"] = (
+              "The no-network repository-native `make hazards-validate` target completed successfully in the hosted one-shot corrective workflow immediately before this receipt update. The command exercises the deterministic Hazards unit tests and fixture validator; it does not establish live hazard truth, source admission, policy approval, release, or publication readiness."
+          )
+          evidence_ref = "repo:workflow/make-hazards-validate@pr-3217"
+          if evidence_ref not in receipt["inputs"]["evidence_refs"]:
+              receipt["inputs"]["evidence_refs"].append(evidence_ref)
+          receipt["notes"] = (
+              "Corrective authoring receipt for draft PR #3217. The reviewed Hazards specification remains bound to its prepared SHA-256, while the Dashboard Catalog is concurrency-reconciled as v0.6 to preserve current-main People/DNA/Land and Settlements/Infrastructure work. The PR removes the temporary transfer archive and one-shot assembly workflow left by earlier merged transfer PRs. Repository-native `make hazards-validate` completed successfully in the hosted corrective workflow; broader hosted exact-head checks and human review remain pending. No source activation, live hazard claim, policy decision, release, deployment, promotion, publication, merge, or repository-setting authority is asserted."
+          )
+
+          receipt_path.write_text(
+              json.dumps(receipt, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+              newline="\n",
+          )
+          rebound = json.loads(receipt_path.read_text(encoding="utf-8"))
+          rebound_gates = {gate["gate"]: gate for gate in rebound["validation_gates"]}
+          assert rebound_gates["repository-native-changed-area-validation"]["outcome"] == "PASS"
+          assert rebound["human_review"]["state"] == "pending"
+          assert rebound_gates["hosted-exact-head-ci"]["outcome"] == "SKIPPED"
+          print(f"Receipt SHA-256: {hashlib.sha256(receipt_path.read_bytes()).hexdigest()}")
+          PY
+
+          git diff --check
+          git rm .github/workflows/kfm-hazards-payload-assembly.yml
+          git add -f data/receipts/generated/genrec-dashboards-domain-hazards-532aeaa5a6fe.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(dashboards): record Hazards validation evidence"
+          git push origin "HEAD:${TARGET_BRANCH}"
