@@ -6,7 +6,7 @@ version: v1.0
 status: draft; repository-grounded; planning-only; compatibility-lane; non-release; non-publication
 owners:
   - "NEEDS VERIFICATION — Focus Mode stewardship"
-created: "NEEDS VERIFICATION — file predates this modernization"
+created: 2026-05-22
 updated: 2026-08-21
 policy_label: public; documentation; county-scope; compatibility; cite-or-abstain; sensitive-context
 owning_root: docs/
@@ -19,18 +19,7 @@ authority: >-
   Human-readable navigation and boundary documentation only. This README and
   its linked build plan do not admit sources, resolve evidence, activate policy,
   validate a payload, approve a release, deploy a product, or publish a claim.
-truth_posture: >-
-  CONFIRMED current repository path, two-file directory inventory, county-index
-  TRACKED_PAIR finding, accepted Directory Rules v2, proposed ADR-0027, and the
-  current Focus semantic-contract, schema-family, and policy-boundary surfaces /
-  PROPOSED the build plan's Crawford County proof-slice thesis, source seeds,
-  layers, object families, interfaces, fixtures, milestones, and public products /
-  SUPERSEDED the build plan's no-repository-evidence statements only for current
-  path and file-presence evidence / UNKNOWN source admission, rights, semantic
-  accuracy, EvidenceRef-to-EvidenceBundle closure, policy outcomes, runtime
-  behavior, accountable owner, release, correction, rollback execution,
-  deployment, and public parity / NEEDS VERIFICATION every county lifecycle and
-  public-use claim.
+truth_posture: "CONFIRMED current repository path, two-file directory inventory, county-index TRACKED_PAIR finding, accepted Directory Rules v2, proposed ADR-0027, and the current Focus semantic-contract, schema-family, and policy-boundary surfaces / PROPOSED the build plan's Crawford County proof-slice thesis, source seeds, layers, object families, interfaces, fixtures, milestones, and public products / SUPERSEDED the build plan's no-repository-evidence statements only for current path and file-presence evidence / UNKNOWN source admission, rights, semantic accuracy, EvidenceRef-to-EvidenceBundle closure, policy outcomes, runtime behavior, accountable owner, release, correction, rollback execution, deployment, and public parity / NEEDS VERIFICATION every county lifecycle and public-use claim."
 current_path: docs/focus-mode/counties/crawford_county/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -49,7 +38,6 @@ evidence_snapshot:
   focus_policy_readme_blob: 35001e958a6b51d2f22004d5e637d72baeab49af
   focus_index_validator_blob: 89391d75680e859dddf3696b9b782369f364c73e
   validator_registry_blob: 86aeadabe7104114c3f1efe60a8708ec11563bb1
-  generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
   contributing_blob: de5bf143e601e36a794e6e5442ae8f91c6f75aad
 inspection_boundary: >-
   Current-session GitHub reads covered the complete prior README, complete
@@ -57,11 +45,11 @@ inspection_boundary: >-
   compatibility documentation, accepted Directory Rules v2 and ADR-0029,
   proposed ADR-0027, the FocusModePayload semantic contract, the current Focus
   schema-family README, the inactive Focus policy boundary, the county index
-  validator and registry, generated-receipt controls, and open pull-request and
-  task-branch overlap. No mounted clone, repository-native command execution,
-  external source or rights review, evidence resolution, policy evaluation,
-  governed Focus request, model call, release record, correction propagation,
-  rollback drill, deployment, or public endpoint was exercised.
+  validator and registry, contribution guidance, and open pull-request and
+  task-branch overlap. No external source or rights review, evidence resolution,
+  policy evaluation, governed Focus request, model call, release record,
+  correction propagation, rollback drill, deployment, or public endpoint was
+  exercised.
 related:
   - docs/focus-mode/counties/crawford_county/crawford_county_focus_mode_build_plan.md
   - docs/focus-mode/counties/COUNTY_INDEX.md
@@ -77,6 +65,8 @@ related:
 tags: [kfm, focus-mode, crawford-county, planning, coal, mined-land, floodplain, agriculture, historic-resources, geoprivacy, public-safety, compatibility, non-publication]
 notes:
   - "v1.0 replaces a brief orientation with a same-path, repository-grounded lane README."
+  - "PR #924 confirms that the predecessor README was added on 2026-05-22."
+  - "The county index already records Crawford as TRACKED_PAIR and remains unchanged in this one-file slice."
   - "The current edit does not decide singular-versus-plural Focus documentation placement or authorize migration."
   - "The linked build plan remains a planning artifact and is not silently promoted or rewritten by this README."
 [/KFM_META_BLOCK_V2] -->
@@ -137,7 +127,7 @@ notes:
 | README role | Human navigation, scope, and boundary documentation |
 | Directory inventory | This README plus `crawford_county_focus_mode_build_plan.md` |
 | County-index finding | `TRACKED_PAIR` — the README and expected legacy build-plan filename are present in the pinned inventory |
-| Build-plan state | Present; substantial; planning-only; semantic and external-source claims remain `NEEDS VERIFICATION` |
+| Build-plan state | Present; substantial; planning-only; source checks are dated 2026-05-21 and semantic and external-source claims remain `NEEDS VERIFICATION` |
 | County lifecycle | `NEEDS VERIFICATION` — no lifecycle state is assigned by this document |
 | Executable county validation | `NOT_RUN` — the existing validator targets a different plural, seven-file control-plane layout and is absent from the current validator registry |
 | Accountable owner and independent reviewers | `NEEDS VERIFICATION` |
@@ -496,7 +486,6 @@ The authoring change should verify:
 - absence of coordinates, credentials, private endpoints, personal data, exact
   protected locations, live operational payloads, and unsupported current-state
   claims;
-- generated-receipt schema and artifact-hash parity;
 - exact branch comparison, changed paths, remote bytes, and draft PR state.
 
 Repository-native full validation and hosted exact-head checks remain separate
@@ -506,10 +495,10 @@ silently waived.
 ### Rollback and correction
 
 Before merge, close or abandon the draft PR and leave `main` unchanged. After an
-authorized merge, revert the README and its generated authoring receipt together,
-or apply a bounded forward correction against the actual merged bytes. Do not
-revert the sibling plan, county index, contracts, schemas, policy, validators,
-applications, or release objects unless a later change explicitly included them.
+authorized merge, revert the documentation commit or apply a bounded forward
+correction against the actual merged bytes. Do not revert the sibling plan,
+county index, contracts, schemas, policy, validators, applications, or release
+objects unless a later change explicitly included them.
 
 This documentation rollback would not reverse a source admission, policy
 decision, runtime change, release, deployment, or publication because none is
