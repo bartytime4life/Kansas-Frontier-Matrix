@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-focus-mode-clay-county-readme-50e725bc6264",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/clay_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/clay_county/README.md": "sha256:50e725bc6264fb25378ce458945224ab6a007307aa99210589aeb6e5f4653092"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro"
+  },
+  "prompt_or_contract": "sha256:189b6e13a481fd1eeee47f8c0a5b45410f6e71fe87592273b07c673391aa90e5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:189b6e13a481fd1eeee47f8c0a5b45410f6e71fe87592273b07c673391aa90e5"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 — normalized scoped task contract"
+    ],
+    "evidence_refs": [
+      "repo:commit/17923d0bdfd87feadeebe6afe344ef35ca949c63",
+      "repo:docs/focus-mode/counties/clay_county/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "repo:docs/focus-mode/counties/clay_county/clay_county_focus_mode_build_plan.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=0906663c653ecd82011db0c1e1b8a25956f86e19",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=1a83417c8a3ff7b1c9d9ea302eb5dc47fc726e36",
+      "repo:docs/focus-mode/counties/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=48621badd51614db7bff0882c19096fa388234ac",
+      "repo:docs/focus-mode/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:docs/doctrine/directory-rules.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:contracts/focus_mode/focus_mode_payload.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:schemas/contracts/v1/focus/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33",
+      "repo:tools/validators/validate_focus_mode_index.py@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validators/validator_registry.json@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:.github/CODEOWNERS@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:CONTRIBUTING.md@17923d0bdfd87feadeebe6afe344ef35ca949c63#blob=de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "task-contract:clay-county-readme-v6#sha256=189b6e13a481fd1eeee47f8c0a5b45410f6e71fe87592273b07c673391aa90e5"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/clay_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-tree-overlap-and-drift-inspection",
+      "outcome": "PASS",
+      "reason": "Reconciled authoring from main@0bebe15a757b9be7d27ce384993d1fee6ebc7e1f to current main@17923d0bdfd87feadeebe6afe344ef35ca949c63 before mutation; verified prior target blob 8b137891791fe96927ad78e64b0aad7bded08bdc, the exact two-file Clay directory, unchanged sibling plan blob 0906663c653ecd82011db0c1e1b8a25956f86e19, and no open pull request or matching Clay task branch."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 keeps docs/ as the human-documentation owner; the change stays at the tracked path and explicitly leaves ADR-0027 path convergence, renaming, and seven-file migration on HOLD."
+    },
+    {
+      "gate": "repository-grounded-plan-and-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README distinguishes the tracked draft plan from current implementation, treats the plan's May 2026 source checks as authoring lineage, preserves Clay-specific currentness and sensitivity boundaries, and does not promote source, payload, validator, runtime, release, or publication claims."
+    },
+    {
+      "gate": "markdown-metadata-heading-anchor-fence-table-and-whitespace-checks",
+      "outcome": "PASS",
+      "reason": "One H1, one bounded KFM Meta Block, 17 headings, 14 resolved unique local fragments, balanced fence/comment pairs, consistent tables, no tabs or trailing whitespace, final newline, 30746 bytes, 394 lines, Git blob 9ae3c3832eb98109992599d09f8d22fd3c9e75b2, and SHA-256 50e725bc6264fb25378ce458945224ab6a007307aa99210589aeb6e5f4653092."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 14 unique repository-relative targets introduced by the README were confirmed through pinned repository reads or verified directory/file presence; all 14 unique local fragments resolved."
+    },
+    {
+      "gate": "sensitive-content-and-non-effect-scan",
+      "outcome": "PASS",
+      "reason": "No coordinates, credentials, signed URLs, private endpoints, personal data, or exact protected locations were introduced; reservoir/recreation currentness, water quality, property/floodplain, wildlife, infrastructure, road, and emergency precision remains fail closed."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Receipt contract 3.0.0 binds the complete final README SHA-256 50e725bc6264fb25378ce458945224ab6a007307aa99210589aeb6e5f4653092, aligns artifact and truth-label maps, records the evidence snapshot and skipped checks, uses finite JSON values, and leaves human review pending."
+    },
+    {
+      "gate": "repository-native-full-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted full repository dependency environment was used; the current county Focus index validator targets the proposed plural/kebab-case seven-file control plane and is not registered for this legacy two-file lane. Hosted exact-head checks remain to be inspected after draft PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-county-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/COUNTY_INDEX.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-clay-build-plan",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/clay_county/clay_county_focus_mode_build_plan.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-focus-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-county-control-plane-proposal",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-focus-payload-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/focus_mode/focus_mode_payload.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "repo-focus-schema-family",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/focus/README.md@17923d0bdfd87feadeebe6afe344ef35ca949c63"
+    },
+    {
+      "id": "current-user-task-contract",
+      "validated": true,
+      "evidence_ref": "task-contract:clay-county-readme-v6#sha256=189b6e13a481fd1eeee47f8c0a5b45410f6e71fe87592273b07c673391aa90e5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T18:41:44Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. The normalized scoped task-contract hash is not a stored prompt transcript. This receipt is not evidence authority, policy approval, migration authority, merge approval, release, deployment, or publication authority."
+}
