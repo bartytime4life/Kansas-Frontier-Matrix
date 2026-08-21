@@ -1,3 +1,4 @@
+# Transfer-only workflow; self-deletes after checksum-verified assembly.
 name: Assemble MapLibre dependency gate payload
 
 on:
