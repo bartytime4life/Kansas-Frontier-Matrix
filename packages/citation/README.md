@@ -20,7 +20,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/lifecycle-law.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - packages/README.md
   - packages/api/README.md
   - data/proofs/evidence_bundle/

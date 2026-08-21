@@ -17,7 +17,7 @@ related:
   - README.md
   - TRUST_MEMBRANE.md
   - document-convergence-plan.md
-  - governed-api.md
+  - governed-api/README.md
   - evidence-drawer.md
   - publication/promotion-gates.md
   - ../doctrine/directory-rules.md
@@ -729,7 +729,7 @@ The slice should include `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, and prove no 
 - [`README.md`](./README.md) — architecture lane map and explicit structural migration hold.
 - [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — current repository-grounded architecture/enforcement snapshot.
 - [`document-convergence-plan.md`](./document-convergence-plan.md) — provisional no-loss convergence direction.
-- [`governed-api.md`](./governed-api.md) — dynamic API architecture.
+- [`governed-api/README.md`](./governed-api/README.md) — dynamic API architecture.
 - [`evidence-drawer.md`](./evidence-drawer.md) — universal client explanation surface.
 - [`publication/promotion-gates.md`](./publication/promotion-gates.md) — promotion-gate architecture context.
 - [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) — meaning, shape, admissibility, execution, and proof boundaries.

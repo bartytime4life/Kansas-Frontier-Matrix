@@ -16,7 +16,7 @@ related:
   - docs/domains/archaeology/README.md
   - docs/domains/people-dna-land/README.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, domain, roads-rail-trade, sublane, trade-routes, historic-routes, cultural-heritage]
 notes:
@@ -427,7 +427,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 - **Cultural authority:** [`docs/domains/archaeology/README.md`](../../archaeology/README.md) — owner of cultural / Indigenous corridor truth and sensitivity policy.
 - [`docs/domains/people-dna-land/README.md`](../../people-dna-land/README.md) — land tenure / private-land authority.
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Domain Placement Law (§12), lifecycle invariant.
-- Architecture: [`docs/architecture/governed-api.md`](../../../architecture/governed-api.md) — trust-membrane definition.
+- Architecture: [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — trust-membrane definition.
 - ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §13 items, including the OPEN-TRADE-03 slug conflict. (`TODO` link targets — verify on mount.)
 - Atlas §24.13 — Responsibility-root crosswalk (source of the `transport` slug variance).

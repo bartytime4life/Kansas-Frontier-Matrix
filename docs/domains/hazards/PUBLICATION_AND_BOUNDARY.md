@@ -15,7 +15,7 @@ related:
   - docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, domain, hazards, publication, rollback, correction, governed-api, life-safety, not-for-life-safety]
 notes:
@@ -350,7 +350,7 @@ PROPOSED validator classes (Atlas §12.K), framed here as boundary-defense oblig
 - `docs/domains/hazards/MISSING_OR_PLANNED_FILES.md` — Lane planning inventory across responsibility roots.
 - `docs/doctrine/trust-membrane.md` — Public surface vs. canonical stores boundary.
 - `docs/doctrine/directory-rules.md` — Placement and anti-pattern rules (§6.5, §9.1, §12, §13).
-- `docs/architecture/governed-api.md` — Governed API surface where hazards routes live.
+- `docs/architecture/governed-api/README.md` — Governed API surface where hazards routes live.
 - `docs/registers/VERIFICATION_BACKLOG.md` — Repo-wide verification backlog.
 - `docs/registers/DRIFT_REGISTER.md` — Drift entries from this lane.
 - `docs/adr/README.md` — ADR index; ADR-HAZ-* and ADR-S-* entries.

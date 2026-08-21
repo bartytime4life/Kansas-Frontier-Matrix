@@ -54,7 +54,7 @@ related:
   - ERROR_CODES.md
   - LIFECYCLE_GATES.md
   - THREAT_MODEL.md
-  - ../governed-api.md
+  - README.md
   - ../README.md
   - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
@@ -167,7 +167,7 @@ Accepted ADR-0029 makes Directory Rules v2 the placement authority. Under that a
 
 This is a same-path edit to an existing architecture document, so the placement outcome is `PLACE`. It creates no root, route, policy lane, schema home, data lane, release family, or parallel authority.
 
-The broader prose overlap between [`README.md`](README.md) and the flat [`../governed-api.md`](../governed-api.md) remains unresolved. This page does not select a canonical replacement for either one.
+Merged [PR #3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150) retired the former flat Governed API entrypoint. [`README.md`](README.md) is the active architecture landing page; this archaeology page preserves scope-specific lineage without creating competing authority.
 
 [Back to top](#top)
 

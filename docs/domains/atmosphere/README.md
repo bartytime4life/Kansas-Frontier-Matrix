@@ -566,7 +566,7 @@ Companion docs already authored for this lane (all under `docs/domains/atmospher
 - [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-route-through-governed-API invariant *(TODO link target)*.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance *(TODO link target)*.
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `RuntimeResponseEnvelope`, ANSWER/ABSTAIN/DENY/ERROR *(TODO link target)*.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — `RuntimeResponseEnvelope`, ANSWER/ABSTAIN/DENY/ERROR *(TODO link target)*.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV crosswalk for evidence and receipts.
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — tile artifact profile for Atmosphere layers.
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC Tiles integration for Atmosphere layers.

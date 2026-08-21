@@ -16,7 +16,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - schemas/contracts/v1/hazards/
   - contracts/hazards/
@@ -425,7 +425,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lane pattern, anti-patterns
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed API as trust path
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — finite-outcome envelopes
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelopes
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — MapLibre downstream of trust
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift entries (schema-home correction). `TODO` link target
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide verification backlog. `TODO` link target

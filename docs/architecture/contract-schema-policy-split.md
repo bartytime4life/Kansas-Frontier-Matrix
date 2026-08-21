@@ -31,7 +31,7 @@ related:
   - ../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../adr/ADR-0002-contracts-vs-schemas-split.md
   - ./README.md
-  - ./governed-api.md
+  - ./governed-api/README.md
   - ../../contracts/README.md
   - ../../schemas/README.md
   - ../../policy/README.md
@@ -736,7 +736,7 @@ The matrix is a **current, bounded example**, not a complete registry. Paths are
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md)
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md)
 - [`docs/architecture/README.md`](./README.md)
-- [`docs/architecture/governed-api.md`](./governed-api.md)
+- [`docs/architecture/governed-api/README.md`](./governed-api/README.md)
 
 ### Owning roots
 

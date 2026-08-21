@@ -16,7 +16,7 @@ related:
   - docs/domains/fauna/README.md            # NEEDS VERIFICATION
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md  # NEEDS VERIFICATION
   - docs/runbooks/event-driven-ingest.md    # NEEDS VERIFICATION
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, runbook, fauna, ingestion, source-refresh, governed-pipeline]
 notes:
@@ -608,7 +608,7 @@ The following items are intentionally unresolved in this doc. They block tighten
 > Placeholders are intentional where the target file's existence is **NEEDS VERIFICATION**. Each link should be confirmed against repo evidence before this runbook is promoted past `draft`.
 
 - **Doctrine.** [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) · [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md)
-- **Architecture.** [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) · [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md)
+- **Architecture.** [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) · [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md)
 - **Domain.** [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) — **NEEDS VERIFICATION**
 - **Source onboarding.** [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — **NEEDS VERIFICATION**
 - **Event-driven ingest.** [`docs/runbooks/event-driven-ingest.md`](../event-driven-ingest.md) — **NEEDS VERIFICATION**

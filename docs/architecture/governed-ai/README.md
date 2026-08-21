@@ -97,7 +97,7 @@ tags: [kfm, architecture, governed-ai, focus-mode, model-adapter, evidence-resol
 notes:
   - 'v2.1.0-draft closes the README-local navigation and authority fallout from merged PR #3149 without recreating the retired flat overview.'
   - 'The same-path landing page remains explanatory; accepted Directory Rules govern placement, while governed-AI route, adapter, and provider decisions remain proposed or unassigned.'
-  - 'Eight companions now carry repository-grounded updates from 2026-08-19 or 2026-08-20; PROMPT_INJECTION.md remains proposal-era and ROUTE_MAP.md retains known stale flat-overview metadata.'
+  - 'Eight companions carry repository-grounded updates from 2026-08-19 or 2026-08-20; this link-closure packet reconciles ROUTE_MAP.md and active consumers with the merged PR #3149 retirement.'
   - 'Current bounded proof includes the internal evidence-resolver candidate, CitationValidationReport fixture profile, RuntimeResponseEnvelope helpers, MockAdapter selector, and AIReceipt builders and validators; no end-to-end AI operation is established.'
   - 'This revision changes documentation and its generated authoring receipt only.'
 [/KFM_META_BLOCK_V2] -->
@@ -122,7 +122,7 @@ notes:
 > **Bounded proofs must not be promoted into an AI-integration claim.** The repository has a deterministic no-I/O `MockAdapter`, a closed four-outcome `RuntimeResponseEnvelope`, an internal non-authoritative evidence-resolver candidate, a fixture-first `CitationValidationReport` profile, AIReceipt candidate builders and validation, and defensive Explorer Focus projection. It does not have a verified governed-AI API route, active composed policy/evidence/citation transaction, AIReceipt emitter/store, admitted provider, deployed Focus operation, or public AI release.
 
 > [!WARNING]
-> **The flat overview has been retired.** Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md`; this README is now the tracked subsystem landing page and same-path survivor. That repository-topology fact does not accept an ADR or create runtime authority. Stale references to the retired path elsewhere in the repository remain inherited documentation debt and require a separate bounded cleanup.
+> **The flat overview has been retired.** Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md`; this README is now the tracked subsystem landing page and same-path survivor. That repository-topology fact does not accept an ADR or create runtime authority. This bounded link-closure packet repairs active consumers; immutable receipts, source maps, Git history, and the Wave 0 ledger retain the former path only as historical lineage.
 
 **Quick navigation:** [Purpose](#1--purpose) · [Authority](#2--authority-level) · [Belongs](#3--what-belongs-here) · [Exclusions](#4--what-does-not-belong-here) · [Repo fit](#5--repo-fit) · [Tree](#6--proposed-directory-tree) · [Inputs](#7--inputs) · [Outputs](#8--outputs) · [Doctrine](#9--core-doctrine) · [Objects](#10--object-families-and-homes) · [Outcomes](#11--finite-outcomes--the-trust-grammar) · [Flow](#12--the-governed-ai-request-flow) · [Adapters](#13--adapter-boundary) · [Citations](#14--citation-validation) · [Policy](#15--policy-precheck-and-postcheck) · [Receipts](#16--aireceipt-and-replay-discipline) · [Exposure](#17--trust-membrane-and-exposure-controls) · [Validation](#18--validation) · [Siblings](#19--sibling-docs-in-this-folder) · [Anti-patterns](#20--anti-patterns) · [Propagation](#21--update-propagation) · [Rollback](#22--rollback) · [Review](#23--review-burden) · [ADRs](#24--adrs) · [Open work](#25--open-questions-and-verification-backlog) · [Related](#26--related-folders) · [Evidence](#27--last-reviewed)
 
@@ -271,7 +271,7 @@ Explorer Focus projection         PARTIAL — defensive client logic, injected r
 | Surface | Confirmed state | Safe conclusion |
 |---|---|---|
 | Governed-AI folder | Ten tracked Markdown files including this README | Documentation exists; presence does not prove every statement current |
-| Retired flat overview | Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md` | This README is the current same-path survivor; stale consumers remain separate debt |
+| Retired flat overview | Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) removed `docs/architecture/governed-ai.md` | This README is the active landing page; current consumers resolve here and historical records retain the retired path |
 | Modernized companions | Eight companions were repository-grounded on 2026-08-19 or 2026-08-20 | Their evidence snapshots are bounded and do not create runtime authority |
 | `PROMPT_INJECTION.md` | Proposal-era May 2026 document with a missing `STATE_OWNERSHIP.md` reference and speculative fields | Useful doctrine lineage; current repo claims need refresh |
 | `ROUTE_MAP.md` | Current route inventory, but metadata still references the retired flat overview | Route facts are useful; document-relationship text needs later correction |
@@ -883,7 +883,7 @@ Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/
 - Replace permissive Focus scaffolds before declaring a stable wire contract.
 - Establish authoritative evidence, executable policy, and composed citation validation before any `ANSWER` route.
 - Define AIReceipt emission, storage, resolution, retention, correction, access, and deletion policy.
-- Repair remaining active references to retired `docs/architecture/governed-ai.md` through a separately bounded consumer-aware cleanup.
+- Keep active consumers on this README and preserve the retired `docs/architecture/governed-ai.md` path only in explicit historical lineage.
 
 ### P1 — bounded implementation and documentation closure
 
@@ -947,13 +947,13 @@ Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/
 <a id="27--last-reviewed"></a>
 ## 27 · Last reviewed
 
-**Reviewed:** 2026-08-20 against `main@21cdb5ff7d630a39f70fc03d44b31b91eb63b1aa`.
+**Reviewed:** 2026-08-20 against `main@930c31a1da9940fb21f0e060a6b0db6500d706b5`.
 
 ### Evidence ledger
 
 | Evidence class | Included | Excluded conclusion |
 |---|---|---|
-| Current repository topology | Target, ten-file folder inventory, merged PR #3149 deletion, current main | Does not prove every stale consumer is repaired |
+| Current repository topology | Target, ten-file folder inventory, merged PR #3149 deletion, current main, and active consumer closure | Historical literal references remain evidence, not live navigation |
 | Current repository bytes | Companions, routes, stubs, adapters, contracts, schemas, policy docs, packages, tests, and receipt requirements | Does not prove deployment or release |
 | Bounded component proof | Envelope, MockAdapter, AIReceipt builders/validator, evidence resolver, citation report, Focus projection | Does not prove orchestration or authority closure |
 | Hosted exact-head evidence | Pending after feature-branch and draft-PR creation | No hosted result is claimed here before it exists |
@@ -964,7 +964,7 @@ Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/
 
 This documentation-only update does not:
 
-- recreate the retired flat overview, rewrite all remaining stale consumers, or change another document's authority;
+- recreate the retired flat overview, alter immutable historical receipts or source maps, or change another document's authority;
 - accept or reject an ADR;
 - alter a contract, schema, policy rule, fixture, test, workflow, route, adapter, worker, package, evidence object, runtime receipt, release, correction, or rollback record;
 - invoke a provider, resolve authoritative evidence, evaluate policy, compose citation validation, or emit a runtime AIReceipt;

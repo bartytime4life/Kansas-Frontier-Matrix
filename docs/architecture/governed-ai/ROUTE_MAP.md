@@ -2,7 +2,7 @@
 doc_id: kfm://doc/architecture-governed-ai-route-map
 title: Governed AI — Route Map
 type: architecture-standard
-version: v0.2
+version: v0.3
 status: draft; repository-grounded; route-lineage-reconciled; governed-ai-route-absent; non-authoritative
 maturity: bounded WSGI scaffold plus no-network client and adapter proofs; no end-to-end governed-AI transport
 owners:
@@ -10,7 +10,7 @@ owners:
   - "NEEDS VERIFICATION — Governed API maintainer"
   - "NEEDS VERIFICATION — governed-AI, evidence, citation, policy, security, review, correction, and release stewards"
 created: 2026-05-24
-updated: 2026-08-19
+updated: 2026-08-20
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -18,7 +18,7 @@ current_path: docs/architecture/governed-ai/ROUTE_MAP.md
 responsibility: "Explain the current executable route surface, bounded governed-AI client/runtime components, legacy six-family route taxonomy, ownership boundaries, forbidden paths, and graduation evidence without defining routes, contracts, schemas, policy, release state, or public exposure."
 authority_class: explanatory architecture guidance
 authority_limit: "This page does not register an endpoint, authenticate a caller, grant a capability, resolve evidence, execute policy, validate citations, invoke a provider, emit an AIReceipt, approve review, release an artifact, deploy a service, or publish a claim."
-canonical_relationship: "CONFIRMED existing same-path companion under docs/architecture/governed-ai/; the flat docs/architecture/governed-ai.md overview and folder README remain a separately recorded CONFLICTED/HOLD relationship."
+canonical_relationship: "CONFIRMED current topology — README.md is the active governed-AI landing page after merged PR #3149 retired the former flat docs/architecture/governed-ai.md entrypoint; the retired path remains historical lineage only."
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -63,7 +63,6 @@ inspection_boundary: >-
   publication was exercised.
 related:
   - README.md
-  - ../governed-ai.md
   - BOUNDARIES.md
   - CONTINUITY_NOTES.md
   - FOCUS_FLOW.md
@@ -202,9 +201,9 @@ Accepted [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.
 
 The existence of a topic document does not prove its described implementation. Architecture pages may define target constraints while code, contracts, schemas, policy, tests, deployment records, and observed behavior decide current state.
 
-### 2.3 Unresolved overview relationship
+### 2.3 Retired overview relationship
 
-This folder's [`README.md`](README.md) and the flat [`docs/architecture/governed-ai.md`](../governed-ai.md) remain overlapping human overviews. Current documentation narrows the flat page to a cross-cutting overview and the folder README to a detailed inventory, but no accepted decision establishes precedence, retirement, redirect, or canonicality. This page does not resolve that separate **CONFLICTED / HOLD**.
+Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149) retired the former flat `docs/architecture/governed-ai.md` overview. [`README.md`](README.md) is the active subsystem landing page; immutable receipts, Git history, and the pinned convergence ledger retain the former path only as historical lineage. This navigation correction does not accept an ADR or create runtime, policy, release, or publication authority.
 
 ### 2.4 Responsibility split
 
@@ -853,7 +852,7 @@ That slice proves inventory and fail-closed metadata only. It does not implement
 | Reference | Role | Current bounded status |
 |---|---|---|
 | [`README.md`](README.md) | Governed-AI subsystem inventory | Repository-grounded; no end-to-end route |
-| [`../governed-ai.md`](../governed-ai.md) | Cross-cutting governed-AI overview | Repository-grounded; overlapping overview relationship remains HOLD |
+| Former flat `docs/architecture/governed-ai.md` | Retired overview lineage | Removed by PR #3149; not an active navigation or authority target |
 | [`FOCUS_FLOW.md`](FOCUS_FLOW.md) | Target Focus request flow | Architecture target; several implementation assumptions are not current proof |
 | [`BOUNDARIES.md`](BOUNDARIES.md) | Forbidden paths and trust boundaries | Explanatory; implementation requires code/policy/tests |
 | [`ADAPTER_CONTRACT.md`](ADAPTER_CONTRACT.md) | Adapter responsibility | Explanatory; current MockAdapter proof is narrower |
@@ -987,6 +986,7 @@ A route is not complete until:
 |---|---|---|
 | `v0.1` | 2026-05-24 | Proposal-era six-family route map, audience classes, concrete URL examples, and three-sibling placement framing. |
 | `v0.2` | 2026-08-19 | Grounds the page in the exact three-route WSGI scaffold; reclassifies six families as lineage; records bounded Explorer/MockAdapter proofs; removes unsupported route, audience, DTO, receipt, and provider claims; adds integration HOLDs and graduation evidence. |
+| `v0.3` | 2026-08-20 | Reconciles the merged PR #3149 flat-entrypoint retirement, removes the dead navigation target, and preserves the former path only as explicit historical lineage. |
 
 **Rollback:** revert this documentation commit, restore prior target blob `c99296e4676e6a587ae6e6d003d163d31e217ee4`, and remove or supersede the paired generated authoring receipt through reviewed history. No route, process, deployment, release, cache, or public rollback is required because this revision changes no operational state.
 
@@ -994,8 +994,8 @@ A route is not complete until:
 
 ---
 
-**Related (mini)** · [`README.md`](README.md) · [`../governed-ai.md`](../governed-ai.md) · [`FOCUS_FLOW.md`](FOCUS_FLOW.md) · [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) · [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) · [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) · [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) · [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py)
+**Related (mini)** · [`README.md`](README.md) · [`FOCUS_FLOW.md`](FOCUS_FLOW.md) · [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) · [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) · [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) · [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) · [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py)
 
-**Last updated:** 2026-08-19 · **Doc version:** v0.2 · **Doc status:** repository-grounded draft · **Governed-AI HTTP route:** ABSENT / HOLD
+**Last updated:** 2026-08-20 · **Doc version:** v0.3 · **Doc status:** repository-grounded draft · **Governed-AI HTTP route:** ABSENT / HOLD
 
 [↑ Back to top](#top)

@@ -494,7 +494,7 @@ stateDiagram-v2
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules (governs placement)
 - [`../../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle law
 - [`../../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — Trust membrane (governed API boundary)
-- [`../../../architecture/governed-api.md`](../../../architecture/governed-api.md) — Governed API surface
+- [`../../../architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — Governed API surface
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — Provenance standard (W3C PROV-O mapping)
 - [`../../../standards/REDACTION_DETERMINISM.md`](../../../standards/REDACTION_DETERMINISM.md) — Redaction determinism standard *(TODO — PROPOSED in corpus, not yet authored)*
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — Sensitivity rubric *(TODO — PROPOSED in corpus, not yet authored)*

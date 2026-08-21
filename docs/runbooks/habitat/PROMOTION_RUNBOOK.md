@@ -13,7 +13,7 @@ related: [
   docs/doctrine/lifecycle-law.md,
   docs/doctrine/trust-membrane.md,
   docs/domains/habitat/README.md,
-  docs/architecture/governed-api.md,
+  docs/architecture/governed-api/README.md,
   policy/promotion/README.md,
   data/release/README.md,
   docs/runbooks/README.md
@@ -673,7 +673,7 @@ Run this list before submitting a Habitat release for promotion. Any unchecked b
 - 🔐 `policy/promotion/README.md` — OPA / Conftest bundle for promotion gates. *(TODO link target)*
 - 📦 `data/release/README.md` — `ReleaseManifest`, `PromotionReceipt`, attestation conventions. *(TODO link target)*
 - 🧾 `data/receipts/README.md` — `RunReceipt`, `ValidationReport`, `PolicyDecision`, `RedactionReceipt`. *(TODO link target)*
-- 🛰️ `docs/architecture/governed-api.md` — finite-outcome envelopes; the public trust path. *(TODO link target)*
+- 🛰️ `docs/architecture/governed-api/README.md` — finite-outcome envelopes; the public trust path. *(TODO link target)*
 - 📜 `docs/adr/ADR-0001-schema-home.md` — `schemas/contracts/v1/...` schema-home rule. *(TODO link target)*
 - 🗒️ `docs/registers/VERIFICATION_BACKLOG.md` — open verification items for Habitat. *(TODO link target)*
 

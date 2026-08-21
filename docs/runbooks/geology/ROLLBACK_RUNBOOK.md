@@ -12,7 +12,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
   - docs/domains/geology/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/governance/separation-of-duties.md
   - release/manifests/
   - release/rollback_cards/
@@ -392,7 +392,7 @@ Geology relations cross into adjacent domains. Rolling back a Geology release ma
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant and gate semantics.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement protocol for runbooks and release artifacts.
 - [`docs/domains/geology/README.md`](../../domains/geology/README.md) — Geology domain identity, scope, and boundary.
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — finite-outcome envelopes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelopes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
 - [`docs/governance/separation-of-duties.md`](../../governance/separation-of-duties.md) — *[TODO: confirm path]* role definitions and SoD matrix.
 - [`docs/runbooks/geology/VALIDATION_RUNBOOK.md`](./VALIDATION_RUNBOOK.md) — *[TODO]* validation runbook (PROPOSED sibling).
 - [`docs/runbooks/geology/INGEST_RUNBOOK.md`](./INGEST_RUNBOOK.md) — *[TODO]* ingest runbook (PROPOSED sibling).
@@ -486,6 +486,6 @@ Specific implementation, tool names, route names, queue names, file paths, test 
 
 ---
 
-**Related docs:** [Lifecycle law](../../doctrine/lifecycle-law.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Geology domain](../../domains/geology/README.md) · [Governed API](../../architecture/governed-api.md)
+**Related docs:** [Lifecycle law](../../doctrine/lifecycle-law.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Geology domain](../../domains/geology/README.md) · [Governed API](../../architecture/governed-api/README.md)
 
 **Last updated:** 2026-05-12 &nbsp;·&nbsp; **Version:** v0.1 (draft) &nbsp;·&nbsp; [Back to top](#geology--rollback-runbook)

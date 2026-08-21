@@ -46,7 +46,7 @@ evidence_snapshot:
   generated_receipt_schema_blob: fba21ed27ebccf1362fe397fe0c3ebd85e072685
 related:
   - README.md
-  - ../governed-api.md
+  - README.md
   - ../trust-membrane.md
   - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -620,7 +620,7 @@ A stable audience profile is not complete until:
 | Reference | Responsibility | Current use here |
 |---|---|---|
 | [`README.md`](README.md) | Governed API architecture boundary and current maturity map | Parent boundary; confirms this companion remains proposal/conflict work |
-| [`../governed-api.md`](../governed-api.md) | Older flat architecture surface | Overlapping lineage; no canonical migration inferred |
+| [`README.md`](README.md) | Active Governed API architecture landing page | Folder landing survives merged PR #3150; runtime authority remains separate |
 | [`ADR-0004`](../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | Proposed trust-membrane decision | Decision remains effectively proposed |
 | [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted Directory Rules v2 adoption | Placement authority only |
 | [`Directory Rules`](../../doctrine/directory-rules.md) | Responsibility-root placement law | Governs same-path documentation and future object placement |
@@ -716,7 +716,7 @@ non-GET on registered path → 405 + safe ERROR
 
 ---
 
-**Related (mini)** · [`README.md`](README.md) · [`../governed-api.md`](../governed-api.md) · [`THREAT_MODEL.md`](THREAT_MODEL.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
+**Related (mini)** · [`README.md`](README.md) · [`THREAT_MODEL.md`](THREAT_MODEL.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
 
 **Last updated:** 2026-08-19 · **Doc version:** v0.2 · **Doc status:** repository-grounded draft · **Enforcement:** unbound · **Publisher:** no
 

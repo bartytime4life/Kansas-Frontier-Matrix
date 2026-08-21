@@ -28,7 +28,7 @@ related:
   - ../../docs/doctrine/trust-membrane.md
   - ../../docs/doctrine/lifecycle-law.md
   - ../../docs/architecture/maplibre.md
-  - ../../docs/architecture/map-master.md
+  - ../../docs/architecture/map-master/README.md
   - ../../docs/architecture/maplibre-master.md
   - ../../docs/architecture/maplibre-3d.md
   - ../../docs/architecture/map-shell.md

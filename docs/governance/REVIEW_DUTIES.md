@@ -457,7 +457,7 @@ These are the failure modes the matrix exists to prevent. They are drawn from At
 - [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — what outranks what when sources conflict.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — the boundary the matrix protects.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — the operational form of the trust membrane; live path **NEEDS VERIFICATION**.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — the operational form of the trust membrane; live path **NEEDS VERIFICATION**.
 - [`docs/adr/README.md`](../adr/README.md) — ADR index. **ADR-S-09** (reviewer separation threshold) is the open ADR that closes the maturity-band table in §8.
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — file any conflict between this matrix and observed repo behaviour here.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — track open repo, policy, schema, owner, and enforcement checks.

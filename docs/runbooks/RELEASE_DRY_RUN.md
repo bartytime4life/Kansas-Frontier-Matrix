@@ -12,7 +12,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/runbooks/RELEASE_ROLLBACK_DRILL.md
   - release/README.md
   - apps/cli/README.md
@@ -414,7 +414,7 @@ A release dry-run is "done" when **all** of the following are true. Anything les
 | `docs/doctrine/lifecycle-law.md` | The RAW → … → PUBLISHED invariant | CONFIRMED doctrine; file presence NEEDS VERIFICATION |
 | `docs/doctrine/trust-membrane.md` | Why public clients use `apps/governed-api/` | CONFIRMED doctrine; file presence NEEDS VERIFICATION |
 | `docs/doctrine/directory-rules.md` | Where files live; why `docs/runbooks/` exists | CONFIRMED home, this file's basis |
-| `docs/architecture/governed-api.md` | The trust membrane in executable form | NEEDS VERIFICATION |
+| `docs/architecture/governed-api/README.md` | The trust membrane in executable form | NEEDS VERIFICATION |
 | `release/README.md` | What `release/candidates/`, `release/manifests/`, `release/promotion_decisions/`, `release/rollback_cards/` own | NEEDS VERIFICATION |
 | `docs/runbooks/RELEASE_ROLLBACK_DRILL.md` | Sibling runbook; rehearses rollback against a dry-run release | PROPOSED (PR-10) |
 | `docs/runbooks/RELEASE_CORRECTION.md` | Sibling runbook; correction-path rehearsal | PROPOSED |

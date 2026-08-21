@@ -40,7 +40,7 @@ The root fixture README says RAW, WORK, and QUARANTINE data do not belong in `fi
 | `../regulatory_labeled_observed/` | Related negative case for source-role collapse with evidence implications. |
 | `../temporal_role_swap/` | Related negative case for identity/role/evidence inconsistency. |
 | `../` | Parent invalid lane; not verified as populated during this update. |
-| `../../../../docs/architecture/governed-api.md` | Cite-or-abstain and finite-outcome doctrine; this lane supplies examples only. |
+| `../../../../docs/architecture/governed-api/README.md` | Cite-or-abstain and finite-outcome doctrine; this lane supplies examples only. |
 | `../../../../contracts/evidence/evidence_drawer_payload.md` | Drawer projection semantics; this lane supplies examples only. |
 | `../../../../data/proofs/hazards/` | Proof/EvidenceBundle home; fixtures do not populate proof storage. |
 | `../../../../policy/domains/hazards/` | Policy home; fixtures do not decide policy. |
@@ -60,7 +60,7 @@ The root fixture README says RAW, WORK, and QUARANTINE data do not belong in `fi
 - `../expired_warning_as_current/README.md`
 - `../drawer_missing_disclaimer/README.md`
 - `../../../README.md`
-- `../../../../docs/architecture/governed-api.md`
+- `../../../../docs/architecture/governed-api/README.md`
 - `../../../../docs/architecture/hazards-trust-membrane.md`
 - `../../../../docs/domains/hazards/API_CONTRACTS.md`
 - `../../../../docs/domains/hazards/MAP_UI_CONTRACTS.md`
@@ -122,7 +122,7 @@ Do not use this lane for real records, source exports, lifecycle data, EvidenceB
 
 - Target README: replaced one-character placeholder content.
 - Fixture payload inventory: no payload files verified in this directory during this update.
-- Governed API cite-or-abstain alignment: PARTIALLY VERIFIED against `docs/architecture/governed-api.md`.
+- Governed API cite-or-abstain alignment: PARTIALLY VERIFIED against `docs/architecture/governed-api/README.md`.
 - Evidence Drawer projection alignment: PARTIALLY VERIFIED against `contracts/evidence/evidence_drawer_payload.md`.
 - Hazards feature-resolver fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/feature_resolver/README.md`.
 - Hazards drawer fixture alignment: PARTIALLY VERIFIED against `fixtures/domains/hazards/drawer/README.md`.

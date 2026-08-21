@@ -355,7 +355,7 @@ The safest current-state entry point is [Project Status](Project-Status.md). Re-
 - [Repository entry point](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/README.md)
 - [Architecture index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/README.md)
 - [System Context](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/system-context.md)
-- [Governed API architecture](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/governed-api.md)
+- [Governed API architecture](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/governed-api/README.md)
 - [Contract / Schema / Policy / Test split](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/contract-schema-policy-split.md)
 - [MapLibre architecture](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/architecture/maplibre.md)
 - [Lifecycle Law](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/lifecycle-law.md)

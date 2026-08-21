@@ -44,7 +44,7 @@ related:
   - README.md
   - SYSTEM_MAP.md
   - deployment-topology.md
-  - governed-api.md
+  - governed-api/README.md
   - map-shell.md
   - contract-schema-policy-split.md
   - document-convergence-plan.md
@@ -156,7 +156,7 @@ It does not define the full responsibility-plane map, object semantics, schema f
 | How does the whole system fit together? | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) |
 | Who or what crosses the KFM boundary? | This page |
 | How are hosts, networks, images, environments, and exposure arranged? | [`deployment-topology.md`](./deployment-topology.md) |
-| What must public and semi-public traffic pass through? | [`governed-api.md`](./governed-api.md) and the Governed API app README |
+| What must public and semi-public traffic pass through? | [`governed-api/README.md`](./governed-api/README.md) and the Governed API app README |
 | How does the map shell consume governed responses? | [`map-shell.md`](./map-shell.md) and the Explorer README |
 | What do contracts, schemas, policy, tests, receipts, proofs, and release records own? | [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) |
 | Which placement rules are effective? | Accepted ADR-0029 plus [`directory-rules.md`](../doctrine/directory-rules.md) |
@@ -546,7 +546,7 @@ client request
 | Whole-system responsibility planes, root map, and maturity overview | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) |
 | Architecture-lane navigation and convergence state | [`README.md`](./README.md) and [`document-convergence-plan.md`](./document-convergence-plan.md) |
 | Deployment hosts, networks, containers, environments, exposure, and readiness | [`deployment-topology.md`](./deployment-topology.md), `infra/`, and runbooks |
-| Governed API route and envelope architecture | [`governed-api.md`](./governed-api.md) and [`apps/governed-api/README.md`](../../apps/governed-api/README.md) |
+| Governed API route and envelope architecture | [`governed-api/README.md`](./governed-api/README.md) and [`apps/governed-api/README.md`](../../apps/governed-api/README.md) |
 | Explorer, MapLibre, Evidence Drawer, and Focus Mode composition | [`map-shell.md`](./map-shell.md) and [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) |
 | Review, CLI, Admin, and worker implementation | App-local READMEs and implementation under `apps/` |
 | Object meaning | `contracts/` |
@@ -615,7 +615,7 @@ A boundary path should not be described as operational until current evidence in
 - [Architecture lane README](./README.md)
 - [Whole-system map](./SYSTEM_MAP.md)
 - [Deployment topology](./deployment-topology.md)
-- [Governed API architecture](./governed-api.md)
+- [Governed API architecture](./governed-api/README.md)
 - [Map shell architecture](./map-shell.md)
 - [Contract / schema / policy split](./contract-schema-policy-split.md)
 - [Architecture convergence plan](./document-convergence-plan.md)

@@ -456,7 +456,7 @@ For the full risk register, see `KFM_Domains_Culmination_Atlas_v1_1.pdf` §24.10
 - `docs/standards/CONSENT_TOKENS.md` *(PROPOSED, C6-07 expansion direction)*
 - `docs/standards/DP_BUDGETS.md` *(PROPOSED, C6-05 expansion direction)*
 - `docs/runbooks/revocation.md` *(PROPOSED, C6-08)*
-- `docs/architecture/governed-api.md` — operational form of the trust membrane
+- `docs/architecture/governed-api/README.md` — operational form of the trust membrane
 - `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md`
 - `policy/sensitivity/`, `policy/rights/`, `policy/redaction/`, `policy/gates/`, `policy/release/`
 - `schemas/contracts/v1/release/release_manifest.schema.json` *(PROPOSED path)*

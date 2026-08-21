@@ -28,7 +28,7 @@ related:
   - ../../tests/contracts/test_runtime_response_contract_alignment.py
   - ../../tests/runtime_proof/test_envelope_finite_outcomes.py
   - ../../docs/architecture/contract-schema-policy-split.md
-  - ../../docs/architecture/governed-ai.md
+  - ../../docs/architecture/governed-ai/README.md
 notes:
   - "Expanded from existing `contracts/runtime/runtime_response_envelope.md`."
   - "Paired schema verified at `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`; schema status is PROPOSED."

@@ -22,7 +22,7 @@ truth_posture: >-
 supersedes: v0.1 at the same path; documentation only
 related:
   - README.md
-  - ../governed-api.md
+  - README.md
   - ../deployment-topology.md
   - THREAT_MODEL.md
   - AUDIENCE_CLASSES.md
@@ -601,7 +601,7 @@ A routine provider/configuration selection does not automatically need an ADR wh
 | Reference | Role | Current bounded status |
 |---|---|---|
 | [`README.md`](README.md) | Governed API architecture index and current scaffold boundary. | Repository-grounded; no live deployment claimed. |
-| [`../governed-api.md`](../governed-api.md) | Higher-level trust-membrane doctrine and architecture. | Human architecture; implementation claims require current evidence. |
+| [`README.md`](README.md) | Governed API architecture landing page. | Human architecture; implementation claims require current evidence. |
 | [`../deployment-topology.md`](../deployment-topology.md) | Repository-wide deployment readiness and topology distinctions. | Repository-grounded draft; current deployment unknown. |
 | [`THREAT_MODEL.md`](THREAT_MODEL.md) | Threats and boundary risks for the Governed API. | Architecture input; enforcement requires implementation evidence. |
 | [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) | Audience/caller vocabulary reconciliation. | Legacy audience enum and numeric tiers are not canonical or enforced. |

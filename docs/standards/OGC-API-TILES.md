@@ -58,7 +58,7 @@ related:
   - ../doctrine/lifecycle-law.md
   - ../doctrine/trust-membrane.md
   - ../architecture/TRUST_MEMBRANE.md
-  - ../architecture/governed-api.md
+  - ../architecture/governed-api/README.md
   - ../architecture/map-shell.md
   - ../architecture/contract-schema-policy-split.md
   - "../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
@@ -444,7 +444,7 @@ The observations in this section are pinned to `main@6e45646702022513fa0777b294d
 | `LayerManifest` semantic contract | [`contracts/data/layer_manifest.md`](../../contracts/data/layer_manifest.md) has a strict, proposed-inactive, fixture-only candidate profile plus a permissive legacy profile | A bounded layer carrier exists; it is not a release or runtime implementation |
 | `LayerManifest` schema | [`schemas/contracts/v1/data/layer_manifest.schema.json`](../../schemas/contracts/v1/data/layer_manifest.schema.json) enumerates `PMTILES`, `XYZ`, `COG`, and `GEOJSON_FIXTURE` | OGC API — Tiles is not admitted by the strict protocol enum |
 | Layer contract lane | [`contracts/layers/README.md`](../../contracts/layers/README.md) marks `TileArtifactManifest` and `StyleManifest` as proposed and preserves a layer/data placement conflict | This page must not present those objects as implemented authority |
-| Governed API | [`docs/architecture/governed-api.md`](../architecture/governed-api.md) records `/bootstrap`, `/layers`, and `/evidence` scaffold routes returning `ABSTAIN / NOT_IMPLEMENTED` | No tiles API or evidence-backed answer path is established |
+| Governed API | [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) records `/bootstrap`, `/layers`, and `/evidence` scaffold routes returning `ABSTAIN / NOT_IMPLEMENTED` | No tiles API or evidence-backed answer path is established |
 | Trust membrane | [`docs/architecture/TRUST_MEMBRANE.md`](../architecture/TRUST_MEMBRANE.md) records a bounded fail-closed scaffold and unresolved operational seams | Architecture exists in parts; complete enforcement is unproven |
 | MapLibre seam decisions | ADR-0006 and ADR-0007 exist but remain effectively proposed; current package/adapter evidence is scaffold-level and readiness is held | Do not make renderer or adapter implementation claims from this page |
 
@@ -819,7 +819,7 @@ Until these questions are resolved, operational use remains on `HOLD`.
 | [`contracts/data/layer_manifest.md`](../../contracts/data/layer_manifest.md) | Current semantic profile status and non-effects |
 | [`schemas/contracts/v1/data/layer_manifest.schema.json`](../../schemas/contracts/v1/data/layer_manifest.schema.json) | Current strict protocol enumeration and fixture-only machine shape |
 | [`contracts/layers/README.md`](../../contracts/layers/README.md) | Current layer-family placement conflict and proposed object status |
-| [`docs/architecture/governed-api.md`](../architecture/governed-api.md) | Current route scaffold and fail-closed behavior |
+| [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) | Current route scaffold and fail-closed behavior |
 | [`docs/architecture/TRUST_MEMBRANE.md`](../architecture/TRUST_MEMBRANE.md) | Current cross-root membrane evidence and limitations |
 | [`docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Proposed adapter seam and current scaffold/HOLD evidence |
 | [`docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Proposed renderer-family decision and current readiness limits |
@@ -859,7 +859,7 @@ Re-review this page when:
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — lifecycle doctrine.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — trust-membrane doctrine.
 - [`docs/architecture/TRUST_MEMBRANE.md`](../architecture/TRUST_MEMBRANE.md) — current architecture/enforcement map.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — current API scaffold.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — current API scaffold.
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — map-shell boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) — authority separation.
 - [`contracts/data/layer_manifest.md`](../../contracts/data/layer_manifest.md) — current layer semantic contract.

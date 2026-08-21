@@ -8,7 +8,7 @@ owners: <fauna-domain-steward> + <contract-schema-steward>  # TODO confirm in OW
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/fauna/README.md, docs/domains/fauna/SCHEMAS.md, docs/domains/fauna/POLICY.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/architecture/governed-api.md, contracts/OBJECT_MAP.md, schemas/contracts/v1/runtime/runtime_response_envelope.schema.json, schemas/contracts/v1/ui/evidence_drawer_payload.schema.json, schemas/contracts/v1/map/layer_manifest.schema.json, schemas/contracts/v1/ai/ai_receipt.schema.json, ai-build-operating-contract.md]
+related: [docs/domains/fauna/README.md, docs/domains/fauna/SCHEMAS.md, docs/domains/fauna/POLICY.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/architecture/governed-api/README.md, contracts/OBJECT_MAP.md, schemas/contracts/v1/runtime/runtime_response_envelope.schema.json, schemas/contracts/v1/ui/evidence_drawer_payload.schema.json, schemas/contracts/v1/map/layer_manifest.schema.json, schemas/contracts/v1/ai/ai_receipt.schema.json, ai-build-operating-contract.md]
 tags: [kfm, fauna, api, contracts, governed-api]
 notes: [CONTRACT_VERSION pinned 3.0.0 # all route paths, DTO field lists, and status codes PROPOSED until verified against a mounted repo and an accepted ADR # exact Fauna feature/detail resolver route is UNKNOWN per Atlas §7.J # Atlas §7.J names the DTO FaunaDecisionEnvelope # schema slug fauna vs domains/fauna is CONFLICTED → OQ-FAUNA-API-011]
 [/KFM_META_BLOCK_V2] -->
@@ -697,7 +697,7 @@ docs/runbooks/fauna/
 - [`docs/domains/fauna/POLICY.md`](./POLICY.md) — sensitivity & rights policy *(TODO)*
 - [`docs/domains/fauna/adr/README.md`](./adr/README.md) — Fauna ADR index
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — source refresh runbook
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — generic governed API architecture *(TODO confirm path)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — generic governed API architecture *(TODO confirm path)*
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema home decision

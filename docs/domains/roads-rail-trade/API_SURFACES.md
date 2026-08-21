@@ -14,7 +14,7 @@ related:
   - docs/domains/roads-rail-trade/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, domains, roads-rail-trade, api, surfaces, governed-api, routing]
 notes:
@@ -208,7 +208,7 @@ Track in `docs/registers/VERIFICATION_BACKLOG.md` / `docs/registers/DRIFT_REGIST
 - Parent dossier: [`./README.md`](./README.md) — Roads/Rail/Trade lane README *(PROPOSED — verify on mount)*.
 - Doctrine: [`../../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), responsibility roots.
 - Doctrine: [`../../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — trust-membrane boundary (CONFIRMED in Directory Rules related-doctrine list).
-- Architecture: [`../../../architecture/governed-api.md`](../../architecture/governed-api.md) — governed-API surface definition.
+- Architecture: [`../../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed-API surface definition.
 - ADR: [`../../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule.
 - Atlas §20.3 — Master API Surface Table; Atlas Ch. 13 §J — Roads/Rail surface rows (doctrine basis).
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §8 items.

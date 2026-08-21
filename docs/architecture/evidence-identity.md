@@ -37,7 +37,7 @@ related:
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
   - ./contract-schema-policy-split.md
-  - ./governed-api.md
+  - ./governed-api/README.md
   - ../standards/PROV.md
   - ../standards/PROVENANCE.md
   - ../../contracts/common/spec_hash.md
@@ -70,7 +70,7 @@ notes:
 [![EvidenceRef schema: confirmed](https://img.shields.io/badge/EvidenceRef%20schema-confirmed-1a7f37?style=flat-square)](../../schemas/contracts/v1/evidence/evidence_ref.schema.json)
 [![EvidenceBundle schema: confirmed](https://img.shields.io/badge/EvidenceBundle%20schema-confirmed-1a7f37?style=flat-square)](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)
 [![Resolver: internal alpha](https://img.shields.io/badge/resolver-internal%20v1alpha1-1f6feb?style=flat-square)](../../packages/evidence-resolver/README.md)
-[![Public answer: not implemented](https://img.shields.io/badge/public%20ANSWER-not%20implemented-b42318?style=flat-square)](./governed-api.md)
+[![Public answer: not implemented](https://img.shields.io/badge/public%20ANSWER-not%20implemented-b42318?style=flat-square)](./governed-api/README.md)
 [![Hash grammar: conflicted](https://img.shields.io/badge/spec__hash-CONFLICTED-d4a72c?style=flat-square)](../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md)
 [![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-boundary)
 
@@ -625,7 +625,7 @@ The paths below are confirmed at the inspected main commit. Their statuses remai
 | Synthetic resolver fixtures | [`fixtures/packages/evidence_resolver/v1alpha1/`](../../fixtures/packages/evidence_resolver/v1alpha1/README.md) | **CONFIRMED public-safe fixture family** |
 | Resolver tests | [`tests/packages/evidence_resolver/`](../../tests/packages/evidence_resolver/README.md) | **CONFIRMED focused test family** |
 | Resolver workflow | [`.github/workflows/evidence-resolver.yml`](../../.github/workflows/evidence-resolver.yml) | **CONFIRMED workflow definition; run state separate** |
-| Public response architecture | [`docs/architecture/governed-api.md`](./governed-api.md) | **CONFIRMED fail-closed scaffold description** |
+| Public response architecture | [`docs/architecture/governed-api/README.md`](./governed-api/README.md) | **CONFIRMED fail-closed scaffold description** |
 | Policy evaluation | `policy/` | **Responsibility root confirmed; resolver integration not established** |
 | Materialized evidence/proof instances | `data/proofs/` and related governed data families | **Responsibility home confirmed; authoritative resolver store not established** |
 | Release/correction/rollback | `release/` | **Responsibility home confirmed; resolver integration not established** |
@@ -872,7 +872,7 @@ Current decision:
 | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Makes the doctrine path the sole writable Directory Rules authority. | **ACCEPTED** |
 | [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) | Doctrine boundary this architecture helps operationalize. | **CONFIRMED present; draft doctrine** |
 | [`docs/architecture/contract-schema-policy-split.md`](./contract-schema-policy-split.md) | Explains responsibility separation used throughout this page. | **CONFIRMED repository-grounded draft** |
-| [`docs/architecture/governed-api.md`](./governed-api.md) | Public finite-outcome and current negative-scaffold boundary. | **CONFIRMED repository-grounded draft; no substantive `ANSWER` path established** |
+| [`docs/architecture/governed-api/README.md`](./governed-api/README.md) | Public finite-outcome and current negative-scaffold boundary. | **CONFIRMED repository-grounded draft; no substantive `ANSWER` path established** |
 | [`ADR-0013`](../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md) | Proposed content/activity identity grammar and current implementation conflict record. | **PROPOSED / CONFLICTED** |
 | [`contracts/common/spec_hash.md`](../../contracts/common/spec_hash.md) | Current semantic meaning of the common SpecHash object. | **CONFIRMED v0.2 draft** |
 | [`contracts/evidence/evidence_ref.md`](../../contracts/evidence/evidence_ref.md) | Canonical semantic pointer contract. | **CONFIRMED v0.2 draft** |

@@ -72,7 +72,7 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - apps/README.md
   - apps/governed-api/README.md
   - apps/explorer-web/src/adapters/GovernedClient.ts
@@ -548,7 +548,7 @@ This documentation change modifies only this ADR. The surfaces below are the ver
 | [`release/`](../../release/) | Release, correction, withdrawal, rollback authority | Separate root present | API consumes state; does not approve it |
 | [`api-test.yml`](../../.github/workflows/api-test.yml) | Bounded CI orchestration | Command-bearing | Keep read-only; expand representative checks deliberately |
 | [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) | Shape/fixture CI | Both runtime families configured | Does not prove mapping or runtime behavior |
-| [`docs/architecture/governed-api.md`](../architecture/governed-api.md) | Architecture explainer | Present but implementation-depth language is stale | Follow-up documentation candidate, not changed here |
+| [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) | Current architecture landing page | Repository-grounded explanatory boundary; implementation claims still require current evidence | Navigation correction only; this ADR's decision status is unchanged |
 | `apps/api/` | Potential parallel API | Absent at snapshot | No migration required now; future creation is governed by §9 |
 
 ### 8.2 Required implementation packet for the first substantive route
@@ -828,7 +828,7 @@ Unless a row says otherwise, the numbered ADRs below are currently effectively `
 | [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) | **Accepted** adoption record for the exact Directory Rules bytes; placement authority, not acceptance of ADR-0004 |
 | [Directory Rules](../doctrine/directory-rules.md) | Responsibility-root placement and app-role doctrine |
 | [Trust Membrane doctrine](../doctrine/trust-membrane.md) | Trust-warranty vocabulary; current document status remains draft |
-| [Governed API architecture](../architecture/governed-api.md) | Human architecture explainer; current-state reconciliation remains future work |
+| [Governed API architecture](../architecture/governed-api/README.md) | Human architecture landing page; current-state claims remain subordinate to repository evidence |
 | [`apps/README.md`](../../apps/README.md) | Repository-grounded app-root inventory and maturity map |
 | [`apps/governed-api/README.md`](../../apps/governed-api/README.md) | App-local responsibility boundary |
 | [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Fixture-only public-safe projection adapter; explicitly not a live network client |
@@ -868,7 +868,7 @@ Unless a row says otherwise, the numbered ADRs below are currently effectively `
 | **OQ-04-15** | What is the audit/retention relationship among request, response, decision, policy, evidence, release, receipt, and correction IDs? | Identity/retention design and privacy review |
 | **OQ-04-16** | Which branch-protection and independent-review controls are actually enforced? | Repository ruleset evidence; not inferred from CODEOWNERS |
 | **OQ-04-17** | When may one route graduate from scaffolded `ABSTAIN` to `ANSWER`? | Closed §13.2 gates for that route packet |
-| **OQ-04-18** | Should the stale `docs/architecture/governed-api.md` and app README be reconciled after this ADR revision? | Separate scoped documentation task with current evidence |
+| **OQ-04-18** | How should the Governed API architecture landing page and app README remain synchronized as implementation advances? | Separate scoped documentation task with current evidence |
 | **OQ-04-19** | What future condition, if any, would justify an internal `apps/api/` service? | Concrete consumer and reviewed no-parallel-authority proof |
 | **OQ-04-20** | Which rollback/forward-fix record home governs route-contract migrations? | Current migrations/release contracts and Directory Rules review |
 | **OQ-04-21** | How will the RuntimeResponseEnvelope prose contract, its current conditional precision schema, and the dedicated `precision_actually_used` contract be reconciled and versioned? | One reviewed meaning/shape decision, synchronized contract/schema/fixtures, and mapping tests before substantive `ANSWER` |
@@ -993,7 +993,7 @@ Reason codes must be safe to expose at their intended surface. They must not enc
 - [ADR authoring contract](./README.md)
 - [Directory Rules](../doctrine/directory-rules.md)
 - [Trust Membrane doctrine](../doctrine/trust-membrane.md)
-- [Governed API architecture](../architecture/governed-api.md)
+- [Governed API architecture](../architecture/governed-api/README.md)
 - [Apps root README](../../apps/README.md)
 - [Governed API app README](../../apps/governed-api/README.md)
 - [Explorer fixture client](../../apps/explorer-web/src/adapters/GovernedClient.ts)

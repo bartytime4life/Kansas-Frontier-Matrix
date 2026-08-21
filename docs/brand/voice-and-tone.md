@@ -14,7 +14,7 @@ related:
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
 tags: [kfm, brand, voice, tone, writing, ubiquitous-language]
 notes:
@@ -431,7 +431,7 @@ Use this before merging any change that adds or alters public-surface prose. **P
 - [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — which source wins when sources disagree *(PROPOSED path)*
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED` invariant *(PROPOSED path)*
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — where files live and why
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — finite outcomes on the API surface *(PROPOSED path)*
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — finite outcomes on the API surface *(PROPOSED path)*
 - [`docs/standards/PROV.md`](../standards/PROV.md) — provenance terminology and crosswalks
 - `docs/brand/README.md` *(TODO — verify presence)*
 - `docs/brand/style-guide.md` *(TODO — visual identity counterpart, if separate)*

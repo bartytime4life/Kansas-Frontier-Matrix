@@ -16,7 +16,7 @@ related:
   - docs/domains/habitat/sublanes/ecoregions.md
   - docs/domains/habitat/sublanes/suitability.md
   - docs/domains/habitat/sublanes/restoration.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - contracts/domains/habitat/
   - schemas/contracts/v1/domains/habitat/
@@ -88,7 +88,7 @@ The Habitat lane governs **`HabitatPatch`, `LandCoverObservation`, `EcologicalSy
 
 **This file does not cover**
 
-- **Wire format mechanics** (HTTP verbs, status codes, content negotiation, pagination semantics). Those belong to `docs/architecture/governed-api.md` _(`PROPOSED`)_.
+- **Wire format mechanics** (HTTP verbs, status codes, content negotiation, pagination semantics). Those belong to `docs/architecture/governed-api/README.md` _(`PROPOSED`)_.
 - **Machine schemas.** Those live under the canonical Habitat schema home (see §16; slug `CONFLICTED`).
 - **Map and UI rendering of these payloads.** That belongs to `docs/domains/habitat/MAP_UI_CONTRACTS.md` _(`PROPOSED`)_.
 - **Source descriptors and harvest mechanics.** Those belong to `docs/domains/habitat/SOURCES.md` _(`PROPOSED`)_ and the Habitat source-refresh runbook.
@@ -672,7 +672,7 @@ The following reason codes are referenced by Habitat envelopes. Each must resolv
 
 **Cross-cutting architecture and standards**
 
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Cross-cutting governed-API architecture _(`PROPOSED`)_
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Cross-cutting governed-API architecture _(`PROPOSED`)_
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / schema / policy split _(`PROPOSED`)_
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV profile _(naming `PROV.md` vs `PROVENANCE.md` is a tracked drift item)_
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust-membrane doctrine _(`PROPOSED`)_

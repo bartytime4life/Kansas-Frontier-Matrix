@@ -75,7 +75,7 @@ related:
   - ENVELOPES.md
   - ERROR_CODES.md
   - DEPLOYMENT_RULES.md
-  - ../governed-api.md
+  - README.md
   - ../publication/RELEASE_GATES.md
   - ../publication/release-state-machine.md
   - ../publication/release-objects.md

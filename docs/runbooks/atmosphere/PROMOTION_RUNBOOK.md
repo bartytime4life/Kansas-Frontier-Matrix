@@ -14,7 +14,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/domains/atmosphere/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/runbooks/governed_ai_VALIDATION.md
   - control_plane/release_state_register.yaml
   - control_plane/policy_gate_register.yaml
@@ -496,7 +496,7 @@ Open items that this runbook depends on. Each is **NEEDS VERIFICATION** until pr
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-surface boundary *(PROPOSED)*
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain default *(PROPOSED)*
 - [`docs/domains/atmosphere/README.md`](../../domains/atmosphere/README.md) — domain identity, ubiquitous language, objects *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — `ANSWER / ABSTAIN / DENY / ERROR` envelope *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — `ANSWER / ABSTAIN / DENY / ERROR` envelope *(PROPOSED)*
 - [`docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md`](./CORRECTION_RUNBOOK.md) — sibling runbook *(PROPOSED, TODO)*
 - [`docs/runbooks/atmosphere/ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) — sibling runbook *(PROPOSED, TODO)*
 - `control_plane/policy_gate_register.yaml` — machine-readable gate map *(PROPOSED)*
@@ -608,6 +608,6 @@ python tools/policy/decision_envelope.py \
 
 ---
 
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Atmosphere domain README](../../domains/atmosphere/README.md) *(PROPOSED)* · [Governed API](../../architecture/governed-api.md) *(PROPOSED)* · [Correction runbook](./CORRECTION_RUNBOOK.md) *(PROPOSED, TODO)* · [Rollback runbook](./ROLLBACK_RUNBOOK.md) *(PROPOSED, TODO)*
+**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Atmosphere domain README](../../domains/atmosphere/README.md) *(PROPOSED)* · [Governed API](../../architecture/governed-api/README.md) *(PROPOSED)* · [Correction runbook](./CORRECTION_RUNBOOK.md) *(PROPOSED, TODO)* · [Rollback runbook](./ROLLBACK_RUNBOOK.md) *(PROPOSED, TODO)*
 
 **Last updated:** 2026-05-13 · **Version:** v1 (draft) · [⬆ Back to top](#top)

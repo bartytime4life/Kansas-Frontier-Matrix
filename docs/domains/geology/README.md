@@ -567,7 +567,7 @@ Unchecked items above remain **PROPOSED** (DOM-GEOL §K names the first five exp
 - [`docs/domains/geology/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — per-family preservation/tier/transform rules _(path PROPOSED)_
 - [`docs/domains/geology/OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) — geology open-questions register _(path PROPOSED)_
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — the four-layer authority _(path PROPOSED)_
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — trust membrane and finite outcomes _(path PROPOSED)_
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — trust membrane and finite outcomes _(path PROPOSED)_
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile _(path PROPOSED; naming variance vs `PROVENANCE.md` → OPEN-DR-01)_
 - Doctrinal upstream: `DOM-GEOL` dossier (canonical); Encyclopedia §7.8; Culmination Atlas Ch. 10; Build Manual §10.8
 - Cross-lane neighbors: `docs/domains/hydrology/`, `docs/domains/soil/`, `docs/domains/hazards/`, `docs/domains/people-dna-land/`, `docs/domains/archaeology/` _(paths PROPOSED)_

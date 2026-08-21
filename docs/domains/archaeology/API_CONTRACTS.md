@@ -14,7 +14,7 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/lifecycle-law.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/ARCHITECTURE.md
   - docs/domains/archaeology/CANONICAL_PATHS.md
@@ -478,7 +478,7 @@ This section is a **single-source-of-pointer table** so readers do not look here
 | Source-role discipline | Atlas v1.1 §24.1 (roles + collapse patterns); ADR-S-04 (enum evolution) |
 | Sensitivity tier scheme (T0–T4) | Atlas v1.1 §24.5; `docs/domains/archaeology/SENSITIVITY.md` (PROPOSED) |
 | Domain doctrine (orientation, ubiquitous language, sources) | `docs/domains/archaeology/` (this folder; `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`) |
-| Universal governed-API doctrine | `docs/architecture/governed-api.md`, `docs/doctrine/trust-membrane.md` |
+| Universal governed-API doctrine | `docs/architecture/governed-api/README.md`, `docs/doctrine/trust-membrane.md` |
 | Schema-home convention | `docs/doctrine/directory-rules.md` §13.1; `docs/adr/ADR-0001-schema-home.md` |
 | Operating contract | `docs/doctrine/ai-build-operating-contract.md` (`CONTRACT_VERSION = "3.0.0"`) |
 | Rollback drill | `docs/domains/archaeology/runbooks/rollback-drill.md` (placement under ADR review per `OQ-AR-API-09`) |
@@ -556,7 +556,7 @@ This document is done enough to enter the repository when:
 
 - it is placed at `docs/domains/archaeology/api-contracts.md` per Directory Rules §12 (or retains a location consistent with the sibling casing convention per `OQ-AR-API-07`);
 - docs steward, archaeology-domain steward, cultural-review-board representative, sovereignty-review liaison, policy steward, governed-API owner, security steward, and AI surface steward have reviewed and approved it;
-- it is linked from `docs/domains/archaeology/README.md`, `docs/domains/archaeology/ARCHITECTURE.md`, and `docs/architecture/governed-api.md`;
+- it is linked from `docs/domains/archaeology/README.md`, `docs/domains/archaeology/ARCHITECTURE.md`, and `docs/architecture/governed-api/README.md`;
 - it does not conflict with accepted ADRs, including ADR-0001 (schema home) and any of ADR-S-01 / ADR-S-03 / ADR-S-04 once filed;
 - any conflict with current repo conventions — including the v0.2→v0.3 enum-casing migration — is logged in `docs/registers/DRIFT_REGISTER.md`;
 - the `GENERATED_RECEIPT.json` planned for AI authorship is wired into CI per contract §34 with `CONTRACT_VERSION = "3.0.0"`;
@@ -586,7 +586,7 @@ PROPOSED. Targets below are PROPOSED; verify before linking from other docs.
 - [`./VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog.
 - [`./runbooks/README.md`](./runbooks/README.md) — Archaeology runbooks folder README (placement under ADR review, `OQ-AR-API-09`).
 - [`./runbooks/rollback-drill.md`](./runbooks/rollback-drill.md) — Rollback drill runbook (Atlas v1.0 Ch. 15 §N item 4 anchor).
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — _TODO_ — universal trust-membrane and route doctrine.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — _TODO_ — universal trust-membrane and route doctrine.
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — _TODO_ — schemas live under `schemas/contracts/v1/...`.
 
 ---

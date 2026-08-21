@@ -25,7 +25,7 @@ related:
   - docs/security/INCIDENT_RESPONSE.md
   - docs/security/KEY_ROTATION.md
   - docs/architecture/deployment-topology.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/runbooks/
   - policy/
   - configs/

@@ -70,7 +70,7 @@ related:
   - ./source-role-anti-collapse.md
   - ./data-classification-framework.md
   - ./map-shell.md
-  - ./governed-api.md
+  - ./governed-api/README.md
   - ./sensitive-domain-fail-closed.md
   - ./sensitivity.md
   - ./document-convergence-plan.md
@@ -1172,7 +1172,7 @@ Because the change is documentation-only, rollback requires no source shutdown, 
 - [`docs/architecture/cross-lane-join-policy.md`](./cross-lane-join-policy.md)
 - [`docs/architecture/source-role-anti-collapse.md`](./source-role-anti-collapse.md)
 - [`docs/architecture/map-shell.md`](./map-shell.md)
-- [`docs/architecture/governed-api.md`](./governed-api.md)
+- [`docs/architecture/governed-api/README.md`](./governed-api/README.md)
 - [`docs/architecture/sensitive-domain-fail-closed.md`](./sensitive-domain-fail-closed.md)
 - [`docs/architecture/document-convergence-plan.md`](./document-convergence-plan.md)
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md)

@@ -11,19 +11,19 @@
 
 | Field | Current bounded result |
 |---|---|
-| Evidence snapshot | `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c` |
-| Base architecture tree | `7130327e01542244e96c51ebc4b61974bea9278b` |
-| Prior README blob | `636e433b96ff32bb756cc6f15d2190072ab238ca` |
-| Direct Markdown files | **41** |
+| Evidence snapshot | `main@930c31a1da9940fb21f0e060a6b0db6500d706b5` |
+| Base architecture tree | `6084b56fefad2c0764d1de53239624fc3ac7ea66` |
+| Prior README blob | `0b92d8d809b25a5b39c19bc0fa7e94f98ea499b9` |
+| Direct Markdown files | **38** |
 | Direct subdirectories | **8** |
 | Markdown files in those subdirectories | **62** |
-| Total Markdown documents | **103** |
+| Total Markdown documents | **100** |
 | Placement authority | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes at [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) |
 | Whole-system orientation | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) is the primary repository-grounded orientation candidate |
 | Active topology hazard | `TRUST_MEMBRANE.md` and `trust-membrane.md` are a case-insensitive path collision; the current-main identity, content, fragment, and consumer inventory leaves structural migration on explicit **HOLD** |
 | Skeleton Map posture | [`SKELETON_MAP.md`](./SKELETON_MAP.md) is the source-maintained physical-topology and responsibility-routing companion; [PR #3097](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3097) records retirement of the temporary one-shot writer, and current `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb` has no active workflow at the former path |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS`; specialist architecture and documentation stewardship remains **NEEDS VERIFICATION** |
-| Convergence state | Wave 0 plan merged in [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031); structural moves and retirements remain unexecuted |
+| Convergence state | Wave 0 plan merged in [PR #3031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3031); [PRs #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149), [#3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150), and [#3151](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3151) retired the three flat Governed AI, Governed API, and Map Master entrypoints; unrelated convergence remains out of scope |
 | Release/publication effect | None |
 
 The inventory is **CONFIRMED** at the pinned tree. Document roles below are repository-grounded where inspected. Future migrations remain **PROPOSED** or **HOLD** until content, identity, consumer, authority, validation, and rollback closure is complete.
@@ -66,18 +66,19 @@ A path in this folder is an authority claim about **who explains a concern**, no
 
 | Surface | Current status | Safe interpretation |
 |---|---|---|
-| Folder and current tree | **CONFIRMED** | `docs/architecture/` contains 103 Markdown documents at the pinned checkpoint. |
+| Folder and current tree | **CONFIRMED** | `docs/architecture/` contains 100 Markdown documents at the pinned checkpoint. |
 | Directory Rules v2 | **ACCEPTED** | ADR-0029 adopts the exact current doctrine bytes as placement authority. |
 | Root README | **PLACE / modernized in place** | This page is the architecture entrypoint and directory contract. |
 | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | **PLACE** | Primary whole-system orientation candidate; repository-grounded at its own evidence snapshot. |
 | [`SKELETON_MAP.md`](./SKELETON_MAP.md) | **PLACE / source-maintained** | Repository-grounded physical-topology and responsibility-routing companion. PR #3097 records retirement of the temporary one-shot writer; no active current-main workflow targets this file. |
 | Upper/lower trust-membrane pair | **CONFLICTED / explicit HOLD** | Both are full documents with distinct identities, content, and fragment schemes. The repository-local reference inventory is recorded below; no structural migration occurs through this README. |
 | Folder landing pages | **PLACE** | `cross-domain/`, `governed-ai/`, `governed-api/`, `map-master/`, `publication/`, `settlements-infrastructure/`, `story/`, and `ui/` are repository-present lanes. |
-| Flat/folder overlaps | **PROPOSED convergence** | Governed AI, Governed API, Map/MapLibre, publication, Evidence Drawer, and other clusters still have competing or overlapping entrypoints. |
+| Retired flat entrypoints | **CLOSED topology** | The Governed AI, Governed API, and Map Master flat files are absent; active navigation resolves to their folder READMEs. Pinned receipts, source maps, and the Wave 0 ledger retain historical path lineage. |
+| Remaining overlap clusters | **PROPOSED / HOLD** | Publication, Evidence Drawer, MapLibre companion pages, trust-membrane variants, and other unrelated clusters retain their existing dispositions. |
 | Dated implementation notes | **HOLD** | Preserve until a verified report, archive, or history lane and supersession treatment are established. |
 | Runtime, deployment, public operation | **UNKNOWN unless separately proved** | Documentation presence and quality do not establish operational maturity. |
 
-The current convergence ledger and dependency order are recorded in [`document-convergence-plan.md`](./document-convergence-plan.md). Its original 102-document census is a pinned Wave 0 baseline; the merged plan itself is the additional document that brings the current tree to 103.
+The convergence ledger in [`document-convergence-plan.md`](./document-convergence-plan.md) retains its original 102-document Wave 0 census as historical evidence. Adding that plan produced the former 103-document checkpoint; the three later flat-file retirements reduce the current tree to 100 without rewriting the pinned ledger.
 
 [Back to top](#top)
 
@@ -194,7 +195,7 @@ docs/architecture/
 ├── document-convergence-plan.md      # 102-file Wave 0 ledger and migration sequence
 ├── system-context.md                 # system boundary and external interfaces
 ├── contract-schema-policy-split.md   # meaning / shape / admissibility / proof split
-├── ... 35 additional direct Markdown pages
+├── ... 32 additional direct Markdown pages
 ├── cross-domain/                     # 9 Markdown files
 ├── governed-ai/                      # 10 Markdown files
 ├── governed-api/                     # 8 Markdown files
@@ -212,7 +213,7 @@ docs/architecture/
 | [`SYSTEM_MAP.md`](./SYSTEM_MAP.md) | Repository-grounded whole-system orientation | `PLACE` |
 | [`system-context.md`](./system-context.md) | System boundary, audiences, and external interfaces | `PLACE` |
 | [`contract-schema-policy-split.md`](./contract-schema-policy-split.md) | Cross-root meaning/shape/admissibility/enforceability explanation | `PLACE` |
-| [`document-convergence-plan.md`](./document-convergence-plan.md) | Current overlap ledger, migration waves, validation, and rollback | `PLACE`; non-authoritative plan |
+| [`document-convergence-plan.md`](./document-convergence-plan.md) | Pinned Wave 0 overlap ledger, migration waves, validation, and rollback | `PLACE`; non-authoritative historical baseline with a post-baseline retirement note |
 | [`SKELETON_MAP.md`](./SKELETON_MAP.md) | Commit-pinned physical topology and responsibility routing | `PLACE`; source-maintained |
 
 ### Subsystem landing lanes
@@ -233,9 +234,9 @@ docs/architecture/
 | Cluster | Current active reading posture | Convergence state |
 |---|---|---|
 | Trust membrane | Read doctrine first, then the two architecture variants with the conflict visible | `TRUST_MEMBRANE.md` and `trust-membrane.md` remain `CONFLICTED / HOLD` |
-| Governed AI | Folder README is the landing-page candidate; flat `governed-ai.md` remains a migration source | `PROPOSED` no-loss convergence |
-| Governed API | Folder README is the landing-page candidate; flat `governed-api.md` remains a migration source | `PROPOSED` no-loss convergence |
-| Map/MapLibre | `map-master/README.md` is the landing-page candidate; flat map and MapLibre pages remain overlapping inputs | `PROPOSED` responsibility split |
+| Governed AI | [`governed-ai/README.md`](./governed-ai/README.md) is the active landing page; the former flat `governed-ai.md` remains only in historical lineage | `RETIRED` by PR #3149; active links closed |
+| Governed API | [`governed-api/README.md`](./governed-api/README.md) is the active landing page; the former flat `governed-api.md` remains only in historical lineage | `RETIRED` by PR #3150; active links closed |
+| Map/MapLibre | [`map-master/README.md`](./map-master/README.md) is the active Map Master landing page; separate MapLibre companion-page convergence is unchanged | Flat `map-master.md` retired by PR #3151; unrelated responsibility split remains `PROPOSED` |
 | Publication/release | `publication/README.md` is the landing-page candidate; flat release pages remain overlapping inputs | `HOLD` where gate vocabulary is unresolved |
 | Evidence Drawer | Root concept page plus UI- and map-specific pages | Root owns universal boundary; subordinate pages should narrow |
 | Evidence identity/hash | `evidence-identity.md` plus older hash guidance | Normative hash grammar remains outside architecture prose |
@@ -529,14 +530,14 @@ No. A commit, pull request, merge, badge, validator pass, or architecture page i
 
 | Field | Value |
 |---|---|
-| Review date | 2026-08-19 |
-| Evidence base | `main@452ccf7250e04a40a05776895f0e4ca8129d7f1c` |
-| Focused correction evidence | [PR #3097](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3097) and `main@fec1f92fde6fb7dd83c995f9984d495bb61a84bb` confirm temporary writer retirement and absence of the former workflow path |
-| Base architecture tree | `7130327e01542244e96c51ebc4b61974bea9278b` |
+| Review date | 2026-08-20 |
+| Evidence base | `main@930c31a1da9940fb21f0e060a6b0db6500d706b5` |
+| Focused correction evidence | [PR #3097](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3097) records temporary writer retirement; PRs [#3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3149), [#3150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3150), and [#3151](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3151) record the three flat-entrypoint retirements |
+| Base architecture tree | `6084b56fefad2c0764d1de53239624fc3ac7ea66` |
 | Review route | `@bartytime4life` through `.github/CODEOWNERS` |
 | Specialist stewardship | **NEEDS VERIFICATION** |
 | Next review trigger | Architecture-tree change; accepted ADR affecting placement or subsystem ownership; trust-membrane convergence; a new Skeleton Map writer or role change; or material runtime/release boundary change |
-| Rollback | Revert the focused README commit; no runtime, data, policy, release, deployment, or publication state changes |
+| Rollback | Revert the focused link-closure commit; do not recreate the retired flat files; no runtime, data, policy, release, deployment, or publication state changes |
 
 ### Related documents
 

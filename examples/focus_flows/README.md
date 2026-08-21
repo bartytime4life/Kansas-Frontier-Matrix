@@ -121,7 +121,7 @@ CODEOWNERS routing is not stewardship, approval evidence, policy permission, or 
 - [Parent examples contract](../README.md)
 - [Hydrology walkthrough](hydrology_huc12_question.md)
 - [Focus Flow doctrine](../../docs/architecture/governed-ai/FOCUS_FLOW.md)
-- [Governed API doctrine](../../docs/architecture/governed-api.md)
+- [Governed API doctrine](../../docs/architecture/governed-api/README.md)
 - [Evidence Drawer](../../docs/architecture/ui/EVIDENCE_DRAWER.md)
 
 ## ADRs

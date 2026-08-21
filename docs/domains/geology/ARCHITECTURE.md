@@ -15,7 +15,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/adr/ADR-0001-schema-home.md
   - ai-build-operating-contract.md
@@ -570,7 +570,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Governed-API-only public path
 - [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — Truth-source ranking
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — Public-read membrane (PROPOSED)
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Public-read membrane (PROPOSED)
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — `contracts/` vs `schemas/` vs `policy/`
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home decision
 - Adjacent domain architectures: [`docs/domains/hydrology/ARCHITECTURE.md`](../hydrology/ARCHITECTURE.md) · [`docs/domains/soil/ARCHITECTURE.md`](../soil/ARCHITECTURE.md) · [`docs/domains/hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md) — _existence not verified this session_

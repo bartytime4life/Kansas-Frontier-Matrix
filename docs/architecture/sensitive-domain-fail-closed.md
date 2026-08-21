@@ -55,7 +55,7 @@ related:
   - ./critical-asset-exposure.md
   - ./cross-lane-join-policy.md
   - ./data-classification-framework.md
-  - ./governed-api.md
+  - ./governed-api/README.md
   - ./TRUST_MEMBRANE.md
   - ../standards/SENSITIVITY_RUBRIC.md
   - ../standards/REDACTION_PROFILES.md
@@ -759,7 +759,7 @@ A slice is reviewable only when it proves, without network access or real protec
 - [`critical-asset-exposure.md`](./critical-asset-exposure.md) — current repository-grounded critical-asset exposure architecture.
 - [`cross-lane-join-policy.md`](./cross-lane-join-policy.md) — join and composition boundary.
 - [`data-classification-framework.md`](./data-classification-framework.md) — data classification architecture.
-- [`governed-api.md`](./governed-api.md) and [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — governed delivery and trust boundary.
+- [`governed-api/README.md`](./governed-api/README.md) and [`TRUST_MEMBRANE.md`](./TRUST_MEMBRANE.md) — governed delivery and trust boundary.
 - [`directory-rules.md`](../doctrine/directory-rules.md) and accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — placement authority.
 - Proposed [`ADR-0010`](../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) — cross-domain decision under review.
 

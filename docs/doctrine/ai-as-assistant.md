@@ -20,7 +20,7 @@ related:
   - docs/doctrine/lifecycle-law.md                                  # PROPOSED — RAW → … → PUBLISHED invariant
   - docs/doctrine/README.md                                         # v0.2 — doctrine-folder landing page
   - docs/architecture/governed-ai/README.md                         # NEEDS VERIFICATION — exact path/length
-  - docs/architecture/governed-api.md                               # trust membrane in executable form
+  - docs/architecture/governed-api/README.md                               # trust membrane in executable form
   - docs/architecture/map-shell.md                                  # map-first shell architecture
   - docs/architecture/maplibre-3d.md                                # v1.3 — sole-renderer doctrine (renderer-decision ADR PROPOSED)
   - docs/security/threat-model.md                                   # TODO — confirm filename
@@ -536,7 +536,7 @@ per-root README.
 ### Architecture companions
 
 - [`docs/architecture/governed-ai/README.md`](../architecture/governed-ai/README.md) — Architecture of the AI runtime, adapters, and envelopes (companion to this doctrine doc). `[NEEDS VERIFICATION — exact path/length.]`
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — Trust membrane in executable form.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — Trust membrane in executable form.
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — Map-first shell architecture (the surface where Focus Mode AI lives).
 - [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — v1.3 sole-renderer doctrine + 3D Admission Decision + Plugin Admission. Relevant because the AI surface inside Focus Mode reads layers rendered by `packages/maplibre-runtime/`.
 

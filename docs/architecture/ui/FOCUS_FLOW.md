@@ -64,7 +64,7 @@ related:
   - ./EVIDENCE_DRAWER.md
   - ./TELEMETRY.md
   - ../governed-ai/FOCUS_FLOW.md
-  - ../governed-api.md
+  - ../governed-api/README.md
   - ../document-convergence-plan.md
   - ../../doctrine/directory-rules.md
   - ../../doctrine/trust-membrane.md
@@ -713,7 +713,7 @@ No source shutdown, model rollback, data migration, cache purge, route removal, 
 - [`ui/EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) — client Evidence Drawer behavior
 - [`ui/TELEMETRY.md`](./TELEMETRY.md) — UI telemetry architecture
 - [`governed-ai/FOCUS_FLOW.md`](../governed-ai/FOCUS_FLOW.md) — proposed server-side decision flow
-- [`governed-api.md`](../governed-api.md) — governed API architecture
+- [`governed-api/README.md`](../governed-api/README.md) — governed API architecture
 - [`document-convergence-plan.md`](../document-convergence-plan.md) — `SPLIT` disposition for the two Focus Flow pages
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — accepted placement law
 - [`trust-membrane.md`](../../doctrine/trust-membrane.md) — trust boundary doctrine

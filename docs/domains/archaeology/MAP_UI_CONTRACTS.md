@@ -20,7 +20,7 @@ related:
   - docs/architecture/ui/README.md
   - docs/architecture/ui/LAYERING.md
   - docs/architecture/governed-ai/README.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
   - docs/architecture/maplibre-3d.md
   - docs/atlases/domains-v1.1/ch15-archaeology.md
@@ -642,7 +642,7 @@ This document is **done enough to enter the repository** when:
 - [`docs/architecture/ui/README.md`](../../architecture/ui/README.md) — _TODO: UI architecture_
 - [`docs/architecture/ui/LAYERING.md`](../../architecture/ui/LAYERING.md) — _TODO: layering doctrine_
 - [`docs/architecture/governed-ai/README.md`](../../architecture/governed-ai/README.md) — _TODO: governed AI architecture_
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — _TODO: governed API surface_
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — _TODO: governed API surface_
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — _TODO: map shell contract_
 - [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre 3D / sole-renderer doctrine (v1.3, PROPOSED via ADR)
 - [`docs/atlases/domains-v1.1/ch15-archaeology.md`](../../atlases/domains-v1.1/ch15-archaeology.md) — _TODO: Atlas Ch. 15_

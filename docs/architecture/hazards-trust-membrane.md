@@ -24,7 +24,7 @@ evidence_snapshot:
 related:
   - ./README.md
   - ./TRUST_MEMBRANE.md
-  - ./governed-api.md
+  - ./governed-api/README.md
   - ./contract-schema-policy-split.md
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -1031,7 +1031,7 @@ else:
 ### Governing architecture and placement
 
 - [System-wide Trust Membrane](./TRUST_MEMBRANE.md)
-- [Governed API architecture](./governed-api.md)
+- [Governed API architecture](./governed-api/README.md)
 - [Contract / schema / policy split](./contract-schema-policy-split.md)
 - [Directory Rules v2](../doctrine/directory-rules.md)
 - [ADR-0029 — adopt Directory Governance Standard v2](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)

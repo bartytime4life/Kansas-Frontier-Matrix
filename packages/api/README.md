@@ -68,7 +68,7 @@ related:
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/doctrine/trust-membrane.md
   - ../../docs/doctrine/lifecycle-law.md
-  - ../../docs/architecture/governed-api.md
+  - ../../docs/architecture/governed-api/README.md
   - ../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../.github/CODEOWNERS
   - ../../.github/workflows/api-test.yml

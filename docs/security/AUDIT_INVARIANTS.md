@@ -14,7 +14,7 @@ related:
   - docs/doctrine/truth-posture.md                   # PROPOSED — verify presence
   - docs/doctrine/authority-ladder.md                # PROPOSED — verify presence
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md                # PROPOSED — verify presence
+  - docs/architecture/governed-api/README.md                # PROPOSED — verify presence
   - docs/security/THREAT_MODEL.md                    # PROPOSED — sibling doc
   - docs/security/INCIDENT_RESPONSE.md               # PROPOSED — sibling doc
   - docs/registers/DRIFT_REGISTER.md                 # PROPOSED — verify presence
@@ -483,7 +483,7 @@ Items resolved against repo evidence should move from this list to a per-invaria
 - `docs/doctrine/trust-membrane.md` — Canonical statement of the public trust boundary. *(PROPOSED.)*
 - `docs/doctrine/truth-posture.md` — Cite-or-abstain doctrine. *(PROPOSED.)*
 - `docs/doctrine/authority-ladder.md` — What outranks what. *(PROPOSED.)*
-- `docs/architecture/governed-api.md` — The trust membrane in executable form. *(PROPOSED.)*
+- `docs/architecture/governed-api/README.md` — The trust membrane in executable form. *(PROPOSED.)*
 - `docs/security/THREAT_MODEL.md` — Threats whose mitigation depends on the invariants above. *(PROPOSED sibling.)*
 - `docs/security/INCIDENT_RESPONSE.md` — What to do when an invariant fails in production. *(PROPOSED sibling.)*
 - `docs/security/EXPOSURE_PLAN.md` — Deny-by-default, least-privilege, audit-logging posture for exposed systems. *(Current tracked sibling; document remains draft.)*

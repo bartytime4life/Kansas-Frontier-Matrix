@@ -30,7 +30,7 @@
 | **Owners** | Docs steward + Design steward · *names PROPOSED — TODO* |
 | **Reviewers required for change** | Docs steward + Design steward; Accessibility reviewer for trust-state visuals |
 | **Lifecycle posture** | Reference — no lifecycle phase (not under `data/`) |
-| **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/architecture/map-shell.md`](../architecture/map-shell.md), [`docs/architecture/governed-api.md`](../architecture/governed-api.md) |
+| **Related doctrine** | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md), [`docs/architecture/map-shell.md`](../architecture/map-shell.md), [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) |
 | **Implementation home** | [`packages/ui/`](../../packages/ui) — design tokens, theme code, components |
 | **Consuming app** | [`apps/explorer-web/`](../../apps/explorer-web) |
 | **Standards referenced** | [WCAG 2.1](https://www.w3.org/TR/WCAG21/) (target AA) — see [`docs/standards/`](../standards/) for the full conformance list |
@@ -73,7 +73,7 @@ docs/                       # human-facing control plane
 - [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — *cite-or-abstain* governs voice.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — public surfaces use governed APIs only; brand must not visually contradict that.
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — the map is a *trust viewer*, not decoration.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) shape the language reference.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — finite outcomes (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`) shape the language reference.
 
 **Downstream of this folder (consumers of guidance):**
 

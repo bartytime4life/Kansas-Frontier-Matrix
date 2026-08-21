@@ -16,7 +16,7 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/domains/atmosphere/README.md
   - docs/domains/atmosphere/CROSS_LANE_RELATIONS.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, domain, atmosphere, air, lifecycle, governance, publication]
@@ -611,7 +611,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain default.
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere/Air domain landing page. *(TODO if absent.)*
 - [`docs/domains/atmosphere/CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) — cross-lane relation detail. *(PROPOSED neighbor.)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — The only legitimate public path.
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — The only legitimate public path.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance crosswalk used by atmosphere PROV activities.
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — Geographic metadata crosswalk.
 - *TODO:* link to atmosphere SourceDescriptor README once published.

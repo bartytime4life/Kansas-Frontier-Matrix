@@ -61,7 +61,7 @@ inspection_boundary: >-
   browser transport, operational log, dashboard, or public request was exercised.
 related:
   - README.md
-  - ../governed-api.md
+  - README.md
   - AUDIENCE_CLASSES.md
   - LIFECYCLE_GATES.md
   - ERROR_CODES.md
@@ -812,7 +812,7 @@ No step is implied by the previous one.
 | Reference | Current role | Truth posture for this page |
 |---|---|---|
 | [`README.md`](README.md) | Governed API lane boundary and direct-child index | Repository-grounded, but some app-to-envelope wording predates current scaffold tests |
-| [`../governed-api.md`](../governed-api.md) | Flat overlapping architecture document | Proposal/design lineage; canonical relationship unresolved |
+| [`README.md`](README.md) | Active Governed API architecture landing page | Folder landing survives merged PR #3150; envelope authority remains with owning contracts and schemas |
 | [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) | Reconciles identity, role, audience, exposure, lifecycle, and outcome axes | Current repository-grounded companion |
 | [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) | Request-time lifecycle and gate design | Mixed/proposed; several envelope and audience assumptions require reconciliation |
 | [`ERROR_CODES.md`](ERROR_CODES.md) | Error-vocabulary design lineage | Proposed and shape-conflicted |

@@ -345,7 +345,7 @@ These are explicit NEEDS VERIFICATION / OPEN items for this doc and the WMTS han
 - [`docs/standards/DCAT.md`](./DCAT.md) — DCAT distributions for non-spatiotemporal records and dual-publication mirroring of STAC. _TODO_
 - [`docs/standards/PROV.md`](./PROV.md) — PROV-O lineage for WMTS view assembly and signed `RunReceipt` integration. _TODO_
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — MapLibre shell, view registry, `tileProtocol` enum, render hints.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — Public path and policy mediation.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — Public path and policy mediation.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — Public/canonical separation; finite outcomes.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → … → PUBLISHED invariant.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement law; §6.1 governs `docs/standards/`.

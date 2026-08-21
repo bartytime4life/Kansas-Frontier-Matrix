@@ -287,7 +287,7 @@ docs/domains/roads-rail-trade/
 ├── cross-lane-relations.md                # PROPOSED — joins to Settlements, Hydrology, Hazards, Archaeology
 ├── viewing-products.md                    # PROPOSED — MapLibre layers and Evidence Drawer surfaces
 ├── sensitivity-and-publication.md         # PROPOSED — Indigenous corridors, critical facilities posture
-├── governed-ai.md                         # PROPOSED — Focus Mode behavior for this domain
+├── governed-ai/README.md                         # PROPOSED — Focus Mode behavior for this domain
 ├── verification-backlog.md                # PROPOSED — domain-specific NEEDS VERIFICATION items
 └── adr-index.md                           # PROPOSED — ADRs that govern this domain
 ```
@@ -686,7 +686,7 @@ KDOT / FHWA / county / state authoritative records. — [DOM-ROADS §D, §K]
 | Parent index             | [`../README.md`](../README.md)                                                           | `docs/domains/` index             |
 | Doctrine                 | [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md)                 | Placement law, README contract    |
 | Doctrine                 | [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)                     | RAW → PUBLISHED gates             |
-| Architecture             | [`../../architecture/governed-api.md`](../../architecture/governed-api.md)               | Public-path discipline            |
+| Architecture             | [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md)               | Public-path discipline            |
 | Architecture             | [`../../architecture/map-shell.md`](../../architecture/map-shell.md)                     | MapLibre + Evidence Drawer        |
 | ADR home                 | [`../../adr/`](../../adr/)                                                               | ADR-0001 (schema home), more      |
 | Operating contract       | [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md)     | `CONTRACT_VERSION = "3.0.0"`       |

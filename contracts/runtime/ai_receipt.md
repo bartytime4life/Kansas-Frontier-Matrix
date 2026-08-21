@@ -21,7 +21,7 @@ related:
   - ../../policy/ai/
   - ../../fixtures/contracts/v1/runtime/ai_receipt/
   - ../../tools/validators/validate_ai_receipt.py
-  - ../../docs/architecture/governed-ai.md
+  - ../../docs/architecture/governed-ai/README.md
   - ../../docs/architecture/contract-schema-policy-split.md
 notes:
   - "Expanded from existing schema-paired stub at `contracts/runtime/ai_receipt.md`."

@@ -12,7 +12,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/runbooks/ROLLBACK_DRILL.md
   - policy/promotion/
   - policy/release/
@@ -525,7 +525,7 @@ All paths PROPOSED until verified against mounted-repo evidence. NEEDS VERIFICAT
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — the invariant and what counts as a violation.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — where things live; why a path move is not a promotion.
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — the public-surface boundary the runbook protects.
-- [`docs/architecture/governed-api.md`](../architecture/governed-api.md) — the trust-membrane interface.
+- [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — the trust-membrane interface.
 - [`docs/runbooks/ROLLBACK_DRILL.md`](./ROLLBACK_DRILL.md) — `TODO` — drill cadence and full checklist.
 - [`docs/runbooks/CORRECTION.md`](./CORRECTION.md) — `TODO` — post-publication correction procedure.
 - [`docs/adr/`](../adr/) — accepted ADRs that may amend this runbook.

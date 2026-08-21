@@ -37,7 +37,7 @@ evidence_snapshot:
 related:
   - ./README.md
   - ../TRUST_MEMBRANE.md
-  - ../governed-api.md
+  - ../governed-api/README.md
   - ../evidence-drawer.md
   - ./MAP_RUNTIME_BOUNDARY.md
   - ./EVIDENCE_DRAWER.md
@@ -504,7 +504,7 @@ Before merge, close the draft pull request and abandon or delete its feature bra
 
 - [`README.md`](./README.md) — repository-grounded UI architecture landing page.
 - [`TRUST_MEMBRANE.md`](../TRUST_MEMBRANE.md) — current cross-root trust-membrane architecture and enforcement map.
-- [`governed-api.md`](../governed-api.md) — current Governed API architecture and negative scaffold state.
+- [`governed-api/README.md`](../governed-api/README.md) — current Governed API architecture and negative scaffold state.
 - [`evidence-drawer.md`](../evidence-drawer.md) — current Evidence Drawer architecture and bounded executable projection.
 - [`MAP_RUNTIME_BOUNDARY.md`](./MAP_RUNTIME_BOUNDARY.md) — map-runtime seam; older proposed details must be read against current placeholder evidence and proposed ADR status.
 - [`EVIDENCE_DRAWER.md`](./EVIDENCE_DRAWER.md) — UI-lane Evidence Drawer architecture; relationship to the flat architecture page remains a documented consolidation question.

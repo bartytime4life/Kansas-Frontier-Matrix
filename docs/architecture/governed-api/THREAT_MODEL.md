@@ -31,7 +31,7 @@ evidence_snapshot:
   api_workflow_blob: 84ba16a3c36a1d58b2f6f1059a31ed6354063357
 related:
   - README.md
-  - ../governed-api.md
+  - README.md
   - ../../security/THREAT_MODEL.md
   - ../../security/AUDIT_INVARIANTS.md
   - ../../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
@@ -850,7 +850,7 @@ A routine implementation that conforms to an already accepted contract and stays
 | Reference | Current role | Use with this document |
 |---|---|---|
 | [`README.md`](README.md) | Repository-grounded folder boundary and direct-child index | Parent authority and current maturity context |
-| [`../governed-api.md`](../governed-api.md) | Grounded flat architecture spine | Current three-route scaffold and trust-membrane invariants |
+| [`README.md`](README.md) | Governed API architecture landing page | Current three-route scaffold and trust-membrane invariants |
 | [`../../security/THREAT_MODEL.md`](../../security/THREAT_MODEL.md) | Broader draft system threat posture | System-wide risk families; not current API enforcement proof |
 | [`../../security/AUDIT_INVARIANTS.md`](../../security/AUDIT_INVARIANTS.md) | Human audit guidance | Audit-family constraints; verify current implementation separately |
 | [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) | Repository-grounded audience/capability boundary | Prevent role/audience/outcome collapse |
@@ -979,7 +979,7 @@ Before merge, close the draft pull request and abandon the feature branch. After
 
 ---
 
-**Related (mini):** [`README.md`](README.md) · [`../governed-api.md`](../governed-api.md) · [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
+**Related (mini):** [`README.md`](README.md) · [`AUDIENCE_CLASSES.md`](AUDIENCE_CLASSES.md) · [`ENVELOPES.md`](ENVELOPES.md) · [`LIFECYCLE_GATES.md`](LIFECYCLE_GATES.md) · [`ERROR_CODES.md`](ERROR_CODES.md) · [`DEPLOYMENT_RULES.md`](DEPLOYMENT_RULES.md)
 
 **Last updated:** 2026-08-19 · **Doc version:** v0.2 · **Doc status:** repository-grounded draft · **Path:** accepted same-path placement under ADR-0029
 

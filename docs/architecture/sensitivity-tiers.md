@@ -42,7 +42,7 @@ related:
   - sensitivity.md
   - data-classification-framework.md
   - contract-schema-policy-split.md
-  - governed-api.md
+  - governed-api/README.md
   - sensitive-domain-fail-closed.md
   - ../doctrine/directory-rules.md
   - ../doctrine/sensitivity.md

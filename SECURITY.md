@@ -18,7 +18,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/directory-rules.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - policy/README.md
   - release/README.md
   - tools/validators/README.md
@@ -253,7 +253,7 @@ These are checkable but not confirmed by this SECURITY.md update:
 - [`docs/doctrine/lifecycle-law.md`](docs/doctrine/lifecycle-law.md) — RAW to PUBLISHED lifecycle invariant.
 - [`docs/doctrine/truth-posture.md`](docs/doctrine/truth-posture.md) — cite-or-abstain posture.
 - [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) — placement and authority-boundary rules.
-- [`docs/architecture/governed-api.md`](docs/architecture/governed-api.md) — governed public API boundary.
+- [`docs/architecture/governed-api/README.md`](docs/architecture/governed-api/README.md) — governed public API boundary.
 - [`policy/README.md`](policy/README.md) — policy authority entrypoint.
 - [`release/README.md`](release/README.md) — release, rollback, and correction entrypoint.
 - [`tools/validators/README.md`](tools/validators/README.md) — validator-root posture.

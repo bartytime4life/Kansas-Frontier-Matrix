@@ -17,7 +17,7 @@ related:
   - docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
   - docs/domains/hazards/IDENTITY_MODEL.md
   - docs/architecture/map-shell.md
-  - docs/architecture/governed-api.md
+  - docs/architecture/governed-api/README.md
   - docs/doctrine/trust-membrane.md
   - schemas/contracts/v1/map/
   - schemas/contracts/v1/ui/
@@ -611,7 +611,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness, receipt matrix *(sibling doc)*
 - [`docs/domains/hazards/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — feature/source identity; OQ-HAZ-IM-01 *(sibling doc)*
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — map shell architecture *(PROPOSED)*
-- [`docs/architecture/governed-api.md`](../../architecture/governed-api.md) — governed API architecture *(PROPOSED)*
+- [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed API architecture *(PROPOSED)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — trust-membrane doctrine *(PROPOSED; operational form `apps/governed-api/` CONFIRMED at commit)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — file DRIFT-HAZ-PATH-01 here
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — file HZ-UI-01 … HZ-UI-14 here
