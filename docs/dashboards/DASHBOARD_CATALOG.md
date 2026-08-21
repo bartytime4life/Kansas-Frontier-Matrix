@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.5
+version: v0.6
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -27,7 +27,8 @@ notes:
   - "Spec-file presence is separate from running-surface verification."
   - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
   - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
-  - "This v0.5 refresh reconciles the Roads / Rail / Trade row with current bounded CorridorRoute, trust-projection, Explorer, Evidence Drawer, policy, source-registry, proof, and release evidence without claiming a routed dashboard or production telemetry."
+  - "This v0.5 refresh reconciles the People/DNA/Land row with current domain, contract, closed fixture-schema, policy-maturity, synthetic validation, workflow, Explorer boundary, and proof/release-hold evidence without claiming real-person processing or a dashboard runtime."
+  - "This v0.6 refresh preserves the merged People/DNA/Land reconciliation and adds the Roads / Rail / Trade row reconciliation against bounded CorridorRoute, trust-projection, Explorer, Evidence Drawer, policy, source-registry, proof, and release evidence without claiming a routed dashboard or production telemetry."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -88,7 +89,7 @@ notes:
 | `docs/dashboards/DASHBOARD_CATALOG.md` exists in the accessible repo. | CONFIRMED | Direct fetch of current catalog. |
 | `docs/dashboards/README.md` says `docs/dashboards/` is a proposed documentation surface, not the running dashboard implementation. | CONFIRMED | Direct fetch of dashboard README. |
 | Category READMEs exist for governance, operational, domain, and observability. | CONFIRMED | Direct fetch/search of category README files. |
-| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | Direct current-tree listings at `main@b820a8a938db741018289c6131477f2ceaa052fc` contain 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
+| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | Direct current-tree listings at `main@5cf8f6eac5f7015f29d4b0547caffad903b269a4` contain 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
 | Running dashboard surfaces exist and read the named receipts. | NEEDS VERIFICATION | No running app, telemetry stack, receipt source, or validator output was inspected here. |
 | `docs/dashboards/` is canonical placement under Directory Rules. | PROPOSED / NEEDS VERIFICATION | Dashboard README records placement drift / ADR need; this catalog does not resolve it. |
 
@@ -145,7 +146,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 | [`domain/roads-rail-trade.md`](domain/roads-rail-trade.md) | Roads/Rail/Trade source-admission holds, CorridorRoute validation, route/segment/graph anti-collapse, fixture-only trust projections, public-audience release protection, Evidence Drawer convergence, and proof/release/correction readiness; no routed dashboard or production telemetry is verified. | Current domain docs, contracts, schemas, validators, fixtures, tests, workflows, Explorer trust-overlay/Evidence Drawer seams, inactive policy, and empty source/proof/candidate implementation lanes | Roads/Rail/Trade steward · Source/evidence steward · Policy/sensitivity reviewer · UI/metric steward (identities unverified) | Explorer Web bounded trust-overlay/Evidence Drawer seams; dashboard route and telemetry `UNKNOWN` | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/settlements-infrastructure.md`](domain/settlements-infrastructure.md) | Per-domain instance of §24.11 for settlements / infrastructure (critical-asset T4): fail-closed gate, redaction coverage, rollback coverage, service-area cascade. | Atlas v1.1 §24.11.3 / §24.11.2 | Settlements-infrastructure domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/archaeology.md`](domain/archaeology.md) | Per-domain instance of §24.11 for archaeology / cultural heritage (T4 defaults, sovereignty): sovereignty review presence, NAGPRA-flag completeness, side-channel audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Archaeology domain steward · Sensitivity reviewer · Sovereignty rep | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/people-dna-land.md`](domain/people-dna-land.md) | Per-domain instance of §24.11 for people / genealogy / DNA / land ownership (living-person T4, DNA T4): fail-closed, rights-change response time, AIReceipt presence, synthetic-claim incidence (target zero). | Atlas v1.1 §24.11.3 / §24.11.4 / §24.11.1 | People-DNA-land domain steward · Sensitivity reviewer · AI-surface steward · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/people-dna-land.md`](domain/people-dna-land.md) | Repository-grounded People/DNA/Land dashboard spec: documented T4/deny-default baseline, consent/revocation synthetic proof slice, unbound policy evaluator, source-role and title anti-collapse, sensitive-metric side-channel controls, finite states, and proof/release holds; no real-person processing or dashboard runtime is verified. | Current People/DNA/Land docs and contracts, three closed fixture-profile schemas, two substantive validators, 25 deterministic no-network tests across two profiles, the domain workflow, policy maturity boundary, Explorer feature README, plus proposed Atlas §24.11.1 / §24.11.3 / §24.11.4 | `@bartytime4life` review route; People/DNA/Land, privacy, consent, genomic, land/title, metric, policy, release, rights-holder/sovereignty, and independent stewards NEEDS VERIFICATION | Explorer People/DNA/Land README confirmed; no dashboard route, metric producer, telemetry feed, bound policy evaluator, proof/release producer, or deployed panel verified | CONFIRMED | NEEDS VERIFICATION |
 
 [↑ back to top](#dashboard-catalog--docsdashboardsdashboard_catalogmd)
 
@@ -216,4 +217,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.5 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.6 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)

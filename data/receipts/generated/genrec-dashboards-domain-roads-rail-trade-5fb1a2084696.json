@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/roads-rail-trade.md": "sha256:5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:706f1fcbc0f07d6517dfa69dcc5cedce9743b9781007655744977d597729ead1"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -56,7 +56,11 @@
       "repo:data/proofs/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=91c109d463c45c925f1d104d4cd8aaf742cd28af",
       "repo:release/candidates/roads-rail-trade/README.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=c989bf2bed10472bc46a168231b2269f17bbda48",
       "repo:.github/CODEOWNERS@b820a8a938db741018289c6131477f2ceaa052fc#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
-      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "repo:commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@5cf8f6eac5f7015f29d4b0547caffad903b269a4#blob=d508dd68ce4606ddb0986f11e5892b0d135f8073",
+      "repo:pull/3206",
+      "repo:pull/3207"
     ]
   },
   "truth_labels": {
@@ -72,7 +76,7 @@
     {
       "gate": "current-main-concurrency-reconciliation",
       "outcome": "PASS",
-      "reason": "Main advanced to b820a8a938db741018289c6131477f2ceaa052fc through an unrelated Butler County documentation merge. The Roads/Rail/Trade target remained blob 3a4ca7c5198efc8371a5a6f44978595afbdf89c2 and the dashboard catalog remained blob 3b9ee1b34a8278fbabe04145a99a37e4d6214838; final artifacts and branch delivery are based on the exact newer main."
+      "reason": "Main first advanced to b820a8a938db741018289c6131477f2ceaa052fc through unrelated Butler County documentation work, then to 5cf8f6eac5f7015f29d4b0547caffad903b269a4 when PR #3206 merged the People/DNA/Land dashboard. The Roads/Rail/Trade target remained blob 3a4ca7c5198efc8371a5a6f44978595afbdf89c2. The shared catalog was three-way reconciled to preserve the People/DNA/Land v0.5 delta and add the Roads/Rail/Trade v0.6 delta on the exact newer main."
     },
     {
       "gate": "directory-rules-placement-and-authority-boundary",
@@ -92,7 +96,7 @@
     {
       "gate": "dashboard-catalog-current-tree-parity",
       "outcome": "PASS",
-      "reason": "Direct current-tree listings at main@b820a8a938db741018289c6131477f2ceaa052fc confirm 5 governance, 4 operational, 13 domain, and 11 observability specifications excluding category READMEs. The catalog delta changes only its bounded edition note, evidence pin, Roads/Rail/Trade row, and footer."
+      "reason": "Direct current-tree listings at main@5cf8f6eac5f7015f29d4b0547caffad903b269a4 confirm 5 governance, 4 operational, 13 domain, and 11 observability specifications excluding category READMEs. The reconciled catalog preserves the merged People/DNA/Land row, changes only the bounded Roads/Rail/Trade row, advances the edition note to v0.6, and updates the evidence pin."
     },
     {
       "gate": "markdown-metadata-anchor-fence-table-link-whitespace-and-sensitive-pattern-check",
@@ -102,12 +106,17 @@
     {
       "gate": "prepared-artifact-sha256-and-git-blob-binding",
       "outcome": "PASS",
-      "reason": "Prepared Roads/Rail/Trade bytes bind to SHA-256 5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed and Git blob 9de95fff00c549156aa025cd62c75f13fd798d36; prepared catalog bytes bind to SHA-256 706f1fcbc0f07d6517dfa69dcc5cedce9743b9781007655744977d597729ead1 and Git blob a65c0bb3b0c8f5cdc54deb85bce7785a2b6e1f86."
+      "reason": "Prepared Roads/Rail/Trade bytes bind to SHA-256 5fb1a208469669b2acae366c46b98e6f69a6275f19698d4eb711c21adfd6ebed and Git blob 9de95fff00c549156aa025cd62c75f13fd798d36; reconciled catalog bytes bind to SHA-256 f216610c9b83b784687f95dd7ce7bee786058744e121b9a0c1c4c492d3eca88e and Git blob 9d371a4711e628f2a5af78dc306b677b5e64eeac."
     },
     {
       "gate": "generated-receipt-shape-and-cross-field-check",
       "outcome": "PASS",
       "reason": "Receipt uses contract version 3.0.0, exact artifact/hash/truth-label key parity, supported SHA-256 bindings, core truth labels, nonempty citations, canonical repository-relative paths, pending human review, no override, and no receipt self-reference."
+    },
+    {
+      "gate": "post-pr-open-base-reconciliation",
+      "outcome": "PASS",
+      "reason": "PR #3207 opened after main advanced to 5cf8f6eac5f7015f29d4b0547caffad903b269a4. A non-force merge commit is prepared with current main as the second parent and current-main tree as its base, preserving PR #3206 while retaining exactly the Roads/Rail/Trade target, reconciled catalog, and generated receipt as the task delta."
     },
     {
       "gate": "repository-native-runtime-and-domain-tests",
@@ -142,7 +151,7 @@
     {
       "id": "final-main",
       "validated": true,
-      "evidence_ref": "repo:commit/b820a8a938db741018289c6131477f2ceaa052fc"
+      "evidence_ref": "repo:commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4"
     },
     {
       "id": "prior-dashboard",
@@ -152,7 +161,7 @@
     {
       "id": "current-dashboard-catalog",
       "validated": true,
-      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@b820a8a938db741018289c6131477f2ceaa052fc#blob=3b9ee1b34a8278fbabe04145a99a37e4d6214838"
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@5cf8f6eac5f7015f29d4b0547caffad903b269a4#blob=d508dd68ce4606ddb0986f11e5892b0d135f8073"
     },
     {
       "id": "dashboard-lane-boundary",
@@ -228,6 +237,11 @@
       "id": "attached-implementation-contract",
       "validated": true,
       "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "people-dna-land-concurrent-catalog-delta",
+      "validated": true,
+      "evidence_ref": "repo:pull/3206"
     }
   ],
   "human_review": {
@@ -236,12 +250,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-21T16:20:23Z",
+  "created_at": "2026-08-21T16:35:08Z",
   "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
   "links": {
-    "pr_number": null,
+    "pr_number": 3207,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Documentation-only authoring receipt. The prompt_or_contract digest is the SHA-256 of a canonical descriptor containing the attached v6.0.0 contract identity and the current direct user request; it is not claimed as the raw attachment-byte digest. Main advanced once during authoring; the exact target and catalog blobs were reverified unchanged and final delivery is based on b820a8a938db741018289c6131477f2ceaa052fc. Human review and hosted exact-head CI remain pending. The receipt is provenance, not approval, release, deployment, publication, or merge authority."
+  "notes": "Documentation-only authoring receipt, updated before human review to reconcile PR #3207 with current main after PR #3206 merged a concurrent People/DNA/Land catalog edit. The prompt_or_contract digest is the SHA-256 of a canonical descriptor containing the attached v6.0.0 contract identity and the current direct user request; it is not claimed as the raw attachment-byte digest. Final integration uses a non-force merge commit based on main@5cf8f6eac5f7015f29d4b0547caffad903b269a4 and preserves the concurrent catalog row. Human review and hosted exact-head CI remain pending. The receipt is provenance, not approval, release, deployment, publication, or merge authority."
 }
