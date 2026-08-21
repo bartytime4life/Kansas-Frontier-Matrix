@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     "docs/dashboards/domain/settlements-infrastructure.md": "sha256:59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272",
-    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af"
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:53ba133e911d29ab357ec056ed8d590de2054dba1b75d69f6dab20a4ebab1a0d"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -32,10 +32,10 @@
     "evidence_hashes": [
       "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
       "sha256:59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272",
-      "sha256:23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af"
+      "sha256:53ba133e911d29ab357ec056ed8d590de2054dba1b75d69f6dab20a4ebab1a0d"
     ],
     "attached_docs": [
-      "Pasted text(20260821-161458).txt"
+      "Pasted text(20260821-160507).txt"
     ],
     "evidence_refs": [
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/5cf8f6eac5f7015f29d4b0547caffad903b269a4",
@@ -63,7 +63,9 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/docs/doctrine/directory-rules.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/.github/CODEOWNERS",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8b9e457c1e59ef7a0813ef6407fee33f22d2a841",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8b9e457c1e59ef7a0813ef6407fee33f22d2a841/docs/dashboards/DASHBOARD_CATALOG.md"
     ]
   },
   "truth_labels": {
@@ -94,12 +96,12 @@
     {
       "gate": "current-main-base-drift-reconciliation",
       "outcome": "PASS",
-      "reason": "Main advanced to 5cf8f6eac5f7015f29d4b0547caffad903b269a4 through merged PR #3206. That merge left the Settlements/Infrastructure target blob unchanged and changed only adjacent People/DNA/Land catalog/receipt material. The exact #3206 catalog patch was applied before the one-row Settlements/Infrastructure reconciliation; no unrelated bytes were lost."
+      "reason": "Main advanced through merged PR #3206 and then PR #3207 to 8b9e457c1e59ef7a0813ef6407fee33f22d2a841. The task branch merged current main without force, preserved the People/DNA/Land and Roads/Rail/Trade catalog reconciliations, and retained only the Settlements/Infrastructure specification, its catalog-row closure, and this receipt as task changes."
     },
     {
       "gate": "dashboard-catalog-dependency-reconciliation",
       "outcome": "PASS",
-      "reason": "Reconciled the exact catalog delta merged by PR #3206, then updated only the existing Settlements/Infrastructure row so its evidence basis, placeholder Explorer state, unresolved route/telemetry, and unverified reviewer identities match the modernized specification."
+      "reason": "Preserved current-main Dashboard Catalog v0.6, including the merged People/DNA/Land and Roads/Rail/Trade rows, then emitted v0.7 with only the Settlements/Infrastructure row reconciliation and current-tree evidence update."
     },
     {
       "gate": "markdown-structure-and-diff-hygiene",
@@ -119,7 +121,7 @@
     {
       "gate": "artifact-byte-and-hash-closure",
       "outcome": "PASS",
-      "reason": "Target SHA-256 59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272; catalog SHA-256 23907354a705fa46e093b0648fe023cfc625c964ebc3345b6ed927260101b0af. Artifact paths, hashes, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+      "reason": "Target SHA-256 59b0bfe0a1176d012b665a20207d8b040fd7bcabfd8835bd2429b2b3ae219272; catalog SHA-256 53ba133e911d29ab357ec056ed8d590de2054dba1b75d69f6dab20a4ebab1a0d. Remote Git blobs 4fad5dfa2b2743e1bccd5b7ceae276d00636a763 and 37bf6d6aee1775bdffd6d14600b51f295608ff23 match the validated local bytes; artifact paths, hashes, and truth-label keys are identical; the receipt is excluded from its own artifact map."
     },
     {
       "gate": "draft-2020-12-generated-receipt-validation",
@@ -142,7 +144,7 @@
     {
       "id": "attached-implementation-prompt",
       "validated": true,
-      "evidence_ref": "attachment://Pasted text(20260821-161458).txt"
+      "evidence_ref": "attachment://Pasted text(20260821-160507).txt"
     },
     {
       "id": "pinned-current-main",
@@ -188,6 +190,11 @@
       "id": "generated-receipt-schema",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5cf8f6eac5f7015f29d4b0547caffad903b269a4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "current-main-reconciliation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/8b9e457c1e59ef7a0813ef6407fee33f22d2a841"
     }
   ],
   "human_review": {
@@ -199,9 +206,9 @@
   "created_at": "2026-08-21T16:38:17Z",
   "emitter": "openai/gpt-5.6-pro",
   "links": {
-    "pr_number": null,
+    "pr_number": 3209,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Modernizes the existing Settlements / Infrastructure dashboard specification and reconciles its single Dashboard Catalog row against current repository evidence. The parent domain-dashboard README already links the target and remains semantically valid. No app/runtime implementation, source activation, contract/schema/policy change, lifecycle mutation, proof, release, deployment, publication, merge, or repository-setting change is performed. The receipt is non-authoritative process memory; human review remains pending."
+  "notes": "Modernizes the existing Settlements / Infrastructure dashboard specification and reconciles its single Dashboard Catalog row against current repository evidence, including current-main People/DNA/Land and Roads/Rail/Trade catalog lineage. The parent domain-dashboard README already links the target and remains semantically valid. No app/runtime implementation, source activation, contract/schema/policy change, lifecycle mutation, proof, release, deployment, publication, merge, or repository-setting change is performed. The receipt is non-authoritative process memory; human review remains pending."
 }
