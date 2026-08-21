@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-agriculture-dashboard-spec-v1-f506b53b",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/agriculture.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/agriculture.md": "sha256:f506b53bff46470d6e31ec94205b4b5fbb8cd1ef76778f6073abb9dc4c24d865"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-21"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "attached KFM Repository Build-Out v6 prompt",
+      "static Markdown and JSON validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(20260821-015931).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/domain/agriculture.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/DASHBOARD_CATALOG.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/domains/agriculture/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/sources/catalog/usda/usda-nass-quickstats.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/connectors/nass/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/data/registry/sources/agriculture/nass_quickstats.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/contracts/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/contracts/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/schemas/contracts/v1/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/schemas/contracts/v1/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/policy/sensitivity/agriculture/aggregation_thresholds.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/policy/sensitivity/agriculture/farm_operator_join.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/tests/domains/agriculture/test_nass_aggregate_only.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/tests/domains/agriculture/test_policy_denial_field_level_nass.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/review-console/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/explorer-web/src/features/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/governed-api/src/routes/agriculture/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/agriculture.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "scope-base-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Resolved bartytime4life/Kansas-Frontier-Matrix at main@51d45e45a56d19961a3014009b80c2c94b1107ee; verified prior target blob b641f57a3fd22fe088727663f8e44a503626ee92; found no open pull request or task branch owning this exact Agriculture dashboard path."
+    },
+    {
+      "gate": "directory-rules-and-same-path-placement",
+      "outcome": "PASS",
+      "reason": "Kept the tracked file under docs/ with no new lane, move, rename, deletion, or parallel authority. The existing dashboards placement hold remains visible."
+    },
+    {
+      "gate": "repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the specification against current parent dashboard boundaries, CODEOWNERS, Agriculture source/contract/schema/policy/test/workflow surfaces, and app/API README boundaries."
+    },
+    {
+      "gate": "unsupported-claim-correction",
+      "outcome": "PASS",
+      "reason": "Removed the unverified n<3/complementary-suppression formula, >99.9% health threshold, and fixed review cadence; replaced them with source-native withheld-state preservation and evidence-bounded metric rules."
+    },
+    {
+      "gate": "markdown-structure-and-compatibility",
+      "outcome": "PASS",
+      "reason": "Verified one H1, one parseable KFM Meta Block, balanced fences, final newline, no tabs or trailing whitespace, and preserved top plus all eight legacy section anchors."
+    },
+    {
+      "gate": "repository-relative-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "Verified 28 unique repository-relative destinations at the pinned base and all same-document fragments against explicit or heading-derived anchors."
+    },
+    {
+      "gate": "sensitive-content-and-secret-screen",
+      "outcome": "PASS",
+      "reason": "Introduced no credential, private endpoint, operator identity, parcel payload, exact protected location, or hidden disclosure threshold; retained fail-closed treatment for reconstructive Agriculture joins."
+    },
+    {
+      "gate": "generated-receipt-shape-and-binding",
+      "outcome": "PASS",
+      "reason": "Bound the final target bytes to sha256:f506b53bff46470d6e31ec94205b4b5fbb8cd1ef76778f6073abb9dc4c24d865; receipt keys and enum values were checked against the current generated_receipt schema contract."
+    },
+    {
+      "gate": "repository-native-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "This is a documentation-only change. No untrusted repository code, live source, policy evaluator, browser runtime, telemetry store, release producer, or deployment was executed."
+    },
+    {
+      "gate": "policy-decision-record",
+      "outcome": "SKIPPED",
+      "reason": "No PolicyDecision was created or identified for this documentation-only correction; the target explicitly records policy scaffolds as non-enforcement."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-target-and-dashboard-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/dashboards/domain/agriculture.md"
+    },
+    {
+      "id": "directory-rules-and-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "agriculture-source-role-and-connector-posture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/docs/sources/catalog/usda/usda-nass-quickstats.md"
+    },
+    {
+      "id": "source-record-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/data/registry/sources/agriculture/nass_quickstats.yaml"
+    },
+    {
+      "id": "contract-and-schema-path-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/schemas/contracts/v1/agriculture/README.md"
+    },
+    {
+      "id": "agriculture-policy-scaffolds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/policy/sensitivity/agriculture/farm_operator_join.rego"
+    },
+    {
+      "id": "nass-negative-test-placeholders",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/tests/domains/agriculture/test_policy_denial_field_level_nass.py"
+    },
+    {
+      "id": "agriculture-workflow-bounded-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/.github/workflows/domain-agriculture.yml"
+    },
+    {
+      "id": "dashboard-runtime-boundaries",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/51d45e45a56d19961a3014009b80c2c94b1107ee/apps/review-console/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T13:59:18Z",
+  "emitter": "openai/chatgpt-github-connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored same-path documentation modernization for the Agriculture dashboard specification. The receipt records provenance, source selection, validation, and unresolved human review; it is not correctness proof, policy approval, source admission, dashboard implementation, release authority, deployment, or publication. The repository change is limited to the specification and this receipt."
+}

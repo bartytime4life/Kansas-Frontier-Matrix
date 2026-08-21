@@ -1,25 +1,26 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/dashboards-domain-fauna
-title: Fauna Dashboard Specification (PROPOSED lane; per-domain instance of Atlas §24.11)
+title: Fauna Dashboard Specification
 type: standard
-version: v0.1
+version: v0.2.0
 status: draft
-owners: OWNER_TBD  # NEEDS VERIFICATION: fauna-domain steward + sensitivity reviewer + governance-health steward
+owners: "@bartytime4life (CODEOWNERS review route); fauna, sensitivity, and governance-health stewards NEEDS VERIFICATION"
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-08-21
 policy_label: public
 related:
   - kfm://doc/dashboards-domain-readme
-  - kfm://doc/atlas-v1-1
-  - kfm://doc/atlas-v1-1-ch24-5-sensitivity-tier-reference
-  - kfm://doc/atlas-v1-1-ch24-6-pipeline-gate-reference
-  - kfm://doc/domains-fauna-dossier                          # CONFIRMED dossier home: docs/domains/fauna/
-  - kfm://adr/dashboards-lane-existence                      # PROPOSED candidate: OPEN-DASH-01
-tags: [kfm, dashboards, domain, fauna, sensitivity, t4, indicators, governance-health, specification]
+  - kfm://doc/domains-fauna-dossier
+  - ../../domains/fauna/README.md
+  - ../../../apps/explorer-web/src/features/domains/fauna/README.md
+  - ../../../contracts/domains/fauna/occurrence_evidence.md
+  - ../../../policy/domains/fauna/README.md
+  - ../../../policy/sensitivity/fauna/README.md
+tags: [kfm, dashboards, domain, fauna, sensitivity, geoprivacy, evidence, governance-health, specification]
 notes:
-  - Per-domain instance of Atlas v1.1 §24.11. Specification only; not an implementation.
-  - Default sensitivity tier is T4 (sensitive-species localities, listed-species range, observation lineage).
-  - Atlas §24.11 wins on indicator-definition conflicts; the fauna dossier wins on context conflicts.
+  - Same-path modernization of the per-domain dashboard specification; no dashboard route, release, or publication is created.
+  - Dashboard indicators report derived posture. Contracts define meaning, schemas define shape, policy decides, review records disposition, and release artifacts authorize public use.
+  - Sensitive Fauna occurrence and site information remains deny-by-default; this document contains no exact locations or exposure-aiding thresholds.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna Dashboard Specification
@@ -27,127 +28,287 @@ notes:
 <!-- [doc: kfm://doc/dashboards-domain-fauna] -->
 <a id="top"></a>
 
-> Per-domain dashboard specification for **Fauna** (Atlas v1.0 Ch. 7). A **T4-default sensitive domain** — the dashboard's primary job is reporting fail-closed posture, redaction coverage, and side-channel audit cadence.
-
-<p>
-  <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-blue">
-  <img alt="Lane: PROPOSED" src="https://img.shields.io/badge/lane-PROPOSED-orange">
-  <img alt="Atlas chapter: Ch. 7" src="https://img.shields.io/badge/atlas-Ch.%207-purple">
-  <img alt="Indicator emphasis: 24.11.3 (T4 defaults) / 24.11.1" src="https://img.shields.io/badge/emphasis-24.11.3%20%C2%B7%2024.11.1-informational">
-  <img alt="Default tier: T4" src="https://img.shields.io/badge/default--tier-T4-red">
-  <img alt="Policy label: public" src="https://img.shields.io/badge/policy--label-public-lightgrey">
-</p>
+This draft specifies a review-facing Fauna dashboard that reports evidence,
+sensitivity, validation, and release posture without becoming an authority for
+Fauna truth, policy, review, or publication.
 
 > [!IMPORTANT]
-> **Truth posture.** Atlas §24.11 catalog PROPOSED; per-domain instances PROPOSED; lane PROPOSED (OPEN-DASH-01); implementation NEEDS VERIFICATION.
+> **Current status.** Repository evidence confirms a bounded Fauna feature
+> directory, an Evidence Drawer adapter, draft occurrence-evidence machinery,
+> deterministic fixture checks, and fail-closed CI holds. It does **not** confirm
+> a routed dashboard, production telemetry, accepted indicator thresholds, live
+> source admission, release readiness, deployment, or publication.
 
 > [!CAUTION]
-> **T4 default.** Fauna observations of listed, sensitive, or vulnerable species are T4 by default. The dashboard reports posture; **the gate enforces**. Any apparent "false-positive DENY" must be diagnosed at the policy/, not by tuning this dashboard.
+> **Sensitive information stays closed.** Exact sensitive occurrences, nests,
+> dens, roosts, hibernacula, spawning sites, steward-controlled records, and
+> re-identifying joins must not appear in a public dashboard. An unresolved
+> rights, sensitivity, geoprivacy, evidence, review, policy, correction, or
+> release dependency produces a safe hold, restriction, abstention, denial, or
+> error—not a guessed value or an exposure hint.
 
-> [!WARNING]
-> **Authoring control.** Per OPEN-DASH-08, sensitive-domain specs should require a sensitivity reviewer on the PR. Treat that as a soft gate until the ADR resolves.
+## Contents
+
+1. [Domain scope](#1-domain-scope)
+2. [Indicator subset](#2-indicator-subset)
+3. [Domain-specific indicators](#3-domain-specific-indicators-proposed)
+4. [Ownership](#4-ownership)
+5. [Implementation pointer](#5-implementation-pointer)
+6. [Review cadence](#6-review-cadence)
+7. [Open questions](#7-open-questions)
+8. [Evidence basis and citations](#8-evidence-basis--citations)
 
 ---
 
 ## 1. Domain scope
 
-- **Atlas chapter:** v1.0 Ch. 7 (Fauna).
-- **Default sensitivity tier(s):** **T4** for listed-species localities, nest/den sites, observation lineage; T2–T3 for non-sensitive aggregate counts.
-- **Pipeline shape:** Standard intake → validation → derive → publish, with **sensitive-lane fail-closed gate** before any public-surface emission; redaction receipts required on public-safe derivatives.
-- **Dossier:** `docs/domains/fauna/` — `I.` sensitivity rules (KDWP / USFWS / state listings), `K.` validators, `M.` correction posture for misidentification rollback.
+The dashboard covers aggregate operational posture for Fauna taxonomy,
+occurrence evidence, generalized public representations, sensitivity controls,
+evidence resolution, and correction readiness.
 
-[↑ back to top](#top)
+It may report:
+
+- finite validator outcomes and safe reason-code families;
+- completeness of source, rights, sensitivity, evidence, policy, and review
+  dependencies;
+- coverage of public-safe transformation records;
+- EvidenceRef-to-EvidenceBundle resolution for claim-bearing UI payloads;
+- public-safe field-allowlist and presentation-state coverage; and
+- explicit proof, release, correction, and rollback holds.
+
+It must not:
+
+- expose exact or reverse-engineerable sensitive locations, small-cell counts,
+  transformation parameters, source-restricted attributes, or private review
+  material;
+- turn an observation, model, map layer, tile, fixture, validator result, badge,
+  or AI response into Fauna truth;
+- redefine contracts, schemas, source roles, sensitivity tiers, policy outcomes,
+  review authority, or release eligibility;
+- read RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLETS, or internal registry
+  stores directly from a public client; or
+- treat a green workflow, pull request, merge, or rendered chart as promotion or
+  publication.
+
+Public clients consume governed API envelopes or release-approved public-safe
+artifacts. Claim-bearing UI details resolve EvidenceRefs to EvidenceBundles
+before presentation as authoritative. The dashboard is an interpretive surface
+over those governed inputs.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 2. Indicator subset
 
-Emphasis per README §5.1: **Sensitivity-and-rights (T4 defaults) · Evidence-and-source**.
+These are bounded Fauna instances of the parent dashboard categories. They do
+not replace a master indicator catalog or create executable policy.
 
-| Indicator | §24.11 cat. | Domain-scale healthy posture | Receipt / signal source |
-|:---|:---|:---|:---|
-| **Sensitive-lane fail-closed rate** | 24.11.3 | **100% at the first gate.** Any DENY-leakage below the gate is a critical defect. | `PolicyDecision` DENY counts |
-| RedactionReceipt coverage | 24.11.3 | 100% on every public-safe derivative of a T4 fauna record. | `RedactionReceipt` |
-| Review-aged-out incidence | 24.11.3 | Sensitive-lane claims past review cadence dispositioned within tolerance; trend tracked. | `ReviewRecord` |
-| Rights-change response time | 24.11.3 | Median time from rights-change detection (e.g., new state listing) to tier reassignment within stated tolerance. | Source descriptors, `ReviewRecord` |
-| Sensitive-content side-channel audit | 24.11.3 | Periodic automated checks for label / map-popup / AI-text leaks; documented. | Audit logs, `RepresentationReceipt` |
-| EvidenceRef resolution rate | 24.11.1 | > 99.9% across iNaturalist / KDWP / GBIF / KU Biodiversity Institute cites; per-source rate visible. | `ValidationReport`, EvidenceBundle index |
-| Source-role distribution drift | 24.11.1 | Observation roles (museum specimen / citizen science / regulatory) tracked; no silent shift. | Source descriptors |
-| Quarantine throughput | 24.11.1 | Cause distribution visible (misidentification, locality precision); no sustained backlog. | `ValidationReport`, quarantine ledger |
+| ID | Indicator | Computation and healthy posture | Governed input | Current state |
+|:---|:---|:---|:---|:---|
+| `FAUNA-DB-01` | Sensitive public-path protection | Count public render or export candidates rejected for disallowed exact, restricted, or re-identifying fields. Any confirmed public exposure is a critical defect; `NO_DATA` must never render as 100% safe. | Policy and validation outcomes, release-approved field profiles, incident/correction records | **PROPOSED metric**; fixture-only field-allowlist checks are CONFIRMED, production telemetry is UNKNOWN. |
+| `FAUNA-DB-02` | Occurrence-evidence disposition | Report `pass`, `quarantine`, `deny`, and `error` counts by safe reason-code family. No record may claim `pass` while required source, rights, taxonomy, evidence, sensitivity, policy, or review support is unresolved. | `OccurrenceEvidence` validator output and validation reports | **PARTIAL:** draft schema, validator, fixtures, tests, and CI are CONFIRMED; live-source and runtime use remain held. |
+| `FAUNA-DB-03` | Evidence resolution | Numerator: eligible claim-bearing UI payloads whose EvidenceRefs resolve to an audience-appropriate EvidenceBundle. Denominator: all eligible claim-bearing payloads in the same snapshot. Unresolved support blocks an authoritative answer. | EvidenceBundle resolver results and Evidence Drawer payloads | **PARTIAL:** Fauna Evidence Drawer adapter and schema-convergence checks are CONFIRMED; a routed dashboard and production observations are UNKNOWN. |
+| `FAUNA-DB-04` | Public-safe transform provenance | Numerator: sensitive-derived public candidates with the required transform, receipt, review, policy, and release references. Denominator: all sensitive-derived public candidates in scope. Missing support yields `HOLD` or `DENY`. | Redaction or aggregation receipt, ReviewRecord, PolicyDecision, ReleaseManifest | **HOLD:** the Fauna RedactionReceipt contract records a placement/schema conflict and does not yet prove executable coverage. |
+| `FAUNA-DB-05` | Source-role and taxonomy closure | Report unresolved source-role mappings, role/basis mismatches, unresolved taxonomy, and correction-required records without collapsing aggregator identity into source authority. | Source descriptors, occurrence validation findings, taxonomy lineage | **PARTIAL:** deterministic source-role and occurrence checks exist; accepted taxonomy authority and live source admission remain NEEDS VERIFICATION. |
+| `FAUNA-DB-06` | Public tile field posture | Compare a candidate LayerManifest field set with the reviewed allowlist. Any denied or undeclared field fails closed; a style-only check does not count as field safety. | Tile-field allowlist policy, validator findings, LayerManifest | **PARTIAL:** inactive synthetic profile, validator, tests, and workflow are CONFIRMED; production tile bytes and public approval are not. |
+| `FAUNA-DB-07` | Proof and release readiness | Show the explicit proof and release-dry-run hold until accepted producers, candidate identity, EvidenceBundle closure, review, correction, and rollback artifacts exist. Never infer readiness from absence of failures. | Fauna domain workflow, proof inventory, release candidates and manifests | **CONFIRMED HOLD** at the inspected snapshot. |
 
-[↑ back to top](#top)
+### Measurement envelope
+
+Every displayed measurement should carry, or resolve to, the following fields:
+
+| Field | Requirement |
+|:---|:---|
+| Metric identity | Stable indicator ID plus specification version. |
+| Snapshot identity | Immutable run, report, or artifact reference; not “latest” without a resolved object. |
+| Time | UTC observation window, calculation time, and source-valid time where applicable. |
+| Population | Explicit numerator, denominator, exclusions, and completeness state. |
+| Presentation state | `AVAILABLE`, `NO_DATA`, `STALE`, `INCOMPLETE`, or `ERROR` as **PROPOSED UI states**, separate from policy and validator outcomes. |
+| Authority references | SourceDescriptor, EvidenceRef/EvidenceBundle, schema/spec hash, policy version, and review/release references as required. |
+| Sensitivity | Audience and aggregation/generalization posture; suppress or restrict unsafe small cells and re-identifying combinations. No threshold is invented here. |
+| Correction | Supersession, withdrawal, correction notice, and rollback target when the source snapshot changes. |
+
+If the denominator is unknown or incomplete, the dashboard must disclose that
+state and withhold a percentage. If a safe aggregation threshold is unresolved,
+the dashboard must deny or restrict the view rather than guess.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 3. Domain-specific indicators (PROPOSED)
 
-| PROPOSED indicator | Why fauna-specific | Candidate §24.11 home |
-|:---|:---|:---|
-| Locality-precision DENY pattern | DENYs triggered specifically by locality coarseness below threshold — a fauna-recurrent signal. | §24.11.3 |
-| Citizen-science role drift | Shift in observation-role mix toward citizen science without an ADR — affects identification confidence. | §24.11.1 |
-| Listing-change lag | Time between a state/federal listing change and the corresponding tier reassignment on local records. | §24.11.3 (rights-change variant) |
+The following extensions require an accepted metric contract before runtime use:
 
-[↑ back to top](#top)
+| Candidate | Purpose | Minimum dependency | Safe failure behavior |
+|:---|:---|:---|:---|
+| Taxonomy-correction backlog | Surface records affected by misidentification, synonym, split, merge, or authority changes. | Stable taxon concept lineage, correction reason codes, and supersession references. | `INCOMPLETE` or `HOLD`; never silently rewrite historical claims. |
+| Listing-change response | Measure time from an admitted conservation-status change to reviewed sensitivity and public-safe disposition. | Admitted authority source, valid-time semantics, PolicyDecision, ReviewRecord, and correction path. | `NO_DATA` or `HOLD`; never scrape or infer current legal status from dashboard prose. |
+| Geoprivacy transform drift | Detect public derivatives whose current policy/spec version no longer matches the transform evidence used to create them. | Resolved transform/receipt identity, policy version, source snapshot, and release manifest. | `DENY` public detail and open correction review without revealing transformation parameters. |
+| Re-identification risk review | Count combinations of otherwise generalized attributes that require additional restriction. | Reviewed risk profile and public-safe fixture coverage. | Restrict the combined view; expose only a non-reconstructive reason code. |
+
+Exact locality thresholds, taxon-specific generalization rules, reviewer identities,
+and source terms belong to their governing policy, registry, and review records;
+they are intentionally absent from this public specification.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 4. Ownership
 
-- **Domain steward:** OWNER_TBD (fauna dossier owner — resolve against Atlas §24.7).
-- **Governance-health steward:** OWNER_TBD (**sensitivity reviewer** + rights-holder representative; mandatory pair per Atlas §24.7).
-- **Implementation owner:** OWNER_TBD (`apps/review-console/` team).
+| Responsibility | Current disposition |
+|:---|:---|
+| Repository review route | **CONFIRMED:** `@bartytime4life` is the default CODEOWNERS route. CODEOWNERS routing does not prove review, stewardship, or approval. |
+| Fauna domain steward | **NEEDS VERIFICATION:** no verified identity is assigned by this document. |
+| Sensitivity reviewer | **NEEDS VERIFICATION:** the parent dashboard register keeps stricter sensitive-domain review as `OPEN-DASH-08`. |
+| Governance-health / metric steward | **NEEDS VERIFICATION:** required to approve indicator semantics, windows, completeness, and correction behavior. |
+| Application owner | **NEEDS VERIFICATION:** the current implementation evidence is under Explorer Web; no dashboard owner or route is confirmed. |
 
-[↑ back to top](#top)
+The author or generator is not the sole approver for a policy-significant change.
+Merge review, sensitivity review, release approval, and publication authority
+remain separate transitions.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 5. Implementation pointer
 
-- **Dashboard app:** `apps/review-console/` (PROPOSED) — `UNKNOWN` until verified.
-- **Telemetry:** `runtime/observability/sensitivity/` (PROPOSED) — `UNKNOWN`.
-- **Schemas read:** `schemas/contracts/v1/sensitivity/`, `schemas/contracts/v1/redaction/`, `schemas/contracts/v1/review/`.
-- **Policy bundles emitting signals:** `policy/sensitivity/`, `policy/sources/`.
+### Current repository evidence
 
-[↑ back to top](#top)
+| Surface | Verified state | Boundary |
+|:---|:---|:---|
+| [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) | Draft Fauna domain lane with deny-by-default sensitive-occurrence posture. | Doctrine and domain context, not runtime enforcement. |
+| [`contracts/domains/fauna/occurrence_evidence.md`](../../../contracts/domains/fauna/occurrence_evidence.md), [schema](../../../schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json), [validator](../../../tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py), and [tests](../../../tests/domains/fauna/test_occurrence_evidence.py) | Fixture-first draft profile with deterministic identity, finite outcomes, and fail-closed checks. | Does not admit live sources, resolve EvidenceBundles, authorize public derivatives, or release data. |
+| [`apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx`](../../../apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx) | Re-exports the shared Evidence Drawer controller and view model. | Confirms an adapter surface, not a routed Fauna dashboard or runtime data. |
+| [`fauna-evidence-drawer-convergence.yml`](../../../.github/workflows/fauna-evidence-drawer-convergence.yml) | Read-only, no-network schema/convergence test definition. | A workflow definition or passing run is not evidence truth or release authority. |
+| [`FocusFlow.tsx`](../../../apps/explorer-web/src/features/domains/fauna/FocusFlow.tsx) and [`layers.ts`](../../../apps/explorer-web/src/features/domains/fauna/layers.ts) | Greenfield placeholders. | Must not be described as implemented Focus Mode or map-layer behavior. |
+| [`fauna-tile-field-allowlist.yml`](../../../.github/workflows/fauna-tile-field-allowlist.yml) | Deterministic inactive, fixture-only allowlist validation. | Does not inspect production tile bytes or approve a public field set. |
+| [`domain-fauna.yml`](../../../.github/workflows/domain-fauna.yml) | Runs the accepted synthetic smoke slice and preserves explicit proof and release-dry-run holds. | Performs no source access, transform, promotion, release, deployment, or publication. |
+| [`data/registry/sources/fauna/`](../../../data/registry/sources/fauna/README.md) | Source-registry boundary exists. | Current rights, terms, cadence, field mapping, and source activation remain individually governed. |
+| [`contracts/domains/fauna/redaction_receipt.md`](../../../contracts/domains/fauna/redaction_receipt.md) | Draft Fauna semantics with a disclosed cross-domain placement/schema conflict. | Not an accepted executable receipt contract; cannot substantiate coverage alone. |
+
+### Proposed read path
+
+```text
+governed API or release-approved public-safe artifact
+  -> runtime-validated finite envelope
+  -> evidence / policy / review / release references
+  -> aggregate metric calculation with sensitivity controls
+  -> Fauna dashboard presentation
+```
+
+No dashboard route, telemetry adapter, metric store, or release binding was
+confirmed at the inspected snapshot. Those remain implementation work, not
+documentation facts.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 6. Review cadence
 
-- **Trigger events:** state/federal listing change; fauna dossier edition; Atlas §24.11 amendment; **any** unexplained drop in DENY rate.
-- **Default cadence:** quarterly; **immediate** review on side-channel audit failure.
+Review this specification when any of the following occurs:
 
-[↑ back to top](#top)
+- the Fauna domain lane changes its sensitivity, evidence, source-role,
+  taxonomy, correction, or rollback posture;
+- an occurrence, EvidenceBundle, Evidence Drawer, tile-field, receipt, policy,
+  review, release, or runtime contract changes;
+- a dashboard route, telemetry source, metric window, aggregation rule, or
+  public export is introduced;
+- a source-rights or conservation-status change affects admissibility;
+- an incident, correction, withdrawal, or rollback reveals an unsafe or stale
+  metric; or
+- the parent dashboard catalog or `OPEN-DASH-08` reviewer disposition changes.
+
+### Changed-document checks
+
+The repository workflows apply changed-file metadata, document-graph, and
+no-network local-link checks. A focused local link check is:
+
+```bash
+python tools/validators/docs/link-check/check_links.py \
+  --repo-root . \
+  --format text \
+  docs/dashboards/domain/fauna.md
+```
+
+The accepted synthetic Fauna smoke slice is:
+
+```bash
+KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_fauna_smoke.py' \
+  --verbose
+```
+
+Passing these checks proves only their bounded document and fixture contracts.
+It does not establish source truth, current rights, taxonomic authority,
+EvidenceBundle closure, sensitivity review, safe public use, release readiness,
+deployment, or publication.
+
+[↑ Back to top](#top)
 
 ---
 
 ## 7. Open questions
 
-- [ ] **OPEN-DASH-FAUNA-01** — Define locality-precision threshold per taxon group (mammals / birds / herps).
-- [ ] **OPEN-DASH-FAUNA-02** — Confirm `RedactionReceipt` schema covers vertex-density side-channels (cross-reference habitat spec).
-- [ ] **OPEN-DASH-FAUNA-03** — Confirm sensitivity-reviewer-on-PR gate per OPEN-DASH-08.
+- [ ] **OPEN-DASH-FAUNA-01** — Which reviewed metric contract defines safe
+  aggregation and suppression without recording exposure-aiding thresholds in
+  this public document?
+- [ ] **OPEN-DASH-FAUNA-02** — Which shared receipt family is canonical for
+  geoprivacy/redaction evidence, and how will the current Fauna placement/schema
+  conflict be resolved without parallel authority?
+- [ ] **OPEN-DASH-FAUNA-03** — Which verified identity serves as sensitivity
+  reviewer, and which repository control—if any—enforces that review?
+- [ ] **OPEN-DASH-FAUNA-04** — What accepted route, telemetry contract, and
+  immutable snapshot identity will supply the dashboard?
+- [ ] **OPEN-DASH-FAUNA-05** — Which correction and withdrawal events invalidate
+  a historical metric snapshot and its downstream caches or exports?
 
-[↑ back to top](#top)
+[↑ Back to top](#top)
 
 ---
 
 ## 8. Evidence basis & citations
 
-<details>
-<summary><strong>Source ledger</strong></summary>
+Evidence was inspected against
+[`main@51d45e45a56d19961a3014009b80c2c94b1107ee`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/51d45e45a56d19961a3014009b80c2c94b1107ee)
+on 2026-08-21.
 
-| Source | Status | Supports | Limits |
+| Source | Status | Supports | Does not prove |
 |:---|:---|:---|:---|
-| Atlas v1.1 §24.11.3 / §24.11.1 | CONFIRMED (manuscript) | §2 indicator subset. | Indicators PROPOSED at source. |
-| Atlas v1.0 Ch. 7 (Fauna dossier) | CONFIRMED (manuscript) | §1 scope, T4 default; §3 candidates. | Mounted dossier presence NEEDS VERIFICATION. |
-| Atlas v1.1 §24.5 (Sensitivity tier reference) | CONFIRMED authored sibling | T4 default justification. | Tier table PROPOSED. |
-| Atlas v1.1 §24.10 (Risk register) | CONFIRMED (manuscript) | Sensitive-lane risk severities. | PROPOSED severities. |
-| `docs/dashboards/domain/README.md` §5.1, §6 | CONFIRMED | Emphasis (Sensitivity-and-rights, T4 defaults); template. | Lane PROPOSED (OPEN-DASH-01). |
+| [Parent dashboard specification](./README.md) | **CONFIRMED file / PROPOSED lane** | Per-domain scope, indicator-instance boundary, anti-collapse rule, and open sensitive-domain review question. | Accepted dashboard authority, implementation, or reviewer assignment. |
+| [Fauna domain lane](../../domains/fauna/README.md) and [sensitivity posture](../../domains/fauna/SENSITIVITY.md) | **CONFIRMED draft documentation** | T4 deny-by-default posture, geoprivacy boundary, finite public outcomes, and governed API path. | Executable policy, reviewed release, or current source truth. |
+| [Occurrence Evidence contract](../../../contracts/domains/fauna/occurrence_evidence.md) and [focused workflow](../../../.github/workflows/fauna-occurrence-evidence.yml) | **CONFIRMED draft machinery** | Finite disposition states, deterministic validation, source-role separation, synthetic fixture coverage, and explicit holds. | Live-source admission, EvidenceBundle closure, public derivative, or publication. |
+| [Explorer Web Fauna feature boundary](../../../apps/explorer-web/src/features/domains/fauna/README.md) and current TypeScript files | **CONFIRMED repository surfaces** | Evidence Drawer adapter exists; FocusFlow and layers are placeholders. | A dashboard route, complete feature, runtime behavior, deployment, or public availability. |
+| [Fauna domain workflow](../../../.github/workflows/domain-fauna.yml) | **CONFIRMED read-only workflow definition** | Synthetic smoke validation and explicit proof/release holds. | Hosted pass at an arbitrary head, proof, release readiness, or publication. |
+| [Directory Rules](../../doctrine/directory-rules.md) and [accepted ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **CONFIRMED adopted placement authority** | Documentation may reference every responsibility root but gains no executable authority through prose; public clients use governed APIs or released carriers. | That the separately proposed `docs/dashboards/` lane has been independently adopted as canonical. |
+| [CODEOWNERS](../../../.github/CODEOWNERS) | **CONFIRMED review routing** | `@bartytime4life` is the verified default repository review route. | Human review, domain stewardship, sensitivity approval, or branch-protection enforcement. |
 
-</details>
+### Material change ledger
 
-[↑ back to top](#top)
+- **KEEP:** document ID, path, created date, draft status, T4 deny-by-default
+  posture, specification-only boundary, numbered section anchors, and open
+  reviewer/receipt questions.
+- **CLARIFY:** dashboards report derived posture; contracts, schemas, policy,
+  reviews, and release artifacts retain their separate authority.
+- **REPAIR:** replace obsolete `apps/review-console/` and unverified telemetry
+  pointers with current Explorer Web, contract, validator, fixture, and workflow
+  evidence.
+- **REMOVE WITH EVIDENCE:** arbitrary health percentages, decorative external
+  badges, and source-currentness implications not supported by current runtime
+  evidence.
+- **ENRICH:** add measurement envelopes, finite missing/stale/error states,
+  sensitivity-safe computation rules, validation commands, correction triggers,
+  and explicit implementation holds.
 
----
+This document is a specification and review aid. It is not a PolicyDecision,
+ReviewRecord, EvidenceBundle, RedactionReceipt, ValidationReport,
+ReleaseManifest, correction notice, rollback card, deployment record, or
+publication artifact.
 
-<sub>Per-domain fauna dashboard specification. **Specification only — implementations live in `apps/`; indicator definitions live in Atlas §24.11; domain context lives in `docs/domains/fauna/`.** Default tier T4: the dashboard reports posture, the gate enforces, the receipts back the trust.</sub>
+[↑ Back to top](#top)
