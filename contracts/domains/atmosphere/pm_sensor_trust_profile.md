@@ -2,18 +2,18 @@
 doc_id: kfm://contract/domains/atmosphere/pm-sensor-trust-profile
 title: PM Sensor Trust Profile Candidate
 type: semantic-contract
-version: v1.0.0
+version: v1.0.1
 status: proposed-inactive; fixture-only; non-authoritative
 owners: OWNER_TBD — Atmosphere steward · Air-quality steward · Evidence steward · Schema steward · Validation steward
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-21
 policy_label: internal; atmosphere; pm-sensor; trust-dimensions; no-network; non-release
 source_card: KFM-P30-PROG-0001
 source_spec_hash: sha256:6fed794c95d89545865ee4faa472ee9dc5906a073d2af0e22145fe16610b7b4f
 related:
   - ./AirStation.md
   - ./PM25Observation.md
-  - ../../../docs/dashboards/domain/air/PM_SENSOR_CALIBRATION_REVIEW.md
+  - ../../../docs/dashboards/domain/atmosphere.md
   - ../../../schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json
   - ../../../fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/cases.json
   - ../../../tools/validators/domains/atmosphere/validate_pm_sensor_trust_profile.py
@@ -54,7 +54,7 @@ Atmosphere-specific semantic meaning belongs under `contracts/domains/atmosphere
 - `AirStation` remains station and network identity context; it does not prove calibration or observation quality.
 - `PM25Observation` remains the observation family and preserves low-cost-sensor caveats, correction references, source roles, evidence, and release boundaries.
 - Existing low-cost-sensor calibration fixtures remain correction-lineage proof surfaces. This profile does not replace or reinterpret them.
-- The PM Sensor Calibration Review dashboard remains a proposed review specification; this profile does not activate a dashboard or define scientific thresholds.
+- The Atmosphere / Air dashboard specification may report these fixture-only dimensions. No separate PM Sensor Calibration Review dashboard specification exists on current main; this profile does not activate a dashboard or define scientific thresholds.
 
 ## Validation
 
