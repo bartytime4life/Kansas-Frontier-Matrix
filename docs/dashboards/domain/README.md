@@ -13,7 +13,7 @@ owning_root: docs/
 responsibility: Define the human-readable boundary, inventory, shared measurement contract, evidence limits, safety rules, validation expectations, maintenance duties, and review path for the thirteen domain dashboard specifications without creating domain, metric, runtime, policy, release, or publication authority.
 truth_posture: CONFIRMED current path, thirteen-spec directory inventory, catalog coverage, accepted Directory Rules v2, current child-file presence, and bounded documentation validators / PROPOSED dashboard measurements, panels, thresholds, joins, alerts, and implementation mappings / UNKNOWN running dashboard routes, production telemetry, active policy evaluation, complete evidence resolution, release integration, correction propagation, rollback execution, deployment, and public parity / NEEDS VERIFICATION accountable domain, measurement, sensitivity, policy, UI, release, and independent reviewers.
 current_path: docs/dashboards/domain/README.md
-evidence_snapshot: "repository=bartytime4life/Kansas-Frontier-Matrix; base=main@40f68c17b16cdc4219ea3d00756912f9fdb768b8; target_prior_blob=fc18e269e8f674688ea580ac384ba46c40304840; parent_readme_blob=c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3; dashboard_catalog_blob=f86b42f7bc6fd28de78e98f06cf1f89cc5af7d4c; generated_receipt_readme_blob=5a67f8d743306799a014590ccb45fa9f1177f16a; directory_rules_blob=fd49a0b83e55cef52c1124281f093e263526898d; metadata_validator_readme_blob=25be64b52c6fe74fbe0c167f32ba878280b11f5c"
+evidence_snapshot: "repository=bartytime4life/Kansas-Frontier-Matrix; initial_base=main@40f68c17b16cdc4219ea3d00756912f9fdb768b8; reconciled_base=main@17923d0bdfd87feadeebe6afe344ef35ca949c63; target_prior_blob=fc18e269e8f674688ea580ac384ba46c40304840; parent_readme_blob=c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3; dashboard_catalog_blob=82c7859b2782c13e97b1b3d3d55cdf35400fe675; hydrology_spec_blob=ee1816f1bec8ccf3da3e3c58f1ec58b2bfa2fa9d; generated_receipt_readme_blob=5a67f8d743306799a014590ccb45fa9f1177f16a; directory_rules_blob=fd49a0b83e55cef52c1124281f093e263526898d; metadata_validator_readme_blob=25be64b52c6fe74fbe0c167f32ba878280b11f5c"
 related:
   - docs/dashboards/README.md
   - docs/dashboards/DASHBOARD_CATALOG.md
@@ -141,7 +141,7 @@ Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 
 ### 2.2 Current repository inventory
 
-At `main@40f68c17b16cdc4219ea3d00756912f9fdb768b8`, the direct-child domain lane contains:
+At reconciled `main@17923d0bdfd87feadeebe6afe344ef35ca949c63`, the direct-child domain lane contains:
 
 ```text
 docs/dashboards/domain/
@@ -318,7 +318,7 @@ A cross-domain measurement belongs here only when one domain is clearly accounta
 A new or materially revised child specification should use the repository's bounded metadata profile and the smallest complete structure appropriate to its risk. The following is a design template, not a generator or accepted machine contract.
 
 ```markdown
-<!-- [KFM_META_BLOCK_V2]
+<!-- Begin the repository's KFM metadata block v2 here. -->
 doc_id: kfm://doc/dashboard/domain/<domain>
 title: <Domain> Dashboard Specification
 type: standard
@@ -335,7 +335,7 @@ truth_posture: CONFIRMED <current evidence> / PROPOSED <design> / UNKNOWN <runti
 related:
   - docs/dashboards/domain/README.md
   - docs/dashboards/DASHBOARD_CATALOG.md
-[/KFM_META_BLOCK_V2] -->
+<!-- End the KFM metadata block v2 here. -->
 
 <a id="top"></a>
 
@@ -573,9 +573,9 @@ Accepted ADR-0029 establishes Directory Rules authority; it does **not** answer 
 
 | Evidence surface | Confirmed result | Limit |
 |---|---|---|
-| `main@40f68c17b16cdc4219ea3d00756912f9fdb768b8` | Pinned current-main evidence snapshot for this modernization | Later main changes require reconciliation |
+| `main@17923d0bdfd87feadeebe6afe344ef35ca949c63` | Reconciled current-main evidence snapshot after the Hydrology modernization merged during authoring | Later main changes require reconciliation |
 | Prior target blob `fc18e269e8f674688ea580ac384ba46c40304840` | Existing v1 README, stable identity, H1, top anchor, headings, and Atlas-first design lineage | Its 2026-05 implementation and placement claims were stale |
-| [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md) blob `f86b42f7bc6fd28de78e98f06cf1f89cc5af7d4c` | 33 cataloged specs overall and thirteen domain rows | Cataloging does not prove runtime |
+| [`DASHBOARD_CATALOG.md`](../DASHBOARD_CATALOG.md) blob `82c7859b2782c13e97b1b3d3d55cdf35400fe675` | v0.7 records 33 cataloged specs overall, thirteen domain rows, and the current Hydrology evidence boundary | Cataloging does not prove runtime |
 | [`docs/dashboards/README.md`](../README.md) blob `c3a0ab69cfc14cea7269cc2cdd853fbac3bb14e3` | Parent boundary and placement hold | Its 34/14 inventory is stale relative to the current catalog/tree |
 | Current domain directory | README plus thirteen exact child spec paths; no nested `air/` lane | File presence does not prove semantic parity or implementation |
 | [Directory Rules v2](../../doctrine/directory-rules.md) blob `fd49a0b83e55cef52c1124281f093e263526898d` | `docs/` explanation authority, nested-lane boundary, finite placement outcomes | Does not admit sources, metrics, dashboards, or release |
@@ -586,7 +586,7 @@ Accepted ADR-0029 establishes Directory Rules authority; it does **not** answer 
 
 ### 12.2 Child-document evidence boundary
 
-The thirteen child files were inspected for path presence and their current documentation posture through direct repository reads and the current catalog. Several record bounded synthetic validators, fixtures, workflows, or placeholder UI seams. Those are valid implementation facts only for the named profiles. No live source was fetched, no production metric was queried, no dashboard route was exercised, no policy evaluator was run, no release record was resolved, and no deployed panel or public endpoint was tested in this documentation change.
+The thirteen child files were inspected for path presence and their current documentation posture through direct repository reads and the current catalog. Several record bounded synthetic validators, fixtures, workflows, or placeholder UI seams. During authoring, the Hydrology specification advanced to repository-grounded v0.2.0 at blob `ee1816f1bec8ccf3da3e3c58f1ec58b2bfa2fa9d`; current main and catalog v0.7 were merged into the task branch without force. Those are valid implementation facts only for the named profiles. No live source was fetched, no production metric was queried, no dashboard route was exercised, no policy evaluator was run, no release record was resolved, and no deployed panel or public endpoint was tested in this documentation change.
 
 ### 12.3 Attached doctrine and prompt basis
 
