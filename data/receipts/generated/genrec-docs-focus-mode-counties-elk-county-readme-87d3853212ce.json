@@ -1,11 +1,11 @@
 {
-  "receipt_id": "genrec-docs-focus-mode-counties-elk-county-readme-96a9817caec0",
+  "receipt_id": "genrec-docs-focus-mode-counties-elk-county-readme-87d3853212ce",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "docs/focus-mode/counties/elk_county/README.md"
   ],
   "artifact_hashes": {
-    "docs/focus-mode/counties/elk_county/README.md": "sha256:96a9817caec0fd1ae66e530298098cbca229d7dc588d7ec226c84e0df0ffde01"
+    "docs/focus-mode/counties/elk_county/README.md": "sha256:87d3853212cee0bc0bc1e45fe5bf7e6e815fe8f2ddafa075f7418498c7257d45"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -29,7 +29,7 @@
   "inputs": {
     "evidence_hashes": [
       "sha256:aa899f69053d3bc99ae79bba8318a1bfaae3198f2dd5b1673f5cb35ddfee2b59",
-      "sha256:96a9817caec0fd1ae66e530298098cbca229d7dc588d7ec226c84e0df0ffde01"
+      "sha256:87d3853212cee0bc0bc1e45fe5bf7e6e815fe8f2ddafa075f7418498c7257d45"
     ],
     "attached_docs": [],
     "evidence_refs": [
@@ -99,12 +99,12 @@
     {
       "gate": "markdown-structure-and-diff-hygiene",
       "outcome": "PASS",
-      "reason": "The 44,191-byte README has one H1, one YAML-parseable KFM metadata block, 17 unique explicit anchors, internally consistent tables, balanced fences, LF endings, no tabs or trailing whitespace, and a final newline. The unknown predecessor creation date is omitted rather than encoded as an invalid date or fabricated value."
+      "reason": "The 44,211-byte README has one H1, one YAML-parseable KFM metadata block, 17 unique explicit anchors, internally consistent tables, balanced fences, LF endings, no tabs or trailing whitespace, and a final newline. The ISO created date records this first substantive v1.0 README edition; it is not represented as the one-byte placeholder's unknown origin date."
     },
     {
       "gate": "documentation-freshness-created-date-repair",
       "outcome": "PASS",
-      "reason": "The first exact-head docs-stale-scan run failed because the README encoded an unknown predecessor creation date as a non-ISO string. The one-byte predecessor supplied no date to preserve, so the invalid field was removed without inventing a value or weakening the scanner; a new exact-head hosted run remains required."
+      "reason": "The first exact-head docs-stale-scan rejected a non-ISO unknown value, and removing the field exposed the metadata validator's required-created contract. The repair records 2026-08-21 as the creation date of this first substantive v1.0 README edition while leaving the one-byte placeholder's historical origin unknown; neither hosted check was weakened."
     },
     {
       "gate": "repository-relative-target-closure",
@@ -124,7 +124,7 @@
     {
       "gate": "artifact-byte-and-hash-closure",
       "outcome": "PASS",
-      "reason": "README SHA-256 96a9817caec0fd1ae66e530298098cbca229d7dc588d7ec226c84e0df0ffde01; Git blob e34e033b2d3f55643107d586bcda916115d38968; 44,191 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+      "reason": "README SHA-256 87d3853212cee0bc0bc1e45fe5bf7e6e815fe8f2ddafa075f7418498c7257d45; Git blob 310f56a7490adf212313674d8b85f38f0f5b8074; 44,211 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
     },
     {
       "gate": "generated-receipt-schema-constraint-validation",
@@ -226,7 +226,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-21T21:54:49Z",
+  "created_at": "2026-08-21T22:01:14Z",
   "emitter": "OpenAI Codex via ChatGPT GitHub connector",
   "links": {
     "pr_number": null,

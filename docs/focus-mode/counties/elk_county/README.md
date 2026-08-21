@@ -7,6 +7,7 @@ status: "draft; repository-grounded; planning-only; compatibility-lane; non-rele
 owners:
   - "NEEDS VERIFICATION — Focus Mode stewardship"
   - "NEEDS VERIFICATION — geology, property/privacy, infrastructure, environmental-health, and emergency-currentness review"
+created: 2026-08-21
 updated: 2026-08-21
 policy_label: "public; documentation; county-scope; compatibility; cite-or-abstain; privacy; infrastructure-sensitivity; currentness"
 owning_root: docs/
