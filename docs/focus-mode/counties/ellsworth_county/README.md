@@ -15,25 +15,25 @@ owning_root: docs/
 responsibility_root: docs/
 responsibility: "Explain the current Ellsworth County Focus Mode planning directory, orient readers to its sibling build plan, preserve historical, hydrologic, environmental, transport, sensitive-location, living-person, emergency, and public-interface boundaries, and expose the evidence and implementation gaps that must close before any Ellsworth County payload, interface, release, or public claim can be relied upon."
 current_path: docs/focus-mode/counties/ellsworth_county/README.md
-base_commit: e871009f34b24f79f4882da3e93cd849c798d78f
+base_commit: 0bcbd40253fdd7b21efdf1a1c55632ab43200456
 prior_blob: 3712202ecb80c5bab1e97281cde741bd974cb209
 sibling_plan_blob: 26f11c18befa02b344fef87b7ab4b5c8bca6c717
-county_index_blob: 1a83417c8a3ff7b1c9d9ea302eb5dc47fc726e36
+county_index_blob: c93e778af02862cbc4f42e52373cfa63fede8f5a
 directory_governance: "ADR-0029 accepts Directory Rules v2. This same-path docs/ modernization changes no authority, lifecycle, ownership root, or structure."
 canonical_relationship: "Current tracked Ellsworth County planning lane. Path convergence remains HOLD because ADR-0027 is proposed and no accepted singular-to-plural migration was verified."
 truth_posture: "CONFIRMED the prior concise README, paired sibling draft plan, current TRACKED_PAIR county-index classification, accepted Directory Rules authority, proposed ADR-0027 status, proposed FocusModePayload semantic contract, focus schema and inactive policy limits, CONTRIBUTING receipt requirement, and CODEOWNERS route / PROPOSED this boundary contract, Ellsworth County public-safe proof slice, source-role separation, finite outcomes, and maintenance guidance / UNKNOWN any admitted Ellsworth source set, governed payload, API route, Explorer surface, released layer, correction cascade, rollback execution, deployment, or public parity / NEEDS VERIFICATION accountable stewards, source rights and freshness, safe public geometry, historical and cultural review, evidence closure, policy outcomes, machine validation, hosted checks, human review, release evidence, and consumer closure."
 evidence_refs:
-  - "repo:commit/e871009f34b24f79f4882da3e93cd849c798d78f"
-  - "repo:docs/focus-mode/counties/ellsworth_county/README.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=3712202ecb80c5bab1e97281cde741bd974cb209"
-  - "repo:docs/focus-mode/counties/ellsworth_county/ellsworth_county_focus_mode_build_plan.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=26f11c18befa02b344fef87b7ab4b5c8bca6c717"
-  - "repo:docs/focus-mode/counties/COUNTY_INDEX.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=1a83417c8a3ff7b1c9d9ea302eb5dc47fc726e36"
-  - "repo:docs/doctrine/directory-rules.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=fd49a0b83e55cef52c1124281f093e263526898d"
-  - "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08"
-  - "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
-  - "repo:contracts/focus_mode/focus_mode_payload.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73"
-  - "repo:schemas/contracts/v1/focus/README.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33"
-  - "repo:policy/focus/README.md@e871009f34b24f79f4882da3e93cd849c798d78f#blob=35001e958a6b51d2f22004d5e637d72baeab49af"
-  - "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@e871009f34b24f79f4882da3e93cd849c798d78f#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+  - "repo:commit/0bcbd40253fdd7b21efdf1a1c55632ab43200456"
+  - "repo:docs/focus-mode/counties/ellsworth_county/README.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=3712202ecb80c5bab1e97281cde741bd974cb209"
+  - "repo:docs/focus-mode/counties/ellsworth_county/ellsworth_county_focus_mode_build_plan.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=26f11c18befa02b344fef87b7ab4b5c8bca6c717"
+  - "repo:docs/focus-mode/counties/COUNTY_INDEX.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=c93e778af02862cbc4f42e52373cfa63fede8f5a"
+  - "repo:docs/doctrine/directory-rules.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=fd49a0b83e55cef52c1124281f093e263526898d"
+  - "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08"
+  - "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+  - "repo:contracts/focus_mode/focus_mode_payload.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73"
+  - "repo:schemas/contracts/v1/focus/README.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=2b75990b53dea2841c28410f0d9dc9fb10a60f33"
+  - "repo:policy/focus/README.md@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=35001e958a6b51d2f22004d5e637d72baeab49af"
+  - "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@0bcbd40253fdd7b21efdf1a1c55632ab43200456#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
 inspection_boundary: "GitHub reads covered the exact target, complete sibling plan, county index, parent Focus Mode surfaces, adopted Directory Rules projection and ADR-0029, proposed ADR-0027, FocusModePayload semantic contract, focus schema and policy boundaries, CONTRIBUTING.md, CODEOWNERS, generated-receipt controls, open pull requests, task branches, and current main. No live source refresh, source admission, rights review, EvidenceRef resolution, policy evaluation, county runtime, released artifact, deployment, public endpoint, or rollback drill was exercised."
 related:
   - docs/focus-mode/counties/ellsworth_county/ellsworth_county_focus_mode_build_plan.md
