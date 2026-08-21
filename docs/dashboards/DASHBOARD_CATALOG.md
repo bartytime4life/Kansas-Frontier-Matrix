@@ -2,7 +2,7 @@
 doc_id: kfm://doc/dashboards-dashboard-catalog
 title: Dashboard Catalog — index of all KFM dashboard specifications
 type: standard
-version: v0.4
+version: v0.5
 status: draft
 owners:
   - <dashboards-stewards>  # PROPOSED placeholder; resolve before review
@@ -27,6 +27,7 @@ notes:
   - "Spec-file presence is separate from running-surface verification."
   - "This v0.3 refresh records 33 repo-observed dashboard spec files after removal of the domain/air PM-sensor specification and replaces a malformed raw-search evidence row with a pinned tree count."
   - "This v0.4 refresh reconciles the Flora row with current contracts, schema scaffolds, source-registry and connector boundaries, bounded synthetic validation, inactive policy, and proof/release holds without claiming a dashboard runtime."
+  - "This v0.5 refresh reconciles the Roads / Rail / Trade row with current bounded CorridorRoute, trust-projection, Explorer, Evidence Drawer, policy, source-registry, proof, and release evidence without claiming a routed dashboard or production telemetry."
   - "Running dashboards, telemetry data, receipts, proofs, policy logic, schemas, release manifests, and generated reports do not live in docs/dashboards/."
   - "All running-surface claims remain PROPOSED or NEEDS VERIFICATION until checked against implementation evidence."
 [/KFM_META_BLOCK_V2] -->
@@ -87,7 +88,7 @@ notes:
 | `docs/dashboards/DASHBOARD_CATALOG.md` exists in the accessible repo. | CONFIRMED | Direct fetch of current catalog. |
 | `docs/dashboards/README.md` says `docs/dashboards/` is a proposed documentation surface, not the running dashboard implementation. | CONFIRMED | Direct fetch of dashboard README. |
 | Category READMEs exist for governance, operational, domain, and observability. | CONFIRMED | Direct fetch/search of category README files. |
-| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | The non-truncated tree at `main@977bd5219b2002bab647792606c862ebc3b6bd85` contains 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
+| 33 dashboard spec files are cataloged below. | CONFIRMED at the pinned repository tree. | Direct current-tree listings at `main@b820a8a938db741018289c6131477f2ceaa052fc` contain 5 governance, 4 operational, 13 domain, and 11 observability spec files, excluding category READMEs. |
 | Running dashboard surfaces exist and read the named receipts. | NEEDS VERIFICATION | No running app, telemetry stack, receipt source, or validator output was inspected here. |
 | `docs/dashboards/` is canonical placement under Directory Rules. | PROPOSED / NEEDS VERIFICATION | Dashboard README records placement drift / ADR need; this catalog does not resolve it. |
 
@@ -141,7 +142,7 @@ Domain-specific dashboards live under `domain/` and must not become domain autho
 | [`domain/geology.md`](domain/geology.md) | Per-domain instance of §24.11 for geology / natural resources: source breadth, stratigraphic canonicalization, well-record identifiability gate. | Atlas v1.1 §24.11.1 | Geology domain steward | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/atmosphere.md`](domain/atmosphere.md) | Atmosphere evidence, observed/model separation, finite outcomes, fixture-only PM trust dimensions, correction, and governed-AI posture; complete route and telemetry remain unverified. | Current repository contracts, schemas, policies, validators, tests, plus proposed Atlas §24.11.1 / §24.11.4 | Atmosphere steward · UI steward · Evidence steward | `apps/explorer-web/` Evidence Drawer seam; review-console route UNKNOWN | CONFIRMED | PROPOSED |
 | [`domain/hazards.md`](domain/hazards.md) | Per-domain instance of §24.11 for hazards: rollback coverage, correction lead time, alert-authority DENY rate, derivative invalidation cascade. | Atlas v1.1 §24.11.2 / §24.11.1 | Hazards domain steward · Release steward | `apps/review-console/` | CONFIRMED | PROPOSED |
-| [`domain/roads-rail-trade.md`](domain/roads-rail-trade.md) | Per-domain instance of §24.11 for roads / rail / trade routes: source breadth, functional-class canonicalization, historical-corpus edition pinning; rolls up transit SLOs. | Atlas v1.1 §24.11.1 / §24.11.5 | Roads-rail-trade domain steward · Source steward | `apps/review-console/` | CONFIRMED | PROPOSED |
+| [`domain/roads-rail-trade.md`](domain/roads-rail-trade.md) | Roads/Rail/Trade source-admission holds, CorridorRoute validation, route/segment/graph anti-collapse, fixture-only trust projections, public-audience release protection, Evidence Drawer convergence, and proof/release/correction readiness; no routed dashboard or production telemetry is verified. | Current domain docs, contracts, schemas, validators, fixtures, tests, workflows, Explorer trust-overlay/Evidence Drawer seams, inactive policy, and empty source/proof/candidate implementation lanes | Roads/Rail/Trade steward · Source/evidence steward · Policy/sensitivity reviewer · UI/metric steward (identities unverified) | Explorer Web bounded trust-overlay/Evidence Drawer seams; dashboard route and telemetry `UNKNOWN` | CONFIRMED | NEEDS VERIFICATION |
 | [`domain/settlements-infrastructure.md`](domain/settlements-infrastructure.md) | Per-domain instance of §24.11 for settlements / infrastructure (critical-asset T4): fail-closed gate, redaction coverage, rollback coverage, service-area cascade. | Atlas v1.1 §24.11.3 / §24.11.2 | Settlements-infrastructure domain steward · Sensitivity reviewer | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/archaeology.md`](domain/archaeology.md) | Per-domain instance of §24.11 for archaeology / cultural heritage (T4 defaults, sovereignty): sovereignty review presence, NAGPRA-flag completeness, side-channel audit. | Atlas v1.1 §24.11.3 / §24.11.1 | Archaeology domain steward · Sensitivity reviewer · Sovereignty rep | `apps/review-console/` | CONFIRMED | PROPOSED |
 | [`domain/people-dna-land.md`](domain/people-dna-land.md) | Per-domain instance of §24.11 for people / genealogy / DNA / land ownership (living-person T4, DNA T4): fail-closed, rights-change response time, AIReceipt presence, synthetic-claim incidence (target zero). | Atlas v1.1 §24.11.3 / §24.11.4 / §24.11.1 | People-DNA-land domain steward · Sensitivity reviewer · AI-surface steward · Rights-holder rep | `apps/review-console/` | CONFIRMED | PROPOSED |
@@ -215,4 +216,4 @@ Vocabulary for the **File presence** column:
 
 **Related docs:** [README.md](README.md) · [INDICATOR_CATALOG.md](INDICATOR_CATALOG.md) · [registers/DRIFT_REGISTER.md](../registers/DRIFT_REGISTER.md)
 
-**Last updated:** 2026-08-21 · **Edition:** v0.4 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
+**Last updated:** 2026-08-21 · **Edition:** v0.5 (draft) · **Owners:** `<dashboards-stewards>` (PROPOSED)
