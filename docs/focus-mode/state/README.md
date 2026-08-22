@@ -2,7 +2,7 @@
 doc_id: kfm://doc/focus-mode-state-readme
 title: Focus Mode State Documentation Boundary
 type: readme; focus-mode; system-state; geographic-state-boundary; compatibility-lane
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; mixed-authority; compatibility-lane; non-release; non-publication
 owner: "@bartytime4life via CODEOWNERS; Focus Mode, state-vocabulary, runtime, review, release, and independent publication authority NEEDS VERIFICATION"
 created: 2026-05-24
@@ -36,10 +36,12 @@ truth_posture: >-
   machine-enumerated runtime outcomes ANSWER, ABSTAIN, DENY, and ERROR /
   PROPOSED geographic kansas-state scope, state-domain profile, sibling review,
   payload, map-context, revocation, and transition vocabularies, and future
-  state-aware validation / CONFLICTED geographic-state and system-state material
-  in one writable tree, the sibling seven-outcome vocabulary versus the current
-  four-outcome runtime schema, and older exact-path claims versus accepted
-  Directory Rules v2 / UNKNOWN end-to-end Focus service behavior, source
+  state-aware validation / CONFIRMED finite-outcomes.md now reconciles the
+  repository's four-outcome runtime machine shape while preserving v0.1 reason
+  codes as lineage / CONFLICTED geographic-state and system-state material in
+  one writable tree, sibling review and transition prose that still treats HOLD
+  as a runtime outcome, and older exact-path claims versus accepted Directory
+  Rules v2 / UNKNOWN end-to-end Focus service behavior, source
   admission, EvidenceRef-to-EvidenceBundle closure, policy evaluation,
   accountable review, state-scale payloads, release, correction propagation,
   rollback execution, deployment, and public parity / NEEDS VERIFICATION final
@@ -48,17 +50,19 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 94bff9fe25eb1d80462cf2e16cba285bc742d7c9
-  target_prior_blob: ad89a66c4a1e5de0678bffd95c9502f0aee23c96
+  base_commit: ec58517b74a02f5ce7dda3f407769c31d1393bb7
+  target_prior_blob: 34e2c6c90006937ea00d432689a36bf83fa5a898
   parent_focus_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
   state_index_blob: 8d0b631bd53e6af3747417ee813c791fc67a9c3c
-  finite_outcomes_blob: 22df8e44b31cad5899339f665f205757d70ab47c
+  finite_outcomes_blob: bd188a69890f43698422b2bd27c76c74958c5feb
+  finite_outcomes_commit: aba7628e8934b3c034eda5e384c2f945652fe7fd
   lifecycle_states_blob: 3826306d620de81840a8140a5645d64c7a630242
   review_state_blob: 0dd5a1089455f560975057c6b5e7ef9e5b1f333d
   payload_state_blob: 9556743d908b1a5c92579fb3adfb318e0037529c
   map_context_state_blob: 5707de7d264724dc6afc85eb397e3815f2a8cdf1
   revocation_state_blob: 89c032bb7e8e08dbfbf9b6c9e73f4ea97acdbcea
   state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
+  transitions_readme_blob: e25f1814e51579d5f55c0f1fe0135ddb28a47f4a
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0028_blob: d14ea2b4ad57294ab52da643c954a7f83d5e24e9
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -71,9 +75,10 @@ evidence_snapshot:
   focus_schema_family_readme_blob: 2b75990b53dea2841c28410f0d9dc9fb10a60f33
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
 inspection_boundary: >-
-  Current-session GitHub reads covered the complete prior README in multiple
-  ranges, every direct child of docs/focus-mode/state, every transition filename,
-  the state index and template inventory, the parent Focus README, accepted
+  Current-session GitHub reads covered the complete prior README, every direct
+  child of docs/focus-mode/state, the newly added one-byte transitions README,
+  every transition specification filename, the state index and template
+  inventory, the parent Focus README, accepted
   Directory Rules evidence, ADR-0028, runtime and UI Focus contracts, the
   runtime schema, validator and fixture family, the Focus schema-family index,
   CODEOWNERS, open pull-request overlap, and task-branch overlap. No source was
@@ -105,6 +110,7 @@ related:
 tags: [kfm, focus-mode, state, system-state, geographic-state, runtime-envelope, finite-outcomes, lifecycle, review, payload, map-context, revocation, compatibility, non-publication]
 notes:
   - "v1.0 replaces stale no-repository-evidence and Directory Rules v1.2 assumptions with current repository evidence and accepted Directory Rules v2."
+  - "v1.1 reconciles finite-outcomes.md with the current four-outcome runtime machine shape and records the one-byte transitions README added on current main."
   - "The state tree remains mixed authority. This update documents the split requirement but does not move, rename, copy, or delete any state artifact."
   - "The currently tracked RuntimeResponseEnvelope schema enumerates ANSWER, ABSTAIN, DENY, and ERROR. HOLD and PASS/FAIL remain separate review, placement, promotion, or validator concepts unless a later accepted contract changes that boundary."
   - "The geographic STATE_INDEX and state-build-plan template remain proposed ADR-0028 lineage; no kansas-state lane or state-scale release is claimed."
@@ -135,8 +141,9 @@ notes:
 > [!WARNING]
 > **The current repository's client-facing runtime envelope has four machine
 > outcomes: `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.** The sibling
-> `finite-outcomes.md` document's seven-item list is older, draft, and conflicted.
-> `HOLD` is currently a review, placement, promotion, or workflow posture;
+> [`finite-outcomes.md`](./finite-outcomes.md) now reconciles that boundary and
+> preserves its older seven-item vocabulary only as labeled lineage. `HOLD` is
+> currently a review, placement, promotion, correction, or workflow posture;
 > `PASS` and `FAIL` are validator results. None belongs to the current
 > `RuntimeResponseEnvelope.outcome` enum.
 
@@ -171,9 +178,9 @@ notes:
 
 | Question | Current bounded answer | Truth label |
 |---|---|---|
-| Does this README exist at the requested path? | Yes. The prior v0.1 file was tracked at blob `ad89a66c4a1e5de0678bffd95c9502f0aee23c96`. | `CONFIRMED` |
+| Does this README exist at the requested path? | Yes. The prior v1.0 file was tracked at blob `34e2c6c90006937ea00d432689a36bf83fa5a898`. | `CONFIRMED` |
 | What owns this file? | `docs/` owns human-readable explanation and navigation. CODEOWNERS routes review to `@bartytime4life`; that route is not policy, release, or publication approval. | `CONFIRMED` |
-| Does the surrounding state tree exist? | Yes. The tree contains this README, a proposed geographic state index and template, six state-family documents, and five transition documents. | `CONFIRMED` |
+| Does the surrounding state tree exist? | Yes. The tree contains this README, a proposed geographic state index and template, six state-family documents, five transition specifications, and a one-byte transitions README. | `CONFIRMED` |
 | Is this tree one coherent authority? | No. Geographic state-scope planning and system/trust-state doctrine are mixed beneath one path. | `CONFLICTED` |
 | Is ADR-0028 accepted? | No. It remains proposed and therefore does not register `kansas-state`, authorize a state lane, or select a migration target. | `CONFIRMED` proposed status |
 | Is Directory Rules v2 effective? | Yes through accepted ADR-0029, which adopts the exact bytes at `docs/doctrine/directory-rules.md`. | `CONFIRMED` |
@@ -267,7 +274,7 @@ The current tree carries two materially different concepts.
 
 | Meaning | Current artifacts | Correct interpretation | Current posture |
 |---|---|---|---|
-| **System/trust state** | `finite-outcomes.md`, `lifecycle-states.md`, `review-state.md`, `payload-state.md`, `map-context-state.md`, `revocation-state.md`, and `transitions/` | Cross-cutting documentation about response, lifecycle, review, freshness, context, correction, and rollback concepts | Tracked draft lineage; parts conflict with newer contract/schema evidence |
+| **System/trust state** | `finite-outcomes.md`, `lifecycle-states.md`, `review-state.md`, `payload-state.md`, `map-context-state.md`, `revocation-state.md`, and `transitions/` | Cross-cutting documentation about response, lifecycle, review, freshness, context, correction, and rollback concepts | Tracked draft lineage; finite outcomes are reconciled, while review/HOLD and other sibling vocabularies remain mixed or stale |
 | **Geographic state-scale Focus composition** | `STATE_INDEX.md` and `_template/state-build-plan.md` | Proposed Kansas-wide composition scope with direct evidence, domain-profile, sensitivity, release, correction, and rollback duties | Proposed under ADR-0028; no registered lane, state-aware validator, payload, or release verified |
 
 > [!IMPORTANT]
@@ -308,6 +315,7 @@ docs/focus-mode/state/
 ├── review-state.md
 ├── revocation-state.md
 └── transitions/
+    ├── README.md
     ├── answer-to-abstain.md
     ├── candidate-to-hold.md
     ├── hold-to-deny.md
@@ -322,18 +330,19 @@ docs/focus-mode/state/
 | [`README.md`](./README.md) | State-tree navigation and reconciliation boundary | `PLACE`; this document |
 | [`STATE_INDEX.md`](./STATE_INDEX.md) | Proposed single-row Kansas geographic state index | `LINEAGE` / `PROPOSED`; inert pending ADR-0028 and machine closure |
 | [`_template/state-build-plan.md`](./_template/state-build-plan.md) | Proposed geographic state build-plan template | `LINEAGE` / `PROPOSED`; no state lane created |
-| [`finite-outcomes.md`](./finite-outcomes.md) | Older seven-outcome prose vocabulary | `CONFLICTED`; does not override current four-outcome runtime schema |
+| [`finite-outcomes.md`](./finite-outcomes.md) | Repository-grounded four-outcome documentation boundary with retained v0.1 anchors and reason-code lineage | `PLACE` / reconciled; contract, schema, policy, and runtime authority remain separate |
 | [`lifecycle-states.md`](./lifecycle-states.md) | Lifecycle and promotion-gate prose | Core lifecycle shorthand retained; detailed gates and paths remain proposal/verification-sensitive |
 | [`review-state.md`](./review-state.md) | ReviewRecord and HOLD proposal | `PROPOSED`; HOLD/runtime collision remains unresolved |
 | [`payload-state.md`](./payload-state.md) | FocusModePayload freshness and citation-closure proposal | `PROPOSED`; no state-scale payload or old asserted machine schema verified |
 | [`map-context-state.md`](./map-context-state.md) | Older MapContextEnvelope proposal | `LINEAGE`; newer UI semantic contract/schema family is the current repository seam |
 | [`revocation-state.md`](./revocation-state.md) | Revocation-manifest and rollback-state proposal | `PROPOSED`; no public verifier or state-scale execution verified |
-| [`transitions/`](./transitions/) | Prose transition specifications | `LINEAGE` / `PROPOSED`; not executable state-machine proof |
+| [`transitions/`](./transitions/) | One-byte README plus prose transition specifications | `LINEAGE` / `PROPOSED`; README responsibility is absent and transition prose is not executable state-machine proof |
 
 ### Transition-document inventory
 
 | Transition document | Intended concept | Boundary |
 |---|---|---|
+| [`README.md`](./transitions/README.md) | One-byte placeholder added on current main | No usable lane orientation or authority boundary; separate same-path documentation work is needed |
 | [`answer-to-abstain.md`](./transitions/answer-to-abstain.md) | Response narrows when evidence or currentness no longer supports an answer | Must preserve correction/revocation state; prose is not runtime execution |
 | [`candidate-to-hold.md`](./transitions/candidate-to-hold.md) | Candidate pauses pending rights, policy, sensitivity, or review | HOLD is not publication and not a current runtime-envelope outcome |
 | [`hold-to-deny.md`](./transitions/hold-to-deny.md) | Held candidate resolves to a denial or rejection | Requires owning policy/review records; Markdown cannot issue them |
@@ -368,7 +377,7 @@ docs/focus-mode/state/
 | Capability | Current status |
 |---|---|
 | State-tree bytes and navigation | `CONFIRMED` |
-| System-state prose corpus | `CONFIRMED` presence; mixed freshness and authority |
+| System-state prose corpus | `CONFIRMED` presence; finite outcomes reconciled, remaining siblings mixed in freshness and authority |
 | Runtime four-outcome machine shape | `CONFIRMED` repository shape; contract/schema remain marked proposed |
 | Runtime envelope validator and fixtures | `CONFIRMED` repository implementation |
 | Geographic `kansas-state` identity | `PROPOSED`; not accepted or registered |
@@ -410,10 +419,11 @@ The tracked runtime schema currently permits exactly four client-facing outcomes
 | `fresh`, `stale`, `revoked-but-cached` | Payload or correction posture proposals | These may influence the four outcomes but do not replace them |
 
 > [!CAUTION]
-> The sibling [`finite-outcomes.md`](./finite-outcomes.md) and
-> [`review-state.md`](./review-state.md) remain useful lineage for the unresolved
-> HOLD model, but maintainers must not treat their seven-item enum as current
-> runtime machine authority.
+> The sibling [`finite-outcomes.md`](./finite-outcomes.md) now preserves the
+> current four-outcome runtime boundary. [`review-state.md`](./review-state.md)
+> and some transition documents remain useful but stale lineage for the
+> unresolved HOLD model; maintainers must not treat their older outcome-state
+> HOLD claims as current runtime machine authority.
 
 ### State-family orthogonality
 
@@ -683,8 +693,8 @@ It is not sufficient evidence that the transition exists in runtime.
 - no claim that an ADR, contract, schema, validator, workflow, commit, or PR
   creates release/publication authority;
 - preserved core lifecycle and trust-membrane invariants;
-- explicit conflict between the older seven-outcome prose and current four-outcome
-  runtime machine shape.
+- explicit alignment of finite-outcomes.md with the four-outcome runtime machine
+  shape, while keeping HOLD and PASS/FAIL in separate state families.
 
 ### What a green check does not prove
 
@@ -735,7 +745,7 @@ rollback drill does not by itself establish:
 |---|---|---|
 | Split geographic state scope from system/trust state | `HOLD` | Accepted decision naming each authority owner and final target |
 | Accept or reject `scope_kind: state` and `scope_id: kansas-state` | `PROPOSED` under ADR-0028 | ADR acceptance with domain-profile, evidence, policy, release, correction, and rollback consequences |
-| Reconcile sibling seven-outcome prose with four-outcome runtime schema | `CONFLICTED` | Contract/schema review and documented sibling migration |
+| Reconcile `finite-outcomes.md` with four-outcome runtime schema | `RESOLVED IN v1.1` for this documentation surface | Preserve contract/schema authority; correct remaining review/HOLD sibling prose separately |
 | Model HOLD | `NEEDS VERIFICATION` | Decide review/placement/promotion carrier and public runtime projection |
 | Settle Focus request/response schema ownership | `CONFLICTED` | Resolve UI/focus/runtime overlap without parallel schema authority |
 | Close `FocusModePayload` machine shape | `UNKNOWN` | Accepted semantic owner, schema, validator, positive/negative fixtures, compatibility plan |
@@ -790,7 +800,7 @@ Before merge, close or abandon the draft pull request and branch. Branch deletio
 is a separate action.
 
 After merge, restore prior blob
-`ad89a66c4a1e5de0678bffd95c9502f0aee23c96` through a transparent revert or
+`34e2c6c90006937ea00d432689a36bf83fa5a898` through a transparent revert or
 apply a bounded forward correction. Do not rewrite shared history.
 
 Because this change is documentation-only, repository rollback affects this
@@ -829,7 +839,7 @@ withdrawal, cache invalidation, supersession, and rollback process.
 
 - [Geographic state index](./STATE_INDEX.md)
 - [State build-plan template](./_template/state-build-plan.md)
-- [Finite-outcome lineage](./finite-outcomes.md)
+- [Finite-outcome documentation boundary](./finite-outcomes.md)
 - [Lifecycle-state lineage](./lifecycle-states.md)
 - [Review-state lineage](./review-state.md)
 - [Payload-state lineage](./payload-state.md)
