@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-object-family-register-mrts-03-rebased-20260822",
+  "receipt_id": "genrec-object-family-register-mrts-03-docgraph-successor-20260822",
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/object-family-register.yml",
@@ -20,9 +20,9 @@
     "tools/validators/control_plane/validate_object_family_register.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/object-family-register.yml": "sha256:1688e4d89b5bf50ee1c27ade987158ffe2cbc88aa8c51029e8329e20de5d5a07",
+    ".github/workflows/object-family-register.yml": "sha256:b32afdf763891b448b167c4e0b1e58bb30d60360ef0dc22867ab28b8b4fed0c1",
     "control_plane/object_family_register.yaml": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c",
-    "docs/registers/OBJECT_FAMILY.md": "sha256:051f6b1afd4609b089837fb3f82e5d3db4f26c85de30f0c4c615d2d371feaceb",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:868b344fa1583870977bd2c426f844837ce958b4ef520e5a3cfd49ef2ff2ba73",
     "fixtures/contracts/v1/governance/object_family_register/README.md": "sha256:c40e5d43a3bd578f5c13d8263986d7a8d6c7046dbe9030ba2ccec249325a1971",
     "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json": "sha256:204e89e7be025c2a6e6f1ef3794cdf2b58a8b078a6c7902d20264ff1def4c0b1",
     "fixtures/contracts/v1/governance/object_family_register/invalid/bad_root.yaml": "sha256:81bacf369d5c0cbcfe1644e979948f11284bbe8398d5900d3fff353cf0109dfa",
@@ -47,36 +47,19 @@
     "seed": null,
     "temperature": null,
     "top_p": null,
-    "max_tokens": null,
     "tools_enabled": [
       "Google Drive connector",
       "GitHub connector",
-      "local Git evidence inspection",
-      "no-network Python validation"
+      "local no-network validation"
     ]
   },
   "inputs": {
-    "evidence_hashes": [
-      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
-      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
-      "sha256:dd474c338d3f6597e2c5e8960d3071828f857cb822c09b030c10055cf7459f36"
-    ],
-    "attached_docs": [
-      "Kansas Frontier Matrix Repository Structure Guiding Document",
-      "Kansas Frontier Matrix — AI Build Operating Contract"
-    ],
     "evidence_refs": [
-      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
       "github://bartytime4life/Kansas-Frontier-Matrix/issues/3360",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/3405",
-      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3407",
-      "repo:main@59cd37856c877c34248e6c85738989b307dcbb6a",
-      "repo:agent/mrts-02-normalize-registries-20260822@292d9e920a50ade153cd7bb68b2fd40e232e2adf",
-      "repo:docs/doctrine/directory-rules.md@59cd37856c877c34248e6c85738989b307dcbb6a",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@59cd37856c877c34248e6c85738989b307dcbb6a",
-      "repo:control_plane/object_family_register.yaml@59cd37856c877c34248e6c85738989b307dcbb6a",
-      "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
-      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3408",
+      "repo:main@db070e62a1f95d5edaaa088896a6e9ff3757a9a0",
+      "repo:historical-receipt:data/receipts/generated/genrec-object-family-register-mrts-03-rebased-20260822.json@a0edd3adc410db01cabf9abc8b452b4e58c6a494"
     ]
   },
   "truth_labels": {
@@ -99,64 +82,19 @@
   },
   "validation_gates": [
     {
-      "gate": "milestone_contract_and_authority_assay",
+      "gate": "historical-receipt-restoration",
       "outcome": "PASS",
-      "reason": "Issue #3360, accepted ADR-0029, adopted Directory Rules, the existing register, merged branch history, and the rebased MRTS-02 packet were inspected; Google Drive planning documents remained advisory."
+      "reason": "The rebased MRTS-03 receipt is restored byte-for-byte to its first committed state at a0edd3adc410db01cabf9abc8b452b4e58c6a494."
     },
     {
-      "gate": "required_family_and_relationship_coverage",
+      "gate": "document-graph-successor",
       "outcome": "PASS",
-      "reason": "All sixteen required families and three retained families have stable canonical IDs, closed cross-family references, responsibility-root placement, explicit surface status, identity, compatibility, evidence, lifecycle, and release/correction/rollback relationships."
+      "reason": "This append-only successor binds the corrected object-family document and selected workflow without choosing a canonical Atlas carrier."
     },
     {
-      "gate": "conflict_and_maturity_truthfulness",
-      "outcome": "PASS",
-      "reason": "Eleven required families remain explicitly CONFLICTED, EvidenceRef and WithdrawalNotice remain PARTIAL, deployed runtime behavior remains NOT_INSPECTED, and no candidate was silently selected."
-    },
-    {
-      "gate": "schema_and_current_register",
-      "outcome": "PASS",
-      "reason": "The strict Draft 2020-12 schema meta-validated and the current nineteen-entry register passed no-network structural, path, status, compatibility, and relationship validation against the rebased baseline."
-    },
-    {
-      "gate": "fixture_polarity",
-      "outcome": "PASS",
-      "reason": "One valid and seven invalid fixtures matched exact reviewed findings, including duplicate ID, invalid root, impossible maturity, self-authority, unknown field, and noncanonical ordering cases."
-    },
-    {
-      "gate": "focused_unit_tests",
-      "outcome": "PASS",
-      "reason": "Fifteen focused no-network object-family-register tests passed."
-    },
-    {
-      "gate": "documentation_metadata_and_links",
-      "outcome": "PASS",
-      "reason": "Two modified Markdown metadata blocks passed with zero findings and thirty-eight bounded repository-local link targets resolved."
-    },
-    {
-      "gate": "workflow_security",
-      "outcome": "PASS",
-      "reason": "Nineteen workflow-security tests passed and the repository scanner reported 475 workflows with zero security findings."
-    },
-    {
-      "gate": "dependency_profiles",
-      "outcome": "PASS",
-      "reason": "The rebased MRTS-02 registry profile passed thirteen tests and exact pinned evidence replay; the accepted MRTS-01 trust profile passed eleven tests and append-only receipt replay on the combined tree."
-    },
-    {
-      "gate": "repository_topology",
-      "outcome": "FAIL",
-      "reason": "The inherited topology state remains failed with nine unbaselined drift categories, 125 baselined warnings, and thirteen stale fingerprints; this packet does not expand or waive the baseline."
-    },
-    {
-      "gate": "generated_receipt_artifact_hash_replay",
-      "outcome": "PASS",
-      "reason": "The generated-receipt validator replayed every declared artifact SHA-256 against final combined-tree bytes."
-    },
-    {
-      "gate": "hosted_exact_head_workflows",
+      "gate": "human-review",
       "outcome": "SKIPPED",
-      "reason": "Hosted workflows and human review belong to the reconciled pull-request head and were unavailable when this successor receipt was emitted."
+      "reason": "Independent human review remains pending and this receipt grants no merge or release authority."
     }
   ],
   "policy_decisions": [
@@ -166,27 +104,12 @@
     {
       "id": "KFM-DIRECTORY-RULES-V2",
       "validated": true,
-      "evidence_ref": "repo:docs/doctrine/directory-rules.md@59cd37856c877c34248e6c85738989b307dcbb6a"
-    },
-    {
-      "id": "KFM-ADR-0029",
-      "validated": true,
-      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@59cd37856c877c34248e6c85738989b307dcbb6a"
-    },
-    {
-      "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE-GUIDANCE",
-      "validated": true,
-      "evidence_ref": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit"
+      "evidence_ref": "docs/doctrine/directory-rules.md"
     },
     {
       "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
       "validated": true,
       "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
-    },
-    {
-      "id": "KFM-GITHUB-MILESTONE-1-MRTS-03",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3360"
     }
   ],
   "human_review": {
@@ -195,12 +118,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-22T19:33:06Z",
+  "created_at": "2026-08-22T19:51:12Z",
   "emitter": "OpenAI Codex Work Mode",
   "links": {
-    "pr_number": 3405,
+    "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Rebased MRTS-03 reconciliation after the user merged PR #3407 into the MRTS-02 branch. The prior draft receipt remains preserved in branch history; this successor binds current combined-tree bytes. The register is navigational only, records nineteen observed families, preserves eleven required-family conflicts, and does not choose canonical aliases or infer runtime maturity from repository presence. Independent review, hosted exact-head checks, topology correction, candidate authority decisions, source activation, data admission, policy approval, lifecycle mutation, release, deployment, promotion, publication, and public-runtime behavior remain outside this receipt."
+  "notes": "Append-only successor for the post-merge MRTS-03 document-graph fix. The prior receipt is restored exactly rather than rewritten. This receipt binds repository bytes only and creates no semantic authority, policy approval, human review, merge authority, release state, deployment, promotion, or publication authority."
 }
