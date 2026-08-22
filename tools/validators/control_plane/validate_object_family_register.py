@@ -3,9 +3,10 @@
 
 The `.yaml` register intentionally uses the JSON-compatible subset of YAML so the
 validator can parse it deterministically with the Python standard library. A PASS
-proves bounded shape, canonical ordering, declared-path placement, path existence,
-and structural maturity classification only. It does not establish object-family
-meaning, policy, evidence, review, release, deployment, or publication authority.
+proves bounded shape, milestone-family membership, canonical ordering, relationship
+closure, declared-path placement and existence, and structural classification only.
+It does not establish object-family meaning, select conflicting candidates, or
+grant policy, evidence, review, release, deployment, or publication authority.
 """
 
 from __future__ import annotations
@@ -27,17 +28,73 @@ SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/governance/object_family_registe
 FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/governance/object_family_register"
 MAX_FILE_BYTES = 2 * 1024 * 1024
 MAX_SCHEMA_FINDINGS = 100
-SCOPE = "object-family-register-navigation-and-structural-coverage-only"
+SCOPE = "trust-object-catalog-navigation-relationships-and-structural-coverage-only"
 PATH_ROLES = {
     "contract_paths": ("contracts/",),
     "schema_paths": ("schemas/contracts/v1/",),
     "policy_paths": ("policy/",),
     "fixture_paths": ("fixtures/",),
-    "validator_paths": ("tools/validators/",),
+    "validator_paths": ("tools/proof_pack/", "tools/validators/"),
     "test_paths": ("tests/",),
     "workflow_paths": (".github/workflows/",),
     "emitter_paths": ("apps/", "data/", "packages/", "pipelines/", "runtime/", "tools/"),
 }
+SURFACE_BY_PATH_ROLE = {
+    "contract_paths": "contracts",
+    "schema_paths": "schemas",
+    "policy_paths": "policy",
+    "fixture_paths": "fixtures",
+    "validator_paths": "validators",
+    "test_paths": "tests",
+    "workflow_paths": "workflows",
+    "emitter_paths": "emitters",
+}
+RELATIONSHIP_ROLES = (
+    "dependency_family_ids",
+    "evidence_family_ids",
+    "release_family_ids",
+    "correction_family_ids",
+    "rollback_family_ids",
+)
+STRUCTURAL_ROLES = (
+    "contract_paths",
+    "schema_paths",
+    "fixture_paths",
+    "validator_paths",
+    "test_paths",
+    "workflow_paths",
+)
+REQUIRED_FAMILIES = {
+    "ai_receipt": "AIReceipt",
+    "correction_notice": "CorrectionNotice",
+    "evidence_bundle": "EvidenceBundle",
+    "evidence_ref": "EvidenceRef",
+    "layer_manifest": "LayerManifest",
+    "policy_decision": "PolicyDecision",
+    "promotion_receipt": "PromotionReceipt",
+    "proof_pack": "ProofPack",
+    "release_manifest": "ReleaseManifest",
+    "rollback_card": "RollbackCard",
+    "run_receipt": "RunReceipt",
+    "runtime_response_envelope": "RuntimeResponseEnvelope",
+    "source_activation_decision": "SourceActivationDecision",
+    "source_descriptor": "SourceDescriptor",
+    "validation_report": "ValidationReport",
+    "withdrawal_notice": "WithdrawalNotice",
+}
+REQUIRED_NON_EFFECTS = frozenset(
+    {
+        "does_not_activate_sources",
+        "does_not_add_rename_or_remove_object_family_authority",
+        "does_not_create_evidence_release_or_publication_authority",
+        "does_not_define_contract_meaning",
+        "does_not_define_schema_shape",
+        "does_not_evaluate_policy",
+        "does_not_prove_runtime_or_release_maturity",
+        "does_not_select_conflicting_candidates",
+    }
+)
+ABSENT_SURFACE_STATES = frozenset({"ABSENT", "NOT_INSPECTED"})
 
 
 class DuplicateKeyError(ValueError):
@@ -151,6 +208,28 @@ def _canonical_path(value: Any) -> PurePosixPath | None:
     return path
 
 
+def _mapping(value: Any) -> Mapping[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _check_sorted_unique(
+    values: list[Any],
+    *,
+    field: str,
+    findings: list[Finding],
+    prefix: str,
+) -> None:
+    try:
+        canonical = sorted(values)
+        unique_count = len(set(values))
+    except TypeError:
+        return
+    if len(values) != unique_count:
+        findings.append(Finding(f"{prefix}_DUPLICATE", field))
+    if values != canonical:
+        findings.append(Finding(f"{prefix}_NOT_CANONICAL", field))
+
+
 def _expected_maturity(entry: Mapping[str, Any]) -> str:
     contracts = bool(_array(entry.get("contract_paths")))
     schemas = bool(_array(entry.get("schema_paths")))
@@ -167,14 +246,145 @@ def _expected_maturity(entry: Mapping[str, Any]) -> str:
     return "seed"
 
 
-def _semantic_findings(candidate: Mapping[str, Any], *, repo_root: Path, check_paths: bool) -> list[Finding]:
+def _expected_implementation_status(entry: Mapping[str, Any]) -> str:
+    surfaces = _mapping(entry.get("surface_status"))
+    compatibility = _mapping(entry.get("compatibility"))
+    if compatibility.get("posture") == "multiple_candidates_unresolved" or any(
+        value == "CONFLICTED" for value in surfaces.values()
+    ):
+        return "CONFLICTED"
+    contracts = bool(_array(entry.get("contract_paths")))
+    schemas = bool(_array(entry.get("schema_paths")))
+    if not contracts and not schemas:
+        return "ABSENT"
+    if all(
+        _array(entry.get(role))
+        and surfaces.get(SURFACE_BY_PATH_ROLE[role]) == "IMPLEMENTED"
+        for role in STRUCTURAL_ROLES
+    ):
+        return "IMPLEMENTED"
+    return "PARTIAL"
+
+
+def _path_has_symlink_component(root: Path, relative: PurePosixPath) -> bool:
+    candidate = root
+    for part in relative.parts:
+        candidate = candidate / part
+        if candidate.is_symlink():
+            return True
+    return False
+
+
+def _check_declared_path(
+    value: Any,
+    *,
+    prefixes: tuple[str, ...],
+    field: str,
+    resolved_root: Path,
+    check_paths: bool,
+    findings: list[Finding],
+) -> None:
+    relative = _canonical_path(value)
+    if relative is None:
+        findings.append(Finding("PATH_INVALID", field))
+        return
+    if not any(str(relative).startswith(prefix) for prefix in prefixes):
+        findings.append(Finding("PATH_ROOT_MISMATCH", field))
+        return
+    if not check_paths:
+        return
+    try:
+        if _path_has_symlink_component(resolved_root, relative):
+            findings.append(Finding("PATH_SYMLINK_DENIED", field))
+            return
+        candidate_path = resolved_root.joinpath(*relative.parts)
+        resolved = candidate_path.resolve(strict=True)
+        resolved.relative_to(resolved_root)
+        if not (resolved.is_file() or resolved.is_dir()):
+            findings.append(Finding("PATH_NOT_REGULAR", field))
+    except (OSError, ValueError):
+        findings.append(Finding("PATH_NOT_FOUND", field))
+
+
+def _semantic_findings(
+    candidate: Mapping[str, Any],
+    *,
+    repo_root: Path,
+    check_paths: bool,
+) -> list[Finding]:
     findings: list[Finding] = []
     entries = _array(candidate.get("entries"))
     ids = [entry.get("family_id") for entry in entries if isinstance(entry, dict)]
-    if ids != sorted(ids):
-        findings.append(Finding("ENTRIES_NOT_CANONICAL", "/entries"))
-    if len(ids) != len(set(ids)):
-        findings.append(Finding("FAMILY_ID_DUPLICATE", "/entries"))
+    _check_sorted_unique(
+        ids,
+        field="/entries",
+        findings=findings,
+        prefix="FAMILY_ID",
+    )
+
+    unresolved = _array(candidate.get("unresolved_items"))
+    non_effects = _array(candidate.get("non_effects"))
+    _check_sorted_unique(
+        unresolved,
+        field="/unresolved_items",
+        findings=findings,
+        prefix="UNRESOLVED_ITEMS",
+    )
+    _check_sorted_unique(
+        non_effects,
+        field="/non_effects",
+        findings=findings,
+        prefix="NON_EFFECTS",
+    )
+    if not REQUIRED_NON_EFFECTS.issubset(set(non_effects)):
+        findings.append(Finding("REQUIRED_NON_EFFECT_MISSING", "/non_effects"))
+    if candidate.get("authority") != "navigational_index_only":
+        findings.append(Finding("SELF_AUTHORITY_CLAIM", "/authority"))
+
+    entry_by_id = {
+        entry.get("family_id"): entry
+        for entry in entries
+        if isinstance(entry, dict) and isinstance(entry.get("family_id"), str)
+    }
+    required_entries = [
+        entry
+        for entry in entries
+        if isinstance(entry, dict) and entry.get("required_by_milestone") is True
+    ]
+    required_ids = {
+        entry.get("family_id")
+        for entry in required_entries
+        if isinstance(entry.get("family_id"), str)
+    }
+    if candidate.get("coverage_scope") == "milestone_trust_spine_v1":
+        if required_ids != set(REQUIRED_FAMILIES):
+            findings.append(Finding("REQUIRED_FAMILY_SET_MISMATCH", "/entries"))
+        for family_id, display_name in sorted(REQUIRED_FAMILIES.items()):
+            entry = entry_by_id.get(family_id)
+            if isinstance(entry, dict) and entry.get("display_name") != display_name:
+                findings.append(
+                    Finding("REQUIRED_DISPLAY_NAME_MISMATCH", f"/entries/{family_id}")
+                )
+
+    required_count = len(required_entries)
+    other_count = len(entries) - required_count
+    conflicted_required_count = sum(
+        1
+        for entry in required_entries
+        if entry.get("implementation_status") == "CONFLICTED"
+    )
+    for field, expected in (
+        ("required_family_count", len(REQUIRED_FAMILIES)),
+        ("required_registered_count", required_count),
+        ("other_registered_count", other_count),
+        ("conflicted_required_count", conflicted_required_count),
+    ):
+        if candidate.get(field) != expected:
+            findings.append(Finding("CATALOG_COUNT_MISMATCH", f"/{field}"))
+    if candidate.get("completeness") == "complete" and (
+        unresolved or conflicted_required_count
+    ):
+        findings.append(Finding("IMPOSSIBLE_COMPLETENESS", "/completeness"))
 
     try:
         resolved_root = repo_root.resolve(strict=True)
@@ -189,25 +399,126 @@ def _semantic_findings(candidate: Mapping[str, Any], *, repo_root: Path, check_p
         field_base = f"/entries/{index}"
         if raw_entry.get("maturity") != _expected_maturity(raw_entry):
             findings.append(Finding("MATURITY_MISMATCH", f"{field_base}/maturity"))
+        if raw_entry.get("implementation_status") != _expected_implementation_status(
+            raw_entry
+        ):
+            findings.append(
+                Finding(
+                    "IMPLEMENTATION_STATUS_MISMATCH",
+                    f"{field_base}/implementation_status",
+                )
+            )
+
+        surfaces = _mapping(raw_entry.get("surface_status"))
+        declared_paths: set[Any] = set()
         for role, prefixes in PATH_ROLES.items():
             values = _array(raw_entry.get(role))
-            if values != sorted(set(values)):
-                findings.append(Finding("PATHS_NOT_CANONICAL", f"{field_base}/{role}"))
+            declared_paths.update(values)
+            _check_sorted_unique(
+                values,
+                field=f"{field_base}/{role}",
+                findings=findings,
+                prefix="PATHS",
+            )
+            surface = SURFACE_BY_PATH_ROLE[role]
+            surface_status = surfaces.get(surface)
+            if values and surface_status in ABSENT_SURFACE_STATES:
+                findings.append(
+                    Finding("SURFACE_STATUS_MISMATCH", f"{field_base}/surface_status/{surface}")
+                )
+            if not values and surface_status not in ABSENT_SURFACE_STATES:
+                findings.append(
+                    Finding("SURFACE_STATUS_MISMATCH", f"{field_base}/surface_status/{surface}")
+                )
             for item_index, value in enumerate(values):
-                field = f"{field_base}/{role}/{item_index}"
-                relative = _canonical_path(value)
-                if relative is None:
-                    findings.append(Finding("PATH_INVALID", field))
-                    continue
-                if not any(value.startswith(prefix) for prefix in prefixes):
-                    findings.append(Finding("PATH_ROOT_MISMATCH", field))
-                    continue
-                if check_paths:
-                    candidate_path = resolved_root.joinpath(*relative.parts)
-                    try:
-                        candidate_path.resolve(strict=True).relative_to(resolved_root)
-                    except (OSError, ValueError):
-                        findings.append(Finding("PATH_NOT_FOUND", field))
+                _check_declared_path(
+                    value,
+                    prefixes=prefixes,
+                    field=f"{field_base}/{role}/{item_index}",
+                    resolved_root=resolved_root,
+                    check_paths=check_paths,
+                    findings=findings,
+                )
+
+        identity = _mapping(raw_entry.get("identity"))
+        identity_refs = _array(identity.get("rule_refs"))
+        _check_sorted_unique(
+            identity_refs,
+            field=f"{field_base}/identity/rule_refs",
+            findings=findings,
+            prefix="IDENTITY_REFS",
+        )
+        for ref_index, value in enumerate(identity_refs):
+            if value not in declared_paths:
+                findings.append(
+                    Finding(
+                        "IDENTITY_REF_UNDECLARED",
+                        f"{field_base}/identity/rule_refs/{ref_index}",
+                    )
+                )
+            _check_declared_path(
+                value,
+                prefixes=("contracts/", "schemas/contracts/v1/"),
+                field=f"{field_base}/identity/rule_refs/{ref_index}",
+                resolved_root=resolved_root,
+                check_paths=check_paths,
+                findings=findings,
+            )
+
+        compatibility = _mapping(raw_entry.get("compatibility"))
+        candidates = _array(compatibility.get("candidate_paths"))
+        _check_sorted_unique(
+            candidates,
+            field=f"{field_base}/compatibility/candidate_paths",
+            findings=findings,
+            prefix="COMPATIBILITY_CANDIDATES",
+        )
+        for candidate_index, value in enumerate(candidates):
+            if value not in declared_paths:
+                findings.append(
+                    Finding(
+                        "COMPATIBILITY_CANDIDATE_UNDECLARED",
+                        f"{field_base}/compatibility/candidate_paths/{candidate_index}",
+                    )
+                )
+        reasons = _array(compatibility.get("reason_codes"))
+        _check_sorted_unique(
+            reasons,
+            field=f"{field_base}/compatibility/reason_codes",
+            findings=findings,
+            prefix="COMPATIBILITY_REASONS",
+        )
+        if compatibility.get("posture") == "multiple_candidates_unresolved":
+            if raw_entry.get("implementation_status") != "CONFLICTED":
+                findings.append(
+                    Finding(
+                        "UNRESOLVED_COMPATIBILITY_NOT_CONFLICTED",
+                        f"{field_base}/implementation_status",
+                    )
+                )
+
+        for role in RELATIONSHIP_ROLES:
+            values = _array(raw_entry.get(role))
+            _check_sorted_unique(
+                values,
+                field=f"{field_base}/{role}",
+                findings=findings,
+                prefix="RELATIONSHIPS",
+            )
+            for relationship_index, value in enumerate(values):
+                field = f"{field_base}/{role}/{relationship_index}"
+                if value == raw_entry.get("family_id"):
+                    findings.append(Finding("SELF_RELATIONSHIP", field))
+                elif value not in entry_by_id:
+                    findings.append(Finding("RELATIONSHIP_TARGET_MISSING", field))
+
+        for role in ("producer_classes", "consumer_classes"):
+            _check_sorted_unique(
+                _array(raw_entry.get(role)),
+                field=f"{field_base}/{role}",
+                findings=findings,
+                prefix="ROLE_CLASSES",
+            )
     return findings
 
 
