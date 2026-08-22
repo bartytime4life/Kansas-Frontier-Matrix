@@ -22,7 +22,7 @@
   "artifact_hashes": {
     ".github/workflows/object-family-register.yml": "sha256:1688e4d89b5bf50ee1c27ade987158ffe2cbc88aa8c51029e8329e20de5d5a07",
     "control_plane/object_family_register.yaml": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c",
-    "docs/registers/OBJECT_FAMILY.md": "sha256:051f6b1afd4609b089837fb3f82e5d3db4f26c85de30f0c4c615d2d371feaceb",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:868b344fa1583870977bd2c426f844837ce958b4ef520e5a3cfd49ef2ff2ba73",
     "fixtures/contracts/v1/governance/object_family_register/README.md": "sha256:c40e5d43a3bd578f5c13d8263986d7a8d6c7046dbe9030ba2ccec249325a1971",
     "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json": "sha256:204e89e7be025c2a6e6f1ef3794cdf2b58a8b078a6c7902d20264ff1def4c0b1",
     "fixtures/contracts/v1/governance/object_family_register/invalid/bad_root.yaml": "sha256:81bacf369d5c0cbcfe1644e979948f11284bbe8398d5900d3fff353cf0109dfa",
