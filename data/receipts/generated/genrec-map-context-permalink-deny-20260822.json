@@ -13,7 +13,7 @@
   ],
   "artifact_hashes": {
     "contracts/ui/map_context_envelope.md": "sha256:fcafa9198c88aea360465d74f1f979ba4eaff3180b7eef294e80ec0e1ec63d36",
-    "docs/focus-mode/state/map-context-state.md": "sha256:1c4e0a01150d3745849a5acb1aed53bc8e9a12db00fe61b0fb8b43762cfbaf0f",
+    "docs/focus-mode/state/map-context-state.md": "sha256:8fcd93d8932cd69b061f7269a69b8c8bf6997823c9ac40c308e2de4afa1eaa8b",
     "fixtures/ui/map_context_envelope/base_geography.json": "sha256:986a15c70084d0ddc4e73f49f3839f50fd0bd0918e28de6131661d4e8a35302d",
     "fixtures/ui/map_context_envelope/base_viewport.json": "sha256:53db2439ff85e9a9cc9c586559e8835f10c1dc6208ef5f779a534814b66c6075",
     "fixtures/ui/map_context_envelope/cases.json": "sha256:405d58b2f7c9744b42b2f866dec51ae4d66d4c72103ffc2dce0f1c482ecac441",
@@ -107,6 +107,11 @@
       "gate": "markdown-structure-and-local-links",
       "outcome": "PASS",
       "reason": "Both changed Markdown files have one H1, balanced metadata and code-fence delimiters, zero trailing whitespace, all 59 local link targets resolve against the pinned tree/candidate, and all 22 internal anchors resolve."
+    },
+    {
+      "gate": "documentation-metadata-ratchet",
+      "outcome": "PASS",
+      "reason": "The touched Focus Mode state document now uses the bounded single-token type grammar. Focused metadata validation reports one valid metadata block and zero fail findings; unsupported nested fields and the free-form truth posture remain non-blocking warnings under the present profile."
     },
     {
       "gate": "repository-wide-topology-and-hosted-exact-head",

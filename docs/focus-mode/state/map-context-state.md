@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: "kfm://doc/focus-mode-state-map-context-state"
 title: "Focus Mode — MapContextEnvelope State"
-type: "standard; focus-mode; ui-request-context; system-state-documentation"
+type: "standard"
 version: "v1.1"
 status: "draft; repository-grounded; current-contract-aligned; proposed-inactive-contract; fixture-first; validator-present; runtime-integration-unproven; non-release; non-publication"
 owners:
