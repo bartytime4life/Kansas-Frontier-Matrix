@@ -56,10 +56,17 @@ class CIConformanceReportTests(unittest.TestCase):
         candidate["checks"][1]["outcome"] = "PASS"
         self.assertIn("CHECK_OUTCOME_INVALID", self.codes(candidate))
 
-    def test_blocked_closure_has_no_fabricated_final_evidence(self) -> None:
+    def test_blocked_closure_binds_observed_final_head_without_fabricated_approval(self) -> None:
         closure = self.report["closure"]
         self.assertEqual(closure["state"], "BLOCKED")
-        self.assertIsNone(closure["target_sha"])
+        self.assertEqual(
+            closure["target_sha"],
+            "c653d573c1641503215844c5c4fc85bc15060ced",
+        )
+        self.assertEqual(
+            self.report["repository"]["final_sha"],
+            closure["target_sha"],
+        )
         self.assertEqual(closure["hosted_runs"], [])
         self.assertEqual(closure["human_review"]["state"], "PENDING")
         self.assertIsNone(closure["closer"])
@@ -69,7 +76,8 @@ class CIConformanceReportTests(unittest.TestCase):
         candidate = copy.deepcopy(self.report)
         candidate["closure"]["state"] = "READY"
         codes = self.codes(candidate)
-        self.assertIn("CLOSURE_FINAL_SHA_MISSING", codes)
+        self.assertNotIn("CLOSURE_FINAL_SHA_MISSING", codes)
+        self.assertIn("CLOSURE_CRITERIA_INCOMPLETE", codes)
         self.assertIn("CLOSURE_HOSTED_EVIDENCE_MISSING", codes)
         self.assertIn("CLOSURE_REVIEW_MISSING", codes)
         self.assertIn("CLOSURE_UNRESOLVED", codes)

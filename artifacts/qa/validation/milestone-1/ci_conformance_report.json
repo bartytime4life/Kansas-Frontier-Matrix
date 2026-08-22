@@ -60,12 +60,15 @@
     },
     {
       "command": null,
-      "evidence": [],
+      "evidence": [
+        "github-connector:commit-workflow-runs:c88a4d1ae3a9ad23859caeb870eaa1ae249ed7d8:none",
+        "github-connector:commit-workflow-runs:c653d573c1641503215844c5c4fc85bc15060ced:none"
+      ],
       "execution_state": "CHECK_NOT_RUN",
       "id": "hosted-exact-head",
       "outcome": "CHECK_NOT_RUN",
       "required_for_closure": true,
-      "scope": "GitHub-hosted workflows for the eventual exact final head"
+      "scope": "GitHub-hosted workflows for main@c653d573c1641503215844c5c4fc85bc15060ced"
     },
     {
       "command": null,
@@ -74,7 +77,7 @@
       "id": "human-review",
       "outcome": "CHECK_NOT_RUN",
       "required_for_closure": true,
-      "scope": "independent review of the eventual exact final head"
+      "scope": "independent review of main@c653d573c1641503215844c5c4fc85bc15060ced"
     },
     {
       "command": "python tools/validators/governance/validate_trust_spine_fixture_slice.py",
@@ -172,12 +175,12 @@
     "closer": null,
     "exit_criteria": [
       {
-        "evidence": null,
+        "evidence": "protected main@c653d573c1641503215844c5c4fc85bc15060ced includes MRTS-06 merge f18597cf4fbb81d8969b6ef7c034837ff175e9e8 and MRTS-02 review-fix PR 3415",
         "id": "EXACT_FINAL_SHA",
-        "satisfied": false
+        "satisfied": true
       },
       {
-        "evidence": null,
+        "evidence": "GitHub connector returned no PR-triggered workflow runs for candidate c88a4d1ae3a9ad23859caeb870eaa1ae249ed7d8 or exact main head c653d573c1641503215844c5c4fc85bc15060ced",
         "id": "HOSTED_CHECKS_SUCCESS",
         "satisfied": false
       },
@@ -187,7 +190,7 @@
         "satisfied": false
       },
       {
-        "evidence": "main@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67 includes merged PR 3411",
+        "evidence": "main@c653d573c1641503215844c5c4fc85bc15060ced includes merged MRTS implementation and review-fix PRs through 3415",
         "id": "PREREQUISITES_MERGED",
         "satisfied": true
       },
@@ -209,8 +212,8 @@
       "timestamp": null
     },
     "state": "BLOCKED",
-    "target_sha": null,
-    "unresolved_count": 5
+    "target_sha": "c653d573c1641503215844c5c4fc85bc15060ced",
+    "unresolved_count": 4
   },
   "controls": {
     "deployment_authorized": false,
@@ -293,7 +296,7 @@
     "state": "OPEN",
     "title": "Machine-Readable Trust Spine v1"
   },
-  "observed_at": "2026-08-22T21:02:00Z",
+  "observed_at": "2026-08-22T22:03:43Z",
   "policies": [
     {
       "id": "decision-vocabulary",
@@ -332,18 +335,18 @@
     {
       "id": "validator-orchestrator",
       "path": "tools/validators/validator_registry.json",
-      "scope": "CANDIDATE_TREE",
+      "scope": "BASE_TREE",
       "sha256": "sha256:f0514bd63c71cbea5873bcca6335be8a1ca11c5313e61b61319f68568c065791",
-      "status": "PROPOSED_CANDIDATE",
+      "status": "MERGED_IMPLEMENTATION",
       "version": "kfm.validator-orchestrator-registry.v1"
     }
   ],
-  "report_digest": "sha256:9a6206802c3e50bef280954149ed0debbcbae6c1c52cc30a940a8c3d4edccc34",
+  "report_digest": "sha256:c37d0afaea0b08419c443108ef08935907e6054f4659ed20b6a829f2239453d2",
   "report_id": "kfm://qa/milestone-1/ci-conformance/2026-08-22",
   "repository": {
-    "base_sha": "f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
-    "candidate_ref": "agent/mrts-06-ci-conformance-local-20260822",
-    "final_sha": null,
+    "base_sha": "c653d573c1641503215844c5c4fc85bc15060ced",
+    "candidate_ref": "agent/mrts-06-post-merge-reconciliation-20260822",
+    "final_sha": "c653d573c1641503215844c5c4fc85bc15060ced",
     "full_name": "bartytime4life/Kansas-Frontier-Matrix"
   },
   "schema_version": "kfm.ci-conformance-report.v1",
@@ -351,9 +354,9 @@
     {
       "id": "ci-conformance-report",
       "path": "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
-      "scope": "CANDIDATE_TREE",
+      "scope": "BASE_TREE",
       "sha256": "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
-      "status": "PROPOSED",
+      "status": "MERGED_IMPLEMENTATION",
       "version": "1.0.0"
     },
     {
@@ -365,27 +368,22 @@
       "version": "kfm.trust-spine-fixture-slice.v1"
     }
   ],
-  "sha256": "sha256:9a6206802c3e50bef280954149ed0debbcbae6c1c52cc30a940a8c3d4edccc34",
+  "sha256": "sha256:c37d0afaea0b08419c443108ef08935907e6054f4659ed20b6a829f2239453d2",
   "status": "BLOCKED",
   "unresolved_items": [
     {
       "blocking": true,
-      "detail": "The exact final milestone SHA is unavailable until MRTS-06 is reviewed, merged, and refreshed against the resulting final head.",
-      "id": "EXACT_FINAL_SHA_MISSING"
-    },
-    {
-      "blocking": true,
-      "detail": "No hosted workflow result has been observed for the eventual exact final head.",
+      "detail": "GitHub returned no PR-triggered workflow runs for final MRTS-06 candidate c88a4d1ae3a9ad23859caeb870eaa1ae249ed7d8 or exact main head c653d573c1641503215844c5c4fc85bc15060ced; exact-head hosted success is unavailable.",
       "id": "HOSTED_EXACT_HEAD_CHECKS_NOT_RUN"
     },
     {
       "blocking": true,
-      "detail": "Independent human review for the eventual exact final head remains pending.",
+      "detail": "Independent human review for main@c653d573c1641503215844c5c4fc85bc15060ced remains pending.",
       "id": "HUMAN_REVIEW_PENDING"
     },
     {
       "blocking": true,
-      "detail": "Milestone implementation issues remain open pending review and exact closure evidence.",
+      "detail": "Milestone issues 3359, 3360, 3361, 3363, and 3364 remain open pending review and exact closure evidence.",
       "id": "MILESTONE_ISSUES_REMAIN_OPEN"
     },
     {
@@ -398,17 +396,17 @@
     {
       "id": "ci-conformance-report",
       "path": "tools/validators/governance/validate_ci_conformance_report.py",
-      "scope": "CANDIDATE_TREE",
+      "scope": "BASE_TREE",
       "sha256": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
-      "status": "PROPOSED",
+      "status": "MERGED_IMPLEMENTATION",
       "version": "source-sha256"
     },
     {
       "id": "generated-receipt",
       "path": "tools/validators/validate_generated_receipt.py",
-      "scope": "CANDIDATE_TREE",
+      "scope": "BASE_TREE",
       "sha256": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
-      "status": "PROPOSED_FORWARD_FIX",
+      "status": "MERGED_FORWARD_FIX",
       "version": "source-sha256"
     },
     {
