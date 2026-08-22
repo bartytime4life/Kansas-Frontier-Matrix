@@ -21,7 +21,7 @@
     ".github/workflows/ci-conformance-report.yml": "sha256:6f40e935dfcdf0851e663d9df90084394de5e6ee23ec7bb9b06e5bdb891ceced",
     "Makefile": "sha256:2eab237e6f616f8032e266613581d1e36ad6d1b38fe671f6974fafffaa18c2c8",
     "artifacts/qa/validation/milestone-1/README.md": "sha256:9b1321660dde0fe6b973544c4687db417af7179b35f6d44fb2a6cefe87ef1c9b",
-    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:d3a81b8a821c14402bf4d8117b1339d22f5d47a31e464d46fbb282cd2a029cb4",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:19ed203647177d2e6076d4c0305e48a7095431fc6f1cf02c4a01db6c1e1a2df7",
     "contracts/governance/ci_conformance_report.md": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
     "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:df501cdd89e3050e1c0ef0ed8bd02d5be0b4a20a085eedc1c983cd466b339266",
     "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "sha256:d9d9d33cf3c768a1cbe5156545442c37bb974600f83acec5d975d0e54325cd53",
@@ -31,7 +31,7 @@
     "tests/validators/test_validate_generated_receipt.py": "sha256:6c25026bb1fae49139f11b66226967df4ec7862b7b974cf94f0e1faa45e9031c",
     "tools/validators/governance/validate_ci_conformance_report.py": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
     "tools/validators/validate_generated_receipt.py": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
-    "tools/validators/validator_registry.json": "sha256:74e02c7458c164d618eee5d61413b5622db48fe53e88fa5407c8b94835b46105"
+    "tools/validators/validator_registry.json": "sha256:f0514bd63c71cbea5873bcca6335be8a1ca11c5313e61b61319f68568c065791"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -56,8 +56,8 @@
       "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
       "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
       "sha256:9e6381b682313a77619faaac5306a7361d005976f724f39688ee2a97bcae4eae",
-      "sha256:f551ea076e85368b14a9e1f83a907e8518ed384d346fcd486490143376bffb99",
-      "sha256:d3a81b8a821c14402bf4d8117b1339d22f5d47a31e464d46fbb282cd2a029cb4"
+      "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
+      "sha256:19ed203647177d2e6076d4c0305e48a7095431fc6f1cf02c4a01db6c1e1a2df7"
     ],
     "attached_docs": [
       "Kansas Frontier Matrix Repository Structure Guiding Document",

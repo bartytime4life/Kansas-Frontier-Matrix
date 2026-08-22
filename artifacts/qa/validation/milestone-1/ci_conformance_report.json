@@ -141,15 +141,16 @@
       "scope": "MRTS-05 merged fixture slice; final milestone hosted review remains pending"
     },
     {
-      "command": "make validator-registry-check",
+      "command": "make validator-registry-check && python tools/validators/validate_fixture_root_contract.py --repo-root .",
       "evidence": [
-        "local:registry-shape:pass"
+        "local:registry-shape:pass",
+        "local:fixture-root-contract:pass"
       ],
       "execution_state": "EXECUTED_LOCAL",
       "id": "validator-registry",
       "outcome": "PASS",
       "required_for_closure": true,
-      "scope": "strict offline validator orchestration registry"
+      "scope": "strict offline validator orchestration registry and aggregate fixture-mode parity"
     },
     {
       "command": "make workflow-security",
@@ -330,12 +331,12 @@
       "id": "validator-orchestrator",
       "path": "tools/validators/validator_registry.json",
       "scope": "CANDIDATE_TREE",
-      "sha256": "sha256:74e02c7458c164d618eee5d61413b5622db48fe53e88fa5407c8b94835b46105",
+      "sha256": "sha256:f0514bd63c71cbea5873bcca6335be8a1ca11c5313e61b61319f68568c065791",
       "status": "PROPOSED_CANDIDATE",
       "version": "kfm.validator-orchestrator-registry.v1"
     }
   ],
-  "report_digest": "sha256:f551ea076e85368b14a9e1f83a907e8518ed384d346fcd486490143376bffb99",
+  "report_digest": "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
   "report_id": "kfm://qa/milestone-1/ci-conformance/2026-08-22",
   "repository": {
     "base_sha": "f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
@@ -362,7 +363,7 @@
       "version": "kfm.trust-spine-fixture-slice.v1"
     }
   ],
-  "sha256": "sha256:f551ea076e85368b14a9e1f83a907e8518ed384d346fcd486490143376bffb99",
+  "sha256": "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
   "status": "BLOCKED",
   "unresolved_items": [
     {

@@ -419,7 +419,9 @@
       "id": "repository-governance-parity",
       "description": "Validate MRTS-04 lane coverage, pinned governance references, baseline monotonicity, and inherited-versus-introduced topology classification without waiving drift.",
       "script": "tools/validators/directory_governance/validate_repository_governance_parity.py",
-      "args": [],
+      "args": [
+        "--fixtures"
+      ],
       "path_globs": [
         ".github/workflows/repository-governance-parity.yml",
         "contracts/governance/repository_governance_parity.md",
