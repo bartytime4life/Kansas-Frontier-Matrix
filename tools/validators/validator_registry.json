@@ -21,7 +21,8 @@
       "catalog-distribution-mapping-profile",
       "release-manifest",
       "release-proof-pack-closure",
-      "trust-spine-fixture-slice"
+      "trust-spine-fixture-slice",
+      "ci-conformance-report"
     ],
     "full": [
       "source-descriptor",
@@ -44,6 +45,7 @@
       "kansas-transportation-geometry-source-assessment",
       "repository-governance-parity",
       "trust-spine-fixture-slice",
+      "ci-conformance-report",
       "workflow-security",
       "repository-topology"
     ]
@@ -452,6 +454,34 @@
         "tools/release/release_dry_run.py",
         "tools/validators/governance/validate_trust_spine_fixture_slice.py",
         "data/receipts/generated/genrec-trust-spine-fixture-slice-*.json"
+      ],
+      "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "ci-conformance-report",
+      "description": "Validate the deterministic MRTS-06 milestone inspection report, exact finite outcomes, digest replay, inherited/introduced failure separation, and closure-evidence preconditions without creating authority.",
+      "script": "tools/validators/governance/validate_ci_conformance_report.py",
+      "args": [
+        "--fixtures"
+      ],
+      "path_globs": [
+        ".github/workflows/ci-conformance-report.yml",
+        "artifacts/qa/validation/milestone-1/**",
+        "contracts/governance/ci_conformance_report.md",
+        "control_plane/object_family_register.yaml",
+        "control_plane/root_registry.yaml",
+        "data/receipts/generated/genrec-ci-conformance-report-*.json",
+        "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+        "docs/doctrine/directory-rules.md",
+        "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+        "fixtures/contracts/v1/governance/ci_conformance_report/**",
+        "fixtures/contracts/v1/governance/trust_spine_fixture_slice/**",
+        "policy/README.md",
+        "policy/decision/vocabulary.v1.json",
+        "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
+        "tests/validators/governance/test_validate_ci_conformance_report.py",
+        "tools/validators/governance/validate_ci_conformance_report.py"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []

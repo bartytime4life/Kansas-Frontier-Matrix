@@ -1,0 +1,92 @@
+# Validate the deterministic MRTS-06 report without network effects or authority.
+name: ci-conformance-report
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/ci-conformance-report.yml"
+      - "Makefile"
+      - "artifacts/qa/validation/milestone-1/**"
+      - "contracts/governance/ci_conformance_report.md"
+      - "control_plane/object_family_register.yaml"
+      - "control_plane/root_registry.yaml"
+      - "data/receipts/generated/genrec-ci-conformance-report-*.json"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "docs/doctrine/directory-rules.md"
+      - "docs/runbooks/mrts-06-ci-conformance-handoff.md"
+      - "fixtures/contracts/v1/governance/ci_conformance_report/**"
+      - "fixtures/contracts/v1/governance/trust_spine_fixture_slice/**"
+      - "policy/README.md"
+      - "policy/decision/vocabulary.v1.json"
+      - "schemas/contracts/v1/governance/ci_conformance_report.schema.json"
+      - "tests/validators/governance/test_validate_ci_conformance_report.py"
+      - "tools/validators/governance/validate_ci_conformance_report.py"
+      - "tools/validators/validator_registry.json"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci-conformance-report.yml"
+      - "Makefile"
+      - "artifacts/qa/validation/milestone-1/**"
+      - "contracts/governance/ci_conformance_report.md"
+      - "data/receipts/generated/genrec-ci-conformance-report-*.json"
+      - "docs/runbooks/mrts-06-ci-conformance-handoff.md"
+      - "fixtures/contracts/v1/governance/ci_conformance_report/**"
+      - "schemas/contracts/v1/governance/ci_conformance_report.schema.json"
+      - "tests/validators/governance/test_validate_ci_conformance_report.py"
+      - "tools/validators/governance/validate_ci_conformance_report.py"
+      - "tools/validators/validator_registry.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-conformance-report-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-ci-conformance-report:
+    name: validate-ci-conformance-report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact history without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Validate deterministic MRTS-06 report and receipt
+        run: make ci-conformance-report
+
+      - name: Record bounded result and non-authority boundary
+        if: always()
+        run: |
+          {
+            echo "### MRTS-06 CI conformance inspection"
+            echo
+            echo "- Validator job: ${{ job.status }}."
+            echo "- Report closure state in this candidate: BLOCKED."
+            echo "- Green scope: schema, finite outcomes, digest replay, deterministic serialization, negative cases, and closure precondition enforcement."
+            echo "- Boundary: workflow success does not approve review, merge, release, deployment, promotion, publication, public routing, issue closure, or milestone closure."
+          } >> "$GITHUB_STEP_SUMMARY"
