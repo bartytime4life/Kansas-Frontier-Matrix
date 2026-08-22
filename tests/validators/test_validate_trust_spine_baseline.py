@@ -15,6 +15,7 @@ from tools.validators.control_plane.validate_trust_spine_baseline import (
     FIXTURE_ROOT,
     REPO_ROOT,
     SCHEMA_PATH,
+    _read_pinned_blob,
     validate_baseline,
 )
 
@@ -76,6 +77,55 @@ class TrustSpineBaselineValidatorTests(unittest.TestCase):
                 check_git=False,
             )
         self.assertIn("PATH_NOT_FOUND", {finding.code for finding in result.findings})
+
+    def test_pinned_digest_replay_ignores_later_worktree_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "fixture@example.invalid"],
+                cwd=root,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "KFM fixture"],
+                cwd=root,
+                check=True,
+            )
+            path = root / "control_plane/example.yaml"
+            path.parent.mkdir(parents=True)
+            path.write_bytes(b"pinned-baseline-bytes\n")
+            subprocess.run(
+                ["git", "add", "control_plane/example.yaml"],
+                cwd=root,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "commit", "-q", "-m", "fixture baseline"],
+                cwd=root,
+                check=True,
+            )
+            base_sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            path.write_bytes(b"later-worktree-bytes\n")
+            findings = []
+
+            observed = _read_pinned_blob(
+                "control_plane/example.yaml",
+                base_sha=base_sha,
+                repo_root=root,
+                field="/fixture/path",
+                expected_prefixes=("control_plane/",),
+                findings=findings,
+            )
+
+        self.assertEqual(b"pinned-baseline-bytes\n", observed)
+        self.assertEqual([], findings)
 
     def test_fixture_cli_profile_passes(self) -> None:
         result = subprocess.run(

@@ -1,0 +1,229 @@
+{
+  "receipt_id": "genrec-control-plane-registry-packet-review-fix-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/control-plane-registry-packet.yml",
+    ".github/workflows/trust-spine-baseline.yml",
+    "Makefile",
+    "contracts/governance/control_plane_registry_packet.md",
+    "contracts/governance/trust_spine_baseline.md",
+    "control_plane/contradiction_register.yaml",
+    "control_plane/deprecation_register.yaml",
+    "control_plane/document_registry.yaml",
+    "control_plane/policy_gate_register.yaml",
+    "control_plane/release_state_register.yaml",
+    "control_plane/source_authority_register.yaml",
+    "control_plane/verification_backlog.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/README.md",
+    "fixtures/contracts/v1/governance/control_plane_registry/expected_findings_manifest.json",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/duplicate_entry_id.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/missing_material_authority.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/self_activation.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unknown_field.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unresolved_governing_ref.yaml",
+    "fixtures/contracts/v1/governance/control_plane_registry/valid/valid_minimal.yaml",
+    "schemas/contracts/v1/governance/control_plane_registry.schema.json",
+    "tests/validators/test_validate_control_plane_registry_packet.py",
+    "tests/validators/test_validate_trust_spine_baseline.py",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/control-plane-registry-packet.yml": "sha256:9f3d36a844b96e40b3f6f5d15e5e705532203c688df4964de72846a79d414c3b",
+    ".github/workflows/trust-spine-baseline.yml": "sha256:b066da4b338f09952453037a362a430b6720aea826fbbf29bc584eb715ca674a",
+    "Makefile": "sha256:94b4b3afc544e22d8b1ab02a33bd7c47aa7f9674b5c6104d2afa0bb01ae583a0",
+    "contracts/governance/control_plane_registry_packet.md": "sha256:8e96f2d21a15341de2678b00a2e49eb3a59c259c217c325181e936838a3f54ea",
+    "contracts/governance/trust_spine_baseline.md": "sha256:b55cae918b0dcd0f4923553f2271d22d773c5fe2517a10b959128864bb3a9578",
+    "control_plane/contradiction_register.yaml": "sha256:2e418192c909db8e38f238cb02027b26e9ff64a15ba6db0c9860ebd442436112",
+    "control_plane/deprecation_register.yaml": "sha256:ad42bdf4117748297346604d180c31d833fa067c511f06541d605b0f4791635a",
+    "control_plane/document_registry.yaml": "sha256:e5acc81731ad2024d5855904cebf4f34a973ecf0eda86c2ef7814d933aa03583",
+    "control_plane/policy_gate_register.yaml": "sha256:4e8eed2052c01d66f8f3f9913e0e8b3c1f1607666511fd7b93becab9e6597bf2",
+    "control_plane/release_state_register.yaml": "sha256:fedea34f07de4d789063c0705eef10fc9c887cf71eb52f41f04f97569351c8de",
+    "control_plane/source_authority_register.yaml": "sha256:d9475ea7895c5175040e8ce91a3f93f856dec92efa8b98b12f265522a17c2b20",
+    "control_plane/verification_backlog.yaml": "sha256:3fd116efb8a2d1c4d8bf95584702be85bf187bbc2ed0f71d75ffb0cee1bb4451",
+    "fixtures/contracts/v1/governance/control_plane_registry/README.md": "sha256:427b1fde64de6bd1be5dc0ecb8858eb09c9ea70d0b8699177be16d9884bd74bb",
+    "fixtures/contracts/v1/governance/control_plane_registry/expected_findings_manifest.json": "sha256:8c8a6caf5cc1a4ea9b727e1c51e3d05301c1328df7d10d17efd7213487568ac1",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/duplicate_entry_id.yaml": "sha256:4ffcec4a7ea0d3c40fa72c299ff6152913f4d12afa2a4719840ed4213ac3b062",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/missing_material_authority.yaml": "sha256:eadc8c7cc7c76eeea87104e5cc09062ea6281b0f3712dbe5b932890a7425453e",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/self_activation.yaml": "sha256:7f12300571a7925c2c4487802910a1397bc9ef605c7889acaf443131881f0529",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unknown_field.yaml": "sha256:e59921de391e7c7276f3c82256631970a4f7249b511a12247c94a6bae169ff28",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unresolved_governing_ref.yaml": "sha256:5e978b0584232ca52d96af7a39f25ab358bf7bfbaab3db962644a1e3baa2027e",
+    "fixtures/contracts/v1/governance/control_plane_registry/valid/valid_minimal.yaml": "sha256:9856a6a09e9823f28550a18acc064c713c04a29907894f49356c5b217ac59cb5",
+    "schemas/contracts/v1/governance/control_plane_registry.schema.json": "sha256:b393ed0d287cf93ecce13eebd06f849bc221e832f8990fe0032a6851bd4118be",
+    "tests/validators/test_validate_control_plane_registry_packet.py": "sha256:4a78f0ce5e04fd56cb6a1b095f0eb302a65b61e0509bb9986e3229cb5759f4b8",
+    "tests/validators/test_validate_trust_spine_baseline.py": "sha256:eb7ee3fe52f1dbd73f7e17900e6cf3adac02f2e5c64f8f5ae41fdad11aef7bee",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py": "sha256:badc483982d24e5a50f2bb23d6a500b70fd594cfab41bb404c68b26cb9cebf87",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py": "sha256:8012efa3e17f21e63113017a8677cfcb1c8377f3f1e183b21159966e428c2459"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:8e96f2d21a15341de2678b00a2e49eb3a59c259c217c325181e936838a3f54ea",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:af9467aaf406a886f350e2016a5ee83cff36f1c5081ea840fe8a06d034766755"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Structure Guiding Document",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3359",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3402",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3405",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3406",
+      "repo:current-main@59cd37856c877c34248e6c85738989b307dcbb6a",
+      "repo:prior-receipt:data/receipts/generated/genrec-control-plane-registry-packet-20260822.json@b467a2197eb37167435fa36d1753e8fd574a4ac0",
+      "repo:docs/doctrine/directory-rules.md@568a95f025654d1ceb551f4d014674b736b5dbad",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@568a95f025654d1ceb551f4d014674b736b5dbad",
+      "repo:control_plane/document_registry_doctrine_required.yaml@568a95f025654d1ceb551f4d014674b736b5dbad",
+      "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/control-plane-registry-packet.yml": "PROPOSED",
+    ".github/workflows/trust-spine-baseline.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "contracts/governance/control_plane_registry_packet.md": "PROPOSED",
+    "contracts/governance/trust_spine_baseline.md": "PROPOSED",
+    "control_plane/contradiction_register.yaml": "PROPOSED",
+    "control_plane/deprecation_register.yaml": "PROPOSED",
+    "control_plane/document_registry.yaml": "PROPOSED",
+    "control_plane/policy_gate_register.yaml": "PROPOSED",
+    "control_plane/release_state_register.yaml": "PROPOSED",
+    "control_plane/source_authority_register.yaml": "PROPOSED",
+    "control_plane/verification_backlog.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/duplicate_entry_id.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/missing_material_authority.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/self_activation.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unknown_field.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/invalid/unresolved_governing_ref.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/control_plane_registry/valid/valid_minimal.yaml": "PROPOSED",
+    "schemas/contracts/v1/governance/control_plane_registry.schema.json": "PROPOSED",
+    "tests/validators/test_validate_control_plane_registry_packet.py": "PROPOSED",
+    "tests/validators/test_validate_trust_spine_baseline.py": "PROPOSED",
+    "tools/validators/control_plane/validate_control_plane_registry_packet.py": "PROPOSED",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "control_plane_registry_schema_and_semantics",
+      "outcome": "PASS",
+      "reason": "All seven canonical registry files passed strict common-schema, packet-membership, ordering, exact-base-ref Git-tree reference, digest, and base-commit checks."
+    },
+    {
+      "gate": "control_plane_registry_fixture_polarity",
+      "outcome": "PASS",
+      "reason": "One valid and five invalid no-network fixtures matched their exact reviewed finding-code sets."
+    },
+    {
+      "gate": "control_plane_registry_unit_tests",
+      "outcome": "PASS",
+      "reason": "Thirteen focused tests passed, including a mutable-worktree digest regression and dynamic workflow coverage for every current subject and governing path."
+    },
+    {
+      "gate": "historical_trust_spine_forward_compatibility",
+      "outcome": "PASS",
+      "reason": "Twelve focused tests plus fixture and canonical validation proved the MRTS-01 baseline replays referenced bytes from its pinned Git tree instead of mutable working-tree paths."
+    },
+    {
+      "gate": "legacy_control_plane_metadata",
+      "outcome": "PASS",
+      "reason": "Nine existing control-plane metadata compatibility tests passed for the normalized in-place files."
+    },
+    {
+      "gate": "workflow_security",
+      "outcome": "PASS",
+      "reason": "Nineteen workflow-security tests passed and the repository scan reported 475 workflows with zero invariant, new-drift, baselined-warning, or stale-baseline findings."
+    },
+    {
+      "gate": "documentation_metadata_and_links",
+      "outcome": "PASS",
+      "reason": "Two modified documentation metadata blocks passed with zero findings and three modified Markdown files passed bounded local link validation."
+    },
+    {
+      "gate": "repository_topology",
+      "outcome": "FAIL",
+      "reason": "The inherited topology state remains failed with nine unbaselined drift categories, 125 baselined warnings, and thirteen stale fingerprints; this packet does not expand or waive the baseline."
+    },
+    {
+      "gate": "automated_review_findings",
+      "outcome": "PASS",
+      "reason": "The P1 historical-byte binding finding and P2 workflow-trigger coverage finding on pull request 3405 are addressed by pinned Git-tree replay and a regression that derives required trigger paths from current registry instances."
+    },
+    {
+      "gate": "generated_receipt_artifact_hash_replay",
+      "outcome": "PASS",
+      "reason": "The generated-receipt validator replayed every declared artifact SHA-256 against final local bytes; the prior authoring receipt remains unchanged as append-only process memory."
+    },
+    {
+      "gate": "hosted_exact_head_workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions had not run for the reconciled final head when this forward-fix receipt was emitted; exact-head status belongs in the pull request record."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@568a95f025654d1ceb551f4d014674b736b5dbad"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@568a95f025654d1ceb551f4d014674b736b5dbad"
+    },
+    {
+      "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE-GUIDANCE",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit"
+    },
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    },
+    {
+      "id": "KFM-GITHUB-MILESTONE-1-MRTS-02",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3359"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T19:30:40Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": 3405,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward-fix receipt for MRTS-02 after current main advanced to 59cd37856c877c34248e6c85738989b307dcbb6a through merged PRs #3406 and #3404. The prior genrec-control-plane-registry-packet-20260822 receipt is retained unchanged as append-only authoring history. This receipt binds the reconciled final packet, preserves the merged MRTS-01 pinned-tree implementation, addresses the two automated review findings on PR #3405, and keeps the exact same seven canonical registry paths. Six registries remain explicitly empty, owners remain UNKNOWN, the document registry records rather than resolves its authority conflict, topology remains failed, hosted exact-head checks and independent review remain pending, and MRTS-03 through MRTS-06 remain open. No source activation, data admission, policy approval, verification closure, contradiction resolution, lifecycle mutation, release, deployment, promotion, publication, or public-runtime behavior is represented."
+}
