@@ -58,7 +58,7 @@ evidence_snapshot:
   finite_outcomes_commit: aba7628e8934b3c034eda5e384c2f945652fe7fd
   lifecycle_states_blob: 3826306d620de81840a8140a5645d64c7a630242
   review_state_blob: 0dd5a1089455f560975057c6b5e7ef9e5b1f333d
-  payload_state_blob: 9556743d908b1adf318e0037529c
+  payload_state_blob: 9556743d908b1a5c92579fb3adfb318e0037529c
   map_context_state_blob: 5707de7d264724dc6afc85eb397e3815f2a8cdf1
   revocation_state_blob: 89c032bb7e8e08dbfbf9b6c9e73f4ea97acdbcea
   state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
