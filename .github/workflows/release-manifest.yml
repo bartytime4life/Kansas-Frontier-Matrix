@@ -78,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-pass7-release-manifest-rollback-card-presence-repair-20260816.json \
+            data/receipts/generated/genrec-pass7-release-manifest-mrts-successor-20260822.json \
             --repo-root .
 
       - name: Record trust boundary
