@@ -11,7 +11,7 @@
 KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
-.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline control-plane-registry-packet trust-spine-fixture-slice policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -27,6 +27,7 @@ help:
 	@echo "  trust-spine-baseline Validate the pinned MRTS-01 authority baseline packet"
 	@echo "  control-plane-registry-packet Validate the seven MRTS-02 registry projections"
 	@echo "  trust-spine-fixture-slice Validate the synthetic MRTS-05 cross-family flow"
+	@echo "  ci-conformance-report Validate the deterministic blocked MRTS-06 handoff"
 	@echo "  hazards-validate      Run bounded synthetic USDM materiality validation"
 	@echo "  governed-api-smoke    Run governed API tests"
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
@@ -133,6 +134,12 @@ trust-spine-fixture-slice:
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json --repo-root .
+
+ci-conformance-report:
+	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.governance.test_validate_ci_conformance_report --verbose
+	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py --fixtures
+	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-ci-conformance-report-mrts-06-20260822.json --repo-root .
 
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
