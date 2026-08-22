@@ -8,11 +8,15 @@
   "maturity_mismatch.yaml": [
     "MATURITY_MISMATCH"
   ],
+  "self_authority.yaml": [
+    "SCHEMA_INVALID",
+    "SELF_AUTHORITY_CLAIM"
+  ],
   "unknown_field.yaml": [
     "SCHEMA_INVALID"
   ],
   "unsorted_entries.yaml": [
-    "ENTRIES_NOT_CANONICAL"
+    "FAMILY_ID_NOT_CANONICAL"
   ],
   "unsorted_paths.yaml": [
     "PATHS_NOT_CANONICAL"

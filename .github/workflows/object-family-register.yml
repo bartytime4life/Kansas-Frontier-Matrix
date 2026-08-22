@@ -2,14 +2,15 @@
 #
 # This workflow is deterministic and no-network after installing declared test
 # dependencies. A green result proves navigational index consistency only; it
-# does not add object-family authority or authorize policy, evidence, release,
-# deployment, promotion, or publication.
+# does not select conflicting candidates, add object-family authority, or
+# authorize policy, evidence, release, deployment, promotion, or publication.
 name: object-family-register
 
 "on":
   pull_request:
     paths:
       - ".github/workflows/object-family-register.yml"
+      - "docs/registers/OBJECT_FAMILY.md"
       - "control_plane/object_family_register.yaml"
       - "schemas/contracts/v1/governance/object_family_register.schema.json"
       - "fixtures/contracts/v1/governance/object_family_register/**"
@@ -21,6 +22,7 @@ name: object-family-register
       - main
     paths:
       - ".github/workflows/object-family-register.yml"
+      - "docs/registers/OBJECT_FAMILY.md"
       - "control_plane/object_family_register.yaml"
       - "schemas/contracts/v1/governance/object_family_register.schema.json"
       - "fixtures/contracts/v1/governance/object_family_register/**"
@@ -54,6 +56,7 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -93,7 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-20260806.json \
+            data/receipts/generated/genrec-object-family-register-mrts-03-rebased-20260822.json \
             --repo-root .
 
       - name: Record validation boundary
@@ -104,6 +107,7 @@ jobs:
             echo "### Object family register"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: schema shape, canonical ordering, responsibility-root placement, path existence, and structural maturity classification."
-            echo "- Boundary: the register is a navigational index. It cannot add, rename, remove, approve, release, deploy, promote, or publish an object family."
+            echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
+            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef and WithdrawalNotice remain partial."
+            echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
           } >> "$GITHUB_STEP_SUMMARY"
