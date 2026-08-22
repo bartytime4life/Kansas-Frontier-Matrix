@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-docs-backlog-readme-567df585cfd3",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/backlog/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/backlog/README.md": "sha256:567df585cfd3cf429b2c4fd63d02f746a29e961c6344f6874fd5c98d5e14a3b0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro",
+    "parameter_hash": "sha256:92147df798048722b6b40edfec4033a50de4edac0a198d14428f064abd129f49"
+  },
+  "prompt_or_contract": "sha256:88bd3cd7ca2636f8ea8b396a8f2097aacab4f5fde50e4214c96ab09eab28fdf6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector",
+      "file-search attachment grounding",
+      "local Python static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "github:docs/backlog/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:a2e81ef6c24d3b854774d8beb2435d1701d66afc",
+      "github:docs/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:1f8bac189dac1d01c1185e8b4fb8e25efd11d09f",
+      "github:docs/doctrine/directory-rules.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:docs/registers/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:ffd35793b5ea74dbb5ef482eee2d2cf1caed55c8",
+      "github:docs/registers/VERIFICATION_BACKLOG.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:077c29c04ab6c45212ed0f4812aa176094923155",
+      "github:docs/registers/DRIFT_REGISTER.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:5c5078b93c467e66f4cc8b86a7a696dbce5ae7e0",
+      "github:control_plane/verification_backlog.yaml@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:d0fd8552e4ad90f80ea0c04a2607f9e85c7b1b9d",
+      "github:docs/adr/INDEX.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "github:docs/intake/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:35cc8f301be00526d3334f0778d65d52965a8687",
+      "github:docs/domains/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:7bf702fbdb336abcc3fb1bc2ab30b3dd1acfcff3",
+      "github:contracts/governance/open_adr_backlog_discipline_assessment.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:ebd509c8ab9b5689ad52c20a9d56be7a13a110f6",
+      "github:.github/CODEOWNERS@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "github:CONTRIBUTING.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "task-contract:update-docs-backlog-readme-20260822"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/backlog/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main@43792be16c693d7e4ce9da8afe5514da87440e0d, re-read the complete predecessor at blob a2e81ef6c24d3b854774d8beb2435d1701d66afc, inspected the one-file docs/backlog directory and adjacent authority surfaces, confirmed no path-scoped AGENTS.md, and found no open issue or pull request targeting the exact path before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 adopts Directory Rules v2. The tracked human routing README remains under docs/ through same-path PLACE treatment; direct-child lane classification remains NEEDS VERIFICATION and move, rename, redirect, retirement, and deletion remain HOLD."
+    },
+    {
+      "gate": "semantic-routing-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The revision removes stale proposal-era counts and prior-session implementation claims, routes each kind of open work to its current owner, separates ADR-S-NN, ADR-NNNN, OPEN-* and GitHub identities, preserves human-machine backlog drift, and performs no backlog or decision mutation."
+    },
+    {
+      "gate": "markdown-structure-anchors-and-links",
+      "outcome": "PASS",
+      "reason": "Static validation of the exact remote blob found one metadata block, one H1, 20 unique explicit anchors, all 20 internal fragments resolving, one balanced Mermaid fence, no trailing whitespace, valid UTF-8 YAML metadata, and a final newline. Fourteen unique repository-relative target paths were confirmed from the pinned branch lineage."
+    },
+    {
+      "gate": "security-rights-privacy-and-sensitivity-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private-person data, restricted payloads, source text, operational vulnerability details, or protected precise locations were introduced. The page remains repository-facing navigation only."
+    },
+    {
+      "gate": "artifact-sha256-and-git-blob-integrity",
+      "outcome": "PASS",
+      "reason": "Exact remote Markdown bytes are 27,116 bytes across 488 lines; SHA-256 is 567df585cfd3cf429b2c4fd63d02f746a29e961c6344f6874fd5c98d5e14a3b0 and computed Git blob 930e54d1000d67f3b249e082e9a026f2048e6978 exactly matches the GitHub write response."
+    },
+    {
+      "gate": "generated-receipt-json-and-schema",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON and was checked against the inspected Draft 2020-12 GENERATED_RECEIPT field, type, enum, pattern, and additional-properties constraints; human review remains pending."
+    },
+    {
+      "gate": "full-repository-native-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available for make validate, git diff --check, or repository-native documentation commands. Static exact-byte checks and hosted exact-head workflows are reported separately."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted runs can be inspected only after draft pull-request creation and are not represented as pass evidence in this authoring receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:docs/backlog/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:a2e81ef6c24d3b854774d8beb2435d1701d66afc"
+    },
+    {
+      "id": "github:docs/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:1f8bac189dac1d01c1185e8b4fb8e25efd11d09f"
+    },
+    {
+      "id": "github:docs/doctrine/directory-rules.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "github:docs/registers/VERIFICATION_BACKLOG.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:077c29c04ab6c45212ed0f4812aa176094923155"
+    },
+    {
+      "id": "github:control_plane/verification_backlog.yaml@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:d0fd8552e4ad90f80ea0c04a2607f9e85c7b1b9d"
+    },
+    {
+      "id": "github:docs/intake/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:35cc8f301be00526d3334f0778d65d52965a8687"
+    },
+    {
+      "id": "github:docs/domains/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:7bf702fbdb336abcc3fb1bc2ab30b3dd1acfcff3"
+    },
+    {
+      "id": "github:contracts/governance/open_adr_backlog_discipline_assessment.md@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "validated": true,
+      "evidence_ref": "blob:ebd509c8ab9b5689ad52c20a9d56be7a13a110f6"
+    },
+    {
+      "id": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "validated": true,
+      "evidence_ref": "sha256:88bd3cd7ca2636f8ea8b396a8f2097aacab4f5fde50e4214c96ab09eab28fdf6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T17:07:24Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring receipt for the same-path backlog-routing README reconciliation. It records authoring provenance only. It does not create or update a backlog item, accept or reject an ADR, assign ownership or priority, mutate a human or machine register, perform source admission, evaluate policy, authenticate review, authorize a lifecycle transition, move or retire docs/backlog/, issue release or correction state, execute rollback, deploy, publish, change repository settings, or merge. The sanitized prompt hash covers the named v6 task contract and direct user request; no hidden reasoning, prompt transcript, credentials, or sensitive payload is stored."
+}
