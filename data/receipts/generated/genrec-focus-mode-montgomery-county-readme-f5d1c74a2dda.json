@@ -1,0 +1,112 @@
+{
+  "receipt_id": "genrec-focus-mode-montgomery-county-readme-f5d1c74a2dda",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/montgomery_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/montgomery_county/README.md": "sha256:f5d1c74a2dda585cfa21144e559f6c9e63f2dd5d00000000000000000000000"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a973d2fff263db156677999a940e4f246e672f31",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/focus-mode/counties/montgomery_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/focus-mode/counties/montgomery_county/montgomery_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/montgomery_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at a973d2fff263db156677999a940e4f246e672f31; target was one-byte blob 8b137891791fe96927ad78e64b0aad7bded08bdc; no overlapping open PR or Montgomery task branch was found before branch creation."
+    },
+    {
+      "gate": "same-path-placement",
+      "outcome": "PASS",
+      "reason": "Existing tracked README remains at the same docs/ path; no move, rename, new root, or parallel authority is introduced."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The linked Montgomery build plan was inspected and remains unchanged; its external-source observations remain dated planning lineage rather than current truth."
+    },
+    {
+      "gate": "environmental-health-infrastructure-sensitivity-boundary",
+      "outcome": "PASS",
+      "reason": "README explicitly rejects current contamination, health, facility-compliance, flood, water, property-impact, and vulnerability conclusions and keeps industrial/infrastructure detail bounded."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "SKIPPED",
+      "reason": "Git blob identity is available, but exact SHA-256 bytes were not computed in this connector-only run. The hash field is a schema-shape placeholder and must not be treated as verified integrity evidence."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native validator execution was not available through the connector-only workflow."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observed only after PR creation and are reported separately."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is separate from generated receipt provenance."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/a973d2fff263db156677999a940e4f246e672f31"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/focus-mode/counties/montgomery_county/README.md"
+    },
+    {
+      "id": "complete-montgomery-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/focus-mode/counties/montgomery_county/montgomery_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-directory-rules-proposal",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a973d2fff263db156677999a940e4f246e672f31/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T02:28:00Z",
+  "emitter": "ChatGPT GitHub connector",
+  "notes": "Provenance record for the Montgomery County README modernization. Exact SHA-256 artifact binding and repository-native receipt validation were not performed; no source admission, release, deployment, promotion, publication, or settings action is authorized by this receipt."
+}
