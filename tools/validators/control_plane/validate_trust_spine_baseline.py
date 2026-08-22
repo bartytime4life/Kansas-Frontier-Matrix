@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -30,6 +31,7 @@ FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/governance/trust_spine_baselin
 MAX_FILE_BYTES = 4 * 1024 * 1024
 MAX_SCHEMA_FINDINGS = 100
 MAX_REFERENCED_FILE_BYTES = 64 * 1024 * 1024
+GIT_TIMEOUT_SECONDS = 5
 SCOPE = "pinned-authority-and-implementation-evidence-projection-only"
 REQUIRED_NON_EFFECTS = frozenset(
     {
@@ -192,14 +194,17 @@ def _entry_ids(
     return ids
 
 
-def _resolve_path(
+def _read_pinned_blob(
     relative_value: Any,
     *,
+    base_sha: Any,
     repo_root: Path,
     field: str,
     expected_prefixes: tuple[str, ...],
     findings: list[Finding],
-) -> Path | None:
+) -> bytes | None:
+    """Read one bounded repository file from the projection's pinned commit."""
+
     relative = _canonical_path(relative_value)
     if relative is None:
         findings.append(Finding("PATH_INVALID", field))
@@ -207,50 +212,115 @@ def _resolve_path(
     if not any(str(relative).startswith(prefix) for prefix in expected_prefixes):
         findings.append(Finding("PATH_ROOT_MISMATCH", field))
         return None
+    if not isinstance(base_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", base_sha):
+        findings.append(Finding("BASE_SHA_INVALID", "/base/sha"))
+        return None
+
+    object_name = f"{base_sha}:{relative.as_posix()}"
     try:
-        resolved_root = repo_root.resolve(strict=True)
-        unresolved = resolved_root.joinpath(*relative.parts)
-        if unresolved.is_symlink():
-            findings.append(Finding("PATH_SYMLINK_DENIED", field))
-            return None
-        resolved = unresolved.resolve(strict=True)
-        resolved.relative_to(resolved_root)
-    except (OSError, ValueError):
+        tree_result = subprocess.run(
+            ["git", "ls-tree", "-z", base_sha, "--", relative.as_posix()],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=GIT_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
         findings.append(Finding("PATH_NOT_FOUND", field))
         return None
-    if not resolved.is_file():
+    if tree_result.returncode != 0 or not tree_result.stdout:
+        findings.append(Finding("PATH_NOT_FOUND", field))
+        return None
+    try:
+        records = [item for item in tree_result.stdout.split(b"\0") if item]
+        metadata, returned_path = records[0].split(b"\t", 1)
+        mode, object_type, _object_id = metadata.split(b" ", 2)
+        returned = returned_path.decode("utf-8")
+    except (UnicodeError, ValueError, IndexError):
+        findings.append(Finding("PATH_READ_ERROR", field))
+        return None
+    if len(records) != 1 or returned != relative.as_posix():
+        findings.append(Finding("PATH_READ_ERROR", field))
+        return None
+    if object_type != b"blob":
         findings.append(Finding("PATH_NOT_FILE", field))
         return None
-    return resolved
+    if mode not in {b"100644", b"100755"}:
+        findings.append(Finding("PATH_SYMLINK_DENIED", field))
+        return None
+
+    try:
+        size_result = subprocess.run(
+            ["git", "cat-file", "-s", object_name],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=GIT_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        findings.append(Finding("PATH_NOT_FOUND", field))
+        return None
+    if size_result.returncode != 0:
+        findings.append(Finding("PATH_NOT_FOUND", field))
+        return None
+    try:
+        size = int(size_result.stdout.decode("ascii").strip())
+    except (UnicodeError, ValueError):
+        findings.append(Finding("PATH_READ_ERROR", field))
+        return None
+    if size < 0 or size > MAX_REFERENCED_FILE_BYTES:
+        findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
+        return None
+
+    try:
+        blob_result = subprocess.run(
+            ["git", "cat-file", "blob", object_name],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=GIT_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        findings.append(Finding("PATH_READ_ERROR", field))
+        return None
+    if blob_result.returncode != 0 or len(blob_result.stdout) != size:
+        findings.append(Finding("PATH_READ_ERROR", field))
+        return None
+    return blob_result.stdout
 
 
 def _check_path_digest(
     entry: Mapping[str, Any],
     *,
     path_key: str,
+    base_sha: Any,
     repo_root: Path,
     field: str,
     expected_prefixes: tuple[str, ...],
     findings: list[Finding],
 ) -> None:
-    resolved = _resolve_path(
+    referenced_bytes = _read_pinned_blob(
         entry.get(path_key),
+        base_sha=base_sha,
         repo_root=repo_root,
         field=f"{field}/{path_key}",
         expected_prefixes=expected_prefixes,
         findings=findings,
     )
     digest = entry.get("sha256")
-    if resolved is None or not isinstance(digest, str) or not digest.startswith("sha256:"):
+    if (
+        referenced_bytes is None
+        or not isinstance(digest, str)
+        or not digest.startswith("sha256:")
+    ):
         return
-    try:
-        if resolved.stat().st_size > MAX_REFERENCED_FILE_BYTES:
-            findings.append(Finding("REFERENCED_FILE_TOO_LARGE", f"{field}/{path_key}"))
-            return
-        actual = "sha256:" + hashlib.sha256(resolved.read_bytes()).hexdigest()
-    except OSError:
-        findings.append(Finding("PATH_READ_ERROR", f"{field}/{path_key}"))
-        return
+    actual = "sha256:" + hashlib.sha256(referenced_bytes).hexdigest()
     if actual != digest:
         findings.append(Finding("DIGEST_MISMATCH", f"{field}/sha256"))
 
@@ -446,6 +516,7 @@ def _semantic_findings(
         _check_path_digest(
             directory_rules,
             path_key="path",
+            base_sha=base.get("sha"),
             repo_root=repo_root,
             field="/authority_snapshot/directory_rules",
             expected_prefixes=("docs/doctrine/",),
@@ -456,6 +527,7 @@ def _semantic_findings(
                 _check_path_digest(
                     entry,
                     path_key="path",
+                    base_sha=base.get("sha"),
                     repo_root=repo_root,
                     field=f"/authority_snapshot/accepted_adrs/{index}",
                     expected_prefixes=("docs/adr/",),
@@ -463,8 +535,9 @@ def _semantic_findings(
                 )
         for index, entry in enumerate(candidates):
             if isinstance(entry, dict):
-                _resolve_path(
+                _read_pinned_blob(
                     entry.get("path"),
+                    base_sha=base.get("sha"),
                     repo_root=repo_root,
                     field=f"/authority_snapshot/unresolved_authority_candidates/{index}/path",
                     expected_prefixes=("docs/adr/",),
@@ -473,6 +546,7 @@ def _semantic_findings(
         _check_path_digest(
             roots,
             path_key="registry_path",
+            base_sha=base.get("sha"),
             repo_root=repo_root,
             field="/repository_roots",
             expected_prefixes=("control_plane/",),
@@ -483,6 +557,7 @@ def _semantic_findings(
                 _check_path_digest(
                     entry,
                     path_key="path",
+                    base_sha=base.get("sha"),
                     repo_root=repo_root,
                     field=f"/control_plane_projections/{index}",
                     expected_prefixes=("control_plane/",),
@@ -491,6 +566,7 @@ def _semantic_findings(
         _check_path_digest(
             catalog,
             path_key="registry_path",
+            base_sha=base.get("sha"),
             repo_root=repo_root,
             field="/trust_object_catalog",
             expected_prefixes=("control_plane/",),
