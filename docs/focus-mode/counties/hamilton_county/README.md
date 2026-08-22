@@ -42,10 +42,10 @@ current_path: docs/focus-mode/counties/hamilton_county/README.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: f591f81b6418831011f8a11ba5a0d8814ee7f931
+  base_commit: c52bd60a10f6d536a6057d89cd4d36742bdf69b7
   target_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   build_plan_blob: 1855a1e1e729303880c27c359f5200af811b9ff8
-  county_index_blob: da13511c06270e3051eb08b24dd0a3fa2aebb5b4
+  county_index_blob: 89d7259feddf77f0229fb24bfe2244ed09b659a2
   focus_mode_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
   county_lane_readme_blob: 48621badd51614db7bff0882c19096fa388234ac
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
