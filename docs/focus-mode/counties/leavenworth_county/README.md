@@ -1,67 +1,21 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/focus-mode/counties/leavenworth-county/readme
+doc_id: kfm://docs/focus-mode/counties/leavenworth-county/readme
 title: Leavenworth County Focus Mode Documentation Boundary
-type: readme; county-focus-mode; documentation-boundary
+type: readme
 version: v1.0
-status: draft; repository-grounded; current-path; planning-only; compatibility-lane; military-sensitive; corrections-sensitive; privacy-sensitive; cultural-sensitivity; non-release; non-publication
+status: proposed
 owners:
   - "@bartytime4life — verified CODEOWNERS review route; county, source, evidence, military-security, corrections, privacy, cultural, policy, release, and publication authority remain separate"
 created: 2026-08-21
 updated: 2026-08-21
-policy_label: public; documentation; county-scope; military-installation; corrections; detention; infrastructure; privacy; cultural-sensitivity; river-and-flood-context; cite-or-abstain; fail-closed
+policy_label: public
 owning_root: docs/
-responsibility: >-
-  Explain the repository-present Leavenworth County planning lane, preserve the
-  sibling build plan as proposal and lineage, and make its evidence, source-role,
-  military, corrections, detention, privacy, cultural, river, infrastructure,
-  currentness, review, correction, and rollback limits inspectable without
-  creating county runtime, source admission, policy, release, or publication authority.
+responsibility: Explain the repository-present Leavenworth County planning lane, preserve the sibling build plan as proposal and lineage, and make its evidence, source-role, military, corrections, detention, privacy, cultural, river, infrastructure, currentness, review, correction, and rollback limits inspectable without creating county runtime, source admission, policy, release, or publication authority.
 current_path: docs/focus-mode/counties/leavenworth_county/README.md
-canonical_relationship: >-
-  Same-path human documentation in the repository-present singular compatibility
-  lane. Exact convergence with any plural or kebab-case Focus Mode control plane
-  remains on HOLD unless an accepted decision and a reviewed migration authorize it.
-truth_posture: >-
-  CONFIRMED current directory, compact predecessor README, sibling build-plan
-  path and bytes, TRACKED_PAIR county-index row, accepted Directory Rules
-  authority, proposed ADR-0027, proposed Focus semantic and schema surfaces,
-  inactive Focus policy boundary, and CODEOWNERS review routing / PROPOSED the
-  sibling plan's Leavenworth military, Missouri River, territorial-history,
-  corrections, transportation, and metro-edge proof slice and a no-network
-  follow-up / SUPERSEDED the plan's no-repository-inspection and unknown-current-
-  path statements only for repository presence / UNKNOWN source admission,
-  rights, external-fact freshness, safe geometry, accountable specialist review,
-  EvidenceRef-to-EvidenceBundle closure, active Focus policy, county runtime,
-  release, correction propagation, rollback execution, deployment, and public
-  parity / NEEDS VERIFICATION every external, historical, operational, legal,
-  cultural, privacy, safety, and public-use claim carried by the sibling plan.
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: 59350f29e29df23d52084c95e30878ba24fdd6a0
-  target_prior_blob: d598aad1f71b10c96140ba3b61d4a616a4468c9f
-  sibling_plan_blob: 65d2098c1220476be229fbf8fbda8d6bfd4c9e37
-  county_index_blob: 07e9b65cab9c4fd4ae31b61a84fecb06c6cde655
-  focus_lane_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
-  county_lane_readme_blob: 48621badd51614db7bff0882c19096fa388234ac
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0027_blob: 4dfb29c963cd566225e3cb97f98be82212d5e08
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  focus_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
-  focus_schema_readme_blob: 2b75990b53dea2841c28410f0d9dc9fb10a60f33
-  focus_policy_readme_blob: 35001e958a6b51d2f22004d5e637d72baeab49af
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-inspection_boundary: >-
-  Current-session GitHub reads covered the complete predecessor README, the
-  complete Leavenworth County build plan, the exact two-file directory inventory,
-  the current county-index row and planning signals, parent Focus documentation,
-  accepted Directory Rules v2 and ADR-0029, proposed ADR-0027, Focus semantic
-  contract, Focus schema-family boundary, inactive Focus policy boundary,
-  CODEOWNERS, open pull-request overlap, and matching task branches. No external
-  source page was rechecked, no source was admitted, and no live connector,
-  evidence resolver, policy evaluator, governed API request, map render, model
-  call, release record, correction propagation, rollback drill, deployment, or
-  public endpoint was exercised.
+canonical_relationship: Same-path human documentation in the repository-present singular compatibility lane. Exact convergence with any plural or kebab-case Focus Mode control plane remains on HOLD unless an accepted decision and a reviewed migration authorize it.
+truth_posture: CONFIRMED current directory, compact predecessor README, sibling build-plan path and bytes, TRACKED_PAIR county-index row, accepted Directory Rules authority, proposed ADR-0027, proposed Focus semantic and schema surfaces, inactive Focus policy boundary, and CODEOWNERS review routing / PROPOSED the sibling plan's Leavenworth military, Missouri River, territorial-history, corrections, transportation, and metro-edge proof slice and a no-network follow-up / SUPERSEDED the plan's no-repository-inspection and unknown-current-path statements only for repository presence / UNKNOWN source admission, rights, external-fact freshness, safe geometry, accountable specialist review, EvidenceRef-to-EvidenceBundle closure, active Focus policy, county runtime, release, correction propagation, rollback execution, deployment, and public parity / NEEDS VERIFICATION every external, historical, operational, legal, cultural, privacy, safety, and public-use claim carried by the sibling plan.
+evidence_snapshot: repository=bartytime4life/Kansas-Frontier-Matrix; base_ref=main; base_commit=59350f29e29df23d52084c95e30878ba24fdd6a0; target_prior_blob=d598aad1f71b10c96140ba3b61d4a616a4468c9f; sibling_plan_blob=65d2098c1220476be229fbf8fbda8d6bfd4c9e37; county_index_blob=07e9b65cab9c4fd4ae31b61a84fecb06c6cde655; directory_rules_blob=fd49a0b83e55cef52c1124281f093e263526898d; adr_0027_blob=4dfb29c963cd566225e3cb97f98be82212d5e08; adr_0029_blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+inspection_boundary: Current-session GitHub reads covered the complete predecessor README, the complete Leavenworth County build plan, the exact two-file directory inventory, the current county-index row and planning signals, parent Focus documentation, accepted Directory Rules v2 and ADR-0029, proposed ADR-0027, Focus semantic contract, Focus schema-family boundary, inactive Focus policy boundary, CODEOWNERS, open pull-request overlap, and matching task branches. No external source page was rechecked, no source was admitted, and no live connector, evidence resolver, policy evaluator, governed API request, map render, model call, release record, correction propagation, rollback drill, deployment, or public endpoint was exercised.
 related:
   - ./leavenworth_county_focus_mode_build_plan.md
   - ../COUNTY_INDEX.md
