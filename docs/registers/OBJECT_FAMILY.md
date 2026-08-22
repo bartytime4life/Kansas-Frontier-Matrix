@@ -2,13 +2,16 @@
 doc_id: kfm://doc/registers/object-family
 title: Object Family Register
 type: standard
-version: v1
-status: draft
+version: v1.1
+status: proposed; doctrine-navigation-retained; machine-catalog-reconciled; non-authoritative
 owners: docs-steward, domain-stewards
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-08-22
 policy_label: public
-related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/, KFM_Domains_Culmination_Atlas_v1_1.pdf]
+owning_root: docs/
+responsibility: provide a human-facing navigational register for object families while keeping semantic shape policy evidence lifecycle release correction rollback deployment and publication authority in their owning roots
+truth_posture: CONFIRMED inherited doctrine navigation and accepted Directory Rules / PROPOSED MRTS-03 machine-catalog reconciliation and repository-surface classifications / UNKNOWN accountable field-level owners deployed consumers and production behavior / NEEDS VERIFICATION human review hosted exact-head results and resolution of recorded candidate conflicts
+related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/governance/object_family_register.schema.json, tools/validators/control_plane/validate_object_family_register.py, KFM_Domains_Culmination_Atlas_v1_1.pdf]
 tags: [kfm, register, object-family, doctrine, navigation]
 notes: [Navigational register only. EvidenceBundle and source dossiers remain authoritative. Adding, removing, or renaming an object family requires an ADR per Directory Rules §2.4.]
 [/KFM_META_BLOCK_V2] -->
@@ -22,11 +25,11 @@ notes: [Navigational register only. EvidenceBundle and source dossiers remain au
   <img alt="Type: register" src="https://img.shields.io/badge/type-register-6f42c1">
   <img alt="Authority: navigational" src="https://img.shields.io/badge/authority-navigational-lightgrey">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy-public-2ea44f">
-  <img alt="Updated: 2026-05-12" src="https://img.shields.io/badge/updated-2026--05--12-informational">
+  <img alt="Updated: 2026-08-22" src="https://img.shields.io/badge/updated-2026--08--22-informational">
   <img alt="License: TODO" src="https://img.shields.io/badge/license-TODO-lightgrey">
 </p>
 
-**Status:** draft · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-05-12
+**Status:** proposed · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-08-22
 
 ---
 
@@ -34,6 +37,7 @@ notes: [Navigational register only. EvidenceBundle and source dossiers remain au
 
 - [1. Scope](#1-scope)
 - [2. Repo fit](#2-repo-fit)
+  - [2.1 Machine-readable MRTS-03 reconciliation](#21-machine-readable-mrts-03-reconciliation)
 - [3. What this register accepts](#3-what-this-register-accepts)
 - [4. What this register does *not* do](#4-what-this-register-does-not-do)
 - [5. Authority and lineage](#5-authority-and-lineage)
@@ -113,10 +117,45 @@ flowchart LR
     REG -. points to .-> CON
     CON -- pairs with --> SCH
     REG -. points to .-> POL
-    SCH -- field shape --> EVID
-    POL -- admissibility --> EVID
-    EVID -. outranks .-> REG
+SCH -- field shape --> EVID
+POL -- admissibility --> EVID
+EVID -. outranks .-> REG
 ```
+
+### 2.1 Machine-readable MRTS-03 reconciliation
+
+**PROPOSED repository projection.** The canonical machine index at [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) now records the milestone's sixteen minimum trust-object families and retains the three pre-existing runtime families. This is a repository-surface inventory, not an amendment to the doctrine or family names elsewhere in this document.
+
+| Catalog observation | Count | Meaning |
+| --- | ---: | --- |
+| Required milestone families registered | 16 of 16 | Every required stable family ID has an entry. |
+| Other pre-existing families retained | 3 | `DecisionEnvelope`, `GeneratedRuntimeProofArtifact`, and `RuntimeVerificationReceiptAndProof` remain navigable. |
+| Required families structurally `IMPLEMENTED` | 3 | `PromotionReceipt`, `ProofPack`, and `RollbackCard` have the six declared structural surfaces; this is not release or runtime approval. |
+| Required families `PARTIAL` | 2 | `EvidenceRef` lacks a dedicated workflow; `WithdrawalNotice` lacks a focused fixture, validator, test, workflow, and observed emitter. |
+| Required families `CONFLICTED` | 11 | Multiple repository-wide contract or schema candidates remain unresolved and no candidate is silently selected. |
+
+Each machine entry records contract and schema candidates, policy dependencies, fixture/validator/test/workflow/emitter surfaces, per-surface implementation state, role-level producers and consumers, lifecycle placement, identity-rule references, compatibility posture, evidence dependencies, and release/correction/rollback relationships. Every relationship closes over a registered family ID. `UNKNOWN` and `NOT_INSPECTED` remain explicit evidence states.
+
+| Required family | Projection state | Material unresolved condition |
+| --- | --- | --- |
+| `AIReceipt` | `CONFLICTED` | `ai/` and `runtime/` schema candidates coexist. |
+| `CorrectionNotice` | `CONFLICTED` | Four schema candidates coexist; focused fixtures, tests, and workflow are absent. |
+| `EvidenceBundle` | `CONFLICTED` | Three hyphen/underscore/suffix schema candidates coexist. |
+| `EvidenceRef` | `PARTIAL` | Contract, schema, fixtures, validator, and test exist; a dedicated workflow was not observed. |
+| `LayerManifest` | `CONFLICTED` | Data, map, release, runtime, and plural-layer candidates overlap. |
+| `PolicyDecision` | `CONFLICTED` | Policy semantics and runtime contract candidates overlap. |
+| `PromotionReceipt` | `IMPLEMENTED` | Structural surface exists; live emitter and promotion authority remain uninspected. |
+| `ProofPack` | `IMPLEMENTED` | Structural assembly/validation exists; a pack cannot self-authorize release. |
+| `ReleaseManifest` | `CONFLICTED` | Generic and map-specific contract/schema candidates coexist. |
+| `RollbackCard` | `IMPLEMENTED` | Structural and policy surfaces exist; execution authority remains separate. |
+| `RunReceipt` | `CONFLICTED` | Runtime, source, source-event, and release-bound candidates coexist. |
+| `RuntimeResponseEnvelope` | `CONFLICTED` | Focus and runtime schema candidates coexist; a dedicated workflow was not observed. |
+| `SourceActivationDecision` | `CONFLICTED` | Hyphenated and underscored schema candidates coexist. |
+| `SourceDescriptor` | `CONFLICTED` | Case, hyphen, underscore, suffix, and `source/` versus `sources/` aliases coexist. |
+| `ValidationReport` | `CONFLICTED` | Generic and domain-specific report candidates coexist. |
+| `WithdrawalNotice` | `PARTIAL` | Contract and schema exist; the focused validation lane is absent. |
+
+The validator rejects missing required IDs, duplicate or noncanonical IDs, invalid responsibility roots, unresolved relationship targets, self-relations, self-authority, path/surface mismatches, and impossible maturity or implementation claims. It validates only navigation and structural coverage.
 
 [↑ Back to top](#object-family-register)
 
@@ -343,7 +382,7 @@ A reviewer who cannot answer "yes" SHOULD request changes or open a drift entry.
 - [`docs/registers/DRIFT_REGISTER.md`](./DRIFT_REGISTER.md) — open conflicts between Rules and repo
 - [`docs/registers/VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) — explicit open verification items
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement and lifecycle doctrine
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — schema-home rule (`schemas/contracts/v1/...`)
+- [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule (`schemas/contracts/v1/...`)
 - [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) — machine-readable counterpart
 - [`contracts/OBJECT_MAP.md`](../../contracts/OBJECT_MAP.md) — object meaning index
 - [`schemas/contracts/v1/`](../../schemas/contracts/v1/) — object shape (per ADR-0001)
