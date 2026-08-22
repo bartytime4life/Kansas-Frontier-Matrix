@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-map-context-permalink-deny-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/ui/map_context_envelope.md",
+    "docs/focus-mode/state/map-context-state.md",
+    "fixtures/ui/map_context_envelope/base_geography.json",
+    "fixtures/ui/map_context_envelope/base_viewport.json",
+    "fixtures/ui/map_context_envelope/cases.json",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json",
+    "tests/validators/test_validate_map_context_envelope.py",
+    "tools/validators/ui/validate_map_context_envelope.py"
+  ],
+  "artifact_hashes": {
+    "contracts/ui/map_context_envelope.md": "sha256:fcafa9198c88aea360465d74f1f979ba4eaff3180b7eef294e80ec0e1ec63d36",
+    "docs/focus-mode/state/map-context-state.md": "sha256:8fcd93d8932cd69b061f7269a69b8c8bf6997823c9ac40c308e2de4afa1eaa8b",
+    "fixtures/ui/map_context_envelope/base_geography.json": "sha256:986a15c70084d0ddc4e73f49f3839f50fd0bd0918e28de6131661d4e8a35302d",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "sha256:53db2439ff85e9a9cc9c586559e8835f10c1dc6208ef5f779a534814b66c6075",
+    "fixtures/ui/map_context_envelope/cases.json": "sha256:405d58b2f7c9744b42b2f866dec51ae4d66d4c72103ffc2dce0f1c482ecac441",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "sha256:1103abf8b330f0ea9eee9a8373cc9992663ba75fd54c05d473d3dcb8055e924d",
+    "tests/validators/test_validate_map_context_envelope.py": "sha256:3e8985eaafa386797b6504b28bf1a801b60f3459e6910a71dc66d0631280ff60",
+    "tools/validators/ui/validate_map_context_envelope.py": "sha256:d7e5dde8ba3de73c5c71d3856dc42125038e4c6ab7cfd32797b819802f7fd85e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-22"
+  },
+  "prompt_or_contract": "sha256:b253c45f0b27ca101167d0800534e30258146c7f12111a49e7f101ac69c62aad",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector read-only discovery and inspection",
+      "local apply_patch authoring",
+      "Poppler PDF extraction",
+      "Python no-network schema, fixture, identity, and focused unit validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b253c45f0b27ca101167d0800534e30258146c7f12111a49e7f101ac69c62aad",
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:877ae553345aa61806efddf871a7b4e43694a41a0526c752f2a008645e9e3bac"
+    ],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15.docx",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "maplibre3d.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/be8652410fa22499ac2ada43a26ed09bc3ab0514",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/contracts/ui/map_context_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/schemas/contracts/v1/ui/map_context_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874",
+      "gdrive://1tDpCPS8Vto3FkQ69gSUIFbah2qdarw-R"
+    ]
+  },
+  "truth_labels": {
+    "contracts/ui/map_context_envelope.md": "PROPOSED",
+    "docs/focus-mode/state/map-context-state.md": "PROPOSED",
+    "fixtures/ui/map_context_envelope/base_geography.json": "PROPOSED",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "PROPOSED",
+    "fixtures/ui/map_context_envelope/cases.json": "PROPOSED",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "PROPOSED",
+    "tests/validators/test_validate_map_context_envelope.py": "PROPOSED",
+    "tools/validators/ui/validate_map_context_envelope.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-current-main-and-overlap",
+      "outcome": "PASS",
+      "reason": "Refreshed main and tree after merged PR #3410 to be8652410fa22499ac2ada43a26ed09bc3ab0514 / 4e8a9c9ac2ef2e88d9c23ca821c19dc69c22c660. All selected target and governing-authority bytes remained unchanged; only the independently referenced validator registry changed. No open PR, issue, or current-main commit owns permalink_policy or this object-family change."
+    },
+    {
+      "gate": "source-and-current-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "The supplied MapLibre manual names permalink_policy in section 7 page 7, requires redaction or degradation in section 8 page 8, and names permalink_policy_test in sections 13-14 pages 11-12. Current repository evidence has no URL-state codec, deep-link restoration, or permalink_policy field, so this slice records only a fixed fail-closed denial."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Semantic meaning remains under contracts/, machine shape under schemas/, synthetic cases under fixtures/, executable validation under tools/ and tests/, current-state explanation under docs/, and AI provenance under data/receipts/generated/."
+    },
+    {
+      "gate": "untouched-baseline-focused-validation",
+      "outcome": "PASS",
+      "reason": "The exact baseline object-family snapshot passed 9 focused tests and replayed 16 fixture cases with zero suite mismatches."
+    },
+    {
+      "gate": "candidate-focused-validation",
+      "outcome": "PASS",
+      "reason": "The candidate passed 10 focused tests in 1.48 seconds and replayed 19 fixture cases with zero suite mismatches; three new schema-negative cases reject a missing policy, enabled mode, and raw-envelope serialization."
+    },
+    {
+      "gate": "json-schema-and-deterministic-identity",
+      "outcome": "PASS",
+      "reason": "All changed JSON parses; Draft 2020-12 schema self-check runs in the focused suite; both valid fixtures reproduce their RFC 8785 JCS plus SHA-256 spec_hash and envelope_id; policy constants and 2/7/10 case polarity match."
+    },
+    {
+      "gate": "markdown-structure-and-local-links",
+      "outcome": "PASS",
+      "reason": "Both changed Markdown files have one H1, balanced metadata and code-fence delimiters, zero trailing whitespace, all 59 local link targets resolve against the pinned tree/candidate, and all 22 internal anchors resolve."
+    },
+    {
+      "gate": "documentation-metadata-ratchet",
+      "outcome": "PASS",
+      "reason": "The touched Focus Mode state document now uses the bounded single-token type grammar. Focused metadata validation reports one valid metadata block and zero fail findings; unsupported nested fields and the free-form truth posture remain non-blocking warnings under the present profile."
+    },
+    {
+      "gate": "repository-wide-topology-and-hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "A full checkout is not mounted in this session. Merged PR #3410 records the current baseline topology as HOLD_INHERITED with 9 new-drift categories, 125 baselined warnings, and 13 stale fingerprints; exact-head hosted checks remain required and this receipt does not reclassify that inherited state."
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "The repository validator reports GENERATED_RECEIPT_VALID with 8 artifact paths, exact SHA-256 bindings, pending review, and no approval claim."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; the contract remains proposed/inactive and the pull request must remain draft."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "maplibre-manual-permalink-boundary",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf#sections-7-8-13-14"
+    },
+    {
+      "id": "current-map-context-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/contracts/ui/map_context_envelope.md"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-ui-route-posture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/be8652410fa22499ac2ada43a26ed09bc3ab0514/docs/architecture/ui/GOVERNED_SHELL.md"
+    },
+    {
+      "id": "newer-proposed-whole-system-reference",
+      "validated": true,
+      "evidence_ref": "gdrive://1tDpCPS8Vto3FkQ69gSUIFbah2qdarw-R"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T20:33:39Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One proposed/inactive MapContextEnvelope compatibility slice only. It creates no shareable URL, serializer, route, renderer, evidence resolution, policy decision, release, deployment, publication, source activation, repository-setting change, or Google Drive mutation. Roll back by reverting the bounded PR and rerunning the same focused suite; fixture identities return to the pinned baseline values."
+}

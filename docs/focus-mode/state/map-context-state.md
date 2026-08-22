@@ -1,8 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: "kfm://doc/focus-mode-state-map-context-state"
 title: "Focus Mode — MapContextEnvelope State"
-type: "standard; focus-mode; ui-request-context; system-state-documentation"
-version: "v1.0"
+type: "standard"
+version: "v1.1"
 status: "draft; repository-grounded; current-contract-aligned; proposed-inactive-contract; fixture-first; validator-present; runtime-integration-unproven; non-release; non-publication"
 owners:
   - "@bartytime4life — verified repository owner and current review route"
@@ -35,7 +35,7 @@ canonical_relationship: >-
   accepted decision, consumer closure, migration validation, and rollback.
 truth_posture: >-
   CONFIRMED current target bytes, current UI semantic contract and schema,
-  two valid synthetic fixture bases, a sixteen-case no-network fixture matrix,
+  two valid synthetic fixture bases, a nineteen-case no-network fixture matrix,
   the deterministic validator, its focused unit test, accepted ADR-0029, and
   the current state-parent evidence snapshot / PROPOSED and INACTIVE the
   MapContextEnvelope object family as a runtime or public integration /
@@ -51,27 +51,27 @@ truth_posture: >-
 evidence_snapshot:
   repository: "bartytime4life/Kansas-Frontier-Matrix"
   base_ref: "main"
-  base_commit: "ec58517b74a02f5ce7dda3f407769c31d1393bb7"
-  target_prior_blob: "5707de7d264724dc6afc85eb397e3815f2a8cdf1"
-  parent_state_readme_blob: "34e2c6c90006937ea00d432689a36bf83fa5a898"
+  base_commit: "be8652410fa22499ac2ada43a26ed09bc3ab0514"
+  target_prior_blob: "a5580fd67a0ef6a2c556bc14b5141d48b3f83bbe"
+  parent_state_readme_blob: "3df63e3181264ee2ba9a5dad5a8e61d806005808"
   semantic_contract_path: "contracts/ui/map_context_envelope.md"
-  semantic_contract_blob: "c6367306f14f9da56b3e3cbe7fad9d5545a0cdbf"
+  semantic_contract_blob: "f0f7484b0d8d7f12bea5779ff55f61f13a75e6cd"
   schema_path: "schemas/contracts/v1/ui/map_context_envelope.schema.json"
-  schema_blob: "6972d16341339c266499eca17dc2717b67778bed"
-  fixture_readme_blob: "3cdc11b8f43d52486c26b15304585acfc363fc5c"
-  base_viewport_fixture_blob: "127b4f9c4b490bf3e2c70128a0d7af3f4d548c1f"
-  base_geography_fixture_blob: "c1b8329ee0252a005aaa3c7cfdb358123f9beab1"
-  case_matrix_blob: "d524c3fa7198186548c381decdfe672f1f70cead"
-  validator_blob: "9ead8aed6fb0df2355cb1af573a069339b567b74"
-  validator_test_blob: "809cccdc31a428ab23097f956b6561c61dad9916"
-  focus_request_schema_blob: "a2f298f014fa299bdec03afbf14ba9937aa95ef8"
-  validator_registry_blob: "86aeadabe7104114c3f1efe60a8708ec11563bb1"
-  directory_rules_adr_blob: "a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+  schema_blob: "178347eb846783989867cadbb74b6f0dd02fde4a"
+  fixture_readme_blob: "22dfdc15d9b55a78a589b4af5ba037a1743f118f"
+  base_viewport_fixture_blob: "6df7f360a8424f98125d8e0797e57c696eac1c2e"
+  base_geography_fixture_blob: "03e3fedadb812455a65911ca9aa29d00cf9f8263"
+  case_matrix_blob: "ba30d8b3794c125de41caf1379f5644e169904ab"
+  validator_blob: "aa7c8db972290362d47d05f5c0bf368864f14ded"
+  validator_test_blob: "b8c3e429c3771f792c4893029e32e621af3089e7"
+  focus_request_schema_blob: "ab56ff852e30b36219156f513170d33b0f9996e1"
+  validator_registry_blob: "71d347ce4cdd64bc498397312f904ad8136fcc32"
+  directory_rules_adr_blob: "21a1d0c902ff90702aad990575b825c6ef5fc123"
 inspection_boundary: >-
   Current-session GitHub reads covered the complete prior document, the current
   state-parent README, the complete UI semantic contract and machine schema,
   the compatibility object-folder README, both valid fixture bases, the full
-  sixteen-case matrix, the validator including its CLI, the focused unit test,
+  nineteen-case matrix, the validator including its CLI, the focused unit test,
   the Focus request schema scaffold, the central validator registry, accepted
   ADR-0029, current main, and bounded open-pull-request and task-branch overlap.
   No repository clone was mounted; no repository command, live map, governed
@@ -96,9 +96,10 @@ related:
   - "../../../contracts/runtime/runtime_response_envelope.md"
   - "../../doctrine/directory-rules.md"
   - "../../adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-tags: [kfm, focus-mode, state, map-context-envelope, ui, renderer-neutral, contract, schema, fixtures, validator, deterministic-identity, cite-or-abstain, non-publication]
+tags: [kfm, focus-mode, state, map-context-envelope, ui, renderer-neutral, permalink-policy, deny-by-default, contract, schema, fixtures, validator, deterministic-identity, cite-or-abstain, non-publication]
 notes:
   - "v1.0 replaces the stale v0.1 proposal with current repository evidence while retaining the existing H1 and numbered section anchors."
+  - "v1.1 records the required fail-closed permalink declaration: the inactive profile permits no raw-envelope URL serialization, exact-location state, or restricted-context state."
   - "The MapContextEnvelope contract and schema remain proposed and inactive; tracked files and passing fixtures do not prove runtime integration or public use."
   - "The parent state README remains a pinned snapshot and is not rewritten in this single-target slice; a later cohort refresh should update its prior LINEAGE classification after all state documents are reconciled."
 [/KFM_META_BLOCK_V2] -->
@@ -150,12 +151,12 @@ notes:
 | Surface | Current repository evidence | Bounded status | What it does not prove |
 |---|---|---|---|
 | This document | Existing tracked path; prior blob `5707de7d264724dc6afc85eb397e3815f2a8cdf1` | Documentation reconciliation in progress | Machine shape, runtime behavior, policy, or release |
-| Semantic contract | [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md), blob `c6367306f14f9da56b3e3cbe7fad9d5545a0cdbf` | `proposed; inactive; no-network; no-authority` | Adoption, deployed producer/consumer, or public use |
-| Machine schema | [`schemas/contracts/v1/ui/map_context_envelope.schema.json`](../../../schemas/contracts/v1/ui/map_context_envelope.schema.json), blob `6972d16341339c266499eca17dc2717b67778bed` | Draft 2020-12 closed shape; `PROPOSED_INACTIVE` | Reference resolution, policy, or actual release state |
+| Semantic contract | [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md), candidate blob `f0f7484b0d8d7f12bea5779ff55f61f13a75e6cd` | `proposed; inactive; no-network; no-authority` | Adoption, deployed producer/consumer, permalink serializer, or public use |
+| Machine schema | [`schemas/contracts/v1/ui/map_context_envelope.schema.json`](../../../schemas/contracts/v1/ui/map_context_envelope.schema.json), candidate blob `178347eb846783989867cadbb74b6f0dd02fde4a` | Draft 2020-12 closed shape; `PROPOSED_INACTIVE`; permalink fixed to disabled/deny | Reference resolution, policy, URL-state serialization, or actual release state |
 | Valid fixture bases | [`base_viewport.json`](../../../fixtures/ui/map_context_envelope/base_viewport.json) and [`base_geography.json`](../../../fixtures/ui/map_context_envelope/base_geography.json) | Two deterministic synthetic valid candidates | Real sources, current releases, or operational requests |
-| Case matrix | [`cases.json`](../../../fixtures/ui/map_context_envelope/cases.json), blob `d524c3fa7198186548c381decdfe672f1f70cead` | Sixteen no-network cases: two valid, four schema negatives, ten semantic negatives | Production coverage or complete adversarial coverage |
-| Validator | [`validate_map_context_envelope.py`](../../../tools/validators/ui/validate_map_context_envelope.py), blob `9ead8aed6fb0df2355cb1af573a069339b567b74` | Deterministic local shape and consistency validator | Evidence resolution, policy evaluation, review, release, or deployment |
-| Focused test | [`test_validate_map_context_envelope.py`](../../../tests/validators/test_validate_map_context_envelope.py), blob `809cccdc31a428ab23097f956b6561c61dad9916` | Exercises schema closure, exact case polarity, identity, no-network replay, and CLI | Hosted exact-head status or end-to-end Focus behavior |
+| Case matrix | [`cases.json`](../../../fixtures/ui/map_context_envelope/cases.json), candidate blob `ba30d8b3794c125de41caf1379f5644e169904ab` | Nineteen no-network cases: two valid, seven schema negatives, ten semantic negatives | Production coverage or complete adversarial coverage |
+| Validator | [`validate_map_context_envelope.py`](../../../tools/validators/ui/validate_map_context_envelope.py), candidate blob `aa7c8db972290362d47d05f5c0bf368864f14ded` | Deterministic local shape and consistency validator with explicit permalink-deny scope | Evidence resolution, policy evaluation, URL-state serialization, review, release, or deployment |
+| Focused test | [`test_validate_map_context_envelope.py`](../../../tests/validators/test_validate_map_context_envelope.py), candidate blob `b8c3e429c3771f792c4893029e32e621af3089e7` | Exercises schema closure, exact case polarity, permalink denial, identity, no-network replay, and CLI | Hosted exact-head status or end-to-end Focus behavior |
 | Focus request schema | [`focus_request.schema.json`](../../../schemas/contracts/v1/focus/focus_request.schema.json), blob `a2f298f014fa299bdec03afbf14ba9937aa95ef8` | Empty `PROPOSED` scaffold with no field-level MapContextEnvelope binding | A wrapper relationship between question text and map context |
 | Validator registry | [`validator_registry.json`](../../../tools/validators/validator_registry.json), blob `86aeadabe7104114c3f1efe60a8708ec11563bb1` | No `validate_map_context_envelope` entry found in the inspected registry | Central orchestration or required-check coupling |
 
@@ -216,6 +217,7 @@ The current shape can carry:
 - selected-feature identifiers tied to declared layers;
 - finite renderer-neutral filters;
 - canonical evidence- and release-reference unions;
+- a fixed fail-closed permalink declaration that denies raw-envelope, exact-location, and restricted-context URL state;
 - explicit non-authority governance flags; and
 - deterministic `spec_hash` and `envelope_id` values.
 
@@ -227,6 +229,7 @@ It does **not** carry:
 - raw geometry or feature-property payloads from canonical/internal stores;
 - an `EvidenceBundle`, citation validation, or resolved release object;
 - a `PolicyDecision`, runtime outcome, answer, model output, or review approval;
+- a permalink payload, URL-state codec, route, browser-history mutation, or share authorization;
 - an access token, user profile, private source payload, or sensitive location;
 - a release, promotion, correction, withdrawal, or rollback decision; or
 - repository, map-store, or lifecycle mutation authority.
@@ -248,6 +251,7 @@ It does **not** carry:
 | `spec_hash` as layer/style/filter binding only | Current hash binds the canonical envelope body excluding `envelope_id` and `spec_hash`. |
 | Runtime may rebind a mismatched spec | No rebind implementation or receipt path was verified. Hash mismatch is a validator finding. |
 | Optional `viewport_pull[]` | Not present in the closed schema; adding it is schema-invalid until a versioned contract change. |
+| `permalink_policy` as an implementation-ready share-state control | **Narrowed.** The current field is a required fail-closed declaration fixed to `DISABLED` / `DENY`; no serializer or redacted projection is established. |
 | Envelope-level evidence closure | Not performed. Evidence refs are syntax- and union-checked only. |
 | Directory Rules v1.2 and `OPEN-DR-09` path claim | **SUPERSEDED as current authority.** Accepted ADR-0029 adopts Directory Rules v2; the existing path receives `PLACE` for this repair while structural convergence remains `HOLD`. |
 | MapLibre v2.1, Atlas, and KFM-P21 citations | Retained as historical design lineage only; they were not verified as current repository implementation authority in this slice. |
@@ -282,6 +286,7 @@ field below is required.
 | `filters` | 0–32 unique renderer-neutral filters | Bounded request filtering | Only `EQ`, `IN`, `BETWEEN` |
 | `evidence_refs` | 1–128 unique safe refs | Canonical evidence-ref union | References are not resolved here |
 | `release_refs` | 1–128 unique safe refs | Canonical release-ref union | References are not authenticated here |
+| `permalink_policy` | Closed fixed-denial object | Makes the absence of an admitted serializer explicit | Not a URL-state codec or redacted projection |
 | `governance` | Closed object of eight constant-false declarations | Explicit non-effect record | Declarative, not independently attested |
 | `spec_hash` | `sha256:` plus 64 lowercase hex | Deterministic identity binding | Recomputed from canonical content |
 
@@ -386,7 +391,28 @@ Filters must be unique and canonically sorted by compact JSON representation.
 The contract does not admit MapLibre expressions, style operators, callbacks, or
 arbitrary executable filter language.
 
-### 2.6 Governance declarations
+### 2.6 Permalink policy
+
+The inactive v1 profile requires a fixed fail-closed declaration:
+
+```json
+{
+  "exact_location_state_allowed": false,
+  "mode": "DISABLED",
+  "outcome": "DENY",
+  "raw_envelope_serialization": false,
+  "reason_codes": ["PERMALINK_SERIALIZER_NOT_ADMITTED"],
+  "restricted_context_allowed": false
+}
+```
+
+This object prevents a consumer from treating a valid envelope as a shareable
+URL payload. It does not redact state, encode a route, mutate browser history,
+or authorize a permalink. A future safe-share implementation requires a
+separate reviewed projection contract, serializer, policy checks, fixtures,
+tests, consumer migration, correction behavior, and rollback proof.
+
+### 2.7 Governance declarations
 
 The current schema requires every field below to be `false`:
 
@@ -404,7 +430,7 @@ not independently audit the producer. A dishonest producer could still submit a
 shape-valid declaration; producer trust, code review, runtime isolation,
 receipts, and external audit remain separate controls.
 
-### 2.7 Tracked synthetic valid example
+### 2.8 Tracked synthetic valid example
 
 The following is the current geography-scoped synthetic fixture. It is a test
 candidate, not evidence or a public request:
@@ -417,7 +443,7 @@ candidate, not evidence or a public request:
   },
   "assembled_at": "2026-08-06T21:00:00Z",
   "caller_role": "SYSTEM_TEST",
-  "envelope_id": "map-context-envelope:b02391e76b25f0c49dd5d2e3",
+  "envelope_id": "map-context-envelope:0068ff8417193c3fc09af303",
   "evidence_refs": [
     "evidence:soil:ssurgo"
   ],
@@ -445,6 +471,16 @@ candidate, not evidence or a public request:
     }
   ],
   "object_type": "MapContextEnvelope",
+  "permalink_policy": {
+    "exact_location_state_allowed": false,
+    "mode": "DISABLED",
+    "outcome": "DENY",
+    "raw_envelope_serialization": false,
+    "reason_codes": [
+      "PERMALINK_SERIALIZER_NOT_ADMITTED"
+    ],
+    "restricted_context_allowed": false
+  },
   "profile": "kfm.ui.map-context-envelope.v1",
   "release_refs": [
     "release:soil-static:2026-08-01"
@@ -452,7 +488,7 @@ candidate, not evidence or a public request:
   "request_id": "request:fixture:geography-001",
   "schema_version": "1.0.0",
   "selections": [],
-  "spec_hash": "sha256:b02391e76b25f0c49dd5d2e32113ead5cff4361c6d263ff57e084b3b02c60c5f",
+  "spec_hash": "sha256:0068ff8417193c3fc09af3031050bf508fa37ecf11ae5e43acd0fb53df83573f",
   "time_window": {
     "end": "2026-08-06T20:59:59Z",
     "start": "2026-08-01T00:00:00Z"

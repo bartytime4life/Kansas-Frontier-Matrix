@@ -3,7 +3,8 @@
 
 A passing result proves bounded fixture shape and local consistency only. It does
 not resolve evidence, evaluate policy, authenticate review, establish release
-state, authorize public use, or prove a deployed map/runtime path.
+state, authorize public use, create a permalink, or prove a deployed map/runtime
+path. The paired schema keeps permalink handling fixed at DISABLED / DENY.
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ CASE_PATH = FIXTURE_ROOT / "cases.json"
 MAX_JSON_BYTES = 1_048_576
 MAX_SCHEMA_FINDINGS = 64
 MAX_TTL_SECONDS = 15 * 60
-SCOPE = "map-context-envelope-renderer-neutral-fixture-only"
+SCOPE = "map-context-envelope-renderer-neutral-permalink-deny-fixture-only"
 
 _INTERNAL_PREFIXES = (
     "raw:",

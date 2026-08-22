@@ -10,7 +10,7 @@
   },
   "assembled_at": "2026-08-06T21:00:00Z",
   "caller_role": "SYSTEM_TEST",
-  "envelope_id": "map-context-envelope:89a254671bc488b073e8fc07",
+  "envelope_id": "map-context-envelope:7cee6ac5b4400d4d1c2062b4",
   "evidence_refs": [
     "evidence:soil:mukey:123",
     "evidence:soil:ssurgo",
@@ -57,6 +57,16 @@
     }
   ],
   "object_type": "MapContextEnvelope",
+  "permalink_policy": {
+    "exact_location_state_allowed": false,
+    "mode": "DISABLED",
+    "outcome": "DENY",
+    "raw_envelope_serialization": false,
+    "reason_codes": [
+      "PERMALINK_SERIALIZER_NOT_ADMITTED"
+    ],
+    "restricted_context_allowed": false
+  },
   "profile": "kfm.ui.map-context-envelope.v1",
   "release_refs": [
     "release:soil-static:2026-08-01",
@@ -73,7 +83,7 @@
       "layer_id": "soil-static"
     }
   ],
-  "spec_hash": "sha256:89a254671bc488b073e8fc07be2d457d19ce460e0b7ed7f121501cc5f53409a1",
+  "spec_hash": "sha256:7cee6ac5b4400d4d1c2062b41381f46d03e03357f49ec0e48cb00ad6571db0c2",
   "time_window": {
     "end": "2026-08-06T20:59:59Z",
     "start": "2026-08-01T00:00:00Z"

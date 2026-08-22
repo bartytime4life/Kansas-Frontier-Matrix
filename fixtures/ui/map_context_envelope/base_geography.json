@@ -5,7 +5,7 @@
   },
   "assembled_at": "2026-08-06T21:00:00Z",
   "caller_role": "SYSTEM_TEST",
-  "envelope_id": "map-context-envelope:b02391e76b25f0c49dd5d2e3",
+  "envelope_id": "map-context-envelope:0068ff8417193c3fc09af303",
   "evidence_refs": [
     "evidence:soil:ssurgo"
   ],
@@ -33,6 +33,16 @@
     }
   ],
   "object_type": "MapContextEnvelope",
+  "permalink_policy": {
+    "exact_location_state_allowed": false,
+    "mode": "DISABLED",
+    "outcome": "DENY",
+    "raw_envelope_serialization": false,
+    "reason_codes": [
+      "PERMALINK_SERIALIZER_NOT_ADMITTED"
+    ],
+    "restricted_context_allowed": false
+  },
   "profile": "kfm.ui.map-context-envelope.v1",
   "release_refs": [
     "release:soil-static:2026-08-01"
@@ -40,7 +50,7 @@
   "request_id": "request:fixture:geography-001",
   "schema_version": "1.0.0",
   "selections": [],
-  "spec_hash": "sha256:b02391e76b25f0c49dd5d2e32113ead5cff4361c6d263ff57e084b3b02c60c5f",
+  "spec_hash": "sha256:0068ff8417193c3fc09af3031050bf508fa37ecf11ae5e43acd0fb53df83573f",
   "time_window": {
     "end": "2026-08-06T20:59:59Z",
     "start": "2026-08-01T00:00:00Z"

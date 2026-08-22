@@ -35,6 +35,7 @@
     "filters",
     "evidence_refs",
     "release_refs",
+    "permalink_policy",
     "governance",
     "spec_hash"
   ],
@@ -106,6 +107,9 @@
     },
     "release_refs": {
       "$ref": "#/$defs/ref_array"
+    },
+    "permalink_policy": {
+      "$ref": "#/$defs/permalink_policy"
     },
     "governance": {
       "$ref": "#/$defs/governance"
@@ -310,6 +314,41 @@
           "items": {
             "$ref": "#/$defs/scalar"
           }
+        }
+      }
+    },
+    "permalink_policy": {
+      "type": "object",
+      "description": "Fail-closed declaration only. This profile admits no permalink serializer or shareable state projection and forbids raw-envelope, exact-location, and restricted-context URL state.",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "outcome",
+        "reason_codes",
+        "raw_envelope_serialization",
+        "exact_location_state_allowed",
+        "restricted_context_allowed"
+      ],
+      "properties": {
+        "mode": {
+          "const": "DISABLED"
+        },
+        "outcome": {
+          "const": "DENY"
+        },
+        "reason_codes": {
+          "const": [
+            "PERMALINK_SERIALIZER_NOT_ADMITTED"
+          ]
+        },
+        "raw_envelope_serialization": {
+          "const": false
+        },
+        "exact_location_state_allowed": {
+          "const": false
+        },
+        "restricted_context_allowed": {
+          "const": false
         }
       }
     },
