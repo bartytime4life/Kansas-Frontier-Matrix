@@ -1,0 +1,190 @@
+{
+  "schema_version": "kfm.trust-spine-fixture-slice.v1",
+  "flow_id": "kfm://fixture/trust-spine/mrts-05",
+  "status": "PROPOSED_FIXTURE_ONLY",
+  "base_ref": "be8652410fa22499ac2ada43a26ed09bc3ab0514",
+  "artifact_count": 11,
+  "artifacts": [
+    {
+      "family_id": "evidence_bundle",
+      "object_id": "evidence-bundle:fixture:mrts-05",
+      "identity_field": "bundle_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/evidence_bundle.json",
+      "schema_path": "schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "sha256": "sha256:2ca86ef55309f57a593b1ab409fee4a697fa8b7d2d405ec9bd2df6c4b5da6c76",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "evidence_ref",
+      "object_id": "evidence:observation:fixture:mrts-05",
+      "identity_field": "ref",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/evidence_ref.json",
+      "schema_path": "schemas/contracts/v1/evidence/evidence_ref.schema.json",
+      "sha256": "sha256:d5590ba0b46c034d1aa7f0545be4929ab1cabd2b37caa8abb324f7c0377201f4",
+      "registry_identity_status": "PARTIAL",
+      "candidate_binding": "SINGLE_SURFACE_FIXTURE_PIN"
+    },
+    {
+      "family_id": "policy_decision",
+      "object_id": "policy-decision:fixture:mrts-05:allow",
+      "identity_field": "decision_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/policy_decision_allow.json",
+      "schema_path": "schemas/contracts/v1/policy/policy_decision.schema.json",
+      "sha256": "sha256:5040cccf0b79f7e1536a1d6a71d67d1cb10123b071f2b561b46fa6634cc4cf48",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "promotion_receipt",
+      "object_id": "promotion:fixture:mrts-05",
+      "identity_field": "promotion_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/promotion_receipt.json",
+      "schema_path": "schemas/contracts/v1/release/promotion_receipt.schema.json",
+      "sha256": "sha256:794c5af36c1b7129168725e7061ad3c262f59f051eea8a41851fdd6b8c057412",
+      "registry_identity_status": "PARTIAL",
+      "candidate_binding": "SINGLE_SURFACE_FIXTURE_PIN"
+    },
+    {
+      "family_id": "proof_pack",
+      "object_id": "proof_pack:fixture:mrts-05",
+      "identity_field": "proof_pack_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/proof_pack.json",
+      "schema_path": "schemas/contracts/v1/evidence/proof_pack.schema.json",
+      "sha256": "sha256:dcf1c539220025c31cde54f3a97c7704c4b1157e86d176396dea4016e0b960df",
+      "registry_identity_status": "PARTIAL",
+      "candidate_binding": "SINGLE_SURFACE_FIXTURE_PIN"
+    },
+    {
+      "family_id": "release_manifest",
+      "object_id": "release:fixture-proof-pack-20260805",
+      "identity_field": "release_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/release_manifest.json",
+      "schema_path": "schemas/contracts/v1/release/release_manifest.schema.json",
+      "sha256": "sha256:830242831ff72af40cd03d29ddeb53b7e448c158dae0c1520f827d781aa920e7",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "rollback_card",
+      "object_id": "rollback:fixture:mrts-05",
+      "identity_field": "id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/rollback_card.json",
+      "schema_path": "schemas/contracts/v1/release/rollback_card.schema.json",
+      "sha256": "sha256:f76ebf9d4a83e72f11c8c70ca800a03881634840521409a3f271ccc94b6d992d",
+      "registry_identity_status": "PARTIAL",
+      "candidate_binding": "SINGLE_SURFACE_FIXTURE_PIN"
+    },
+    {
+      "family_id": "run_receipt",
+      "object_id": "run-receipt:fixture:mrts-05",
+      "identity_field": "run_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/run_receipt.json",
+      "schema_path": "schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "sha256": "sha256:6d888c1fe4cdd3d36d53bb4fadd65af0680e84cd785ebfe6250eb1c8a2ab11ea",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "source_activation_decision",
+      "object_id": "activation:fixture:mrts-05",
+      "identity_field": "activation_decision_id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/source_activation_decision.json",
+      "schema_path": "schemas/contracts/v1/source/source_activation_decision.schema.json",
+      "sha256": "sha256:6e03ff8c92f767dd17e344a260449e5c8266069b1d2676304520390e352605d8",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "source_descriptor",
+      "object_id": "source-descriptor:src:fixture/mrts-05-public-safe:1.0.0",
+      "identity_field": "source_id+descriptor_version",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/source_descriptor.json",
+      "schema_path": "schemas/contracts/v1/source/source_descriptor.schema.json",
+      "sha256": "sha256:0e82089684b0d610348499b3963b7b65bcc5fbdd4e8e52f71dba878fc3fdfebc",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    },
+    {
+      "family_id": "validation_report",
+      "object_id": "validation-report:fixture:mrts-05",
+      "identity_field": "id",
+      "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/artifacts/validation_report.json",
+      "schema_path": "schemas/contracts/v1/data/validation_report.schema.json",
+      "sha256": "sha256:f3521d12a3762c35a6638d67363a309e5d06f6027cd5ff6a1fbf93642feae585",
+      "registry_identity_status": "CONFLICTED",
+      "candidate_binding": "CONFLICTED_CANDIDATE_PIN"
+    }
+  ],
+  "governing_refs": [
+    {
+      "path": "control_plane/object_family_register.yaml",
+      "sha256": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c"
+    },
+    {
+      "path": "docs/doctrine/directory-rules.md",
+      "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    }
+  ],
+  "link_requirements": [
+    "activation_descriptor_digest",
+    "activation_descriptor_identity",
+    "activation_policy_decision",
+    "bundle_source_descriptor",
+    "evidence_ref_bundle",
+    "proof_pack_component_digests",
+    "proof_pack_release",
+    "promotion_evidence_bundle",
+    "promotion_policy_decision",
+    "release_evidence_bundle",
+    "release_policy_decision",
+    "release_promotion_receipt",
+    "release_proof_pack",
+    "release_rollback_card",
+    "release_run_receipt",
+    "release_source_descriptor",
+    "rollback_release_and_target",
+    "run_source_descriptor",
+    "run_validation_report"
+  ],
+  "required_negative_cases": [
+    "direct_public_path_attempt",
+    "duplicate_id",
+    "incomplete_promotion_gates",
+    "invalid_lifecycle_placement",
+    "missing_receipt",
+    "missing_release_manifest",
+    "missing_rollback_target",
+    "missing_source_identity",
+    "policy_deny",
+    "schema_mismatch",
+    "unauthorized_parallel_writer",
+    "unknown_rights_or_sensitivity",
+    "unresolved_evidence_ref"
+  ],
+  "dry_run": {
+    "promotion_verification_plan": {
+      "path": "fixtures/release/promotion_verification_execution/valid/pass.json",
+      "sha256": "sha256:7d257a0ffa19944424b12f5ab1b1ad1fcdfdbb547d04318a0f98e46e3014f5d8"
+    },
+    "publication_deny_tool": {
+      "path": "tools/release/release_dry_run.py",
+      "sha256": "sha256:1b6aa53ebdde595e64f042ec41b24752431d168ff46c9568d1ff28004b8f358b"
+    },
+    "expected_status": "PASS",
+    "expected_readiness": "APPROVE_READY",
+    "expected_publication_created": false
+  },
+  "controls": {
+    "fixture_only": true,
+    "network_used": false,
+    "source_activated": false,
+    "lifecycle_write": false,
+    "publication_attempted": false,
+    "publication_created": false,
+    "release_authorized": false,
+    "promotion_authorized": false,
+    "writer_path": "tools/validators/governance/validate_trust_spine_fixture_slice.py",
+    "public_route": null
+  }
+}
