@@ -156,8 +156,9 @@ notes:
 The [county master index](../COUNTY_INDEX.md) is the current
 collision-prevention inventory. Its `README_1_BYTE` finding records the base
 state this change repairs. This slice synchronizes only the Hamilton row to
-`TRACKED_PAIR` so the inventory remains truthful. Neither state is a payload,
-maturity, validation, priority, water-right, safety, or release status.
+`TRACKED_PAIR` so the Hamilton entry reflects the prepared branch. Neither
+state is a payload, maturity, validation, priority, water-right, safety, or
+release status.
 
 [Back to top](#top)
 
