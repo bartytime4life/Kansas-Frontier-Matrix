@@ -11,7 +11,7 @@ policy_label: public
 owning_root: docs/
 responsibility: provide a human-facing navigational register for object families while keeping semantic shape policy evidence lifecycle release correction rollback deployment and publication authority in their owning roots
 truth_posture: CONFIRMED inherited doctrine navigation and accepted Directory Rules / PROPOSED MRTS-03 machine-catalog reconciliation and repository-surface classifications / UNKNOWN accountable field-level owners deployed consumers and production behavior / NEEDS VERIFICATION human review hosted exact-head results and resolution of recorded candidate conflicts
-related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/governance/object_family_register.schema.json, tools/validators/control_plane/validate_object_family_register.py, KFM_Domains_Culmination_Atlas_v1_1.pdf]
+related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/governance/object_family_register.schema.json, tools/validators/control_plane/validate_object_family_register.py, docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf/README.md]
 tags: [kfm, register, object-family, doctrine, navigation]
 notes: [Navigational register only. EvidenceBundle and source dossiers remain authoritative. Adding, removing, or renaming an object family requires an ADR per Directory Rules §2.4.]
 [/KFM_META_BLOCK_V2] -->
