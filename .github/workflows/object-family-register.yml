@@ -9,25 +9,33 @@ name: object-family-register
 "on":
   pull_request:
     paths:
-      - ".github/workflows/object-family-register.yml"
-      - "docs/registers/OBJECT_FAMILY.md"
+      - ".github/workflows/**"
+      - "contracts/**"
       - "control_plane/object_family_register.yaml"
-      - "schemas/contracts/v1/governance/object_family_register.schema.json"
-      - "fixtures/contracts/v1/governance/object_family_register/**"
-      - "tools/validators/control_plane/**"
-      - "tests/validators/test_validate_object_family_register.py"
+      - "docs/registers/OBJECT_FAMILY.md"
+      - "fixtures/contracts/**"
+      - "packages/**"
+      - "policies/**"
+      - "policy/**"
+      - "schemas/contracts/**"
+      - "tests/**"
+      - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
   push:
     branches:
       - main
     paths:
-      - ".github/workflows/object-family-register.yml"
-      - "docs/registers/OBJECT_FAMILY.md"
+      - ".github/workflows/**"
+      - "contracts/**"
       - "control_plane/object_family_register.yaml"
-      - "schemas/contracts/v1/governance/object_family_register.schema.json"
-      - "fixtures/contracts/v1/governance/object_family_register/**"
-      - "tools/validators/control_plane/**"
-      - "tests/validators/test_validate_object_family_register.py"
+      - "docs/registers/OBJECT_FAMILY.md"
+      - "fixtures/contracts/**"
+      - "packages/**"
+      - "policies/**"
+      - "policy/**"
+      - "schemas/contracts/**"
+      - "tests/**"
+      - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
   workflow_dispatch:
 
