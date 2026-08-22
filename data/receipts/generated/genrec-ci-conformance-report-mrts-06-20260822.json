@@ -24,14 +24,14 @@
     ".github/workflows/release-dry-run.yml": "sha256:efce9c2249d1055c53c53a7c185062cc925a9e32595cf7ddd18df2b6f6ac2d64",
     ".github/workflows/release-manifest.yml": "sha256:917b41a54e04a5b47ee1775b55d2d76b8cf6dc1d0f169bb3cc36eaedeb271567",
     "Makefile": "sha256:2eab237e6f616f8032e266613581d1e36ad6d1b38fe671f6974fafffaa18c2c8",
-    "artifacts/qa/validation/milestone-1/README.md": "sha256:9b1321660dde0fe6b973544c4687db417af7179b35f6d44fb2a6cefe87ef1c9b",
-    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:b1d75af163e9b248f75555d39073eaa491d37b2a2e6d41cdf29eca3b85deeb6b",
-    "contracts/governance/ci_conformance_report.md": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
-    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:df501cdd89e3050e1c0ef0ed8bd02d5be0b4a20a085eedc1c983cd466b339266",
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:dc6a1c8786c0a3240ebfd50e9cb8ad255625622c07625ecb604995c41a10e099",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb",
+    "contracts/governance/ci_conformance_report.md": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:a24416c7072adb2211ddce26a85b946b1d87305a14183c84ad00775dc42f5589",
     "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "sha256:d9d9d33cf3c768a1cbe5156545442c37bb974600f83acec5d975d0e54325cd53",
-    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "sha256:b34f9693ab6d8a41eb9b5e0aacb72cf8d6948895b921c88f635b077bca85483f",
+    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "sha256:860d9e607ade3164ea33c004d16b8902c9160e3c14032af2647c95e900eb74bc",
     "schemas/contracts/v1/governance/ci_conformance_report.schema.json": "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
-    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:7ed81f26059ea8d6f9cc346a571eb014c7c2b4effba885b5978a8fad665dbd86",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:bbaf17e3e5801fe200d7f2b1f8d36e1299befcc64e3d6f7856fb1cc100eda802",
     "tests/validators/test_validate_generated_receipt.py": "sha256:6c25026bb1fae49139f11b66226967df4ec7862b7b974cf94f0e1faa45e9031c",
     "tools/validators/governance/validate_ci_conformance_report.py": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
     "tools/validators/validate_generated_receipt.py": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
@@ -42,7 +42,7 @@
     "model": "Codex",
     "version": "GPT-5-session-2026-08-22"
   },
-  "prompt_or_contract": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
+  "prompt_or_contract": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -60,8 +60,8 @@
       "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
       "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
       "sha256:9e6381b682313a77619faaac5306a7361d005976f724f39688ee2a97bcae4eae",
-      "sha256:9a6206802c3e50bef280954149ed0debbcbae6c1c52cc30a940a8c3d4edccc34",
-      "sha256:b1d75af163e9b248f75555d39073eaa491d37b2a2e6d41cdf29eca3b85deeb6b"
+      "sha256:c37d0afaea0b08419c443108ef08935907e6054f4659ed20b6a829f2239453d2",
+      "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb"
     ],
     "attached_docs": [
       "Kansas Frontier Matrix Repository Structure Guiding Document",
@@ -71,10 +71,13 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
       "github://bartytime4life/Kansas-Frontier-Matrix/issues/3364",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/3411",
-      "repo:main@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
-      "repo:agent/mrts-06-ci-conformance-local-20260822",
-      "repo:docs/doctrine/directory-rules.md@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3414",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3415",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3416",
+      "repo:main@c653d573c1641503215844c5c4fc85bc15060ced",
+      "repo:agent/mrts-06-post-merge-reconciliation-20260822",
+      "repo:docs/doctrine/directory-rules.md@c653d573c1641503215844c5c4fc85bc15060ced",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c653d573c1641503215844c5c4fc85bc15060ced",
       "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
       "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
     ]
@@ -101,7 +104,7 @@
     {
       "gate": "milestone_contract_and_authority_assay",
       "outcome": "PASS",
-      "reason": "Issue #3364, merged milestone evidence through MRTS-05 including PR #3411, adopted Directory Rules, accepted ADR-0029, current registries, policy surfaces, and advisory Drive documents were inspected without turning guidance or CI evidence into authority."
+      "reason": "Issue #3364, merged milestone evidence through MRTS-06 including PR #3414, MRTS-02 review fixes through PR #3415, and main@c653d573c1641503215844c5c4fc85bc15060ced were inspected with adopted Directory Rules, accepted ADR-0029, current registries, policy surfaces, and advisory Drive documents without turning guidance or CI evidence into authority."
     },
     {
       "gate": "ci_conformance_schema_and_semantics",
@@ -111,7 +114,7 @@
     {
       "gate": "source_and_generated_artifact_digest_replay",
       "outcome": "PASS",
-      "reason": "Every BASE_TREE reference replayed from main@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67 and every CANDIDATE_TREE reference replayed from bounded current bytes."
+      "reason": "Every report reference replayed from exact merged BASE_TREE main@c653d573c1641503215844c5c4fc85bc15060ced; the refreshed report, receipt, fixture polarity, tests, and handoff documentation remain bounded current candidate bytes."
     },
     {
       "gate": "historical_authoring_receipt_replay",
@@ -200,12 +203,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-22T21:02:00Z",
+  "created_at": "2026-08-22T22:03:43Z",
   "emitter": "OpenAI Codex Work Mode",
   "links": {
-    "pr_number": null,
+    "pr_number": 3416,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "MRTS-06 emits a deterministic blocked inspection report and process receipt only. It preserves CHECK_NOT_RUN, SKIPPED, HOLD_INHERITED, and PASS as distinct states. Exact final SHA, hosted exact-head results, human review, prerequisite merge closure, issue closure, and milestone closure remain absent. Neither this receipt nor any validator result approves review, merge, baseline expansion, release, deployment, promotion, publication, public routing, or lifecycle mutation."
+  "notes": "MRTS-06 emits a deterministic blocked inspection report and process receipt only. It preserves CHECK_NOT_RUN, SKIPPED, HOLD_INHERITED, and PASS as distinct states. The exact merged implementation checkpoint is recorded; hosted exact-head success, human review, issue closure, and milestone closure remain absent. Neither this receipt nor any validator result approves review, merge, baseline expansion, release, deployment, promotion, publication, public routing, or lifecycle mutation."
 }

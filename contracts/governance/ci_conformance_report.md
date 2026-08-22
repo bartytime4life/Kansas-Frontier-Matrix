@@ -26,7 +26,7 @@ related:
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
   - This contract implements the bounded repository portion of MRTS-06 for milestone KFM-MS-MRTS-001.
-  - The canonical initial report is BLOCKED because exact-final-head hosted evidence and human review do not exist.
+  - The canonical post-merge report is BLOCKED: the merged implementation head is pinned, while exact-head hosted evidence and human review do not exist.
   - Passing validation proves report integrity only; it does not prove milestone conformance or authorize an effect.
 [/KFM_META_BLOCK_V2] -->
 
@@ -70,8 +70,10 @@ cat-file` from that commit. A `CANDIDATE_TREE` reference is replayed from the
 bounded current worktree and is appropriate for proposed files absent from
 the base.
 
-`repository.final_sha` and `closure.target_sha` stay `null` until the exact
-final milestone head exists. They must match when populated.
+`repository.final_sha` and `closure.target_sha` stay `null` until an exact
+merged implementation checkpoint exists. They must match when populated. A
+populated pair records that observed checkpoint; it does not imply hosted
+success, review approval, readiness, or closure.
 
 `report_digest` and the tracked-generated-payload provenance field `sha256`
 carry the same SHA-256 over RFC 8259 JSON with sorted keys, compact separators,

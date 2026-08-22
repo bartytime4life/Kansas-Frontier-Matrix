@@ -16,7 +16,6 @@
     {
       "expected_codes": [
         "CLOSURE_CRITERIA_INCOMPLETE",
-        "CLOSURE_FINAL_SHA_MISSING",
         "CLOSURE_HOSTED_EVIDENCE_MISSING",
         "CLOSURE_REQUIRED_CHECKS",
         "CLOSURE_REVIEW_MISSING",
@@ -118,7 +117,7 @@
           "value": {
             "id": "ci-conformance-report",
             "path": "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
-            "scope": "CANDIDATE_TREE",
+            "scope": "BASE_TREE",
             "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
             "status": "PROPOSED",
             "version": "1.0.0"
@@ -135,7 +134,7 @@
         {
           "op": "set",
           "path": "/closure/unresolved_count",
-          "value": 4
+          "value": 5
         }
       ]
     }

@@ -11,7 +11,7 @@ responsibility_root: docs/
 owning_root: docs/
 responsibility: explain ownership inputs outputs validation correction rollback and closure limits for the MRTS-06 CI conformance report
 policy_label: internal-governance; no-self-authority; no-network-validation
-truth_posture: CONFIRMED current repository paths and bounded local observations / PROPOSED MRTS-06 implementation packet / UNKNOWN hosted exact-final-head results human approval branch protection and final closure / NEEDS VERIFICATION every false exit criterion
+truth_posture: CONFIRMED current repository paths bounded local observations and merged implementation checkpoint c653d573c1641503215844c5c4fc85bc15060ced / PROPOSED MRTS-06 evidence packet / UNKNOWN hosted exact-head results human approval branch protection and final closure / NEEDS VERIFICATION every false exit criterion
 related:
   - ../../contracts/governance/ci_conformance_report.md
   - ../../schemas/contracts/v1/governance/ci_conformance_report.schema.json
@@ -25,10 +25,11 @@ related:
 
 ## Current handoff
 
-The initial report is a deterministic `BLOCKED` candidate. It records merged
-MRTS-01 through MRTS-05 evidence, local focused checks, and inherited
-repository-topology holds. It does not claim an exact
-final SHA, hosted exact-head success, human approval, or milestone closure.
+The post-merge report is a deterministic `BLOCKED` checkpoint. It records
+merged MRTS-01 through MRTS-06 evidence, the exact integrated implementation
+head `c653d573c1641503215844c5c4fc85bc15060ced`, local focused checks, and
+inherited repository-topology holds. It does not claim hosted exact-head
+success, human approval, or milestone closure.
 
 ## Ownership
 
@@ -148,6 +149,6 @@ evidence or alter release/runtime state.
   evidence.
 - `artifacts/qa/` is a compatibility inspection lane, not a proof, receipt,
   policy, lifecycle, or release authority root.
-- The initial candidate carries inherited topology debt and still lacks its
-  own merge, exact-final-head hosted evidence, human review, and issue closure;
+- The merged implementation checkpoint carries inherited topology debt and
+  still lacks exact-head hosted evidence, human review, and issue closure;
   milestone closure therefore remains blocked.

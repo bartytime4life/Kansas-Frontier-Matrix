@@ -8,4 +8,5 @@ and the handoff procedure is
 
 The JSON file is generated-style, deterministic, and safe to regenerate. It
 is not a canonical receipt, proof, policy decision, release record, approval,
-or milestone-close action. The initial report is deliberately `BLOCKED`.
+or milestone-close action. The post-merge report pins the exact integrated
+implementation checkpoint and remains deliberately `BLOCKED`.
