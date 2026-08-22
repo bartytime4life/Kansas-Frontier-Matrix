@@ -1,0 +1,58 @@
+{
+  "receipt_id": "genrec-focus-mode-lyon-county-readme-a28ea27fc906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/lyon_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/lyon_county/README.md": "sha256:a28ea27fc9065971793b6a06699e4402f3ee3b4c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Sol"
+  },
+  "prompt_or_contract": "sha256:5c0d37b20a2ba70b74e164b1da8f37bb0b151a6e026793a1876ef539bbad6020",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["ChatGPT GitHub connector"]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "Current user request to update docs/focus-mode/counties/lyon_county/README.md next under KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "github:docs/focus-mode/counties/lyon_county/README.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:3be08836918be1874359a9c34615a3f417eeb0b7",
+      "github:docs/doctrine/directory-rules.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "github:docs/focus-mode/counties/lyon_county/README.md@agent/lyon-county-readme-20260821#blob:a28ea27fc9065971793b6a06699e4402f3ee3b4c",
+      "github:commit:5886ea5740c4c402ae69f96657419436e7a02554"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/lyon_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate":"repository-base-target-and-overlap-inspection","outcome":"PASS","reason":"Pinned main, inspected the target and sibling plan, and found no open Lyon County README PR or matching branch before mutation."},
+    {"gate":"same-path-directory-governance-review","outcome":"PASS","reason":"The edit remains at the tracked docs path; accepted ADR-0029 makes docs/doctrine/directory-rules.md the current writable placement authority."},
+    {"gate":"markdown-structure-and-link-review","outcome":"PASS","reason":"The README uses one metadata block, one H1, explicit anchors, bounded GFM alerts, repository-relative references, and a final newline."},
+    {"gate":"security-rights-sensitivity-review","outcome":"PASS","reason":"No credentials, private data, exact protected locations, source payloads, or current operational claims were introduced."},
+    {"gate":"hosted-exact-head-checks","outcome":"SKIPPED","reason":"Observed after pull-request creation; not represented as completed in this authoring receipt."}
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id":"github:docs/focus-mode/counties/lyon_county/README.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b","validated":true,"evidence_ref":"blob:3be08836918be1874359a9c34615a3f417eeb0b7"},
+    {"id":"github:docs/doctrine/directory-rules.md@d5b2d6e74f939d38a426207f2afb7653f005ea3b","validated":true,"evidence_ref":"blob:fd49a0b83e55cef52c1124281f093e263526898d"}
+  ],
+  "human_review": {"reviewer_ids":[],"state":"pending","timestamp":null},
+  "override_record": null,
+  "created_at": "2026-08-22T02:16:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol via ChatGPT GitHub connector",
+  "links": {"pr_number":null,"adr_link":"docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md","drift_register_entry":null},
+  "notes": "Authoring receipt for the Lyon County README modernization. Provenance only; no source admission, policy decision, runtime proof, release, deployment, publication, or merge authority."
+}
