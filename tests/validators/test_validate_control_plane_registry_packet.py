@@ -68,6 +68,7 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
             )
             subject = root / candidate["entries"][0]["path"]
             pinned_bytes = b"pinned-registry-subject\n"
+            governing_bytes = b"pinned governing reference\n"
             subject.parent.mkdir(parents=True, exist_ok=True)
             subject.write_bytes(pinned_bytes)
             referenced = {
@@ -77,7 +78,7 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
             for relative in sorted(referenced):
                 path = root / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text("pinned governing reference\n", encoding="utf-8")
+                path.write_bytes(governing_bytes)
             subprocess.run(["git", "add", "."], cwd=root, check=True)
             subprocess.run(
                 ["git", "commit", "-q", "-m", "fixture baseline"],
@@ -95,6 +96,12 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
             candidate["entries"][0]["path_sha256"] = (
                 "sha256:" + hashlib.sha256(pinned_bytes).hexdigest()
             )
+            candidate["entries"][0]["source_digests"] = sorted(
+                {
+                    "sha256:" + hashlib.sha256(pinned_bytes).hexdigest(),
+                    "sha256:" + hashlib.sha256(governing_bytes).hexdigest(),
+                }
+            )
             candidate_path = root / "candidate.yaml"
             candidate_path.write_text(
                 yaml.safe_dump(candidate, sort_keys=False),
@@ -110,6 +117,30 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
             )
 
         self.assertTrue(result.ok, result.findings)
+
+    def test_source_digests_must_match_pinned_subject_and_governing_bytes(self) -> None:
+        candidate = yaml.safe_load(
+            REGISTRY_PATHS["document_registry"].read_text(encoding="utf-8")
+        )
+        candidate["entries"][0]["source_digests"] = [
+            "sha256:" + character * 64 for character in ("0", "1", "2")
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            candidate_path = Path(directory) / "document_registry.yaml"
+            candidate_path.write_text(
+                yaml.safe_dump(candidate, sort_keys=False),
+                encoding="utf-8",
+            )
+            result = validate_registry(
+                candidate_path,
+                repo_root=REPO_ROOT,
+                check_paths=True,
+                check_git=True,
+            )
+        self.assertIn(
+            "SOURCE_DIGESTS_MISMATCH",
+            {finding.code for finding in result.findings},
+        )
 
     def test_workflow_watches_material_referenced_paths(self) -> None:
         workflow = (
