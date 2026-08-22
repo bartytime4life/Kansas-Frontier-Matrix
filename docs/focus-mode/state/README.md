@@ -1,186 +1,313 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/focus-mode-state-readme
-title: Focus Mode — State Doctrine
-type: standard
-version: v0.1
-status: draft
-owners: <FOCUS-MODE-DOCTRINE-OWNER> · NEEDS VERIFICATION
+title: Focus Mode State Documentation Boundary
+type: readme; focus-mode; system-state; geographic-state-boundary; compatibility-lane
+version: v1.0
+status: draft; repository-grounded; mixed-authority; compatibility-lane; non-release; non-publication
+owner: "@bartytime4life via CODEOWNERS; Focus Mode, state-vocabulary, runtime, review, release, and independent publication authority NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-05-24
-policy_label: public
+updated: 2026-08-22
+policy_label: public; documentation; focus-mode; system-state; geographic-state; finite-outcomes; lifecycle; review; payload; map-context; revocation; cite-or-abstain; fail-closed
+owning_root: docs/
+responsibility: >-
+  Explain the repository-present docs/focus-mode/state compatibility lane,
+  distinguish system and trust state from the proposed Kansas geographic
+  state-scale Focus composition, inventory the tracked state documents, and
+  expose current contract, schema, validation, migration, review, release,
+  correction, and rollback boundaries without creating machine, policy,
+  lifecycle, scope-registration, release, deployment, or publication authority.
+authority: >-
+  Human-readable navigation, reconciliation, and maintenance guidance only.
+  Current runtime shape belongs to contracts and schemas; policy decisions,
+  evidence closure, review records, release manifests, corrections, withdrawals,
+  and rollback records remain in their owning responsibility roots.
+current_path: docs/focus-mode/state/README.md
+canonical_relationship: >-
+  Same-path documentation boundary inside the repository-present singular Focus
+  compatibility lane. Accepted Directory Rules v2 permits this docs-root repair
+  but does not resolve the mixed state tree's final split or migration. Exact
+  future placement remains HOLD pending an accepted decision, consumer closure,
+  validated migration, and rollback plan.
+truth_posture: >-
+  CONFIRMED current main, target and sibling blobs, the complete tracked state
+  tree, accepted ADR-0029 and adopted Directory Rules v2, proposed ADR-0028,
+  current parent Focus compatibility guidance, the repository-present
+  RuntimeResponseEnvelope contract/schema/validator/fixtures, and the four
+  machine-enumerated runtime outcomes ANSWER, ABSTAIN, DENY, and ERROR /
+  PROPOSED geographic kansas-state scope, state-domain profile, sibling review,
+  payload, map-context, revocation, and transition vocabularies, and future
+  state-aware validation / CONFLICTED geographic-state and system-state material
+  in one writable tree, the sibling seven-outcome vocabulary versus the current
+  four-outcome runtime schema, and older exact-path claims versus accepted
+  Directory Rules v2 / UNKNOWN end-to-end Focus service behavior, source
+  admission, EvidenceRef-to-EvidenceBundle closure, policy evaluation,
+  accountable review, state-scale payloads, release, correction propagation,
+  rollback execution, deployment, and public parity / NEEDS VERIFICATION final
+  state-tree ownership, accepted scope identity, controlled vocabularies,
+  external consumers, link/anchor migration, and every public-use claim.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 94bff9fe25eb1d80462cf2e16cba285bc742d7c9
+  target_prior_blob: ad89a66c4a1e5de0678bffd95c9502f0aee23c96
+  parent_focus_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
+  state_index_blob: 8d0b631bd53e6af3747417ee813c791fc67a9c3c
+  finite_outcomes_blob: 22df8e44b31cad5899339f665f205757d70ab47c
+  lifecycle_states_blob: 3826306d620de81840a8140a5645d64c7a630242
+  review_state_blob: 0dd5a1089455f560975057c6b5e7ef9e5b1f333d
+  payload_state_blob: 9556743d908b1a5c92579fb3adfb318e0037529c
+  map_context_state_blob: 5707de7d264724dc6afc85eb397e3815f2a8cdf1
+  revocation_state_blob: 89c032bb7e8e08dbfbf9b6c9e73f4ea97acdbcea
+  state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0028_blob: d14ea2b4ad57294ab52da643c954a7f83d5e24e9
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  runtime_response_contract_blob: 9dfc286984b5b52b383753fe6215a2b31df8c876
+  runtime_response_schema_blob: 8b86e7db8b18b65a56a4e639dfc54e1b2db93155
+  runtime_response_validator_blob: 44ce7d51038a9adf9fcbdb18108cc27da8381e33
+  ui_focus_response_contract_blob: 5fe3e2763d2b3735e94a53a416114d9b37e7be64
+  ui_map_context_contract_blob: c6367306f14f9da56b3e3cbe7fad9d5545a0cdbf
+  focus_mode_payload_contract_blob: 7fe687d587cd60dafd6e3fa34306cd58fd125c73
+  focus_schema_family_readme_blob: 2b75990b53dea2841c28410f0d9dc9fb10a60f33
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >-
+  Current-session GitHub reads covered the complete prior README in multiple
+  ranges, every direct child of docs/focus-mode/state, every transition filename,
+  the state index and template inventory, the parent Focus README, accepted
+  Directory Rules evidence, ADR-0028, runtime and UI Focus contracts, the
+  runtime schema, validator and fixture family, the Focus schema-family index,
+  CODEOWNERS, open pull-request overlap, and task-branch overlap. No source was
+  admitted, no evidence or policy service was exercised, no state-scale payload
+  was built, no map or model call ran, and no release, correction, rollback,
+  deployment, or public endpoint was exercised.
 related:
-  - directory-rules.md §6.7
-  - docs/focus-modes/README.md (PROPOSED, per directory-rules.md §6.7.3)
-  - docs/standards/PROV.md
-  - contracts/focus_mode/focus_mode_payload.md (PROPOSED)
-  - schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json (PROPOSED)
-  - schemas/contracts/v1/runtime/decision_envelope.schema.json (PROPOSED)
-tags: [kfm, focus-mode, state, governance, finite-outcomes, lifecycle]
+  - ../README.md
+  - ./STATE_INDEX.md
+  - ./_template/state-build-plan.md
+  - ./finite-outcomes.md
+  - ./lifecycle-states.md
+  - ./review-state.md
+  - ./payload-state.md
+  - ./map-context-state.md
+  - ./revocation-state.md
+  - ../../doctrine/directory-rules.md
+  - "../../adr/ADR-0028 — State-scale Focus Mode scope.md"
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../../contracts/runtime/runtime_response_envelope.md
+  - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - ../../../tools/validators/validate_runtime_response_envelope.py
+  - ../../../contracts/ui/focus_response.md
+  - ../../../contracts/ui/map_context_envelope.md
+  - ../../../contracts/focus_mode/focus_mode_payload.md
+  - ../../../schemas/contracts/v1/focus/README.md
+  - ../../../tools/validators/validate_focus_mode_index.py
+  - ../../../.github/CODEOWNERS
+tags: [kfm, focus-mode, state, system-state, geographic-state, runtime-envelope, finite-outcomes, lifecycle, review, payload, map-context, revocation, compatibility, non-publication]
 notes:
-  - Path placement diverges from Directory Rules v1.2 §6.7.2 canonical pattern; see §2.1 below and OPEN-DR-09 (PROPOSED).
-  - No mounted repo evidence in this session; all repo-shaped claims labeled PROPOSED.
+  - "v1.0 replaces stale no-repository-evidence and Directory Rules v1.2 assumptions with current repository evidence and accepted Directory Rules v2."
+  - "The state tree remains mixed authority. This update documents the split requirement but does not move, rename, copy, or delete any state artifact."
+  - "The currently tracked RuntimeResponseEnvelope schema enumerates ANSWER, ABSTAIN, DENY, and ERROR. HOLD and PASS/FAIL remain separate review, placement, promotion, or validator concepts unless a later accepted contract changes that boundary."
+  - "The geographic STATE_INDEX and state-build-plan template remain proposed ADR-0028 lineage; no kansas-state lane or state-scale release is claimed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="focus-mode--state-doctrine"></a>
 
-# Focus Mode — State Doctrine
+# Focus Mode State Documentation Boundary
 
-> *Canonical reference for what "state" means inside a Focus Mode: the finite outcomes a Focus Mode may return, the lifecycle stages an artifact passes through before reaching one, and the review and revocation states that gate publication.*
-
-<!-- Badge row — placeholders pending canonical badge targets (PROPOSED) -->
-![status](https://img.shields.io/badge/status-draft-yellow)
-![doctrine](https://img.shields.io/badge/doctrine-Focus%20Mode%20v0.2-blue)
-![directory-rules](https://img.shields.io/badge/directory--rules-v1.2-informational)
-![truth-posture](https://img.shields.io/badge/posture-cite--or--abstain-success)
-![path-status](https://img.shields.io/badge/path-PROPOSED-orange)
-![ci](https://img.shields.io/badge/CI-TODO-lightgrey)
-
-**Status:** draft · **Owners:** `<FOCUS-MODE-DOCTRINE-OWNER>` *(NEEDS VERIFICATION)* · **Last updated:** 2026-05-24
-
-> [!CAUTION]
-> **Path placement diverges from Directory Rules v1.2 §6.7.2.**
-> The canonical `docs/` lane for Focus Mode artifacts is `docs/focus-modes/<area>-<scope>/` (plural, kebab-case + scope suffix). This file lives at `docs/focus-mode/state/README.md` — **singular** `focus-mode/` and **no area-scope segment**. This is recorded below as **OPEN-DR-09 (PROPOSED)** and SHOULD be reconciled by ADR before further state-doctrine artifacts land. See [§2 — Repo fit](#2-repo-fit--directory-rules-basis) for the path-prefix lint exposure and migration options. **PROPOSED**
-
----
-
-## Table of contents
-
-1. [Scope](#1-scope)
-2. [Repo fit — Directory Rules basis](#2-repo-fit--directory-rules-basis)
-3. [What lives here](#3-what-lives-here)
-4. [What does NOT live here](#4-what-does-not-live-here)
-5. [Directory tree (PROPOSED)](#5-directory-tree-proposed)
-6. [State families at a glance](#6-state-families-at-a-glance)
-7. [Finite outcome state — ANSWER · ABSTAIN · DENY · ERROR · HOLD](#7-finite-outcome-state)
-8. [Lifecycle state — RAW → PUBLISHED](#8-lifecycle-state)
-9. [Review and release state](#9-review-and-release-state)
-10. [Payload state and MapContextEnvelope state](#10-payload-state-and-mapcontextenvelope-state)
-11. [Revocation and rollback state](#11-revocation-and-rollback-state)
-12. [State transition diagrams](#12-state-transition-diagrams)
-13. [Validators, tests, and receipts](#13-validators-tests-and-receipts)
-14. [Anti-patterns](#14-anti-patterns)
-15. [Open questions and ADR triggers](#15-open-questions-and-adr-triggers)
-16. [Related docs](#16-related-docs)
-17. [Appendix — glossary, vocabularies, references](#17-appendix)
-
----
-
-## 1. Scope
-
-This README defines **what "state" means inside a Focus Mode** and how the various state families are *named, owned, transitioned, and audited* across the KFM trust path:
-
-> `SourceDescriptor → SourceIntakeRecord → EvidenceRef → EvidenceBundle → Claim/AtlasCard → DecisionEnvelope → ReleaseManifest → Public UI` — **CONFIRMED doctrine.** *(directory-rules.md §6.7.1)*
-
-The doc is **cross-cutting** — it applies to every Focus Mode area (county, region, corridor, state-level) — and is **doctrine-class**, not area-scoped. It is the place where a reader confirms which state vocabularies are canonical, which transitions are governed, and which receipts are required.
-
-> [!NOTE]
-> **Why a single state-doctrine doc.** The corpus introduces multiple state vocabularies (finite outcomes; lifecycle gates; review state; release state; payload state; revocation state) across separate carriers. This README consolidates them so a reader can move from one vocabulary to the next without losing the trust path. **PROPOSED.**
-
-[↑ Back to top](#top)
-
----
-
-## 2. Repo fit — Directory Rules basis
-
-### 2.1 Path divergence (must be resolved)
-
-| Concern | Requested path | Canonical pattern *(Directory Rules v1.2 §6.7.2)* | Recommended resolution |
-|---|---|---|---|
-| Plural vs singular | `docs/focus-mode/...` | `docs/focus-modes/...` *(plural)* | Migrate to plural; **PROPOSED** |
-| Area-scope segment missing | `docs/focus-mode/state/` | `docs/focus-modes/<area>-<scope>/` *(e.g., `ellsworth-county`, `kansas-state`)* | Decide whether `state/` here means **scope suffix `-state`** *(area=Kansas)*, **a control-plane "state" topic** *(cross-cutting doctrine)*, or **UI state management** *(would live under `apps/`, not `docs/`)*. Record decision in ADR. **PROPOSED.** |
-| Path-prefix linter exposure | `focus-mode/` at top of `docs/` | Linter rejects any new `focus_mode/`, `focus-mode/`, `focus_modes/`, `focus-modes/` *root-of-repo* path *(§13.5 anti-pattern)*. Inside `docs/`, only the plural `focus-modes/` lane is canonical. *(directory-rules.md §6.7.5, §13.5)* | Treat current path as **PROPOSED** until ADR-reconciled. |
+> **Purpose.** Explain the mixed state documentation currently tracked under
+> `docs/focus-mode/state/`, keep its two meanings of **state** distinct, and show
+> which repository surfaces can support a claim about runtime, lifecycle, review,
+> payload, map context, geographic scope, revocation, correction, or rollback.
 
 > [!IMPORTANT]
-> **OPEN-DR-09 (PROPOSED).** Decide one of:
-> 1. Rename this file to `docs/focus-modes/README.md` *(canonical doctrine landing)* and keep state-specific subsections inside it, OR
-> 2. Rename to `docs/focus-modes/kansas-state/README.md` *(if "state" was intended as scope = the state of Kansas)*, OR
-> 3. Keep `docs/focus-mode/state/` ONLY if an ADR formally carves out a non-Focus-Mode doctrinal lane for state vocabularies *(low recommendation; collides with §13.5)*.
-> Until the ADR lands, **no path, schema, contract, or release artifact below this README is canonical**.
+> **This directory is documentation and design lineage, not a canonical state
+> machine or released Focus product.** It cannot register a Kansas state-scale
+> scope, select a runtime outcome, resolve evidence, evaluate policy, approve a
+> review, issue a release, revoke a public artifact, execute rollback, or publish.
 
-### 2.2 Where this doc sits relative to canonical responsibility roots
-
-```mermaid
-flowchart LR
-  subgraph THIS["docs/focus-mode/state/  ⚠ PROPOSED · diverges from §6.7.2"]
-    R["README.md (this file)"]
-  end
-  subgraph DOCS["docs/focus-modes/  ✅ canonical"]
-    A["<area>-<scope>/README.md"]
-    B["<area>-<scope>/build-plan.md"]
-    C["<area>-<scope>/acceptance-checklist.md"]
-  end
-  subgraph CONTRACTS["contracts/focus_mode/  ✅ canonical (singular snake)"]
-    P["focus_mode_payload.md"]
-    L["layer_registry_entry.md"]
-  end
-  subgraph SCHEMAS["schemas/contracts/v1/focus_mode/  ✅ canonical"]
-    SP["focus_mode_payload.schema.json"]
-    SD["..."]
-  end
-  subgraph RUNTIME["schemas/contracts/v1/runtime/  ✅ canonical"]
-    DE["decision_envelope.schema.json"]
-    AR["ai_receipt.schema.json"]
-  end
-  R -. references .-> P
-  R -. references .-> SP
-  R -. references .-> DE
-  R -. references .-> AR
-  R -. complements .-> A
-  classDef warn fill:#fff4e0,stroke:#d97706,color:#7c2d12;
-  class THIS warn;
-```
-
-[↑ Back to top](#top)
-
----
-
-## 3. What lives here
-
-| Content | Why it belongs in a state-doctrine doc | Truth label |
-|---|---|---|
-| **Definitions** of every state vocabulary used by Focus Mode | Reader needs one place to disambiguate "state" *(finite outcome vs lifecycle stage vs review state vs UI state)* | CONFIRMED doctrine; PROPOSED placement |
-| **State-transition diagrams** with required artifacts at each transition | Transitions are governed — each one binds a receipt, evidence ref, policy decision, or release manifest | CONFIRMED doctrine; PROPOSED placement |
-| **Mappings** from finite-outcome state ↔ lifecycle stage ↔ surface | Same answer can mean different things on different surfaces *(Evidence Drawer vs Layer Manifest vs Focus Mode answer)* | CONFIRMED doctrine *(Atlas v1.1 §24.3.2)* |
-| **Pointers** to canonical schemas, contracts, validators | A doctrine doc cites; it does not duplicate machine artifacts | CONFIRMED doctrine |
-| **Open questions** and **ADR triggers** for state vocabulary changes | State vocabulary is stable on purpose; renames are ADR-class | CONFIRMED doctrine *(directory-rules.md §2.4)* |
-
-[↑ Back to top](#top)
-
----
-
-## 4. What does NOT live here
-
-| Excluded | Why | Canonical home |
-|---|---|---|
-| `.schema.json` files for any state envelope | Schema home rule *(directory-rules.md §6.4, ADR-0001)* | `schemas/contracts/v1/focus_mode/` or `schemas/contracts/v1/runtime/` |
-| Rego policy implementing state-transition gates | Policy home rule *(directory-rules.md §6.5)* | `policy/` |
-| Validators or admission-check scripts | Validator home rule *(directory-rules.md §7.5)* | `tools/validators/` |
-| Area-specific Focus Mode build plans, acceptance checklists, layer registries | These are area-scoped artifacts, not doctrine | `docs/focus-modes/<area>-<scope>/` |
-| UI state-machine implementation *(React/Vue/MapLibre store)* | UI code home | `apps/explorer-web/src/focus-modes/<area>/` |
-| Release manifests, candidate dossiers | Release home | `release/manifests/`, `release/candidates/<area>-focus-mode/` |
-| Fixtures exercising state transitions | Fixture home | `fixtures/focus_modes/<area>/{valid,invalid}/` |
+> [!CAUTION]
+> **`state` is overloaded here.** The tree combines proposed
+> **geographic state-scale composition** material with cross-cutting
+> **system/trust state** documentation. Those responsibilities may reference one
+> another, but they must not become one independently writable authority.
 
 > [!WARNING]
-> **Do not let this doc absorb implementation.** A doctrine doc that grows schemas, policies, validators, or UI code inside `docs/` becomes a parallel authority and violates Directory Rules §6.4 *(schema)*, §6.5 *(policy)*, §7.5 *(tools)*. Keep this file lean and reference-only.
+> **The current repository's client-facing runtime envelope has four machine
+> outcomes: `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.** The sibling
+> `finite-outcomes.md` document's seven-item list is older, draft, and conflicted.
+> `HOLD` is currently a review, placement, promotion, or workflow posture;
+> `PASS` and `FAIL` are validator results. None belongs to the current
+> `RuntimeResponseEnvelope.outcome` enum.
 
-[↑ Back to top](#top)
+> [!NOTE]
+> **Placement remains bounded.** Accepted Directory Rules v2 supports a same-path
+> repair under `docs/`; it does not choose the final home or split for this mixed
+> tree. Structural convergence remains **HOLD** pending an accepted decision,
+> consumer and anchor inventory, migration validation, and rollback plan.
+
+**Quick navigation:** [Status](#1-status-and-evidence-boundary) ·
+[Responsibilities](#2-responsibility-and-placement-boundary) ·
+[Two meanings](#3-two-meanings-of-state) ·
+[Inventory](#4-current-directory-inventory) ·
+[Authority](#5-current-authority-and-implementation-map) ·
+[Outcomes](#6-runtime-outcomes-and-state-family-separation) ·
+[Lifecycle](#7-lifecycle-and-trust-membrane) ·
+[Review](#8-review-hold-and-release-boundary) ·
+[Payload and map](#9-payload-map-context-and-freshness) ·
+[Revocation](#10-revocation-correction-and-rollback) ·
+[Transitions](#11-transition-documents-and-governed-change) ·
+[Validation](#12-validation-tests-and-receipts) ·
+[Anti-patterns](#13-anti-patterns) ·
+[Open work](#14-open-questions-and-adr-triggers) ·
+[Maintenance](#15-maintenance-correction-and-rollback) ·
+[References](#16-related-docs) · [Glossary](#17-appendix)
 
 ---
 
-## 5. Directory tree (PROPOSED)
+<a id="1-scope"></a>
 
-**PROPOSED — assumes OPEN-DR-09 resolves to "keep this lane".** If OPEN-DR-09 resolves to *migrate*, the tree below moves wholesale to the canonical lane.
+## 1. Status and evidence boundary
+
+| Question | Current bounded answer | Truth label |
+|---|---|---|
+| Does this README exist at the requested path? | Yes. The prior v0.1 file was tracked at blob `ad89a66c4a1e5de0678bffd95c9502f0aee23c96`. | `CONFIRMED` |
+| What owns this file? | `docs/` owns human-readable explanation and navigation. CODEOWNERS routes review to `@bartytime4life`; that route is not policy, release, or publication approval. | `CONFIRMED` |
+| Does the surrounding state tree exist? | Yes. The tree contains this README, a proposed geographic state index and template, six state-family documents, and five transition documents. | `CONFIRMED` |
+| Is this tree one coherent authority? | No. Geographic state-scope planning and system/trust-state doctrine are mixed beneath one path. | `CONFLICTED` |
+| Is ADR-0028 accepted? | No. It remains proposed and therefore does not register `kansas-state`, authorize a state lane, or select a migration target. | `CONFIRMED` proposed status |
+| Is Directory Rules v2 effective? | Yes through accepted ADR-0029, which adopts the exact bytes at `docs/doctrine/directory-rules.md`. | `CONFIRMED` |
+| What is the current runtime outcome shape? | The repository-present `RuntimeResponseEnvelope` schema enumerates `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. | `CONFIRMED` machine shape; contract status remains proposed |
+| Is an end-to-end Focus runtime proven? | No authenticated state-scale or general Focus service, live evidence resolution, active policy evaluation, accountable release, or public endpoint was verified here. | `UNKNOWN`; do not infer |
+| Does this README change runtime or release state? | No. It changes documentation only. | `CONFIRMED` |
+| Is the final state-tree path settled? | No. Same-path maintenance is allowed; split, move, rename, mirror, or deletion remains `HOLD`. | `CONFIRMED` current disposition |
+
+### Truth labels used here
+
+| Label | Meaning |
+|---|---|
+| `CONFIRMED` | Verified from current-session repository bytes or remote state. |
+| `PROPOSED` | Design, vocabulary, path, behavior, or scope not accepted or proven as current implementation. |
+| `CONFLICTED` | Current sources or writable surfaces make incompatible claims. |
+| `LINEAGE` | Retained prior design or doctrine carrier; not current authority by itself. |
+| `UNKNOWN` | Evidence does not establish the claim. |
+| `NEEDS VERIFICATION` | A concrete repository, policy, evidence, reviewer, migration, or runtime check remains. |
+| `NOT_RUN` | The named executable or external check was not performed in this documentation slice. |
+| `HOLD` | Proceeding would cross an unresolved authority, placement, review, sensitivity, or release boundary. |
+
+Repository presence proves that bytes exist. It does not prove semantic acceptance,
+runtime behavior, evidence sufficiency, policy permission, release eligibility, or
+public parity.
+
+[Back to top](#top)
+
+---
+
+<a id="2-repo-fit--directory-rules-basis"></a>
+<a id="21-path-divergence-must-be-resolved"></a>
+<a id="3-what-lives-here"></a>
+<a id="4-what-does-not-live-here"></a>
+
+## 2. Responsibility and placement boundary
+
+### This README owns
+
+- current navigation for the tracked state tree;
+- a repository-grounded inventory of its direct children and transition documents;
+- separation of geographic scope state from system/trust state;
+- explanation of current contract, schema, validator, fixture, review, release,
+  correction, and rollback boundaries;
+- compatibility anchors for inbound links to the v0.1 README;
+- maintenance and rollback guidance for this documentation artifact.
+
+### This README does not own
+
+| Responsibility | Owning surface or decision class | Effect here |
+|---|---|---|
+| Client-facing runtime envelope meaning | [`contracts/runtime/runtime_response_envelope.md`](../../../contracts/runtime/runtime_response_envelope.md) | This README must not redefine the runtime enum or fields |
+| Runtime machine shape | [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Current four-outcome shape outranks stale prose for machine compatibility |
+| UI Focus response projection | [`contracts/ui/focus_response.md`](../../../contracts/ui/focus_response.md) | UI projection must preserve runtime state; it is not runtime authority |
+| Map request-context meaning | [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md) | Map context is immutable request context, not evidence or an answer |
+| Focus payload semantics | [`contracts/focus_mode/focus_mode_payload.md`](../../../contracts/focus_mode/focus_mode_payload.md) | Semantic proposal; no state-scale payload is established here |
+| Source and evidence truth | Source registries, `EvidenceRef`, and `EvidenceBundle` owners | State prose cannot admit a source or close evidence |
+| Policy and sensitivity decisions | `policy/` plus accountable review | Documentation may describe fail-closed posture but cannot decide |
+| Lifecycle instances | Governed data and catalog/triplet stores | This tree does not store or promote lifecycle objects |
+| Geographic state-scope identity | Accepted scope decision and machine registration | ADR-0028 remains proposed; `kansas-state` is not registered by this README |
+| Review and separation of duties | Review records and accountable reviewer assignments | CODEOWNERS routing is not proof of completed review |
+| Release, withdrawal, correction, and rollback | `release/` and governed accountability objects | A Markdown edit or merge creates none of these states |
+| UI or API implementation | Application and runtime roots | No route, renderer, resolver, model adapter, or public client changes here |
+
+### Directory Rules basis
+
+Accepted Directory Rules v2 treats a path as an authority claim, assigns one
+authority owner per artifact, and returns `SPLIT` when one artifact contains
+multiple independently writable authorities. It also distinguishes current
+repository drift from adopted placement authority.
+
+For this task:
+
+| Decision | Outcome | Basis |
+|---|---|---|
+| Update this existing README in place | `PLACE` | Same `docs/` responsibility, no authority or lifecycle change |
+| Treat current tree as final canonical structure | `DENY` | Current mixed tree cannot become canon by drift |
+| Move or rename the tree now | `HOLD` | Final owners, targets, consumers, anchors, and rollback are unresolved |
+| Create a parallel plural Focus tree | `DENY` | Would create parallel writable authority without an accepted migration |
+| Split geographic and system-state material later | `PROPOSED` / `HOLD` | ADR-0028 identifies the need; placement decision and migration evidence remain open |
+
+This update therefore makes no structural claim beyond the current same-path
+documentation boundary.
+
+[Back to top](#top)
+
+---
+
+## 3. Two meanings of `state`
+
+The current tree carries two materially different concepts.
+
+| Meaning | Current artifacts | Correct interpretation | Current posture |
+|---|---|---|---|
+| **System/trust state** | `finite-outcomes.md`, `lifecycle-states.md`, `review-state.md`, `payload-state.md`, `map-context-state.md`, `revocation-state.md`, and `transitions/` | Cross-cutting documentation about response, lifecycle, review, freshness, context, correction, and rollback concepts | Tracked draft lineage; parts conflict with newer contract/schema evidence |
+| **Geographic state-scale Focus composition** | `STATE_INDEX.md` and `_template/state-build-plan.md` | Proposed Kansas-wide composition scope with direct evidence, domain-profile, sensitivity, release, correction, and rollback duties | Proposed under ADR-0028; no registered lane, state-aware validator, payload, or release verified |
+
+> [!IMPORTANT]
+> A statewide geographic composition may use system-state concepts, but it cannot
+> own or redefine them. Conversely, a system-state document cannot create a
+> Kansas-wide scope merely because both use the word `state`.
+
+### What the mix does not prove
+
+- that `kansas-state` is registered or admitted;
+- that the state index is validator-clean or lifecycle-significant;
+- that any sibling vocabulary is accepted as a canonical machine enum;
+- that a public runtime consumes these Markdown files;
+- that review, release, correction, or rollback machinery exists for a state-scale product;
+- that moving files would resolve the semantic conflict without consumer breakage.
+
+[Back to top](#top)
+
+---
+
+<a id="5-directory-tree-proposed"></a>
+
+## 4. Current directory inventory
+
+The v0.1 README described the tree as proposed. The files below are now
+**repository-present**; their presence does not promote their internal proposals.
 
 ```text
-docs/focus-mode/state/        ⚠ PROPOSED · diverges from §6.7.2
-├── README.md                 ◄── this file (PROPOSED)
-├── finite-outcomes.md        ◄── per-outcome semantics (PROPOSED)
-├── lifecycle-states.md       ◄── RAW → PUBLISHED gates and required artifacts (PROPOSED)
-├── review-state.md           ◄── ReviewRecord lifecycle, HOLD semantics (PROPOSED)
-├── payload-state.md          ◄── FocusModePayload state, freshness, citation closure (PROPOSED)
-├── map-context-state.md      ◄── MapContextEnvelope shape and freshness rules (PROPOSED)
-├── revocation-state.md       ◄── revocation manifest, TTL, spec_hash binding (PROPOSED)
-└── transitions/              ◄── individual transition specs (PROPOSED)
+docs/focus-mode/state/
+├── README.md
+├── STATE_INDEX.md
+├── _template/
+│   └── state-build-plan.md
+├── finite-outcomes.md
+├── lifecycle-states.md
+├── map-context-state.md
+├── payload-state.md
+├── review-state.md
+├── revocation-state.md
+└── transitions/
     ├── answer-to-abstain.md
     ├── candidate-to-hold.md
     ├── hold-to-deny.md
@@ -188,351 +315,604 @@ docs/focus-mode/state/        ⚠ PROPOSED · diverges from §6.7.2
     └── rollback-to-prior.md
 ```
 
-> [!NOTE]
-> Each file under `transitions/` is a *prose transition spec* — pre-conditions, post-conditions, required receipts, and rollback target. Machine state-machine specs (if introduced) go under `schemas/contracts/v1/runtime/` per §6.4, not here.
+### Direct-child disposition
 
-[↑ Back to top](#top)
-
----
-
-## 6. State families at a glance
-
-> **CONFIRMED doctrine.** A Focus Mode operates over **five state families** that are independent vocabularies but interlock at well-defined points. None of them is reducible to another; collapsing them is the canonical anti-pattern. *(Atlas v1.1 §24.3, Doctrine Synthesis §11, MapLibre v2.1 ML-O-067/068/069.)*
-
-| # | Family | Vocabulary | Authority object | Governing surface |
-|---|---|---|---|---|
-| 1 | **Finite outcome** | `ANSWER` · `ABSTAIN` · `DENY` · `ERROR` · `HOLD` · `PASS` · `FAIL` | `DecisionEnvelope` + `AIReceipt` | Every governed API surface, validator, policy gate, Focus Mode answer |
-| 2 | **Lifecycle** | `RAW` · `WORK` · `QUARANTINE` · `PROCESSED` · `CATALOG/TRIPLET` · `PUBLISHED` | `SourceDescriptor`, `EvidenceRef`, `EvidenceBundle`, `ReleaseManifest` | Pipeline gates A–G *(Doctrine Synthesis Part X)* |
-| 3 | **Review** | `draft` · `pending` · `approved` · `rejected` · `held` · `superseded` | `ReviewRecord` + `PolicyDecision` | Promotion gate, sensitive-lane review |
-| 4 | **Payload / context** | `fresh` · `stale` · `not-yet-released` · `revoked-but-cached` · `unknown` | `FocusModePayload`, `MapContextEnvelope`, `EvidenceDrawerPayload` | Focus Mode runtime, Evidence Drawer |
-| 5 | **Revocation / rollback** | `live` · `revoked` · `rolled-back` · `superseded-by` | Revocation manifest, `CorrectionNotice`, `RollbackCard`, rollback target | Public UI, Evidence Drawer, governed API |
-
-> [!IMPORTANT]
-> **Collapse is the failure mode.** Conflating finite outcome with lifecycle stage *(e.g., treating `PROCESSED` as `ANSWER`)*, or review state with release state *(e.g., treating `approved` as `PUBLISHED`)*, breaks cite-or-abstain. The §14 anti-pattern register tracks these explicitly.
-
-[↑ Back to top](#top)
-
----
-
-## 7. Finite outcome state
-
-> **Evidence basis:** Atlas v1.1 §24.3.1; Doctrine Synthesis §11; Governed AI / AIReceipt doctrine carriers (SRC-GAI).
-> **Doctrine status:** CONFIRMED finite-outcome enum; PROPOSED runtime implementation; UNKNOWN repo-state.
-
-Every Focus Mode answer, governed-API response, validator return, and policy decision **MUST** terminate in exactly one of these outcomes. Silent fall-through to a different lane is a doctrine violation.
-
-| Outcome | When *(CONFIRMED doctrine)* | Required artifacts | Public-surface effect |
-|---|---|---|---|
-| **`ANSWER`** | Evidence sufficient · policy permits · release state allows · review *(if required)* recorded. | `EvidenceBundle` resolved; `PolicyDecision = ALLOW`; `ReleaseManifest` applies. | Substantive answer with Evidence Drawer and citation. |
-| **`ABSTAIN`** | Evidence insufficient · cannot cite · evidence stale and no released alternative. | `AIReceipt` with reason; **no claim emitted**. | Non-substantive note with reason; **never invents**. |
-| **`DENY`** | Policy · rights · sensitivity · or release state forbids the answer. Sensitive lanes default here. | `PolicyDecision = DENY` + reason code; `AIReceipt` records denial. | Denial reason; offers non-restricted alternative where possible. |
-| **`ERROR`** | Governed API cannot evaluate — missing schema, malformed query, contract violation, infra failure. | Error envelope with diagnostic code; **no claim leakage**. | Finite, actionable error; never silently falls through. |
-| **`HOLD`** | Promotion/release/correction paused pending steward, rights-holder, or policy review. | `ReviewRecord` pending; `PolicyDecision = HOLD`; no public claim while held. | Surface remains in prior state; no silent rollback. |
-| **`PASS`** *(validator-class)* | Validator/admission check completed; input acceptable. | `ValidationReport` PASS. | Internal only; does not emit a public answer. |
-| **`FAIL`** *(validator-class)* | Validator/admission check completed; input unacceptable. | `ValidationReport` with failure list. | Promotion blocked; quarantine where appropriate. |
-
-### 7.1 Outcome × surface mapping *(CONFIRMED doctrine — Atlas v1.1 §24.3.2)*
-
-| Surface | Outcomes returned | Forbidden behavior |
+| Artifact | Current role | Current evidence-backed disposition |
 |---|---|---|
-| Source summary resolver | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Returning raw source bytes; returning quarantined source as `ANSWER`. |
-| Domain feature/detail lookup | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Returning an unreleased candidate as `ANSWER`; exposing internal store identifiers. |
-| Layer manifest resolver | `ANSWER` / `DENY` / `ERROR` | Returning a layer without `ReleaseManifest`; serving `WORK` or `CATALOG` layers to public clients. |
-| Evidence resolver | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | Returning a bundle whose `EvidenceRef` chain fails closure. |
-| **Focus Mode runtime** | **`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`** | **Returning prose-only output without `AIReceipt`; treating model recall as evidence.** |
-| Review queue surface | `ALLOW` / `RESTRICT` / `DENY` / `ERROR` *(role-scoped)* | Surfacing held items to public role; bypassing separation of duties. |
+| [`README.md`](./README.md) | State-tree navigation and reconciliation boundary | `PLACE`; this document |
+| [`STATE_INDEX.md`](./STATE_INDEX.md) | Proposed single-row Kansas geographic state index | `LINEAGE` / `PROPOSED`; inert pending ADR-0028 and machine closure |
+| [`_template/state-build-plan.md`](./_template/state-build-plan.md) | Proposed geographic state build-plan template | `LINEAGE` / `PROPOSED`; no state lane created |
+| [`finite-outcomes.md`](./finite-outcomes.md) | Older seven-outcome prose vocabulary | `CONFLICTED`; does not override current four-outcome runtime schema |
+| [`lifecycle-states.md`](./lifecycle-states.md) | Lifecycle and promotion-gate prose | Core lifecycle shorthand retained; detailed gates and paths remain proposal/verification-sensitive |
+| [`review-state.md`](./review-state.md) | ReviewRecord and HOLD proposal | `PROPOSED`; HOLD/runtime collision remains unresolved |
+| [`payload-state.md`](./payload-state.md) | FocusModePayload freshness and citation-closure proposal | `PROPOSED`; no state-scale payload or old asserted machine schema verified |
+| [`map-context-state.md`](./map-context-state.md) | Older MapContextEnvelope proposal | `LINEAGE`; newer UI semantic contract/schema family is the current repository seam |
+| [`revocation-state.md`](./revocation-state.md) | Revocation-manifest and rollback-state proposal | `PROPOSED`; no public verifier or state-scale execution verified |
+| [`transitions/`](./transitions/) | Prose transition specifications | `LINEAGE` / `PROPOSED`; not executable state-machine proof |
 
-[↑ Back to top](#top)
+### Transition-document inventory
 
----
-
-## 8. Lifecycle state
-
-> **Evidence basis:** Atlas v1.1 Part I.H; Doctrine Synthesis Part X (Pipeline gates A–G); directory-rules.md §9.
-> **Doctrine status:** CONFIRMED doctrine; PROPOSED stage-by-stage repo implementation; UNKNOWN repo-state.
-
-The KFM lifecycle is a **default-deny promotion pipeline**: each stage holds an explicit gate; promotion is a *governed state transition*, not a file move.
-
-| Stage | Handling | Gate | Required artifact at exit |
-|---|---|---|---|
-| **`RAW`** | Capture immutable source payload or reference with source role, rights, sensitivity, citation, time, hash. | `SourceDescriptor` exists. | `SourceDescriptor`, `SourceIntakeRecord`. |
-| **`WORK` / `QUARANTINE`** | Normalize schema, geometry, time, identity, evidence, rights, policy; **hold failures**. | Validation and policy gate pass — or quarantine reason recorded. | `ValidationReport`, `PolicyDecision`, quarantine reason *(if held)*. |
-| **`PROCESSED`** | Emit validated normalized objects, receipts, public-safe candidates. | `EvidenceRef`, `ValidationReport`, digest closure exist. | `EvidenceRef`, `EvidenceBundle` *(candidate)*. |
-| **`CATALOG` / `TRIPLET`** | Emit catalog records, `EvidenceBundle`s, graph/triplet projections, release candidates. | Catalog/proof closure passes. | `EvidenceBundle` *(released)*, catalog record, release candidate. |
-| **`PUBLISHED`** | Serve released public-safe artifacts through governed APIs and manifests. | `ReleaseManifest`, correction path, rollback target, review/policy state exist. | `ReleaseManifest`, `CorrectionNotice` *(if applicable)*, rollback target. |
-
-> [!NOTE]
-> **Trust-membrane rule.** Public clients and normal UI surfaces *(including Focus Mode UI)* read **only** `PUBLISHED` artifacts via governed APIs. Focus Mode UI under `apps/explorer-web/src/focus-modes/<area>/` **never** reads `RAW` / `WORK` / `QUARANTINE` directly. *(directory-rules.md §6.7.5, §7.1)*
-
-[↑ Back to top](#top)
-
----
-
-## 9. Review and release state
-
-> **Evidence basis:** Atlas v1.1 §24.3, §24.11; Doctrine Synthesis §11.
-> **Doctrine status:** CONFIRMED doctrine; PROPOSED vocabulary stability; UNKNOWN repo implementation.
-
-Review state is **orthogonal** to lifecycle state. An artifact may be `PROCESSED` *(lifecycle)* and simultaneously `pending` *(review)*. Promotion from `PROCESSED` to `PUBLISHED` typically requires the review state to be `approved`.
-
-| Review state | Meaning | Allowed forward transitions | Required artifact |
-|---|---|---|---|
-| `draft` | Authored, not yet submitted for review. | → `pending` | `ReviewRecord` *(draft)* |
-| `pending` | Submitted; awaiting reviewer decision. | → `approved`, `rejected`, `held` | `ReviewRecord` *(pending)* |
-| `held` | Paused by steward, rights-holder, or policy review. | → `pending`, `rejected` | `ReviewRecord` *(held)* + `PolicyDecision = HOLD` |
-| `approved` | Reviewer accepted; release gate may now evaluate. | → `superseded` *(on later revision)* | `ReviewRecord` *(approved)* + reviewer identity *(separation-of-duties applies on sensitive lanes)* |
-| `rejected` | Reviewer declined; artifact does not advance. | terminal *(unless re-authored)* | `ReviewRecord` *(rejected)* + reason |
-| `superseded` | Later approved revision exists; this one no longer current. | terminal | `supersession_chain` entry |
-
-> [!IMPORTANT]
-> **Separation of duties.** Where maturity justifies it, the author of a Focus Mode payload and the approver of its release **MUST** be different identities. This is enforced at the `pending → approved` transition for sensitive-lane content. *(Atlas v1.1 §24, Doctrine Synthesis §11.)*
-
-[↑ Back to top](#top)
-
----
-
-## 10. Payload state and MapContextEnvelope state
-
-> **Evidence basis:** Atlas v1.1 §20.3, §24.11.4; MapLibre v2.1 ML-O-067/068/069/070; KFM-P13-FEAT-0001 *(Focus Mode provenance and trace lenses)*; KFM-P15-FEAT-0002 *(trust badge)*; KFM-P21-FEAT-0002 *(HUC12 viewport pulls)*.
-> **Doctrine status:** PROPOSED for individual cards; CONFIRMED for envelope shape doctrine.
-
-### 10.1 `FocusModePayload` state
-
-A `FocusModePayload` carries the bounded, released, citation-closed evidence a Focus Mode answer is built from. Its **freshness state** is independent of the underlying artifact's lifecycle state.
-
-| Payload state | When | Public effect |
+| Transition document | Intended concept | Boundary |
 |---|---|---|
-| `fresh` | All cited evidence is `PUBLISHED`, in-window, and not revoked. | `ANSWER` allowed *(subject to policy)*. |
-| `stale` | Underlying evidence has been superseded or has aged past its freshness window. | `ABSTAIN` unless a released alternative is found and re-bound. |
-| `not-yet-released` | At least one referenced artifact is still `PROCESSED` or `CATALOG`. | `ABSTAIN` *(never `ANSWER`)*. |
-| `revoked-but-cached` | Evidence has been revoked but UI still holds a cached payload. | `ABSTAIN` and surface revocation reason; never `ANSWER`. |
-| `unknown` | Payload is well-formed but evidence resolution returned `ERROR`. | `ERROR` envelope; never silently `ANSWER`. |
+| [`answer-to-abstain.md`](./transitions/answer-to-abstain.md) | Response narrows when evidence or currentness no longer supports an answer | Must preserve correction/revocation state; prose is not runtime execution |
+| [`candidate-to-hold.md`](./transitions/candidate-to-hold.md) | Candidate pauses pending rights, policy, sensitivity, or review | HOLD is not publication and not a current runtime-envelope outcome |
+| [`hold-to-deny.md`](./transitions/hold-to-deny.md) | Held candidate resolves to a denial or rejection | Requires owning policy/review records; Markdown cannot issue them |
+| [`published-to-revoked.md`](./transitions/published-to-revoked.md) | Released artifact is withdrawn | Requires governed revocation, correction, cache, and public-state handling |
+| [`rollback-to-prior.md`](./transitions/rollback-to-prior.md) | Prior released state becomes current through governed rollback | A Git revert alone is not public rollback |
 
-### 10.2 `MapContextEnvelope` state
-
-The `MapContextEnvelope` is what the Focus Mode runtime sees of the map: camera, layer IDs, feature IDs, temporal snapshot, release refs, selected evidence refs. It **MUST** include `time_window`, `layer_ids`, `feature_ids`, `spec_hash`, and a release-ref binding before the runtime accepts it. *(MapLibre v2.1 ML-O-069, CONFIRMED doctrine.)*
-
-```mermaid
-flowchart TB
-  UI["MapLibre canvas + UI state"] -->|build envelope| ENV["MapContextEnvelope<br/><i>time_window · layer_ids · feature_ids ·<br/>spec_hash · release_refs · evidence_refs</i>"]
-  ENV -->|admission check| ADM{"Envelope valid?<br/>(citation closure +<br/>spec_hash + release refs)"}
-  ADM -- "no" --> ERR["ERROR<br/><i>diagnostic code</i>"]
-  ADM -- "yes" --> RT["Focus Mode runtime"]
-  RT -->|resolve| RES{"Evidence resolves +<br/>policy allows?"}
-  RES -- "policy denies" --> DENY["DENY<br/><i>PolicyDecision + AIReceipt</i>"]
-  RES -- "evidence insufficient" --> ABS["ABSTAIN<br/><i>AIReceipt</i>"]
-  RES -- "yes" --> ANS["ANSWER<br/><i>AIReceipt + EvidenceDrawerPayload</i>"]
-  RES -- "review pending" --> HOLD["HOLD<br/><i>ReviewRecord pending</i>"]
-```
-
-> [!NOTE]
-> **Per KFM-P21-FEAT-0002 (PROPOSED).** Viewport pulls *(e.g., HUC12 boundaries)* are permitted **only when scoped, policy-aware, and tied to `SourceDescriptor`s**. An unbounded "fetch what's on screen" pattern breaks scope governance and is not allowed.
-
-[↑ Back to top](#top)
+[Back to top](#top)
 
 ---
 
-## 11. Revocation and rollback state
+<a id="6-state-families-at-a-glance"></a>
 
-> **Evidence basis:** KFM-P19-FEAT-0002 *(Focus Mode revocation verifier, PROPOSED)*; KFM-P7-PROG-0005 *(Detached payload mode, CONFIRMED)*; Atlas v1.1 §20.3 *(Correction/Rollback capability matrix)*.
+## 5. Current authority and implementation map
 
-| Revocation/rollback state | Meaning | Required artifact | Required check before serving |
-|---|---|---|---|
-| `live` | Artifact is the current released form. | `ReleaseManifest` current | Standard release-state check. |
-| `revoked` | Issuer published a revocation; artifact MUST NOT serve. | Revocation manifest *(signed)*, TTL, `spec_hash` binding | Revocation manifest signature + TTL + `spec_hash` + run-receipt attestations *(PROPOSED — KFM-P19-FEAT-0002)*. |
-| `rolled-back` | A prior `ReleaseManifest` has been re-promoted as current. | `RollbackCard` + prior release-manifest reference | Rollback receipt + supersession chain. |
-| `superseded-by` | A newer release replaces this one; old version remains addressable. | `supersession_chain` entry; new `ReleaseManifest` | Surface "superseded — see <new>"; do not silently swap. |
+| Surface | What is confirmed now | What it cannot prove |
+|---|---|---|
+| Parent [`docs/focus-mode/README.md`](../README.md) | Singular compatibility lane exists; geographic and system state are mixed; migration is held | Final canonical path or accepted scope |
+| [`RuntimeResponseEnvelope` contract](../../../contracts/runtime/runtime_response_envelope.md) | Tracked v0.4 contract points to a paired runtime schema and documents four client outcomes | Live service behavior, evidence resolution, policy correctness, or release |
+| [Runtime schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Closed object; enum is `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `ANSWER` requires evidence refs and precision disclosure | Accepted semantics, truthful evidence, policy permission, or public deployment |
+| [Runtime validator](../../../tools/validators/validate_runtime_response_envelope.py) and [fixtures](../../../fixtures/contracts/v1/runtime/runtime_response_envelope/README.md) | Repository-present deterministic shape and precision checks with positive/negative fixture lanes | Evidence closure, policy, review, release, or publication |
+| [`FocusResponse` contract](../../../contracts/ui/focus_response.md) | UI response is a projection downstream of the runtime envelope | Runtime outcome authority or answer truth |
+| [`MapContextEnvelope` contract](../../../contracts/ui/map_context_envelope.md) | Renderer-neutral, immutable, released-input-only request-context proposal | Evidence, policy, review, release, or answer authority |
+| [`FocusModePayload` contract](../../../contracts/focus_mode/focus_mode_payload.md) | Semantic planning contract exists | Machine schema closure at the old `focus_mode` path, state-scale payload, or public release |
+| [`schemas/contracts/v1/focus/`](../../../schemas/contracts/v1/focus/README.md) | Mixed scaffold and compatibility family exists; runtime alias points to the runtime schema | Settled request/response schema ownership or mature Focus runtime |
+| [`validate_focus_mode_index.py`](../../../tools/validators/validate_focus_mode_index.py) | Tracked proposed validator is explicitly county-focused and recognizes county/region/corridor scopes | State-scope validation, current singular-tree validity, or state release |
+| [`STATE_INDEX.md`](./STATE_INDEX.md) | One proposed `kansas-state` planning row exists | Registered scope, matching lane, validation, payload, release, or publication |
+| ADR-0028 | Documents the proposed state-scope and required split between geographic and system state | Acceptance, path resolution, implementation, or release |
+| ADR-0029 and Directory Rules v2 | Establish accepted placement authority and finite placement outcomes | Domain truth, runtime behavior, rights, sensitivity, or publication |
+
+### Maturity summary
+
+| Capability | Current status |
+|---|---|
+| State-tree bytes and navigation | `CONFIRMED` |
+| System-state prose corpus | `CONFIRMED` presence; mixed freshness and authority |
+| Runtime four-outcome machine shape | `CONFIRMED` repository shape; contract/schema remain marked proposed |
+| Runtime envelope validator and fixtures | `CONFIRMED` repository implementation |
+| Geographic `kansas-state` identity | `PROPOSED`; not accepted or registered |
+| State-aware Focus index validation | `ABSENT / NEEDS IMPLEMENTATION` |
+| State-scale `FocusModePayload` | `UNKNOWN`; no verified instance |
+| Live evidence and policy evaluation | `UNKNOWN` |
+| Accountable review and separation of duties | `UNKNOWN` |
+| State-scale release, correction, and rollback | `UNKNOWN` |
+| Deployment and public parity | `UNKNOWN` |
+
+[Back to top](#top)
+
+---
+
+<a id="7-finite-outcome-state"></a>
+
+## 6. Runtime outcomes and state-family separation
+
+### Current runtime/client outcomes
+
+The tracked runtime schema currently permits exactly four client-facing outcomes.
+
+| Outcome | Current bounded meaning | Evidence and disclosure posture |
+|---|---|---|
+| `ANSWER` | The runtime may return a governed response under the current envelope proposal | Requires at least one `EvidenceRef` and `precision_actually_used`; still does not prove evidence resolution or policy/release correctness |
+| `ABSTAIN` | The runtime declines to answer because support, currentness, rights, context, or another prerequisite is insufficient | Must not carry answer-shaped precision disclosure |
+| `DENY` | Policy, role, sensitivity, access, or release posture blocks delivery | Must not leak restricted payload or protected precision |
+| `ERROR` | The runtime cannot complete safely or deterministically | Diagnostic state; not evidence for or against the underlying claim |
+
+### Concepts that are not current runtime outcomes
+
+| Concept | Correct current class | Why it remains separate |
+|---|---|---|
+| `HOLD` | Placement, review, promotion, correction, or workflow posture | The runtime schema does not enumerate it; held public behavior must resolve through the accepted runtime contract rather than a fifth ad hoc outcome |
+| `PASS` | Validator/admission result | A green check does not emit a public answer or authorize release |
+| `FAIL` | Validator/admission result | A red check blocks or narrows work; it is not a client truth judgment |
+| `approved`, `rejected`, `held` | Review-state proposal | Review status is orthogonal to runtime response and lifecycle |
+| `RAW`, `PROCESSED`, `PUBLISHED` | Lifecycle state | Lifecycle location does not determine the client outcome by itself |
+| `fresh`, `stale`, `revoked-but-cached` | Payload or correction posture proposals | These may influence the four outcomes but do not replace them |
 
 > [!CAUTION]
-> **Cached-but-revoked is a doctrine boundary.** If a Focus Mode UI holds a payload locally and the underlying evidence is revoked while the user is mid-session, the runtime **MUST** transition the answer to `ABSTAIN` with a revocation reason. **Silently continuing to render the cached payload violates cite-or-abstain.** *(KFM-P19-FEAT-0002, PROPOSED.)*
+> The sibling [`finite-outcomes.md`](./finite-outcomes.md) and
+> [`review-state.md`](./review-state.md) remain useful lineage for the unresolved
+> HOLD model, but maintainers must not treat their seven-item enum as current
+> runtime machine authority.
 
-[↑ Back to top](#top)
+### State-family orthogonality
+
+One request may involve all of these dimensions at once:
+
+```text
+artifact lifecycle:     PROCESSED
+review posture:         held
+payload freshness:      stale
+correction posture:     superseded
+runtime outcome:        ABSTAIN
+validator result:       PASS or FAIL for a particular check
+```
+
+None of those values may be silently substituted for another.
+
+[Back to top](#top)
 
 ---
 
-## 12. State transition diagrams
+<a id="8-lifecycle-state"></a>
 
-### 12.1 Finite-outcome decision flow inside Focus Mode
+## 7. Lifecycle and trust membrane
 
-```mermaid
-stateDiagram-v2
-  [*] --> Resolving
-  Resolving --> CitationCheck : EvidenceRef → EvidenceBundle
-  CitationCheck --> PolicyCheck : closure ok
-  CitationCheck --> ABSTAIN : closure fails
-  CitationCheck --> ERROR : malformed / schema missing
-  PolicyCheck --> ReleaseCheck : allow
-  PolicyCheck --> DENY : deny (policy / rights / sensitivity)
-  PolicyCheck --> HOLD : hold (review pending)
-  ReleaseCheck --> ReviewCheck : ReleaseManifest applies
-  ReleaseCheck --> ABSTAIN : not-yet-released
-  ReviewCheck --> ANSWER : approved (or review not required)
-  ReviewCheck --> HOLD : pending
-  ABSTAIN --> [*]
-  DENY --> [*]
-  ERROR --> [*]
-  HOLD --> [*]
-  ANSWER --> [*]
+KFM preserves the lifecycle shorthand:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED
 ```
 
-### 12.2 Lifecycle promotion with required artifacts
+Promotion is a governed state transition, not a file move, commit, pull request,
+workflow badge, merge, release-page entry, or UI render.
+
+| Stage | Bounded responsibility | Public-client posture |
+|---|---|---|
+| `RAW` | Capture source material or references with identity and provenance | Internal; never a normal public-client source |
+| `WORK` / `QUARANTINE` | Transform, assess, validate, or hold unresolved rights, sensitivity, identity, or quality issues | Internal; fail closed |
+| `PROCESSED` | Produce validated normalized candidates and supporting accountability material | Internal candidate state; not public release |
+| `CATALOG` / `TRIPLETS` | Index, relate, and prepare governed evidence or release candidates | Derived or candidate state; not sovereign truth |
+| `PUBLISHED` | Released public-safe artifacts available through governed interfaces | Only after evidence, policy, review, release, correction, and rollback closure appropriate to the claim |
 
 ```mermaid
 flowchart LR
-  RAW["RAW<br/><i>SourceDescriptor</i>"] -->|validate + policy| WQ["WORK / QUARANTINE<br/><i>ValidationReport · PolicyDecision</i>"]
-  WQ -->|closure passes| PROC["PROCESSED<br/><i>EvidenceRef · digest closure</i>"]
-  PROC -->|catalog closure| CAT["CATALOG / TRIPLET<br/><i>EvidenceBundle · release candidate</i>"]
-  CAT -->|release gate| PUB["PUBLISHED<br/><i>ReleaseManifest · rollback target</i>"]
-  PUB -. correction .-> CORR["CorrectionNotice<br/><i>+ rollback target</i>"]
-  CORR -. supersedes .-> PUB
-  classDef quarantine fill:#fff4e0,stroke:#d97706,color:#7c2d12;
-  class WQ quarantine;
+    RAW["RAW"] --> WQ["WORK / QUARANTINE"]
+    WQ --> PROC["PROCESSED"]
+    PROC --> CAT["CATALOG / TRIPLETS"]
+    CAT --> GATE{{"Evidence · policy · review · release"}}
+    GATE -->|eligible| PUB["PUBLISHED"]
+    GATE -->|insufficient| ABS["ABSTAIN / remain internal"]
+    GATE -->|prohibited| DENY["DENY / quarantine"]
+    PUB --> API["Governed API"]
+    API --> UI["Public-safe UI / Focus projection"]
 ```
 
-[↑ Back to top](#top)
+### Trust-membrane rules
+
+- Public and ordinary UI clients consume governed interfaces or released
+  public-safe artifacts, not RAW, WORK, QUARANTINE, canonical/internal, proof,
+  or direct model stores.
+- `EvidenceRef` must resolve to admissible `EvidenceBundle` support before a
+  consequential claim can be presented as supported.
+- Maps, graphs, indexes, summaries, state tables, and generated language remain
+  projections; they do not become sovereign truth.
+- A document that describes lifecycle stages does not own the machine state or
+  move an object through it.
+- Passing a schema or validator is necessary evidence for its bounded check, not
+  proof of source truth, policy approval, release, or publication.
+
+[Back to top](#top)
 
 ---
 
-## 13. Validators, tests, and receipts
+<a id="9-review-and-release-state"></a>
 
-> [!NOTE]
-> **Authorities only.** This doc enumerates *which* validator families and *which* receipt types apply to each state. Implementations live at canonical homes; this section is **reference**, not source.
+## 8. Review, HOLD, and release boundary
 
-| State family | Validator family *(home: `tools/validators/`)* | Receipt / record type | Negative case required *(PROPOSED)* |
-|---|---|---|---|
-| Finite outcome | `validate_decision_envelope.py` *(PROPOSED)* | `DecisionEnvelope`, `AIReceipt` | Surface returning unenum'd outcome → `ERROR`. |
-| Lifecycle | `validate_evidence_bundle.py`, `validate_release_manifest.py` *(PROPOSED)* | `ValidationReport`, `ReleaseManifest` | Promotion attempted without `EvidenceBundle` closure → `FAIL`. |
-| Review | `validate_review_record.py` *(PROPOSED)* | `ReviewRecord`, `PolicyDecision` | Same identity authors and approves sensitive-lane release → `FAIL`. |
-| Payload / context | `validate_focus_mode_payload.py` *(PROPOSED — directory-rules.md §6.7.2)* | `FocusModePayload`, `MapContextEnvelope`, `EvidenceDrawerPayload` | Public Focus Mode renders `WORK`-stage geometry → `FAIL`. |
-| Revocation / rollback | `validate_revocation_manifest.py` *(PROPOSED)* | Revocation manifest, `RollbackCard`, `CorrectionNotice` | Cached revoked payload served as `ANSWER` → `FAIL`. |
+The tracked review-state document proposes six ReviewRecord states and uses
+`HOLD` in both review and runtime senses. Current repository evidence does not
+close that collision.
 
-> **CI invocation.** Per `directory-rules.md §7.5.a` *(OPEN-DR-07)*, the canonical orchestrator is `python tools/validate_all.py`. **PROPOSED — verify at next mounted-repo session.**
+| Topic | Current bounded treatment |
+|---|---|
+| Draft and pending review | Useful planning concepts; exact accepted contract and machine vocabulary require verification |
+| `HOLD` | Fail-closed review, placement, promotion, or correction posture; not in the current runtime outcome schema |
+| Approval | May satisfy a review gate; never equals release or publication |
+| Rejection | Stops the reviewed candidate; does not erase history |
+| Supersession | Requires explicit lineage to a successor; must not silently overwrite prior state |
+| Separation of duties | Preferred and required where consequence justifies it; current independent reviewer identities remain unverified |
+| CODEOWNERS | Routes GitHub review to `@bartytime4life`; does not create a ReviewRecord or release approval |
+| Release | Requires a distinct release decision/manifest, evidence and policy closure, correction path, and rollback target |
 
-[↑ Back to top](#top)
+### Fail-closed HOLD behavior
+
+A HOLD should identify:
+
+1. the exact object or transition held;
+2. the reason category;
+3. the owner of the unresolved decision;
+4. evidence required to clear the hold;
+5. what remains usable while held;
+6. whether public state must abstain, deny, remain unchanged, or be withdrawn;
+7. the correction and rollback implications.
+
+This README records no active HOLD object beyond placement and verification
+posture. It creates no review or policy decision.
+
+[Back to top](#top)
 
 ---
 
-## 14. Anti-patterns
+<a id="10-payload-state-and-mapcontextenvelope-state"></a>
 
-| Anti-pattern | Why it breaks the trust path | Mitigation |
+## 9. Payload, map context, and freshness
+
+### Focus payload
+
+The tracked [`payload-state.md`](./payload-state.md) proposes freshness and
+citation-closure states for a `FocusModePayload`. The semantic payload contract
+exists, but the old asserted machine path
+`schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` was not present
+at the inspected commit.
+
+Therefore:
+
+- payload-state vocabularies remain `PROPOSED`;
+- no state-scale payload instance is confirmed;
+- no payload state can authorize an answer by itself;
+- citation closure is claim-specific and requires governed resolution;
+- stale, unresolved, withdrawn, or unreleased support must narrow the runtime
+  result rather than being filled by model language.
+
+### Map context
+
+The current repository has a newer, renderer-neutral UI
+[`MapContextEnvelope`](../../../contracts/ui/map_context_envelope.md) proposal.
+That contract names a paired schema, fixtures, validator, and tests; their
+execution was not verified in this task. The envelope defines request context,
+not evidence or an answer.
+
+| Context property | Bounded rule |
+|---|---|
+| Layer and feature identity | Stable KFM identifiers; no renderer-internal object leakage |
+| Release references | Context may name released inputs; downstream services re-check current state |
+| Evidence references | Pointers only; they must still resolve through governed evidence interfaces |
+| Time and area scope | Explicit and bounded; cannot upgrade the evidence's own temporal or spatial support |
+| Deterministic identity | Supports replay and comparison; hash integrity is not truth |
+| Expiration | Prevents stale UI context from being treated as current |
+| Policy and sensitivity | Evaluated downstream; map context does not grant permission |
+| Renderer neutrality | MapLibre or another admitted renderer cannot become evidence authority |
+
+### Freshness boundary
+
+Freshness is not one global boolean. At minimum, maintainers must distinguish:
+
+- request-context freshness;
+- source observation time;
+- evidence validity and supersession;
+- policy version and effective period;
+- review and release state;
+- correction, withdrawal, and cache state.
+
+A current map envelope cannot make stale evidence current, and a fresh evidence
+bundle cannot authorize a denied or unreleased response.
+
+[Back to top](#top)
+
+---
+
+<a id="11-revocation-and-rollback-state"></a>
+
+## 10. Revocation, correction, and rollback
+
+The tracked [`revocation-state.md`](./revocation-state.md) is a draft proposal.
+It usefully preserves the principle that post-release change is governed, but
+its manifest fields, TTLs, signatures, reason codes, and execution remain
+`PROPOSED` unless confirmed by current contracts, schemas, validators, policy,
+and release evidence.
+
+| Concept | Governing requirement | What this README proves |
 |---|---|---|
-| **State-family collapse** — treating `PROCESSED` *(lifecycle)* as `ANSWER` *(outcome)*. | Conflates "validated artifact exists" with "public claim allowed". | Separate vocabularies in this doc; validator checks every transition. |
-| **Silent fall-through** — returning prose without an explicit outcome envelope. | Breaks cite-or-abstain; makes audit impossible. | Every governed surface returns one of seven finite outcomes; no other path. *(§7.)* |
-| **Cached-but-revoked render** — UI keeps rendering revoked evidence. | Violates revocation; serves stale or denied content. | KFM-P19-FEAT-0002 verifier *(PROPOSED)*; revocation manifest TTL check. |
-| **Review = Release** — treating an approved review record as published. | Skips release manifest, rollback target, correction path. | Lifecycle gate requires `ReleaseManifest`, not just `ReviewRecord`. |
-| **AI as truth source** — model output stored as evidence object. | Violates governed-AI rule. | `AIReceipt` records context + provider + hashes; never persists hidden chain-of-thought as evidence. |
-| **Outcome enum drift** — adding a new outcome without an ADR. | Breaks downstream consumers that join on outcome string. | Outcome vocabulary changes are ADR-class. *(directory-rules.md §2.4.)* |
-| **State doc absorbs implementation** — schemas/policies/validators land here. | Creates parallel authority outside canonical roots. | Keep this doc reference-only; §4 lists what doesn't belong. |
+| Correction | Identify the affected claim/artifact, cause, successor or narrowed state, and public notice path | Principle only |
+| Withdrawal/revocation | Stop serving the affected released form and preserve why it was withdrawn | No executed revocation |
+| Supersession | Retain old addressable lineage and point to the successor | No state-scale successor |
+| Rollback | Restore an eligible prior released state through a governed decision and receipts | No rollback execution |
+| Cache invalidation | Prevent clients from continuing to render withdrawn or superseded content | Not exercised |
+| Git revert | Correct repository bytes | Insufficient by itself for public correction or rollback |
 
-[↑ Back to top](#top)
+> [!WARNING]
+> A Git revert can restore documentation bytes. It cannot by itself retract
+> cached public artifacts, update governed APIs, issue correction notices,
+> withdraw evidence, or reconstruct public reliance.
+
+[Back to top](#top)
 
 ---
 
-## 15. Open questions and ADR triggers
+<a id="12-state-transition-diagrams"></a>
 
-| Open item | Class | Suggested ADR title *(PROPOSED)* |
+## 11. Transition documents and governed change
+
+The transition files are human-readable design and review aids. They do not
+execute state changes and must not become a second contract, policy engine, or
+release ledger.
+
+```mermaid
+flowchart TD
+    REQUEST["Request or candidate"] --> RESOLVE["Resolve evidence and current state"]
+    RESOLVE --> POLICY["Apply policy, rights, sensitivity, and role"]
+    POLICY --> REVIEW["Apply review and release requirements"]
+    REVIEW --> OUTCOME{{"Runtime outcome"}}
+    OUTCOME --> ANSWER["ANSWER"]
+    OUTCOME --> ABSTAIN["ABSTAIN"]
+    OUTCOME --> DENY["DENY"]
+    OUTCOME --> ERROR["ERROR"]
+    REVIEW --> HOLD["HOLD outside runtime enum"]
+    HOLD --> REVIEW
+    ANSWER --> CORRECT["Correction / withdrawal / supersession if needed"]
+    CORRECT --> OUTCOME
+```
+
+### Transition-document use rule
+
+A transition document is useful when it records:
+
+- preconditions and blocked states;
+- one authority owner;
+- source and evidence requirements;
+- policy and sensitivity obligations;
+- review identity and separation-of-duties expectations;
+- finite success and failure outcomes;
+- emitted receipts or records;
+- correction, supersession, withdrawal, and rollback effects.
+
+It is not sufficient evidence that the transition exists in runtime.
+
+[Back to top](#top)
+
+---
+
+<a id="13-validators-tests-and-receipts"></a>
+
+## 12. Validation, tests, and receipts
+
+### Current repository evidence
+
+| Validation surface | Current status | Bounded conclusion |
 |---|---|---|
-| **OPEN-DR-09** — Reconcile `docs/focus-mode/state/` path divergence vs canonical `docs/focus-modes/<area>-<scope>/`. | Directory Rules §2.4 *(structural)* | "Focus Mode state-doctrine lane placement". |
-| Should the outcome enum include a distinct `STALE` or remain folded into `ABSTAIN`? | Vocabulary | "Finite outcome vocabulary v2 — STALE handling". |
-| Should `HOLD` be modeled as an outcome **or** a review state **or** both? *(Currently both — Atlas v1.1 §24.3.1 and review-state §9.)* | Vocabulary / collision | "HOLD modeling — outcome vs review-state collision". |
-| Obligations enforcement point — pre-emit vs consumer-enforced? *(KFM atlas open question.)* | Runtime | "Decision-envelope obligations enforcement". |
-| Receipt schema layout — `schemas/contracts/v1/receipts/` vs `schemas/contracts/v1/<domain>/receipts/`? | Schema home | ADR-S-03 *(PROPOSED — Atlas v1.1 §24.12)*. |
-| Path-prefix linter rule for `focus-mode/` *(singular)* inside `docs/`. | Lint / CI | "Path-prefix linter — singular focus-mode rejection". |
+| Runtime response schema | Present, closed, four outcomes, conditional answer precision | Confirms machine shape only |
+| Runtime response validator | Present and deterministic | Confirms implemented local shape/semantic checks |
+| Runtime valid/invalid fixture lanes | Present | Confirms test carriers exist; individual hosted/local results remain separate |
+| Focus schema family | Present but mixed scaffolds/compatibility | Does not establish final Focus request/response ownership |
+| County Focus index validator | Present, proposed, county-only, targets a different layout | Not a state-tree or state-scope validator |
+| State index validator | Not verified | State planning row remains unvalidated |
+| README/Markdown checks | Applicable to this change | Prove document structure and link integrity only |
+| Source, evidence, policy, review, release, correction, rollback | `NOT_RUN` | No operational state claim allowed |
 
-> [!IMPORTANT]
-> **Until OPEN-DR-09 resolves, this doc is doctrinally usable but structurally provisional.** Cite it as `kfm://doc/focus-mode-state-readme` *(stable doc_id)*, not as a path.
+### Validation expected for this README change
 
-[↑ Back to top](#top)
+- one H1 and one complete `KFM_META_BLOCK_V2`;
+- unique explicit compatibility anchors;
+- balanced fenced blocks and valid Mermaid syntax;
+- consistent tables;
+- all same-document fragments resolve;
+- repository-relative links resolve at the pinned base;
+- UTF-8 with LF line endings and a final newline;
+- no tabs, trailing whitespace, conflict markers, or decorative badge assertions;
+- no claim that an ADR, contract, schema, validator, workflow, commit, or PR
+  creates release/publication authority;
+- preserved core lifecycle and trust-membrane invariants;
+- explicit conflict between the older seven-outcome prose and current four-outcome
+  runtime machine shape.
+
+### What a green check does not prove
+
+A passing README, schema, validator, unit test, security scan, release dry run, or
+rollback drill does not by itself establish:
+
+- source truth or rights;
+- EvidenceBundle closure;
+- policy correctness;
+- accountable human review;
+- state-scope acceptance;
+- release or publication;
+- deployed runtime behavior;
+- correction propagation or public rollback.
+
+[Back to top](#top)
 
 ---
+
+<a id="14-anti-patterns"></a>
+
+## 13. Anti-patterns
+
+| Anti-pattern | Failure | Required posture |
+|---|---|---|
+| State-family collapse | Treating lifecycle, review, payload, correction, validator, and runtime values as one enum | Keep separate carriers and mappings |
+| Geographic/system-state collapse | Using one `state/` path as authority for both Kansas scope and cross-cutting runtime doctrine | Split only through accepted placement and migration |
+| Seven-outcome runtime claim | Treating `HOLD`, `PASS`, or `FAIL` as current runtime-envelope outcomes | Preserve four machine outcomes; track other classes separately |
+| Review equals release | Treating approval or CODEOWNERS routing as publication | Require distinct release and rollback closure |
+| Schema-valid equals true | Treating valid JSON as evidence, policy, or release proof | Resolve evidence and governing state |
+| Current map equals current evidence | Treating viewport time or camera state as observation freshness | Preserve source/evidence time |
+| Candidate equals published | Serving PROCESSED or CATALOG material to a public role | Use governed released projection only |
+| Cached-but-withdrawn render | Continuing to serve corrected or revoked material | Abstain/deny/withdraw and invalidate caches |
+| Prose transition equals implementation | Claiming a state transition exists because a Markdown spec exists | Require contract, schema, code, fixtures, tests, and runtime evidence |
+| Proposed ADR as authority | Using ADR-0028 to register or move state scope before acceptance | Keep implementation and migration held |
+| Parallel Focus tree | Creating `docs/focus-modes/` while the current tree remains writable | Deny until accepted migration and single-writer cutover |
+| Git state equals public state | Treating commit, PR, merge, tag, or release page as KFM publication | Preserve governed release, correction, and rollback |
+
+[Back to top](#top)
+
+---
+
+<a id="15-open-questions-and-adr-triggers"></a>
+
+## 14. Open questions and ADR triggers
+
+| Open item | Current status | Decision or evidence needed |
+|---|---|---|
+| Split geographic state scope from system/trust state | `HOLD` | Accepted decision naming each authority owner and final target |
+| Accept or reject `scope_kind: state` and `scope_id: kansas-state` | `PROPOSED` under ADR-0028 | ADR acceptance with domain-profile, evidence, policy, release, correction, and rollback consequences |
+| Reconcile sibling seven-outcome prose with four-outcome runtime schema | `CONFLICTED` | Contract/schema review and documented sibling migration |
+| Model HOLD | `NEEDS VERIFICATION` | Decide review/placement/promotion carrier and public runtime projection |
+| Settle Focus request/response schema ownership | `CONFLICTED` | Resolve UI/focus/runtime overlap without parallel schema authority |
+| Close `FocusModePayload` machine shape | `UNKNOWN` | Accepted semantic owner, schema, validator, positive/negative fixtures, compatibility plan |
+| Define state-aware Focus index validation | `ABSENT` | Accepted state scope plus deterministic no-network validator and negative fixtures |
+| Inventory inbound links and external consumers | `NEEDS VERIFICATION` | Repository and external consumer closure before move/rename |
+| Define accountable independent review routes | `NEEDS VERIFICATION` | Verified identities and assignments, not placeholder roles |
+| Prove correction/withdrawal/rollback behavior | `UNKNOWN` | Executable governed flow, receipts, cache handling, and drill evidence |
+
+### Changes that require more than a README edit
+
+- adding or removing a runtime outcome;
+- accepting geographic state scope;
+- moving, splitting, renaming, mirroring, or deleting the current tree;
+- changing the authority owner of runtime, payload, review, or correction state;
+- introducing a new canonical schema or policy home;
+- allowing public clients to consume a new state class;
+- changing release, correction, withdrawal, or rollback semantics.
+
+[Back to top](#top)
+
+---
+
+## 15. Maintenance, correction, and rollback
+
+### Update this README when
+
+- the state tree adds, removes, renames, or moves a direct child;
+- ADR-0028 changes effective status;
+- accepted placement authority resolves the mixed state tree;
+- the runtime outcome enum changes through an accepted contract/schema process;
+- HOLD gains an accepted carrier or client projection;
+- state-aware validation is implemented or registered;
+- Focus payload, map-context, review, revocation, or correction contracts change;
+- a state-scale release, correction, withdrawal, or rollback becomes verifiable;
+- an inbound-link or external-consumer inventory changes migration risk.
+
+### Documentation correction
+
+A correction should:
+
+1. pin the affected README version and repository commit;
+2. identify the false, stale, or conflicted claim;
+3. cite the newer contract, schema, test, decision, or runtime evidence;
+4. preserve compatibility anchors where feasible;
+5. state whether sibling docs also need correction;
+6. avoid changing machine or policy authority through prose;
+7. define rollback to a known prior blob or a bounded forward fix.
+
+### Rollback
+
+Before merge, close or abandon the draft pull request and branch. Branch deletion
+is a separate action.
+
+After merge, restore prior blob
+`ad89a66c4a1e5de0678bffd95c9502f0aee23c96` through a transparent revert or
+apply a bounded forward correction. Do not rewrite shared history.
+
+Because this change is documentation-only, repository rollback affects this
+README. Any future public state artifact would require its own correction,
+withdrawal, cache invalidation, supersession, and rollback process.
+
+[Back to top](#top)
+
+---
+
+<a id="16-related-docs"></a>
 
 ## 16. Related docs
 
-- `directory-rules.md` *(v1.2 §6.7 Focus Mode placement contract)*
-- `docs/focus-modes/README.md` *(PROPOSED — canonical doctrine landing; pending OPEN-DR-08)*
-- `docs/standards/PROV.md` *(W3C PROV-O / PAV provenance standards profile)*
-- `contracts/focus_mode/focus_mode_payload.md` *(PROPOSED — semantic contract)*
-- `schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json` *(PROPOSED — machine schema)*
-- `schemas/contracts/v1/runtime/decision_envelope.schema.json` *(PROPOSED — finite-outcome envelope)*
-- `schemas/contracts/v1/runtime/ai_receipt.schema.json` *(PROPOSED — AIReceipt)*
-- `kfm_unified_doctrine_synthesis.md` *(§11 finite outcome envelope vocabulary)*
-- `Master_MapLibre_Components-Functions-Features_v2_1_FULL.md` *(Focus Mode placement contract; ML-O-067/068/069)*
-- `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas` *(§24.3 Master Decision Outcome Envelope Reference)*
-- `tools/validators/` *(home for all state validators — PROPOSED)*
+### Current Focus and placement boundaries
 
-[↑ Back to top](#top)
+- [Parent Focus compatibility README](../README.md)
+- [Accepted Directory Rules v2 bytes](../../doctrine/directory-rules.md)
+- [ADR-0028 — proposed state-scale Focus scope](../../adr/ADR-0028%20%E2%80%94%20State-scale%20Focus%20Mode%20scope.md)
+- [ADR-0029 — accepted Directory Rules adoption](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [CODEOWNERS review routing](../../../.github/CODEOWNERS)
+
+### Current runtime, UI, payload, schema, and validation seams
+
+- [`RuntimeResponseEnvelope` semantic contract](../../../contracts/runtime/runtime_response_envelope.md)
+- [Runtime response machine schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json)
+- [Runtime response validator](../../../tools/validators/validate_runtime_response_envelope.py)
+- [Runtime response fixture README](../../../fixtures/contracts/v1/runtime/runtime_response_envelope/README.md)
+- [`FocusResponse` UI projection contract](../../../contracts/ui/focus_response.md)
+- [`MapContextEnvelope` UI semantic contract](../../../contracts/ui/map_context_envelope.md)
+- [`FocusModePayload` semantic contract](../../../contracts/focus_mode/focus_mode_payload.md)
+- [Focus schema-family index](../../../schemas/contracts/v1/focus/README.md)
+- [Proposed county Focus index validator](../../../tools/validators/validate_focus_mode_index.py)
+
+### State-tree documents
+
+- [Geographic state index](./STATE_INDEX.md)
+- [State build-plan template](./_template/state-build-plan.md)
+- [Finite-outcome lineage](./finite-outcomes.md)
+- [Lifecycle-state lineage](./lifecycle-states.md)
+- [Review-state lineage](./review-state.md)
+- [Payload-state lineage](./payload-state.md)
+- [Map-context-state lineage](./map-context-state.md)
+- [Revocation-state lineage](./revocation-state.md)
+- [Transition specifications](./transitions/)
+
+[Back to top](#top)
 
 ---
+
+<a id="17-appendix"></a>
+<a id="17-appendix--glossary-vocabularies-references"></a>
 
 ## 17. Appendix
 
-<details>
-<summary><strong>17.1 Glossary of state vocabularies</strong></summary>
+### 17.1 State-family glossary
 
-| Term | Family | Definition *(CONFIRMED doctrine unless noted)* |
+| Term | Family | Bounded meaning |
 |---|---|---|
-| `ANSWER` | Finite outcome | Substantive response with resolved evidence, allowing policy, applicable release manifest. |
-| `ABSTAIN` | Finite outcome | Non-substantive response when evidence is insufficient, citation closure fails, or no released alternative exists. |
-| `DENY` | Finite outcome | Refusal because policy, rights, sensitivity, or release state forbids the answer. |
-| `ERROR` | Finite outcome | Diagnostic refusal because the governed API cannot evaluate the request. |
-| `HOLD` | Finite outcome **and** review state *(see open question §15)* | Pending steward, rights-holder, or policy review. |
-| `PASS` / `FAIL` | Validator-class outcome | Internal validator/admission-check terminals; never directly emit a public answer. |
-| `RAW` → `PUBLISHED` | Lifecycle | The five-stage default-deny pipeline; promotion is a governed state transition. |
-| `ReviewRecord` | Review state carrier | `draft` / `pending` / `held` / `approved` / `rejected` / `superseded`. |
-| `FocusModePayload` | Payload state | Bounded, released, citation-closed evidence projection for one Focus Mode answer. |
-| `MapContextEnvelope` | Context state | Camera + layer IDs + feature IDs + temporal snapshot + release refs + selected evidence refs *(MapLibre v2.1 ML-O-069)*. |
-| `EvidenceDrawerPayload` | UI projection | Governed UI projection of `EvidenceBundle` + citations + policy/review/release/correction state. |
-| `AIReceipt` | Audit record | Context + provider/model profile + hashes + policy decisions for a Focus Mode answer. |
-| `DecisionEnvelope` | Outcome carrier | `decision_id` + `outcome` + `policy_family` + `reasons[]` + `obligations[]` + `evaluated_at`. |
-| `ReleaseManifest` | Release state | Authoritative record of what is `PUBLISHED`, with correction path and rollback target. |
-| `CorrectionNotice` / `RollbackCard` | Correction state | Public-visible records of correction or rollback against a prior `ReleaseManifest`. |
-| Revocation manifest | Revocation state | Signed record of a revocation, with TTL and `spec_hash` binding *(KFM-P19-FEAT-0002, PROPOSED)*. |
+| `ANSWER` | Runtime outcome | Client may render a governed response under the current proposed envelope shape |
+| `ABSTAIN` | Runtime outcome | Support or another prerequisite is insufficient; do not infer |
+| `DENY` | Runtime outcome | Policy, role, sensitivity, access, or release posture blocks delivery |
+| `ERROR` | Runtime outcome | Runtime cannot complete safely or deterministically |
+| `HOLD` | Review/placement/promotion posture | Decision is intentionally paused; not a current runtime enum value |
+| `PASS` / `FAIL` | Validator result | Bounded check result; not a public truth judgment |
+| `RAW` through `PUBLISHED` | Lifecycle | Governed data/evidence promotion stages |
+| `ReviewRecord` | Review | Proposed carrier for draft, pending, held, approved, rejected, superseded |
+| `FocusModePayload` | Payload | Proposed governed projection for a bounded Focus composition |
+| `MapContextEnvelope` | Request context | Immutable renderer-neutral map/request context; not evidence |
+| `EvidenceRef` | Evidence pointer | Must resolve through governed interfaces before supporting a claim |
+| `EvidenceBundle` | Evidence support | Outranks generated language for supported claims |
+| `RuntimeResponseEnvelope` | Trust membrane | Client-facing finite outcome and supporting governance posture |
+| `ReleaseManifest` | Release | Distinct record of released eligibility; not created by Git state |
+| Correction / withdrawal / rollback | Accountability | Governed post-release change with visible lineage and public effects |
 
-</details>
+### 17.2 Compatibility anchors retained
 
-<details>
-<summary><strong>17.2 Cross-vocabulary mapping (state × surface × required receipt)</strong></summary>
+The following v0.1 anchors remain available in this file for inbound links:
 
-| Surface | Lifecycle stages consumed | Outcomes returned | Required receipt at `ANSWER` |
-|---|---|---|---|
-| Focus Mode runtime | `PUBLISHED` only | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` *(+ `HOLD` if review pending)* | `AIReceipt` + `EvidenceDrawerPayload` + `DecisionEnvelope` |
-| Evidence Drawer | `PUBLISHED` *(via Focus Mode payload)* | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | `EvidenceDrawerPayload` *(projection of `EvidenceBundle`)* |
-| Layer manifest resolver | `PUBLISHED` | `ANSWER` / `DENY` / `ERROR` *(no `ABSTAIN`)* | `ReleaseManifest` reference |
-| Review queue | All stages *(role-scoped)* | `ALLOW` / `RESTRICT` / `DENY` / `ERROR` | `ReviewRecord` + `PolicyDecision` |
-| Validator orchestrator | All stages | `PASS` / `FAIL` | `ValidationReport` |
+- `#focus-mode--state-doctrine`
+- `#1-scope`
+- `#2-repo-fit--directory-rules-basis`
+- `#21-path-divergence-must-be-resolved`
+- `#3-what-lives-here`
+- `#4-what-does-not-live-here`
+- `#5-directory-tree-proposed`
+- `#6-state-families-at-a-glance`
+- `#7-finite-outcome-state`
+- `#8-lifecycle-state`
+- `#9-review-and-release-state`
+- `#10-payload-state-and-mapcontextenvelope-state`
+- `#11-revocation-and-rollback-state`
+- `#12-state-transition-diagrams`
+- `#13-validators-tests-and-receipts`
+- `#14-anti-patterns`
+- `#15-open-questions-and-adr-triggers`
+- `#16-related-docs`
+- `#17-appendix`
 
-</details>
+### 17.3 Self-check
 
-<details>
-<summary><strong>17.3 Source attribution</strong></summary>
-
-- **SRC-DOCTRINE** — `kfm_unified_doctrine_synthesis.md` *(§11 finite outcome envelope vocabulary; §10 governance objects)*.
-- **SRC-ATLAS-V11** — `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas` *(§24.3 outcome envelope; §24.11.4 AI surface health; §24.12 ADR backlog)*.
-- **SRC-DIR-V12** — `directory-rules.md` *(§6.7 Focus Mode placement contract; §6.7.5 What a Focus Mode is NOT; §13.5 anti-patterns)*.
-- **SRC-MAPMASTER-V21** — `Master_MapLibre_Components-Functions-Features_v2.1` *(ML-O-027/028/029/030/031/032/033/034/035/047/048/049/050/051/067/068/069/070)*.
-- **SRC-REPO-STRUCT** — `kfm_repository_structure_guiding_document.md` *(§8 Focus Mode placement contract; §6 target tree)*.
-- **SRC-GAI** — Governed AI / AIReceipt doctrine carriers *(finite envelope; cite-or-abstain; ABSTAIN/DENY/ERROR outcomes)*.
-- **SRC-AIBOC** — `ai-build-operating-contract.md` *(priority order; truth labels; verification threshold; core invariants)*.
-- **Idea cards cited:** KFM-P13-FEAT-0001 *(provenance and trace lenses)*, KFM-P13-FEAT-0002 *(smoke event timeline)*, KFM-P13-FEAT-0003 *(promotion gate reader surface)*, KFM-P15-FEAT-0002 *(trust badge)*, KFM-P19-FEAT-0002 *(revocation verifier)*, KFM-P21-FEAT-0002 *(HUC12 viewport pulls)*, KFM-P26-FEAT-0003 *(runtime citation route)*, KFM-P26-FEAT-0009 *(Ecology Focus Mode proof view)*, KFM-P7-PROG-0005 *(detached payload mode)*.
-
-</details>
-
-<details>
-<summary><strong>17.4 Truth-label legend</strong></summary>
-
-- **CONFIRMED** — verified this session from attached docs, workspace evidence, tests, logs, or generated artifacts.
-- **PROPOSED** — design, recommendation, file path, placement, or inference not yet verified in implementation.
-- **INFERRED** — reasonably derivable from visible evidence but not directly stated.
-- **NEEDS VERIFICATION** — checkable, but not yet checked strongly enough to act as fact.
-- **UNKNOWN** — not verified strongly enough in this session, or not resolvable without more evidence.
-- **EXTERNAL** — sourced from authoritative external research *(not applied in this doc; no external research was triggered)*.
-
-</details>
+| Check | Result expected for this revision |
+|---|---|
+| One H1 | yes |
+| Metadata block | one complete `KFM_META_BLOCK_V2` |
+| Current base and blobs recorded | yes |
+| Current state tree inventoried | yes |
+| Geographic/system state separated | yes |
+| Four current runtime outcomes preserved | yes |
+| HOLD and PASS/FAIL separated | yes |
+| Core lifecycle preserved | yes |
+| Proposed ADRs remain proposed | yes |
+| No structural migration | yes |
+| No runtime, release, deployment, or publication claim | yes |
+| Correction and rollback visible | yes |
+| Legacy anchors preserved | yes |
 
 ---
 
-**Related docs (mini)** · [directory-rules.md §6.7](../../directory-rules.md) · [docs/focus-modes/README.md (PROPOSED)](../../focus-modes/README.md) · [contracts/focus_mode/focus_mode_payload.md (PROPOSED)](../../../contracts/focus_mode/focus_mode_payload.md) · [schemas/contracts/v1/runtime/decision_envelope.schema.json (PROPOSED)](../../../schemas/contracts/v1/runtime/decision_envelope.schema.json)
+**Current document status:** repository-grounded draft · **Path posture:** same-path
+`PLACE`; structural split/migration `HOLD` · **Runtime outcome shape:** four
+machine-enumerated values, proposal status retained · **Release/publication
+effect:** none.
 
-**Last updated:** 2026-05-24 · **Doc version:** v0.1 · **Doc status:** draft · **Path status:** PROPOSED *(OPEN-DR-09)*
-
-[↑ Back to top](#top)
+[Back to top](#top)
