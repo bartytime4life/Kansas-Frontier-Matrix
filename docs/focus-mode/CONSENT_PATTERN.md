@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/focus-mode/consent-pattern
 title: Focus Mode Consent Boundary and Projection Pattern
-type: standard; focus-mode; consent-boundary; ui-projection; compatibility-lane
+type: standard
 version: v1.0
 status: draft; repository-grounded; documentation-only; mixed-maturity; no-consent-authority; no-runtime-enforcement; non-release; non-publication
 owner: "@bartytime4life via CODEOWNERS; consent, privacy, identity, security, policy, domain, accessibility, release, correction, and independent-review authority NEEDS VERIFICATION"
