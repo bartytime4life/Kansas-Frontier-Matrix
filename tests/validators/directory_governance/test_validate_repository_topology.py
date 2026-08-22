@@ -37,6 +37,28 @@ def _entry(finding: object) -> dict[str, object]:
     return entry
 
 
+def _root_registry(*roots: dict[str, object]) -> bytes:
+    normalized_roots = []
+    for root in roots:
+        normalized = dict(root)
+        normalized.setdefault("class", "canonical")
+        normalized_roots.append(normalized)
+    return json.dumps(
+        {
+            "class_defaults": {
+                "canonical": {"status": "ACTIVE"},
+                "compatibility": {"status": "ACTIVE"},
+                "conditional": {"status": "PROPOSED"},
+                "deprecated": {"status": "DEPRECATED"},
+                "platform": {"status": "ACTIVE"},
+                "retired": {"status": "RETIRED"},
+            },
+            "roots": normalized_roots,
+        },
+        sort_keys=True,
+    ).encode("utf-8")
+
+
 class RepositoryTopologyTests(unittest.TestCase):
     def test_profile_has_exactly_twenty_stable_rule_ids(self) -> None:
         self.assertEqual(20, len(module.RULES))
@@ -181,12 +203,11 @@ class RepositoryTopologyTests(unittest.TestCase):
         self.assertEqual([], candidate["entries"])
 
     def test_hard_path_safety_findings_cannot_be_baselined(self) -> None:
-        root_registry = {"roots": [{"path": "docs/", "status": "ACTIVE"}]}
         paths = ("docs/link.md",)
         modes = {"docs/link.md": "120000"}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(root_registry).encode(
-                "utf-8"
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"}
             )
         }
         object_ids = {path: "a" * 40 for path in paths}
@@ -204,9 +225,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("docs/example(name).md",)
         modes = {paths[0]: "100644"}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "docs/", "status": "ACTIVE"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"}
+            )
         }
         first = module._path_findings(paths, modes, {paths[0]: "a" * 40}, blobs)
         second = module._path_findings(paths, modes, {paths[0]: "b" * 40}, blobs)
@@ -243,9 +264,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("policy/people/README.md", "policy/people/rule.rego")
         modes = {path: "100644" for path in paths}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
         }
         object_ids = {path: "a" * 40 for path in paths}
 
@@ -268,9 +289,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("policy/transport/README.md",)
         modes = {path: "100644" for path in paths}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
         }
         object_ids = {path: "a" * 40 for path in paths}
 
@@ -291,9 +312,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("policy/example/SHOUT.md",)
         modes = {path: "100644" for path in paths}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "policy/", "status": "ACTIVE"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
         }
         object_ids = {path: "a" * 40 for path in paths}
 
@@ -332,14 +353,10 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
 
         duplicate_roots = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {
-                    "roots": [
-                        {"path": "docs/", "status": "ACTIVE"},
-                        {"path": "docs", "status": "ACTIVE"},
-                    ]
-                }
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"},
+                {"path": "docs"},
+            )
         }
         with self.assertRaisesRegex(module.TopologyError, "duplicate or invalid"):
             module._registered_roots(duplicate_roots)
@@ -373,9 +390,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("catalog/README.md",)
         modes = {paths[0]: "100644"}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "catalog/", "status": "DEPRECATED"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "catalog/", "class": "deprecated"}
+            )
         }
         first = module._path_findings(
             paths, modes, {paths[0]: "a" * 40}, blobs
@@ -461,9 +478,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         paths = ("artifacts/release/example/release_manifest.json",)
         modes = {paths[0]: "100644"}
         blobs = {
-            "control_plane/root_registry.yaml": json.dumps(
-                {"roots": [{"path": "artifacts/", "status": "COMPATIBILITY"}]}
-            ).encode("utf-8")
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "artifacts/", "class": "compatibility"}
+            )
         }
         first = module._path_findings(paths, modes, {paths[0]: "a" * 40}, blobs)
         second = module._path_findings(paths, modes, {paths[0]: "b" * 40}, blobs)
@@ -536,12 +553,20 @@ class RepositoryTopologyTests(unittest.TestCase):
             "src",
             "tools",
         }
-        root_registry = {
-            "roots": [
-                {"path": root + "/", "status": "ACTIVE"}
+        root_classes = {
+            "artifacts": "compatibility",
+            "catalog": "deprecated",
+            "src": "conditional",
+        }
+        root_registry = _root_registry(
+            *[
+                {
+                    "path": root + "/",
+                    "class": root_classes.get(root, "canonical"),
+                }
                 for root in sorted(registered_roots)
             ]
-        }
+        )
         paths = tuple(
             sorted(
                 {
@@ -565,11 +590,7 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         modes = {path: "100644" for path in paths}
         modes["connectors/air/README.md"] = "120000"
-        blobs = {
-            "control_plane/root_registry.yaml": json.dumps(root_registry).encode(
-                "utf-8"
-            )
-        }
+        blobs = {"control_plane/root_registry.yaml": root_registry}
         object_ids = {path: "a" * 40 for path in paths}
         findings = module._path_findings(paths, modes, object_ids, blobs)
         observed = {finding.rule_id for finding in findings}
