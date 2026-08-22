@@ -41,6 +41,7 @@
       "release-proof-pack-closure",
       "western-kansas-observation-assessment",
       "kansas-transportation-geometry-source-assessment",
+      "repository-governance-parity",
       "workflow-security",
       "repository-topology"
     ]
@@ -408,6 +409,25 @@
         "data/receipts/generated/genrec-kansas-transportation-geometry-source-assessment-20260815.json"
       ],
       "timeout_seconds": 120,
+      "artifact_refs": []
+    },
+    {
+      "id": "repository-governance-parity",
+      "description": "Validate MRTS-04 lane coverage, pinned governance references, baseline monotonicity, and inherited-versus-introduced topology classification without waiving drift.",
+      "script": "tools/validators/directory_governance/validate_repository_governance_parity.py",
+      "args": [],
+      "path_globs": [
+        ".github/workflows/repository-governance-parity.yml",
+        "contracts/governance/repository_governance_parity.md",
+        "control_plane/**",
+        "schemas/contracts/v1/governance/repository_governance_parity.schema.json",
+        "fixtures/contracts/v1/governance/repository_governance_parity/**",
+        "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+        "tools/validators/control_plane/**",
+        "tools/validators/directory_governance/**",
+        "data/receipts/generated/genrec-repository-governance-parity-*.json"
+      ],
+      "timeout_seconds": 180,
       "artifact_refs": []
     },
     {
