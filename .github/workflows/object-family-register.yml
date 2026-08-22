@@ -96,7 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-mrts-03-20260822.json \
+            data/receipts/generated/genrec-object-family-register-mrts-03-rebased-20260822.json \
             --repo-root .
 
       - name: Record validation boundary

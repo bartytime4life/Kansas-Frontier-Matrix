@@ -39,4 +39,3 @@ entries:
     reason_codes:
       - fixture_entry
     notes: Synthetic fixture entry for deterministic validation only.
-

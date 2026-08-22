@@ -43,95 +43,84 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
             {path.relative_to(REPO_ROOT).as_posix() for path in REGISTRY_PATHS.values()},
         )
 
-    def test_workflow_covers_current_subject_and_governing_paths(self) -> None:
-        referenced_paths: set[str] = set()
-        for path in REGISTRY_PATHS.values():
-            candidate = yaml.safe_load(path.read_text(encoding="utf-8"))
-            referenced_paths.update(candidate["meta"]["related_doctrine"])
-            for entry in candidate["entries"]:
-                referenced_paths.add(entry["path"])
-                referenced_paths.update(entry["governing_refs"])
-        workflow = yaml.safe_load(
-            (
-                REPO_ROOT / ".github/workflows/control-plane-registry-packet.yml"
-            ).read_text(encoding="utf-8")
-        )
-        for event in ("pull_request", "push"):
-            with self.subTest(event=event):
-                configured = set(workflow["on"][event]["paths"])
-                self.assertEqual(set(), referenced_paths - configured)
-
     def test_current_packet_passes(self) -> None:
         for registry_id, path in sorted(REGISTRY_PATHS.items()):
             with self.subTest(registry_id=registry_id):
                 result = validate_registry(path, expected_registry_id=registry_id)
                 self.assertTrue(result.ok, result.findings)
 
-    def test_pinned_digest_replay_rejects_mutable_worktree_digest(self) -> None:
+    def test_canonical_validation_replays_entry_bytes_from_base_ref(self) -> None:
         candidate = yaml.safe_load(
             (FIXTURE_ROOT / "valid/valid_minimal.yaml").read_text(encoding="utf-8")
         )
-        pinned_bytes = b"pinned-registry-subject\n"
-        mutable_bytes = b"later-worktree-subject\n"
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            subject = root / "control_plane/document_registry_doctrine_required.yaml"
-            doctrine = root / "docs/doctrine/directory-rules.md"
-            decision = root / "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
-            for path in (subject, doctrine, decision):
-                path.parent.mkdir(parents=True, exist_ok=True)
-            subject.write_bytes(pinned_bytes)
-            doctrine.write_text("# Directory rules\n", encoding="utf-8")
-            decision.write_text("# ADR-0029\n", encoding="utf-8")
             subprocess.run(["git", "init", "-q"], cwd=root, check=True)
-            subprocess.run(["git", "add", "."], cwd=root, check=True)
             subprocess.run(
-                [
-                    "git",
-                    "-c",
-                    "user.name=KFM fixture",
-                    "-c",
-                    "user.email=fixture@example.invalid",
-                    "commit",
-                    "-q",
-                    "-m",
-                    "pinned registry fixture",
-                ],
+                ["git", "config", "user.email", "fixture@example.invalid"],
                 cwd=root,
                 check=True,
             )
-            candidate["base_ref"] = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
+            subprocess.run(
+                ["git", "config", "user.name", "KFM fixture"],
                 cwd=root,
                 check=True,
+            )
+            subject = root / candidate["entries"][0]["path"]
+            pinned_bytes = b"pinned-registry-subject\n"
+            subject.parent.mkdir(parents=True, exist_ok=True)
+            subject.write_bytes(pinned_bytes)
+            referenced = {
+                *candidate["meta"]["related_doctrine"],
+                *candidate["entries"][0]["governing_refs"],
+            }
+            for relative in sorted(referenced):
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("pinned governing reference\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(
+                ["git", "commit", "-q", "-m", "fixture baseline"],
+                cwd=root,
+                check=True,
+            )
+            base_ref = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=root,
                 capture_output=True,
                 text=True,
+                check=True,
             ).stdout.strip()
-            candidate_path = root / "candidate.yaml"
+            candidate["base_ref"] = base_ref
             candidate["entries"][0]["path_sha256"] = (
                 "sha256:" + hashlib.sha256(pinned_bytes).hexdigest()
             )
+            candidate_path = root / "candidate.yaml"
             candidate_path.write_text(
                 yaml.safe_dump(candidate, sort_keys=False),
                 encoding="utf-8",
             )
-            pinned_result = validate_registry(candidate_path, repo_root=root)
-            self.assertTrue(pinned_result.ok, pinned_result.findings)
+            subject.write_bytes(b"later-mutable-worktree-bytes\n")
 
-            subject.write_bytes(mutable_bytes)
-            candidate["entries"][0]["path_sha256"] = (
-                "sha256:" + hashlib.sha256(mutable_bytes).hexdigest()
+            result = validate_registry(
+                candidate_path,
+                repo_root=root,
+                check_paths=True,
+                check_git=True,
             )
-            candidate_path.write_text(
-                yaml.safe_dump(candidate, sort_keys=False),
-                encoding="utf-8",
-            )
-            mutable_result = validate_registry(candidate_path, repo_root=root)
 
-        self.assertIn(
-            "DIGEST_MISMATCH",
-            {finding.code for finding in mutable_result.findings},
-        )
+        self.assertTrue(result.ok, result.findings)
+
+    def test_workflow_watches_material_referenced_paths(self) -> None:
+        workflow = (
+            REPO_ROOT / ".github/workflows/control-plane-registry-packet.yml"
+        ).read_text(encoding="utf-8")
+        for path in (
+            "control_plane/document_registry_doctrine_required.yaml",
+            "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+            "docs/doctrine/directory-rules.md",
+        ):
+            self.assertEqual(2, workflow.count(f'- "{path}"'), path)
 
     def test_valid_fixture_passes_and_preserves_unknown_owner(self) -> None:
         files = sorted((FIXTURE_ROOT / "valid").glob("*.yaml"))

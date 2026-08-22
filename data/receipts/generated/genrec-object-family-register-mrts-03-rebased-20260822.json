@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-object-family-register-mrts-03-20260822",
+  "receipt_id": "genrec-object-family-register-mrts-03-rebased-20260822",
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/object-family-register.yml",
@@ -20,8 +20,8 @@
     "tools/validators/control_plane/validate_object_family_register.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/object-family-register.yml": "sha256:14af379e8c779b12e4e3f9c87a4a09f8823d5d0edf67047ea63dcdecfe426716",
-    "control_plane/object_family_register.yaml": "sha256:3c99dd6cfb6712868c093bc4ca7caea23e84aff9cb9bd9efa2eb58ae4bcb1b9c",
+    ".github/workflows/object-family-register.yml": "sha256:1688e4d89b5bf50ee1c27ade987158ffe2cbc88aa8c51029e8329e20de5d5a07",
+    "control_plane/object_family_register.yaml": "sha256:edb84b419131e3ac5cd70476cf3319bbfe2c6c7c82d427c0106c08f9b3fba31c",
     "docs/registers/OBJECT_FAMILY.md": "sha256:051f6b1afd4609b089837fb3f82e5d3db4f26c85de30f0c4c615d2d371feaceb",
     "fixtures/contracts/v1/governance/object_family_register/README.md": "sha256:c40e5d43a3bd578f5c13d8263986d7a8d6c7046dbe9030ba2ccec249325a1971",
     "fixtures/contracts/v1/governance/object_family_register/expected_findings_manifest.json": "sha256:204e89e7be025c2a6e6f1ef3794cdf2b58a8b078a6c7902d20264ff1def4c0b1",
@@ -69,10 +69,12 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
       "github://bartytime4life/Kansas-Frontier-Matrix/issues/3360",
       "github://bartytime4life/Kansas-Frontier-Matrix/pull/3405",
-      "repo:agent/mrts-02-normalize-registries-20260822@b467a2197eb37167435fa36d1753e8fd574a4ac0",
-      "repo:docs/doctrine/directory-rules.md@b467a2197eb37167435fa36d1753e8fd574a4ac0",
-      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b467a2197eb37167435fa36d1753e8fd574a4ac0",
-      "repo:control_plane/object_family_register.yaml@b467a2197eb37167435fa36d1753e8fd574a4ac0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3407",
+      "repo:main@59cd37856c877c34248e6c85738989b307dcbb6a",
+      "repo:agent/mrts-02-normalize-registries-20260822@292d9e920a50ade153cd7bb68b2fd40e232e2adf",
+      "repo:docs/doctrine/directory-rules.md@59cd37856c877c34248e6c85738989b307dcbb6a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@59cd37856c877c34248e6c85738989b307dcbb6a",
+      "repo:control_plane/object_family_register.yaml@59cd37856c877c34248e6c85738989b307dcbb6a",
       "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
       "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
     ]
@@ -99,7 +101,7 @@
     {
       "gate": "milestone_contract_and_authority_assay",
       "outcome": "PASS",
-      "reason": "Issue #3360, accepted ADR-0029, adopted Directory Rules, the existing register, and the stacked MRTS-02 dependency were inspected before authorship; Google Drive planning documents remained advisory."
+      "reason": "Issue #3360, accepted ADR-0029, adopted Directory Rules, the existing register, merged branch history, and the rebased MRTS-02 packet were inspected; Google Drive planning documents remained advisory."
     },
     {
       "gate": "required_family_and_relationship_coverage",
@@ -114,7 +116,7 @@
     {
       "gate": "schema_and_current_register",
       "outcome": "PASS",
-      "reason": "The strict Draft 2020-12 schema meta-validated and the current nineteen-entry register passed no-network structural, path, status, compatibility, and relationship validation."
+      "reason": "The strict Draft 2020-12 schema meta-validated and the current nineteen-entry register passed no-network structural, path, status, compatibility, and relationship validation against the rebased baseline."
     },
     {
       "gate": "fixture_polarity",
@@ -137,14 +139,9 @@
       "reason": "Nineteen workflow-security tests passed and the repository scanner reported 475 workflows with zero security findings."
     },
     {
-      "gate": "dependency_parent_regression",
+      "gate": "dependency_profiles",
       "outcome": "PASS",
-      "reason": "The exact MRTS-02 dependency head b467a2197eb37167435fa36d1753e8fd574a4ac0 passed its registry and trust-spine profiles before this stacked packet was authored."
-    },
-    {
-      "gate": "stacked_trust_spine_fixture_profile",
-      "outcome": "FAIL",
-      "reason": "The unchanged MRTS-01 fixture-only profile resolves the now-evolving object-family path from the mutable worktree and reports digest mismatches. The canonical trust baseline and the MRTS-02 25-artifact receipt each still replay successfully against pinned evidence; changing their receipt-bound validator or tests in this packet would rewrite prior evidence."
+      "reason": "The rebased MRTS-02 registry profile passed thirteen tests and exact pinned evidence replay; the accepted MRTS-01 trust profile passed eleven tests and append-only receipt replay on the combined tree."
     },
     {
       "gate": "repository_topology",
@@ -154,12 +151,12 @@
     {
       "gate": "generated_receipt_artifact_hash_replay",
       "outcome": "PASS",
-      "reason": "The generated-receipt validator replayed every declared artifact SHA-256 against final local bytes."
+      "reason": "The generated-receipt validator replayed every declared artifact SHA-256 against final combined-tree bytes."
     },
     {
       "gate": "hosted_exact_head_workflows",
       "outcome": "SKIPPED",
-      "reason": "Hosted workflows and human review belong to the stacked draft pull request record and were unavailable when this authoring receipt was emitted."
+      "reason": "Hosted workflows and human review belong to the reconciled pull-request head and were unavailable when this successor receipt was emitted."
     }
   ],
   "policy_decisions": [
@@ -169,12 +166,12 @@
     {
       "id": "KFM-DIRECTORY-RULES-V2",
       "validated": true,
-      "evidence_ref": "repo:docs/doctrine/directory-rules.md@b467a2197eb37167435fa36d1753e8fd574a4ac0"
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@59cd37856c877c34248e6c85738989b307dcbb6a"
     },
     {
       "id": "KFM-ADR-0029",
       "validated": true,
-      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b467a2197eb37167435fa36d1753e8fd574a4ac0"
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@59cd37856c877c34248e6c85738989b307dcbb6a"
     },
     {
       "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE-GUIDANCE",
@@ -198,12 +195,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-22T19:09:50Z",
+  "created_at": "2026-08-22T19:33:06Z",
   "emitter": "OpenAI Codex Work Mode",
   "links": {
-    "pr_number": null,
+    "pr_number": 3405,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "AI-authored MRTS-03 stacked, dependency-ordered reconciliation packet based on the proposed MRTS-02 head b467a2197eb37167435fa36d1753e8fd574a4ac0. The register is a navigational projection only: it records nineteen observed families, preserves eleven required-family conflicts, and does not choose canonical aliases or infer runtime maturity from repository presence. Google Drive planning documents were advisory; adopted Directory Rules, accepted ADR-0029, the issue contract, and repository evidence controlled placement and claims. The prior object-family receipt remains immutable. Independent review, hosted exact-head checks, topology correction, trust-fixture evolution, candidate authority decisions, source activation, data admission, policy approval, lifecycle mutation, release, deployment, promotion, publication, and public-runtime behavior remain outside this receipt."
+  "notes": "Rebased MRTS-03 reconciliation after the user merged PR #3407 into the MRTS-02 branch. The prior draft receipt remains preserved in branch history; this successor binds current combined-tree bytes. The register is navigational only, records nineteen observed families, preserves eleven required-family conflicts, and does not choose canonical aliases or infer runtime maturity from repository presence. Independent review, hosted exact-head checks, topology correction, candidate authority decisions, source activation, data admission, policy approval, lifecycle mutation, release, deployment, promotion, publication, and public-runtime behavior remain outside this receipt."
 }

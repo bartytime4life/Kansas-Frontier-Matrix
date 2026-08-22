@@ -12,7 +12,7 @@ status: PROPOSED
 authority_mode: projection_only
 implementation_status: PARTIAL
 completeness: partial
-base_ref: 568a95f025654d1ceb551f4d014674b736b5dbad
+base_ref: 59cd37856c877c34248e6c85738989b307dcbb6a
 owner_role: UNKNOWN
 non_effects:
   - does_not_accept_or_supersede_documents

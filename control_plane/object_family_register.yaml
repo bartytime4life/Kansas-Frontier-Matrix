@@ -4,7 +4,7 @@
   "status": "PROPOSED",
   "authority": "navigational_index_only",
   "updated_at": "2026-08-22",
-  "base_ref": "b467a2197eb37167435fa36d1753e8fd574a4ac0",
+  "base_ref": "59cd37856c877c34248e6c85738989b307dcbb6a",
   "coverage_scope": "milestone_trust_spine_v1",
   "implementation_status": "PARTIAL",
   "completeness": "partial",

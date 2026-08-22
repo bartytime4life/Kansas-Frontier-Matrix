@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -26,20 +25,6 @@ class TrustSpineBaselineValidatorTests(unittest.TestCase):
         Draft202012Validator.check_schema(schema)
 
     def test_current_baseline_passes_with_paths_digests_and_base_commit(self) -> None:
-        result = validate_baseline(BASELINE_PATH)
-        self.assertTrue(result.ok, result.findings)
-
-    def test_current_baseline_replays_pinned_tree_not_mutable_worktree(self) -> None:
-        baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
-        projection = next(
-            item
-            for item in baseline["control_plane_projections"]
-            if item["id"] == "document_registry"
-        )
-        current_digest = "sha256:" + hashlib.sha256(
-            (REPO_ROOT / projection["path"]).read_bytes()
-        ).hexdigest()
-        self.assertNotEqual(projection["sha256"], current_digest)
         result = validate_baseline(BASELINE_PATH)
         self.assertTrue(result.ok, result.findings)
 

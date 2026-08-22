@@ -19,7 +19,6 @@ name: trust-spine-baseline
       - "tools/validators/control_plane/validate_trust_spine_baseline.py"
       - "tests/validators/test_validate_trust_spine_baseline.py"
       - "data/receipts/generated/genrec-trust-spine-baseline-*.json"
-      - "data/receipts/generated/genrec-control-plane-registry-packet-*.json"
   push:
     branches:
       - main
@@ -34,7 +33,6 @@ name: trust-spine-baseline
       - "tools/validators/control_plane/validate_trust_spine_baseline.py"
       - "tests/validators/test_validate_trust_spine_baseline.py"
       - "data/receipts/generated/genrec-trust-spine-baseline-*.json"
-      - "data/receipts/generated/genrec-control-plane-registry-packet-*.json"
   workflow_dispatch:
 
 permissions:

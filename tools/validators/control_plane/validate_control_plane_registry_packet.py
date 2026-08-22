@@ -13,7 +13,6 @@ import argparse
 import hashlib
 import json
 import math
-import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -241,6 +240,44 @@ def _resolve_path(
     return resolved
 
 
+def _git_commit_status(repo_root: Path, base_ref: str) -> bool | None:
+    try:
+        completed = subprocess.run(
+            ["git", "cat-file", "-e", f"{base_ref}^{{commit}}"],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=GIT_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return completed.returncode == 0
+
+
+def _pinned_ref(
+    candidate: Mapping[str, Any],
+    *,
+    repo_root: Path,
+    check_git: bool,
+    findings: list[Finding],
+) -> str | None:
+    if not check_git:
+        return None
+    base_ref = candidate.get("base_ref")
+    if not isinstance(base_ref, str):
+        return ""
+    status = _git_commit_status(repo_root, base_ref)
+    if status is None:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/base_ref"))
+        return ""
+    if not status:
+        findings.append(Finding("BASE_COMMIT_NOT_FOUND", "/base_ref"))
+        return ""
+    return base_ref
+
+
 def _read_pinned_blob(
     value: Any,
     *,
@@ -249,8 +286,6 @@ def _read_pinned_blob(
     field: str,
     findings: list[Finding],
 ) -> bytes | None:
-    """Read one bounded, regular file from the registry's pinned Git tree."""
-
     relative = _canonical_path(value)
     if relative is None:
         findings.append(Finding("PATH_INVALID", field))
@@ -267,21 +302,21 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("PATH_NOT_FOUND", field))
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
         return None
-    if tree_result.returncode != 0 or not tree_result.stdout:
-        findings.append(Finding("PATH_NOT_FOUND", field))
+    records = [record for record in tree_result.stdout.split(b"\0") if record]
+    if tree_result.returncode != 0 or not records:
+        findings.append(Finding("PINNED_PATH_NOT_FOUND", field))
         return None
     try:
-        records = [item for item in tree_result.stdout.split(b"\0") if item]
         metadata, returned_path = records[0].split(b"\t", 1)
         mode, object_type, _object_id = metadata.split(b" ", 2)
         returned = returned_path.decode("utf-8")
     except (UnicodeError, ValueError, IndexError):
-        findings.append(Finding("PATH_READ_ERROR", field))
+        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
         return None
     if len(records) != 1 or returned != relative.as_posix():
-        findings.append(Finding("PATH_READ_ERROR", field))
+        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
         return None
     if object_type != b"blob":
         findings.append(Finding("PATH_NOT_FILE", field))
@@ -289,7 +324,6 @@ def _read_pinned_blob(
     if mode not in {b"100644", b"100755"}:
         findings.append(Finding("PATH_SYMLINK_DENIED", field))
         return None
-
     try:
         size_result = subprocess.run(
             ["git", "cat-file", "-s", object_name],
@@ -301,20 +335,19 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("PATH_NOT_FOUND", field))
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
         return None
     if size_result.returncode != 0:
-        findings.append(Finding("PATH_NOT_FOUND", field))
+        findings.append(Finding("PINNED_PATH_NOT_FOUND", field))
         return None
     try:
         size = int(size_result.stdout.decode("ascii").strip())
     except (UnicodeError, ValueError):
-        findings.append(Finding("PATH_READ_ERROR", field))
+        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
         return None
     if size < 0 or size > MAX_REFERENCED_FILE_BYTES:
         findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
         return None
-
     try:
         blob_result = subprocess.run(
             ["git", "cat-file", "blob", object_name],
@@ -326,46 +359,78 @@ def _read_pinned_blob(
             check=False,
         )
     except (OSError, subprocess.SubprocessError):
-        findings.append(Finding("PATH_READ_ERROR", field))
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
         return None
     if blob_result.returncode != 0 or len(blob_result.stdout) != size:
-        findings.append(Finding("PATH_READ_ERROR", field))
+        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
         return None
     return blob_result.stdout
 
 
-def _check_digest_bytes(
-    content: bytes | None,
-    expected: Any,
+def _check_reference(
+    value: Any,
     *,
+    repo_root: Path,
+    pinned_ref: str | None,
     field: str,
     findings: list[Finding],
 ) -> None:
-    if content is None or not isinstance(expected, str) or not expected.startswith("sha256:"):
+    if pinned_ref is not None:
+        if pinned_ref:
+            _read_pinned_blob(
+                value,
+                base_ref=pinned_ref,
+                repo_root=repo_root,
+                field=field,
+                findings=findings,
+            )
         return
+    _resolve_path(value, repo_root=repo_root, field=field, findings=findings)
+
+
+def _check_digest(
+    value: Any,
+    expected: Any,
+    *,
+    repo_root: Path,
+    pinned_ref: str | None,
+    field: str,
+    findings: list[Finding],
+) -> None:
+    if not isinstance(expected, str) or not expected.startswith("sha256:"):
+        return
+    if pinned_ref is not None:
+        if not pinned_ref:
+            return
+        content = _read_pinned_blob(
+            value,
+            base_ref=pinned_ref,
+            repo_root=repo_root,
+            field=field.removesuffix("_sha256"),
+            findings=findings,
+        )
+        if content is None:
+            return
+    else:
+        path = _resolve_path(
+            value,
+            repo_root=repo_root,
+            field=field.removesuffix("_sha256"),
+            findings=findings,
+        )
+        if path is None:
+            return
+        try:
+            if path.stat().st_size > MAX_REFERENCED_FILE_BYTES:
+                findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
+                return
+            content = path.read_bytes()
+        except OSError:
+            findings.append(Finding("PATH_READ_ERROR", field))
+            return
     actual = "sha256:" + hashlib.sha256(content).hexdigest()
     if actual != expected:
         findings.append(Finding("DIGEST_MISMATCH", field))
-
-
-def _check_digest_path(
-    path: Path | None,
-    expected: Any,
-    *,
-    field: str,
-    findings: list[Finding],
-) -> None:
-    if path is None:
-        return
-    try:
-        if path.stat().st_size > MAX_REFERENCED_FILE_BYTES:
-            findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
-            return
-        content = path.read_bytes()
-    except OSError:
-        findings.append(Finding("PATH_READ_ERROR", field))
-        return
-    _check_digest_bytes(content, expected, field=field, findings=findings)
 
 
 def _semantic_findings(
@@ -377,6 +442,12 @@ def _semantic_findings(
     check_git: bool,
 ) -> list[Finding]:
     findings: list[Finding] = []
+    pinned_ref = _pinned_ref(
+        candidate,
+        repo_root=repo_root,
+        check_git=check_git,
+        findings=findings,
+    )
     registry_id = candidate.get("registry_id")
     if expected_registry_id is not None and registry_id != expected_registry_id:
         findings.append(Finding("REGISTRY_FILE_ID_MISMATCH", "/registry_id"))
@@ -412,30 +483,6 @@ def _semantic_findings(
         prefix="DOCTRINE_REFS",
     )
 
-    pinned_base_ref: str | None = None
-    if check_git:
-        base_ref = candidate.get("base_ref")
-        if not isinstance(base_ref, str) or not re.fullmatch(r"[0-9a-f]{40}", base_ref):
-            findings.append(Finding("BASE_REF_INVALID", "/base_ref"))
-        else:
-            try:
-                completed = subprocess.run(
-                    ["git", "cat-file", "-e", f"{base_ref}^{{commit}}"],
-                    cwd=repo_root,
-                    stdin=subprocess.DEVNULL,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    timeout=GIT_TIMEOUT_SECONDS,
-                    check=False,
-                )
-            except (OSError, subprocess.SubprocessError):
-                findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/base_ref"))
-            else:
-                if completed.returncode != 0:
-                    findings.append(Finding("BASE_COMMIT_NOT_FOUND", "/base_ref"))
-                else:
-                    pinned_base_ref = base_ref
-
     for index, raw_entry in enumerate(entries):
         if not isinstance(raw_entry, dict):
             continue
@@ -469,67 +516,33 @@ def _semantic_findings(
                         field,
                     )
                 )
-        if check_paths and check_git and pinned_base_ref is not None:
-            subject_bytes = _read_pinned_blob(
+        if check_paths:
+            _check_digest(
                 raw_entry.get("path"),
-                base_ref=pinned_base_ref,
-                repo_root=repo_root,
-                field=f"{field}/path",
-                findings=findings,
-            )
-            _check_digest_bytes(
-                subject_bytes,
                 raw_entry.get("path_sha256"),
+                repo_root=repo_root,
+                pinned_ref=pinned_ref,
                 field=f"{field}/path_sha256",
                 findings=findings,
             )
             for ref_index, value in enumerate(governing_refs):
-                _read_pinned_blob(
-                    value,
-                    base_ref=pinned_base_ref,
-                    repo_root=repo_root,
-                    field=f"{field}/governing_refs/{ref_index}",
-                    findings=findings,
-                )
-        elif check_paths and not check_git:
-            subject_path = _resolve_path(
-                raw_entry.get("path"),
-                repo_root=repo_root,
-                field=f"{field}/path",
-                findings=findings,
-            )
-            _check_digest_path(
-                subject_path,
-                raw_entry.get("path_sha256"),
-                field=f"{field}/path_sha256",
-                findings=findings,
-            )
-            for ref_index, value in enumerate(governing_refs):
-                _resolve_path(
+                _check_reference(
                     value,
                     repo_root=repo_root,
+                    pinned_ref=pinned_ref,
                     field=f"{field}/governing_refs/{ref_index}",
                     findings=findings,
                 )
 
-    if check_paths and check_git and pinned_base_ref is not None:
+    if check_paths:
         for index, value in enumerate(doctrine_refs):
-            _read_pinned_blob(
+            _check_reference(
                 value,
-                base_ref=pinned_base_ref,
                 repo_root=repo_root,
+                pinned_ref=pinned_ref,
                 field=f"/meta/related_doctrine/{index}",
                 findings=findings,
             )
-    elif check_paths and not check_git:
-        for index, value in enumerate(doctrine_refs):
-            _resolve_path(
-                value,
-                repo_root=repo_root,
-                field=f"/meta/related_doctrine/{index}",
-                findings=findings,
-            )
-
     return findings
 
 

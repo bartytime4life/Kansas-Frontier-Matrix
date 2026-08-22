@@ -2,7 +2,7 @@
 doc_id: kfm://contract/governance/control-plane-registry-packet/v1
 title: Normalized Control-Plane Registry Packet Contract
 type: semantic-contract
-version: v1.0.1
+version: v1.0.0
 status: proposed; repository-grounded; schema-backed; implementation-partial; non-authoritative
 owners:
   - UNKNOWN
@@ -28,7 +28,6 @@ related:
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 notes:
   - "This packet implements MRTS-02 and preserves the existing seven canonical paths."
-  - "v1.0.1 binds path and digest replay to each instance's exact base_ref Git tree and couples workflow triggers to referenced subject and governing files."
   - "UNKNOWN is an explicit evidence state and never a wildcard permission."
   - "An empty registry is ABSENT for population and cannot be read as proof that no objects or problems exist."
 [/KFM_META_BLOCK_V2] -->
@@ -72,7 +71,7 @@ Each registry keeps the legacy `meta` block required by current repository consu
 - `status: PROPOSED`;
 - `authority_mode: projection_only`;
 - implementation and completeness state;
-- exact 40-character implementation-base commit in `base_ref`;
+- exact implementation-base commit;
 - evidence-backed `owner_role`, including literal `UNKNOWN`;
 - sorted, unique non-effects;
 - a canonically ordered entry array.
@@ -106,7 +105,7 @@ Every populated entry declares:
 - sorted reason codes;
 - bounded notes.
 
-Entries with `CONFIRMED` or `CONFLICTED` authority state are material and require at least one governing reference and source digest. Canonical-instance subject and governing paths are resolved from the exact `base_ref` Git tree, must identify bounded regular files rather than symlinks, and never fall back to mutable working-tree bytes. Every subject digest is replayed from those pinned bytes. Fixture-only validation may use an explicitly selected working tree when Git replay is disabled.
+Entries with `CONFIRMED` or `CONFLICTED` authority state are material and require at least one governing reference and source digest. Every path must remain inside the repository and resolve to a regular non-symlink file. For canonical instances, referenced paths and digests are replayed from the exact `base_ref` Git tree rather than mutable checkout bytes; synthetic fixture mode uses its isolated worktree.
 
 ## Current normalization result
 
@@ -136,8 +135,8 @@ The profile checks:
 - completeness/population consistency;
 - `UNKNOWN` owner consistency;
 - governing-reference and source-digest requirements for material claims;
-- pinned-Git-tree path containment, existence, regular-file status, and SHA-256 replay;
-- pull-request and main-branch workflow coupling for every referenced subject and governing path in the current packet;
+- pinned-commit repository path containment, existence, regular-file status, and SHA-256 replay;
+- workflow triggers for every material subject and governing path referenced by the packet;
 - required non-effects;
 - exact fixture polarity.
 
