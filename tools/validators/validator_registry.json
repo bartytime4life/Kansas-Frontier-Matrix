@@ -481,7 +481,9 @@
         "policy/decision/vocabulary.v1.json",
         "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
         "tests/validators/governance/test_validate_ci_conformance_report.py",
-        "tools/validators/governance/validate_ci_conformance_report.py"
+        "tests/validators/test_validate_generated_receipt.py",
+        "tools/validators/governance/validate_ci_conformance_report.py",
+        "tools/validators/validate_generated_receipt.py"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []

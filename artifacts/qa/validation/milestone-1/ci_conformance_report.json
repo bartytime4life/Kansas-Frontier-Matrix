@@ -43,6 +43,20 @@
       "scope": "effects intentionally excluded from milestone implementation"
     },
     {
+      "command": "python -m unittest tests.validators.test_validate_generated_receipt --verbose",
+      "evidence": [
+        "local:28-tests:pass",
+        "git-ref:236bdaf81b001d434726bd9ec7b0664c8ec0be83:trust-spine-baseline-and-control-plane-receipts:pass",
+        "git-ref:f7c6ba4c73227858c2d7c8931adae37b57092ce1:repository-parity-receipt:pass",
+        "git-ref:f2d5ec5f34c97beaedca96f1ea7cce84b3643b67:trust-spine-fixture-receipt:pass"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "generated-receipt-historical-replay",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "immutable exact-ancestor replay for four prior milestone authoring receipts"
+    },
+    {
       "command": null,
       "evidence": [],
       "execution_state": "CHECK_NOT_RUN",
@@ -316,12 +330,12 @@
       "id": "validator-orchestrator",
       "path": "tools/validators/validator_registry.json",
       "scope": "CANDIDATE_TREE",
-      "sha256": "sha256:1ec732d2a03a56f177231ec9558cefc5f1af6bf2a97e7ec5b64393704db8e344",
+      "sha256": "sha256:74e02c7458c164d618eee5d61413b5622db48fe53e88fa5407c8b94835b46105",
       "status": "PROPOSED_CANDIDATE",
       "version": "kfm.validator-orchestrator-registry.v1"
     }
   ],
-  "report_digest": "sha256:a885e2d45676f3b2d7111132bb6db52467868eb03932ed08bf8472447e025acc",
+  "report_digest": "sha256:f551ea076e85368b14a9e1f83a907e8518ed384d346fcd486490143376bffb99",
   "report_id": "kfm://qa/milestone-1/ci-conformance/2026-08-22",
   "repository": {
     "base_sha": "f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
@@ -348,7 +362,7 @@
       "version": "kfm.trust-spine-fixture-slice.v1"
     }
   ],
-  "sha256": "sha256:a885e2d45676f3b2d7111132bb6db52467868eb03932ed08bf8472447e025acc",
+  "sha256": "sha256:f551ea076e85368b14a9e1f83a907e8518ed384d346fcd486490143376bffb99",
   "status": "BLOCKED",
   "unresolved_items": [
     {
@@ -389,9 +403,9 @@
     {
       "id": "generated-receipt",
       "path": "tools/validators/validate_generated_receipt.py",
-      "scope": "BASE_TREE",
-      "sha256": "sha256:0348f6117e64ab4e57d40d607e219f70e3c20b3a6e7489ecb1f60f471f0af20a",
-      "status": "IMPLEMENTED",
+      "scope": "CANDIDATE_TREE",
+      "sha256": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
+      "status": "PROPOSED_FORWARD_FIX",
       "version": "source-sha256"
     },
     {

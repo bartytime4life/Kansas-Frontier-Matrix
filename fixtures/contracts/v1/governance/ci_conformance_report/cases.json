@@ -8,7 +8,7 @@
       "mutations": [
         {
           "op": "set",
-          "path": "/checks/2/outcome",
+          "path": "/checks/3/outcome",
           "value": "PASS"
         }
       ]

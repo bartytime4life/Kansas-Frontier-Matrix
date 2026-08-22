@@ -17,6 +17,7 @@ related:
   - ../../schemas/contracts/v1/governance/ci_conformance_report.schema.json
   - ../../artifacts/qa/validation/milestone-1/ci_conformance_report.json
   - ../../tools/validators/governance/validate_ci_conformance_report.py
+  - ../../tools/validators/validate_generated_receipt.py
   - ../../data/receipts/generated/genrec-ci-conformance-report-mrts-06-20260822.json
 [/KFM_META_BLOCK_V2] -->
 
@@ -54,6 +55,8 @@ AI author.
 - exact local or hosted command execution states and outcomes;
 - inherited and introduced failure counts;
 - generated artifact paths and digests;
+- exact ancestor commits for replaying historical authoring receipts after
+  shared successor files advance;
 - blocking unresolved items;
 - exact final-head hosted run URLs and human review only after they exist.
 
@@ -86,6 +89,17 @@ The first two commands must pass. The rendered bytes must match the committed
 report. Separately inspect the repository-governance parity and topology
 diagnostics; do not hide an inherited hold behind this validator's integrity
 pass.
+
+Historical receipts that bind mutable shared paths are replayed without
+changing their stored hashes:
+
+```bash
+python tools/validators/validate_generated_receipt.py <receipt.json> \
+  --repo-root . --artifact-git-ref <exact-40-character-ancestor-commit>
+```
+
+The pinned commit must exist, be an ancestor of the tested head, and contain
+every declared artifact as a regular blob with the receipt's exact digest.
 
 ## Final-head closure procedure
 
@@ -127,6 +141,8 @@ evidence or alter release/runtime state.
 
 - Local Git and filesystem validation cannot prove hosted workflow execution,
   branch-protection configuration, or reviewer identity.
+- Exact-ancestor receipt replay proves historical bytes and receipt integrity;
+  it does not claim those historical bytes are the current implementation.
 - Workflow source presence is not evidence that a workflow ran or was required.
 - A fixture dry run is not live source, production, release, or publication
   evidence.
