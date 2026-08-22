@@ -17,7 +17,9 @@ related:
   - ../../schemas/contracts/v1/governance/ci_conformance_report.schema.json
   - ../../fixtures/contracts/v1/governance/ci_conformance_report/README.md
   - ../../tools/validators/governance/validate_ci_conformance_report.py
+  - ../../tools/validators/validate_generated_receipt.py
   - ../../tests/validators/governance/test_validate_ci_conformance_report.py
+  - ../../tests/validators/test_validate_generated_receipt.py
   - ../../docs/runbooks/mrts-06-ci-conformance-handoff.md
   - ../../.github/workflows/ci-conformance-report.yml
   - ../../docs/doctrine/directory-rules.md
@@ -129,6 +131,14 @@ canonical report validation, and generated-receipt hash replay without
 network access. `--render` emits canonical bytes to standard output; repeated
 runs must be byte-identical.
 
+Historical authoring receipts are never rewritten to follow successor edits.
+When a later milestone changes a shared artifact such as `Makefile`, replay
+uses `validate_generated_receipt.py --artifact-git-ref <exact-ancestor-sha>`.
+The validator accepts only a lowercase 40-character commit that exists and is
+an ancestor of the tested head, then reads regular blobs from that immutable
+tree. Mutable branch names, tags, symlinks, missing blobs, digest drift, and
+non-ancestor commits fail closed.
+
 ## Correction and rollback
 
 Correct a current candidate with a same-path forward fix, preserve historical
@@ -136,7 +146,8 @@ receipts, and regenerate every affected digest. If the integration itself is
 wrong, revert the contract, schema, validator, fixtures, workflow, Make target,
 report, runbook, registry entry, and generated authoring receipt as one unit.
 Never rewrite an already reviewed historical report to make later evidence
-appear earlier.
+appear earlier. Preserve historical receipt hashes and update only the replay
+command to cite the exact authoring tree when shared successor files advance.
 
 ## Non-effects
 

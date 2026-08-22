@@ -3,6 +3,8 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/ci-conformance-report.yml",
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/release-manifest.yml",
     "Makefile",
     "artifacts/qa/validation/milestone-1/README.md",
     "artifacts/qa/validation/milestone-1/ci_conformance_report.json",
@@ -12,29 +14,35 @@
     "fixtures/contracts/v1/governance/ci_conformance_report/cases.json",
     "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
     "tests/validators/governance/test_validate_ci_conformance_report.py",
+    "tests/validators/test_validate_generated_receipt.py",
     "tools/validators/governance/validate_ci_conformance_report.py",
+    "tools/validators/validate_generated_receipt.py",
     "tools/validators/validator_registry.json"
   ],
   "artifact_hashes": {
-    ".github/workflows/ci-conformance-report.yml": "sha256:337dae7abe2ab543be9833bff2a5664dafb14e085c68d723f9aa5d5429f41201",
-    "Makefile": "sha256:b2725ca3840b16bbe7c30821b3c1c1436b89ed892262941ddbcc4ac883fe32ef",
+    ".github/workflows/ci-conformance-report.yml": "sha256:6f40e935dfcdf0851e663d9df90084394de5e6ee23ec7bb9b06e5bdb891ceced",
+    ".github/workflows/release-dry-run.yml": "sha256:efce9c2249d1055c53c53a7c185062cc925a9e32595cf7ddd18df2b6f6ac2d64",
+    ".github/workflows/release-manifest.yml": "sha256:917b41a54e04a5b47ee1775b55d2d76b8cf6dc1d0f169bb3cc36eaedeb271567",
+    "Makefile": "sha256:2eab237e6f616f8032e266613581d1e36ad6d1b38fe671f6974fafffaa18c2c8",
     "artifacts/qa/validation/milestone-1/README.md": "sha256:9b1321660dde0fe6b973544c4687db417af7179b35f6d44fb2a6cefe87ef1c9b",
-    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:d869235c227d82f57a81fca2418fc41b741d158f3d95009b37d6bdd0fdd18dca",
-    "contracts/governance/ci_conformance_report.md": "sha256:248d73fad7ffb427f315926af92ae0fbea27307cbd111f8ea37e776c93c07c91",
-    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:e1200fb95a71f55942c252d22dd9361a2d25d95a13fffb8ad539e66b90bb4d59",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:b1d75af163e9b248f75555d39073eaa491d37b2a2e6d41cdf29eca3b85deeb6b",
+    "contracts/governance/ci_conformance_report.md": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:df501cdd89e3050e1c0ef0ed8bd02d5be0b4a20a085eedc1c983cd466b339266",
     "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "sha256:d9d9d33cf3c768a1cbe5156545442c37bb974600f83acec5d975d0e54325cd53",
-    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "sha256:c13863565e74371970efc5793f7f613a228a5e38357df6b4ebd9a2f679915cbf",
+    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "sha256:b34f9693ab6d8a41eb9b5e0aacb72cf8d6948895b921c88f635b077bca85483f",
     "schemas/contracts/v1/governance/ci_conformance_report.schema.json": "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
-    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:1e5ca20837e0c0b95f318deb3581ade51ddfe26361a93d185d1852aae6f6e007",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:7ed81f26059ea8d6f9cc346a571eb014c7c2b4effba885b5978a8fad665dbd86",
+    "tests/validators/test_validate_generated_receipt.py": "sha256:6c25026bb1fae49139f11b66226967df4ec7862b7b974cf94f0e1faa45e9031c",
     "tools/validators/governance/validate_ci_conformance_report.py": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
-    "tools/validators/validator_registry.json": "sha256:1ec732d2a03a56f177231ec9558cefc5f1af6bf2a97e7ec5b64393704db8e344"
+    "tools/validators/validate_generated_receipt.py": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
+    "tools/validators/validator_registry.json": "sha256:f0514bd63c71cbea5873bcca6335be8a1ca11c5313e61b61319f68568c065791"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "Codex",
     "version": "GPT-5-session-2026-08-22"
   },
-  "prompt_or_contract": "sha256:248d73fad7ffb427f315926af92ae0fbea27307cbd111f8ea37e776c93c07c91",
+  "prompt_or_contract": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -52,8 +60,8 @@
       "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
       "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
       "sha256:9e6381b682313a77619faaac5306a7361d005976f724f39688ee2a97bcae4eae",
-      "sha256:a885e2d45676f3b2d7111132bb6db52467868eb03932ed08bf8472447e025acc",
-      "sha256:d869235c227d82f57a81fca2418fc41b741d158f3d95009b37d6bdd0fdd18dca"
+      "sha256:9a6206802c3e50bef280954149ed0debbcbae6c1c52cc30a940a8c3d4edccc34",
+      "sha256:b1d75af163e9b248f75555d39073eaa491d37b2a2e6d41cdf29eca3b85deeb6b"
     ],
     "attached_docs": [
       "Kansas Frontier Matrix Repository Structure Guiding Document",
@@ -73,6 +81,8 @@
   },
   "truth_labels": {
     ".github/workflows/ci-conformance-report.yml": "PROPOSED",
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/release-manifest.yml": "PROPOSED",
     "Makefile": "PROPOSED",
     "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
     "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "PROPOSED",
@@ -82,7 +92,9 @@
     "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "PROPOSED",
     "schemas/contracts/v1/governance/ci_conformance_report.schema.json": "PROPOSED",
     "tests/validators/governance/test_validate_ci_conformance_report.py": "PROPOSED",
+    "tests/validators/test_validate_generated_receipt.py": "PROPOSED",
     "tools/validators/governance/validate_ci_conformance_report.py": "PROPOSED",
+    "tools/validators/validate_generated_receipt.py": "PROPOSED",
     "tools/validators/validator_registry.json": "PROPOSED"
   },
   "validation_gates": [
@@ -100,6 +112,11 @@
       "gate": "source_and_generated_artifact_digest_replay",
       "outcome": "PASS",
       "reason": "Every BASE_TREE reference replayed from main@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67 and every CANDIDATE_TREE reference replayed from bounded current bytes."
+    },
+    {
+      "gate": "historical_authoring_receipt_replay",
+      "outcome": "PASS",
+      "reason": "Twenty-eight generated-receipt tests passed, and seven retained authoring receipts across MRTS-01, MRTS-02, MRTS-04, MRTS-05, the release dry-run, and ReleaseManifest replayed from exact ancestor commits without rewriting their stored hashes."
     },
     {
       "gate": "deterministic_serialization_and_report_digest",
@@ -144,7 +161,7 @@
     {
       "gate": "generated_receipt_artifact_hash_replay",
       "outcome": "PASS",
-      "reason": "The generated-receipt validator replayed all twelve declared authored artifact SHA-256 values against final local bytes."
+      "reason": "The generated-receipt validator replayed all sixteen declared authored artifact SHA-256 values against final local bytes."
     }
   ],
   "policy_decisions": [

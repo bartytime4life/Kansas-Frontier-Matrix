@@ -48,6 +48,7 @@ jobs:
       - name: Check out inspected revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up inspection Python
@@ -121,14 +122,18 @@ jobs:
           set -euo pipefail
           make release-dry-run
 
-      - name: Validate current generated authoring receipt bindings
+      - name: Replay retained authoring receipts from their exact Git tree
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json
+            data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json \
+            --repo-root . \
+            --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json
+            data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json \
+            --repo-root . \
+            --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80
 
       - name: Record candidate assembly outcome
         if: always()
@@ -139,7 +144,7 @@ jobs:
             echo
             echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
             echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
-            echo "- Historical authoring receipts remain immutable; the workflow validates the MRTS Makefile successor, then validates the dependency-closed workflow receipt that binds this workflow to that successor."
+            echo "- Historical authoring receipts remain immutable and replay from exact authoring tree 8383a722a619df64c7eaa668c9e6427540f2df80; successor workflow and Makefile bytes do not rewrite earlier evidence."
             echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."
           } >> "$GITHUB_STEP_SUMMARY"

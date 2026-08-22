@@ -54,6 +54,7 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -74,12 +75,13 @@ jobs:
           python -m unittest tests.validators.test_validate_release_manifest -v
           python tools/validators/release/validate_release_manifest.py --fixtures
 
-      - name: Validate generated authoring receipt
+      - name: Replay retained authoring receipt from its exact Git tree
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass7-release-manifest-mrts-successor-20260822.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref ca7a410382aef37bfa93185b149df70d35c1d279
 
       - name: Record trust boundary
         if: always()
@@ -89,5 +91,6 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: deterministic local shape and semantic validation for a PROPOSED_INACTIVE / FIXTURE_ONLY ReleaseManifest candidate."
+            echo "- Receipt replay: retained authoring bytes are read from exact tree ca7a410382aef37bfa93185b149df70d35c1d279; successor workflow changes do not rewrite historical evidence."
             echo "- Boundary: PASS does not resolve refs, verify artifact bytes or signatures, authenticate review, authorize promotion/release/publication, mutate lifecycle state, or permit public use."
           } >> "$GITHUB_STEP_SUMMARY"
