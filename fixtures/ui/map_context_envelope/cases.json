@@ -39,6 +39,61 @@
     },
     {
       "base": "viewport",
+      "case_id": "invalid-permalink-policy-missing",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "delete",
+          "path": [
+            "permalink_policy"
+          ]
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-permalink-policy-enabled",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "permalink_policy",
+            "mode"
+          ],
+          "value": "ENABLED"
+        }
+      ]
+    },
+    {
+      "base": "viewport",
+      "case_id": "invalid-permalink-raw-envelope-serialization",
+      "case_kind": "SCHEMA_NEGATIVE",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "FAIL",
+      "patches": [
+        {
+          "op": "set",
+          "path": [
+            "permalink_policy",
+            "raw_envelope_serialization"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "base": "viewport",
       "case_id": "invalid-unpublished-layer",
       "case_kind": "SCHEMA_NEGATIVE",
       "expected_findings": [

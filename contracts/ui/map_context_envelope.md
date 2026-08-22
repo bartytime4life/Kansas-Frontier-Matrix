@@ -2,12 +2,12 @@
 doc_id: kfm://contract/ui/map-context-envelope
 title: MapContextEnvelope Semantic Contract
 type: semantic-contract; ui; map-runtime; renderer-neutral; fixture-first
-version: v0.1.0
+version: v0.2.0
 status: proposed; inactive; no-network; no-authority
 owners: OWNER_TBD — UI steward · Map steward · Evidence steward · Runtime steward · Release steward · Validation steward
 created: 2026-08-06
-updated: 2026-08-06
-policy_label: public; ui; map-context; renderer-neutral; released-input-only
+updated: 2026-08-22
+policy_label: public; ui; map-context; renderer-neutral; released-input-only; permalink-deny-by-default
 related:
   - ./README.md
   - ./map_context_envelope/README.md
@@ -39,15 +39,29 @@ The map shell may report what the user is viewing and selecting. It must not pas
 7. The requested time window is ordered; viewport bounds are ordered and geographic.
 8. Filters are renderer-neutral declarations with finite operators and valid arity.
 9. References to RAW, WORK, QUARANTINE, canonical/internal stores, direct model output, or proof stores are denied.
-10. `spec_hash` is RFC 8785 JCS + SHA-256 over the envelope without `envelope_id` and `spec_hash`; `envelope_id` uses the first 24 digest hex.
+10. `permalink_policy` is fixed to `DISABLED` / `DENY`; raw-envelope serialization, exact-location state, and restricted-context state are all explicitly forbidden until a separately reviewed projection contract and serializer exist.
+11. `spec_hash` is RFC 8785 JCS + SHA-256 over the envelope without `envelope_id` and `spec_hash`; `envelope_id` uses the first 24 digest hex.
 
 ## Authority and non-effects
 
-The envelope records request context only. It does not resolve EvidenceRefs, evaluate policy, establish release state, authorize public use, create citations, return an answer, or mutate repository/canonical state. Downstream services must independently resolve current EvidenceBundles, policy, review, release, correction, and rollback state.
+The envelope records request context only. It does not resolve EvidenceRefs, evaluate policy, establish release state, authorize public use, create citations, return an answer, create a shareable URL, or mutate repository/canonical state. Downstream services must independently resolve current EvidenceBundles, policy, review, release, correction, and rollback state.
 
 ## Renderer-neutral boundary
 
 The contract admits stable KFM identifiers and bounded filter declarations. It rejects renderer-specific members such as `sourceLayer`, `queryRenderedFeatures`, `paint`, `layout`, `featureState`, style expressions, camera objects, or raw feature-property payloads. The same envelope can be produced by MapLibre, a test harness, or a future admitted renderer without changing evidence semantics.
+
+## Permalink safety boundary
+
+`permalink_policy` is a fail-closed declaration, not a URL-state codec or a redacted permalink payload. Under this inactive v1 profile it must contain exactly this posture:
+
+- `mode: DISABLED`;
+- `outcome: DENY`;
+- `reason_codes: [PERMALINK_SERIALIZER_NOT_ADMITTED]`;
+- `raw_envelope_serialization: false`;
+- `exact_location_state_allowed: false`; and
+- `restricted_context_allowed: false`.
+
+Callers must not serialize the raw envelope into a URL, hash, browser history entry, QR code, export, or other outward carrier. A future redacted share-state projection requires a versioned semantic contract and schema, policy and sensitivity review, deterministic positive and negative fixtures, a bounded serializer, consumer migration, correction behavior, and rollback proof. This fixed denial closes the current field-level ambiguity without implying that permalink behavior exists.
 
 ## Placement
 
