@@ -111,7 +111,7 @@ trust-spine-baseline:
 	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_trust_spine_baseline.py' --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-baseline-20260822.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-baseline-pinned-replay-20260822.json --repo-root .
 
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose

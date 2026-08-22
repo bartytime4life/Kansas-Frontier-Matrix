@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/trust-spine-baseline/v1
 title: Trust Spine Authority Baseline Contract
-version: v1.0.0
+version: v1.0.1
 type: semantic-contract
 status: proposed; repository-grounded; implementation-partial; non-authoritative
 owners: Control-plane steward; Architecture steward; Validation/CI steward
@@ -23,6 +23,7 @@ related:
   - ../../.github/workflows/trust-spine-baseline.yml
 notes:
   - This contract implements the MRTS-01 baseline slice for milestone KFM-MS-MRTS-001.
+  - v1.0.1 clarifies that path and digest replay reads the pinned Git tree, not mutable working-tree bytes.
   - It does not complete MRTS-02 through MRTS-06.
   - It does not create authority, accept an ADR, waive drift, activate a source, or change release state.
 [/KFM_META_BLOCK_V2] -->
@@ -63,7 +64,7 @@ Every instance must declare:
 - an RFC 3339 observation timestamp;
 - the exact 40-character base commit, branch, milestone identity, and observed open pull-request numbers.
 
-The pinned base must resolve to a local Git commit during current-instance validation. It need not equal the pull request head: the baseline intentionally describes the pre-change starting point.
+The pinned base must resolve to a local Git commit during current-instance validation. It need not equal the pull request head: the baseline intentionally describes the pre-change starting point. Referenced paths and SHA-256 values are replayed from that pinned Git tree. Later same-path working-tree changes cannot rewrite the historical observation or make it fail merely because downstream implementation advanced.
 
 ## Evidence sections
 
@@ -139,7 +140,7 @@ The profile performs:
 2. duplicate-key and non-finite-number rejection;
 3. canonical ordering, uniqueness, count, and cross-field checks;
 4. repository-relative path containment and existence checks;
-5. SHA-256 replay against referenced repository bytes;
+5. SHA-256 replay against referenced bytes from the exact `base.sha` Git tree, not the mutable working tree;
 6. pinned Git commit existence checking for the canonical instance;
 7. exact valid/invalid fixture polarity;
 8. focused no-network unit tests;
@@ -155,7 +156,7 @@ The validator fails closed when:
 - schema constraints fail;
 - IDs, paths, family names, or issue numbers are not sorted and unique;
 - declared counts do not reconcile;
-- referenced paths escape the repository, do not exist, or differ from their pinned digests;
+- referenced paths are non-canonical, are absent from the pinned Git tree, exceed the bounded read budget, or differ from their pinned digests;
 - an unexecuted command claims `PASS` or `FAIL`;
 - topology failure counts are presented as a pass;
 - a required non-effect is removed;
