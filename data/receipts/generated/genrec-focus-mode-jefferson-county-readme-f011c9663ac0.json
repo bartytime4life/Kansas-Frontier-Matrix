@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-focus-mode-jefferson-county-readme-f011c9663ac0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/jefferson_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/jefferson_county/README.md": "sha256:f011c9663ac0dc2eeaa278d3c04928caa7e8178dbe9d9b4f0b993457f4db598d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro",
+    "parameter_hash": "sha256:3a7a80a529acba0995774b37151427462e2965606c39989fe9bda025f5237b9a"
+  },
+  "prompt_or_contract": "sha256:b9d3faeb16345b079569a8d18cf358460021df86ee283e0c4e449e61bfe87212",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "ChatGPT GitHub connector",
+      "deterministic in-memory Markdown validation",
+      "SHA-256 and Git blob identity calculation",
+      "JSON Schema validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b9d3faeb16345b079569a8d18cf358460021df86ee283e0c4e449e61bfe87212"
+    ],
+    "attached_docs": [
+      "Current user request: update docs/focus-mode/counties/jefferson_county/README.md under KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@336674c3793b55872f2885385d9d5f7bd7258c5c",
+      "github:docs/focus-mode/counties/jefferson_county/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "github:docs/focus-mode/counties/jefferson_county/jefferson_county_focus_mode_build_plan.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:05593f69db78ad7f8d823b19f9123e257d382f08",
+      "github:docs/focus-mode/counties/COUNTY_INDEX.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:07e9b65cab9c4fd4ae31b61a84fecb06c6cde655",
+      "github:docs/focus-mode/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "github:docs/focus-mode/counties/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:48621badd51614db7bff0882c19096fa388234ac",
+      "github:docs/focus-mode/counties/_template/county-build-plan.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:520922bf756ff5e75f927c5d0dc9cc81e65ca3e0",
+      "github:docs/doctrine/directory-rules.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:fd49a0b83e55cef52c1124281f093e263526898d",
+      "github:docs/adr/ADR-0027-county-focus-mode-control-plane.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "github:contracts/focus_mode/focus_mode_payload.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "github:schemas/contracts/v1/focus/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:2b75990b53dea2841c28410f0d9dc9fb10a60f33",
+      "github:policy/focus/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:35001e958a6b51d2f22004d5e637d72baeab49af",
+      "github:tools/validators/validate_focus_mode_index.py@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:89391d75680e859dddf3696b9b782369f364c73e",
+      "github:schemas/contracts/v1/receipts/generated_receipt.schema.json@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "github:CONTRIBUTING.md@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:de5bf143e601e36a794e6e5442ae8f91c6f75aad",
+      "github:.github/CODEOWNERS@336674c3793b55872f2885385d9d5f7bd7258c5c#blob:dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "github:open-pull-request-search?query=Jefferson%20County&state=open#none",
+      "github:branch-search?query=jefferson#none",
+      "task-contract:kfm-focus-mode-jefferson-county-readme-20260821",
+      "github:docs/focus-mode/counties/jefferson_county/README.md@agent/jefferson-county-readme-20260821#blob:2676616ece5aa7b6e77e8f511b1b266e0ab60a02",
+      "github:commit:1f0cfa238ad60f6163a587b1b6bac08dd8d5644e"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/jefferson_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main, re-read the one-byte target, inspected the sibling plan and direct authority surfaces, and found no open Jefferson PR or matching task branch before mutation."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "The change remains at the tracked docs/ path; accepted ADR-0029 and Directory Rules v2 support docs/ ownership while plural-lane migration remains explicitly held."
+    },
+    {
+      "gate": "material-no-loss-and-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete sibling plan was read; repository-presence claims were reconciled while dated source checks, proposals, uncertainties, safety limits, correction, and rollback boundaries were preserved."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One metadata block, one H1, ordered headings, balanced comments and fences, consistent tables, valid same-document fragments, LF line endings, clean whitespace, and final newline."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "Every added repository-relative file target was read or otherwise confirmed at the pinned base; the self-link resolves on the task branch."
+    },
+    {
+      "gate": "content-hash-and-remote-byte-readback",
+      "outcome": "PASS",
+      "reason": "Final README SHA-256 is f011c9663ac0dc2eeaa278d3c04928caa7e8178dbe9d9b4f0b993457f4db598d; computed Git blob 2676616ece5aa7b6e77e8f511b1b266e0ab60a02 matches remote branch blob read-back."
+    },
+    {
+      "gate": "security-rights-sensitivity-and-prompt-injection-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private endpoints, coordinates, personal records, restricted payloads, exact protected locations, live operational payloads, hidden instructions, or external currentness claims were introduced."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Representative pull-request workflows inspected use GitHub-hosted runners, read-only contents permissions, pinned actions, and no release, deployment, publication, OIDC, or secret-bearing write authority."
+    },
+    {
+      "gate": "county-index-update",
+      "outcome": "SKIPPED",
+      "reason": "The current index is a pinned predecessor inventory. Pre-updating it would claim a merged-main fact that does not yet exist; post-merge reconciliation remains separate."
+    },
+    {
+      "gate": "full-repository-and-county-focus-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available. The existing county validator targets the conflicting plural seven-file layout and is not registered as current validation for this singular two-file lane."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observed only after draft pull-request creation; they are not represented as completed in this authoring receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github:docs/focus-mode/counties/jefferson_county/README.md@336674c3793b55872f2885385d9d5f7bd7258c5c",
+      "validated": true,
+      "evidence_ref": "blob:8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    {
+      "id": "github:docs/focus-mode/counties/jefferson_county/jefferson_county_focus_mode_build_plan.md@336674c3793b55872f2885385d9d5f7bd7258c5c",
+      "validated": true,
+      "evidence_ref": "blob:05593f69db78ad7f8d823b19f9123e257d382f08"
+    },
+    {
+      "id": "github:docs/doctrine/directory-rules.md@336674c3793b55872f2885385d9d5f7bd7258c5c",
+      "validated": true,
+      "evidence_ref": "blob:fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@336674c3793b55872f2885385d9d5f7bd7258c5c",
+      "validated": true,
+      "evidence_ref": "blob:a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T01:00:31Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": null
+  },
+  "notes": "Generated authoring receipt for the Jefferson County README modernization. The receipt binds only the AI-authored README bytes and preserves pending human review. It does not validate the sibling plan's external claims, admit sources, decide rights or sensitivity, activate Focus policy, prove a governed API or runtime, authorize county-lane migration, update the current-main county inventory, approve release, deploy, publish, or merge."
+}
