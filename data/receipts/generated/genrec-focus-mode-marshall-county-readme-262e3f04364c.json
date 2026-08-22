@@ -12,7 +12,7 @@
     "model": "GPT-5.6 Pro",
     "version": "exact serving revision not exposed"
   },
-  "prompt_or_contract": "sha256:a1d7a91823a7f299b17ecc0f59cc0c606da30869f73704bad3b177d41657d74a",
+  "prompt_or_contract": "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -20,14 +20,13 @@
     "max_tokens": null,
     "tools_enabled": [
       "GitHub connector",
-      "bounded current-repository inspection",
-      "deterministic Markdown and JSON validation",
-      "SHA-256 and Git-blob verification"
+      "bounded repository inspection",
+      "deterministic Markdown/JSON validation"
     ]
   },
   "inputs": {
     "evidence_hashes": [
-      "sha256:a1d7a91823a7f299b17ecc0f59cc0c606da30869f73704bad3b177d41657d74a",
+      "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81",
       "sha256:262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198"
     ],
     "attached_docs": [],
@@ -35,20 +34,12 @@
       "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/README.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/marshall_county_focus_mode_build_plan.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/tree/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/COUNTY_INDEX.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/README.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/doctrine/directory-rules.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/contracts/focus_mode/focus_mode_payload.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/focus/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/policy/focus/README.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/tools/validators/validate_focus_mode_index.py",
       "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/CONTRIBUTING.md",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/.github/CODEOWNERS",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json",
-      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/.github/workflows/README.md"
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
     ]
   },
   "truth_labels": {
@@ -56,212 +47,102 @@
   },
   "validation_gates": [
     {
-      "gate": "current-main-target-and-overlap-preflight",
+      "gate": "repository-and-overlap-preflight",
       "outcome": "PASS",
-      "reason": "Pinned main at 9656da3c88b9a21b844179ecc97a52136bb5799d; verified the target as one LF byte, the sibling plan and two-file directory, the current county-index row, no open Marshall README pull request, and no matching task branch before mutation."
+      "reason": "Pinned main at 9656da3c88b9a21b844179ecc97a52136bb5799d; verified one-byte target, 105,947-byte sibling plan, two-file directory, stale index row, no matching open PR, no matching branch, and no path-scoped AGENTS.md."
     },
     {
-      "gate": "path-scoped-instruction-preflight",
+      "gate": "same-path-directory-governance",
       "outcome": "PASS",
-      "reason": "AGENTS.md was absent at the repository root, docs/, docs/focus-mode/, and docs/focus-mode/counties/ on the pinned base; CONTRIBUTING.md, CODEOWNERS, Directory Rules, and applicable ADRs were inspected."
+      "reason": "Existing docs/ path retained under accepted ADR-0029 and adopted Directory Rules; proposed ADR-0027 did not authorize migration, rename, or parallel authority."
     },
     {
-      "gate": "same-path-compatibility-placement",
+      "gate": "plan-reconciliation-and-truth-labels",
       "outcome": "PASS",
-      "reason": "The existing README remains at docs/focus-mode/counties/marshall_county/ under docs/. Accepted ADR-0029 and adopted Directory Rules support docs/ ownership; proposed ADR-0027 does not authorize migration, and no parallel Focus tree, move, rename, or authority change is introduced."
+      "reason": "The complete sibling plan was inspected and left unchanged. Its 2026-05-22 external observations and product designs remain dated PROPOSED lineage."
     },
     {
-      "gate": "one-byte-placeholder-replacement",
+      "gate": "sensitive-domain-boundaries",
       "outcome": "PASS",
-      "reason": "The prior target was exactly one UTF-8 line-feed byte. The replacement supplies complete planning-lane orientation, evidence limits, responsibilities, plan reconciliation, source-role and temporal rules, sensitive-domain boundaries, finite outcomes, validation, maintenance, migration, correction, and rollback."
+      "reason": "README denies grave prediction, archaeology/artifact prospecting, fragile-feature targeting, unsupported cultural-authority claims, live river/flood safety advice, property determinations, historical-science currentness overclaim, private inference, sensitive ecology, and infrastructure vulnerability."
     },
     {
-      "gate": "linked-build-plan-reconciliation",
+      "gate": "finite-outcomes",
       "outcome": "PASS",
-      "reason": "The complete 105,947-byte Marshall build plan was inspected and left byte-unchanged. Current path and plan presence supersede only its old no-repository/no-plan uncertainty; its 2026-05-22 external observations and all proposed designs remain dated planning lineage."
+      "reason": "Exactly ANSWER, ABSTAIN, DENY, and ERROR are defined as terminal outcomes; planning/lifecycle dispositions remain non-terminal."
     },
     {
-      "gate": "county-index-staleness-disclosure",
+      "gate": "markdown-and-link-validation",
       "outcome": "PASS",
-      "reason": "The shared index records Marshall as README_1_BYTE. This leaf change makes that finding stale, but a partial high-churn inventory/count edit was not made; a separately pinned full current-main reconciliation is required."
+      "reason": "48,549 UTF-8 bytes; one H1; one metadata block; 19 unique explicit anchors; all same-document fragments and 15 distinct repository-relative targets resolved; balanced HTML comments; LF-only; final newline; no tabs or trailing whitespace."
     },
     {
-      "gate": "dated-source-and-temporal-fitness-boundary",
+      "gate": "artifact-hash-closure",
       "outcome": "PASS",
-      "reason": "The README does not transform the plan's 2026-05-22 NPS, KGS, county, KDA, or USGS observations into current repository, visitor, river, flood, property, groundwater, safety, legal, health, or emergency truth."
+      "reason": "README SHA-256 262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198; Git blob 94db08c71e9e380d973968e4e30573283a13076c; remote read-back matched. Artifact path, hash key, and truth-label key are identical."
     },
     {
-      "gate": "fragile-heritage-burial-and-archaeology-boundary",
+      "gate": "generated-receipt-shape",
       "outcome": "PASS",
-      "reason": "The README denies exact or predictive burial locations, archaeological or artifact prospecting, vulnerable inscription or trail-trace targeting, and cross-layer reconstruction of withheld heritage detail."
+      "reason": "Required fields, enums, hash patterns, closed-object fields, citation records, ISO timestamp, path/hash parity, and pending review state conform to the current generated receipt schema."
     },
     {
-      "gate": "cultural-authority-and-representation-boundary",
-      "outcome": "PASS",
-      "reason": "The README does not treat emigrant-trail or geological sources as a complete or Nation-authoritative Indigenous history and requires appropriate evidence, review, consent, attribution, correction, and abstention for expansion."
-    },
-    {
-      "gate": "river-flood-property-and-public-safety-boundary",
-      "outcome": "PASS",
-      "reason": "The README makes no current river-stage, crossing, flood, recreation, visitor, property, insurance, permit, building, legal, or emergency determination."
-    },
-    {
-      "gate": "historical-science-agriculture-ecology-and-infrastructure-boundary",
-      "outcome": "PASS",
-      "reason": "The README makes no current well, water-supply, potability, health, private-farm, owner, parcel, exact ecology, or infrastructure-vulnerability claim."
-    },
-    {
-      "gate": "finite-outcome-boundary",
-      "outcome": "PASS",
-      "reason": "The authored document preserves exactly ANSWER, ABSTAIN, DENY, and ERROR as terminal outcomes; DEFER, EXCLUDE, QUARANTINE, and HOLD are explicitly planning or lifecycle dispositions, not runtime outcomes."
-    },
-    {
-      "gate": "focus-surface-maturity-boundary",
-      "outcome": "PASS",
-      "reason": "Repository-present semantic contract, schema-family scaffolds, inactive Focus policy, and incompatible county validator are described within their verified maturity limits and are not promoted into Marshall readiness or enforcement evidence."
-    },
-    {
-      "gate": "markdown-structure-and-diff-hygiene",
-      "outcome": "PASS",
-      "reason": "The 48,549-byte README has one H1, one KFM metadata block, 19 unique explicit anchors including top, resolving same-document links, balanced HTML comments, no code fences, LF-only endings, no tabs or trailing whitespace, and a final newline."
-    },
-    {
-      "gate": "repository-relative-link-closure",
-      "outcome": "PASS",
-      "reason": "All 15 distinct repository-relative targets were normalized from the Marshall README path and verified as repository-present at the pinned base; all same-document fragments resolve to unique explicit anchors."
-    },
-    {
-      "gate": "artifact-byte-and-hash-closure",
-      "outcome": "PASS",
-      "reason": "README SHA-256 262e3f04364c30e77cc85a48d93410b5871bcaf160342e802a26e6ee7b48e198; computed and remote Git blob 94db08c71e9e380d973968e4e30573283a13076c; 48,549 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
-    },
-    {
-      "gate": "generated-receipt-schema-constraint-validation",
-      "outcome": "PASS",
-      "reason": "The receipt satisfies the current generated_receipt.schema.json required fields, enums, patterns, object closures, artifact-map parity, canonical path form, citation shape, timestamp format, and pending human-review state."
-    },
-    {
-      "gate": "workflow-trigger-threat-preflight",
-      "outcome": "PASS",
-      "reason": "No workflow definitions are changed. Current workflow governance documents the workflow layer as a non-publisher and requires explicit threat review for privileged events; this branch performs documentation and provenance writes only, and exact-head hosted results are observed separately."
-    },
-    {
-      "gate": "shared-county-index-reconciliation",
+      "gate": "county-index-reconciliation",
       "outcome": "SKIPPED",
-      "reason": "The index is a high-churn shared inventory whose row and aggregate counts require a full current-main recomputation. The leaf README discloses the stale finding rather than performing an isolated count edit."
+      "reason": "The shared index is a high-churn aggregate inventory and requires a separately pinned full recount rather than an isolated Marshall row/count edit."
     },
     {
       "gate": "county-focus-mode-validator",
       "outcome": "SKIPPED",
-      "reason": "The validator targets docs/focus-modes/, kebab-case lanes, a different index grammar, and seven required files; it is not a valid passing gate for the current singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+      "reason": "The validator targets the proposed plural, kebab-case, seven-file control plane rather than the current singular, snake_case, two-file compatibility lane."
     },
     {
-      "gate": "external-source-currentness-rights-and-sensitive-review",
+      "gate": "external-source-rights-currentness-and-specialist-review",
       "outcome": "SKIPPED",
-      "reason": "The task is documentation-only. External sources, rights, site-manager review, burial/archaeology review, cultural-authority relationships, river/flood currentness, property, ecology, and public-use fitness remain explicit future gates."
+      "reason": "External sources, rights, site-manager review, heritage/burial/archaeology review, cultural-authority relationships, river/flood currentness, property, ecology, and public-use fitness remain future gates."
     },
     {
-      "gate": "hosted-exact-head-workflows",
+      "gate": "hosted-ci-and-human-review",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created; their exact-head state will be inspected separately and not inferred."
-    },
-    {
-      "gate": "human-review",
-      "outcome": "SKIPPED",
-      "reason": "Human review remains pending. CODEOWNERS routing is not source, rights, heritage, burial, archaeology, cultural, hydrology, property, ecology, policy, release, or publication approval."
+      "reason": "Hosted checks are observed only after PR creation; human review remains pending and CODEOWNERS routing is not specialist, policy, release, or publication approval."
     }
   ],
   "policy_decisions": [],
   "citations": [
     {
-      "id": "current-user-implementation-request",
+      "id": "current-user-request",
       "validated": true,
-      "evidence_ref": "sha256:a1d7a91823a7f299b17ecc0f59cc0c606da30869f73704bad3b177d41657d74a"
+      "evidence_ref": "sha256:d9d9395ab91157e0245a61122103a063be888def4c9bb52bc63151173f215b81"
     },
     {
-      "id": "pinned-current-main",
+      "id": "pinned-main",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/9656da3c88b9a21b844179ecc97a52136bb5799d"
     },
     {
-      "id": "prior-one-byte-target",
+      "id": "prior-target",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/README.md"
     },
     {
-      "id": "complete-marshall-build-plan",
+      "id": "sibling-plan",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county/marshall_county_focus_mode_build_plan.md"
     },
     {
-      "id": "current-marshall-directory",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/marshall_county"
-    },
-    {
-      "id": "current-county-index",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/COUNTY_INDEX.md"
-    },
-    {
-      "id": "current-county-lane-readme",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/focus-mode/counties/README.md"
-    },
-    {
-      "id": "adopted-directory-rules",
+      "id": "directory-rules",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/doctrine/directory-rules.md"
     },
     {
-      "id": "proposed-adr-0027",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
-    },
-    {
-      "id": "accepted-adr-0029",
+      "id": "adr-0029",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
     },
     {
-      "id": "focus-payload-contract",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/contracts/focus_mode/focus_mode_payload.md"
-    },
-    {
-      "id": "focus-schema-family",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/focus/README.md"
-    },
-    {
-      "id": "focus-policy-boundary",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/policy/focus/README.md"
-    },
-    {
-      "id": "focus-index-validator",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/tools/validators/validate_focus_mode_index.py"
-    },
-    {
-      "id": "contribution-guide",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/CONTRIBUTING.md"
-    },
-    {
-      "id": "codeowners-review-routing",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/.github/CODEOWNERS"
-    },
-    {
-      "id": "generated-receipt-schema",
+      "id": "receipt-schema",
       "validated": true,
       "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
-    },
-    {
-      "id": "workflow-governance",
-      "validated": true,
-      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/9656da3c88b9a21b844179ecc97a52136bb5799d/.github/workflows/README.md"
     }
   ],
   "human_review": {
@@ -277,5 +158,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Provenance for the same-path Marshall County README modernization. The receipt is pending human review and does not validate the sibling build plan's external claims, admit sources, establish rights or cultural authority, activate Focus policy, approve sensitive-detail handling, prove runtime behavior, authorize merge, or create release, deployment, promotion, or publication state."
+  "notes": "Provenance only. This receipt does not validate external claims, admit sources, establish rights or cultural authority, activate policy, approve sensitive-detail handling, authorize merge, or create release, deployment, promotion, or publication state."
 }
