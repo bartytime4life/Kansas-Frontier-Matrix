@@ -55,14 +55,6 @@ jobs:
         shell: bash
         run: python tools/ci/install_python_ci.py project-runtime
 
-      - name: Upload exact topology test source
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: repository-topology-test-source
-          path: tests/validators/directory_governance/test_validate_repository_topology.py
-          if-no-files-found: error
-          retention-days: 1
-
       - name: Emit and compare repository-owned topology baseline candidate
         shell: bash
         run: |
@@ -116,14 +108,6 @@ jobs:
               for value in sorted(after - before):
                   print(f"      + {value}")
           PY
-
-      - name: Upload bounded topology baseline candidate
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: repository-topology-baseline-candidate
-          path: /tmp/repository_topology_baseline_candidate.json
-          if-no-files-found: error
-          retention-days: 1
 
       - name: Diagnose repository-topology ratchet
         shell: bash
