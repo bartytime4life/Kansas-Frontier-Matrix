@@ -47,6 +47,7 @@
       "evidence": [
         "local:28-tests:pass",
         "git-ref:236bdaf81b001d434726bd9ec7b0664c8ec0be83:trust-spine-baseline-and-control-plane-receipts:pass",
+        "git-ref:8383a722a619df64c7eaa668c9e6427540f2df80:release-dry-run-receipts:pass",
         "git-ref:f7c6ba4c73227858c2d7c8931adae37b57092ce1:repository-parity-receipt:pass",
         "git-ref:f2d5ec5f34c97beaedca96f1ea7cce84b3643b67:trust-spine-fixture-receipt:pass"
       ],
@@ -54,7 +55,7 @@
       "id": "generated-receipt-historical-replay",
       "outcome": "PASS",
       "required_for_closure": true,
-      "scope": "immutable exact-ancestor replay for four prior milestone authoring receipts"
+      "scope": "immutable exact-ancestor replay for six retained authoring receipts across four prior milestone lanes and the release dry-run"
     },
     {
       "command": null,
@@ -336,7 +337,7 @@
       "version": "kfm.validator-orchestrator-registry.v1"
     }
   ],
-  "report_digest": "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
+  "report_digest": "sha256:b8d17c987567210834769933c1917214e157f5022cc3051af9445456627a2023",
   "report_id": "kfm://qa/milestone-1/ci-conformance/2026-08-22",
   "repository": {
     "base_sha": "f2d5ec5f34c97beaedca96f1ea7cce84b3643b67",
@@ -363,7 +364,7 @@
       "version": "kfm.trust-spine-fixture-slice.v1"
     }
   ],
-  "sha256": "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
+  "sha256": "sha256:b8d17c987567210834769933c1917214e157f5022cc3051af9445456627a2023",
   "status": "BLOCKED",
   "unresolved_items": [
     {

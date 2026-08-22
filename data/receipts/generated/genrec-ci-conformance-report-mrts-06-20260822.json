@@ -3,6 +3,7 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/ci-conformance-report.yml",
+    ".github/workflows/release-dry-run.yml",
     "Makefile",
     "artifacts/qa/validation/milestone-1/README.md",
     "artifacts/qa/validation/milestone-1/ci_conformance_report.json",
@@ -19,9 +20,10 @@
   ],
   "artifact_hashes": {
     ".github/workflows/ci-conformance-report.yml": "sha256:6f40e935dfcdf0851e663d9df90084394de5e6ee23ec7bb9b06e5bdb891ceced",
+    ".github/workflows/release-dry-run.yml": "sha256:efce9c2249d1055c53c53a7c185062cc925a9e32595cf7ddd18df2b6f6ac2d64",
     "Makefile": "sha256:2eab237e6f616f8032e266613581d1e36ad6d1b38fe671f6974fafffaa18c2c8",
     "artifacts/qa/validation/milestone-1/README.md": "sha256:9b1321660dde0fe6b973544c4687db417af7179b35f6d44fb2a6cefe87ef1c9b",
-    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:19ed203647177d2e6076d4c0305e48a7095431fc6f1cf02c4a01db6c1e1a2df7",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:f4c99e1c7a8204a45dd1a3f5817f1db41ee75f015e01ebb0545838d53fe7b8b2",
     "contracts/governance/ci_conformance_report.md": "sha256:8004edbdd9c892e8a58453a0c84726f40c83fb1b05c84d58a7527e8b8c1b57fa",
     "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:df501cdd89e3050e1c0ef0ed8bd02d5be0b4a20a085eedc1c983cd466b339266",
     "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "sha256:d9d9d33cf3c768a1cbe5156545442c37bb974600f83acec5d975d0e54325cd53",
@@ -56,8 +58,8 @@
       "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
       "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
       "sha256:9e6381b682313a77619faaac5306a7361d005976f724f39688ee2a97bcae4eae",
-      "sha256:84ecb23848604f661e3bcdb9abaa6656fed500fbd9e5b42c23239007e60bd421",
-      "sha256:19ed203647177d2e6076d4c0305e48a7095431fc6f1cf02c4a01db6c1e1a2df7"
+      "sha256:b8d17c987567210834769933c1917214e157f5022cc3051af9445456627a2023",
+      "sha256:f4c99e1c7a8204a45dd1a3f5817f1db41ee75f015e01ebb0545838d53fe7b8b2"
     ],
     "attached_docs": [
       "Kansas Frontier Matrix Repository Structure Guiding Document",
@@ -77,6 +79,7 @@
   },
   "truth_labels": {
     ".github/workflows/ci-conformance-report.yml": "PROPOSED",
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
     "Makefile": "PROPOSED",
     "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
     "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "PROPOSED",
@@ -110,7 +113,7 @@
     {
       "gate": "historical_authoring_receipt_replay",
       "outcome": "PASS",
-      "reason": "Twenty-eight generated-receipt tests passed, and the four MRTS-01, MRTS-02, MRTS-04, and MRTS-05 authoring receipts replayed from exact ancestor commits without rewriting their stored hashes."
+      "reason": "Twenty-eight generated-receipt tests passed, and six retained authoring receipts across MRTS-01, MRTS-02, MRTS-04, MRTS-05, and the release dry-run replayed from exact ancestor commits without rewriting their stored hashes."
     },
     {
       "gate": "deterministic_serialization_and_report_digest",
@@ -155,7 +158,7 @@
     {
       "gate": "generated_receipt_artifact_hash_replay",
       "outcome": "PASS",
-      "reason": "The generated-receipt validator replayed all fourteen declared authored artifact SHA-256 values against final local bytes."
+      "reason": "The generated-receipt validator replayed all fifteen declared authored artifact SHA-256 values against final local bytes."
     }
   ],
   "policy_decisions": [
