@@ -1,238 +1,415 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/PATH_TBD_AFTER_REPO_INSPECTION
-title: docs/atlas/source-role-anti-collapse.md — Deprecated Pointer
-type: standard
-version: v1
-status: deprecated
-owners: OWNER_TBD (docs steward; placement steward)
+doc_id: kfm://doc/atlas/source-role-anti-collapse
+title: Source-Role Anti-Collapse — Legacy Atlas Compatibility Pointer
+type: compatibility-pointer; atlas; source-role; anti-collapse
+version: v2.0
+status: draft; repository-grounded; legacy-lane; pointer-only; non-authoritative; removal-hold; non-release; non-publication
+owner: "@bartytime4life via CODEOWNERS; accountable documentation, source, evidence, schema, policy, release, and independent review ownership remains NEEDS VERIFICATION"
 created: 2026-05-25
-updated: 2026-05-25
-policy_label: public
+updated: 2026-08-22
+policy_label: public; documentation; source-role; anti-collapse; compatibility; cite-or-abstain; fail-closed
+owning_root: docs/
+responsibility: >-
+  Preserve inbound links to the legacy singular atlas path and route readers to
+  the current human atlas reference, universal architecture map, cross-domain
+  seam guidance, source-role taxonomy, and owning contract/schema surfaces
+  without duplicating or superseding their content.
+authority: >-
+  Navigation and compatibility only. This file is not source-role doctrine,
+  vocabulary authority, a semantic contract, machine schema, policy, validator,
+  review record, release decision, correction record, or implementation proof.
+current_path: docs/atlas/source-role-anti-collapse.md
+canonical_relationship: >-
+  Legacy compatibility pointer. docs/atlases/source-role-anti-collapse.md is the
+  repository-present curated atlas reference; docs/architecture/source-role-anti-collapse.md
+  is the universal current responsibility and enforcement map; cross-domain,
+  semantic, machine, policy, validation, release, and correction authority remain
+  in their owning responsibility roots.
+truth_posture: >-
+  CONFIRMED current main, this prior pointer, the repository-present plural atlas
+  target, the universal and cross-domain architecture references, the human
+  source-role taxonomy, SourceDescriptor contract/schema surfaces, accepted
+  ADR-0029, adopted Directory Rules v2, and an empty deprecation register /
+  PROPOSED final cross-profile vocabulary and machine crosswalks / CONFLICTED
+  source-role vocabularies and singular/plural SourceDescriptor schema-path
+  projections / UNKNOWN external consumers, active production policy, deployed
+  enforcement, release/correction propagation, and public parity / NEEDS
+  VERIFICATION accountable ownership, consumer closure, redirect/tombstone
+  behavior, deprecation registration, and any retirement date.
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 785606a6cc7d1f949eeb8c83799834c8b763d5a8
+  target_prior_blob: 54ca20771d90531575b4d58c1fe2425dc4638939
+  plural_atlas_reference_blob: 4da701f70dda7acd2ca3584b25cdc6e1f9d93dc7
+  atlases_readme_blob: 5dd756497b9eb20b4ffa55cd2cfadcd77ee2f3b4
+  universal_architecture_blob: 702515cf920f811305f04598453322b28ba20d48
+  cross_domain_architecture_blob: 89da72168d6165c744ebb4970ba45c80940ce746
+  source_descriptor_schema_blob: 582e70b834278c3c6ca9a8b31efbe0989c96f0bc
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
 related:
-  - docs/atlas/README.md
-  - docs/atlases/source-role-anti-collapse.md
-  - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
-  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - docs/adr/ADR-S-02-docs-dossiers-vs-docs-atlases.md
-  - contracts/source/source_descriptor.md
-  - schemas/contracts/v1/source/source_descriptor.schema.json
-  - policy/source_role/
-  - tests/policy/source_role/
-  - tools/validators/
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-tags: [kfm, docs, atlas, pointer, deprecated, source-role, anti-collapse, redirect, policy]
+  - ./README.md
+  - ../atlases/README.md
+  - ../atlases/source-role-anti-collapse.md
+  - ../architecture/source-role-anti-collapse.md
+  - ../architecture/cross-domain/source-role-anti-collapse.md
+  - ../sources/source-roles.md
+  - ../../contracts/source/source_descriptor.md
+  - ../../schemas/contracts/v1/source/source_descriptor.schema.json
+  - ../../control_plane/deprecation_register.yaml
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../CONTRIBUTING.md
+tags: [kfm, docs, atlas, pointer, legacy, compatibility, source-role, anti-collapse, cite-or-abstain, non-publication]
 notes:
-  - "This is a pointer page in a deprecated compatibility lane. It carries no register content."
-  - "Canonical atlas-register home (PROPOSED): docs/atlases/source-role-anti-collapse.md (NEEDS VERIFICATION — file may not yet exist as a standalone extract)."
-  - "Authoritative current source: Atlas v1.1 §24.1 — Master Source-Role Anti-Collapse Register."
-  - "v1.0 cross-references: §20.4 validator catalogue row 'Source-role anti-collapse'; §23.3 figure-to-generate."
-  - "Enforcement implementation lives across contracts/source/, schemas/contracts/v1/source/, policy/, tests/policy/, and tools/validators/."
-  - "Sunset: this pointer file SHOULD be removed when docs/atlas/ is retired at the end of the 30-day mirror window."
+  - "v2.0 replaces the proposal-era pointer with a repository-grounded compatibility boundary."
+  - "The seven broad atlas classes are human conceptual groupings, not a claim that SourceDescriptor has a seven-value machine enum."
+  - "No 30-day retirement clock or other active sunset is asserted; the current deprecation register has no entry for this path."
+  - "Removal, move, rename, redirect, or tombstone work remains HOLD until consumer and migration evidence closes."
+  - "No source admission, policy decision, review, validation, release, correction, rollback, deployment, or publication is performed here."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+<a id="source-role-anti-collapse--deprecated-pointer"></a>
 
-# `docs/atlas/source-role-anti-collapse.md` — Deprecated Pointer
+# Source-Role Anti-Collapse — Legacy Atlas Compatibility Pointer
 
-> This file is a **deprecation pointer** in the [`docs/atlas/`](./README.md) compatibility lane. It carries no register content. Read the canonical sources listed below.
+> **Purpose.** Preserve the legacy
+> `docs/atlas/source-role-anti-collapse.md` address while directing readers to
+> the repository surfaces that now own source-role explanation, semantics,
+> machine shape, validation, and cross-domain use.
 
-![status: DEPRECATED](https://img.shields.io/badge/status-DEPRECATED-red)
-![authority: compatibility · pointer](https://img.shields.io/badge/authority-compatibility%20%C2%B7%20pointer-lightgrey)
-![canonical lane: docs/atlases/](https://img.shields.io/badge/canonical%20lane-docs%2Fatlases%2F-blue)
-![canonical target: PROPOSED](https://img.shields.io/badge/canonical%20target-PROPOSED-yellow)
-![doctrine: Atlas v1.1 §24.1](https://img.shields.io/badge/doctrine-Atlas%20v1.1%20%C2%A724.1-success)
-![ADR: ADR-S-02](https://img.shields.io/badge/ADR-ADR--S--02-yellow)
+[![status](https://img.shields.io/badge/status-legacy%20pointer-d97706?style=flat-square)](#1-what-this-register-is-orientation-only)
+[![authority](https://img.shields.io/badge/authority-navigation%20only-6e7781?style=flat-square)](#2-where-the-canonical-content-lives)
+[![retirement](https://img.shields.io/badge/retirement-HOLD-b42318?style=flat-square)](#4-why-this-file-is-here-as-a-pointer)
+[![publication](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#5-what-this-file-does-not-contain)
 
 > [!IMPORTANT]
-> **Status:** `DEPRECATED` (doctrine-CONFIRMED per [`docs/atlas/README.md`](./README.md) §5–§6).
-> **Owner:** `OWNER_TBD` — docs steward.
-> **Sunset:** end of the 30-day `docs/atlas/` mirror window. This file SHOULD be removed when the parent folder is retired.
-> **Truth posture:** `CONFIRMED` deprecation framing / `CONFIRMED` doctrine of the underlying register / `PROPOSED` canonical-target paths / `NEEDS VERIFICATION` mounted-repo presence of every target / `UNKNOWN` repo implementation depth.
+> **This file is not source-role authority.** Use the
+> [plural atlas reference](../atlases/source-role-anti-collapse.md) for a
+> human quick reference, the
+> [universal architecture map](../architecture/source-role-anti-collapse.md)
+> for current repository responsibilities and enforcement evidence, and the
+> owning contract, schema, policy, validation, review, and release surfaces for
+> decisions.
 
-**Quick jumps:** [What this register is](#1-what-this-register-is-orientation-only) · [Where the canonical content lives](#2-where-the-canonical-content-lives) · [Per-enforcement-surface redirects](#3-per-enforcement-surface-redirects) · [Why this file is here as a pointer](#4-why-this-file-is-here-as-a-pointer) · [What this file does NOT contain](#5-what-this-file-does-not-contain) · [Verification checklist](#6-verification-checklist) · [Rollback / removal](#7-rollback--removal)
+> [!WARNING]
+> **Do not treat `HOLD`, `deprecated`, or this pointer as authorization to
+> delete the path.** The repository-present
+> [deprecation register](../../control_plane/deprecation_register.yaml) has no
+> entry for this file, and external-consumer, redirect, anchor, tombstone, and
+> rollback closure were not proved in this work.
+
+> [!CAUTION]
+> **The source-role vocabularies are not interchangeable.** The atlas uses
+> broad human conceptual classes; the repository-present `SourceDescriptor`
+> schema has a richer machine vocabulary; transition-assessment and human
+> taxonomy documents expose additional profiles. No accepted global crosswalk
+> was verified.
+
+**Quick jumps:** [Orientation](#1-what-this-register-is-orientation-only) ·
+[Destinations](#2-where-the-canonical-content-lives) ·
+[Use rules](#3-per-enforcement-surface-redirects) ·
+[Compatibility status](#4-why-this-file-is-here-as-a-pointer) ·
+[Non-effects](#5-what-this-file-does-not-contain) ·
+[Validation](#6-verification-checklist) ·
+[Rollback and retirement](#7-rollback--removal)
 
 ---
+
+<a id="1"></a>
+<a id="1-what-this-register-is-orientation-only"></a>
 
 ## 1. What this register is (orientation only)
 
-`CONFIRMED doctrine — KFM treats source role as a first-class identity attribute. An observed reading is not interchangeable with a modeled estimate; a regulatory determination is not interchangeable with an administrative compilation; an aggregate publication is not interchangeable with candidate evidence; synthetic content is never the same thing as observed reality.` (Atlas v1.1 §24.1.)
+Source-role anti-collapse is the KFM rule that a source, observation, model,
+aggregate, administrative record, regulation, reconstruction, synthetic
+artifact, or other source product must not silently acquire the authority,
+meaning, precision, or evidentiary role of a different class.
 
-`CONFIRMED doctrine — the lifecycle and the governed API both fail closed when these roles are conflated. The role is set at admission (SourceDescriptor) and is preserved through every promotion. Promotion does not upgrade an observation to a regulation, or a model to an aggregate, or a candidate to a verified record — those are separate governed transitions with their own evidence and review requirements.` (Atlas v1.1 §24.1, reading note.)
+This legacy file owns only two responsibilities:
 
-The register has **seven canonical role classes** *(named but not defined here — see §2 for the canonical definitions)*: `Observed`, `Regulatory`, `Modeled`, `Aggregate`, `Administrative`, `Candidate`, `Synthetic`.
+1. preserve inbound path and anchor compatibility for readers that still reach
+   the singular `docs/atlas/` lane; and
+2. route those readers to the current repository surfaces without copying their
+   normative or implementation-bearing content.
 
-It has **multiple companion artifacts** in distinct responsibility roots:
+It does **not** freeze one universal vocabulary. Current repository evidence
+shows multiple bounded profiles:
 
-| Companion artifact | Role | Responsibility root |
+| Profile | Current purpose | Authority limit |
 |---|---|---|
-| **Master Source-Role Anti-Collapse Register** *(atlas-register form)* | Cross-domain register: seven role classes, anti-collapse failure modes (DENY conditions), required guardrails. | `docs/atlases/` *(Atlas v1.1 §24.1)* |
-| **Validator catalogue entry** | Test family "Source-role anti-collapse" — negative case: regulatory/model/aggregate/admin source used as different truth class; expected outcome: `DENY`. | `docs/atlases/` *(Atlas v1.0 §20.4)* + `tests/policy/` / `tools/validators/` for the implementation |
-| **Trust-membrane anti-patterns** *(related register)* | §24.9.2 row "Aggregate cited as per-place observation" and adjacent rows. | `docs/atlases/` *(Atlas v1.1 §24.9.2)* |
-| **`SourceDescriptor` meaning contract** | The object family carrying `source_role` as a fixed-at-admission field. | `contracts/source/` |
-| **`SourceDescriptor` JSON Schema** | The field-level enum and validation of `source_role`. | `schemas/contracts/v1/source/` |
-| **Policy implementation** | OPA / Rego policy enforcing DENY for role-collapse attempts at admission, promotion, render, and citation surfaces. | `policy/` (admission, promotion, render policy packages) |
-| **Per-domain J. tables and F. cross-lane relations** | Each domain dossier (chs. 3–18) carries its own role-collapse risks and guardrails relevant to that domain. | `docs/atlases/` *(within the consolidated atlas)* and/or `docs/domains/<domain>/` |
-| **Figure-to-generate** | Atlas v1.0 §23.3 "Source-role anti-collapse diagram" — the visual showing the seven roles as separate channels. | `docs/atlases/` *(referenced in Atlas v1.0 §23.3; rendering pipeline `NEEDS VERIFICATION`)* |
+| Curated atlas classes | Broad human orientation and anti-collapse examples | Navigational; not a 1:1 schema projection |
+| Human source-role taxonomy | Architecture-facing explanation of source roles and authority relationships | Human reference; not machine shape |
+| `SourceDescriptor.source_role` | Repository-present machine field for source admission and use limits | Schema is `PROPOSED`; singular/plural path authority remains conflicted |
+| Source-role use assessment | Deterministic fixture-first evaluation of a requested use | Bounded validator profile; not production policy or release authority |
+| Source-role transition assessment | Evaluation of source-role transformation or transition risk | Fixture-first profile; not a universal crosswalk |
+| Cross-domain role vector | Preserves each participating lane's native role through joins and derivatives | Seam guidance; no silent role normalization |
 
-The pointer page does not duplicate any of these companion artifacts; it only redirects.
+The exact current inventory, status labels, fixtures, validators, workflows,
+policy gaps, and consumer gaps belong in the
+[universal architecture reference](../architecture/source-role-anti-collapse.md),
+not in this pointer.
 
-> [!NOTE]
-> **The doctrine is not implementation.** Atlas v1.1 §24.1 establishes the register as doctrine. Whether each enforcement surface (contract, schema, policy, validator, test) currently implements that doctrine in the mounted repo is `NEEDS VERIFICATION` for every surface listed below.
-
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="2"></a>
+<a id="2-where-the-canonical-content-lives"></a>
 
 ## 2. Where the canonical content lives
 
-| If you want to read… | Go to | Responsibility root | Status |
-|---|---|---|---|
-| The **master register** (seven role classes + DENY conditions + required guardrails) | `docs/atlases/source-role-anti-collapse.md` *(as a standalone register extract)* | `docs/` — atlas lane | `PROPOSED` — file `NEEDS VERIFICATION`; may not yet exist as a standalone extract |
-| The **authoritative current source** | `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` § "24.1 Master Source-Role Anti-Collapse Register" | `docs/` — atlas lane | `PROPOSED placement` per Atlas v1.1 Appendix G; mounted-repo presence `NEEDS VERIFICATION` |
-| The **edition-of-record PDF** | `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` § Ch. 24.1 | `docs/` — atlas lane | `PROPOSED placement` per Atlas v1.1 Appendix G G.4; mounted-repo presence `NEEDS VERIFICATION` |
-| The **validator-catalogue row** (test family, negative case, expected outcome) | Atlas v1.0 §20.4 "Source-role anti-collapse" *(retained verbatim in v1.1)* | `docs/` — atlas lane | `CONFIRMED corpus content`; placement of the extracted §20.4 catalogue `NEEDS VERIFICATION` |
-| The **trust-membrane anti-patterns context** | Atlas v1.1 §24.9.2 | `docs/` — atlas lane | `CONFIRMED corpus content` |
-| The **figure** ("observed / regulatory / modeled / aggregate / administrative / candidate / synthetic as separate channels") | Atlas v1.0 §23.3 figure-to-generate | `docs/` — atlas lane | `CONFIRMED corpus reference`; rendering target path `NEEDS VERIFICATION` |
-| The **`SourceDescriptor` meaning contract** (with `source_role` field) | `contracts/source/source_descriptor.md` | `contracts/` — meaning | `PROPOSED`; `NEEDS VERIFICATION` |
-| The **`SourceDescriptor` JSON Schema** (with `source_role` enum) | `schemas/contracts/v1/source/source_descriptor.schema.json` | `schemas/` — shape | `PROPOSED` per ADR-0001 schema-home; `NEEDS VERIFICATION` |
-| The **policy implementation** (OPA / Rego) | `policy/source_role/` *(or `policy/admission/source_role.rego`, `policy/promotion/source_role.rego`, `policy/render/source_role.rego`)* | `policy/` — admissibility | `PROPOSED`; exact package layout `NEEDS VERIFICATION` |
-| The **policy tests** (negative-fixture conformance) | `tests/policy/source_role/` | `tests/` | `PROPOSED`; `NEEDS VERIFICATION` |
-| The **fixtures** (positive / negative role-collapse fixtures) | `fixtures/source_role/{valid,invalid}/` | `fixtures/` | `PROPOSED` per `directory-rules.md` v1.2 §6.6 fixture substructure; `NEEDS VERIFICATION` |
-| The **doctrinal anchor** for source-role discipline in governed AI | `docs/doctrine/ai-build-operating-contract.md` §10 (core invariants) + §11 (placement contract) | `docs/doctrine/` | `CONFIRMED in attached corpus` |
-| The **per-domain J. and F. sections** (where domain-specific role-collapse risks live) | Atlas v1.1 chs. 3–18 in the consolidated atlas; and/or `docs/domains/<domain>/` | `docs/` — atlas + domain dossiers | `PROPOSED placement`; mounted-repo presence `NEEDS VERIFICATION` |
+“Canonical” is scoped by responsibility. No single Markdown page owns every
+source-role decision.
 
-> [!CAUTION]
-> All relative paths above are `PROPOSED` from this file's location and have not been verified against a mounted repo. Treat them as redirect targets to confirm, not as proof that the target file exists today.
+| Need | Current repository destination | What that destination owns |
+|---|---|---|
+| Curated human atlas reference | [`docs/atlases/source-role-anti-collapse.md`](../atlases/source-role-anti-collapse.md) | Broad conceptual classes, examples, guardrail orientation, and atlas navigation |
+| Atlas-lane status and lineage | [`docs/atlases/README.md`](../atlases/README.md) | Curated atlas lane, naming drift, compatibility posture, and child inventory |
+| Universal responsibility and enforcement map | [`docs/architecture/source-role-anti-collapse.md`](../architecture/source-role-anti-collapse.md) | Repository-grounded composition of contracts, schemas, fixtures, validators, workflows, release guidance, conflicts, and open work |
+| Cross-domain seam guidance | [`docs/architecture/cross-domain/source-role-anti-collapse.md`](../architecture/cross-domain/source-role-anti-collapse.md) | Joins, aggregates, derivatives, role vectors, relation evidence, and composition sensitivity |
+| Human role taxonomy | [`docs/sources/source-roles.md`](../sources/source-roles.md) | Human-readable source-role and authority vocabulary |
+| SourceDescriptor semantic meaning | [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) | Field meaning, invariants, rights/sensitivity posture, and compatibility semantics |
+| Repository-present machine shape | [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) | JSON validation shape; it self-identifies a plural compatibility/canonical path, so final path authority remains conflicted |
+| Deprecation-machine state | [`control_plane/deprecation_register.yaml`](../../control_plane/deprecation_register.yaml) | Machine-readable deprecation entries; currently no entry for this pointer |
+| Placement authority | [Directory Rules v2](../doctrine/directory-rules.md) and [accepted ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Responsibility-root placement, compatibility, migration, and retirement rules |
+| Contribution and receipt requirements | [`CONTRIBUTING.md`](../../CONTRIBUTING.md) | Review, validation, generated-work receipt, and rollback discipline |
 
-[↑ back to top](#top)
+### Current authority order
+
+For a concrete source-role decision, use the narrowest applicable accepted
+authority and current evidence:
+
+1. enforced platform and repository controls;
+2. accepted ADRs and adopted doctrine;
+3. accepted semantic contracts;
+4. current machine schemas and active policy;
+5. evidence, review, validation, release, correction, and rollback records for
+   the exact subject;
+6. executable implementation and current runtime evidence;
+7. architecture and taxonomy documentation;
+8. atlas summaries and this compatibility pointer.
+
+When two surfaces disagree, preserve the conflict. Do not make this pointer a
+silent crosswalk or choose a machine authority by prose.
+
+[Back to top](#top)
 
 ---
+
+<a id="3"></a>
+<a id="3-per-enforcement-surface-redirects"></a>
 
 ## 3. Per-enforcement-surface redirects
 
-`CONFIRMED corpus content — the register's enforcement spans admission, promotion, render, citation, and AI runtime surfaces.` Each surface has its own canonical home for the enforcing artifact. The table below tells you where each enforcement surface lives; it does not reproduce the §24.1 DENY-condition table itself.
+Use this table to select the next surface. It is a navigation map, not an
+enforcement specification.
 
-| Enforcement surface | What it does *(per Atlas v1.1 §24.1.2 + §24.9.2)* | Canonical home for the enforcing artifact *(PROPOSED)* | Outcome on collapse *(per corpus)* |
-|---|---|---|---|
-| **Admission** | `SourceDescriptor.source_role` is set at admission and immutable through promotion. | `contracts/source/source_descriptor.md` + `schemas/contracts/v1/source/source_descriptor.schema.json` + `policy/admission/source_role.rego` | Admission `DENY` if role cannot be determined or is ambiguous. |
-| **Promotion** | Promotion never upgrades a role (e.g., modeled → observed, candidate → verified). | `policy/promotion/source_role.rego` + `tests/policy/source_role/promotion_test.rego` | Promotion `DENY` if proposed transition implies a role upgrade. |
-| **Publication (release queue)** | Modeled product MAY not be published with observed framing; aggregate MAY not be published as per-place truth; synthetic MAY not be published without a Reality Boundary Note. | `policy/release/source_role.rego` *(or `policy/promotion/source_role.rego`)* + `release/` review gates | Release `DENY` / `HOLD`. |
-| **Render (map / UI)** | Map layers and Evidence Drawer payloads MUST preserve role labeling. | `policy/render/source_role.rego` + MapLibre layer registry guards | Render `DENY` for collapsed presentation. |
-| **Citation (AI / Focus Mode)** | AI surfaces MUST `ABSTAIN` when a query would force role collapse; MUST `DENY` when policy would emit a collapse. | `policy/render/source_role.rego` + AIReceipt evaluator + Focus Mode citation evaluator | `ABSTAIN` or `DENY`. |
-| **Validator harness** | Test family "Source-role anti-collapse" — negative case: regulatory/model/aggregate/admin source used as different truth class. | `tools/validators/source_role/` + `tests/policy/source_role/` | Validator outcome `DENY` (per Atlas v1.0 §20.4). |
-| **Sensitive-domain interlock** | Sensitive domains *(archaeology, fauna/flora, people/land, hazards, infrastructure)* default to `DENY` on collapse; redaction/generalization receipt required. | `policy/sensitivity/` + domain dossier J. tables | `DENY`; `RedactionReceipt` required if any release proceeds. |
-
-> [!NOTE]
-> **All policy and validator paths in this table are `PROPOSED`.** They are consistent with the existing `policy/{admission,promotion,release,render,sensitivity,consent}/` family structure and the `tools/validators/` flat-prefix naming convention from the *KFM Repository Structure Guiding Document*, but mounted-repo presence is `NEEDS VERIFICATION` for every row. The outcome vocabulary (`DENY` / `ABSTAIN` / `HOLD`) is `CONFIRMED` per Atlas v1.1 §24.3 and `ai-build-operating-contract.md` §9.2.
-
-### 3.1 Most-at-risk domains (for navigation only)
-
-`CONFIRMED corpus content — Atlas v1.1 §24.1.2 names six domain families as most at risk for specific role-collapse patterns.` Navigate to the matching domain dossier for the per-domain detail:
-
-| Collapse pattern *(per §24.1.2)* | Most-at-risk domains *(per §24.1.2)* | Where the per-domain detail lives |
+| Question | Read or inspect | Fail-safe posture |
 |---|---|---|
-| Modeled product labeled or queried as observed | Air; Hydrology; Habitat; Agriculture; 3D | `docs/atlases/` chs. 4, 6, 9, 11, 18 (consolidated atlas) + per-domain dossiers |
-| Regulatory zone labeled as an observed flood / event | Hydrology; Hazards; Air | `docs/atlases/` chs. 4, 11, 12 + per-domain dossiers |
-| Aggregate cited as a per-place truth | Agriculture; People; Geology; Air | `docs/atlases/` chs. 9, 10, 11, 16 + per-domain dossiers |
-| Administrative compilation cited as observation | People/Land; Settlements; Roads | `docs/atlases/` chs. 13, 14, 16 + per-domain dossiers |
-| *(others — see §24.1.2 in the consolidated atlas)* | — | — |
+| What does the source-role field mean? | SourceDescriptor semantic contract and human taxonomy | Mark unresolved semantics `NEEDS VERIFICATION`; do not infer |
+| What values and fields are machine-valid? | Current SourceDescriptor schema and its validator/fixtures as inventoried by the universal architecture page | Reject invalid shape; do not call schema validity truth or release permission |
+| May this source support this claim or use? | Source-role use-request contract, validator profile, applicable policy, EvidenceBundle, and accountable review | `ABSTAIN`, `DENY`, `HOLD`, `REVIEW_REQUIRED`, or `ERROR` as the owning profile permits |
+| May one source role transform into another? | Transition-assessment contract/profile, transform evidence, policy, and review | Preserve native role and derivation; fail closed on unsupported upgrades |
+| May multiple domains be joined? | Cross-domain seam guidance plus each domain's source/evidence contract | Preserve a role vector or explicit derivation; no least-common-denominator role |
+| May a map, export, graph, or AI response show the result? | Governed API/runtime contract, release state, public-safe transform, citations, and downstream consumer tests | Public clients use released, policy-safe artifacts only |
+| May this pointer be removed? | Deprecation register, consumer inventory, link/anchor checks, accepted migration decision, tombstone/redirect plan, and rollback evidence | `HOLD` until all required evidence closes |
 
-> The chapter numbers above are from the v1.1 / v1.0 interior; mounted-repo file placement is `PROPOSED` per Atlas v1.1 Appendix G.
+### Minimum anti-collapse invariant
 
-[↑ back to top](#top)
+A governed implementation should preserve, at minimum:
+
+- stable source identity and role;
+- the distinction between observation, interpretation, model, aggregate,
+  administrative/regulatory context, reconstruction, and synthetic output where
+  applicable;
+- authority rank and claim-scoped use limits;
+- derivation and transformation lineage;
+- spatial and temporal support actually available;
+- rights, sensitivity, consent, and access obligations;
+- EvidenceRef-to-EvidenceBundle resolution for consequential claims;
+- review and release state;
+- correction, withdrawal, supersession, and rollback references where material;
+- the exact role disclosed to APIs, maps, exports, graphs, and AI surfaces.
+
+A validator result, schema pass, map layer, issue, pull request, receipt, or
+atlas row must never upgrade source authority.
+
+[Back to top](#top)
 
 ---
+
+<a id="4"></a>
+<a id="4-why-this-file-is-here-as-a-pointer"></a>
 
 ## 4. Why this file is here as a pointer
 
-`CONFIRMED doctrine:`
+The singular `docs/atlas/` path is a repository-present **legacy compatibility
+lane**. The plural `docs/atlases/` path is the current curated atlas lane.
+Accepted Directory Rules v2 allows this same-path documentation correction but
+does not make physical retirement automatic.
 
-1. `docs/atlas/` (singular) is a **deprecated compatibility mirror** during a 30-day sunset window. See [`docs/atlas/README.md`](./README.md).
-2. The canonical doc-lane for atlas-class registers is `docs/atlases/` (plural), per `directory-rules.md` v1.2 §6.1 + §13.5 row "Docs naming duplication", per the *KFM Repository Structure Guiding Document* migration plan row `Docs naming`, and per Atlas v1.1 Appendix G G.4.
-3. During the sunset window, `docs/atlas/` is permitted to carry **only** the deprecation README and conforming pointer pages — no atlas content, no master register, no contract, no schema, no policy file, no validator catalogue. *(Per [`docs/atlas/README.md`](./README.md) §5–§6.)*
-4. This file is a conforming pointer page. It carries the deprecation banner, the redirect tables, and no register content.
+### Current migration posture
 
-If you arrived here from a legacy backlink, the redirect tables in §2 and §3 list every canonical home you might be looking for. Update your backlink to one of those targets and stop linking into `docs/atlas/`.
+| Condition | Current status |
+|---|---|
+| Plural human atlas target exists | `CONFIRMED` |
+| Universal and cross-domain architecture references exist | `CONFIRMED` |
+| This singular pointer exists and preserves old links | `CONFIRMED` |
+| Machine deprecation entry names this path | `NOT PRESENT` at the pinned base |
+| External and internal consumer inventory is complete | `UNKNOWN` |
+| Redirect, anchor, and host-render behavior is proved | `UNKNOWN` |
+| Tombstone or archive behavior is accepted | `UNKNOWN` |
+| Final retirement date is approved | `UNKNOWN` |
+| Removal is safe and reversible | `NEEDS VERIFICATION` / `HOLD` |
 
-[↑ back to top](#top)
+The prior pointer asserted a 30-day mirror window. Current repository evidence
+does not establish that an active timer was registered, started, completed, or
+approved. This revision therefore removes the unsupported date-based deletion
+claim.
+
+### Same-path placement decision
+
+| Proposed operation | Current disposition | Basis |
+|---|---|---|
+| Correct this pointer in place | `PLACE` | Existing human compatibility responsibility under `docs/` |
+| Copy atlas or architecture content into this file | `DENY` | Would create duplicate, drifting human authority |
+| Treat this file as contract, schema, policy, or review authority | `DENY` | Wrong responsibility root and object family |
+| Move, rename, delete, redirect, or tombstone the path now | `HOLD` | Consumer, deprecation, redirect, archive, and rollback closure remain incomplete |
+| Update the plural atlas or architecture references | Separate bounded change | Those files have distinct responsibilities and evidence snapshots |
+
+[Back to top](#top)
 
 ---
+
+<a id="5"></a>
+<a id="5-what-this-file-does-not-contain"></a>
 
 ## 5. What this file does NOT contain
 
-`CONFIRMED — this pointer page intentionally OMITS:`
+This pointer does not:
 
-- The definition or scope of any of the seven role classes (`Observed`, `Regulatory`, `Modeled`, `Aggregate`, `Administrative`, `Candidate`, `Synthetic`).
-- The "typical example" enumeration per role.
-- The "allowed downstream role" matrix.
-- The anti-collapse failure-mode table (DENY conditions, required guardrails).
-- The role-immutability rule's worked examples.
-- The Reality Boundary Note specification for synthetic content.
-- The Representation Receipt specification.
-- The `SourceDescriptor.source_role` JSON Schema enum.
-- Rego policy text, validator code, fixture content, or test cases.
-- The figure-to-generate ("seven roles as separate channels").
-- Per-domain J. table content.
+- define a canonical source-role enum;
+- assert that the seven broad atlas classes equal the current SourceDescriptor
+  machine enum;
+- approve a source, claim, transformation, join, model, aggregate, map layer,
+  export, graph edge, or AI answer;
+- evaluate evidence, rights, sensitivity, consent, access, or policy;
+- authenticate a reviewer or satisfy separation of duties;
+- validate a contract, schema, fixture, or runtime event;
+- create a PolicyDecision, ReviewRecord, receipt, proof, manifest, correction,
+  withdrawal, supersession, or rollback record;
+- activate a source, connector, workflow, policy bundle, public route, or
+  deployment;
+- start a deprecation clock or authorize removal;
+- change lifecycle, promotion, release, deployment, or publication state.
 
-> [!WARNING]
-> If a future PR adds any of the above content to this file, the PR re-opens parallel-authority drift and should be refused at review. The substantive content belongs at the canonical homes listed in §2 and §3.
+A repository commit or merge would change only documentation and authoring
+provenance. It would not prove production enforcement or public parity.
 
-[↑ back to top](#top)
+[Back to top](#top)
 
 ---
+
+<a id="6"></a>
+<a id="6-verification-checklist"></a>
 
 ## 6. Verification checklist
 
-- [ ] Confirm the canonical atlas-register file exists at `docs/atlases/source-role-anti-collapse.md` *(or)* confirm that Atlas v1.1 §24.1 inside `docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md` is the authoritative reference and that no standalone register extract is needed.
-- [ ] Confirm `contracts/source/source_descriptor.md` exists and declares the `source_role` field as fixed-at-admission and immutable through promotion.
-- [ ] Confirm `schemas/contracts/v1/source/source_descriptor.schema.json` exists per ADR-0001 schema-home rule and constrains `source_role` to the seven canonical role classes.
-- [ ] Confirm a policy package exists under `policy/` enforcing role immutability at admission, promotion, release, and render gates (exact package layout per ADR if subdivision is contested).
-- [ ] Confirm `tests/policy/source_role/` contains negative-case tests for each DENY condition in Atlas v1.1 §24.1.2.
-- [ ] Confirm `fixtures/source_role/{valid,invalid}/` exists with role-collapse negative fixtures per `directory-rules.md` v1.2 §6.6 fixture substructure.
-- [ ] Confirm the validator catalogue entry "Source-role anti-collapse" from Atlas v1.0 §20.4 is wired to a validator under `tools/validators/`.
-- [ ] Confirm every internal repo backlink to `docs/atlas/source-role-anti-collapse.md` has been redirected to one of the canonical homes in §2 or §3.
-- [ ] Confirm no substantive register content has been added to this file (see §5).
+Before changing this pointer again, verify:
 
-[↑ back to top](#top)
+### Documentation and compatibility
+
+- [ ] The singular path and legacy anchors remain available unless an accepted
+      migration explicitly replaces them.
+- [ ] The plural atlas, universal architecture, cross-domain architecture, human
+      taxonomy, contract, schema, deprecation register, Directory Rules, ADR, and
+      contribution links resolve at the proposed head.
+- [ ] The pointer contains one H1, balanced Markdown, no duplicate anchor IDs,
+      valid internal fragments, and a final newline.
+- [ ] The pointer does not duplicate the register, architecture, enum, policy, or
+      validator implementation.
+- [ ] Truth labels distinguish repository presence from accepted authority and
+      production behavior.
+
+### Source-role boundary
+
+- [ ] Broad atlas classes are described as human groupings, not a machine enum.
+- [ ] Schema-path and vocabulary conflicts remain visible until accepted
+      convergence exists.
+- [ ] Role, authority, derivation, evidence, policy, review, release, correction,
+      and public projection remain separate.
+- [ ] Negative outcomes do not silently become approval, truth, release, or
+      publication.
+
+### Retirement readiness
+
+- [ ] A machine deprecation entry names the exact old and successor paths.
+- [ ] Inbound repository and external consumer references are inventoried.
+- [ ] Redirect, anchor, host-render, and cache behavior are tested.
+- [ ] Retention, archive, or tombstone treatment is accepted.
+- [ ] Rollback restores the old path and navigation without rewriting history.
+- [ ] Accountable human review approves the migration.
+- [ ] No release or public artifact still depends on the withdrawn path.
+
+For AI-authored changes, add and validate a new generated-work receipt under
+`data/receipts/generated/` with final artifact hashes and pending human review.
+
+[Back to top](#top)
 
 ---
+
+<a id="7"></a>
+<a id="7-rollback--removal"></a>
 
 ## 7. Rollback / removal
 
-This file **should be removed**, not maintained, when the `docs/atlas/` mirror window closes. The doctrinally-correct end-state is:
+### Documentation rollback
 
-- `docs/atlas/` no longer exists in the repo.
-- Every backlink that previously pointed at `docs/atlas/source-role-anti-collapse.md` now points to one of the canonical homes in §2 or §3.
-- The deprecation entry in `control_plane/deprecation_register.yaml` is closed.
+Before merge, close the draft pull request and abandon the task branch; branch
+deletion is a separate repository action. After an authorized merge, revert the
+bounded documentation commit or restore prior blob
+`54ca20771d90531575b4d58c1fe2425dc4638939`, remove or supersede the paired
+generated-work receipt consistently, re-run the same validation, and disclose why
+the proposal-era pointer was restored.
 
-`PROPOSED rollback path` (if removal causes link breakage that the redirect map did not catch): restore this exact pointer file from git history under the original `docs/atlas/source-role-anti-collapse.md` path, extend the mirror window in the deprecation register, and reopen the migration manifest for a second pass of backlink redirection.
+### Future removal protocol
 
-**Rollback target:** `ROLLBACK_TARGET_TBD` — record the migration manifest `git_sha_before` here once known.
+Do not delete this path solely because the plural target exists. A future removal
+must, at minimum:
 
-[↑ back to top](#top)
+1. pin the old path, successor path, consumers, and deprecation entry;
+2. establish the accepted migration and retention decision;
+3. prove inbound link, fragment, redirect/tombstone, host-render, and cache
+   behavior;
+4. update indexes, registries, generated mirrors, receipts, and documentation
+   graphs that depend on the path;
+5. preserve historical attribution and correction lineage;
+6. define and test rollback;
+7. deliver through accountable human review.
+
+Until those conditions close, the retirement outcome remains `HOLD`.
+
+### References
+
+- [Curated atlas lane](../atlases/README.md)
+- [Curated source-role atlas reference](../atlases/source-role-anti-collapse.md)
+- [Universal source-role anti-collapse architecture](../architecture/source-role-anti-collapse.md)
+- [Cross-domain source-role anti-collapse architecture](../architecture/cross-domain/source-role-anti-collapse.md)
+- [Human source-role taxonomy](../sources/source-roles.md)
+- [SourceDescriptor semantic contract](../../contracts/source/source_descriptor.md)
+- [Repository-present SourceDescriptor schema](../../schemas/contracts/v1/source/source_descriptor.schema.json)
+- [Deprecation register](../../control_plane/deprecation_register.yaml)
+- [Directory Rules v2](../doctrine/directory-rules.md)
+- [ADR-0029 — adopt Directory Governance Standard v2](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [Contribution guide](../../CONTRIBUTING.md)
 
 ---
 
-<details>
-<summary><strong>Appendix A — Evidence basis (source ledger)</strong></summary>
+**Document status:** `draft` · **Version:** `v2.0` · **Updated:** 2026-08-22 ·
+**Path posture:** legacy compatibility pointer · **Removal:** `HOLD` ·
+**Release, deployment, publication:** not performed
 
-| Source | Status | Supports | Limits |
-|---|---|---|---|
-| `docs/atlas/README.md` (prior turn, this session) | `CONFIRMED doctrine framing` | `docs/atlas/` is a deprecated mirror; only README and pointer pages permitted. | Doctrine framing only; mounted-repo state `NEEDS VERIFICATION`. |
-| `directory-rules.md` v1.2 §6.1 + §13.5 row "Docs naming duplication" | `CONFIRMED doctrine` | Canonical lane is `docs/atlases/`. | Commit-pinned doctrine, not a `ls` of the working tree. |
-| Atlas v1.1 §24.1 "Master Source-Role Anti-Collapse Register" | `CONFIRMED corpus content` | Seven canonical role classes; immutability at admission rule; six collapse-failure modes with DENY conditions and required guardrails; most-at-risk domain map. | Atlas-level register; not a policy or schema authority. |
-| Atlas v1.0 §20.4 "Master Validator / Test Catalogue" row "Source-role anti-collapse" | `CONFIRMED corpus content` | Validator test family with named negative case (regulatory/model/aggregate/admin used as different truth class) and expected outcome (`DENY`). | Validator-catalogue row; not a validator implementation. |
-| Atlas v1.0 §23.3 "Source-role anti-collapse diagram" (figure-to-generate) | `CONFIRMED corpus reference` | The seven roles modeled as separate channels in the canonical figure. | Reference to a figure-to-generate; rendering target path `NEEDS VERIFICATION`. |
-| Atlas v1.1 §24.9.2 row "Aggregate cited as per-place observation" | `CONFIRMED corpus content` | Trust-membrane anti-pattern view of role collapse with DENY surfaces. | Anti-pattern register; not enforcement authority. |
-| Atlas v1.1 §24.9.3 "Promotion that 'upgrades' a source role" counter-rule | `CONFIRMED corpus content` | Source role is fixed at admission; never upgraded by promotion. | Governance-process counter-rule; not implementation. |
-| Atlas v1.1 Appendix G G.4 "Edition identity and citation form" | `CONFIRMED edition statement` | Canonical placement of the v1.1 PDF and (by inheritance) of any extracted register at `docs/atlases/`. | Atlas explicitly notes "Final repo placement … NEEDS VERIFICATION". |
-| Atlas seed cards — FEATURE "Source-Role Anti-Collapse Register Capability" (`kfm_full_atlas_seed_cards.md`) | `PROPOSED implementation` / `CONFIRMED card content` | Categorizes the capability under `POL - Policy, OPA, Conftest, Decisions`; lists the seven collapse patterns by name. | Seed card; not implementation proof. |
-| `ai-build-operating-contract.md` §10 core invariants + §11 placement contract | `CONFIRMED doctrine` | Source identity is preserved deterministically where practical; placement rule routes policy to `policy/`, contract to `contracts/`, schema to `schemas/`. | Doctrine, not implementation depth. |
-| *KFM Repository Structure Guiding Document* — `policy/` and `contracts/` root contracts | `CONFIRMED doctrine` | Family structure under `contracts/{source,evidence,data,runtime,release,correction,governance,domains}/`; policy package family. | Doctrine, not implementation depth. |
-
-**Memory is not evidence.** No mounted repo, CI run, workflow, dashboard, or branch state was inspected for this pointer page. Every implementation claim above is bounded to doctrine.
-
-</details>
-
-[↑ back to top](#top)
+[Back to top](#top)
