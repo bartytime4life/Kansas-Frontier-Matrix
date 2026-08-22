@@ -433,6 +433,42 @@ def _check_digest(
         findings.append(Finding("DIGEST_MISMATCH", field))
 
 
+def _check_source_digests(
+    subject_path: Any,
+    governing_refs: Sequence[Any],
+    declared: Sequence[Any],
+    *,
+    repo_root: Path,
+    pinned_ref: str | None,
+    field: str,
+    findings: list[Finding],
+) -> None:
+    """Bind declared evidence digests to the exact subject and governing blobs."""
+    if pinned_ref is None or not pinned_ref:
+        return
+    expected: set[str] = set()
+    references = [(subject_path, f"{field}/subject")]
+    references.extend(
+        (value, f"{field}/governing_refs/{index}")
+        for index, value in enumerate(governing_refs)
+    )
+    complete = True
+    for value, reference_field in references:
+        content = _read_pinned_blob(
+            value,
+            base_ref=pinned_ref,
+            repo_root=repo_root,
+            field=reference_field,
+            findings=findings,
+        )
+        if content is None:
+            complete = False
+            continue
+        expected.add("sha256:" + hashlib.sha256(content).hexdigest())
+    if complete and list(declared) != sorted(expected):
+        findings.append(Finding("SOURCE_DIGESTS_MISMATCH", field))
+
+
 def _semantic_findings(
     candidate: Mapping[str, Any],
     *,
@@ -523,6 +559,15 @@ def _semantic_findings(
                 repo_root=repo_root,
                 pinned_ref=pinned_ref,
                 field=f"{field}/path_sha256",
+                findings=findings,
+            )
+            _check_source_digests(
+                raw_entry.get("path"),
+                governing_refs,
+                source_digests,
+                repo_root=repo_root,
+                pinned_ref=pinned_ref,
+                field=f"{field}/source_digests",
                 findings=findings,
             )
             for ref_index, value in enumerate(governing_refs):

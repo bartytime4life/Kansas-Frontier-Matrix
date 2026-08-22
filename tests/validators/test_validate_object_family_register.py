@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import fnmatch
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -27,6 +29,35 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
     def test_current_register_passes_with_real_repository_paths(self) -> None:
         result = validate_register(REGISTER_PATH)
         self.assertTrue(result.ok, result.findings)
+
+    def test_workflow_watches_every_declared_catalog_surface(self) -> None:
+        register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
+        workflow = (
+            REPO_ROOT / ".github/workflows/object-family-register.yml"
+        ).read_text(encoding="utf-8")
+        patterns = re.findall(r'^\s+- "([^"]+)"\s*$', workflow, flags=re.MULTILINE)
+        path_roles = (
+            "contract_paths",
+            "schema_paths",
+            "policy_paths",
+            "fixture_paths",
+            "validator_paths",
+            "test_paths",
+            "workflow_paths",
+            "emitter_paths",
+        )
+        for entry in register["entries"]:
+            for role in path_roles:
+                for path in entry[role]:
+                    with self.subTest(family_id=entry["family_id"], role=role, path=path):
+                        matched = sum(
+                            1 for pattern in patterns if fnmatch.fnmatchcase(path, pattern)
+                        )
+                        self.assertGreaterEqual(
+                            matched,
+                            2,
+                            f"{path} is not watched by both pull_request and push filters",
+                        )
 
     def test_current_catalog_has_exact_milestone_family_set(self) -> None:
         register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
