@@ -113,7 +113,7 @@ repository-governance-parity:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.directory_governance.test_validate_repository_governance_parity --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/directory_governance/validate_repository_governance_parity.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/directory_governance/validate_repository_governance_parity.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json --repo-root . --artifact-git-ref f7c6ba4c73227858c2d7c8931adae37b57092ce1
 
 repository-guardrails: validator-registry-check workflow-security repository-topology
 
@@ -121,21 +121,22 @@ trust-spine-baseline:
 	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_trust_spine_baseline.py' --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-baseline-control-plane-successor-20260822.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-baseline-control-plane-successor-20260822.json --repo-root . --artifact-git-ref 236bdaf81b001d434726bd9ec7b0664c8ec0be83
 
 control-plane-registry-packet:
 	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_control_plane_registry_packet.py' --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_control_plane_registry_packet.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_control_plane_registry_packet.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-control-plane-registry-packet-rebased-20260822.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-control-plane-registry-packet-rebased-20260822.json --repo-root . --artifact-git-ref 236bdaf81b001d434726bd9ec7b0664c8ec0be83
 
 trust-spine-fixture-slice:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.governance.test_validate_trust_spine_fixture_slice --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_trust_spine_fixture_slice.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json --repo-root .
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json --repo-root . --artifact-git-ref f2d5ec5f34c97beaedca96f1ea7cce84b3643b67
 
 ci-conformance-report:
+	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.test_validate_generated_receipt --verbose
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.governance.test_validate_ci_conformance_report --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py

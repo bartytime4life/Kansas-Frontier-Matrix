@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -137,6 +138,67 @@ class GeneratedReceiptValidatorTests(unittest.TestCase):
         self.assertTrue(result.integrity_checked)
         self.assertFalse(result.review_claim_present)
         self.assertEqual(result.artifact_count, 1)
+
+    def test_exact_ancestor_git_ref_replays_historical_artifact(self) -> None:
+        git_root = self.root / "git-replay"
+        git_root.mkdir()
+        artifact = git_root / "artifact.txt"
+        artifact.write_text("historical bytes\n", encoding="utf-8")
+        subprocess.run(["git", "init", "-q"], cwd=git_root, check=True)
+        subprocess.run(
+            [
+                "git",
+                "-c",
+                "user.name=KFM Test",
+                "-c",
+                "user.email=test@example.invalid",
+                "add",
+                "artifact.txt",
+            ],
+            cwd=git_root,
+            check=True,
+        )
+        subprocess.run(
+            [
+                "git",
+                "-c",
+                "user.name=KFM Test",
+                "-c",
+                "user.email=test@example.invalid",
+                "commit",
+                "-q",
+                "-m",
+                "historical artifact",
+            ],
+            cwd=git_root,
+            check=True,
+        )
+        git_ref = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=git_root,
+            text=True,
+        ).strip()
+        expected = "sha256:" + hashlib.sha256(artifact.read_bytes()).hexdigest()
+        receipt = self._receipt()
+        receipt["artifact_hashes"] = {"artifact.txt": expected}
+        receipt_path = git_root / "receipt.json"
+        receipt_path.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+        artifact.write_text("successor bytes\n", encoding="utf-8")
+
+        current = validate_receipt(receipt_path, repo_root=git_root)
+        historical = validate_receipt(
+            receipt_path,
+            repo_root=git_root,
+            artifact_git_ref=git_ref,
+        )
+
+        self.assertFinding(current, "ARTIFACT_DIGEST_MISMATCH")
+        self.assertTrue(historical.ok, historical.findings)
+
+    def test_artifact_git_ref_requires_exact_ancestor_sha(self) -> None:
+        result = self._validate(artifact_git_ref="HEAD")
+
+        self.assertFinding(result, "ARTIFACT_GIT_REF_INVALID")
 
     def test_require_review_claim_rejects_pending_review(self) -> None:
         result = self._validate(require_review_claim=True)

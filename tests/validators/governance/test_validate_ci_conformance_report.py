@@ -48,7 +48,7 @@ class CIConformanceReportTests(unittest.TestCase):
 
     def test_check_not_run_cannot_claim_pass(self) -> None:
         candidate = copy.deepcopy(self.report)
-        candidate["checks"][2]["outcome"] = "PASS"
+        candidate["checks"][3]["outcome"] = "PASS"
         self.assertIn("CHECK_OUTCOME_INVALID", self.codes(candidate))
 
     def test_skipped_cannot_claim_pass(self) -> None:

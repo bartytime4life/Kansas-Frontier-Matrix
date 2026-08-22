@@ -1,11 +1,12 @@
 """Validate GENERATED_RECEIPT provenance records without network access.
 
 This validator binds the repository-authoring receipt schema to final local
-artifact bytes.  A successful default validation proves bounded shape,
-cross-field, and SHA-256 integrity checks only.  An optional gate can require a
-receipt to contain an approval or override claim, but the validator does not
-authenticate that claim.  No result grants truth, policy, review, mutation,
-merge, release, or publication authority.
+artifact bytes or, when explicitly requested, regular blobs from one exact
+ancestor Git commit. A successful validation proves bounded shape, cross-field,
+and SHA-256 integrity checks only. An optional gate can require a receipt to
+contain an approval or override claim, but the validator does not authenticate
+that claim. No result grants truth, policy, review, mutation, merge, release,
+or publication authority.
 """
 
 from __future__ import annotations
@@ -14,6 +15,9 @@ import argparse
 import hashlib
 import json
 import math
+import os
+import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from itertools import islice
@@ -43,6 +47,8 @@ MAX_SCHEMA_FINDINGS = 100
 MAX_ARTIFACTS = 1_000
 MAX_ARTIFACT_BYTES = 64 * 1024 * 1024
 MAX_TOTAL_ARTIFACT_BYTES = 256 * 1024 * 1024
+GIT_TIMEOUT_SECONDS = 30
+GIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 POLICY_DECISION_ROOTS = (
     "policy/",
     "schemas/contracts/v1/",
@@ -338,6 +344,211 @@ def _sha256(path: Path) -> str:
     return f"sha256:{digest.hexdigest()}"
 
 
+def _git(
+    repo_root: Path,
+    *args: str,
+    input_bytes: bytes | None = None,
+) -> subprocess.CompletedProcess[bytes]:
+    env = os.environ.copy()
+    env.update(
+        {
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_OPTIONAL_LOCKS": "0",
+            "GIT_TERMINAL_PROMPT": "0",
+            "LC_ALL": "C",
+        }
+    )
+    try:
+        return subprocess.run(
+            ["git", *args],
+            cwd=repo_root,
+            env=env,
+            input=input_bytes,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=GIT_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return subprocess.CompletedProcess(["git", *args], 124, b"", b"")
+
+
+def _artifact_digest_finding(
+    expected: object,
+    *,
+    field: str,
+) -> Finding | None:
+    if not isinstance(expected, str):
+        return None
+    algorithm, separator, encoded = expected.partition(":")
+    if algorithm == "blake3" and separator:
+        return Finding(
+            "ARTIFACT_DIGEST_UNSUPPORTED",
+            field,
+            "BLAKE3 verification requires an explicitly admitted dependency",
+        )
+    if algorithm != "sha256" or not separator or not 32 <= len(encoded) <= 64:
+        return Finding(
+            "ARTIFACT_DIGEST_INVALID",
+            field,
+            "SHA-256 artifact digests must contain 32 to 64 hex characters",
+        )
+    if set(encoded) == {"0"}:
+        return Finding(
+            "ARTIFACT_DIGEST_PLACEHOLDER_DENIED",
+            field,
+            "all-zero artifact digest placeholders are denied",
+        )
+    return None
+
+
+def _git_integrity_findings(
+    receipt: Mapping[str, object],
+    receipt_path: Path,
+    repo_root: Path,
+    artifact_git_ref: str,
+) -> list[Finding]:
+    """Replay immutable receipt artifacts from one exact ancestor commit."""
+
+    findings: list[Finding] = []
+    try:
+        if repo_root.is_symlink() or not repo_root.is_dir():
+            raise OSError
+        resolved_root = repo_root.resolve(strict=True)
+        resolved_receipt = receipt_path.resolve(strict=True)
+    except OSError:
+        return [
+            Finding(
+                "REPO_ROOT_UNREADABLE",
+                "/repo_root",
+                "repository root could not be resolved safely",
+            )
+        ]
+
+    if not GIT_SHA_RE.fullmatch(artifact_git_ref):
+        return [
+            Finding(
+                "ARTIFACT_GIT_REF_INVALID",
+                "/artifact_git_ref",
+                "exact lowercase 40-character commit required",
+            )
+        ]
+    exists = _git(resolved_root, "cat-file", "-e", f"{artifact_git_ref}^{{commit}}")
+    ancestor = _git(resolved_root, "merge-base", "--is-ancestor", artifact_git_ref, "HEAD")
+    if exists.returncode != 0 or ancestor.returncode != 0:
+        return [
+            Finding(
+                "ARTIFACT_GIT_REF_UNRESOLVED",
+                "/artifact_git_ref",
+                "commit must exist and be an ancestor of HEAD",
+            )
+        ]
+
+    try:
+        receipt_relative = resolved_receipt.relative_to(resolved_root).as_posix()
+    except ValueError:
+        receipt_relative = None
+    hashes = receipt.get("artifact_hashes")
+    if not isinstance(hashes, dict):
+        return findings
+    paths = _artifact_paths(receipt)
+    if len(paths) > MAX_ARTIFACTS:
+        return findings
+
+    total_bytes = 0
+    for index, raw_path in enumerate(paths):
+        field = f"/artifact_paths/{index}"
+        relative = _canonical_artifact_path(raw_path)
+        if relative is None:
+            findings.append(
+                Finding(
+                    "ARTIFACT_PATH_INVALID",
+                    field,
+                    "artifact path must be canonical, POSIX, and repository-relative",
+                )
+            )
+            continue
+        if raw_path == receipt_relative:
+            findings.append(
+                Finding(
+                    "RECEIPT_SELF_REFERENCE_DENIED",
+                    field,
+                    "receipt must not bind its own bytes",
+                )
+            )
+            continue
+
+        expected = hashes.get(raw_path)
+        digest_finding = _artifact_digest_finding(expected, field=field)
+        if digest_finding is not None:
+            findings.append(digest_finding)
+            continue
+        if not isinstance(expected, str):
+            continue
+
+        tree = _git(resolved_root, "ls-tree", "-z", artifact_git_ref, "--", raw_path)
+        records = [record for record in tree.stdout.split(b"\0") if record]
+        if tree.returncode != 0 or len(records) != 1:
+            findings.append(
+                Finding(
+                    "ARTIFACT_NOT_FILE",
+                    field,
+                    "artifact is not a regular file in the pinned Git tree",
+                )
+            )
+            continue
+        try:
+            header, encoded_path = records[0].split(b"\t", 1)
+            mode, object_type, object_id = header.decode("ascii").split(" ", 2)
+            tree_path = encoded_path.decode("utf-8")
+        except (ValueError, UnicodeError):
+            findings.append(
+                Finding("ARTIFACT_UNREADABLE", field, "Git tree entry could not be inspected")
+            )
+            continue
+        if tree_path != raw_path or object_type != "blob" or mode not in {"100644", "100755"}:
+            findings.append(
+                Finding(
+                    "ARTIFACT_SYMLINK_DENIED",
+                    field,
+                    "only regular Git blobs are allowed",
+                )
+            )
+            continue
+        blob = _git(resolved_root, "cat-file", "blob", object_id)
+        if blob.returncode != 0:
+            findings.append(Finding("ARTIFACT_UNREADABLE", field, "Git blob unavailable"))
+            continue
+        size = len(blob.stdout)
+        if size > MAX_ARTIFACT_BYTES:
+            findings.append(
+                Finding("ARTIFACT_TOO_LARGE", field, "artifact exceeds the 64 MiB validation budget")
+            )
+            continue
+        total_bytes += size
+        encoded = expected.removeprefix("sha256:")
+        actual = hashlib.sha256(blob.stdout).hexdigest()
+        if not actual.startswith(encoded):
+            findings.append(
+                Finding(
+                    "ARTIFACT_DIGEST_MISMATCH",
+                    field,
+                    "pinned Git artifact bytes do not match the receipt digest",
+                )
+            )
+
+    if total_bytes > MAX_TOTAL_ARTIFACT_BYTES:
+        findings.append(
+            Finding(
+                "ARTIFACT_TOTAL_TOO_LARGE",
+                "/artifact_paths",
+                "artifact set exceeds the 256 MiB validation budget",
+            )
+        )
+    return findings
+
+
 def _workflow_dependency_migration_allows(
     repo_root: Path,
     artifact_path: str,
@@ -372,7 +583,15 @@ def _integrity_findings(
     receipt: Mapping[str, object],
     receipt_path: Path,
     repo_root: Path,
+    artifact_git_ref: str | None = None,
 ) -> list[Finding]:
+    if artifact_git_ref is not None:
+        return _git_integrity_findings(
+            receipt,
+            receipt_path,
+            repo_root,
+            artifact_git_ref,
+        )
     findings: list[Finding] = []
     try:
         if repo_root.is_symlink():
@@ -501,34 +720,11 @@ def _integrity_findings(
 
     for index, raw_path, candidate, expected in candidates:
         field = f"/artifact_paths/{index}"
-        algorithm, separator, encoded = expected.partition(":")
-        if algorithm == "blake3" and separator:
-            findings.append(
-                Finding(
-                    "ARTIFACT_DIGEST_UNSUPPORTED",
-                    field,
-                    "BLAKE3 verification requires an explicitly admitted dependency",
-                )
-            )
+        digest_finding = _artifact_digest_finding(expected, field=field)
+        if digest_finding is not None:
+            findings.append(digest_finding)
             continue
-        if algorithm != "sha256" or not separator or not 32 <= len(encoded) <= 64:
-            findings.append(
-                Finding(
-                    "ARTIFACT_DIGEST_INVALID",
-                    field,
-                    "SHA-256 artifact digests must contain 32 to 64 hex characters",
-                )
-            )
-            continue
-        if set(encoded) == {"0"}:
-            findings.append(
-                Finding(
-                    "ARTIFACT_DIGEST_PLACEHOLDER_DENIED",
-                    field,
-                    "all-zero artifact digest placeholders are denied",
-                )
-            )
-            continue
+        _algorithm, _separator, encoded = expected.partition(":")
         try:
             actual = _sha256(candidate)
         except OSError:
@@ -564,6 +760,7 @@ def validate_receipt(
     repo_root: Path = REPO_ROOT,
     verify_integrity: bool = True,
     require_review_claim: bool = False,
+    artifact_git_ref: str | None = None,
 ) -> ValidationResult:
     """Validate one generated receipt against bounded local evidence."""
 
@@ -583,7 +780,14 @@ def validate_receipt(
             _semantic_findings(receipt, require_review_claim=require_review_claim)
         )
         if verify_integrity:
-            findings.extend(_integrity_findings(receipt, receipt_path, repo_root))
+            findings.extend(
+                _integrity_findings(
+                    receipt,
+                    receipt_path,
+                    repo_root,
+                    artifact_git_ref,
+                )
+            )
 
     return ValidationResult(
         tuple(sorted(set(findings))),
@@ -668,6 +872,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--fixtures", action="store_true")
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
     parser.add_argument(
+        "--artifact-git-ref",
+        help=(
+            "replay artifact bytes from one exact 40-character ancestor commit; "
+            "the receipt itself remains the supplied current file"
+        ),
+    )
+    parser.add_argument(
         "--require-review-claim",
         action="store_true",
         help=(
@@ -685,6 +896,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if (
             args.receipt is not None
             or args.require_review_claim
+            or args.artifact_git_ref is not None
             or args.repo_root != REPO_ROOT
         ):
             parser.error("--fixtures cannot be combined with receipt options")
@@ -696,6 +908,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         args.receipt,
         repo_root=args.repo_root,
         require_review_claim=args.require_review_claim,
+        artifact_git_ref=args.artifact_git_ref,
     )
     for line in _render_result(args.receipt, result):
         print(line)

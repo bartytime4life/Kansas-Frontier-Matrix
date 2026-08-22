@@ -20,7 +20,9 @@ name: ci-conformance-report
       - "policy/decision/vocabulary.v1.json"
       - "schemas/contracts/v1/governance/ci_conformance_report.schema.json"
       - "tests/validators/governance/test_validate_ci_conformance_report.py"
+      - "tests/validators/test_validate_generated_receipt.py"
       - "tools/validators/governance/validate_ci_conformance_report.py"
+      - "tools/validators/validate_generated_receipt.py"
       - "tools/validators/validator_registry.json"
   push:
     branches: [main]
@@ -34,7 +36,9 @@ name: ci-conformance-report
       - "fixtures/contracts/v1/governance/ci_conformance_report/**"
       - "schemas/contracts/v1/governance/ci_conformance_report.schema.json"
       - "tests/validators/governance/test_validate_ci_conformance_report.py"
+      - "tests/validators/test_validate_generated_receipt.py"
       - "tools/validators/governance/validate_ci_conformance_report.py"
+      - "tools/validators/validate_generated_receipt.py"
       - "tools/validators/validator_registry.json"
   workflow_dispatch:
 
