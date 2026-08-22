@@ -161,6 +161,23 @@ def _canonical_path(value: Any) -> PurePosixPath | None:
     return path
 
 
+def _validated_relative_path(
+    relative_value: Any,
+    *,
+    field: str,
+    expected_prefixes: tuple[str, ...],
+    findings: list[Finding],
+) -> PurePosixPath | None:
+    relative = _canonical_path(relative_value)
+    if relative is None:
+        findings.append(Finding("PATH_INVALID", field))
+        return None
+    if not any(str(relative).startswith(prefix) for prefix in expected_prefixes):
+        findings.append(Finding("PATH_ROOT_MISMATCH", field))
+        return None
+    return relative
+
+
 def _check_sorted_unique(
     values: Sequence[Any],
     *,
@@ -200,12 +217,13 @@ def _resolve_path(
     expected_prefixes: tuple[str, ...],
     findings: list[Finding],
 ) -> Path | None:
-    relative = _canonical_path(relative_value)
+    relative = _validated_relative_path(
+        relative_value,
+        field=field,
+        expected_prefixes=expected_prefixes,
+        findings=findings,
+    )
     if relative is None:
-        findings.append(Finding("PATH_INVALID", field))
-        return None
-    if not any(str(relative).startswith(prefix) for prefix in expected_prefixes):
-        findings.append(Finding("PATH_ROOT_MISMATCH", field))
         return None
     try:
         resolved_root = repo_root.resolve(strict=True)
@@ -224,35 +242,182 @@ def _resolve_path(
     return resolved
 
 
+def _git_commit_status(repo_root: Path, sha: str) -> bool | None:
+    try:
+        completed = subprocess.run(
+            ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return completed.returncode == 0
+
+
+def _read_pinned_blob(
+    relative_value: Any,
+    *,
+    repo_root: Path,
+    pinned_sha: str,
+    field: str,
+    expected_prefixes: tuple[str, ...],
+    findings: list[Finding],
+) -> bytes | None:
+    relative = _validated_relative_path(
+        relative_value,
+        field=field,
+        expected_prefixes=expected_prefixes,
+        findings=findings,
+    )
+    if relative is None:
+        return None
+    object_name = f"{pinned_sha}:{relative.as_posix()}"
+    try:
+        size_result = subprocess.run(
+            ["git", "cat-file", "-s", object_name],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
+        return None
+    if size_result.returncode != 0:
+        findings.append(Finding("PINNED_PATH_NOT_FOUND", field))
+        return None
+    try:
+        size = int(size_result.stdout.strip())
+    except ValueError:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
+        return None
+    if size > MAX_REFERENCED_FILE_BYTES:
+        findings.append(Finding("REFERENCED_FILE_TOO_LARGE", field))
+        return None
+    try:
+        blob_result = subprocess.run(
+            ["git", "cat-file", "blob", object_name],
+            cwd=repo_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", field))
+        return None
+    if blob_result.returncode != 0 or len(blob_result.stdout) != size:
+        findings.append(Finding("PINNED_PATH_READ_ERROR", field))
+        return None
+    return blob_result.stdout
+
+
+def _check_path_reference(
+    relative_value: Any,
+    *,
+    repo_root: Path,
+    pinned_sha: str | None,
+    field: str,
+    expected_prefixes: tuple[str, ...],
+    findings: list[Finding],
+) -> None:
+    if pinned_sha is not None:
+        if pinned_sha:
+            _read_pinned_blob(
+                relative_value,
+                repo_root=repo_root,
+                pinned_sha=pinned_sha,
+                field=field,
+                expected_prefixes=expected_prefixes,
+                findings=findings,
+            )
+        return
+    _resolve_path(
+        relative_value,
+        repo_root=repo_root,
+        field=field,
+        expected_prefixes=expected_prefixes,
+        findings=findings,
+    )
+
+
 def _check_path_digest(
     entry: Mapping[str, Any],
     *,
     path_key: str,
     repo_root: Path,
+    pinned_sha: str | None,
     field: str,
     expected_prefixes: tuple[str, ...],
     findings: list[Finding],
 ) -> None:
-    resolved = _resolve_path(
-        entry.get(path_key),
-        repo_root=repo_root,
-        field=f"{field}/{path_key}",
-        expected_prefixes=expected_prefixes,
-        findings=findings,
-    )
     digest = entry.get("sha256")
-    if resolved is None or not isinstance(digest, str) or not digest.startswith("sha256:"):
+    if not isinstance(digest, str) or not digest.startswith("sha256:"):
         return
-    try:
-        if resolved.stat().st_size > MAX_REFERENCED_FILE_BYTES:
-            findings.append(Finding("REFERENCED_FILE_TOO_LARGE", f"{field}/{path_key}"))
+    path_field = f"{field}/{path_key}"
+    if pinned_sha is not None:
+        if not pinned_sha:
             return
-        actual = "sha256:" + hashlib.sha256(resolved.read_bytes()).hexdigest()
-    except OSError:
-        findings.append(Finding("PATH_READ_ERROR", f"{field}/{path_key}"))
-        return
+        content = _read_pinned_blob(
+            entry.get(path_key),
+            repo_root=repo_root,
+            pinned_sha=pinned_sha,
+            field=path_field,
+            expected_prefixes=expected_prefixes,
+            findings=findings,
+        )
+        if content is None:
+            return
+        actual = "sha256:" + hashlib.sha256(content).hexdigest()
+    else:
+        resolved = _resolve_path(
+            entry.get(path_key),
+            repo_root=repo_root,
+            field=path_field,
+            expected_prefixes=expected_prefixes,
+            findings=findings,
+        )
+        if resolved is None:
+            return
+        try:
+            if resolved.stat().st_size > MAX_REFERENCED_FILE_BYTES:
+                findings.append(Finding("REFERENCED_FILE_TOO_LARGE", path_field))
+                return
+            actual = "sha256:" + hashlib.sha256(resolved.read_bytes()).hexdigest()
+        except OSError:
+            findings.append(Finding("PATH_READ_ERROR", path_field))
+            return
     if actual != digest:
         findings.append(Finding("DIGEST_MISMATCH", f"{field}/sha256"))
+
+
+def _pinned_sha(
+    base: Mapping[str, Any],
+    *,
+    repo_root: Path,
+    check_git: bool,
+    findings: list[Finding],
+) -> str | None:
+    if not check_git:
+        return None
+    sha = base.get("sha")
+    if not isinstance(sha, str):
+        return ""
+    status = _git_commit_status(repo_root, sha)
+    if status is None:
+        findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/base/sha"))
+        return ""
+    if not status:
+        findings.append(Finding("BASE_COMMIT_NOT_FOUND", "/base/sha"))
+        return ""
+    return sha
 
 
 def _semantic_findings(
@@ -263,6 +428,13 @@ def _semantic_findings(
     check_git: bool,
 ) -> list[Finding]:
     findings: list[Finding] = []
+    base = _mapping(candidate.get("base"))
+    pinned_sha = _pinned_sha(
+        base,
+        repo_root=repo_root,
+        check_git=check_git,
+        findings=findings,
+    )
 
     authority = _mapping(candidate.get("authority_snapshot"))
     accepted = _array(authority.get("accepted_adrs"))
@@ -421,7 +593,6 @@ def _semantic_findings(
                     findings.append(Finding("FINDING_COUNT_MISMATCH", f"{field}/finding_counts/finding"))
 
     overlap = _mapping(candidate.get("overlap"))
-    base = _mapping(candidate.get("base"))
     for field, values in (
         ("/base/open_pull_requests", _array(base.get("open_pull_requests"))),
         ("/overlap/open_pull_requests", _array(overlap.get("open_pull_requests"))),
@@ -447,6 +618,7 @@ def _semantic_findings(
             directory_rules,
             path_key="path",
             repo_root=repo_root,
+            pinned_sha=pinned_sha,
             field="/authority_snapshot/directory_rules",
             expected_prefixes=("docs/doctrine/",),
             findings=findings,
@@ -457,15 +629,17 @@ def _semantic_findings(
                     entry,
                     path_key="path",
                     repo_root=repo_root,
+                    pinned_sha=pinned_sha,
                     field=f"/authority_snapshot/accepted_adrs/{index}",
                     expected_prefixes=("docs/adr/",),
                     findings=findings,
                 )
         for index, entry in enumerate(candidates):
             if isinstance(entry, dict):
-                _resolve_path(
+                _check_path_reference(
                     entry.get("path"),
                     repo_root=repo_root,
+                    pinned_sha=pinned_sha,
                     field=f"/authority_snapshot/unresolved_authority_candidates/{index}/path",
                     expected_prefixes=("docs/adr/",),
                     findings=findings,
@@ -474,6 +648,7 @@ def _semantic_findings(
             roots,
             path_key="registry_path",
             repo_root=repo_root,
+            pinned_sha=pinned_sha,
             field="/repository_roots",
             expected_prefixes=("control_plane/",),
             findings=findings,
@@ -484,6 +659,7 @@ def _semantic_findings(
                     entry,
                     path_key="path",
                     repo_root=repo_root,
+                    pinned_sha=pinned_sha,
                     field=f"/control_plane_projections/{index}",
                     expected_prefixes=("control_plane/",),
                     findings=findings,
@@ -492,29 +668,11 @@ def _semantic_findings(
             catalog,
             path_key="registry_path",
             repo_root=repo_root,
+            pinned_sha=pinned_sha,
             field="/trust_object_catalog",
             expected_prefixes=("control_plane/",),
             findings=findings,
         )
-
-    if check_git:
-        sha = base.get("sha")
-        if isinstance(sha, str):
-            try:
-                completed = subprocess.run(
-                    ["git", "cat-file", "-e", f"{sha}^{{commit}}"],
-                    cwd=repo_root,
-                    stdin=subprocess.DEVNULL,
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    timeout=5,
-                    check=False,
-                )
-            except (OSError, subprocess.SubprocessError):
-                findings.append(Finding("GIT_CHECK_UNAVAILABLE", "/base/sha"))
-            else:
-                if completed.returncode != 0:
-                    findings.append(Finding("BASE_COMMIT_NOT_FOUND", "/base/sha"))
 
     return findings
 

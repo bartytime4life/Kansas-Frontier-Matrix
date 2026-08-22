@@ -1,7 +1,7 @@
 meta:
   status: PROPOSED
   owner: UNKNOWN
-  description: Indexes document identities and repository paths without creating document authority.
+  description: Synthetic normalized registry fixture.
   last_reviewed: 2026-08-22
   related_doctrine:
     - docs/doctrine/directory-rules.md
@@ -22,7 +22,7 @@ non_effects:
   - does_not_release_deploy_or_publish
   - does_not_replace_owning_objects
 entries:
-  - entry_id: document.required_artifact_index
+  - entry_id: fixture.document
     subject_id: kfm://doc/doctrine/required-artifact-index
     kind: doctrine_required_artifact_index
     path: control_plane/document_registry_doctrine_required.yaml
@@ -36,8 +36,24 @@ entries:
     source_digests:
       - sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0
       - sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
-      - sha256:af9467aaf406a886f350e2016a5ee83cff36f1c5081ea840fe8a06d034766755
     reason_codes:
-      - prior_entry_claimed_confirmed
-      - target_projection_status_proposed
-    notes: The prior CONFIRMED entry conflicted with the referenced target's PROPOSED metadata; this projection records the conflict without deciding document authority.
+      - fixture_entry
+    notes: Synthetic fixture entry for deterministic validation only.
+  - entry_id: fixture.document
+    subject_id: kfm://doc/doctrine/required-artifact-index
+    kind: doctrine_required_artifact_index
+    path: control_plane/document_registry_doctrine_required.yaml
+    path_sha256: sha256:af9467aaf406a886f350e2016a5ee83cff36f1c5081ea840fe8a06d034766755
+    authority_status: CONFLICTED
+    implementation_status: PARTIAL
+    owner_role: UNKNOWN
+    governing_refs:
+      - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+      - docs/doctrine/directory-rules.md
+    source_digests:
+      - sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0
+      - sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
+    reason_codes:
+      - fixture_entry
+    notes: Synthetic fixture entry for deterministic validation only.
+

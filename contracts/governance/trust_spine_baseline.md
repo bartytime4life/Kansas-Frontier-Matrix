@@ -63,7 +63,7 @@ Every instance must declare:
 - an RFC 3339 observation timestamp;
 - the exact 40-character base commit, branch, milestone identity, and observed open pull-request numbers.
 
-The pinned base must resolve to a local Git commit during current-instance validation. It need not equal the pull request head: the baseline intentionally describes the pre-change starting point.
+The pinned base must resolve to a local Git commit during current-instance validation. It need not equal the pull request head: the baseline intentionally describes the pre-change starting point. Referenced paths and digests are replayed from that pinned Git tree, not from mutable working-tree bytes, so a later same-path forward correction cannot rewrite the historical observation.
 
 ## Evidence sections
 
@@ -139,8 +139,8 @@ The profile performs:
 2. duplicate-key and non-finite-number rejection;
 3. canonical ordering, uniqueness, count, and cross-field checks;
 4. repository-relative path containment and existence checks;
-5. SHA-256 replay against referenced repository bytes;
-6. pinned Git commit existence checking for the canonical instance;
+5. SHA-256 replay against referenced bytes in the declared base commit for the canonical instance;
+6. pinned Git commit and blob existence checking for the canonical instance;
 7. exact valid/invalid fixture polarity;
 8. focused no-network unit tests;
 9. generated authoring-receipt integrity validation.
@@ -155,7 +155,7 @@ The validator fails closed when:
 - schema constraints fail;
 - IDs, paths, family names, or issue numbers are not sorted and unique;
 - declared counts do not reconcile;
-- referenced paths escape the repository, do not exist, or differ from their pinned digests;
+- referenced paths escape the repository, do not exist in the validation target (the pinned Git tree for the canonical instance), or differ from their pinned digests;
 - an unexecuted command claims `PASS` or `FAIL`;
 - topology failure counts are presented as a pass;
 - a required non-effect is removed;

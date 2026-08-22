@@ -1,9 +1,24 @@
 meta:
   status: PROPOSED
-  owner: docs steward
-  description: Lists every gate (connector_gate, promotion_gate, deny tests, etc.).
-  last_reviewed: 2026-05-14
+  owner: UNKNOWN
+  description: Indexes policy-gate references and observed states without evaluating or approving policy.
+  last_reviewed: 2026-08-22
   related_doctrine:
     - docs/doctrine/directory-rules.md
 
+schema_version: 1.0.0
+registry_id: policy_gate_register
+status: PROPOSED
+authority_mode: projection_only
+implementation_status: ABSENT
+completeness: empty
+base_ref: 568a95f025654d1ceb551f4d014674b736b5dbad
+owner_role: UNKNOWN
+non_effects:
+  - does_not_activate_sources
+  - does_not_approve_policy
+  - does_not_create_authority
+  - does_not_execute_or_bypass_policy
+  - does_not_release_deploy_or_publish
+  - does_not_replace_owning_objects
 entries: []
