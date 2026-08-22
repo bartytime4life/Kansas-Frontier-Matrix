@@ -29,7 +29,7 @@ canonical_relationship: >-
   future placement remains HOLD pending an accepted decision, consumer closure,
   validated migration, and rollback plan.
 truth_posture: >-
-  CONFIRMED current main through e392a0a445b31e70dbfab9c5d126d63d1751bf5f,
+  CONFIRMED current main through da90743a1f1ed29db8e372722e7789a7c0c1eb73,
   target and sibling blobs, the complete tracked state tree, the
   repository-grounded template and transitions boundary READMEs, accepted
   ADR-0029 and adopted Directory Rules v2, proposed ADR-0028, current parent
@@ -51,8 +51,9 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: e392a0a445b31e70dbfab9c5d126d63d1751bf5f
+  base_commit: da90743a1f1ed29db8e372722e7789a7c0c1eb73
   prior_inspected_commit: c3f85604a8792e6147e2006256019926880cb3ef
+  intermediate_base_commit: e392a0a445b31e70dbfab9c5d126d63d1751bf5f
   target_prior_blob: 38c53a9a22ccaf5987630ec3a736a0fc551abbb7
   parent_focus_readme_blob: 8600c0ac09452b4b03e5f60b94f1eb27c072b5db
   state_index_blob: 8d0b631bd53e6af3747417ee813c791fc67a9c3c
@@ -68,6 +69,7 @@ evidence_snapshot:
   state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
   transitions_readme_prior_blob: e25f1814e51579d5f55c0f1fe0135ddb28a47f4a
   transitions_readme_blob: 220f7d6b7c2cd486267490a986d943a509d54347
+  transitions_readme_merge_commit: da90743a1f1ed29db8e372722e7789a7c0c1eb73
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0028_blob: d14ea2b4ad57294ab52da643c954a7f83d5e24e9
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
@@ -88,7 +90,7 @@ inspection_boundary: >-
   evidence, ADR-0028, runtime and UI Focus contracts, the runtime schema,
   validator and fixture family, the Focus schema-family index, CODEOWNERS,
   applicable documentation workflow triggers, open pull-request overlap, task
-  branch overlap, and the concurrent main advance that merged PR #3339. No
+  branch overlap, and the concurrent merges of PR #3339 and PR #3340. No
   source was admitted, no evidence or policy service was exercised, no
   state-scale payload was built, no map or model call ran, and no release,
   correction, rollback, deployment, or public endpoint was exercised.
@@ -121,7 +123,7 @@ notes:
   - "v1.0 replaces stale no-repository-evidence and Directory Rules v1.2 assumptions with current repository evidence and accepted Directory Rules v2."
   - "v1.1 reconciles finite-outcomes.md with the current four-outcome runtime machine shape and records the one-byte transitions README added on main."
   - "v1.2 records the repository-grounded transitions boundary README, removes stale placeholder claims, accounts for the separate template README at the prior pinned base, and leaves sibling transition semantics and structural migration unchanged."
-  - "v1.3 reconciles the concurrent merge of PR #3339, records the repository-grounded state-template boundary now on main, and preserves this pull request's two-path documentation scope."
+  - "v1.3 reconciles the concurrent merges of PR #3339 and PR #3340, records both repository-grounded child boundaries now on main, and preserves PR #3340's two-path documentation scope."
   - "The state tree remains mixed authority. This update documents the split requirement but does not move, rename, copy, or delete any state artifact."
   - "The currently tracked RuntimeResponseEnvelope schema enumerates ANSWER, ABSTAIN, DENY, and ERROR. HOLD and PASS/FAIL remain separate review, placement, promotion, or validator concepts unless a later accepted contract changes that boundary."
   - "The geographic STATE_INDEX and state-build-plan template remain proposed ADR-0028 lineage; no kansas-state lane or state-scale release is claimed."
