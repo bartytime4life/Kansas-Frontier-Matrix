@@ -12,6 +12,7 @@ name: repository-topology-diagnostics
       - "contracts/**"
       - "schemas/**"
       - "fixtures/**"
+      - "tests/validators/directory_governance/**"
       - "tools/validators/directory_governance/**"
       - "control_plane/root_registry.yaml"
   workflow_dispatch:
