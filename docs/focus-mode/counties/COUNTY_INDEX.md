@@ -2,7 +2,7 @@
 doc_id: kfm://doc/focus-modes-county-index
 title: County Focus Mode Master Index (Kansas, 105 counties)
 type: standard
-version: v1.4
+version: v1.5
 status: draft; repository-grounded; compatibility-lane; non-release; non-publication
 owners:
   - "NEEDS VERIFICATION — Focus Mode stewardship"
@@ -32,10 +32,13 @@ current_path: docs/focus-mode/counties/COUNTY_INDEX.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  authoring_base_commit: 51d06e47d60e1071a5728267b5dac4255c4c338b
-  current_main_inventory_commit: 51d06e47d60e1071a5728267b5dac4255c4c338b
-  target_prior_blob: 8a2fa26d607f2da2c1f59c9ea9134d6dda3a222c
-  county_tree_current_main: 2a70a8b7a8b9b6a096c818898286be545a09144a
+  authoring_base_commit: f591f81b6418831011f8a11ba5a0d8814ee7f931
+  current_main_inventory_commit: f591f81b6418831011f8a11ba5a0d8814ee7f931
+  target_prior_blob: da13511c06270e3051eb08b24dd0a3fa2aebb5b4
+  county_tree_current_main: fee3d44490ae25e5b2e42e67bca5a168d67b635d
+  franklin_readme_blob: 15234935b89c7815de3c1238e5caa4d78985c639
+  gove_readme_blob: 777ca9609713b25c4e5678014132454620c2f9d3
+  graham_readme_blob: 5a6e3ec94cf59263c4b9130a6e1ae3275c0ee5fe
   decatur_readme_blob: 8c42e0a671fc63f6726a53737628338bb1b2732e
   decatur_plan_blob: a56142b219741d857564dd68d803bb48fabdc540
   elk_readme_blob: 310f56a7490adf212313674d8b85f38f0f5b8074
@@ -53,13 +56,12 @@ evidence_snapshot:
   validator_registry_blob: 86aeadabe7104114c3f1efe60a8708ec11563bb1
   state_index_blob: 8d0b631bd53e6af3747417ee813c791fc67a9c3c
 inspection_boundary: >-
-  Current-session GitHub reads covered the complete prior v1.3 index,
-  current `main@51d06e47d60e1071a5728267b5dac4255c4c338b`, the complete
-  non-truncated recursive repository tree, all 105 direct county directories,
-  every direct README and build-artifact filename, blob size, and county tree
-  identity, plus open pull-request and task-branch search. The recount includes
-  the user-identified Comanche, Decatur, and Dickinson merges and all newer
-  county state through merged PR #3239. External source pages, source or rights
+  Current-session GitHub reads covered the complete prior v1.4 index,
+  current `main@f591f81b6418831011f8a11ba5a0d8814ee7f931`, the complete
+  non-truncated direct county tree, all 105 county directories, every direct
+  README and build-artifact filename and blob size, and the merged Franklin,
+  Geary, Graham, and Gove README work in PRs #3246-#3249, plus open
+  pull-request and task-branch search. External source pages, source or rights
   review, evidence resolution, policy evaluation, fixtures, runtime, releases,
   corrections, rollback drills, deployments, and public endpoints were not
   exercised.
@@ -81,6 +83,7 @@ notes:
   - "v1.2 carries Allen forward over current main and recomputes the exact county inventory, including the already-merged Barber README."
   - "v1.3 repairs Edwards README filename drift, carries the merged Doniphan README forward, and reconciles every README fact visible in the non-truncated current tree; all lifecycle, validator, release, and publication claims remain fail-closed."
   - "v1.4 recomputes all 105 county rows on current main, clears only the resolved Decatur foreign-plan and Elk one-byte README findings, and preserves every remaining naming, identity, placement, validator, lifecycle, release, and publication hold."
+  - "v1.5 reconciles the merged Franklin, Graham, and Gove README modernizations, records 53 one-byte, 52 substantive, and 54 anomalous county rows, and preserves every remaining hold."
   - "The inventory corrections do not decide the singular-versus-plural Focus documentation placement or authorize broader structural migration."
   - "Legacy P1/P2, lane, sensitivity, and source-seed signals are retained as PROPOSED planning context, not promoted as current repository fact."
 [/KFM_META_BLOCK_V2] -->
@@ -92,7 +95,7 @@ notes:
 > **Purpose.** Navigate the 105 county planning entries currently tracked under `docs/focus-mode/counties/`, prevent accidental duplicate generation, and expose the repository drift that must be reconciled before any county can claim validated, payload-ready, released, or published state.
 
 > [!IMPORTANT]
-> **Every Kansas county has a current repository entry, but no county is proven ready.** At current-main inventory base `51d06e47d60e1071a5728267b5dac4255c4c338b`, the complete non-truncated county tree contains 105 county-shaped directories and exactly one direct build artifact in each. That evidence is sufficient to stop first-time duplicate generation; it is not evidence of semantic correctness, source rights, evidence closure, policy approval, validator success, release, or publication.
+> **Every Kansas county has a current repository entry, but no county is proven ready.** At current-main inventory base `f591f81b6418831011f8a11ba5a0d8814ee7f931`, the complete non-truncated county tree contains 105 county-shaped directories and exactly one direct build artifact in each. That evidence is sufficient to stop first-time duplicate generation; it is not evidence of semantic correctness, source rights, evidence closure, policy approval, validator success, release, or publication.
 
 > [!CAUTION]
 > **Placement remains a compatibility question.** Accepted Directory Rules v2 defines a Focus Mode as a composition scope but does not select one exact documentation tree. The current singular path exists; proposed ADR-0027 describes a plural, kebab-case target but remains unaccepted. This update only reconciles the existing index against current main; any county-lane move, directory rename, or parallel-tree creation remains on **HOLD**.
@@ -133,7 +136,7 @@ The index uses inventory findings, not the dormant validator's lifecycle enum.
 
 ## 2. Repository snapshot
 
-The counts below come from non-truncated repository tree `2a70a8b7a8b9b6a096c818898286be545a09144a` at current-main inventory base `51d06e47d60e1071a5728267b5dac4255c4c338b`.
+The counts below come from non-truncated repository tree `fee3d44490ae25e5b2e42e67bca5a168d67b635d` at current-main inventory base `f591f81b6418831011f8a11ba5a0d8814ee7f931`.
 
 | Measure | Count | Evidence and limit |
 |---|---:|---|
@@ -141,11 +144,11 @@ The counts below come from non-truncated repository tree `2a70a8b7a8b9b6a096c818
 | County-shaped directories in the current lane | **105** | Direct children under `docs/focus-mode/counties/`, excluding `_template/`. |
 | Exact expected snake_case directory names | **104** | Hodgeman is tracked as `hodgman_county/`. |
 | Directories with an exact `README.md` | **105** | Edwards now has canonical `README.md`; the one-byte `README,md` placeholder is absent from the branch snapshot. |
-| One-byte README-like files | **56** | All are exact `README.md` files; byte length is inventory evidence, not content-maturity proof. |
+| One-byte README-like files | **53** | All are exact `README.md` files; byte length is inventory evidence, not content-maturity proof. |
 | Directories with an exact legacy plan filename | **96** | Nine counties use an alternate or incorrect plan filename. |
 | County-directory build artifacts | **105** | Every directory has exactly one direct non-README build artifact. |
 | Directories satisfying the validator's seven required filenames | **0** | Current directories use the older two-file layout; no lifecycle implication is inferred. |
-| Directories with tree-level anomalies | **57** | Includes one-byte README and the bounded naming/identity findings recorded below. |
+| Directories with tree-level anomalies | **54** | Includes one-byte README and the bounded naming/identity findings recorded below. |
 | County lifecycle states verified by executable validation | **0** | Validator not run and current tree does not match its configured root/layout. |
 | County releases or publications verified | **0** | No release or publication evidence was inspected or inferred. |
 
@@ -203,8 +206,8 @@ Every link below resolves in the pinned county tree. Link resolution proves only
 | [Ford](./ford_county/) | `ford_county` | [`README.md`](./ford_county/README.md) | [`ford_county_focus_mode_build_plan.md`](./ford_county/ford_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
 | [Franklin](./franklin_county/) | `franklin_county` | [`README.md`](./franklin_county/README.md) | [`franklin_county_focus_mode_build_plan.md`](./franklin_county/franklin_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
 | [Geary](./geary_county/) | `geary_county` | [`README.md`](./geary_county/README.md) | [`geary_county_focus_mode_build_plan.md`](./geary_county/geary_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
-| [Gove](./gove_county/) | `gove_county` | [`README.md`](./gove_county/README.md) · 1 byte | [`gove_county_focus_mode_build_plan.md`](./gove_county/gove_county_focus_mode_build_plan.md) | `README_1_BYTE` |
-| [Graham](./graham_county/) | `graham_county` | [`README.md`](./graham_county/README.md) · 1 byte | [`graham_county_focus_mode_build_plan.md`](./graham_county/graham_county_focus_mode_build_plan.md) | `README_1_BYTE` |
+| [Gove](./gove_county/) | `gove_county` | [`README.md`](./gove_county/README.md) | [`gove_county_focus_mode_build_plan.md`](./gove_county/gove_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
+| [Graham](./graham_county/) | `graham_county` | [`README.md`](./graham_county/README.md) | [`graham_county_focus_mode_build_plan.md`](./graham_county/graham_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
 | [Grant](./grant_county/) | `grant_county` | [`README.md`](./grant_county/README.md) · 1 byte | [`grant_county_focus_mode_build_plan.md`](./grant_county/grant_county_focus_mode_build_plan.md) | `README_1_BYTE` |
 | [Gray](./gray_county/) | `gray_county` | [`README.md`](./gray_county/README.md) · 1 byte | [`gray_county_focus_mode_build_plan.md`](./gray_county/gray_county_focus_mode_build_plan.md) | `README_1_BYTE` |
 | [Greeley](./greeley_county/) | `greeley_county` | [`README.md`](./greeley_county/README.md) · 1 byte | [`greeley_county_focus_mode_build.md`](./greeley_county/greeley_county_focus_mode_build.md) | `README_1_BYTE`<br>`PLAN_NAME_DRIFT` |
@@ -297,7 +300,7 @@ Every link below resolves in the pinned county tree. Link resolution proves only
 | `COUNTY-INV-005` | Anderson, Greeley, Nemaha, Russell, Smith, Sumner, and Wichita use alternate or malformed plan filenames. | Filename-based tooling and navigation are unreliable. | Repair one bounded naming cohort with exact consumer checks and rollback. |
 | `COUNTY-INV-006` | **RESOLVED IN v1.4:** Decatur contains only its own plan; the prior Stevens-named foreign plan is absent from the current tree. | The tree-level foreign-plan conflict is cleared; plan content correctness remains `NEEDS VERIFICATION`. | Keep the county-local filename; treat any semantic or provenance review as a separate evidence-backed change. |
 | `COUNTY-INV-007` | Sherman and Stevens share tree `8c963f0daac7582822b0e7ec84d37275ec04e34e`; both contain a Stevens-named plan. | Sherman cannot be treated as independently implemented. | Reconstruct Sherman identity from source/history in a separate correction PR. |
-| `COUNTY-INV-008` | 56 README files are one byte; 49 are substantive by byte length. | Directory presence does not establish lane responsibility, ownership, or usage. | Build or repair leaf READMEs only from verified county content and inherited lane rules. |
+| `COUNTY-INV-008` | 53 README files are one byte; 52 are substantive by byte length. | Directory presence does not establish lane responsibility, ownership, or usage. | Build or repair leaf READMEs only from verified county content and inherited lane rules. |
 | `COUNTY-INV-009` | No current county directory contains the validator's seven required filenames. | No row can be promoted to `draft` or beyond from tree shape alone. | Treat every lifecycle state as `NEEDS VERIFICATION`; do not weaken the validator. |
 | `COUNTY-INV-010` | Per-county source descriptors, rights, evidence resolution, policy outcomes, releases, corrections, and rollback execution were not inspected exhaustively. | Content and public fitness remain unknown. | Verify one county at a time through governed evidence and release boundaries. |
 
@@ -535,11 +538,11 @@ The prior index's lane IDs, P1/P2 cohort, sensitivity hints, and source-seed fam
 
 | Check | Result | Evidence |
 |---|---|---|
-| Current-main inventory base pinned | **PASS** | Base `main@51d06e47d60e1071a5728267b5dac4255c4c338b`; prior index blob `8a2fa26d607f2da2c1f59c9ea9134d6dda3a222c`. |
-| County tree traversal complete | **PASS** | Recursive repository tree `2a70a8b7a8b9b6a096c818898286be545a09144a`; `truncated: false`. |
-| County universe and current README recount | **PASS** | 105 unique rows; 105 exact `README.md` files; 56 one-byte and 49 substantive README files; 57 anomalous rows after preserving all remaining naming, identity, foreign-plan, and duplicate-tree findings. |
+| Current-main inventory base pinned | **PASS** | Base `main@f591f81b6418831011f8a11ba5a0d8814ee7f931`; prior index blob `da13511c06270e3051eb08b24dd0a3fa2aebb5b4`. |
+| County tree traversal complete | **PASS** | Direct county tree `fee3d44490ae25e5b2e42e67bca5a168d67b635d`; `truncated: false`. |
+| County universe and current README recount | **PASS** | 105 unique rows; 105 exact `README.md` files; 53 one-byte and 52 substantive README files; 54 anomalous rows after preserving all remaining naming, identity, foreign-plan, and duplicate-tree findings. |
 | Current county directory links | **PASS** | All 105 directory targets exist in the pinned tree. |
-| README/build-artifact links | **PASS** | Every table link resolves to a blob in the pinned tree; Decatur and Elk resolve through their current substantive `README.md` files, and Decatur exposes only its own direct build artifact. |
+| README/build-artifact links | **PASS** | Every table link resolves to a blob in the pinned tree; Franklin, Graham, and Gove resolve through their current substantive `README.md` files, and Geary remains a substantive `TRACKED_PAIR`. |
 | Index structure | **PASS** | One H1 and one KFM metadata block; legacy index anchors remain intact. |
 | Current county validator | **NOT_RUN** | Root, naming, table grammar, file layout, and registry mismatch are disclosed above. |
 | Source, rights, evidence, policy, release, rollback, deployment | **NOT_RUN** | Outside this same-path documentation inventory change. |
@@ -573,5 +576,6 @@ Before merge, close or abandon this draft PR; the current default-branch tree re
 | v1.2 | 2026-08-20 | Brought the Allen README over current main; recomputed 67 one-byte, 38 substantive, and 68 anomalous county rows; retained Anderson `PLAN_NAME_DRIFT`; synchronized the already-merged Barber row. |
 | v1.3 | 2026-08-21 | Replaced Edwards `README,md` with substantive `README.md`; reconciled its row and resolved drift ledger item `COUNTY-INV-004`; carried the merged Doniphan README and all current-main README facts forward to 58 one-byte, 47 substantive, and 60 anomalous county rows; retained all naming, identity, foreign-plan, duplicate-tree, lifecycle, validator, release, and publication holds. |
 | v1.4 | 2026-08-21 | Recomputed the complete 105-county inventory at current main; cleared the resolved Decatur foreign-plan and Elk one-byte README findings; recorded 56 one-byte, 49 substantive, and 57 anomalous county rows; preserved the singular/plural placement HOLD and every remaining naming, identity, validator, lifecycle, source, policy, release, deployment, and publication boundary. |
+| v1.5 | 2026-08-21 | Reconciled the merged Franklin, Graham, and Gove README modernizations; recorded 53 one-byte, 52 substantive, and 54 anomalous county rows; preserved the singular/plural placement HOLD and every remaining naming, identity, validator, lifecycle, source, policy, release, deployment, and publication boundary. |
 
 [↑ Back to top](#top)
