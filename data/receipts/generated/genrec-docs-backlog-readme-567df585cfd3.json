@@ -28,6 +28,7 @@
   "inputs": {
     "evidence_refs": [
       "github:bartytime4life/Kansas-Frontier-Matrix@43792be16c693d7e4ce9da8afe5514da87440e0d",
+      "github:reconciled-main@632f77bf40353b3cef5a996173fd6bc6a597f78a",
       "github:docs/backlog/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:a2e81ef6c24d3b854774d8beb2435d1701d66afc",
       "github:docs/README.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:1f8bac189dac1d01c1185e8b4fb8e25efd11d09f",
       "github:docs/doctrine/directory-rules.md@43792be16c693d7e4ce9da8afe5514da87440e0d#blob:fd49a0b83e55cef52c1124281f093e263526898d",
@@ -87,6 +88,11 @@
       "gate": "generated-receipt-json-and-schema",
       "outcome": "PASS",
       "reason": "The receipt parses as JSON and was checked against the inspected Draft 2020-12 GENERATED_RECEIPT field, type, enum, pattern, and additional-properties constraints; human review remains pending."
+    },
+    {
+      "gate": "current-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 43792be16c693d7e4ce9da8afe5514da87440e0d to 632f77bf40353b3cef5a996173fd6bc6a597f78a through unrelated docs/atlas, focus-mode transition, and generated-receipt changes. The task branch merged current main forward without force; current main is the merge base, the branch is three commits ahead and zero behind, and the diff remains exactly the README plus its generated receipt."
     },
     {
       "gate": "full-repository-native-validation",
@@ -165,5 +171,5 @@
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Generated authoring receipt for the same-path backlog-routing README reconciliation. It records authoring provenance only. It does not create or update a backlog item, accept or reject an ADR, assign ownership or priority, mutate a human or machine register, perform source admission, evaluate policy, authenticate review, authorize a lifecycle transition, move or retire docs/backlog/, issue release or correction state, execute rollback, deploy, publish, change repository settings, or merge. The sanitized prompt hash covers the named v6 task contract and direct user request; no hidden reasoning, prompt transcript, credentials, or sensitive payload is stored."
+  "notes": "Generated authoring receipt for the same-path backlog-routing README reconciliation. It records authoring provenance only. It does not create or update a backlog item, accept or reject an ADR, assign ownership or priority, mutate a human or machine register, perform source admission, evaluate policy, authenticate review, authorize a lifecycle transition, move or retire docs/backlog/, issue release or correction state, execute rollback, deploy, publish, change repository settings, or merge. The sanitized prompt hash covers the named v6 task contract and direct user request; no hidden reasoning, prompt transcript, credentials, or sensitive payload is stored. The task branch was reconciled to main@632f77bf40353b3cef5a996173fd6bc6a597f78a without force or history rewriting before pull-request delivery."
 }
