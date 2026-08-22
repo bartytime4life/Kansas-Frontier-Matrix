@@ -61,6 +61,7 @@ evidence_snapshot:
   payload_state_blob: 9556743d908b1a5c92579fb3adfb318e0037529c
   map_context_state_blob: 5707de7d264724dc6afc85eb397e3815f2a8cdf1
   revocation_state_blob: 89c032bb7e8e08dbfbf9b6c9e73f4ea97acdbcea
+  state_template_readme_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   state_template_blob: e7d2f2542ddcfee416c4d3fd709e972ff193d446
   transitions_readme_prior_blob: e25f1814e51579d5f55c0f1fe0135ddb28a47f4a
   transitions_readme_blob: 220f7d6b7c2cd486267490a986d943a509d54347
@@ -79,17 +80,18 @@ inspection_boundary: >-
   Current-session GitHub reads covered the complete prior README, every direct
   child of docs/focus-mode/state, the prior one-byte transitions README and its
   repository-grounded replacement, every transition specification filename and
-  body, the state index and template inventory, the parent Focus README,
-  accepted Directory Rules evidence, ADR-0028, runtime and UI Focus contracts,
-  the runtime schema, validator and fixture family, the Focus schema-family
-  index, CODEOWNERS, applicable documentation workflow triggers, open
-  pull-request overlap, and task-branch overlap. No source was admitted, no
-  evidence or policy service was exercised, no state-scale payload was built,
-  no map or model call ran, and no release, correction, rollback, deployment, or
-  public endpoint was exercised.
+  body, the state index, blank template README, and template-plan inventory, the
+  parent Focus README, accepted Directory Rules evidence, ADR-0028, runtime and
+  UI Focus contracts, the runtime schema, validator and fixture family, the
+  Focus schema-family index, CODEOWNERS, applicable documentation workflow
+  triggers, open pull-request overlap, and task-branch overlap. No source was
+  admitted, no evidence or policy service was exercised, no state-scale payload
+  was built, no map or model call ran, and no release, correction, rollback,
+  deployment, or public endpoint was exercised.
 related:
   - ../README.md
   - ./STATE_INDEX.md
+  - ./_template/README.md
   - ./_template/state-build-plan.md
   - ./finite-outcomes.md
   - ./lifecycle-states.md
@@ -114,7 +116,7 @@ tags: [kfm, focus-mode, state, system-state, geographic-state, runtime-envelope,
 notes:
   - "v1.0 replaces stale no-repository-evidence and Directory Rules v1.2 assumptions with current repository evidence and accepted Directory Rules v2."
   - "v1.1 reconciles finite-outcomes.md with the current four-outcome runtime machine shape and records the one-byte transitions README added on current main."
-  - "v1.2 records the repository-grounded transitions boundary README, removes stale placeholder claims, and leaves sibling transition semantics and structural migration unchanged."
+  - "v1.2 records the repository-grounded transitions boundary README, removes stale placeholder claims, accounts for the separate blank template README at the pinned base, and leaves sibling transition semantics and structural migration unchanged."
   - "The state tree remains mixed authority. This update documents the split requirement but does not move, rename, copy, or delete any state artifact."
   - "The currently tracked RuntimeResponseEnvelope schema enumerates ANSWER, ABSTAIN, DENY, and ERROR. HOLD and PASS/FAIL remain separate review, placement, promotion, or validator concepts unless a later accepted contract changes that boundary."
   - "The geographic STATE_INDEX and state-build-plan template remain proposed ADR-0028 lineage; no kansas-state lane or state-scale release is claimed."
@@ -184,7 +186,7 @@ notes:
 |---|---|---|
 | Does this README exist at the requested path? | Yes. The prior v1.1 file was tracked at blob `38c53a9a22ccaf5987630ec3a736a0fc551abbb7`. | `CONFIRMED` |
 | What owns this file? | `docs/` owns human-readable explanation and navigation. CODEOWNERS routes review to `@bartytime4life`; that route is not policy, release, or publication approval. | `CONFIRMED` |
-| Does the surrounding state tree exist? | Yes. The tree contains this README, a proposed geographic state index and template, six state-family documents, five transition specifications, and a repository-grounded transitions boundary README. | `CONFIRMED` |
+| Does the surrounding state tree exist? | Yes. The tree contains this README, a proposed geographic state index, a separate blank template README, a proposed build-plan template, six state-family documents, five transition specifications, and a repository-grounded transitions boundary README. | `CONFIRMED` |
 | Is this tree one coherent authority? | No. Geographic state-scope planning and system/trust-state doctrine are mixed beneath one path. | `CONFLICTED` |
 | Is ADR-0028 accepted? | No. It remains proposed and therefore does not register `kansas-state`, authorize a state lane, or select a migration target. | `CONFIRMED` proposed status |
 | Is Directory Rules v2 effective? | Yes through accepted ADR-0029, which adopts the exact bytes at `docs/doctrine/directory-rules.md`. | `CONFIRMED` |
@@ -311,6 +313,7 @@ docs/focus-mode/state/
 ├── README.md
 ├── STATE_INDEX.md
 ├── _template/
+│   ├── README.md
 │   └── state-build-plan.md
 ├── finite-outcomes.md
 ├── lifecycle-states.md
@@ -333,6 +336,7 @@ docs/focus-mode/state/
 |---|---|---|
 | [`README.md`](./README.md) | State-tree navigation and reconciliation boundary | `PLACE`; this document |
 | [`STATE_INDEX.md`](./STATE_INDEX.md) | Proposed single-row Kansas geographic state index | `LINEAGE` / `PROPOSED`; inert pending ADR-0028 and machine closure |
+| [`_template/README.md`](./_template/README.md) | Blank local template-lane README at the pinned base | Repository-present placeholder; separate same-path work may define its bounded documentation responsibility |
 | [`_template/state-build-plan.md`](./_template/state-build-plan.md) | Proposed geographic state build-plan template | `LINEAGE` / `PROPOSED`; no state lane created |
 | [`finite-outcomes.md`](./finite-outcomes.md) | Repository-grounded four-outcome documentation boundary with retained v0.1 anchors and reason-code lineage | `PLACE` / reconciled; contract, schema, policy, and runtime authority remain separate |
 | [`lifecycle-states.md`](./lifecycle-states.md) | Lifecycle and promotion-gate prose | Core lifecycle shorthand retained; detailed gates and paths remain proposal/verification-sensitive |
@@ -850,6 +854,7 @@ withdrawal, cache invalidation, supersession, and rollback process.
 ### State-tree documents
 
 - [Geographic state index](./STATE_INDEX.md)
+- [Template-lane README](./_template/README.md)
 - [State build-plan template](./_template/state-build-plan.md)
 - [Finite-outcome documentation boundary](./finite-outcomes.md)
 - [Lifecycle-state lineage](./lifecycle-states.md)
@@ -921,6 +926,7 @@ The following v0.1 anchors remain available in this file for inbound links:
 | Metadata block | one complete `KFM_META_BLOCK_V2` |
 | Current base and blobs recorded | yes |
 | Current state tree inventoried | yes |
+| Blank template README accounted for | yes |
 | Geographic/system state separated | yes |
 | Four current runtime outcomes preserved | yes |
 | HOLD and PASS/FAIL separated | yes |
