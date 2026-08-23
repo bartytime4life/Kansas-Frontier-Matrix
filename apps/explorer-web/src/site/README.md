@@ -11,8 +11,9 @@ The composition:
 - exposes the thirteen domain families already represented under `src/features/domains/`;
 - presents KFM's evidence, finite-outcome, time, correction, accessibility, and trust-membrane principles;
 - mounts the existing renderer-neutral `map_runtime` selection-to-Evidence-Drawer bridge with deterministic synthetic cases;
-- records the current MapLibre package, candidate, and HOLD posture without importing or admitting `maplibre-gl`; and
-- projects its existing public anchors through a code-owned workspace registry.
+- records the current MapLibre package, candidate, and HOLD posture without importing or admitting `maplibre-gl`;
+- projects its existing public anchors through a code-owned workspace registry; and
+- composes existing finite-state features into one text-first public trust surface.
 
 ## Unified Workspace UI-01 bounded slice
 
@@ -24,9 +25,29 @@ The first Unified Workspace implementation slice is intentionally public, no-net
 - The context parser reuses `@kfm/maplibre` camera and selection validators, rejects extra fields, requires `publicSafe: true`, and keeps URL context synchronized with the compatible workspace hash.
 - Unit and browser tests cover registry integrity, feature references, deterministic URL round-trip, malformed/oversized/duplicated context, public-safety exclusions, hash mismatch, and rendered anchor navigation.
 
-This is a bounded browser-composition contract. It is not a canonical semantic contract, source registry, policy rule, evidence object, review decision, release record, deployment record, or publication artifact.
+UI-01 is a bounded browser-composition contract. It is not a canonical semantic contract, source registry, policy rule, evidence object, review decision, release record, deployment record, or publication artifact.
 
-Implementation baseline for this slice: `main@f732cbd1003898dc765a7afe4b635d710e295d17`.
+Implementation baseline for UI-01: `main@f732cbd1003898dc765a7afe4b635d710e295d17`.
+
+## Unified Workspace UI-02 bounded slice
+
+UI-02 adds the smallest app-local shared trust grammar without moving component ownership or creating a new authority root:
+
+- `trust-state-primitives.ts` strictly validates and renders the same visible labels for outcome, evidence, freshness, coarse sensitivity, release, and correction.
+- `trust-surface.ts` composes the existing Trust Header, Time Banner, Citation Pill, Evidence Drawer, and Denial Reason Explorer around deterministic supported, unresolved, restricted, stale, error, and loading cases.
+- Extra or inconsistent trust-state metadata fails closed to fixed error copy. The primitive never reflects unknown fields.
+- The `LOADING` case is explicitly a transient browser condition, not a governed finite outcome or evidence/release claim.
+- Coarse sensitivity values are already-supplied presentation metadata. The browser does not infer sensitivity or evaluate policy.
+- Negative cases suppress citation and time affordances, retain text labels rather than color-only signals, and expose no override, approval, promotion, or publication action.
+- Multiple Evidence Drawer mounts allocate document-unique panel, label, and title IDs while preserving the original IDs for the first compatible instance.
+- Evidence Drawer `ERROR` views suppress release and correction labels when a resolver failure prevents a reliable user-facing interpretation; policy and freshness cues remain visible.
+- Unit and browser tests verify the shared six-label grammar, alignment with the existing strict governed projection, loading separation, malformed-input denial, no-network behavior, keyboard-operable case selection, unique accessible drawer relationships, error-detail suppression, and absence of privileged controls.
+
+UI-02 remains under `apps/explorer-web/src/site/` because it has one verified consumer: the Explorer composition. `packages/ui/` remains the future extraction home if another application requires the primitive. This follows the existing app-source and shared-package responsibility boundaries rather than creating a parallel UI root.
+
+Implementation baseline for UI-02: `main@4671f53533cbb1c0757c01d4f90ae60733d544e8`.
+
+Reconciliation baseline for the current UI-02 branch: `main@265b99b81f9526a885caaf799e17c89b5424f9f2`. The reconciliation preserves the separately merged synthetic Focus Mode request surface and repairs shared Evidence Drawer identity and error-state presentation without granting new authority.
 
 ## Evidence snapshot
 
@@ -50,12 +71,13 @@ This composition does not:
 - activate or ingest a live source;
 - call a model provider or local model runtime;
 - perform policy, review, release, correction, rollback, or publication transitions;
-- infer evidence from rendered features, pixels, route state, or generated text;
+- infer evidence from rendered features, pixels, route state, generated text, or a presentation badge;
+- infer sensitivity or expand protected detail from a coarse public label;
 - serialize prompts, reviewer notes, restricted coordinates, evidence excerpts, credentials, or private payloads into public workspace URLs;
 - import `maplibre-gl` or create a second renderer acquisition seam; or
 - claim that fixture-first feature slices are live production routes.
 
-The concrete renderer remains a separate governed implementation and dependency-admission change after ADR and acquisition enforcement close.
+The concrete renderer remains a separate governed implementation and dependency-admission change after its own gates close.
 
 ## Validation
 
@@ -67,8 +89,8 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. The workspace tests add registry, context, URL, negative-input, and browser-navigation coverage.
+The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
 
 ## Rollback
 
-Revert this slice by restoring `src/main.ts`, removing `workspace-registry.ts`, `workspace-navigation.ts`, `workspace-context.ts`, and their tests, and restoring this README. The original `mount-explorer-site.ts` anchor navigation remains unchanged as the compatibility fallback, so rollback does not require a renderer, API, source, policy, release, deployment, or publication transition.
+For UI-02, restore `src/main.ts`, remove `trust-state-primitives.ts`, `trust-surface.ts`, `site-trust.css`, and their tests, restore this README, and revert the bounded Evidence Drawer identity/error-presentation repair. UI-01 navigation/context behavior and the independently merged Focus Mode request surface remain intact. No data migration, renderer transition, API transition, source transition, policy action, release action, deployment action, or publication action is required.
