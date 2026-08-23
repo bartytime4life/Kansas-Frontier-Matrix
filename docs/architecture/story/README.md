@@ -88,7 +88,7 @@ related:
   - .github/workflows/story-manifest-trust-inheritance.yml
   - .github/workflows/story-node-trust-inheritance.yml
   - apps/explorer-web/src/features/story_player/README.md
-  - apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - apps/explorer-web/src/features/story_player/current-implementation.md
   - apps/explorer-web/src/features/story_player/index.tsx
   - apps/explorer-web/tests/story-player.test.ts
   - policy/story/README.md
@@ -184,7 +184,7 @@ This revision is grounded in `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`.
 | Projection validators and tests | StoryManifest and StoryNode validators, synthetic fixtures, tests, and focused workflows exist. | Deterministic no-network profile validation is implemented; reference resolution is not. |
 | Story Player source | [`index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) implements `resolveStoryPlayer()`. | The former two-line placeholder claim is stale and corrected here. |
 | Story Player app tests | [`story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) contains 10 focused Vitest cases. | App-local projection eligibility and anti-bypass behavior are tested; rendered playback is not. |
-| Current implementation note | [`CURRENT_IMPLEMENTATION.md`](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md) records the bounded consumer and explicit non-effects. | It is accurate implementation-boundary documentation, not a release record. |
+| Current implementation note | [`current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) records the bounded consumer and explicit non-effects. | It is accurate implementation-boundary documentation, not a release record. |
 | App feature README | [`apps/explorer-web/src/features/story_player/README.md`](../../../apps/explorer-web/src/features/story_player/README.md) remains pre-implementation in parts. | Treat its maturity wording as bounded drift pending a separate same-path update. |
 | Consumer call sites | Repository search found `resolveStoryPlayer` only in its source, focused test, and architecture documentation. | No verified Explorer navigation or rendered component wiring exists. |
 | Story policy | [`policy/story/evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) remains a proposed stub with no real rules. | No enforcing Story evidence-continuity policy is established. |
@@ -285,7 +285,7 @@ Accepted Directory Rules place this file under `docs/architecture/` because its 
 | Focused profile CI | `.github/workflows/story-*-trust-inheritance.yml` | **CONFIRMED** workflow files; exact-head status reported separately |
 | App-local projection consumer | `apps/explorer-web/src/features/story_player/index.tsx` | **CONFIRMED** pure bounded consumer |
 | App-local consumer tests | `apps/explorer-web/tests/story-player.test.ts` | **CONFIRMED** 10 focused Vitest cases |
-| App-local implementation note | `apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md` | **CONFIRMED** bounded implementation record |
+| App-local implementation note | `apps/explorer-web/src/features/story_player/current-implementation.md` | **CONFIRMED** bounded implementation record |
 | App feature README | `apps/explorer-web/src/features/story_player/README.md` | **CONFIRMED** tracked but partly stale maturity prose |
 | Story policy | `policy/story/` | **CONFIRMED** README and non-enforcing stub |
 | Story API implementation | Current Governed API Python route package | **ABSENT in inspected inventory** |
@@ -534,7 +534,7 @@ A first governed Story transport must decide, through current contracts and test
 | `apps/explorer-web/src/features/story_player/index.tsx` | Pure `resolveStoryPlayer()` projection consumer plus local types and defensive checks |
 | `StoryPlayerProjection` | Finite outcome, local code, title/accessibility summary, story/state, ordered node refs when eligible, public-safe refs/caveats, replacement ref, `canPlay`, fixed `mode: "2D"`, `authoritative: false` |
 | `apps/explorer-web/tests/story-player.test.ts` | 10 focused Vitest cases covering eligibility, negative states, malformed input, ordering/uniqueness, missing response, and anti-bypass source checks |
-| `CURRENT_IMPLEMENTATION.md` | Accurate bounded implementation and rollback note |
+| `current-implementation.md` | Accurate bounded implementation and rollback note |
 | App feature README | Substantive boundary documentation with pre-implementation maturity drift |
 | Rendered Story Player component | Not found in the inspected feature directory |
 | `resolveStoryPlayer()` call site outside source/test/docs | Not found by repository search |
@@ -838,7 +838,7 @@ Merged PR #2868 can be reverted as a repository change if its consumer slice mus
 | [`contracts/ui/story_node.md`](../../../contracts/ui/story_node.md) | Current bounded StoryNode projection meaning |
 | [`contracts/story/README.md`](../../../contracts/story/README.md) | Broader proposed Story semantic lane; convergence unresolved |
 | [`apps/explorer-web/src/features/story_player/index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) | Current pure StoryManifest projection consumer |
-| [`apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md`](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md) | Bounded implementation and rollback note |
+| [`apps/explorer-web/src/features/story_player/current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) | Bounded implementation and rollback note |
 | [`apps/explorer-web/src/features/story_player/README.md`](../../../apps/explorer-web/src/features/story_player/README.md) | App-local feature boundary with remaining maturity drift |
 | [`apps/explorer-web/tests/story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) | Focused app-local projection and anti-bypass proof |
 | [`policy/story/README.md`](../../../policy/story/README.md) | Story policy boundary documentation |

@@ -23,7 +23,7 @@ related:
   - ./src/README.md
   - ./src/adapters/README.md
   - ./src/features/README.md
-  - ./src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - ./src/features/story_player/current-implementation.md
   - ./src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md
   - ../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - ../../docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
@@ -311,7 +311,7 @@ The directory contains a growing catalog of bounded feature families. Presence m
 
 For the authoritative child inventory and per-feature obligations, use [`src/features/README.md`](./src/features/README.md). Two high-signal current implementation notes are:
 
-- [`Story Player current implementation`](./src/features/story_player/CURRENT_IMPLEMENTATION.md)
+- [`Story Player current implementation`](./src/features/story_player/current-implementation.md)
 - [`Mobile PMTiles verification fixture`](./src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md)
 
 > [!WARNING]

@@ -505,6 +505,15 @@ def _is_conventional_readme(path: str) -> bool:
     return PurePosixPath(path).name == "README.md"
 
 
+def _is_conventional_uppercase_path(path: str) -> bool:
+    return bool(
+        re.fullmatch(
+            r"docs/adr/ADR-[0-9]{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md",
+            path,
+        )
+    )
+
+
 def _path_findings(
     paths: Sequence[str],
     modes: Mapping[str, str],
@@ -539,8 +548,10 @@ def _path_findings(
                 unsafe.append("non-ascii")
             if "," in segment:
                 unsafe.append("comma")
-            if segment != "README.md" and any(
-                character.isupper() for character in segment
+            if (
+                segment != "README.md"
+                and not _is_conventional_uppercase_path(path)
+                and any(character.isupper() for character in segment)
             ):
                 grammar_groups["uppercase"].append(path)
             if not re.fullmatch(r"[A-Za-z0-9._()-]+", segment):

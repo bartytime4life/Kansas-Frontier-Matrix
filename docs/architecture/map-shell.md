@@ -48,7 +48,7 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - apps/explorer-web/src/main.ts
   - apps/explorer-web/src/site/README.md
-  - apps/explorer-web/src/site/mountExplorerSite.ts
+  - apps/explorer-web/src/site/mount-explorer-site.ts
   - apps/explorer-web/src/site/catalog.ts
   - apps/explorer-web/src/features/map_runtime/index.tsx
   - apps/explorer-web/src/features/evidence_drawer/index.tsx
@@ -131,7 +131,7 @@ notes:
 The prior edition was written as a proposal against an unmounted repository. Current evidence now establishes a materially different—but still bounded—state:
 
 1. Merged PR `#3070` replaced the inert default page with a repository-grounded Explorer composition.
-2. [`main.ts`](../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../apps/explorer-web/src/site/mountExplorerSite.ts).
+2. [`main.ts`](../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../apps/explorer-web/src/site/mount-explorer-site.ts).
 3. The composed site exposes **Map**, **Knowledge**, **Features**, and **Trust** regions.
 4. [`catalog.ts`](../../apps/explorer-web/src/site/catalog.ts) inventories 38 feature families, 13 knowledge domains, and 8 trust principles with conservative maturity labels.
 5. The map region is a decorative, explicitly synthetic SVG—not a renderer.
@@ -362,7 +362,7 @@ A real map interaction may replace the synthetic controls only after a dependenc
 ```mermaid
 flowchart TB
   APP["apps/explorer-web"] --> ENTRY["main.ts"]
-  ENTRY --> SITE["src/site/mountExplorerSite.ts"]
+  ENTRY --> SITE["src/site/mount-explorer-site.ts"]
   SITE --> HEADER["Header + section navigation"]
   SITE --> HERO["Hero + baseline ABSTAIN posture"]
   SITE --> MAP["Synthetic map workspace"]

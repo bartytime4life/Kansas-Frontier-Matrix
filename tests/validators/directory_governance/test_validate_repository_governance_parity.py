@@ -38,9 +38,9 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
         self.assertEqual("PASS", report["profile_integrity_outcome"])
         self.assertEqual("HOLD_INHERITED", report["conformance_outcome"])
         self.assertEqual(0, report["topology"]["introduced_finding_count"])
-        self.assertEqual(9, report["topology"]["fail_new_drift"])
-        self.assertEqual(125, report["topology"]["baselined_warning"])
-        self.assertEqual(13, report["topology"]["stale_fingerprints"])
+        self.assertEqual(1, report["topology"]["fail_new_drift"])
+        self.assertEqual(133, report["topology"]["baselined_warning"])
+        self.assertEqual(0, report["topology"]["stale_fingerprints"])
 
     def test_valid_and_invalid_fixtures_match_reviewed_codes(self) -> None:
         ok, results = parity.validate_fixtures()
@@ -125,6 +125,26 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
         self.assertFalse(report["authority"]["authorizes_migration_or_deletion"])
         self.assertFalse(report["authority"]["authorizes_release"])
         self.assertFalse(report["authority"]["publishes"])
+
+    def test_topology_delta_treats_strict_evidence_shrink_as_resolution(self) -> None:
+        prior = parity.topology._finding(
+            "KFM-TOPO-009",
+            "scaffold-only-leaf-directories",
+            ["fixtures/a", "fixtures/b"],
+        )
+        shrunk = parity.topology._finding(
+            "KFM-TOPO-009",
+            "scaffold-only-leaf-directories",
+            ["fixtures/b"],
+        )
+
+        introduced, resolved = parity._classify_topology_delta(
+            [shrunk],
+            [prior],
+        )
+
+        self.assertEqual([], introduced)
+        self.assertEqual([prior.fingerprint], resolved)
 
 
 if __name__ == "__main__":

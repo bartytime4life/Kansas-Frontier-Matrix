@@ -38,7 +38,7 @@ evidence_snapshot:
   story_player_receipt_blob: 3d5b6ee9cecdaee803a6bab731f2d7eab11579da
 inspection_boundary: >
   Repository reads at the pinned main commit covering this feature directory,
-  resolveStoryPlayer source, its focused Vitest suite, CURRENT_IMPLEMENTATION.md,
+  resolveStoryPlayer source, its focused Vitest suite, current-implementation.md,
   the UI StoryManifest contract/schema/fixtures/validator/test lineage, the Story
   Player and Story subsystem architecture pages, Story policy posture, Governed API
   route inventory, renderer ADR lineage, and the generated authoring receipt. No live
@@ -48,7 +48,7 @@ inspection_boundary: >
   publication was exercised.
 related:
   - ./index.tsx
-  - ./CURRENT_IMPLEMENTATION.md
+  - ./current-implementation.md
   - ../../../tests/story-player.test.ts
   - ../README.md
   - ../../README.md
@@ -114,7 +114,7 @@ This README explains app-local repository behavior; it does not create runtime, 
 |---|---|---|
 | [`index.tsx`](./index.tsx) | Exports `resolveStoryPlayer()` plus the bounded projection and finite-state types it uses. | The app-local projection consumer is implemented. |
 | [`story-player.test.ts`](../../../tests/story-player.test.ts) | Contains 10 focused Vitest cases covering eligible, abstained, denied, error, superseded, malformed, missing-response, ordering, and anti-bypass behavior. | The bounded consumer has app-level unit proof; rendered playback is not tested. |
-| [`CURRENT_IMPLEMENTATION.md`](./CURRENT_IMPLEMENTATION.md) | Records the executable slice and explicit non-effects. | The feature is implementation-partial, not placeholder and not live. |
+| [`current-implementation.md`](./current-implementation.md) | Records the executable slice and explicit non-effects. | The feature is implementation-partial, not placeholder and not live. |
 | [`contracts/ui/story_manifest.md`](../../../../../contracts/ui/story_manifest.md) and its closed schema/validator lineage | Define the fixture-only public-safe projection profile and least-permissive trust posture. | They remain the semantic and machine-shape authority; this app code is only a defensive consumer. |
 | [`docs/architecture/ui/STORY_PLAYER.md`](../../../../../docs/architecture/ui/STORY_PLAYER.md) | Separates projection consumption from future governed playback and preserves renderer, 3D, release, and publication gates. | Architecture prose does not prove deployed behavior. |
 | [`docs/architecture/story/README.md`](../../../../../docs/architecture/story/README.md) | Records the implemented consumer separately from absent transport and rendered playback. | Story architecture remains broader than this app-local slice. |
@@ -273,7 +273,7 @@ The consumer does not accept or resolve raw StoryNode bodies, claim text, geomet
 |---|---|---|
 | [`index.tsx`](./index.tsx) | Closed defensive parsing and finite StoryPlayerProjection creation | **Implemented** |
 | [`README.md`](./README.md) | App-local feature boundary and contributor guidance | **Current document** |
-| [`CURRENT_IMPLEMENTATION.md`](./CURRENT_IMPLEMENTATION.md) | First-slice implementation note and explicit non-effects | **Confirmed** |
+| [`current-implementation.md`](./current-implementation.md) | First-slice implementation note and explicit non-effects | **Confirmed** |
 | [`story-player.test.ts`](../../../tests/story-player.test.ts) | Focused app proof for projection eligibility and anti-bypass behavior | **10 tests implemented** |
 
 ### Held future capabilities
@@ -425,7 +425,7 @@ python tools/validators/ui/validate_story_manifest.py
 Expected current inventory:
 
 ```text
-apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+apps/explorer-web/src/features/story_player/current-implementation.md
 apps/explorer-web/src/features/story_player/README.md
 apps/explorer-web/src/features/story_player/index.tsx
 ```
@@ -479,7 +479,7 @@ A documentation-only change should at minimum verify:
 3. Change only the smallest dependency-closed layer; do not smuggle a later layer into an earlier one.
 4. Add finite negative fixtures before widening an accepted input or exposing new output.
 5. Preserve the governed-interface-only browser boundary and renderer import isolation.
-6. Update this README, `CURRENT_IMPLEMENTATION.md`, focused tests, and architecture docs only where the actual behavior changed.
+6. Update this README, `current-implementation.md`, focused tests, and architecture docs only where the actual behavior changed.
 7. Keep release, deployment, publication, source activation, policy activation, and repository settings outside an ordinary feature PR.
 
 [Back to top](#top)
@@ -539,7 +539,7 @@ A documentation-only change should at minimum verify:
 |---|---|
 | Feature described broadly as `NEEDS VERIFICATION` | **Narrowed:** the projection consumer and its focused app tests are confirmed; live playback remains unverified. |
 | Directory described as a proposed future home | **Corrected:** `story_player/` is the implemented app-local home. |
-| Implementation files and tests said to be unknown | **Corrected:** `index.tsx`, `CURRENT_IMPLEMENTATION.md`, and the 10-case app test are recorded. |
+| Implementation files and tests said to be unknown | **Corrected:** `index.tsx`, `current-implementation.md`, and the 10-case app test are recorded. |
 | Candidate modules treated as the feature map | **Replaced:** current files are separated from held future capabilities. |
 | Story schemas pointed toward `schemas/contracts/v1/story/` | **Corrected:** the current executable projection lives under `schemas/contracts/v1/ui/`. |
 | `packages/maplibre-runtime/` treated as an expected home | **Removed as current placement:** no package authority is created here. |

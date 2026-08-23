@@ -20,7 +20,7 @@ responsibility: >-
   states, accountable roles, content boundary, correction path, and rollback
   rules for the two tracked incident-response surfaces without exposing
   restricted procedure or accepting the decision by publication.
-current_path: docs/security/INCIDENT_RESPONSE_HANDOFF_DECISION.md
+current_path: docs/security/incident-response-handoff-decision.md
 related:
   - docs/security/INCIDENT_RESPONSE.md
   - docs/runbooks/INCIDENT_RESPONSE.md

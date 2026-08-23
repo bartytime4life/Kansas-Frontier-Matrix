@@ -71,10 +71,10 @@ related:
   - apps/explorer-web/README.md
   - apps/explorer-web/src/main.ts
   - apps/explorer-web/src/site/README.md
-  - apps/explorer-web/src/site/mountExplorerSite.ts
+  - apps/explorer-web/src/site/mount-explorer-site.ts
   - apps/explorer-web/src/site/catalog.ts
   - apps/explorer-web/tests/explorer-site-catalog.test.ts
-  - apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - apps/explorer-web/src/features/story_player/current-implementation.md
   - apps/governed-api/src/governed_api/main.py
   - apps/governed-api/src/governed_api/routes/registry.py
   - apps/governed-api/src/governed_api/stub.py
@@ -98,7 +98,7 @@ notes:
 > **Repository-grounded landing page.** KFM's UI is a downstream, map-first, time-aware, evidence-bounded client surface. It may orient users, render finite governed projections, exercise deterministic synthetic interactions, and display already released public-safe carriers. It does not create truth, resolve evidence authority, decide policy, approve review or release, activate sources, call model runtimes directly, or publish by displaying something.
 
 > [!IMPORTANT]
-> **Current Explorer composition is real but bounded.** At `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`, [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts the repository-grounded [`mountExplorerSite`](../../../apps/explorer-web/src/site/mountExplorerSite.ts) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
+> **Current Explorer composition is real but bounded.** At `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`, [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts the repository-grounded [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
 
 | Field | Current evidence-backed value |
 |---|---|
@@ -343,7 +343,7 @@ source evidence + policy + review + active release + correction state
 
 ```text
 apps/explorer-web/src/main.ts
-    -> apps/explorer-web/src/site/mountExplorerSite.ts
+    -> apps/explorer-web/src/site/mount-explorer-site.ts
        -> resolveBaselineShell()
           -> ABSTAIN / NO_GOVERNED_RESPONSE
        -> repository-grounded site catalog
@@ -754,7 +754,7 @@ Material changes to an ADR, contract, schema, policy, release rule, object-famil
 | [`release/`](../../../release/) | Release, correction, withdrawal, supersession, and rollback control |
 | [`docs/architecture/governed-ai/`](../governed-ai/) | Governed AI and Focus architecture |
 | [`docs/architecture/story/`](../story/) | Story architecture |
-| [`docs/architecture/review/`](../review/) | Review architecture |
+| [`docs/architecture/ui/REVIEW_CONSOLE.md`](REVIEW_CONSOLE.md) | Review-console architecture |
 | [`docs/runbooks/`](../../runbooks/) | Operational procedures |
 
 Compatibility roots such as `ui/`, `web/`, `styles/`, `viewer_templates/`, and `artifacts/` must not become parallel canonical shell, renderer, policy, release, or architecture authorities without an accepted migration decision.
