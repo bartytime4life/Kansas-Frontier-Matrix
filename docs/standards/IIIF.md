@@ -185,7 +185,7 @@ The May 2026 page described implementation as unknown. Current repository eviden
 
 | Surface | CONFIRMED evidence | Safe conclusion |
 |---|---|---|
-| Standards pages | [`IIIF.md`](./IIIF.md) and [`iiif.md`](./iiif.md) | Guidance exists; document identity is conflicted |
+| Standards page | [`IIIF.md`](./IIIF.md) | Owner-selected canonical guidance is integrated; this is not IIIF adoption or conformance proof |
 | Readiness meaning | [`iiif_historic_overlay_readiness.md`](../../contracts/map/iiif_historic_overlay_readiness.md) | Fixture preflight only; no source/evidence/policy/release authority |
 | Readiness shape | [`iiif_historic_overlay_readiness.schema.json`](../../schemas/contracts/v1/map/iiif_historic_overlay_readiness.schema.json) | Closed Draft 2020-12 shape with fixed no-network/no-authority fields |
 | Cases | [`cases.json`](../../fixtures/contracts/v1/map/iiif_historic_overlay_readiness/cases.json) | Eleven mutation-derived cases cover all readiness outcomes |
