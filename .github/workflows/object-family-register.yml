@@ -15,7 +15,9 @@ name: object-family-register
       - "control_plane/object_family_register.yaml"
       - "docs/registers/OBJECT_FAMILY.md"
       - "fixtures/contracts/**"
+      - "fixtures/correction/correction_notice/**"
       - "fixtures/data/layer_manifest/**"
+      - "fixtures/data/validation_report/**"
       - "fixtures/domains/soil/domain_validation_report/**"
       - "fixtures/release/promotion_receipt/**"
       - "fixtures/release/release_manifest/**"
@@ -40,7 +42,9 @@ name: object-family-register
       - "control_plane/object_family_register.yaml"
       - "docs/registers/OBJECT_FAMILY.md"
       - "fixtures/contracts/**"
+      - "fixtures/correction/correction_notice/**"
       - "fixtures/data/layer_manifest/**"
+      - "fixtures/data/validation_report/**"
       - "fixtures/domains/soil/domain_validation_report/**"
       - "fixtures/release/promotion_receipt/**"
       - "fixtures/release/release_manifest/**"
@@ -122,7 +126,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-workflow-watch-20260822.json \
+            data/receipts/generated/genrec-object-family-register-catalog-correction-20260823.json \
             --repo-root .
 
       - name: Record validation boundary
