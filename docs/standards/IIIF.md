@@ -3,7 +3,7 @@ doc_id: kfm://doc/standards-iiif
 title: IIIF — KFM Consumption and Historic-Overlay Boundary
 type: standard; interoperability-guidance
 version: v2.0-draft
-status: "draft; repository-grounded; upstream-currentness-refreshed; bounded-fixture-profile; case-collision-hold"
+status: "draft; repository-grounded; upstream-currentness-refreshed; bounded-fixture-profile; canonical-path-integrated; independent-review-pending"
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — IIIF/archives, map, evidence, rights/CARE, accessibility, security, and release reviewers"
@@ -82,7 +82,7 @@ tags: [kfm, standards, iiif, image-api, presentation-api, georeference, allmaps,
 notes:
   - "Same-path documentation-only update; no contract, schema, policy, source, fixture, validator, workflow, dependency, runtime, release, or publication change."
   - "The merged readiness profile remains PROPOSED_INACTIVE and fixture-only."
-  - "The IIIF.md/iiif.md case collision remains HOLD; this change does not rename, delete, redirect, or supersede the lowercase sibling."
+  - "Owner authority selected docs/standards/IIIF.md as canonical; the lowercase sibling is retired on current main, while independent review and milestone closure remain pending."
   - "Presentation API 4.0 is now an upstream release candidate while the current readiness schema still names 4.0-preview."
 [/KFM_META_BLOCK_V2] -->
 
@@ -99,7 +99,7 @@ notes:
 [![profile](https://img.shields.io/badge/readiness-PROPOSED__INACTIVE-d4a72c?style=flat-square)](#5-current-iiif-readiness-profile)
 [![network](https://img.shields.io/badge/live_network-NOT__ESTABLISHED-8250df?style=flat-square)](#2-current-repository-state)
 [![release](https://img.shields.io/badge/release-none-6e7781?style=flat-square)](#9-validation-and-maturity)
-[![collision](https://img.shields.io/badge/path_collision-HOLD-bf8700?style=flat-square)](#10-case-collision)
+[![path authority](https://img.shields.io/badge/path_authority-INTEGRATED-1a7f37?style=flat-square)](#10-canonical-path-authority)
 
 > [!IMPORTANT]
 > **This page is guidance, not conformance proof.** It does not adopt IIIF, activate an archive source, validate a live Manifest or Image Service, authenticate rights or CARE state, enable Allmaps, authorize a release, or prove interoperability.
@@ -107,12 +107,12 @@ notes:
 > [!CAUTION]
 > KFM's present executable IIIF proof is a no-network, fixture-only `IIIFHistoricOverlayReadinessAssessment` plus separate synthetic georeference-quality profiles. Those checks do not fetch IIIF, warp imagery, authenticate evidence, run policy, or publish a layer.
 
-> [!WARNING]
-> Both `docs/standards/IIIF.md` and `docs/standards/iiif.md` exist. This update changes only the uppercase file requested by the user. Identity, inbound links, supersession, and case-safe migration remain unresolved.
+> [!NOTE]
+> Current `main` tracks only `docs/standards/IIIF.md`. The owner-selected path migration is integrated, but integration is not independent review, IIIF adoption, conformance proof, release, or publication authority. Historical receipts remain bound to their recorded paths and bytes.
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40` |
+| **Repository-state snapshot** | `main@c1bc952aa6cddca4f4910cdcffd85a419a412ade` |
 | **Placement** | `PLACE` at the existing path under the accepted ADR-0029 standards lane |
 | **Upstream stable baseline** | Image `3.0.0`; Presentation `3.0.0`; Authorization Flow `2.0.0`; Change Discovery `1.0.0`; Content Search `2.0.0`; Content State `1.0.0` |
 | **Upstream draft** | Presentation `4.0.0` release candidate; stable remains `3.0.0` |
@@ -124,7 +124,7 @@ notes:
 | **Review route** | `@bartytime4life`; specialist and independent review need verification |
 | **Release/publication effect** | None |
 
-**Quick navigation:** [Authority](#1-authority-and-non-effects) · [Repository](#2-current-repository-state) · [Upstream](#3-official-iiif-snapshot) · [Trust model](#4-core-model-and-trust-path) · [Readiness](#5-current-iiif-readiness-profile) · [Georeference](#6-georeference-and-quality-separation) · [Rights/runtime](#7-rights-care-and-renderer-boundary) · [Objects](#8-object-and-authority-map) · [Validation](#9-validation-and-maturity) · [Collision](#10-case-collision) · [Backlog](#11-backlog-and-next-slice) · [References](#12-references-terms-and-rollback)
+**Quick navigation:** [Authority](#1-authority-and-non-effects) · [Repository](#2-current-repository-state) · [Upstream](#3-official-iiif-snapshot) · [Trust model](#4-core-model-and-trust-path) · [Readiness](#5-current-iiif-readiness-profile) · [Georeference](#6-georeference-and-quality-separation) · [Rights/runtime](#7-rights-care-and-renderer-boundary) · [Objects](#8-object-and-authority-map) · [Validation](#9-validation-and-maturity) · [Path authority](#10-canonical-path-authority) · [Backlog](#11-backlog-and-next-slice) · [References](#12-references-terms-and-rollback)
 
 ---
 
@@ -540,26 +540,19 @@ Graduation should proceed: documentation -> profile correction -> captured-byte 
 ---
 
 <a id="10-case-collision"></a>
+<a id="10-canonical-path-authority"></a>
 
-## 10. Case collision
+## 10. Canonical path authority
 
-Confirmed paths:
+The former case-only collision is resolved in the current tracked tree:
 
-```text
-docs/standards/IIIF.md
-docs/standards/iiif.md
-```
+- issue #3361 records the owner decision that `docs/standards/IIIF.md` is the canonical human-readable IIIF guidance;
+- current `main@c1bc952aa6cddca4f4910cdcffd85a419a412ade` tracks the uppercase path and not the lowercase sibling;
+- PR #3429 integrated the deletion, strict baseline shrink, focused test updates, and the `0 new / 132 baselined / 0 stale` topology checkpoint;
+- PR #3428 merged afterward but added no tree delta relative to #3429; and
+- historical generated receipts and source-map records remain bound to the paths and bytes they originally recorded.
 
-They overlap in identity and responsibility but differ in content. This creates a case-insensitive checkout hazard.
-
-Current disposition:
-
-- update the requested uppercase path only;
-- do not declare either sole canonical authority;
-- do not rename/delete/redirect;
-- hold migration until inbound links, fragments, generated indexes, external consumers, and case-insensitive checkout behavior are inventoried.
-
-A later atomic migration must choose identity through accepted authority, preserve unique content and legacy fragments, repair links/generators/tests/receipts, record supersession, prove case-safe checkout, and define rollback.
+Exact-head checks for #3429 proved the direct topology ratchet and governance-parity profile at the candidate head. They do not substitute for exact-final-main hosted evidence or accountable independent review. No IIIF adoption, source activation, runtime support, release, deployment, or publication follows from the path decision.
 
 ---
 
@@ -569,7 +562,7 @@ A later atomic migration must choose identity through accepted authority, preser
 
 | Item | Status | Closure evidence |
 |---|---|---|
-| Upper/lowercase identity | HOLD | Accepted disposition + reference/fragment inventory + migration plan |
+| Canonical path authority | INTEGRATED / NEEDS REVIEW | Current-main tree evidence + accountable independent review + milestone closure record |
 | Presentation 4 vocabulary | NEEDS VERIFICATION | Contract/schema/fixtures/tests or explicit unsupported behavior |
 | Canonical rights URIs | NEEDS VERIFICATION | Reviewed acceptance/canonicalization rule and fixtures |
 | Three-GCP warp readiness | NEEDS VERIFICATION | Explicit valid-vs-warp-ready model and tests |
@@ -603,7 +596,7 @@ It should not activate a source, plugin, or public route.
 ### 12.1 KFM references
 
 - [`docs/standards/README.md`](./README.md)
-- [`docs/standards/iiif.md`](./iiif.md) — conflicting sibling; not superseded here
+- Canonical IIIF guidance is this uppercase-path document; historical lowercase references remain audit-bound rather than live authority.
 - [`STAC.md`](./STAC.md), [`DCAT.md`](./DCAT.md), [`PROV.md`](./PROV.md), [`DUBLIN-CORE.md`](./DUBLIN-CORE.md), [`ARCHIVAL-STANDARDS.md`](./ARCHIVAL-STANDARDS.md)
 - [`directory-rules.md`](../doctrine/directory-rules.md)
 - [`map-shell.md`](../architecture/map-shell.md)
@@ -705,8 +698,8 @@ KFM source identity, exact-byte digests, rights/CARE, quality, evidence, policy,
 
 The prior purpose, IIIF model, georeference/Allmaps discussion, lifecycle, provenance, rights, validation, anti-patterns, open questions, terminology, example, and placement guidance are retained or reconciled. Stale API status, proposal-only repo posture, placeholder owners/build badge, missing links, and false single-axis “conformance” framing are replaced.
 
-This is one documentation file. Before merge, close the draft PR and abandon the branch. After merge, revert the content commit or restore prior blob `699555ea1b37c28dceb932aab247cb90bbeaadc2`. No source, data, schema, dependency, runtime, cache, release, or publication cleanup is required.
+This reconciliation changes current documentation only. Before merge, close the draft PR and abandon the branch. After merge, revert the content commit or restore prior blob `cca12f40263ef27201c6e9fe118cdcde2b93bc0b`. Do not restore the retired lowercase sibling or rewrite historical receipts. No source, data, schema, dependency, runtime, cache, release, or publication cleanup is required.
 
 ---
 
-**Last evidence review:** 2026-08-18 against `main@f9a515a1124f9f5397996f6bc7cb3fd1a3534c40` · [Back to top](#top)
+**Repository-state reconciliation:** 2026-08-22 against `main@c1bc952aa6cddca4f4910cdcffd85a419a412ade`; upstream evidence review remains 2026-08-18 · [Back to top](#top)
