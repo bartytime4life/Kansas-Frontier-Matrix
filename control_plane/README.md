@@ -1,26 +1,26 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-readme
 title: control_plane/ — Machine-Readable Governance Index Root
-version: v0.5
+version: v0.6
 type: README
 status: "draft; repository-grounded; canonical-root-confirmed; directory-rules-v2-adopted; required-register-packet-enforced; mixed-validation-profiles; register-population-partial; specialized-projections-present; non-authoritative"
 owners: "OWNER_TBD — Control-plane steward · Register steward · Architecture steward · Docs steward · affected authority-root owners · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
 created: 2026-06-24
 updated: 2026-08-22
-supersedes: v0.4 control-plane root README at the same path
+supersedes: v0.5 control-plane root README at the same path
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; control-plane; machine-registers; authority-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/README.md
 owning_root: control_plane/
 responsibility: document the machine-readable governance projection root its authority boundary current bounded inventory validation profiles correction controls and no-direct-public-path posture without creating or changing indexed authority
-truth_posture: CONFIRMED existing control-plane root stable identity accepted ADR-0029 adopted Directory Rules v2 required register packet split validation profiles pinned MRTS-01 baseline current direct-child inventory dedicated workflows CODEOWNERS routing and Makefile entrypoints / PROPOSED maturity vocabulary semantic closure consumer admission and incomplete-family closure order / UNKNOWN external consumers branch-protection enforcement production behavior and public effects / NEEDS VERIFICATION accountable owners independent review field-level schemas full population reference closure correction propagation and retirement drills
+truth_posture: CONFIRMED existing control-plane root stable identity accepted ADR-0006 ADR-0007 and ADR-0029 adopted Directory Rules v2 required register packet split validation profiles pinned MRTS-01 snapshot pinned M01 program baseline current direct-child inventory dedicated workflows CODEOWNERS routing and Makefile entrypoints / PROPOSED maturity vocabulary semantic closure consumer admission and incomplete-family closure order / UNKNOWN external consumers branch-protection enforcement production behavior and public effects / NEEDS VERIFICATION accountable owners independent review field-level schemas full population reference closure correction propagation and retirement drills
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   repository_id: "1059091169"
   visibility: public
   base_ref: main
-  base_commit: f86fcddb553217f7ffadafd80f20e95d635180b1
-  prior_blob: 77cad905655b66e3861767f3d4c411ddc58ab237
+  base_commit: 6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e
+  prior_blob: a7bbfddc0f257194c42b75046da6eccf976980e0
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
   adr_0029_blob: b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62
@@ -30,15 +30,15 @@ evidence_snapshot:
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   path_alias_register_blob: 8a6503fb1c7f419e362cf2ced44ace66eff1aa4d
   domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
-  object_family_register_blob: 8673b21ea49cb4a2852595208efdb206ed040690
+  object_family_register_blob: 94dfa446a8a955dc7c62e26da7dc0d4c0255cf90
   cross_domain_seam_register_blob: dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29
   required_registers: "9"
   required_meta_profile_registers: "8"
   required_schema_profile_registers: "1"
   required_registers_with_entries: "3"
   required_registers_empty: "6"
-  direct_child_entries: "26"
-  direct_child_files: "24"
+  direct_child_entries: "28"
+  direct_child_files: "26"
   direct_child_directories: "2"
 related:
   - ../README.md
@@ -62,13 +62,15 @@ related:
   - ../.github/workflows/domain-lane-register.yml
   - ../.github/workflows/cross-domain-seam-register.yml
   - ../.github/workflows/trust-spine-baseline.yml
+  - ../.github/workflows/program-baseline.yml
   - ../Makefile
+  - program_baseline.json
   - trust_spine_baseline.yaml
   - domains/README.md
   - registers/README.md
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
-  - "v0.5 is a same-path extension of v0.4 that indexes the proposed MRTS-01 baseline without changing authority."
+  - "v0.6 is a same-path extension of v0.5 that indexes the proposed M01 program baseline without changing authority."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
   - "A validation pass proves only the boundary exercised by that validator."
   - "This README does not populate or activate a register, create authority, amend an ADR, approve policy, change release state, promote lifecycle data, expose a public route, or publish."
@@ -298,6 +300,7 @@ Validation is layered; each result proves only its named boundary.
 | Legacy required-register metadata | `python -m pytest tests/policy/test_control_plane_register_meta_contract.py -q --strict-config --strict-markers` | Eight legacy files have required metadata, review date, owner, doctrine paths, and `entries`. | Nonempty population, entry shape, semantic agreement. |
 | Object-family register | `object-family-register` workflow | Schema shape, fixtures, path existence, maturity classification, generated-receipt binding. | Object-family authority, runtime deployment, release. |
 | Trust-spine baseline | `make trust-spine-baseline` / `trust-spine-baseline` workflow | Pinned base, authority inventory, path/digest binding, reconciled counts and execution states, fixture polarity, and receipt integrity. | New authority, ADR acceptance, drift waiver, source activation, policy approval, release, deployment, promotion, or publication. |
+| M01 program baseline | `make program-baseline` / `program-baseline` workflow | Pinned authority and owner bytes, exact issue/PR overlap, Drive-lineage non-authority, honest failure states, fixture polarity, and receipt integrity. | Issue mutation, tracker truth, human review, settings enforcement, source admission, drift waiver, release, deployment, promotion, or publication. |
 | Root registry | `directory-root-registry` workflow | Adopted-doctrine digest binding, root-class invariants, ordering, top-level coverage. | Root creation, activation, migration, write permission. |
 | Path alias register | `path-alias-register` workflow | Alias shape and compatibility invariants. | Consumer closure, tombstoning, deletion authority. |
 | Domain lane register | `domain-lane-register` workflow | Lane identity and placement projection. | Steward assignment, source activation, domain readiness. |
@@ -411,9 +414,11 @@ control_plane/
 ├── object_family_register.yaml
 ├── path_alias_register.yaml
 ├── policy_gate_register.yaml
+├── program_baseline.json
 ├── registers/
 ├── release_state_register.yaml
 ├── repository_control_state.yaml
+├── repository_governance_parity.yaml
 ├── root_registry.yaml
 ├── source_authority_register.yaml
 ├── trust_spine_baseline.yaml
@@ -432,9 +437,9 @@ Child READMEs own deeper detail. Do not duplicate deep trees here.
 | Field | Value |
 |---|---|
 | Evidence inspection date | 2026-08-22 |
-| Repository snapshot | `main@f86fcddb553217f7ffadafd80f20e95d635180b1` |
-| Prior README blob | `77cad905655b66e3861767f3d4c411ddc58ab237` |
-| Direct children inspected | 26: 24 files, two directories |
+| Repository snapshot | `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e` |
+| Prior README blob | `a7bbfddc0f257194c42b75046da6eccf976980e0` |
+| Direct children inspected | 28: 26 files, two directories, including the proposed M01 packet |
 | Required registers | 9: three nonempty, six empty |
 | Open overlapping README PR | None found in bounded current search |
 | Historical matching branch | One historical branch; no open PR |
@@ -456,7 +461,7 @@ Re-review when a required register is added, moved, populated, or retired; valid
 |---|---:|---|---|
 | [`document_registry.yaml`](document_registry.yaml) | 1 entry | legacy metadata | Minimal document index only. |
 | [`source_authority_register.yaml`](source_authority_register.yaml) | empty | legacy metadata | Does not establish source identity, rights, or activation. |
-| [`object_family_register.yaml`](object_family_register.yaml) | 6 entries | dedicated schema | Navigational projection; no object-family authority. |
+| [`object_family_register.yaml`](object_family_register.yaml) | 19 entries | dedicated schema | Structural catalog passes; nine workflow-watch path bindings remain failed. No object-family authority. |
 | [`domain_lane_register.yaml`](domain_lane_register.yaml) | 13 entries | legacy metadata + dedicated workflow | Placement projection; no steward or readiness authority. |
 | [`policy_gate_register.yaml`](policy_gate_register.yaml) | empty | legacy metadata | Does not create policy gates or decisions. |
 | [`release_state_register.yaml`](release_state_register.yaml) | empty | legacy metadata | Does not create release or rollback state. |
@@ -472,6 +477,7 @@ Re-review when a required register is added, moved, populated, or retired; valid
 | `path_alias_register.yaml` | Active legacy-to-canonical mapping for Directory Rules. | Cannot close consumers or authorize tombstone/deletion. |
 | `cross_domain_seam_register.yaml` | Five high-risk seams, all held unresolved. | Cannot authorize a join or lower policy/sensitivity. |
 | `trust_spine_baseline.yaml` | Proposed pinned MRTS-01 authority and implementation evidence projection. | Cannot create authority, accept decisions, waive drift, activate sources, or change release/publication state. |
+| `program_baseline.json` | Proposed pinned M01 authority, ownership, tracker/PR overlap, Drive-lineage, validation, and rollback projection. | Cannot mutate issues, create authority, accept decisions, waive failures, activate sources, or change release/publication state. |
 | `repository_control_state.yaml` | Historical repository-control observation. | Cannot authorize itself; stale for current state. |
 | `watcher_registry.json` | Placeholder and inactive soil candidate. | No source activation, RAW admission, release, or publication. |
 | `hash_profile_readiness_matrix.json` | Candidate hash profiles, mostly spec-only/inactive. | No shared activation or migration decision. |
@@ -514,6 +520,10 @@ This mixed state is current implementation evidence, not a recommendation that f
 ### Dedicated trust-spine baseline profile — supplemental projection
 
 `trust_spine_baseline.yaml` is a JSON-compatible YAML projection pinned to a reviewed repository base. Its dedicated contract, schema, valid/invalid fixtures, validator, tests, Make target, workflow, and generated receipt verify repository path/digest binding, count reconciliation, explicit partial states, and honest validation outcomes. It remains outside the nine-file required register packet and cannot promote its own authority.
+
+### Dedicated M01 program-baseline profile — supplemental projection
+
+`program_baseline.json` is pinned to the exact pre-change main commit for Milestone 2. Its contract, schema, fixture cases, validator, focused tests, Make target, read-only workflow, and generated receipt verify authority and ownership bytes, the observed issue/PR overlap, advisory Drive lineage, classification vocabulary, explicit inherited failures, correction triggers, and rollback. It remains outside the nine-file required register packet, does not mutate GitHub or Drive, and cannot authorize itself.
 
 [Back to top](#top)
 
@@ -630,15 +640,15 @@ Correct or hold an entry when its path/ID no longer resolves, authority changes,
 
 A deprecation packet records stable identity, replacement, reason/decision, affected consumers, sunset or exit condition, compatibility behavior, correction state, rollback target, and evidence/review references.
 
-### Rollback for v0.5
+### Rollback for v0.6
 
 Before merge, close/abandon the draft PR or restore the prior README bytes. After merge, use a transparent revert or forward-fix PR. The exact prior blob is:
 
 ```text
-77cad905655b66e3861767f3d4c411ddc58ab237
+a7bbfddc0f257194c42b75046da6eccf976980e0
 ```
 
-Revert the trust-spine baseline, contract, schema, fixtures, validator, tests, workflow, Make target, README delta, and generated receipt as one reviewed packet, or apply a same-path forward fix with a new receipt. This slice creates no source activation, policy decision, lifecycle transition, release, deployment, promotion, publication, or public-runtime state.
+Revert the M01 program-baseline instance, contract, schema, fixture cases, validator, tests, workflow, Make target, README delta, and generated receipt as one reviewed packet, or apply a same-path forward fix with a new receipt. Correct external tracker statements with append-only issue comments. This slice creates no source activation, policy decision, lifecycle transition, release, deployment, promotion, publication, or public-runtime state.
 
 [Back to top](#top)
 
@@ -672,16 +682,16 @@ Revert the trust-spine baseline, contract, schema, fixtures, validator, tests, w
 
 | Evidence | Observation | Status / limit |
 |---|---|---|
-| Prior README | v0.4 at blob `77cad905655b66e3861767f3d4c411ddc58ab237`. | `CONFIRMED` |
+| Prior README | v0.5 at blob `a7bbfddc0f257194c42b75046da6eccf976980e0`. | `CONFIRMED` |
 | Directory Rules | Exact v2 bytes define `control_plane/` as governance-projection root. | `CONFIRMED adopted via ADR-0029` |
 | ADR-0029 | Current record says `accepted` and pins the adopted digest. | `CONFIRMED / ACCEPTED` |
 | Required-register test | Eight legacy metadata files plus one object-family schema profile. | `CONFIRMED executable source` |
 | `docs-control-plane.yml` | Direct root YAML parse, required-register test, ADR-index coherence. | `CONFIRMED workflow definition` |
-| Dedicated projection workflows | Root, alias, lane, seam, object-family, and trust-spine baseline checks exist. | `CONFIRMED definitions`; not release authority |
-| Makefile | `boundary-guards` includes required-register tests; `trust-spine-baseline` is a separate bounded profile. | `CONFIRMED wiring` |
+| Dedicated projection workflows | Root, alias, lane, seam, object-family, trust-spine, governance-parity, and M01 program-baseline checks exist. | `CONFIRMED definitions`; not release authority |
+| Makefile | `boundary-guards` includes required-register tests; trust-spine and M01 program baselines are separate bounded profiles. | `CONFIRMED wiring` |
 | CODEOWNERS | `/control_plane/` routes to `@bartytime4life`. | `CONFIRMED routing`; enforcement unverified |
 | Required registers | Three nonempty; six empty. | `CONFIRMED bounded inventory` |
-| Direct-child listing | 26 entries: 24 files and two directories. | `CONFIRMED direct-child inventory` |
+| Direct-child listing | 28 entries after this slice: 26 files and two directories. | `CONFIRMED review-worktree inventory`; proposed M01 path was absent at the pinned base |
 | Repository-topology validator | Pinned current-main run reports nine unbaselined drift findings and thirteen stale fingerprints. | `CONFIRMED FAIL`; inherited and not waived |
 | Repository-control projection | Older observation and main SHA. | `CONFIRMED present / STALE` |
 | Open-PR search | No open overlapping README PR found. | `CONFIRMED bounded search` |
@@ -694,9 +704,9 @@ Revert the trust-spine baseline, contract, schema, fixtures, validator, tests, w
 <a id="v02-to-v03-no-loss-ledger"></a>
 <a id="v03-to-v04-no-loss-ledger"></a>
 
-## v0.4 to v0.5 no-loss ledger
+## v0.5 to v0.6 no-loss ledger
 
-| v0.4 material element | v0.5 disposition |
+| v0.5 material element | v0.6 disposition |
 |---|---|
 | Machine-readable “what governs what” purpose | Preserved and clarified. |
 | No-parallel-authority boundary | Preserved and tied to accepted ADR-0029. |
@@ -708,13 +718,21 @@ Revert the trust-spine baseline, contract, schema, fixtures, validator, tests, w
 | Public-client prohibition | Preserved. |
 | Correction/deprecation/rollback | Preserved with current prior blob. |
 | Stable fragments | Legacy anchors retained for authority, status, belongs, exclusions, validation, lanes, register rules, rollback, evidence, no-loss, and summary. |
-| Current-state claims | Repinned to the MRTS-01 starting revision; inherited topology failure remains explicit. |
+| Current-state claims | Repinned to the M01 starting revision; inherited topology and object-family workflow-watch failures remain explicit. |
 
 [Back to top](#top)
 
 ---
 
 ## Change history
+
+### v0.6 — 2026-08-22
+
+- repinned the bounded control-plane inventory to `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`;
+- indexed the proposed M01 program-baseline contract, schema, instance, fixture cases, validator, tests, workflow, and generated receipt;
+- recorded the exact three accepted ADRs, unchanged Directory Rules digest, current issue overlap, empty open-PR queue, and non-authoritative Drive lineage;
+- preserved nine inherited topology findings, nine object-family workflow-watch failures, and absent exact-main hosted runs as `FAIL`, `FAIL`, and `NOT_RUN` respectively;
+- changed no authority, register entry, source, lifecycle, release, deployment, promotion, publication, or repository setting.
 
 ### v0.5 — 2026-08-22
 
@@ -752,10 +770,10 @@ Revert the trust-spine baseline, contract, schema, fixtures, validator, tests, w
 
 ## Status summary
 
-`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. Current repository evidence establishes a mixed nine-file required register packet, three nonempty required registers, six empty required registers, dedicated root/alias/domain/seam/object-family validation profiles, a pinned proposed MRTS-01 trust-spine baseline profile, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints.
+`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. Current repository evidence establishes a mixed nine-file required register packet, three nonempty required registers, six empty required registers, dedicated root/alias/domain/seam/object-family validation profiles, a pinned historical MRTS-01 trust-spine snapshot, a pinned proposed M01 program baseline, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints.
 
 That evidence does **not** establish a complete or semantically closed control plane. Six required register bodies are empty; several supplemental files are placeholders, historical observations, or deliberately inactive; schema and reference closure are uneven; JSON and nested-lane coverage are not unified; consumers and correction propagation are incomplete; and no raw register is a public truth surface.
 
-The smallest safe next increment is MRTS-02 registry normalization against this pinned baseline—not broad activation: preserve owning authorities, add deterministic valid/invalid/stale/conflict/deny fixtures, implement reference checks, and keep incomplete families `PARTIAL` until consumer and correction behavior are proven.
+The next safe corrections are separately attributable: close the nine object-family workflow-watch gaps through their owning workflow, reconcile the nine topology findings without baseline expansion, and append current deltas to issues #2768 and #2874. None of those follow-ups should be folded into this baseline packet or treated as authority for broad activation.
 
 <p align="right"><a href="#top">Back to top</a></p>

@@ -11,7 +11,7 @@
 KFM_VALIDATION_ENV := KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC
 VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
-.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
 
 help:
 	@echo "KFM repository targets"
@@ -25,6 +25,7 @@ help:
 	@echo "  repository-governance-parity Validate the MRTS-04 parity and inherited-drift profile"
 	@echo "  repository-guardrails Run registry, workflow, and topology guardrails"
 	@echo "  trust-spine-baseline Validate the pinned MRTS-01 authority baseline packet"
+	@echo "  program-baseline     Validate the pinned M01 program baseline packet"
 	@echo "  control-plane-registry-packet Validate the seven MRTS-02 registry projections"
 	@echo "  trust-spine-fixture-slice Validate the synthetic MRTS-05 cross-family flow"
 	@echo "  ci-conformance-report Validate the deterministic blocked MRTS-06 handoff"
@@ -122,6 +123,12 @@ trust-spine-baseline:
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_trust_spine_baseline.py
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-trust-spine-baseline-control-plane-successor-20260822.json --repo-root . --artifact-git-ref 236bdaf81b001d434726bd9ec7b0664c8ec0be83
+
+program-baseline:
+	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_program_baseline.py' --verbose
+	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_program_baseline.py --fixtures
+	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_program_baseline.py
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-program-baseline-m01-20260822.json --repo-root .
 
 control-plane-registry-packet:
 	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_control_plane_registry_packet.py' --verbose
