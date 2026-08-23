@@ -2,35 +2,84 @@
 doc_id: kfm://doc/decision-log
 title: Decision Log
 type: standard
-version: v1.1
-status: draft
-owners: OWNER_TBD (governance/docs steward; verify CODEOWNERS)
+version: v2.0
+status: draft; repository-grounded
+owners:
+  - "@bartytime4life"
+owner_status: "Verified CODEOWNERS review route only; no independent stewardship assignment, approval, release authority, or publication authority is implied."
 created: 2026-05-12
-updated: 2026-05-15
+updated: 2026-08-23
 policy_label: public
-related: [docs/registers/DECISION_LOG.md, docs/registers/decisions/, docs/adr/, docs/governance/, docs/doctrine/directory-rules.md, docs/architecture/contract-schema-policy-split.md]
-tags: [kfm, governance, decisions, adr, registers]
-notes: [Revised for Directory Rules alignment; prior docs/governance/decisions path retained as CONFLICTED lineage; registry rows remain placeholders until real decisions are added]
+owning_root: docs/
+current_path: docs/governance/DECISION_LOG.md
+responsibility: "Provide a human-facing, non-duplicating log of reviewed KFM decision-state transitions, their bounded effects, and the separation between decision acceptance, implementation evidence, release, and publication."
+truth_posture: "CONFIRMED repository evidence / source-ADR status / UNKNOWN operational authority; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9
+  target_prior_blob: 4e6394ccbee782b68ed1ed4c97ee017d942b4f7d
+  governance_readme_blob: 500f8bcad3a384160a561f1460617f0a13d42fcc
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  maplibre_package_manifest_blob: c7e8e57445fcca8f8a7316b54043da0ea43968a6
+canonical_decision_inventory: docs/adr/INDEX.md
+related:
+  - docs/governance/README.md
+  - docs/adr/README.md
+  - docs/adr/INDEX.md
+  - docs/adr/ADR-template.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
+  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/registers/ADR_INDEX.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/doctrine/directory-rules.md
+  - contracts/governance/implementation_decision_record.md
+  - packages/maplibre/package.json
+  - packages/maplibre/src/map-runtime-port.ts
+  - packages/maplibre/src/null-map-runtime.ts
+  - .github/CODEOWNERS
+  - .github/workflows/docs-control-plane.yml
+tags: [kfm, governance, decisions, adr, evidence, implementation, supersession, rollback]
+notes:
+  - "The canonical ADR source records and docs/adr/INDEX.md own decision identity and status. This document summarizes reviewed transitions without maintaining a second full ADR inventory."
+  - "The prior proposed move to docs/registers/DECISION_LOG.md and the illustrative KFM-D-NNNN identity scheme are retired as stale planning prose; no file move, rename, or new authority home is created."
+  - "Accepted, implemented, released, deployed, and published remain separate states."
+  - "This documentation-only update creates no source, policy, review, release, deployment, promotion, or publication effect."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Decision Log
 
-> Chronological registry of significant Kansas Frontier Matrix decisions — what was decided, why, on what evidence, by whom, and how later work can inspect, supersede, or roll back the decision.
+> **Human-facing decision-transition log.** This document records reviewed KFM decision-state changes and their bounded consequences while routing authoritative identity and status to the source ADRs and the canonical [`docs/adr/INDEX.md`](../adr/INDEX.md).
 
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Type](https://img.shields.io/badge/type-register-blue)
-![Policy](https://img.shields.io/badge/policy-public-green)
-![Updated](https://img.shields.io/badge/updated-2026--05--15-lightgrey)
-![Truth posture](https://img.shields.io/badge/truth--posture-CONFIRMED%20doctrine%20%7C%20PROPOSED%20paths%20%7C%20UNKNOWN%20repo%20depth-informational)
-
-**Status:** Draft (PROPOSED) · **Owner:** OWNER_TBD · **Path candidate:** `docs/registers/DECISION_LOG.md` *(PROPOSED)* · **Last updated:** 2026-05-15
+[![document](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#repo-fit-and-evidence-boundary)
+[![canonical inventory](https://img.shields.io/badge/canonical_inventory-docs%2Fadr%2FINDEX.md-1f883d?style=flat-square)](../adr/INDEX.md)
+[![decision snapshot](https://img.shields.io/badge/decision_snapshot-3_accepted_%7C_33_proposed-0969da?style=flat-square)](#decision-registry)
+[![publication effect](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#rollback)
 
 > [!IMPORTANT]
-> **Evidence boundary:** This document states KFM decision-governance doctrine and a proposed register shape. Current repository implementation depth remains **UNKNOWN** unless a mounted repo, CODEOWNERS, adjacent docs, tests, workflows, generated artifacts, or runtime evidence are inspected. Paths in this file are **PROPOSED** until verified.
+> **This log cannot accept, reject, or supersede a decision.** A decision-state transition is authoritative only when the source ADR and the canonical ADR index carry matching reviewed status. This file is a readable event view and maintenance guide, not a second decision registry.
+
+> [!WARNING]
+> **Accepted is not implemented, and implemented is not released or published.** A source ADR records governance intent. Current code, contracts, schemas, policy, tests, workflows, and generated artifacts provide bounded implementation evidence. Release and publication require their own state-bearing records and gates.
+
+| Field | Current bounded value |
+|---|---|
+| Tracked path | `docs/governance/DECISION_LOG.md` — same-path update |
+| Placement authority | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), adopted [Directory Rules](../doctrine/directory-rules.md), and the repository-present governance lane |
+| Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
+| Snapshot at `main@0d2c9db…` | 36 numbered ADRs: 3 accepted, 33 proposed; 12 unassigned scaffolds |
+| Accepted decisions summarized here | ADR-0006, ADR-0007, ADR-0029 |
+| Verified GitHub review route | `@bartytime4life` through [CODEOWNERS](../../.github/CODEOWNERS); routing is not approval |
+| Runtime / release / deployment / publication effect | None |
 
 ---
 
-## Quick navigation
+## Contents
 
 - [Purpose & scope](#purpose--scope)
 - [Repo fit and evidence boundary](#repo-fit-and-evidence-boundary)
@@ -52,425 +101,430 @@ notes: [Revised for Directory Rules alignment; prior docs/governance/decisions p
 
 ## Purpose & scope
 
-The Decision Log is the **intended chronological register of significant KFM decisions**. It records what was decided, when, on what evidence, by whom, and what changed as a result. Routine implementation choices live in code, PR descriptions, CHANGELOG entries, or working notes — not here.
+The Decision Log gives maintainers one place to answer four questions without copying the canonical ADR inventory:
 
-A decision belongs in this log when **any** of the following apply:
+1. **Which reviewed decision-state transitions have occurred?**
+2. **What did each transition authorize—and what did it explicitly leave unchanged?**
+3. **What bounded implementation evidence exists after the decision?**
+4. **Where are the authoritative source record, inventory row, review evidence, and rollback path?**
 
-- It changes architecture, module boundaries, responsibility roots, or the data lifecycle, including `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`.
-- It introduces, retires, or redefines an `EvidenceBundle`, `EvidenceRef`, `SourceDescriptor`, `RunReceipt`, `PromotionDecision`, `ReleaseManifest`, `RollbackCard`, or other governance contract.
-- It sets or revises a policy, review burden, source-rights posture, publication rule, or external-standard commitment.
-- It locks in a vendor, runtime, source family, file format, schema home, API surface, map-delivery format, or interface downstream work must respect.
-- It resolves a previously open question that other docs, contracts, schemas, policies, tests, or release gates reference.
+### In scope
 
-> [!IMPORTANT]
-> The Decision Log records **decisions**, not extended discussion. Rationale is summarized; long deliberation belongs in linked ADRs, issues, RFCs, evidence bundles, or PRs.
+- reviewed ADR transitions to `accepted`, `rejected`, or `superseded`;
+- material post-decision implementation or conformance checkpoints when current repository evidence supports them;
+- explicit separation of decision status, implementation maturity, review, release, deployment, promotion, publication, correction, and rollback;
+- links to source ADRs, the canonical index, relevant implementation evidence, and verification gaps;
+- maintenance rules for keeping this view non-duplicating and auditable.
 
-The Decision Log is not:
+### Out of scope
 
-- a substitute for ADRs;
-- a substitute for `EvidenceBundle` / `EvidenceRef` resolution;
-- an implementation proof;
-- a release manifest;
-- a place to hide unresolved path, policy, rights, or sensitivity conflicts.
+- the complete proposed-ADR inventory, which belongs only in [`docs/adr/INDEX.md`](../adr/INDEX.md);
+- activating the proposed `GovernanceDecision` object-family roster before a reviewed contract, schema, registry, and authority path exist;
+- accepting, rejecting, superseding, or renumbering an ADR;
+- a parallel `KFM-D-NNNN` decision identity scheme;
+- a second writable decision-record tree under `docs/registers/decisions/` or any other path;
+- routine commit, issue, or pull-request history that does not constrain future work;
+- implementation-local rationale that belongs in a pull-request body or the proposed-inactive [`ImplementationDecisionRecord`](../../contracts/governance/implementation_decision_record.md);
+- release, deployment, promotion, publication, correction, or rollback authority.
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Repo fit and evidence boundary
 
-This file is a human-facing governance register. Under the current Directory Rules doctrine, the best-fit path is:
+### Same-path placement basis
 
-```text
-docs/registers/DECISION_LOG.md
-```
+`docs/governance/DECISION_LOG.md` is a tracked human-facing governance document and is linked from the repository-grounded [`docs/governance/README.md`](./README.md). Accepted ADR-0029 assigns human explanation to `docs/` and makes the adopted Directory Rules the placement authority. This revision therefore updates the existing path and does not create, move, rename, mirror, or delete a file.
 
-The proposed location is responsibility-rooted because `docs/` explains human-facing governance, and `docs/registers/` is the register surface. It should not create a new root folder and should not live under a domain lane.
+The previous document proposed `docs/registers/DECISION_LOG.md` and separate `docs/registers/decisions/` records because repository depth was then unverified. Current evidence resolves that proposal:
 
-| Item | Status | Proposed handling | Verification needed |
-|---|---|---|---|
-| This register | PROPOSED | `docs/registers/DECISION_LOG.md` | Confirm current repo conventions and adjacent register names. |
-| Individual short decision records | PROPOSED / NEEDS VERIFICATION | `docs/registers/decisions/KFM-D-NNNN-short-slug.md` | Confirm whether the repo wants separate short records or registry-only rows. |
-| Architecture Decision Records | PROPOSED | `docs/adr/ADR-NNNN-short-slug.md` | Confirm ADR naming and numbering convention. |
-| Governance roles and review policy | PROPOSED | `docs/governance/` | Confirm policy docs and owner files. |
-| Prior path `docs/governance/decisions/` | CONFLICTED / LINEAGE | Do not create by default. Retain only as a prior-doc path until repo evidence or ADR confirms it. | Check existing repo tree and open a drift entry if this path already exists. |
+- `docs/governance/` is the existing explanatory governance lane;
+- `docs/adr/` owns source decision records and the canonical inventory;
+- `docs/registers/ADR_INDEX.md` is intentionally a pointer, not a competing row set;
+- `contracts/governance/implementation_decision_record.md` defines a narrower, proposed-inactive review-support object for implementation choices.
 
-> [!WARNING]
-> If the mounted repository already contains a conflicting decision-log home, do not silently normalize it. Record the conflict in the drift or verification backlog, then resolve through an ADR or migration note.
+Creating another writable decision home would now increase authority drift rather than close a gap.
 
-[⬆ Back to top](#decision-log)
+### Evidence inspected for this revision
+
+| Surface | Current-session observation | Authority limit |
+|---|---|---|
+| [`docs/adr/INDEX.md`](../adr/INDEX.md) | 36 numbered records; ADR-0006, ADR-0007, and ADR-0029 are accepted; 33 are proposed; 12 scaffolds are unassigned | Canonical human inventory and status crosswalk; not implementation proof |
+| [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Accepted 2026-08-21: one package-owned `MapRuntimePort` / `MapLibreAdapter` seam | Architecture only; no dependency, release, deployment, or publication admission |
+| [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Accepted 2026-08-21: MapLibre GL JS is the sole normal browser renderer family | Family choice only; no version, package, plugin, runtime, release, or publication admission |
+| [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Accepted 2026-07-26: exact Directory Rules v2 bytes adopted; compatibility migration remains controlled | Placement authority only; post-adoption conformance remains partial |
+| [`packages/maplibre/src/`](../../packages/maplibre/src/) | `MapRuntimePort` and deterministic `NullMapRuntime` are present | Bounded implementation evidence; not a concrete renderer or browser-readiness proof |
+| [`packages/maplibre/package.json`](../../packages/maplibre/package.json) | No `maplibre-gl` dependency is declared | Confirms dependency remains unadmitted at this snapshot |
+| [CODEOWNERS](../../.github/CODEOWNERS) | Routes `docs/governance/` review to `@bartytime4life` | Review routing only; not independent approval or release authority |
+| Open pull requests | Draft PR #3443 changes adjacent `docs/governance/CONTRADICTION_HANDLING.md` at head `e74ca8d443d5ac482bdf58f79dc3937df0da9452`; it does not change this target | Compatible adjacent work; the stable relative link is preserved and no shared bytes are overwritten |
+| Historical task branch | `codex/implement-decision-log-verification-layer` is behind current main with no unique commits | Lineage only; not a reusable current task branch |
+
+### Known adjacent drift
+
+The canonical ADR index is newer than the summary counts in [`docs/adr/README.md`](../adr/README.md) and [`docs/registers/ADR_INDEX.md`](../registers/ADR_INDEX.md). Those files are secondary operating and pointer surfaces; the canonical source ADRs and [`docs/adr/INDEX.md`](../adr/INDEX.md) control current status. Refreshing the two summaries is a separate bounded maintenance change and is not silently folded into this file.
+
+[Back to top](#top)
 
 ---
 
 ## How to read this log
 
-Each entry has stable identity (`KFM-D-NNNN`) and a clear status. Entries are **append-only**: superseded decisions are not deleted; they are re-statused and linked forward.
+Read every entry across separate axes:
 
-- **Read the registry table** for an at-a-glance view of decisions and their current status.
-- **Open the linked decision record or ADR** for full context when the registry row is not enough.
-- **Inspect the evidence references** before treating a decision as support for a downstream claim.
-- **Follow supersession links** before relying on an old decision.
+| Axis | Question | Authoritative evidence |
+|---|---|---|
+| Decision identity | Which durable decision is this? | Source ADR ID and path |
+| Decision status | Is it proposed, accepted, rejected, or superseded? | Matching source ADR and canonical index status |
+| Truth posture | How strongly is a factual claim supported now? | Pinned repository evidence and KFM truth labels |
+| Realization | Has code, documentation, policy, schema, validation, or migration implemented the decision? | Current files, tests, workflows, logs, and generated artifacts |
+| Review | Was the relevant change reviewed by an authorized route? | Review records, source ADR evidence, and platform review state |
+| Release / publication | Has a governed artifact crossed a release or publication gate? | State-bearing release, promotion, correction, and rollback records |
 
-> [!NOTE]
-> A decision can be accepted before it is implemented. Treat **Accepted** as governance intent and **Implemented** as implementation evidence only when linked repo evidence supports it.
+A row may therefore say **accepted decision / partial implementation / no release effect** without contradiction.
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Decision lifecycle
 
-The lifecycle below is **PROPOSED** and aligned with KFM truth-label discipline. Adjust transitions to match existing repository convention before publishing.
+KFM's canonical decision statuses are `proposed`, `accepted`, `rejected`, and `superseded`. Implementation and release are parallel evidence tracks, not additional ADR statuses.
 
 ```mermaid
 flowchart LR
-    A[Proposed] --> B[Under Review]
-    B --> C[Accepted]
-    B --> D[Rejected]
-    C --> E[Implemented]
-    C --> F[Superseded]
-    E --> F
-    F --> G[Archived]
-    D --> G
+    P["proposed ADR"] -->|matching reviewed source + index transition| A["accepted ADR"]
+    P -->|matching reviewed source + index transition| R["rejected ADR"]
+    A -->|accepted successor + reciprocal links| S["superseded ADR"]
+
+    A -. "separate current-repo evidence" .-> I["partial or implemented realization"]
+    I -. "separate governed transition" .-> L["release / deployment / publication state"]
+
+    R --> H["retained decision history"]
+    S --> H
 ```
 
-| Stage | Meaning | Required evidence before use |
-|---|---|---|
-| Proposed | A decision record exists; no consensus yet. | Draft record, owner placeholder, evidence plan. |
-| Under Review | Active review by owners; comments open. | Reviewer list, open questions, evidence references. |
-| Accepted | Decision endorsed; downstream work may depend on it. | Approval record, ADR or rationale, evidence references. |
-| Implemented | Code, docs, policy, schema, contract, or release artifacts reflect the decision. | PR, commit, test, workflow, release, or emitted artifact evidence. |
-| Rejected | Closed without acceptance; preserved for context. | Rejection note and reason. |
-| Superseded | Replaced by a newer decision. | Forward link to replacing decision. |
-| Archived | No longer active; retained for historical record. | Archive note and successor if any. |
+| Transition or checkpoint | Minimum support before this log records it |
+|---|---|
+| Proposed → accepted | Source ADR and canonical index both say `accepted`; reviewed decision evidence is linked in the ADR |
+| Proposed → rejected | Source ADR and canonical index both say `rejected`; rationale is retained |
+| Accepted → superseded | Accepted successor exists; old and new ADRs link reciprocally; canonical index agrees |
+| Implementation checkpoint | Current repository bytes plus proportionate tests, workflows, logs, or generated evidence support the bounded claim |
+| Release or publication checkpoint | State-bearing release or publication records exist; a PR, merge, tag, badge, or green workflow is insufficient |
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Decision registry
 
 > [!NOTE]
-> No real decision rows are confirmed in this attached baseline. The row below is a **shape example only**. Replace it with real entries after owners, IDs, evidence references, and paths are verified.
+> The heading is retained for stable navigation, but this table is a **non-authoritative transition view**, not the canonical ADR registry. Proposed records stay in [`docs/adr/INDEX.md`](../adr/INDEX.md); do not copy all 36 rows here.
 
-| ID | Date | Title | Status | Owner | Evidence / ADR / PR | Supersession |
-|---|---|---|---|---|---|---|
-| KFM-D-NNNN | YYYY-MM-DD | `<decision title>` | Proposed | OWNER_TBD | EvidenceRef / ADR / PR: NEEDS VERIFICATION | Supersedes: none; Superseded by: none |
+### Current accepted-decision transition view
+
+| Effective date | Decision | Reviewed transition | Bounded current realization at `main@0d2c9db…` | Explicit non-effects | Source |
+|---|---|---|---|---|---|
+| 2026-08-21 | `ADR-0006` — only package-owned `MapLibreAdapter` imports MapLibre | `proposed` → `accepted` | **CONFIRMED BOUNDED / PARTIAL:** `MapRuntimePort` and `NullMapRuntime` are present; no package-owned concrete `MapLibreAdapter` implementation or `maplibre-gl` dependency is present | No dependency admission, browser readiness, release, deployment, or publication | [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) · [`src/`](../../packages/maplibre/src/) · [`package.json`](../../packages/maplibre/package.json) |
+| 2026-08-21 | `ADR-0007` — MapLibre GL JS is the sole browser-side renderer family | `proposed` → `accepted` | **HOLD:** renderer family is selected; exact package/version, plugins, workers, concrete adapter, and authenticated browser evidence remain unadmitted or unproved | No runtime, release, deployment, serving, or publication authority | [ADR-0007](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) · [`package.json`](../../packages/maplibre/package.json) |
+| 2026-07-26 | `ADR-0029` — adopt Directory Governance Standard v2 | `proposed` → `accepted` | **PARTIAL:** the source ADR records machine projections and a topology ratchet; compatibility-path migration, consumer closure, and full conformance remain incomplete or held | No automatic root migration, source admission, release, deployment, or publication | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) · [Directory Rules](../doctrine/directory-rules.md) |
+
+### Snapshot summary
+
+| Classification | Count | Where to inspect |
+|---|---:|---|
+| Accepted numbered ADRs | 3 | The transition view above and the canonical index |
+| Proposed numbered ADRs | 33 | [`docs/adr/INDEX.md`](../adr/INDEX.md) only |
+| Rejected numbered ADRs | 0 | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
+| Superseded numbered ADRs | 0 | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
+| Unassigned ADR scaffolds | 12 | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 
 ### Registry row rules
 
-- IDs are stable and must not be reused.
-- Rows are chronological by decision date, newest row placement to be confirmed by repo convention.
-- **Accepted** rows must link evidence, approval, and reviewer context.
-- **Implemented** rows must link implementation proof; do not infer implementation from an accepted decision.
-- **Superseded** rows stay visible and link forward.
-- Illustrative rows must be labeled illustrative and must not use real-looking accepted status.
+- Use the source ADR ID; do not allocate `KFM-D-*` identifiers.
+- Add a row only for a reviewed decision transition or a material bounded realization checkpoint.
+- Link the source ADR and current evidence rather than copying full rationale.
+- State what the event did **not** authorize.
+- Keep newest effective events first.
+- Preserve rejected and superseded history once those states exist.
+- Never infer acceptance from file presence, merge, validation, issue closure, or index registration alone.
+- Never infer implementation from acceptance or publication from implementation.
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Decision record template
 
-Each substantial decision should have either a linked ADR or a decision record. File placement is **PROPOSED** until verified:
+The prior revision supplied a standalone `KFM-D-NNNN` template and proposed a new `docs/registers/decisions/` home. Current repository authority makes that pattern inappropriate because it would compete with the established ADR identity and inventory.
 
-- Short decision record: `docs/registers/decisions/KFM-D-NNNN-short-slug.md`
-- Full ADR: `docs/adr/ADR-NNNN-short-slug.md`
+Use the existing surface that matches the decision:
 
-Use the template below for a short decision record. Use the repo's ADR template when the decision needs full alternatives, consequences, and architectural rationale.
-
-```markdown
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://decision/KFM-D-NNNN
-title: <Short decision title>
-type: standard
-version: v1
-status: proposed|under-review|accepted|rejected|implemented|superseded|archived
-owners: OWNER_TBD (<team or steward; verify CODEOWNERS>)
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public|restricted
-related: [<linked ADRs, EvidenceBundles, issues, PRs>]
-tags: [kfm, decision]
-notes: [<short notes; include PROPOSED/UNKNOWN where relevant>]
-[/KFM_META_BLOCK_V2] -->
-
-# KFM-D-NNNN — <Short decision title>
-
-> One-line summary of what was decided.
-
-## Context
-
-What problem or question prompted this decision. Cite the evidence considered. State whether repo implementation depth is CONFIRMED, PROPOSED, UNKNOWN, or NEEDS VERIFICATION.
-
-## Decision
-
-The decision, stated plainly. Keep it short. Do not include long deliberation here.
-
-## Rationale
-
-Why this decision was chosen over alternatives. Reference evidence, source role, policy posture, review state, or implementation constraints.
-
-## Alternatives considered
-
-- **Option A** — summary and why it was not chosen.
-- **Option B** — summary and why it was not chosen.
-
-## Consequences
-
-- **Immediate** — what changes now: docs, contract, schema, policy, tests, source registry, release, or UI/API behavior.
-- **Downstream** — what this enables, blocks, or forces.
-- **Reversibility** — how hard this is to undo and what rollback target exists.
-
-## Evidence
-
-- `EvidenceBundle` / `EvidenceRef`: `<id or NEEDS VERIFICATION>`
-- ADR / RFC / issue / PR: `<id or NEEDS VERIFICATION>`
-- Tests / validators / release artifacts: `<id or UNKNOWN>`
-
-## Status history
-
-| Date | Status | Note |
+| Decision kind | Correct surface | Status / authority boundary |
 |---|---|---|
-| YYYY-MM-DD | Proposed | Initial entry |
+| Architecture, root, lifecycle, trust-boundary, or long-lived governance choice | Copy [`docs/adr/ADR-template.md`](../adr/ADR-template.md), assign a collision-free `ADR-NNNN`, and update [`docs/adr/INDEX.md`](../adr/INDEX.md) in the same change | Source ADR owns the decision; starts proposed |
+| Routine implementation choice visible in one PR | Record rationale, alternatives, evidence, validation, and rollback in the pull-request body | PR context only; not a governance decision |
+| Load-bearing implementation fork that benefits from deterministic review support | Use the proposed-inactive [`ImplementationDecisionRecord`](../../contracts/governance/implementation_decision_record.md) only within its validated profile | Review support only; creates no approval or release authority |
+| Release, correction, withdrawal, or rollback decision | Use the state-bearing object family under `release/` and its governing contracts, schemas, policy, and review route | Separate from ADR acceptance and GitHub state |
 
-## Supersession
+> [!CAUTION]
+> Do not create `docs/registers/decisions/`, a new `KFM-D-*` sequence, or another canonical decision table without an accepted ADR and migration plan. The old illustrative template remains recoverable in Git history and is intentionally removed from the active guidance.
 
-- Supersedes: `KFM-D-NNNN` or `none`.
-- Superseded by: `KFM-D-NNNN` or `none`.
-```
-
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Status taxonomy
 
-Decision status maps to KFM truth posture, but it does not replace evidence. Use the narrowest truthful label.
+### Canonical ADR status
 
-| Decision status | Truth-label analog | Meaning in practice |
+| Status | Meaning | What establishes it |
 |---|---|---|
-| Proposed | PROPOSED | Drafted; not yet endorsed. |
-| Under Review | NEEDS VERIFICATION | Actively being evaluated. |
-| Accepted | CONFIRMED *(of the decision itself)* | Endorsed; binding as governance intent. |
-| Implemented | CONFIRMED *(in repo or artifact evidence)* | Reflected in inspected code, docs, policy, tests, workflow, release, or emitted artifacts. |
-| Rejected | n/a | Closed; preserved for context. |
-| Superseded | n/a | Replaced by a newer decision. |
-| Archived | n/a | Historical record only. |
+| `proposed` | Under consideration; not binding even if merged | Source ADR plus canonical index |
+| `accepted` | Explicitly reviewed and effective within the ADR's stated scope | Matching reviewed source ADR and canonical index transition |
+| `rejected` | Considered and not adopted; retained as history | Matching source ADR and index transition with rationale |
+| `superseded` | Replaced by an accepted successor; retained with reciprocal links | Old ADR, successor ADR, and canonical index agreement |
 
-> [!TIP]
-> A decision can be **Accepted** without being **Implemented**. Keep the two statuses separate so the gap between intent and reality stays visible.
+### Truth labels for current-state claims
 
-[⬆ Back to top](#decision-log)
+| Label | Meaning in this document |
+|---|---|
+| `CONFIRMED` | Verified at the pinned repository snapshot from source records, files, configuration, tests, workflows, or generated artifacts |
+| `PROPOSED` | Design, action, or state not accepted or not implemented |
+| `UNKNOWN` | Evidence is insufficient to state the current condition |
+| `NEEDS VERIFICATION` | A named check can resolve the claim but has not been completed strongly enough |
+| `HOLD` | A stronger transition must not proceed because a prerequisite or authority remains unresolved |
+
+### States that must remain separate
+
+| State | Not equivalent to |
+|---|---|
+| ADR accepted | Implemented, conformant, secure, released, deployed, or published |
+| File or schema present | Adopted semantic authority or active policy |
+| Validator passes | Correct evidence, approval, release, or publication |
+| Pull request merged | Promotion, release, deployment, or publication |
+| GitHub release or tag exists | KFM governed publication unless release closure independently supports it |
+| Implementation checkpoint recorded here | Canonical ADR status change |
+
+[Back to top](#top)
 
 ---
 
 ## Relationship to ADRs and EvidenceBundles
 
-The Decision Log is a **registry**, not a replacement for ADRs or evidence artifacts. The relationships below are **PROPOSED** and should be confirmed against the repository's ADR, register, and evidence conventions.
-
 ```mermaid
 flowchart TB
-    DL[Decision Log<br/>docs/registers/DECISION_LOG.md] -->|indexes| DR[Decision Record<br/>KFM-D-NNNN]
-    DR -->|may be expanded by| ADR[ADR<br/>full rationale]
-    DR -->|cites| EB[EvidenceBundle / EvidenceRef]
-    DR -->|may link| PR[Pull Request]
-    DR -->|may link| ISS[Issue or RFC]
-    ADR -->|grounded in| EB
-    PR -->|implements or updates| IMPL[Code / Docs / Policy / Tests / Release Artifacts]
+    ADR["Source ADR\ncanonical decision record"] --> IDX["docs/adr/INDEX.md\ncanonical human inventory"]
+    ADR -->|"reviewed transition"| LOG["docs/governance/DECISION_LOG.md\nnon-authoritative event view"]
+    IDX --> LOG
+
+    ADR -->|"cites"| EV["EvidenceRef / EvidenceBundle"]
+    PR["Issue / PR / review context"] --> ADR
+    PR --> IMPL["Code / docs / contracts / schemas / policy / tests"]
+    IMPL -->|"bounded current evidence"| LOG
+
+    IMPL --> REL["Release / correction / rollback records"]
+    REL --> PUB["Governed release or publication state"]
 ```
 
-| Artifact | Primary role | Lives where *(PROPOSED)* | Notes |
-|---|---|---|---|
-| Decision Log | Chronological register | `docs/registers/DECISION_LOG.md` | Human-facing register; not implementation proof. |
-| Decision record | Short, citable record of one decision | `docs/registers/decisions/` | Use only if repo convention supports separate records. |
-| ADR | Full rationale, alternatives, consequences | `docs/adr/` | Required when architecture, schema home, roots, lifecycle, or policy-significant boundaries change. |
-| `EvidenceBundle` / `EvidenceRef` | Verifiable evidence grounding the decision | Per KFM evidence conventions | Evidence outranks generated language and summaries. |
-| PR / Issue / RFC | Discussion, review, implementation work | GitHub or repo-native tracker | Not a substitute for evidence. |
-| Release / rollback artifact | Publication state, correction, rollback | `release/` and lifecycle artifacts | Required when decision affects publication state. |
+| Artifact | Primary role | Authority boundary |
+|---|---|---|
+| Source ADR | One consequential decision, rationale, alternatives, consequences, migration, validation, and rollback | Owns decision intent and source status |
+| [`docs/adr/INDEX.md`](../adr/INDEX.md) | Complete numbered ADR and scaffold inventory | Owns the canonical human status crosswalk; cannot promote independently |
+| Decision Log | Readable transition timeline and bounded realization notes | Summarizes only; cannot change source status |
+| `EvidenceRef` / `EvidenceBundle` | Verifiable support for claims considered by a decision | Evidence outranks summaries and generated language |
+| Issue / PR / review record | Discussion, coordination, review, and implementation delivery | Does not replace source evidence or decision status |
+| `ImplementationDecisionRecord` | Proposed-inactive, local review-support rationale | Not an ADR, review approval, policy decision, or release record |
+| Release / correction / rollback object | State-bearing release, withdrawal, correction, or reversal decision | Separate from ADR and GitHub state |
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Adding a decision
 
-The workflow below is **PROPOSED**. Confirm against `CONTRIBUTING.md`, CODEOWNERS, ADR conventions, and governance policy before adopting.
-
-1. Open an issue or RFC describing the question, affected roots, and decision scope.
-2. Check whether the decision requires an ADR. ADR is required for canonical root changes, schema-home changes, lifecycle changes, new parallel authority homes, or invariant-bending changes.
-3. Assign the next unused `KFM-D-NNNN` identifier. Do not reuse IDs.
-4. Draft a decision record from the [template](#decision-record-template) or link a full ADR.
-5. Add evidence references. If evidence is not ready, keep status **Proposed** or **Under Review**.
-6. Open a PR and request review from owners and affected subsystem stewards.
-7. Add or update the [registry table](#decision-registry) only with truthful status.
-8. On approval, update status to **Accepted** and record reviewer / approval evidence.
-9. When implementation lands, update status to **Implemented** only after linking the implementation proof.
-10. If later replaced, mark the old decision **Superseded** and link forward to the replacing decision.
+1. **Classify the choice.** Confirm that it is consequential and ADR-class rather than a routine implementation detail, runbook step, release instance, or local refactor.
+2. **Inspect current authority and overlap.** Read Directory Rules, the canonical ADR index, relevant accepted ADRs, open pull requests, active branches, and recent merges.
+3. **Assign one collision-free ADR identity.** Copy the current ADR template and use the next available number only after the index and overlap check.
+4. **Keep the initial status proposed.** Record context, decision, alternatives, consequences, affected roots, evidence, migration, validation, correction, and rollback.
+5. **Update source and index together.** A source ADR and canonical index row must agree; registration never implies acceptance.
+6. **Request the affected review routes.** CODEOWNERS may route review, but does not prove reviewer identity, independence, authority, or approval.
+7. **Transition only through explicit review.** Change source and index together to `accepted`, `rejected`, or `superseded`; preserve evidence and reciprocal supersession links.
+8. **Update this log after the source transition.** Add one concise row with the effective date, bounded effect, current realization evidence, and non-effects. Do not copy all proposed rows.
+9. **Implement separately.** Link later implementation evidence without rewriting the historical decision or upgrading release state.
+10. **Release separately.** Use governed release, correction, withdrawal, and rollback controls when a public or semi-public state changes.
 
 > [!WARNING]
-> Do not delete or rewrite the substance of accepted decisions. Use **Superseded** with a forward link. The historical record is the point of the log.
+> Do not edit the substance of an accepted ADR to make later implementation look conformant. Use a successor ADR for a changed decision, a transparent implementation note for bounded realization, or a drift/correction record when current behavior conflicts.
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Governance and review
 
-- **Cadence** — PROPOSED: quarterly review of open, under-review, accepted-but-unimplemented, and recently superseded decisions.
-- **Quorum** — PROPOSED: defined by `CONTRIBUTING.md`, CODEOWNERS, or governance policy.
-- **Conflicts** — when a new decision contradicts an accepted one, the new entry must explicitly supersede the older one or be rejected. Silent contradictions are not permitted.
-- **Path conflicts** — when a proposed path conflicts with Directory Rules or mounted repo evidence, mark it `CONFLICTED / NEEDS VERIFICATION` and record a drift or verification item.
-- **External standards** — when a decision adopts or modifies alignment with an external standard (for example STAC, JSON Schema, W3C PROV, OGC, FAIR/CARE), cite the standard **and version**. Standards evolve; pinning the version protects future readers.
-- **Sensitive or rights-bearing decisions** — require source role, rights, sensitivity, steward, review, release, correction, and rollback posture appropriate to significance.
+- **Review route — CONFIRMED:** [CODEOWNERS](../../.github/CODEOWNERS) routes `docs/governance/`, `docs/adr/`, and `docs/registers/` to `@bartytime4life`.
+- **Independent stewardship — UNKNOWN:** the route does not establish an accepted StewardshipAssignment, independent reviewer capacity, quorum, or release authority.
+- **Decision transition:** source ADR and canonical index must agree and carry the reviewed transition evidence.
+- **Implementation claim:** verify current repository bytes and proportionate validation; a historical branch or old ADR description is insufficient.
+- **Contradiction:** surface source/index disagreement, implementation drift, or conflicting authority through [`CONTRADICTION_HANDLING.md`](./CONTRADICTION_HANDLING.md), the drift register, or a successor ADR as appropriate.
+- **Sensitive or rights-bearing decisions:** require rights, sensitivity, sovereignty, source role, evidence, review, release, correction, and rollback support proportionate to consequence.
+- **Maintenance trigger:** review this log when a numbered ADR changes to accepted, rejected, or superseded, or when a material realization checkpoint makes a current row misleading.
 
-[⬆ Back to top](#decision-log)
+This document does not establish a periodic approval quorum, automatic acceptance rule, or release cadence.
+
+[Back to top](#top)
 
 ---
 
 ## Verification checklist
 
-Before publishing or merging this Decision Log, verify:
+Before merging a Decision Log update:
 
-- [ ] Target path: confirm `docs/registers/DECISION_LOG.md` or record the accepted alternative.
-- [ ] Owner: replace `OWNER_TBD` with a confirmed steward or team.
-- [ ] CODEOWNERS: confirm review responsibility for decision-log and ADR changes.
-- [ ] Adjacent docs: confirm `docs/registers/`, `docs/adr/`, `docs/governance/`, and `docs/doctrine/` conventions.
-- [ ] Previous path: determine whether `docs/governance/decisions/` exists; if it does, open a drift/migration note rather than duplicating authority.
-- [ ] ID policy: confirm ID allocation, numbering, and whether IDs are global or scoped.
-- [ ] Evidence policy: confirm required `EvidenceBundle` / `EvidenceRef` fields for accepted decisions.
-- [ ] ADR policy: confirm when a decision must be an ADR rather than a short record.
-- [ ] Registry rows: remove illustrative rows or label them as examples before treating the document as authoritative.
-- [ ] Relative links: verify all related-doc paths from the final file location.
-- [ ] Supersession: verify every superseded row links forward and every replacing decision links back.
-- [ ] No implementation overclaim: accepted decisions are not called implemented without inspected proof.
+- [ ] The target remains `docs/governance/DECISION_LOG.md`; no parallel decision home is introduced.
+- [ ] The file has one H1, valid heading order, balanced fences, renderable tables, and a final newline.
+- [ ] Every decision row links to an existing source ADR.
+- [ ] Source ADR status and [`docs/adr/INDEX.md`](../adr/INDEX.md) agree.
+- [ ] Proposed ADRs are not copied into a competing full inventory.
+- [ ] Accepted, implemented, released, deployed, promoted, and published are kept separate.
+- [ ] Every current implementation claim is pinned to present repository evidence or labeled `UNKNOWN` / `NEEDS VERIFICATION`.
+- [ ] Superseded and rejected entries remain visible once they exist, with reciprocal links where required.
+- [ ] CODEOWNERS routing is not described as independent review or approval.
+- [ ] Relative links and legacy space-containing ADR paths resolve from this file.
+- [ ] No source, policy, release, deployment, publication, repository-setting, or sensitive-data effect is implied.
+- [ ] Rollback is the prior committed revision or a transparent forward-fix PR; shared history is never rewritten.
 
-[⬆ Back to top](#decision-log)
+### Repository-native ADR coherence checks
+
+```bash
+python tools/validators/validate_adr_index.py
+python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
+```
+
+The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-control-plane.yml) runs the ADR coherence profile. A green result supports checked-revision inventory, ID, status, link, scaffold, and supersession coherence. It does not accept a decision, prove implementation, or authorize release or publication.
+
+[Back to top](#top)
 
 ---
 
 ## Rollback
 
-Rollback is required if this Decision Log:
+### Before merge
 
-- creates a path authority conflict;
-- treats illustrative rows as real decisions;
-- removes accepted-decision history;
-- breaks supersession links without replacement;
-- upgrades implementation status without evidence;
-- weakens evidence, policy, review, publication, correction, or rollback controls.
+Close or abandon the draft pull request and retain the base revision. Remote-branch deletion, if desired, is a separate repository mutation and is not required to neutralize an unmerged documentation change.
 
-Rollback target: the previous committed revision of this file. If the file is not yet committed, use the original attached baseline dated `2026-05-12` as the rollback reference.
+### After merge
 
-[⬆ Back to top](#decision-log)
+Open a transparent revert or forward-fix pull request against the merged commit. Do not rewrite shared history and do not recreate a second writable Decision Log.
+
+### Rollback target for this revision
+
+- Base: `main@0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9`
+- Prior target blob: `4e6394ccbee782b68ed1ed4c97ee017d942b4f7d`
+- Changed path: `docs/governance/DECISION_LOG.md`
+- Migration or reprocessing: none
+- Release, deployment, cache, source, or publication rollback: not applicable
+
+Rollback is required if this file creates a competing decision identity, misstates source ADR status, upgrades implementation without evidence, hides supersession, or collapses decision, review, release, correction, and publication boundaries.
+
+[Back to top](#top)
 
 ---
 
 ## FAQ
 
 <details>
-<summary><b>Is every PR a decision?</b></summary>
+<summary><b>Is every pull request a decision?</b></summary>
 
-No. Most PRs implement existing decisions or make routine changes. A decision is logged when it constrains future work, locks in an interface, changes responsibility boundaries, sets policy, or creates a commitment downstream work must respect.
+No. Most pull requests implement existing decisions or make routine changes. Create an ADR only when a choice constrains future work, changes a responsibility or trust boundary, creates lasting compatibility, or is likely to be re-litigated. Record local rationale in the PR body when no ADR is required.
+</details>
+
+<details>
+<summary><b>Does an accepted ADR prove implementation?</b></summary>
+
+No. Acceptance establishes governance intent within the ADR's scope. Implementation requires current repository evidence. ADR-0006 and ADR-0007 are accepted while the package-owned concrete adapter and renderer dependency remain unadmitted or incomplete.
+</details>
+
+<details>
+<summary><b>Does this log replace the ADR index?</b></summary>
+
+No. [`docs/adr/INDEX.md`](../adr/INDEX.md) is the canonical complete inventory. This log carries only reviewed transitions and concise bounded realization notes.
+</details>
+
+<details>
+<summary><b>Where do implementation-only decisions go?</b></summary>
+
+Use the pull-request body for ordinary choices. The [`ImplementationDecisionRecord`](../../contracts/governance/implementation_decision_record.md) is a proposed-inactive deterministic review-support profile for load-bearing implementation forks; it creates no governance or release authority.
 </details>
 
 <details>
 <summary><b>What if I disagree with an accepted decision?</b></summary>
 
-Open a new decision record proposing supersession. Cite the evidence that changed. Do not edit the original entry's substance — append a status update on the original and link forward once the new decision is accepted.
-</details>
-
-<details>
-<summary><b>Do experiments need a decision record?</b></summary>
-
-Only if the experiment's outcome will bind future work. Pure exploration without commitment does not. If an experiment touches sensitive data, rights, public publication, source authority, or policy gates, record its review path even if it never becomes an accepted decision.
+Propose a successor ADR with the changed evidence, consequences, migration, validation, and rollback. Do not silently rewrite the accepted record or this summary row. Once accepted, link the old and new ADRs reciprocally and mark the old decision superseded.
 </details>
 
 <details>
 <summary><b>How does this differ from a CHANGELOG?</b></summary>
 
-A CHANGELOG records *what* shipped. The Decision Log records *why* something was chosen — and is often written before implementation. Many decisions never produce a single CHANGELOG entry; many CHANGELOG entries trace back to a single decision.
+A CHANGELOG records delivered product or repository changes. The Decision Log records reviewed decision transitions and the boundary between intent and realization. One accepted decision may lead to many implementation changes; many routine changes require no ADR event.
 </details>
 
 <details>
-<summary><b>Does an ADR replace a Decision Log entry?</b></summary>
+<summary><b>Can a green workflow, merge, or GitHub release publish a KFM artifact?</b></summary>
 
-No. The ADR carries full rationale. The Decision Log indexes the decision chronologically and keeps status, supersession, implementation evidence, and rollback visibility in one place.
+No. Those are delivery or platform events. KFM publication remains a separate governed transition with evidence, policy, review, release, correction, and rollback support appropriate to consequence.
 </details>
 
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Related docs
 
-All links below are **PROPOSED** until verified from the final file location.
+- [Governance lane README](./README.md) — human roles, review burden, separation of duties, and responsibility boundaries.
+- [Canonical ADR index](../adr/INDEX.md) — complete numbered-record and scaffold inventory.
+- [ADR operating guide](../adr/README.md) — authoring and review rules; its summary counts may lag the canonical index.
+- [ADR template](../adr/ADR-template.md) — starting point for new proposed ADRs.
+- [ADR cross-register pointer](../registers/ADR_INDEX.md) — non-duplicating register connection; its summary may lag the canonical index.
+- [Directory Rules](../doctrine/directory-rules.md) — adopted placement authority through ADR-0029.
+- [Drift Register](../registers/DRIFT_REGISTER.md) — current placement and authority drift.
+- [Verification Backlog](../registers/VERIFICATION_BACKLOG.md) — checkable unresolved work.
+- [Contradiction Handling](./CONTRADICTION_HANDLING.md) — contradiction classification and routing.
+- [ImplementationDecisionRecord contract](../../contracts/governance/implementation_decision_record.md) — proposed-inactive implementation-rationale profile.
+- [CODEOWNERS](../../.github/CODEOWNERS) — verified GitHub review routing and its authority limits.
+- [Documentation control-plane workflow](../../.github/workflows/docs-control-plane.yml) — read-only ADR coherence checks.
 
-- `CONTRIBUTING.md` — root contribution and PR review rules; verify path.
-- `CODEOWNERS` or `.github/CODEOWNERS` — reviewer ownership; verify location.
-- `docs/doctrine/directory-rules.md` — placement authority; verify path.
-- `docs/doctrine/truth-posture.md` — truth labels and evidence posture; verify path.
-- `docs/doctrine/trust-membrane.md` — trust-boundary doctrine; verify path.
-- `docs/doctrine/lifecycle-law.md` — lifecycle invariant; verify path.
-- `docs/adr/` — ADR home; verify directory and naming convention.
-- `docs/governance/` — roles, review burden, separation of duties; verify contents.
-- `docs/registers/DRIFT_REGISTER.md` — drift capture; verify path.
-- `docs/registers/VERIFICATION_BACKLOG.md` — unresolved verification work; verify path.
-- `docs/architecture/contract-schema-policy-split.md` — responsibility split; verify path.
-
-> [!NOTE]
-> Replace proposed links with confirmed relative links after repository inspection. Remove links that do not exist or create them through the appropriate governed change.
-
-[⬆ Back to top](#decision-log)
+[Back to top](#top)
 
 ---
 
 ## Appendix
 
-<details>
-<summary><b>Why this log exists (design notes)</b></summary>
+### A. Material modernization ledger
 
-The Decision Log addresses three recurring failure modes in long-lived projects:
+| Prior element | Disposition | Current treatment |
+|---|---|---|
+| Existing path and document ID | KEEP / CLARIFY | Same path and stable document identity retained |
+| `OWNER_TBD` | REPAIR | Replaced with verified CODEOWNERS route plus explicit authority limit |
+| Unknown repository depth | REPAIR | Replaced with pinned current repository evidence |
+| Proposed move to `docs/registers/DECISION_LOG.md` | REMOVE WITH EVIDENCE | Existing governance lane and accepted Directory Rules support same-path ownership |
+| Illustrative `KFM-D-NNNN` registry and template | REMOVE WITH EVIDENCE | Canonical `ADR-NNNN` identity and index now exist; parallel identity is prohibited |
+| Full decision lifecycle including `Implemented` as a decision status | CLARIFY | Canonical ADR status separated from implementation and release tracks |
+| Empty illustrative registry row | REPAIR / ENRICH | Replaced by the three verified accepted transitions and bounded non-effects |
+| ADR / evidence relationships | KEEP / CLARIFY | Reframed around source ADR, canonical index, implementation evidence, and release objects |
+| Verification and rollback guidance | KEEP / ENRICH | Bound to current paths, validators, snapshot, and exact prior blob |
+| FAQ and stable major headings | KEEP / CLARIFY | Retained for navigation compatibility and updated to current authority |
 
-1. **Lost rationale** — implementations outlive the reasoning behind them.
-2. **Drift** — small changes accumulate until the project no longer resembles its stated architecture.
-3. **Re-litigation** — settled questions are re-opened because no one remembers the previous answer.
+### B. Open verification and follow-up
 
-A lightweight, append-only registry with stable IDs, evidence links, status history, and explicit supersession links resolves all three.
-</details>
-
-<details>
-<summary><b>Glossary (KFM-specific terms used here)</b></summary>
-
-- **`EvidenceBundle`** — KFM governance primitive packaging the evidence supporting a claim or decision.
-- **`EvidenceRef`** — pointer to evidence used in lieu of inlining the full bundle.
-- **`SourceDescriptor`** — source identity, role, rights, cadence, sensitivity, and limits.
-- **`RunReceipt`** — receipt that pins an intake, transform, validation, or release-adjacent run.
-- **`PromotionDecision`** — governed promotion state decision; publication is not a file move.
-- **`ReleaseManifest`** — manifest describing released artifacts and rollback/correction references.
-- **`RollbackCard`** — rollback target and procedure for reversing a release or decision impact.
-- **`RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`** — KFM data lifecycle progression.
-- **KFM Meta Block v2** — standard HTML-comment metadata block for KFM standard docs.
-
-Definitions reflect terminology preserved from KFM doctrine. Verify usage against the authoritative glossary when available.
-</details>
-
-<details>
-<summary><b>Example: illustrative decision row and record</b></summary>
-
-```text
-KFM-D-NNNN — Adopt a decision-log path under docs/registers
-
-Context:      Directory placement must encode responsibility and avoid parallel authority.
-Decision:     Place the Decision Log under docs/registers/ after repo verification.
-Rationale:    The file is a human-facing governance register, not a domain doc or implementation artifact.
-Consequences: Prior docs/governance/decisions path becomes lineage unless accepted by ADR or repo convention.
-Status:       Proposed (illustrative only — not a recorded KFM decision).
-```
-
-This example is **illustrative only** and is not a recorded KFM decision.
-</details>
+- **NEEDS VERIFICATION:** independent stewardship assignments, reviewer quorum, and operational release authority.
+- **CONFIRMED DRIFT / separate maintenance:** `docs/adr/README.md` and `docs/registers/ADR_INDEX.md` summary counts lag the canonical index after ADR-0006 and ADR-0007 acceptance.
+- **HOLD:** exact MapLibre dependency, concrete adapter, plugins, workers, and browser-readiness evidence remain separate implementation and admission work.
+- **CONFIRMED compatible overlap:** draft PR #3443 owns adjacent `CONTRADICTION_HANDLING.md` bytes only; recheck its head before final delivery because this document links to that stable path.
+- **NEEDS VERIFICATION:** hosted exact-head results after this documentation change; pending checks must be reported separately from draft-PR delivery.
+- **PROPOSED / INACTIVE:** `GovernanceDecision` appears in the governance-contract lane roster, but no active canonical record family or registry was verified; this log does not instantiate one.
+- **UNKNOWN:** external consumers of legacy headings beyond repository-search visibility. Stable major headings are retained to reduce compatibility risk.
 
 ---
 
-**Last updated:** 2026-05-15 · **Status:** Draft (PROPOSED) · **Path:** `docs/registers/DECISION_LOG.md` *(PROPOSED)* · [⬆ Back to top](#decision-log)
+**Last updated:** 2026-08-23 · **Status:** Draft, repository-grounded · **Canonical decision inventory:** [`docs/adr/INDEX.md`](../adr/INDEX.md) · [Back to top](#top)
