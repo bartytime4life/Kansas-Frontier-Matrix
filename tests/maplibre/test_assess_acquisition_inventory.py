@@ -37,13 +37,31 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertFalse(payload["renderer_selected"])
         self.assertEqual(payload["findings"], [])
 
+    def test_kfm_facade_import_and_dependency_are_not_raw_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/explorer-web/package.json",
+                json.dumps({"dependencies": {"@kfm/maplibre": "workspace:*"}}),
+            )
+            self._write(
+                root,
+                "apps/explorer-web/src/features/map_runtime/index.ts",
+                'import { MAP_RUNTIME_PORT_PROFILE } from "@kfm/maplibre";\n'
+                'export { MAP_RUNTIME_PORT_PROFILE };\n',
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
     def test_maplibre_manifest_in_candidate_seam_is_hold(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
             self._write(
                 root,
                 "packages/maplibre/package.json",
-                json.dumps({"dependencies": {"maplibre-gl": "6.3.0"}}),
+                json.dumps({"dependencies": {"maplibre-gl": "6.4.0"}}),
             )
             result = MODULE.scan(root)
         self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
@@ -52,7 +70,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "MANIFEST_DEPENDENCY")
         self.assertTrue(result.findings[0].candidate_seam)
 
-    def test_explorer_adapter_import_is_candidate_seam(self) -> None:
+    def test_explorer_adapter_raw_import_is_outside_accepted_seam(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
             self._write(
@@ -62,8 +80,8 @@ class AcquisitionInventoryTests(unittest.TestCase):
             )
             result = MODULE.scan(root)
         self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
-        self.assertNotIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
-        self.assertTrue(any(f.kind == "STATIC_IMPORT" and f.candidate_seam for f in result.findings))
+        self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+        self.assertTrue(any(f.kind == "STATIC_IMPORT" and not f.candidate_seam for f in result.findings))
 
     def test_renderer_import_outside_candidate_seam_holds(self) -> None:
         with self._root() as tmp:
@@ -76,7 +94,7 @@ class AcquisitionInventoryTests(unittest.TestCase):
     def test_parallel_maplibre_package_homes_fail(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
-            manifest = json.dumps({"dependencies": {"maplibre-gl": "6.3.0"}})
+            manifest = json.dumps({"dependencies": {"maplibre-gl": "6.4.0"}})
             self._write(root, "packages/maplibre/package.json", manifest)
             self._write(root, "packages/maplibre-runtime/package.json", manifest)
             result = MODULE.scan(root)

@@ -3,10 +3,15 @@
 
 This assessment is intentionally non-authoritative. It inventories bounded executable,
 package, test, example, runtime, and public-web roots for renderer acquisition mechanisms
-so ADR-0006/0007 can be reviewed with structural evidence. PASS means the scan completed
-with no renderer acquisition. HOLD means acquisition is present while architecture or
-admission remains unresolved. FAIL means parallel active MapLibre package homes surfaced.
-ERROR means the bounded scan could not complete safely.
+so ADR-0006/0007 can be enforced with structural evidence. PASS means the scan completed
+with no renderer acquisition. HOLD means acquisition is present while admission remains
+unresolved or a raw renderer is acquired outside the accepted package seam. FAIL means
+parallel active MapLibre package homes surfaced. ERROR means the bounded scan could not
+complete safely.
+
+Imports of the KFM-owned ``@kfm/maplibre`` facade are consumer use of the accepted
+MapRuntimePort boundary, not raw renderer acquisition. Only ``packages/maplibre/`` is an
+approved candidate seam for a future raw renderer dependency or import.
 """
 from __future__ import annotations
 
@@ -23,6 +28,7 @@ TEXT_SUFFIXES = frozenset({".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".html"
 MAX_FILES = 5000
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
+KFM_RENDERER_FACADES = ("@kfm/maplibre",)
 
 PATTERNS = {
     "STATIC_IMPORT": re.compile(r"(?:^|\n)\s*import(?:\s+type)?(?:[\s\S]{0,160}?from\s*)?['\"]([^'\"]+)['\"]"),
@@ -85,11 +91,21 @@ class Result:
 
 
 def _candidate_seam(path: str) -> bool:
-    return path.startswith("packages/maplibre/") or path == "apps/explorer-web/src/adapters/MapLibreAdapter.ts"
+    return path.startswith("packages/maplibre/")
+
+
+def _is_kfm_renderer_facade(value: str) -> bool:
+    lowered = value.lower()
+    return any(
+        lowered == facade or lowered.startswith(facade + "/")
+        for facade in KFM_RENDERER_FACADES
+    )
 
 
 def _renderer_subject(value: str) -> str | None:
     lowered = value.lower()
+    if _is_kfm_renderer_facade(lowered):
+        return None
     for package in RENDERER_PACKAGES:
         if lowered == package or lowered.startswith(package + "/"):
             return package
