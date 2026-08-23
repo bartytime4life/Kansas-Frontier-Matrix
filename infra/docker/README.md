@@ -59,6 +59,8 @@ The two checked-in Dockerfiles are payload-free security-review placeholders. Th
 
 Both digest-pinned Debian 13 base images previously carried `CVE-2026-53615` in the installed `util-linux` package family at version `2.41-5`. The bounded repair in PR #2986 preserved both base-image digests and all application dependency locks, upgraded only the nine already-installed affected packages, asserted `libblkid1 >= 2.41.5-0+deb13u1`, and removed apt metadata. It did not change the scanner policy, build context, runtime users, dependency manifests, or repository settings.
 
+The exact-head security run for PR #3419 later found `CVE-2026-73566` in npm's bundled `tar@7.5.19` inside the Explorer review image. The bounded successor overlay keeps checksum-bound npm `11.19.0`, adds `tar@7.5.22` and its dependency graph to the committed integrity lock, replaces only npm's bundled `tar` directory, and asserts the exact resolved runtime dependency versions plus the loadable extraction API during image construction. It does not weaken scanner policy, suppress the finding, change the base-image digest, add an application payload, or change runtime exposure.
+
 This confirms a repository-owned final-image assembly correction for the affected OS package layer. It does not establish that future base images or vulnerability databases will remain finding-free, that these placeholders are production images, or that any image is released, deployed, published, or approved for public use.
 
 ## Expected Docker file families
@@ -99,13 +101,13 @@ This confirms a repository-owned final-image assembly correction for the affecte
 
 ## Verification status
 
-- Evidence snapshot: **CONFIRMED** against `main@33c41a62845e2b10bc12969063e381ee74120f90`, the merged PR #2986 repair, and current-main security run `31995417666`.
+- Evidence snapshot: **CONFIRMED** against `main@101f9ca6983ffb8427855db60b9b4b30c82cb164`, the merged PR #2986 repair, and merged PR #3419 exact-head security run `32607461812`.
 - Target README: same-path evidence refresh; no placement, authority, runtime, release, deployment, publication, or repository-setting change.
 - Docker payload inventory: **CONFIRMED** tracked `Dockerfile.governed-api` and `Dockerfile.explorer-web`; both remain payload-free security-review placeholders. Both preserve their digest-pinned Debian 13 base images, upgrade only the affected installed `util-linux` package family to the fixed Debian security level, assert the `libblkid1` fixed-version floor, remove apt metadata, and end as non-root users.
-- Explorer dependency posture: **CONFIRMED** npm `11.19.0` remains checksum-bound; `brace-expansion` `5.0.9` and `ip-address` `10.3.1` remain installed from the committed integrity lock.
+- Explorer dependency posture: **CONFIRMED review-worktree bytes** keep npm `11.19.0` checksum-bound and install `brace-expansion` `5.0.9`, `ip-address` `10.3.1`, and `tar` `7.5.22` from the committed integrity lock; exact-head image scan remains pending.
 - Governed API dependency posture: **CONFIRMED** `packaging` `26.3`, `wheel` `0.46.3`, and `setuptools` `82.0.1` remain installed from the hash-locked requirements file.
 - Exact child-lane inventory under `infra/docker/`: **CONFIRMED** `README.md`, both Dockerfiles, `governed-api-requirements.lock`, and the `explorer-web/` npm manifest and lockfile at the inspected revision. No `.dockerignore` was verified in this lane.
-- Security workflow: **CONFIRMED** current-main run `31995417666` passed repository scanning, both image builds, both governed-api and explorer-web Trivy container scans, OpenSSF Scorecard, and the aggregate `security-result`. Dependency review was correctly skipped for the push event.
+- Security workflow: **CONFIRMED FAIL at the inspected predecessor head** because Explorer npm bundled `tar@7.5.19`; repository scan, dependency review, and governed-api image scan passed. The proposed `tar@7.5.22` overlay requires a fresh exact-head image build and Trivy scan before any corrected-green claim.
 - Tests and validators: **CONFIRMED** the no-network Compose static suite checks context and Dockerfile resolution, loopback-only published ports, forbidden mount/privilege markers, and a final non-root `USER` in both Dockerfiles. The hosted `security` workflow independently supplies the current image-build and container-scan evidence.
 - Parent infrastructure alignment: PARTIALLY VERIFIED against `infra/README.md`.
 - Compose sibling alignment: PARTIALLY VERIFIED against `infra/compose/README.md`.
