@@ -1,76 +1,111 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs-governance-escalation
-title: Escalation — docs/governance/ESCALATION.md
-type: standard
-version: v1
-status: draft
-owners: ["@kfm-docs-stewards"]
+doc_id: kfm://doc/governance/escalation
+title: Escalation — Governed Handoff, Containment, and Closure Boundaries
+type: governance-guide
+version: v2-draft
+status: draft; repository-grounded; proposed routing guidance; non-authoritative; no-release-effect
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route only"
+owner_status: "No accepted StewardshipAssignment, authenticated KFM actor identity, independent reviewer capacity, incident command, release authority, reviewer quorum, or approval is implied."
 created: 2026-05-12
-updated: 2026-05-15
+updated: 2026-08-23
 policy_label: public
+owning_root: docs/
+current_path: docs/governance/ESCALATION.md
+responsibility: "Explain when a KFM concern must leave its normal path, how to freeze and route the subject, what evidence and authority a handoff needs, how immediate containment differs from adjudication, and what must remain held before closure, correction, release, or restoration."
+truth_posture: "CONFIRMED repository evidence and accepted Directory Rules placement / PROPOSED trigger, routing, severity, reason-code, and closure guidance / CONFLICTED incident-response and ReviewRecord machine surfaces / UNKNOWN operational queues, staffing, identity, policy, release, and platform enforcement / NEEDS VERIFICATION exact-current hosted checks and human authority; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  inspected_main: 05e2437f746c884daf5c0b4c17bb5b5614117ff0
+  target_prior_blob: fa808272d6f6873e704ae7180b8e0ee49575a5fc
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+  adr_0024_blob: 57d46867c97a1c8d76ccdfbc12fc012bee3bd2ea
+  governance_readme_blob: 500f8bcad3a384160a561f1460617f0a13d42fcc
+  review_duties_blob: df9848c324cbb1b7a3d63b32bd5e2fcf929ff4e9
+  separation_of_duties_blob: 00f68beeeec7d57cce806e6cdbd710a837bd4f0c
+  contradiction_handling_blob: ff3ee37454b2baea29b533b643c4a86b63d74df0
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  stewardship_assignment_contract_blob: 80c6fd4149deeb4172e2401dfaf741226380f085
+  stewardship_assignment_schema_blob: bd12f7e5e8eea966306c250d992f2826693815c9
+  review_record_contract_blob: 9641345d1e5d939dc59687a900e60a563d92c4f0
+  review_authority_binding_contract_blob: f156e100660e9fd97ca95e90092143a3cd6d62ee
+  sensitive_release_review_contract_blob: 235ca86dd807c6842ca8c861f995371fe7758f64
+  policy_gate_register_blob: bc8185b4762a947c742cf54a7ea4f2bf80670e21
+  contradiction_register_blob: cf51caf09daa17822b052e955f1fa48e830453ab
+  sensitivity_runbook_blob: e4dc0cb960b115a55cbc57fd5b8d186caaeaed48
+  operations_incident_runbook_blob: 33d364c98f88f94b78e401298a0970e7dec2cbb9
+  security_incident_standard_blob: da6eb82dc6608e0cdfbbe9f1823ebd1e13289ec4
+inspection_boundary: >-
+  Current-session GitHub reads covered the target, accepted Directory Rules and ADR-0029,
+  proposed ADR-0024, governance siblings, CODEOWNERS, governance contract and schema
+  surfaces, fixture-only review profiles, release-policy and release-review guidance,
+  control-plane projection registers, human drift and verification registers, sensitivity
+  escalation, and both incident-response documents. No actor was authenticated, no
+  assignment or queue was activated, no live policy bundle or release gate was evaluated,
+  no governed escalation, review, correction, withdrawal, rollback, release, or incident
+  record was issued, and no lifecycle, deployment, publication, or repository-setting
+  transition was exercised.
 related:
-  - docs/governance/README.md
-  - docs/governance/SEPARATION_OF_DUTIES.md
-  - docs/governance/STEWARD_CHARTERS.md
-  - docs/governance/REVIEW_DUTIES.md
-  - docs/governance/CONTRADICTION_HANDLING.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/runbooks/SENSITIVITY_ESCALATION.md
-  - docs/runbooks/INCIDENT_RESPONSE.md
-  - docs/runbooks/VENDOR_WATCH.md
-  - docs/security/INCIDENT_RESPONSE.md
-  - control_plane/policy_gate_register.yaml
-  - control_plane/contradiction_register.yaml
-tags: ["kfm", "governance", "escalation", "review", "separation-of-duties", "sensitivity", "rollback", "incident-response", "vendor-watch"]
-notes: "Names the triggers, owning roles, secondary reviewers, minimum receipts, closure records, and verification gaps required when a decision exceeds an actor's authority. Explains; does not enforce. Enforcement lives in policy/, tests/, .github/workflows/, and control_plane/."
+  - ./README.md
+  - ./REVIEW_DUTIES.md
+  - ./SEPARATION_OF_DUTIES.md
+  - ./STEWARD_CHARTERS.md
+  - ./CONTRADICTION_HANDLING.md
+  - ./DEPRECATION_PROCESS.md
+  - ../doctrine/directory-rules.md
+  - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - ../registers/DRIFT_REGISTER.md
+  - ../registers/VERIFICATION_BACKLOG.md
+  - ../runbooks/SENSITIVITY_ESCALATION.md
+  - ../runbooks/INCIDENT_RESPONSE.md
+  - ../security/INCIDENT_RESPONSE.md
+  - ../../contracts/governance/ReviewRecord.md
+  - ../../contracts/governance/steward_assignment.md
+  - ../../contracts/governance/review_authority_binding.md
+  - ../../contracts/governance/sensitive_release_review_closure.md
+  - ../../schemas/contracts/v1/governance/README.md
+  - ../../policy/release/README.md
+  - ../../release/reviews/README.md
+  - ../../control_plane/policy_gate_register.yaml
+  - ../../control_plane/contradiction_register.yaml
+  - ../../.github/CODEOWNERS
+tags: [kfm, governance, escalation, handoff, containment, review, sensitivity, rights, incident, correction, rollback, ai, source-watch, separation-of-duties]
+notes:
+  - "v2-draft is a same-path documentation-only reconciliation against repository evidence."
+  - "ADR-0029 is accepted and confirms docs/ as the owning responsibility root; this update creates no path, alias, queue, registry authority, or migration."
+  - "ADR-0024 is the current numbered release-separation decision and remains proposed."
+  - "A generic operational EscalationRecord contract, canonical reason-code registry, staffed queue, and accepted SLA were not established."
+  - "The two incident-response documents and the ReviewRecord machine candidates remain unresolved; this guide selects none."
+  - "The control-plane policy-gate and contradiction registers are projection-only, empty, and declare implementation absent at the inspected snapshot."
+  - "No source activation, policy approval, review approval, release, deployment, promotion, correction, rollback, or publication effect."
 [/KFM_META_BLOCK_V2] -->
 
-# Escalation · `docs/governance/ESCALATION.md`
+<a id="top"></a>
 
-> **When a decision exceeds an actor's authority, KFM escalates it through a named, reviewable path. This document catalogs the triggers, owning role, required secondary reviewer, minimum receipts, and closure record the handoff must produce.**
+# Escalation — Governed Handoff, Containment, and Closure Boundaries
 
-[![Status](https://img.shields.io/badge/status-draft-lightgrey)](#status)
-[![Authority](https://img.shields.io/badge/authority-governance%20prose-blue)](#repo-fit)
-[![Owners](https://img.shields.io/badge/owners-%40kfm--docs--stewards-informational)](#review-burden)
-[![Lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%E2%86%92PROC%E2%86%92CAT%E2%86%92PUB-success)](../doctrine/lifecycle-law.md)
-[![Truth posture](https://img.shields.io/badge/truth-cite--or--abstain-purple)](../doctrine/truth-posture.md)
-[![Fail-safe](https://img.shields.io/badge/sensitive%20lanes-fail--closed-critical)](#6-sensitivity-tier-escalation)
-[![Last reviewed](https://img.shields.io/badge/last%20reviewed-2026--05--15-yellow)](#last-reviewed)
+> **Escalation is a bounded transfer of unresolved responsibility—not a shortcut to approval.** Freeze the exact subject, preserve evidence and uncertainty, contain exposure when necessary, route to an eligible authority, and keep every stronger transition on `HOLD` until its own gate closes.
 
-**Status:** `draft` · **Owners:** `@kfm-docs-stewards` *(PROPOSED placeholder)* · **Updated:** `2026-05-15` *(draft revision; confirm at merge)* · **Repo implementation depth:** `UNKNOWN`
+[![Document: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status--authority)
+[![Directory authority: ADR-0029 accepted](https://img.shields.io/badge/directory%20authority-ADR--0029%20accepted-1f883d?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Release SoD: proposed](https://img.shields.io/badge/release%20SoD-ADR--0024%20proposed-d4a72c?style=flat-square)](../adr/ADR-0024-steward-separation-of-duties-for-release.md)
+[![Operational routing: HOLD](https://img.shields.io/badge/operational%20routing-HOLD-b42318?style=flat-square)](#9-process--tracking)
+[![Registers: projection only](https://img.shields.io/badge/registers-projection%20only-f59e0b?style=flat-square)](#92-current-register-and-queue-boundary)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#status--authority)
 
 > [!IMPORTANT]
-> `docs/governance/ESCALATION.md` **explains** how escalation works.
-> It does **not** enforce escalation. Enforcement lives in `policy/`, `tests/`, `.github/workflows/`, and `control_plane/`.
-> If this document and the executable layer disagree, the executable layer wins for runtime behavior and a `docs/registers/DRIFT_REGISTER.md` entry is opened.
+> **This page explains a human governance handoff; it does not create an authority, queue, approval, policy result, release record, or public state.** Contracts define object meaning, schemas define machine shape, policy evaluates admissibility, validators prove only bounded behavior, and state-bearing promotion, release, correction, withdrawal, and rollback records remain separate.
 
-> [!NOTE]
-> **Evidence boundary:** this revision preserves the attached Markdown's intent, terms, anchors, and governing posture. Current implementation depth remains **UNKNOWN** where repo files, `CODEOWNERS`, tests, workflows, dashboards, logs, emitted receipts, or live runtime behavior were not inspected.
+> [!WARNING]
+> **Containment and adjudication are different acts.** A suspected sensitive exposure, trust-membrane bypass, credential leak, or unsafe public route may be disabled immediately to fail closed. That containment does not prove the diagnosis, authorize destructive cleanup, approve corrected bytes, restore service, or publish a replacement.
 
----
+> [!CAUTION]
+> **Do not invent operational maturity from filenames.** At the inspected snapshot, the policy-gate and contradiction registers are empty projection-only indexes with `implementation_status: ABSENT`; the repository also contains two incident-response documents whose authority relationship is unresolved. This guide records those facts and routes conservatively. It does not select a canonical incident owner or claim an active escalation service.
 
-## Quick links
-
-- [Status & authority](#status--authority)
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. Roles roster](#2-roles-roster)
-- [3. Escalation flow](#3-escalation-flow)
-- [4. Trigger catalog](#4-trigger-catalog)
-- [5. Routing matrix](#5-routing-matrix)
-- [6. Sensitivity tier escalation](#6-sensitivity-tier-escalation)
-- [7. AI surface escalation](#7-ai-surface-escalation)
-- [8. Source / vendor distress escalation](#8-source--vendor-distress-escalation)
-- [9. Process & tracking](#9-process--tracking-proposed)
-- [10. Anti-patterns](#10-anti-patterns)
-- [11. Open questions](#11-open-questions--verification-backlog)
-- [12. Related docs](#12-related-docs)
-- [Appendix A — Reason-code crosswalk](#appendix-a--reason-code-crosswalk)
-- [Appendix B — Merge verification checklist](#appendix-b--merge-verification-checklist)
+**Quick navigation:** [Status](#status--authority) · [Purpose](#1-purpose--scope) · [Roles](#2-roles-roster) · [Flow](#3-escalation-flow) · [Triggers](#4-trigger-catalog) · [Matrix](#5-routing-matrix) · [Sensitivity](#6-sensitivity-tier-escalation) · [AI](#7-ai-surface-escalation) · [Source/vendor](#8-source--vendor-distress-escalation) · [Process](#9-process--tracking) · [Anti-patterns](#10-anti-patterns) · [Open work](#11-open-questions--verification-backlog) · [Related](#12-related-docs) · [Verification](#13-verification-review--rollback) · [Reason codes](#appendix-a--reason-code-crosswalk) · [Checklist](#appendix-b--merge-verification-checklist) · [No-loss ledger](#appendix-c--no-loss-modernization-ledger)
 
 ---
 
@@ -79,513 +114,982 @@ notes: "Names the triggers, owning roles, secondary reviewers, minimum receipts,
 
 ## Status & authority
 
-| Aspect | Status | What this means |
-|---|---:|---|
-| Document authority | **Governance prose** | Explains routing and review burden; does not enforce policy or CI behavior. |
-| Directory fit | **PROPOSED path / doctrine-aligned** | `docs/governance/ESCALATION.md` belongs under the `docs/` responsibility root as human-facing governance guidance. Confirm mounted-repo placement before merge. |
-| Enforcement layer | **External to this doc** | Enforcement belongs in `policy/`, `tests/`, `.github/workflows/`, `control_plane/`, and governed API/runtime gates. |
-| Implementation evidence | **UNKNOWN** | No current repo checkout, workflow output, logs, dashboards, or emitted proof objects are asserted by this document. |
-| Change discipline | **Review required** | Docs steward + at least one subsystem owner; ADR required for Directory Rules §2.4-class changes. |
+| Area | Current bounded result | Consequence |
+|---|---|---|
+| Tracked path | **CONFIRMED** at `docs/governance/ESCALATION.md` | Same-path update under the existing human-governance lane. |
+| Placement authority | **CONFIRMED:** accepted ADR-0029 and adopted Directory Rules assign human explanation to `docs/` | No new root, move, rename, compatibility home, or placement ADR is created here. |
+| Document authority | **DRAFT / PROPOSED guidance** | Binding effect exists only where this file accurately restates accepted higher authority. |
+| Repository review route | **CONFIRMED:** `@bartytime4life` through CODEOWNERS | Routing is not an accepted assignment, independence proof, approval, or release authority. |
+| Detailed release separation | **PROPOSED:** ADR-0024 remains draft/effectively proposed | Material release-separation claims remain `HOLD`. |
+| Generic escalation object | **NOT ESTABLISHED** by the inspected evidence | The packet template in this file is human guidance, not a new contract or schema. |
+| Reason-code vocabulary | **PROPOSED / mixed lineage** | Codes help reviewers describe cases; they are not canonical machine outcomes until an accepted profile registers them. |
+| Policy and contradiction registers | **CONFIRMED present; projection-only, empty, implementation absent** | They cannot be represented as active queues, decision stores, or policy engines. |
+| Incident-response ownership | **CONFLICTED / NEEDS VERIFICATION** | Both `docs/runbooks/INCIDENT_RESPONSE.md` and `docs/security/INCIDENT_RESPONSE.md` exist; this guide selects neither as sole authority. |
+| Sensitivity tier model | **PROPOSED / conflicted lineage** | T0–T4 is not treated as a universally accepted machine model by this guide. |
+| Operational queues, staffing, contacts, SLAs | **UNKNOWN / HOLD** | No named on-call, private roster, accepted assignment, queue, or response target is asserted. |
+| Release, deployment, publication effect | **None** | A documentation change cannot promote, correct, withdraw, roll back, release, deploy, restore, or publish anything. |
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+### 0.1 Responsibility split
+
+| Responsibility | Owning surface | Relationship to this guide |
+|---|---|---|
+| Human trigger, routing, handoff, and anti-pattern guidance | `docs/governance/` | **Owned here** |
+| Stable operating law | `docs/doctrine/` and accepted ADRs | Outranks this draft |
+| Steward and review-event meaning | `contracts/governance/` | Referenced; not redefined |
+| Machine-checkable shape | `schemas/contracts/v1/` | Referenced; conflicts disclosed |
+| Admissibility and restrictions | `policy/` through an accepted evaluator | Separate authority |
+| Synthetic fixtures and validators | `fixtures/`, `tests/`, `tools/validators/`, workflows | Bounded execution evidence only |
+| Operational procedure | `docs/runbooks/` and security procedures | Referenced; current overlap disclosed |
+| Release review and state-bearing decisions | `release/` | Separate release-control authority |
+| Human drift and verification tracking | `docs/registers/` | Records open work; does not decide it |
+| Machine projections | `control_plane/` | Indexes accepted objects only when a governed producer exists |
+| GitHub routing and merge controls | `.github/` and platform settings | Repository controls; not KFM release authority |
+
+### 0.2 Truth labels used here
+
+- **CONFIRMED** — verified from repository bytes or accepted decisions at the evidence snapshot.
+- **PROPOSED** — useful design or process guidance not accepted or operationally proven.
+- **UNKNOWN** — evidence is insufficient to state the condition.
+- **NEEDS VERIFICATION** — a specific check could resolve the claim but has not done so strongly enough.
+- **HOLD** — a stronger transition must not proceed because a required authority, record, or control is unresolved.
+- **CONFLICTED** — two or more visible surfaces make incompatible or overlapping authority claims.
+
+[Back to top](#top)
 
 ---
 
 ## 1. Purpose & scope
 
-Escalation is the deliberate, governed handoff that happens when an actor encounters a decision they cannot, may not, or should not make alone. KFM treats every such handoff as a **first-class event**: it has a named trigger, a named owning role, a named secondary reviewer where separation is required, and one or more receipts that record what was decided and why.
+Escalation is the deliberate handoff used when the current actor cannot, may not, or should not close a decision alone. The handoff preserves the exact subject and its evidence, names the blocked next step, records why the normal path is insufficient, identifies the required role or authority class, and prevents stronger state from being inferred while the case is unresolved.
 
-This document catalogs those handoffs. It is the **routing layer** between three other document families:
+This guide answers six questions:
 
-- `docs/governance/REVIEW_DUTIES.md` *(PROPOSED)* — what each reviewer is responsible for in steady state.
-- `docs/governance/SEPARATION_OF_DUTIES.md` *(PROPOSED)* — which duty pairs may not collapse onto a single actor.
-- `docs/runbooks/SENSITIVITY_ESCALATION.md`, `docs/runbooks/INCIDENT_RESPONSE.md`, and `docs/runbooks/VENDOR_WATCH.md` *(PROPOSED)* — step-by-step procedures.
+1. **What exact subject and operation are blocked or unsafe?**
+2. **Which trigger requires the normal path to stop?**
+3. **Is immediate containment needed before full review?**
+4. **Which role and authority basis are required next?**
+5. **What support, constraints, and rollback context must travel with the handoff?**
+6. **What separate record or gate can close the case without confusing closure with release or publication?**
 
-**In scope** — the table of *when* to escalate, *to whom*, with *what receipts*, and *what outcome is acceptable*.
+### 1.1 In scope
 
-**Out of scope**:
+- Source admission, rights, consent, sovereignty, sensitivity, freshness, and source-role concerns.
+- Contract, schema, policy, registry, implementation, and documentation conflicts.
+- Missing evidence, validation, review, correction, rollback, or release support.
+- Sensitive-location, living-person, genomic, cultural, infrastructure, and harmful-precision exposure concerns.
+- Governed AI citation, evidence, policy, direct-runtime, and public-surface concerns.
+- Public trust-membrane bypass, credential exposure, and release-integrity concerns.
+- Vendor or provider changes that may affect source rights, continuity, or consent assumptions.
+- The distinction among routine review, escalation, contradiction handling, incident response, correction, withdrawal, rollback, and release.
+- Minimum human handoff content, fail-closed behavior, re-review triggers, and closure boundaries.
 
-- Object-family meaning. (`contracts/`)
-- Field-level shape. (`schemas/`)
-- Allow / deny / restrict / abstain machine decisions. (`policy/`)
-- The mechanical CI gates. (`.github/workflows/`, `tests/`)
-- Threat-modeling and exposure posture. (`docs/security/`)
-- Emergency instructions, legal advice, medical advice, title opinions, or sensitive-location release decisions.
+### 1.2 Out of scope
+
+- Defining the semantic contract or JSON Schema for a generic `EscalationRecord`.
+- Creating a steward roster, on-call rotation, private contact list, assignment, or reviewer quorum.
+- Selecting between the two incident-response documents.
+- Accepting ADR-0024 or any sensitivity-tier decision.
+- Registering machine reason codes or outcome enums.
+- Evaluating live policy, authenticating actors, or proving reviewer independence.
+- Issuing a `ReviewRecord`, `PolicyDecision`, `PromotionDecision`, `ReleaseManifest`, `CorrectionNotice`, withdrawal, or `RollbackCard`.
+- Legal, title, medical, cultural-authority, consent, or emergency-response determinations.
+- Publishing private contact information, credentials, restricted coordinates, protected reason details, or control-defeating redaction parameters.
+- Restoring a public surface or declaring an incident resolved.
+
+### 1.3 Escalation is not the same as adjacent processes
+
+| Process | Core question | Escalation relationship |
+|---|---|---|
+| Routine review | Is this fixed subject acceptable for a named next gate? | Escalate when evidence, authority, independence, rights, or risk exceeds the reviewer’s scope. |
+| Contradiction handling | Which incompatible claims or authorities are visible, and how are they preserved? | Escalation routes a contradiction when its disposition exceeds the current actor’s authority. |
+| Incident response | Is immediate containment and coordinated recovery required? | Escalation hands off into incident procedure when public exposure, security, or trust-membrane risk is present. |
+| Correction / withdrawal / rollback | How is released state repaired, removed, or restored? | Escalation may request these paths but cannot authorize them. |
+| ADR / governance decision | Should architecture, authority, or invariant-level behavior change? | Escalation freezes the proposal until the decision route acts. |
+| Policy evaluation | Is an operation allowed, restricted, held, denied, or unevaluable under an exact bundle? | Escalation supplies context; it does not synthesize a policy result. |
+| Release | May a reviewed, policy-cleared candidate cross into public state? | Escalation closure is merely one possible prerequisite. |
 
 > [!NOTE]
-> KFM's operating-law invariant — *separate policy-significant release duties when maturity justifies it* — is doctrine. The matrices below are the **PROPOSED** operational form of that doctrine for ADR review. Until the relevant ADRs are accepted and the executable layer enforces them, treat the routing rows as guidance, not proof of current enforcement.
+> An unresolved case can be both an escalation and a contradiction or incident. Keep the labels separate because each carries a different authority, evidence, and closure burden.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+[Back to top](#top)
 
 ---
 
 ## 2. Roles roster
 
-The roster below keeps the role names already used across the KFM corpus and this document. Each row carries a **scope** (the artifacts and surfaces the role governs) and a **primary escalation partner** (the role most often paired with it when separation is required).
+The role names below are **PROPOSED responsibility labels**, not verified people, teams, service identities, or staffed positions. A role becomes usable for a governed decision only when actor identity, current scoped assignment, authority basis, effective interval, conflict posture, and required independence are established for the exact subject.
 
-> [!IMPORTANT]
-> Role names are **PROPOSED operational names** until ratified by ADR, `CODEOWNERS`, team charter, or mounted-repo evidence. Owner handles and contact channels remain **UNKNOWN** unless the repo supplies them.
+### 2.1 Core governance roles
 
-### 2.1 Core review roles
-
-| Role | Scope | Primary escalation partner |
+| Role | Proposed escalation responsibility | Cannot establish alone |
 |---|---|---|
-| **Source steward** | `SourceDescriptor` lifecycle; source admission; rights confirmation; sensitivity tag; source-role preservation; freshness watch. | Rights-holder representative when rights, sovereignty, consent, or source terms are unclear. |
-| **Domain steward** | Meaning of a domain's object families; contracts, schemas, validators; domain-internal review before promotion. | Sensitivity reviewer for sensitive lanes; release authority for PUBLISHED transitions. |
-| **Sensitivity reviewer** | Tier assignment; redaction; generalization; withholding; exact-location controls; `RedactionReceipt`. | Rights-holder representative; release authority. |
-| **Rights-holder representative** | Sovereignty, cultural-heritage, consent-based, living-person, DNA, and steward-controlled release decisions. | Release authority. |
-| **Release authority** | Issues or approves `ReleaseManifest`; authorizes PUBLISHED transitions; authorizes rollback. Distinct from authorship when materiality applies. | Author / detector for separation; correction reviewer post-publication. |
-| **Correction reviewer** | Reviews `CorrectionNotice` / `RollbackCard` before they amend or supersede a PUBLISHED claim. | Release authority; domain steward. |
-| **AI surface steward** | Focus Mode templates; `AIReceipt` sampling; cite-or-abstain audits; policy bindings on AI surfaces. | Docs steward for policy binding; domain steward for meaning. |
-| **Docs steward** | Governance documentation; ADR index; drift register; Atlas / supplement integrity; review-burden metadata. | At least one subsystem owner for material governance changes. |
+| **Source steward** | Source identity, role, terms, rights intake, freshness, admission, and source-family continuity. | Unresolved rights or consent, sensitive release, public release, or source-role upcast. |
+| **Domain steward** | Domain meaning, scope, transforms, validation context, and domain-level impact. | Policy override, rights clearance, sensitive release, or public release. |
+| **Sensitivity reviewer** | Precision, redaction, generalization, withholding, tier/profile applicability, and reconstruction risk. | Rights-holder authority, release approval, or independent authorship separation by role label alone. |
+| **Rights-holder representative** | Consent, sovereignty, cultural/community authority, license or agreement constraints, and revocation concerns. | Technical validation, schema authority, or release alone. |
+| **Release authority** | Accountable decision for a governed public-state transition or restoration after all prerequisites close. | Evidence creation, policy substitution, self-approval where independence is required, or silent rollback. |
+| **Correction reviewer** | Post-release defect scope, correction, withdrawal, supersession, derivative invalidation, and rollback recommendation. | Replacement-content authorship and public-state mutation alone. |
+| **AI surface steward** | Evidence-bounded templates, citations, finite outcomes, prompt-injection posture, direct-runtime boundaries, and AI receipt review. | Evidence, truth, policy, domain meaning, release, or model self-approval. |
+| **Docs steward** | Human guidance, ADR/index integrity, drift visibility, metadata, links, and supersession documentation. | Contract, schema, policy, release, or operational authority by prose. |
 
-### 2.2 Supporting roles referenced by this document
+### 2.2 Supporting responsibility labels
 
-| Supporting role | Scope | Escalates with |
+| Supporting label | Proposed scope | Typical handoff partner |
 |---|---|---|
-| **Contract/schema steward** | Contract and schema authority; schema-home conflicts; field-shape validation surfaces. | Domain steward + docs steward when `contracts/` and `schemas/` drift. |
-| **Policy steward** | Policy bundles, reason-code semantics, deny/hold/restrict posture, and policy-gate registers. | AI surface steward; release authority; docs steward. |
-| **Security steward** | Direct public-access attempts, local exposure, authn/authz posture, secrets, and security incident response. | AI surface steward; release authority; security incident response owner. |
-| **Author / detector** | The actor who authored a candidate change or detected a problem. This is not an approving role. | Owning role named in §5; cannot approve its own material release when separation applies. |
+| **Contract steward** | Semantic object meaning and anti-collapse boundaries. | Schema steward and affected domain steward. |
+| **Schema steward** | Machine shape, compatibility, fixtures, and migration. | Contract steward and validation steward. |
+| **Policy steward** | Exact policy source, bundle identity, evaluator binding, reason semantics, and obligations. | Affected domain/sensitivity/release authority. |
+| **Validation steward** | Deterministic validator behavior, fixtures, negative tests, diagnostics, and execution evidence. | Contract/schema owner and affected subsystem. |
+| **Security steward** | Credentials, access, exposure, trust roots, authn/authz, infrastructure, and security response. | Incident coordinator and release authority. |
+| **Subsystem owner** | Affected package, service, pipeline, UI, API, renderer, source connector, or operational lane. | The governance role that owns the blocked decision. |
+| **Detector / reporter** | The actor or signal that discovered the concern. | Never treated as approval authority by detection alone. |
+| **Incident coordinator** | Timeline, containment coordination, evidence preservation, and handoff orchestration. | Does not become release authority merely by coordinating. |
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+### 2.3 Eligibility and independence
+
+Before assigning a material case to a reviewer or decision-maker, verify:
+
+- stable actor identity and relevant aliases;
+- a current, scoped, accepted authority basis;
+- subject and operation within that authority;
+- effective interval covering the decision time;
+- required independence from author, producer, detector, or prior approver;
+- conflicts, recusals, delegations, and bootstrap exceptions;
+- safe access to the evidence and restricted context needed for review;
+- an alternate route if the assigned actor is absent, conflicted, or lacks capacity.
+
+Different account names, CODEOWNERS matches, workflow identities, or role labels do not prove different independent actors. Missing eligibility produces `HOLD`, `ABSTAIN`, `DENY`, or transfer according to the exact governing profile; it does not produce assumed approval.
+
+### 2.4 Absence, conflict, and recusal
+
+- **Absent authority:** keep the blocked operation on `HOLD`; do not widen another role by convenience.
+- **Conflict of interest:** record recusal and transfer to an independently eligible actor.
+- **No independent capacity:** disclose the bootstrap limitation. High-risk release, sensitive exposure, rights decisions, and public restoration remain held unless an accepted, scoped, time-bounded exception exists.
+- **Ambiguous ownership:** route to governance/architecture decision work without creating a new responsibility root or queue.
+- **Emergency containment:** an available operator may disable exposure, but may not use that action as proof of authority to restore or release.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Escalation flow
 
-The high-level flow below captures the most common shape of an escalation. A trigger fires inside the lifecycle; an owning role takes it; a secondary reviewer is added when separation is required or sensitivity is in play; the outcome is recorded as one or more receipts; and the original lifecycle transition either completes or fails closed.
-
 ```mermaid
 flowchart TD
-    T["Trigger fires<br/>(quarantine reason, sensitive event,<br/>AI incident, vendor distress, drift)"] --> O["Owning role takes the case<br/>(see §5 routing matrix)"]
-    O --> S{"Separation<br/>required?"}
-    S -->|"No"| D["Owning role decides<br/>(routine path)"]
-    S -->|"Yes"| P["Pair with secondary reviewer<br/>(see §2 roster)"]
-    P --> D
-    D --> R["Receipts emitted:<br/>ReviewRecord · PolicyDecision ·<br/>RedactionReceipt · CorrectionNotice ·<br/>RollbackCard · AIReceipt · RunReceipt"]
-    R --> X{"Outcome"}
-    X -->|"ALLOW / ANSWER"| C["Lifecycle transition completes;<br/>artifacts updated"]
-    X -->|"RESTRICT / ABSTAIN / HOLD"| H["Held at prior state;<br/>conditions recorded"]
-    X -->|"DENY"| F["Fails closed;<br/>prior state preserved;<br/>reason recorded"]
-    X -->|"ERROR"| E["Structured error;<br/>no silent fall-through"]
-    C --> AU["Audit log + register update"]
-    H --> AU
-    F --> AU
-    E --> AU
+    A["Detect signal or blocked operation"] --> B["Freeze subject, version, digest, scope, and requested next gate"]
+    B --> C{"Immediate exposure risk?"}
+    C -->|"Yes"| D["Contain fail-closed<br/>disable route, withhold output, revoke access, or isolate candidate"]
+    C -->|"No"| E["Preserve current state<br/>no mutation"]
+    D --> F["Preserve evidence and containment receipt where an accepted profile exists"]
+    E --> G["Classify trigger and significance"]
+    F --> G
+    G --> H["Resolve evidence, validation, rights, sensitivity, policy, correction, and rollback context"]
+    H --> I["Resolve eligible owning role, assignment, interval, conflicts, and independence"]
+    I --> J{"Enough authority and support to review?"}
+    J -->|"No"| K["HOLD / ABSTAIN / DENY / transfer / incident route"]
+    J -->|"Yes"| L["Conduct bounded review or decision under the exact accepted profile"]
+    L --> M["Record findings, obligations, validity, and supersession"]
+    M --> N{"Which separate next gate owns action?"}
+    N --> O["Return for evidence or repair"]
+    N --> P["Policy / promotion / release"]
+    N --> Q["Correction / withdrawal / rollback"]
+    N --> R["ADR / migration / authority decision"]
+    N --> S["Close with no action"]
+    O --> T["Case remains inspectable"]
+    P --> T
+    Q --> T
+    R --> T
+    S --> T
+    K --> T
 ```
 
-> [!TIP]
-> Every leaf of this flow ends in **an audit-bearing receipt**, not in a verbal hand-wave. If an escalation cannot produce a receipt, the lifecycle stays at the prior state. This is the same fail-closed posture the trust membrane enforces at the public surface.
+> [!IMPORTANT]
+> A flowchart node is not an implemented service. Each arrow becomes operational only through accepted contracts, schemas, identity, assignments, policy, records, procedures, and observed enforcement for the named profile.
 
-### 3.1 Minimum escalation record
+### 3.1 Freeze-before-route rule
 
-Every escalation record SHOULD be able to answer these questions without reading chat history or reconstructing intent from memory.
+Before routing, capture enough identity to prevent the subject from drifting during review:
 
-| Field | Purpose |
-|---|---|
-| `case_id` | Stable ID for the escalation case. |
-| `trigger_reason_code` | Machine-readable reason from Appendix A or a registered policy reason. |
-| `origin_surface` | Where it fired: validator, policy gate, reviewer, watcher, AI audit, docs drift, manual catch. |
-| `object_ref` | The artifact, source, claim, release candidate, template, or route affected. |
-| `current_lifecycle_state` | Current state: RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED, or runtime surface. |
-| `requested_transition` | The transition or operation that was blocked, routed, denied, corrected, or approved. |
-| `owning_role` | Primary role from §2 / §5. |
-| `secondary_reviewer` | Required when separation, sensitivity, rights, sovereignty, release, correction, or security materiality applies. |
-| `receipt_refs` | References to `ReviewRecord`, `PolicyDecision`, `ValidationReport`, `RedactionReceipt`, `RunReceipt`, `AIReceipt`, `CorrectionNotice`, `RollbackCard`, or related proof object. |
-| `decision_outcome` | Finite outcome; no free-form hidden state. |
-| `rollback_target_ref` | Required when PUBLISHED artifacts, derivatives, public API payloads, or public tiles are affected. |
+- stable `subject_ref`;
+- repository, source, release, or object-family namespace;
+- version, commit, immutable locator, and digest where available;
+- exact operation or transition requested;
+- included and excluded scope;
+- current lifecycle and exposure state;
+- author, producer, detector, and prior reviewer references;
+- evidence snapshot time;
+- known downstream consumers and rollback or containment target.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+If the subject changes, the review and escalation scope must be refreshed. A reviewer may not approve one digest and have that approval silently applied to another.
+
+### 3.2 Immediate containment rule
+
+Contain without waiting for ordinary review when there is credible risk of:
+
+- sensitive or rights-restricted public exposure;
+- living-person, genomic, archaeology, rare-species, cultural, or critical-infrastructure precision leakage;
+- public access to RAW, WORK, QUARANTINE, canonical/internal stores, unpublished candidates, credentials, or direct model runtime;
+- signing-key, secret, or authentication compromise;
+- an unsafe public route that can continue to spread unsupported or restricted content;
+- KFM being presented as emergency or life-safety authority.
+
+Containment should be the smallest reversible action that stops exposure and preserves evidence. Examples include disabling a route or layer, forcing `ABSTAIN`/`DENY`, withholding a candidate, revoking a compromised credential, or isolating a service. Destructive deletion, public restoration, replacement release, and erasure decisions require their own authority.
+
+### 3.3 Minimum human escalation packet
+
+The following is a documentation template—not a new semantic contract or schema:
+
+```yaml
+escalation_packet:
+  case_ref: "<stable human or accepted-system reference>"
+  subject_ref: "<exact subject>"
+  subject_version: "<version or commit>"
+  subject_digest: "sha256:<digest-or-NEEDS_VERIFICATION>"
+  detected_at: "<timestamp>"
+  detection_source: "<person|validator|policy|watcher|runtime|external-report>"
+  current_state: "<lifecycle/exposure/release state>"
+  requested_operation: "<blocked operation or next gate>"
+  trigger_family: "<evidence|rights|sensitivity|policy|review|release|incident|other>"
+  trigger_details_public_safe: "<bounded description>"
+  immediate_containment:
+    required: false
+    action_ref: null
+  evidence_refs: []
+  validation_refs: []
+  policy_refs: []
+  rights_and_sensitivity_refs: []
+  author_or_producer_refs: []
+  required_role_classes: []
+  assignment_and_independence_refs: []
+  correction_withdrawal_rollback_refs: []
+  downstream_impact_refs: []
+  open_obligations: []
+  re_review_triggers: []
+  next_authority_surface: "<review|policy|ADR|release|incident|correction|other>"
+```
+
+Do not put private contact details, credentials, precise restricted locations, protected consent terms, or control-defeating details into a public packet. Use governed references to restricted systems.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Trigger catalog
 
-Triggers are grouped by **the layer they originate in**. The reason codes are drawn from the current KFM escalation vocabulary in this document and its related corpus. They are the canonical machine-readable signals that an escalation has begun.
+A trigger stops or diverts the normal path. It does not decide the final outcome. Trigger names below retain the prior edition’s coverage and are **PROPOSED guidance vocabulary** unless an exact accepted contract or policy profile registers them.
 
-### 4.1 Lifecycle gate triggers
+### 4.1 Evidence, provenance, and source-role triggers
 
-A lifecycle gate (Admission, Normalization, Validation, Catalog closure, Release, Correction, Rollback) emits a finite outcome — `PASS`, `FAIL`, `ALLOW`, `HOLD`, `DENY`, or `ERROR`. The non-routine outcomes below escalate.
-
-| Trigger reason code | Where it fires | Default owning role | Receipt required to close |
-|---|---|---|---|
-| `MISSING_RECEIPT` / `MISSING_EVIDENCE` / `MISSING_REVIEW` | Normalization → Catalog → Release | Domain steward | Re-emitted receipt; `ValidationReport` pass. |
-| `SCHEMA_MISMATCH` / `CONTRACT_DRIFT` | Normalization / Validation | Domain steward + contract/schema steward | Schema fix and/or ADR; `ValidationReport` pass. |
-| `RIGHTS_UNKNOWN` / `SENSITIVITY_UNRESOLVED` | Admission → Release | Source steward + sensitivity reviewer | `PolicyDecision` + `ReviewRecord` (+ rights-holder where applicable). |
-| `ROLE_COLLAPSE` / `ROLE_DOWNCAST_FORBIDDEN` | Validation → Catalog → Release | Source steward + domain steward | Restored source role; corrected `EvidenceBundle`; no role upcast. |
-| `REVIEW_NEEDED` / `REVIEW_INSUFFICIENT` / `REVIEW_REJECTED` | Catalog / Release | The reviewer named by the lane | `ReviewRecord` with outcome. |
-| `RELEASE_MANIFEST_INVALID` / `ROLLBACK_TARGET_MISSING` | Release | Release authority | Fixed `ReleaseManifest`; rollback target supplied. |
-| `CORRECTION_DERIVATIVES_UNRESOLVED` / `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Correction reviewer | Resolved derivatives; predecessor release linked; supersession entry. |
-
-### 4.2 Sensitivity / rights triggers
-
-These escalate the moment the originating signal is observed, regardless of which gate would have fired next. They follow KFM's sensitivity-tier scheme (T0–T4) described in §6.
-
-| Trigger | Default owning role | Required partners |
+| Trigger | Default posture | Proposed route |
 |---|---|---|
-| Archaeology site coordinate at full precision | Sensitivity reviewer | Rights-holder representative (cultural / sovereignty) |
-| Sensitive fauna or flora exact occurrence | Sensitivity reviewer | Domain steward |
-| Living-person field exposure attempt | Sensitivity reviewer | Rights-holder representative (consent) |
-| DNA segment / match-evidence handling | Sensitivity reviewer | Rights-holder representative + release authority |
-| Critical infrastructure detail at facility precision | Sensitivity reviewer | Release authority + security steward where exposure risk applies |
-| Hazards surface used as alert / instruction authority | Release authority | Sensitivity reviewer (boundary holds) |
-| Synthetic / reconstructed surface presented without Reality Boundary Note | AI surface steward | Domain steward |
+| Evidence reference does not resolve or support is missing | Hold the claim; runtime uses `ABSTAIN` or `ERROR` as appropriate | Domain/evidence responsibility; reviewer if public or release-significant |
+| Source identity, role, authority, or version is ambiguous | Preserve original role; do not upcast | Source steward plus domain steward |
+| Rival sources or internal objects make incompatible claims | Preserve both sides; do not smooth | Contradiction handling plus owning domain/source role |
+| Provenance, digest, time, or geography binding is incomplete | Hold promotion or release | Validation/domain responsibility |
+| Source freshness exceeds declared cadence | Mark stale; evaluate affected claims | Source steward; correction reviewer if public state is affected |
+| Model, aggregate, administrative, regulatory, or forecast output is presented as observation | Deny the role collapse | Source and domain stewards |
 
-> [!WARNING]
-> The sensitive-lane defaults are **fail-closed**. An actor who is uncertain about rights, sovereignty, or sensitivity must escalate rather than proceed. There is no "publish and correct later" path for these triggers; the cost of failing safe is much smaller than the cost of failing open.
+### 4.2 Contract, schema, policy, and repository triggers
 
-### 4.3 AI surface triggers
+| Trigger | Default posture | Proposed route |
+|---|---|---|
+| Contract and schema vocabularies disagree | Freeze machine authority; preserve both | Contract and schema stewards; ADR/migration when authority changes |
+| Multiple schema or contract homes overlap | `HOLD`; do not select by prose | Directory/architecture decision route |
+| Policy source, bundle, evaluator, or entrypoint is unresolved | No policy permission may be inferred | Policy steward and affected operation owner |
+| A permissive scaffold is used as operational proof | Reject the proof claim | Schema/validation review |
+| Documentation and implementation disagree | Record current behavior and doctrinal conflict separately | Docs steward plus affected subsystem |
+| Proposed structural change lacks accepted placement or migration authority | Hold the structural change | ADR/Directory Rules route |
+| Workflow or validator passes but its claimed authority exceeds its profile | Narrow the claim | Validation steward plus owning governance role |
 
-These follow the Governed AI doctrine: AI is interpretive, not the root truth source; `EvidenceBundle` outranks generated language.
+### 4.3 Review and authority triggers
 
-| Trigger | Default owning role |
+| Trigger | Default posture | Proposed route |
+|---|---|---|
+| Required reviewer identity or assignment is missing | `HOLD` | Governance/stewardship decision route |
+| Reviewer is author, producer, detector, or role-chain actor where separation is required | Recuse and transfer | Independent eligible reviewer |
+| Review is stale, conditional, superseded, or scoped to different bytes | Renew review | Original role class plus current subject owner |
+| CODEOWNERS or platform approval is being treated as release authority | Reject the inference | Docs/governance and release authority |
+| No independent capacity exists for a material decision | Disclose and hold | Accepted bootstrap-exception decision or alternate reviewer |
+| Review obligations remain open | Do not advance the named gate | Reviewer and obligation owners |
+
+### 4.4 Rights, sensitivity, sovereignty, and public-safety triggers
+
+Escalate immediately when rights, consent, sovereignty, cultural authority, living-person data, genomic data, rare-species locations, archaeology, private land/title detail, infrastructure precision, or reconstructability is unclear.
+
+Typical signals include:
+
+- exact restricted coordinates or attributes in a public carrier;
+- client-side hiding used instead of server-side withholding or generalization;
+- public joins that reconstruct protected information;
+- consent, license, agreement, or rights status changed or expired;
+- community or rights-holder objection;
+- public-safe transform cannot be demonstrated;
+- withheld reason text itself reveals protected information;
+- a map, export, screenshot, story, AI answer, or tile carries harmful precision.
+
+Default posture: contain or withhold; route to sensitivity and rights review; keep release/restoration held.
+
+### 4.5 AI and public-interface triggers
+
+| Trigger | Default posture |
 |---|---|
-| Synthetic-claim incidence detected during `AIReceipt` audit | AI surface steward |
-| ABSTAIN rate spike on a Focus Mode template | AI surface steward |
-| Large new-reason spike in DENY reason distribution | AI surface steward + policy steward |
-| Uncited language returned as `ANSWER` | AI surface steward (severity → release authority) |
-| Direct model-runtime access attempt from a public client | AI surface steward + security steward |
-| Focus Mode template change | AI surface steward + docs steward |
+| `ANSWER` lacks resolvable citations or exceeds evidence | Replace with `ABSTAIN` or `ERROR`; review the affected surface |
+| Direct browser/public-client access to model runtime, source API, or internal store | Deny and route to incident/security review |
+| Prompt injection or tool manipulation changes evidence/policy scope | Deny or contain; preserve diagnostics without leaking protected content |
+| Generated text hides contradiction or upgrades source role | Reject and re-ground from evidence |
+| Synthetic/reconstructed content is presented as observed reality | Add bounded reality/provenance treatment or withhold |
+| Template, policy binding, or public scope changes | Route to AI surface, domain, policy, docs, and release review as applicable |
+| Model or adapter failure causes uncontrolled fallback | Return structured error; no silent uncited generation |
 
-### 4.4 Source / vendor triggers
+### 4.6 Release, correction, withdrawal, and rollback triggers
 
-These follow the vendor-watchlist doctrine. The current corpus uses the 23andMe Chapter 11 filing of March 2025 as the reference example for vendor distress as a consent-relevant variable. This document treats that as a **corpus exemplar**, not as a current legal-status update.
+- candidate lacks evidence, validation, policy, review, rights, sensitivity, manifest, correction, or rollback support required by its profile;
+- release identity or digest mismatches the reviewed candidate;
+- published alias points to an unreviewed or stale object;
+- correction does not identify predecessor or affected derivatives;
+- withdrawal lacks public-state and cache/invalidation handling;
+- rollback target is missing, untested, or cannot restore a public-safe state;
+- restoration is attempted before incident, policy, review, and release prerequisites close;
+- a release decision is inferred from a merge, tag, workflow, or fixture result.
 
-| Trigger | Default owning role |
-|---|---|
-| Upstream vendor enters distress (bankruptcy, sale, terms-of-service rewrite) | Source steward |
-| Source rights change detected by watcher | Source steward + rights-holder representative |
-| Source freshness expired past declared cadence | Source steward (correction routed via correction reviewer) |
-| Source-role collapse risk (e.g., modeled → observed) | Domain steward |
+Default posture: keep or return to the prior safe state. Escalation may prepare the handoff but cannot issue the state-bearing decision.
 
-### 4.5 Documentation / structural triggers
+### 4.7 Incident triggers
 
-| Trigger | Default owning role |
-|---|---|
-| Path / schema / policy / source home conflict between docs and repo | Docs steward (`docs/registers/DRIFT_REGISTER.md` entry) |
-| Atlas / supplement / dossier supersession | Docs steward + at least one subsystem owner |
-| ADR-class change (Directory Rules §2.4) without an open ADR | Docs steward (block merge; open ADR) |
-| Contradiction register entry that grows stale | Docs steward |
-| Related-doc link resolves to a compatibility root instead of the canonical home | Docs steward + affected subsystem owner |
+Use an incident route when the concern is active, public, security-relevant, spreading, or demands coordinated containment. Examples include:
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+- public trust-membrane bypass;
+- credential, secret, signer, or key compromise;
+- active sensitive-data exposure;
+- public delivery of unsupported authoritative claims at scale;
+- public model-runtime bypass;
+- malicious or accidental access-control failure;
+- release/rollback control bypass;
+- evidence or audit integrity compromise that makes current public state untrustworthy.
+
+The repository contains both an operations runbook and a security incident standard. Until their relationship is resolved, use the more conservative applicable requirements and record which document governed each action.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Routing matrix
 
-The matrix below collapses §4 into a single "trigger → owning role → required partner → outcome envelope" view. The outcome envelope refers to finite outcomes: `ALLOW`, `RESTRICT`, `DENY`, `HOLD`, `ERROR` for governance queues, and `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` for runtime surfaces.
+The matrix is **PROPOSED human guidance**. It does not prove that roles are staffed, that a queue exists, or that platform controls enforce the route.
 
-| Trigger family | Owning role | Required partner (separation) | Acceptable outcomes |
+| Trigger family | Primary role class | Additional participation when material | Separate next authority |
 |---|---|---|---|
-| Routine source admission | Source steward | — | `ALLOW` / `HOLD` / `DENY` / `ERROR` |
-| Admission with unresolved rights / sovereignty | Source steward | Rights-holder representative | `ALLOW` only with `PolicyDecision` + `ReviewRecord` / `HOLD` / `DENY` |
-| Normalization receipt (routine) | Domain steward | — | `ALLOW` / `HOLD` / `ERROR` |
-| Normalization with sensitivity-relevant transform | Domain steward | Sensitivity reviewer | `ALLOW` / `RESTRICT` / `HOLD` / `DENY` |
-| Validator authorship & run | Domain steward | Periodic audit by docs steward | `PASS` / `FAIL` / `ERROR` |
-| Schema or contract drift | Contract/schema steward | Domain steward + docs steward if home conflict exists | `ALLOW` after fix / `HOLD` / `DENY` / `ERROR` |
-| Promotion PROCESSED → CATALOG (non-sensitive) | Domain steward | — | `ALLOW` / `HOLD` / `DENY` |
-| Promotion PROCESSED → CATALOG (sensitive lane) | Domain steward | Sensitivity reviewer | `ALLOW` / `RESTRICT` / `HOLD` / `DENY` |
-| Release CATALOG → PUBLISHED (material change) | Release authority | Author ≠ release authority; rights-holder where applicable | `ALLOW` / `HOLD` / `DENY` |
-| Sensitive-lane release | Release authority | Author + sensitivity reviewer + rights-holder | `ALLOW` only with full receipt stack / `HOLD` / `DENY` |
-| Correction / rollback (steward-significant) | Correction reviewer | Author / detector + release authority | `ACCEPTED` / `HOLD` / `DENY` / `ERROR` |
-| AI surface change (template or policy binding) | AI surface steward | Docs steward + domain steward where domain meaning is affected | `ALLOW` / `HOLD` / `DENY` |
-| AI direct-runtime or public-bypass incident | AI surface steward | Security steward + policy steward | `DENY` / `ERROR` + incident record |
-| Atlas / supplement publication | Docs steward | At least one subsystem owner | `ALLOW` / `HOLD` / `DENY` |
-| ADR-class structural change | Docs steward | At least one subsystem owner | `ALLOW` only with accepted ADR / `HOLD` |
+| Missing evidence or unresolved provenance | Domain/evidence responsibility | Source steward; reviewer for public claims | Evidence repair, validation, or `ABSTAIN` |
+| Source identity, terms, role, or freshness | Source steward | Rights-holder, domain, correction reviewer | Source admission/refresh/correction |
+| Contract/schema drift | Contract and schema stewards | Domain, validation, docs; ADR when authority changes | Contract/schema decision and migration |
+| Policy ambiguity or evaluator uncertainty | Policy steward | Domain, sensitivity, release authority | Accepted policy evaluation |
+| Missing/invalid reviewer authority | Governance/stewardship responsibility | Independent role class; security for actor/trust roots | Assignment/identity/SoD decision |
+| Sensitive or harmful-precision concern | Sensitivity reviewer | Rights-holder, domain, security, release authority | Public-safe transform, denial, or release review |
+| Rights, consent, sovereignty, cultural authority | Rights-holder representative | Source, sensitivity, release authority | Agreement/consent/rights decision |
+| Material release candidate | Release authority | Author distinct from releaser; affected roles | Release decision |
+| Published defect or stale public claim | Correction reviewer | Detector/author, domain, release authority | Correction, withdrawal, or rollback |
+| AI evidence/citation/template concern | AI surface steward | Domain, policy, docs, security, release as applicable | AI repair, policy, incident, or release review |
+| Public route/internal-store/model bypass | Security/incident responsibility | AI/API/UI owner, policy, release | Containment and incident recovery |
+| Documentation/authority/path conflict | Docs steward | Affected responsibility owner; ADR reviewer | Drift, contradiction, ADR, or migration decision |
+| Vendor/provider distress or terms change | Source steward | Rights-holder, security, release, correction | Source hold, consent/rights review, correction |
+| Emergency/life-safety ambiguity | Deny KFM authority | Authoritative external agency—not a KFM release role | KFM withholds or clearly disclaims authority |
 
-> Status: **PROPOSED** routing. Author-and-approver overlap is permitted only in low-materiality routine cases. As maturity rises, separation must be enforced through tooling, not custom.
+### 5.1 Materiality triggers
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+Require independent or multi-role participation when the case can materially affect:
+
+- public exposure or lifecycle/release state;
+- evidence meaning, source role, contract/schema interpretation, policy, or authority;
+- rights, consent, sovereignty, cultural sensitivity, living-person or genomic data;
+- exact/harmful spatial precision, archaeology, rare species, infrastructure, or private land/title information;
+- AI/public-surface behavior, citation closure, denial/abstention, or direct-runtime access;
+- correction, withdrawal, rollback, cache invalidation, published lineage, or downstream derivatives;
+- trust roots, signing, credentials, actor identity, reviewer assignment, platform controls, or auditability.
+
+### 5.2 Low-materiality routine cases
+
+A routine documentation typo, formatting repair, or deterministic non-sensitive validation correction may remain in ordinary review when it does not change authority, meaning, policy, source admission, lifecycle, release, sensitivity, rights, public behavior, or rollback posture.
+
+When unsure whether a case is routine, classify it upward until evidence supports the lower burden.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Sensitivity tier escalation
 
-The tier scheme (T0 Open → T4 Denied) is the canonical KFM language for "how safely is this representation publishable?" An escalation that moves an object **toward T0** (more public) always requires both a transform receipt and a review record. An escalation that moves an object **toward T4** (less public) may happen immediately to fail closed, but the closure record still needs a `CorrectionNotice` / `ReviewRecord` when affected derivatives or PUBLISHED claims exist.
+This heading preserves the prior link anchor. The current repository evidence does **not** establish one universally accepted sensitivity-tier machine model.
 
-| Tier transition | Direction | Required artifacts | Required reviewer | Reversibility |
-|---|---|---|---|---|
-| T4 → T3 | toward public | `PolicyDecision` + `ReviewRecord` + agreement | Sensitivity reviewer + rights-holder where applicable | Reversible via agreement revocation |
-| T4 → T2 | toward public | `PolicyDecision` + `ReviewRecord` | Sensitivity reviewer | Reversible via review revocation |
-| T4 → T1 | toward public | `RedactionReceipt` + `ReviewRecord` | Sensitivity reviewer | Reversible; redaction can be re-evaluated |
-| T3 → T2 | toward public | `PolicyDecision` + `ReviewRecord` | Sensitivity reviewer | Reversible |
-| T2 → T1 | toward public | `RedactionReceipt` + `ReviewRecord` | Sensitivity reviewer | Reversible |
-| T1 → T0 | toward public | `ReleaseManifest` + `ReviewRecord` | Sensitivity reviewer + release authority | Reversible via `RollbackCard` |
-| Any → T4 | toward restricted | `CorrectionNotice` + `ReviewRecord` when derivatives or PUBLISHED claims are affected | Owning steward + rights-holder where applicable | Always permitted; precedes derivative invalidation |
+### 6.1 Current model boundary
 
-> [!CAUTION]
-> Three transitions **cannot be reached by any transform**:
-> - **Archaeology — human remains / sacred sites** never relaxes below T3, and only under explicit named authorization.
-> - **People/DNA — raw DNA segment data** never reaches a public tier; T3 only under explicit research agreement.
-> - **Hazards — KFM as alert authority** holds at T4 forever. No transform permits KFM to act as an emergency-alert authority.
+The inspected sensitivity runbook carries two vocabularies:
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+- a 0–5 sensitivity rank described as doctrine lineage; and
+- a T0–T4 exposure tier described as proposed and awaiting reconciliation.
+
+This guide therefore:
+
+- does not declare either vocabulary universally canonical;
+- uses descriptive risk and public-exposure language first;
+- cites an exact tier/profile only when the governing source, policy, contract, or record declares it;
+- fails closed when mapping, rights, transform, or reviewer authority is unresolved;
+- does not create a rank-to-tier crosswalk.
+
+### 6.2 Directional asymmetry
+
+The safe general rule is directional:
+
+- **Toward less exposure:** immediate containment, withholding, restriction, or denial may occur to fail closed. Public-state consequences still require correction, withdrawal, rollback, and invalidation records through their own authority.
+- **Toward more exposure:** require an accepted public-safe transform/profile, evidence that protected information is not ordinarily reconstructable, applicable rights/consent, policy evaluation, independent review, and release authority.
+
+A reduction in visible precision is not automatically safe. Joins, labels, attributes, temporal clues, vector payloads, tiles, exports, screenshots, caches, and AI text may reconstruct what the map style hides.
+
+### 6.3 Sensitivity escalation packet additions
+
+Add the following to the base packet:
+
+- exact protected subject and trigger;
+- internal and proposed public representation;
+- rights, consent, sovereignty, or cultural-authority basis;
+- applicable source terms and permitted audience/purpose;
+- proposed redaction/generalization/aggregation/delay/withholding transform;
+- transform identity, version, parameters, and receipt reference where public-safe;
+- reconstruction and linkage analysis;
+- downstream derivative, cache, tile, export, screenshot, and AI-output impact;
+- authorized reviewer set and independence evidence;
+- expiry, re-review, revocation, correction, withdrawal, and rollback path.
+
+### 6.4 Non-negotiable fail-closed classes
+
+Without explicit accepted authority and public-safe support, do not expose:
+
+- living-person or genomic details beyond the approved purpose and audience;
+- culturally restricted, sovereign, sacred, or descendant-sensitive information;
+- exact archaeology or rare-species locations where harm is plausible;
+- infrastructure vulnerabilities or facility-level detail that creates risk;
+- private rights/consent terms or protected contact details;
+- precise values hidden only by client-side styling;
+- KFM output as emergency-alert or life-safety instruction.
+
+[Back to top](#top)
 
 ---
 
 ## 7. AI surface escalation
 
-The AI surface (`Focus Mode` and any downstream story / explanation surfaces) has its own escalation envelope because generated language can fluently substitute for evidence if left unchecked.
+AI is interpretive and never the root truth source. `EvidenceBundle` and accepted policy/release state outrank generated language.
 
-**Required abstention.** ABSTAIN when `EvidenceBundle` is missing, citations cannot be validated, source roles conflict, temporal scope is insufficient, or the user asks for unsupported inference.
+### 7.1 Runtime boundary
 
-**Required denial.** DENY direct `RAW` / `WORK` / `QUARANTINE` access, sensitive-location exposure, restricted personal/DNA inference, emergency-alerting replacement, public-client model-runtime bypass, or uncited authoritative claims.
+The stable runtime terminal posture used by current governance guidance is:
 
-**Escalation triggers (this surface only).**
+- `ANSWER` — bounded response supported by admissible evidence and permitted by the applicable controls;
+- `ABSTAIN` — evidence, scope, freshness, or authority is insufficient;
+- `DENY` — policy, rights, sensitivity, security, or release state forbids the request;
+- `ERROR` — the governed path cannot evaluate safely.
 
-| Indicator | Healthy posture (PROPOSED) | Escalates to |
-|---|---|---|
-| `AIReceipt` presence rate | 100% of Focus Mode answers | AI surface steward; any miss is an incident |
-| ABSTAIN rate by template | Visibly tracked; very low ABSTAIN suggests over-fitting, very high suggests evidence gaps | AI surface steward |
-| DENY reason distribution | Stable; large new-reason spikes investigated | AI surface steward + policy steward |
-| Synthetic-claim incidence | Approaches zero; never silently | AI surface steward + release authority |
-| Focus Mode template change | n/a; always a change-managed event | AI surface steward + docs steward |
-| Direct model-runtime access attempt | Zero from public clients | AI surface steward + security steward |
+`HOLD`, `BOUND`, `CLOSED_FOR_SEPARATE_RELEASE_GATE`, `PASS`, and similar values belong to specific governance or validation profiles. They are not additional public-answer terminals and never imply release.
 
-> [!IMPORTANT]
-> AI suggestions are **never** approvals. A Focus Mode answer that suggests promoting, releasing, or correcting an artifact is interpreted as **a candidate that still owes the same receipts as any other candidate**. The trust-membrane anti-pattern of "AI generation routed through admin shortcut" is denied at the trust-membrane audit.
+### 7.2 Required escalation triggers
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+Escalate when:
+
+- an answer has no resolvable evidence or citation closure;
+- a cited bundle does not support the generated claim;
+- contradictory evidence is omitted or silently reconciled;
+- source role is upgraded by paraphrase;
+- generated content exposes restricted data or harmful precision;
+- a public client reaches the model runtime directly;
+- prompt injection changes tool, evidence, policy, or destination scope;
+- a template or policy binding changes public behavior;
+- a model/adapter fallback bypasses governed outcomes;
+- AI suggests promotion, correction, release, or rollback as though it were authority;
+- synthetic or reconstructed content is presented without bounded provenance/reality treatment.
+
+### 7.3 Safe response
+
+1. Freeze the prompt, tool/evidence scope, model/adapter identity, policy context, and output reference without copying protected payloads into public records.
+2. Force the affected surface to `ABSTAIN`, `DENY`, or `ERROR` where continued `ANSWER` cannot be defended.
+3. Contain any public bypass or data exposure.
+4. Route evidence/meaning to the domain steward, policy to the policy steward, exposure to sensitivity/security, and public restoration to release authority.
+5. Preserve a bounded audit or receipt only under an accepted contract.
+6. Re-enable only through the separate governed release/restoration path.
+
+AI-generated remediation text is a candidate patch, not approval or proof.
+
+[Back to top](#top)
 
 ---
 
 ## 8. Source / vendor distress escalation
 
-A source-side incident — vendor distress, terms-of-service rewrite, sudden licensing change, ownership transfer, freshness collapse — is escalated through the source steward, with mandatory consent revalidation when consent-relevant.
+A source-side event may alter rights, continuity, freshness, authority, consent assumptions, access, provenance, or reproducibility. A watcher signal is evidence that review is needed—not proof of the event’s legal or operational consequence.
 
-**Canonical reference incident.** The corpus uses the 23andMe Chapter 11 filing (March 2025) as the named exemplar that vendor solvency can become a consent-relevant variable, because a sale of customer data in bankruptcy can void prior consent assumptions. Treat this as a source-ledger precedent, not as a current-status statement.
+### 8.1 Trigger examples
 
-**Routing.**
+- ownership, control, or provider changed;
+- terms, license, consent, API, retention, or access changed;
+- vendor/provider distress or service discontinuity threatens continuity;
+- source moved, disappeared, or changed without a new immutable capture;
+- freshness cadence expired;
+- upstream correction or withdrawal was issued;
+- source role or authority classification appears wrong;
+- authentication or credentials were exposed;
+- an upstream identifier or geography version changed;
+- a source is available only through terms incompatible with intended public use.
 
-1. Watcher detects watchlist event → emits to source steward queue.
-2. Source steward classifies severity:
-   - **Routine** (minor licensing-page update with no scope change) → `ReviewRecord` only.
-   - **Material** (ownership change, scope change, bankruptcy filing, ToS rewrite affecting downstream rights) → escalate to rights-holder representative + release authority.
-3. **Consent-revalidation drill** runs against every active KFM consent grant under that vendor; ambiguous postures embargo until cleared.
-4. Affected records are tier-reassigned per §6; downstream derivatives are invalidated per correction discipline.
-5. `CorrectionNotice` + `RollbackCard` emitted where PUBLISHED claims are affected.
+### 8.2 Route
 
-> [!NOTE]
-> Cadence, threshold definitions, and notification format for watchlist events are **NEEDS VERIFICATION** in the corpus. The vendor-watch SOP remains **PROPOSED** at `docs/runbooks/VENDOR_WATCH.md` until authored and verified.
+1. **Observe:** record a public-safe signal and its evidence.
+2. **Freeze:** identify affected `SourceDescriptor`/source family, captures, releases, and downstream claims.
+3. **Hold:** stop new admission, refresh, promotion, or public use when rights or integrity are unclear.
+4. **Review:** source steward assesses identity, role, terms, cadence, and impact.
+5. **Add authority:** rights-holder, sensitivity, security, domain, correction, and release roles join as triggered.
+6. **Decide separately:** source admission/refresh, correction, withdrawal, rollback, or release controls act through their own records.
+7. **Watch:** define re-check conditions and preserve predecessor/successor lineage.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+### 8.3 Current vendor-watch boundary
+
+The prior edition referenced a named historical vendor-distress example. This edition preserves the governance lesson but makes no current legal, bankruptcy, ownership, or consent-status claim about any named vendor.
+
+No `docs/runbooks/VENDOR_WATCH.md` was established in the inspected runbook inventory. Vendor-watch cadence, source list, thresholds, notifications, and queue ownership remain **UNKNOWN / NEEDS VERIFICATION**. Do not imply an active watcher from this guide.
+
+### 8.4 Freshness is not automatically falsity
+
+An expired cadence marks support as stale or needing re-evaluation. It does not, by itself, prove the underlying claim is wrong. Public claims may need `ABSTAIN`, a stale marker, withdrawal, or correction depending on their time semantics and accepted contracts.
+
+[Back to top](#top)
 
 ---
 
-## 9. Process & tracking (PROPOSED)
+## 9. Process & tracking
 
-The process below is the smallest useful flow that preserves auditability without prematurely committing to tooling.
+### 9.1 Smallest governed process
 
-1. **Detect.** A trigger fires from §4, either by a validator, a policy gate, a CI check, a steward review, a watcher, an AI surface audit, or a manual catch.
-2. **File.** The detector opens an entry in the appropriate register:
-   - Policy-gate or release-gate triggers → `control_plane/policy_gate_register.yaml` *(PROPOSED)* with a cross-reference to the originating receipt.
-   - Drift between docs and repo → `docs/registers/DRIFT_REGISTER.md` *(PROPOSED)*.
-   - Doctrine-or-source contradiction → `control_plane/contradiction_register.yaml` *(PROPOSED)*.
-   - Verifiable but unverified claims → `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)*.
-3. **Route.** The owning role from §5 picks up the case. If separation is required, the secondary reviewer is named at the time of pickup, not at the time of decision.
-4. **Decide.** The owning role and (where required) the secondary reviewer produce the receipts named in §4 / §5.
-5. **Close.** The lifecycle transition that triggered the escalation either completes (with the new receipts attached to the `EvidenceBundle`) or fails closed (with the reason recorded). Either way, the register entry moves to a closed state with links to the receipts.
-6. **Audit.** Periodic docs-steward audit reviews aged-out register entries, synthetic-claim incidence on the AI surface, separation-of-duties violations, and ADR completeness for Directory Rules §2.4-class cases.
+1. **Detect** — receive a signal from a person, source, validator, policy evaluator, workflow, runtime, watcher, audit, or external report.
+2. **Freeze** — bind exact subject, version, digest, scope, current state, and blocked operation.
+3. **Contain** — when exposure risk is credible, apply the smallest reversible fail-closed action.
+4. **Classify** — identify trigger family, significance, incident posture, contradiction posture, and affected responsibility roots.
+5. **Preserve** — retain evidence, uncertainty, competing claims, logs/receipts, and public-safe diagnostics.
+6. **Route** — resolve the required role class, actor identity, assignment, interval, conflicts, independence, and alternate route.
+7. **Review** — apply the exact accepted contract/policy/profile; do not improvise authority from this page.
+8. **Disposition** — record findings, obligations, expiry, and the separate next gate.
+9. **Handoff** — send to evidence repair, ADR, policy, promotion, release, correction, withdrawal, rollback, or incident recovery.
+10. **Close or supersede** — close only when the declared handoff is complete and durable references resolve; reopen when a trigger invalidates closure.
+11. **Audit** — preserve enough lineage to reconstruct why the path stopped, who acted, what changed, and which stronger transitions did not occur.
 
-### 9.1 Severity bands
+### 9.2 Current register and queue boundary
+
+The inspected repository contains:
+
+- `control_plane/policy_gate_register.yaml`;
+- `control_plane/contradiction_register.yaml`;
+- `docs/registers/DRIFT_REGISTER.md`;
+- `docs/registers/VERIFICATION_BACKLOG.md`.
+
+The two control-plane registers explicitly declare projection-only authority, empty entries, and absent implementation at the inspected snapshot. They are not active escalation queues or case stores. The human registers contain historical and open items, but entry presence is not a policy decision or operational assignment.
+
+Until a governed producer, schema, writer, ownership model, retention rule, and consumer are accepted:
+
+- do not write a fabricated escalation instance into a control-plane projection;
+- do not create a parallel case registry under `docs/governance/`;
+- use an issue, pull-request handoff, accepted review/release object, or other currently authorized repository mechanism only for the purpose it actually owns;
+- reference open drift/verification work without treating the register as adjudication;
+- preserve any private operational details outside public repository documentation.
+
+### 9.3 Closure criteria
+
+A case may be described as closed only for its declared scope when:
+
+- the exact subject and trigger are fixed;
+- immediate containment is stable or intentionally lifted by authorized action;
+- evidence and required references resolve;
+- required role eligibility and independence are established;
+- the applicable review/policy/decision record exists under an accepted profile;
+- open obligations are resolved or transferred with explicit ownership;
+- correction, withdrawal, rollback, and derivative invalidation are complete where public state is affected;
+- supersession and re-review triggers are recorded;
+- closure does not imply release, deployment, publication, or restoration beyond its scope.
+
+“Routed to the next authority” and “fully resolved” are different closure classes. State which one occurred.
+
+### 9.4 Reopen triggers
+
+Reopen or supersede a case when:
+
+- subject bytes, digest, scope, audience, geography, or time changes;
+- evidence, source role, rights, consent, sensitivity, or policy changes;
+- reviewer assignment expires or conflict is discovered;
+- a conditional obligation remains unmet;
+- downstream impact expands;
+- a new contradiction or affected derivative appears;
+- containment is lifted or public restoration is requested;
+- the controlling contract, schema, policy bundle, decision, or release profile changes.
+
+### 9.5 Severity and cadence
+
+The prior edition used routine/material/sensitive/incident bands and left SLA values as placeholders. This edition retains the **qualitative bands as PROPOSED triage guidance**:
 
 | Band | Meaning | Default posture |
 |---|---|---|
-| Routine | Low-materiality, non-sensitive, no public release impact. | Owning steward may close with a receipt. |
-| Material | Affects release state, public API payloads, public map layers, evidence closure, or stable docs. | Secondary reviewer required. |
-| Sensitive | Rights, sovereignty, living-person, DNA, archaeology, rare species, critical infrastructure, or exact-location exposure. | Fail closed; sensitivity reviewer required. |
-| Incident | Public trust membrane bypass, model-runtime direct access, security exposure, uncited authoritative answer, or emergency-alert substitution. | Deny or error; incident response path required. |
+| **Routine** | Low consequence; no authority, rights, sensitivity, public, release, or rollback effect. | Ordinary review may suffice. |
+| **Material** | Meaning, authority, policy, evidence, public carrier, release, or durable docs may change. | Separate review and explicit handoff. |
+| **Sensitive** | Rights, sovereignty, living-person, genomic, cultural, archaeology, rare-species, infrastructure, or harmful precision. | Fail closed; specialized review. |
+| **Incident** | Active public exposure, security compromise, trust-membrane bypass, or spreading harm. | Immediate containment and incident route. |
 
-### 9.2 SLA / cadence
+No acknowledgement, routing, containment, or closure SLA is asserted. Time targets require an accepted operational decision and demonstrated capacity. A number in prose cannot create on-call coverage.
 
-All time-bound numbers are **UNKNOWN** in the corpus and intentionally left placeholder here.
-
-| Stage | Target (PROPOSED — NEEDS VERIFICATION) |
-|---|---|
-| Acknowledgement of a triggered escalation | `TODO` |
-| Initial routing decision | `TODO` |
-| Closure of routine (non-sensitive) escalations | `TODO` |
-| Closure of sensitive-lane escalations | `TODO` |
-| Periodic docs-steward audit cadence | `TODO` |
-
-> [!NOTE]
-> SLAs encode operational maturity. They are written down only when the team has the capacity to honor them; writing a number that will not be met would weaken the rest of the document. Open an ADR (suggested title: *Reviewer separation-of-duties threshold and tooling*) before pinning numbers.
-
-[Back to top](#escalation--docsgovernanceescalationmd)
+[Back to top](#top)
 
 ---
 
 ## 10. Anti-patterns
 
-The list below names the failure modes most likely to corrode the escalation discipline.
+> [!WARNING]
+> **Escalation as permission.** Being routed to a senior role does not authorize the blocked action.
 
 > [!WARNING]
-> **Approving one's own release on a sensitive lane.** Separation-of-duties matrix §5; release authority must be distinct from the author when materiality applies.
+> **Containment as diagnosis or release.** Disabling a route is not proof of root cause; re-enabling it is a separate governed decision.
 
 > [!WARNING]
-> **Documenting a change instead of validating it.** Docs are part of the working system but never substitute for validators, fixtures, or schema. An escalation note is not a receipt.
+> **Placeholder owner as real actor.** Role labels, `OWNER_TBD`, and unverified teams cannot sign or approve a case.
 
 > [!WARNING]
-> **Treating an AI summary or Story Node as an approval.** AI surface output is interpretive only; cite-or-abstain applies; promotion still requires the full receipt stack.
+> **CODEOWNERS as KFM authority.** Review routing is not an accepted assignment, independence proof, `ReviewRecord`, policy decision, or release approval.
 
 > [!WARNING]
-> **Promotion that "upgrades" a source role** (for example, modeled → observed). Source role is fixed at admission; never upgraded by promotion. Escalate to the source steward instead.
+> **Empty register as active queue.** Projection-only control-plane files do not become operational because this document names them.
 
 > [!WARNING]
-> **Re-publishing a corrected claim without invalidating derivatives.** `CorrectionNotice` must list invalidated derivatives; `RollbackCard` is required where downstream is affected.
+> **Free-form status that hides state.** “Looks okay,” “handled,” or “approved” is not a bounded disposition or state-bearing record.
 
 > [!WARNING]
-> **Silent migration between schema, policy, or source homes.** ADR is required per Directory Rules §2.4; migration plan and supersession entry are mandatory.
+> **Schema-valid equals governed.** A permissive or proposed schema pass does not authenticate an actor, evaluate policy, or establish authority.
 
 > [!WARNING]
-> **Admin shortcut becomes the normal public path.** Admin / steward bypasses are explicitly constrained, documented, and kept out of the normal public route. An escalation triggered through an admin shortcut still owes the full receipt stack.
+> **Workflow-green equals release.** A green check proves only the check’s bounded assertion at that head.
 
 > [!WARNING]
-> **Free-form escalation statuses.** Escalation records use finite outcomes and reason codes. A sentence like "looks okay" is not a governance outcome.
+> **Self-approval on a material or sensitive path.** Detection, authorship, review, release, and audit may require distinct actors.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+> [!WARNING]
+> **AI-generated handoff as evidence.** Generated summaries must resolve back to evidence and cannot approve their own recommendations.
+
+> [!WARNING]
+> **Client-side hiding as protection.** Styling, filters, obscured labels, and popups do not remove protected bytes from public access.
+
+> [!WARNING]
+> **Silent source-role upgrade.** Modeled, forecast, aggregate, administrative, or regulatory material cannot become observation by promotion or paraphrase.
+
+> [!WARNING]
+> **Public correction without derivative invalidation.** A replacement that leaves stale tiles, caches, exports, screenshots, indexes, or AI outputs reachable is incomplete.
+
+> [!WARNING]
+> **Destructive cleanup before preservation.** Deleting logs, payloads, or lineage can destroy the evidence needed to investigate and correct.
+
+> [!WARNING]
+> **Publishing private escalation details.** Public docs must not expose credentials, contacts, protected coordinates, consent terms, or security-sensitive diagnostics.
+
+> [!WARNING]
+> **Choosing between overlapping incident documents by convenience.** Record the conflict and route it to an authority decision.
+
+> [!WARNING]
+> **Life-safety substitution.** KFM must not present itself as an emergency-alert or response authority.
+
+[Back to top](#top)
 
 ---
 
 ## 11. Open questions & verification backlog
 
-These items are **NEEDS VERIFICATION** in the current corpus. Each should be retired by ADR, register entry, or mounted-repo evidence before any number in this document is treated as fact.
+### 11.1 Authority and object-family work
 
-- **SLA numbers** for acknowledgement, routing, and closure (§9). UNKNOWN; needs ADR or runbook decision.
-- **Channel and queue identifiers** (for example, which queue source-steward cases live in, which channel rights-holder representatives are reachable through). UNKNOWN; needs `CODEOWNERS` + ops decision.
-- **Vendor-watch cadence and threshold definitions** (§8). NEEDS VERIFICATION.
-- **Right-to-be-forgotten boundary** between tombstoning and erasure; affects DNA / consent triggers.
-- **ADR for reviewer separation-of-duties threshold and tooling**; pending.
-- **ADR for sensitivity-tier scheme adoption**; pending.
-- **Vendor-watch SOP** at `docs/runbooks/VENDOR_WATCH.md`; not yet authored.
-- **Drift register triage cadence**; pending.
-- **Contract/schema, policy, source, release, proof, and receipt homes**; verify against mounted repo before treating any path as current fact.
-- **Role handles and contact channels**; placeholder until `CODEOWNERS`, steward charters, or team roster evidence exists.
+- Is a generic `EscalationRecord` object family needed, and where would its semantic contract, schema, instances, policy, fixtures, validator, retention, and correction path live?
+- Which outcome and reason-code vocabulary is accepted for human queues, policy evaluation, validation, incidents, and public runtime?
+- How should ReviewRecord schema overlap and contract-vocabulary drift be resolved without parallel authority?
+- Which decision accepts or rejects the detailed release-separation model in ADR-0024?
+- What qualifies as an accepted actor identity and `StewardshipAssignment` for escalation?
+- How are recusal, delegation, expiry, and bootstrap exceptions recorded?
 
-Track these against `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)*.
+### 11.2 Operational work
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+- What queue or case system owns operational escalations?
+- Who is on call, through which private channels, and with what coverage?
+- Which severity model and time targets match actual capacity?
+- How are public-safe and restricted case details split?
+- What is the retention, access-control, correction, and deletion posture for case records?
+- Which controls enforce immediate containment and prevent unauthorized restoration?
+- Which hosted checks are required for the relevant repository operations?
+
+### 11.3 Incident-response conflict
+
+Both of these paths exist:
+
+- [`docs/runbooks/INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md)
+- [`docs/security/INCIDENT_RESPONSE.md`](../security/INCIDENT_RESPONSE.md)
+
+Their authority, audience, sensitivity label, operational role, and supersession relationship require a separate decision and migration/compatibility analysis. This document does not merge, redirect, deprecate, or delete either.
+
+### 11.4 Sensitivity-model conflict
+
+The inspected sensitivity runbook carries 0–5 rank and T0–T4 tier vocabularies with unresolved reconciliation. Required work includes:
+
+- identify the accepted semantic authority;
+- inventory schemas, policy, data, UI, API, docs, and consumers for each vocabulary;
+- decide mapping, coexistence, migration, or retirement;
+- add positive/negative fixtures and public-safe examples;
+- preserve legacy records and correction/rollback behavior.
+
+### 11.5 Register and producer work
+
+The policy-gate and contradiction registers declare projection-only, empty, and implementation absent. Before operational use, verify or implement:
+
+- accepted semantic source objects;
+- schemas and deterministic identity;
+- governed writer/producer;
+- reviewer and owner assignments;
+- access, retention, correction, and supersession;
+- consumer inventory;
+- negative-path validation;
+- audit and rollback;
+- explicit non-public handling for restricted details.
+
+Track these questions in the current authorized issue/register mechanism without creating a parallel authority in this file.
+
+[Back to top](#top)
 
 ---
 
 ## 12. Related docs
 
-The links below assume the `docs/` tree laid out in `docs/doctrine/directory-rules.md`. Until a mounted repo confirms the paths, treat them as **PROPOSED**.
+### 12.1 Governing and sibling guidance
 
-- [`docs/governance/README.md`](./README.md) *(PROPOSED)* — governance landing page.
-- [`docs/governance/REVIEW_DUTIES.md`](./REVIEW_DUTIES.md) *(PROPOSED)* — what each reviewer is responsible for.
-- [`docs/governance/SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) *(PROPOSED)* — which duty pairs may not collapse.
-- [`docs/governance/STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) *(PROPOSED)* — per-steward charter and scope.
-- [`docs/governance/CONTRADICTION_HANDLING.md`](./CONTRADICTION_HANDLING.md) *(PROPOSED)* — how contradictions are recorded and resolved.
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) *(PROPOSED home)* — placement rules and ADR-required changes.
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) *(PROPOSED)* — canonical authority order.
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) *(PROPOSED)* — public-vs-internal boundary.
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) *(PROPOSED)* — RAW → PUBLISHED invariant.
-- [`docs/runbooks/SENSITIVITY_ESCALATION.md`](../runbooks/SENSITIVITY_ESCALATION.md) *(PROPOSED)* — step-by-step sensitivity escalation procedure.
-- [`docs/runbooks/INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md) *(PROPOSED)* — operational incident response.
-- [`docs/runbooks/VENDOR_WATCH.md`](../runbooks/VENDOR_WATCH.md) *(PROPOSED)* — vendor/source distress watch procedure.
-- [`docs/security/INCIDENT_RESPONSE.md`](../security/INCIDENT_RESPONSE.md) *(PROPOSED)* — security-side incident response.
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) *(PROPOSED)* — doctrine/code/path drift entries.
-- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) *(PROPOSED)* — open verification items.
-- `control_plane/policy_gate_register.yaml` *(PROPOSED)* — machine-readable policy gate register.
-- `control_plane/contradiction_register.yaml` *(PROPOSED)* — machine-readable contradiction register.
+- [`README.md`](./README.md) — governance landing page and responsibility map.
+- [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md) — reviewer tasks, packets, and ReviewRecord boundary.
+- [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) — proposed independence and release-significant duty separation.
+- [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) — proposed role scopes; path presence is not staffing proof.
+- [`CONTRADICTION_HANDLING.md`](./CONTRADICTION_HANDLING.md) — preservation and routing of incompatible claims and authorities.
+- [`DEPRECATION_PROCESS.md`](./DEPRECATION_PROCESS.md) — retirement, successor, compatibility, and rollback guidance.
+- [`directory-rules.md`](../doctrine/directory-rules.md) — adopted responsibility-root and placement law through ADR-0029.
+- [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption decision.
+- [`ADR-0024`](../adr/ADR-0024-steward-separation-of-duties-for-release.md) — current proposed release-separation decision.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+### 12.2 Contracts, schemas, policy, and release
+
+- [`contracts/governance/ReviewRecord.md`](../../contracts/governance/ReviewRecord.md) — draft review-event semantics.
+- [`contracts/governance/steward_assignment.md`](../../contracts/governance/steward_assignment.md) — draft responsibility-assignment semantics.
+- [`ReviewAuthorityBinding`](../../contracts/governance/review_authority_binding.md) — fixture-only structural binding; no authority.
+- [`SensitiveReleaseReviewClosure`](../../contracts/governance/sensitive_release_review_closure.md) — fixture-only T3/T4 closure profile; no release authority.
+- [`schemas/contracts/v1/governance/README.md`](../../schemas/contracts/v1/governance/README.md) — mixed-maturity governance schema inventory.
+- [`policy/release/README.md`](../../policy/release/README.md) — release-policy lane; current modules described as scaffolds.
+- [`release/reviews/README.md`](../../release/reviews/README.md) — release-review guidance; no parent-level governed release ReviewRecord established by this guide.
+
+### 12.3 Procedures, registers, and platform routing
+
+- [`SENSITIVITY_ESCALATION.md`](../runbooks/SENSITIVITY_ESCALATION.md) — sensitivity procedure lineage; model reconciliation remains open.
+- [`docs/runbooks/INCIDENT_RESPONSE.md`](../runbooks/INCIDENT_RESPONSE.md) — operations incident runbook.
+- [`docs/security/INCIDENT_RESPONSE.md`](../security/INCIDENT_RESPONSE.md) — security incident standard; relationship to the runbook is unresolved.
+- [`DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — human drift history and open observations.
+- [`VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — human verification backlog.
+- [`policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) — projection-only policy-gate index at the evidence snapshot.
+- [`contradiction_register.yaml`](../../control_plane/contradiction_register.yaml) — projection-only contradiction index at the evidence snapshot.
+- [`.github/CODEOWNERS`](../../.github/CODEOWNERS) — repository review routing, not KFM authority.
+
+> [!NOTE]
+> A related link proves only that a repository path was inspected at the evidence snapshot. It does not accept the document, resolve its internal status, establish implementation, or make it operational.
+
+[Back to top](#top)
+
+---
+
+## 13. Verification, review & rollback
+
+### 13.1 Documentation validation
+
+A review of this file should confirm:
+
+- exactly one H1 and one closed `KFM_META_BLOCK_V2`;
+- current tracked path and accepted Directory Rules placement;
+- no placeholder team represented as a real owner;
+- direct links point to inspected repository paths;
+- controls, contracts, schemas, policy, runbooks, registers, and release records retain separate authority;
+- T0–T4 is not described as universally accepted;
+- both incident-response documents and their unresolved relationship are visible;
+- control-plane registers are not described as active queues;
+- generic escalation object, reason-code registry, staffing, channels, and SLAs remain unclaimed;
+- immediate containment is separated from diagnosis, correction, restoration, and release;
+- runtime outcomes are not collapsed with review, policy, validator, or fixture-profile outcomes;
+- sensitive examples remain public-safe;
+- exact rollback preimage is recorded;
+- no release, deployment, publication, or repository-setting effect is implied.
+
+### 13.2 Implementation verification before stronger claims
+
+Do not claim operational escalation until evidence establishes, for a named profile:
+
+1. accepted object meaning and machine shape;
+2. deterministic case identity and exact-subject binding;
+3. authenticated actors and accepted scoped assignments;
+4. recusal, conflict, delegation, expiry, and alternate-route handling;
+5. accepted policy bundle/evaluator and finite outcomes;
+6. operational queue, private contact, access-control, and retention behavior;
+7. required platform and runtime enforcement;
+8. incident containment and restoration controls;
+9. correction, withdrawal, rollback, cache, and derivative invalidation drills;
+10. observed fail-closed behavior and auditable records.
+
+### 13.3 Review burden
+
+This is a governance-significant documentation change because wording can imply authority or weaken fail-closed posture. Review should focus on:
+
+- trigger completeness without invented machine authority;
+- role and independence boundaries;
+- containment/restoration separation;
+- sensitivity and rights safeguards;
+- incident-document conflict disclosure;
+- control-plane register maturity;
+- reason-code and outcome boundaries;
+- compatibility with Review Duties, Separation of Duties, Contradiction Handling, and proposed ADR-0024;
+- non-effects and rollback.
+
+CODEOWNERS routes repository review to `@bartytime4life`. That route is not independent KFM governance review.
+
+### 13.4 Rollback
+
+**Exact pre-change target:** `docs/governance/ESCALATION.md` blob `fa808272d6f6873e704ae7180b8e0ee49575a5fc`.
+
+Before merge, close or abandon the draft pull request and branch. After an authorized merge, use a transparent revert or reviewed forward correction against the actual merged state.
+
+A forward correction is preferable for wording, links, or evidence pins because restoring the prior edition would reintroduce:
+
+- the unverified `@kfm-docs-stewards` owner;
+- no-repository/unknown-depth authoring language;
+- proposed repository paths presented as unverified despite current evidence;
+- control-plane registers described like operational filing destinations;
+- T0–T4 described as canonical;
+- a generic receipt/queue posture stronger than current contracts support;
+- the unbounded relationship among escalation, incident response, review, and release.
+
+No data migration, reprocessing, cache invalidation, deployment rollback, release rollback, or publication rollback is required for this documentation-only change.
+
+### 13.5 Non-effects
+
+This update does not:
+
+- create or authenticate an actor, steward, reviewer, incident coordinator, assignment, queue, quorum, or approval;
+- accept ADR-0024 or any sensitivity-tier decision;
+- create or choose an `EscalationRecord`, ReviewRecord schema, reason-code registry, or incident-response authority;
+- change a contract, schema, policy, fixture, validator, workflow, register entry, ruleset, permission, secret, signer, key, runtime, API, UI, map, or AI adapter;
+- activate a source, watcher, vendor feed, policy bundle, evaluator, release gate, incident service, or public route;
+- move an object through RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, or PUBLISHED;
+- issue a `ReviewRecord`, `PolicyDecision`, promotion decision, release manifest, correction, withdrawal, or rollback record;
+- merge, release, deploy, promote, restore, correct, withdraw, roll back, or publish anything.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix A — Reason-code crosswalk
 
-<details>
-<summary><strong>Click to expand:</strong> reason codes used in this document and their canonical source</summary>
+The codes below preserve the prior edition’s routing vocabulary. They are **PROPOSED human labels** unless an accepted contract, schema, policy bundle, validator, or runtime profile defines the exact code and semantics.
 
-The reason codes below are the machine-readable signals that a gate has failed closed, a reviewer must be added, or a runtime surface has refused to emit `ANSWER`. Codes marked **PROPOSED** should be registered in the relevant policy / control-plane home before enforcement.
-
-| Code | Layer | Meaning | Recovery |
+| Proposed code | Trigger family | Public-safe meaning | Typical safe next step |
 |---|---|---|---|
-| `MISSING_RECEIPT` | Normalization → Release | A required receipt (`TransformReceipt`, `RedactionReceipt`, `RunReceipt`, `AIReceipt`, etc.) is absent. | Re-emit the receipt; re-run validator. |
-| `MISSING_EVIDENCE` | Validation → Catalog | An `EvidenceRef` does not resolve to an `EvidenceBundle`. | Resolve the bundle; re-link the reference. |
-| `MISSING_REVIEW` | Catalog / Release | A required `ReviewRecord` is missing. | Run the required review; supply the record. |
-| `SCHEMA_MISMATCH` | Normalization / Validation | The object does not conform to its schema version. | Schema fix and/or ADR; re-run validator. |
-| `CONTRACT_DRIFT` | Normalization / Validation | The object does not conform to its contract / vocabulary. | Contract correction; re-run validator. |
-| `RIGHTS_UNKNOWN` | Admission → Release | Source rights are unconfirmed. | Steward review; rights resolution; tier reassignment. |
-| `SENSITIVITY_UNRESOLVED` | Admission → Release | Sensitivity tag is unconfirmed. | Sensitivity reviewer; tier assignment. |
-| `ROLE_COLLAPSE` | Validation → Release | Source role has been collapsed (for example, aggregate cited as per-place observation). | Restore source role. |
-| `ROLE_DOWNCAST_FORBIDDEN` | Validation → Release | A forbidden source-role change is attempted, commonly an upcast such as modeled → observed. | Refuse change; preserve original role. |
-| `REVIEW_NEEDED` | Catalog / Release | A review is required but has not been performed. | Run the review. |
-| `REVIEW_INSUFFICIENT` | Catalog / Release | A review was performed but is inadequate for the lane. | Re-run with the correct reviewer roster. |
-| `REVIEW_REJECTED` | Catalog / Release | The review explicitly rejected the candidate. | Honor the rejection; hold or correct. |
-| `RELEASE_MANIFEST_INVALID` | Release | The `ReleaseManifest` is malformed or incomplete. | Fix the manifest. |
-| `ROLLBACK_TARGET_MISSING` | Release | No `RollbackCard` / rollback target is supplied. | Supply the rollback target. |
-| `CORRECTION_DERIVATIVES_UNRESOLVED` | Correction | Downstream derivatives have not been identified or invalidated. | Resolve derivatives; supersession entry. |
-| `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | The `CorrectionNotice` does not reference its predecessor release. | Add the reference. |
-| `DIRECT_MODEL_ACCESS_ATTEMPT` | AI / security | A public client attempts direct model-runtime access. | DENY; route to AI surface steward + security steward. |
-| `UNCITED_ANSWER` | AI | AI surface emits or attempts to emit authoritative language without citation validation. | ABSTAIN or DENY; open AIReceipt audit. |
-| `REALITY_BOUNDARY_MISSING` | AI / 3D / story | Synthetic or reconstructed content lacks a Reality Boundary Note. | Add note and review; restrict until corrected. |
-| `VENDOR_DISTRESS` | Source watch | Vendor distress, sale, bankruptcy, or ToS change may affect consent or rights. | Consent revalidation drill; source steward escalation. |
-| `SOURCE_FRESHNESS_EXPIRED` | Source watch | Source is stale beyond declared cadence. | Hold affected claims; correction reviewer if PUBLISHED. |
-| `PATH_HOME_CONFLICT` | Docs / structure | Docs and repo disagree about schema, policy, source, release, proof, or receipt home. | Open drift entry; ADR or migration plan. |
-| `ADR_REQUIRED_MISSING` | Docs / structure | A Directory Rules §2.4-class change lacks an ADR. | Block merge; open ADR. |
+| `MISSING_RECEIPT` | Evidence/process | A required process record is absent or unresolved. | Hold; resolve the exact required object under its accepted profile. |
+| `MISSING_EVIDENCE` | Evidence | Claim support is absent or unresolved. | Hold or `ABSTAIN`; resolve EvidenceRef/EvidenceBundle support. |
+| `MISSING_REVIEW` | Review | Required review record or reviewer participation is absent. | Resolve identity, assignment, scope, and review. |
+| `SCHEMA_MISMATCH` | Validation | Object does not conform to the declared schema profile. | Repair object/schema relationship; revalidate. |
+| `CONTRACT_DRIFT` | Semantics | Object or implementation conflicts with semantic contract. | Freeze authority; contract/schema/domain review. |
+| `RIGHTS_UNKNOWN` | Rights | Rights, license, consent, sovereignty, or permitted use is unresolved. | Hold/withhold; rights review. |
+| `SENSITIVITY_UNRESOLVED` | Sensitivity | Exposure, precision, audience, or transform safety is unresolved. | Contain or withhold; sensitivity review. |
+| `ROLE_COLLAPSE` | Source role | Distinct source/evidence roles were collapsed. | Restore role labels and evidence boundaries. |
+| `ROLE_DOWNCAST_FORBIDDEN` | Source role | A forbidden role change or semantic upgrade is attempted. | Deny the change; preserve original role. |
+| `REVIEW_NEEDED` | Review | A material operation requires review. | Route exact subject to eligible role. |
+| `REVIEW_INSUFFICIENT` | Review | Existing review lacks scope, authority, independence, or support. | Renew or expand review. |
+| `REVIEW_REJECTED` | Review | Reviewer blocked the declared next step. | Honor block; repair, transfer, or stop. |
+| `RELEASE_MANIFEST_INVALID` | Release | Declared release support is malformed, mismatched, or incomplete. | Hold release; repair through release authority. |
+| `ROLLBACK_TARGET_MISSING` | Release/rollback | Safe rollback or restoration target is absent. | Hold release/restoration. |
+| `CORRECTION_DERIVATIVES_UNRESOLVED` | Correction | Affected downstream artifacts or caches are not closed. | Inventory and invalidate derivatives. |
+| `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Predecessor public state is not bound. | Resolve predecessor and lineage. |
+| `DIRECT_MODEL_ACCESS_ATTEMPT` | AI/security | Public path attempted to reach model runtime directly. | Deny, contain, and route to incident/security review. |
+| `UNCITED_ANSWER` | AI/evidence | Public answer lacks adequate citation support. | Withdraw/replace with `ABSTAIN`; review evidence path. |
+| `REALITY_BOUNDARY_MISSING` | AI/rendering | Synthetic/reconstructed output lacks bounded provenance treatment. | Withhold or add accepted treatment and review. |
+| `VENDOR_DISTRESS` | Source watch | Provider condition may affect continuity, rights, or consent assumptions. | Verify event; source/rights impact review. |
+| `SOURCE_FRESHNESS_EXPIRED` | Source watch | Declared source cadence has expired. | Mark stale; hold or re-evaluate affected claims. |
+| `PATH_HOME_CONFLICT` | Directory/authority | Two repository homes claim overlapping responsibility. | Record conflict; ADR/migration decision. |
+| `ADR_REQUIRED_MISSING` | Governance | Proposed authority/architecture change lacks required decision. | Hold structural change; open decision work. |
 
-</details>
+### A.1 Outcome-family boundary
 
-<details>
-<summary><strong>Click to expand:</strong> finite outcome envelopes used in routing decisions</summary>
-
-| Outcome | When | Required artifacts | Public-surface effect |
+| Family | Example outcomes | What they mean | What they do not mean |
 |---|---|---|---|
-| `ANSWER` | Evidence sufficient; policy permits; release allows; review (if required) recorded. | `EvidenceBundle` resolved; `PolicyDecision = allow`; `ReleaseManifest` applies. | Substantive answer with citation. |
-| `ABSTAIN` | Evidence insufficient or AI cannot cite. | `AIReceipt` with reason; no claim emitted. | Non-substantive note with reason; never invents. |
-| `DENY` | Policy / rights / sensitivity / release state forbids. | `PolicyDecision = deny` + reason code; `AIReceipt` records denial where AI surface is involved. | Denial reason; offers alternative non-restricted surface where possible. |
-| `ERROR` | Governed API cannot evaluate. | Error envelope with diagnostic code; no claim leakage. | Finite, actionable error; no silent fall-through. |
-| `HOLD` | Promotion / release / correction paused pending a reviewer or missing artifact. | `ReviewRecord` pending; `PolicyDecision = hold`. | Surface remains in prior state; no silent rollback. |
-| `PASS` / `FAIL` | Validator-class outcome. | `ValidationReport`. | Internal; promotion blocked on `FAIL`. |
-| `ALLOW` / `RESTRICT` | Governance queue outcomes. | `ReviewRecord` and any required policy / redaction receipt. | Drives downstream lifecycle transition. |
-| `ACCEPTED` | Correction-queue outcome. | `CorrectionNotice`. | Triggers supersession or rollback. |
+| Public runtime | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Finite response posture | Release approval or evidence creation |
+| Policy | Exact accepted profile may use `ALLOW`, `RESTRICT`, `HOLD`, `DENY`, `ERROR` | Admissibility result under one bundle/evaluator | Release or publication |
+| Validation | `PASS`, `FAIL`, `ERROR` | Conformance to named check | Truth, authority, or approval |
+| Review binding | `BOUND`, `HOLD`, `DENY` | Fixture/profile structural result | Actor authentication or write authority |
+| Sensitive release closure | `CLOSED_FOR_SEPARATE_RELEASE_GATE`, `HOLD`, `DENY` | Candidate closure for another gate | Promotion, release, or publication |
+| Human escalation | Descriptive open/routed/contained/held/transferred/closed language | Case coordination | Canonical machine state unless accepted separately |
 
-</details>
+Unknown or mismatched outcomes fail closed. Do not translate among families silently.
 
-[Back to top](#escalation--docsgovernanceescalationmd)
+[Back to top](#top)
 
 ---
 
 ## Appendix B — Merge verification checklist
 
-Use this checklist before treating the document as merged, enforced, or operational.
+- [ ] Target path is `docs/governance/ESCALATION.md`.
+- [ ] Accepted ADR-0029 and Directory Rules placement are represented accurately.
+- [ ] `@bartytime4life` is described only as the verified CODEOWNERS route.
+- [ ] ADR-0024 remains proposed.
+- [ ] A generic escalation contract/schema/queue is not claimed.
+- [ ] ReviewRecord and incident-response conflicts are not silently resolved.
+- [ ] Policy-gate and contradiction registers remain projection-only/empty/absent-implementation at the evidence snapshot.
+- [ ] Sensitivity vocabulary is bounded and fail-closed.
+- [ ] Public runtime outcomes remain distinct from policy, review, validation, and fixture outcomes.
+- [ ] Immediate containment is allowed only as bounded fail-closed action.
+- [ ] Restoration, correction, withdrawal, rollback, release, and publication remain separate.
+- [ ] Vendor distress is treated as a signal requiring verification, not a current legal conclusion.
+- [ ] No fabricated contacts, queues, SLAs, teams, assignments, or approvals appear.
+- [ ] No sensitive payload, exact protected location, credential, or control-defeating detail appears.
+- [ ] Related links resolve or are explicitly marked as conflicted/missing.
+- [ ] One H1, balanced fences, valid metadata block, and final newline are present.
+- [ ] Exact rollback blob is recorded.
+- [ ] Hosted checks are interpreted only within their bounded profiles.
+- [ ] Human review is still required before any merge.
+- [ ] No release, deployment, promotion, restoration, or publication claim is made.
 
-- [ ] Confirm `docs/governance/ESCALATION.md` exists at the target path in the mounted repo.
-- [ ] Confirm `@kfm-docs-stewards` and subsystem owners in `CODEOWNERS` or steward charters.
-- [ ] Confirm related docs exist or mark missing links in `docs/registers/VERIFICATION_BACKLOG.md`.
-- [ ] Confirm role names align with `STEWARD_CHARTERS.md` and `SEPARATION_OF_DUTIES.md`.
-- [ ] Confirm the reason codes in Appendix A are registered in policy/control-plane homes before enforcement.
-- [ ] Confirm `policy_gate_register.yaml`, `contradiction_register.yaml`, `DRIFT_REGISTER.md`, and `VERIFICATION_BACKLOG.md` homes in the mounted repo.
-- [ ] Confirm Mermaid renders in GitHub or replace with a text fallback.
-- [ ] Confirm no section implies enforcement before policy, tests, workflows, or runtime gates exist.
-- [ ] Confirm sensitive-lane defaults remain fail-closed.
-- [ ] Confirm rollback target expectations match release tooling.
-- [ ] Confirm any Directory Rules §2.4-class change has an accepted ADR.
-
-[Back to top](#escalation--docsgovernanceescalationmd)
+[Back to top](#top)
 
 ---
 
-### Last reviewed
+## Appendix C — No-loss modernization ledger
 
-`2026-05-15` — draft update pass. Merge reviewer must confirm repo paths, owners, related links, and enforcement surfaces.
-
-### Review burden
-
-| Aspect | Value |
+| Prior element | v2 treatment |
 |---|---|
-| Doc owner | `@kfm-docs-stewards` *(placeholder; confirm in `CODEOWNERS`)* |
-| Reviewers required for change | Docs steward + at least one subsystem owner; ADR required for changes that bend an invariant from Directory Rules §2.4 |
-| Material-change protocol | Open a PR; reference the relevant ADR or register entry; surface the change in the next docs-steward audit |
-| Rollback target | Revert this Markdown file to the prior committed version; open drift/verification entries for any related links or role names that were introduced by this revision |
+| Draft governance-prose posture | Preserved and grounded against repository evidence. |
+| Placeholder `@kfm-docs-stewards` owner | Replaced with verified CODEOWNERS route plus explicit non-authority boundary. |
+| “No repository mounted” caveat | Replaced with commit/blob-pinned evidence snapshot and inspection limits. |
+| Purpose and scope | Preserved; expanded to distinguish escalation from review, contradiction, incident, policy, correction, and release. |
+| Eight core roles and supporting roles | Preserved as proposed responsibility labels; actor eligibility and assignment requirements added. |
+| Mermaid flow | Preserved and revised to separate containment, review, and state-bearing next gates. |
+| Minimum escalation record | Preserved as a human packet template; explicitly not a new contract/schema. |
+| Lifecycle, sensitivity, AI, vendor, structural, and correction triggers | Preserved, grouped, and bounded by current authority. |
+| Routing matrix | Preserved and aligned with current review/SoD guidance. |
+| T0–T4 sensitivity table | Replaced with an evidence-grounded conflict disclosure and directional fail-closed rules; no universal tier authority claimed. |
+| AI receipt/answer posture | Preserved; runtime outcomes narrowed to `ANSWER`/`ABSTAIN`/`DENY`/`ERROR`. |
+| Named vendor-distress exemplar | Principle preserved; stale current-status/legal inference removed. |
+| Filing cases into control-plane registers | Corrected: registers are projection-only, empty, and implementation-absent at the snapshot. |
+| Severity bands and TODO SLAs | Qualitative bands preserved as proposed; fabricated time targets remain unclaimed. |
+| Anti-patterns | Preserved and expanded for containment, owner, register, schema, incident-overlap, and public-safe handling. |
+| Open questions | Preserved and converted into repository-grounded verification work. |
+| Reason-code appendix | Preserved as proposed human vocabulary; machine authority explicitly withheld. |
+| Outcome crosswalk | Preserved and separated by runtime, policy, validation, review, and fixture profile. |
+| Merge checklist | Preserved and updated for current evidence and non-effects. |
+| Rollback posture | Replaced with exact prior blob and forward-correction guidance. |
+
+[Back to top](#top)
 
 ---
 
-**Related** · [`README.md`](./README.md) · [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) · [`STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md) · [`../doctrine/directory-rules.md`](../doctrine/directory-rules.md) · [`../runbooks/SENSITIVITY_ESCALATION.md`](../runbooks/SENSITIVITY_ESCALATION.md)
-
-**Last updated:** `2026-05-15` · [Back to top](#escalation--docsgovernanceescalationmd)
+**Last updated:** 2026-08-23 · **Version:** `v2-draft` · **Status:** draft human governance guidance · **Publication effect:** none
