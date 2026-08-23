@@ -76,10 +76,10 @@ jobs:
       - name: Run focused validator tests
         run: python -m unittest -q tests.validators.test_validate_evidence_drawer_payload
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify current generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-evidence-drawer-payload-20260805.json \
+            data/receipts/generated/genrec-evidence-drawer-payload-repair-20260823.json \
             --repo-root .
 
       - name: Record trust boundary
