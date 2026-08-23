@@ -35,6 +35,8 @@ export function mountFocusComposedClaimPanel(
   const heading = document.createElement("h2");
   const outcome = document.createElement("p");
   const message = document.createElement("p");
+  const scopeList = document.createElement("ul");
+  const policyResult = document.createElement("p");
   const identityList = document.createElement("ul");
   const dependencyList = document.createElement("ul");
   const evidenceList = document.createElement("ul");
@@ -53,6 +55,16 @@ export function mountFocusComposedClaimPanel(
   outcome.dataset.focusOutcome = state.outcome;
   outcome.dataset.focusCode = state.code;
   message.textContent = state.message;
+
+  scopeList.setAttribute("aria-label", "Active Focus evidence scope");
+  for (const evidenceRef of resolution.request?.allowedEvidenceRefs ?? []) {
+    const item = document.createElement("li");
+    item.textContent = evidenceRef;
+    scopeList.append(item);
+  }
+
+  policyResult.dataset.component = "focus-policy-result";
+  policyResult.textContent = `Policy result: ${resolution.projection?.policy ?? "NOT_EVALUATED"}`;
 
   identityList.setAttribute("aria-label", "Composed claim identity");
   for (const label of [
@@ -112,6 +124,8 @@ export function mountFocusComposedClaimPanel(
     heading,
     outcome,
     message,
+    scopeList,
+    policyResult,
     identityList,
     dependencyList,
     evidenceList,
