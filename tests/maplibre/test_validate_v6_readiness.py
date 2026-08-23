@@ -23,6 +23,7 @@ def write_repo(
     *,
     version: str | None = TARGET_VERSION,
     explorer_version: str | None = None,
+    root_version: str | None = None,
     source: str = "export const ok = true;\n",
     probes: dict[str, str] | None = None,
     probe_profile: str = PROFILE,
@@ -30,9 +31,11 @@ def write_repo(
     root.joinpath("apps/explorer-web/src").mkdir(parents=True)
     root.joinpath("packages/maplibre/src").mkdir(parents=True)
     root.joinpath("configs/maplibre").mkdir(parents=True)
-    root_manifest = {"name": "root", "private": True}
+    root_manifest = {"name": "root", "private": True, "dependencies": {}}
     explorer = {"name": "explorer-web", "type": "module", "dependencies": {}}
     package = {"name": "@kfm/maplibre", "private": True, "version": "0.0.0", "dependencies": {}}
+    if root_version is not None:
+        root_manifest["dependencies"]["maplibre-gl"] = root_version
     if version is not None:
         package["dependencies"]["maplibre-gl"] = version
     if explorer_version is not None:
@@ -54,7 +57,7 @@ def write_repo(
 
 
 class MapLibreV64ReadinessTests(unittest.TestCase):
-    def test_ready_repository_accepts_exact_6_4_candidate(self) -> None:
+    def test_ready_repository_accepts_exact_package_owned_6_4_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             write_repo(root)
@@ -78,15 +81,38 @@ class MapLibreV64ReadinessTests(unittest.TestCase):
             write_repo(root, explorer_version="5.5.0")
             result = scan_repository(root)
             self.assertEqual(result.outcome, Outcome.HOLD)
+            self.assertIn("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION", result.reasons)
             self.assertIn("MAPLIBRE_DEPENDENCY_CONFLICT", result.reasons)
 
-    def test_explorer_manifest_version_remains_supported(self) -> None:
+    def test_explorer_owned_exact_version_is_hold(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             write_repo(root, version=None, explorer_version=TARGET_VERSION)
             result = scan_repository(root)
-            self.assertEqual(result.outcome, Outcome.READY)
+            self.assertEqual(result.outcome, Outcome.HOLD)
+            self.assertIsNone(result.selected_version)
+            self.assertIn("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION", result.reasons)
+            self.assertIn("MAPLIBRE_DEPENDENCY_UNPINNED", result.reasons)
+
+    def test_duplicate_exact_version_outside_package_is_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root, explorer_version=TARGET_VERSION)
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.HOLD)
             self.assertEqual(result.selected_version, TARGET_VERSION)
+            self.assertIn("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION", result.reasons)
+            self.assertNotIn("MAPLIBRE_DEPENDENCY_CONFLICT", result.reasons)
+
+    def test_root_owned_exact_version_is_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root, version=None, root_version=TARGET_VERSION)
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.HOLD)
+            self.assertIsNone(result.selected_version)
+            self.assertIn("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION", result.reasons)
+            self.assertIn("MAPLIBRE_DEPENDENCY_UNPINNED", result.reasons)
 
     def test_unreadable_present_package_manifest_is_error(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

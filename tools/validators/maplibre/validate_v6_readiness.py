@@ -2,12 +2,13 @@
 """Evaluate the MapLibre GL JS 6.4 readiness candidate without installing MapLibre.
 
 The validator combines bounded repository inspection with an optional committed
-probe-results record. It can prove exact dependency selection, ESM/ES2022
-posture, import-boundary hygiene, absence of known internal API use, and whether
-the required KFM browser/runtime probes were recorded. It cannot prove rendering
-equivalence, WebGL2 availability, CSP behavior, tile-query safety, resource
-reclamation, terrain behavior, Evidence Drawer stability, or headless parity
-unless those probes have actually been executed and supplied.
+probe-results record. It can prove accepted package-owned exact dependency
+selection, ESM/ES2022 posture, import-boundary hygiene, absence of known
+internal API use, and whether the required KFM browser/runtime probes were
+recorded. It cannot prove rendering equivalence, WebGL2 availability, CSP
+behavior, tile-query safety, resource reclamation, terrain behavior, Evidence
+Drawer stability, or headless parity unless those probes have actually been
+executed and supplied.
 
 A ``READY`` result is eligibility evidence for human review of the exact 6.4.0
 candidate. It does not authorize dependency admission, upgrade, release,
@@ -197,22 +198,33 @@ def scan_repository(root: Path) -> ReadinessResult:
         codes = [code for code in (root_error, explorer_error, package_error, ts_error) if code]
         return ReadinessResult(Outcome.ERROR, tuple(sorted(set(codes))), None, None, None, {})
 
-    manifests = (
-        (root_manifest, explorer_manifest)
-        if package_manifest is None
-        else (root_manifest, explorer_manifest, package_manifest)
+    root_version = _dependency_version(root_manifest)
+    explorer_version = _dependency_version(explorer_manifest)
+    package_version = _dependency_version(package_manifest) if package_manifest is not None else None
+
+    forbidden_versions = tuple(
+        version for version in (root_version, explorer_version) if version is not None
     )
-    versions = [value for manifest in manifests if (value := _dependency_version(manifest)) is not None]
+    if forbidden_versions:
+        reasons.append("MAPLIBRE_DEPENDENCY_OWNER_VIOLATION")
+
     selected_version: str | None
-    if not versions:
+    if package_version is None:
         selected_version = None
         reasons.append("MAPLIBRE_DEPENDENCY_UNPINNED")
-    elif len(set(versions)) != 1 or "CONFLICT" in versions:
+    elif package_version == "CONFLICT":
         selected_version = None
         reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
     else:
-        selected_version = versions[0]
+        selected_version = package_version
         reasons.extend(_version_reasons(selected_version))
+
+    if "CONFLICT" in forbidden_versions:
+        reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
+    elif selected_version is not None and any(
+        version != selected_version for version in forbidden_versions
+    ):
+        reasons.append("MAPLIBRE_DEPENDENCY_CONFLICT")
 
     module_mode = explorer_manifest.get("type") if isinstance(explorer_manifest.get("type"), str) else None
     if module_mode != "module":
