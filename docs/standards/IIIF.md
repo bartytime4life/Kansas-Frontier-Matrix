@@ -59,7 +59,6 @@ external_currentness_review:
     - "Georeference"
 related:
   - ./README.md
-  - ./iiif.md
   - ./STAC.md
   - ./DCAT.md
   - ./PROV.md
