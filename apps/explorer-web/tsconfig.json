@@ -12,6 +12,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "strict": true,
+    "types": ["vite/client"],
     "paths": {
       "@kfm/maplibre": ["../../packages/maplibre/src/index.ts"]
     }
