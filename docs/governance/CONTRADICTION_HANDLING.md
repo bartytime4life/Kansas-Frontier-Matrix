@@ -1,631 +1,720 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/NEEDS-VERIFICATION/contradiction-handling
+doc_id: kfm://doc/governance/contradiction-handling
 title: Contradiction Handling
-type: standard
-version: v1
-status: draft
-owners: "TODO(owner): confirm Governance Steward + Doctrine Working Group + Release Authority in role register"
+type: governance-guide
+version: v2-draft
+status: draft; repository-grounded; taxonomy-proposed; non-publisher
+owners:
+  - "@bartytime4life"
+owner_status: "Verified CODEOWNERS review route only; no StewardshipAssignment, independent review, policy authority, release authority, or approval is implied."
 created: 2026-05-12
-updated: 2026-05-15
+updated: 2026-08-23
 policy_label: public
+owning_root: docs/
+responsibility: "Explain how KFM preserves, classifies, routes, reviews, and records contradictions without creating contract, schema, policy, release, correction, rollback, deployment, or publication authority."
+truth_posture: "CONFIRMED current repository surfaces / PROPOSED C1-C6 and S1-S5 taxonomy / UNKNOWN operational enforcement; cite-or-abstain"
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9
+  target_prior_blob: 042096c66c8c23ce1ab98008ad3b9139eddb859d
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+  correction_notice_schema_blob: 8f260eb5a5adba0b4966adfeffebfbcf6960277d
+  correction_notice_validator_blob: 00b7335a39efdc6b12d180acb40a27fe682b8ade
+  validation_report_schema_blob: 14d1eeffbb15fa07f233c778a7a30106a4a14fd6
+  validation_report_validator_blob: c43b6e9594e8fd91760ea3811ac888c848681e70
 related:
-  - docs/doctrine/truth-posture.md
+  - docs/governance/README.md
+  - docs/governance/ESCALATION.md
+  - docs/governance/REVIEW_DUTIES.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
+  - docs/governance/STEWARD_CHARTERS.md
+  - docs/governance/DEPRECATION_PROCESS.md
+  - docs/governance/DECISION_LOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
   - docs/doctrine/corrections-first-class.md
   - docs/doctrine/derived-stays-derived.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/time-aware.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/directory-rules.md
-  - docs/adr/
-  - docs/runbooks/RB-CORRECTION-ROUTINE.md
-  - docs/runbooks/RB-ROLLBACK-EXECUTION.md
-  - schemas/contracts/v1/correction_notice.schema.json
-  - schemas/contracts/v1/supersession_record.schema.json
-  - schemas/contracts/v1/quarantine_receipt.schema.json
-  - schemas/contracts/v1/validation_report.schema.json
-  - schemas/contracts/v1/rollback_plan.schema.json
-  - schemas/contracts/v1/ai_receipt.schema.json
-  - control_plane/policy_gate_register.yaml
-tags: [kfm, governance, doctrine, contradiction, conflict, evidence, audit, trust]
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - control_plane/object_family_register.yaml
+  - contracts/correction/correction_notice.md
+  - contracts/correction/supersession_notice.md
+  - contracts/data/validation_report.md
+  - contracts/release/rollback_card.md
+  - schemas/contracts/v1/correction/correction_notice.schema.json
+  - schemas/contracts/v1/correction/supersession_notice.schema.json
+  - schemas/contracts/v1/data/validation_report.schema.json
+  - tools/validators/correction/validate_correction_notice.py
+  - tools/validators/data/validate_validation_report.py
+  - docs/architecture/publication/rollback-and-correction.md
+  - .github/CODEOWNERS
+tags: [kfm, governance, contradiction, conflict, evidence, quarantine, correction, supersession, rollback, ai, cite-or-abstain]
 notes:
-  - Codifies how KFM detects, classifies, surfaces, and routes contradictions across sources, repository evidence, doctrine, external standards, and AI-assisted output.
-  - Operationalizes the "Conflict surfacing" rule from docs/doctrine/truth-posture.md and the override-routing rules from docs/doctrine/authority-ladder.md.
-  - Placement under docs/governance/ remains CONFLICTED / NEEDS VERIFICATION with the sibling doctrine track under docs/doctrine/. Confirm against Directory Rules and mounted-repo evidence before moving or linking.
-  - All schema field names, route paths, CI workflow names, reason codes, role-register paths, and runbook references are PROPOSED until verified against repository state.
-  - 2026-05-15 update tightened evidence-boundary language, quick triage, path placeholders, runtime outcome notes, and adoption checks without changing the core doctrine.
+  - "v2-draft is a same-path documentation reconciliation against current main."
+  - "ADR-0029 is accepted and confirms docs/ as the owning responsibility root; this change creates no new path or authority home."
+  - "The C1-C6 categories, S1-S5 severities, and routing matrix remain PROPOSED governance machinery until accepted by the applicable decision route."
+  - "CorrectionNotice and ValidationReport validators provide bounded no-network shape evidence only."
+  - "The repository currently records conflicting CorrectionNotice and AIReceipt schema candidates; this document surfaces those conflicts and selects none."
+  - "Runtime terminal outcomes remain ANSWER, ABSTAIN, DENY, and ERROR. Staleness is a reason/state, not a fifth terminal outcome unless an accepted contract says otherwise."
+  - "Release, deployment, promotion, publication, source activation, and repository settings are unaffected."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Contradiction Handling
 
-> **How Kansas Frontier Matrix detects, classifies, surfaces, and resolves contradictions — across sources, repository evidence, doctrine, external standards, and AI-assisted output — without ever silently picking a winner.**
+> **Operating posture:** preserve disagreement, expose its evidence and scope, route it through the proper authority, and refuse silent reconciliation.
 
-[![Status: Draft](https://img.shields.io/badge/status-draft-orange?style=flat-square)](#)
-[![Doc Type: Governance · Doctrine](https://img.shields.io/badge/doc%20type-governance%20%C2%B7%20doctrine-1F3A66?style=flat-square)](#)
-[![Posture: Surface, Don't Smooth](https://img.shields.io/badge/posture-surface%20don't%20smooth-critical?style=flat-square)](#)
-[![Policy: Public](https://img.shields.io/badge/policy-public-2E7D32?style=flat-square)](#)
-[![Version: v1](https://img.shields.io/badge/version-v1-lightgrey?style=flat-square)](#)
-[![Last Updated: 2026-05-15](https://img.shields.io/badge/last%20updated-2026--05--15-lightgrey?style=flat-square)](#)
-[![Placement: Needs Verification](https://img.shields.io/badge/placement-needs%20verification-yellow?style=flat-square)](#)
-
-**Status:** Draft &middot; **Owners:** `TODO(owner): confirm Governance Steward + Doctrine Working Group + Release Authority in role register` &middot; **Last updated:** 2026-05-15 &middot; **Path:** `PATH_TBD_AFTER_REPO_INSPECTION`
+[![Document: draft](https://img.shields.io/badge/document-draft-d4a72c?style=flat-square)](#status--authority)
+[![Directory authority: ADR-0029 accepted](https://img.shields.io/badge/directory%20authority-ADR--0029%20accepted-1f883d?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+[![Taxonomy: proposed](https://img.shields.io/badge/C1--C6%20%2F%20S1--S5-proposed-d4a72c?style=flat-square)](#4-categories-of-contradiction)
+[![Object-family authority: conflicted](https://img.shields.io/badge/CorrectionNotice-CONFLICTED-b42318?style=flat-square)](#12-audit--provenance-requirements)
+[![Runtime: four outcomes](https://img.shields.io/badge/runtime-ANSWER%20%7C%20ABSTAIN%20%7C%20DENY%20%7C%20ERROR-1f883d?style=flat-square)](#10-runtime-impact--outcome-mapping)
+[![Publication effect: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#status--authority)
 
 > [!IMPORTANT]
-> This document is **normative**. It governs how every KFM contributor — human or AI — must behave when they encounter disagreement between sources, between code and doctrine, between standards and project terminology, or between an AI draft and its citations. Deviation is not a stylistic choice; it requires explicit governance review and a recorded justification (typically an ADR).
+> **This document explains governance; it does not create authority.** Accepted doctrine and ADRs govern placement and operating law. Contracts define object meaning. Schemas define machine shape. Policy decides admissibility. Validators and tests establish only their bounded behavior. Review and release records decide governed transitions. This page does not accept its own taxonomy, choose a canonical schema candidate, authorize a correction, release an artifact, or publish anything.
 
-> [!NOTE]
-> **Evidence boundary for this revision:** the attached Markdown was inspected as the working baseline. No mounted repository, live schemas, tests, workflows, role register, policy-gate register, runbooks, dashboards, or runtime logs were inspected in this session. This document states doctrine and proposed operating machinery; exact paths, owners, reason codes, schema fields, and runtime wiring remain `NEEDS VERIFICATION` until repository evidence confirms them.
+> [!WARNING]
+> A file, commit, merge, passing workflow, valid JSON instance, catalog row, map layer, or AI answer is not proof that a contradiction has been resolved. Resolution requires evidence appropriate to the claim and a recorded decision from the authority that owns that decision.
 
----
+## Status & authority
 
-## Quick triage card
-
-Use this card when a reviewer, steward, validator, or AI assistant first encounters a possible contradiction. It is a navigation aid; the numbered sections below remain authoritative.
-
-| First question | If yes | If no |
+| Area | Current bounded result | Consequence |
 |---|---|---|
-| Are two or more claims incompatible about the same fact, geometry, date, source role, release state, or policy posture? | Classify as a contradiction and continue. | Treat as uncertainty or missing evidence; see [§3](#3-definitions--contradiction-vs-uncertainty-vs-missing-evidence). |
-| Is either side already public, semi-public, or used by a released artifact? | Start at C6 and consider S4/S5 escalation. | Start at C1–C5 according to source of the conflict. |
-| Does the contradiction cross rights, sensitivity, cultural, archaeological, ecological, living-person, DNA, title, infrastructure, or security boundaries? | Prefer `DENY`, quarantine, redaction, generalization, or steward review until support is clear. | Continue normal classification and provenance recording. |
-| Is the contradiction between doctrine and current repository evidence? | Mark `PROPOSED CORRECTION`; route through ADR. | Use the ordinary category/severity matrix. |
-| Did AI generate, summarize, or smooth the disputed claim? | Reject or re-ground the draft and record an `AIReceipt` when C5 applies. | Record the contradiction through the non-AI receipt path. |
+| Path | **CONFIRMED** at `docs/governance/CONTRADICTION_HANDLING.md` | Same-path update under the existing human-governance lane. |
+| Placement authority | **CONFIRMED**: accepted ADR-0029 and adopted Directory Rules place human explanation under `docs/` | No new root, move, rename, compatibility home, or ADR is required for this docs-only reconciliation. |
+| Document authority | **DRAFT** governance guidance | Binding force exists only where this page accurately restates accepted higher authority. |
+| Category/severity taxonomy | **PROPOSED** | C1-C6, S1-S5, and the matrix are review aids, not machine policy or accepted incident law. |
+| Review route | **CONFIRMED**: `@bartytime4life` through CODEOWNERS | Routing is not independent approval, stewardship assignment, or release authority. |
+| `CorrectionNotice` family | **CONFIRMED structural coverage / CONFLICTED authority** | Contract, fixtures, validator, and tests exist; four schema candidates remain visible and this page selects none. |
+| `ValidationReport` family | **CONFIRMED bounded shape path** | Contract, proposed schema, fixtures, no-network validator, and tests exist; shape conformance does not prove evidence truth or review. |
+| Operational contradiction routing | **UNKNOWN / HOLD** | No claim is made that ingestion, policy, runtime, UI, review console, correction worker, or release flow enforces this page end to end. |
+| Release, deployment, publication | **None** | A documentation PR cannot promote, release, deploy, correct, withdraw, roll back, or publish an artifact. |
 
-> [!CAUTION]
-> The triage card must not become a shortcut for picking a winner. Its job is to get the contradiction into the right queue with enough evidence to audit later.
-
-[⬆ Back to top](#contradiction-handling)
-
----
-
-## Contents
-
-- [Quick triage card](#quick-triage-card)
-
-1. [Purpose &amp; scope](#1-purpose--scope)
-2. [The doctrine in one paragraph](#2-the-doctrine-in-one-paragraph)
-3. [Definitions — contradiction vs uncertainty vs missing evidence](#3-definitions--contradiction-vs-uncertainty-vs-missing-evidence)
-4. [Categories of contradiction](#4-categories-of-contradiction)
-5. [Severity classes](#5-severity-classes)
-6. [Routing flow](#6-routing-flow)
-7. [Disposition matrix](#7-disposition-matrix)
-8. [The cardinal rules — what is forbidden](#8-the-cardinal-rules--what-is-forbidden)
-9. [Lifecycle impact — where contradictions are caught](#9-lifecycle-impact--where-contradictions-are-caught)
-10. [Runtime impact — outcome mapping](#10-runtime-impact--outcome-mapping)
-11. [AI-assisted authoring rules](#11-ai-assisted-authoring-rules)
-12. [Audit &amp; provenance requirements](#12-audit--provenance-requirements)
-13. [Roles &amp; responsibilities](#13-roles--responsibilities)
-14. [Pre-merge contradiction checklist](#14-pre-merge-contradiction-checklist)
-15. [Worked examples](#15-worked-examples)
-16. [FAQ](#16-faq)
-17. [Related docs](#17-related-docs)
-18. [Adoption & verification checklist](#18-adoption--verification-checklist)
+**Quick navigation:** [Purpose](#1-purpose--scope) · [Core posture](#2-the-doctrine-in-one-paragraph) · [Definitions](#3-definitions--contradiction-vs-uncertainty-vs-missing-evidence) · [Categories](#4-categories-of-contradiction) · [Severity](#5-severity-classes) · [Routing](#6-routing-flow) · [Matrix](#7-disposition-matrix) · [Forbidden actions](#8-the-cardinal-rules--what-is-forbidden) · [Lifecycle](#9-lifecycle-impact--where-contradictions-are-caught) · [Runtime](#10-runtime-impact--outcome-mapping) · [AI](#11-ai-assisted-authoring-rules) · [Records](#12-audit--provenance-requirements) · [Roles](#13-roles--responsibilities) · [Checklist](#14-pre-merge-contradiction-checklist) · [Examples](#15-worked-examples) · [FAQ](#16-faq) · [Related docs](#17-related-docs) · [Verification](#18-adoption--verification-checklist) · [Change history](#19-change-history--rollback)
 
 ---
 
-## 1. Purpose &amp; scope
+## 1. Purpose & scope
 
-Kansas Frontier Matrix integrates heterogeneous, frequently contested historical, archival, geospatial, and scientific evidence. Disagreement is the default state of the input. The integrity of every downstream artifact — datasets, catalogs, maps, narratives, models, documentation — depends on the discipline with which **contradictions are detected, named, and routed** rather than smoothed away by the author or the pipeline.
+KFM treats contradictions as evidence about the limits, history, or authority of a claim. The goal is not to maximize the number of contradictions or force every disagreement into a single winner. The goal is to keep the disagreement inspectable until an authorized, evidence-backed disposition exists.
 
-This document operationalizes the **"Conflict surfacing"** rule from [`truth-posture`](../doctrine/truth-posture.md) and the **override-routing rules** from [`authority-ladder`](../doctrine/authority-ladder.md). It defines the categories, severity ladder, routing mechanisms, audit obligations, and forbidden actions that together comprise KFM's contradiction posture. It does **not** prove current repository implementation, schema availability, runbook existence, or runtime behavior; those remain `UNKNOWN` until inspected.
+This document helps contributors and reviewers answer five questions:
 
-**In scope**
+1. Are rival claims actually present, or is the problem uncertainty or missing evidence?
+2. What kind of contradiction is it?
+3. What consequence might it have?
+4. Which responsibility owns the next decision?
+5. What record must survive so downstream consumers can reconstruct the disposition?
 
-- Contradictions across any KFM authority tier (Primary doctrine, Secondary repo evidence, Tertiary external research).
-- Contradictions inside ingested data (cross-source conflicts, intra-source conflicts).
-- Contradictions between AI-generated output and the sources it cites.
-- Contradictions between published artifacts and later-arriving evidence.
-- The classification, routing, audit, and disposition machinery for each of the above.
+### In scope
 
-**Out of scope**
+- Conflicts between sources, records, models, classifications, standards, contracts, schemas, policy, implementation, AI output, and released artifacts.
+- Contradiction detection at every lifecycle stage.
+- Human review and escalation expectations.
+- Cite-or-abstain behavior when a contradiction blocks a defensible answer.
+- Correction, supersession, withdrawal, and rollback handoffs after release.
+- The minimum evidence profile that a contradiction-related record should preserve.
 
-- Pure *uncertainty* with no rival claim (covered by [`truth-posture`](../doctrine/truth-posture.md) truth labels and the time-uncertainty vocabulary in [`time-aware`](../doctrine/time-aware.md)).
-- *Missing* evidence with no conflict (covered by the `ABSTAIN` rule in [`evidence-first`](../doctrine/evidence-first.md)).
-- Data-quality validation failures that are not contradictions (covered by the validation policy and `ValidationReport` contract).
-- General governance procedure (PR review, ADR cadence) where no contradiction is at stake.
+### Out of scope
+
+- Pure uncertainty with no rival claim.
+- Missing evidence with no competing support.
+- Generic validation failures that do not express rival claims.
+- Selecting canonical schema or contract authority.
+- Defining policy reason codes or runtime DTOs.
+- Issuing an actual `CorrectionNotice`, `SupersessionNotice`, `RollbackCard`, release decision, or public correction.
+- Legal, title, medical, emergency-response, or cultural-authority judgments.
 
 > [!NOTE]
-> The boundaries above matter. A label of *"uncertain"* communicates one thing; a label of *"contradicted"* communicates a different thing; they must not be conflated. See [§3](#3-definitions--contradiction-vs-uncertainty-vs-missing-evidence).
+> A case may contain several states at once. Two approximate dates may be both uncertain and contradictory. Preserve uncertainty on each side, then apply contradiction handling to the incompatibility between them.
 
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 2. The doctrine in one paragraph
 
-A contradiction is **not a defect to hide** — it is information that must be preserved, classified, surfaced, and routed. KFM never silently picks a winner. Every contradiction must be **(a)** detected at the earliest stage it is detectable, **(b)** classified by tier and severity, **(c)** recorded in a form downstream consumers can inspect, and **(d)** routed to a mechanism appropriate to its kind — `QuarantineReceipt`, set-capture in metadata, `PROPOSED CORRECTION` + ADR, `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`, `ABSTAIN`, `DENY`, or a rejected AI draft. **Silent reconciliation is the cardinal sin.**
+A contradiction is not a defect to hide. KFM preserves the rival claims, their `EvidenceRef` support, source roles, temporal and spatial scope, rights and sensitivity posture, and current lifecycle/release state. It detects disagreement as early as practical, records what was found, routes the case to the responsibility that owns the decision, and exposes unresolved conflict to governed consumers. KFM does not select a winner merely because one file is newer, one source looks official, one schema validates, one test passes, one branch merged, or one answer sounds fluent. When evidence cannot support a defensible result, the system narrows scope, holds work, or returns `ABSTAIN`, `DENY`, or `ERROR` as appropriate. **Silent reconciliation is an integrity defect.**
 
-> [!WARNING]
-> *Silent reconciliation* means: choosing one side of a contradiction in code, prose, geometry, date, attribution, or summary **without recording that a contradiction existed**, the sides of it, the evidence basis for each, and the disposition. Discovering silent reconciliation in a KFM artifact is sufficient grounds for rollback regardless of any downstream consequences.
+### The minimum preservation rule
 
-[⬆ Back to top](#contradiction-handling)
+Every material contradiction should preserve, at minimum:
+
+- the subject or referent under dispute;
+- each rival claim without smoothing;
+- an evidence reference for each side, or an explicit missing-evidence label;
+- source role and authority context for each side;
+- temporal and spatial scope;
+- category and severity status, including who assigned them;
+- current disposition and unresolved obligations;
+- correction, supersession, withdrawal, or rollback references where public state is involved.
+
+[Back to top](#top)
 
 ---
 
 ## 3. Definitions — contradiction vs uncertainty vs missing evidence
 
-Three nearby states are commonly conflated. The doctrine treats them distinctly because their dispositions differ.
-
-| State | Definition | Example | Disposition family |
+| State | Definition | Example | Primary posture |
 |---|---|---|---|
-| **Contradiction** | Two or more sources make incompatible claims about the same fact; both are present. | Two USGS gauge records report different discharge values for the same station-hour. | Routed per this document. |
-| **Uncertainty** | A single source makes a claim with admitted imprecision; no rival is present. | An EDTF date `1854~` (approximate). | Captured via truth labels and `time_uncertainty`. |
-| **Missing evidence** | No source supports a claim that the artifact wishes to make. | A timeline event with no citable source. | `ABSTAIN` per `evidence-first`. |
+| **Contradiction** | Two or more claims about the same scoped subject cannot all be true in the asserted sense. | Two source records give incompatible station-hour discharge values. | Preserve all sides and route under this guide. |
+| **Uncertainty** | A claim admits imprecision, probability, ambiguity, or a range without a rival claim. | A date is recorded as approximately 1854. | Preserve uncertainty metadata; do not invent a conflict. |
+| **Missing evidence** | A desired claim lacks admissible support. | A timeline event has no resolvable evidence. | `ABSTAIN` or hold the claim. |
+| **Drift** | Documentation, contracts, schemas, policy, code, tests, workflows, or generated projections no longer agree about intended or current state. | A document names one schema home while a validator targets another. | Record current evidence; route an authority or migration decision. |
+| **Supersession** | A later governed object explicitly replaces an earlier object for a defined scope while preserving lineage. | A corrected geometry release replaces a prior released geometry. | Follow the accepted correction/release contract; do not delete history silently. |
+| **Competing interpretation** | The same evidence can support more than one reasoned interpretation without a settled authority decision. | Two historical interpretations weigh the same archive differently. | Present bounded alternatives; do not relabel interpretation as observation. |
 
-> [!TIP]
-> When unsure, ask: *"Are there rival claims present?"* If yes → contradiction (this doc). If only one source with hedged confidence → uncertainty. If zero sources → missing evidence (abstain).
+### Identity and scope check
 
-A claim can be **simultaneously** uncertain *and* contradicted (two imprecise sources that disagree); the contradiction posture applies, with uncertainty labels preserved on each side.
+Before declaring a contradiction, verify that the claims refer to the same subject and comparable scope:
 
-[⬆ Back to top](#contradiction-handling)
+- same real-world referent or explicit crosswalk;
+- compatible measurement or claim type;
+- compatible temporal basis;
+- compatible spatial basis, CRS, scale, and generalization level;
+- compatible source role;
+- compatible release or version state.
+
+A forecast and an observation about the same place and date may disagree numerically without being contradictory object types. A generalized public geometry and a restricted exact geometry may differ by design. Classification precedes comparison.
+
+[Back to top](#top)
 
 ---
 
 ## 4. Categories of contradiction
 
-Six categories cover the contradictions KFM encounters. Each has a typical detection point and a primary disposition. All categories are normative; none may be silently reconciled.
+The six categories below are **PROPOSED governance vocabulary**. They preserve the baseline document's coverage while broadening internal-authority conflicts beyond doctrine-versus-code alone.
 
-| # | Category | Definition | Typically detected at | Primary disposition |
+| ID | Category | Definition | Typical detection point | Primary route |
 |---|---|---|---|---|
-| C1 | **Cross-source data conflict** | Two or more ingested sources disagree on a fact about the same real-world referent. | `RAW` intake / `WORK` normalization. | Quarantine and/or set-capture in metadata; route per [§7](#7-disposition-matrix). |
-| C2 | **Intra-source contradiction** | A single source contradicts itself (e.g., two dates for the same event in the same document). | `RAW` intake. | `QuarantineReceipt`; steward decides if the source is usable at all. |
-| C3 | **Doctrine vs repository evidence** | Tier 2 (code, tests, configs) reveals doctrine is wrong or has drifted. | Authoring / review / audit. | `PROPOSED CORRECTION` in the doc + ADR per [`authority-ladder`](../doctrine/authority-ladder.md). |
-| C4 | **External vs internal terminology or standard** | A Tier 3 external standard or vendor doc conflicts with KFM terminology, casing, or doctrine. | Authoring / review. | Surface the relationship inline (`EXTERNAL` label); never adopt the external term in place of the KFM term. |
-| C5 | **AI synthesis vs citation** | An AI-generated draft makes a claim its cited evidence does not support, or omits a contradiction visible in the cited evidence. | AI-assisted authoring / review. | Reject the draft; require re-grounding. Record an `AIReceipt` indicating the synthesis was retracted. |
-| C6 | **Published artifact vs later evidence** | A new source surfaces after publication and contradicts a published claim, geometry, date, attribution, release state, or policy classification. | Post-publication. | `CorrectionNotice` + `SupersessionRecord` (+ `RollbackPlan` if severity ≥ S5). |
+| **C1** | Cross-source claim conflict | Two or more source-backed claims disagree about the same scoped referent. | Source intake, RAW comparison, WORK normalization, evidence assembly. | Preserve rival values; validate identity/scope; hold or set-capture until reviewed. |
+| **C2** | Intra-source contradiction | One source or one source version contradicts itself. | Source inspection or RAW validation. | Preserve both passages/records; assess source usability; quarantine when material. |
+| **C3** | Internal authority or implementation conflict | Doctrine, ADRs, contracts, schemas, policy, registries, code, tests, workflows, or generated projections claim incompatible authority or behavior. | Repository preflight, authoring, validation, CI, audit. | Record drift; freeze authority; use ADR, migration, contract/schema correction, or scoped repair as applicable. |
+| **C4** | External-to-KFM semantic conflict | An external standard, provider, vendor, or source vocabulary overlaps with but does not equal a KFM concept. | Research, connector design, standards mapping. | Preserve KFM vocabulary; record an explicit mapping or gap; never silently substitute terms. |
+| **C5** | AI synthesis versus evidence | Generated language omits a visible disagreement, cites only one side, or asserts more than its evidence supports. | Retrieval, drafting, citation validation, review. | Reject or narrow the draft; re-ground from evidence; record the bounded AI event where the active contract permits. |
+| **C6** | Released artifact versus later evidence | New evidence, review, rights information, or policy state contradicts a released or published claim or carrier. | Watch, correction intake, post-release review. | Hold stale routes; assess impact; initiate governed correction, supersession, withdrawal, and rollback review. |
 
-> [!NOTE]
-> The categories are exhaustive **by intent**, not by enumeration. A contradiction that does not cleanly fit one of C1–C6 should be classified into the nearest category and the misfit noted as a `PROPOSED CORRECTION` to this taxonomy. Do not invent new categories silently.
+> [!IMPORTANT]
+> Categories are not authority. A category helps route a case; it does not decide which claim is true, which schema is canonical, whether policy allows exposure, or whether a correction is approved.
 
-[⬆ Back to top](#contradiction-handling)
+### Multi-category cases
+
+A case may carry more than one category. For example, four competing `CorrectionNotice` schema candidates are primarily C3. If one candidate copied an external standard term that changes KFM semantics, C4 also applies. Record a primary category and any secondary categories rather than forcing a false single label.
+
+[Back to top](#top)
 
 ---
 
 ## 5. Severity classes
 
-Severity governs **response urgency and ceiling of disposition**. Severity is determined by the impact on consumers, on doctrine, and on the policy / release surface — not by how much the contradiction "feels" important.
+Severity is also **PROPOSED**. It expresses consequence and response urgency, not confidence in either side and not moral judgment about a contributor.
 
-| Class | Definition | Examples | Required action |
+| Class | Consequence profile | Illustrative case | Minimum posture |
 |---|---|---|---|
-| **S1 — Informational** | Minor disagreement between weak sources; no material downstream effect. | Two history books disagree on one digit of a treaty *year* where the canonical record is clear. | Capture both in metadata (`time_uncertainty: conflicting_sources` or analogous set field). No quarantine. |
-| **S2 — Substantive** | Material disagreement that affects downstream use. | Two land surveys report incompatible parcel geometries; both are otherwise credible. | `QuarantineReceipt`; steward review required before `PROCESSED`. |
-| **S3 — Doctrine-impacting** | Code, schema, or test reveals doctrine itself is wrong or has drifted. | Validator behavior contradicts the published rule in a doctrine doc. | `PROPOSED CORRECTION` in the doc plus an ADR within the doctrine-review window. |
-| **S4 — Policy-impacting** | Contradiction crosses a policy boundary (sensitivity, rights, public exposure). | A published geometry contradicts the sensitivity classification it should have inherited. | `DENY` at the policy gate; immediate steward review; possible `RollbackPlan`. |
-| **S5 — Integrity** | A published artifact is provably wrong in a way consumers may have already acted on. | Geometry that places a Kansas county in a neighboring state in the public map. | `CorrectionNotice` + `SupersessionRecord` + `RollbackPlan`; public correction-feed entry. |
+| **S1 — Informational** | The disagreement is real but has no material downstream effect at the current scope. | Two contextual sources differ on a non-consequential label. | Record and expose the difference; no forced winner. |
+| **S2 — Substantive** | The disagreement can change analysis, selection, interpretation, or a non-public derived product. | Two credible parcel or station geometries differ materially. | Hold the affected transition; require steward/reviewer disposition. |
+| **S3 — Authority-impacting** | The disagreement changes doctrine, contract meaning, schema authority, policy semantics, identity, or compatibility. | Multiple candidate schemas claim one object family. | Freeze authority; open ADR, migration, contract/schema, or drift work as required. |
+| **S4 — Policy-impacting** | The disagreement affects rights, sensitivity, sovereignty, access, harmful precision, or public exposure. | One source marks an archaeology location public while another marks it restricted. | Fail closed; route rights/sensitivity/policy review. |
+| **S5 — Released-integrity** | A released claim or carrier may have misled consumers or exposed unsafe material. | Public geometry is materially wrong or improperly precise. | Initiate correction-impact review, supersession/withdrawal, and rollback planning. |
 
-> [!CAUTION]
-> The severity rubric above is **PROPOSED** in its exact thresholds. Severity assignment for any specific incident is a steward judgment that must be recorded in the audit trail. Do not encode severity as an automatic function of category; the same category can produce different severities depending on consequence.
+### Assignment and change control
 
-[⬆ Back to top](#contradiction-handling)
+- Record the evidence and rationale for the assigned severity.
+- Incident-specific severity may be raised or lowered through a recorded reviewer/steward decision; an ADR is not required merely to reassess one incident.
+- Changing the taxonomy, thresholds, or authority consequences of a severity class is a governance decision and may require an ADR or contract/policy change.
+- Unclear consequence defaults upward to the safer review lane until the uncertainty is resolved.
+
+[Back to top](#top)
 
 ---
 
 ## 6. Routing flow
 
-The diagram below is the doctrinal routing model for any detected contradiction. Begin at the top; the categorization step (`C1`–`C6`) determines the lane; severity (`S1`–`S5`) determines the ceiling.
-
 ```mermaid
 flowchart TD
-    D["Contradiction detected<br/>(in source, repo, doctrine, external, AI output, or published artifact)"]
-    D --> CL{"Classify category<br/>(C1–C6, see §4)"}
+    D["Contradiction detected"] --> I{"Same identity and comparable scope?"}
+    I -->|"No"| N["Record mismatch as identity, role, time, scale, or representation difference"]
+    I -->|"Yes"| C{"Classify C1-C6"}
 
-    CL -->|"C1 — cross-source<br/>data conflict"| Q["QuarantineReceipt<br/>and/or set-capture<br/>(conflicting_sources, set-valued fields)"]
-    CL -->|"C2 — intra-source<br/>contradiction"| QR["QuarantineReceipt<br/>+ steward decision on<br/>source usability"]
-    CL -->|"C3 — doctrine vs<br/>repo evidence"| PC["PROPOSED CORRECTION<br/>in doc + ADR<br/>(authority-ladder §4)"]
-    CL -->|"C4 — external vs<br/>internal terminology"| FL["Flag inline · EXTERNAL label ·<br/>preserve KFM term ·<br/>never adopt external"]
-    CL -->|"C5 — AI synthesis<br/>vs citation"| RJ["Reject draft ·<br/>AIReceipt records retraction ·<br/>require re-grounding"]
-    CL -->|"C6 — published vs<br/>later evidence"| CN["CorrectionNotice<br/>+ SupersessionRecord"]
+    C -->|"C1/C2"| E["Preserve all claims and EvidenceRefs; validate; hold or quarantine if material"]
+    C -->|"C3"| A["Freeze authority; record drift; route ADR, migration, contract, schema, policy, or implementation repair"]
+    C -->|"C4"| X["Record crosswalk or semantic gap; preserve KFM term"]
+    C -->|"C5"| G["Reject or narrow generation; re-ground; citation review"]
+    C -->|"C6"| R["Assess released impact; correction, supersession, withdrawal, rollback review"]
 
-    Q --> SEV{"Severity?<br/>(S1–S5, see §5)"}
-    QR --> SEV
-    CN --> SEV
+    E --> S{"Assign S1-S5"}
+    A --> S
+    X --> S
+    G --> S
+    R --> S
 
-    SEV -->|"S1 informational"| MD["Metadata capture<br/>(no quarantine)"]
-    SEV -->|"S2 substantive"| SR["Steward review"]
-    SEV -->|"S3 doctrine-impacting"| ADR["ADR window"]
-    SEV -->|"S4 policy-impacting"| DENY["Policy DENY<br/>+ steward review"]
-    SEV -->|"S5 integrity"| RB["RollbackPlan<br/>+ public correction feed"]
+    S --> O{"Governed disposition"}
+    O -->|"Support closes"| ANS["ANSWER or continue bounded lifecycle work"]
+    O -->|"Evidence conflict unresolved"| ABS["ABSTAIN / HOLD"]
+    O -->|"Policy boundary"| DEN["DENY"]
+    O -->|"Invariant or processing failure"| ERR["ERROR"]
 
-    MD --> REC["Provenance receipt<br/>(see §12)"]
-    SR --> REC
-    ADR --> REC
-    DENY --> REC
-    RB --> REC
-    PC --> REC
-    FL --> REC
-    RJ --> REC
-
-    classDef start fill:#1F3A66,stroke:#0F1F3A,color:#fff,stroke-width:1.5px
-    classDef classify fill:#4A6FA5,stroke:#2A4F85,color:#fff,stroke-width:1.5px
-    classDef disposition fill:#8E5A2A,stroke:#5E3A0A,color:#fff,stroke-width:1.5px
-    classDef severity fill:#5E3A8E,stroke:#3E1A6E,color:#fff,stroke-width:1.5px
-    classDef terminal fill:#2E7D32,stroke:#1B5E20,color:#fff,stroke-width:1.5px
-
-    class D start
-    class CL,SEV classify
-    class Q,QR,PC,FL,RJ,CN disposition
-    class MD,SR,ADR,DENY,RB severity
-    class REC terminal
+    ANS --> P["Persist reviewable record and references"]
+    ABS --> P
+    DEN --> P
+    ERR --> P
+    N --> P
 ```
 
-The dashed reading of the diagram: **classification chooses the lane; severity chooses the ceiling**. Every path terminates in a provenance receipt — there is no path where the contradiction simply disappears.
+The flow has no path where disagreement simply disappears. It also has no path from detection directly to publication. A correction candidate must still cross the applicable evidence, policy, review, release, correction, and rollback gates.
 
-> [!NOTE]
-> Diagram vocabulary is **CONFIRMED** as this document's category/severity taxonomy. The precise routing edges are **PROPOSED** implementation guidance until verified against active runbooks (`RB-CORRECTION-ROUTINE.md`, `RB-ROLLBACK-EXECUTION.md`) and the policy-gate register.
-
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 7. Disposition matrix
 
-The matrix below maps **category × severity** to disposition mechanisms. Cells marked with a primary mechanism (**bold**) are required; secondary mechanisms (plain) may also apply.
+The matrix is **PROPOSED minimum guidance**. Applicable contracts, policy, accepted ADRs, and release controls can require more. It does not create executable routing.
 
 | Category \ Severity | S1 | S2 | S3 | S4 | S5 |
 |---|---|---|---|---|---|
-| **C1** cross-source data | **`conflicting_sources` / set-capture** | **`QuarantineReceipt`** | (rare) → ADR if doctrine implicated | **`DENY` + review** | **`CorrectionNotice` + `RollbackPlan`** |
-| **C2** intra-source | (rare) metadata flag | **`QuarantineReceipt`** | (rare) → ADR | **`DENY` + review** | **`CorrectionNotice` + `RollbackPlan`** |
-| **C3** doctrine vs repo | (n/a — doctrine conflicts are ≥ S3) | (n/a) | **`PROPOSED CORRECTION` + ADR** | **`PROPOSED CORRECTION` + ADR + policy review** | **`PROPOSED CORRECTION` + ADR + rollback** |
-| **C4** external vs internal | **Inline `EXTERNAL` flag** | **Inline flag + reviewer escalation** | **ADR if doctrine impacted** | **Policy review** | (rare) integrity rollback |
-| **C5** AI synthesis vs citation | **Reject draft + re-ground** | **Reject + `AIReceipt` retraction** | **Reject + doctrine review** | **Reject + policy review** | **Reject + post-mortem if published** |
-| **C6** published vs later | (rare — S2 is the floor for post-pub) | **`CorrectionNotice` + `SupersessionRecord`** | **`CorrectionNotice` + ADR** | **`CorrectionNotice` + `DENY` on stale routes** | **`CorrectionNotice` + `SupersessionRecord` + `RollbackPlan`** |
+| **C1 cross-source** | Structured set-capture or rival-claim display | Hold or quarantine; reviewer disposition | Contract/identity review if the conflict exposes a modeling defect | Fail closed for rights/sensitivity/public-exposure conflicts | Correction-impact and rollback review if released |
+| **C2 intra-source** | Preserve source caveat | Hold source use; assess usability | Source-admission or contract review | Deny unsafe use pending policy review | Correct/withdraw released dependence on the source |
+| **C3 internal authority** | Record bounded documentation drift | Scoped repair or verification item | Authority freeze plus ADR/migration/contract/schema decision | Policy review plus authority decision | Correct/roll back released behavior that relied on the wrong authority |
+| **C4 external semantic** | Explicit crosswalk note | Reviewer escalation if behavior could drift | ADR or contract change if KFM semantics should change | Policy/rights review where external semantics affect exposure | Correct released mappings or carriers if consumers were misled |
+| **C5 AI versus evidence** | Reject or narrow and re-ground | Record retraction under the applicable AI audit surface | Doctrine/contract review if prompts or envelopes encourage the defect | Deny unsafe generation or exposure | Correction/post-incident review if released output was consumed |
+| **C6 released versus later evidence** | Record later evidence when no material effect exists | Correction-impact review | Correction plus authority review | Deny or withdraw affected public route pending policy review | Correction, `SupersessionNotice`, withdrawal, and `RollbackCard` review |
 
-> [!IMPORTANT]
-> The matrix codifies *minimum* response. A steward may always escalate (e.g., treat an S2 as if it were S3) when judgment warrants. A steward **may not** de-escalate without an ADR; downgrading severity in private is itself a silent-reconciliation defect.
+> [!CAUTION]
+> The presence of a named object in this matrix does not prove its schema is canonical or its workflow is active. Section 12 records the current repository evidence and conflicts.
 
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 8. The cardinal rules — what is forbidden
 
-These are the actions that, if discovered in any KFM artifact, are sufficient grounds for rollback and a post-mortem regardless of how convenient or polished the result appears.
-
-- ❌ **Silent picking.** Choosing one source over another without recording that a contradiction existed, the sides of it, the basis for each side, and the disposition.
-- ❌ **"Most recent wins"** without evidence that recency is the right tiebreaker for the specific fact at hand.
-- ❌ **"Most authoritative-looking wins"** without an explicit mapping to the authority ladder (see [`authority-ladder`](../doctrine/authority-ladder.md)).
-- ❌ **Smoothing prose.** Rewriting language so a reader cannot tell that sources disagree.
-- ❌ **Substituting an external term** (e.g., replacing `EvidenceBundle` with a generic industry word) to dodge a doctrine conflict.
-- ❌ **AI synthesis that papers over disagreement** present in the cited sources.
-- ❌ **Hand-editing data** to "fix" a source contradiction. Manual edits are themselves a derivation step and must be recorded as such per [`derived-stays-derived`](../doctrine/derived-stays-derived.md).
-- ❌ **Treating absence of disagreement** as evidence of resolution. Silence is not consensus.
-- ❌ **Resolving a Tier 1 vs Tier 2 contradiction without an ADR.** Doctrine drift is itself a violation.
-- ❌ **Closing a `QuarantineReceipt` without recording the steward decision** that justified the closure.
-- ❌ **Withdrawing a `CorrectionNotice`** instead of issuing a follow-on notice. Corrections themselves are first-class and immutable; see [`corrections-first-class`](../doctrine/corrections-first-class.md).
+- **Silent picking:** selecting one side without preserving the rival claims and decision basis.
+- **File-presence authority:** assuming the most canonical-looking path wins.
+- **Validation-as-truth:** treating schema conformance as evidence truth, review, release, or publication.
+- **Recency-as-universal-tiebreaker:** using “newest wins” without proving that the claim type is version-superseding.
+- **Majority vote by sources:** counting sources without evaluating independence, source role, lineage, and fitness for the claim.
+- **Authority by tone or branding:** choosing the source that sounds more official.
+- **Prose smoothing:** rewriting disagreement into one fluent sentence that no source actually supports.
+- **Terminology laundering:** replacing a KFM object name with an external near-synonym to avoid a semantic conflict.
+- **Representation hiding:** concealing a sensitive or contradictory feature only with client styling rather than governed transformation and policy.
+- **Hand-editing source truth:** overwriting source material instead of producing a recorded derivative or correction.
+- **AI winner selection:** asking a model to resolve an authority decision that belongs to evidence, policy, review, or an ADR.
+- **History deletion:** deleting prior released state, corrections, or evidence merely because a successor exists.
+- **Private de-escalation:** lowering severity or closing a hold without recording rationale and the responsible review route.
+- **Publishing from a watcher:** allowing detection, drift, or source-watch automation to promote or publish directly.
 
 > [!WARNING]
-> If you find yourself reaching for any of the above to "make the doc / dataset / answer cleaner," **stop**. The cleanness you are buying is paid for by the consumer downstream, who can no longer see the disagreement.
+> Convenience, deadline pressure, a green check, or a polished map cannot compensate for hidden disagreement, missing evidence closure, unresolved rights, unsafe precision, or absent correction and rollback paths.
 
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 9. Lifecycle impact — where contradictions are caught
 
-Contradictions are caught at every stage of the lifecycle. Each stage has detection responsibility, disposition mechanism, and a non-negotiable rule that the stage must **never collapse** a contradiction it can see.
+KFM's lifecycle remains:
 
-| Stage | Detection responsibility | Disposition mechanism | Non-negotiable |
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLETS -> PUBLISHED
+```
+
+Promotion is a governed state transition, not a file move.
+
+| Stage | Detection responsibility | Allowed handling | Forbidden collapse |
 |---|---|---|---|
-| **`RAW`** | Intake validation; per-source schema validation; cross-source comparison where possible. | `IntakeReceipt` may record detected cross-source disagreement; `QuarantineReceipt` if validation fails. | RAW never silently merges sources. |
-| **`WORK`** | Normalization rules; type/units coercion; geometry alignment. | Transformation must preserve disagreement (e.g., emit set-valued fields, not collapsed scalars). | A transformation that collapses a contradiction is **rejected** by validation. |
-| **`QUARANTINE`** | Holds anything that failed intake or normalization due to contradiction or other defect. | Steward review → released to `WORK`/`PROCESSED` with annotation, or rejected. | A `QuarantineReceipt` may not be closed without a recorded steward decision. |
-| **`PROCESSED`** | Encodes surviving contradictions as structured metadata. | `time_uncertainty: conflicting_sources`; set-valued geometries; multi-valued attributions. | Single-value fields require a recorded reason if multiple inputs disagreed. |
-| **`CATALOG` / `TRIPLET`** | Catalog records and triples must link **all** supporting `EvidenceRef`s when sources disagree. | Multiple `EvidenceRef`s per `InspectableClaim`; rival claims linked, not hidden. | A claim grounded in disagreement that cites only one side fails the citation-closure check. |
-| **`PUBLISHED`** | Surfaces contradictions to consumers via metadata / evidence drawer / catalog. | `ReleaseManifest` records detected unresolved disagreements; `ProofPack` includes them. | A `PUBLISHED` artifact that hides a known disagreement is an integrity defect (S5). |
-| **Post-publication** | Watches for later-arriving evidence; receives correction submissions. | `CorrectionNotice` + `SupersessionRecord` (+ `RollbackPlan` if S5). | Corrections themselves are immutable and append-only. |
+| **Source edge / admission** | Verify source identity, role, rights, terms, sensitivity, and version. | Record source caveats and candidate conflicts before activation. | Treating discovery or connector presence as source admission. |
+| **RAW** | Preserve source-native bytes or immutable reference and source hash. | Record rival source records without merging them. | Editing RAW to make sources agree. |
+| **WORK** | Normalize units, CRS, identity, time, and field semantics. | Emit comparable rival values and transformation receipts. | Coercing incompatible roles, times, or geometries into one scalar. |
+| **QUARANTINE** | Hold unresolved, unsafe, malformed, or authority-conflicted material. | Record reason, owner, next evidence need, and exit decision. | Closing the hold without a reviewable disposition. |
+| **PROCESSED** | Validate shape and preserve contradiction metadata or rival claims. | Store explicit conflict state and evidence references. | Declaring truth because validation passed. |
+| **CATALOG / TRIPLETS** | Preserve claim/evidence links and rival relationships. | Project all relevant support and contradiction lineage. | Letting a graph, index, or catalog become sovereign truth. |
+| **Release / PUBLISHED** | Verify evidence, policy, review, release, correction, and rollback closure. | Expose public-safe contradiction state or abstain/deny. | Publishing a known hidden disagreement or unsafe precision. |
+| **Post-release** | Receive later evidence, rights changes, policy changes, and consumer corrections. | Assess impact; issue governed correction/supersession/withdrawal/rollback objects. | Silent replacement or deletion of prior public lineage. |
 
-> [!TIP]
-> A contradiction caught at `RAW` is cheap. The same contradiction caught at `PUBLISHED` is expensive. Detection investment belongs as close to ingest as the available evidence permits.
+Public clients and ordinary UI surfaces use governed APIs and released public-safe carriers. They do not read RAW, WORK, QUARANTINE, internal candidate stores, or direct model output as their normal path.
 
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 10. Runtime impact — outcome mapping
 
-Contradictions affect the runtime decision envelope. The mapping below ties each outcome (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `STALE`) to the contradiction states that produce it.
+The finite terminal vocabulary is `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` unless an accepted runtime contract explicitly says otherwise.
 
-| Outcome | When it applies to a contradiction | Illustrative `reason_code` |
+| Outcome | Contradiction posture | Required traceability |
 |---|---|---|
-| `ANSWER` | Contradiction was resolved (e.g., supersession established, steward decision recorded); citation chain is clean and links both the resolved claim and the superseded one. | `ok.warranted` |
-| `ABSTAIN` | An unresolved contradiction prevents a defensible answer; available evidence is mutually inconsistent and no supersession exists. | `evidence.conflicting` *(PROPOSED)* |
-| `DENY` | The contradiction crosses a policy boundary (e.g., sensitivity classification mismatch, public-exposure mismatch). | `policy.sensitivity` &middot; `policy.rights_unclear` |
-| `ERROR` | The contradiction reveals a system invariant violation (e.g., a `PUBLISHED` artifact whose `EvidenceRef` chain no longer terminates in `RAW`). | `system.integrity_failure` |
-| `STALE` | The contradiction is between current evidence and an evidence bundle whose freshness window has lapsed; serve nothing until refreshed. | `freshness.window_lapsed` |
+| **`ANSWER`** | The relevant contradiction is resolved for the requested scope, or the answer can accurately present bounded alternatives without implying a false winner. | Evidence for each material claim, resolution/scope note, and any superseded lineage. |
+| **`ABSTAIN`** | Rival evidence prevents a defensible claim, or required evidence/review is incomplete. | Conflict summary, evidence references, missing decision, and next verification step. |
+| **`DENY`** | Rights, sensitivity, sovereignty, access, harmful precision, or release state prohibits exposure. | Policy/review reference and a non-sensitive reason. |
+| **`ERROR`** | The contradiction reveals an invariant failure, broken reference, malformed state, or processing failure that cannot be represented safely as evidence uncertainty. | Stable error reason, non-value-bearing diagnostics, and no partial authoritative answer. |
 
-> [!NOTE]
-> The `evidence.conflicting` reason code is **PROPOSED**. Existing reason codes (`policy.sensitivity`, `policy.rights_unclear`, `system.integrity_failure`, `freshness.window_lapsed`, `evidence.missing`) are drawn from existing KFM doctrine. The naming of any new reason code requires alignment with [`policy-aware`](../doctrine/policy-aware.md) and the `policy_gate_register.yaml` register before adoption.
->
-> `STALE` is treated here as a trust-visible runtime state. If the active runtime contract admits only `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, map a stale contradiction to `ABSTAIN` or `ERROR` with `freshness.window_lapsed`, rather than inventing a new final outcome silently.
+### Staleness
 
-[⬆ Back to top](#contradiction-handling)
+`STALE` is a trust-visible condition, not a fifth terminal outcome in this guide. A stale conflict should map through the active runtime contract, commonly:
+
+- `ABSTAIN` when support is out of date or supersession is unresolved;
+- `ERROR` when a required freshness or lineage invariant is broken;
+- `DENY` when policy forbids serving the stale state.
+
+Reason-code examples such as `evidence.conflicting`, `freshness.window_lapsed`, or `system.integrity_failure` remain **PROPOSED / NEEDS VERIFICATION** until aligned with the accepted policy and runtime reason-code authority. This document does not register them.
+
+### UI and map behavior
+
+A governed public surface should make the following visible when permitted:
+
+- that a contradiction exists;
+- the rival claim summaries;
+- source roles and applicable time/spatial scope;
+- current review or correction state;
+- whether the result is narrowed, abstained, denied, withdrawn, or superseded;
+- the Evidence Drawer route to inspect admissible support.
+
+A popup, layer style, graph edge, badge, or generated narrative is a carrier. None may resolve a contradiction by itself.
+
+[Back to top](#top)
 
 ---
 
 ## 11. AI-assisted authoring rules
 
-AI assistance is permitted inside KFM under the [`ai-as-assistant`](../doctrine/ai-as-assistant.md) doctrine. Contradiction handling imposes additional, AI-specific rules that override any model preference for fluency.
-
-1. **Surface, never reconcile.** An AI draft must surface a contradiction it sees in cited sources. It may not synthesize a "best of both" sentence that hides the disagreement.
-2. **Label, don't smooth.** When sources disagree, the AI labels the claim `CONTRADICTED` and presents each side with its `EvidenceRef`, rather than choosing.
-3. **Refuse fluent reconciliation.** If a contradiction can only be resolved by inference, the AI must mark the inference `INFERRED` or `PROPOSED` — never present it as fact.
-4. **Reject re-grounding requests that ask for a winner.** A request like *"just pick the more authoritative one"* must be refused with an explanation; routing to a steward or ADR is the correct response.
-5. **`AIReceipt` records retraction.** When an AI draft is rejected for failing C5 (synthesis vs citation), the `AIReceipt` records that the synthesis was retracted, the contradiction that caused the retraction, and the re-grounding action taken.
-6. **No silent terminology substitution.** If an external standard the AI is referencing uses a different word for a KFM concept (`EvidenceBundle` vs "provenance bundle"), the AI flags the relationship as a C4 contradiction and preserves the KFM term.
-7. **Chain-of-thought is not the audit trail.** The audit trail is the `AIReceipt`, the receipts on the artifacts the AI produced, and the citations resolved. The model's internal reasoning is not persisted and cannot substitute for a recorded disposition.
+1. **Retrieve before generating.** Resolve the applicable evidence and scope before asking a model to summarize.
+2. **Preserve both sides.** Cite each rival claim independently; do not cite one side and paraphrase the other from memory.
+3. **Do not manufacture synthesis.** A sentence that combines incompatible sources into a new unsupported claim is rejected.
+4. **Use bounded language.** Distinguish observation, interpretation, model, forecast, classification, aggregate, context, and synthetic support.
+5. **Abstain on unresolved authority.** Models do not choose canonical schema homes, rights posture, steward authority, or release state.
+6. **Keep policy outside the model.** Sensitivity, access, rights, and release decisions come from governed policy/review surfaces.
+7. **Record the auditable result, not private reasoning.** Citations, retrieval scope, finite outcome, validator reports, and the applicable AI audit object form the record; private chain-of-thought does not.
+8. **Treat `AIReceipt` maturity honestly.** The current object-family register records two schema candidates and a conflicted implementation status. A valid candidate receipt cannot be treated as settled family authority.
+9. **Reject direct public model paths.** Public clients use governed APIs; a model response cannot bypass evidence resolution, policy, review, or release state.
 
 > [!CAUTION]
-> An AI that resolves contradictions silently is **less safe** than an AI that abstains. KFM prefers an `ABSTAIN` with structured uncertainty over a polished, fluent answer that hides a disagreement. Reviewers should treat fluent reconciliation by AI as a defect signal, not a quality signal.
+> Fluent reconciliation is a defect signal when the evidence remains conflicted. KFM prefers a structured `ABSTAIN` to a polished unsupported answer.
 
-[⬆ Back to top](#contradiction-handling)
-
----
-
-## 12. Audit &amp; provenance requirements
-
-Every contradiction event leaves a record. The records are append-only and immutable per [`corrections-first-class`](../doctrine/corrections-first-class.md). The required content of each record:
-
-- **Detection metadata** — when the contradiction was detected, by what (validator, steward, AI review), at what lifecycle stage.
-- **Sides** — the rival claims, each with their `EvidenceRef`(s) and source citations.
-- **Classification** — category (C1–C6) and severity (S1–S5), with the steward who assigned them.
-- **Disposition** — which mechanism was invoked (`QuarantineReceipt`, `PROPOSED CORRECTION`, `CorrectionNotice`, etc.) and where the artifact for that mechanism lives.
-- **Resolution** — if resolved, the resolution decision and its evidence basis; if unresolved, the abstain / set-capture / quarantine state.
-- **ADR linkage** — if a doctrine or contract change resulted, the ADR id and disposition.
-
-The receipts that may carry these records (paths and field names **PROPOSED** until verified):
-
-<details>
-<summary><strong>Receipts and records that carry contradiction provenance</strong></summary>
-
-- `schemas/contracts/v1/quarantine_receipt.schema.json` — `QuarantineReceipt` records the conflict that caused quarantine and the steward decision that closed it. *PROPOSED path.*
-- `schemas/contracts/v1/correction_notice.schema.json` — `CorrectionNotice` records the published claim that was wrong, the corrected claim, and the contradiction that triggered the correction. *PROPOSED path.*
-- `schemas/contracts/v1/supersession_record.schema.json` — `SupersessionRecord` links the superseded claim to the new claim and references the `CorrectionNotice`. *PROPOSED path.*
-- `schemas/contracts/v1/rollback_plan.schema.json` — `RollbackPlan` for S5 events. *PROPOSED path.*
-- `schemas/contracts/v1/validation_report.schema.json` — `ValidationReport` records detected contradictions at intake / normalization. *PROPOSED path.*
-- `schemas/contracts/v1/ai_receipt.schema.json` — `AIReceipt` records C5 retractions. *PROPOSED path.*
-- `docs/adr/` — ADRs for C3 doctrine-vs-repo dispositions. *PROPOSED path.*
-
-</details>
-
-> [!IMPORTANT]
-> Records are **append-only**. A wrong record is corrected by issuing a *new* record that supersedes the previous one — not by editing the prior record. This applies to `QuarantineReceipt`, `CorrectionNotice`, `SupersessionRecord`, and `AIReceipt` equally.
-
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
-## 13. Roles &amp; responsibilities
+## 12. Audit & provenance requirements
 
-The roles below are **functional**, not necessarily mapped to specific people. A single individual may hold multiple roles; a contradiction's disposition is recorded against the role, not the person.
+This section describes a **portable contradiction evidence profile**, not a new canonical `ContradictionRecord` object family. Store the information in the object that owns the event—such as a `ValidationReport`, review record, issue, drift entry, correction candidate, `CorrectionNotice`, `SupersessionNotice`, or `RollbackCard`—according to its accepted contract and lifecycle home.
 
-| Role | Responsibility for contradictions |
+### 12.1 Minimum profile
+
+| Field group | Minimum content |
 |---|---|
-| **Contributor (human or AI)** | Detect contradictions during authoring; label them; route them; never silently reconcile. |
-| **Reviewer** | Audit submitted artifacts for hidden contradictions; confirm classification and severity; sign off only when disposition is recorded. |
-| **Steward** | Make the disposition decision for quarantined data; sign `QuarantineReceipt` closures; assign severity. |
-| **Doctrine Working Group** | Resolve C3 (doctrine vs repo) contradictions via ADR; maintain this document. |
-| **Release Authority** | Approve `CorrectionNotice` and `RollbackPlan` for published material; coordinate with stewards on S4/S5 events. |
-| **Governance Steward** | Owns this document; reviews patterns of contradictions to identify systemic issues; reports drift to the working group. |
-| **Audit role** | Spot-checks artifacts for silent reconciliation; flags suspected violations for steward review. |
+| Detection | Detection time, detector class or role, lifecycle stage, and tool/run reference where applicable. |
+| Subject | Stable subject identifier or bounded description; temporal and spatial scope. |
+| Rival claims | Each claim separately, without smoothing or winner language. |
+| Evidence | `EvidenceRef` or equivalent resolvable support for each side; explicit absence where support is missing. |
+| Source role | Observation, model, forecast, classification, aggregate, regulatory, contextual, synthetic, or other accepted role. |
+| Classification | Primary C1-C6 category, secondary categories, S1-S5 status, and rationale; mark taxonomy status `PROPOSED` where material. |
+| Authority | Owning responsibility, required reviewer, unresolved authority conflicts, and applicable ADR/contract/policy references. |
+| Disposition | HOLD, quarantine, set-capture, narrowed answer, abstention, denial, repair, correction, supersession, withdrawal, or rollback review. |
+| Lineage | Prior and successor object/release references; correction and rollback targets where applicable. |
+| Non-effects | What the record does not authorize: source activation, truth, policy approval, release, deployment, or publication. |
 
-> [!NOTE]
-> Role identities (specific people, teams, or groups) are **TODO** placeholders until confirmed against the project's role register (`control_plane/role_register.yaml`, *PROPOSED path*).
+### 12.2 Current repository evidence
 
-[⬆ Back to top](#contradiction-handling)
+| Surface | CONFIRMED current evidence | Important boundary |
+|---|---|---|
+| `control_plane/object_family_register.yaml` | Proposed navigational register covers sixteen required trust families plus three pre-existing runtime families and records eleven required families as conflicted. | It selects no canonical candidate and creates no meaning, shape, policy, evidence, review, release, or publication authority. |
+| `CorrectionNotice` semantic contract | `contracts/correction/correction_notice.md` exists. | Contract presence does not prove acceptance, issuance, review, or release. |
+| `CorrectionNotice` schema candidates | Four candidates are recorded: `schemas/contracts/v1/correction/correction_notice.schema.json`, `schemas/contracts/v1/corrections/correction_notice_candidate.schema.json`, `schemas/contracts/v1/release/correction_notice.schema.json`, and `schemas/contracts/v1/review/correction_notice.schema.json`. | **CONFLICTED.** This document does not choose among them. |
+| Paired correction schema | `schemas/contracts/v1/correction/correction_notice.schema.json` is a Draft 2020-12, `PROPOSED`, permissive stub requiring only `id`. | Shape is incomplete and `additionalProperties` remains allowed. |
+| Correction validator | `tools/validators/correction/validate_correction_notice.py` performs bounded, no-network JSON safety and schema validation with valid/invalid fixture polarity. | PASS proves only conformance to the paired proposed schema; it does not prove correction completion, evidence closure, policy, review, release, rollback, or publication. |
+| Correction compatibility entry point | `tools/validators/validate_correction_notice.py` forwards to the correction validator. | A wrapper does not create a second validator authority or resolve schema candidates. |
+| Generic `ValidationReport` | `contracts/data/validation_report.md`, `schemas/contracts/v1/data/validation_report.schema.json`, `fixtures/data/validation_report/`, `tools/validators/data/validate_validation_report.py`, and focused tests exist. | The schema is also a permissive `PROPOSED` stub; validator PASS is shape-only. |
+| Supersession vocabulary | Current correction surfaces use `SupersessionNotice` in `contracts/correction/supersession_notice.md` and `schemas/contracts/v1/correction/supersession_notice.schema.json`. | Baseline references to `SupersessionRecord` are lineage terminology, not an automatic alias. Equivalence needs an authority decision. |
+| Rollback vocabulary | Current semantic contract path is `contracts/release/rollback_card.md`. | Baseline references to `RollbackPlan` are not silently converted into the same object family. |
+| `QuarantineReceipt` | The term appears in doctrine and domain guidance. | A dedicated canonical schema/validator family was not verified in this bounded inspection; use the applicable lane's accepted quarantine record rather than inventing a path. |
+| `AIReceipt` | Structural contract/schema/fixture/validator/test coverage is recorded. | The object-family register records two schema candidates and `CONFLICTED` authority. |
+| CODEOWNERS | `/docs/governance/` routes to `@bartytime4life`. | Review routing is not independent approval, stewardship assignment, policy decision, release authority, or proof that review occurred. |
+
+### 12.3 Vocabulary collision rule
+
+When current repository evidence and lineage terminology differ:
+
+1. record both names and their owning surfaces;
+2. do not declare them aliases based on similarity;
+3. use the current contract name when discussing the current repository surface;
+4. preserve the lineage term when describing historical material;
+5. route equivalence, rename, migration, or retirement through the applicable ADR/contract/migration process.
+
+[Back to top](#top)
+
+---
+
+## 13. Roles & responsibilities
+
+The role names below are functional. Only `@bartytime4life` is verified as a GitHub review route for this path. No independent staffing, authenticated actor binding, reviewer quorum, or operational release authority is established by this page.
+
+| Role | Contradiction responsibility | Authority boundary |
+|---|---|---|
+| **Author or detector** | Preserve the contradiction, evidence, and scope; stop silent reconciliation; route the case. | Cannot approve its own material release merely by opening or merging a PR. |
+| **Source steward** | Assess source identity, role, terms, version, reliability limits, and source usability. | Does not decide domain meaning or public release alone. |
+| **Domain steward** | Assess the meaning and consequence of rival domain claims. | Does not override rights, sensitivity, or release authority. |
+| **Evidence/validation reviewer** | Verify claim/evidence closure, comparable scope, validator limits, and negative evidence. | A passing validation report is not policy or release approval. |
+| **Contract/schema steward** | Reconcile semantic meaning, machine shape, candidate collisions, compatibility, and migrations. | File presence does not select authority; material changes may need ADR/migration review. |
+| **Policy, rights, or sensitivity reviewer** | Decide fail-closed posture for rights, sovereignty, living-person data, DNA, archaeology, rare species, infrastructure, private land, or harmful precision. | Must not be replaced by AI or client-side hiding. |
+| **Docs/governance reviewer** | Keep this guide, escalation guidance, drift, and decision references accurate. | Documentation cannot create runtime or release authority. |
+| **Correction reviewer** | Assess released impact and correction/supersession obligations. | Does not issue release state unless separately authorized. |
+| **Release authority** | Decide correction, withdrawal, supersession, or rollback transitions under accepted controls. | Current operational identity and separation remain `UNKNOWN / HOLD`. |
+| **Audit role** | Sample artifacts for hidden contradictions, unrecorded winner selection, and broken lineage. | Audit findings route work; they do not publish fixes. |
+
+Use [`ESCALATION.md`](./ESCALATION.md), [`REVIEW_DUTIES.md`](./REVIEW_DUTIES.md), and [`SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md) for the broader proposed role model. Their role identities and operational enforcement remain separately evidence-gated.
+
+[Back to top](#top)
 
 ---
 
 ## 14. Pre-merge contradiction checklist
 
-Reviewers and authors should run this checklist before merging any PR that touches sources, data, doctrine, schemas, policies, or runtime decision paths. The checklist is **absolute** in the sense of [`truth-posture`](../doctrine/truth-posture.md) — failure on any item is grounds to block merge.
+- [ ] I verified the target path and current base rather than relying on memory.
+- [ ] I searched for parallel contracts, schemas, policies, registries, validators, fixtures, workflows, and active PRs that touch the same authority surface.
+- [ ] I distinguished contradiction from uncertainty, missing evidence, drift, and representation differences.
+- [ ] I verified identity, source role, temporal scope, spatial scope, scale, CRS, and version before comparing claims.
+- [ ] Every material rival claim remains visible and independently cited or explicitly unsupported.
+- [ ] I did not select a winner because a file looked canonical, a validator passed, a test was green, or a source was newer.
+- [ ] I recorded the category and severity as `PROPOSED` taxonomy where relevant, with rationale and responsible review route.
+- [ ] I used current repository object names and separately recorded lineage terms or unresolved aliases.
+- [ ] I did not turn a `ValidationReport`, receipt, proof, catalog entry, workflow, or merge into authority it does not own.
+- [ ] Rights, sensitivity, sovereignty, living-person, DNA, archaeology, rare-species, infrastructure, and exact-location conflicts fail closed.
+- [ ] An unresolved evidence conflict maps to a hold or finite runtime outcome rather than fluent reconciliation.
+- [ ] If released state is affected, I identified correction-impact, supersession/withdrawal, cache/index invalidation, and rollback obligations without claiming they are approved.
+- [ ] Documentation was updated where behavior or authority changed, or the omission is explained.
+- [ ] Rollback remains possible and prior lineage is preserved.
 
-- [ ] Every contradiction I encountered while authoring is **recorded somewhere** — in metadata, in a receipt, in an inline label, or in a `PROPOSED CORRECTION`.
-- [ ] No prose was rewritten to hide a disagreement.
-- [ ] No data field collapses multiple disagreeing inputs into a single value without a recorded reason.
-- [ ] No external term replaces a KFM term to dodge a C4 contradiction.
-- [ ] No AI-generated section makes a synthesis claim its citations do not support.
-- [ ] Where a contradiction exists, the category (C1–C6) and severity (S1–S5) are explicit.
-- [ ] Where disposition required an ADR, the ADR is linked or the contradiction is marked **`PROPOSED CORRECTION`** awaiting ADR.
-- [ ] Where the contradiction touched published material, a `CorrectionNotice` is open or in flight.
-- [ ] The audit trail required by [§12](#12-audit--provenance-requirements) is complete for every contradiction I introduced or discovered.
-- [ ] If I touched placement, schema-home, reason-code, role-register, or runbook assumptions, they are either verified or marked `NEEDS VERIFICATION` / `PROPOSED`.
-- [ ] I have not silently reconciled.
-
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
 ## 15. Worked examples
 
-The examples below are **illustrative** — they are not direct transcripts of incidents. Each shows how the doctrine routes a realistic-shaped contradiction.
-
 <details>
-<summary><strong>Example 1 — Two historical sources disagree on a treaty date</strong></summary>
+<summary><strong>Example 1 — Historical sources disagree on an event date</strong></summary>
 
-**Situation.** Source A (a state archive transcript) records a treaty signing as `1854-09-12`. Source B (a contemporary newspaper) records it as `1854-09-15`. Both are credible. The KFM event node currently in `WORK` cites Source A.
+**Situation.** Two independently cited historical sources assert different dates for the same event.
 
-**Classification.** C1 (cross-source data conflict), S1–S2 depending on downstream usage. Treat as **S2** here because the date is surfaced in a public timeline.
+**Classification.** C1. Severity depends on consequence: S1 for a contextual display with no material downstream effect; S2 or higher when the date controls a timeline join, jurisdiction, eligibility, or released narrative.
 
-**Disposition.**
-- Encode the disagreement using the `time_uncertainty: conflicting_sources` vocabulary from [`time-aware`](../doctrine/time-aware.md).
-- Use an EDTF *set* on the event node: `[1854-09-12, 1854-09-15]`.
-- Link both `EvidenceRef`s; do not drop Source B.
-- Surface the disagreement in the catalog metadata and in the public Evidence Drawer.
-- No quarantine — the event remains usable with the structured disagreement carried forward.
+**Handling.**
 
-**Forbidden.** Silently picking `1854-09-12` because Source A "looks more authoritative." That move is a silent-reconciliation defect.
+- Verify that both sources describe the same event and calendar basis.
+- Preserve both dates and citations.
+- Record source role, publication date, archival lineage, and any admitted uncertainty.
+- `ABSTAIN` from a single date unless an authorized source/claim decision closes the conflict.
+- A later source does not automatically supersede an earlier primary record.
 
 </details>
 
 <details>
-<summary><strong>Example 2 — Validator behavior contradicts published doctrine</strong></summary>
+<summary><strong>Example 2 — Four CorrectionNotice schema candidates exist</strong></summary>
 
-**Situation.** Doctrine doc states *"PROCESSED artifacts must carry a non-empty list of input `EvidenceRef`s."* A reviewer discovers that the active validator accepts empty `EvidenceRef` lists for a specific stage.
+**Situation.** The current object-family register records four schema candidates for `CorrectionNotice`, while the bounded validator targets only `schemas/contracts/v1/correction/correction_notice.schema.json`.
 
-**Classification.** C3 (doctrine vs repo), severity at least **S3** (doctrine-impacting); escalates to S4 if it can produce policy-violating output.
+**Classification.** C3, S3 authority-impacting.
 
-**Disposition.**
-- Author inserts `PROPOSED CORRECTION` note in the doctrine doc identifying the contradiction.
-- An ADR is opened under `docs/adr/` (*PROPOSED path*) to resolve.
-- The ADR decides whether (a) doctrine narrows to match validator scope, or (b) validator is fixed to enforce doctrine. The decision is **not** made silently in either place.
-- Until the ADR lands, the doctrine doc carries the `PROPOSED CORRECTION` openly.
+**Handling.**
 
-**Forbidden.** Editing the doctrine doc to match validator behavior without an ADR. Silent doctrine drift is a structural defect.
-
-</details>
-
-<details>
-<summary><strong>Example 3 — AI draft synthesizes a "consensus" from disagreeing sources</strong></summary>
-
-**Situation.** An AI assistant is asked to summarize hydrology gauge coverage for 1925. Two cited reports give different gauge counts. The AI returns: *"By 1925, KFM held roughly 90 gauge records for Kansas."*
-
-**Classification.** C5 (AI synthesis vs citation), severity at least **S2** (substantive — the synthesis hides the disagreement).
-
-**Disposition.**
-- Reviewer rejects the draft.
-- An `AIReceipt` is filed recording the retraction and the contradiction.
-- The AI is re-prompted to surface both counts, label the claim `CONTRADICTED`, link both `EvidenceRef`s, and present the disagreement to the consumer.
-- The final draft reads, illustratively: *"Source X reports 87 gauge records; Source Y reports 94. The sources disagree (`CONTRADICTED`)."*
-
-**Forbidden.** Accepting the original "roughly 90" formulation on the grounds that it is "close enough." The fluency conceals the contradiction; the fluency is the defect.
+- Preserve all four candidate paths in the register and review record.
+- Treat the paired validator's PASS as evidence only about the schema it loads.
+- Do not relabel that candidate canonical because it has fixtures and tests.
+- Freeze rename/deletion/consumer migration until the applicable contract/schema authority decision lands.
+- Keep review, release, correction issuance, and publication separate.
 
 </details>
 
 <details>
-<summary><strong>Example 4 — A new survey arrives after publication and contradicts a published geometry</strong></summary>
+<summary><strong>Example 3 — AI summary cites one side and hides another</strong></summary>
 
-**Situation.** A `PUBLISHED` parcel geometry is contradicted by a newly-arrived 2026 survey that places one boundary 14 meters further north.
+**Situation.** Retrieval returns two incompatible source claims; generated prose cites only the claim that produces the cleaner answer.
 
-**Classification.** C6 (published vs later evidence), severity **S5** if the published geometry is consumed by downstream legal or planning users; **S2–S3** if usage is informational.
+**Classification.** C5. S2 if caught before release; S5 may apply if a consequential released answer was consumed.
 
-**Disposition (assuming S5).**
-- File a `CorrectionNotice` identifying the published artifact, the prior geometry, the new geometry, and the contradiction.
-- Issue a `SupersessionRecord` linking the prior `EvidenceBundle` to the new one.
-- Open a `RollbackPlan` to retract or amend the public artifact.
-- Add the event to the public correction-notice feed.
-- The prior `CorrectionNotice` and prior `EvidenceBundle` are **not deleted** — they remain in the immutable record per [`corrections-first-class`](../doctrine/corrections-first-class.md).
-
-**Forbidden.** Silently re-publishing with the new geometry. The old geometry must remain accessible with a supersession pointer; consumers who saw the old version need to see how they got there.
+**Handling.** Reject the draft, restore both evidence paths, re-run citation validation, and return a bounded alternative or `ABSTAIN`. Record the event through the applicable AI audit surface without treating the currently conflicted `AIReceipt` schema family as settled authority.
 
 </details>
 
 <details>
-<summary><strong>Example 5 — External standard uses terminology that conflicts with a KFM term</strong></summary>
+<summary><strong>Example 4 — Later evidence contradicts a released public geometry</strong></summary>
 
-**Situation.** A contributor cites an external standard that uses the phrase "provenance bundle" for a concept that overlaps partly, but not exactly, with KFM's `EvidenceBundle`. The draft replaces `EvidenceBundle` with the external term throughout the KFM doc to sound more standard.
+**Situation.** A newly reviewed source shows that a released public geometry is materially wrong or was exposed at unsafe precision.
 
-**Classification.** C4 (external vs internal terminology or standard), severity **S1–S3** depending on whether the substitution changes doctrine or only wording.
+**Classification.** C6. S4 for a rights/sensitivity exposure conflict; S5 when consumers may have relied on materially wrong public state.
 
-**Disposition.**
-- Preserve the KFM term `EvidenceBundle`.
-- Add an inline note: `EXTERNAL: <standard> uses "provenance bundle"; KFM uses EvidenceBundle for the governed evidence-resolution object.`
-- If the external standard shows that KFM terminology or structure is wrong, open a `PROPOSED CORRECTION` and ADR rather than silently renaming.
-
-**Forbidden.** Replacing the KFM term everywhere without recording the relationship. External familiarity is not authority to erase KFM semantics.
+**Handling.** Fail closed on affected routes, preserve the released lineage, assess impact, prepare the applicable correction candidate, use the current `SupersessionNotice` and `RollbackCard` vocabulary where those accepted contracts apply, and route release authority separately. Do not silently overwrite the public artifact.
 
 </details>
 
-[⬆ Back to top](#contradiction-handling)
+<details>
+<summary><strong>Example 5 — External standard uses a near-synonym for EvidenceBundle</strong></summary>
+
+**Situation.** An external standard uses a term that partly overlaps with KFM's `EvidenceBundle`.
+
+**Classification.** C4. Usually S1; S3 if adopting the term would change object meaning or compatibility.
+
+**Handling.** Preserve `EvidenceBundle`, document the external mapping and non-equivalent fields, and route any proposed rename or structural adoption through the contract/ADR process. Familiarity is not semantic authority.
+
+</details>
+
+[Back to top](#top)
 
 ---
 
 ## 16. FAQ
 
 <details>
-<summary><strong>Isn't "surface every contradiction" exhausting? Can we batch them?</strong></summary>
+<summary><strong>Does the most authoritative source always win?</strong></summary>
 
-Batching the *recording* is fine; batching the *resolution* is fine; batching the *concealment* is not. The doctrine requires that the record exist — not that every record interrupt the workflow. Stewards may review quarantine queues on a cadence; ADRs may aggregate related doctrine-vs-repo findings. What's not permitted is the contradiction passing through without a record at all.
-
-</details>
-
-<details>
-<summary><strong>What if both sources are clearly low-quality?</strong></summary>
-
-Quality is not a license to pick. If both sources are weak, the structured disagreement reflects the weakness honestly. The consumer is told *"we have two weak sources that disagree,"* which is more accurate than *"here is a fact."* If a steward decides neither source is usable at all, that is a different disposition (quarantine the source, not the contradiction).
+No universal authority score exists. Authority is claim-relative. A regulator may be authoritative for permit status but not for observed geology; a model may be useful for prediction but not as a measurement; a later compilation may be less primary than an earlier source-native record. Record source role and fitness for the exact claim.
 
 </details>
 
 <details>
-<summary><strong>How does this differ from <code>truth-posture.md</code>'s "Conflict surfacing" section?</strong></summary>
+<summary><strong>Can a passing validator resolve a contradiction?</strong></summary>
 
-`truth-posture.md` states the **principle**: conflicts are information, do not smooth. This document provides the **machinery**: categories, severities, routing, mechanisms, receipts, audit. The principle is binding; the machinery is how the principle is applied across the lifecycle and the runtime.
-
-</details>
-
-<details>
-<summary><strong>Is "the source is wrong, just fix it" ever acceptable?</strong></summary>
-
-Only via a recorded derivation. A manual edit that corrects a source is itself a derivation step per [`derived-stays-derived`](../doctrine/derived-stays-derived.md) and must be recorded as such, with the original source preserved and the correction linked. The doctrine does not forbid corrections — it forbids invisible corrections.
+No. A validator can prove bounded shape or rule behavior. It cannot prove source authority, evidence truth, policy approval, human review, release, or publication unless those claims are explicitly within a verified validator contract—and the current CorrectionNotice and generic ValidationReport validators disclaim those effects.
 
 </details>
 
 <details>
-<summary><strong>What if the contradiction is between this doc and another doctrine doc?</strong></summary>
+<summary><strong>Can contradictions be batched?</strong></summary>
 
-Then this doc carries an inline `PROPOSED CORRECTION` flag and an ADR is opened. The contradiction-handling doctrine is bound by its own rules. There is no "trust me" exception for governance documents.
+Detection records and review queues may be batched. Concealment may not. The minimum requirement is that the disagreement and its evidence survive before processing continues.
 
 </details>
 
 <details>
-<summary><strong>Does this apply to ingestion of large datasets where per-record review is infeasible?</strong></summary>
+<summary><strong>What if both sources are weak?</strong></summary>
 
-Yes — but the rule applies at the *shape* of detection, not at human-eyeballs review. Automated cross-source comparison at intake, automated set-capture in metadata, and automated `QuarantineReceipt` generation when validators detect disagreement are the operational form. Stewards review the queues, not every record individually.
+Preserve that fact. The defensible result may be `ABSTAIN`, a bounded alternatives view, or source quarantine. Weakness is not permission to choose the more convenient claim.
 
 </details>
 
-[⬆ Back to top](#contradiction-handling)
+<details>
+<summary><strong>What if two files both look canonical?</strong></summary>
+
+That is a C3 authority conflict. Consult accepted ADRs, Directory Rules, contracts, machine projections, consumers, and migration evidence. Return HOLD rather than inventing a winner. A navigational register may expose candidates but cannot create authority.
+
+</details>
+
+<details>
+<summary><strong>Does correction mean the prior record disappears?</strong></summary>
+
+No. Governed correction preserves prior identity and lineage, subject to rights, retention, and access controls. Exact behavior belongs to the accepted correction, supersession, withdrawal, release, and rollback contracts—not to this guide.
+
+</details>
+
+[Back to top](#top)
 
 ---
 
 ## 17. Related docs
 
-> [!NOTE]
-> Paths below preserve the existing relative-link assumptions of the baseline document. Because this session did not inspect a mounted repository, every concrete path remains `NEEDS VERIFICATION` unless separately confirmed by repository evidence. Directory placement should follow Directory Rules: responsibility root first, no parallel schema/contract/policy homes without an ADR, and `schemas/contracts/v1/<…>` as the default schema-home convention where applicable.
+### Governing placement and authority
 
-- [`docs/doctrine/truth-posture.md`](../doctrine/truth-posture.md) — Truth labels, source hierarchy, evidence-gathering, and the headline "Conflict surfacing" rule this document operationalizes. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — Primary / Secondary / Tertiary tiers and the `PROPOSED CORRECTION` mechanism this document inherits. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — `InspectableClaim` → `EvidenceRef` → `EvidenceBundle` → `SourceDescriptor`; the `ABSTAIN` rule that applies when contradictions cannot be defensibly resolved. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; the stages where contradictions are caught and quarantined. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`; the immutable-append-only correction machinery referenced throughout. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/derived-stays-derived.md`](../doctrine/derived-stays-derived.md) — Manual edits are derivations; the doctrine that governs how source corrections are recorded. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Bounds AI use; `AIReceipt`; chain-of-thought non-persistence. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — `DecisionEnvelope`, sensitivity classification, `DENY` reason codes referenced in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — Runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `STALE`); the canonical outcome vocabulary mapped in [§10](#10-runtime-impact--outcome-mapping). **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — `time_uncertainty` vocabulary including `conflicting_sources`. **CONFIRMED doctrine reference; path NEEDS VERIFICATION.**
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement, responsibility-root, and schema-home rules to verify before moving this standard or creating contradiction-related schemas. **CONFIRMED directory doctrine; path NEEDS VERIFICATION.**
-- [`docs/adr/`](../adr/) — ADR home for C3 dispositions, schema-home conflicts, placement decisions, and severity-rubric revisions. **PROPOSED path.**
-- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction procedure. **PROPOSED path.**
-- [`docs/runbooks/RB-ROLLBACK-EXECUTION.md`](../runbooks/RB-ROLLBACK-EXECUTION.md) — Day-2 rollback procedure for S5 events. **PROPOSED path.**
-- `schemas/contracts/v1/` — Default schema-home convention for receipt and record schemas listed in [§12](#12-audit--provenance-requirements), subject to ADR/repo verification. **PROPOSED file names; directory convention from Directory Rules.**
-- `control_plane/policy_gate_register.yaml` — Reason-code register referenced in [§10](#10-runtime-impact--outcome-mapping). **NEEDS VERIFICATION — exact path.**
-- [`CONTRIBUTING.md`](../../CONTRIBUTING.md) — Pre-merge checklist surface; PR template references. **NEEDS VERIFICATION.**
+- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — adopted responsibility-root and placement law.
+- [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules v2 adoption and migration boundary.
+- [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — draft explanation of documentation/decision authority versus external sources.
+- [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) — proposed, navigational, non-authoritative family projection.
+
+### Evidence, lifecycle, AI, and correction doctrine
+
+- [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md)
+- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md)
+- [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md)
+- [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md)
+- [`docs/doctrine/derived-stays-derived.md`](../doctrine/derived-stays-derived.md)
+- [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md)
+
+### Human governance lane
+
+- [`docs/governance/README.md`](./README.md)
+- [`docs/governance/ESCALATION.md`](./ESCALATION.md)
+- [`docs/governance/REVIEW_DUTIES.md`](./REVIEW_DUTIES.md)
+- [`docs/governance/SEPARATION_OF_DUTIES.md`](./SEPARATION_OF_DUTIES.md)
+- [`docs/governance/STEWARD_CHARTERS.md`](./STEWARD_CHARTERS.md)
+- [`docs/governance/DEPRECATION_PROCESS.md`](./DEPRECATION_PROCESS.md)
+- [`docs/governance/DECISION_LOG.md`](./DECISION_LOG.md)
+- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md)
+- [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md)
+
+### Current semantic and machine surfaces
+
+- [`contracts/correction/correction_notice.md`](../../contracts/correction/correction_notice.md)
+- [`contracts/correction/supersession_notice.md`](../../contracts/correction/supersession_notice.md)
+- [`contracts/data/validation_report.md`](../../contracts/data/validation_report.md)
+- [`contracts/release/rollback_card.md`](../../contracts/release/rollback_card.md)
+- [`schemas/contracts/v1/correction/correction_notice.schema.json`](../../schemas/contracts/v1/correction/correction_notice.schema.json)
+- [`schemas/contracts/v1/correction/supersession_notice.schema.json`](../../schemas/contracts/v1/correction/supersession_notice.schema.json)
+- [`schemas/contracts/v1/data/validation_report.schema.json`](../../schemas/contracts/v1/data/validation_report.schema.json)
+- [`tools/validators/correction/validate_correction_notice.py`](../../tools/validators/correction/validate_correction_notice.py)
+- [`tools/validators/data/validate_validation_report.py`](../../tools/validators/data/validate_validation_report.py)
+- [`docs/architecture/publication/rollback-and-correction.md`](../architecture/publication/rollback-and-correction.md)
+- [`.github/CODEOWNERS`](../../.github/CODEOWNERS)
+
+[Back to top](#top)
 
 ---
 
 ## 18. Adoption & verification checklist
 
-Use this checklist before treating this standard as implemented or wiring it into validators, runbooks, policy gates, APIs, UI surfaces, or AI review workflows.
+Before treating this guide as normative or implemented:
 
-- [ ] Confirm the canonical target path for this file (`docs/doctrine/`, `docs/governance/`, or another documented home) against Directory Rules, current repo structure, and any accepted ADR.
-- [ ] Confirm owners in the role register; replace `TODO(owner)` only with verified role/team names.
-- [ ] Confirm every sibling doctrine link in [§17](#17-related-docs) resolves from the final target path.
-- [ ] Confirm `C1`–`C6` and `S1`–`S5` are accepted taxonomy, or open an ADR for changes.
-- [ ] Confirm contradiction-related schemas exist or create them under the ADR-approved schema home.
-- [ ] Confirm `policy_gate_register.yaml` (or successor) contains the reason codes used in [§10](#10-runtime-impact--outcome-mapping).
-- [ ] Confirm runbooks for correction and rollback exist and match the routing model in [§6](#6-routing-flow).
-- [ ] Confirm runtime contracts either support `STALE` directly or map stale conditions to finite outcomes without silent vocabulary drift.
-- [ ] Confirm UI surfaces, especially Evidence Drawer and Focus Mode, expose contradictions instead of smoothing them.
-- [ ] Confirm PR templates or contributor guidance include the pre-merge checklist in [§14](#14-pre-merge-contradiction-checklist).
+- [ ] Decide whether C1-C6 and S1-S5 should become accepted governance vocabulary; use an ADR or other verified decision route if required.
+- [ ] Reconcile the four `CorrectionNotice` schema candidates without treating validator coverage as canonical authority.
+- [ ] Reconcile `SupersessionNotice` versus lineage references to `SupersessionRecord`.
+- [ ] Reconcile `RollbackCard` versus lineage references to `RollbackPlan`.
+- [ ] Verify whether a canonical `QuarantineReceipt` family exists or define the applicable quarantine-record contract through the proper authority.
+- [ ] Resolve the two `AIReceipt` schema candidates before claiming one family shape.
+- [ ] Verify contradiction reason codes against the accepted policy/runtime reason-code source.
+- [ ] Verify authenticated actor binding, stewardship assignments, independent review capacity, and separation of duties.
+- [ ] Verify end-to-end enforcement across source intake, validators, policy, review, governed API, Evidence Drawer, Focus Mode, correction, and rollback.
+- [ ] Add realistic positive and negative fixtures for any accepted contradiction contract.
+- [ ] Prove that public surfaces expose unresolved contradiction state and cannot bypass it through direct stores, client-only filters, or direct model calls.
+- [ ] Run a governed correction and rollback rehearsal against synthetic, no-network fixtures before claiming operational maturity.
 
 > [!IMPORTANT]
-> Until these checks pass, this file can govern authoring posture and review expectations, but exact implementation wiring remains `UNKNOWN` / `NEEDS VERIFICATION`.
+> Until those checks close, this page improves authoring and review posture only. Implementation maturity, runtime behavior, source activation, release authority, deployment, and publication remain separate.
 
-[⬆ Back to top](#contradiction-handling)
+[Back to top](#top)
 
 ---
 
-<sub>**Last updated:** 2026-05-15 · **Version:** v1 (draft) · **Placement:** `PATH_TBD_AFTER_REPO_INSPECTION` — current relative links preserve the baseline assumption pending repo verification</sub>
+## 19. Change history & rollback
 
-[⬆ Back to top](#contradiction-handling)
+### v2-draft — 2026-08-23
+
+- Reconciled the document against current main and accepted ADR-0029 placement authority.
+- Removed the stale `PATH_TBD_AFTER_REPO_INSPECTION` and no-mounted-repository posture.
+- Changed the page from self-declared normative doctrine to repository-grounded draft governance guidance.
+- Preserved the C1-C6 categories, S1-S5 severities, routing flow, disposition matrix, lifecycle mapping, AI rules, checklist, examples, and FAQ while labeling their exact machinery `PROPOSED`.
+- Expanded C3 to cover doctrine, contract, schema, policy, registry, implementation, workflow, and generated-projection authority conflicts.
+- Reconciled runtime behavior to four terminal outcomes; retained staleness as a reason/state.
+- Grounded `CorrectionNotice` and `ValidationReport` claims in current contract/schema/fixture/validator/test evidence and stated validator non-effects.
+- Surfaced the four current `CorrectionNotice` schema candidates and selected none.
+- Reconciled current `SupersessionNotice` and `RollbackCard` terminology while preserving older terms as lineage rather than silent aliases.
+- Replaced unverified schema/runbook claims with explicit verification boundaries.
+- Recorded CODEOWNERS as a review route only.
+
+### Rollback
+
+This is a one-file documentation change. Rollback is the exact restoration of prior blob:
+
+```text
+042096c66c8c23ce1ab98008ad3b9139eddb859d
+```
+
+Rollback restores the prior prose only. It does not alter any contract, schema, policy, validator, fixture, test, workflow, receipt, proof, release record, correction, rollback object, runtime, deployment, or publication state.
+
+[Back to top](#top)
