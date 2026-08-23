@@ -25,12 +25,15 @@
     "source_activation_authorized": false
   },
   "created_at": "2026-08-23T00:00:00Z",
-  "edit_policy": "same_path_forward_correction",
+  "edit_policy": "manual_review_required",
   "exact_current_main_topology": {
     "execution_state": "CHECK_NOT_RUN",
     "outcome": "NEEDS_VERIFICATION",
     "reason": "Current main advanced after the latest verified topology candidate."
   },
+  "generated_from": "mrts-milestone-reconciliation-2026-08-23",
+  "generator": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "generator_version": "kfm.qa.mrts-reconciliation.v1",
   "issues": {
     "3359": {
       "blockers": [
@@ -108,5 +111,6 @@
     "open_pull_requests_at_preflight": 0,
     "task_branch": "docs/mrts-milestone-reconciliation-20260823"
   },
-  "schema_version": "kfm.qa.mrts-reconciliation.v1"
+  "schema_version": "kfm.qa.mrts-reconciliation.v1",
+  "sha256": "sha256:74217fe5d5f1969752e534e9360484b06493a91eb3e3080817b1030be66de524"
 }

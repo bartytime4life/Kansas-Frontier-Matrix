@@ -1,12 +1,12 @@
 {
   "artifact_hashes": {
-    "artifacts/qa/validation/milestone-1/README.md": "sha256:f43a9567e9a673c31fa60c0090cdf6ab82eb07b7f2b017c4d44742195fd2eaa8",
-    "artifacts/qa/validation/milestone-1/mrts_milestone_reconciliation_2026-08-23.md": "sha256:b03c5963b80e2cef685f728c42dc29e22d1c99daabdfd9060ee04a1538d7b4bf",
-    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "sha256:9924cd4c13e00a187a9a029167f413e03da5bf87c21f042f7e4fbaea39050cf7"
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:4a7f3b18017e9c57909c0c99347962eacf4e1a028b9a757244a99867faf19912",
+    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "sha256:5b20d20588182dda3d59f521b3ca61a5f1c3ea26b7e53642952a9a2040af0f19",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:23dd2e85bfb2cbb8fd1074f5f359ed1a01313db5bac665093c85b517b1e5665f"
   },
   "artifact_paths": [
     "artifacts/qa/validation/milestone-1/README.md",
-    "artifacts/qa/validation/milestone-1/mrts_milestone_reconciliation_2026-08-23.md",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
     "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json"
   ],
   "citations": [
@@ -73,7 +73,7 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 3439
   },
   "model_identity": {
     "model": "GPT-5.6 Pro",
@@ -95,8 +95,8 @@
   "receipt_id": "kfm-mrts-reconciliation-b03c5963b80e2cef685f",
   "truth_labels": {
     "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
-    "artifacts/qa/validation/milestone-1/mrts_milestone_reconciliation_2026-08-23.md": "PROPOSED",
-    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "PROPOSED"
+    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "PROPOSED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "PROPOSED"
   },
   "validation_gates": [
     {
@@ -117,7 +117,7 @@
     {
       "gate": "directory-rules-placement",
       "outcome": "PASS",
-      "reason": "QA projections remain beside the existing canonical report; authoring receipt stays in the existing generated-receipt lane."
+      "reason": "Human procedure remains in docs/runbooks; machine QA projection remains beside the canonical report with generated metadata; authoring receipt stays in the generated-receipt lane."
     },
     {
       "gate": "artifact-structure-and-json-parse",
@@ -130,6 +130,11 @@
       "reason": "All added repository-relative targets were verified at the pinned base or created in this packet."
     },
     {
+      "gate": "topology-artifact-metadata",
+      "outcome": "PASS",
+      "reason": "Non-README artifacts/ payload is JSON with generated_from, generator, generator_version, sha256, and manual_review_required edit policy."
+    },
+    {
       "gate": "canonical-report-mutation",
       "outcome": "SKIPPED",
       "reason": "The canonical report is regenerate-only and exact-current-main execution evidence is unavailable in the connector-only environment."
@@ -137,7 +142,7 @@
     {
       "gate": "repository-native-hosted-ci",
       "outcome": "SKIPPED",
-      "reason": "Hosted checks begin after draft pull-request creation and are reported separately."
+      "reason": "Hosted checks are observed separately for exact pull-request heads."
     },
     {
       "gate": "human-review",
