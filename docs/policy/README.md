@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-policy-readme
 title: docs/policy/ — Human Policy Guidance Containment and Routing Lane
 type: directory-readme
-version: v1.2
+version: v1.3
 status: draft; repository-active; containment-only; noncanonical-under-directory-rules; migration-hold; non-policy-authority; non-release; non-publication
 owners:
   - "@bartytime4life"
@@ -12,30 +12,33 @@ updated: 2026-08-23
 policy_label: repository-public
 current_path: docs/policy/README.md
 owning_root: docs/
-responsibility: "Maintain the repository-present docs/policy containment contract, distinguish historical lineage from current state, route policy-related human guidance to its owning responsibility, and prevent explanatory or scaffold Markdown from becoming policy source, executable test, or publication authority."
+responsibility: "Maintain the repository-present docs/policy containment contract, distinguish historical lineage from current state, route policy-related human guidance to its owning responsibility, and prevent explanatory or scaffold Markdown from becoming policy source, executable test, sensitive-data storage, or publication authority."
 truth_posture: "CONFIRMED current README and child bytes, direct-child inventory, accepted Directory Rules v2 placement law, canonical policy and test authorities, documentation workflows, CODEOWNERS fallback, and current machine-registry contents / PROPOSED per-file convergence and retirement sequencing / UNKNOWN complete external consumers, final lane disposition, and independent stewardship / NEEDS VERIFICATION accepted migration decisions, branch-protection coupling, and document-registry admission"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 38715c760f0005e97ede9281b8cbe755a827346d
-  base_tree: 1a4868dc9c0343fa86f666267e4d87ce6cb5c055
-  current_blob_before_update: 5c483016ea0e99cb0f782d1b807542c824b6dbae
+  base_commit: 565af2021254c27ea3626724106ad6b1eae800df
+  base_tree: e1b2719997edbc7e6f877ac00803c11b83cd9453
+  current_blob_before_update: e3f17038f9f0b96c1c023ed6b59f85ee465a9ead
   contract_introduced_commit: afc9eabd8902a7ae85f7c8c119817c9b6db6d449
   historical_placeholder_blob: e25f1814e51579d5f55c0f1fe0135ddb28a47f4a
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   policy_root_readme_blob: 52877f1befd3112f1aec0eb122669d3fdc2634e6
+  policy_sensitivity_readme_blob: 06197c7a7255264b94fb9dd8d7f73844cfa35682
   tests_root_readme_blob: 5e497ae0f5b2f6a22d795346315b94393802e38f
   tests_policy_readme_blob: d39a16c668824048c19738bbcdd3068d08f2f557
   policy_tests_readme_blob: 4bb2b04fba4a9109501a5d42a4bf1a432569c085
-  docs_policy_tests_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   docs_policy_tests_pointer_blob: ecc70dcf7ea032e6e6e45cdb5695668d7872bb51
+  docs_policy_sensitivity_prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
+  docs_policy_sensitivity_pointer_blob: 40af7f1b4a6501c90294d4f74c7c61c97946a9f0
   tests_marker_blob: e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   living_persons_scaffold_blob: 51a7da413c94280a527ada69c7fdd74a8dd08613
   fauna_scaffold_blob: 31be13d0ce49779bc0de3d6829842ef439ba07ec
 related:
   - docs/README.md
+  - docs/policy/sensitivity/README.md
   - docs/policy/tests/README.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -46,6 +49,7 @@ related:
   - docs/security/README.md
   - docs/standards/README.md
   - policy/README.md
+  - policy/sensitivity/README.md
   - policy/tests/README.md
   - policy/domains/people-dna-land/README.md
   - policy/domains/fauna/README.md
@@ -76,7 +80,8 @@ tags:
 notes:
   - "v1.0 replaced a one-byte README whose complete content was the character y."
   - "v1.1 refreshed current-main evidence, separated historical lineage from current state, added repository-native validation commands, and corrected rollback to the actual current contract."
-  - "v1.2 reconciles the tests child after PR #3448 created a blank README, pairs that child with a containment/routing pointer, and keeps executable tests under canonical tests/."
+  - "v1.2 reconciled the tests child after PR #3448 created a blank README, paired that child with a containment/routing pointer, and kept executable tests under canonical tests/."
+  - "v1.3 reconciles the sensitivity child after PR #3448 created a blank README, pairs that child with a public-safe containment/routing pointer, and keeps executable sensitivity policy under canonical policy/."
   - "The adopted Directory Rules v2 canonical docs direct-child map does not name docs/policy/; this README therefore contains and routes the current lane rather than declaring it canonical."
   - "No executable policy rule, contract, schema, fixture, test, registry, receipt, proof, release object, runtime, or public surface is changed by this documentation reconciliation."
 [/KFM_META_BLOCK_V2] -->
@@ -85,7 +90,7 @@ notes:
 
 # `docs/policy/` — Human Policy Guidance Containment and Routing Lane
 
-`docs/policy/` is a repository-present documentation lane containing two small proposal-only guidance scaffolds and one policy-test documentation pointer. This README makes that state inspectable, routes readers to the responsibility roots that own policy-related work, and prevents the lane from becoming a second policy, test, fixture, or publication authority.
+`docs/policy/` is a repository-present documentation lane containing two small proposal-only guidance scaffolds and two containment/routing pointers. This README makes that state inspectable, routes readers to the responsibility roots that own policy-related work, and prevents the lane from becoming a second policy, test, fixture, sensitive-data, or publication authority.
 
 > [!IMPORTANT]
 > **This path exists, but adopted Directory Rules v2 do not list `docs/policy/` as a canonical documentation lane.** The current posture is containment and migration review. Keep existing references readable; place new substantive guidance by its primary responsibility under an adopted documentation lane.
@@ -94,7 +99,7 @@ notes:
 > **Executable policy source is singular under [`policy/`](../../policy/README.md), while executable conformance belongs under [`tests/`](../../tests/README.md).** Nothing here can allow or deny an operation, run a test, authenticate consent, clear rights, downgrade sensitivity, establish evidence, approve release, or authorize publication.
 
 > [!CAUTION]
-> The child scaffolds concern living-person/DNA geoprivacy and fauna sensitivity. The tests child is public documentation. Do not add real personal data, genomic material, exact protected locations, private-land details, consent tokens, restricted evidence, executable fixtures, or reconstruction-enabling examples to this repository-facing lane.
+> The child scaffolds concern living-person/DNA geoprivacy and fauna sensitivity. The tests and sensitivity READMEs are public documentation pointers. Do not add real personal data, genomic material, exact protected locations, private-land details, consent tokens, restricted evidence, executable fixtures, or reconstruction-enabling examples to this repository-facing lane.
 
 **Quick navigation:** [Purpose](#purpose-and-authority) · [Evidence](#current-repository-state-and-lineage) · [Inventory](#current-direct-child-map) · [Routing](#authority-routing) · [Containment](#containment-contract) · [Guidance contract](#human-policy-guidance-contract) · [Sensitive content](#rights-sensitivity-and-public-exposure) · [Migration](#convergence-and-migration-discipline) · [Validation](#validation) · [Review](#ownership-and-review) · [Rollback](#correction-and-rollback) · [Open work](#open-verification-register) · [History](#change-history)
 
@@ -121,11 +126,12 @@ It does **not** choose a final home for either sensitive-domain scaffold, retire
 | Placement outcome for this README | `PLACE` for same-path containment while the current lane exists |
 | Placement outcome for new substantive content | `HOLD` until one primary responsibility and any canonical equivalent are verified |
 | Policy-source authority | [`policy/`](../../policy/README.md) |
+| Sensitivity-policy authority | [`policy/sensitivity/`](../../policy/sensitivity/README.md) |
 | Policy-object meaning | [`contracts/policy/`](../../contracts/policy/README.md) |
 | Machine shape | [`schemas/contracts/v1/policy/`](../../schemas/contracts/v1/policy/README.md) |
 | Executable-test authority | [`tests/`](../../tests/README.md), normally [`tests/policy/`](../../tests/policy/README.md) for policy boundaries |
 | Reusable-fixture authority | [`fixtures/`](../../fixtures/README.md) |
-| Public-path role | Repository-facing documentation only; never a policy-evaluation, test-execution, or data-serving path |
+| Public-path role | Repository-facing documentation only; never a policy-evaluation, test-execution, protected-data, or data-serving path |
 | Writers | Reviewed documentation changes on feature branches |
 | Trust posture | Cite or abstain; fail closed where rights, sensitivity, consent, public exposure, ownership, or test authority is unresolved |
 
@@ -140,7 +146,7 @@ Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - require README contracts where authority, exposure, mutation, or lifecycle behavior changes; and
 - require explicit classification, single-write discipline, verified consumers, exit criteria, and rollback for compatibility or migration.
 
-This same-path update is a bounded containment action. It does not authorize growth of `docs/policy/` or `docs/policy/tests/` as parallel authority lanes.
+This same-path update is a bounded containment action. It does not authorize growth of `docs/policy/`, `docs/policy/sensitivity/`, or `docs/policy/tests/` as parallel authority lanes.
 
 [Back to top](#top)
 
@@ -148,21 +154,23 @@ This same-path update is a bounded containment action. It does not authorize gro
 
 ## Current repository state and lineage
 
-Evidence base: `main@38715c760f0005e97ede9281b8cbe755a827346d`, tree `1a4868dc9c0343fa86f666267e4d87ce6cb5c055`. The tests-child pointer is authored on the feature branch from that exact base at blob `ecc70dcf7ea032e6e6e45cdb5695668d7872bb51`.
+Evidence base: `main@565af2021254c27ea3626724106ad6b1eae800df`, tree `e1b2719997edbc7e6f877ac00803c11b83cd9453`. The sensitivity-child pointer is authored on the feature branch from that exact base at blob `40af7f1b4a6501c90294d4f74c7c61c97946a9f0`.
 
 | Surface | Confirmed current state | Safe interpretation |
 |---|---|---|
-| `docs/policy/README.md` before this revision | Substantive containment contract; blob `5c483016ea0e99cb0f782d1b807542c824b6dbae` | Current parent boundary, not policy or publication authority |
+| `docs/policy/README.md` before this revision | Substantive containment contract; blob `e3f17038f9f0b96c1c023ed6b59f85ee465a9ead` | Current parent boundary, not policy or publication authority |
 | Contract introduction | Commit `afc9eabd8902a7ae85f7c8c119817c9b6db6d449` replaced the historical placeholder on 2026-08-14 | Establishes current README lineage |
 | Historical placeholder | Blob `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a` contained only `y` | Historical defect evidence; not current state or a preferred rollback target |
 | Direct entries | This README, one Markdown file, and two directories | Small containment surface |
 | `living_persons_geoprivacy.md` | Explicit `PROPOSED scaffold`; blob `51a7da413c94280a527ada69c7fdd74a8dd08613` | Not authoritative privacy or geoprivacy guidance |
+| `sensitivity/README.md` at base | One newline; blob `8b137891791fe96927ad78e64b0aad7bded08bdc` | Path presence only; no sensitivity contract or policy |
+| `sensitivity/README.md` on this branch | Public-safe containment and routing pointer; blob `40af7f1b4a6501c90294d4f74c7c61c97946a9f0` | Human guidance only; no executable-policy authority |
 | `sensitivity/fauna.md` | Explicit `PROPOSED scaffold`; blob `31be13d0ce49779bc0de3d6829842ef439ba07ec` | Not an accepted sensitivity documentation family |
-| `tests/README.md` at base | One newline; blob `8b137891791fe96927ad78e64b0aad7bded08bdc` | Path presence only; no test contract or implementation |
-| `tests/README.md` on this branch | Containment and routing pointer; blob `ecc70dcf7ea032e6e6e45cdb5695668d7872bb51` | Human guidance only; no executable-test authority |
+| `tests/README.md` | Containment and routing pointer; blob `ecc70dcf7ea032e6e6e45cdb5695668d7872bb51` | Human guidance only; no executable-test authority |
 | `tests/.gitkeep` | Zero bytes; blob `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` | Historical marker only |
 | Canonical test root | `tests/README.md` blob `5e497ae0f5b2f6a22d795346315b94393802e38f` | Executable conformance belongs under root `tests/` |
 | Canonical policy-test lane | `tests/policy/README.md` blob `d39a16c668824048c19738bbcdd3068d08f2f557` | Substantive mixed-maturity boundary suite; passing remains non-authoritative |
+| Canonical sensitivity-policy lane | `policy/sensitivity/README.md` blob `06197c7a7255264b94fb9dd8d7f73844cfa35682` | Rule-source boundary with mixed scaffold maturity and unverified runtime enforcement |
 | Policy-local tests placeholder | `policy/tests/README.md` blob `4bb2b04fba4a9109501a5d42a4bf1a432569c085` | Separate held lane; not a substitute for root `tests/policy/` |
 | Canonical policy root | `policy/README.md` blob `52877f1befd3112f1aec0eb122669d3fdc2634e6` | Policy-source work belongs under `policy/`, not here |
 | Placement authority | Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, adopted through ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9` | Same-path containment is allowed; parallel policy/test authority is not |
@@ -170,7 +178,7 @@ Evidence base: `main@38715c760f0005e97ede9281b8cbe755a827346d`, tree `1a4868dc9c
 | Consumer closure | GitHub search is insufficient to prove complete repository or external consumers | Moves and deletion remain `HOLD` |
 | Runtime, release, publication | None | Documentation presence and CI cannot establish enforcement or public state |
 
-**CONFIRMED:** the parent README is substantive; the one-byte value is historical lineage. The child inventory is current on this branch, and every child remains proposal, containment, or marker material rather than executable authority.
+**CONFIRMED:** the parent README is substantive; the one-byte parent is historical lineage. The current children are proposal, containment, or marker material rather than executable authority.
 
 **PROPOSED:** classify and converge child documents into their owning documentation responsibilities after consumer review.
 
@@ -188,15 +196,19 @@ Evidence base: `main@38715c760f0005e97ede9281b8cbe755a827346d`, tree `1a4868dc9c
 docs/policy/
 ├── README.md                         # containment, routing, and migration boundary
 ├── living_persons_geoprivacy.md      # PROPOSED scaffold; no policy authority
-├── sensitivity/                      # one fauna scaffold; no child README
-└── tests/                            # containment pointer plus .gitkeep; no executable tests
+├── sensitivity/
+│   ├── README.md                     # containment and routing pointer; no policy authority
+│   └── fauna.md                      # PROPOSED scaffold; no policy authority
+└── tests/
+    ├── README.md                     # containment and test-routing pointer
+    └── .gitkeep                      # zero-byte historical marker
 ```
 
 | Direct child | Current evidence | Current posture |
 |---|---|---|
 | [`living_persons_geoprivacy.md`](living_persons_geoprivacy.md) | Names [`docs/domains/people-dna-land/sublanes/dna.md`](../domains/people-dna-land/sublanes/dna.md) as its source | `HOLD`; compare domain, security/privacy, standards, and executable-policy responsibilities |
-| [`sensitivity/`](sensitivity/) | Contains `fauna.md`, sourced to [`docs/domains/fauna/IDENTITY_MODEL.md`](../domains/fauna/IDENTITY_MODEL.md) | `HOLD`; no accepted child-lane contract or final documentation home |
-| [`tests/`](tests/) | Contains a routing pointer and zero-byte `.gitkeep`; no executable extension or fixture | `PLACE` for containment; `HOLD` for growth or retirement pending consumer review |
+| [`sensitivity/`](sensitivity/README.md) | Contains a public-safe routing pointer plus `fauna.md`, sourced to [`docs/domains/fauna/IDENTITY_MODEL.md`](../domains/fauna/IDENTITY_MODEL.md) | `PLACE` for containment; `HOLD` for substantive growth, promotion, migration, or retirement |
+| [`tests/`](tests/README.md) | Contains a routing pointer and zero-byte `.gitkeep`; no executable extension or fixture | `PLACE` for containment; `HOLD` for growth or retirement pending consumer review |
 
 No child is promoted, accepted, activated, released, or made canonical by this inventory.
 
@@ -219,6 +231,7 @@ Route policy-related material by **primary responsibility**, not by the word “
 | Operational procedure | [`docs/runbooks/`](../runbooks/) |
 | Drift or unresolved authority | [`docs/registers/`](../registers/) |
 | Executable admissibility rule | [`policy/`](../../policy/) |
+| Executable sensitivity rule/profile source | [`policy/sensitivity/`](../../policy/sensitivity/README.md) |
 | Policy-object meaning | [`contracts/policy/`](../../contracts/policy/) |
 | Machine-valid policy-object shape | [`schemas/contracts/v1/policy/`](../../schemas/contracts/v1/policy/) |
 | Executable policy and trust-boundary tests | [`tests/policy/`](../../tests/policy/README.md) or another accepted test lane |
@@ -237,7 +250,7 @@ A human document may explain an accepted rule and link to its source. It must no
 
 While lane disposition is unresolved, permitted content is limited to:
 
-- this README, the current proposal scaffolds, and the tests-child routing pointer;
+- this README, the current proposal scaffolds, and the two child routing pointers;
 - bounded correction or migration preparation;
 - tombstone, alias, or migration facts after an accepted decision;
 - links to the current owning documentation, policy, contract, schema, validation, test, fixture, evidence, and release surfaces; and
@@ -293,6 +306,7 @@ Use synthetic or irreversibly generalized examples. Never commit consent tokens,
 | Current item | Candidate responsibility | Result | Evidence needed before action |
 |---|---|---|---|
 | `living_persons_geoprivacy.md` | People/DNA/Land explanation; security/privacy guidance; standards profile | `HOLD` | Compare current docs, consumers, standards, identity, links, and qualified review |
+| `sensitivity/README.md` | Temporary sensitivity-routing pointer | `PLACE` for same-path containment; `HOLD` for substantive growth or retirement | Complete consumers, one canonical documentation target or zero-successor decision, registry/link update, and rollback |
 | `sensitivity/fauna.md` | Fauna explanation; security/geoprivacy guidance; standards profile | `HOLD` | Compare fauna docs, policy lanes, source-role boundaries, links, and public-safe review |
 | `tests/README.md` | Temporary test-routing pointer | `PLACE` for same-path containment; `HOLD` for executable growth or retirement | Complete consumers, one canonical documentation target or zero-successor decision, registry/link update, and rollback |
 | `tests/.gitkeep` | Historical marker only | `NEEDS VERIFICATION` | Confirm no identity, generation, or consumer dependence before deletion |
@@ -308,7 +322,7 @@ Do not bulk-move by filename or topic, and never create two writable authorities
 
 ## Validation
 
-Documentation checks are quality evidence only. They do not prove policy correctness, test completeness, activation, runtime enforcement, release approval, or publication.
+Documentation checks are quality evidence only. They do not prove policy correctness, test completeness, sensitivity classification, activation, runtime enforcement, release approval, or publication.
 
 | Check | Applies | Boundary |
 |---|:---:|---|
@@ -316,7 +330,7 @@ Documentation checks are quality evidence only. They do not prove policy correct
 | [`link-check`](../../.github/workflows/link-check.yml) | Yes | Validates changed local targets; external URLs are not requested |
 | [`docs-document-graph`](../../.github/workflows/docs-document-graph.yml) | Yes | Builds a bounded documentation graph projection |
 | [`docs-stale-scan`](../../.github/workflows/docs-stale-scan.yml) | Yes | Reports changed-file freshness and verification debt |
-| [`docs-build`](../../.github/workflows/docs-build.yml) | Yes | Records the explicit generator/preview hold; it does not publish |
+| [`docs-build`](../../.github/workflows/docs-build.yml) | Yes | Records the current generator/preview posture; it does not publish |
 | Directory-topology validation | Yes | Detects new drift; this change admits no new canonical lane |
 | Policy evaluator tests | No behavior changed | These docs change no policy source or evaluator |
 | Policy boundary tests | No behavior changed | Existing suites are referenced, not modified or rerun as authority |
@@ -324,7 +338,7 @@ Documentation checks are quality evidence only. They do not prove policy correct
 
 ### Repository-native commands
 
-Run in an isolated checkout after `python tools/ci/install_python_ci.py project-test`, replacing `<base>` with the pinned base commit.
+Run in an isolated checkout after using the repository's admitted dependency-install path, replacing `<base>` with the pinned base commit.
 
 ```bash
 python -m unittest discover \
@@ -373,21 +387,24 @@ python tools/validators/docs/stale-scan/check_stale_docs.py \
 
 make repository-topology
 make validator-registry-check
+git diff --check
 ```
 
 The registry delta is review-only. These commands do not mutate the registry, accept doctrine, activate policy, create test authority, approve release, deploy, or publish.
 
 ### Changed-file acceptance checks
 
-- Both changed files contain one H1 and a closed `KFM_META_BLOCK_V2` where required.
+- Both changed documentation files contain one H1 and a closed `KFM_META_BLOCK_V2`.
 - Every introduced local link resolves with correct case.
 - The direct-child map matches the inspected tree.
 - Historical lineage is not presented as current state.
 - The tests child is described as a containment pointer, not executable implementation.
+- The sensitivity child is described as a containment pointer, not policy implementation or sensitive-data storage.
+- The fauna scaffold remains proposal-only.
 - No child is promoted and no policy source, schema, contract, runtime, fixture, test, decision, receipt, proof, release, or publication state is created.
 - No real sensitive data, secret, credential, protected exact location, or executable fixture appears.
-- The diff remains limited to the child pointer and this directly dependent parent inventory.
-- Both files end with a newline and contain no trailing whitespace.
+- The diff remains limited to the sensitivity child pointer, this directly dependent parent inventory, and the required generated authorship receipt.
+- All changed text files end with a newline and contain no trailing whitespace.
 
 [Back to top](#top)
 
@@ -399,7 +416,7 @@ The registry delta is review-only. These commands do not mutate the registry, ac
 
 Content-specific changes also need the applicable policy, contract, schema, runtime, domain, privacy, consent, rights, biodiversity, sensitivity, geoprivacy, security, standards, QA, release, correction, rollback, and migration reviewers. Independent assignments remain `NEEDS VERIFICATION`; do not encode placeholder roles as GitHub owners.
 
-Review of this update should verify the exact base and prior blobs, the current child map, canonical test routing, the absence of executable content, the noncanonical docs-lane posture, public-safe wording, and exact rollback.
+Review of this update should verify the exact base and prior blobs, the current child map, canonical policy/test routing, the absence of executable or protected content, the noncanonical docs-lane posture, public-safe wording, the generated authorship receipt, and exact rollback.
 
 [Back to top](#top)
 
@@ -409,11 +426,11 @@ Review of this update should verify the exact base and prior blobs, the current 
 
 A correction should identify the affected claim, current evidence, whether a child or authority route changed, links or consumers requiring propagation, and the prior blob or forward-fix target.
 
-The base parent contract for this revision is blob `5c483016ea0e99cb0f782d1b807542c824b6dbae`; the child target preimage is blob `8b137891791fe96927ad78e64b0aad7bded08bdc`; both are pinned to `main@38715c760f0005e97ede9281b8cbe755a827346d`.
+The base parent contract for this revision is blob `e3f17038f9f0b96c1c023ed6b59f85ee465a9ead`; the sensitivity-child target preimage is blob `8b137891791fe96927ad78e64b0aad7bded08bdc`; the authored sensitivity pointer is blob `40af7f1b4a6501c90294d4f74c7c61c97946a9f0`; all are tied to the branch rooted at `main@565af2021254c27ea3626724106ad6b1eae800df`.
 
 Before merge, rollback normally means closing or abandoning the draft pull request and branch. After an authorized merge, use a reviewed revert of the implementation commits or a forward-fix PR against the actual merged state; never rewrite shared history.
 
-Restoring the child blank blob is byte-accurate but removes the containment warning. A forward fix is preferred for wording errors. The historical parent one-byte blob `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a` remains lineage evidence but is not a rollback target because restoring it would recreate the broken parent placeholder.
+Restoring the sensitivity child blank blob is byte-accurate but removes the containment warning. A forward fix is preferred for wording errors. The historical parent one-byte blob `e25f1814e51579d5f55c0f1fe0135ddb28a47f4a` remains lineage evidence but is not a rollback target because restoring it would recreate the broken parent placeholder.
 
 No policy, test, fixture, contract, schema, runtime, release, deployment, or public state needs rollback because none changes here.
 
@@ -429,8 +446,10 @@ No policy, test, fixture, contract, schema, runtime, release, deployment, or pub
 | Canonical target for each sensitive-domain scaffold | `HOLD` | Per-file responsibility and canonical-equivalent review |
 | Complete repository and external references | `UNKNOWN` | Recursive search plus known external-consumer inventory |
 | Living-person/DNA scaffold ownership | `NEEDS VERIFICATION` | Domain, privacy, security, and standards disposition |
-| Fauna scaffold ownership | `NEEDS VERIFICATION` | Fauna, geoprivacy, security, and standards disposition |
-| Purpose of `docs/policy/tests/` | `CONFIRMED bounded containment and routing` | This pointer; final lifetime remains separate |
+| Fauna scaffold ownership | `NEEDS VERIFICATION` | Fauna, geoprivacy, security, policy, and standards disposition |
+| Purpose of `docs/policy/sensitivity/` | `CONFIRMED bounded containment and routing` | Current pointer; final lifetime remains separate |
+| Final lifetime of `docs/policy/sensitivity/` | `HOLD` | Canonical target or zero-successor decision plus consumer closure |
+| Purpose of `docs/policy/tests/` | `CONFIRMED bounded containment and routing` | Current pointer; final lifetime remains separate |
 | Final lifetime of `docs/policy/tests/` | `HOLD` | Canonical target or zero-successor decision plus consumer closure |
 | Independent stewardship | `NEEDS VERIFICATION` | Approved assignments and repository access |
 | Machine document-registry admission | `NEEDS VERIFICATION` | Reviewed metadata-validator delta and accepted registry update |
@@ -445,6 +464,7 @@ No policy, test, fixture, contract, schema, runtime, release, deployment, or pub
 
 ## Related documentation
 
+- [Sensitivity-guidance containment pointer](sensitivity/README.md)
 - [Policy-test documentation pointer](tests/README.md)
 - [Documentation root contract](../README.md)
 - [Adopted Directory Rules](../doctrine/directory-rules.md)
@@ -456,6 +476,7 @@ No policy, test, fixture, contract, schema, runtime, release, deployment, or pub
 - [Security documentation](../security/README.md)
 - [Standards documentation](../standards/README.md)
 - [Canonical policy root](../../policy/README.md)
+- [Sensitivity policy boundary](../../policy/sensitivity/README.md)
 - [Policy-local tests placeholder](../../policy/tests/README.md)
 - [People, DNA, and Land policy boundary](../../policy/domains/people-dna-land/README.md)
 - [Fauna policy boundary](../../policy/domains/fauna/README.md)
@@ -473,7 +494,7 @@ No policy, test, fixture, contract, schema, runtime, release, deployment, or pub
 
 Re-review when an ADR classifies the lane, a child gains a canonical successor, a consumer requires an alias, the inventory changes, adjacent authority boundaries or CODEOWNERS change, documentation QA changes, test placement changes, sensitivity/correction requirements change, or migration reaches single-write, dual-read, zero-consumer, or retirement.
 
-**Last evidence review:** 2026-08-23 against `main@38715c760f0005e97ede9281b8cbe755a827346d`, tree `1a4868dc9c0343fa86f666267e4d87ce6cb5c055`, parent blob `5c483016ea0e99cb0f782d1b807542c824b6dbae`, child prior blob `8b137891791fe96927ad78e64b0aad7bded08bdc`, child pointer blob `ecc70dcf7ea032e6e6e45cdb5695668d7872bb51`, Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9`.
+**Last evidence review:** 2026-08-23 against `main@565af2021254c27ea3626724106ad6b1eae800df`, tree `e1b2719997edbc7e6f877ac00803c11b83cd9453`, parent prior blob `e3f17038f9f0b96c1c023ed6b59f85ee465a9ead`, sensitivity child prior blob `8b137891791fe96927ad78e64b0aad7bded08bdc`, sensitivity child pointer blob `40af7f1b4a6501c90294d4f74c7c61c97946a9f0`, tests child pointer blob `ecc70dcf7ea032e6e6e45cdb5695668d7872bb51`, Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and ADR-0029 blob `a4de0d7a96b78da59cfc499d1025e1508afd8dd9`.
 
 ## Change history
 
@@ -482,10 +503,11 @@ Re-review when an ADR classifies the lane, a child gains a canonical successor, 
 | `v1.0` | 2026-08-14 | Replaced the one-byte placeholder with a containment, routing, migration, sensitivity, validation, and rollback contract. |
 | `v1.1` | 2026-08-16 | Refreshed current-main evidence, separated historical lineage from current state, added repository-native validation commands, and corrected rollback to the actual current contract. |
 | `v1.2` | 2026-08-23 | Reconciled the tests child after its blank README was added, linked the new containment pointer, and routed executable policy tests to canonical `tests/` responsibilities. |
+| `v1.3` | 2026-08-23 | Reconciled the sensitivity child after its blank README was added, linked the public-safe containment pointer, and routed executable sensitivity policy to canonical `policy/` responsibilities. |
 
 ## Status
 
-**CONFIRMED:** current same-path containment contract, direct-child inventory, adopted Directory Rules, canonical `policy/` and `tests/` authorities, child routing pointer, and current documentation workflow surfaces; no executable or runtime change.
+**CONFIRMED:** current same-path containment contract, direct-child inventory, adopted Directory Rules, canonical `policy/` and `tests/` authorities, both child routing pointers, and current documentation workflow surfaces; no executable or runtime change.
 
 **PROPOSED:** per-file convergence after responsibility and consumer review.
 
