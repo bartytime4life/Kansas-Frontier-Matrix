@@ -1,0 +1,153 @@
+{
+  "artifact_hashes": {
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:4a7f3b18017e9c57909c0c99347962eacf4e1a028b9a757244a99867faf19912",
+    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "sha256:5b20d20588182dda3d59f521b3ca61a5f1c3ea26b7e53642952a9a2040af0f19",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:23dd2e85bfb2cbb8fd1074f5f359ed1a01313db5bac665093c85b517b1e5665f"
+  },
+  "artifact_paths": [
+    "artifacts/qa/validation/milestone-1/README.md",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "accepted-adr-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md",
+      "id": "directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/governance/ci_conformance_report.md",
+      "id": "canonical-ci-conformance-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:artifacts/qa/validation/milestone-1/ci_conformance_report.json",
+      "id": "current-canonical-report",
+      "validated": true
+    },
+    {
+      "evidence_ref": "github:issues:3359,3360,3361,3363,3364",
+      "id": "mrts-issue-lineage",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-23T06:30:05Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_MRTS_Milestone_Reconciliation_Packet_2026-08-23.md",
+      "KFM_MRTS_Reconciliation_Status_2026-08-23.json",
+      "Connected Google Drive KFM doctrine and architecture corpus (read-only lineage)"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@8d852fb1a97478cd68631f1dfa4643515aa62e3b",
+      "github:issue:3359",
+      "github:issue:3360",
+      "github:issue:3361",
+      "github:issue:3363",
+      "github:issue:3364",
+      "github:pull:3409",
+      "github:pull:3411",
+      "github:pull:3416",
+      "github:pull:3429",
+      "repo:docs/doctrine/directory-rules.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:contracts/governance/ci_conformance_report.md",
+      "repo:artifacts/qa/validation/milestone-1/ci_conformance_report.json"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 3439
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-23"
+  },
+  "notes": "Process provenance only. The packet does not replace the canonical CIConformanceReport, approve review, close an issue or milestone, or authorize release, deployment, promotion, publication, source activation, or repository-settings changes.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:fe2cdccaaa9f793912e6fee8ab9dd40951bf0727322f643a0480b5a612f30cbc",
+  "receipt_id": "kfm-mrts-reconciliation-b03c5963b80e2cef685f",
+  "truth_labels": {
+    "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json": "PROPOSED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-pin",
+      "outcome": "PASS",
+      "reason": "Exact main pinned to 8d852fb1a97478cd68631f1dfa4643515aa62e3b."
+    },
+    {
+      "gate": "open-pr-overlap-search",
+      "outcome": "PASS",
+      "reason": "Connected GitHub search returned no open pull requests before branch continuation."
+    },
+    {
+      "gate": "existing-task-branch-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reused the exact-purpose branch; it was one commit ahead and zero behind current main."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Human procedure remains in docs/runbooks; machine QA projection remains beside the canonical report with generated metadata; authoring receipt stays in the generated-receipt lane."
+    },
+    {
+      "gate": "artifact-structure-and-json-parse",
+      "outcome": "PASS",
+      "reason": "One-H1 Markdown structure, final newlines, JSON parsing, stable keys, and control flags were checked before push."
+    },
+    {
+      "gate": "repository-relative-link-targets",
+      "outcome": "PASS",
+      "reason": "All added repository-relative targets were verified at the pinned base or created in this packet."
+    },
+    {
+      "gate": "topology-artifact-metadata",
+      "outcome": "PASS",
+      "reason": "Non-README artifacts/ payload is JSON with generated_from, generator, generator_version, sha256, and manual_review_required edit policy."
+    },
+    {
+      "gate": "canonical-report-mutation",
+      "outcome": "SKIPPED",
+      "reason": "The canonical report is regenerate-only and exact-current-main execution evidence is unavailable in the connector-only environment."
+    },
+    {
+      "gate": "repository-native-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observed separately for exact pull-request heads."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not fabricated by generation."
+    }
+  ]
+}
