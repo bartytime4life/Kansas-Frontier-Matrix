@@ -728,7 +728,7 @@ No source shutdown, model rollback, data migration, cache purge, route removal, 
 - [`focus_panel/resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts)
 - [`focus_panel/panel.ts`](../../../apps/explorer-web/src/features/focus_panel/panel.ts)
 - [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts)
-- [`apps/explorer-web/src/site/mountExplorerSite.ts`](../../../apps/explorer-web/src/site/mountExplorerSite.ts)
+- [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
 - [`apps/governed-api/.../routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py)
 - [`ComposedClaimDependencyClosureCandidate`](../../../contracts/evidence/composed_claim_dependency_closure.md)
 - [`Focus schema family`](../../../schemas/contracts/v1/focus/README.md)

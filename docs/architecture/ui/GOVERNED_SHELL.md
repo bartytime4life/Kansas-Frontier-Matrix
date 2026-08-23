@@ -59,7 +59,7 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../apps/explorer-web/src/main.ts
   - ../../../apps/explorer-web/src/site/README.md
-  - ../../../apps/explorer-web/src/site/mountExplorerSite.ts
+  - ../../../apps/explorer-web/src/site/mount-explorer-site.ts
   - ../../../apps/explorer-web/src/site/catalog.ts
   - ../../../apps/explorer-web/src/features/shell/index.tsx
   - ../../../apps/explorer-web/src/features/map_runtime/index.tsx
@@ -109,7 +109,7 @@ notes:
 | **Evidence snapshot** | `main@68603b748d859884f5e140467285b5ae71d093a9` |
 | **Document role** | Human-readable UI architecture reference at the existing path; no semantic, schema, policy, evidence, runtime, release, or publication authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md); the same-path `docs/architecture/ui/` update is `PLACE` |
-| **Current Explorer entrypoint** | **CONFIRMED:** [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mountExplorerSite.ts) |
+| **Current Explorer entrypoint** | **CONFIRMED:** [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) |
 | **Current visual shell** | **CONFIRMED / BOUNDED:** map-first landing composition with header, skip link, section navigation, trust posture, synthetic map stage, deterministic evidence lab, 13-domain matrix, 38-feature catalog, 8 trust principles, and public-safety disclaimer |
 | **Current baseline state** | **CONFIRMED:** [`resolveBaselineShell`](../../../apps/explorer-web/src/features/shell/index.tsx) returns `ABSTAIN / NO_GOVERNED_RESPONSE` without input and `ERROR / UNSUPPORTED_BASELINE_INPUT` with supplied input; both carry zero evidence references |
 | **Current evidence interaction** | **CONFIRMED / FIXTURE-ONLY:** strict renderer-neutral selection parsing, injected in-memory resolution, evidence-subset enforcement, and finite Evidence Drawer projection |
@@ -163,7 +163,7 @@ The prior edition was written as a proposal against an unmounted repository. It 
 Current repository evidence supports a materially stronger—but still bounded—statement:
 
 1. Merged PR [`#3070`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3070) replaced the inert default page with a repository-grounded Explorer composition.
-2. [`main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mountExplorerSite.ts).
+2. [`main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts).
 3. The current visual composition lives under [`src/site/`](../../../apps/explorer-web/src/site/), not in a proposed `src/app/GovernedShell.tsx`.
 4. [`features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx) remains a small immutable finite-state baseline resolver.
 5. [`catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts) inventories **38** feature families, **13** knowledge domains, and **8** trust principles with conservative maturity labels.
@@ -195,7 +195,7 @@ The term `GovernedShell` currently spans two repository-present surfaces with di
 | Surface | Current responsibility | Maturity |
 |---|---|---|
 | [`apps/explorer-web/src/features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx) | Immutable finite baseline state: `ABSTAIN` without input and `ERROR` for unsupported input | **CONFIRMED / BOUNDED** |
-| [`apps/explorer-web/src/site/mountExplorerSite.ts`](../../../apps/explorer-web/src/site/mountExplorerSite.ts) | The current visual composition root and section orchestration | **CONFIRMED / BOUNDED** |
+| [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) | The current visual composition root and section orchestration | **CONFIRMED / BOUNDED** |
 | [`apps/explorer-web/src/site/catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts) | Descriptive repository inventory and maturity labels | **CONFIRMED snapshot / non-authoritative** |
 | [`apps/explorer-web/src/features/shell/README.md`](../../../apps/explorer-web/src/features/shell/README.md) | Earlier feature-boundary design and graduation guidance | **LINEAGE / partly stale current-state prose** |
 
@@ -430,16 +430,16 @@ The synthetic map is not a placeholder to be mistaken for a basemap. It is a del
 | Region | Current code | Current function | Target evolution |
 |---|---|---|---|
 | Document root | `main.ts` | Finds `#root`, fails if absent, mounts site | Preserve one deployable composition root |
-| Skip link | `mountExplorerSite.ts` | Jumps to `#explorer-main` | Add route/panel skip strategy as composition grows |
-| Site header | `mountExplorerSite.ts` | Brand, section anchors, baseline and renderer state chips | Aggregate validated route/layer trust without computing it |
-| Hero | `mountExplorerSite.ts` | Purpose, current finite posture, explicit non-live disclaimer | Bind to validated shell bootstrap/release context |
-| Map region | `mountExplorerSite.ts` | Synthetic SVG, visible renderer HOLD, issue link | Replace only through admitted `MapRuntimePort`/adapter slice |
+| Skip link | `mount-explorer-site.ts` | Jumps to `#explorer-main` | Add route/panel skip strategy as composition grows |
+| Site header | `mount-explorer-site.ts` | Brand, section anchors, baseline and renderer state chips | Aggregate validated route/layer trust without computing it |
+| Hero | `mount-explorer-site.ts` | Purpose, current finite posture, explicit non-live disclaimer | Bind to validated shell bootstrap/release context |
+| Map region | `mount-explorer-site.ts` | Synthetic SVG, visible renderer HOLD, issue link | Replace only through admitted `MapRuntimePort`/adapter slice |
 | Selection laboratory | `map_runtime/index.tsx` | Strict candidate parsing and finite drawer outcomes | Reuse the same shape for real renderer events |
 | Knowledge matrix | `catalog.ts` + site mount | Thirteen domain summaries and safeguards | Keep domain navigation separate from live domain-data authority |
 | Feature catalog | `catalog.ts` + site mount | Repository-oriented search/filter and maturity labels | Separate repository capability inventory from runtime route availability |
 | Trust section | `catalog.ts` + site mount | Eight principles and pinned repository link | Preserve visible truth posture at point of use |
 | Evidence Drawer | `evidence_drawer/index.tsx` | Finite no-leak projection, citations, limitations, trust, history | Bind to authoritative resolver/transport only after closure |
-| Footer | `mountExplorerSite.ts` | Non-emergency/legal/regulatory/life-safety disclaimer | Keep domain-specific disclaimers close to relevant surfaces |
+| Footer | `mount-explorer-site.ts` | Non-emergency/legal/regulatory/life-safety disclaimer | Keep domain-specific disclaimers close to relevant surfaces |
 
 ### 5.2 Current component-slot maturity
 
@@ -523,7 +523,7 @@ The shell must not become:
 | State | Current owner | Current proof |
 |---|---|---|
 | Baseline finite posture | `features/shell/index.tsx` | Immutable `ABSTAIN` or `ERROR`, zero evidence refs |
-| Site composition state | `mountExplorerSite.ts` | Local DOM nodes, event listeners, domain selection, filters, fixture controller |
+| Site composition state | `mount-explorer-site.ts` | Local DOM nodes, event listeners, domain selection, filters, fixture controller |
 | Repository catalog state | `site/catalog.ts` | Frozen arrays and pinned descriptive snapshot |
 | Map-selection candidate | `features/map_runtime/index.tsx` | Strict parsed value with layer, feature, and evidence-ref scope |
 | Evidence Drawer projection | `features/evidence_drawer/index.tsx` | Finite view model and controller |
@@ -1071,7 +1071,7 @@ After P1:
 
 - [Explorer entrypoint](../../../apps/explorer-web/src/main.ts)
 - [Site composition README](../../../apps/explorer-web/src/site/README.md)
-- [Site composition](../../../apps/explorer-web/src/site/mountExplorerSite.ts)
+- [Site composition](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
 - [Site catalog](../../../apps/explorer-web/src/site/catalog.ts)
 - [Baseline shell state](../../../apps/explorer-web/src/features/shell/index.tsx)
 - [Map evidence bridge](../../../apps/explorer-web/src/features/map_runtime/index.tsx)

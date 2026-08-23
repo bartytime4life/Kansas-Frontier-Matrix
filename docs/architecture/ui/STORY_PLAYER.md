@@ -69,7 +69,7 @@ related:
   - tests/validators/test_validate_story_manifest.py
   - .github/workflows/story-manifest-trust-inheritance.yml
   - apps/explorer-web/src/features/story_player/README.md
-  - apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - apps/explorer-web/src/features/story_player/current-implementation.md
   - apps/explorer-web/src/features/story_player/index.tsx
   - apps/explorer-web/tests/story-player.test.ts
   - policy/story/README.md
@@ -817,7 +817,7 @@ The former page proposed multiple paths that no longer match the executable repo
 | Cross-root Story architecture | `docs/architecture/story/README.md` | Repository-grounded but carries bounded post-#2868 drift |
 | Story continuity lineage | `docs/architecture/story/CONTINUITY.md` | Proposal-era lineage; not runtime proof |
 | App-local projection consumer | `apps/explorer-web/src/features/story_player/index.tsx` | Bounded executable view-model slice |
-| Current implementation boundary note | `apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md` | Accurate bounded implementation note |
+| Current implementation boundary note | `apps/explorer-web/src/features/story_player/current-implementation.md` | Accurate bounded implementation note |
 | App feature README | `apps/explorer-web/src/features/story_player/README.md` | Boundary documentation; some maturity fields need reconciliation |
 | App-local Story Player tests | `apps/explorer-web/tests/story-player.test.ts` | Focused Vitest proof |
 | StoryManifest semantics | `contracts/ui/story_manifest.md` | Proposed fixture-only semantic contract |
@@ -1085,7 +1085,7 @@ No source, data, policy, evidence, cache, runtime, release, deployment, or publi
 - `.github/workflows/story-manifest-trust-inheritance.yml`;
 - `apps/explorer-web/src/features/story_player/index.tsx`;
 - `apps/explorer-web/tests/story-player.test.ts`;
-- `apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md`;
+- `apps/explorer-web/src/features/story_player/current-implementation.md`;
 - `data/receipts/generated/genrec-story-player-governed-projection-20260814.json`;
 - merged PR #2868.
 
@@ -1141,7 +1141,7 @@ When documentation and implementation differ, current code/configuration/tests c
 ### App, policy, data, and receipts
 
 - [`Story Player feature README`](../../../apps/explorer-web/src/features/story_player/README.md)
-- [`Story Player current implementation`](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md)
+- [`Story Player current implementation`](../../../apps/explorer-web/src/features/story_player/current-implementation.md)
 - [`Story Player source`](../../../apps/explorer-web/src/features/story_player/index.tsx)
 - [`Story Player tests`](../../../apps/explorer-web/tests/story-player.test.ts)
 - [`Story policy boundary`](../../../policy/story/README.md)

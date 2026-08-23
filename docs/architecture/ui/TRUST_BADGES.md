@@ -1013,7 +1013,7 @@ Do not graduate a profile when any of these remain unresolved:
 - [`apps/explorer-web/src/features/attestation_badge/README.md`](../../../apps/explorer-web/src/features/attestation_badge/README.md)
 - [`apps/explorer-web/tests/browser/attestation-badge.spec.ts`](../../../apps/explorer-web/tests/browser/attestation-badge.spec.ts)
 - [`apps/explorer-web/src/site/catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts)
-- [`apps/explorer-web/src/site/mountExplorerSite.ts`](../../../apps/explorer-web/src/site/mountExplorerSite.ts)
+- [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
 
 ### UI boundaries
 
@@ -1071,7 +1071,7 @@ Do not graduate a profile when any of these remain unresolved:
 | `apps/explorer-web/src/features/attestation_badge/README.md` | Fixture-first non-effects and validation commands |
 | `apps/explorer-web/tests/browser/attestation-badge.spec.ts` | Accessible status, inspection delegation, malformed no-leak behavior |
 | `apps/explorer-web/src/site/catalog.ts` | Descriptive feature maturity and MapLibre HOLD metadata |
-| `apps/explorer-web/src/main.ts` and `src/site/mountExplorerSite.ts` | Current default site composition boundary |
+| `apps/explorer-web/src/main.ts` and `src/site/mount-explorer-site.ts` | Current default site composition boundary |
 | `apps/explorer-web/package.json` | Exact build and test scripts |
 | `.github/CODEOWNERS` | Current review routing and explicit non-authority warning |
 | `CONTRIBUTING.md` | Documentation, AI receipt, validation, PR, and rollback requirements |

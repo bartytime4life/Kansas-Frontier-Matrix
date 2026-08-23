@@ -335,6 +335,42 @@ def _scan_ref(repo_root: Path, ref: str) -> tuple[tuple[topology.Finding, ...], 
             pass
 
 
+def _classify_topology_delta(
+    current_findings: Sequence[topology.Finding],
+    base_findings: Sequence[topology.Finding],
+) -> tuple[list[str], list[str]]:
+    current_by_identity = {
+        (finding.rule_id, finding.subject): finding for finding in current_findings
+    }
+    base_by_identity = {
+        (finding.rule_id, finding.subject): finding for finding in base_findings
+    }
+    introduced: set[str] = set()
+    resolved: set[str] = set()
+    for identity in sorted(set(current_by_identity) | set(base_by_identity)):
+        current = current_by_identity.get(identity)
+        base = base_by_identity.get(identity)
+        if current is None:
+            assert base is not None
+            resolved.add(base.fingerprint)
+            continue
+        if base is None:
+            introduced.add(current.fingerprint)
+            continue
+        if current.fingerprint == base.fingerprint:
+            continue
+        if (
+            current.baseline_allowed
+            and base.baseline_allowed
+            and set(current.evidence_members) < set(base.evidence_members)
+        ):
+            resolved.add(base.fingerprint)
+            continue
+        introduced.add(current.fingerprint)
+        resolved.add(base.fingerprint)
+    return sorted(introduced), sorted(resolved)
+
+
 def _validate_shape(instance: Mapping[str, Any], schema: Mapping[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
     for error in sorted(Draft202012Validator(schema).iter_errors(instance), key=lambda item: list(item.path)):
@@ -428,10 +464,10 @@ def validate_current(
             baseline_entries,
             expires_on=str(baseline_data["expires_on"]),
         )
-        current_fingerprints = {item.fingerprint for item in current_findings}
-        base_fingerprints = {item.fingerprint for item in base_findings}
-        introduced = sorted(current_fingerprints - base_fingerprints)
-        resolved = sorted(base_fingerprints - current_fingerprints)
+        introduced, resolved = _classify_topology_delta(
+            current_findings,
+            base_findings,
+        )
         counts = topology_report["counts"]
         stale_count = len(topology_report["baseline"]["stale_fingerprints"])
         topology_summary = {

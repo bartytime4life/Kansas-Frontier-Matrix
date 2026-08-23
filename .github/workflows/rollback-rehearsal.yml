@@ -7,7 +7,7 @@ name: rollback-rehearsal
       - "tools/release/rollback_apply.py"
       - "tests/release/test_synthetic_rollback_rehearsal.py"
       - "fixtures/release/rollback_rehearsal/**"
-      - "docs/runbooks/ROLLBACK_REHEARSAL.md"
+      - "docs/runbooks/rollback-rehearsal.md"
   push:
     branches: [main]
     paths:
@@ -15,7 +15,7 @@ name: rollback-rehearsal
       - "tools/release/rollback_apply.py"
       - "tests/release/test_synthetic_rollback_rehearsal.py"
       - "fixtures/release/rollback_rehearsal/**"
-      - "docs/runbooks/ROLLBACK_REHEARSAL.md"
+      - "docs/runbooks/rollback-rehearsal.md"
   workflow_dispatch:
 
 permissions:

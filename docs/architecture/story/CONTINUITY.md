@@ -68,7 +68,7 @@ related:
   - ../../../fixtures/ui/story_manifest/cases.json
   - ../../../tools/validators/ui/validate_story_manifest.py
   - ../../../tools/validators/ui/validate_story_node.py
-  - ../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md
+  - ../../../apps/explorer-web/src/features/story_player/current-implementation.md
   - ../../../apps/explorer-web/src/features/story_player/index.tsx
   - ../../../apps/explorer-web/tests/story-player.test.ts
   - ../../../policy/story/README.md
@@ -595,7 +595,7 @@ flowchart LR
 | StoryNode focused CI | [`story-node-trust-inheritance.yml`](../../../.github/workflows/story-node-trust-inheritance.yml) | Read-only focused workflow; no policy, release, or publication effect |
 | App-local Story consumer | [`index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) | Pure 2D-only `resolveStoryPlayer()` projection consumer |
 | App-local proof | [`story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) | READY and negative-state behavior plus anti-bypass source checks |
-| Current implementation note | [`CURRENT_IMPLEMENTATION.md`](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md) | Records the bounded consumer and explicit non-effects |
+| Current implementation note | [`current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) | Records the bounded consumer and explicit non-effects |
 | Story policy boundary | [`policy/story/README.md`](../../../policy/story/README.md) | Current lane documented; policy semantics and evaluator remain unestablished |
 | Story Rego source | [`evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) | Proposal stub with no operative deny rule |
 | Historical manifest lane | [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) | Non-canonical compatibility and retirement boundary |
@@ -810,7 +810,7 @@ release is established by the inspected evidence.
 - [StoryNode fixtures](../../../fixtures/ui/story_node/)
 - [StoryManifest validator](../../../tools/validators/ui/validate_story_manifest.py)
 - [StoryNode validator](../../../tools/validators/ui/validate_story_node.py)
-- [Story Player implementation note](../../../apps/explorer-web/src/features/story_player/CURRENT_IMPLEMENTATION.md)
+- [Story Player implementation note](../../../apps/explorer-web/src/features/story_player/current-implementation.md)
 - [Story Player consumer](../../../apps/explorer-web/src/features/story_player/index.tsx)
 - [Story Player focused test](../../../apps/explorer-web/tests/story-player.test.ts)
 - [Story policy boundary](../../../policy/story/README.md)
@@ -894,7 +894,7 @@ tools/validators/ui/
 
 apps/explorer-web/src/features/story_player/
 ├── README.md
-├── CURRENT_IMPLEMENTATION.md
+├── current-implementation.md
 └── index.tsx
 
 apps/explorer-web/tests/
