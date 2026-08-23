@@ -17,7 +17,8 @@ truth_posture: "CONFIRMED repository evidence / source-ADR status / UNKNOWN oper
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9
+  base_commit: 1362b9c4d8a5e0575ac72f0bef2848fe4b074daa
+  initial_authoring_base_commit: 0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9
   target_prior_blob: 4e6394ccbee782b68ed1ed4c97ee017d942b4f7d
   governance_readme_blob: 500f8bcad3a384160a561f1460617f0a13d42fcc
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
@@ -72,7 +73,7 @@ notes:
 | Tracked path | `docs/governance/DECISION_LOG.md` — same-path update |
 | Placement authority | Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md), adopted [Directory Rules](../doctrine/directory-rules.md), and the repository-present governance lane |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
-| Snapshot at `main@0d2c9db…` | 36 numbered ADRs: 3 accepted, 33 proposed; 12 unassigned scaffolds |
+| Snapshot at `main@1362b9c…` | 36 numbered ADRs: 3 accepted, 33 proposed; 12 unassigned scaffolds |
 | Accepted decisions summarized here | ADR-0006, ADR-0007, ADR-0029 |
 | Verified GitHub review route | `@bartytime4life` through [CODEOWNERS](../../.github/CODEOWNERS); routing is not approval |
 | Runtime / release / deployment / publication effect | None |
@@ -157,7 +158,7 @@ Creating another writable decision home would now increase authority drift rathe
 | [`packages/maplibre/src/`](../../packages/maplibre/src/) | `MapRuntimePort` and deterministic `NullMapRuntime` are present | Bounded implementation evidence; not a concrete renderer or browser-readiness proof |
 | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) | No `maplibre-gl` dependency is declared | Confirms dependency remains unadmitted at this snapshot |
 | [CODEOWNERS](../../.github/CODEOWNERS) | Routes `docs/governance/` review to `@bartytime4life` | Review routing only; not independent approval or release authority |
-| Open pull requests | Draft PR #3443 changes adjacent `docs/governance/CONTRADICTION_HANDLING.md` at head `e74ca8d443d5ac482bdf58f79dc3937df0da9452`; it does not change this target | Compatible adjacent work; the stable relative link is preserved and no shared bytes are overwritten |
+| Base reconciliation | PR #3443 merged as `main@1362b9c4d8a5e0575ac72f0bef2848fe4b074daa` and changed adjacent `docs/governance/CONTRADICTION_HANDLING.md`; the Decision Log blob remained `4e6394ccbee782b68ed1ed4c97ee017d942b4f7d` | Compatible adjacent change; this branch was reconciled without overwriting the merged bytes |
 | Historical task branch | `codex/implement-decision-log-verification-layer` is behind current main with no unique commits | Lineage only; not a reusable current task branch |
 
 ### Known adjacent drift
@@ -223,7 +224,7 @@ flowchart LR
 
 ### Current accepted-decision transition view
 
-| Effective date | Decision | Reviewed transition | Bounded current realization at `main@0d2c9db…` | Explicit non-effects | Source |
+| Effective date | Decision | Reviewed transition | Bounded current realization at `main@1362b9c…` | Explicit non-effects | Source |
 |---|---|---|---|---|---|
 | 2026-08-21 | `ADR-0006` — only package-owned `MapLibreAdapter` imports MapLibre | `proposed` → `accepted` | **CONFIRMED BOUNDED / PARTIAL:** `MapRuntimePort` and `NullMapRuntime` are present; no package-owned concrete `MapLibreAdapter` implementation or `maplibre-gl` dependency is present | No dependency admission, browser readiness, release, deployment, or publication | [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) · [`src/`](../../packages/maplibre/src/) · [`package.json`](../../packages/maplibre/package.json) |
 | 2026-08-21 | `ADR-0007` — MapLibre GL JS is the sole browser-side renderer family | `proposed` → `accepted` | **HOLD:** renderer family is selected; exact package/version, plugins, workers, concrete adapter, and authenticated browser evidence remain unadmitted or unproved | No runtime, release, deployment, serving, or publication authority | [ADR-0007](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) · [`package.json`](../../packages/maplibre/package.json) |
@@ -419,7 +420,7 @@ Open a transparent revert or forward-fix pull request against the merged commit.
 
 ### Rollback target for this revision
 
-- Base: `main@0d2c9db88861be1ba2c32b60daea7bab3a5d4ab9`
+- Base: `main@1362b9c4d8a5e0575ac72f0bef2848fe4b074daa`
 - Prior target blob: `4e6394ccbee782b68ed1ed4c97ee017d942b4f7d`
 - Changed path: `docs/governance/DECISION_LOG.md`
 - Migration or reprocessing: none
@@ -520,7 +521,7 @@ No. Those are delivery or platform events. KFM publication remains a separate go
 - **NEEDS VERIFICATION:** independent stewardship assignments, reviewer quorum, and operational release authority.
 - **CONFIRMED DRIFT / separate maintenance:** `docs/adr/README.md` and `docs/registers/ADR_INDEX.md` summary counts lag the canonical index after ADR-0006 and ADR-0007 acceptance.
 - **HOLD:** exact MapLibre dependency, concrete adapter, plugins, workers, and browser-readiness evidence remain separate implementation and admission work.
-- **CONFIRMED compatible overlap:** draft PR #3443 owns adjacent `CONTRADICTION_HANDLING.md` bytes only; recheck its head before final delivery because this document links to that stable path.
+- **CONFIRMED reconciled base drift:** PR #3443 merged adjacent `CONTRADICTION_HANDLING.md` bytes and advanced `main` to `1362b9c4d8a5e0575ac72f0bef2848fe4b074daa`; the Decision Log target blob was unchanged and the merged bytes are retained.
 - **NEEDS VERIFICATION:** hosted exact-head results after this documentation change; pending checks must be reported separately from draft-PR delivery.
 - **PROPOSED / INACTIVE:** `GovernanceDecision` appears in the governance-contract lane roster, but no active canonical record family or registry was verified; this log does not instantiate one.
 - **UNKNOWN:** external consumers of legacy headings beyond repository-search visibility. Stable major headings are retained to reduce compatibility risk.
