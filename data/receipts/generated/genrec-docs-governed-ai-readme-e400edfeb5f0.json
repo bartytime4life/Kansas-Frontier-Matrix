@@ -1,0 +1,202 @@
+{
+  "receipt_id": "b696cb55-a58c-5b18-8736-f6e0ff629efb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/governed-ai/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/governed-ai/README.md": "sha256:e400edfeb5f0b4807c6a1a6408a36d96aebc867cfda90495d4e7333fa7957641"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-23-session"
+  },
+  "prompt_or_contract": "sha256:7c271510b45f70f6da2b781ccec5d70fb0d2fc7b30b1c1be404110bf47ae7bc0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7c271510b45f70f6da2b781ccec5d70fb0d2fc7b30b1c1be404110bf47ae7bc0",
+      "sha256:a1fce4363854ff888cff4b8e7875d600c2682390412a8cf79b37d0b11148b0fa"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/governed-ai/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/architecture/governed-ai/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/doctrine/ai-as-assistant.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#contracts/ai/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#apps/governed-api/src/ai/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#apps/governed-api/src/governed_api/routes/registry.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#apps/governed-api/src/governed_api/stub.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#runtime/AI/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#runtime/model_adapters/MockAdapter.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#runtime/model_adapters/OllamaAdapter.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#packages/evidence-resolver/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#data/receipts/generated/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attachment:KFM-Repository-Build-Out-Markdown-Modernization-Agent-v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/governed-ai/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap",
+      "outcome": "PASS",
+      "reason": "Pinned main at f168b18291462da10b8b8d52459c85a10c225875; no open pull request claimed the exact target at the final pre-authoring search."
+    },
+    {
+      "gate": "target-baseline",
+      "outcome": "PASS",
+      "reason": "Verified target blob e25f1814e51579d5f55c0f1fe0135ddb28a47f4a contains exactly one UTF-8 byte, y, with SHA-256 a1fce4363854ff888cff4b8e7875d600c2682390412a8cf79b37d0b11148b0fa."
+    },
+    {
+      "gate": "directory-rules-and-survivor",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and the docs root place cross-cutting architecture under docs/architecture; the current governed-AI architecture README remains the active landing-page survivor. This is a same-path compatibility repair with no move, rename, or deletion."
+    },
+    {
+      "gate": "no-parallel-authority",
+      "outcome": "PASS",
+      "reason": "The target explicitly routes substantive architecture, contracts, schemas, policy, implementation, receipts, and release decisions to their owning surfaces instead of duplicating them."
+    },
+    {
+      "gate": "bounded-runtime-status",
+      "outcome": "PASS",
+      "reason": "Current route registry, fail-closed API stub, deterministic MockAdapter, placeholder OllamaAdapter, and internal non-authoritative evidence resolver were inspected; no end-to-end governed-AI route or live provider is claimed."
+    },
+    {
+      "gate": "metadata-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "Deterministic checks found one H1, one balanced KFM metadata block, balanced fences, no heading-level jumps, no duplicate slugs or explicit anchors, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "local-anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "Every local table-of-contents fragment resolves to a generated or explicit anchor."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "Thirty unique repository-relative destinations were resolved and verified through current GitHub file or directory evidence."
+    },
+    {
+      "gate": "sensitivity-and-secret-boundary",
+      "outcome": "PASS",
+      "reason": "The README and receipt contain no credentials, private prompts, hidden reasoning, protected source payloads, living-person data, genomic material, or exact sensitive locations."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds final README bytes to sha256:e400edfeb5f0b4807c6a1a6408a36d96aebc867cfda90495d4e7333fa7957641."
+    },
+    {
+      "gate": "repository-native-local-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available in this connector-only run; repository-native commands are deferred to hosted exact-head CI."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "This receipt is emitted before draft pull-request creation; hosted exact-head outcomes are reported separately after the final branch head exists."
+    },
+    {
+      "gate": "release-and-publication-side-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes one compatibility README and adds its generated authoring receipt; no runtime, route, provider, source, contract, schema, policy, lifecycle, release, deployment, publication, or repository-setting state changes."
+    }
+  ],
+  "policy_decisions": [
+    "directory-rules:SAME_PATH_REPAIR:retain existing docs/governed-ai target without structural migration",
+    "navigation:SURVIVOR:docs/architecture/governed-ai/README.md remains the active human architecture landing page",
+    "authority:NO_PARALLEL_HOME:compatibility README may route but not redefine architecture, contracts, schemas, policy, runtime, receipts, or release",
+    "runtime:HOLD:no governed-AI route, live provider, public ANSWER, deployment, or publication claim",
+    "sensitivity:FAIL_CLOSED:no secrets, private prompts, hidden reasoning, restricted payloads, or exact sensitive locations",
+    "receipt:REQUIRED_BY_PR_TEMPLATE:add one generated work receipt binding the final README hash",
+    "delivery:DRAFT_PR_ONLY:no merge, release, deployment, promotion, publication, or repository-setting action"
+  ],
+  "citations": [
+    {
+      "id": "attached-implementation-prompt",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Repository-Build-Out-Markdown-Modernization-Agent-v6.0.0"
+    },
+    {
+      "id": "prior-target",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/governed-ai/README.md"
+    },
+    {
+      "id": "canonical-governed-ai-architecture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/architecture/governed-ai/README.md"
+    },
+    {
+      "id": "docs-root-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/README.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "governed-api-route-registry",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#apps/governed-api/src/governed_api/routes/registry.py"
+    },
+    {
+      "id": "governed-api-fail-closed-stub",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#apps/governed-api/src/governed_api/stub.py"
+    },
+    {
+      "id": "mock-adapter-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#runtime/model_adapters/MockAdapter.py"
+    },
+    {
+      "id": "ollama-adapter-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#runtime/model_adapters/OllamaAdapter.py"
+    },
+    {
+      "id": "evidence-resolver-boundary",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#packages/evidence-resolver/README.md"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@f168b18291462da10b8b8d52459c85a10c225875#schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-23T16:13:34Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "The prompt_or_contract digest binds the normalized task-authority descriptor used in this run, not the full attached prompt bytes. No prompt text, private chain-of-thought, hidden reasoning, or tool transcript is stored. The receipt binds the authored README only and creates no review, merge, runtime, release, deployment, promotion, or publication authority."
+}
