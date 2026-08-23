@@ -1,5 +1,3 @@
-<a id="top"></a>
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/unified-workspace
 title: KFM Unified Workspace — Complete User Interface Architecture
@@ -17,54 +15,33 @@ responsibility: Describe one coherent KFM interaction architecture that makes th
 truth_posture: cite-or-abstain; repository facts are pinned to the evidence snapshot; source-corpus ideas and future implementation remain PROPOSED; operational behavior remains UNKNOWN without runtime evidence
 current_path: docs/architecture/ui/UNIFIED_WORKSPACE.md
 placement_outcome: PLACE
-directory_rules_basis:
-  adopted_decision: ADR-0029
-  owning_root_reason: docs/architecture/ui owns cross-cutting human-readable UI architecture; this document does not define contracts, schemas, policy, executable code, evidence, release decisions, or published state
-  adjacent_contract: docs/architecture/ui/README.md and existing sibling architecture pages establish this lane
-  parallel_authority_check: this page integrates and navigates existing UI responsibilities; sibling pages remain authoritative for their narrower architecture topics
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_ref: main
-  base_commit: d590c569ed22383572e0376eaf346489ae36b0a4
-  inspected_repository_surfaces:
-    - docs/doctrine/directory-rules.md
-    - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
-    - docs/architecture/ui/README.md
-    - docs/architecture/ui/GOVERNED_SHELL.md
-    - docs/architecture/ui/BOUNDARIES.md
-    - docs/architecture/ui/LAYERING.md
-    - docs/architecture/ui/ACCESSIBILITY.md
-    - docs/architecture/ui/EVIDENCE_DRAWER.md
-    - docs/architecture/ui/FOCUS_FLOW.md
-    - docs/architecture/ui/STORY_PLAYER.md
-    - docs/architecture/ui/REVIEW_CONSOLE.md
-    - docs/architecture/ui/COMPARE_AND_EXPORT.md
-    - apps/explorer-web/package.json
-    - apps/explorer-web/src/site/catalog.ts
-    - apps/explorer-web/src/site/mount-explorer-site.ts
-    - packages/maplibre/src/map-runtime-port.ts
-    - packages/maplibre/src/null-map-runtime.ts
-    - apps/governed-api/
-    - apps/review-console/
-  drive_lineage_sources:
-    - title: KFM_Whole_UI_Governed_AI_Expansion_Report_Extended_Pro.pdf
-      drive_id: 11pLQf17nOYkqX3n9jojBcvI5nUn236FP
-      role: whole-UI and governed-AI proposal lineage
-    - title: KFM_Greenfield_Commissioning_Plan_v2_FULL.pdf
-      drive_id: 161zjrR23nrv2b9ejne7iRDasVNnvCFwc
-      role: current commissioning, smallest-complete-circle, and non-effect doctrine
-    - title: KFM_Authoritative_Whole_System_Reference_PROPOSED_2026-08-15.docx
-      drive_id: 1tDpCPS8Vto3FkQ69gSUIFbah2qdarw-R
-      role: whole-system architecture and domain-lane synthesis; proposed, not adopted authority
+authority_refs:
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/architecture/ui/README.md
+evidence_refs:
+  - repository=bartytime4life/Kansas-Frontier-Matrix
+  - base_ref=main
+  - base_commit=d590c569ed22383572e0376eaf346489ae36b0a4
+  - apps/explorer-web/package.json
+  - apps/explorer-web/src/site/catalog.ts
+  - apps/explorer-web/src/site/mount-explorer-site.ts
+  - packages/maplibre/src/map-runtime-port.ts
+  - packages/maplibre/src/null-map-runtime.ts
+  - apps/governed-api/
+  - apps/review-console/
+  - drive=11pLQf17nOYkqX3n9jojBcvI5nUn236FP
+  - drive=161zjrR23nrv2b9ejne7iRDasVNnvCFwc
+  - drive=1tDpCPS8Vto3FkQ69gSUIFbah2qdarw-R
 non_effects:
-  source_activation: none
-  evidence_authority: none
-  policy_change: none
-  review_decision: none
-  release: none
-  deployment: none
-  promotion: none
-  publication: none
+  - no source activation
+  - no evidence-authority change
+  - no policy change
+  - no review decision
+  - no release
+  - no deployment
+  - no promotion
+  - no publication
 related:
   - ./README.md
   - ./GOVERNED_SHELL.md
@@ -104,6 +81,8 @@ notes:
   - "Current code is materially richer than proposal-era source documents, but remains mixed maturity and fixture-first in important paths."
   - "All proposed routes, interfaces, component names, performance budgets, and implementation paths require repository-native design review before implementation."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # KFM Unified Workspace — Complete User Interface Architecture
 
