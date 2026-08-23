@@ -26,7 +26,7 @@ The first Unified Workspace implementation slice is intentionally public, no-net
 
 This is a bounded browser-composition contract. It is not a canonical semantic contract, source registry, policy rule, evidence object, review decision, release record, deployment record, or publication artifact.
 
-Implementation baseline for this slice: `main@565af2021254c27ea3626724106ad6b1eae800df`.
+Implementation baseline for this slice: `main@f732cbd1003898dc765a7afe4b635d710e295d17`.
 
 ## Evidence snapshot
 
