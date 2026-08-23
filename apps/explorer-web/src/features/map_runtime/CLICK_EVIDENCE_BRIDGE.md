@@ -25,11 +25,36 @@ Unknown fields are rejected. IDs use a bounded portable grammar. Evidence refere
 
 ## Shared `MapRuntimePort` profile
 
-The stable selection profile and internal `MapFeatureSelection` type now come from the dependency-free `@kfm/maplibre` package. Explorer Web imports that KFM-owned facade and re-exports the same symbols for compatibility; parsing, evidence-subset enforcement, and Evidence Drawer behavior remain app-owned.
+The stable selection profile and internal `MapFeatureSelection` type come from the dependency-free `@kfm/maplibre` package. Explorer Web imports that KFM-owned facade and re-exports the same symbols for compatibility; parsing, evidence-subset enforcement, and Evidence Drawer behavior remain app-owned.
 
 The package also exposes a minimal renderer-neutral `MapRuntimePort` plus a deterministic `NullMapRuntime` for consumer migration and tests. The null runtime performs no DOM, WebGL, worker, protocol, plugin, tile, network, source, evidence, policy, release, model, deployment, or publication work. It is not a renderer and does not satisfy the authenticated browser probes in issue #2906.
 
 Raw renderer acquisition remains prohibited outside `packages/maplibre/`. Importing the KFM-owned `@kfm/maplibre` facade is consumer use of the accepted port boundary, not dependency admission.
+
+## Runtime selection binding
+
+`runtime-evidence-binding.ts` closes the dependency-free event handoff between `MapRuntimePort` and the existing app-owned evidence bridge:
+
+```text
+MapRuntimePort selection event
+  -> validate and freeze KFM-owned MapFeatureSelection
+  -> translate to the strict external selection profile
+  -> resolveMapFeatureEvidence(...)
+  -> evidence-subset guard
+  -> finite Evidence Drawer resolution
+  -> consumer callback
+```
+
+The binding:
+
+- accepts only a validated KFM-owned runtime selection;
+- still routes the selection through the existing strict parser rather than bypassing it;
+- uses an injected governed resolver and performs no transport itself;
+- suppresses a slower stale result when a newer selection arrives;
+- provides idempotent teardown that unsubscribes the runtime and invalidates pending results; and
+- is proven with `NullMapRuntime`, not with a concrete renderer.
+
+This is a bounded consumer-integration proof. The current browser lab may continue to use deterministic controls until a separately reviewed concrete adapter translates real renderer events into the same port contract.
 
 ## Evidence-subset invariant
 
@@ -70,19 +95,19 @@ This is browser behavior evidence for the governed handoff, not proof of a real 
 ## Files and tests
 
 - `apps/explorer-web/src/features/map_runtime/index.tsx`
+- `apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts`
 - `packages/maplibre/src/map-runtime-port.ts`
 - `packages/maplibre/src/null-map-runtime.ts`
 - `apps/explorer-web/tests/map-runtime-port.test.ts`
-- `apps/explorer-web/tests/map-evidence-bridge.test.ts`
+- `apps/explorer-web/tests/map-runtime-evidence-binding.test.ts`
+- `apps/explorer-web/tests/map-evidence-drawer.test.ts`
 - `apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts`
-- `apps/explorer-web/tests/browser/fixtures/map-evidence-bridge.html`
-- `apps/explorer-web/tests/fixtures/map-evidence/*.json`
-- `.github/workflows/map-evidence-bridge.yml`
+- `apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts`
 - `.github/workflows/ui-build.yml`
 - `tools/validators/maplibre/assess_acquisition_inventory.py`
 - `tests/maplibre/test_assess_acquisition_inventory.py`
 
-The test matrix covers supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, keyboard use, accessibility status, and teardown. The shared-port tests additionally cover deterministic initialization, KFM-owned selection events, invalid camera/selection rejection, and idempotent disposal.
+The test matrix covers supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection events, strict runtime-to-evidence translation, invalid camera/selection rejection, stale-result suppression, and idempotent disposal.
 
 ## Explicit non-effects
 
