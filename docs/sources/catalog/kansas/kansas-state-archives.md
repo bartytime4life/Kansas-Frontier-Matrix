@@ -32,7 +32,7 @@ related:
   - docs/standards/snac-eac-cpf.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/kansas/
   - data/registry/sources/
