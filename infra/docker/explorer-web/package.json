@@ -5,6 +5,7 @@
   "description": "Hash-locked transitive-security overrides for the payload-free explorer-web review image.",
   "dependencies": {
     "brace-expansion": "5.0.9",
-    "ip-address": "10.3.1"
+    "ip-address": "10.3.1",
+    "tar": "7.5.22"
   }
 }
