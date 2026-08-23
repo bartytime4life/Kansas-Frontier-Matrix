@@ -26,3 +26,52 @@ test("mounts the public workspace registry over the compatible anchor navigation
   await expect(page).toHaveURL(/#trust$/);
   await expect(page.locator("#trust")).toBeVisible();
 });
+
+test("runs one bounded governed Focus request inside the Explore workspace", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  const workspace = page.locator('[data-component="focus-mode-workspace"]');
+  await expect(workspace).toBeVisible();
+  await expect(
+    workspace.getByRole("button", { name: "Run bounded governed Focus request" }),
+  ).toHaveCount(1);
+  await expect(workspace).toContainText(
+    "only the endorsed synthetic summary crosses the client boundary",
+  );
+
+  await workspace
+    .getByRole("button", { name: "Run bounded governed Focus request" })
+    .click();
+
+  await expect(workspace.getByRole("status")).toHaveText(
+    "ANSWER / COMPOSED_CLAIM_QUALIFIED",
+  );
+  const panel = workspace.getByRole("region", {
+    name: "Focus Panel: qualified composed claim",
+  });
+  await expect(panel).toBeVisible();
+  await expect(
+    panel.locator('ul[aria-label="Active Focus evidence scope"]'),
+  ).toContainText("kfm:evidence:synthetic:endorsed-soil-summary-3373");
+  await expect(panel.locator('[data-component="focus-policy-result"]')).toHaveText(
+    "Policy result: ALLOW",
+  );
+  await expect(
+    panel.getByRole("link", { name: "Endorsed synthetic soil summary" }),
+  ).toBeVisible();
+  await expect(panel).toContainText("Resolved role: ENDORSED_SUMMARY");
+  await expect(panel).toContainText(
+    "Unavailable optional role: RESTRICTED_CONTEXT",
+  );
+  await expect(panel).toContainText(
+    "One synthetic restricted-context role is withheld by policy; no protected detail is exposed.",
+  );
+  await expect(panel).toContainText("not release proof");
+  await expect(panel).not.toContainText("RAW_GOVERNED_CONTEXT_CANARY_3373");
+  await expect(panel).not.toContainText("raw_governed_context");
+  await expect(workspace).toContainText(
+    "This fixture does not activate a source, execute a model, authenticate release, or publish an answer.",
+  );
+});
