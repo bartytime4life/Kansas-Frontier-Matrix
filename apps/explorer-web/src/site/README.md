@@ -39,11 +39,15 @@ UI-02 adds the smallest app-local shared trust grammar without moving component 
 - The `LOADING` case is explicitly a transient browser condition, not a governed finite outcome or evidence/release claim.
 - Coarse sensitivity values are already-supplied presentation metadata. The browser does not infer sensitivity or evaluate policy.
 - Negative cases suppress citation and time affordances, retain text labels rather than color-only signals, and expose no override, approval, promotion, or publication action.
-- Unit and browser tests verify the shared six-label grammar, alignment with the existing strict governed projection, loading separation, malformed-input denial, no-network behavior, keyboard-operable case selection, and absence of privileged controls.
+- Multiple Evidence Drawer mounts allocate document-unique panel, label, and title IDs while preserving the original IDs for the first compatible instance.
+- Evidence Drawer `ERROR` views suppress release and correction labels when a resolver failure prevents a reliable user-facing interpretation; policy and freshness cues remain visible.
+- Unit and browser tests verify the shared six-label grammar, alignment with the existing strict governed projection, loading separation, malformed-input denial, no-network behavior, keyboard-operable case selection, unique accessible drawer relationships, error-detail suppression, and absence of privileged controls.
 
 UI-02 remains under `apps/explorer-web/src/site/` because it has one verified consumer: the Explorer composition. `packages/ui/` remains the future extraction home if another application requires the primitive. This follows the existing app-source and shared-package responsibility boundaries rather than creating a parallel UI root.
 
 Implementation baseline for UI-02: `main@4671f53533cbb1c0757c01d4f90ae60733d544e8`.
+
+Reconciliation baseline for the current UI-02 branch: `main@265b99b81f9526a885caaf799e17c89b5424f9f2`. The reconciliation preserves the separately merged synthetic Focus Mode request surface and repairs shared Evidence Drawer identity and error-state presentation without granting new authority.
 
 ## Evidence snapshot
 
@@ -85,8 +89,8 @@ pnpm run test:unit
 pnpm run test:browser
 ```
 
-The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. Trust-surface tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, and browser presentation.
+The catalog tests check identifier/path uniqueness, the thirteen-domain inventory, sensitive-domain safeguards, filtering, and preservation of the MapLibre HOLD. Workspace tests cover registry/context/URL behavior. Trust-surface and Evidence Drawer tests cover the consistent public grammar, finite negative states, malformed metadata, no-network boundaries, unique DOM identity, accessible trigger relationships, error-state suppression, and browser presentation.
 
 ## Rollback
 
-For UI-02, restore `src/main.ts`, remove `trust-state-primitives.ts`, `trust-surface.ts`, `site-trust.css`, and their tests, then restore this README. UI-01 navigation and context behavior remain intact. No data migration, renderer transition, API transition, source transition, policy action, release action, deployment action, or publication action is required.
+For UI-02, restore `src/main.ts`, remove `trust-state-primitives.ts`, `trust-surface.ts`, `site-trust.css`, and their tests, restore this README, and revert the bounded Evidence Drawer identity/error-presentation repair. UI-01 navigation/context behavior and the independently merged Focus Mode request surface remain intact. No data migration, renderer transition, API transition, source transition, policy action, release action, deployment action, or publication action is required.

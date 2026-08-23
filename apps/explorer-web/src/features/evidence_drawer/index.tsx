@@ -29,6 +29,12 @@ export type EvidenceDrawerController = Readonly<{
   destroy: () => void;
 }>;
 
+type EvidenceDrawerDomIds = Readonly<{
+  panelId: string;
+  labelId: string;
+  titleId: string;
+}>;
+
 const EMPTY_STRINGS = Object.freeze([]) as readonly string[];
 const EMPTY_CITATIONS = Object.freeze([]) as readonly EvidenceDrawerCitation[];
 
@@ -80,6 +86,23 @@ function historyLabels(history: EvidenceDrawerHistory): readonly string[] {
   ]);
 }
 
+function negativeTrustLabels(
+  outcome: "ABSTAIN" | "DENY" | "ERROR",
+  labels: readonly string[],
+): readonly string[] {
+  if (outcome !== "ERROR") return labels;
+
+  // An upstream or adapter error cannot establish a reliable release or
+  // correction interpretation for the user. Keep stable policy/freshness cues,
+  // but suppress those two fields rather than presenting conflicting detail.
+  return Object.freeze(
+    labels.filter(
+      (label) =>
+        !label.startsWith("Release: ") && !label.startsWith("Correction: "),
+    ),
+  );
+}
+
 function fixedNegativeView(
   outcome: "ABSTAIN" | "DENY" | "ERROR",
   code: EvidenceDrawerReasonCode,
@@ -102,7 +125,7 @@ function fixedNegativeView(
     evidenceRefs: outcome === "ABSTAIN" ? evidenceRefs : EMPTY_STRINGS,
     citations: EMPTY_CITATIONS,
     limitations: Object.freeze(["No unsupported claim is shown."]),
-    trustLabels: labels,
+    trustLabels: negativeTrustLabels(outcome, labels),
     historyLabels: history,
     landmarkRole: "complementary",
     accessibilityLabel: `Evidence Drawer: ${outcome.toLowerCase()}`,
@@ -178,6 +201,29 @@ export function resolveEvidenceDrawer(
   });
 }
 
+function allocateEvidenceDrawerDomIds(document: Document): EvidenceDrawerDomIds {
+  let ordinal = 1;
+
+  while (true) {
+    const prefix = ordinal === 1 ? "evidence-drawer" : `evidence-drawer-${ordinal}`;
+    const ids = Object.freeze({
+      panelId: `${prefix}-panel`,
+      labelId: `${prefix}-label`,
+      titleId: `${prefix}-title`,
+    });
+
+    if (
+      document.getElementById(ids.panelId) === null &&
+      document.getElementById(ids.labelId) === null &&
+      document.getElementById(ids.titleId) === null
+    ) {
+      return ids;
+    }
+
+    ordinal += 1;
+  }
+}
+
 /**
  * Mount one keyboard-operable browser projection of the resolved drawer state.
  *
@@ -192,6 +238,7 @@ export function mountEvidenceDrawer(
 ): EvidenceDrawerController {
   const state = resolveEvidenceDrawer(input);
   const document = host.ownerDocument;
+  const ids = allocateEvidenceDrawerDomIds(document);
   const trigger = document.createElement("button");
   const drawer = document.createElement("aside");
   const accessibleLabel = document.createElement("span");
@@ -208,13 +255,13 @@ export function mountEvidenceDrawer(
 
   trigger.type = "button";
   trigger.textContent = "Open Evidence Drawer";
-  trigger.setAttribute("aria-controls", "evidence-drawer-panel");
+  trigger.setAttribute("aria-controls", ids.panelId);
   trigger.setAttribute("aria-expanded", "false");
 
-  accessibleLabel.id = "evidence-drawer-label";
+  accessibleLabel.id = ids.labelId;
   accessibleLabel.textContent = state.accessibilityLabel;
 
-  heading.id = "evidence-drawer-title";
+  heading.id = ids.titleId;
   heading.textContent = state.title;
 
   outcome.textContent = `${state.outcome} / ${state.code}`;
@@ -262,7 +309,7 @@ export function mountEvidenceDrawer(
     limitationList.append(item);
   }
 
-  drawer.id = "evidence-drawer-panel";
+  drawer.id = ids.panelId;
   drawer.hidden = true;
   drawer.dataset.component = "evidence-drawer";
   drawer.dataset.outcome = state.outcome;

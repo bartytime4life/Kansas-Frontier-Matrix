@@ -5,6 +5,7 @@ import "./site/site-catalog.css";
 import "./site/site-trust.css";
 import "./site/site-responsive.css";
 import { mountExplorerSite } from "./site/mount-explorer-site";
+import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";
 import { mountPublicTrustSurface } from "./site/trust-surface";
 import { mountPublicWorkspaceNavigation } from "./site/workspace-navigation";
 
@@ -24,6 +25,7 @@ if (navigation === null || trustSection === null) {
 }
 
 mountPublicWorkspaceNavigation(navigation);
+mountSyntheticFocusWorkspace(root);
 
 const trustSurfaceHost = document.createElement("div");
 trustSurfaceHost.className = "trust-surface-host";

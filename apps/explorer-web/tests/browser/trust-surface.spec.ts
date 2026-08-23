@@ -67,7 +67,19 @@ test("presents shared accessible trust states without exposing privileged contro
   await cases.getByRole("button", { name: "Error" }).click();
   await expect(summary).toHaveAttribute("data-outcome", "ERROR");
   await expect(summary).toHaveAttribute("role", "alert");
+  await expect(
+    summary.locator('[data-trust-state-field="release"] dd'),
+  ).toHaveText("UNKNOWN");
+  await expect(
+    summary.locator('[data-trust-state-field="correction"] dd'),
+  ).toHaveText("UNKNOWN");
   await expect(surface).not.toContainText(/stack|token|credential|private prompt/i);
+
+  await surface.getByRole("button", { name: "Open Evidence Drawer" }).click();
+  const errorDrawer = surface.locator('[data-component="evidence-drawer"]');
+  await expect(
+    errorDrawer.getByRole("list", { name: "Evidence trust state" }),
+  ).not.toContainText(/Release:|Correction:/);
 
   await cases.getByRole("button", { name: "Loading" }).click();
   await expect(summary).toHaveAttribute("data-outcome", "LOADING");
@@ -77,4 +89,42 @@ test("presents shared accessible trust states without exposing privileged contro
   await expect(surface).toContainText(
     "Loading is a transient UI condition. It does not imply evidence, review, release, or authority.",
   );
+});
+
+test("keeps every composed Evidence Drawer DOM identity unique and correctly linked", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await page
+    .getByRole("button", { name: "Supported synthetic streamflow", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('[data-component="evidence-drawer"]').length > 1,
+  );
+
+  const drawers = page.locator('[data-component="evidence-drawer"]');
+  expect(await drawers.count()).toBeGreaterThan(1);
+
+  const evidenceDrawerIds = await page
+    .locator('[id^="evidence-drawer"]')
+    .evaluateAll((nodes) => nodes.map((node) => node.id));
+  expect(evidenceDrawerIds.every((id) => id.length > 0)).toBe(true);
+  expect(new Set(evidenceDrawerIds).size).toBe(evidenceDrawerIds.length);
+
+  const controls = await page
+    .locator('button[aria-controls^="evidence-drawer"]')
+    .evaluateAll((nodes) =>
+      nodes.map((node) => node.getAttribute("aria-controls")),
+    );
+  const definedControls = controls.filter(
+    (value): value is string => value !== null && value.length > 0,
+  );
+  expect(definedControls).toHaveLength(controls.length);
+  expect(new Set(definedControls).size).toBe(definedControls.length);
+
+  for (const id of definedControls) {
+    await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+  }
 });

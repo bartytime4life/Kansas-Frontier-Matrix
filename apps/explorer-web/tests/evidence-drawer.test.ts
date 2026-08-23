@@ -81,7 +81,7 @@ describe("Explorer Evidence Drawer governed projection", () => {
     expect(result.historyLabels).toEqual([]);
   });
 
-  it("uses a fixed upstream error without exposing diagnostic text", () => {
+  it("uses a fixed upstream error without exposing diagnostic or conflicting release detail", () => {
     const forbiddenCanary = "INTERNAL_ERROR_CANARY_e6f1af";
     const result = resolveEvidenceDrawer(errorFixture);
 
@@ -90,6 +90,14 @@ describe("Explorer Evidence Drawer governed projection", () => {
       code: "UPSTREAM_ERROR",
       ariaLive: "assertive",
     });
+    expect(result.trustLabels).toContain("Policy: ERROR");
+    expect(result.trustLabels).toContain("Freshness: UNKNOWN");
+    expect(
+      result.trustLabels.some((label) => label.startsWith("Release: ")),
+    ).toBe(false);
+    expect(
+      result.trustLabels.some((label) => label.startsWith("Correction: ")),
+    ).toBe(false);
     expect(JSON.stringify(result)).not.toContain(forbiddenCanary);
   });
 
