@@ -20,6 +20,7 @@
     "docs/architecture/ui/TRUST_BADGES.md",
     "docs/runbooks/rollback-rehearsal.md",
     "docs/security/incident-response-handoff-decision.md",
+    "fixtures/README.md",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
     "tests/validators/directory_governance/test_validate_repository_topology.py",
     "tools/validators/directory_governance/repository_topology_baseline.json",
@@ -45,6 +46,7 @@
     "docs/architecture/ui/TRUST_BADGES.md": "sha256:2a039a688704b813fa8a7346638eb596ae754aa7b4a0c6e8b76b70c5221bb5f5",
     "docs/runbooks/rollback-rehearsal.md": "sha256:b3267c154583f3405e72aaaeaf57789aebdafe82edb441c2721feefa31a84cc2",
     "docs/security/incident-response-handoff-decision.md": "sha256:da64c9a5824c3854db49b290dad092372203aa10db9314793553721e363cb8e5",
+    "fixtures/README.md": "sha256:0bafec325e271c2ccb3a57d4e5d8f7ed547c6f3f45e71ea10e85cf0b2aa00210",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:81c2a74202ce133c64661d0616e4b61609cea7477912541d88b386d70871e3f2",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:599b2bee1f04bce5f1e570febad544edd334fdc53992c57d6caf25902da2bf8c",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:7e6da0ae65f5b5aa9c27846808bdcfaee05cadff45d2e3bac48db5c75c422dd0",
@@ -117,6 +119,7 @@
     "docs/architecture/ui/TRUST_BADGES.md": "PROPOSED",
     "docs/runbooks/rollback-rehearsal.md": "PROPOSED",
     "docs/security/incident-response-handoff-decision.md": "PROPOSED",
+    "fixtures/README.md": "PROPOSED",
     "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "PROPOSED",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "PROPOSED",
     "tools/validators/directory_governance/repository_topology_baseline.json": "PROPOSED",
@@ -152,7 +155,12 @@
     {
       "gate": "focused_validator_tests",
       "outcome": "PASS",
-      "reason": "Twenty-five topology tests, eleven governance-parity tests, nineteen workflow-security tests, eight ADR-index tests, eighteen documentation-link tests, and eight synthetic rollback-rehearsal tests passed locally."
+      "reason": "Twenty-five topology tests, eleven governance-parity tests, nineteen workflow-security tests, eight ADR-index tests, eighteen documentation-link tests, eight synthetic rollback-rehearsal tests, and seven fixture-root contract tests passed locally."
+    },
+    {
+      "gate": "fixture_root_contract",
+      "outcome": "PASS",
+      "reason": "The exact fixture-root inventory now records all thirty current direct children, including the already-present correction lane; the no-network validator reports twenty-three aggregate validators and zero findings."
     },
     {
       "gate": "workflow_security",
@@ -221,12 +229,12 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-08-23T01:39:10Z",
+  "created_at": "2026-08-23T01:50:30Z",
   "emitter": "OpenAI Codex Work Mode",
   "links": {
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "This candidate performs only the safe MRTS-04 topology ratchet: canonical ADR filename exemption, four noncanonical path renames with tracked-reference rewrites, removal of two unused README-only scaffold leaves, removal of three temporary topology-diagnostics workflows from PR #2998, strict-subset baseline regeneration, exact known-hold assertions, and parity delta correction. It deliberately does not choose a canonical IIIF document, delete either case-colliding path, change either document id, expand the baseline, waive drift, accept an ADR, merge, release, deploy, promote, publish, close the milestone, or alter Google Drive source material."
+  "notes": "This candidate performs only the safe MRTS-04 topology ratchet: canonical ADR filename exemption, four noncanonical path renames with tracked-reference rewrites, removal of two unused README-only scaffold leaves, removal of three temporary topology-diagnostics workflows from PR #2998, exact fixture-root inventory reconciliation, strict-subset baseline regeneration, exact known-hold assertions, and parity delta correction. It deliberately does not choose a canonical IIIF document, delete either case-colliding path, change either document id, expand the baseline, waive drift, accept an ADR, merge, release, deploy, promote, publish, close the milestone, or alter Google Drive source material."
 }

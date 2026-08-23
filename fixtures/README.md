@@ -2,10 +2,10 @@
 doc_id: kfm://doc/fixtures-readme
 title: fixtures/ — Canonical Reusable Fixture Root
 type: readme; root-readme; canonical-fixtures-root; reusable-test-fixture-boundary
-version: v0.2.1
+version: v0.2.2
 status: repository-grounded draft; aligned to adopted Directory Rules v2; non-authoritative
 created: NEEDS VERIFICATION
-updated: 2026-08-09
+updated: 2026-08-23
 supersedes: v0.1 at the same path
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 current_path: fixtures/README.md
@@ -15,10 +15,10 @@ readme_profile: ROOT_FULL
 policy_label: public-review; synthetic-public-safe-only; no-network-default; no-authority; cite-or-abstain
 truth_posture: >
   CONFIRMED the existing same-path canonical fixture root, adopted Directory Rules v2
-  through ADR-0029, root.fixtures machine projection, current 29-direct-child tree,
-  eight-validator full aggregate profile, generated-receipt fixture lane, no-network
+  through ADR-0029, root.fixtures machine projection, current 30-direct-child tree,
+  23-validator aggregate profile, generated-receipt fixture lane, no-network
   validation posture, CODEOWNERS route, and make fixtures readiness-marker behavior at
-  head@74acdbba6d2bc36407f3694acfb10c680a5087df / PROPOSED the fixture admission
+  head@76bc1ffef374f14e0123f2e0817e8cab0c3727f5 / PROPOSED the fixture admission
   checklist and scenario vocabulary below / UNKNOWN exhaustive recursive payload and
   consumer inventory, deployed consumers, third-party sample rights, and public effects /
   NEEDS VERIFICATION accountable fixture stewardship beyond the current owner route,
@@ -27,15 +27,15 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 74acdbba6d2bc36407f3694acfb10c680a5087df
-  prior_blob: 1781219befe9e47064fd9dee4cfdf81058db80ee
-  fixtures_tree: b41a1641fd39e783d30fa5cd21bc5df09cf27d71
+  base_commit: 76bc1ffef374f14e0123f2e0817e8cab0c3727f5
+  prior_blob: 52ab110393f8b7936a2128eba0488f0799a36737
+  fixtures_tree: f06f74cad9ca9db3ae33e1b53818f0ddae1d0aef
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
-  validator_registry_blob: 12517f368cb1c8b850d3a7138a968cee889875ba
-  makefile_blob: 4abc7f941ce25d7d14703e87e387cef6e96d1592
+  validator_registry_blob: af9a2f4c259bdc8cd2a106a24df44fb3e8c7277b
+  makefile_blob: 304145dd0f674dda759f9097a747c4c7f0b9269d
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  overlap_preflight: PR #2326 carries this bounded inventory reconciliation; no independent overlap sweep was performed
+  overlap_preflight: PR #3425 carries this bounded inventory reconciliation; PR #2326 is the prior historical reconciliation
 related:
   - ../docs/doctrine/directory-rules.md
   - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -53,6 +53,7 @@ related:
   - ../data/receipts/generated/README.md
 tags: [kfm, fixtures, root-readme, synthetic, deterministic, valid, invalid, golden, denied, abstain, hold, error, correction, rollback, no-network, public-safe]
 notes:
+  - "v0.2.2 adds the already-present correction/ direct child to the exact root map and advances the reviewed count from 29 to 30; no child is moved, reclassified, promoted, or published."
   - "v0.2.1 reconciles the direct-child inventory after governance/ and policy/ were present but omitted from the prior map; no child is moved, reclassified, promoted, or published."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL order."
   - "The direct-child map is verified at the pinned base; deeper inventory remains child-owned or NEEDS VERIFICATION."
@@ -82,7 +83,7 @@ notes:
 | Repository exposure | `public`; payloads must therefore be synthetic and public-safe |
 | Mutation / retention | `versioned` / `repository_lifetime` |
 | Validation profile | `synthetic_public_safe_only` |
-| Direct-child snapshot | `README.md` plus 29 directories at `head@74acdbb…` |
+| Direct-child snapshot | `README.md` plus 30 directories at `head@76bc1ff…` |
 | Normal public-client use | **DENY** — repository fixtures are not governed runtime data |
 | Release or publication effect | None |
 
@@ -142,7 +143,7 @@ The current machine projection and [CODEOWNERS](../.github/CODEOWNERS) route thi
 | Placement authority | **CONFIRMED** | Directory Rules v2 adopted through ADR-0029 |
 | Root projection | **CONFIRMED** | `root.fixtures` is present in the root registry |
 | Same-path README role | **CONFIRMED** | Existing root README modernized in place |
-| Direct-child inventory | **CONFIRMED** | 29 direct-child directories at the pinned tree |
+| Direct-child inventory | **CONFIRMED** | 30 direct-child directories at the pinned tree |
 | Reusable fixture role | **CONFIRMED** | Root registry and current validator consumers |
 | All child contracts current | **NEEDS VERIFICATION** | Child README depth and freshness are mixed |
 | Complete recursive payload inventory | **UNKNOWN** | No claim of every nested file or consumer |
@@ -457,7 +458,7 @@ Changing the root class, creating a parallel fixture authority, moving lifecycle
 
 ## Direct-child directory map
 
-The following map is verified from tree `b41a1641fd39e783d30fa5cd21bc5df09cf27d71` at the pinned head before this README-only reconciliation. It shows direct children only; each child README owns deeper detail.
+The following map is verified from tree `f06f74cad9ca9db3ae33e1b53818f0ddae1d0aef` at the pinned head before this README-only reconciliation. It shows direct children only; each child README owns deeper detail.
 
 ```text
 fixtures/
@@ -465,6 +466,7 @@ fixtures/
 ├── archaeology-public-safe/      # Public-safe archaeology fixture lane.
 ├── connectors/                   # Source-connector fixture families.
 ├── contracts/                    # Versioned contract/object-family fixtures.
+├── correction/                   # Correction, supersession, and withdrawal fixtures.
 ├── data/                         # Synthetic data-object shapes; not lifecycle data.
 ├── domains/                      # Domain-owned fixture lanes.
 ├── ecology/                      # Ecology compatibility/cross-domain fixtures.
@@ -505,13 +507,13 @@ fixtures/
 
 | Field | Value |
 |---|---|
-| Last evidence review | 2026-08-09 |
-| Repository snapshot | `head@74acdbba6d2bc36407f3694acfb10c680a5087df` |
-| Target prior blob | `1781219befe9e47064fd9dee4cfdf81058db80ee` |
-| Direct-child tree | `b41a1641fd39e783d30fa5cd21bc5df09cf27d71` |
+| Last evidence review | 2026-08-23 |
+| Repository snapshot | `head@76bc1ffef374f14e0123f2e0817e8cab0c3727f5` |
+| Target prior blob | `52ab110393f8b7936a2128eba0488f0799a36737` |
+| Direct-child tree | `f06f74cad9ca9db3ae33e1b53818f0ddae1d0aef` |
 | Directory authority | Directory Rules v2 adopted by ADR-0029 |
 | Aggregate validator source | `tools/validators/validator_registry.json` |
-| Open PR overlap | PR #2326 contains this bounded reconciliation; no independent overlap sweep was performed |
+| Open PR overlap | PR #3425 contains this bounded reconciliation; PR #2326 is the prior historical reconciliation |
 | Runtime/deployment observation | Not performed; not required for this documentation slice |
 
 Re-review this README when any of the following occurs:
