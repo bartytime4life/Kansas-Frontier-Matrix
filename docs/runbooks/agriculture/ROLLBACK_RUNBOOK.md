@@ -1,390 +1,645 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/runbook-agriculture-rollback
-title: Agriculture Domain — Rollback Runbook
-type: standard
-version: v0.1
-status: draft
-owners: Docs steward + Agriculture domain steward + Release authority (TODO confirm)
+doc_id: kfm://doc/runbooks/agriculture/rollback-runbook
+title: Agriculture — Rollback, Withdrawal, and Recovery Runbook
+type: runbook; operational-procedure; domain-lane; non-authoritative
+version: v0.2
+status: draft; repository-grounded; rollback-card-validator-present; agriculture-drill-held; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route"
+  - "NEEDS VERIFICATION — accountable Agriculture, release, rollback, correction, evidence, rights/sensitivity, and independent-review stewards"
 created: 2026-05-13
-updated: 2026-05-13
-policy_label: public
+updated: 2026-08-23
+policy_label: public-review; agriculture; rollback; withdrawal; correction; fail-closed; no-publication-authority
+current_path: docs/runbooks/agriculture/ROLLBACK_RUNBOOK.md
+owning_root: docs/
+responsibility: >
+  Provide the repository-grounded human procedure for proposing, reviewing,
+  executing, verifying, and correcting an Agriculture rollback or withdrawal
+  without granting release, policy, evidence, review, deployment, or publication authority.
+truth_posture: cite-or-abstain
+truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION, CONFLICTED, HOLD]
+authority_class: explanatory operational documentation
+canonical_relationship: same-path update; no new or parallel authority
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 265b99b81f9526a885caaf799e17c89b5424f9f2
+  prior_blob: 720e0c768343af90ed35533e488dceaec86bdbf2
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  inspected_surfaces:
+    - docs/runbooks/README.md
+    - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+    - contracts/release/rollback_card.md
+    - schemas/contracts/v1/release/rollback_card.schema.json
+    - tools/validators/release/validate_rollback_card.py
+    - tests/validators/test_validate_rollback_card.py
+    - tests/domains/agriculture/rollback_drill/README.md
+    - release/agriculture/README.md
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/domains/agriculture/README.md
-  - docs/runbooks/README.md
-  - release/rollback_cards/
-  - release/correction_notices/
-  - release/manifests/
-tags: [kfm, runbook, agriculture, rollback, release, governance]
+  - ../README.md
+  - ../../doctrine/directory-rules.md
+  - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - ../../domains/agriculture/DATA_LIFECYCLE.md
+  - ../../domains/agriculture/SENSITIVITY.md
+  - ../../../contracts/release/rollback_card.md
+  - ../../../schemas/contracts/v1/release/rollback_card.schema.json
+  - ../../../tools/validators/release/validate_rollback_card.py
+  - ../../../tests/validators/test_validate_rollback_card.py
+  - ../../../tests/domains/agriculture/rollback_drill/README.md
+  - ../../../release/agriculture/README.md
+  - ../../../release/rollback_cards/README.md
+  - ../../../release/correction_notices/README.md
+  - ../../../release/manifests/README.md
+tags: [kfm, agriculture, runbook, rollback, withdrawal, correction, release, governance, fail-closed]
 notes:
-  - Path placement uses docs/runbooks/<domain>/ subdirectory convention.
-  - Convention is PROPOSED and not directly attested in mounted-repo evidence.
-  - See Section 2 for the placement basis and the related drift note.
+  - "v0.2 replaces speculative release paths, stale rollback-card field claims, and implied execution maturity with current repository evidence."
+  - "The shared release-family RollbackCard contract, schema, validator, fixtures, and focused tests are present; candidate validation remains non-executing and non-authoritative."
+  - "The Agriculture rollback-drill lane remains README-only and documents missing executable drill proof, workflow TODOs, and remaining schema/home conflict; production rollback readiness is therefore not established."
+  - "This document changes no release record, alias, fixture, contract, schema, policy, validator, workflow, receipt, proof, lifecycle object, deployment, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
-# 🌾 Agriculture Domain — Rollback Runbook
+<a id="top"></a>
 
-> Operational procedure for withdrawing, superseding, or reverting a published Agriculture release. Rollback is a **governed state transition**, not a file copy.
+# Agriculture — Rollback, Withdrawal, and Recovery Runbook
 
-<!-- Top-of-file impact block -->
+> **Recover an Agriculture public surface by using verified release identity, evidence, policy, review, correction, invalidation, and rollback targets—never by silently rewriting released bytes or treating a prior version as safe by default.**
 
-![Status](https://img.shields.io/badge/status-draft-yellow) ![Doc%20type](https://img.shields.io/badge/type-runbook-blue) ![Domain](https://img.shields.io/badge/domain-agriculture-2ea44f) ![Policy](https://img.shields.io/badge/policy_label-public-informational) ![Lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED%E2%86%92rollback_target-orange) <!-- TODO: replace with verified Shields.io endpoints once CI badges are wired -->
-
-| Field | Value |
-|---|---|
-| **Status** | `draft` |
-| **Owners** | Docs steward + Agriculture domain steward + Release authority *(TODO confirm assignment)* |
-| **Last updated** | 2026-05-13 |
-| **Authority** | KFM core invariants + Directory Rules + Encyclopedia §7.7 + Domain Atlas §M (Agriculture) |
-| **Schema home (PROPOSED)** | `schemas/contracts/v1/release/rollback_card.schema.json` (per ADR-0001 default) |
-| **Artifact home (PROPOSED)** | `release/rollback_cards/` and `release/correction_notices/` |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-
----
-
-## Quick jump
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. When to invoke this runbook](#2-when-to-invoke-this-runbook)
-- [3. Pre-rollback admissibility checks](#3-pre-rollback-admissibility-checks)
-- [4. Defect-class → posture matrix](#4-defect-class--posture-matrix)
-- [5. Rollback flow](#5-rollback-flow)
-- [6. Step-by-step procedure](#6-step-by-step-procedure)
-- [7. Required artifacts](#7-required-artifacts)
-- [8. Agriculture-specific sensitivity rules](#8-agriculture-specific-sensitivity-rules)
-- [9. Post-rollback verification](#9-post-rollback-verification)
-- [10. Reason codes](#10-reason-codes)
-- [11. Drill cadence](#11-drill-cadence)
-- [12. Anti-patterns](#12-anti-patterns)
-- [13. Related docs](#13-related-docs)
-- [14. Appendix](#14-appendix)
-
----
-
-## 1. Purpose & scope
-
-This runbook governs **rollback of a published Agriculture release** in the Kansas Frontier Matrix (KFM). It applies whenever an already-PUBLISHED Agriculture artifact — a CropObservation derivative, a public-safe county/HUC aggregation, a CDL-derived layer, an irrigation context overlay, a suitability product, a drought / pest / stress indicator, an Evidence Drawer payload, a Focus Mode answer drawing on Agriculture evidence, or any other release-bound Agriculture surface — must be withdrawn, superseded, or reverted to a prior known-safe release.
+[![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#current-repository-state)
+[![RollbackCard validator: present](https://img.shields.io/badge/RollbackCard%20validator-present-1f883d?style=flat-square)](#current-repository-state)
+[![Agriculture rollback drill: HOLD](https://img.shields.io/badge/Agriculture%20drill-HOLD-d4a72c?style=flat-square)](#current-repository-state)
+[![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#authority-and-non-effects)
 
 > [!IMPORTANT]
-> Rollback in KFM is a **governed state transition**, not a hidden file copy or silent mutation. Every rollback emits an auditable **RollbackCard**, may emit a **CorrectionNotice**, and re-traverses the same governed release path used by the original publication. A rollback that bypasses gates is treated as a release failure, not a rollback. *(CONFIRMED doctrine, BLD-GREEN §20; UIAI-MASTER §§10-14; BLD-COMP §§21-23, 30-31.)*
-
-**In scope.** Withdrawal, supersession, or reversion of any Agriculture artifact in the **PUBLISHED** lifecycle state. Cascading invalidation of downstream tiles, layer manifests, search indexes, graph projections, and AI-surface answers that depend on the affected release.
-
-**Out of scope.** Pre-publication failures (handled by the validation / promotion gates); silent edits to released artifacts (forbidden); corrections that do not require a public surface change (handled by `CorrectionNotice` alone, see §7); non-Agriculture domains (see their lane runbooks).
-
----
-
-## 2. When to invoke this runbook
-
-Invoke this runbook when one or more of the following is true for an Agriculture release:
-
-- An **evidence defect** is discovered (broken `EvidenceRef`, missing `EvidenceBundle` closure, source-role collapse, fabricated or unsupported claim).
-- A **rights or sensitivity defect** is discovered (source terms changed; field-level or operator-identifying data leaked through aggregation; private farm operation exposed).
-- A **policy-gate regression** is discovered after release (`policy_label`, `rights_status`, or sensitivity tier no longer admissible).
-- A **schema / contract mismatch** is discovered that invalidates downstream consumers.
-- A **temporal or geometry defect** is discovered (wrong crop year, growing-season misalignment, geometry not aggregated to the required county/HUC/grid threshold).
-- A **release-manifest defect** is discovered (`ROLLBACK_TARGET_MISSING`, `RELEASE_MANIFEST_INVALID`, digest mismatch).
-- A **kill-switch** has fired against an Agriculture release pipeline and the affected public surface must be quarantined.
-- A **steward** initiates a rollback drill as part of the cadence in §11.
-
-> [!NOTE]
-> If the defect can be addressed without changing the public surface, prefer a `CorrectionNotice` only (§7). Rollback is reserved for cases where the **current public surface itself is unsafe to keep serving**.
-
----
-
-## 3. Pre-rollback admissibility checks
-
-Before opening a RollbackCard, the on-call steward MUST verify the following. Each line is a **MUST** unless explicitly labeled SHOULD.
-
-- [ ] The affected `release_id` is identified, and its `ReleaseManifest` is retrievable and digest-verified.
-- [ ] At least one **prior safe** release of the same artifact family exists, or the decision is to **withdraw** with no replacement (record reason).
-- [ ] The `rollback_to` candidate's `ReleaseManifest` is digest-verified and its `EvidenceBundle` references still resolve.
-- [ ] The defect class is identified and matches one row of §4.
-- [ ] Affected downstream derivatives are enumerated (tiles, layer manifests, catalog records, graph/triplet projections, search indexes, Evidence Drawer payloads, Focus Mode answers).
-- [ ] Sensitivity posture of the rollback target is **at least as restrictive** as the failing release (rollback MUST NOT re-expose redacted material).
-- [ ] A `ReviewRecord` is open or scheduled where the defect class requires review (rights, sensitivity, source-role, AI-surface).
-- [ ] Audit receipts for the failing release are preserved unmodified (rollback never deletes evidence of the failure).
-
-> [!WARNING]
-> If **any** check fails, **do not** publish the rollback. Hold at the current state, escalate, and log the gap in `docs/registers/VERIFICATION_BACKLOG.md` (or its equivalent). Publishing an under-supported rollback **creates a second incident on top of the first.**
-
----
-
-## 4. Defect-class → posture matrix
-
-The correction and rollback postures by defect class are doctrinal. Agriculture inherits the universal matrix; the column **Agriculture-specific note** records the failure modes this domain sees most often.
-
-| Defect class | Correction posture | Rollback posture | Agriculture-specific note |
-|---|---|---|---|
-| **Evidence gap** | ABSTAIN or withdraw the unsupported claim | Restore prior evidence-supported release | Common after a NASS / QuickStats source-vintage change; verify `EvidenceRef` resolution. |
-| **Source-role collapse** | Re-classify source role; refuse upcast | Restore prior role-correct release | Watch for CDL / model / observation conflation; remote-sensing products MUST NOT be promoted to observation. |
-| **Rights / sensitivity unresolved** | Steward review; tier reassignment; redact | Restore a release whose rights/sensitivity are current and conformant | Farm-operator, parcel, or proprietary yield exposure → fail closed; aggregate to county/HUC/grid threshold. |
-| **Geometry defect** | Re-aggregate or re-mask | Restore prior public-safe geometry | Field polygons MAY be sensitive — public products MUST stay at county / HUC / grid threshold. |
-| **Temporal defect** | Re-bind to correct `observed_time` / `valid_time` / `release_time` | Restore release matching the correct crop year / growing season | Crop-year and growing-season fields must remain distinct. |
-| **Policy gate regression** | Re-evaluate gate; emit denial reason | Restore release covered by the current policy bundle | OPA / policy bundle changes can invalidate prior release admissibility. |
-| **Validation drift** | Re-validate; fix schema or fixture | Restore validator-passing release | Schema drift in `schemas/contracts/v1/domains/agriculture/...` (PROPOSED home). |
-| **Rendering / API defect** | Patch the surface; re-derive tiles or layer manifest | Restore prior tile or layer manifest digest | Public-safe CDL / county aggregation tiles must rebuild from the rollback target. |
-| **AI-surface defect** | ABSTAIN, re-evaluate citation validation, emit new `AIReceipt` | Disable Focus Mode template until evidence-bounded answer can be re-derived | Focus Mode MUST NOT answer beyond the available `EvidenceBundle` and citation validation. |
-| **Release infrastructure** | Manifest fix; supply rollback target | Halt promotion; restore last valid `ReleaseManifest` | `RELEASE_MANIFEST_INVALID` and `ROLLBACK_TARGET_MISSING` both block release. |
-
-*(Matrix consolidates CONFIRMED doctrine from BLD-GREEN §20, BLD-COMP §§21-23, 30-31, IMPL-PIPE §§21, 27, UIAI-MASTER §§10-14, and DOM-AG §M; Agriculture-specific notes derived from Encyclopedia §7.7 and Domains Atlas Ch. 9.)*
-
----
-
-## 5. Rollback flow
-
-The diagram below shows the **governed** rollback path. It is not a shortcut around release controls; it re-traverses them.
-
-```mermaid
-flowchart TD
-    A["Defect discovered<br/>(steward, validator, kill-switch, audit)"] --> B{"§3 admissibility<br/>checks pass?"}
-    B -- "No" --> H["HOLD at current state<br/>escalate; log to verification backlog"]
-    B -- "Yes" --> C["Open RollbackCard<br/>(release_id, rollback_to, reason, invalidates[])"]
-    C --> D["Review (where required)<br/>rights · sensitivity · AI-surface · source-role"]
-    D --> E{"Review<br/>approves?"}
-    E -- "No" --> H
-    E -- "Yes" --> F["Disable / withdraw affected<br/>public surfaces; emit kill-switch<br/>or feature-flag off"]
-    F --> G["Update ReleaseManifest<br/>(supersede or revert to rollback_to)"]
-    G --> I["Emit CorrectionNotice<br/>(if claim was public)"]
-    I --> J["Invalidate downstream:<br/>tiles · layer manifests · catalog<br/>graph/triplets · search · AI answers"]
-    J --> K["Mark UI state stale / withdrawn<br/>(Evidence Drawer · trust badges)"]
-    K --> L["Republish rollback_to<br/>through governed release path"]
-    L --> M["Verify §9 post-rollback checks"]
-    M --> N["Close incident<br/>preserve audit receipts"]
-
-    classDef hold fill:#fff5e6,stroke:#c47f17,color:#000
-    classDef act fill:#e8f4fc,stroke:#2c699a,color:#000
-    classDef done fill:#e8f7ee,stroke:#2e7d32,color:#000
-    class H hold
-    class C,D,F,G,I,J,K,L act
-    class N done
-```
-
-*(Diagram reflects CONFIRMED rollback doctrine; node labels paraphrase the encyclopedia / build manual flow. PROPOSED until verified against mounted-repo workflows.)*
-
----
-
-## 6. Step-by-step procedure
-
-The procedure is numbered for incident-handler use. **Do not skip steps to save time.** A rollback that skips closure rules is not closed.
-
-1. **Detect & classify.** Confirm the defect class (§4). Record the discovery channel (steward report, validator failure, kill-switch, audit, downstream complaint).
-2. **Stop the bleeding.** Where the public surface itself is unsafe, **engage the kill-switch / feature flag** for the affected layer or Focus Mode template *before* opening the RollbackCard. Public exposure of a known-bad release MUST NOT continue while paperwork catches up.
-3. **Run admissibility checks (§3).** Each MUST item must be confirmed or the rollback is held.
-4. **Open the RollbackCard.** Required fields (PROPOSED schema, per Atlas §24.6 and Encyclopedia §H):
-   - `release_id` — the failing release
-   - `rollback_to` — the prior safe release (or `null` if withdraw-only)
-   - `reason` — defect class + free-text summary
-   - `invalidates[]` — list of downstream derivatives requiring invalidation
-   - `review_ref` — `ReviewRecord` ID where required
-   - `time` — UTC timestamp of decision
-5. **Run required review.** Mandatory for: rights / sensitivity defects, source-role defects, AI-surface defects, any defect touching farm-operator or parcel-sensitive joins. SHOULD for: geometry, temporal, validation drift. MAY skip review for release-infrastructure defects when the rollback is purely manifest-level *and* a release authority distinct from the original author signs off.
-6. **Withdraw the affected public surfaces.** Disable layer manifests, mark tiles stale, withdraw or stale-flag Evidence Drawer payloads, take Focus Mode templates offline. Trust badges in the UI MUST reflect the withdrawn state.
-7. **Update the `ReleaseManifest`.** Either supersede (publish a new release pointing forward) or revert the manifest to the `rollback_to` release. **Manifest mutation in place is forbidden** — emit a new release record that captures the rollback.
-8. **Emit a `CorrectionNotice`** if the failing claim was publicly visible. Required fields: `claim_ref`, `prior_release_ref`, `change_summary`, `invalidates[]`, `review_ref`, `time`.
-9. **Invalidate downstream derivatives.** Trigger re-derivation or removal of tiles, COGs, PMTiles, layer manifests, catalog records, graph/triplet projections, search indexes, and any AI receipts whose `EvidenceRef` resolved through the failing release.
-10. **Republish the rollback target through the governed release path.** A rollback is **not** a backdoor — the rollback target re-enters PUBLISHED only after passing the same validation, policy, review, and release gates as any new release.
-11. **Verify (§9).** Run the post-rollback verification checklist.
-12. **Preserve audit.** All receipts for the failing release remain in the audit ledger, untouched. The RollbackCard, CorrectionNotice, and superseding ReleaseManifest are added to the ledger alongside them.
-13. **Close the incident.** Update `docs/registers/DRIFT_REGISTER.md` (or equivalent) if the rollback exposed a systemic issue; update `docs/registers/VERIFICATION_BACKLOG.md` with any new verification items.
-
----
-
-## 7. Required artifacts
-
-A closed Agriculture rollback emits or references **all** of the following. Missing any of these fails the universal closure rule and the rollback is not considered complete.
-
-| Artifact | Purpose | Required home (PROPOSED) | Required fields (PROPOSED) |
-|---|---|---|---|
-| `RollbackCard` | Records the rollback decision and targeted prior release. | `release/rollback_cards/` | `release_id`, `rollback_to`, `reason`, `invalidates[]`, `review_ref`, `time` |
-| `CorrectionNotice` | Public notice of the corrected claim. | `release/correction_notices/` | `claim_ref`, `prior_release_ref`, `change_summary`, `invalidates[]`, `review_ref`, `time` |
-| `ReleaseManifest` (superseding) | Binds the rollback target's artifacts, validation, policy, review, checksums, and forward rollback target. | `release/manifests/` | `release_id`, `contents[]`, `digests`, `evidence_refs[]`, `rollback_target`, `time` |
-| `ReviewRecord` | Auditable reviewer action where required by defect class. | `release/reviews/` *(PROPOSED)* or `policy/governance/` | reviewer identity, decision, reason, `time` |
-| `PolicyDecision` | Re-evaluation of the policy gate against the rollback target. | within the release path / OPA decision log | ALLOW / RESTRICT / DENY / ABSTAIN / ERROR + reason code |
-| `EvidenceBundle` (re-resolved) | Confirms the rollback target's claims still resolve. | `data/proofs/` | resolved evidence + closure proof |
-| Audit-ledger entries | Immutable record of failure, rollback decision, and superseding release. | append-only ledger | run / decision / receipt references |
-
-> [!TIP]
-> A rollback is "closed" only when (i) the required artifacts above exist, (ii) every required artifact **resolves** the artifacts it depends on (not just references them — `EvidenceRef` → `EvidenceBundle`, `source_id` → `SourceDescriptor`, `model_id` → `ModelRunReceipt`), and (iii) the policy gate evaluated and recorded its decision. Missing any of these means the transition **fails closed** and the prior state is preserved. *(CONFIRMED doctrine.)*
-
----
-
-## 8. Agriculture-specific sensitivity rules
-
-Agriculture sits next to private property, livelihoods, and source-rights-limited datasets. Sensitivity rules are **non-negotiable** during rollback.
+> **Rollback documentation is not rollback authority.** The shared release-family `RollbackCard` profile is implemented as a closed, fixture-first candidate schema with a no-network validator and focused tests. That proves candidate shape and local consistency only; it does not approve or execute rollback, mutate a public alias, issue a correction, invalidate caches, release anything, or publish anything.
 
 > [!CAUTION]
-> Rolling back **into** a more permissive sensitivity posture is forbidden. The rollback target's exposure surface MUST be **at least as restrictive** as the failing release. A rollback that re-exposes redacted farm-operator joins, field-level NASS detail, or proprietary yield records is **not a rollback — it is a new release failure**, and MUST be denied at the policy gate.
-
-**Field-level and operator-identifying data.** Public products MUST aggregate to **county / HUC / grid thresholds**. Field polygons MAY be sensitive. Private farm operations, field-level sensitive details, and source-rights-limited data are denied by default and MUST NOT appear in any rolled-back public surface.
-
-**Source-role boundaries.** Distinguish CDL / model / observation / regulatory / legal / status contexts. Remote-sensing products (e.g., CDL, HLS-VI, SMAP) are **not** ground truth — rollback MUST preserve the source-role distinction.
-
-**Temporal handling.** Crop year, growing season, observed time, valid time, retrieval time, release time, and correction time stay distinct. A rollback that collapses them is rejected.
-
-**Cross-lane joins.** Soil (MUKEY), Hydrology (irrigation, drought, water-use), Atmosphere/Air (weather, heat, smoke, vegetation stress), and People/Land (parcel/operator) joins MUST preserve ownership, source role, sensitivity tier, and `EvidenceBundle` support after rollback. Parcel-sensitive contexts remain restricted.
-
----
-
-## 9. Post-rollback verification
-
-After republishing the rollback target, the steward verifies the following before closing the incident:
-
-- [ ] The superseding `ReleaseManifest` resolves; `digests` match emitted artifacts.
-- [ ] The `RollbackCard` resolves to both the failing `release_id` and the `rollback_to` release.
-- [ ] All entries in `invalidates[]` have been re-derived or removed; **no orphan downstream derivative** points at the failing release.
-- [ ] The `CorrectionNotice` is visible on the public surface where the failing claim appeared (Evidence Drawer, Focus Mode answer trail, catalog record).
-- [ ] UI trust state for the affected surface is no longer "fresh" — it reflects "withdrawn", "superseded", or "stale" as appropriate.
-- [ ] Search index, graph / triplet projection, and any AI receipts that depended on the failing release have been invalidated or re-derived.
-- [ ] Policy gate re-evaluation recorded ALLOW (or the documented finite outcome).
-- [ ] Replay verification fixture restores prior root hash and manifest *(per the map-release rollback-replay test pattern; CONFIRMED at doctrine level, PROPOSED at implementation level)*.
-- [ ] Audit-ledger entries for the failing release remain unmodified.
-- [ ] If the defect exposed a systemic issue, a `DRIFT_REGISTER` and/or `VERIFICATION_BACKLOG` entry has been opened.
-
----
-
-## 10. Reason codes
-
-The reason field of the `RollbackCard` SHOULD use a code from the PROPOSED catalog below, plus free-text detail. Codes are inherited from the universal failure-family list in the Domains Atlas §24.6.3.
-
-| Code | Family | Typical Agriculture trigger |
-|---|---|---|
-| `MISSING_RECEIPT` | Missing required artifact | `RunReceipt` for a derivative tile / aggregation absent. |
-| `MISSING_EVIDENCE` | Missing required artifact | `EvidenceRef` does not resolve to an `EvidenceBundle`. |
-| `MISSING_REVIEW` | Missing required artifact | Sensitivity / rights review absent on a release that needed it. |
-| `SCHEMA_MISMATCH` | Schema / contract drift | DTO field renamed without ADR; downstream parser breaks. |
-| `CONTRACT_DRIFT` | Schema / contract drift | Object-family meaning has shifted relative to `contracts/domains/agriculture/`. |
-| `RIGHTS_UNKNOWN` | Rights / sensitivity unresolved | NASS / QuickStats / Mesonet source terms updated; status no longer known. |
-| `SENSITIVITY_UNRESOLVED` | Rights / sensitivity unresolved | Farm-operator or parcel-sensitive join slipped through aggregation. |
-| `ROLE_COLLAPSE` | Source-role collapse | CDL / model output presented as observation. |
-| `ROLE_DOWNCAST_FORBIDDEN` | Source-role collapse | Attempted upcast of an indicator to a regulatory status. |
-| `REVIEW_NEEDED` | Review state inadequate | Rollback discovered review was never performed. |
-| `REVIEW_INSUFFICIENT` | Review state inadequate | Review record present but does not cover the defect class. |
-| `REVIEW_REJECTED` | Review state inadequate | Reviewer rejected the release after public exposure began. |
-| `RELEASE_MANIFEST_INVALID` | Release infrastructure error | Manifest digest mismatch; signature failure. |
-| `ROLLBACK_TARGET_MISSING` | Release infrastructure error | No prior safe release exists; withdraw-only path required. |
-
----
-
-## 11. Drill cadence
-
-Rollback that has never been exercised is not reliable. *(CONFIRMED doctrine: "Rollback untested is not reliable" — Encyclopedia §7.7 risk table.)*
-
-| Drill | Cadence (PROPOSED) | Scope | Owner |
-|---|---|---|---|
-| **Per-release smoke** | Every release | Verify `rollback_target` resolves; replay fixture passes. | Release authority |
-| **Domain rollback drill** | Quarterly | End-to-end rollback against a synthetic Agriculture release. | Agriculture domain steward |
-| **Cross-lane invalidation** | Semi-annual | Rollback of a release whose `invalidates[]` crosses Soil / Hydrology / Atmosphere lanes. | Release authority + adjacent domain stewards |
-| **Withdraw-only rehearsal** | Annual | Withdraw with no replacement (e.g., source-rights revocation). | Agriculture domain steward + rights reviewer |
-| **AI-surface rollback** | Per material AI / Focus Mode change | Disable Focus Mode template; verify ABSTAIN path. | Governed-AI subsystem owner |
-
-> [!NOTE]
-> Drill outcomes SHOULD be logged in `docs/runbooks/` alongside this file (e.g., `docs/runbooks/agriculture/ROLLBACK_DRILL_LOG.md` — **PROPOSED path**) so a reviewer can see when the procedure was last exercised end-to-end.
-
----
-
-## 12. Anti-patterns
+> **Agriculture rollback readiness remains held.** `tests/domains/agriculture/rollback_drill/` is currently README-only in repository evidence and records missing executable drill proof, TODO-only workflow behavior, unresolved release-plane/data-plane questions, and historical conflict around parallel rollback schema surfaces. Do not represent the Agriculture lane as operationally rehearsed or production-ready.
 
 > [!WARNING]
-> The following are not rollbacks. They are release failures dressed as rollbacks, and the policy gate MUST refuse them.
+> A rollback target can be older and still be unsafe. Rights may have changed, source roles may have been corrected, sensitivity rules may have tightened, evidence may no longer resolve, or downstream consumers may have changed. Revalidate the target under current governing rules before any recovery action.
 
-- **Silent mutation of a published artifact.** A release is never "patched in place" — corrections supersede, rollbacks revert through the governed path.
-- **`rollback_to` set to a release that does not resolve.** `ROLLBACK_TARGET_MISSING`. Use the withdraw-only path instead.
-- **Rolling back into a less restrictive sensitivity posture.** Re-exposing redacted material is a new release failure.
-- **Skipping `CorrectionNotice` because "the defect was minor".** If the claim was public, the correction is public.
-- **Treating tile re-derivation or cache invalidation as a complete rollback.** Derivatives are downstream; the `ReleaseManifest` and `RollbackCard` are the rollback.
-- **Editing the audit ledger.** Audit entries for the failing release stay unmodified — the ledger is append-only.
-- **Letting an AI surface keep answering from a withdrawn `EvidenceBundle`.** Focus Mode MUST ABSTAIN until evidence is re-resolved against the rollback target.
-- **PR-bypass / "admin shortcut" rollback.** Admin shortcuts MUST be justified, constrained, documented, and kept out of the normal public path.
+**Quick navigation:** [Purpose](#1-purpose) · [Scope](#2-scope--non-goals) · [Placement](#3-repo-fit--placement) · [State](#current-repository-state) · [Triggers](#5-trigger-and-containment) · [Preconditions](#6-pre-rollback-preconditions) · [Decision](#7-candidate-decision-and-review) · [Execution](#8-execution-sequence) · [Invalidation](#9-downstream-invalidation) · [Agriculture rules](#10-agriculture-specific-constraints) · [Verification](#11-post-rollback-verification) · [Outcomes](#12-finite-outcomes-and-reason-codes) · [Drills](#13-drills-and-rehearsal) · [Rollback of this runbook](#14-runbook-change-rollback) · [Anti-patterns](#15-anti-patterns) · [Related](#16-related-surfaces) · [Evidence](#17-evidence-basis)
 
 ---
 
-## 13. Related docs
+## 1. Purpose
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority; defines `release/`, `data/`, and `docs/runbooks/` responsibilities. *(PROPOSED relative link.)*
-- [`docs/domains/agriculture/README.md`](../../domains/agriculture/README.md) — Agriculture domain overview, object families, source roles. *(PROPOSED — file may not yet exist.)*
-- [`docs/runbooks/README.md`](../README.md) — runbook index and conventions. *(PROPOSED — file may not yet exist.)*
-- `release/rollback_cards/` — RollbackCard artifact home.
-- `release/correction_notices/` — CorrectionNotice artifact home.
-- `release/manifests/` — ReleaseManifest artifact home.
-- `policy/domains/agriculture/` — Agriculture admissibility / sensitivity policy *(PROPOSED home)*.
-- `schemas/contracts/v1/release/` — RollbackCard / CorrectionNotice / ReleaseManifest schemas *(PROPOSED home per ADR-0001 default)*.
-- `docs/registers/DRIFT_REGISTER.md` and `docs/registers/VERIFICATION_BACKLOG.md` — where systemic findings land.
+This runbook defines the **human recovery procedure** for an Agriculture release whose current public or release-facing state is defective, unsafe, stale, unsupported, or otherwise no longer admissible.
 
-[Back to top](#-agriculture-domain--rollback-runbook)
+It answers five bounded questions:
 
----
+1. When should Agriculture use rollback, withdrawal, hold, or a forward correction?
+2. Which current repository objects and checks must be resolved before action?
+3. Which actions belong to release, correction, evidence, policy, review, or data invalidation authorities rather than this runbook?
+4. How should Agriculture-specific rights, sensitivity, source-role, time, and spatial-support risks affect recovery?
+5. What evidence is required before calling a recovery complete?
 
-## 14. Appendix
+The governing recovery pattern is:
 
-<details>
-<summary><strong>A. Illustrative RollbackCard skeleton (PROPOSED schema, not validated)</strong></summary>
-
-The fields below mirror the Domains Atlas §24.2 receipt-table specification for `RollbackCard`. Field names, casing, and the JSON shape are **illustrative only** — the canonical schema lives in `schemas/contracts/v1/release/rollback_card.schema.json` *(PROPOSED home; verify against repo and ADR-0001)*.
-
-```json
-{
-  "kind": "RollbackCard",
-  "release_id": "kfm://release/agriculture/county-crop-year/2024/v3",
-  "rollback_to": "kfm://release/agriculture/county-crop-year/2024/v2",
-  "reason": {
-    "code": "SENSITIVITY_UNRESOLVED",
-    "summary": "Operator-identifying join slipped through county aggregation; v3 withdrawn."
-  },
-  "invalidates": [
-    "kfm://layer/agriculture/county-crop-year-2024/v3",
-    "kfm://tile/agriculture/county-crop-year-2024/v3",
-    "kfm://catalog/agriculture/county-crop-year-2024/v3",
-    "kfm://evidence-drawer/agriculture/county-crop-year/v3"
-  ],
-  "review_ref": "kfm://review/agriculture/sensitivity/2026-05-13-001",
-  "time": "2026-05-13T18:42:00Z"
-}
+```text
+problem detected
+  -> contain unsafe exposure if authorized
+  -> resolve affected release + current support
+  -> validate RollbackCard candidate
+  -> obtain required policy/review/release decisions
+  -> withdraw, hold, or restore through governed release machinery
+  -> invalidate/rebuild dependent derivatives
+  -> emit correction/supersession records when required
+  -> verify public-safe state + audit continuity
+  -/> silent mutation, hidden deletion, or direct publication
 ```
 
-</details>
+A runbook explains the procedure. It does not create the underlying authority records or execute release state by documentation alone.
 
-<details>
-<summary><strong>B. Illustrative CorrectionNotice skeleton (PROPOSED schema)</strong></summary>
-
-```json
-{
-  "kind": "CorrectionNotice",
-  "claim_ref": "kfm://claim/agriculture/county-crop-year-2024-rooks-co",
-  "prior_release_ref": "kfm://release/agriculture/county-crop-year/2024/v3",
-  "change_summary": "Public-safe aggregation product v3 withdrawn pending sensitivity re-review; superseded by v4 once review closes.",
-  "invalidates": [
-    "kfm://focus-answer/agriculture/2026-05-12-rooks-co-yield-summary"
-  ],
-  "review_ref": "kfm://review/agriculture/sensitivity/2026-05-13-001",
-  "time": "2026-05-13T18:43:00Z"
-}
-```
-
-</details>
-
-<details>
-<summary><strong>C. Agriculture object families touched by rollback (Encyclopedia §7.7)</strong></summary>
-
-`CropObservation` · `FieldCandidate` · `CropRotation` · `YieldObservation` · `IrrigationLink` · `ConservationPractice` · `SoilCropSuitability` · `AgriculturalEconomyObservation` · `SupplyChainNode` · `DroughtStressIndicator` · `PestStressIndicator` · `AggregationReceipt`
-
-A rollback that touches any of the above SHOULD enumerate the affected family in the RollbackCard's `reason.summary` so reviewers can scope downstream invalidation.
-
-</details>
-
-<details>
-<summary><strong>D. Open ADR-class questions surfaced by this runbook</strong></summary>
-
-- The path `docs/runbooks/<domain>/<RUNBOOK>.md` follows the same domain-subdirectory pattern as `docs/domains/<domain>/` but is not directly attested in current Directory Rules text. A short ADR or a per-root README in `docs/runbooks/` SHOULD confirm or amend this convention. Until then this path is **PROPOSED**.
-- The exact schema home for `RollbackCard`, `CorrectionNotice`, and `ReleaseManifest` follows ADR-0001's default (`schemas/contracts/v1/release/...`), but mounted-repo verification is required before this runbook's `release/` references can be relied on as canonical.
-- Drill cadence in §11 is **PROPOSED**. A governance / release-authority ADR or per-root README in `release/` SHOULD ratify it.
-
-</details>
+[Back to top](#top)
 
 ---
 
-**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Agriculture domain README](../../domains/agriculture/README.md) *(PROPOSED)* · [Runbooks index](../README.md) *(PROPOSED)*
+## 2. Scope & non-goals
 
-**Last updated:** 2026-05-13 · **Version:** v0.1 · **Status:** draft
+### In scope
 
-[Back to top](#-agriculture-domain--rollback-runbook)
+- Recovery planning for a released or release-candidate Agriculture surface.
+- `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, and `ERROR` candidate handling using the shared release-family `RollbackCard` profile.
+- Agriculture-specific containment, rights/sensitivity checks, source-role checks, temporal checks, spatial-support checks, and evidence checks.
+- Downstream invalidation and re-derivation planning for released derivatives such as tiles, catalogs, triplets, search/vector indexes, API caches, CDN state, AI caches, and other dependent products.
+- Correction/supersession obligations for previously exposed claims.
+- Verification and audit-preservation requirements after recovery.
+
+### Non-goals
+
+- Approving a rollback or acting as release authority.
+- Treating a schema-valid `RollbackCard` as an approved or executed rollback.
+- Choosing a new canonical schema, contract, policy, or data home.
+- Activating a source or connector.
+- Writing directly to `PUBLISHED` or equivalent public state.
+- Deleting a failing release, receipt, proof, correction record, or audit trail to make recovery appear clean.
+- Replacing required human or policy-significant review.
+- Claiming that Agriculture rollback drills, public alias switching, invalidators, release signing, deployment, or production recovery are implemented when current evidence does not prove them.
+
+[Back to top](#top)
+
+---
+
+<a id="authority-and-non-effects"></a>
+
+## 3. Repo fit & placement
+
+**Placement outcome: `PLACE` — CONFIRMED for this same-path update.**
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md). The parent [`docs/runbooks/` index](../README.md) identifies `docs/runbooks/` as the operational-procedure lane under the `docs/` responsibility root and confirms Agriculture as one of the tracked domain segments.
+
+| Property | Current result |
+|---|---|
+| Path | `docs/runbooks/agriculture/ROLLBACK_RUNBOOK.md` |
+| Authority owner | `docs/` — human-facing operational procedure |
+| Scope | Agriculture domain lane |
+| Path state | Existing tracked path; same-path modernization |
+| Structural effect | None; no create, move, rename, split, mirror, or delete |
+| Review route | `@bartytime4life` through repository review routing |
+| Independent stewardship | `NEEDS VERIFICATION` |
+| Release/publication effect | None |
+
+This file may cite contracts, schemas, validators, fixtures, release records, evidence, policy, review, correction, and recovery tools. It cannot replace any of them.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-state"></a>
+
+## 4. Current repository state
+
+The following observations are pinned to `main@265b99b81f9526a885caaf799e17c89b5424f9f2`.
+
+| Surface | CONFIRMED current evidence | Bounded conclusion |
+|---|---|---|
+| Shared RollbackCard contract | `contracts/release/rollback_card.md` defines semantic meaning and non-authority boundaries | Shared release-family semantics exist |
+| Shared RollbackCard schema | `schemas/contracts/v1/release/rollback_card.schema.json` is closed, version `1.0.0`, and fixture-first | Machine shape is defined for candidate cards |
+| Shared RollbackCard validator | `tools/validators/release/validate_rollback_card.py` performs no-network shape and local-consistency checks | Candidate validation is executable and bounded |
+| Focused validator tests | `tests/validators/test_validate_rollback_card.py` checks schema validity, positive/negative fixtures, CLI profile, duplicate keys, non-finite numbers, and missing files | The validator has focused executable coverage |
+| Candidate dispositions | `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, `ERROR` | Recovery candidates have a finite shared vocabulary |
+| Governance flags | Candidate profile requires authority/review/policy/execution/public-mutation flags to remain false | Candidate validation cannot claim operational authority |
+| Agriculture rollback drill | `tests/domains/agriculture/rollback_drill/README.md` remains documentation-only at its inspected checkpoint | Agriculture-specific executable drill proof is not established |
+| Agriculture drill concerns | That README records TODO-only workflow behavior, missing executable drill implementation, and unresolved recovery topology questions | Operational readiness remains `HOLD` / `NEEDS VERIFICATION` |
+| Release/public state mutation | Not proved by the runbook or candidate validator | Production rollback execution remains `UNKNOWN` unless proven from owning runtime/release evidence |
+
+### What changed since the prior runbook text
+
+The prior runbook described the RollbackCard field surface and multiple release homes as `PROPOSED`, even though current repository evidence now contains a shared contract, closed schema, validator, fixtures, and focused tests. It also implied more execution maturity than the Agriculture drill lane currently proves.
+
+This revision therefore:
+
+- points to the current shared release-family contract and schema instead of restating a competing shape;
+- uses the validator's actual candidate dispositions, reason codes, invalidation classes, and authority limits;
+- separates **candidate validation** from **rollback decision** and **rollback execution**;
+- keeps Agriculture drill readiness on `HOLD` until executable proof exists;
+- removes unverified kill-switch, feature-flag, alias-mutation, workflow, and publication claims as mandatory current behavior;
+- preserves withdrawal, correction, downstream invalidation, evidence closure, rights/sensitivity, source-role, audit, and rollback invariants.
+
+[Back to top](#top)
+
+---
+
+## 5. Trigger and containment
+
+Start this procedure when a released or release-facing Agriculture product is suspected of violating evidence, policy, rights, sensitivity, temporal, spatial-support, source-role, integrity, compatibility, or release constraints.
+
+Common triggers include:
+
+| Trigger | Example Agriculture risk | Initial posture |
+|---|---|---|
+| `RELEASE_DEFECT` | Wrong release contents, incorrect current pointer, broken manifest linkage | `HOLD` pending release verification |
+| `EVIDENCE_CONTRADICTION` | Public claim no longer resolves to admissible evidence | `ABSTAIN` or withdrawal pressure |
+| `RIGHTS_CHANGE` | Source terms change or redistribution permission is narrowed | Fail closed; policy/review required |
+| `SENSITIVITY_DISCOVERY` | Field, operator, parcel, well, or private-party detail was exposed | Contain exposure; do not substitute style hiding for data protection |
+| `VALIDATION_FAILURE` | A released derivative no longer satisfies current validation | `HOLD` or withdrawal until corrected |
+| `SOURCE_WITHDRAWAL` | A supporting source is no longer available or admissible | Reassess evidence closure and derived outputs |
+| `POLICY_FAILURE` | Current policy denies a previously admissible public surface | `DENY` or withdrawal pressure |
+| `SECURITY_ISSUE` | Public delivery can leak protected state or internal references | Contain through the authorized operational control plane |
+| `OPERATIONAL_FAILURE` | Cache, index, tile, alias, or delivery state is inconsistent | `HOLD` until impact is bounded |
+| `EMERGENCY_HOLD` | A steward requires immediate bounded containment | Hold without inventing a replacement target |
+| `INSUFFICIENT_EVIDENCE` | Prior target cannot prove current evidence support | `ABSTAIN` / `HOLD` |
+| `INPUT_INVALID` | Candidate request itself is malformed or ambiguous | `ERROR`; no state change |
+
+These reason codes are the current shared `RollbackCard` trigger vocabulary. Additional narrative may explain the Agriculture context, but do not invent a second competing machine vocabulary in this runbook.
+
+### Containment rule
+
+If public exposure is actively unsafe, use only an already-authorized operational containment mechanism owned by the relevant release/runtime system. This runbook does not assume that a kill switch, alias swap, feature flag, CDN purge, route disable, or cache control exists unless current owning-surface evidence proves it.
+
+Containment is not rollback completion. Preserve the affected release identity and audit trail while the governed recovery decision is assembled.
+
+[Back to top](#top)
+
+---
+
+## 6. Pre-rollback preconditions
+
+Before a rollback or withdrawal candidate advances beyond documentation and local validation, confirm the following.
+
+### Release identity and target
+
+- [ ] The affected release reference resolves through the current release authority.
+- [ ] The candidate disposition is explicit: rollback, withdrawal, hold, or error.
+- [ ] For rollback, the target names a **distinct prior release**.
+- [ ] For withdrawal, no prior-release target is falsely supplied.
+- [ ] For hold/error, no public mutation is implied.
+
+### Evidence, policy, review, and correction
+
+- [ ] Consequential claims have resolvable `EvidenceRef` → `EvidenceBundle` support or the correct outcome is `ABSTAIN`/withdrawal.
+- [ ] Current policy references are known for a rollback candidate.
+- [ ] Required review records are identified; their presence is not confused with completed review.
+- [ ] If public notice is required, the correction-notice reference is present.
+- [ ] Rights and sensitivity posture are evaluated under the **current** rules, not the historical release's rules alone.
+
+### Agriculture-specific safety
+
+- [ ] Field-, farm-, parcel-, operator-, well-, private-party-, and proprietary detail remains non-public unless explicitly authorized by current evidence and policy.
+- [ ] A prior aggregate does not silently reintroduce more precise geometry than the current public-safe profile permits.
+- [ ] Observation, model, classification, aggregate, forecast, and remotely sensed support roles remain distinct.
+- [ ] Crop year, growing season, observation time, source time, release time, and correction time remain materially distinct where applicable.
+- [ ] Cross-domain products such as soil, hydrology, atmosphere, habitat, or infrastructure remain linked through their owning authorities rather than copied into Agriculture truth.
+
+### Downstream impact
+
+- [ ] Dependent public and semi-public derivatives are enumerated.
+- [ ] The recovery plan identifies which derivatives are invalidated, rebuilt, withdrawn, or left unchanged.
+- [ ] The plan does not rely on deleting the failing release to hide stale dependents.
+
+If a safety-critical precondition cannot be established, stop at `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` as appropriate.
+
+[Back to top](#top)
+
+---
+
+## 7. Candidate decision and review
+
+### 7.1 Build the RollbackCard candidate
+
+Use the current shared release-family profile rather than the legacy minimal field list. The candidate must conform to:
+
+- `contracts/release/rollback_card.md` for meaning;
+- `schemas/contracts/v1/release/rollback_card.schema.json` for machine shape;
+- `tools/validators/release/validate_rollback_card.py` for bounded candidate validation.
+
+The current profile includes these top-level concepts:
+
+| Concept | Role |
+|---|---|
+| Identity | `object_type`, `schema_version`, `id`, `version`, `spec_hash` |
+| Disposition | rollback candidate, withdrawal candidate, hold, or error |
+| Trigger | public-safe reason code and detection time |
+| Affected release | immutable reference to the release under review |
+| Target | prior release, withdrawal, or hold mode |
+| Evidence / policy / review refs | separate support arrays |
+| Correction notice | required when public notice is required |
+| Invalidations | bounded invalidation classes |
+| Restoration | intended restored release plus validation/notice posture |
+| Timing | decision/effective times |
+| Lineage | supersedes / superseded-by relationships |
+| Governance | explicit non-authority flags and null release authority reference |
+
+Do not duplicate the entire schema in this runbook. The schema and semantic contract are the authority for exact fields and finite values.
+
+### 7.2 Validate the candidate locally
+
+From repository root, the currently verified candidate validator can be invoked as:
+
+```bash
+python tools/validators/release/validate_rollback_card.py path/to/candidate.json
+```
+
+For the maintained fixture profile:
+
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+```
+
+A `PASS` means the candidate satisfies the current schema and local consistency rules. It does **not** resolve referenced releases, evidence, policy, signatures, actors, or approvals and does not execute rollback.
+
+### 7.3 Required review burden
+
+Review requirements are consequence-based, not merely defect-label-based. At minimum, require the owning accountable review path when recovery affects:
+
+- rights or redistribution terms;
+- sensitive or private Agriculture geometry/identity;
+- source-role classification;
+- evidence closure for a public claim;
+- policy-significant exposure;
+- public correction or withdrawal;
+- any alias/current-state mutation;
+- public AI or map behavior derived from the affected release.
+
+Independent stewardship assignments remain `NEEDS VERIFICATION`; CODEOWNERS routing alone is not proof of independent approval.
+
+[Back to top](#top)
+
+---
+
+## 8. Execution sequence
+
+Execution begins only after the owning release, policy, evidence, and review authorities permit the intended transition. The exact mutation mechanism is owned outside this runbook.
+
+1. **Freeze the affected release identity.** Record the immutable release reference and candidate evidence. Do not rewrite the original release.
+2. **Contain unsafe exposure if required and authorized.** Use the current operational control plane; record what was disabled or held.
+3. **Validate the RollbackCard candidate.** Candidate validation must pass or fail closed.
+4. **Resolve referenced support.** Confirm the affected release, candidate target, evidence, policy, review, and correction references through their owning systems.
+5. **Revalidate the target under current rules.** A historical release is not presumed safe.
+6. **Choose one governed disposition.** Restore a verified prior release, withdraw without replacement, hold, or record error. Do not combine incompatible transitions.
+7. **Perform the authorized release transition.** The current release authority owns the actual state mutation; this Markdown file does not.
+8. **Issue correction/supersession records where required.** Publicly consequential changes must preserve visible correction lineage.
+9. **Invalidate or rebuild downstream derivatives.** Use the bounded classes in [§9](#9-downstream-invalidation).
+10. **Verify restored/withdrawn public-safe state.** Run the checklist in [§11](#11-post-rollback-verification).
+11. **Preserve audit continuity.** Retain the failing release and associated receipts/proofs according to governing retention and correction policy.
+12. **Record residual gaps.** Any unresolved consumer, stale derivative, ownership gap, or unverified operational control remains open rather than being hidden behind a successful candidate check.
+
+> [!IMPORTANT]
+> Recovery should prefer transparent supersession, withdrawal, or forward correction over shared-history rewriting or in-place mutation. A Git revert can undo repository bytes, but it does not by itself correct an already exposed public release.
+
+[Back to top](#top)
+
+---
+
+## 9. Downstream invalidation
+
+The current shared candidate profile recognizes these invalidation classes:
+
+- `API_CACHE`
+- `CDN`
+- `TILES`
+- `CATALOG`
+- `TRIPLETS`
+- `SEARCH_INDEX`
+- `VECTOR_INDEX`
+- `AI_CACHE`
+- `DOWNSTREAM_DERIVATIVES`
+
+Agriculture recovery planning should map each affected consumer into one or more of these classes, then resolve the actual tool or system responsible for invalidation.
+
+### Agriculture examples
+
+| Surface | Typical recovery action | Authority caution |
+|---|---|---|
+| Map tiles / PMTiles / other released carriers | Withdraw, replace, or rebuild from the verified target | Tiles are carriers, not truth |
+| Catalog entry | Supersede or mark withdrawn/stale | Catalog presence is not release authority |
+| Triplet/graph projection | Recompute or invalidate derived projection | Graph projection does not replace canonical evidence |
+| Search/vector index | Rebuild from the current admissible corpus | Search results are not evidence authority |
+| Governed API cache | Purge or version-bump according to runtime design | Do not expose internal release stores directly |
+| Evidence Drawer payload | Show withdrawn/stale/corrected state based on governed response | UI state must reflect release/correction state |
+| Focus Mode / AI cache | Invalidate answers that depended on the defective release | AI remains evidence-subordinate |
+| Reports/exports | Reissue or withdraw with correction lineage | A static export can outlive a runtime rollback |
+
+`DOWNSTREAM_DERIVATIVES` should be used when a dependent surface does not fit a narrower class. It is not permission to skip consumer inventory.
+
+[Back to top](#top)
+
+---
+
+## 10. Agriculture-specific constraints
+
+### 10.1 Rights and sensitive agricultural detail
+
+Rollback must never restore a historical release merely because it is older if that release exposes:
+
+- farm/operator identity;
+- private parcel or field boundaries;
+- proprietary yield or input records;
+- private well or irrigation operation details;
+- insurance, financial, or other private-party attributes;
+- harmful precision introduced by joins with adjacent domains.
+
+Where rights, privacy, or precision are unresolved, withdraw, quarantine, generalize, or hold rather than restore.
+
+### 10.2 Source-role anti-collapse
+
+Agriculture commonly combines heterogeneous support. Recovery must preserve the role of each source or derived product.
+
+Examples:
+
+- CDL or other classification is not ground observation merely because it is spatially precise.
+- HLS/NDVI-derived stress signals are modeled/derived support, not direct farm truth.
+- NASS aggregates do not become field-level observations.
+- Weather, drought, or soil context does not become Agriculture-owned observation solely because it participates in a crop analysis.
+
+If a prior release depended on a role collapse that current governance rejects, that release is not a valid rollback target.
+
+### 10.3 Time and geography
+
+Verify that the target matches the intended crop year, valid period, source vintage, release time, and spatial support. Do not repair a temporal defect by restoring a release with a different unacknowledged time basis.
+
+Do not treat client-side masking or style visibility as a substitute for public-safe geometry transformation.
+
+### 10.4 AI and map surfaces
+
+A rollback affecting map or Focus Mode output must preserve the trust membrane:
+
+```text
+released/public-safe carrier or governed API
+  -> evidence resolution + policy state
+  -> map / Evidence Drawer / Focus Mode
+```
+
+Do not route public UI directly to RAW, WORK, QUARANTINE, internal release stores, or model providers during recovery.
+
+[Back to top](#top)
+
+---
+
+## 11. Post-rollback verification
+
+A recovery is not closed until its intended state and dependent surfaces are verified.
+
+### Core verification
+
+- [ ] The affected release remains auditable and immutable.
+- [ ] The final disposition is recorded through the owning release/recovery authority.
+- [ ] If a prior release was restored, its identity is distinct from the defective release and revalidated under current rules.
+- [ ] Evidence, policy, review, correction, and restoration references resolve as required.
+- [ ] Rights and sensitivity did not regress.
+- [ ] Source roles remain intact.
+- [ ] Time and spatial support match the intended public claim.
+- [ ] Required correction/supersession lineage is visible.
+
+### Downstream verification
+
+- [ ] Every planned invalidation class has a verified outcome or an explicit open gap.
+- [ ] Released map layers and downloads no longer reference the defective release where they should not.
+- [ ] Catalog, search, graph/triplet, and vector projections are current or visibly stale/withdrawn.
+- [ ] Governed API and UI trust states agree with release/correction state.
+- [ ] Cached or generated AI answers dependent on the defective release are invalidated or no longer served as authoritative.
+
+### Audit verification
+
+- [ ] Original receipts, proofs, review records, manifests, and correction records are preserved according to retention rules.
+- [ ] No audit artifact was deleted merely to make the recovery pass.
+- [ ] The recovery itself has enough durable evidence to reconstruct who decided what, against which release, under which policy/evidence state.
+
+If any required verification fails, leave the recovery on `HOLD` or escalate. Do not call the incident closed based solely on a green schema/validator result.
+
+[Back to top](#top)
+
+---
+
+## 12. Finite outcomes and reason codes
+
+### Candidate outcomes
+
+The current shared RollbackCard profile uses:
+
+| Candidate disposition | Meaning |
+|---|---|
+| `ROLLBACK_CANDIDATE` | Proposes restoration of a distinct prior release |
+| `WITHDRAWAL_CANDIDATE` | Proposes withdrawal with no prior release selected |
+| `HOLD` | Stops or delays recovery pending unresolved conditions |
+| `ERROR` | Records invalid or failed recovery evaluation without public mutation |
+
+Operational systems may expose additional bounded states such as `ABSTAIN` or `DENY` in policy/runtime envelopes, but do not silently rewrite the RollbackCard candidate vocabulary to include them.
+
+### Shared trigger reason codes
+
+The current validator/schema profile recognizes:
+
+`RELEASE_DEFECT`, `EVIDENCE_CONTRADICTION`, `RIGHTS_CHANGE`, `SENSITIVITY_DISCOVERY`, `VALIDATION_FAILURE`, `SOURCE_WITHDRAWAL`, `POLICY_FAILURE`, `SECURITY_ISSUE`, `OPERATIONAL_FAILURE`, `EMERGENCY_HOLD`, `INSUFFICIENT_EVIDENCE`, `INPUT_INVALID`.
+
+Use the narrowest accurate public-safe code. Sensitive details belong in appropriately protected review/incident evidence, not in a broadly visible reason field.
+
+[Back to top](#top)
+
+---
+
+## 13. Drills and rehearsal
+
+A rollback drill is valuable only when it proves deterministic, reversible behavior without mutating real public state.
+
+### Current status
+
+**HOLD / NEEDS VERIFICATION.** The Agriculture-specific drill lane currently documents the desired boundary but does not prove an executable end-to-end drill. Its repository-grounded README records:
+
+- a documentation-only child lane at its inspected checkpoint;
+- missing executable Agriculture rollback test implementation;
+- TODO-only workflow behavior at that checkpoint;
+- unresolved recovery topology and schema-home questions;
+- unknown alias resolver, invalidation engine, release-state store, public UI/API stale-state integration, and production use.
+
+The shared release-family candidate validator is stronger than that older drill description: the current shared contract/schema/validator/fixtures/tests are now present. That does **not** automatically graduate the Agriculture drill.
+
+### Minimum credible Agriculture drill before graduation
+
+A future substantive drill should prove, with synthetic no-network fixtures:
+
+1. a defective release identity;
+2. a distinct prior target and a withdrawal-with-no-target case;
+3. evidence/policy/reference resolution using fixture-safe inputs;
+4. non-regression of rights/sensitivity;
+5. source-role preservation;
+6. deterministic downstream invalidation planning;
+7. public-state stale/withdrawn/restored projection without real publication;
+8. audit preservation;
+9. idempotent replay;
+10. fail-closed behavior for missing/unsafe targets.
+
+A passing drill would prove only that bounded synthetic recovery logic behaves as tested. Production authority and operational admission would remain separate.
+
+[Back to top](#top)
+
+---
+
+## 14. Runbook change rollback
+
+This documentation change is independently reversible from any operational Agriculture rollback.
+
+### Before merge
+
+Close or abandon the feature branch / draft PR. `main` remains unchanged.
+
+### After merge
+
+Use a transparent revert or forward-fix pull request against the actual merged commit. Do not rewrite shared history.
+
+### Operational correction boundary
+
+Reverting this Markdown file does **not** revert a release, source, public artifact, policy state, or correction record. Those state changes must be corrected through their owning release/lifecycle systems.
+
+[Back to top](#top)
+
+---
+
+## 15. Anti-patterns
+
+Never:
+
+- silently replace released bytes in place;
+- assume "older" means "safe";
+- treat a valid RollbackCard as approval or execution;
+- use schema validity as evidence resolution;
+- delete the defective release or audit history to hide an incident;
+- restore a release whose rights or sensitivity posture is weaker than current requirements;
+- collapse classification, model, aggregate, forecast, or remotely sensed support into observation;
+- hide sensitive geometry only with client styling;
+- skip dependent caches, tiles, indexes, catalogs, triplets, exports, or AI caches because the main release pointer changed;
+- use a runbook to create policy, review, release, or publication authority;
+- present README-only drill design or TODO workflows as operational rollback readiness;
+- invent a kill switch, alias mechanism, signer, validator, workflow, reviewer, or release route that current repository evidence does not prove.
+
+[Back to top](#top)
+
+---
+
+## 16. Related surfaces
+
+| Surface | Role |
+|---|---|
+| [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Semantic meaning of the shared RollbackCard candidate |
+| [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Machine shape for the current candidate profile |
+| [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | No-network candidate validator |
+| [`tests/validators/test_validate_rollback_card.py`](../../../tests/validators/test_validate_rollback_card.py) | Focused validator tests |
+| [`tests/domains/agriculture/rollback_drill/README.md`](../../../tests/domains/agriculture/rollback_drill/README.md) | Agriculture-specific desired drill boundary and current gaps |
+| [`release/agriculture/README.md`](../../../release/agriculture/README.md) | Agriculture release-lane orientation; not superseded by this runbook |
+| [`release/rollback_cards/README.md`](../../../release/rollback_cards/README.md) | Rollback-card review/record lane orientation |
+| [`release/correction_notices/README.md`](../../../release/correction_notices/README.md) | Correction-notice lane orientation |
+| [`release/manifests/README.md`](../../../release/manifests/README.md) | Release-manifest lane orientation |
+| [`docs/runbooks/README.md`](../README.md) | Parent runbook boundary and maturity rules |
+| [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Adopted placement doctrine through ADR-0029 |
+
+[Back to top](#top)
+
+---
+
+## 17. Evidence basis
+
+This revision is grounded in current repository evidence rather than the May 2026 scaffold assumptions in the prior runbook.
+
+### CONFIRMED
+
+- `docs/runbooks/agriculture/ROLLBACK_RUNBOOK.md` is an existing tracked runbook path under the `docs/` responsibility root.
+- Accepted ADR-0029 adopts Directory Rules v2 and the parent runbook README identifies `docs/runbooks/` as the operational-procedure lane.
+- The shared release-family `RollbackCard` semantic contract exists and defines a non-executing candidate plan.
+- The paired `1.0.0` schema is closed and fixture-first.
+- The no-network validator exists and checks bounded shape/local consistency.
+- Focused validator tests cover positive/negative fixtures and fail-closed JSON/file handling.
+- Candidate validation explicitly does not create authority, complete review/policy, execute rollback, mutate public state, or publish.
+- The Agriculture rollback-drill README records that domain-specific executable drill readiness was not established at its repository-grounded checkpoint.
+
+### NEEDS VERIFICATION
+
+- Current accepted production rollback decision authority and independent stewardship.
+- Exact production release-state mutation mechanism, alias/current-pointer semantics, invalidation engine, cache/CDN integration, public API/UI stale-state integration, signing, deployment, and operational drill evidence.
+- Whether historical parallel Agriculture-specific rollback schema surfaces have since been formally retired or remain compatibility/drift surfaces.
+
+### UNKNOWN
+
+- Production rollback use, actual public release inventory, recovery SLOs, operator rotation, and live incident history unless established from current owning-system evidence.
+
+### Non-effects
+
+Updating this runbook changes documentation only. It does not:
+
+- validate or execute a rollback;
+- alter a contract, schema, validator, fixture, workflow, release manifest, RollbackCard, CorrectionNotice, receipt, proof, or policy;
+- activate or deactivate a source;
+- mutate `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLETS`, or `PUBLISHED` state;
+- release, deploy, promote, or publish anything.
+
+[Back to top](#top)
