@@ -29,7 +29,7 @@ related:
   - .github/CODEOWNERS
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
-  - docs/governance/ROLES.md
+  - docs/governance/README.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [incident-response, security, runbook, handoff, restricted, governance, rollback]
