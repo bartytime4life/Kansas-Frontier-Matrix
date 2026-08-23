@@ -536,10 +536,10 @@ A first-PR posture for this family follows the **Atmosphere lane pattern** (Unif
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC namespace and provenance
 - [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard (TODO: create if absent)
-- [`../../../standards/iiif.md`](../../../standards/iiif.md) — IIIF v3 reference (TODO: create if absent)
+- [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — canonical IIIF consumption and historic-overlay guidance
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference (TODO: create if absent)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — KFM Authority Ladder register
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home authority
+- [`../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home authority
 - Pass-10 Idea Index — **`C10-07`** Archives Stack (CONFIRMED); **`C7-10`** Kansas-First Domain Authorities (CONFIRMED); **`C7-06`** SNAC + EAC-CPF (CONFIRMED)
 - Pass-23/32 Consolidated Atlas — **`KFM-P18-PROG-0033`** Kansas Memory source descriptor; **`KFM-P17-PROG-0011`** Kansas historical provenance source object
 
