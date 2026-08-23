@@ -1,0 +1,112 @@
+{
+  "authority_mode": "process_evidence_only",
+  "canonical_report": {
+    "currentness": "STALE_AS_CURRENT_MILESTONE_CHECKPOINT",
+    "edit_policy": "regenerate_only",
+    "hosted_exact_head": "CHECK_NOT_RUN",
+    "human_review": "PENDING",
+    "path": "artifacts/qa/validation/milestone-1/ci_conformance_report.json",
+    "status": "BLOCKED",
+    "target_sha": "c653d573c1641503215844c5c4fc85bc15060ced",
+    "topology_checkpoint": {
+      "baselined_warnings": 125,
+      "new_drift_categories": 9,
+      "stale_fingerprints": 13
+    }
+  },
+  "controls": {
+    "deployment_authorized": false,
+    "issue_close_authorized": false,
+    "lifecycle_promotion_authorized": false,
+    "milestone_close_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "repository_settings_change_authorized": false,
+    "source_activation_authorized": false
+  },
+  "created_at": "2026-08-23T00:00:00Z",
+  "edit_policy": "same_path_forward_correction",
+  "exact_current_main_topology": {
+    "execution_state": "CHECK_NOT_RUN",
+    "outcome": "NEEDS_VERIFICATION",
+    "reason": "Current main advanced after the latest verified topology candidate."
+  },
+  "issues": {
+    "3359": {
+      "blockers": [
+        "ACCOUNTABLE_HUMAN_REVIEW_NOT_RECORDED",
+        "EXACT_CURRENT_CHECKPOINT_NOT_EXECUTED"
+      ],
+      "close_authorized": false,
+      "disposition": "READY_FOR_HUMAN_REVIEW",
+      "implementation": "IMPLEMENTED_MERGED",
+      "work_item": "MRTS-02"
+    },
+    "3360": {
+      "blockers": [
+        "ACCOUNTABLE_HUMAN_REVIEW_NOT_RECORDED",
+        "EXACT_CURRENT_CHECKPOINT_NOT_EXECUTED"
+      ],
+      "close_authorized": false,
+      "disposition": "READY_FOR_HUMAN_REVIEW",
+      "implementation": "IMPLEMENTED_MERGED",
+      "work_item": "MRTS-03"
+    },
+    "3361": {
+      "blockers": [
+        "EXACT_CURRENT_MAIN_TOPOLOGY_NOT_EXECUTED",
+        "ACCOUNTABLE_HUMAN_REVIEW_NOT_RECORDED",
+        "REVIEWED_BASELINE_WARNINGS_REMAIN"
+      ],
+      "close_authorized": false,
+      "disposition": "REVIEW_PENDING_HOLD_INHERITED",
+      "implementation": "IMPLEMENTED_MERGED",
+      "work_item": "MRTS-04"
+    },
+    "3363": {
+      "blockers": [
+        "ACCOUNTABLE_HUMAN_REVIEW_NOT_RECORDED",
+        "DEPENDENCY_DISPOSITION_NOT_RECORDED"
+      ],
+      "close_authorized": false,
+      "disposition": "READY_FOR_HUMAN_REVIEW",
+      "implementation": "IMPLEMENTED_MERGED",
+      "work_item": "MRTS-05"
+    },
+    "3364": {
+      "blockers": [
+        "STALE_CANONICAL_REPORT_CHECKPOINT",
+        "EXACT_FINAL_CHECKPOINT_NOT_SELECTED",
+        "EXACT_TARGET_HOSTED_SUCCESS_NOT_ESTABLISHED",
+        "APPROVED_HUMAN_REVIEW_NOT_RECORDED",
+        "CLOSURE_REQUIRED_TOPOLOGY_DISPOSITION_UNRESOLVED",
+        "PREDECESSOR_ISSUES_OPEN"
+      ],
+      "close_authorized": false,
+      "disposition": "BLOCKED_REGENERATION_REQUIRED",
+      "implementation": "IMPLEMENTED_STALE_HANDOFF",
+      "work_item": "MRTS-06"
+    }
+  },
+  "latest_verified_topology_checkpoint": {
+    "baselined_warnings": 132,
+    "governance_parity": "HOLD_INHERITED",
+    "introduced_findings": 0,
+    "new_drift_categories": 0,
+    "source": "PR #3429 exact candidate head a51b2b22db7de6250bb6257ab64c7081c2c0164f",
+    "stale_fingerprints": 0
+  },
+  "recommended_transition": {
+    "canonical_report_update": "REGENERATE_ONLY",
+    "current": "DRAFT_PR_REVIEW_PACKET",
+    "milestone_close_authorized": false,
+    "next": "EXACT_CHECKPOINT_EXECUTION_AND_HUMAN_REVIEW"
+  },
+  "repository": {
+    "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+    "observed_main_sha": "8d852fb1a97478cd68631f1dfa4643515aa62e3b",
+    "open_pull_requests_at_preflight": 0,
+    "task_branch": "docs/mrts-milestone-reconciliation-20260823"
+  },
+  "schema_version": "kfm.qa.mrts-reconciliation.v1"
+}

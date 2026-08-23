@@ -17,6 +17,8 @@ and the handoff procedure is
   is a human-readable current-main reconciliation and review handoff.
 - [`mrts_reconciliation_status_2026-08-23.json`](./mrts_reconciliation_status_2026-08-23.json)
   is the machine-readable QA projection paired with that handoff.
+- [`data/receipts/generated/genrec-mrts-milestone-reconciliation-b03c5963b80e.json`](../../../../data/receipts/generated/genrec-mrts-milestone-reconciliation-b03c5963b80e.json) records AI-authoring provenance
+  and exact artifact hashes for this review packet.
 
 These files are inspection and process-evidence surfaces only. They are not
 canonical receipts, proofs, policy decisions, review approvals, lifecycle
