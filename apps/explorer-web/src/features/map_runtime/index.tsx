@@ -1,4 +1,8 @@
 import {
+  MAP_FEATURE_SELECTION_PROFILE,
+  type MapFeatureSelection,
+} from "@kfm/maplibre";
+import {
   EVIDENCE_DRAWER_PROJECTION_PROFILE,
   type EvidenceDrawerReasonCode,
 } from "../../adapters/GovernedClient";
@@ -9,20 +13,8 @@ import {
   type EvidenceDrawerViewModel,
 } from "../evidence_drawer";
 
-/**
- * Renderer-neutral feature-selection profile used by the fixture-only click bridge.
- * A selection scopes a governed resolution request; it is never evidence by itself.
- */
-export const MAP_FEATURE_SELECTION_PROFILE =
-  "kfm.explorer.map-feature-selection.v1" as const;
-
-export type MapFeatureSelection = Readonly<{
-  profile: typeof MAP_FEATURE_SELECTION_PROFILE;
-  selectionId: string;
-  layerId: string;
-  featureId: string;
-  evidenceRefs: readonly string[];
-}>;
+export { MAP_FEATURE_SELECTION_PROFILE };
+export type { MapFeatureSelection };
 
 export type GovernedMapEvidenceResolver = (
   selection: MapFeatureSelection,
