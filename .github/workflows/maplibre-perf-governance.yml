@@ -52,6 +52,7 @@ name: MapLibre Perf Governance
   pull_request:
     paths:
       - ".github/workflows/maplibre-perf-governance.yml"
+      - ".github/workflows/maplibre-acquisition-inventory.yml"
       - ".github/workflows/briefing-implementation-campaign.yml"
       - "Makefile"
       - "package.json"
@@ -83,6 +84,7 @@ name: MapLibre Perf Governance
     branches: [main]
     paths:
       - ".github/workflows/maplibre-perf-governance.yml"
+      - ".github/workflows/maplibre-acquisition-inventory.yml"
       - ".github/workflows/briefing-implementation-campaign.yml"
       - "Makefile"
       - "package.json"
@@ -210,6 +212,7 @@ jobs:
 
           required_paths=(
             "Makefile"
+            ".github/workflows/maplibre-acquisition-inventory.yml"
             ".github/workflows/briefing-implementation-campaign.yml"
             "apps/explorer-web"
             "configs/maplibre/README.md"
@@ -236,9 +239,11 @@ jobs:
             "tests/fixtures/maplibre/README.md"
             "tests/maplibre/README.md"
             "tests/maplibre/perf_fixture_builder.py"
+            "tests/maplibre/test_assess_acquisition_inventory.py"
             "tests/maplibre/test_perf_governance_negative_paths.py"
             "tests/maplibre/test_validate_v6_readiness.py"
             "tools/validators/maplibre/README.md"
+            "tools/validators/maplibre/assess_acquisition_inventory.py"
             "tools/validators/maplibre/validate_perf_governance.py"
             "tools/validators/maplibre/validate_v6_readiness.py"
           )
@@ -317,6 +322,23 @@ jobs:
                   "The @kfm/maplibre package gained dependencies. Review runtime ownership, "
                   "browser installation, license, cache, and no-network behavior before "
                   "changing CI."
+              )
+
+          acquisition_inventory_companions = (
+              Path(".github/workflows/maplibre-acquisition-inventory.yml"),
+              Path("tests/maplibre/test_assess_acquisition_inventory.py"),
+              Path("tools/validators/maplibre/assess_acquisition_inventory.py"),
+          )
+          missing_acquisition_inventory_companions = [
+              path for path in acquisition_inventory_companions if not path.is_file()
+          ]
+          if missing_acquisition_inventory_companions:
+              raise SystemExit(
+                  "The separately governed MapLibre acquisition inventory is incomplete. "
+                  "Keep its workflow, tests, and validator review boundary together:\n"
+                  + "\n".join(
+                      str(path) for path in missing_acquisition_inventory_companions
+                  )
               )
 
           fixture_root = Path("tests/fixtures/maplibre")
@@ -448,7 +470,10 @@ jobs:
               "verify_perf_thresholds.py",
               "verify_render_diff_coverage.py",
           }
-          separately_governed_validators = {"validate_v6_readiness.py"} | (
+          separately_governed_validators = {
+              "assess_acquisition_inventory.py",
+              "validate_v6_readiness.py",
+          } | (
               {"validate_source_metadata.py"}
               if source_metadata_root.exists()
               else set()
@@ -463,7 +488,8 @@ jobs:
           if actual_validators != expected_validators:
               raise SystemExit(
                   "MapLibre validator inventory changed outside the accepted perf "
-                  "wrappers/placeholders and separately governed source-metadata/v6-readiness lanes. "
+                  "wrappers/placeholders and separately governed acquisition-inventory, "
+                  "source-metadata, and v6-readiness lanes. "
                   "Review the aggregate command, inputs, fixtures, and exit outcomes before "
                   "changing CI."
               )
@@ -575,6 +601,10 @@ jobs:
                   f"Classified {len(source_metadata_payloads)} source-metadata JSON payloads "
                   "under the dedicated no-network validator lane."
               )
+          print(
+              "Classified the structural MapLibre acquisition inventory under its "
+              "dedicated no-network workflow and test lane."
+          )
           print(
               "Classified the fixture-only MapLibre v6 readiness validator under "
               "the briefing implementation campaign."
