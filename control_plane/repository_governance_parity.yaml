@@ -66,8 +66,8 @@ coverage:
 expected_topology:
   rule_count: 20
   fail_invariant: 0
-  fail_new_drift: 1
-  baselined_warning: 133
+  fail_new_drift: 0
+  baselined_warning: 132
   stale_fingerprints: 0
 required_non_effects:
   - does_not_accept_or_amend_adr

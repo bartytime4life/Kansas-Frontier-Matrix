@@ -98,6 +98,6 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Green scope: exact profile structure, lane execution, accepted rule ownership, pinned evidence, baseline monotonicity, and introduced-drift classification."
-            echo "- Repository conformance: HOLD_INHERITED at the reviewed 1 new-drift / 133 baselined-warning / 0 stale-fingerprint checkpoint unless the emitted report proves a further reviewed reduction."
+            echo "- Repository conformance: HOLD_INHERITED while any reviewed baseline warnings remain; a green profile does not waive or resolve inherited topology debt."
             echo "- Boundary: no ADR acceptance, baseline expansion, drift waiver, migration, deletion, authority, policy/review approval, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

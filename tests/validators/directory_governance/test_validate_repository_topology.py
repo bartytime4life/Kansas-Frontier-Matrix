@@ -30,11 +30,6 @@ module = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = module
 SPEC.loader.exec_module(module)
 
-KNOWN_IIIF_AUTHORITY_HOLD = (
-    "sha256:960323ebbda6c3889fe87723bc263b3580a64f495e91c7692987f7ea3251525a"
-)
-
-
 def _entry(finding: object) -> dict[str, object]:
     entry = module._serialized_baseline_entry(finding)
     entry["evidence_members"] = finding.evidence_members
@@ -72,7 +67,7 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         self.assertEqual(20, len(module.RULE_BY_ID))
 
-    def test_live_index_matches_baseline_plus_reviewed_authority_hold(self) -> None:
+    def test_live_index_matches_baseline_after_reviewed_authority_resolution(self) -> None:
         baseline_data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
         baseline = module.load_baseline(BASELINE_PATH)
         findings, tracked_count = module.scan(REPO_ROOT)
@@ -81,7 +76,7 @@ class RepositoryTopologyTests(unittest.TestCase):
         self.assertGreater(len(findings), 0)
         self.assertEqual(
             {finding.fingerprint for finding in findings},
-            set(baseline) | {KNOWN_IIIF_AUTHORITY_HOLD},
+            set(baseline),
         )
         code, report = module.evaluate(
             findings,
@@ -90,9 +85,9 @@ class RepositoryTopologyTests(unittest.TestCase):
             expires_on=baseline_data["expires_on"],
             as_of=date(2026, 8, 12),
         )
-        self.assertEqual(1, code, report)
-        self.assertEqual("FAIL_NEW_DRIFT", report["outcome"])
-        self.assertEqual(1, report["counts"]["fail_new_drift"])
+        self.assertEqual(0, code, report)
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual(0, report["counts"]["fail_new_drift"])
         self.assertEqual(len(baseline), report["counts"]["baselined_warning"])
         self.assertEqual([], report["baseline"]["stale_fingerprints"])
         self.assertFalse(report["authority"]["authorizes_repository_write"])
@@ -124,13 +119,13 @@ class RepositoryTopologyTests(unittest.TestCase):
             text=True,
             check=False,
         )
-        self.assertEqual(1, first.returncode, first.stdout + first.stderr)
+        self.assertEqual(0, first.returncode, first.stdout + first.stderr)
         self.assertEqual(first.stdout, second.stdout)
         self.assertEqual(first.stderr, second.stderr)
         report = json.loads(first.stdout)
-        self.assertEqual("FAIL_NEW_DRIFT", report["outcome"])
-        self.assertEqual(1, report["counts"]["fail_new_drift"])
-        self.assertEqual(133, report["counts"]["baselined_warning"])
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual(0, report["counts"]["fail_new_drift"])
+        self.assertEqual(132, report["counts"]["baselined_warning"])
         self.assertEqual([], report["baseline"]["stale_fingerprints"])
         self.assertEqual(20, report["rule_count"])
         self.assertNotIn("duration", first.stdout)

@@ -780,13 +780,6 @@
       "subject": "doc-id:kfm://doc/soil-continuity-inventory"
     },
     {
-      "evidence_sha256": "sha256:c4b0cb4879c4bea5c454bf78201bf864fbec026e3c8ea4d61ec6c6c6d6b06347",
-      "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdb39PR008tNYUhBFc7MzEwDCgMAeLcQVw==",
-      "fingerprint": "sha256:d55d2e3552ce07f9e54ba68ef55166182c97b38715026f86da9023a8184968c5",
-      "rule_id": "KFM-TOPO-007",
-      "subject": "casefold:docs/standards/iiif.md"
-    },
-    {
       "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
       "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
       "fingerprint": "sha256:da5a2accc8625952a68005b8ede2d1ca447e014160f09364abbbeee2e35db378",
