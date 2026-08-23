@@ -28,7 +28,7 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/oai-pmh.md
-  - docs/standards/iiif.md
+  - docs/standards/IIIF.md
   - docs/standards/snac-eac-cpf.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/VERIFICATION_BACKLOG.md
