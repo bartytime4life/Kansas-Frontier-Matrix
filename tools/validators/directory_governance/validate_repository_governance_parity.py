@@ -496,7 +496,10 @@ def validate_current(
             findings.append(Finding("TOPOLOGY_EXPECTATION_MISMATCH", "/expected_topology"))
         if introduced:
             findings.append(Finding("TOPOLOGY_INTRODUCED_DRIFT", "/topology"))
-        if topology_report["outcome"] == "PASS":
+        if (
+            topology_report["outcome"] == "PASS"
+            and counts["baselined_warning"] == 0
+        ):
             lane_results["repository-topology"] = "PASS"
         else:
             lane_results["repository-topology"] = "HOLD_INHERITED"
