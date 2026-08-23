@@ -1,23 +1,27 @@
 # REST-Orchestrated Advanced 3D Rendering and LLM-Ingestible PDF Carriers
 
-> **Status:** DRAFT research reconciliation; non-authoritative; no runtime, schema, policy, release, deployment, or publication effect  
+> **Status:** DRAFT research reconciliation; non-authoritative; source-verified; no runtime, schema, policy, release, deployment, or publication effect  
 > **Truth posture:** cite-or-abstain; source material is an idea source, not KFM authority  
 > **Repository:** `bartytime4life/Kansas-Frontier-Matrix`  
-> **Inspection baseline:** `main@23ad1900d5c17d689ccd21489ed19fa852a3d28b`  
+> **Inspection baseline:** `main@d760932e3be8f2cfedd7ece7e9a6f53aa0f18226`  
 > **Prepared:** 2026-08-23  
 > **Owning lane:** `docs/intake/exploratory/` because this file reconciles an external research source against current repository evidence; it does not define semantic, schema, policy, API, renderer, or release authority
 
 ## 1. Purpose and bounded outcome
 
-This source map reconciles the session-supplied PDF **“Designing an LLM-Ingestible PDF Resource on REST-Orchestrated Advanced 3D Rendering”** against the current KFM repository and current primary technical standards. It expands the useful ideas into a buildable control-plane model, identifies what the repository already supports, records drift and missing evidence, and defines small follow-on slices without pretending that proposed routes, contracts, or implementations already exist.
+This source map reconciles the Google Drive PDF **“Designing an LLM-Ingestible PDF Resource on REST-Orchestrated Advanced 3D Rendering”** against the current KFM repository and current primary technical standards. It expands the useful ideas into a buildable control-plane model, identifies what the repository already supports, records drift and missing evidence, and defines small follow-on slices without pretending that proposed routes, contracts, or implementations already exist.
 
-The source PDF is identified in this session by:
+The source PDF is identified by:
 
 - file name: `Designing an LLM-Ingestible PDF Resource on REST-Orchestrated Advanced 3D Rendering.pdf`;
-- session file identifier: `file_000000003948822f81ec62df4d2bde5f`;
+- Google Drive file ID: `1jmkDEI3BK-WESlc29HLZ727da1Rk-qPg`;
+- byte length: `116254`;
+- SHA-256: `d5cd2e88854f3291dbeae5e609a423cce5bbf40e36172efdd2921127e2d8399d`;
+- pages: `23`;
+- PDF profile observed: PDF 1.7, untagged, no XMP metadata stream, no JavaScript, no embedded files, and not linearized;
 - role: read-only idea source;
 - authority: none;
-- exact page-level claim map: **NEEDS VERIFICATION** before any source-specific quotation or page citation is promoted into repository doctrine.
+- exact page-level content map: **CONFIRMED** in section 2.1 from direct inspection of the identified source bytes.
 
 This document deliberately stops at research reconciliation. It does **not**:
 
@@ -41,12 +45,35 @@ The reconciliation used four evidence classes, in descending order of authority 
 
 A statement is labeled:
 
-- **CONFIRMED** when verified from the inspected repository evidence;
+- **CONFIRMED** when verified from the inspected repository or source-artifact evidence;
 - **PROPOSED** when it is a design candidate not yet admitted into implementation;
 - **UNKNOWN** when the inspected evidence does not resolve it;
 - **NEEDS VERIFICATION** when a bounded check can resolve it but has not yet been completed strongly enough to act as fact.
 
 Memory and architectural plausibility are not evidence.
+
+### 2.1 Verified page-level source map
+
+The following page map was checked against the 23-page PDF identified above. It records material content locations; it does not promote the source into KFM doctrine.
+
+| PDF pages | Material content |
+|---|---|
+| 1 | Metadata example, executive summary, and definitions of REST rendering |
+| 2 | Goals, audiences, scope, success criteria, and architecture-pattern introduction |
+| 3 | Client-side, server-side, and hybrid patterns |
+| 4 | Baseline architecture diagram; HTTP semantics, byte ranges, and caching |
+| 5–8 | Resource model, OpenAPI examples, asset/artifact/render-job vocabulary, and finite compute states |
+| 8–10 | Client polling, caching, and format guidance |
+| 11–12 | Format comparison, LOD, compression, streaming, and progressive loading |
+| 13 | Conversion pipeline, engines, trade-offs, and validation |
+| 14 | Performance, observability, and deployment dimensions |
+| 15 | Cost guidance and PDF 3D capability/security discussion |
+| 16–18 | PDF compatibility/accessibility, JSON-LD, XMP, and metadata design |
+| 18–19 | Corpus/build layout and export workflow |
+| 20 | Checklists, validation, pitfalls, and security risks |
+| 21–23 | Legal/licensing and references |
+
+The source is text-extractable and useful as research input. It is not a conformance exemplar for the packaging profile it proposes because the inspected bytes are untagged and contain no XMP stream, associated machine files, embedded 3D assets, or interactive 3D annotation.
 
 ## 3. Repository reconciliation
 
@@ -54,26 +81,39 @@ Memory and architectural plausibility are not evidence.
 
 | Concern | Status | Repository evidence | Consequence |
 |---|---|---|---|
-| Renderer-neutral runtime seam | **CONFIRMED** | `packages/maplibre/src/map-runtime-port.ts`, `packages/maplibre/src/null-map-runtime.ts`, and exports from `packages/maplibre/src/index.ts` were added by merged PR #3433 | KFM now has a dependency-free boundary for serializable map camera, selection, runtime state, and validation. This is not a concrete renderer. |
+| Renderer-neutral runtime seam | **CONFIRMED** | `packages/maplibre/src/map-runtime-port.ts`, `packages/maplibre/src/null-map-runtime.ts`, and exports from `packages/maplibre/src/index.ts` were added by merged PR #3433 | KFM has a dependency-free boundary for serializable map camera, selection, runtime state, and validation. This is not a concrete renderer. |
 | Concrete MapLibre implementation | **CONFIRMED ABSENT from the merged slice** | PR #3433 explicitly bounded out a `MapLibreAdapter`, `maplibre-gl` dependency admission, browser runtime probes, lockfile changes, and viewer integration | No claim may be made that the browser renderer path is implemented or admitted. |
+| Renderer architecture decisions | **CONFIRMED ACCEPTED / implementation held** | ADR-0006 accepts the package-owned port/adapter seam; ADR-0007 accepts the renderer family while separating exact dependency and runtime admission | Architecture acceptance does not add a version, package, plugin, worker, adapter, browser proof, release, deployment, or publication authority. |
 | 3D admission vocabulary | **CONFIRMED, PROPOSED-INACTIVE** | `contracts/map/three_d_admission_decision.md` | `ALLOW_RENDER_CANDIDATE` is not publication or policy authority. Fixture use does not admit real 3D data. |
 | Representation process memory | **CONFIRMED** | `contracts/receipts/representation_receipt.md` | A representation receipt may record how a view or artifact was made; it does not make the output true or released. |
 | Scene contract lane | **CONFIRMED as a guardrail, not an active schema family** | `schemas/contracts/v1/scene/README.md` | A README reserve does not establish machine-valid scene semantics. |
 | Published scene lane | **CONFIRMED empty/guarded at the inspected architecture baseline** | `data/published/layers/scene/README.md` and `docs/architecture/planetary-3d.md` | No released 3D scene may be inferred from directory presence. |
-| Planetary 3D architecture narrative | **CONFIRMED but partially stale** | `docs/architecture/planetary-3d.md` still describes the MapLibre package as a placeholder and the adapter as comment-only | The narrative requires a same-path current-state correction after the source-map review; this file does not silently rewrite that authority-adjacent explanation. |
+| Planetary 3D architecture narrative | **CONFIRMED stale on the pinned base / corrected in the #3436 candidate** | The base document predates PR #3433 and ADR-0006/0007 acceptance; the same-path candidate updates only those current-state facts | The parent remains the carrier-architecture authority. This source map records lineage and does not compete with it. |
+| Promoted REST/3D architecture companion | **CONFIRMED merged** | PR #3434 added `docs/architecture/rest-orchestrated-3d-derivatives.md` as a subordinate companion | Detailed orchestration/PDF guidance belongs in the companion, not in this source-lineage file or a fourth explanatory surface. |
 | REST render-orchestration contract | **NEEDS VERIFICATION** | No dedicated contract was established by the bounded evidence set inspected for this reconciliation | Route names and state objects below remain examples and proposals. A repo-wide contract inventory is required before selecting a home. |
 | LLM-ingestible PDF build profile | **NEEDS VERIFICATION** | No accepted KFM profile was established by the bounded evidence set inspected for this reconciliation | The profile in section 7 is a candidate quality and safety checklist, not a publication standard. |
 
-### 3.2 Drift finding
+### 3.2 Authority and lineage relationship
 
-`docs/architecture/planetary-3d.md` correctly preserves the separation between evidence, policy, representation, and publication, but its current-state snapshot predates merged PR #3433. The smallest truthful correction is not to claim a working renderer. It is to replace only the stale statements with the following bounded facts:
+The merged and candidate documents now have distinct responsibilities:
 
-1. `MapRuntimePort` and `NullMapRuntime` now exist as renderer-neutral package exports.
+1. `docs/intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md` — noncanonical source lineage and verification record, introduced by PR #3435;
+2. `docs/architecture/planetary-3d.md` — parent carrier architecture and current implementation boundary;
+3. `docs/architecture/rest-orchestrated-3d-derivatives.md` — narrow promoted companion for REST orchestration, derivatives, and PDF packaging, introduced by PR #3434.
+
+No one of these files creates a semantic contract, machine schema, policy decision, renderer dependency, release, deployment, or publication state.
+
+### 3.3 Drift finding and bounded correction
+
+`docs/architecture/planetary-3d.md` correctly preserves the separation between evidence, policy, representation, and publication, but its base snapshot predates merged PR #3433 and the accepted ADR-0006/0007 transitions. The #3436 candidate applies the smallest truthful correction:
+
+1. `MapRuntimePort` and `NullMapRuntime` are recorded as renderer-neutral package exports.
 2. The seam remains dependency-free and serializable.
-3. No concrete `MapLibreAdapter`, admitted `maplibre-gl` dependency, browser proof, viewer route, REST render coordinator, or released scene follows from that seam.
-4. All existing 3D admission, sensitivity, receipt, and release restrictions remain in force.
+3. ADR-0006 and ADR-0007 are recorded as accepted architecture decisions.
+4. No concrete `MapLibreAdapter`, admitted `maplibre-gl` dependency, browser proof, viewer route, REST render coordinator, or released scene follows from those facts.
+5. All existing 3D admission, sensitivity, receipt, and release restrictions remain in force.
 
-That correction should be a separate, same-path patch or a dependency-closed follow-up in the same review series. It should not be implemented by adding another architecture authority file.
+The correction is same-path and does not add another architecture authority file.
 
 ## 4. Research synthesis: the control plane is not the renderer
 
@@ -449,9 +489,9 @@ The following order minimizes authority drift and keeps changes reversible.
 
 ### Slice A — current-state documentation correction
 
-**Status:** PROPOSED, ready for a bounded same-path patch after review of this source map.
+**Status:** IN REVIEW through issue #3436 and its same-path candidate branch.
 
-Update only stale current-state statements in `docs/architecture/planetary-3d.md` so they reflect merged PR #3433. Preserve every existing hold, sensitivity, admission, receipt, and publication boundary. Do not add route names or runtime claims.
+Update only stale current-state statements in `docs/architecture/planetary-3d.md` so they reflect merged PR #3433 and accepted ADR-0006/0007. Preserve every existing hold, sensitivity, admission, receipt, and publication boundary. Do not add route names or runtime claims.
 
 ### Slice B — existing-contract inventory
 
@@ -511,7 +551,7 @@ This file is placed under `docs/intake/exploratory/` because its responsibility 
 
 - `contracts/`, because it does not define semantic authority;
 - `schemas/`, because it does not define machine shape;
-- `policies/`, because it does not grant or deny permission;
+- `policy/`, because it does not grant or deny permission;
 - `packages/` or `apps/`, because it contains no implementation;
 - `data/published/`, because it is not a released dataset or scene;
 - a new root-level 3D or AI folder, because topic similarity does not justify a new authority boundary.
@@ -522,17 +562,17 @@ Existing compatibility roots remain unchanged. Future new paths are intentionall
 
 This source map changes documentation only. It has no runtime import, dependency, lockfile, route, schema, source, registry, policy, release, deployment, publication, or data effect.
 
-Rollback is deletion of this single file and closure of its review branch. No migration or data repair is required. Any future slice must define its own rollback target and must not rely on this note as authority.
+Rollback for this same-path update is restoration of source-map blob `f8da2f3efd58197c95219728a5359d2f0ffd267e` or reversal of the candidate commit. No migration or data repair is required. Any future slice must define its own rollback target and must not rely on this note as authority.
 
 ## 14. Open verification register
 
 | ID | Verification item | Status | Closure evidence |
 |---|---|---|---|
-| `REST3D-VER-001` | Extract and map the supplied PDF’s material claims to exact pages or section identifiers | **NEEDS VERIFICATION** | Page-level source ledger reviewed against the original PDF |
+| `REST3D-VER-001` | Extract and map the supplied PDF’s material claims to exact pages or section identifiers | **CONFIRMED CLOSED** | Section 2.1 page map reviewed against source SHA-256 `d5cd2e88854f3291dbeae5e609a423cce5bbf40e36172efdd2921127e2d8399d` |
 | `REST3D-VER-002` | Re-run a repository-wide inventory for existing operation/job/idempotency/error contracts before naming a new semantic home | **NEEDS VERIFICATION** | Search record plus overlap classification |
-| `REST3D-VER-003` | Correct stale current-state statements in `docs/architecture/planetary-3d.md` without expanding authority | **PROPOSED** | Same-path reviewed patch grounded in PR #3433 |
+| `REST3D-VER-003` | Correct stale current-state statements in `docs/architecture/planetary-3d.md` without expanding authority | **IN REVIEW** | Issue #3436 same-path candidate grounded in PR #3433 and accepted ADR-0006/0007; merge remains separate |
 | `REST3D-VER-004` | Verify exact current renderer, 3D Tiles, glTF, OpenAPI, JSON Schema, PDF, and accessibility versions at dependency/profile admission time | **NEEDS VERIFICATION** | Pinned manifests, checksums, official specification references, and tests |
 | `REST3D-VER-005` | Establish independent reviewer ownership for dependency, security, policy, and publication-significant slices | **NEEDS VERIFICATION** | Recorded reviewer route and approval evidence |
 | `REST3D-VER-006` | Demonstrate LLM retrieval preserves claim, truth label, evidence reference, limitation, sensitivity, and validity together | **PROPOSED** | Synthetic evaluation suite with abstention and citation-resolution results |
 
-Until these items are closed, the correct repository posture is: the research is useful, the control-plane model is buildable, the current renderer-neutral seam is real, and the advanced REST/3D/PDF profiles remain proposals.
+Until these items are closed, the correct repository posture is: the research is useful, the control-plane model is buildable, the renderer-neutral seam and accepted architecture decisions are real, and the advanced REST/3D/PDF profiles remain proposals.

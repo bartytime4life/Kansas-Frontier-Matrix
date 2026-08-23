@@ -5,31 +5,31 @@
 doc_id: kfm://doc/architecture-planetary-3d
 title: Planetary, 3D, Digital Twin, and Synthetic Spatial — Current Architecture and Implementation Boundary
 type: architecture-reference
-version: v2.0
+version: v2.1
 status: draft; repository-grounded; bounded-executable; renderer-hold; non-publisher
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent Planetary/3D, renderer, accessibility, evidence, policy, sensitivity, security, release, and domain stewardship"
 created: 2026-05-25
-updated: 2026-08-19
+updated: 2026-08-23
 policy_label: public; architecture; planetary-3d; synthetic-spatial; trust-membrane; renderer-hold; no-release; no-publication
 owning_root: docs/
-responsibility: Explain the current Planetary/3D carrier boundary, repository-present fixture-first admission and representation-receipt profiles, held renderer and scene surfaces, cross-domain obligations, graduation evidence, and rollback without becoming semantic, schema, policy, runtime, review, release, or publication authority.
-truth_posture: cite-or-abstain; current-state claims are pinned to repository evidence; inactive profiles, proposed decisions, absent runtime surfaces, source currentness, deployment, release, and public-operation claims remain explicitly bounded
+responsibility: Explain the current Planetary/3D carrier boundary, repository-present fixture-first admission and representation-receipt profiles, renderer-neutral runtime seam, held concrete renderer and scene surfaces, cross-domain obligations, graduation evidence, and rollback without becoming semantic, schema, policy, runtime, review, release, or publication authority.
+truth_posture: cite-or-abstain; current-state claims are pinned to repository evidence; inactive profiles, held dependencies and runtime surfaces, source currentness, deployment, release, and public-operation claims remain explicitly bounded
 current_path: docs/architecture/planetary-3d.md
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 7ef1597779774d80346f81ecd8104b720797c587
-  target_prior_blob: f95061c8add6fad1910b7acc8c65c523869414ed
+  base_commit: d760932e3be8f2cfedd7ece7e9a6f53aa0f18226
+  target_prior_blob: 41e26697a05c9479fc78b43d5112279d9125a492
   directory_rules_decision: ADR-0029 accepted
-  adr_index_blob: 419ebd60db28404edb0d363125c85f6f15deaec0
-  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  map_shell_blob: b0ae23f2399c019a737a27c6aaaf0d34323b1fb7
-  explorer_manifest_blob: ddd201b74a06001d84a14bf54ac62a6cc3607a29
+  adr_0006_blob: 4bf4292dc05a85fd4cd829c491808b13894bc223
+  adr_0007_blob: 2482eea382fd97e68544bb04bc2e2ea1e1cedebe
   explorer_adapter_blob: 663ba0f7a05498948f67d644387c73ab19d5c16c
-  maplibre_manifest_blob: b0582955feeb51016327113692fa5c98ecad8816
-  maplibre_entry_blob: 91664eb00583f9e3d0405eb7954fefa9a48f4ee9
+  maplibre_manifest_blob: c7e8e57445fcca8f8a7316b54043da0ea43968a6
+  maplibre_entry_blob: 08a48ac008665317833a9476b21cd35b1679c595
+  map_runtime_port_blob: 11b734165bc0e0617b9d98c99f43441b0275cb50
+  null_map_runtime_blob: d51164820393398fe8e193817f9585e6cc3fd43e
   three_d_contract_blob: e71692ce8897596e3477a8dafc0ef5c12fcd130a
   three_d_schema_blob: ad914fa53f32339972ec357ba2da855e1e315516
   three_d_fixture_blob: 3ee003cee537724cdfc28b2cf44a89ae411698ef
@@ -45,14 +45,19 @@ evidence_snapshot:
   representation_workflow_blob: 3ca169034e64e48e030e6a1d3f53c17bc9e8e811
   scene_schema_readme_blob: 3a86146bb6b8a5004b17b3aa076b4e8c040c1fb1
   published_scene_readme_blob: 09be41eb1cddff71e06fcc14bd6b1ee5edc70776
+  rest_3d_companion_blob: 4bef779b0c8275a43be35c6f23f748ff4fd349f6
+  rest_3d_source_map_prior_blob: f8da2f3efd58197c95219728a5359d2f0ffd267e
 related:
   - docs/architecture/README.md
   - docs/architecture/map-shell.md
   - docs/architecture/maplibre.md
+  - docs/architecture/rest-orchestrated-3d-derivatives.md
   - docs/architecture/map-master/2D_3D_PARITY.md
+  - docs/intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md
   - docs/domains/planetary-3d/README.md
   - docs/doctrine/directory-rules.md
   - docs/adr/INDEX.md
+  - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
   - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - contracts/map/three_d_admission_decision.md
@@ -73,33 +78,37 @@ related:
   - apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - packages/maplibre/package.json
   - packages/maplibre/src/index.ts
+  - packages/maplibre/src/map-runtime-port.ts
+  - packages/maplibre/src/null-map-runtime.ts
   - data/published/layers/scene/README.md
-tags: [kfm, architecture, planetary-3d, digital-twin, synthetic-spatial, scene, maplibre, evidence-parity, reality-boundary, representation-receipt, finite-outcomes, renderer-hold]
+tags: [kfm, architecture, planetary-3d, digital-twin, synthetic-spatial, scene, maplibre, map-runtime-port, evidence-parity, reality-boundary, representation-receipt, finite-outcomes, renderer-hold]
 notes:
-  - "v2.0 replaces proposal-era no-repository language with a current repository-grounded architecture and implementation boundary."
+  - "v2.0 replaced proposal-era no-repository language with a repository-grounded architecture and implementation boundary."
+  - "v2.1 reconciles the parent with merged PR #3433, accepted ADR-0006/0007, and the merged REST/3D source-lineage and architecture-companion documents without admitting a renderer dependency or runtime."
   - "The H1 anchor and legacy section anchors for core object families, finite outcome envelope, sensitivity and rights, Reality Boundary Note, renderer relationship, verification backlog, and related docs are preserved for inbound-link compatibility."
   - "The repository has an inactive, fixture-only ThreeDAdmissionDecision contract/schema/validator/test/workflow slice and a separate proposed RepresentationReceipt slice; neither has renderer, policy, review, release, deployment, publication, or public-use authority."
-  - "The concrete browser renderer remains on HOLD: Explorer declares no renderer dependency, packages/maplibre is a private 0.0.0 placeholder, and the Explorer adapter is comment-only."
-  - "ADR-0029 is accepted; ADR-0007 and the related shell/adapter decisions remain proposed. Absence of a Cesium package does not accept a sole-renderer decision."
-  - "The exact docs/architecture/maplibre-3d.md and packages/maplibre-runtime/ paths referenced by the prior edition are absent at the pinned tree and are not treated as current authorities."
-  - "This change updates one human-readable architecture page only and creates no contract, schema, policy, dependency, runtime, source, release, deployment, or publication effect."
+  - "The renderer-neutral seam is implemented: packages/maplibre exports MapRuntimePort and NullMapRuntime. The package still declares no maplibre-gl dependency, and the Explorer MapLibreAdapter remains comment-only."
+  - "ADR-0006 and ADR-0007 are accepted architecture decisions. Exact renderer version, package admission, plugins, workers, concrete adapter implementation, browser proof, release, deployment, and publication remain separate HOLD or future gates."
+  - "The former docs/architecture/maplibre-3d.md source lineage is not restored. REST/3D research lineage lives under docs/intake/exploratory, while the narrow promoted companion lives at docs/architecture/rest-orchestrated-3d-derivatives.md."
+  - "This change updates two existing human-readable documentation surfaces only and creates no contract, schema, policy, dependency, runtime, source, release, deployment, or publication effect."
 [/KFM_META_BLOCK_V2] -->
 
 # Planetary, 3D, Digital Twin, and Synthetic Spatial — Architecture
 
-> **Current architecture and implementation boundary.** Planetary/3D is a cross-domain representation and delivery concern. It can carry released, evidence-bound, policy-safe material in terrain, 2.5D, true-3D, globe, point-cloud, model, reconstruction, and synthetic forms. It does not own the underlying domain truth, and current repository evidence does not establish a working browser 3D runtime or a released scene.
+> **Current architecture and implementation boundary.** Planetary/3D is a cross-domain representation and delivery concern. It can carry released, evidence-bound, policy-safe material in terrain, 2.5D, true-3D, globe, point-cloud, model, reconstruction, and synthetic forms. It does not own the underlying domain truth. Current repository evidence establishes a renderer-neutral port and deterministic null runtime, but not a concrete browser renderer, admitted renderer dependency, production 3D runtime, or released scene.
 
 ![status](https://img.shields.io/badge/status-draft-d4a72c)
 ![repository evidence](https://img.shields.io/badge/repository%20evidence-CONFIRMED-2ea44f)
 ![admission profile](https://img.shields.io/badge/3D%20admission-fixture--only-8250df)
 ![representation receipt](https://img.shields.io/badge/representation%20receipt-bounded__executable-0969da)
-![renderer](https://img.shields.io/badge/browser%20renderer-HOLD-b42318)
+![runtime seam](https://img.shields.io/badge/runtime%20seam-renderer--neutral-0969da)
+![renderer](https://img.shields.io/badge/concrete%20renderer-HOLD-b42318)
 ![scene release](https://img.shields.io/badge/released%20scene-not__established-6e7781)
 ![publication](https://img.shields.io/badge/publication-none-6e7781)
 
 | Field | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@7ef1597779774d80346f81ecd8104b720797c587` |
+| **Evidence snapshot** | `main@d760932e3be8f2cfedd7ece7e9a6f53aa0f18226` |
 | **Document role** | Human-readable cross-cutting architecture reference; no semantic, schema, policy, runtime, review, release, or publication authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../doctrine/directory-rules.md); this is a same-path update under `docs/architecture/` |
 | **Carrier doctrine** | **CONFIRMED:** representations remain downstream carriers and do not become sovereign evidence or domain truth |
@@ -109,8 +118,10 @@ notes:
 | **Reality Boundary Note** | **PARTIAL:** a machine schema exists and both bounded profiles reference it; a complete accepted semantic authority, live resolver, review path, and release binding are not established |
 | **Scene schema family** | **README-ONLY / HOLD:** `schemas/contracts/v1/scene/` contains a guardrail README and no accepted scene schema files |
 | **Published scene lane** | **README-ONLY / EMPTY:** `data/published/layers/scene/` contains a README and `.gitkeep`; no released scene artifact was found |
-| **Concrete browser renderer** | **HOLD:** Explorer has no renderer dependency; `packages/maplibre/` is a private `0.0.0` placeholder; `MapLibreAdapter.ts` is comment-only |
-| **Renderer decision** | **PROPOSED:** ADR-0007 remains proposed; package absence and documentation repetition do not accept it |
+| **Renderer-neutral runtime seam** | **CONFIRMED / DEPENDENCY-FREE:** `MapRuntimePort` and deterministic `NullMapRuntime` are exported from `@kfm/maplibre`; they expose no concrete renderer and grant no evidence, policy, review, release, deployment, or publication authority |
+| **Concrete browser renderer** | **HOLD:** Explorer and `@kfm/maplibre` declare no `maplibre-gl` dependency; `MapLibreAdapter.ts` remains comment-only; authenticated browser and long-session evidence remains separate under #2906 |
+| **Renderer architecture decision** | **ACCEPTED ARCHITECTURE / IMPLEMENTATION HOLD:** ADR-0006 accepts the package-owned seam and ADR-0007 accepts MapLibre GL JS as the sole normal production browser renderer family; neither admits a version, package, plugin, worker, adapter, or browser runtime |
+| **REST/3D derivative architecture** | **CONFIRMED explanatory companion / implementation proposed:** [`rest-orchestrated-3d-derivatives.md`](./rest-orchestrated-3d-derivatives.md) is subordinate to this page; its source lineage remains under [`docs/intake/exploratory/`](../intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md) |
 | **Live 3D policy execution** | **NOT ESTABLISHED:** the candidate validator checks declarations and holds but does not invoke a policy engine or human review |
 | **Source activation and terrain ingestion** | **NOT ESTABLISHED:** source pages are planning/catalog documentation, not proof of active connectors, processed terrain, or released bytes |
 | **Deployment and public operation** | **UNKNOWN / not established** |
@@ -123,7 +134,7 @@ notes:
 > **A `RepresentationReceipt` is process memory, not a release.** It can prove declared input/output digests, method identity, fidelity, information loss, timing, lineage, and a reality-boundary reference. It explicitly keeps evidence, policy, review, release, and public-use authority outside the receipt.
 
 > [!WARNING]
-> **No working 3D product is established.** The repository contains meaningful fixture-first governance slices, but no admitted MapLibre dependency, implemented adapter, live EvidenceBundle resolution, scene manifest implementation, released scene bytes, or production 3D interaction path.
+> **No working 3D product is established.** The repository contains meaningful fixture-first governance slices and a renderer-neutral runtime seam, but no admitted MapLibre dependency, implemented concrete adapter, live EvidenceBundle resolution, scene manifest implementation, released scene bytes, or production 3D interaction path.
 
 ## Quick jump
 
@@ -149,7 +160,7 @@ notes:
 
 ### 0.1 Confirmed repository surfaces
 
-The current tree establishes two executable-but-inactive trust slices and several documentation-only boundaries.
+The current tree establishes two executable-but-inactive trust slices, one renderer-neutral runtime seam, and several documentation-only boundaries.
 
 | Surface | Confirmed repository state | Safe conclusion |
 |---|---|---|
@@ -169,8 +180,12 @@ The current tree establishes two executable-but-inactive trust slices and severa
 | [Scene schema family README](../../schemas/contracts/v1/scene/README.md) | Explicit README-only guardrail; no accepted scene schemas found in that family | Do not infer `SceneManifest` implementation |
 | [Published scene README](../../data/published/layers/scene/README.md) | Defines intended released-carrier boundary; exact directory contains only README and `.gitkeep` | No current scene release is established |
 | [Explorer manifest](../../apps/explorer-web/package.json) | Vite/TypeScript/Vitest/Playwright tooling only; no renderer or 3D dependencies | Explorer cannot be described as a functioning 3D client |
-| [MapLibre package manifest](../../packages/maplibre/package.json) and [entrypoint](../../packages/maplibre/src/index.ts) | Private `@kfm/maplibre` version `0.0.0`; one placeholder export | Package home is a scaffold, not a renderer |
-| [Explorer adapter](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment; no implementation | Adapter seam is not functioning |
+| [MapLibre package manifest](../../packages/maplibre/package.json) and [entrypoint](../../packages/maplibre/src/index.ts) | Private `@kfm/maplibre` version `0.0.0`; explicit source export surface; no renderer dependency | Package home owns a renderer-neutral seam, not a renderer runtime |
+| [`MapRuntimePort`](../../packages/maplibre/src/map-runtime-port.ts) | Serializable camera, selection, runtime-state, snapshot, validation, and disposal boundary with finite errors and no concrete renderer types | Reusable application seam exists; no renderer acquisition or browser proof follows |
+| [`NullMapRuntime`](../../packages/maplibre/src/null-map-runtime.ts) | Deterministic, no-network implementation for migration and tests | Test/control runtime exists; it is not a browser renderer or release proof |
+| [Explorer adapter](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment; no concrete implementation | Renderer adapter remains unimplemented |
+| [REST/3D architecture companion](./rest-orchestrated-3d-derivatives.md) | Source-reconciled explanatory companion merged by PR #3434 | Defines no route, schema, worker, source, dependency, release, or publication authority |
+| [REST/3D source map](../intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md) | Noncanonical source-lineage and verified page-map record from PR #3435 and issue #3436 | Supports research traceability; it does not compete with this parent architecture |
 
 ### 0.2 Current versus target boundary
 
@@ -180,16 +195,18 @@ flowchart LR
     C1["Synthetic fixture references"]
     C2["ThreeDAdmissionDecision<br/>closed candidate profile"]
     C3["RepresentationReceipt<br/>closed process-memory profile"]
-    C4["Validators + tests +<br/>no-network workflows"]
-    C5["HOLD / no effects"]
-    C1 --> C2 --> C4 --> C5
-    C1 --> C3 --> C4
+    C4["MapRuntimePort + NullMapRuntime<br/>renderer-neutral / no network"]
+    C5["Validators + tests +<br/>no-network workflows"]
+    C6["HOLD / no renderer or release effects"]
+    C1 --> C2 --> C5 --> C6
+    C1 --> C3 --> C5
+    C4 --> C6
   end
 
   subgraph TARGET["PROPOSED — not established as current behavior"]
     T1["Released public-safe assets"]
     T2["Evidence resolution + policy +<br/>review + release checks"]
-    T3["Scene manifest + runtime adapter"]
+    T3["Scene manifest + concrete adapter"]
     T4["Admitted renderer/plugins"]
     T5["Evidence Drawer + finite UI"]
     T6["Representation receipt +<br/>correction/rollback propagation"]
@@ -201,17 +218,19 @@ flowchart LR
 
 ### 0.3 Corrections to the prior edition
 
-The prior edition contained useful doctrine but overclaimed current paths, decisions, and implementation maturity. This revision narrows those claims.
+The prior edition contained useful doctrine but became stale after the MapRuntimePort merge and ADR transitions. This revision narrows those deltas without claiming a working renderer.
 
-| Prior treatment | Current evidence | v2.0 disposition |
+| Prior treatment | Current evidence | v2.1 disposition |
 |---|---|---|
-| Repository described as unmounted; every path marked proposed | Current repository and exact target bytes are inspectable | Replace with pinned repository evidence |
-| `docs/architecture/maplibre-3d.md` treated as present renderer authority | Exact path is absent at the pinned tree | Do not link or treat it as current authority; preserve its supplied source lineage separately |
-| `packages/maplibre-runtime/` treated as the renderer home | Exact path is absent; `packages/maplibre/` exists as a placeholder | Record physical evidence and keep final runtime-home decision open |
-| MapLibre 5.x sole-renderer / Cesium retirement treated as settled | ADR-0007 remains proposed; no admitted browser renderer exists | Keep renderer-family decision **PROPOSED** and runtime on **HOLD** |
+| `packages/maplibre/` described as a placeholder package | Package exports `MapRuntimePort` and deterministic `NullMapRuntime`; manifest remains dependency-free | Record the implemented renderer-neutral seam while retaining concrete-renderer HOLD |
+| Shared package entry described as `placeholder = true` | Entry exports `map-runtime-port` and `null-map-runtime` | Replace the retired current-state claim; no renderer dependency is implied |
+| ADR-0006 and ADR-0007 described as proposed | Both ADRs are accepted architecture decisions | Record acceptance while keeping dependency/version, concrete adapter, browser proof, release, deployment, and publication separate |
+| No runtime seam treated as present | PR #3433 established one dependency-free application seam | Distinguish a renderer-neutral port from a renderer implementation |
+| REST/3D research had no settled documentation relationship | PR #3435 merged source lineage; PR #3434 merged a subordinate companion | Link both and preserve this file as the parent carrier architecture |
+| `docs/architecture/maplibre-3d.md` treated as present renderer authority in older lineage | Exact path remains absent | Do not restore or treat it as current authority; preserve supplied source lineage separately |
 | 3D policy paths presented as implemented | Current bounded search finds a candidate contract/validator, not live policy execution | Separate inactive candidate validation from policy authority |
-| Scene and 3D schema families treated as implemented | Scene family is README-only; exact earlier 3D paths are absent | Point to actual receipt, map-candidate, and evidence schema surfaces |
-| Reality Boundary Note described only as a proposed narrative object | A machine schema now exists and bounded validators require its ref in applicable cases | Mark shape **CONFIRMED**, semantics/runtime/review **PARTIAL** |
+| Scene and 3D schema families treated as implemented | Scene family is README-only; exact earlier 3D paths are absent | Point to actual receipt, map-candidate, runtime-seam, and evidence schema surfaces |
+| Reality Boundary Note described only as a proposed narrative object | A machine schema exists and bounded validators require its ref in applicable cases | Mark shape **CONFIRMED**, semantics/runtime/review **PARTIAL** |
 | Representation Receipt described as a future render-time emission | A contract/schema/fixtures/validator/tests/workflow packet exists, but no runtime emits it | Describe the executable profile without runtime overclaim |
 | Fixed sensitivity thresholds stated as global policy | The inactive candidate validator encodes some thresholds, including a 5,000 m archaeology check; no accepted universal 3D policy was verified | State the threshold as profile behavior, not system-wide accepted policy |
 | `ALLOW` treated as operational permission | Positive candidate outcome explicitly carries zero authority and all holds | Use `ALLOW_RENDER_CANDIDATE` exactly and explain its non-effects |
@@ -230,8 +249,8 @@ This page explains the cross-cutting responsibility boundary for:
 - evidence and 2D-parity obligations carried by 3D candidates;
 - Reality Boundary Note and RepresentationReceipt relationships;
 - sensitivity, rights, precision, transform, plugin, review, and release boundaries;
-- current fixture-first implementation evidence;
-- missing runtime, policy, scene, release, and operational evidence;
+- current fixture-first implementation and renderer-neutral seam evidence;
+- missing concrete runtime, policy, scene, release, and operational evidence;
 - graduation and rollback requirements.
 
 This page does not define field-level semantics or machine constraints. The repository-present semantic contracts and schemas own those details.
@@ -249,7 +268,7 @@ It also does not own:
 | Evidence closure | `EvidenceRef → EvidenceBundle` and evidence policy |
 | Machine shape | Accepted schemas under `schemas/` |
 | Admissibility | Policy plus rights, sensitivity, purpose, audience, review, and release state |
-| Renderer acquisition and lifecycle | An accepted adapter/package decision and implementation |
+| Renderer acquisition and lifecycle | Accepted ADR-0006/0007 boundaries plus a separately admitted dependency and concrete implementation |
 | Review approval | Review records and accountable reviewers |
 | Release, correction, withdrawal, and rollback | `release/` and the applicable released-carrier records |
 | Public operation | Deployed configuration, authentication, CSP/network controls, runtime tests, logs, and operational evidence |
@@ -261,6 +280,8 @@ It also does not own:
 
 This file remains under `docs/architecture/` because it explains how multiple responsibility roots and domain lanes compose around a high-exposure representation boundary. Domain-specific 3D use and source selection belong in domain documentation; contracts, schemas, policy, code, fixtures, tests, receipts, and released bytes stay in their owning roots.
 
+The [REST/3D derivative companion](./rest-orchestrated-3d-derivatives.md) explains one narrow cross-cutting concern beneath this parent. Its [source map](../intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md) records the external research lineage. Neither changes this page’s parent role.
+
 [Back to top](#top)
 
 ---
@@ -271,12 +292,13 @@ This file remains under `docs/architecture/` because it explains how multiple re
 
 Planetary/3D representations are downstream carriers. They may arrange released public-safe assets, evidence references, time, camera, projection, layer selection, fidelity, and limitations. They do not create a claim merely by displaying it.
 
-The current repository makes this boundary executable in two narrow ways:
+The current repository makes this boundary executable in three narrow ways:
 
 1. `ThreeDAdmissionDecision` requires declared evidence, source, parity, sensitivity, plugin, review, public-use, and effect state before a candidate can pass local validation.
 2. `RepresentationReceipt` records fidelity and process memory while forcing every governance authority flag to remain false.
+3. `MapRuntimePort` and `NullMapRuntime` separate serializable application state from renderer acquisition and provide deterministic no-network control behavior.
 
-Neither profile resolves live evidence or authorizes display.
+None resolves live evidence, authorizes display, admits a renderer dependency, or releases a scene.
 
 ### 2.2 Non-negotiable invariants
 
@@ -289,6 +311,7 @@ Neither profile resolves live evidence or authorizes display.
 | **Sensitive geometry is transformed before display** | Style-only hiding is never access control | Candidate profile checks declarations; production transformation proof absent |
 | **Explanatory burden matters** | `SPECTACLE_ONLY` is denied in the candidate profile | Executable fixture rule; not an accepted global product policy |
 | **Plugins are dependencies, not evidence** | Plugin references require exact declared versions, digests, attestations, admission refs, license state, and CVE-watch refs in plugin-hosted candidate modes | Executable declaration checks; actual dependency admission absent |
+| **Renderer-neutral state is not renderer admission** | Port types remain serializable and renderer-free; null execution remains deterministic and no-network | `MapRuntimePort`, `NullMapRuntime`, package exports, and focused tests from PR #3433 |
 | **Positive validation retains zero authority** | Review remains `HOLD`, public use false, and all effect flags false | Schema, validator, test, and fixture proof |
 | **Correction and release parity are not optional** | A 3D candidate cannot silently diverge from baseline correction or release refs | Executable candidate checks |
 | **No public internal-store path** | A future browser runtime consumes governed responses or released public-safe carriers only | Architecture doctrine; no deployed proof |
@@ -323,17 +346,19 @@ Use the terms below consistently. Maturity is part of the definition.
 | **True 3D** | OGC 3D Tiles, glTF, or point-cloud candidate labeled `TRUE_3D` | **CONFIRMED schema vocabulary / dependencies absent** |
 | **Globe** | A distinct representation label and candidate mode; it does not change evidence or sensitivity authority | **CONFIRMED schema vocabulary / runtime absent** |
 | **Scene Manifest** | Proposed scene composition identity referenced by the candidate profile | **Reference-only; no accepted scene schema established** |
-| **View State** | Proposed camera/projection/time context referenced by the candidate profile | **Reference-only in this lane** |
+| **`MapRuntimePort`** | KFM-owned renderer-neutral contract for serializable camera, selection, snapshot, runtime state, validation, and disposal | **CONFIRMED implemented seam / no renderer admission** |
+| **`NullMapRuntime`** | Deterministic no-network implementation used for migration and tests | **CONFIRMED bounded implementation / not a renderer** |
+| **View State** | Serializable camera, projection, time, selection, and layer context; some current map state is represented through `MapRuntimePort` | **PARTIAL / renderer-neutral only** |
 | **Representation fitness** | Referenced assessment of whether the requested representation carries explanatory value and truthful geometry labeling | **Referenced candidate dependency; current authority requires separate verification** |
 | **Reality Boundary Note** | Machine-shaped statement of representation kind, reality posture, source roles, evidence, transforms, limitations, spatial/temporal scope, and corrections | **Schema present; accepted semantics/live use partial** |
 | **`RepresentationReceipt`** | Evidence-bound process-memory record for a downstream carrier’s inputs, outputs, method, fidelity, information loss, reality boundary, time, and lineage | **CONFIRMED bounded executable / proposed** |
 | **Scene release** | Governed publication state for a public-safe scene carrier | **Not established** |
 | **3D admission policy** | Actual policy decision permitting or denying a real request for a real audience and purpose | **Not established by fixture validation** |
-| **Renderer adapter** | KFM-owned implementation seam that may eventually translate admitted requests into renderer operations | **Placeholder only** |
+| **Renderer adapter** | KFM-owned implementation seam translating admitted application operations into renderer-specific operations; only this seam may acquire MapLibre runtime types under ADR-0006 | **Architecture accepted; concrete implementation absent** |
 | **3D as carrier** | The architecture rule that a representation remains subordinate to evidence, policy, review, release, correction, and rollback | **CONFIRMED doctrine** |
 
 > [!NOTE]
-> A term’s presence in a schema or fixture does not prove that its referenced object exists, resolves, is authentic, or has been reviewed. The inactive profile intentionally tests reference and declaration closure without dereferencing external authorities.
+> A term’s presence in a schema, fixture, or TypeScript interface does not prove that its referenced object exists, resolves, is authentic, has been reviewed, or is publicly usable. The inactive profiles and null runtime intentionally prove bounded local behavior without dereferencing external authorities or booting a renderer.
 
 [Back to top](#top)
 
@@ -350,9 +375,11 @@ Use the terms below consistently. Maturity is part of the definition.
 | `ThreeDAdmissionDecision` | Inactive candidate assessment | Contract, closed schema, fixtures, deterministic validator, tests, workflow, generated authoring receipt | No live policy, review, renderer, plugin, release, or public-use authority |
 | `RealityBoundaryNote` | Representation/reality disclosure shape | Closed schema; refs required by applicable 3D candidate and receipt rules | Semantic contract, note registry, authenticated review, UI projection, correction propagation, and release binding not established |
 | `RepresentationReceipt` | Process memory for a representation transform | Contract, closed schema, fixtures, validator, tests, workflow | Does not resolve evidence, decide policy, approve review, release, or publish |
+| `MapRuntimePort` | Renderer-neutral application and state boundary | TypeScript contract exported from `@kfm/maplibre`; consumer migration and focused tests from PR #3433 | No renderer dependency, DOM/WebGL behavior, source/layer/style semantics, or browser proof |
+| `NullMapRuntime` | Deterministic no-network runtime control surface | Exported implementation with finite state and disposal behavior | Not a renderer, adapter, evidence resolver, policy engine, release service, or publication path |
 | Scene Manifest | Scene composition reference | Referenced in candidate fixtures; README-only scene schema family | No accepted scene contract/schema/validator/runtime |
 | Layer Manifest | Released-layer-shaped reference in candidate profile | Reference fields exist; broader layer authorities are separate | Candidate does not authenticate the ref |
-| View State | Renderer-neutral view reference | Reference field in candidate profile | No 3D runtime integration established |
+| View State | Serializable renderer-neutral state | Camera/selection/snapshot structures exist through `MapRuntimePort` | No concrete 3D renderer translation established |
 | Representation fitness assessment | Explanatory-burden reference | Required ref in candidate profile | Resolution and authority not proved here |
 | EvidenceBundle | Evidence-support reference | Candidate/receipt arrays require refs | No live resolution or authenticity check in these validators |
 | SourceDescriptor | Source identity/role reference | Candidate requires refs | No live source resolution in these validators |
@@ -361,21 +388,22 @@ Use the terms below consistently. Maturity is part of the definition.
 | Released scene carrier | Public-safe scene bytes and sidecars | Published-lane README only | Exact lane has no scene release artifact |
 | Correction / rollback record | Separate authority governing public change | Candidate parity refs and receipt lineage fields | No released scene exists to correct or roll back |
 
-### 4.2 Reference, validation, and authority closure are different
+### 4.2 Reference, validation, seam, and authority closure are different
 
 ```text
 reference present
   != referenced object exists
   != referenced object validates
+  != renderer-neutral seam exists
+  != concrete renderer is admitted
   != evidence resolves
   != policy allows
   != review approves
   != release authorizes
-  != renderer can display
   != public use is safe
 ```
 
-The current fixture profiles intentionally stop near the left side of that chain.
+The current fixture profiles and runtime seam intentionally stop well before public authority.
 
 ### 4.3 Identity and replay
 
@@ -389,6 +417,8 @@ decision_id = "three-d-admission:" + first_24_hex(spec_hash)
 The focused tests prove deterministic fixture binding. They do not prove source-byte identity, renderer replay, output-byte reproducibility, scene parity on a device, or released-cache behavior.
 
 `RepresentationReceipt` separately carries method-spec and parameter hashes plus input/output digests. Its current validator checks local consistency, not end-to-end artifact retrieval.
+
+`NullMapRuntime` provides deterministic application-state replay for its bounded in-memory profile. It does not prove browser, WebGL, GPU, driver, tile, source, style, worker, plugin, or pixel determinism.
 
 [Back to top](#top)
 
@@ -499,6 +529,8 @@ It does not:
 - compare 2D and 3D output bytes or screenshots;
 - create a release, correction, rollback, cache entry, or public route.
 
+The renderer-neutral port and null runtime do not change that list. They establish application boundaries and deterministic no-network behavior only.
+
 ### 6.3 Proposed governed runtime flow
 
 ```mermaid
@@ -514,17 +546,18 @@ flowchart TD
   PAR["Verify 2D trust parity and correction/release state"]
   REV["Verify accountable review state"]
   ADM{"Admission outcome"}
-  ADP["KFM-owned renderer adapter"]
+  PORT["MapRuntimePort"]
+  ADP["KFM-owned concrete renderer adapter"]
   UI["Evidence Drawer + accessible finite state"]
   REC["RepresentationReceipt candidate"]
   DEN["ABSTAIN / DENY / ERROR<br/>no protected-detail leak"]
 
   REQ --> REL --> EVD --> SRC --> POL --> RBN --> FIT --> DEP --> PAR --> REV --> ADM
-  ADM -->|"admitted under accepted authority"| ADP --> UI --> REC
+  ADM -->|"admitted under accepted authority"| PORT --> ADP --> UI --> REC
   ADM -->|"not admitted"| DEN
 ```
 
-Every box after the request is **PROPOSED as an integrated runtime flow**. Existing fixture profiles prove only selected declaration rules.
+`MapRuntimePort` exists. Every other integrated transition in this diagram remains **PROPOSED** or **HOLD** unless separately proved. The existence of the port does not bypass admission, policy, review, release, or dependency gates.
 
 ### 6.4 Scene-level degradation remains a decision
 
@@ -569,7 +602,7 @@ flowchart LR
 | **CATALOG / TRIPLET** | Create discoverable evidence-bound asset/scene relationships | Scene catalog closure not established |
 | **RELEASE** | Join evidence, policy, review, integrity, correction, and rollback into an authorized transition | No released scene decision found |
 | **PUBLISHED** | Serve only released public-safe scene carriers | Exact scene lane is README-only and empty |
-| **RUNTIME** | Consume governed responses or immutable released carriers; render finite states | Browser 3D runtime not established |
+| **RUNTIME** | Consume governed responses or immutable released carriers through an admitted adapter; render finite states | Renderer-neutral port exists; concrete browser 3D runtime not established |
 
 > [!IMPORTANT]
 > A fixture whose refs look like `kfm:release:...` does not prove a release exists. Fixture references are synthetic test inputs unless resolved to current authority-bearing objects.
@@ -604,7 +637,7 @@ A future governed runtime should expose the existing KFM finite result vocabular
 | `DENY` | Rights, sensitivity, purpose, audience, precision, source terms, or policy prohibit exposure |
 | `ERROR` | A required service or validation operation failed; no unsafe fallback |
 
-The inactive candidate outcome is an internal engineering result. It is not itself a public runtime envelope.
+The inactive candidate outcome and null-runtime state are internal engineering results. Neither is itself a public runtime envelope.
 
 ### 8.3 No-leak negative states
 
@@ -775,7 +808,7 @@ A high-consequence synthetic scene may need both, plus evidence resolution, poli
 
 ### 10.5 No runtime-emission claim
 
-The repository does not establish a browser renderer that emits RepresentationReceipts during real scene rendering. The current receipt examples are fixtures. Any runtime-emission claim remains **PROPOSED** until code, integration tests, emitted artifacts, and operational evidence prove it.
+The repository does not establish a browser renderer that emits RepresentationReceipts during real scene rendering. The current receipt examples are fixtures. `NullMapRuntime` emits no release-significant representation receipt. Any real runtime-emission claim remains **PROPOSED** until code, integration tests, emitted artifacts, and operational evidence prove it.
 
 [Back to top](#top)
 
@@ -789,55 +822,60 @@ The repository does not establish a browser renderer that emits RepresentationRe
 
 | Surface | Current evidence |
 |---|---|
-| Browser app | Tooling and repository-grounded synthetic site composition; no renderer dependency |
-| Map package | `@kfm/maplibre` private `0.0.0` placeholder |
-| Shared package entry | `placeholder = true` only |
-| Explorer adapter | Comment-only |
-| `packages/maplibre-runtime/` | Absent at the pinned tree |
+| Browser app | Tooling and repository-grounded synthetic composition; no renderer dependency |
+| Map package | Private `@kfm/maplibre` version `0.0.0` with explicit renderer-neutral source exports and no `maplibre-gl` dependency |
+| Shared package entry | Exports `map-runtime-port` and `null-map-runtime` |
+| `MapRuntimePort` | Implemented renderer-neutral application contract with serializable state and finite errors |
+| `NullMapRuntime` | Implemented deterministic no-network control runtime; not a renderer |
+| Explorer adapter | Comment-only; no concrete implementation |
+| `packages/maplibre-runtime/` | Absent at the pinned tree and not an authorized peer package under ADR-0006 |
 | `packages/cesium/` | Absent at the pinned tree |
-| `docs/architecture/maplibre-3d.md` | Absent at the pinned tree |
-| Renderer-family ADR | ADR-0007 present but effectively `proposed` |
-| Real browser 3D dependencies | Not declared by Explorer or the current MapLibre package |
+| `docs/architecture/maplibre-3d.md` | Absent at the pinned tree; prior manuscript remains source lineage only |
+| Renderer-package boundary | ADR-0006 accepted architecture; reusable implementation and dependency owner is `packages/maplibre/` |
+| Renderer-family decision | ADR-0007 accepted architecture; MapLibre GL JS is the sole normal production browser renderer family |
+| Exact renderer version and dependency | Not admitted |
 | Real browser 3D boot | Not established |
+| Authenticated browser/long-session evidence | Not established; tracked separately under #2906 |
 | Real-device 3D tests | Not established |
 | Released 3D scene | Not established |
 
-### 11.2 What absence proves—and does not prove
+### 11.2 What accepted architecture proves—and does not prove
 
-The absence of a Cesium package proves only bounded path absence at the inspected revision. It does not:
+Accepted ADR-0006 and ADR-0007 prove the selected package/adapter ownership boundary and renderer family. They do not:
 
-- accept MapLibre as the sole renderer;
-- reject a future peer renderer;
-- prove repository-wide absence of every renderer reference;
-- prove that a runtime home has been decided;
-- prove dependency or migration closure.
+- add `maplibre-gl` or select a version;
+- implement `MapLibreAdapter`;
+- admit a plugin, protocol, worker, custom layer, or external asset;
+- prove browser, device, accessibility, performance, security, or long-session readiness;
+- resolve evidence, execute policy, approve review, release a scene, deploy a client, or publish an artifact.
 
-The presence of `packages/maplibre/` proves only a current placeholder package home. It does not accept ADR-0006 or ADR-0007 or implement the adapter.
+The absence of a Cesium package remains bounded path evidence. The accepted peer-renderer rule comes from ADR-0007, not from path absence.
+
+The presence of `MapRuntimePort` and `NullMapRuntime` proves one renderer-neutral seam and deterministic no-network behavior. It does not prove concrete renderer translation.
 
 ### 11.3 Current decision posture
 
 - **ADR-0029:** accepted placement authority.
-- **ADR-0005:** proposed shell decision.
-- **ADR-0006:** proposed adapter/import boundary.
-- **ADR-0007:** proposed renderer-family decision.
+- **ADR-0005:** current status requires separate verification; it does not alter the accepted package/renderer decisions recorded here.
+- **ADR-0006:** accepted adapter/import and dependency-ownership architecture; dependency and concrete implementation remain held.
+- **ADR-0007:** accepted renderer-family architecture; exact version, dependency, plugin, worker, runtime, release, deployment, and publication remain held or separately governed.
 
-This page applies accepted Directory Rules and records current bytes. It does not promote any proposed ADR.
+This page records those accepted decisions and current bytes. It does not admit their downstream implementation gates.
 
-### 11.4 Minimum renderer-admission closure
+### 11.4 Remaining renderer-admission closure
 
 Before claiming a functioning Planetary/3D runtime, equivalent evidence should establish:
 
-1. reviewed physical package and adapter home;
-2. accepted renderer-family and acquisition decision;
-3. exact dependency ownership and lock closure;
-4. complete import/dynamic-load/worker/protocol/plugin inventory;
-5. license, integrity, attestation, vulnerability, CSP, and browser-support review;
-6. KFM-owned renderer-neutral port and one tested adapter;
-7. released public-safe fixture assets;
-8. real selection-to-Evidence-Drawer parity;
-9. Reality Boundary Note and RepresentationReceipt integration;
-10. negative-state, accessibility, performance, correction, withdrawal, and rollback behavior;
-11. human review without publication overclaim.
+1. exact dependency version, integrity, provenance, license, and lock closure in the accepted owning manifest;
+2. complete import/dynamic-load/worker/protocol/plugin inventory;
+3. vulnerability, CSP, browser-support, accessibility, and rollback review;
+4. one concrete `MapLibreAdapter` behind the existing `MapRuntimePort`;
+5. released public-safe fixture assets;
+6. authenticated browser and long-session probes under #2906 or its governed successor;
+7. real selection-to-Evidence-Drawer parity;
+8. Reality Boundary Note and RepresentationReceipt integration;
+9. negative-state, accessibility, performance, correction, withdrawal, and rollback behavior;
+10. human review without publication overclaim.
 
 [Back to top](#top)
 
@@ -857,8 +895,8 @@ Before claiming a functioning Planetary/3D runtime, equivalent evidence should e
 | **Style-only hiding of sensitive geometry** | Protected bytes still reach the client | Upstream transform/exclusion plus receipt and policy |
 | **Numeric sensitivity tier treated as complete policy** | Rights, purpose, audience, sovereignty, and composition disappear | Obligation-aware policy and accountable review |
 | **Fixture plugin declarations treated as installed dependencies** | Synthetic versions/digests/refs become supply-chain proof | Actual manifest, lock, SBOM, attestation, license, and vulnerability evidence required |
-| **Documentation says “sole renderer,” therefore accepted** | Prose bypasses ADR state | ADR index remains controlling for decision status |
-| **Missing package interpreted as rejected technology** | Path absence becomes governance decision | Bound absence; require explicit reviewed disposition |
+| **Accepted renderer ADR treated as dependency admission** | Architecture choice silently bypasses version, supply-chain, implementation, and browser-proof gates | ADR-0006/0007 non-effects plus separate dependency/runtime admission |
+| **Port or null runtime described as a working renderer** | Boundary/test behavior becomes browser-runtime proof | Exact type and capability language; concrete adapter and #2906 proof remain required |
 | **Scene README interpreted as released scene** | Intended directory boundary becomes publication proof | Exact inventory shows README + `.gitkeep` only |
 | **Source product page interpreted as active ingest** | Documentation becomes connector/runtime proof | Require source descriptor, activated connector, receipts, pipeline, and released artifacts |
 | **Negative state leaks protected reason detail** | Denial itself becomes an exposure channel | Fixed public-safe reasons and no candidate-value echo |
@@ -885,20 +923,21 @@ Before claiming a functioning Planetary/3D runtime, equivalent evidence should e
 | RepresentationReceipt schema | Closed receipt shape | Truth, policy, review, release, or public suitability |
 | Receipt validator/tests | Digests, canonical arrays, fidelity, loss, note ref, time, lineage, authority boundary | Output-byte reproducibility or public release |
 | Receipt workflow | Focused no-network validation | Runtime receipt emission |
+| MapRuntimePort/NullMapRuntime tests | Renderer-neutral state, validation, deterministic null behavior, disposal, and consumer boundary | MapLibre import, WebGL/DOM behavior, browser support, 3D rendering, release, or public operation |
 | Scene schema README | Placement guardrail | Accepted scene machine schema |
 | Published scene README | Lifecycle/publication boundary | Existence of any release |
 
-This documentation-only update does not execute those tests. It reports repository-present proof at the pinned revision and relies on hosted PR checks only for checks actually triggered at this head.
+This documentation-only update does not execute those implementation tests locally. It reports repository-present proof at the pinned revision and relies on hosted PR checks only for checks actually triggered at the candidate head.
 
 ### 13.2 Graduation gates
 
 #### P0 — Authority and physical closure
 
-- Decide renderer-family and adapter/package authority without implying acceptance from scaffolds.
-- Reconcile `packages/maplibre/` with proposal-era `packages/maplibre-runtime/` references.
+- **CONFIRMED closed for architecture direction:** ADR-0006 and ADR-0007 accept the package/adapter seam and renderer family.
+- Preserve `packages/maplibre/` as the single reusable package home; do not create `packages/maplibre-runtime/` as a peer authority.
+- Reconcile stale 3D documentation against accepted decisions and merged seam evidence.
 - Define accepted scene, Reality Boundary Note, admission-policy, and released-carrier authority boundaries.
 - Assign accountable owner/reviewer roles; do not invent identities.
-- Reconcile stale 3D documentation and remove unsupported “settled” claims.
 - Preserve no public internal-store path and zero-effect fixture posture.
 
 #### P1 — One dependency-closed no-network representation slice
@@ -908,15 +947,16 @@ This documentation-only update does not execute those tests. It reports reposito
 - Validate one scene-shaped manifest, one note, one admission candidate, one representation receipt, and one finite UI projection.
 - Prove 2D evidence/drawer/correction/release/sensitivity parity.
 - Prove sensitive and authority-overclaim negatives.
+- Use the current `MapRuntimePort` and `NullMapRuntime` without installing or booting a renderer merely to claim closure.
 - Prove deterministic replay and no network/model calls.
-- Do not install or boot a renderer merely to claim closure.
 
 #### P2 — Controlled renderer admission and browser proof
 
-- Accept exact dependency ownership, versions, lock, worker/protocol strategy, CSP, browser matrix, license, SBOM, attestation, and vulnerability posture.
-- Implement one KFM-owned adapter behind a renderer-neutral port.
+- Admit exact dependency ownership, versions, lock, worker/protocol strategy, CSP, browser matrix, license, SBOM, attestation, and vulnerability posture.
+- Implement one KFM-owned `MapLibreAdapter` behind the existing renderer-neutral port.
 - Render one released-public-safe synthetic fixture on supported browsers/device classes.
 - Prove selection-to-drawer continuity, accessible negative states, time/selection continuity, performance limits, no-leak behavior, receipt emission, correction propagation, cache invalidation, and rollback replay.
+- Satisfy authenticated browser and long-session evidence requirements without collapsing them into release or publication authority.
 - Keep source activation, domain-scale release, deployment, and publication as separately governed transitions.
 
 ### 13.3 Validation commands owned by current profiles
@@ -932,17 +972,19 @@ python -m unittest discover \
 python tools/validators/validate_representation_receipt.py --fixtures
 ```
 
-These commands validate current fixture profiles. They do not boot a browser renderer or approve public use.
+These commands validate current fixture profiles. They do not boot a browser renderer or approve public use. The MapRuntimePort slice has its own TypeScript and policy/acquisition validation surfaces; exact candidate-head execution belongs to the associated PR checks.
 
 ### 13.4 Documentation rollback
 
 Restore the prior target blob:
 
 ```text
-f95061c8add6fad1910b7acc8c65c523869414ed
+41e26697a05c9479fc78b43d5112279d9125a492
 ```
 
-Because this change modifies one architecture document only, rollback requires no:
+The original v2.0 predecessor remains recorded historically as blob `f95061c8add6fad1910b7acc8c65c523869414ed`.
+
+Because this change modifies existing documentation only, rollback requires no:
 
 - data migration;
 - source deactivation;
@@ -981,8 +1023,11 @@ A future renderer/scene implementation needs a separate rollback plan covering:
 - [Architecture folder README](./README.md) — explains the cross-cutting documentation responsibility.
 - [Directory Rules v2](../doctrine/directory-rules.md) — accepted placement authority through ADR-0029.
 - [ADR index](../adr/INDEX.md) — current decision inventory and status crosswalk.
-- [ADR-0007](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — proposed renderer-family decision.
-- [Map Shell](./map-shell.md) — current repository-grounded browser composition and renderer HOLD.
+- [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) — accepted package-owned port/adapter and dependency-acquisition boundary.
+- [ADR-0007](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) — accepted renderer-family architecture with downstream dependency/runtime holds.
+- [Map Shell](./map-shell.md) — browser composition and renderer/runtime boundary; recheck its own evidence snapshot before relying on current-state details.
+- [REST-Orchestrated 3D Derivatives and LLM-Ingestible PDF Packaging](./rest-orchestrated-3d-derivatives.md) — narrow subordinate architecture companion; no route, schema, renderer, source, release, deployment, or publication effect.
+- [REST/3D source map](../intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md) — noncanonical source lineage, PDF audit, and page-level verification record.
 - [Planetary/3D domain README](../domains/planetary-3d/README.md) — domain-lineage companion; current-state and renderer claims require reconciliation against this page and current repo evidence.
 
 ### 14.2 Current bounded implementation
@@ -1000,28 +1045,30 @@ A future renderer/scene implementation needs a separate rollback plan covering:
 - [RepresentationReceipt tests](../../tests/validators/test_validate_representation_receipt.py)
 - [RepresentationReceipt workflow](../../.github/workflows/representation-receipt.yml)
 - [Reality Boundary Note schema](../../schemas/contracts/v1/evidence/reality_boundary_note.schema.json)
+- [MapRuntimePort](../../packages/maplibre/src/map-runtime-port.ts)
+- [NullMapRuntime](../../packages/maplibre/src/null-map-runtime.ts)
+- [MapLibre package entry](../../packages/maplibre/src/index.ts)
 - [Scene schema-family guardrail](../../schemas/contracts/v1/scene/README.md)
 - [Published scene lane guardrail](../../data/published/layers/scene/README.md)
 
-### 14.3 Renderer and source scaffolds
+### 14.3 Renderer and source boundaries
 
-- [Explorer package manifest](../../apps/explorer-web/package.json)
-- [Explorer MapLibre adapter placeholder](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
-- [MapLibre package manifest](../../packages/maplibre/package.json)
-- [MapLibre package placeholder entry](../../packages/maplibre/src/index.ts)
+- [Explorer package manifest](../../apps/explorer-web/package.json) — no concrete renderer dependency.
+- [Explorer MapLibre adapter boundary](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) — comment-only; no concrete implementation.
+- [MapLibre package manifest](../../packages/maplibre/package.json) — accepted owning package, explicit source exports, no `maplibre-gl` dependency.
 - [USGS 3DEP source-planning page](../sources/catalog/usgs/3dep-elevation.md) — source-role and datum guidance; not active-source or release proof.
 
 ### 14.4 Known adjacent-document drift
 
 | Document | Drift | Required treatment |
 |---|---|---|
-| [`maplibre.md`](./maplibre.md) | Treats missing `maplibre-3d.md`, missing `packages/maplibre-runtime/`, sole-renderer disposition, and Cesium retirement as settled | Separate same-path repository-grounded modernization |
-| [`map-master/2D_3D_PARITY.md`](./map-master/2D_3D_PARITY.md) | Treats Cesium as the 3D peer and contains dual-renderer sync assumptions | Preserve as design lineage until reviewed disposition; do not silently apply as current behavior |
+| [`maplibre.md`](./maplibre.md) | May retain pre-ADR or pre-#3433 renderer/package assumptions | Separate same-path repository-grounded modernization; do not expand this PR into a general MapLibre rewrite |
+| [`map-master/2D_3D_PARITY.md`](./map-master/2D_3D_PARITY.md) | Treats Cesium as the 3D peer and contains dual-renderer sync assumptions | Preserve as design lineage until reviewed disposition; accepted ADR-0007 controls current renderer-family architecture |
 | [Planetary/3D domain README](../domains/planetary-3d/README.md) | Says repo not mounted and repeats settled renderer/path claims | Separate same-path reconciliation |
-| Scene schema-family README | Candidate list predates current map-candidate and receipt profiles | Reconcile only with authority and overlap review; do not create parallel scene schemas |
+| Scene schema-family README | Candidate list predates current map-candidate, runtime-seam, and receipt profiles | Reconcile only with authority and overlap review; do not create parallel scene schemas |
 | Source and doctrine pages | Some carry stale Directory Rules editions, package homes, exact renderer versions, or unaccepted policy paths | Treat current repo and accepted ADR status as controlling for current-state claims |
 
-The absence of `docs/architecture/maplibre-3d.md` means the supplied MapLibre 3D manuscript remains source lineage rather than a current repository authority. Creating or restoring that path is outside this update and requires overlap, decision, placement, and migration review.
+The absence of `docs/architecture/maplibre-3d.md` means the supplied MapLibre 3D manuscript remains source lineage rather than a current repository authority. Creating or restoring that path remains outside this update and requires overlap, decision, placement, and migration review.
 
 ---
 
@@ -1030,8 +1077,9 @@ The absence of `docs/architecture/maplibre-3d.md` means the supplied MapLibre 3D
 | Version | Date | Change |
 |---|---|---|
 | `v1` | 2026-05-25 | Proposal-era Planetary/3D architecture written without mounted repository evidence |
-| `v2.0` | 2026-08-19 | Repository-grounded current-state reconciliation; records inactive 3D-admission and representation-receipt proof, Reality Boundary Note shape, scene and renderer HOLDs, proposed ADR state, exact non-effects, validation, graduation, drift, and rollback |
+| `v2.0` | 2026-08-19 | Repository-grounded current-state reconciliation; records inactive 3D-admission and representation-receipt proof, Reality Boundary Note shape, scene and renderer HOLDs, then-current ADR state, exact non-effects, validation, graduation, drift, and rollback |
+| `v2.1` | 2026-08-23 | Reconciles merged MapRuntimePort/NullMapRuntime evidence, accepted ADR-0006/0007 architecture, and REST/3D source-lineage/companion relationships while preserving all dependency, runtime, source, policy, review, release, deployment, and publication holds |
 
-<sub>Last evidence review: **2026-08-19** · Base: `main@7ef1597779774d80346f81ecd8104b720797c587` · Prior blob: `f95061c8add6fad1910b7acc8c65c523869414ed` · Release/publication effect: **none**.</sub>
+<sub>Last evidence review: **2026-08-23** · Base: `main@d760932e3be8f2cfedd7ece7e9a6f53aa0f18226` · Prior blob: `41e26697a05c9479fc78b43d5112279d9125a492` · Release/publication effect: **none**.</sub>
 
 [Back to top](#top)
