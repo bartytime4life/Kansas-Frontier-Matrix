@@ -10,15 +10,24 @@ name: object-family-register
   pull_request:
     paths:
       - ".github/workflows/**"
+      - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
       - "docs/registers/OBJECT_FAMILY.md"
       - "fixtures/contracts/**"
+      - "fixtures/data/layer_manifest/**"
+      - "fixtures/domains/soil/domain_validation_report/**"
+      - "fixtures/release/promotion_receipt/**"
+      - "fixtures/release/release_manifest/**"
+      - "fixtures/release/rollback_card/**"
+      - "fixtures/runtime/layer_manifest_admission/**"
       - "packages/**"
       - "policies/**"
       - "policy/**"
       - "schemas/contracts/**"
       - "tests/**"
+      - "tools/proof_pack/assemble_proof_pack.py"
+      - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
   push:
@@ -26,15 +35,24 @@ name: object-family-register
       - main
     paths:
       - ".github/workflows/**"
+      - "apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"
       - "contracts/**"
       - "control_plane/object_family_register.yaml"
       - "docs/registers/OBJECT_FAMILY.md"
       - "fixtures/contracts/**"
+      - "fixtures/data/layer_manifest/**"
+      - "fixtures/domains/soil/domain_validation_report/**"
+      - "fixtures/release/promotion_receipt/**"
+      - "fixtures/release/release_manifest/**"
+      - "fixtures/release/rollback_card/**"
+      - "fixtures/runtime/layer_manifest_admission/**"
       - "packages/**"
       - "policies/**"
       - "policy/**"
       - "schemas/contracts/**"
       - "tests/**"
+      - "tools/proof_pack/assemble_proof_pack.py"
+      - "tools/proof_pack/proof_pack_check.py"
       - "tools/validators/**"
       - "data/receipts/generated/genrec-object-family-register-*.json"
   workflow_dispatch:
@@ -104,7 +122,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-object-family-register-mrts-03-docgraph-successor-20260822.json \
+            data/receipts/generated/genrec-object-family-register-workflow-watch-20260822.json \
             --repo-root .
 
       - name: Record validation boundary

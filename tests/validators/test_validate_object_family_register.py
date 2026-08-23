@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import fnmatch
 import json
-import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
 from jsonschema import Draft202012Validator
 
 from tools.validators.control_plane.validate_object_family_register import (
@@ -32,10 +32,11 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
 
     def test_workflow_watches_every_declared_catalog_surface(self) -> None:
         register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
-        workflow = (
-            REPO_ROOT / ".github/workflows/object-family-register.yml"
-        ).read_text(encoding="utf-8")
-        patterns = re.findall(r'^\s+- "([^"]+)"\s*$', workflow, flags=re.MULTILINE)
+        workflow = yaml.safe_load(
+            (REPO_ROOT / ".github/workflows/object-family-register.yml").read_text(
+                encoding="utf-8"
+            )
+        )
         path_roles = (
             "contract_paths",
             "schema_paths",
@@ -50,14 +51,16 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
             for role in path_roles:
                 for path in entry[role]:
                     with self.subTest(family_id=entry["family_id"], role=role, path=path):
-                        matched = sum(
-                            1 for pattern in patterns if fnmatch.fnmatchcase(path, pattern)
-                        )
-                        self.assertGreaterEqual(
-                            matched,
-                            2,
-                            f"{path} is not watched by both pull_request and push filters",
-                        )
+                        probe = path if Path(path).suffix else f"{path}/__kfm_watch_probe__"
+                        for event in ("pull_request", "push"):
+                            patterns = workflow["on"][event]["paths"]
+                            self.assertTrue(
+                                any(
+                                    fnmatch.fnmatchcase(probe, pattern)
+                                    for pattern in patterns
+                                ),
+                                f"{path} is not watched recursively by the {event} filter",
+                            )
 
     def test_current_catalog_has_exact_milestone_family_set(self) -> None:
         register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
