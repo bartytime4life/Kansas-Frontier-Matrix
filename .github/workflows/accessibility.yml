@@ -1,9 +1,11 @@
-# KFM CI workflow scaffold: accessibility
-# Status: PROPOSED greenfield scaffold; governance-visible but non-enforcing.
+# KFM CI workflow: accessibility
+# Status: PARTIAL enforcement. The keyboard-navigation job executes a bounded
+# Explorer Web browser smoke; the axe job remains an explicit readiness hold.
 #
 # Responsibility:
 # - Preserve the stable `accessibility`, `axe`, and `keyboard-navigation` check
-#   surfaces while the repository lacks reviewed executable accessibility commands.
+#   surfaces while enforcing the repository-owned keyboard/focus fixtures that
+#   already exist and keeping broader automated-rule coverage visibly held.
 # Authority:
 # - This workflow is orchestration only. It does not prove WCAG conformance,
 #   approve UI behavior, authorize release, or publish any artifact.
@@ -12,22 +14,26 @@
 #   branch-protection dependencies are not verified. `workflow_dispatch` permits
 #   an explicit maintainer run.
 # Untrusted-code posture:
-# - No repository checkout or pull-request code execution occurs in this scaffold.
+# - Pull requests execute submitted repository code with read-only contents
+#   permission and no secrets, write scopes, OIDC, deployment, or publication.
 # Permissions:
-# - All GITHUB_TOKEN permissions are disabled.
+# - The workflow has read-only contents permission for checkout.
 # Network and secrets:
-# - No actions, dependency installation, external endpoints, credentials, or
-#   repository secrets are used.
+# - Locked dependency installation may use the package registry. The browser
+#   smoke uses local Vite fixtures only and no source system, model provider,
+#   private endpoint, credential, or repository secret.
 # Outputs:
-# - GitHub warnings and step summaries only; no uploaded artifacts, receipts,
+# - Job results, logs, and step summaries only; no uploaded artifacts, receipts,
 #   proofs, release records, or public-surface changes.
 # Outcome:
-# - Jobs report WORKFLOW_SKIPPED_EXPLICIT and a readiness HOLD. A green scaffold
-#   run must not be represented as an accessibility pass.
+# - `axe` reports WORKFLOW_SKIPPED_EXPLICIT and a readiness HOLD.
+# - `keyboard-navigation` passes only when the named fixture journeys pass.
+# - Neither outcome is a WCAG, whole-app, assistive-technology, release, or
+#   publication claim.
 # Graduation:
-# - Replace each reporting step only after a repository-owned command,
-#   deterministic public-safe fixtures, positive and negative tests, no-network
-#   posture, reviewer ownership, and rollback/disable path are verified.
+# - Replace the axe reporting step only after a repository-owned command,
+#   deterministic public-safe fixtures, positive and negative tests, a reviewed
+#   dependency/ruleset, reviewer ownership, and rollback/disable path are verified.
 name: accessibility
 
 on:
@@ -37,7 +43,8 @@ on:
       - main
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: read
 
 concurrency:
   group: accessibility-${{ github.workflow }}-${{ github.ref }}
@@ -59,8 +66,8 @@ jobs:
             echo
             echo "**Readiness:** \`WORKFLOW_HOLD\`"
             echo
-            echo "No reviewed repository-owned axe command, deterministic fixture set,"
-            echo "or executable browser accessibility harness is established."
+            echo "No reviewed repository-owned axe command, pinned ruleset, exclusion"
+            echo "policy, or representative state matrix is established."
             echo
             echo "This scaffold did not check accessibility and did not emit a proof,"
             echo "receipt, release decision, or publication artifact."
@@ -70,26 +77,67 @@ jobs:
           echo "TODO axe: add a reviewed repository-owned command and deterministic public-safe fixtures before graduation."
 
   keyboard-navigation:
+    name: keyboard-navigation
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      COREPACK_ENABLE_STRICT: "1"
+      KFM_NO_NETWORK: "1"
+      NODE_VERSION: "22"
+      TZ: UTC
     steps:
-      - name: Report keyboard-navigation readiness hold
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: Install locked workspace dependencies
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm install --frozen-lockfile
+
+      - name: Run bounded Explorer keyboard and focus smoke
+        run: >-
+          pnpm --filter explorer-web exec playwright test
+          --config=playwright.config.ts
+          tests/browser/citation-pill.spec.ts
+          tests/browser/evidence-drawer.spec.ts
+          tests/browser/evidence-tooltip.spec.ts
+          tests/browser/focus-composed-claim.spec.ts
+          tests/browser/map-evidence-drawer.spec.ts
+          tests/browser/map-runtime-trust-status.spec.ts
+          tests/browser/time-banner.spec.ts
+          tests/browser/workspace-navigation.spec.ts
+
+      - name: Record keyboard-navigation boundary
+        if: always()
         run: |
           set -euo pipefail
 
           {
             echo "## Accessibility — keyboard navigation"
             echo
-            echo "**Outcome:** \`WORKFLOW_SKIPPED_EXPLICIT\`"
+            echo "**Result:** \`${{ job.status }}\`"
             echo
-            echo "**Readiness:** \`WORKFLOW_HOLD\`"
+            echo "**Scope:** eight deterministic Explorer Web Playwright specifications"
+            echo "covering native navigation, keyboard activation, focus entry and"
+            echo "restoration, Escape dismissal, a keyboard-operable time slider,"
+            echo "text-first runtime trust states, finite negative states, and"
+            echo "protected-detail suppression."
             echo
-            echo "No reviewed repository-owned keyboard/focus command, deterministic"
-            echo "fixture set, or executable browser navigation harness is established."
+            echo "**Holds:** no axe/ruleset scan, manual assistive-technology matrix,"
+            echo "whole-app focus-order audit, contrast/zoom/reflow/forced-color proof,"
+            echo "reduced-motion audit, non-map parity completion, or WCAG conformance."
             echo
-            echo "This scaffold did not check keyboard operation, focus order, focus"
-            echo "visibility, focus restoration, escape behavior, or non-map parity."
+            echo "**Authority:** CI evidence only; no source, evidence, policy, release,"
+            echo "deployment, publication, or repository-setting authority."
           } >> "${GITHUB_STEP_SUMMARY}"
-
-          echo "::warning title=Keyboard-navigation check not implemented::WORKFLOW_HOLD — this scaffold did not validate keyboard or focus behavior."
-          echo "TODO keyboard-navigation: add a reviewed repository-owned command and deterministic public-safe fixtures before graduation."
