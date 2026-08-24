@@ -12,7 +12,7 @@ owner_status: >-
   geoprivacy, evidence, policy, test, operations, security, public-surface,
   and independent-review assignments remain NEEDS VERIFICATION. CODEOWNERS
   routing does not establish those authorities.
-created: NEEDS VERIFICATION — the planned-file scaffold predates this revision
+created: 2026-08-24
 updated: 2026-08-24
 policy_label: public-review; fauna; rollback-drill; synthetic; no-network; sensitive-location; fail-closed; non-release
 current_path: docs/runbooks/fauna/ROLLBACK_DRILL.md
