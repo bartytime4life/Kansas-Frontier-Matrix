@@ -9,7 +9,7 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Field | Current status |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot for this revision | `main@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275` |
+| Evidence snapshot for this revision | `main@66489ef991cf015d1dd697fe965981a1da171897` |
 | Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
 | Document role | Root contribution guide |
 | Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
@@ -133,6 +133,29 @@ A revision should:
 - preserve IDs, anchors, public links, and compatibility surfaces unless the change intentionally migrates them;
 - state conflicts rather than flattening them;
 - avoid turning a polished document into implementation proof.
+
+### 4. Use the optional proof rhythm when it helps
+
+For a bounded contribution that crosses several trust responsibilities, the
+following sequence can organize the work and its handoffs:
+
+| Session | Question | Handoff to existing owners |
+|---|---|---|
+| `FRAME` | What current claim, place/time scope, user value, owner, non-goals, and stop conditions bound the work? | Task contract, issue, or pull-request scope |
+| `TRACE` | Which source roles, rights, sensitivity, identity, temporal model, and evidence target control the claim? | Existing source, evidence, rights, sensitivity, identity, and temporal surfaces |
+| `PROVE` | Which contract, schema, fixture, validator, policy dependency, and positive and negative cases establish the bounded behavior? | Responsibility-owning contracts, schemas, policy, fixtures, tests, and receipts |
+| `SHOW` | How will a governed API, map, drawer, or Focus interaction keep `ABSTAIN`, `DENY`, `HOLD`, stale, conflict, and correction states visible? | Existing carrier and public-safe interaction surfaces |
+| `REHEARSE` | Which human review, dry run, correction, rollback, unresolved items, and next decision complete the handoff? | Existing review, release, correction, rollback, and continuation records |
+
+This rhythm is optional contributor organization, not a KFM state machine. It
+does not rename the lifecycle, create a policy or gate outcome, prove a claim,
+or authorize review, merge, promotion, release, deployment, publication, or
+public use. A session may be omitted when it does not apply, but the owning
+responsibility and any unresolved risk must remain explicit.
+
+Proposal provenance: *KFM Living Compass Working Edition 1.0*, `TRAIL 12 - A
+five-session mission rhythm`, reconciled through the
+[circled-source distinctive-delta map](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#32-five-session-contributor-rhythm).
 
 ## Choose the owning responsibility root
 
