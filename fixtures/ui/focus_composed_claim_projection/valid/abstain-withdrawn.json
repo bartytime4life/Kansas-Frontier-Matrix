@@ -1,0 +1,59 @@
+{
+  "profile": "kfm.explorer.focus-composed-claim.public-safe.v1",
+  "request_id": "request:focus:withdrawn-evidence-001",
+  "claim_id": "claim:synthetic:withdrawn-evidence-001",
+  "outcome": "ABSTAIN",
+  "reason_code": "REQUIRED_DEPENDENCY_UNRESOLVED",
+  "closure_id": "kfm:closure:synthetic:withdrawn-evidence-001",
+  "closure_outcome": "ABSTAIN",
+  "answer": null,
+  "evidence_refs": [],
+  "citations": [],
+  "resolved_roles": [],
+  "unavailable_roles": [
+    "ENDORSED_SUMMARY"
+  ],
+  "limitations": [
+    "The previously released synthetic summary was withdrawn and cannot support this claim.",
+    "Fixture-only demonstration; no live source, rollback execution, release, or publication action occurs."
+  ],
+  "policy": "ABSTAIN",
+  "review": "REVIEWED",
+  "release": "WITHDRAWN",
+  "freshness": "UNKNOWN",
+  "ai_receipt_ref": null,
+  "evidence_drawer": {
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "id": "kfm:ui:evidence-drawer:focus-withdrawn-evidence-001",
+    "outcome": "ABSTAIN",
+    "reason_code": "WITHDRAWN_EVIDENCE",
+    "title": "Synthetic withdrawn evidence",
+    "summary": "WITHDRAWN_PRIVATE_DIAGNOSTIC_CANARY_483e12",
+    "evidence_refs": [],
+    "citations": [],
+    "limitations": [
+      "The previously released synthetic summary was withdrawn and cannot support this claim."
+    ],
+    "trust_state": {
+      "source_role": "official",
+      "policy": "ABSTAIN",
+      "review": "REVIEWED",
+      "release": "WITHDRAWN",
+      "freshness": "UNKNOWN",
+      "correction": "NONE"
+    },
+    "history": {
+      "negative_outcomes": [
+        {
+          "evidence_ref": "kfm:evidence:synthetic:withdrawn-soil-summary-001",
+          "state": "WITHDRAWN",
+          "reason_code": "WITHDRAWN_EVIDENCE",
+          "recorded_at": "2026-08-21T00:00:00Z",
+          "visible_in_runtime": true,
+          "resolvable_as_current": false
+        }
+      ],
+      "corrections": []
+    }
+  }
+}

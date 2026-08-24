@@ -2,6 +2,8 @@ import {
   EVIDENCE_DRAWER_PROJECTION_PROFILE,
   type EvidenceDrawerCitation,
   type EvidenceDrawerReasonCode,
+  type GovernedEvidenceDrawerProjection,
+  parseEvidenceDrawerProjection,
 } from "../../adapters/GovernedClient";
 import { resolveEvidenceDrawer, type EvidenceDrawerViewModel } from "../evidence_drawer";
 import {
@@ -289,7 +291,17 @@ export function makeNegativeDrawerProjection(
   id: string,
   outcome: "ABSTAIN" | "DENY" | "ERROR",
   reasonCode: EvidenceDrawerReasonCode,
+  governedProjection?: GovernedEvidenceDrawerProjection,
 ): Readonly<Record<string, unknown>> {
+  const governedState =
+    governedProjection !== undefined &&
+    governedProjection.outcome === outcome &&
+    governedProjection.reasonCode === reasonCode
+      ? governedProjection
+      : null;
+  const trustState = governedState?.trustState ?? null;
+  const history = governedState?.history ?? null;
+
   return Object.freeze({
     profile: EVIDENCE_DRAWER_PROJECTION_PROFILE,
     id: `kfm:drawer:focus:${id}`,
@@ -307,20 +319,42 @@ export function makeNegativeDrawerProjection(
         : outcome === "DENY"
           ? "Policy does not permit this evidence detail to be shown."
           : "The governed evidence service could not complete the request.",
-    evidence_refs: Object.freeze([]),
+    evidence_refs: Object.freeze(
+      governedState === null ? [] : [...governedState.evidenceRefs],
+    ),
     citations: Object.freeze([]),
     limitations: Object.freeze(["No unsupported claim is shown."]),
     trust_state: Object.freeze({
-      source_role: "context",
-      policy: outcome,
-      review: "NOT_APPLICABLE",
-      release: "UNRELEASED",
-      freshness: "UNKNOWN",
-      correction: "NONE",
+      source_role: trustState?.sourceRole ?? "context",
+      policy: trustState?.policy ?? outcome,
+      review: trustState?.review ?? "NOT_APPLICABLE",
+      release: trustState?.release ?? "UNRELEASED",
+      freshness: trustState?.freshness ?? "UNKNOWN",
+      correction: trustState?.correction ?? "NONE",
     }),
     history: Object.freeze({
-      negative_outcomes: Object.freeze([]),
-      corrections: Object.freeze([]),
+      negative_outcomes: Object.freeze(
+        history?.negativeOutcomes.map((item) =>
+          Object.freeze({
+            evidence_ref: item.evidenceRef,
+            state: item.state,
+            reason_code: item.reasonCode,
+            recorded_at: item.recordedAt,
+            visible_in_runtime: true,
+            resolvable_as_current: false,
+          }),
+        ) ?? [],
+      ),
+      corrections: Object.freeze(
+        history?.corrections.map((item) =>
+          Object.freeze({
+            prior_evidence_ref: item.priorEvidenceRef,
+            active_evidence_ref: item.activeEvidenceRef,
+            status: item.status,
+            recorded_at: item.recordedAt,
+          }),
+        ) ?? [],
+      ),
     }),
   });
 }
@@ -376,6 +410,8 @@ export function parseFocusComposedClaimProjection(
     return null;
   }
 
+  const governedDrawer = parseEvidenceDrawerProjection(input.evidence_drawer);
+  if (!governedDrawer.ok) return null;
   const parsedEvidenceDrawer = resolveEvidenceDrawer(input.evidence_drawer);
   if (
     parsedEvidenceDrawer.code === "INVALID_PAYLOAD" ||
@@ -413,6 +449,7 @@ export function parseFocusComposedClaimProjection(
           input.claim_id,
           parsedEvidenceDrawer.outcome,
           parsedEvidenceDrawer.code as EvidenceDrawerReasonCode,
+          governedDrawer.payload,
         );
   const evidenceDrawer =
     parsedEvidenceDrawer.outcome === "ANSWER"
