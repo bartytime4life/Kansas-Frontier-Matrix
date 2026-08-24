@@ -16,10 +16,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
 CASES_PATH = REPO_ROOT / "fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json"
 PROFILE = "kfm.western-kansas-observation-assessment.v1"
-SCOPE = "synthetic-no-network-observation-join-claim-assessment"
+SCOPE = "synthetic-no-network-observation-forecast-join-claim-assessment"
 
 DIRECT_SUPPORT = {
     "DROUGHT_CLASSIFICATION": {"USDM"},
+    "DROUGHT_OUTLOOK": {"CPC_DROUGHT_OUTLOOK"},
     "STREAMFLOW_CONDITION": {"USGS_STREAMFLOW"},
     "GROUNDWATER_CONDITION": {"KGS_GROUNDWATER"},
     "EVAPORATIVE_DEMAND": {"PRECIP_EDDI"},
@@ -33,6 +34,9 @@ ERROR_CODES = frozenset(
         "SCHEMA_INVALID",
         "PROFILE_INVALID",
         "TEMPORAL_ORDER_INVALID",
+        "FORECAST_FIELDS_REQUIRED",
+        "FORECAST_ROLE_INVALID",
+        "FORECAST_PREDECESSOR_RELATION_INVALID",
         "CORRECTION_LINK_REQUIRED",
         "SUPERSESSION_LINK_REQUIRED",
         "SOURCE_SUPPORT_ERASURE_DENIED",
@@ -47,6 +51,8 @@ ABSTAIN_CODES = frozenset(
     {
         "MISSING_OBSERVATION",
         "SOURCE_SUPERSEDED",
+        "FORECAST_NOT_YET_VALID",
+        "FORECAST_CANNOT_PROVE_OBSERVED_CONDITION",
         "USDM_CANNOT_PROVE_GROUNDWATER",
         "STREAMFLOW_CANNOT_PROVE_GROUNDWATER",
         "CONTEXT_CANNOT_PROVE_AGRICULTURAL_LOSS",
@@ -111,6 +117,50 @@ def candidate_from_case(base_candidate: Mapping[str, Any], case: Mapping[str, An
     return candidate
 
 
+def _forecast_reasons(source: Mapping[str, Any], analysis_time: datetime) -> list[str]:
+    reasons: list[str] = []
+    family = source["source_family"]
+    role = source.get("source_role")
+    forecast_fields = (
+        source.get("forecast_issue_time"),
+        source.get("forecast_valid_start"),
+        source.get("forecast_valid_end"),
+    )
+
+    if family != "CPC_DROUGHT_OUTLOOK":
+        if role == "FORECAST" or any(value is not None for value in forecast_fields):
+            reasons.append("FORECAST_ROLE_INVALID")
+        return reasons
+
+    if role != "FORECAST" or any(value is None for value in forecast_fields):
+        reasons.append("FORECAST_FIELDS_REQUIRED")
+        return reasons
+
+    issue = _instant(source["forecast_issue_time"])
+    valid_start = _instant(source["forecast_valid_start"])
+    valid_end = _instant(source["forecast_valid_end"])
+    publication = _instant(source["publication_time"])
+    retrieval = _instant(source["retrieval_time"])
+    observed_end = _instant(source["observation_end"])
+    if not (observed_end <= issue <= publication <= retrieval <= analysis_time):
+        reasons.append("TEMPORAL_ORDER_INVALID")
+    if not (issue <= valid_start <= valid_end):
+        reasons.append("TEMPORAL_ORDER_INVALID")
+
+    predecessor_ref = source.get("predecessor_ref")
+    predecessor_relation = source.get("predecessor_relation")
+    if predecessor_ref is not None and predecessor_relation not in {"SUCCESSOR", "CORRECTION", "SUPERSESSION"}:
+        reasons.append("FORECAST_PREDECESSOR_RELATION_INVALID")
+    if predecessor_relation == "SUCCESSOR" and predecessor_ref is None:
+        reasons.append("FORECAST_PREDECESSOR_RELATION_INVALID")
+
+    if analysis_time < valid_start:
+        reasons.append("FORECAST_NOT_YET_VALID")
+    elif analysis_time > valid_end:
+        reasons.append("FORECAST_EXPIRED")
+    return reasons
+
+
 def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
     reasons: list[str] = []
     analysis_time = _instant(candidate["analysis_time"])
@@ -134,6 +184,8 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
         elif valid_start is not None and _instant(valid_start) > _instant(valid_end):
             reasons.append("TEMPORAL_ORDER_INVALID")
 
+        reasons.extend(_forecast_reasons(source, analysis_time))
+
         revision = source["revision_status"]
         if revision == "CORRECTED" and (
             source.get("correction_ref") is None or source.get("supersedes_ref") is None
@@ -146,7 +198,7 @@ def _source_semantic_reasons(candidate: Mapping[str, Any]) -> list[str]:
             reasons.append("MISSING_OBSERVATION")
         if revision == "SUPERSEDED":
             reasons.append("SOURCE_SUPERSEDED")
-        if source["observation_status"] == "PRESENT":
+        if source["observation_status"] == "PRESENT" and source["source_family"] != "CPC_DROUGHT_OUTLOOK":
             age_days = (analysis_time - observed_end).total_seconds() / 86400
             if age_days > max_age_days:
                 reasons.append("OBSERVATION_STALE")
@@ -168,16 +220,15 @@ def _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
         reasons.append("SOURCE_SUPPORT_ERASURE_DENIED")
     if claim["county_intersection_only"] and claim["support_kind"] == "COUNTY":
         reasons.append("COUNTY_INTERSECTION_NOT_UNIFORM")
+    if kind != "DROUGHT_OUTLOOK" and "CPC_DROUGHT_OUTLOOK" in families:
+        reasons.append("FORECAST_CANNOT_PROVE_OBSERVED_CONDITION")
     if kind == "GROUNDWATER_CONDITION" and "USDM" in families:
         reasons.append("USDM_CANNOT_PROVE_GROUNDWATER")
     if kind == "GROUNDWATER_CONDITION" and "USGS_STREAMFLOW" in families:
         reasons.append("STREAMFLOW_CANNOT_PROVE_GROUNDWATER")
     if kind == "AGRICULTURAL_LOSS":
         reasons.append("CONTEXT_CANNOT_PROVE_AGRICULTURAL_LOSS")
-    if (
-        "WATER_MANAGEMENT_BOUNDARY" in families
-        and kind != "MANAGEMENT_BOUNDARY_CONTEXT"
-    ):
+    if "WATER_MANAGEMENT_BOUNDARY" in families and kind != "MANAGEMENT_BOUNDARY_CONTEXT":
         reasons.append("BOUNDARY_CANNOT_PROVE_CONDITION")
 
     if kind == "CROSS_SOURCE_STRESS":
@@ -220,11 +271,13 @@ def assess(candidate: Any) -> Assessment:
         outcome = "ERROR"
     elif any(code in ABSTAIN_CODES for code in reasons):
         outcome = "ABSTAIN"
-    elif "OBSERVATION_STALE" in reasons:
+    elif "FORECAST_EXPIRED" in reasons or "OBSERVATION_STALE" in reasons:
         outcome = "STALE"
     elif candidate["claim"]["source_conflict"]:
         reasons = sorted(set([*reasons, "SOURCE_CONFLICT"]))
         outcome = "CONFLICT"
+    elif candidate["claim"]["kind"] == "DROUGHT_OUTLOOK":
+        outcome = "FORECAST"
     elif candidate["claim"]["kind"] == "CROSS_SOURCE_STRESS":
         outcome = "DERIVED"
     else:
