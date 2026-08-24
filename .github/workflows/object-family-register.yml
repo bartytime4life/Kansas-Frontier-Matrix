@@ -22,6 +22,7 @@ name: object-family-register
       - "fixtures/release/promotion_receipt/**"
       - "fixtures/release/release_manifest/**"
       - "fixtures/release/rollback_card/**"
+      - "fixtures/release/withdrawal_notice/**"
       - "fixtures/runtime/layer_manifest_admission/**"
       - "packages/**"
       - "policies/**"
@@ -49,6 +50,7 @@ name: object-family-register
       - "fixtures/release/promotion_receipt/**"
       - "fixtures/release/release_manifest/**"
       - "fixtures/release/rollback_card/**"
+      - "fixtures/release/withdrawal_notice/**"
       - "fixtures/runtime/layer_manifest_admission/**"
       - "packages/**"
       - "policies/**"
@@ -121,13 +123,14 @@ jobs:
           set -euo pipefail
           python tools/validators/control_plane/validate_object_family_register.py
 
-      - name: Verify generated authoring receipt integrity
+      - name: Verify prior generated authoring receipt as immutable history
         shell: bash
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-object-family-register-catalog-correction-20260823.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 4dbd1060cc1da545df6abfb195d4681458b5adc8
 
       - name: Record validation boundary
         if: always()
@@ -138,6 +141,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
-            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef and WithdrawalNotice remain partial."
-            echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
+            echo "- Known gaps: eleven required families retain unresolved candidate conflicts; EvidenceRef remains partial; WithdrawalNotice semantic, policy, emitter, invalidation, restoration, and operational effects remain unverified."
+            echo "- Receipt boundary: the prior generated receipt is replayed against its immutable merge commit; this change does not rewrite historical process memory."
+            echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, withdraw, invalidate, restore, release, deploy, promote, or publish an object family."
           } >> "$GITHUB_STEP_SUMMARY"
