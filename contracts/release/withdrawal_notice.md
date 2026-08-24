@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-release-withdrawal-notice
 title: contracts/release/withdrawal_notice.md — WithdrawalNotice Contract
 type: contract
-version: v0.2
-status: draft; PROPOSED; schema-paired; thin-schema; withdrawal-notice
+version: v0.3
+status: draft; PROPOSED; schema-paired; thin-schema; fixture-validated; no-network; non-publisher
 owners: OWNER_TBD — Release steward · Withdrawal steward · Correction steward · Contracts steward · Schema steward · Policy steward · Evidence steward · Rights steward · Sensitivity steward · Review steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.2 expansion
-updated: 2026-06-24
+updated: 2026-08-23
 policy_label: public; contracts; release; withdrawal-notice; post-publication; correction-aware; rights-aware; sensitivity-aware; fail-closed; no-erasure; no-silent-mutation
 tags: [kfm, contracts, release, withdrawal-notice, withdrawal, correction-notice, release-manifest, rollback-card, public-notice, rights, sensitivity, stale, supersession, invalidation, no-silent-mutation]
 related:
@@ -25,16 +25,18 @@ related:
   - ../../release/
   - ../../fixtures/release/withdrawal_notice/
   - ../../tools/validators/release/validate_withdrawal_notice.py
+  - ../../tests/validators/test_validate_withdrawal_notice.py
+  - ../../.github/workflows/withdrawal-notice.yml
   - ../../docs/architecture/release-discipline.md
   - ../../docs/architecture/contract-schema-policy-split.md
   - ../../data/proofs/
   - ../../data/receipts/
 notes:
-  - "Expanded from greenfield scaffold at `contracts/release/withdrawal_notice.md`."
-  - "Paired schema verified at `schemas/contracts/v1/release/withdrawal_notice.schema.json`; schema status is PROPOSED."
-  - "The current schema is a greenfield placeholder: only `id` is required and `additionalProperties` is true."
+  - "Paired schema verified at `schemas/contracts/v1/release/withdrawal_notice.schema.json`; schema status remains PROPOSED."
+  - "The current schema is intentionally thin: only `id` is required and `additionalProperties` is true."
+  - "A deterministic no-network validator, focused fixtures, focused tests, and a path-scoped workflow now prove only schema shape, bounded JSON safety, and fixture polarity."
   - "WithdrawalNotice records that a published/released object should no longer be served or relied on in the same way; it is not erasure and not silent deletion."
-  - "Rollback target for this expansion is previous blob SHA `9e96a3171d58724ec09dfccd65630b5347163091`."
+  - "Rollback target for v0.3 is the parent branch commit or previous blob SHA `3cb27571de43e49d3a9f9c1bee0b347f6f3e7753`."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -48,6 +50,7 @@ notes:
   <img alt="Root: contracts" src="https://img.shields.io/badge/root-contracts-blue">
   <img alt="Object: WithdrawalNotice" src="https://img.shields.io/badge/object-WithdrawalNotice-0a7ea4">
   <img alt="Schema: thin" src="https://img.shields.io/badge/schema-thin__placeholder-orange">
+  <img alt="Validation: bounded" src="https://img.shields.io/badge/validation-no--network__bounded-informational">
   <img alt="Mutation: no silent deletion" src="https://img.shields.io/badge/mutation-no__silent__deletion-critical">
   <img alt="Posture: fail closed" src="https://img.shields.io/badge/posture-fail__closed-critical">
 </p>
@@ -55,15 +58,17 @@ notes:
 **Status:** draft / PROPOSED  
 **Path:** `contracts/release/withdrawal_notice.md`  
 **Paired schema:** `schemas/contracts/v1/release/withdrawal_notice.schema.json`  
-**Schema maturity:** greenfield placeholder / thin / permissive  
-**Validator path named by schema:** `tools/validators/release/validate_withdrawal_notice.py` — NEEDS VERIFICATION for implementation/wiring  
-**Policy authority:** `policy/release/`, `policy/sensitivity/`, rights/access policy roots, not this contract  
+**Schema maturity:** thin / permissive / proposal-level  
+**Bounded validator:** `tools/validators/release/validate_withdrawal_notice.py`  
+**Focused test:** `tests/validators/test_validate_withdrawal_notice.py`  
+**No-network workflow:** `.github/workflows/withdrawal-notice.yml`  
+**Policy authority:** `policy/release/`, `policy/sensitivity/`, and rights/access policy roots, not this contract  
 **Release artifact/process authority:** `release/`, not this contract  
-**Truth posture:** CONFIRMED schema pairing and thin field surface · CONFIRMED CorrectionNotice covers withdrawn public posture and prevents silent mutation · CONFIRMED release doctrine requires correction/rollback artifacts after PUBLISHED · PROPOSED detailed fields until schema/fixtures/validator/policy/release integration are verified
+**Truth posture:** CONFIRMED schema pairing, fixture lane, bounded validator, focused test, and no-network workflow · CONFIRMED release doctrine requires visible correction and rollback lineage · PROPOSED detailed withdrawal semantics until schema, policy, review, invalidation, emitter, and operational release integration are separately governed and proved
 
 ## Quick jumps
 
-[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Target semantic field families](#target-semantic-field-families) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Validation expectations](#validation-expectations) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
+[Purpose](#purpose) · [Meaning](#meaning) · [Schema-paired field surface](#schema-paired-field-surface) · [Target semantic field families](#target-semantic-field-families) · [Field semantics](#field-semantics) · [Invariants](#invariants) · [Lifecycle role](#lifecycle-role) · [Boundaries](#boundaries) · [Implemented validation boundary](#implemented-validation-boundary) · [Fixtures](#fixtures) · [Open questions](#open-questions) · [Rollback](#rollback)
 
 ---
 
@@ -192,12 +197,14 @@ Current schema makes it optional. Mature withdrawal notices should include a ver
 
 ## Invariants
 
-CONFIRMED by paired schema:
+CONFIRMED by paired schema and bounded validator:
 
 - `id` is required.
 - `spec_hash` is optional and string-shaped if present.
 - `version` is optional and string-shaped if present.
 - Additional properties are currently allowed.
+- duplicate JSON keys, non-object roots, malformed JSON, and non-finite JSON numbers fail closed;
+- the focused fixture profile executes without network access or repository mutation.
 
 PROPOSED semantic invariants:
 
@@ -245,42 +252,63 @@ Expected use:
 
 ---
 
-## Validation expectations
+## Implemented validation boundary
 
-NEEDS VERIFICATION in implementation:
+**CONFIRMED repository surface.** The current branch pairs this contract and schema with:
 
-- harden schema beyond current `id`-only required surface;
-- decide required fields for production withdrawal notices;
-- validator existence and wiring for `tools/validators/release/validate_withdrawal_notice.py`;
-- fixture coverage under `fixtures/release/withdrawal_notice/`;
-- release/sensitivity/rights policy behavior;
-- CorrectionNotice linkage and public-safe notice requirements;
-- release process storage under accepted release withdrawal homes;
-- receipt/proof emission for withdrawal decisions and invalidation;
-- cache/index/tile/API/map/AI invalidation tests;
-- emergency withdrawal and post-facto review rules;
-- lifting/restoration rules.
+- `fixtures/release/withdrawal_notice/valid/minimal.json`;
+- `fixtures/release/withdrawal_notice/invalid/missing_id.json`;
+- `tools/validators/release/validate_withdrawal_notice.py`;
+- `tests/validators/test_validate_withdrawal_notice.py`;
+- `.github/workflows/withdrawal-notice.yml`.
+
+The validator and focused test prove only:
+
+- Draft 2020-12 schema validity;
+- current required-field behavior;
+- duplicate-key, malformed-input, non-object-root, and non-finite-number rejection;
+- deterministic reason codes and exact fixture polarity;
+- no-network, non-publisher execution.
+
+The workflow does **not** prove or perform withdrawal, correction linkage, cache/index/tile/API/map/AI invalidation, restoration, rights or sensitivity policy, reviewer authority, release, deployment, promotion, or publication.
+
+**NEEDS VERIFICATION / PROPOSED follow-up:**
+
+- harden schema beyond the current `id`-only required surface;
+- decide production-required fields and finite reason/type enums;
+- add release/sensitivity/rights policy behavior;
+- require CorrectionNotice linkage and public-safe notice handling where applicable;
+- define accepted instance storage under the release root;
+- emit proof/receipt records for withdrawal decisions and invalidation;
+- add cache/index/tile/API/map/AI invalidation tests;
+- define emergency withdrawal, post-facto review, lifting, and restoration rules;
+- identify and validate live emitters and consumers.
 
 ---
 
 ## Fixtures
 
-Minimum fixture set PROPOSED:
+**CONFIRMED current bounded fixtures:**
 
 | Fixture | Purpose |
 |---|---|
-| `valid_minimal_schema.json` | Confirms current schema permits `id` only. |
-| `valid_full_withdrawal_rights.json` | Mature withdrawal due to rights/source terms. |
-| `valid_full_withdrawal_sensitivity.json` | Sensitive exact-location or living-person/DNA/geoprivacy withdrawal. |
-| `valid_partial_redaction_withdrawal.json` | Partial withdrawal with generalized successor. |
-| `valid_superseded_release_withdrawal.json` | Withdrawal because successor release supersedes artifact. |
-| `valid_emergency_hold.json` | Emergency withdrawal pending review. |
-| `invalid_missing_id.json` | Confirms current required field. |
-| `governance_invalid_missing_affected_object.json` | Schema may pass; withdrawal governance should fail. |
-| `governance_invalid_missing_correction_notice.json` | Public-facing withdrawal should fail without notice. |
-| `governance_invalid_sensitive_reason_leak.json` | Ensures reason text does not leak sensitive details. |
+| `valid/minimal.json` | Confirms the current schema permits the `id`-only minimum. |
+| `invalid/missing_id.json` | Confirms the current required-field boundary fails closed. |
 
-Fixtures must use synthetic or safe refs only.
+**PROPOSED semantic fixture expansion:**
+
+| Fixture | Purpose |
+|---|---|
+| `valid/full_withdrawal_rights.json` | Mature withdrawal due to rights/source terms. |
+| `valid/full_withdrawal_sensitivity.json` | Sensitive exact-location or living-person/DNA/geoprivacy withdrawal. |
+| `valid/partial_redaction_withdrawal.json` | Partial withdrawal with generalized successor. |
+| `valid/superseded_release_withdrawal.json` | Withdrawal because successor release supersedes artifact. |
+| `valid/emergency_hold.json` | Emergency withdrawal pending review. |
+| `governance-invalid/missing_affected_object.json` | Schema may pass; withdrawal governance should fail. |
+| `governance-invalid/missing_correction_notice.json` | Public-facing withdrawal should fail without notice. |
+| `governance-invalid/sensitive_reason_leak.json` | Ensures reason text does not leak sensitive details. |
+
+All fixtures must remain synthetic or public-safe.
 
 ---
 
@@ -297,8 +325,8 @@ Fixtures must use synthetic or safe refs only.
 
 ## Rollback
 
-Rollback is required if this contract is used to erase history, silently mutate or delete public state, bypass correction/release/policy/evidence/review gates, store artifacts, claim invalidation without receipts/proofs, leak sensitive withdrawal reasons, or authorize public API/UI/map/AI exposure directly.
+Rollback is required if this contract or validation lane is used to erase history, silently mutate or delete public state, bypass correction/release/policy/evidence/review gates, store artifacts, claim invalidation without receipts/proofs, leak sensitive withdrawal reasons, or authorize public API/UI/map/AI exposure directly.
 
-Rollback target for this expansion: previous blob SHA `9e96a3171d58724ec09dfccd65630b5347163091`.
+Repository rollback for v0.3 is a revert of this dependency-closed PR, restoring contract blob `3cb27571de43e49d3a9f9c1bee0b347f6f3e7753`, removing `.github/workflows/withdrawal-notice.yml`, and restoring the prior navigational catalog projection. Reverting repository bytes does not itself restore or alter any release, deployment, promotion, publication, or external system state.
 
 <p align="right"><a href="#top">Back to top</a></p>
