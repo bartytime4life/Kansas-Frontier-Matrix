@@ -82,6 +82,7 @@ jobs:
             "fixtures/contracts/v1/domains/geology/public_safe_geometry/cases.json"
             "docs/intake/exploratory/geology-public-safe-geometry-source-map.md"
             "data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json"
+            "data/receipts/generated/genrec-geology-public-safe-documentation-convergence-20260824.json"
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
@@ -230,7 +231,7 @@ jobs:
             --fixtures
 
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-geology-public-safe-geometry-20260810.json \
+            data/receipts/generated/genrec-geology-public-safe-documentation-convergence-20260824.json \
             --repo-root .
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-public-safe-geometry-fixture"
