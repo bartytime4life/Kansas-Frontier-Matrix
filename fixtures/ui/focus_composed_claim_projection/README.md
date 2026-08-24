@@ -11,6 +11,7 @@ release state, or authorize publication.
 | Fixture | Closure | Focus outcome |
 |---|---|---|
 | `valid/answer-supported.json` | `SUPPORTED` | `ANSWER` |
+| `valid/answer-corrected.json` | `SUPPORTED` | `ANSWER` with active correction lineage and superseded history |
 | `valid/answer-qualified.json` | `QUALIFIED` | `ANSWER` with explicit optional-role limitation |
 | `valid/abstain-unresolved.json` | `ABSTAIN` | fixed no-leak `ABSTAIN` |
 | `valid/deny-policy.json` | `DENY` | fixed no-leak `DENY` |
