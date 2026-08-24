@@ -20,9 +20,10 @@ evidence_snapshot:
   base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
   prior_blob: 8b137891791fe96927ad78e64b0aad7bded08bdc
   child_count: 9
-  substantive_repository_grounded_children: 7
+  substantive_repository_grounded_children: 8
   proposal_era_substantive_children: 1
-  proposed_scaffold_children: 1
+  sensitive_occurrence_review_blob: e783cb4f643b250a456162699fb9768aa8364241
+  sensitive_occurrence_review_merge: 8fd0d46f948d5776ee3c4fe710f1cf21aed0d1ad
 related:
   - ../README.md
   - ../../domains/fauna/README.md
@@ -33,8 +34,9 @@ related:
 tags: [kfm, runbooks, fauna, taxonomy, occurrence, geoprivacy, rights, navigation, boundary, mixed-maturity, hold]
 notes:
   - "Replaces the prior one-byte placeholder with a lane boundary and navigation contract only."
-  - "Seven child procedures are substantive repository-grounded drafts; the rollback runbook is substantive but proposal-era; the sensitive-occurrence review remains a proposed scaffold."
-  - "Document length, path presence, and workflow success are inventory evidence, not operational-readiness or publication evidence."
+  - "Eight child procedures are substantive repository-grounded drafts; the rollback runbook remains substantive but proposal-era."
+  - "PR #3509 merged the sensitive-occurrence review before this branch settled; this revision reconciles the README to that current-main fact without treating the merge as policy or release authority."
+  - "Document length, path presence, merge state, and workflow success are inventory evidence, not operational-readiness or publication evidence."
   - "This README changes no contract, schema, policy, fixture, validator, workflow, source record, evidence object, lifecycle object, review record, release object, runtime, deployment, promotion, rollback execution, or publication state."
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,7 +53,7 @@ notes:
 > Exact or reverse-engineerable wildlife locations fail closed. Nests, dens, roosts, hibernacula, spawning or breeding sites, aggregation sites, telemetry paths, private-land joins, observer-linked records, steward-controlled detail, and geoprivacy transform parameters must not appear in public fixtures, logs, issues, pull requests, screenshots, exports, maps, or generated answers.
 
 > [!CAUTION]
-> Child maturity is mixed. Use the maturity table before following a procedure. In particular, [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) remains proposal-era and links to a Fauna `VALIDATION_RUNBOOK.md` that is not present, while [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) remains only a proposed scaffold.
+> Child maturity is mixed. Use the maturity table before following a procedure. In particular, [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) remains proposal-era and links to a Fauna `VALIDATION_RUNBOOK.md` that is not present. [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) is now repository-grounded after merged PR #3509, but production Fauna sensitivity policy, public/restricted conversion enforcement, accountable review authority, and public release remain held or unverified.
 
 > [!NOTE]
 > KFM is not an official wildlife, law-enforcement, hunting, veterinary, legal-status, regulatory, disease-response, emergency, or life-safety authority. Use the responsible issuing agency or steward for current determinations and operational instructions.
@@ -72,7 +74,7 @@ The lane preserves these domain boundaries:
 - eBird Basic Dataset use remains governed by the exact access agreement, approved purpose, source conditions, privacy constraints, and derivative-review posture applicable to the actual access;
 - synthetic fixtures, schema-valid packets, workflow results, maps, tiles, dashboards, indexes, and generated language remain subordinate to resolvable evidence and accepted policy.
 
-Missing authority or support fails closed with the outcome owned by the selected procedure. Do not infer permission from a public URL, tracked path, plausible filename, long document, validator pass, or absence of an explicit denial.
+Missing authority or support fails closed with the outcome owned by the selected procedure. Do not infer permission from a public URL, tracked path, plausible filename, long document, validator pass, merge, or absence of an explicit denial.
 
 ## Choose the narrowest procedure
 
@@ -81,14 +83,14 @@ Missing authority or support fails closed with the outcome owned by the selected
 | Run deterministic checks without network access | [`NO_NETWORK_TEST_RUNBOOK.md`](NO_NETWORK_TEST_RUNBOOK.md) | Bounded synthetic validation and review handoff only |
 | Refresh an already admitted Fauna source or product | [`SOURCE_REFRESH_RUNBOOK.md`](SOURCE_REFRESH_RUNBOOK.md) | Reviewable `RAW` or `QUARANTINE` handoff candidate; live refresh remains held |
 | Preserve and classify an unresolved taxonomic mapping | [`TAXONOMY_RESOLUTION_RUNBOOK.md`](TAXONOMY_RESOLUTION_RUNBOOK.md) | Manual candidate and review handoff; executable resolution remains held |
-| Review a potentially sensitive occurrence | [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) | **HOLD — scaffold only; use accepted Fauna sensitivity controls and an authorized reviewer** |
+| Review a potentially sensitive occurrence | [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) | Public-safe review handoff only; production sensitivity clearance and public release remain held |
 | Assess a proposed eBird Basic Dataset derivative | [`EBD_DERIVATIVE_RELEASE.md`](EBD_DERIVATIVE_RELEASE.md) | Rights-sensitive review handoff only; current derivative release remains held |
 | Assess promotion readiness | [`PROMOTION_RUNBOOK.md`](PROMOTION_RUNBOOK.md) | Generic readiness result and human handoff; no Fauna transition or release |
 | Rehearse publication denial and assess dry-run readiness | [`PUBLICATION_GATE_DRY_RUN.md`](PUBLICATION_GATE_DRY_RUN.md) | Shared synthetic denial result; candidate-specific Fauna gate remains held |
 | Run a bounded rollback tabletop or synthetic rehearsal | [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) | Shared candidate/rehearsal evidence and Fauna review handoff only |
 | Read the planned full published-release rollback procedure | [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) | Proposal-era guidance only; verify every path, actor, command, and target before use |
 
-If more than one procedure applies, preserve the state boundaries between them. No-network validation does not resolve taxonomy or geoprivacy; taxonomy review does not admit a source; source refresh does not normalize or promote; promotion readiness does not release; publication-gate rehearsal does not deploy or publish; and a rollback drill does not mutate public state.
+If more than one procedure applies, preserve the state boundaries between them. No-network validation does not resolve taxonomy or geoprivacy; taxonomy review does not admit a source; source refresh does not normalize or promote; sensitive-occurrence review does not create sensitivity policy or release clearance; promotion readiness does not release; publication-gate rehearsal does not deploy or publish; and a rollback drill does not mutate public state.
 
 ## Current child maturity
 
@@ -102,7 +104,7 @@ The labels below describe repository documents at `main@6e1bc94ea13fc0c7429fb824
 | [`PUBLICATION_GATE_DRY_RUN.md`](PUBLICATION_GATE_DRY_RUN.md) | Substantive repository-grounded draft | Shared synthetic publication-denial profile is executable; no accepted candidate-specific Fauna dry-run contract or candidate is established |
 | [`ROLLBACK_DRILL.md`](ROLLBACK_DRILL.md) | Substantive repository-grounded draft | Shared `RollbackCard` candidate validation and marker-protected synthetic rehearsal are executable; integrated and operational Fauna rollback remain held |
 | [`ROLLBACK_RUNBOOK.md`](ROLLBACK_RUNBOOK.md) | **Substantive proposal-era draft** | Placeholder owners, proposed paths, and a stale link to absent `VALIDATION_RUNBOOK.md`; not a verified operational rollback procedure |
-| [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) | **Partial — 666-byte proposed scaffold** | Inventory lineage only; no usable roles, preflight, outcomes, commands, validation, handoff, correction, or rollback procedure |
+| [`SENSITIVE_OCCURRENCE_REVIEW.md`](SENSITIVE_OCCURRENCE_REVIEW.md) | Substantive repository-grounded draft | Bounded fail-closed review/handoff procedure; current `OccurrenceEvidence` fixture-first validator can prove internal draft-profile consistency, but production sensitivity policy, public/restricted conversion enforcement, accountable review, and public release remain `HOLD` or unproved |
 | [`SOURCE_REFRESH_RUNBOOK.md`](SOURCE_REFRESH_RUNBOOK.md) | Substantive repository-grounded draft | Fixture-first source-edge procedure; concrete admitted descriptors, source authority, active connectors, and live sensitivity-policy enforcement remain insufficient for live refresh |
 | [`TAXONOMY_RESOLUTION_RUNBOOK.md`](TAXONOMY_RESOLUTION_RUNBOOK.md) | Substantive repository-grounded draft | Manual fail-closed mapping and review handoff; no admitted version-pinned authority inputs or executable resolver are established |
 
@@ -122,9 +124,9 @@ Stop and create a public-safe handoff when required authority, source identity, 
 
 | Item | Current posture | Smallest truthful next step |
 |---|---|---|
-| Sensitive occurrence review | `PARTIAL / PROPOSED SCAFFOLD` | Replace the scaffold with a repository-grounded, value-minimized, fail-closed review procedure tied to current sensitivity, policy, evidence, review, correction, and rollback surfaces |
+| Sensitive occurrence production controls | `RUNBOOK GROUNDED / POLICY-RELEASE HOLD` | Keep the merged review/handoff procedure bounded; separately implement and review executable sensitivity policy, public/restricted conversion enforcement, accountable review, and release closure before any public-sensitive occurrence path graduates |
 | Full rollback procedure | `PARTIAL / PROPOSAL-ERA` | Reconcile it against the current shared `RollbackCard`, synthetic rehearsal, Fauna release topology, current policy, actors, commands, and holds; remove or repair the absent validation-runbook reference |
-| Parent runbook index | `STALE` | Recompute its local-README inventory after the merged Atmosphere boundary and this Fauna boundary; do not broaden this one-file lane update into an unverified subtree recount |
+| Parent runbook index | `STALE` | Recompute its local-README inventory after the merged Atmosphere and Fauna boundary work settles; do not broaden this one-file lane update into an unverified subtree recount |
 | Accountable roles | `NEEDS VERIFICATION` | Record verified scope, authority, separation, and revocation for every required Fauna role |
 | Live Fauna operations | `HOLD / UNKNOWN` | Require admitted sources, executable connectors, rights and sensitivity closure, version-pinned taxonomy, evidence, policy, review, release topology, correction, rollback, monitoring, and current runtime evidence |
 
