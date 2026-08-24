@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    "docs/architecture/briefing-integration.md": "sha256:e30de4d21f9c01e5024960a95fac89fee52be1086eea44046b7a11dc90c4c9c6"
+    "docs/architecture/briefing-integration.md": "sha256:d2487b228a1fb1f9c41a8f8ea5c805712e805b3fcad604b2afc31bd882031842"
   },
   "artifact_paths": [
     "docs/architecture/briefing-integration.md"
@@ -62,7 +62,7 @@
     "model": "GPT-5",
     "version": "2026-08-24"
   },
-  "notes": "Forward metadata correction after merged PR #3531 changed briefing-integration.md and exact-head docs-meta-block run 32777441695 failed because the modified legacy block lacked owning_root, responsibility, and truth_posture. The original authoring receipt remains immutable lineage. This correction grants no architecture, schema, routing, evidence, policy, review, release, deployment, publication, or public-use authority.",
+  "notes": "Forward metadata correction after merged PR #3531 changed briefing-integration.md and exact-head docs-meta-block run 32777441695 failed because the modified legacy block lacked owning_root, responsibility, and truth_posture. The original authoring receipt remains immutable lineage. This open correction also normalizes the legacy type field to the validator's bounded token grammar. This correction grants no architecture, schema, routing, evidence, policy, review, release, deployment, publication, or public-use authority.",
   "override_record": null,
   "parameters": {
     "seed": null,
@@ -84,6 +84,11 @@
     "docs/architecture/briefing-integration.md": "PROPOSED"
   },
   "validation_gates": [
+    {
+      "gate": "metadata-type-token",
+      "outcome": "PASS",
+      "reason": "The existing semicolon-delimited type was normalized to architecture/implementation-guide, which satisfies the bounded token grammar."
+    },
     {
       "gate": "metadata-required-fields",
       "outcome": "PASS",
