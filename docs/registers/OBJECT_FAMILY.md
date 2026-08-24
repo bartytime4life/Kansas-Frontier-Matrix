@@ -2,15 +2,15 @@
 doc_id: kfm://doc/registers/object-family
 title: Object Family Register
 type: standard
-version: v1.1
+version: v1.2
 status: proposed; doctrine-navigation-retained; machine-catalog-reconciled; non-authoritative
 owners: docs-steward, domain-stewards
 created: 2026-05-12
-updated: 2026-08-22
+updated: 2026-08-23
 policy_label: public
 owning_root: docs/
 responsibility: provide a human-facing navigational register for object families while keeping semantic shape policy evidence lifecycle release correction rollback deployment and publication authority in their owning roots
-truth_posture: CONFIRMED inherited doctrine navigation and accepted Directory Rules / PROPOSED MRTS-03 machine-catalog reconciliation and repository-surface classifications / UNKNOWN accountable field-level owners deployed consumers and production behavior / NEEDS VERIFICATION human review hosted exact-head results and resolution of recorded candidate conflicts
+truth_posture: CONFIRMED inherited doctrine navigation accepted Directory Rules and current repository validation paths / PROPOSED MRTS-03 machine-catalog reconciliation and repository-surface classifications / UNKNOWN accountable field-level owners deployed consumers operational invalidation and production behavior / NEEDS VERIFICATION human review hosted exact-head results and resolution of recorded candidate conflicts
 related: [docs/registers/AUTHORITY_LADDER.md, docs/registers/DRIFT_REGISTER.md, docs/registers/VERIFICATION_BACKLOG.md, control_plane/object_family_register.yaml, contracts/OBJECT_MAP.md, schemas/contracts/v1/governance/object_family_register.schema.json, tools/validators/control_plane/validate_object_family_register.py, docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf/README.md]
 tags: [kfm, register, object-family, doctrine, navigation]
 notes: [Navigational register only. EvidenceBundle and source dossiers remain authoritative. Adding, removing, or renaming an object family requires an ADR per Directory Rules §2.4.]
@@ -25,11 +25,11 @@ notes: [Navigational register only. EvidenceBundle and source dossiers remain au
   <img alt="Type: register" src="https://img.shields.io/badge/type-register-6f42c1">
   <img alt="Authority: navigational" src="https://img.shields.io/badge/authority-navigational-lightgrey">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy-public-2ea44f">
-  <img alt="Updated: 2026-08-22" src="https://img.shields.io/badge/updated-2026--08--22-informational">
+  <img alt="Updated: 2026-08-23" src="https://img.shields.io/badge/updated-2026--08--23-informational">
   <img alt="License: TODO" src="https://img.shields.io/badge/license-TODO-lightgrey">
 </p>
 
-**Status:** proposed · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-08-22
+**Status:** proposed · **Owners:** docs-steward · domain-stewards · **Last updated:** 2026-08-23
 
 ---
 
@@ -124,22 +124,23 @@ EVID -. outranks .-> REG
 
 ### 2.1 Machine-readable MRTS-03 reconciliation
 
-**PROPOSED repository projection.** The canonical machine index at [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) now records the milestone's sixteen minimum trust-object families and retains the three pre-existing runtime families. This is a repository-surface inventory, not an amendment to the doctrine or family names elsewhere in this document.
+**PROPOSED repository projection.** The canonical machine index at [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) records the milestone's sixteen minimum trust-object families and retains three pre-existing runtime families. This is a repository-surface inventory, not an amendment to doctrine or family names elsewhere in this document.
 
 | Catalog observation | Count | Meaning |
 | --- | ---: | --- |
 | Required milestone families registered | 16 of 16 | Every required stable family ID has an entry. |
 | Other pre-existing families retained | 3 | `DecisionEnvelope`, `GeneratedRuntimeProofArtifact`, and `RuntimeVerificationReceiptAndProof` remain navigable. |
-| Required families structurally `IMPLEMENTED` | 3 | `PromotionReceipt`, `ProofPack`, and `RollbackCard` have the six declared structural surfaces; this is not release or runtime approval. |
-| Required families `PARTIAL` | 2 | `EvidenceRef` lacks a dedicated workflow; `WithdrawalNotice` lacks a focused fixture, validator, test, workflow, and observed emitter. |
+| Required families structurally `IMPLEMENTED` | 4 | `PromotionReceipt`, `ProofPack`, `RollbackCard`, and `WithdrawalNotice` have the six declared structural surfaces; this is not release, withdrawal, or runtime approval. |
+| Required families `PARTIAL` | 1 | `EvidenceRef` lacks a dedicated workflow. |
 | Required families `CONFLICTED` | 11 | Multiple repository-wide contract or schema candidates remain unresolved and no candidate is silently selected. |
+| Retained non-milestone families structurally `IMPLEMENTED` | 3 | `DecisionEnvelope`, `GeneratedRuntimeProofArtifact`, and `RuntimeVerificationReceiptAndProof` have declared structural validation surfaces; live producers and consumers remain separately unproved. |
 
 Each machine entry records contract and schema candidates, policy dependencies, fixture/validator/test/workflow/emitter surfaces, per-surface implementation state, role-level producers and consumers, lifecycle placement, identity-rule references, compatibility posture, evidence dependencies, and release/correction/rollback relationships. Every relationship closes over a registered family ID. `UNKNOWN` and `NOT_INSPECTED` remain explicit evidence states.
 
 | Required family | Projection state | Material unresolved condition |
 | --- | --- | --- |
 | `AIReceipt` | `CONFLICTED` | `ai/` and `runtime/` schema candidates coexist. |
-| `CorrectionNotice` | `CONFLICTED` | Four schema candidates coexist; focused fixtures, tests, and workflow are absent. |
+| `CorrectionNotice` | `CONFLICTED` | Four schema candidates coexist; bounded fixtures, validators, and a focused test exist, but a dedicated family workflow and canonical candidate decision remain absent. |
 | `EvidenceBundle` | `CONFLICTED` | Three hyphen/underscore/suffix schema candidates coexist. |
 | `EvidenceRef` | `PARTIAL` | Contract, schema, fixtures, validator, and test exist; a dedicated workflow was not observed. |
 | `LayerManifest` | `CONFLICTED` | Data, map, release, runtime, and plural-layer candidates overlap. |
@@ -153,7 +154,9 @@ Each machine entry records contract and schema candidates, policy dependencies, 
 | `SourceActivationDecision` | `CONFLICTED` | Hyphenated and underscored schema candidates coexist. |
 | `SourceDescriptor` | `CONFLICTED` | Case, hyphen, underscore, suffix, and `source/` versus `sources/` aliases coexist. |
 | `ValidationReport` | `CONFLICTED` | Generic and domain-specific report candidates coexist. |
-| `WithdrawalNotice` | `PARTIAL` | Contract and schema exist; the focused validation lane is absent. |
+| `WithdrawalNotice` | `IMPLEMENTED` | Contract, schema, fixtures, bounded validator, focused test, and path-scoped workflow exist; schema hardening, policy, review, emitters, invalidation, restoration, and operational effects remain unverified. |
+
+The retained `DecisionEnvelope` entry is also structurally `IMPLEMENTED`: its contract, schema, fixtures, validator, focused test, and dedicated workflow exist. This classification proves only the declared no-network structural validation lane; it does not prove a deployed policy adapter, runtime route, authoritative answer, release, deployment, or publication.
 
 The validator rejects missing required IDs, duplicate or noncanonical IDs, invalid responsibility roots, unresolved relationship targets, self-relations, self-authority, path/surface mismatches, and impossible maturity or implementation claims. It validates only navigation and structural coverage.
 
@@ -483,6 +486,6 @@ This register is **not** a release decision, **not** a policy decision, and **no
 
 ---
 
-**Last updated:** 2026-05-12 · **Status:** draft · **Next review:** ≤ 6 months from `updated`
+**Last updated:** 2026-08-23 · **Status:** draft · **Next review:** ≤ 6 months from `updated`
 
 [↑ Back to top](#object-family-register)
