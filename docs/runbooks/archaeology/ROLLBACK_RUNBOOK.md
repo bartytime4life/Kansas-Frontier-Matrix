@@ -2,461 +2,968 @@
 doc_id: kfm://doc/runbook-archaeology-rollback
 title: Archaeology Rollback Runbook
 type: standard
-version: v0.1
-status: draft
-owners: TODO — docs steward + domain steward (archaeology) + release authority
+profile: candidate-preparation-and-synthetic-rehearsal
+version: v0.2
+prior_version: v0.1
+status: draft; repository-grounded; fixture-first; operational-rollback-hold; non-authoritative; non-publisher
+owners:
+  - "@bartytime4life — verified GitHub review route only"
+owner_status: "Accountable archaeology, sensitivity, cultural/rights-holder, correction, rollback, and release assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not establish those authorities."
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-08-24
 policy_label: public
+sensitivity_posture: archaeology-sensitive; deny-by-default; no-public-sensitive-detail
+current_path: docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md
+owning_root: docs/
+responsibility: "Explain how to classify an Archaeology release defect, prepare a non-executing RollbackCard candidate, run the bounded synthetic rehearsal, and hand off unresolved operational action without authorizing rollback or mutating public state."
+truth_posture: >-
+  CONFIRMED same-path repository placement, accepted Directory Rules basis,
+  current generic RollbackCard contract/schema/validator/fixtures, marker-protected
+  synthetic rehearsal helper and tests, read-only rollback-drill workflow, one
+  verified CODEOWNERS route, and current operational holds / PROPOSED future
+  actor assignments, review quorum, live policy, rollback execution, invalidation,
+  public correction, and release authority / CONFLICTED generic release profile
+  versus permissive Archaeology-domain schema stub / UNKNOWN production aliases,
+  deployed public surfaces, external caches, signer custody, and operator capacity;
+  cite-or-abstain
+prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 6b0f0f5353754553e0ff3800206f5479b069921a
+  target_prior_blob: c485d242d70201de592470801e7881baafa4e9ba
+  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+  release_root_readme_blob: 60b6a656f8f2b765616bba7223f51c25863c7172
+  rollback_contract_blob: c6d3c35c56b064e04c3a2532f4709d938d7b0c1a
+  release_rollback_schema_blob: e0a9edf02dd5d6997eda60a054a5bf19636c3dd4
+  archaeology_rollback_schema_blob: 17430260592ee7c735937d3041d67edb40022bc9
+  release_rollback_validator_blob: 9e9ed5a92851935b41a36698e4bead13ef4edf57
+  generic_rollback_validator_stub_blob: b80dd40e93733c7fa76f8f9a78e9ec55b6090b4b
+  rollback_pipeline_placeholder_blob: 2afd3a3d859318e05dcb3e1b2763e4e375b790b6
+  synthetic_rehearsal_helper_blob: a8f6bff350e79b453f425ebce9a9ded6801f8944
+  synthetic_rehearsal_test_blob: b644ca6c4185b3f81bc339c077eae85299833261
+  separation_of_duties_blob: 00f68beeeec7d57cce806e6cdbd710a837bd4f0c
+  codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
+inspection_boundary: >-
+  Current-session GitHub reads of the target, accepted Directory Rules evidence,
+  runbook and release-root guidance, RollbackCard contract and both schema lanes,
+  validators, rollback pipeline placeholder, synthetic rehearsal helper/tests,
+  rollback-drill workflow, CODEOWNERS, separation-of-duties guidance, and
+  Archaeology rollback/sensitivity support docs. No workflow was executed, no
+  actor was authenticated, no RollbackCard instance was issued, and no policy,
+  review, correction, withdrawal, rollback, release, deployment, or publication
+  transition was performed.
 related:
   - docs/runbooks/README.md
+  - docs/runbooks/ROLLBACK_RUNBOOK.md
   - docs/runbooks/revocation.md
-  - docs/domains/archaeology/README.md
-  - docs/governance/separation-of-duties.md
+  - docs/runbooks/ui_ROLLBACK.md
+  - docs/runbooks/archaeology/README.md
+  - docs/runbooks/archaeology/PROMOTION_RUNBOOK.md
+  - docs/runbooks/archaeology/NO_NETWORK_TEST_RUNBOOK.md
+  - docs/runbooks/archaeology/SOURCE_REFRESH_RUNBOOK.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
+  - docs/governance/REVIEW_DUTIES.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/domains/archaeology/SENSITIVITY.md
+  - docs/domains/archaeology/PUBLICATION_AND_POLICY.md
+  - release/README.md
   - release/rollback_cards/README.md
-  - release/manifests/README.md
-  - release/correction_notices/README.md
-  - data/rollback/README.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - schemas/contracts/v1/release/RollbackCard.schema.json
-  - schemas/contracts/v1/release/CorrectionNotice.schema.json
-tags: [kfm, runbook, archaeology, rollback, governance, sensitive-lane]
+  - contracts/release/rollback_card.md
+  - schemas/contracts/v1/release/rollback_card.schema.json
+  - schemas/contracts/v1/domains/archaeology/rollback_card.schema.json
+  - tools/validators/release/validate_rollback_card.py
+  - tools/release/rollback_apply.py
+  - tests/release/test_synthetic_rollback_rehearsal.py
+  - .github/workflows/rollback-drill.yml
+  - .github/CODEOWNERS
+  - data/rollback/archaeology/README.md
+tags: [kfm, runbook, archaeology, rollback, withdrawal, correction, synthetic-rehearsal, sensitivity, governance, operational-hold]
 notes:
-  - "Path is PROPOSED placement under docs/runbooks/<domain>/ per Directory Rules §4 Step 3 (domain as segment)."
-  - "Visible KFM examples use flat docs/runbooks/<topic>_ROLLBACK.md; ADR may resolve which form is canonical."
-  - "Implementation maturity is UNKNOWN; doctrine is CONFIRMED."
+  - "Same-path modernization under the docs/ responsibility root; no path, authority root, contract, schema, policy, release object, or public state is created or moved."
+  - "The generic release RollbackCard 1.0.0 profile is the current bounded validator target. The Archaeology-domain rollback-card schema remains a permissive greenfield stub and is not an equivalent authority surface."
+  - "Operational rollback remains HOLD: the production pipeline and generic validator entrypoint are placeholders, while the available apply helper is synthetic-workspace-only."
+  - "This runbook is an instruction and handoff surface. It is not a RollbackCard, ReviewRecord, PolicyDecision, CorrectionNotice, release approval, or rollback execution record."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Archaeology Rollback Runbook
 
-Governed procedure for withdrawing, restoring, or superseding a **PUBLISHED** Archaeology release when evidence, rights, sovereignty, sensitivity, validation, policy, or rendering fails after publication.
+> **Repository-grounded procedure for classifying an Archaeology release defect, preparing a non-executing `RollbackCard` candidate, exercising the deterministic synthetic rollback/withdrawal rehearsal, and handing unresolved operational action to the appropriate governed authorities.**
 
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![doctrine: CONFIRMED](https://img.shields.io/badge/doctrine-CONFIRMED-blue)
-![implementation: PROPOSED](https://img.shields.io/badge/implementation-PROPOSED-lightgrey)
-![domain: archaeology](https://img.shields.io/badge/domain-archaeology-8b5e3c)
-![sensitivity: deny--by--default](https://img.shields.io/badge/sensitivity-deny--by--default-critical)
-![governance: release%20authority](https://img.shields.io/badge/governance-release%20authority-purple)
-![last updated: 2026--05--13](https://img.shields.io/badge/last%20updated-2026--05--13-informational)
-
-> **Status:** draft · **Owners:** _TODO_ — docs steward · archaeology domain steward · release authority · **Last updated:** 2026-05-13
+<p>
+  <img alt="Document status: repository-grounded draft" src="https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b">
+  <img alt="Domain: archaeology" src="https://img.shields.io/badge/domain-archaeology-6e2a8a">
+  <img alt="Sensitivity posture: deny by default" src="https://img.shields.io/badge/sensitivity-deny%20by%20default-b42318">
+  <img alt="Implemented profile: fixture first" src="https://img.shields.io/badge/profile-fixture%20first-8250df">
+  <img alt="Operational rollback: hold" src="https://img.shields.io/badge/operational%20rollback-HOLD-b42318">
+  <img alt="Publication effect: none" src="https://img.shields.io/badge/publication-none-6e7781">
+</p>
 
 > [!IMPORTANT]
-> Archaeology is a **deny-by-default** lane. Exact sites, burial, human remains, sacred sites, and looting-risk detail fail closed by default. A rollback that touches sensitive geometry, cultural material, sovereign records, or rights-restricted source data **requires a rights-holder representative** alongside the release authority. Do not run this procedure unattended.
-
----
-
-## Quick jump
-
-- [1. Purpose & scope](#1-purpose--scope)
-- [2. When to use this runbook](#2-when-to-use-this-runbook)
-- [3. Pre-conditions](#3-pre-conditions)
-- [4. Roles & separation of duties](#4-roles--separation-of-duties)
-- [5. Rollback procedure](#5-rollback-procedure)
-- [6. Defect class → correction & rollback posture](#6-defect-class--correction--rollback-posture)
-- [7. Reason codes & recovery paths](#7-reason-codes--recovery-paths)
-- [8. Sensitive-lane gotchas](#8-sensitive-lane-gotchas)
-- [9. Correction vs. rollback vs. tombstone](#9-correction-vs-rollback-vs-tombstone)
-- [10. Drills & validation](#10-drills--validation)
-- [11. Post-rollback obligations](#11-post-rollback-obligations)
-- [12. Anti-patterns](#12-anti-patterns)
-- [13. Related docs](#13-related-docs)
-- [Appendix A — Artifact inventory](#appendix-a--artifact-inventory)
-- [Appendix B — Glossary](#appendix-b--glossary)
-
----
-
-## 1. Purpose & scope
-
-**Purpose.** Translate KFM rollback doctrine into a repeatable, auditable procedure for the **Archaeology and Cultural Heritage** domain — the lane that owns archaeological sites, surveys, artifacts, features, contexts, excavation units, remote-sensing and LiDAR candidates, geophysics, 3D documentation, collections, chronology, and cultural review records. (CONFIRMED doctrine; PROPOSED implementation.)
-
-**Scope (in).** Anything PUBLISHED under the Archaeology lane: public-safe generalized site summaries, survey-coverage layers, candidate-anomaly surfaces, chronology timelines, 3D documentation surfaces, Evidence Drawer payloads, Focus Mode answers that cite Archaeology evidence, and the catalog and release decisions that authorize them.
-
-**Scope (out).**
-
-- **Migrations** — `migrations/<kind>/rollback/` is the home for database/schema/graph migration reversals; this runbook does not duplicate that procedure.
-- **UI-only rollbacks** — feature-flag flips and schema deprecations in the explorer shell live in `docs/runbooks/ui_ROLLBACK.md`. (CONFIRMED rule; PROPOSED presence.)
-- **AI adapter kill switches** — provider-adapter rollbacks live in `docs/runbooks/governed_ai_ROLLBACK.md`. (CONFIRMED rule; PROPOSED presence.)
-- **True deletion (erasure)** — covered by `docs/runbooks/revocation.md`; tombstoning preserves explainability, erasure does not. See §9.
-
-**Truth posture.** The doctrine in this runbook is **CONFIRMED**. Specific paths, schema names, validator names, and CLI invocations referenced here are **PROPOSED** until verified against a mounted repository. Treat every `release/...`, `data/...`, `schemas/...`, `policy/...`, and `tools/...` path as a placement target consistent with Directory Rules, not as proof of presence.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 2. When to use this runbook
-
-Run this procedure when an Archaeology PUBLISHED claim has failed, or is at risk of failing, in a way that requires returning to a prior safe release rather than (or in addition to) issuing a forward correction.
-
-### 2.1 Trigger classes
-
-| # | Trigger class | Typical signal | Reason code family | Severity |
-|---|---|---|---|---|
-| T1 | **Sensitive geometry leak** | Exact site, burial, sacred-place, or looting-risk coordinate appears in a public payload, tile, popup, export, or AI answer | `SENSITIVITY_UNRESOLVED`, `RIGHTS_UNKNOWN` | **Critical** |
-| T2 | **Cultural sovereignty revocation** | Rights-holder representative withdraws consent or steward review is rescinded | `RIGHTS_UNKNOWN`, `REVIEW_REJECTED` | **Critical** |
-| T3 | **Evidence gap discovered** | `EvidenceRef` fails to resolve, `EvidenceBundle` is missing or invalidated, citation validation regresses | `MISSING_EVIDENCE` | **High** |
-| T4 | **Source-role collapse** | A source family was promoted (e.g., candidate anomaly used as confirmed site) past its authorized role | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN` | **High** |
-| T5 | **Validation regression** | `ValidationReport` for the released artifact set has degraded (schema, geometry, temporal, identity) | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | **High** |
-| T6 | **Release infrastructure failure** | `ReleaseManifest` is invalid, signatures fail, attestation lookup fails, rollback target is missing | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING` | **High** |
-| T7 | **Correction-lineage break** | A prior correction left derivatives unresolved or supersession entry missing | `CORRECTION_DERIVATIVES_UNRESOLVED`, `CORRECTION_PRIOR_RELEASE_MISSING` | **Medium** |
-| T8 | **AI surface violation** | Focus Mode produced an uncited or sovereignty-unaware Archaeology answer, or referenced unreleased context | `AI_UNCITED`, `AI_POLICY_BREACH` _(PROPOSED reason codes)_ | **High** |
-| T9 | **Stale-state past tolerance** | Source freshness expired and a published claim no longer satisfies its declared cadence | `STALE_PAST_TOLERANCE` _(PROPOSED)_ | **Low–Medium** (correction usually sufficient; rollback for material drift) |
+> **This runbook does not authorize or execute rollback.** The current repository proves a closed, fixture-first `RollbackCard` candidate profile and a synthetic-workspace rehearsal. It does not prove authenticated rollback authority, live policy evaluation, independent review, production alias mutation, external cache invalidation, release, deployment, or publication.
 
 > [!WARNING]
-> Triggers T1, T2, and T8 are **always sensitive-lane** and require the full separation-of-duties matrix in §4.2. Do not treat them as routine.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 3. Pre-conditions
-
-Before issuing a `RollbackCard`, the on-call release authority confirms each of the following. If any item is **No**, the rollback **fails closed** at that step and the prior PUBLISHED state is preserved until the gap is filled.
-
-| # | Pre-condition | Required artifact | Status if missing |
-|---|---|---|---|
-| P1 | Affected release is identified by `release_id` | `ReleaseManifest` (current) | `ROLLBACK_TARGET_MISSING` — block |
-| P2 | A prior safe `ReleaseManifest` exists with intact digests | Prior `ReleaseManifest` + `EvidenceBundle` closure | `ROLLBACK_TARGET_MISSING` — block |
-| P3 | Defect is classified (see §6) | Defect record / triage note | `MISSING_RECEIPT` — block |
-| P4 | Sensitivity / rights status of the affected payload is re-checked | `PolicyDecision`, `RedactionReceipt` where applicable | `SENSITIVITY_UNRESOLVED` — block; raise to T4 holdout |
-| P5 | Downstream derivatives are inventoried | Catalog / triplet derivative list | `CORRECTION_DERIVATIVES_UNRESOLVED` — hold until enumerated |
-| P6 | Cache and CDN keys for the affected release are known | Tile / COG / API payload cache index | Proceed with explicit cache-flush plan recorded |
-| P7 | Required reviewers are reachable (see §4) | Reviewer roster | Hold until the materiality-appropriate set is convened |
-| P8 | Kill-switch path is documented and reachable | Fail-closed kill-switch _(PROPOSED tool)_ | Block; do not "soft-disable" via style filter |
+> **Never place exact archaeological coordinates, burial or human-remains detail, sacred-site information, culturally restricted knowledge, collection-security detail, looting-risk detail, or private landowner information in a public issue, pull request, workflow log, fixture, report, or rehearsal workspace.** Use a restricted incident channel and public-safe references only.
 
 > [!CAUTION]
-> Hiding sensitive geometry behind a renderer style filter is **not** a rollback. Public bytes already in tiles, COGs, GeoParquet, PMTiles, payload caches, or third-party caches can still expose the underlying coordinates. The only correct posture is to **withdraw at the manifest layer** and invalidate caches.
+> `tools/release/rollback_apply.py` is guarded for synthetic roots only. Do not weaken, bypass, rename around, or copy around its `.kfm-synthetic-rollback-rehearsal` marker and `synthetic: true` checks. Do not point it at the repository's real `data/`, `release/`, cache, storage, or deployment paths.
 
-[⬆ Back to top](#archaeology-rollback-runbook)
+**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-and-current-repository-evidence) · [Invariants](#3-archaeology-fail-closed-invariants) · [Triggers](#4-trigger-classification-and-finite-candidate-outcomes) · [Preconditions](#5-preconditions-and-stop-conditions) · [Procedure](#6-candidate-preparation-and-synthetic-rehearsal-procedure) · [Contract](#7-current-rollbackcard-profile-and-schema-conflict) · [Rehearsal](#8-synthetic-rehearsal-and-safe-entry-points) · [Review](#9-rights-sovereignty-sensitivity-and-review) · [Actions](#10-correction-withdrawal-rollback-tombstone-and-erasure) · [Invalidation](#11-carrier-and-derivative-invalidation-plan) · [Validation](#12-validation-and-claim-boundaries) · [Handoff](#13-review-handoff-packet) · [Anti-patterns](#14-anti-patterns) · [Open work](#15-current-holds-and-open-verification) · [Related](#16-related-authorities-and-operational-surfaces) · [Maintenance](#17-maintenance-correction-and-document-rollback)
 
 ---
 
-## 4. Roles & separation of duties
+## 1. Purpose, scope, and non-goals
 
-### 4.1 Role definitions (PROPOSED)
+### Purpose
 
-| Role | What they own in rollback | Notes |
+This runbook converts the current repository's rollback evidence into a bounded Archaeology procedure. It helps a maintainer or steward:
+
+1. classify a suspected defect without exposing sensitive detail;
+2. select a finite candidate posture;
+3. prepare a schema-paired `RollbackCard` candidate without claiming authority;
+4. inventory evidence, policy, review, correction, target, and invalidation dependencies;
+5. run the repository's deterministic no-network rehearsal;
+6. produce a truthful review handoff that leaves operational work on `HOLD` when authority or implementation is absent.
+
+### In scope
+
+- Archaeology and Cultural Heritage public-safe release carriers and claims, including generalized map layers, survey-coverage summaries, chronology views, candidate-anomaly surfaces, 3D representations, catalog projections, governed API payloads, Evidence Drawer content, Focus Mode answers, exports, and downstream indexes.
+- Candidate rollback, withdrawal, hold, and error planning using the generic release `RollbackCard` profile.
+- Synthetic, no-network rehearsal in isolated temporary roots.
+- Sensitive-lane escalation and public-safe incident documentation.
+- Correction, withdrawal, invalidation, lineage, and rollback-target handoff requirements.
+
+### Out of scope
+
+- **Production rollback execution.** The tracked production pipeline is still a placeholder.
+- **Release approval or public mutation.** A document, candidate card, passing validator, workflow result, commit, or pull request cannot approve a release transition.
+- **Database, schema, or graph migrations.** Those require their owning migration procedures and reversible migration records.
+- **UI-only implementation rollback.** Use [`../ui_ROLLBACK.md`](../ui_ROLLBACK.md) for renderer or feature-flag concerns that do not change a governed release claim.
+- **Erasure.** Rollback, withdrawal, correction, and tombstoning do not satisfy a lawful deletion or right-to-erasure requirement by themselves; use [`../revocation.md`](../revocation.md) and the relevant privacy/rights process.
+- **Live source activation, live model calls, or external cache operations.** No such action is authorized by this runbook.
+
+### State separation
+
+| State | What it proves | What it does **not** prove |
 |---|---|---|
-| **Source steward** | Re-confirms source rights, sensitivity tag, cadence for the affected source family | Owns `SourceDescriptor` lifecycle |
-| **Domain steward (archaeology)** | Owns Archaeology object families and validators; co-authors defect classification | One of the two minimum signatures on the RollbackCard |
-| **Sensitivity reviewer** | Reviews redaction, generalization, withholding, and tier decisions for the affected payload | Required when the trigger touches T1/T2/T3 sensitivity |
-| **Rights-holder representative** | Confirms sovereignty, cultural-heritage, or consent decisions | **Required** for archaeology sovereign / cultural / tribal sources |
-| **Release authority** | Issues the `RollbackCard`; authorizes the PUBLISHED → prior-release transition; **must be distinct from the original release author when materiality applies** | Single accountable signer for the rollback decision |
-| **Correction reviewer** | Reviews the `CorrectionNotice` that accompanies the rollback | Often the docs steward or domain steward not otherwise involved |
-| **AI surface steward** | Audits Focus Mode templates, `AIReceipt` samples, and citation validation downstream of the rollback | Required for trigger T8 |
-| **Docs steward** | Updates this runbook, the drift register, and the verification backlog after the rollback | Captures lessons-learned without amending PUBLISHED history silently |
+| Tracked runbook | Human procedure exists at a reviewed commit | Operator authority or runtime readiness |
+| Schema-valid candidate | Shape and local cross-field consistency | Reference resolution, policy approval, review, or execution |
+| Synthetic rehearsal `PASS` | Deterministic behavior inside a marked temporary root | Production alias mutation or external invalidation |
+| Hosted workflow success | The workflow's exact bounded assertions passed at one revision | Human review, release, deployment, or publication |
+| Merge | Repository bytes entered `main` | A `PUBLISHED` lifecycle transition |
+| Operational rollback | **UNKNOWN / HOLD** in current evidence | Must not be inferred from any state above |
 
-### 4.2 Separation-of-duties matrix (PROPOSED)
+[Back to top](#top)
 
-| Action | Author may self-approve? | Required separation |
+---
+
+## 2. Authority and current repository evidence
+
+### 2.1 Directory Rules basis
+
+The target is a tracked human-facing runbook under `docs/runbooks/archaeology/`. Accepted Directory Rules place operational procedures under `docs/runbooks/` and domains as nested segments rather than root-level authority folders. This update stays at the same path and does not create, move, rename, split, or retire an authority surface.
+
+| Responsibility | Owning surface | Relationship to this runbook |
 |---|---|---|
-| **Routine, non-sensitive Archaeology rollback** (e.g., chronology metadata defect) | No when materiality applies | Author / detector + correction reviewer + release authority |
-| **Sensitive-lane Archaeology rollback** (T1 / T2 / T3 / T8) | **No** | Author + sensitivity reviewer + release authority + **rights-holder rep** |
-| **Sovereign / cultural-material rollback** (sacred sites, burial, human remains) | **No** | All of the above + explicit sovereignty review note |
-| **Tombstone-only revocation** | No | Correction reviewer + release authority (rights-holder rep where applicable) |
+| Human operating guidance | `docs/runbooks/archaeology/` | **Owned here** |
+| Rollback semantic meaning | [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Referenced; not redefined |
+| Rollback candidate machine shape | [`schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Referenced; passing is not approval |
+| Archaeology-domain schema stub | [`schemas/contracts/v1/domains/archaeology/rollback_card.schema.json`](../../../schemas/contracts/v1/domains/archaeology/rollback_card.schema.json) | Disclosed as conflicting/incomplete; not selected as operational authority |
+| Candidate validation | [`tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | Bounded no-network validation only |
+| Synthetic rehearsal | [`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) and tests | Temporary synthetic roots only |
+| Release decisions and correction records | [`release/`](../../../release/README.md) | Separate append-only decision plane |
+| Data-plane rollback support | [`data/rollback/archaeology/`](../../../data/rollback/archaeology/README.md) | Support and receipts; not release authority |
+| Reviewer routing | [`.github/CODEOWNERS`](../../../.github/CODEOWNERS) | GitHub routing only; not independent actor authority |
+| Policy, rights, sensitivity, and release approval | Accepted policy/review/release authorities | **UNKNOWN / HOLD** for operational use |
+
+### 2.2 Current bounded status at the evidence snapshot
+
+| Surface | Current evidence | Safe conclusion |
+|---|---|---|
+| Target path | Existing tracked Markdown, prior blob `c485d242...` | Same-path modernization is supported |
+| Generic `RollbackCard` contract | Draft v1.0 semantic contract paired to a closed 1.0.0 schema | Candidate meaning and bounded invariants are inspectable |
+| Generic release schema | Draft 2020-12 JSON Schema, `additionalProperties: false` | Candidate shape is closed; authority flags must remain false |
+| Release validator | Implemented, no-network, file-size bounded, duplicate-key aware, schema + semantic checks | Candidate shape/local consistency can be tested |
+| Release fixtures | Three valid and six invalid candidates with expected findings | Fixture polarity is testable |
+| Archaeology-domain rollback schema | Permissive id-only greenfield stub; `additionalProperties: true` | **CONFLICTED / HOLD**; do not treat as equivalent to the generic release profile |
+| Generic validator entrypoint | `tools/validators/validate_rollback_card.py` raises `NotImplementedError` | Do not use this entrypoint |
+| Production rollback pipeline | `pipelines/rollback/main.py` is a one-line greenfield placeholder | No production rollback engine is established |
+| Synthetic helper | Marker-protected, no-network, deterministic; PLAN by default; APPLY only inside marked synthetic root | Safe for rehearsal only |
+| Synthetic tests | Eight non-vacuous tests cover plan/no-write, rollback, withdrawal, marker, synthetic flag, invalidations, target, and digest failures | Rehearsal behavior has bounded deterministic proof |
+| `rollback-drill` workflow | Read-only, no release/signing secret, asserts holds and fixture behavior | Readiness inspection, not operational rollback |
+| CODEOWNERS | One verified route, `@bartytime4life` | Review routing exists; independence and release authority do not |
+| Separation of duties | Current guidance says ADR-0024 remains proposed and ReviewRecord machine surfaces conflict | Operational SoD is `UNKNOWN / HOLD` |
+| Operational release/rollback | Release root records fixture-first profiles and explicit workflow holds | No production rollback, invalidation, alias mutation, or publication is proved |
 
 > [!NOTE]
-> Maturity caveat — separation of duties is **maturity-dependent**. Early-stage doctrine work may be authored and approved by the same actor when materiality is low. For Archaeology rollbacks, materiality is **never low**: assume the full matrix until an ADR documents an exception.
+> **Repository evidence outranks the prior May 2026 no-mounted-repo wording.** Paths and implementations named as `CONFIRMED` above were read at the pinned commit. Anything not verified from an owning surface remains `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION`, or `HOLD`.
 
-[⬆ Back to top](#archaeology-rollback-runbook)
+[Back to top](#top)
 
 ---
 
-## 5. Rollback procedure
+## 3. Archaeology fail-closed invariants
 
-### 5.1 Flow
+The following rules are non-compensable for this lane:
+
+1. **Exact archaeology remains denied by default.** Exact site geometry, burial, human remains, sacred sites, culturally restricted knowledge, collection-security detail, and looting-risk detail do not become public because a rollback, correction, style, export, or model answer is convenient.
+2. **A candidate is not a site.** LiDAR, remote-sensing, geophysics, and survey anomalies keep their candidate role through rollback and correction. Reverting bytes must not upcast source role.
+3. **Style hiding is not withdrawal.** A MapLibre filter or hidden control does not remove coordinates from PMTiles, vector tiles, COGs, GeoParquet, API responses, caches, exports, or model context.
+4. **Evidence remains upstream of language.** An `EvidenceRef` must resolve to an admissible `EvidenceBundle` before a consequential claim is restored. Missing support produces hold, abstention, or withdrawal—not a plausible rewrite.
+5. **Public clients stay behind the trust membrane.** No rollback path may make RAW, WORK, QUARANTINE, canonical stores, direct source APIs, vector indexes, graph internals, or direct model output the normal public path.
+6. **Rollback preserves lineage.** Affected releases, cards, receipts, proofs, corrections, and supersession links remain inspectable unless a separate lawful erasure process applies.
+7. **Receipts, proofs, decisions, and carriers remain distinct.** A rehearsal report is not a `RollbackCard`; a `RollbackCard` is not a `PolicyDecision`; a `CorrectionNotice` is not a release; a tile is not evidence.
+8. **Watchers and CI do not publish.** Detection and validation may propose or hold work; neither may mutate public state through this runbook.
+9. **Unknown authority fails closed.** When eligible actors, rights, sovereignty, review, policy, target safety, invalidation, or public notification are unresolved, use `HOLD` or `ERROR` and escalate.
+10. **No public sensitive detail in the handoff.** Use opaque references and restricted channels. Public repository prose records the reason class and scope, not protected content.
+
+[Back to top](#top)
+
+---
+
+## 4. Trigger classification and finite candidate outcomes
+
+### 4.1 Trigger-to-reason-code crosswalk
+
+Use only reason codes admitted by the current generic release schema. Domain-specific symptoms may refine the narrative, but they must not invent a second machine vocabulary in this runbook.
+
+| Archaeology symptom | `trigger.reason_code` | Candidate posture | Notes |
+|---|---|---|---|
+| Exact site, burial, sacred-site, human-remains, collection-security, or looting-risk detail may have escaped | `SENSITIVITY_DISCOVERY` | `HOLD` immediately; then withdrawal or rollback candidate after authorized review | Do not reproduce the detail in GitHub |
+| Rights, consent, cultural authority, or sovereignty posture changed | `RIGHTS_CHANGE` | Usually `HOLD` or `WITHDRAWAL_CANDIDATE` | Rights-holder authority and communication protocol remain operationally unverified |
+| Upstream source was withdrawn or access terms changed | `SOURCE_WITHDRAWAL` | Withdrawal or rollback candidate | Re-check all derived carriers and citations |
+| Evidence now contradicts a released interpretation or source role | `EVIDENCE_CONTRADICTION` | Rollback, withdrawal, or hold | Includes candidate-as-site and observation-as-authority errors |
+| Evidence is missing or insufficient to support the public claim | `INSUFFICIENT_EVIDENCE` | `HOLD` or `WITHDRAWAL_CANDIDATE` | Restore only after EvidenceBundle closure |
+| Schema, geometry, time, digest, manifest, or validator failure | `VALIDATION_FAILURE` | Rollback or hold | A green unrelated check does not compensate |
+| Policy or review support is absent, rejected, conflicted, or no longer applicable | `POLICY_FAILURE` | `HOLD` or withdrawal candidate | Do not claim the current proposed SoD model is accepted |
+| Credential, exploit, integrity, isolation, or malicious-input concern | `SECURITY_ISSUE` | `EMERGENCY_HOLD` reason; disposition `HOLD` | Coordinate through the security/incident procedure |
+| API, cache, tile, index, storage, or other delivery failure | `OPERATIONAL_FAILURE` | Rollback, withdrawal, or hold | External invalidation remains operationally unproved |
+| Immediate containment is needed before classification closes | `EMERGENCY_HOLD` | `HOLD` | This is a reason code, not authority to mutate state |
+| Candidate input is malformed, unsafe, or cannot be resolved | `INPUT_INVALID` | `ERROR` | Preserve no-write behavior |
+| General release defect not better classified above | `RELEASE_DEFECT` | Any finite candidate posture justified by evidence | Prefer a more specific code when supported |
+
+Examples such as uncited AI output, stale state, correction-lineage drift, or a misleading trust badge are **symptoms**, not additional schema reason codes. Map them to the closest current code and explain the symptom in a public-safe incident note.
+
+### 4.2 Finite candidate dispositions
+
+| `disposition` | `target.mode` | Meaning | Operational effect |
+|---|---|---|---|
+| `ROLLBACK_CANDIDATE` | `PRIOR_RELEASE` | Proposes restoring a distinct prior release | None; requires separate review, policy, and execution |
+| `WITHDRAWAL_CANDIDATE` | `WITHDRAWAL` | Proposes withdrawal without selecting a replacement | None |
+| `HOLD` | `HOLD` | Stops the candidate path pending evidence, authority, or implementation | None |
+| `ERROR` | `HOLD` | Records an invalid or failed recovery evaluation | None |
+
+> [!IMPORTANT]
+> The words `ROLLBACK_CANDIDATE` and `WITHDRAWAL_CANDIDATE` are deliberate. The current profile requires `governance.authority_created`, `policy_evaluated`, `review_completed`, `rollback_executed`, and `public_state_mutated` to remain `false`, with `governance.release_ref: null`.
+
+[Back to top](#top)
+
+---
+
+## 5. Preconditions and stop conditions
+
+### 5.1 Preconditions for candidate preparation
+
+A maintainer may prepare a candidate only when each required input is available or explicitly marked unresolved:
+
+| Check | Minimum evidence | Missing-result posture |
+|---|---|---|
+| Affected release | Stable `affected_release_ref` | `ERROR` / `INPUT_INVALID` |
+| Reason | One admitted trigger reason code plus public-safe summary | `ERROR` |
+| Candidate target | Distinct prior release, withdrawal, or hold mode | `HOLD`; never improvise a prior release |
+| Evidence support | Canonical, sorted, unique EvidenceBundle references | `HOLD` or withdrawal when insufficient |
+| Policy support | Canonical, sorted, unique PolicyDecision references for rollback candidate | `HOLD` |
+| Review support | Canonical review references when available; explicit unresolved review otherwise | Sensitive Archaeology remains `HOLD` without accepted review authority |
+| Correction/public notice | `correction_notice_ref` when `public_notice_required: true` | Validator failure |
+| Invalidation scope | At least one admitted invalidation class; complete carrier inventory for rehearsal | `HOLD` if material carriers are unknown |
+| Restoration | Restore ref matches prior-release target; validation remains required | Validator failure |
+| Time | Detection ≤ decision ≤ effective time when effective time exists | Validator failure |
+| Lineage | No self-supersession; prior/superseding card refs are explicit or null | Validator failure |
+| Governance boundary | Every authority/execution/public-mutation flag remains false | Validator failure |
+| Sensitive detail | No protected content in candidate, logs, branch, or PR | Stop and move to restricted incident handling |
+
+### 5.2 Mandatory stop conditions
+
+Stop candidate preparation and record `HOLD` or `ERROR` when any of these is true:
+
+- the affected release cannot be resolved;
+- the proposed target is the affected release or is not a verified prior candidate;
+- a protected location or culturally restricted fact would have to be disclosed in the repository to continue;
+- rights, sovereignty, consent, policy, review eligibility, or reviewer independence is unresolved;
+- required EvidenceBundle or PolicyDecision references are missing for a rollback candidate;
+- the public-notice requirement is known but no correction reference exists;
+- the invalidation inventory omits a carrier that may retain the affected bytes;
+- the only proposed containment is a renderer style/filter change;
+- the workflow or helper would need production credentials, network access, a real alias, or a real public store;
+- someone proposes changing a governance flag to `true` merely to make the candidate validate;
+- someone proposes using the permissive Archaeology-domain schema to bypass the closed generic release profile;
+- operational action would rely on a proposed role, proposed ADR, or one-account CODEOWNERS route as if it were accepted authority.
+
+[Back to top](#top)
+
+---
+
+## 6. Candidate-preparation and synthetic-rehearsal procedure
+
+### 6.1 Governed flow
 
 ```mermaid
 flowchart TD
-  A["Trigger detected\n(see §2.1)"] --> B["Classify defect\n(see §6)"]
-  B --> C{"Sensitive lane?\n(T1 / T2 / T3 / T8)"}
-  C -- "Yes" --> D["Convene sensitive-lane panel\n(§4.2): author + sensitivity reviewer\n+ release authority + rights-holder rep"]
-  C -- "No"  --> E["Convene routine panel:\nauthor + correction reviewer\n+ release authority"]
-  D --> F["Identify affected ReleaseManifest\nby release_id"]
-  E --> F
-  F --> G{"Prior safe\nReleaseManifest exists?\n(digests intact, evidence closed)"}
-  G -- "No" --> H["FAIL CLOSED:\nROLLBACK_TARGET_MISSING\n→ hold at current state;\nopen verification backlog item"]
-  G -- "Yes" --> I["Withdraw / disable affected\npublic surfaces via governed API\n(NOT a renderer style filter)"]
-  I --> J["Verify prior artifacts:\ndigests, signatures, attestations,\nEvidenceBundle closure"]
-  J --> K["Issue RollbackCard\n+ CorrectionNotice\n(release/rollback_cards/,\n release/correction_notices/)"]
-  K --> L["Invalidate caches:\ntiles, COGs, PMTiles,\nAPI payloads, CDN"]
-  L --> M["Update derivatives:\ncatalog, triplets, indexes,\nstory exports, AI receipts"]
-  M --> N["Mark stale / withdrawn\nUI state in Evidence Drawer\nand trust badges"]
-  N --> O["Record alias-revert receipt\nin data/rollback/<domain>/<release_id>/"]
-  O --> P["Post-rollback obligations (§11)"]
+  A[Signal detected] --> B{Protected detail or active exposure suspected?}
+  B -- Yes --> C[Use restricted incident channel\nRecord public-safe reference only]
+  B -- No --> D[Record public-safe triage note]
+  C --> E[Classify admitted trigger reason]
+  D --> E
+  E --> F{Can affected release and posture be resolved?}
+  F -- No --> G[ERROR or HOLD\nNo write, no target invention]
+  F -- Yes --> H[Inventory evidence, policy, review,\ncorrection, target, and invalidations]
+  H --> I{Operational authority and engine accepted?}
+  I -- No / current state --> J[Prepare non-executing RollbackCard candidate\nAll governance flags false]
+  I -- Yes / future verified state --> K[Follow accepted operational procedure\noutside this draft runbook]
+  J --> L[Run closed release validator and tests]
+  L --> M{Changed-area checks pass?}
+  M -- No --> N[Fix candidate or retain HOLD]
+  M -- Yes --> O[Run synthetic rehearsal only]
+  O --> P[Produce review handoff\nwith exact refs and limitations]
+  P --> Q[Remain HOLD pending accepted\nreview, policy, execution, and correction]
 
-  classDef fail fill:#fee,stroke:#c00,color:#900,font-weight:bold;
-  classDef gate fill:#fff5e6,stroke:#c80,color:#640;
-  classDef ok fill:#eef9ee,stroke:#393,color:#163;
-  class H fail
-  class C,G gate
-  class I,J,K,L,M,N,O,P ok
+  classDef hold fill:#fde7e7,stroke:#b42318,color:#5c1111;
+  classDef proof fill:#e7f1ff,stroke:#0969da,color:#102a43;
+  classDef gate fill:#fff4cc,stroke:#9a6700,color:#4a3000;
+  class G,J,N,Q hold;
+  class L,O,P proof;
+  class B,F,I,M gate;
 ```
 
-> [!NOTE]
-> Diagram reflects KFM doctrine consolidated from the Encyclopedia, the Domain Atlas, and Directory Rules. Specific tool names, CLI commands, and step automations are **PROPOSED** and require verification against a mounted repository.
+### 6.2 Phase 1 — contain and triage without leaking detail
 
-### 5.2 Numbered steps
+1. Record the detection time, observed public surface, and a public-safe opaque reference.
+2. Do not quote, screenshot, attach, or encode the protected content in GitHub.
+3. When exposure may be active, use the authorized security/sensitivity incident channel. This repository runbook cannot substitute for platform containment.
+4. Do not call a style filter, hidden panel, removed popup, or client-side denial a rollback.
+5. Assign one current schema reason code from §4.1. When classification is incomplete, use `EMERGENCY_HOLD` and disposition `HOLD`.
 
-The flowchart above is the source of truth for the sequence. The steps below expand each node.
+### 6.3 Phase 2 — resolve the candidate boundary read-only
 
-1. **Detect and triage.** Capture the inbound signal (alert, report, validation regression, sovereignty notice, CARE concern). Open an incident record with a timestamp, signal source, and observed surface.
-2. **Classify the defect** against the matrix in §6. The class drives both the correction posture and the rollback posture.
-3. **Gate on sensitivity.** If the defect is in trigger classes T1/T2/T3/T8, convene the sensitive-lane panel in §4.2 _before_ touching public surfaces. For routine, non-sensitive defects, convene the routine panel.
-4. **Identify the affected release.** Resolve the `release_id` from the surfaced artifact (ReleaseManifest reference, RunReceipt, AIReceipt, EvidenceDrawerPayload, or LayerManifest). Record the resolution in the incident note.
-5. **Locate the rollback target.** Find the prior `ReleaseManifest` whose `EvidenceBundle` closure, signatures, and policy decisions are intact. If none exists with all closures intact, **fail closed** with `ROLLBACK_TARGET_MISSING`; do not improvise a target.
-6. **Withdraw at the manifest layer.** Disable the affected public surfaces via the governed API and registry — not via renderer style filters, popup hiding, or layer toggles. The trust membrane permits only manifest-mediated withdrawals.
-7. **Verify the prior artifact set.** Re-check digests, signatures (DSSE / cosign where applicable), in-toto / SLSA attestations where present, and `EvidenceBundle → EvidenceRef` resolution. Anything that does not verify is not a valid rollback target.
-8. **Issue the `RollbackCard`.** File the decision artifact under `release/rollback_cards/<release_id>/` _(PROPOSED path, per Directory Rules)_. Co-file a `CorrectionNotice` under `release/correction_notices/` describing the defect class, supersession reference (if any), and the rollback target.
-9. **Invalidate caches.** Record cache-invalidation receipts for tiles (PMTiles, vector tiles), COGs, GeoParquet, API payload caches, and any CDN keys that surfaced the affected payload. The receipt names the cache layer, key set, and timestamp.
-10. **Update derivatives.** Catalog entries (`data/catalog/`), triplet / graph projections (`data/triplets/`), search indexes, Story exports, and `AIReceipt` lineage are all derivative; mark them as superseded, regenerate, or withhold per the defect class.
-11. **Mark stale / withdrawn UI state.** Trust badges, the Evidence Drawer, and Focus Mode answers must visibly reflect the withdrawn or superseded state. Silent reversion is a failure mode.
-12. **Record the alias-revert receipt.** Under `data/rollback/<domain>/<release_id>/` _(PROPOSED path)_, record the data-plane receipt that pairs with the release-plane `RollbackCard`.
-13. **Discharge post-rollback obligations** per §11.
+1. Resolve the affected release reference without mutating an alias or carrier.
+2. Choose one candidate posture:
+   - distinct prior release;
+   - withdrawal with no replacement;
+   - hold;
+   - error.
+3. Resolve or enumerate:
+   - EvidenceBundle references;
+   - PolicyDecision references;
+   - ReviewRecord references or the explicit review gap;
+   - correction/public-notice requirement;
+   - every affected carrier and derivative;
+   - timing and lineage.
+4. Preserve source role. A candidate anomaly does not become a confirmed site because an older release used different wording.
+5. Do not select a target solely because its bytes exist. A future operational target must also satisfy evidence, policy, review, validation, rights, sensitivity, correction, and release requirements.
 
-> [!IMPORTANT]
-> Rollback **must not** be a hidden file copy. Every artifact moved or replaced must travel through the same governed release path that produced it — validators, policy gate, evidence closure, signatures, release decision — or the rollback is itself a publication violation.
+### 6.4 Phase 3 — prepare a non-executing candidate
 
-[⬆ Back to top](#archaeology-rollback-runbook)
+1. Use [`contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) for meaning and the closed generic release schema for shape.
+2. Keep arrays sorted and unique.
+3. Use a non-placeholder `sha256:` digest for `spec_hash`.
+4. Match `disposition`, `target.mode`, target release, and restoration release.
+5. Set `restoration.validation_required: true`.
+6. Set a correction reference when public notice is required.
+7. Keep every governance flag `false` and `release_ref` null.
+8. Do not commit an operational-looking Archaeology card to `release/rollback_cards/` unless an accepted instance-placement and review procedure authorizes it. A temporary candidate or fixture is sufficient for draft review.
 
----
+### 6.5 Phase 4 — validate and rehearse
 
-## 6. Defect class → correction & rollback posture
+1. Run the release-level fixture profile and focused validator tests in §12.
+2. Run the synthetic rehearsal test module in §12.
+3. Prefer the test module over manual helper invocation; it creates isolated temporary roots and exercises both positive and negative cases.
+4. When manual inspection of the helper is necessary, use a disposable root outside the repository and preserve both guards:
+   - `.kfm-synthetic-rollback-rehearsal` containing exactly `synthetic-only\n`;
+   - scenario field `synthetic: true`.
+5. Use PLAN mode unless the purpose is specifically to test synthetic APPLY behavior inside the disposable root.
+6. Treat a rehearsal `PASS` as synthetic evidence only. Do not convert its report into a release, correction, or rollback receipt.
 
-CONFIRMED doctrine; PROPOSED for Archaeology-specific application. The table is the operator's first decision aid: classify, then act.
+### 6.6 Phase 5 — hand off and hold
 
-| Defect class | Correction posture | Rollback posture | Archaeology amplifier |
-|---|---|---|---|
-| **Evidence gap** | ABSTAIN or withdraw the unsupported claim | Restore prior evidence-supported release | Re-check `EvidenceBundle` against steward / cultural review records before re-publishing |
-| **Source-role collapse** (candidate treated as confirmed; observation treated as authority) | Restore source role; refuse upcast | Restore prior release where source role was correctly bounded | Candidate anomalies (LiDAR / remote sensing) **must not** become "confirmed sites" without survey + review evidence |
-| **Rights / sensitivity unresolved** | Withdraw or move to T2/T3/T4 tier with `RedactionReceipt` | Restore prior release that was within rights / sensitivity | Sovereign and cultural rights are **rights-holder representative** decisions, not docs-steward decisions |
-| **Geometry over-precision** | Generalize / aggregate; emit `RedactionReceipt` | Restore prior generalized release | "Generalized cultural activity zones" — never publish as precise sites; H3 / cell granularity per declared transform profile |
-| **Temporal misalignment** | Republish with corrected observed / valid / release times | Restore prior temporally-correct release | Chronology assertions are uncertainty-bearing; do not collapse interval evidence into point claims |
-| **Policy / review state inadequate** | Run required review; supply `ReviewRecord` | Restore prior release that had complete review state | Sensitive-lane release requires the full matrix (§4.2) |
-| **Validation regression** | Re-validate; fix schema or contract drift; re-issue receipts | Restore prior release with intact `ValidationReport` | Re-run candidate-not-site, public no-leak, exact-sensitive-geometry-denial fixtures _(PROPOSED test families)_ |
-| **Rendering / UI defect** | Patch renderer; revalidate visual regression | Restore prior `LayerManifest` and style if the defect is style-borne | A trust badge that misrepresents review state is a release-significant defect, not cosmetic |
-| **API / governed-API defect** | Roll forward the API; ABSTAIN on affected routes | Restore prior `ReleaseManifest` and route binding | The governed API is the only public emitter; bypasses do not exist |
-| **AI-output defect** (uncited, sovereignty-unaware, restricted exposure) | Disable adapter / template; require `AIReceipt` correction | Restore prior `AIReceipt`-validated answer set; tombstone the offending exchanges | Focus Mode for archaeology must remain sovereignty-aware and citation-validated |
+1. Assemble the packet in §13.
+2. Separate current evidence from proposals and unknowns.
+3. Name every unverified actor, policy, target, cache, external carrier, correction, and execution dependency.
+4. Record `HOLD` when the accepted operational path is absent—which is the current repository state.
+5. Do not merge, release, deploy, promote, publish, or mutate public state from this runbook.
 
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 7. Reason codes & recovery paths
-
-Reason codes are surfaced by the policy / promotion / release gates and propagate into the `RollbackCard`. The catalog below is **PROPOSED** and tracks the reason codes recorded in the Domain Atlas.
-
-| Reason code | Family | Typical Archaeology trigger | Recovery path |
-|---|---|---|---|
-| `MISSING_RECEIPT` | Missing required artifact | RunReceipt / AIReceipt / ReviewRecord absent | Re-emit the missing receipt; re-run review |
-| `MISSING_EVIDENCE` | Missing required artifact | `EvidenceRef` does not resolve to `EvidenceBundle` | Resolve evidence; re-publish or ABSTAIN |
-| `MISSING_REVIEW` | Missing required artifact | StewardReview / CulturalReview absent | Convene review; supply `ReviewRecord` |
-| `SCHEMA_MISMATCH` | Schema / contract drift | Object family deviates from `schemas/contracts/v1/...` | Schema fix and/or ADR; re-run validator |
-| `CONTRACT_DRIFT` | Schema / contract drift | Semantic contract changed without ADR | Restore contract; ADR-driven supersession |
-| `RIGHTS_UNKNOWN` | Rights / sensitivity unresolved | Source rights or sovereignty not resolved at admission | Steward review; rights resolution; tier reassignment |
-| `SENSITIVITY_UNRESOLVED` | Rights / sensitivity unresolved | Sensitivity class unsettled for the released payload | Sensitivity reviewer + rights-holder rep; re-tier |
-| `ROLE_COLLAPSE` | Source-role collapse | Candidate / observation / model / regulatory roles mixed | Restore source role; refuse upcast |
-| `ROLE_DOWNCAST_FORBIDDEN` | Source-role collapse | Authority source downgraded to candidate | Restore source role |
-| `REVIEW_NEEDED` | Review state inadequate | Required review never ran | Run review; supply `ReviewRecord` |
-| `REVIEW_INSUFFICIENT` | Review state inadequate | Review missing rights-holder rep for a sovereign lane | Re-run with the full matrix |
-| `REVIEW_REJECTED` | Review state inadequate | Review explicitly rejected; release should never have proceeded | Withdraw; tombstone if needed |
-| `RELEASE_MANIFEST_INVALID` | Release infrastructure error | ReleaseManifest fails schema or signature checks | Manifest fix; supply rollback target |
-| `ROLLBACK_TARGET_MISSING` | Release infrastructure error | No prior safe release identified | **Fail closed**; open verification backlog item; do not improvise |
-| `CORRECTION_DERIVATIVES_UNRESOLVED` | Correction lineage broken | Downstream derivatives not invalidated by a prior correction | Resolve derivatives; supersession entry |
-| `CORRECTION_PRIOR_RELEASE_MISSING` | Correction lineage broken | Correction does not reference a valid prior release | Locate prior release or escalate to docs steward |
-
-[⬆ Back to top](#archaeology-rollback-runbook)
+[Back to top](#top)
 
 ---
 
-## 8. Sensitive-lane gotchas
+## 7. Current `RollbackCard` profile and schema conflict
 
-Archaeology is the canonical example of a sensitive lane in KFM. The Encyclopedia, the Domain Atlas, and the deny-by-default register all converge on the same posture: **exact archaeological locations, burial, human remains, sacred sites, looting-risk detail, and unresolved cultural sensitivity fail closed**.
+### 7.1 Generic release profile — current bounded validator target
 
-> [!CAUTION]
-> **Style filters are not rollbacks.** A MapLibre style that hides a layer does not remove the bytes from PMTiles, COGs, GeoParquet, or the API payload cache. The only correct withdrawal is at the manifest layer, with cache invalidation receipts.
+The generic release profile is the only repository-present RollbackCard surface currently paired with a closed schema, dedicated validator, fixtures, tests, and workflow inspection.
 
-> [!CAUTION]
-> **Tiles are not proof.** Tiled / generalized layers carry selected attributes, not full source authority. A rollback that touches a tile must also touch the `TileArtifactManifest`, the source / evidence / proof links, and the cache keys derived from them.
-
-> [!CAUTION]
-> **AI answers can re-expose withdrawn geometry.** Focus Mode for archaeology must remain sovereignty-aware and citation-validated. After a rollback that touches T1 / T2 / T8 triggers, the AI surface steward audits `AIReceipt` samples for the affected period and tombstones the implicated exchanges.
-
-> [!WARNING]
-> **Default tier matters more than the payload's apparent specificity.** Per the per-domain tier matrix: Archaeology — site location defaults to **T4**; Archaeology — human remains / sacred sites defaults to **T4** with no T0 transform path. A rollback may need to raise a payload's effective tier, not merely restore an earlier one.
-
-### 8.1 Cultural symbol & UI considerations
-
-- Archaeological / cultural symbols must avoid sacred symbols and tribal insignia, remain WCAG accessible, use generalized geometry, and carry CARE metadata.
-- Sovereignty notice chips and generalization logs are part of the release-significant evidence surface, not decoration. A rollback that removes them silently is itself a defect.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 9. Correction vs. rollback vs. tombstone
-
-These three are distinct governed actions. Use the table to pick the right one.
-
-| Action | When to use | Primary artifact | What it preserves | What it changes |
-|---|---|---|---|---|
-| **Correction** (PUBLISHED → PUBLISHED′) | Detected error or new evidence; the claim is fixable | `CorrectionNotice` + (updated or superseding) `ReleaseManifest` + `ReviewRecord` | Original release record; full lineage; downstream invalidation list | Public claim now points at the corrected / superseding release |
-| **Rollback** (PUBLISHED → prior release) | Failed release or post-publication failure; targeted prior release is identified | `RollbackCard` + `CorrectionNotice` + `ReleaseManifest` revert to prior | Audit receipts; downstream-derivative-invalidation chain; explainability | Public surface returns to a prior, evidence-supported state |
-| **Tombstone** (revocation) | The release should not be replaced; only the public surface should be removed while explainability is preserved | Signed tombstone receipt appended to the audit ledger; supersession reference where applicable | Lineage and audit remain explorable; investigators can trace why | Public views (UI, governed API) hide tombstoned items |
-
-> [!NOTE]
-> **Tombstone vs. erasure.** Tombstones satisfy explainability; they do not satisfy right-to-be-forgotten obligations that require actual deletion of personal data. The Archaeology lane occasionally intersects living-person data (e.g., collector identities, landowner detail). For erasure boundaries, defer to `docs/runbooks/revocation.md` (PROPOSED) and the People / DNA / Land domain runbooks.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 10. Drills & validation
-
-Rollback that has never been exercised is not reliable. The drill schedule below mirrors the rollback-drill pattern in the Encyclopedia's reversibility doctrine.
-
-| Drill | What it exercises | Required artifacts | Cadence (PROPOSED) |
-|---|---|---|---|
-| **Dry-run release → rollback** | End-to-end rollback against a synthetic Archaeology candidate fixture (exact-geometry denied; generalized public-safe tile; steward review record; correction / rollback path) | RollbackCard receipt; restored prior `LayerManifest` | Each release cycle that touches Archaeology |
-| **Sensitive-geometry deny replay** | Confirms that a hypothetical leak of exact site / burial / sacred geometry is detected, withdrawn at the manifest layer, and cache-invalidated | Sensitive-geometry deny fixture; cache-invalidation receipt | Quarterly minimum |
-| **Sovereignty revocation drill** | Rights-holder representative withdraws consent; the lane fails closed; tombstones are issued where needed | Tombstone receipt; supersession reference where applicable | At least annually; on rights-holder rotation |
-| **Correction-lineage replay** | After a correction, all downstream derivatives (catalog, triplets, indexes, story exports, AIReceipts) reflect the supersession | Derivative invalidation list; replay validation report | Each release cycle |
-| **AI surface audit** | Sample `AIReceipt`s for the affected period; verify no uncited / sovereignty-unaware Archaeology answer survives the rollback window | AIReceipt sample; citation validation report | After any T8 trigger |
-
-### 10.1 Minimum acceptance for a passing drill
-
-- A `RollbackCard` exists for the simulated release, signed by the materiality-appropriate role set in §4.2.
-- The prior `ReleaseManifest` is verified by digest, signature (where applicable), and `EvidenceBundle` closure.
-- Cache-invalidation receipts cover every public byte source for the affected payload.
-- The Evidence Drawer, trust badges, and Focus Mode visibly reflect the restored state.
-- The drift register or verification backlog records any item that did not pass.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 11. Post-rollback obligations
-
-Within one working cycle of the rollback decision, the on-call release authority and docs steward jointly:
-
-1. **Update the audit ledger.** Append the `RollbackCard`, `CorrectionNotice`, and any tombstone receipts. The ledger is append-only; do not edit prior entries.
-2. **Update the verification backlog.** Open or update entries in `docs/registers/VERIFICATION_BACKLOG.md` (PROPOSED) for any item that the rollback exposed as untested or unverified — including any path, schema, or contract referenced as PROPOSED in this runbook.
-3. **Update the drift register.** Open or update entries in `docs/registers/DRIFT_REGISTER.md` (PROPOSED) for any drift the rollback revealed (e.g., parallel authority, compatibility-root divergence, missing README on an authority root).
-4. **Notify rights-holders.** For sovereignty- or cultural-material rollbacks, formal notification follows the rights-holder communication protocol agreed at admission. (Protocol is **NEEDS VERIFICATION** until the steward authority and confidentiality record exists.)
-5. **Refresh AI surfaces.** Focus Mode templates, AIReceipts, and citation validation reports for the affected period are audited by the AI surface steward and tombstoned where they referenced the withdrawn release.
-6. **Refresh stale-state markers.** Any UI surface, badge, or Evidence Drawer entry that referenced the withdrawn release shows the restored or stale-state marker. Silent reversion is a defect.
-7. **Schedule the next drill.** A failed real rollback resets the drill cadence — schedule the next dry-run within the next cycle, not at the next routine interval.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 12. Anti-patterns
-
-Patterns observed in the corpus as failure modes. None are acceptable in this lane.
-
-- **Style-filter "rollback".** Hiding a sensitive layer via renderer style does not remove the bytes. Public clients, exports, and AI surfaces can still resolve them.
-- **Hidden file copy.** Replacing a published artifact in place without traveling the governed release path destroys auditability and may violate the lifecycle invariant regardless of which directory the bytes ended up in.
-- **Treating MapLibre, tiles, the graph projection, or AI text as truth.** All of these are downstream carriers. A rollback that only touches a carrier without touching the manifest layer is incomplete.
-- **Renaming a candidate as a confirmed site.** LiDAR candidates, remote-sensing anomalies, and geophysics observations are candidate evidence, not confirmed locations. A rollback that re-elevates them is a source-role collapse.
-- **Single-signer rollback on a sensitive-lane release.** Sensitive lanes require the full separation-of-duties matrix.
-- **Silently reverting UI state.** Trust badges, Evidence Drawer entries, and Focus Mode answers must visibly reflect the rollback.
-- **Tombstone instead of erasure where erasure is required.** Tombstones preserve explainability, not erasure.
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## 13. Related docs
-
-| Doc | Why it matters here | Status |
-|---|---|---|
-| `docs/doctrine/lifecycle-law.md` | The lifecycle invariant rollback must travel | PROPOSED presence |
-| `docs/doctrine/trust-membrane.md` | Why public surfaces cannot be reverted via internal stores | PROPOSED presence |
-| `docs/domains/archaeology/README.md` | Domain identity, scope, object families | PROPOSED presence |
-| `docs/runbooks/README.md` | Runbook index and conventions | PROPOSED presence |
-| `docs/runbooks/revocation.md` | Tombstone vs. erasure boundary | PROPOSED presence |
-| `docs/runbooks/ui_ROLLBACK.md` | UI feature-flag rollback (not domain rollback) | PROPOSED presence |
-| `docs/runbooks/governed_ai_ROLLBACK.md` | AI adapter kill-switch (not domain rollback) | PROPOSED presence |
-| `docs/governance/separation-of-duties.md` | Role definitions and matrix | PROPOSED presence |
-| `release/rollback_cards/README.md` | Decision-artifact home (release plane) | PROPOSED presence |
-| `release/correction_notices/README.md` | Correction-notice home (release plane) | PROPOSED presence |
-| `release/manifests/README.md` | ReleaseManifest home | PROPOSED presence |
-| `data/rollback/README.md` | Alias-revert receipts (data plane) | PROPOSED presence |
-| `schemas/contracts/v1/release/RollbackCard.schema.json` | RollbackCard schema | PROPOSED presence |
-| `schemas/contracts/v1/release/CorrectionNotice.schema.json` | CorrectionNotice schema | PROPOSED presence |
-| `docs/registers/VERIFICATION_BACKLOG.md` | Where post-rollback verification items are tracked | PROPOSED presence |
-| `docs/registers/DRIFT_REGISTER.md` | Where post-rollback drift is tracked | PROPOSED presence |
-
-[⬆ Back to top](#archaeology-rollback-runbook)
-
----
-
-## Appendix A — Artifact inventory
-
-<details>
-<summary><b>Required and supporting artifacts referenced by this runbook</b></summary>
-
-| Artifact | Owning root (PROPOSED per Directory Rules) | Role in rollback |
-|---|---|---|
-| `SourceDescriptor` | `data/registry/sources/` | Re-confirmed during rollback for rights / sensitivity / cadence |
-| `EvidenceRef` | `contracts/` (meaning) / `schemas/contracts/v1/...` (shape) | Must resolve to `EvidenceBundle` for the rollback target |
-| `EvidenceBundle` | `data/proofs/evidence_bundle/` | Closure required on the rollback target |
-| `ValidationReport` | `data/receipts/validation/` | Required for both current and prior releases |
-| `RunReceipt` | `data/receipts/pipeline/` | Process memory; re-emitted on any re-publish |
-| `PolicyDecision` | `policy/` outputs into `data/receipts/` | Recorded for the rollback action itself |
-| `RedactionReceipt` | `data/proofs/` (transform receipts) | Required when sensitivity tier changes |
-| `ReviewRecord` | `data/receipts/` (review) | Required for sensitive-lane rollback |
-| `ReleaseManifest` (current) | `release/manifests/` | Identifies the affected release by `release_id` |
-| `ReleaseManifest` (prior) | `release/manifests/` | The rollback target |
-| `RollbackCard` | `release/rollback_cards/` | The rollback decision artifact |
-| `CorrectionNotice` | `release/correction_notices/` | Public notice of the corrected / withdrawn claim |
-| `LayerManifest` | `data/published/layers/<domain>/` | Declares the public-safe layer; restored during rollback |
-| `TileArtifactManifest` | `data/published/` (per layer) | Linked to source / evidence / proof; touched by cache invalidation |
-| `MapReleaseManifest` | `release/manifests/` (where map-specific) | Map release decision; rollback restores prior |
-| `AIReceipt` | `data/receipts/ai/` | Audited for Focus Mode answers affected by the rollback |
-| `CitationValidationReport` | `data/proofs/citation_validation/` | Verified during AI-surface audit |
-| `EvidenceDrawerPayload` | governed-API payload | Updated to reflect the restored state |
-| Tombstone receipt | `data/receipts/release/` (signed, appended) | Used when revocation is reversible without replacement |
-| Alias-revert receipt | `data/rollback/<domain>/<release_id>/` | Data-plane pair to the release-plane `RollbackCard` |
-
-> Path placements above follow Directory Rules §4 (responsibility-root mapping) and the `release/` vs. `data/published/` distinction. Each is **CONFIRMED rule / PROPOSED presence** until verified against a mounted repository.
-
-</details>
-
----
-
-## Appendix B — Glossary
-
-<details>
-<summary><b>Terms used in this runbook</b></summary>
-
-| Term | Definition (placement-relevant short form) |
+| Field | Current requirement |
 |---|---|
-| **Authority root** | A repo-root folder that carries one of the §3 (Directory Rules) responsibilities. |
-| **Compatibility root** | A root that exists for legacy, mirror, deprecated, external-export, or transitional reasons. |
-| **Lane** | A domain or topic segment inside a responsibility root (e.g., `data/processed/archaeology/`). |
-| **Lifecycle invariant** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. |
-| **Promotion** | A governed state transition between lifecycle phases. Not a file move. |
-| **Trust membrane** | The boundary that prevents raw / unreviewed / model-generated / internal state from becoming public truth. Operational form: `apps/governed-api/`. |
-| **EvidenceBundle / EvidenceRef** | Resolved support package for claims; lives in `data/proofs/`. References resolve via `packages/evidence-resolver/`. |
-| **ReleaseManifest** | The release decision artifact; lives in `release/manifests/`. |
-| **CorrectionNotice** | Public notice of a corrected claim; lives in `release/correction_notices/`. |
-| **RollbackCard** | Rollback decision artifact; lives in `release/rollback_cards/`. |
-| **RuntimeResponseEnvelope** | Finite-outcome wrapper (ANSWER, ABSTAIN, DENY, ERROR) returned by the governed API; schema in `schemas/contracts/v1/runtime/`. |
-| **Watcher-as-non-publisher** | The invariant that workers emit receipts and candidates only — they do not publish, mutate canonical records, or bypass review. |
-| **Sensitive lane** | A lane (Archaeology is the canonical example) where deny-by-default applies and the full separation-of-duties matrix is required for release-significant actions. |
-| **CARE** | Collective Benefit, Authority to Control, Responsibility, Ethics — principles applicable to sovereign and cultural data. |
-| **Tier (T0–T4)** | Sensitivity / rights tier from Open (T0) through Denied (T4); per-domain tier matrix governs which transforms move payloads between tiers. |
+| `object_type` | `RollbackCard` |
+| `schema_version` | `1.0.0` |
+| `id` | Stable `rollback:<scope>:...` identifier |
+| `version` | Semantic version |
+| `spec_hash` | Non-placeholder `sha256:` digest |
+| `disposition` | `ROLLBACK_CANDIDATE`, `WITHDRAWAL_CANDIDATE`, `HOLD`, or `ERROR` |
+| `trigger` | Admitted reason code plus timezone-aware `detected_at` |
+| `affected_release_ref` | Release under review |
+| `target` | `PRIOR_RELEASE`, `WITHDRAWAL`, or `HOLD` mode and release ref/null as required |
+| `evidence_bundle_refs` | Sorted, unique support references; non-empty for rollback candidate |
+| `policy_decision_refs` | Sorted, unique policy references; non-empty for rollback candidate |
+| `review_record_refs` | Sorted, unique review references; presence is not proof of eligible review |
+| `correction_notice_ref` | Reference or null; required when public notice is required |
+| `invalidations` | One or more admitted invalidation classes, sorted and unique |
+| `restoration` | Restore ref/null, public-notice flag, and `validation_required: true` |
+| `timing` | Timezone-aware decision and optional effective time |
+| `lineage` | Supersedes/superseded-by refs or null, never self-reference |
+| `governance` | All authority/execution/public-mutation flags false; release ref null |
+
+### 7.2 Current invalidation vocabulary
+
+Use the exact schema vocabulary:
+
+- `API_CACHE`
+- `CDN`
+- `TILES`
+- `CATALOG`
+- `TRIPLETS`
+- `SEARCH_INDEX`
+- `VECTOR_INDEX`
+- `AI_CACHE`
+- `DOWNSTREAM_DERIVATIVES`
+
+The synthetic rehearsal requires the complete set. A future operational candidate may need a narrower schema-valid set, but the handoff must still inventory every real carrier that could retain or reconstruct affected content.
+
+### 7.3 Archaeology-domain schema conflict
+
+The repository also contains [`schemas/contracts/v1/domains/archaeology/rollback_card.schema.json`](../../../schemas/contracts/v1/domains/archaeology/rollback_card.schema.json). At the pinned revision it:
+
+- describes itself as a greenfield placeholder;
+- requires only `id`;
+- allows additional properties;
+- points to an Archaeology contract, fixtures root, and validator that are not established as the current closed profile.
+
+**Disposition: `CONFLICTED / HOLD`.** This runbook does not delete the stub, silently alias it, declare it superseded, or use it to bypass the generic release profile. Resolving the domain-versus-generic schema relationship requires separate contract/schema/ADR work with migration and consumer analysis.
+
+### 7.4 Candidate example
+
+The example is illustrative and non-authoritative. It contains no real release, source, person, place, or cultural detail.
+
+```json
+{
+  "object_type": "RollbackCard",
+  "schema_version": "1.0.0",
+  "id": "rollback:archaeology:synthetic:001",
+  "version": "0.1.0",
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "disposition": "HOLD",
+  "trigger": {
+    "reason_code": "SENSITIVITY_DISCOVERY",
+    "detected_at": "2026-08-23T00:00:00Z"
+  },
+  "affected_release_ref": "release:archaeology:synthetic:v2",
+  "target": {
+    "mode": "HOLD",
+    "release_ref": null
+  },
+  "evidence_bundle_refs": [],
+  "policy_decision_refs": [],
+  "review_record_refs": [],
+  "correction_notice_ref": null,
+  "invalidations": [
+    "AI_CACHE",
+    "API_CACHE",
+    "CATALOG",
+    "CDN",
+    "DOWNSTREAM_DERIVATIVES",
+    "SEARCH_INDEX",
+    "TILES",
+    "TRIPLETS",
+    "VECTOR_INDEX"
+  ],
+  "restoration": {
+    "restore_release_ref": null,
+    "public_notice_required": false,
+    "validation_required": true
+  },
+  "timing": {
+    "decided_at": "2026-08-23T00:05:00Z",
+    "effective_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "review_completed": false,
+    "rollback_executed": false,
+    "public_state_mutated": false,
+    "release_ref": null
+  }
+}
+```
+
+The digest above is syntactically non-placeholder but is still illustrative; do not copy it into a real candidate. Compute a deterministic digest from the actual candidate profile used by the accepted tooling.
+
+[Back to top](#top)
+
+---
+
+## 8. Synthetic rehearsal and safe entry points
+
+### 8.1 What is implemented
+
+[`tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) implements a deterministic, no-network rehearsal for an isolated synthetic root. It can:
+
+- verify the synthetic marker and scenario flag;
+- validate rollback or withdrawal scenario shape;
+- verify the current synthetic alias and release-manifest/artifact digests;
+- produce deterministic PLAN reports without writes;
+- apply a rollback or withdrawal only within the marked synthetic root;
+- preserve affected manifest and artifact bytes;
+- emit synthetic correction and invalidation files;
+- retain governance fields showing that no authority, policy, review, release, publication, or public mutation occurred.
+
+### 8.2 What is not implemented
+
+- production target discovery;
+- authenticated actor or signer verification;
+- accepted review or policy evaluation;
+- production alias mutation;
+- external object-storage, CDN, tile, API, search, vector, graph, or model-cache invalidation;
+- public correction delivery;
+- production rollback receipt/proof issuance;
+- deployment or publication transitions.
+
+### 8.3 Safe test entry point
+
+Use the tests that construct temporary roots automatically:
+
+```bash
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+```
+
+The current test module covers:
+
+1. deterministic PLAN mode and no writes;
+2. synthetic rollback alias switch with history preservation and invalidation output;
+3. synthetic withdrawal with release retention;
+4. denial of `synthetic: false`;
+5. denial of incomplete invalidations;
+6. denial of missing target material;
+7. denial of artifact digest mismatch;
+8. denial of a missing synthetic marker.
+
+### 8.4 Helper refusal and hold codes
+
+The helper's error codes are rehearsal outcomes, not `RollbackCard.trigger.reason_code` values. Useful examples include:
+
+| Rehearsal code | Meaning |
+|---|---|
+| `SYNTHETIC_MARKER_MISSING` / `SYNTHETIC_MARKER_INVALID` | Workspace is not an admitted synthetic root |
+| `NON_SYNTHETIC_INPUT_DENIED` | Scenario did not assert `synthetic: true` |
+| `UNSAFE_PATH` / `UNSAFE_SYMLINK` | Candidate tried to escape the synthetic root |
+| `TARGET_REQUIRED` / `WITHDRAWAL_TARGET_FORBIDDEN` | Operation and target disagree |
+| `INVALIDATION_SET_INCOMPLETE` | Rehearsal omitted a required carrier class |
+| `AFFECTED_RELEASE_NOT_CURRENT` | Synthetic alias does not name the affected release |
+| `ARTIFACT_DIGEST_MISMATCH` | Synthetic carrier bytes differ from the manifest |
+| `HISTORY_MUTATED` | Affected synthetic release history changed unexpectedly |
+
+A helper error returns `HOLD` and preserves no-write/public-mutation boundaries. Do not translate a helper refusal into permission to weaken the guard.
+
+[Back to top](#top)
+
+---
+
+## 9. Rights, sovereignty, sensitivity, and review
+
+### 9.1 Current authority boundary
+
+Current repository evidence confirms one GitHub review route and proposed fixture-first review profiles. It does **not** confirm:
+
+- authenticated KFM actor identities;
+- accepted archaeology, sensitivity, cultural/rights-holder, correction, or release assignments;
+- an independent reviewer pool;
+- accepted reviewer quorum or conflict/recusal policy;
+- an accepted release-separation ADR;
+- canonical ReviewRecord machine shape;
+- live policy/release integration.
+
+Therefore this runbook names future review duties as **PROPOSED** and treats operational review as `UNKNOWN / HOLD`.
+
+### 9.2 Proposed review burden by consequence
+
+| Candidate scope | Proposed participants | Current operational status |
+|---|---|---|
+| Non-sensitive chronology or presentation defect | Detector/author, Archaeology steward, correction reviewer, release authority | Assignments and authority `NEEDS VERIFICATION` |
+| Exact geometry or looting-risk exposure | Detector, Archaeology steward, sensitivity reviewer, release authority, applicable cultural/rights-holder representative | `HOLD` until accepted identities/assignments and restricted handling exist |
+| Burial, human remains, sacred site, or culturally restricted knowledge | All above plus explicit sovereignty/cultural review evidence | `HOLD`; no public detail and no T0 transform assumption |
+| Rights/consent withdrawal | Source/rights steward, applicable rights-holder representative, sensitivity reviewer, correction/release authority | `HOLD`; communication protocol `NEEDS VERIFICATION` |
+| AI or Focus Mode re-exposure | Archaeology steward, AI surface steward, sensitivity reviewer, correction/release authority | `HOLD`; AI cache and citation lineage must be inventoried |
+
+### 9.3 Public-safe incident notation
+
+A public repository record may include:
+
+- opaque incident ID;
+- affected release reference;
+- reason code;
+- consequence class;
+- public carrier families;
+- `HOLD`/candidate disposition;
+- check results and unresolved authority;
+- links to restricted records only when access semantics are safe.
+
+It must not include:
+
+- exact coordinates or reversible geometry;
+- source excerpts revealing restricted cultural knowledge;
+- names or contact details of private individuals or protected representatives;
+- credentials, signed URLs, storage locations, exploit details, or cache keys;
+- screenshots or rendered tiles that reveal the protected location;
+- model prompts or output containing withheld context.
+
+[Back to top](#top)
+
+---
+
+## 10. Correction, withdrawal, rollback, tombstone, and erasure
+
+These actions remain distinct even when the same defect motivates more than one.
+
+| Action | Use when | Candidate/record surface | Preserves | Current effect from this runbook |
+|---|---|---|---|---|
+| **Correction** | A released claim can be transparently superseded or repaired | `CorrectionNotice` plus linked release/review records | Original release and correction lineage | None |
+| **Withdrawal candidate** | No safe replacement is currently selected | `RollbackCard.disposition = WITHDRAWAL_CANDIDATE` | Affected release history and reason | None |
+| **Rollback candidate** | A distinct prior release is proposed for restoration | `ROLLBACK_CANDIDATE` with `PRIOR_RELEASE` target | Both affected and prior release histories | None |
+| **Hold** | Evidence, rights, target, review, policy, invalidation, or execution is unresolved | `HOLD` | Current audit context; no mutation | None |
+| **Error** | Candidate evaluation itself is invalid or unsafe | `ERROR` | Failure evidence and no-write posture | None |
+| **Tombstone** | Public discovery must cease while lineage remains inspectable | Separate governed revocation/tombstone record | Audit and supersession history | None |
+| **Erasure** | Lawful deletion or consent/rights process requires actual removal | Separate privacy/rights procedure | Only what governing law/policy permits | Out of scope |
+
+> [!CAUTION]
+> A Git revert is not automatically a KFM release rollback. It may reverse repository bytes, but it does not by itself correct public carriers, invalidate external caches, issue notices, preserve release lineage, or establish an authorized rollback decision.
+
+[Back to top](#top)
+
+---
+
+## 11. Carrier and derivative invalidation plan
+
+A candidate handoff must enumerate every place the affected content can remain visible, searchable, reconstructable, or model-accessible.
+
+| Schema class | Archaeology examples | Handoff question |
+|---|---|---|
+| `API_CACHE` | Governed API response caches, Evidence Drawer payload caches | Which route/profile/version keys may retain the claim? |
+| `CDN` | Public-safe static carriers and edge caches | Which immutable or mutable cache keys are affected? |
+| `TILES` | PMTiles, MVT, raster/COG, terrain, 3D tile carriers | Can hidden attributes or geometry still be extracted? |
+| `CATALOG` | Dataset, layer, item, release, and discovery records | Which records must show withdrawn, stale, corrected, or superseded state? |
+| `TRIPLETS` | Graph/triplet projections and relation edges | Which edges can still imply the withdrawn claim? |
+| `SEARCH_INDEX` | Text, place, layer, and archival discovery indexes | Which documents or snippets need invalidation or reindexing? |
+| `VECTOR_INDEX` | Embedding/retrieval indexes | Can withheld text or geometry still be retrieved by AI? |
+| `AI_CACHE` | Focus Mode responses, summaries, citations, prompt/result caches | Which answers, receipts, or templates reference the affected release? |
+| `DOWNSTREAM_DERIVATIVES` | Stories, exports, screenshots, reports, generalized surfaces, 3D scenes | Which derivatives must be corrected, withheld, or regenerated? |
+
+### Carrier rules
+
+- Inventory by immutable identifier and digest where possible.
+- Do not publish cache keys or paths that reveal protected content.
+- A carrier invalidation plan is not proof that invalidation occurred.
+- A future execution must emit bounded receipts from the owning systems and preserve failures.
+- If any material carrier is unknown, retain `HOLD` and record the gap in the verification backlog.
+- Derived layers, graphs, indexes, scenes, and AI responses never replace canonical evidence or release records.
+
+[Back to top](#top)
+
+---
+
+## 12. Validation and claim boundaries
+
+### 12.1 Repository-native focused checks
+
+Run from the repository root at the exact branch head:
+
+```bash
+python tools/validators/release/validate_rollback_card.py --fixtures
+python -m unittest discover \
+  --start-directory tests/validators \
+  --pattern 'test_validate_rollback_card.py' \
+  --verbose
+python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
+```
+
+The hosted [`rollback-drill`](../../../.github/workflows/rollback-drill.yml) workflow should also run on the pull request according to its path/event configuration. It is read-only and intentionally reports the operational holds.
+
+### 12.2 What each check proves
+
+| Check | Passing evidence | Explicit non-proof |
+|---|---|---|
+| Release fixture validator | Valid fixtures pass; invalid fixtures produce exact expected findings | No reference resolution, actor authentication, policy evaluation, or execution |
+| Validator unit tests | The validator's changed behavior remains covered | No release authority |
+| Synthetic rehearsal tests | Deterministic temporary-root rollback/withdrawal behavior and negative guards | No real alias, public state, cache, deployment, or carrier mutation |
+| `rollback-drill` workflow | Current repository readiness assertions and holds pass at the exact head | No production rollback or publication |
+| Markdown/GFM checks | One H1, balanced fences, valid internal anchors, readable tables/alerts, and resolvable changed links | No operational correctness beyond documentation |
+| PR read-back | Remote bytes and diff match the intended branch | No review, merge, release, deployment, promotion, or publication |
+
+### 12.3 Required interpretation
+
+Use these result labels precisely:
+
+- `PASS` — the named bounded check passed.
+- `FAIL` — the named check failed and requires repair or a disclosed inherited classification.
+- `PENDING` — hosted check has not settled.
+- `NOT_RUN` — a check was not executed; never imply success.
+- `NOT_APPLICABLE` — check does not bear on this documentation-only change.
+- `HOLD` — operational transition remains blocked by missing accepted authority or implementation.
+
+A documentation-only pull request may be reviewable while hosted CI is pending. It must not be marked ready for operational use merely because Markdown checks pass.
+
+[Back to top](#top)
+
+---
+
+## 13. Review handoff packet
+
+A truthful handoff is compact enough to review but complete enough to reconstruct the candidate.
+
+### 13.1 Required handoff fields
+
+| Field | Required content |
+|---|---|
+| Repository checkpoint | Exact `main` base and candidate branch head |
+| Incident reference | Public-safe opaque ID; restricted record pointer where permitted |
+| Affected release | Stable reference and known public carriers |
+| Trigger | Current schema reason code and public-safe narrative |
+| Candidate disposition | Rollback, withdrawal, hold, or error |
+| Target | Distinct prior release or null according to mode |
+| Evidence | EvidenceBundle refs and resolution status |
+| Policy | PolicyDecision refs and applicability status |
+| Review | Review refs, required duties, conflicts/recusals, and unresolved assignments |
+| Sensitivity/rights | Tier/rank posture, cultural/rights-holder need, and public-safe transform status |
+| Correction | Public-notice requirement and CorrectionNotice ref/status |
+| Invalidations | All schema classes plus carrier-specific inventory |
+| Validation | Exact commands, outputs, branch head, and limitations |
+| Execution | `HOLD` unless accepted production engine and authority are separately proved |
+| Rollback of the repository change | Close/abandon unmerged PR; after merge use transparent revert or forward fix |
+
+### 13.2 Handoff template
+
+```yaml
+repository_base: <full commit SHA>
+branch_head: <full commit SHA>
+incident_ref: <public-safe opaque reference>
+affected_release_ref: <release ref>
+trigger:
+  reason_code: <admitted schema code>
+  summary: <public-safe summary>
+candidate:
+  disposition: <ROLLBACK_CANDIDATE | WITHDRAWAL_CANDIDATE | HOLD | ERROR>
+  target_mode: <PRIOR_RELEASE | WITHDRAWAL | HOLD>
+  target_release_ref: <ref or null>
+evidence_bundle_refs: []
+policy_decision_refs: []
+review_record_refs: []
+correction_notice_ref: null
+invalidations: []
+validation:
+  local: <PASS | FAIL | NOT_RUN>
+  hosted: <PASS | FAIL | PENDING | NOT_RUN>
+operational_state: HOLD
+unknowns: []
+next_authorized_decision: <named decision, not a person invented by this runbook>
+```
+
+### 13.3 Handoff acceptance
+
+The packet is ready for human review when:
+
+- it contains no protected content;
+- every claim is traceable to current repository evidence or labeled otherwise;
+- the candidate validates against the generic release profile when candidate JSON is supplied;
+- all synthetic checks are reported with exact revision and scope;
+- operational authority, policy, review, execution, correction, and publication remain distinct;
+- unresolved items are explicit rather than converted into optimistic prose.
+
+[Back to top](#top)
+
+---
+
+## 14. Anti-patterns
+
+Never use this runbook to justify any of the following:
+
+- **Style-only rollback.** Hidden rendering is not byte withdrawal.
+- **Silent file replacement.** Replacing a carrier in place destroys or obscures release lineage.
+- **Real-data rehearsal.** The helper is synthetic-only; no production root, alias, cache, or source belongs in its workspace.
+- **Guard bypass.** Removing the marker, synthetic flag, path, symlink, or digest checks to make a rehearsal pass.
+- **Schema shopping.** Using the permissive Archaeology stub because the closed release profile rejects a candidate.
+- **Authority by JSON.** Treating a schema-valid card as an approved or executed rollback.
+- **Authority by GitHub.** Treating CODEOWNERS, a reviewer request, green CI, a PR, a merge, or a GitHub release as KFM release authority.
+- **Single-account independence.** Different labels, comments, or automation under one verified account do not establish separated duties.
+- **Candidate-as-site restoration.** Reverting to an older release must not restore a source-role collapse.
+- **Uncited AI restoration.** Cached model output does not become safe because it existed in a prior release.
+- **Incomplete invalidation.** Leaving tiles, search, vector, graph, story, export, or AI carriers untouched.
+- **Tombstone-as-erasure.** An audit-preserving tombstone does not satisfy every deletion obligation.
+- **Public incident leakage.** Issues and PRs must not become secondary disclosure channels.
+- **Documentation-as-operations.** This runbook explains; it does not mutate state.
+
+[Back to top](#top)
+
+---
+
+## 15. Current holds and open verification
+
+The following items remain outside this documentation-only slice:
+
+| Item | Current state | Required next evidence |
+|---|---|---|
+| Production rollback pipeline | Placeholder | Accepted interface, target selection, no-write/negative tests, execution receipts, invalidation adapters, and rollback of the operator itself |
+| Generic validator entrypoint | Placeholder | Reconcile or retire without breaking consumers; keep release validator canonical for current profile |
+| Archaeology-domain RollbackCard schema | Permissive greenfield stub | Contract/schema/fixture/validator decision, consumer inventory, migration/alias plan, and ADR if authority changes |
+| Reviewer identity and assignments | One GitHub route only | Accepted actor identity, StewardshipAssignment, interval, scope, conflict/recusal, and independent capacity |
+| ReviewRecord shape | Conflicted candidates | Canonical machine profile and migration decision |
+| Release separation | ADR-0024 proposed | Accepted decision plus live enforcement and review records |
+| Policy evaluation | Fixture/scaffold evidence only | Accepted policy source, evaluator, inputs, outputs, and fail-closed integration |
+| Production alias semantics | Proposed/held | Accepted pointer profile, atomic mutation, read-back, receipts, and rollback target binding |
+| External invalidation | Unknown | Per-carrier adapter contracts, authenticated execution, receipts, retries, and failure recovery |
+| Public correction/notification | Needs verification | Consequence classes, communication duties, accessibility, timing, and evidence-preserving notices |
+| Rights-holder communication | Needs verification | Accepted restricted protocol, identities, confidentiality, consent/revocation semantics, and audit boundary |
+| First operational Archaeology rollback drill | Not established | Approved non-public environment, synthetic/public-safe fixture, independent review, exact-head evidence, and no public mutation |
+| Domain runbook index | `docs/runbooks/archaeology/README.md` is effectively blank at the inspected revision | Separate bounded index update; not required to make this same-path file truthful |
+
+Do not resolve these items by adding more prose to this file. Each requires its owning contract, schema, policy, test, workflow, governance decision, or operator implementation.
+
+[Back to top](#top)
+
+---
+
+## 16. Related authorities and operational surfaces
+
+| Surface | Role | Current relationship |
+|---|---|---|
+| [`../README.md`](../README.md) | Runbook root boundary and index | Repository-grounded; runbooks are instruction surfaces only |
+| [`../ROLLBACK_RUNBOOK.md`](../ROLLBACK_RUNBOOK.md) | Cross-domain rollback guidance | Older broad draft; this file narrows Archaeology behavior to current evidence |
+| [`../revocation.md`](../revocation.md) | Revocation/tombstone/erasure boundary | Separate procedure |
+| [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) | Placement authority adopted by ADR-0029 | Governs this same-path docs update |
+| [`../../governance/SEPARATION_OF_DUTIES.md`](../../governance/SEPARATION_OF_DUTIES.md) | Current review-independence evidence and holds | Operational separation remains `HOLD` |
+| [`../../governance/REVIEW_DUTIES.md`](../../governance/REVIEW_DUTIES.md) | Review responsibilities and handoff | Guidance only |
+| [`../../domains/archaeology/SENSITIVITY.md`](../../domains/archaeology/SENSITIVITY.md) | Archaeology sensitivity doctrine | Draft; machine policy/review still outrank it |
+| [`../../domains/archaeology/PUBLICATION_AND_POLICY.md`](../../domains/archaeology/PUBLICATION_AND_POLICY.md) | Domain publication boundary | Use for domain-specific release posture |
+| [`../../../release/README.md`](../../../release/README.md) | Canonical append-only release decision root | Operational release/rollback held |
+| [`../../../release/rollback_cards/README.md`](../../../release/rollback_cards/README.md) | Current lane index and card guidance | Does not create approval |
+| [`../../../contracts/release/rollback_card.md`](../../../contracts/release/rollback_card.md) | Generic RollbackCard semantic contract | Current bounded meaning source |
+| [`../../../schemas/contracts/v1/release/rollback_card.schema.json`](../../../schemas/contracts/v1/release/rollback_card.schema.json) | Closed generic candidate shape | Current validator target |
+| [`../../../schemas/contracts/v1/domains/archaeology/rollback_card.schema.json`](../../../schemas/contracts/v1/domains/archaeology/rollback_card.schema.json) | Domain stub | `CONFLICTED / HOLD` |
+| [`../../../tools/validators/release/validate_rollback_card.py`](../../../tools/validators/release/validate_rollback_card.py) | No-network candidate validator | Shape/local consistency only |
+| [`../../../tools/release/rollback_apply.py`](../../../tools/release/rollback_apply.py) | Synthetic rehearsal helper | Never production |
+| [`../../../tests/release/test_synthetic_rollback_rehearsal.py`](../../../tests/release/test_synthetic_rollback_rehearsal.py) | Non-vacuous rehearsal proof | Temporary roots only |
+| [`../../../.github/workflows/rollback-drill.yml`](../../../.github/workflows/rollback-drill.yml) | Read-only readiness inspection | Preserves explicit operational holds |
+| [`../../../data/rollback/archaeology/README.md`](../../../data/rollback/archaeology/README.md) | Data-plane support and alias-revert receipt guidance | Not release authority |
+| [`../../registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) | Authority/path drift tracking | Record, do not silently normalize |
+| [`../../registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) | Checkable unresolved work | Track concrete verification gaps |
+
+[Back to top](#top)
+
+---
+
+## 17. Maintenance, correction, and document rollback
+
+### Change discipline
+
+Update this runbook when any of these changes materially:
+
+- accepted Directory Rules or the owning path;
+- RollbackCard contract/schema version or finite vocabularies;
+- canonical validator or fixture root;
+- synthetic helper guards or test entry point;
+- rollback-drill workflow semantics;
+- accepted actor/review/SoD model;
+- production rollback engine or alias/invalidation implementation;
+- Archaeology sensitivity, rights, sovereignty, or public-notice policy;
+- correction, withdrawal, tombstone, or erasure boundary.
+
+A behavior change belongs in its owning code, contract, schema, policy, test, workflow, or release surface first. Update this runbook in the same coherent slice or explain why not.
+
+### Rollback of this documentation change
+
+Before merge, abandon or close the draft pull request and retain the prior blob. After merge, use a transparent revert or forward-fix pull request against the actual merged commit. Do not rewrite shared history.
+
+Reverting this file:
+
+- restores documentation bytes only;
+- does not execute or reverse a RollbackCard;
+- does not mutate an alias, cache, carrier, release, deployment, or public surface;
+- does not resolve the generic/domain schema conflict;
+- does not change reviewer, rights-holder, policy, or release authority.
+
+### Last reviewed
+
+| Field | Value |
+|---|---|
+| Evidence checkpoint | `main@6b0f0f5353754553e0ff3800206f5479b069921a` |
+| Prior target blob | `c485d242d70201de592470801e7881baafa4e9ba` |
+| Reviewed | 2026-08-24 |
+| Operational posture | `HOLD` |
+| Release / deployment / publication effect | None |
+| Next review trigger | Any material change listed under Change discipline |
+
+[Back to top](#top)
+
+---
+
+## Appendix A — Glossary
+
+<details>
+<summary>Open glossary</summary>
+
+| Term | Bounded meaning in this runbook |
+|---|---|
+| `RollbackCard` | Immutable non-executing candidate plan and target binding under the current profile |
+| Rollback candidate | Proposal to restore a distinct prior release; no authority or mutation implied |
+| Withdrawal candidate | Proposal to remove current public use without selecting a prior release |
+| Hold | Fail-closed work state pending evidence, rights, review, policy, target, or implementation |
+| CorrectionNotice | Separate public correction/withdrawal explanation; not a RollbackCard or release |
+| EvidenceBundle | Resolved admissible support that outranks generated language |
+| Public carrier | Released tile, raster, vector, document, API payload, story, scene, export, or other delivery artifact |
+| Derivative | Rebuildable downstream catalog, graph, index, summary, visualization, or AI output |
+| Synthetic rehearsal | Deterministic no-network exercise inside a marked temporary root; never production authority |
+| Trust membrane | Boundary keeping public clients on governed interfaces and released public-safe carriers |
+| Source-role anti-collapse | Observation, candidate, model, regulatory, aggregate, and authority roles remain explicit |
+| Tombstone | Audit-preserving revocation marker; not equivalent to erasure |
 
 </details>
 
 ---
 
-> **Last reviewed:** 2026-05-13 · **Last updated:** 2026-05-13 · **Next review:** TODO
->
-> **Related docs:** [Archaeology domain README](../../domains/archaeology/README.md) · [Runbooks index](../README.md) · [Lifecycle law](../../doctrine/lifecycle-law.md) · [Trust membrane](../../doctrine/trust-membrane.md) · [Release / rollback_cards](../../../release/rollback_cards/README.md)
->
-> [⬆ Back to top](#archaeology-rollback-runbook)
+## Appendix B — Candidate review checklist
+
+- [ ] Exact base and candidate head are recorded.
+- [ ] No protected Archaeology detail appears in the branch, PR, logs, or fixtures.
+- [ ] Affected release reference is stable and resolvable in the permitted review context.
+- [ ] Trigger uses one admitted generic release schema reason code.
+- [ ] Disposition and target mode agree.
+- [ ] Prior target is distinct, or withdrawal/hold uses null target as required.
+- [ ] Evidence and policy references are sorted, unique, and sufficient for a rollback candidate.
+- [ ] Review references and unresolved assignment/independence gaps are explicit.
+- [ ] Correction/public-notice requirement is explicit.
+- [ ] Invalidation classes and real carrier inventory are complete.
+- [ ] Timing and lineage are coherent.
+- [ ] All governance flags remain false and release ref is null.
+- [ ] Generic release validator profile passes when candidate JSON is supplied.
+- [ ] Synthetic rehearsal tests pass at the exact branch head.
+- [ ] Hosted checks are classified as `PASS`, `FAIL`, `PENDING`, or `NOT_RUN` without overclaim.
+- [ ] Operational state remains `HOLD` unless accepted authority and production implementation are independently proved.
+- [ ] Rollback/correction path for the repository change is recorded.
+
+[Back to top](#top)
