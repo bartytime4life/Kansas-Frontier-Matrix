@@ -1,8 +1,11 @@
 import {
   freezeMapFeatureSelection,
   isMapFeatureSelection,
+  isMapRuntimeTrustState,
   type MapFeatureSelection,
+  type MapRuntimeReasonCode,
   type MapRuntimePort,
+  type MapRuntimeTrustState,
 } from "@kfm/maplibre";
 import {
   EVIDENCE_DRAWER_PROJECTION_PROFILE,
@@ -24,12 +27,26 @@ export type MapRuntimeEvidenceResolution = Readonly<{
   evidence: MapEvidenceResolution;
 }>;
 
+export type MapRuntimeEvidenceInvalidation = Readonly<{
+  kind: "RUNTIME_INVALIDATED";
+  selectionId: string;
+  runtimeState: MapRuntimeTrustState | "DISPOSED";
+  runtimeReason: MapRuntimeReasonCode | null;
+}>;
+
+export type MapRuntimeEvidenceUpdate =
+  | Readonly<{
+      kind: "EVIDENCE_RESOLVED";
+      resolution: MapRuntimeEvidenceResolution;
+    }>
+  | MapRuntimeEvidenceInvalidation;
+
 export type RuntimeLayerManifestProjection = (
   selection: MapFeatureSelection,
 ) => unknown;
 
 export type MapRuntimeEvidenceConsumer = (
-  resolution: MapRuntimeEvidenceResolution,
+  update: MapRuntimeEvidenceUpdate,
 ) => void;
 
 export type MapRuntimeEvidenceBinding = Readonly<{
@@ -146,9 +163,12 @@ export async function resolveMapRuntimeSelectionEvidence(
  * Bind renderer-neutral runtime selection events to the governed evidence
  * bridge. Newer selections supersede unresolved older requests. A transition
  * away from READY invalidates unresolved evidence so stale, denied, withdrawn,
- * rolled-back, or failed runtime state cannot be followed by a late ANSWER.
- * Destroy is idempotent and prevents pending or later results from reaching the
- * consumer.
+ * rolled-back, or failed runtime state cannot be followed by a late ANSWER. If
+ * an active selection exists, that transition emits a non-claim-bearing
+ * invalidation carrying only its selection ID and the exact KFM-owned runtime
+ * state/reason. It never synthesizes an evidence, policy, release, correction,
+ * or rollback decision. Destroy is idempotent and prevents pending or later
+ * results from reaching the consumer.
  *
  * This binding performs no network, renderer, source, evidence-store, policy,
  * lifecycle, model, release, deployment, or publication work. The manifest
@@ -171,13 +191,33 @@ export function bindMapRuntimeEvidence(
 
   let active = true;
   let requestVersion = 0;
+  let latestSelectionId: string | null = null;
 
   const unsubscribeSnapshot = runtime.subscribeSnapshot((snapshot) => {
-    if (snapshot.state !== "READY") requestVersion += 1;
+    if (snapshot.state === "READY") return;
+
+    requestVersion += 1;
+    const invalidatesVisibleEvidence =
+      isMapRuntimeTrustState(snapshot.state) || snapshot.state === "DISPOSED";
+    if (!active || !invalidatesVisibleEvidence || latestSelectionId === null) {
+      return;
+    }
+
+    const selectionId = latestSelectionId;
+    latestSelectionId = null;
+    consume(
+      Object.freeze({
+        kind: "RUNTIME_INVALIDATED",
+        selectionId,
+        runtimeState: snapshot.state,
+        runtimeReason: snapshot.reason,
+      }),
+    );
   });
 
   const unsubscribeSelection = runtime.subscribeSelection((selection) => {
     const currentRequest = ++requestVersion;
+    latestSelectionId = selection.selectionId;
     let layerManifestInput: unknown;
     try {
       layerManifestInput = layerManifestForSelection(selection);
@@ -191,7 +231,7 @@ export function bindMapRuntimeEvidence(
     ).then(
       (resolution) => {
         if (!active || currentRequest !== requestVersion) return;
-        consume(resolution);
+        consume(Object.freeze({ kind: "EVIDENCE_RESOLVED", resolution }));
       },
     );
   });
@@ -201,6 +241,7 @@ export function bindMapRuntimeEvidence(
       if (!active) return;
       active = false;
       requestVersion += 1;
+      latestSelectionId = null;
       unsubscribeSelection();
       unsubscribeSnapshot();
     },
