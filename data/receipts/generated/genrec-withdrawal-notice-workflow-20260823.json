@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-withdrawal-notice-workflow-20260823",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/withdrawal-notice.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/withdrawal-notice.yml": "sha256:753c685ac911ba812da3eebd277c50e0e322b7a8cf3e08ff54047db1b85e3ec2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro"
+  },
+  "prompt_or_contract": "sha256:f3e287d578c0bba518b7a01a3348df3686541133ec399f8aa179d13d2a593b8d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "no-network fixture validation",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f1361c43a3f769318ea702c6d0909541052e8045",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f1361c43a3f769318ea702c6d0909541052e8045/contracts/release/withdrawal_notice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f1361c43a3f769318ea702c6d0909541052e8045/schemas/contracts/v1/release/withdrawal_notice.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f1361c43a3f769318ea702c6d0909541052e8045/fixtures/release/withdrawal_notice",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f1361c43a3f769318ea702c6d0909541052e8045/tools/validators/release/validate_withdrawal_notice.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f1361c43a3f769318ea702c6d0909541052e8045/tests/validators/test_validate_withdrawal_notice.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/withdrawal-notice.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned the slice to main f1361c43a3f769318ea702c6d0909541052e8045 and found no open pull request owning the WithdrawalNotice workflow surface."
+    },
+    {
+      "gate": "landed-validation-surface",
+      "outcome": "PASS",
+      "reason": "Confirmed the current PROPOSED contract/schema pair, no-network fixtures, bounded validator, and focused tests already exist; this slice only adds event-specific hosted wiring."
+    },
+    {
+      "gate": "least-privilege-workflow",
+      "outcome": "PASS",
+      "reason": "The workflow grants contents:read only, disables persisted checkout credentials, pins actions by commit, uses finite path filters, and sets no-network environment controls."
+    },
+    {
+      "gate": "local-workflow-structure-and-hash",
+      "outcome": "PASS",
+      "reason": "Parsed the workflow, checked required triggers and commands, and bound its final bytes with SHA-256."
+    },
+    {
+      "gate": "repository-native-and-hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "The focused repository tests and hosted exact-head job remain NEEDS VERIFICATION until the draft pull request head exists."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T23:30:00Z",
+  "emitter": "openai/chatgpt-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Adds a bounded hosted validation lane only. The workflow and receipt do not issue, approve, apply, withdraw, unpublish, release, deploy, promote, or publish any artifact. Rollback is deletion of the workflow and this pending-review receipt."
+}
