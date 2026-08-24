@@ -35,7 +35,7 @@ prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Impleme
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 991f9f99634ceeb31228b22e593b1111f9b0510b
+  base_commit: 0c63d45e2a6f132052c8b6d67cae47a373860eae
   target_prior_blob: 1a3ac56d5108197f57716f84a6db45370320a0f4
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   release_manifest_contract_blob: ce7dc89ff447d76d974afdd802b85a38538d8f48
@@ -257,7 +257,7 @@ This document may explain how to prepare a release handoff. It cannot:
 
 ## 3. Current repository release posture
 
-The observations below are pinned to `main@991f9f99634ceeb31228b22e593b1111f9b0510b`.
+The observations below are pinned to `main@0c63d45e2a6f132052c8b6d67cae47a373860eae`.
 
 | Surface | CONFIRMED current evidence | Safe conclusion |
 |---|---|---|
