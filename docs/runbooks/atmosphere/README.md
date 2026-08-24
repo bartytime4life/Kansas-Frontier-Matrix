@@ -3,7 +3,7 @@ doc_id: kfm://doc/runbooks/atmosphere/readme
 title: Atmosphere / Air Runbooks · Lane Boundary and Navigation
 type: readme
 version: v1.2
-status: draft; repository-grounded; documentation-only; mixed-child-maturity; non-authoritative; non-publisher; not-for-life-safety
+status: draft; repository-grounded; documentation-only; mixed-child-operational-maturity; non-authoritative; non-publisher; not-for-life-safety
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Atmosphere, source, validation, evidence, policy, rights, sensitivity, Hazards-seam, review, promotion, release, correction, rollback, operations, and independent-review assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
@@ -18,9 +18,10 @@ evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   initial_base_commit: df6c3f5dadd2800fdc2356ceb540ca4e448f6c7a
-  reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
-  prior_blob: 3fc864c34682de630faa2c529a41004e7ff08e38
-  release_rollback_runbook_blob: 7db7cc87e673b6a9f29b76cc6cb865099ad2ea8a
+  first_reconciled_base_commit: 6e1bc94ea13fc0c7429fb824b62099ed1871598b
+  current_base_commit: fdf513f9b450aef016ea47b599cf0b6d6e8db04d
+  prior_blob: 89f76bcb650950c04be47109739d11908f545991
+  release_rollback_runbook_blob: 24a61405e65bd2f24e4793c4566b2b6cd052dc1b
   child_count: 9
   substantive_repository_grounded_children: 9
   proposal_era_substantive_children: 0
@@ -32,7 +33,7 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags: [kfm, runbooks, atmosphere, air, navigation, boundary, mixed-maturity, promotion, hold]
 notes:
-  - "All nine child procedures are substantive repository-grounded drafts after reconciling the merged combined release/rollback coordination update and the promotion modernization."
+  - "All nine child procedures are substantive repository-grounded drafts after reconciling the combined release/rollback coordination update and the promotion modernization."
   - "The combined release/rollback child is composition-only and does not supersede the separate release and rollback procedures or authorize execution."
   - "The promotion procedure reflects the bounded shared A-G readiness validator, empty Atmosphere candidate lane, empty source-authority projection, inactive policy sources, and operational promotion hold."
   - "Document maturity, a passing fixture, or a green workflow is not operational readiness, promotion, release, deployment, rollback execution, or publication evidence."
@@ -87,7 +88,7 @@ If more than one procedure applies, preserve the state boundaries between them. 
 
 ## Current child maturity
 
-The labels below describe the repository documents at reconciled `main@6e1bc94ea13fc0c7429fb824b62099ed1871598b` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
+The labels below describe the repository documents at current `main@fdf513f9b450aef016ea47b599cf0b6d6e8db04d` plus the same-branch promotion modernization. They do not prove that a live source, accountable actor, accepted policy, deployed consumer, released artifact, or public carrier exists.
 
 | Procedure | Current document maturity | Verified limit |
 |---|---|---|
@@ -164,6 +165,6 @@ Stop and create a public-safe handoff when required authority, source identity, 
 
 Update this README when a child is added, removed, renamed, materially re-scoped, or changes maturity; when the Atmosphere/Hazards seam changes; or when accountable authority, executable validation, source admission, evidence, policy, promotion, release, rollback, deployment, publication, or public read-back evidence changes.
 
-This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `3fc864c34682de630faa2c529a41004e7ff08e38` restores the reconciled pre-promotion README, but reverting this index would not change any operational or public state.
+This is a documentation-only change. Before merge, close or abandon its draft pull request. After merge, revert the documentation commit or submit a smaller reviewed forward fix. Blob `89f76bcb650950c04be47109739d11908f545991` restores the current-main pre-promotion lane index, but reverting this index would not change any operational or public state.
 
 [Back to top](#top)
