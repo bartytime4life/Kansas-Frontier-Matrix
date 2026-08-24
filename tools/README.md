@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-readme
 title: tools README
 type: README
-version: v0.4
-status: draft; directory-rules-v2-aligned; root-orchestrator-confirmed; direct-child-inventory-refreshed
+version: v0.5
+status: draft; directory-rules-v2-aligned; root-orchestrator-confirmed; direct-child-inventory-refreshed; validator-registry-evidence-refreshed
 owner: "@bartytime4life — verified CODEOWNERS and root-registry route; independent tooling stewardship remains NEEDS VERIFICATION"
 created: NEEDS VERIFICATION — file existed before the repo-aware v0.3 update
-updated: 2026-08-09
+updated: 2026-08-24
 policy_label: repository-facing; tools-root; canonical-root; implementation-bearing; trust-tooling; fail-closed; no-publication-by-tool; non-authoritative
 owning_root: tools/
 responsibility: canonical repository-tool root for validators, generators, builders, inspectors, comparators, diagnostic probes, bounded operators, and stable repository-facing tooling entrypoints
@@ -14,15 +14,15 @@ truth_posture: cite-or-abstain; current-behavior claims require pinned repositor
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 3793c4fd72fecb189e38e39fed17220606120e49
-  prior_blob: df9aad984076894d4a9e4aac13cd667995b6700a
+  base_commit: a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34
+  prior_blob: fca4e94e3f1f12534cb624fd4b14dea8b5025c51
   accepted_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
   root_entrypoint_blob: c308015da780d7b72f56277b521fb0e42317651e
   orchestrator_blob: 728cf1404839a5b95e03d70d44567863a6f9b6df
-  validator_registry_blob: 12517f368cb1c8b850d3a7138a968cee889875ba
-  makefile_blob: 7edd58ecb847a6b911f5eb71c7945247860a7ec4
+  validator_registry_blob: af9a2f4c259bdc8cd2a106a24df44fb3e8c7277b
+  makefile_blob: 304145dd0f674dda759f9097a747c4c7f0b9269d
 related:
   - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../docs/doctrine/directory-rules.md
@@ -36,10 +36,10 @@ related:
   - validators/_common/run_all.py
   - ../Makefile
 notes:
-  - "v0.4 is a same-path ROOT_FULL documentation modernization; it changes no executable, schema, contract, policy, fixture, test, workflow, dependency, lifecycle, release, runtime, or public behavior."
+  - "v0.5 refreshes the ROOT_FULL evidence snapshot and current validator count; it changes no executable, schema, contract, policy, fixture, test, workflow, dependency, lifecycle, release, runtime, or public behavior."
   - "The first twelve H2 sections implement the accepted Directory Rules v2 ROOT_FULL field order."
   - "tools/validate_all.py is now the confirmed canonical thin entrypoint; it delegates to the registry-driven tools/validators/validate_all.py implementation."
-  - "The current registry contains eight validators and four selection profiles; profile success remains bounded validation evidence, not truth or release authority."
+  - "The current registry contains twenty-three validators and four selection profiles; profile success remains bounded validation evidence, not truth or release authority."
   - "The direct-child map records nineteen directories plus README.md and validate_all.py at the pinned base."
   - "tools/experiments/ has an executable file but no boundary README at the pinned base; its ownership and graduation posture remain NEEDS VERIFICATION."
 [/KFM_META_BLOCK_V2] -->
@@ -130,10 +130,10 @@ The active [`control_plane/root_registry.yaml`](../control_plane/root_registry.y
 |---|---|---|
 | Directory Rules v2 | **ACCEPTED** through [`ADR-0029`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | The exact pinned bytes at [`docs/doctrine/directory-rules.md`](../docs/doctrine/directory-rules.md) govern this README's placement and ROOT_FULL profile. |
 | `root.tools` registry entry | **ACTIVE** | `tools/` is the canonical `repository_tool` root with internal exposure and versioned mutation. |
-| `tools/README.md` | **CONFIRMED existing / draft documentation** | This v0.4 update is same-path and does not change root authority. |
+| `tools/README.md` | **CONFIRMED existing / draft documentation** | This v0.5 update is same-path and does not change root authority. |
 | [`tools/validate_all.py`](validate_all.py) | **CONFIRMED implemented thin entrypoint** | It imports and returns the orchestrator's `main()` result. |
 | [`tools/validators/validate_all.py`](validators/validate_all.py) | **CONFIRMED implemented orchestrator** | It validates a bounded registry, selects validators, executes them no-network, and emits deterministic JSON unless timing is requested. |
-| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Eight validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
+| [`validator_registry.json`](validators/validator_registry.json) | **CONFIRMED v1 registry** | Twenty-three validators are registered under `focused`, `changed-area`, `release-dry-run`, and `full` profiles. |
 | [`_common/run_all.py`](validators/_common/run_all.py) | **CONFIRMED compatibility entrypoint** | It preserves the historical aggregate fixture runner while delegating to the full orchestrator profile. |
 | Root direct-child inventory | **CONFIRMED at the pinned base** | Nineteen directories, this README, and the root validator entrypoint are present. |
 | Tool-family implementation maturity | **MIXED** | Some lanes are executable and fixture-tested; others remain documentation-only, proposed, compatibility-bound, or insufficiently reviewed. |
@@ -496,12 +496,12 @@ A child README owns deeper detail. This root map does not duplicate recursive tr
 
 | Field | Value |
 |---|---|
-| **Review date** | `2026-08-09` |
-| **Pinned base** | `main@3793c4fd72fecb189e38e39fed17220606120e49` |
-| **Target baseline** | Complete `tools/README.md` v0.3 at blob `df9aad984076894d4a9e4aac13cd667995b6700a` |
+| **Review date** | `2026-08-24` |
+| **Pinned base** | `main@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34` |
+| **Target baseline** | Complete `tools/README.md` v0.4 at blob `fca4e94e3f1f12534cb624fd4b14dea8b5025c51` |
 | **Authority evidence** | Accepted ADR-0029, exact Directory Rules v2 bytes, active root registry, and CODEOWNERS |
 | **Implementation evidence** | Current direct-child tree, root entrypoint, orchestrator, validator registry, historical compatibility runner, Makefile, validators README, crosswalk/source-artifact/spec-hash READMEs, and experiments inventory |
-| **Review type** | Same-path README reconciliation, ROOT_FULL conformance, direct-child inventory, command/exit-boundary verification, link/anchor audit, and claim-boundary review |
+| **Review type** | Same-path evidence-snapshot refresh, validator-registry count verification, direct-child inventory confirmation, link/anchor audit, and claim-boundary review |
 | **Not established** | Exhaustive recursive tool inventory; every child tool's test or hosted-CI result; branch-protection enforcement; production scheduling; external storage; signing; live network behavior; runtime use; release, deployment, or publication |
 | **Risk-based maximum interval** | No calendar interval is asserted by this README; event-based triggers below control re-review. |
 
@@ -620,6 +620,7 @@ Every trust-bearing tool should test applicable negative states:
 
 | Date | Version | Change | Status |
 |---|---|---|---|
+| 2026-08-24 | v0.5 | Refreshed the pinned evidence snapshot and corrected the current validator-registry count from eight to twenty-three while preserving the four selection profiles and all authority limits. | **CONFIRMED documentation update / executable behavior unchanged** |
 | 2026-08-09 | v0.4 | Aligned the root README with accepted Directory Rules v2 and the active root registry; replaced stale placeholder-orchestrator claims with the implemented registry-driven contract; added the current direct-child map and newly observed lanes; refreshed validation, writer, exposure, storage, review, migration, outcome, negative-state, and review-trigger guidance while preserving stable identity and legacy anchors. | **CONFIRMED documentation update / executable behavior unchanged** |
 | 2026-07-23 | v0.3 | Modernized the canonical-root README in place; aligned the prior H2 order; replaced a speculative future tree with a verified README-lane index; surfaced placeholder orchestrators and watcher-placement conflict; repaired owner, review, validation, ADR, related-root, badge, and evidence-review guidance. | **CONFIRMED historical documentation change** |
 | 2026-07-08 | v0.2 | Updated the tools root README from pasted scaffold to a repo-aware root contract reflecting then-confirmed validator and watcher README surfaces. | **CONFIRMED historical documentation change** |
