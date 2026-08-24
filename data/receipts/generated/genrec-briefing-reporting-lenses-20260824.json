@@ -1,6 +1,6 @@
 {
   "artifact_hashes": {
-    "docs/architecture/briefing-integration.md": "sha256:065e4ed9db7f95b6e0b94c9193d0476178589982c1bd781245dce55a1086fd74"
+    "docs/architecture/briefing-integration.md": "sha256:e30de4d21f9c01e5024960a95fac89fee52be1086eea44046b7a11dc90c4c9c6"
   },
   "artifact_paths": [
     "docs/architecture/briefing-integration.md"
@@ -50,7 +50,7 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null,
-    "pr_number": null
+    "pr_number": 3531
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -82,7 +82,7 @@
     {
       "gate": "markdown-structure",
       "outcome": "PASS",
-      "reason": "The document retains one H1, one metadata block, balanced fences, and one bounded reporting-lenses section."
+      "reason": "The document retains one H1, one metadata block with the required owning-root/responsibility/truth-posture fields, balanced fences, and one bounded reporting-lenses section."
     },
     {
       "gate": "source-reconciliation",
