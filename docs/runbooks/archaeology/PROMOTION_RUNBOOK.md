@@ -2,456 +2,717 @@
 doc_id: kfm://doc/runbook-archaeology-promotion
 title: Archaeology Promotion Runbook
 type: standard
-version: v1
-status: draft
-owners: Archaeology domain steward · Sensitivity reviewer · Rights-holder representative · Release authority · Correction reviewer
+version: v2.0
+status: draft; repository-grounded; fail-closed; non-publisher
+owners:
+  - "@bartytime4life — verified CODEOWNERS review route"
+  - "NEEDS VERIFICATION — Archaeology domain steward"
+  - "NEEDS VERIFICATION — cultural, sovereignty, rights-holder, and sensitivity reviewers"
+  - "NEEDS VERIFICATION — policy, evidence, release, correction, and rollback authorities"
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-08-24
 policy_label: public
+truth_posture: cite-or-abstain
+owning_root: docs/
+responsibility: "Document the fail-closed operator procedure for evaluating an Archaeology candidate from governed lifecycle staging through final promotion readiness without creating source, evidence, policy, review, release, deployment, or publication authority."
+repository_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
+  base_commit: 2c010b36609bf2ceb94e5a2d61fa62493e6f298f
+  target_prior_blob: 1be7cf86cf928116435c775ad9b1815f9b199af0
 related:
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/architecture/governed-ai/README.md
+  - docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md
+  - docs/adr/ADR-0018-promotion-gate-sequence.md
+  - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
+  - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-archaeology-exact-location-policy.md
   - docs/domains/archaeology/README.md
-  - contracts/release/release_manifest.md
-  - contracts/release/promotion_decision.md
-  - contracts/release/rollback_card.md
-  - contracts/correction/correction_notice.md
-  - contracts/governance/review_record.md
-  - contracts/evidence/evidence_bundle.md
-  - schemas/contracts/v1/release/release_manifest.schema.json
-  - policy/sensitivity/archaeology/
-  - policy/promotion/
-tags: [kfm, archaeology, runbook, promotion, governance, sensitivity]
+  - policy/domains/archaeology/README.md
+  - release/candidates/archaeology/README.md
+  - tools/validators/promotion_gate/README.md
+  - .github/workflows/domain-archaeology.yml
+  - docs/runbooks/archaeology/NO_NETWORK_TEST_RUNBOOK.md
+  - docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md
+tags: [kfm, runbook, archaeology, promotion, release-readiness, sensitivity, cultural-review, fail-closed, rollback]
 notes:
-  - Path is PROPOSED extension of the docs/runbooks/ pattern; segment-by-domain follows Directory Rules §3.
-  - Implementation maturity of every linked target is UNKNOWN until verified against mounted repo evidence.
+  - "Same-path documentation modernization under accepted ADR-0029; no root, path, schema, policy, release, or authority migration."
+  - "Current executable evidence is bounded and synthetic. It does not establish an accepted Archaeology policy bundle, live evaluator, authenticated review authority, candidate dossier, proof producer, release dry-run, transition executor, deployment, or publication."
+  - "No exact or reverse-engineerable protected Archaeology location, cultural-review substance, consent secret, or restricted payload belongs in this public runbook or its public review packet."
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Archaeology Promotion Runbook
 
-Operational procedure for moving Archaeology-lane content through the governed lifecycle — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` — with **fail-closed defaults** for exact site locations, burials, sacred sites, and culturally sensitive material.
+> Fail-closed operating procedure for assessing whether an Archaeology and Cultural Heritage candidate is ready for accountable release review. This runbook does **not** itself promote, release, deploy, publish, or authorize public access.
 
-![status](https://img.shields.io/badge/status-draft-lightgrey)
-![domain](https://img.shields.io/badge/domain-archaeology-8b5e3c)
-![doctrine](https://img.shields.io/badge/doctrine-KFM-blue)
-![sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-critical)
-![lifecycle](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-informational)
-![schema-home](https://img.shields.io/badge/schema_home-PROPOSED-yellow)
-![last-updated](https://img.shields.io/badge/updated-2026--05--13-lightgrey)
-
-| Field         | Value |
-|---|---|
-| **Status**    | `draft` — doctrine-grounded; implementation references are PROPOSED |
-| **Owners**    | Archaeology domain steward · Sensitivity reviewer · Rights-holder representative · Release authority |
-| **Updated**   | 2026-05-13 |
-| **Authority** | KFM lifecycle invariant + Directory Rules + DOM-ARCH + ENCY |
-| **Scope**     | Archaeology lane only — settlements, hazards, roads/rail, geology lanes have their own runbooks |
+[![status: draft](https://img.shields.io/badge/status-draft-d4a72c?style=flat-square)](#current-repository-posture)
+[![path: confirmed](https://img.shields.io/badge/path-confirmed-0969da?style=flat-square)](#directory-rules-basis)
+[![policy: unbound](https://img.shields.io/badge/policy-unbound-b42318?style=flat-square)](#current-repository-posture)
+[![candidate: none established](https://img.shields.io/badge/candidate-none__established-6e7781?style=flat-square)](#current-repository-posture)
+[![publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-boundary)
 
 > [!IMPORTANT]
-> Promotion in KFM is a **governed state transition, not a file move.** This runbook describes the gates, artifacts, and approvals required to cross each transition; it does not authorize bypass under any condition. When in doubt, **HOLD**.
-
----
-
-## Quick jump
-
-- [1 · Scope and audience](#1--scope-and-audience)
-- [2 · Lifecycle at a glance](#2--lifecycle-at-a-glance)
-- [3 · Required artifacts](#3--required-artifacts)
-- [4 · Pre-promotion checklist](#4--pre-promotion-checklist)
-- [5 · Procedure A — Admission (→ RAW)](#5--procedure-a--admission---raw)
-- [6 · Procedure B — Normalization (RAW → WORK / QUARANTINE)](#6--procedure-b--normalization-raw--work--quarantine)
-- [7 · Procedure C — Validation (WORK → PROCESSED)](#7--procedure-c--validation-work--processed)
-- [8 · Procedure D — Catalog closure (PROCESSED → CATALOG / TRIPLET)](#8--procedure-d--catalog-closure-processed--catalog--triplet)
-- [9 · Procedure E — Release (CATALOG / TRIPLET → PUBLISHED)](#9--procedure-e--release-catalog--triplet--published)
-- [10 · Sensitivity, rights, and CARE checks](#10--sensitivity-rights-and-care-checks)
-- [11 · Separation of duties](#11--separation-of-duties)
-- [12 · Failure handling and reason codes](#12--failure-handling-and-reason-codes)
-- [13 · Correction and rollback](#13--correction-and-rollback)
-- [14 · Verification backlog](#14--verification-backlog)
-- [15 · Related docs](#15--related-docs)
-- [Appendix · Promotion gate matrix A–G](#appendix--promotion-gate-matrix-ag)
-
----
-
-## 1 · Scope and audience
-
-**CONFIRMED doctrine.** This runbook governs promotion of objects produced by the Archaeology lane: `ArchaeologicalSite`, `SiteComponent`, `Survey`, `SurveyProject`, `SurveyTransect`, `ShovelTest`, `TestUnit`, `ExcavationUnit`, `ProvenienceContext`, `StratigraphicUnit`, `ArtifactRecord`, `Feature`, `Context`, `RemoteSensingAnomaly`, `LiDARCandidate`, `GeophysicsObservation`, `ThreeDDocumentation`, `CulturalReview`, `StewardReview`, `CollectionAccession`, `ChronologyAssertion`, `SensitivityTransform`, `CandidateFeature`, and `CulturalTemporalPeriod`. [DOM-ARCH] [ENCY]
-
-**Out of scope.** Adjacent context supplied by other lanes (roads/rail, settlements, geology, hazards, spatial foundation) **may not confirm sites or bypass archaeological sensitivity.** [DOM-ARCH §§2-6]
-
-**Audience.** Archaeology domain stewards, sensitivity reviewers, rights-holder representatives, release authorities, correction reviewers, and any contributor preparing a promotion PR. Read this before opening a PR that touches `data/processed/archaeology/`, `data/catalog/domain/archaeology/`, `data/published/layers/archaeology/`, `release/candidates/archaeology/`, or any sensitivity-relevant manifest. *(All paths PROPOSED — see Directory Rules §3.)*
+> **Promotion is a governed state transition, not a file move, commit, pull request, merge, workflow result, badge, manifest-shaped JSON document, or map-layer toggle.** Storage paths reflect lifecycle state only after the owning gates and authorities have closed.
 
 > [!CAUTION]
-> **Exact archaeological site locations are denied by default.** Burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private-landowner details, and looting-risk exposure **fail closed** at every gate. No public surface emits raw site coordinates. [DOM-ARCH §§2-6] [ENCY]
+> **Archaeology remains deny-by-default for exact or reverse-engineerable protected locations.** Coordinates are not the only exposure path: tiles, identifiers, joins, labels, screenshots, search, exports, graph edges, caches, logs, errors, and generated language can reveal or narrow a protected place.
+
+> [!WARNING]
+> **Current repository automation stops at bounded readiness evidence.** A green `make publish-check` or `domain-archaeology` workflow run is not a `PromotionDecision`, release approval, lifecycle transition, deployment, publication, or public permission.
+
+**Quick navigation:** [Purpose](#purpose) · [Current posture](#current-repository-posture) · [Directory Rules](#directory-rules-basis) · [Scope](#scope-and-non-goals) · [Roles](#roles-and-separation-of-duties) · [Lifecycle](#lifecycle-and-object-family-boundaries) · [Preflight](#preflight-and-stop-conditions) · [Procedures](#stage-procedures) · [Archaeology gates](#archaeology-specific-gates) · [Validation](#current-executable-validation) · [Packet](#candidate-packet) · [Outcomes](#finite-outcomes-and-reason-codes) · [Authority](#authority-boundary) · [Rollback](#correction-withdrawal-and-rollback) · [Audit](#audit-and-join-keys) · [Checklist](#operator-checklist) · [Open work](#open-verification-register) · [References](#references)
 
 ---
 
-## 2 · Lifecycle at a glance
+<a id="purpose"></a>
 
-The KFM lifecycle invariant applies to Archaeology unchanged. What differs is the **default sensitivity posture**: every transition must demonstrate that exact geometry, cultural sovereignty, and rights have been resolved before the object may advance.
+## Purpose
+
+Use this runbook to evaluate a bounded Archaeology candidate as it advances through the KFM lifecycle:
+
+```text
+RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
+```
+
+The operator's job is to assemble and evaluate support, preserve the most restrictive applicable posture, and stop safely when evidence or authority is incomplete. The durable result of a run is an inspectable readiness or hold packet—not an implied public release.
+
+This runbook is subordinate to accepted repository authority. When it conflicts with accepted ADRs, Directory Rules, current contracts, schemas, policy, validators, release records, or runtime evidence, stop and record the conflict rather than selecting the convenient interpretation.
+
+[Back to top](#top)
+
+---
+
+<a id="current-repository-posture"></a>
+
+## Current repository posture
+
+The following statements are bounded to `main@2c010b36609bf2ceb94e5a2d61fa62493e6f298f`.
+
+| Surface | Status | Safe conclusion |
+|---|---|---|
+| This runbook path | **CONFIRMED** | `docs/runbooks/archaeology/PROMOTION_RUNBOOK.md` is tracked. This is a same-path documentation update. |
+| Directory governance | **CONFIRMED / accepted** | ADR-0029 adopts Directory Rules v2 at `docs/doctrine/directory-rules.md`; `docs/runbooks/` owns human operational procedures. |
+| Final-readiness validator | **CONFIRMED / bounded** | `tools/validators/promotion_gate/validate_promotion_gate.py` evaluates declared A–G packets with no network or writes. `PASS` means `APPROVE_READY` for accountable review only. |
+| ReviewRecord checks | **CONFIRMED / fixture-only** | The validator checks supplied synthetic identity, authority interval, separation, scope, and binding declarations; it does not authenticate live actors or authority. |
+| PromotionReceipt family | **CONFIRMED / proposed fixture profile** | Contract, schema, validator, tests, and workflow exist as a separate non-publishing family. Shape validity is not transition proof. |
+| Promotion policy | **CONFIRMED / inactive** | Current promotion Rego modules are proposed no-op stubs; no active policy-gate register entry, accepted evaluator, or governed consumer is established. |
+| Archaeology policy lane | **CONFIRMED / mixed scaffold** | Domain policy documentation and Rego scaffolds exist, but no accepted Archaeology bundle, evaluator binding, obligation handler, or production consumer is established. |
+| Archaeology domain CI | **CONFIRMED / one substantive slice plus holds** | The workflow validates one synthetic, no-network `ThreeDDocumentation` paradata profile. Proof construction and release dry-run jobs intentionally hold. |
+| Archaeology candidate lane | **CONFIRMED / empty at bounded inspection** | `release/candidates/archaeology/` contains its parent README but no child candidate dossier was established. |
+| Exact-location decision | **PROPOSED / unassigned** | The archaeology exact-location ADR candidate is non-binding and selects no public precision or transform profile. |
+| Release, deployment, publication | **UNKNOWN / not established** | No authenticated review packet, accepted Archaeology release dry-run, applied transition, deployment, or published Archaeology release was verified. |
+
+### What this changes operationally
+
+Until the open controls graduate, the normal terminal result for an Archaeology promotion attempt is one of:
+
+- `HOLD` for missing authority, review, policy, proof, release, or rollback support;
+- `ABSTAIN` when evidence is insufficient without asserting unsafe facts;
+- `DENY` when exposure, rights, sensitivity, or contradiction makes the operation impermissible; or
+- `ERROR` when trust infrastructure cannot complete safely.
+
+A bounded readiness `PASS` may be handed to accountable reviewers. It must not be translated into `PROMOTED`, `RELEASED`, or `PUBLISHED` by this runbook.
+
+[Back to top](#top)
+
+---
+
+<a id="directory-rules-basis"></a>
+
+## Directory Rules basis
+
+Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes [Directory Rules v2](../../doctrine/directory-rules.md) the placement authority.
+
+| Responsibility | Owning root or lane | Boundary |
+|---|---|---|
+| Human operator procedure | `docs/runbooks/archaeology/` | This file explains the procedure; it does not own executable policy or release state. |
+| Archaeology meaning | `contracts/domains/archaeology/` | Semantic authority after acceptance. |
+| Machine shape | `schemas/contracts/v1/domains/archaeology/` and `schemas/contracts/v1/release/` | Shape authority after acceptance. |
+| Policy source and bundles | `policy/` | Admissibility and obligations; file presence does not activate policy. |
+| Reusable synthetic inputs | `fixtures/` | Test inputs only; never release evidence by themselves. |
+| Enforcement proof | `tests/` and `tools/validators/` | Verifies bounded behavior; does not decide truth or publication. |
+| Lifecycle stores | `data/raw`, `data/work`, `data/quarantine`, `data/processed`, `data/catalog`, `data/triplets`, `data/published` | Stores reflect governed state; moving bytes is not the transition. |
+| Candidate and release decisions | `release/` | Owns review, promotion, manifest, correction, withdrawal, and rollback records. |
+| Public delivery | governed APIs and released public-safe artifacts | Public clients do not read canonical or internal stores as their normal path. |
+
+No new path is proposed here. The existing same-path placement is retained.
+
+[Back to top](#top)
+
+---
+
+<a id="scope-and-non-goals"></a>
+
+## Scope and non-goals
+
+### In scope
+
+- promotion readiness for public-safe Archaeology derivatives and metadata;
+- source-role, evidence, rights, sensitivity, cultural, sovereignty, consent, validation, review, release, correction, and rollback closure;
+- candidate-versus-confirmed distinctions;
+- public-safe geometry, attribute, search, export, graph, map, cache, and AI-output review;
+- deterministic packet identity and replay where practical;
+- finite fail-closed outcomes and public-safe reason codes; and
+- handoff to the owning release authority when—and only when—the packet is complete.
+
+### Out of scope
+
+This runbook does not:
+
+- admit a live source or retrieve protected payloads;
+- confirm a site, feature, burial, affiliation, chronology, ownership, or cultural authority;
+- choose a universal buffer, grid, jitter, rounding, aggregation, or suppression threshold;
+- store exact coordinates, cultural-review substance, consent secrets, or rights-holder deliberations;
+- appoint reviewers or infer Tribal, cultural, sovereignty, legal, or rights-holder authority from CODEOWNERS;
+- accept an ADR, policy bundle, contract, schema, or release profile;
+- generate an EvidenceBundle, ProofPack, review record, release manifest, promotion decision, or rollback record merely by describing one;
+- apply a lifecycle transition;
+- merge, release, deploy, publish, activate a source, or alter repository settings; or
+- treat map styling, model refusal, generalized appearance, schema validity, or green CI as safety or release authority.
+
+[Back to top](#top)
+
+---
+
+<a id="roles-and-separation-of-duties"></a>
+
+## Roles and separation of duties
+
+Functional assignments remain `NEEDS VERIFICATION`. The roles below describe responsibilities, not current appointments.
+
+| Role | Required responsibility | Must not be inferred from |
+|---|---|---|
+| Archaeology domain steward | Confirms domain meaning, candidate status, source-role compatibility, and domain-specific validation scope. | Repository ownership alone. |
+| Evidence/source steward | Confirms admitted source identity, authority role, EvidenceRef closure, limitations, and freshness. | A URL, connector, citation string, or file hash alone. |
+| Cultural/sovereignty/rights-holder reviewer | Supplies or verifies the governed review state required for the exact operation and audience. | CODEOWNERS, a generic consent flag, or absence of objection. |
+| Sensitivity and reverse-inference reviewer | Assesses direct and joined exposure across every public carrier and derivative. | A hidden layer, coarse zoom, or missing coordinate field. |
+| Policy steward | Owns the accepted input profile, bundle, evaluator binding, normalized outcomes, and obligations. | Rego file presence or a README. |
+| Independent reviewer | Reviews packet scope, support, obligations, and separation from the author where materiality requires it. | Automated checks or self-declared identity alone. |
+| Release authority | Decides whether an otherwise complete packet may enter an authorized transition. | A readiness `PASS`, merge, or manifest-shaped file. |
+| Correction/rollback steward | Confirms correction lineage, withdrawal behavior, cache/derivative invalidation, and a tested rollback target. | A path named `rollback` or an unexecuted card. |
+
+> [!IMPORTANT]
+> CODEOWNERS routes review. It does not create cultural authority, rights-holder representation, independent approval, policy authority, or release authority.
+
+### Minimum separation for policy-significant Archaeology promotion
+
+The candidate author, the specialist cultural/sensitivity reviewer, and the release authority should be distinct when maturity and staffing permit. If required independence cannot be established, the result is `HOLD`; do not silently downgrade the review burden.
+
+[Back to top](#top)
+
+---
+
+<a id="lifecycle-and-object-family-boundaries"></a>
+
+## Lifecycle and object-family boundaries
 
 ```mermaid
 flowchart LR
-    SRC[Source<br/>SHPO · tribal steward · survey · LiDAR · museum] --> RAW
-    RAW[RAW<br/>SourceDescriptor + hash] --> WORK{WORK / QUARANTINE<br/>normalize · classify · transform}
-    WORK -- pass --> PROCESSED[PROCESSED<br/>ValidationReport · TransformReceipt<br/>RedactionReceipt if sensitive]
-    WORK -- fail --> Q[QUARANTINE<br/>quarantine reason recorded]
-    PROCESSED --> CATALOG[CATALOG / TRIPLET<br/>EvidenceBundle · CatalogMatrix<br/>graph projection]
-    CATALOG --> RELEASE[PUBLISHED<br/>ReleaseManifest · rollback target<br/>correction path · ReviewRecord]
-    RELEASE -. correction .-> CORR[CorrectionNotice<br/>supersession]
-    RELEASE -. rollback .-> RB[RollbackCard<br/>prior release restored]
-    classDef sensitive fill:#fef3c7,stroke:#b45309,color:#78350f;
-    classDef public fill:#d1fae5,stroke:#047857,color:#064e3b;
-    class WORK,Q sensitive
-    class RELEASE public
+  S["Source edge"] --> A["Admission decision"]
+  A --> R["RAW"]
+  R --> W["WORK"]
+  R --> Q["QUARANTINE"]
+  W --> P["PROCESSED"]
+  P --> C["CATALOG / TRIPLET"]
+  C --> G["Bounded A–G readiness"]
+  G --> V["Accountable review"]
+  V --> D["PromotionDecision"]
+  D --> X["Separately authorized transition"]
+  X --> PUB["PUBLISHED public-safe carrier"]
+  PUB --> CR["Correction / withdrawal / rollback"]
+
+  G -. "PASS is readiness only" .-> V
+  G -. "ABSTAIN / DENY / ERROR" .-> Q
 ```
 
-> [!NOTE]
-> The diagram reflects KFM **doctrine** as documented in the Domains Atlas (§24.6.1 lifecycle gates) and the Encyclopedia (Appendix E). Specific implementation paths (workflows, validator entry points, runtime routes) are **UNKNOWN** until verified against mounted repo evidence.
+### Object families remain distinct
 
-A transition is **closed** only when:
+| Object family | What it may prove | What it never proves alone |
+|---|---|---|
+| `SourceDescriptor` | Declared source identity, role, rights, cadence, and sensitivity context. | Truth, permission, or release. |
+| `RunReceipt` / transform receipt | What process ran over which declared inputs and outputs. | Correctness, evidence closure, or approval. |
+| `ValidationReport` | A named validator/profile produced a finite result over a pinned subject. | Source authority, cultural permission, or release. |
+| `EvidenceRef` / `EvidenceBundle` | Traceable support and limitations for a bounded claim. | Policy permission or publication state. |
+| `PolicyDecision` | A pinned policy profile/evaluator produced a decision and obligations. | Reviewer authority, transition application, or release. |
+| `ReviewRecord` | A governed review occurred under a defined scope and authority record. | Release unless the release profile explicitly grants that effect. |
+| `PromotionDecision` | Accountable decision on a specific candidate and support set. | Applied lifecycle mutation unless separately recorded. |
+| `PromotionReceipt` | Process memory for an evaluated or applied transition profile. | Authority or truth merely because the shape validates. |
+| `ReleaseManifest` | Declared release contents, digests, support, correction, and rollback linkage. | Publication unless an authorized release state is recorded and served. |
+| `CorrectionNotice`, withdrawal record, `RollbackCard` | Visible reversal or correction intent and lineage. | Successful propagation unless derivatives and public surfaces are verified. |
 
-1. The required artifacts (see §3) exist for that gate.
-2. Every artifact resolves the artifacts it depends on (`EvidenceRef → EvidenceBundle`, `source_id → SourceDescriptor`, `model_id → ModelRunReceipt`) — references alone are insufficient.
-3. The policy gate has evaluated and recorded its decision (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR`).
+Receipts, proofs, reviews, decisions, manifests, catalogs, and published artifacts must not be collapsed into one generic “proof” file.
 
-Missing any of these means the transition **fails closed**; the prior state is preserved. [ENCY] [DIRRULES]
-
----
-
-## 3 · Required artifacts
-
-Artifact homes are PROPOSED per the Atlas crosswalk; verify against current repo evidence before authoring paths.
-
-| Object family | Used at gate | Schema home (PROPOSED) | Contract home (PROPOSED) | Truth label |
-|---|---|---|---|---|
-| `SourceDescriptor` | Admission | `schemas/contracts/v1/source/` | `contracts/source/` | CONFIRMED doctrine |
-| `TransformReceipt` | Normalization | `schemas/contracts/v1/data/` | `contracts/data/` | CONFIRMED doctrine |
-| `ValidationReport` | Validation | `schemas/contracts/v1/data/` | `contracts/data/` | CONFIRMED doctrine |
-| `RedactionReceipt` (`SensitivityTransform` for Archaeology) | Validation / Catalog | `schemas/contracts/v1/domains/archaeology/` | `contracts/domains/archaeology/` | CONFIRMED doctrine |
-| `EvidenceRef` → `EvidenceBundle` | Validation onward | `schemas/contracts/v1/evidence/` | `contracts/evidence/` | CONFIRMED doctrine |
-| `CatalogMatrix` entry | Catalog closure | `schemas/contracts/v1/data/` | `contracts/data/` | CONFIRMED doctrine |
-| `ReviewRecord` (cultural / steward) | Catalog / Release | `schemas/contracts/v1/governance/` | `contracts/governance/` | CONFIRMED doctrine |
-| `PromotionDecision` | Release | `schemas/contracts/v1/release/` | `contracts/release/` | CONFIRMED doctrine |
-| `ReleaseManifest` | Release | `schemas/contracts/v1/release/` | `contracts/release/` | CONFIRMED doctrine |
-| `RollbackCard` | Release / Rollback | `schemas/contracts/v1/release/` | `contracts/release/` | CONFIRMED doctrine |
-| `CorrectionNotice` | Correction | `schemas/contracts/v1/correction/` | `contracts/correction/` | CONFIRMED doctrine |
-| `RunReceipt` | Every CI-run gate | `schemas/contracts/v1/runtime/` | `contracts/runtime/` | CONFIRMED doctrine |
-| `DecisionEnvelope` / `ArchaeologyDecisionEnvelope` | Runtime / API | `schemas/contracts/v1/runtime/` | `contracts/runtime/` | PROPOSED route — exact endpoint UNKNOWN |
-
-> [!TIP]
-> If a required artifact is **missing**, emit it and re-run the gate — do not waive the requirement. Default-deny is structural: the absence of evidence blocks promotion.
+[Back to top](#top)
 
 ---
 
-## 4 · Pre-promotion checklist
+<a id="preflight-and-stop-conditions"></a>
 
-Run this checklist **before** opening or approving a promotion PR. Each item must resolve to **YES / N/A** with linked evidence; a missing or unknown item is a `HOLD`.
+## Preflight and stop conditions
 
-```text
-[ ] Source identity and role are recorded in a SourceDescriptor.
-[ ] Source rights are resolved or explicitly RIGHTS_UNKNOWN with steward action queued.
-[ ] Sovereignty / cultural authority is identified (steward_org, authority_to_control, consent).
-[ ] Object distinguishes CandidateFeature from confirmed ArchaeologicalSite.
-[ ] No exact site coordinates appear in any public-bound artifact (geometry generalized below threshold).
-[ ] Below-H3-r7 geometry is absent from products marked public-safe.    (See §10.)
-[ ] SensitivityTransform / RedactionReceipt is present and lineage-logged.
-[ ] EvidenceRef resolves to a closed EvidenceBundle.
-[ ] ValidationReport status is "pass" for all required validators.
-[ ] CatalogMatrix entry closes (digest, EvidenceBundle, graph projection).
-[ ] ReviewRecord exists where required (cultural / steward review for sensitive content).
-[ ] Release authority is distinct from the author for material releases.
-[ ] ReleaseManifest names a rollback target and a correction path.
-[ ] RunReceipt is signed (DSSE / cosign) and discoverable via lineage.
-[ ] PromotionDecision records spec_hash, attestation_ref, and decision_id.
-[ ] No raw model output, raw stores, or canonical internals are reachable from the public surface.
+Before evaluating any stage transition, record a bounded packet header:
+
+```yaml
+candidate_id: <stable candidate identifier>
+candidate_version: <immutable version or digest>
+domain: archaeology
+current_lifecycle_state: <RAW|WORK|QUARANTINE|PROCESSED|CATALOG|TRIPLET>
+requested_transition: <exact boundary>
+operation: <map|api|search|export|graph|ai|aggregate|other>
+audience: <public|restricted|internal-review>
+source_refs: []
+evidence_refs: []
+policy_profile_ref: null
+review_refs: []
+release_ref: null
+rollback_target: null
+correction_ref: null
 ```
 
----
+### Hard stop conditions
 
-## 5 · Procedure A — Admission (`— → RAW`)
+Stop with `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` when any of the following applies:
 
-**Pre-condition.** Source identity and rights are minimally established at discovery; source-role intent is set. [ENCY] [DIRRULES]
+- candidate identity or requested transition is ambiguous;
+- source role is unknown, conflicted, or being upcast from candidate/model/context to confirmed observation;
+- rights, consent, cultural, sovereignty, or sensitivity state is missing, stale, conflicted, or untrusted;
+- exact or reverse-engineerable protected information would reach a public or semi-public carrier;
+- EvidenceRef cannot resolve to admissible support for a consequential claim;
+- a referenced schema, policy profile, bundle, evaluator, review authority, release profile, correction path, or rollback target is not accepted for the operation;
+- obligations cannot be enforced by every downstream consumer;
+- candidate artifacts, digests, receipts, and manifest declarations disagree;
+- self-review or unverified authority would substitute for required independent review;
+- current public derivatives and caches cannot be inventoried for correction or rollback;
+- the system encounters an internal error and would otherwise fall back to allow; or
+- an overlapping branch or pull request owns the same candidate or release surface.
 
-**Steps.**
+Quarantine is a governed hold with reason and exit criteria. It is not deletion and not a private route around release controls.
 
-1. Open a `SourceDescriptor` entry. Record source role (steward / tribal / survey / SHPO / museum / remote-sensing / geophysics / historical-map / 3D), authority, rights statement, sensitivity classification, cadence, and the immutable payload hash. *(Connector output goes to `data/raw/archaeology/<source_id>/<run_id>/` — PROPOSED per Directory Rules §7.3.)*
-2. **Do not normalize, transform, or publish** at this step. Connectors do not promote. [DIRRULES §7.3]
-3. If source role is unclear, mark the SourceDescriptor `ROLE_UNRESOLVED` and queue steward triage. Promotion does not advance.
-4. If rights or sovereignty cannot be confirmed, set `RIGHTS_UNKNOWN` and route to the rights-holder representative.
-
-**Exit criteria.** A `SourceDescriptor` exists with hash, source-role, and sensitivity classification recorded.
-
-**Fail-closed outcome.** Source is not admitted; the candidate is logged as awaiting steward action.
-
----
-
-## 6 · Procedure B — Normalization (`RAW → WORK / QUARANTINE`)
-
-**Pre-condition.** Schema, geometry, time, identity, evidence, rights, and policy rules are runnable. [ENCY] [DIRRULES]
-
-**Steps.**
-
-1. Run domain normalizers: schema validators (`schemas/contracts/v1/domains/archaeology/`), geometry validators, temporal normalizers, identity resolvers. *(PROPOSED schema home.)*
-2. Emit a `TransformReceipt` for every transform, including coordinate generalization, raster downsampling, and CRS reprojection.
-3. Classify object as `CandidateFeature` vs. assertion of `ArchaeologicalSite`. **Remote-sensing anomalies, LiDAR candidates, geophysics observations, and model outputs remain candidates until confirmed by source evidence and review.** [REF-3DGIS Chs. 2-4]
-4. Apply `SensitivityTransform`: generalize geometry, redact sacred / burial context, suppress exact survey extents per policy. Log the transform to enable audit.
-5. Quarantine any object that fails validation, rights, sensitivity, source-role, or policy checks. Record `quarantine_reason` and the failing rule.
-
-> [!WARNING]
-> A candidate-to-confirmed upgrade is **not** a normalization step. It requires a `ReviewRecord` and may require a `RIGHTS_HOLDER_REVIEW` for sovereign or culturally sensitive material. Do not collapse candidate-vs-confirmed at the validator layer.
-
-**Exit criteria.** Object holds a `TransformReceipt`, a working `ValidationReport`, a `PolicyDecision`, and — for sensitive content — a `RedactionReceipt`. Failures land in QUARANTINE with reason.
-
-**Fail-closed outcome.** Quarantine with reason; never silent promotion.
+[Back to top](#top)
 
 ---
 
-## 7 · Procedure C — Validation (`WORK → PROCESSED`)
+<a id="stage-procedures"></a>
 
-**Pre-condition.** Validators are deterministic, tied to fixtures, and the required receipts are present.
+## Stage procedures
 
-**Required Archaeology validators (PROPOSED).** [DOM-ARCH]
+Each procedure produces a finite decision and preserves the candidate in its prior governed state unless the owning transition is authorized.
 
-| Validator | Purpose |
+### 1. Source edge to `RAW`
+
+**Goal:** admit an immutable source capture or stable source-native reference without granting downstream authority.
+
+1. Resolve a governed `SourceDescriptor` and exact source role.
+2. Confirm rights, access terms, sensitivity, cultural/sovereignty posture, citation obligation, and intended operations.
+3. Record retrieval/source time separately from observed, valid, publication, effective, correction, and transaction time.
+4. Bind the capture or stable reference to a digest and deterministic run identity where practical.
+5. Route unresolved rights, authority, source role, or sensitivity to `QUARANTINE` or pre-RAW hold.
+6. Do not place protected payloads, exact locations, credentials, signed URLs, or restricted review material in public Git history.
+
+**Required result:** admission record plus process receipt. Admission is not validation, evidence closure, or publication permission.
+
+### 2. `RAW` to `WORK / QUARANTINE`
+
+**Goal:** normalize without changing source role or exposing protected material.
+
+1. Run deterministic parsing and normalization in an isolated, no-network profile when possible.
+2. Preserve original identity, source role, provenance, temporal fields, and transform parameters.
+3. Emit a transform/run receipt and working validation findings.
+4. Route malformed, ambiguous, rights-unclear, over-precise, culturally blocked, or unsupported records to `QUARANTINE` with stable reason codes and exit criteria.
+5. Never silently retry into a different semantic role.
+
+**Required result:** normalized candidate or structured quarantine record. A clean parse is not a confirmed archaeological claim.
+
+### 3. `WORK` to `PROCESSED`
+
+**Goal:** establish machine and semantic conformance for the exact object profile.
+
+1. Validate schema shape, bounded semantic rules, deterministic identity, geometry declaration, time semantics, and required references.
+2. Execute negative fixtures for exact-location requests, candidate-as-confirmed misuse, missing evidence, unknown rights, absent cultural review, unsupported generalization, and reverse-inference paths.
+3. Record a `ValidationReport` tied to the exact candidate digest and validator/profile versions.
+4. If a public-safe transform is proposed, emit a transform/redaction receipt and preserve the protected source outside public review surfaces.
+5. Route any unresolved or unsafe condition to `QUARANTINE`; do not accept a positive-looking visualization as validation.
+
+**Required result:** processed candidate with deterministic validation evidence. No public delivery is authorized.
+
+### 4. `PROCESSED` to `CATALOG / TRIPLET`
+
+**Goal:** close evidence and catalog references without turning derivatives into sovereign truth.
+
+1. Resolve every consequential `EvidenceRef` to an `EvidenceBundle` appropriate to the claim and audience.
+2. Preserve source-role, limitations, uncertainty, temporal scope, spatial scope, sensitivity, rights, and correction lineage.
+3. Generate catalog/graph projections only from governed processed records.
+4. Verify STAC, DCAT, PROV, layer, graph, and search projections agree on identity and release state where those projections are in scope.
+5. Mark public-safe derivatives as derived, generalized, modeled, aggregate, or interpretive; never overwrite canonical support.
+6. Keep catalog records, evidence bundles, receipts, and proofs in their owning families.
+
+**Required result:** catalog/triplet candidate with resolvable declared support. Catalog presence is not publication.
+
+### 5. `CATALOG / TRIPLET` to final promotion readiness
+
+**Goal:** evaluate the bounded A–G packet currently implemented by the repository.
+
+Run:
+
+```bash
+make publish-check
+```
+
+Or evaluate explicit packets without writes or network access:
+
+```bash
+python tools/validators/validate_promotion_gate.py candidate.json
+python tools/validators/validate_review_record.py --fixtures
+```
+
+The bounded gates are:
+
+| Gate | Current bounded name | Archaeology interpretation |
+|:---:|---|---|
+| A | Identity and closure | Candidate, author, lifecycle boundary, spec hash, and manifest identity agree. |
+| B | Asset integrity | Candidate, manifest, and receipt digest sets agree. |
+| C | Geometry and CRS | Declared geometry is valid and deterministic; this gate does **not** establish public safety or cultural permission. |
+| D | Temporal semantics | Required UTC-second intervals are valid and ordered. |
+| E | Rights/sensitivity policy context | Declared profile, labels, result, and bundle reference are internally coherent; actual policy evaluation remains external and unproved. |
+| F | Proof and catalog support | Required evidence, attestation, catalog, receipt, and conditional AI references are declared; authenticity and authority are not resolved. |
+| G | Review and rollback | Fixture-only review identity/authority declarations, separation, binding, correction, and rollback links are coherent. |
+
+Result precedence is `ERROR > DENY > ABSTAIN > PASS`.
+
+> [!IMPORTANT]
+> `PASS` means `APPROVE_READY` under the bounded declared packet. It does not prove source authority, rights, sensitivity clearance, evidence truth, cryptographic verification, live reviewer authority, rollback execution, release, deployment, publication, or required-check coupling.
+
+### 6. Accountable review and release handoff
+
+Only after bounded readiness passes may the packet be handed to the separately governed review and release process.
+
+The handoff must identify:
+
+- exact candidate and artifact digests;
+- accepted source, evidence, policy, sensitivity, cultural/sovereignty, consent, and review authority records;
+- all policy obligations and the consumers that enforce them;
+- correction, withdrawal, expiry, and rollback targets;
+- remaining `UNKNOWN`, `CONFLICTED`, or `NEEDS VERIFICATION` items;
+- the requested decision, without pre-writing the answer; and
+- an explicit statement that the handoff has no release or publication effect.
+
+At the current repository checkpoint, no Archaeology child candidate dossier or accepted Archaeology release dry-run is established. Stop at `HOLD` after preparing the review handoff unless new, independently verified authority closes that gap.
+
+[Back to top](#top)
+
+---
+
+<a id="archaeology-specific-gates"></a>
+
+## Archaeology-specific gates
+
+These gates are non-compensable. Product value, deadlines, model confidence, map quality, or generalization effort cannot offset a failure.
+
+| Gate | Required question | Fail-closed posture |
+|---|---|---|
+| Candidate status | Is the object a candidate, observation, interpretation, confirmed assertion, derivative, or collection record—and is that role preserved? | `DENY` role collapse; `ABSTAIN` when evidence cannot resolve status. |
+| Harmful precision | Could any direct field, tile, join, identifier, search result, graph edge, cache, screenshot, log, or generated answer reveal or narrow a protected place? | `DENY` exact/reconstructive exposure; `HOLD` generalized candidate pending accepted profile and inference review. |
+| Burial/human remains/sacred or restricted material | Is the operation authorized for the exact audience and purpose by the relevant governed authority? | `DENY` or `HOLD`; do not expose the existence or location while explaining the result. |
+| Cultural and sovereignty review | Does a current, operation-specific review record exist under an accepted authority model? | `HOLD`; CODEOWNERS or generic stewardship metadata is insufficient. |
+| Rights, consent, embargo, and revocation | Are permissions current, scoped, auditable, and revocable—and do derivatives inherit the restrictions? | `DENY` or `HOLD` on missing, expired, conflicted, or revoked state. |
+| Public-safe transform | Is the transform accepted, reproducible, irreversible enough for the threat model, and recorded without disclosing protective parameters? | `HOLD` or `DENY`; visual coarseness alone is not proof. |
+| Reverse inference | Have cross-layer joins, time, labels, narratives, terrain, parcels, roads, collections, and external public sources been assessed together? | `DENY` or narrow scope until the composite risk is reviewed. |
+| Collection and 3D security | Do media, models, point clouds, textures, metadata, camera paths, and downloadable assets preserve the same restrictions as 2D outputs? | `DENY` when parity or asset-level controls fail. |
+| AI mediation | Does any model receive only governed public-safe context, cite released evidence, preserve denial/withholding context, and emit a bounded receipt? | `ABSTAIN`, `DENY`, or `ERROR`; never send raw protected context to a public model path. |
+| Correction and rollback | Can the system stop serving, invalidate derivatives/caches, preserve public-safe audit history, and restore a prior safe state? | `HOLD` without a realistic correction and rollback path. |
+
+No universal public precision threshold is adopted by this runbook. Some candidates require suppression or no geometry rather than generalization.
+
+[Back to top](#top)
+
+---
+
+<a id="current-executable-validation"></a>
+
+## Current executable validation
+
+### Bounded Archaeology profile
+
+The current `domain-archaeology` workflow executes one substantive synthetic, no-network `ThreeDDocumentation` paradata slice. The same focused proof can be run locally:
+
+```bash
+python -m unittest \
+  tests.validators.domains.archaeology.test_validate_three_d_documentation \
+  --verbose
+
+python tools/validators/domains/archaeology/validate_three_d_documentation.py \
+  --fixtures
+```
+
+A pass proves fixture-profile conformance for acquisition, processing, scale, georeference, interpretation, asset roles, and governance-reference coherence. It does not inspect a real asset, validate an archaeological site, resolve evidence/rights/cultural authority, apply policy, construct proof, approve review, or release.
+
+### Explicit workflow holds
+
+The same workflow intentionally holds:
+
+- `build-proof-archaeology` because no accepted Archaeology proof producer or deterministic proof command is established; and
+- `publish-dry-run-archaeology` because no accepted Archaeology release dry-run command or reviewed candidate dossier is established.
+
+A green held job proves the repository still recognizes the hold. It is not proof that the missing capability exists.
+
+### Documentation-only validation for this runbook
+
+For a same-path Markdown update, validate at minimum:
+
+1. metadata block remains parseable and truth labels are explicit;
+2. headings and internal anchors are unique;
+3. all repository-relative links resolve at the exact branch head;
+4. Mermaid fences are balanced and contain no protected data;
+5. commands match current repository files and do not imply writes or network access;
+6. terminology preserves object-family and lifecycle boundaries;
+7. no exact location, sensitive review substance, credential, or real candidate payload appears; and
+8. the PR changes no release, policy, schema, workflow, data, settings, or publication state.
+
+[Back to top](#top)
+
+---
+
+<a id="candidate-packet"></a>
+
+## Candidate packet
+
+A future Archaeology candidate dossier should be public-safe and pointer-oriented. It must not duplicate restricted source bytes, exact geometry, consent secrets, or cultural-review substance.
+
+### Minimum public-review index
+
+| Field | Requirement |
 |---|---|
-| `evidence_bundle_required` | Refuse promotion of objects without a resolvable `EvidenceBundle`. |
-| `candidate_not_site` | Refuse to label a remote-sensing / LiDAR / geophysics record as a confirmed site without source + review. |
-| `exact_geometry_denial` | Block any public-bound product carrying below-threshold geometry for sensitive classes. |
-| `public_no_leak` | End-to-end test that public artifacts do not surface exact coordinates, burial, sacred-site, or human-remains content. |
-| `rights_and_cultural_review` | Refuse promotion when rights or cultural review is unresolved. |
-| `catalog_closure` | Verify EvidenceRefs resolve, digests close, and catalog matrix passes. |
-| `ai_exact_location_denial` | AI surface (Focus Mode) must DENY any exact-location query for Archaeology. |
+| Candidate identity | Stable ID, immutable version/digest, object role, lifecycle state, requested operation, and audience. |
+| Scope | Spatial and temporal scope described at a safe level; no protective transform parameters. |
+| Artifact set | Content digests and roles for proposed public-safe carriers. |
+| Source support | SourceDescriptor references and source-role summary. |
+| Evidence support | EvidenceRef/EvidenceBundle references, limitations, uncertainty, and freshness. |
+| Policy | Accepted profile, bundle/evaluator identity, finite result, reasons, obligations, and expiry. |
+| Review | Governed review references and authority state; sensitive substance remains outside the public dossier. |
+| Validation | Exact validator/profile versions, reports, negative tests, and known gaps. |
+| Representation | Transform/representation receipt and reality-boundary note where material. |
+| Release | Proposed manifest reference and explicit current release state. |
+| Correction and rollback | Correction path, withdrawal behavior, prior safe target, derivative/cache inventory, and drill evidence. |
+| Open state | Every `UNKNOWN`, `CONFLICTED`, `NEEDS VERIFICATION`, `HOLD`, `ABSTAIN`, `DENY`, or `ERROR` item. |
 
-> [!IMPORTANT]
-> Validators **do not decide truth.** They prove rules are enforceable. Truth lives in `contracts/` (meaning) + `schemas/` (shape) + `policy/` (admissibility) + `EvidenceBundle` (substantiation). [DIRRULES §§6.3-6.5]
+### Packet review rule
 
-**Exit criteria.** All required validators emit `pass`; `RedactionReceipt` is present where sensitivity applies; `RunReceipt` is recorded for the validation run.
+A reviewer must be able to reconstruct why each public claim and representation is supported, permitted, scoped, reviewed, releasable, correctable, and reversible without gaining access to protected details that the review surface is not authorized to carry.
 
-**Fail-closed outcome.** Stay in WORK; emit structured `FAIL` outcome with reason codes (see §12).
-
----
-
-## 8 · Procedure D — Catalog closure (`PROCESSED → CATALOG / TRIPLET`)
-
-**Pre-condition.** EvidenceRefs resolve; catalog matrix and digests close.
-
-**Steps.**
-
-1. Compose the `EvidenceBundle` from the validated PROCESSED objects and their EvidenceRefs. Bundles **are** the substantiation surface; downstream graphs, vector indexes, and search projections are derivative.
-2. Emit the `CatalogMatrix` entry: source role, identity, temporal scope, sensitivity tier, evidence-bundle digest, related-lane relations (see §1).
-3. Build graph / triplet projections from released or review-authorized evidence — never from RAW or quarantined material. [GAI] [ENCY]
-4. Validate catalog closure: every EvidenceRef resolves; every digest closes; every relation preserves source role, sensitivity, and rights.
-
-**Exit criteria.** `CatalogMatrix` entry valid; `EvidenceBundle` closed; graph projections (where applicable) link only to released-or-authorized evidence.
-
-**Fail-closed outcome.** HOLD at PROCESSED; emit structured FAIL; **no public edge is created**.
+[Back to top](#top)
 
 ---
 
-## 9 · Procedure E — Release (`CATALOG / TRIPLET → PUBLISHED`)
+<a id="finite-outcomes-and-reason-codes"></a>
 
-**Pre-condition.** Review state is satisfied where required; release authority is distinct from the original author when materiality applies. [ENCY §24.7]
+## Finite outcomes and reason codes
 
-**Steps.**
+Use one finite result per evaluated operation. Do not encode a denial as an empty success payload.
 
-1. Confirm review coverage:
-   - Steward review for any object claiming `ArchaeologicalSite` status.
-   - **Rights-holder representative** sign-off for sovereign, tribal, or culturally sensitive content.
-   - Sensitivity reviewer sign-off for any tier transition toward more public exposure.
-2. Compose the `ReleaseManifest`:
-   - Released artifact set with digests
-   - Policy posture (gate decisions, sensitivity tier)
-   - Review state references (`ReviewRecord` IDs)
-   - **Rollback target** (prior valid release or explicit "first release")
-   - **Correction path** (channel + reviewer + supersession rule)
-   - Attestation references (DSSE / cosign / Rekor where applicable)
-3. Run the **Promotion Gate Matrix A–G** (see Appendix). Promotion is denied unless every required gate evaluates `allow` with verified receipts.
-4. Emit a signed `PromotionDecision` with `decision_id`, `spec_hash`, `attestation_ref`, and outcome.
-5. Publish through the governed API path **only**. Public clients consume `apps/governed-api/` endpoints, not canonical or internal stores. [DIRRULES §7] [Trust membrane]
-
-> [!CAUTION]
-> The Archaeology layer manifest resolver returns **public-safe release only**. A `LayerManifest` referencing un-generalized geometry, missing `SensitivityTransform` provenance, or missing `ReviewRecord` must return `DENY` — not a degraded `ANSWER`.
-
-**Exit criteria.** `ReleaseManifest`, rollback target, correction path, and (where required) `ReviewRecord` all present; PromotionDecision is `ANSWER`/`allow`; `RunReceipt` and attestation are stored immutably.
-
-**Fail-closed outcome.** HOLD at CATALOG; no public surface change.
-
----
-
-## 10 · Sensitivity, rights, and CARE checks
-
-These rules **fail closed** at every gate. They are not waivable.
-
-| Concern | Default | Required artifact to advance |
+| Result | Meaning | Next action |
 |---|---|---|
-| Exact site coordinates | DENY | Generalization receipt + sensitivity reviewer sign-off |
-| Burial / human remains | DENY (no public path) | Rights-holder review + no public layer at any tier |
-| Sacred sites | DENY | Rights-holder representative consent + steward review |
-| Unresolved cultural sensitivity | DENY | `CulturalReview` resolved |
-| Below H3 r7 geometry on sensitive products | DENY | Generalization above threshold + reviewer sign-off |
-| Private-landowner detail | DENY | Redaction or steward-only access |
-| Collection security | DENY public | Steward-only / staged access only |
-| Looting-risk exposure | DENY | Risk assessment + steward + release authority |
-| Indigenous data sovereignty | CARE-gated default-deny | Consent grant present, valid, unrevoked; `authority_to_control` recorded; `obligations` and `benefit_commitments` declared |
+| `PASS` / `APPROVE_READY` | The bounded readiness validator found no issue in the declared packet. | Hand off for accountable review; do not transition. |
+| `HOLD` | A required authority, review, accepted profile, proof, candidate dossier, release path, or rollback capability is not yet established. | Record owner, evidence needed, and re-entry condition. |
+| `ABSTAIN` | Evidence is insufficient to support the requested claim without asserting an unsafe contradiction. | Narrow the claim or resolve evidence. |
+| `DENY` | A mandatory, unsafe, prohibited, revoked, expired, or contradictory condition blocks the operation. | Quarantine or withdraw; do not expose protected context in the reason. |
+| `ERROR` | The evaluator, parser, resolver, or other trust infrastructure could not complete safely. | Fail closed and repair infrastructure; never fall back to allow. |
 
-**CARE alignment (CONFIRMED doctrine).** Any Archaeology object whose `MetaBlock v2` declares a non-empty `authority_to_control` is gated by an OPA rule that defaults to deny on publication, with an explicit allow path requiring the named authority's consent grant to be present, valid, and unrevoked. The rule runs at PR-time (Conftest) and at runtime (admission webhook / PDP), giving CI-equals-runtime parity. [C15-03] [C5-03]
+Recommended stable reason-code families:
 
-**Generalization log.** Every public geometry must carry a generalization receipt that records the input precision, the transform applied (H3 resolution, buffer, suppression), and the policy clause that justified it. The receipt is validation evidence; the badge in the UI is not. [SRC-061 pp.228-229]
+- `IDENTITY_MISSING`, `IDENTITY_CONFLICT`, `LIFECYCLE_BOUNDARY_INVALID`;
+- `SOURCE_ROLE_UNKNOWN`, `SOURCE_ROLE_CONFLICT`, `ROLE_COLLAPSE`;
+- `RIGHTS_UNKNOWN`, `CONSENT_MISSING`, `CONSENT_REVOKED`, `CULTURAL_REVIEW_MISSING`;
+- `SENSITIVITY_UNRESOLVED`, `EXACT_LOCATION_DENIED`, `REVERSE_INFERENCE_RISK`;
+- `EVIDENCE_UNRESOLVED`, `EVIDENCE_INSUFFICIENT`, `CITATION_CLOSURE_FAILED`;
+- `POLICY_PROFILE_UNACCEPTED`, `POLICY_EVALUATOR_UNBOUND`, `POLICY_DENIED`, `POLICY_ERROR`;
+- `REVIEW_AUTHORITY_UNVERIFIED`, `SELF_REVIEW_FORBIDDEN`, `REVIEW_EXPIRED`;
+- `ASSET_DIGEST_MISMATCH`, `CATALOG_CLOSURE_FAILED`, `ATTESTATION_UNVERIFIED`;
+- `CANDIDATE_DOSSIER_MISSING`, `RELEASE_DRY_RUN_UNAVAILABLE`, `RELEASE_AUTHORITY_MISSING`;
+- `CORRECTION_PATH_MISSING`, `DERIVATIVE_INVENTORY_INCOMPLETE`, `ROLLBACK_TARGET_MISSING`; and
+- `INTERNAL_ERROR`.
 
-> [!NOTE]
-> Public geometry thresholds and specific transform profiles for Archaeology are **NEEDS VERIFICATION** in this session. Treat any specific numeric threshold here (e.g., H3 r7) as the floor named in source evidence, not as a verified repo configuration.
+Public messages should disclose the safe reason category and next step without confirming protected locations, cultural content, consent details, security posture, or reconstruction parameters.
+
+[Back to top](#top)
 
 ---
 
-## 11 · Separation of duties
+<a id="authority-boundary"></a>
 
-CONFIRMED doctrine, **PROPOSED enforcement maturity.** Archaeology is a sensitive lane; the author of a promotion **may not** approve it. [ENCY §24.7.2]
+## Authority boundary
 
-| Action | Author may approve? | Required separation |
+This runbook may guide evaluation and produce a review handoff. It may not:
+
+- create or amend source authority;
+- accept a contract, schema, policy bundle, evaluator, ADR, or reviewer assignment;
+- authenticate cultural, sovereignty, rights-holder, or release authority;
+- create an EvidenceBundle or ProofPack by assertion;
+- apply a lifecycle transition;
+- write to `data/published/` as a substitute for release;
+- mark a pull request ready, approve, merge, auto-merge, release, deploy, promote, publish, or bypass a required review; or
+- expose a protected candidate through an API, map, tile, search, export, graph, log, or AI surface.
+
+The release authority must act through the accepted release process after independent evidence confirms that every non-compensable gate is closed. CI, review, merge, release, deployment, promotion, and publication remain distinct events.
+
+[Back to top](#top)
+
+---
+
+<a id="correction-withdrawal-and-rollback"></a>
+
+## Correction, withdrawal, and rollback
+
+Use the sibling [Archaeology Rollback Runbook](./ROLLBACK_RUNBOOK.md) for an authorized released artifact. This section defines the promotion-time requirement.
+
+Before a candidate can leave review hold, confirm that a material defect can trigger all of the following:
+
+1. stop serving or deny the affected public operation;
+2. identify the exact release and every derivative/cache affected;
+3. issue a correction, withdrawal, supersession, or rollback record in the owning release lane;
+4. preserve public-safe audit history without preserving harmful payloads;
+5. invalidate or replace tiles, exports, search indexes, graph projections, AI caches, and other carriers;
+6. restore a verified prior safe release or remain withdrawn;
+7. show corrected, withdrawn, stale, or superseded state in governed clients; and
+8. require full re-evaluation before any re-release.
+
+A style change, hidden layer, deleted Git file, or new model prompt is not an adequate rollback for already delivered bytes.
+
+For this documentation change, rollback before merge is closing the draft PR and deleting the scoped branch. After merge, use a transparent revert or bounded forward-correction PR. Neither action changes archaeology release state.
+
+[Back to top](#top)
+
+---
+
+<a id="audit-and-join-keys"></a>
+
+## Audit and join keys
+
+Every promotion-readiness packet should preserve enough stable identity to join the evaluation without copying protected content.
+
+| Key | Purpose |
+|---|---|
+| `candidate_id` and immutable version/digest | Identifies the exact subject. |
+| `spec_hash` | Binds the evaluated profile/specification. |
+| `source_ref` / `source_version` | Resolves source identity, role, and terms. |
+| `evidence_ref` / `evidence_bundle_id` | Resolves claim support and limitations. |
+| `run_id` / `validation_report_id` | Links process and validation memory. |
+| `policy_profile_ref` / bundle digest / evaluator identity | Identifies the decision logic actually used. |
+| `review_record_id` / authority reference | Links accountable review without exposing restricted substance. |
+| `promotion_decision_id` / `promotion_receipt_id` | Keeps decision and process memory distinct. |
+| `release_id` / manifest digest | Identifies the declared release contents and state. |
+| `correction_id`, withdrawal/supersession ref, `rollback_target` | Preserves reversal lineage. |
+| `artifact_digest` / representation receipt | Binds each public carrier and material transform. |
+
+Avoid join keys derived from protected coordinates, names, parcel identifiers, collection-security details, or sensitive cultural terms.
+
+[Back to top](#top)
+
+---
+
+<a id="operator-checklist"></a>
+
+## Operator checklist
+
+### Before evaluation
+
+- [ ] Exact candidate, version, lifecycle state, operation, audience, and requested transition are recorded.
+- [ ] No protected payload or exact/reconstructive location is present in the public packet, branch, logs, fixtures, or screenshots.
+- [ ] Source roles, rights, consent, cultural/sovereignty posture, and limitations resolve to governed records.
+- [ ] EvidenceRefs resolve to admissible EvidenceBundles for each consequential claim.
+- [ ] Accepted contracts, schemas, policy profile/bundle/evaluator, and validator versions are pinned.
+- [ ] Negative tests cover candidate/site confusion, harmful precision, reverse inference, missing evidence, missing review, and policy/runtime failure.
+- [ ] Required reviewers and authorities are verified independently of CODEOWNERS.
+- [ ] Correction, withdrawal, expiry, derivative invalidation, and rollback targets are realistic and reviewable.
+
+### During bounded validation
+
+- [ ] Run `make publish-check` and record exact commit, command, environment, result, and limitations.
+- [ ] Run the focused Archaeology `ThreeDDocumentation` fixture tests when the candidate touches that profile.
+- [ ] Treat `PASS` as readiness only.
+- [ ] Preserve `ABSTAIN`, `DENY`, `ERROR`, and explicit workflow holds without relabeling them as success.
+- [ ] Distinguish introduced failures from inherited repository failures.
+
+### Before review handoff
+
+- [ ] Candidate packet contains only public-safe pointers and summaries.
+- [ ] Every support object is bound to the same candidate/spec/artifact identities.
+- [ ] Policy obligations name the consumers responsible for enforcement.
+- [ ] Cultural, rights, consent, sensitivity, and specialist review are current and operation-specific.
+- [ ] Candidate lane, proof lane, and release dry-run no longer carry unresolved holds—or the handoff remains `HOLD`.
+- [ ] Remaining unknowns and conflicts are visible.
+- [ ] Handoff states that no transition, release, deployment, or publication has occurred.
+
+### After a separately authorized transition
+
+- [ ] Verify the authoritative release record and exact served artifact digests.
+- [ ] Verify governed API, map, search, export, graph, cache, and AI consumers preserve policy obligations.
+- [ ] Exercise correction and rollback monitoring.
+- [ ] Do not infer deployment or publication from merge or release-record presence; verify the actual governed state.
+
+[Back to top](#top)
+
+---
+
+<a id="open-verification-register"></a>
+
+## Open verification register
+
+| Item | Status | Required evidence before relying on it |
 |---|---|---|
-| Source admission (`— → RAW`) | Routine: yes. Unresolved rights / sovereignty: **no.** | Source steward + rights-holder representative where applicable |
-| Normalization receipts | Routine: yes. Sensitivity-relevant transforms: **no.** | Domain steward; sensitivity reviewer when transforms touch sensitive content |
-| Validator authorship / run | Yes (deterministic) | Domain steward; periodic docs-steward audit |
-| Promotion to PROCESSED / CATALOG (Archaeology) | **No — sensitive lane** | Domain steward + sensitivity reviewer |
-| Release to PUBLISHED | **No when materiality applies** | Author ≠ release authority; rights-holder representative where applicable |
-| Sensitive-lane release (Archaeology) | **No** | Author + sensitivity reviewer + release authority + rights-holder representative |
-| Correction / rollback | **No when steward-significant** | Author / detector + correction reviewer + release authority |
-| AI surface change (Focus Mode templates) | **No** | AI surface steward + docs steward |
+| Functional Archaeology, cultural/sovereignty, rights-holder, policy, evidence, independent-review, and release owners | `NEEDS VERIFICATION` | Accepted assignments, authority scopes, expiry/revocation, and separation rules. |
+| Archaeology exact-location policy | `PROPOSED / not assigned` | Accepted decision or operation-specific successor without publishing protective parameters. |
+| Accepted Archaeology policy bundle and evaluator | `UNKNOWN / not established` | Exact input contract, bundle digest, selector, evaluator, normalization, obligations, tests, activation record, and rollback. |
+| Broad Archaeology validator orchestration | `PARTIAL` | Executable non-placeholder validators and negative fixtures beyond the bounded 3D paradata slice. |
+| EvidenceRef-to-EvidenceBundle resolver for Archaeology | `UNKNOWN` | Deterministic resolution, authority checks, policy integration, tests, and governed consumers. |
+| Proof producer | `HOLD` | Accepted proof schema, producer, validator, fixtures, support resolution, and non-publication boundary. |
+| Child release-candidate dossier | `HOLD / none established` | Public-safe dossier with complete support and independent review. |
+| Archaeology release dry-run | `HOLD` | Accepted no-write command, representative synthetic candidate, policy/review integration, correction, and rollback evidence. |
+| Cryptographic verification and signer trust | `NEEDS VERIFICATION` | Accepted profile, trust root/custody, verification command, failure behavior, and audit evidence. |
+| Public-safe transform and reverse-inference thresholds | `UNKNOWN` | Accepted protected profile and specialist review; do not place parameters in public docs. |
+| Governed consumer enforcement | `UNKNOWN` | Exact API/map/search/export/graph/AI tests proving obligations and denial behavior. |
+| Required-check coupling | `NEEDS VERIFICATION` | Repository ruleset evidence showing the exact checks are required for the relevant transition. |
+| Deployment and publication state | `UNKNOWN` | Runtime, release, serving, monitoring, correction, and rollback evidence—not documentation or merge state. |
 
-> [!IMPORTANT]
-> Maturity note: tooling-enforced separation is the target. Until enforcement is verified in repo, separation is enforced by **custom and review discipline**, and this fact must be visible in every promotion PR description.
+Do not convert these items into implied facts. Close them only with current, pinned evidence.
+
+[Back to top](#top)
 
 ---
 
-## 12 · Failure handling and reason codes
+<a id="references"></a>
 
-A failed gate must emit a structured outcome. Below are the doctrine-level reason codes; lane-specific reason codes may be added per ADR.
+## References
 
-| Failure family | Reason code (PROPOSED catalog) | Gate(s) where it fires | Recovery |
+### Governing and cross-cutting
+
+- [Directory Rules v2](../../doctrine/directory-rules.md)
+- [ADR-0029 — Adopt Directory Governance Standard v2](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+- [ADR-0018 — Promotion Gate Sequence](../../adr/ADR-0018-promotion-gate-sequence.md)
+- [ADR-0024 — Steward Separation of Duties for Release](../../adr/ADR-0024-steward-separation-of-duties-for-release.md)
+- [ADR-0025 — Public Client Never Reads Canonical/Internal Stores](../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md)
+- [Promotion-gate readiness validator](../../../tools/validators/promotion_gate/README.md)
+
+### Archaeology
+
+- [Archaeology domain documentation](../../domains/archaeology/README.md)
+- [Archaeology domain policy](../../../policy/domains/archaeology/README.md)
+- [ADR-0010 — Sensitive Domains Deny by Default](../../adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md)
+- [Archaeology exact-location ADR candidate](../../adr/ADR-archaeology-exact-location-policy.md)
+- [Archaeology release-candidate lane](../../../release/candidates/archaeology/README.md)
+- [Archaeology CI workflow](../../../.github/workflows/domain-archaeology.yml)
+- [No-network test runbook](./NO_NETWORK_TEST_RUNBOOK.md)
+- [Rollback runbook](./ROLLBACK_RUNBOOK.md)
+
+---
+
+## Change history
+
+| Date | Version | Change | Effect |
 |---|---|---|---|
-| Missing required artifact | `MISSING_RECEIPT`, `MISSING_EVIDENCE`, `MISSING_REVIEW` | Normalization / Validation / Catalog / Release | Re-emit; re-run review or validator |
-| Schema / contract mismatch | `SCHEMA_MISMATCH`, `CONTRACT_DRIFT` | Normalization / Validation | Fix schema and/or ADR; re-run |
-| Rights / sensitivity unresolved | `RIGHTS_UNKNOWN`, `SENSITIVITY_UNRESOLVED` | Admission / Validation / Catalog / Release | Steward review; rights resolution; tier reassignment |
-| Source-role collapse | `ROLE_COLLAPSE`, `ROLE_DOWNCAST_FORBIDDEN` | Validation / Catalog / Release | Restore source role; refuse upcast |
-| Review state inadequate | `REVIEW_NEEDED`, `REVIEW_INSUFFICIENT`, `REVIEW_REJECTED` | Catalog / Release | Run required review; supply `ReviewRecord` |
-| Release infrastructure error | `RELEASE_MANIFEST_INVALID`, `ROLLBACK_TARGET_MISSING` | Release | Manifest fix; supply rollback target |
-| Correction lineage broken | `CORRECTION_DERIVATIVES_UNRESOLVED`, `CORRECTION_PRIOR_RELEASE_MISSING` | Correction | Resolve derivatives; supersession entry |
-| Archaeology-specific | `EXACT_GEOMETRY_DENIED`, `CULTURAL_REVIEW_REQUIRED`, `LOOTING_RISK_ESCALATION` | Validation / Catalog / Release | Generalize geometry; route to rights-holder; risk assessment |
+| 2026-05-13 | v1 | Initial doctrine-led promotion runbook. | Draft guidance; implementation claims largely unverified. |
+| 2026-08-24 | v2.0 | Same-path repository-grounded modernization; reconciled Directory Rules, bounded A–G validator, Archaeology CI holds, policy/candidate maturity, exact-location posture, and explicit review/release boundaries. | Documentation only; no policy, data, transition, release, deployment, or publication effect. |
 
-**Where the reason goes.** Every reason code is recorded on the `DecisionEnvelope` and joined to the `PromotionDecision`, the `RunReceipt`, and (where applicable) the `AIReceipt` via a shared `decision_id`. Append-only audit ledgers and DSSE/cosign attestations are the canonical place to retrieve them.
-
----
-
-## 13 · Correction and rollback
-
-Correction and rollback are **publication requirements, not afterthoughts.** A released Archaeology claim must already carry a visible correction path and rollback target before it is treated as safely publishable.
-
-```mermaid
-flowchart TB
-    P[PUBLISHED] -- defect detected --> Detect{Defect class?}
-    Detect -- evidence gap --> EW[ABSTAIN or withdraw]
-    Detect -- sensitivity --> SR[Tier downgrade · redact]
-    Detect -- geometry --> GZ[Generalize · re-release]
-    Detect -- rights --> RR[Restrict · re-review]
-    Detect -- broken release infra --> RB[Rollback to prior release]
-    EW & SR & GZ & RR --> CN[CorrectionNotice + ReviewRecord]
-    CN --> SUP[Superseding release with updated ReleaseManifest]
-    RB --> RBC[RollbackCard · prior digests restored · derivatives invalidated]
-    SUP --> Pp[PUBLISHED']
-    RBC --> Pp
-```
-
-**Correction posture by defect class** (CONFIRMED doctrine):
-
-| Defect class | Correction posture | Rollback posture |
-|---|---|---|
-| Evidence gap | ABSTAIN or withdraw unsupported claim | Restore prior evidence-supported release |
-| Rights / sensitivity | Tier downgrade; redact; re-review | Restore prior compliant release |
-| Geometry over-precision | Generalize; re-release | Restore prior generalized release |
-| Source-role collapse | Restore role; re-validate | Restore prior release |
-| Review state regression | Hold; require fresh review | Restore prior reviewed release |
-
-**Rollback requirements.** Identify affected release, locate prior safe artifact set, verify digests and manifests, **disable or withdraw affected public surfaces** (governed API path), preserve audit receipts, mark stale or withdrawn UI state, and restore through the same governed release path. Rollback is **not a hidden file copy**. [BLD-GREEN §20] [UIAI-MASTER §§10-14]
-
-**Stale vs. wrong.** A stale claim is one whose evidence, source freshness, dependent data, or context has aged past its declared tolerance; a wrong claim is one whose substance is incorrect. Both states have visible markers and traceable lifecycles. Stale-state markers appear in the Evidence Drawer alongside `ReleaseManifest` references; they are not silent. [Atlas §24.8]
-
----
-
-## 14 · Verification backlog
-
-These items are **NEEDS VERIFICATION** until evidence from a mounted repo, schemas, registry entries, tests, logs, emitted artifacts, review records, or release manifests resolves them. Carry them on the verification backlog and link any PR that closes one.
-
-<details>
-<summary><strong>Open verification items — Archaeology promotion</strong></summary>
-
-| Item | Evidence that would settle it | Status |
-|---|---|---|
-| Verify Archaeology schema home (`schemas/contracts/v1/archaeology/` vs. `schemas/contracts/v1/domains/archaeology/`) | Mounted repo + ADR-0001 conformance check | NEEDS VERIFICATION |
-| Verify policy bundle home for Archaeology sensitivity (`policy/sensitivity/archaeology/` vs. `policy/domains/archaeology/`) | Mounted repo + ADR | NEEDS VERIFICATION |
-| Confirm runbook path convention (`docs/runbooks/archaeology/PROMOTION_RUNBOOK.md` nested vs. flat `docs/runbooks/archaeology_PROMOTION.md`) | Existing repo convention or docs-steward decision | PROPOSED |
-| Verify steward authority register and confidentiality scopes | `control_plane/source_authority_register.yaml`; review records | NEEDS VERIFICATION |
-| Define public geometry thresholds and transform profiles (H3 resolution, buffer radius, suppression rules) | Policy fixtures + sensitivity reviewer ADR | NEEDS VERIFICATION |
-| Verify oral history / cultural-knowledge handling protocol | Domain dossier + rights-holder agreement record | NEEDS VERIFICATION |
-| Verify emergency public-layer disablement and rollback drill | Rollback playbook + drill log | NEEDS VERIFICATION |
-| Verify Archaeology feature/detail resolver route and `ArchaeologyDecisionEnvelope` schema | `apps/governed-api/` route map + schema | UNKNOWN |
-| Verify CI workflow names align to Promotion Gate Matrix A–G | `.github/workflows/` + branch protection rules | NEEDS VERIFICATION |
-| Verify attestation flow (DSSE / cosign / Rekor) for Archaeology releases | `tools/attest/` + verify-attestation gate | NEEDS VERIFICATION |
-| Verify CARE consent-grant store and revocation channel | `policy/consent/` + steward feedback channel | NEEDS VERIFICATION |
-| Verify AI exact-location denial test coverage in `tests/domains/archaeology/` | Negative fixtures + test report | NEEDS VERIFICATION |
-
-</details>
-
----
-
-## 15 · Related docs
-
-- `docs/doctrine/directory-rules.md` — placement rules; responsibility roots; lifecycle invariant
-- `docs/doctrine/lifecycle-law.md` — RAW → PUBLISHED invariant *(PROPOSED)*
-- `docs/doctrine/trust-membrane.md` — public/UI/AI surfaces and governed APIs *(PROPOSED)*
-- `docs/domains/archaeology/README.md` — domain landing *(PROPOSED — see DOM-ARCH dossier for content basis)*
-- `docs/architecture/governed-ai/README.md` — Focus Mode evidence binding; ABSTAIN / DENY semantics *(PROPOSED)*
-- `docs/runbooks/governed_ai_VALIDATION.md` — Focus Mode validation runbook *(PROPOSED)*
-- `docs/runbooks/governed_ai_ROLLBACK.md` — AI adapter rollback runbook *(PROPOSED)*
-- `contracts/release/release_manifest.md` — release object meaning
-- `contracts/release/promotion_decision.md` — promotion outcome record
-- `contracts/release/rollback_card.md` — rollback record
-- `contracts/correction/correction_notice.md` — correction record
-- `contracts/governance/review_record.md` — review-state object
-- `contracts/evidence/evidence_bundle.md` — substantiation surface
-- `policy/sensitivity/archaeology/` — admissibility rules for sensitive Archaeology content
-- `policy/promotion/` — promotion-gate policy bundle (Gates A–G)
-- `release/candidates/archaeology/` — release candidate manifests
-
-> [!NOTE]
-> Every link above is **PROPOSED** until verified against current repo evidence. Use these as targets for placement under Directory Rules, not as proof of existence.
-
----
-
-## Appendix · Promotion Gate Matrix A–G
-
-CONFIRMED doctrine. KFM enforces seven gates between authoring and publication. Auto-merge fires only when all seven pass; any failure blocks the merge until remediation. [C5-01] [C5-02]
-
-| Gate | Intent | Machine check (PROPOSED tooling) | Required evidence |
-|---|---|---|---|
-| **A — Structure & Metadata** | MetaBlock present; zones correct | `check_structure` | KFM Meta Block v2; CARE fields where applicable |
-| **B — Schemas & Contracts** | Schema + OpenAPI validation | JSON Schema validators; OpenAPI validator | Object validates against `schemas/contracts/v1/...` |
-| **C — Policy Parity** | CI = runtime; same bundle, pinned digest | Conftest / OPA in CI; PDP or Gatekeeper at runtime | Bundle digest match; same decisions both sides |
-| **D — Security & Sensitivity** | Sensitivity + license scans; CARE rules | Sensitivity scanner; license scanner; CARE OPA rules | No exact-geometry leak; consent-grant valid; rights status `allow` |
-| **E — Data Quality** | Profilers / assertions with thresholds | DQ runner | All required validators `pass` |
-| **F — Provenance & Lineage** | Receipt and lineage validation | OpenLineage emit + verify | `RunReceipt` cosign-verified; lineage `run_id` discoverable |
-| **G — Reviewability** | CODEOWNERS + policy two-key approval | CODEOWNERS enforcement; required reviews | `ReviewRecord`(s); release-authority sign-off |
-
-**Default-deny posture (CONFIRMED).** Promotion is denied unless: `spec_hash` is present and matches a recomputation; the `RunReceipt` is cosign-signed and verifiable; SPDX rights are in the allowlist; at least one attestation bundle is published; and every dataset-quality check has status `pass`. Only then is `input.valid = true` and `allow` permitted. [C5-02]
-
-**Archaeology-specific overlays:**
-
-- **Gate D** additionally requires `SensitivityTransform` lineage and absence of below-threshold geometry on public products.
-- **Gate G** requires rights-holder representative sign-off for sovereign or culturally sensitive content; author ≠ release authority.
-- **Gate F** ties Archaeology releases to `EvidenceBundle` resolution and `ReviewRecord` references — not just to a lineage event.
-
----
-
-<sub>**Last updated:** 2026-05-13 · **Status:** draft · **Authority:** KFM doctrine (CONFIRMED) + Archaeology lane (PROPOSED implementation) · [Back to top](#archaeology-promotion-runbook)</sub>
+[Back to top](#top)
