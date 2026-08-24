@@ -1,8 +1,8 @@
 <!--
 KFM Pull Request Template
-Template version: v1.3
+Template version: v1.4
 Pinned contract: CONTRACT_VERSION = "3.0.0"
-Evidence snapshot used for this revision: main@de1cb18e688e3f81a0fc12d7f5d09a2f27921177
+Evidence snapshot used for this revision: main@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275
 
 This is a governed work-intake and review surface. It asks for evidence,
 scope, validation, risk, review, and rollback. It is not evidence authority,
@@ -125,6 +125,24 @@ not proof that work is independent.
 - [ ] `PROPOSED` — design, placement, behavior, or recommendation not yet verified as implemented.
 - [ ] `NEEDS VERIFICATION` — checkable, but not checked strongly enough to act as fact.
 - [ ] `UNKNOWN` — unresolved; do not silently act on it.
+
+## Claim posture and capability maturity:
+
+<!--
+For every material claim about a repository capability, report these two axes
+independently at the pinned evidence snapshot. Authority / epistemic posture
+uses the core four PR truth labels above. Capability maturity is descriptive
+reporting vocabulary, not a new contract enum, lifecycle state, gate result,
+policy outcome, ADR status, release state, or publication authority.
+-->
+
+| Capability or claim | Authority / epistemic posture | Capability maturity | Pinned evidence |
+|---|---|---|---|
+| | `CONFIRMED` / `PROPOSED` / `UNKNOWN` / `NEEDS VERIFICATION` | `IMPLEMENTED` / `PARTIAL` / `DRAFT` / `DEPRECATED` / `ABSENT` / `NOT INSPECTED` | |
+
+- [ ] Neither axis is inferred from the other.
+- [ ] `IMPLEMENTED` is limited to the exact inspected scope and does not imply deployment, activation, acceptance, rights clearance, policy approval, release, publication, or public fitness.
+- [ ] Any uninspected capability is recorded as `NOT INSPECTED` rather than inferred from documentation, a schema, a workflow name, or a passing check.
 
 ## Evidence inspected:
 
