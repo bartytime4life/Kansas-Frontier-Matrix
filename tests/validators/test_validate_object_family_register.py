@@ -84,8 +84,17 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
         }
         self.assertEqual(11, len(conflicted))
         self.assertEqual(11, register["conflicted_required_count"])
-        self.assertEqual("PARTIAL", by_id["withdrawal_notice"]["implementation_status"])
-        self.assertEqual([], by_id["withdrawal_notice"]["validator_paths"])
+        self.assertEqual(
+            "IMPLEMENTED", by_id["withdrawal_notice"]["implementation_status"]
+        )
+        self.assertEqual(
+            ["tools/validators/release/validate_withdrawal_notice.py"],
+            by_id["withdrawal_notice"]["validator_paths"],
+        )
+        self.assertNotIn(
+            "withdrawal_notice_validation_surface_partial",
+            register["unresolved_items"],
+        )
         for family_id in conflicted:
             with self.subTest(family_id=family_id):
                 compatibility = by_id[family_id]["compatibility"]
@@ -94,6 +103,44 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
                     compatibility["posture"],
                 )
                 self.assertGreaterEqual(len(compatibility["candidate_paths"]), 2)
+
+    def test_current_catalog_binds_landed_validation_surfaces(self) -> None:
+        register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
+        by_id = {entry["family_id"]: entry for entry in register["entries"]}
+        expected = {
+            "decision_envelope": {
+                "fixture_paths": ["fixtures/contracts/v1/runtime/decision_envelope"],
+                "validator_paths": ["tools/validators/validate_decision_envelope.py"],
+                "test_paths": ["tests/validators/test_validate_decision_envelope.py"],
+                "workflow_paths": [".github/workflows/decision-envelope.yml"],
+            },
+            "withdrawal_notice": {
+                "fixture_paths": ["fixtures/release/withdrawal_notice"],
+                "validator_paths": [
+                    "tools/validators/release/validate_withdrawal_notice.py"
+                ],
+                "test_paths": ["tests/validators/test_validate_withdrawal_notice.py"],
+                "workflow_paths": [".github/workflows/withdrawal-notice.yml"],
+            },
+        }
+        for family_id, paths in expected.items():
+            entry = by_id[family_id]
+            with self.subTest(family_id=family_id):
+                self.assertEqual("hardened", entry["maturity"])
+                self.assertEqual("IMPLEMENTED", entry["implementation_status"])
+                for role, expected_paths in paths.items():
+                    self.assertEqual(expected_paths, entry[role])
+                for surface in (
+                    "contracts",
+                    "schemas",
+                    "fixtures",
+                    "validators",
+                    "tests",
+                    "workflows",
+                ):
+                    self.assertEqual("IMPLEMENTED", entry["surface_status"][surface])
+                self.assertEqual("ABSENT", entry["surface_status"]["policy"])
+                self.assertEqual("NOT_INSPECTED", entry["surface_status"]["emitters"])
 
     def test_current_relationships_are_closed_and_non_self_referential(self) -> None:
         register = json.loads(REGISTER_PATH.read_text(encoding="utf-8"))
