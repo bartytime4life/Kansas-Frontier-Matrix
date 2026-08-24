@@ -82,7 +82,7 @@
     {
       "gate": "aggregate_validator_profile",
       "outcome": "FAIL",
-      "reason": "Inherited on untouched main: the full validator profile rejects existing fixture-backed families before this slice; the changed contributor paths are not selected validator inputs."
+      "reason": "Inherited environment failure on untouched main: the absent jsonschema package makes twenty registered validators exit before fixture evaluation; the same twenty validator IDs fail on this slice, while the remaining three pass. The changed contributor paths are not selected validator inputs."
     },
     {
       "gate": "repository_topology",
