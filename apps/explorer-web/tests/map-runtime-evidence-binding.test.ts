@@ -121,6 +121,33 @@ describe("MapRuntimePort to governed Evidence Drawer binding", () => {
     expect(consume).toHaveBeenCalledTimes(1);
   });
 
+  it("invalidates pending evidence when the runtime leaves READY", async () => {
+    const runtime = createNullMapRuntime();
+    await runtime.initialize();
+    const consume = vi.fn();
+    let releasePending: ((value: unknown) => void) | undefined;
+    const pending = new Promise<unknown>((resolve) => {
+      releasePending = resolve;
+    });
+    const resolver = vi.fn(() => pending);
+    const binding = bindMapRuntimeEvidence(runtime, resolver, consume);
+
+    runtime.emitSelection(selection);
+    runtime.emitTrustState("WITHDRAWN");
+    releasePending?.(answerFixture);
+    await settle();
+
+    expect(resolver).toHaveBeenCalledTimes(1);
+    expect(consume).not.toHaveBeenCalled();
+    expect(runtime.getSnapshot()).toMatchObject({
+      state: "WITHDRAWN",
+      reason: "MAP_RUNTIME_WITHDRAWN",
+      selection: null,
+    });
+
+    binding.destroy();
+  });
+
   it("keeps the runtime binding renderer-neutral, no-network, and outside lifecycle stores", () => {
     expect(bindingSource).not.toMatch(/\bfetch\s*\(/);
     expect(bindingSource).not.toMatch(

@@ -52,8 +52,11 @@ export async function resolveMapRuntimeSelectionEvidence(
 
 /**
  * Bind renderer-neutral runtime selection events to the governed evidence
- * bridge. Newer selections supersede unresolved older requests; destroy is
- * idempotent and prevents pending or later results from reaching the consumer.
+ * bridge. Newer selections supersede unresolved older requests. A transition
+ * away from READY invalidates unresolved evidence so stale, denied, withdrawn,
+ * rolled-back, or failed runtime state cannot be followed by a late ANSWER.
+ * Destroy is idempotent and prevents pending or later results from reaching the
+ * consumer.
  *
  * This binding performs no network, renderer, source, evidence-store, policy,
  * lifecycle, model, release, deployment, or publication work. The injected
@@ -71,7 +74,11 @@ export function bindMapRuntimeEvidence(
   let active = true;
   let requestVersion = 0;
 
-  const unsubscribe = runtime.subscribeSelection((selection) => {
+  const unsubscribeSnapshot = runtime.subscribeSnapshot((snapshot) => {
+    if (snapshot.state !== "READY") requestVersion += 1;
+  });
+
+  const unsubscribeSelection = runtime.subscribeSelection((selection) => {
     const currentRequest = ++requestVersion;
     void resolveMapRuntimeSelectionEvidence(selection, resolver).then(
       (resolution) => {
@@ -86,7 +93,8 @@ export function bindMapRuntimeEvidence(
       if (!active) return;
       active = false;
       requestVersion += 1;
-      unsubscribe();
+      unsubscribeSelection();
+      unsubscribeSnapshot();
     },
   });
 }
