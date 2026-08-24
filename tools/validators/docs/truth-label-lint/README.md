@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-validators-docs-truth-label-lint-readme
 title: tools/validators/docs/truth-label-lint README
 type: README
-version: v0.2.0
+version: v0.2.1
 status: bounded-executable; opt-in; no-network; non-authoritative; review-pending
 owner: TODO-tooling-qa-owner-plus-docs-steward-plus-evidence-steward-plus-ci-steward
 created: 2026-07-07
-updated: 2026-08-23
+updated: 2026-08-24
 policy_label: repository-facing; docs-validator; truth-label-lint; evidence-posture-qa; non-authoritative
 owning_root: tools/
 responsibility: Deterministically verify that explicitly opted-in Markdown assessments record authority or epistemic posture separately from capability maturity, without deciding either axis, interpreting its values, editing documents, or creating evidence, policy, review, release, or publication authority.
-truth_posture: CONFIRMED bounded standard-library executable, synthetic cases, focused tests, and read-only workflow proposal / PROPOSED adoption by individual assessment documents / NEEDS VERIFICATION hosted exact-head results, steward acceptance, and any future expansion beyond the opt-in structural rule
+truth_posture: CONFIRMED bounded standard-library executable, synthetic cases, focused tests, and tracked read-only workflow definition / PROPOSED adoption by individual assessment documents / NEEDS VERIFICATION hosted exact-head results, steward acceptance, and any future expansion beyond the opt-in structural rule
 related:
   - ../README.md
   - ../../_common/README.md
@@ -51,11 +51,12 @@ truth-label vocabulary.
 
 | Surface | Bounded current state |
 |---|---|
-| Validator | **PROPOSED / implemented on this branch** — standard-library, deterministic, no network, read-only |
+| Validator | **CONFIRMED bounded executable** — tracked standard-library implementation; deterministic, no network, read-only |
 | Opt-in contract | **PROPOSED** — exact marker and table shape below |
 | Value vocabulary | **UNCHANGED** — values are preserved as written and not interpreted |
 | Repository-wide use | **NOT ENABLED** — unmarked documents are skipped |
-| Workflow | **PROPOSED** — focused tests only; no document mutation or QA artifact upload |
+| Workflow definition | **CONFIRMED tracked definition** — focused tests only; no document mutation or QA artifact upload |
+| Hosted exact-head result | **NEEDS VERIFICATION** — a tracked workflow is not evidence that a particular SHA passed |
 | Authority | **NONE** — a pass is documentation-structure evidence only |
 
 ## Opt-in document contract

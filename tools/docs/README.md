@@ -2,17 +2,19 @@
 doc_id: kfm://doc/tools-docs-readme
 title: tools/docs README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-docs-steward-plus-tooling-qa-owner
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-08-24
 policy_label: public
 owning_root: tools/
-responsibility: repo-wide documentation tooling, hygiene checks, render helpers, and docs QA handoff
+responsibility: repo-wide documentation operators, render and normalization helpers, and routing to canonical documentation validators
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
+  - ../validators/docs/README.md
+  - ./wiki/README.md
   - ../../docs/README.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/registers/VERIFICATION_BACKLOG.md
@@ -20,7 +22,8 @@ related:
   - ../../tools/ci/README.md
 notes:
   - "This README defines the governed boundary for documentation tooling under tools/docs/."
-  - "Documentation content belongs under docs/ or the relevant responsibility root; tools/docs/ only owns executable helpers for checking, rendering, normalizing, or summarizing docs."
+  - "Documentation validator implementation is routed to tools/validators/docs/ under accepted Directory Rule DIR-EXEC-006."
+  - "Documentation content belongs under docs/ or the relevant responsibility root; tools/docs/ owns bounded non-validator operators and helpers, not documentation authority."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -33,7 +36,7 @@ notes:
 ![truth](https://img.shields.io/badge/truth-cite--or--abstain-success)
 ![authority](https://img.shields.io/badge/content--authority-docs%2F-lightgrey)
 
-> **One-line purpose.** `tools/docs/` owns repo-wide executable helpers for documentation hygiene, rendering, normalization, metadata checks, link checks, and reviewer handoff reports. It does **not** own KFM doctrine, documentation authority, policy meaning, schema shape, contracts, or publication decisions.
+> **One-line purpose.** `tools/docs/` owns bounded documentation-specific operators and non-validator helpers such as explicit rendering, normalization, transport, or reviewer-handoff support. Documentation validators live under [`tools/validators/docs/`](../validators/docs/README.md). This lane does **not** own KFM doctrine, documentation authority, policy meaning, schema shape, contracts, or publication decisions.
 
 ---
 
@@ -46,7 +49,7 @@ notes:
 - [What does not belong here](#what-does-not-belong-here)
 - [Documentation tooling contract](#documentation-tooling-contract)
 - [Inputs and outputs](#inputs-and-outputs)
-- [Suggested helper families](#suggested-helper-families)
+- [Current routing](#current-routing)
 - [Validation](#validation)
 - [Review checklist](#review-checklist)
 - [Roadmap](#roadmap)
@@ -55,14 +58,15 @@ notes:
 
 ## Purpose
 
-`tools/docs/` is a tooling lane for documentation operations that need executable support across the repository.
+`tools/docs/` is a tooling lane for documentation operations that need bounded executable support across the repository but are not validator implementations.
 
 It exists because KFM documentation is part of the governed system. Good documentation helps maintainers understand evidence boundaries, responsibility roots, policy posture, source roles, validation gates, release state, correction paths, rollback targets, and implementation uncertainty.
 
 This lane may help produce or check documentation, but it must not blur the authority boundary:
 
 - `docs/` owns human-facing doctrine, architecture, runbooks, ADRs, source documentation, and public-facing documentation content.
-- `tools/docs/` owns executable support used to check, normalize, render, summarize, or inspect those documents.
+- `tools/docs/` owns bounded operators and helpers used to render, normalize, transport, summarize, or inspect those documents.
+- [`tools/validators/docs/`](../validators/docs/README.md) owns documentation validator implementations, including metadata, local-link, document-graph, freshness, and opt-in assessment-axis checks.
 - `policy/`, `contracts/`, and `schemas/` remain the sources of policy meaning, object-family meaning, and field-level shape.
 - `release/`, `data/receipts/`, and `data/proofs/` remain the homes for release decisions and trust artifacts.
 
@@ -75,11 +79,9 @@ This lane may help produce or check documentation, but it must not blur the auth
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/docs/README.md` | **CONFIRMED** | This README defines the lane boundary. |
-| Documentation helper scripts | **NEEDS VERIFICATION** | Confirm current branch contents before naming specific executables as implemented. |
-| Docs linting behavior | **PROPOSED** | Should be fixture-backed before being treated as CI behavior. |
-| Markdown metadata checks | **PROPOSED** | Recommended first-slice helper family. |
-| Link / citation checks | **PROPOSED** | Must distinguish broken links from unsupported claims. |
-| Render helpers | **PROPOSED** | May produce previews or artifacts; they do not publish docs. |
+| [`wiki/`](wiki/README.md) | **CONFIRMED tracked operator surface / PROPOSED use** | The dry-run-first synchronization helper exists; its child README keeps remote execution review-gated and unverified. |
+| Documentation validators | **CONFIRMED separate canonical lane** | Implemented documentation checks are indexed under [`tools/validators/docs/`](../validators/docs/README.md), not duplicated here. |
+| Additional render, normalization, or index helpers | **NOT CLAIMED** | No additional helper name or implementation status is established by this README. |
 | Doctrine authority | **DENY here** | Doctrine lives in `docs/doctrine/` and accepted ADRs, not tool code. |
 
 > [!IMPORTANT]
@@ -132,17 +134,14 @@ Those decisions require the owning docs steward, ADRs, source stewards, policy c
 
 Good fits for `tools/docs/` include:
 
-- Markdown metadata checkers.
-- KFM meta-block validators.
-- README shape checkers.
-- Anchor and mini-TOC checkers.
-- Link checking wrappers for local repository paths.
+- Explicit documentation render or preview helpers that do not publish.
 - Markdown normalization helpers that preserve meaning.
 - Generated docs index builders.
 - Docs report generators for CI handoff.
-- Documentation drift scanners.
-- Tools that compare stated path placement against Directory Rules references and flag items for review.
-- Tools that find unlabelled implementation claims and suggest `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` review.
+- Review-gated documentation transport or synchronization operators.
+- Non-authoritative summarization or inventory helpers whose output remains derived.
+
+Repository-wide documentation validators belong under [`tools/validators/docs/`](../validators/docs/README.md). A validator must not be placed here merely because its input is Markdown.
 
 Every helper should be:
 
@@ -162,6 +161,7 @@ Every helper should be:
 
 | Do not put in `tools/docs/` | Correct home | Reason |
 |---|---|---|
+| Documentation validator implementations | `tools/validators/docs/<lane>/` | Accepted `DIR-EXEC-006` places validator implementation under `tools/validators/`; subject matter does not create a second validator home. |
 | Doctrine documents | `docs/doctrine/` | Tooling checks doctrine; it does not own doctrine. |
 | ADRs | `docs/adr/` | ADRs are governance records, not executable helpers. |
 | Architecture prose | `docs/architecture/` | Human-facing architecture belongs in docs. |
@@ -171,8 +171,8 @@ Every helper should be:
 | Policy files | `policy/` | Policy meaning must not be embedded in docs helpers. |
 | JSON Schemas | `schemas/contracts/v1/...` | Field shape belongs in schema home. |
 | Contract definitions | `contracts/` | Object-family meaning belongs in contract home. |
-| Tests | `tests/docs/` or existing test root convention | Tests prove helpers; helpers do not own tests. |
-| Fixtures | `fixtures/` or `tests/docs/fixtures/` | Fixture data is not executable tooling. |
+| Validator tests | `tests/validators/docs/<lane>/` | Tests prove validators; validators and tests remain responsibility-aligned. |
+| Other helper tests and fixtures | The current responsibility-aligned `tests/` or `fixtures/` lane | Test data is not executable tooling, and this README does not invent a parallel test topology. |
 | One-off manual cleanup snippets | `scripts/maintenance/` or `scripts/one_off/` | Promote only durable, repo-wide tooling into `tools/docs/`. |
 
 [Back to top](#top)
@@ -247,20 +247,28 @@ Generated outputs should go to a caller-selected output path. The helper should 
 
 ---
 
-## Suggested helper families
+## Current routing
 
-| Helper family | Proposed path | Purpose | Status |
-|---|---|---|---|
-| Metadata checker | `tools/docs/check_meta_block.py` | Verify KFM meta-block presence and required fields. | **PROPOSED** |
-| README shape checker | `tools/docs/check_readme_shape.py` | Check expected README sections, badges, and governance warnings. | **PROPOSED** |
-| Local link checker | `tools/docs/check_links.py` | Verify relative links and anchors within the repo. | **PROPOSED** |
-| Truth-label scanner | `tools/docs/check_truth_labels.py` | Flag strong implementation claims without support labels. | **PROPOSED** |
-| Docs index builder | `tools/docs/build_docs_index.py` | Emit a deterministic docs inventory for review. | **PROPOSED** |
-| Markdown normalizer | `tools/docs/normalize_markdown.py` | Optional explicit-write hygiene pass that preserves meaning. | **PROPOSED** |
-| Drift note helper | `tools/docs/find_directory_drift_notes.py` | Find path claims that should be compared against Directory Rules. | **PROPOSED** |
+The verified direct-child implementation surface is intentionally small:
 
-> [!NOTE]
-> These names are recommended first-slice targets, not proof of current implementation. Confirm file presence on the active branch before invoking them.
+```text
+tools/docs/
+├── README.md                 # this non-authoritative routing boundary
+└── wiki/                     # dry-run-first native-wiki synchronization operator
+```
+
+Current documentation validator responsibilities are routed as follows:
+
+| Responsibility | Canonical implementation lane | Current evidence boundary |
+|---|---|---|
+| Local Markdown targets and fragments | [`tools/validators/docs/link-check/`](../validators/docs/link-check/README.md) | **CONFIRMED bounded executable**; external URLs remain unverified. |
+| Document connectivity and registry parity | [`tools/validators/docs/document-graph/`](../validators/docs/document-graph/README.md) | **CONFIRMED bounded executable**. |
+| KFM metadata blocks | [`tools/validators/docs/meta-block/`](../validators/docs/meta-block/README.md) | **CONFIRMED bounded executable**. |
+| Explicit freshness and review-age signals | [`tools/validators/docs/stale-scan/`](../validators/docs/stale-scan/README.md) | **CONFIRMED bounded executable**; freshness is not truth. |
+| Opt-in authority/maturity axis separation | [`tools/validators/docs/truth-label-lint/`](../validators/docs/truth-label-lint/README.md) | **CONFIRMED bounded executable**; the opt-in profile remains non-authoritative. |
+| Terminology parity | [`tools/validators/docs/terminology-parity/`](../validators/docs/terminology-parity/README.md) | **README-only proposal**. |
+
+This map records current routing; it does not propose another helper, validator, workflow, or authority surface.
 
 [Back to top](#top)
 
@@ -268,41 +276,24 @@ Generated outputs should go to a caller-selected output path. The helper should 
 
 ## Validation
 
-The first useful proof surface should be a small fixture-backed test suite.
-
-Recommended structure:
-
-```text
-tests/docs/
-├── README.md
-├── test_check_meta_block.py
-├── test_check_readme_shape.py
-└── fixtures/
-    ├── valid_readme.md
-    ├── missing_meta_block.md
-    ├── unresolved_link.md
-    └── unsupported_implementation_claim.md
-```
-
-Recommended assertions:
-
-- valid KFM meta block returns `pass`;
-- missing required metadata returns `fail`;
-- unresolved local links return `fail` or `warn` according to documented rule;
-- unsupported implementation claims are flagged for review, not auto-rewritten;
-- exact sensitive placeholders in fixtures are synthetic and public-safe;
-- write mode is disabled unless explicitly requested;
-- output order is deterministic.
-
-Suggested future command pattern:
+Validate the current routing documents with the existing canonical validators:
 
 ```bash
-pytest -q tests/docs
+python tools/validators/docs/link-check/check_links.py \
+  tools/docs/README.md \
+  tools/validators/docs/README.md \
+  tools/validators/docs/truth-label-lint/README.md
 ```
 
 ```bash
-python tools/docs/check_meta_block.py --path docs --output .tmp/docs-meta-report.json
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --profile required \
+  tools/docs/README.md \
+  tools/validators/docs/README.md \
+  tools/validators/docs/truth-label-lint/README.md
 ```
+
+Each implemented child validator owns its executable and synthetic test command. The [`tools/validators/docs/` parent README](../validators/docs/README.md#validation) indexes those commands. The wiki operator's child README documents its separate dry-run, remote-write, and verification boundary; this README does not claim that a live synchronization was run.
 
 [Back to top](#top)
 
@@ -310,9 +301,10 @@ python tools/docs/check_meta_block.py --path docs --output .tmp/docs-meta-report
 
 ## Review checklist
 
-Before adding or changing a `tools/docs/` helper, reviewers should confirm:
+Before adding or changing a `tools/docs/` helper or operator, reviewers should confirm:
 
 - [ ] The helper has a narrow documented purpose.
+- [ ] Validator implementation is routed to `tools/validators/docs/` instead of duplicated here.
 - [ ] The helper does not redefine doctrine, policy, schema, contract, release, receipt, or proof authority.
 - [ ] The helper is deterministic.
 - [ ] Network access is off by default.
@@ -331,12 +323,10 @@ Before adding or changing a `tools/docs/` helper, reviewers should confirm:
 
 | Step | Status | Outcome |
 |---|---|---|
-| Replace empty README with lane contract | **DONE in this README** | Establishes boundary for documentation tooling. |
-| Add metadata checker | **PROPOSED** | First executable helper for KFM meta-block coverage. |
-| Add README shape fixtures | **PROPOSED** | Prevents root README drift. |
-| Add local link checker | **PROPOSED** | Improves docs reliability without web dependency. |
-| Add truth-label scanner | **PROPOSED** | Helps reviewers catch unsupported implementation claims. |
-| Add CI report handoff | **PROPOSED / later** | Emits reviewer summaries without making doctrine decisions. |
+| Maintain this lane boundary | **CONFIRMED** | Keeps non-validator documentation operations separate from documentation authority. |
+| Route validator implementation to `tools/validators/docs/` | **CONFIRMED current topology** | Avoids parallel metadata, link, freshness, graph, or assessment-axis validator homes. |
+| Maintain the wiki synchronization operator | **PROPOSED use / child-owned** | Any remote write remains explicit, review-gated, and verified by the child contract. |
+| Add another documentation helper | **NOT PROPOSED here** | Requires a distinct non-validator responsibility, current-tree review, tests, and an owned output lane. |
 
 [Back to top](#top)
 
@@ -346,6 +336,6 @@ Before adding or changing a `tools/docs/` helper, reviewers should confirm:
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-07 |
-| Review state | Draft README replacement for existing empty file. |
-| Next smallest safe change | Add `tools/docs/check_meta_block.py` plus public-safe `tests/docs/` fixtures. |
+| Last reviewed | 2026-08-24 |
+| Review state | Current routing reconciled against `main@a565914ea37b2ffc2f8dfeaa5a4b35eed137ae34`, accepted ADR-0029, and tracked documentation-validator implementations. |
+| Next smallest safe change | None proposed by this README; re-review when the direct-child topology or a documentation-operator responsibility changes. |
