@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-two-axis-contributor-reporting-20260824",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    "CONTRIBUTING.md"
+  ],
+  "artifact_hashes": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "sha256:3d906b7726f7f5073062f54b2cb43df731c1df31af7d9d8f1ca0fd40d0a8968a",
+    "CONTRIBUTING.md": "sha256:c703671f9373b1b4daa82664000ec2c172c698018bc4bc47257efd23f9b19099"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-24"
+  },
+  "prompt_or_contract": "sha256:aa19cbffde30188a28b2cf0dbf0dbf4db2ec0b15d8ad71c3b3ee454aec8519c1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "read-only local source inspection",
+      "local Git evidence inspection",
+      "no-network repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:968435f689b78ea9b8a35259fb50f126c2ebdc826ca4ac3419a89ebda56d17cf",
+      "sha256:27e5cb40b23964e63302c5c7eeef9f213e18c0d9ed58b1051b026ff2c99fbf91",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5"
+    ],
+    "attached_docs": [
+      "KFM Circled Sources — Distinctive Delta Synthesis",
+      "KFM_Full_Atlas_seed_cards.md",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf"
+    ],
+    "evidence_refs": [
+      "gdrive:KFM Circled Sources — Distinctive Delta Synthesis#3.1",
+      "repo:docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275#3.1",
+      "repo:docs/adr/INDEX.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275",
+      "repo:docs/doctrine/directory-rules.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275",
+      "repo:control_plane/root_registry.yaml@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275",
+      "repo:CONTRIBUTING.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275"
+    ]
+  },
+  "truth_labels": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "PROPOSED",
+    "CONTRIBUTING.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source_reconciliation_and_non_authority_boundary",
+      "outcome": "PASS",
+      "reason": "The retained two-axis reporting delta was traced to section 3.1 of the current Drive synthesis and its byte-inspected repository source map; the change creates no object family, machine enum, lifecycle state, policy outcome, or authority claim."
+    },
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "Current main, accepted ADR-0029, Directory Rules, root registry, CODEOWNERS, the open pull-request queue, active issues, and recent merges were inspected; the only open pull request concerns Atmosphere documentation and does not overlap these contributor-control paths."
+    },
+    {
+      "gate": "documentation_structure_and_diff",
+      "outcome": "PASS",
+      "reason": "The required pull-request-template token headings remain intact, the source-map anchor resolves, the two-axis vocabulary is present in both contributor surfaces, and git diff --check passes."
+    },
+    {
+      "gate": "workflow_security",
+      "outcome": "PASS",
+      "reason": "The untouched baseline passes 19 workflow-security unit tests and the 478-workflow repository scan; this documentation-only slice does not change workflows."
+    },
+    {
+      "gate": "aggregate_validator_profile",
+      "outcome": "FAIL",
+      "reason": "Inherited on untouched main: the full validator profile rejects existing fixture-backed families before this slice; the changed contributor paths are not selected validator inputs."
+    },
+    {
+      "gate": "repository_topology",
+      "outcome": "PASS",
+      "reason": "After main advanced through PR #3521, the refreshed untouched baseline and this rebased slice both report 131 baselined warnings, zero invariant or new-drift findings, and zero stale fingerprints. This slice adds no root or directory."
+    },
+    {
+      "gate": "repository_python_test_environment",
+      "outcome": "SKIPPED",
+      "reason": "The current runtime lacks the repository-declared pytest and jsonschema packages, and restricted network access prevented dependency installation; this limitation was reproduced before editing."
+    },
+    {
+      "gate": "generated_receipt_schema_validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository validator could not start because jsonschema is absent from the current runtime; JSON parsing, required-key inspection, artifact-path/hash binding, and final local hash comparison were performed separately."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "Both AI-authored artifacts are bound to their final local SHA-256 values; this receipt does not bind itself."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-CIRCLED-SOURCES-TWO-AXIS-DRIVE",
+      "validated": true,
+      "evidence_ref": "gdrive:KFM Circled Sources — Distinctive Delta Synthesis#3.1"
+    },
+    {
+      "id": "KFM-CIRCLED-SOURCES-TWO-AXIS-REPO",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275#3.1"
+    },
+    {
+      "id": "KFM-ADR-INDEX",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-24T20:12:07Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This documentation-only contributor-control slice requires independent reporting of authority posture and capability maturity for material capability claims. It preserves the core four truth labels and adds no authority, contract enum, gate, lifecycle state, source activation, review, release, deployment, promotion, publication, access, or repository-setting effect. Rollback is a revert of the two contributor-document edits and this provenance receipt."
+}

@@ -9,10 +9,10 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Field | Current status |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot for this revision | `main@99337e68ba4299b667f27d5dd35c3dc92295933e` |
+| Evidence snapshot for this revision | `main@f7b9a29ccbf38453cf43efba8eb1cbc5af3eb275` |
 | Directory-governance authority reverified | `main@2262d5b374eebeb216494c05a8edb4cc189dfd84`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) |
 | Document role | Root contribution guide |
-| Truth posture | Cite-or-abstain; use the core four truth labels |
+| Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
 | Review route | Focused branch and draft pull request by default |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
 | Review-routing limitation | The listed GitHub teams and branch-protection enforcement remain **NEEDS VERIFICATION** |
@@ -328,6 +328,19 @@ Use these labels for material claims:
 | **NEEDS VERIFICATION** | Checkable, but not yet checked strongly enough to act as fact |
 
 `INFERRED`, `CONFLICTED`, `SUPERSEDED`, `RETAINED`, or similar terms may qualify a claim's relationship or lifecycle, but they do not replace the core four evidence labels.
+
+### Capability maturity is a separate axis
+
+Whenever a pull request makes a material claim about a repository capability, report two independent answers at a pinned evidence snapshot:
+
+| Axis | Pull-request vocabulary | Question answered | Must not imply |
+|---|---|---|---|
+| Authority / epistemic posture | `CONFIRMED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` | How strongly may the exact claim be relied on? | Implementation, deployment, activation, release, or publication |
+| Capability maturity | `IMPLEMENTED`, `PARTIAL`, `DRAFT`, `DEPRECATED`, `ABSENT`, `NOT INSPECTED` | What implementation evidence exists for the exact capability and scope? | Acceptance, evidence sufficiency, rights clearance, policy approval, review, release, publication, or public fitness |
+
+Do not infer either axis from the other. An implemented validator may enforce only a proposed inactive profile; an accepted placement decision may be only partially implemented; a confirmed source fact may remain held by rights or sensitivity controls. When a capability was not inspected, use `NOT INSPECTED` instead of inferring maturity from prose, filenames, schemas, workflow names, or check status.
+
+This is a reporting discipline, not a new machine enum, lifecycle state, gate result, policy outcome, ADR status, release state, or publication authority. Its proposal lineage and bounded non-effects are recorded in [`circled-whole-system-sources-distinctive-delta-source-map.md`](docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md#31-two-axis-assessment-authority-is-not-maturity).
 
 ### Evidence requirements
 
