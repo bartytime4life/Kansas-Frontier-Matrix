@@ -38,7 +38,7 @@ test("runs one bounded governed Focus request inside the Explore workspace", asy
     workspace.getByRole("button", { name: "Run bounded governed Focus request" }),
   ).toHaveCount(1);
   await expect(workspace).toContainText(
-    "only the endorsed synthetic summary crosses the client boundary",
+    "Only the endorsed synthetic summary crosses the client boundary",
   );
 
   await workspace
