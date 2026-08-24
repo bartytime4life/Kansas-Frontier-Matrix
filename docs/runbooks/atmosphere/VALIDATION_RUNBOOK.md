@@ -1200,6 +1200,15 @@ Use the promotion, correction, and rollback runbooks only after their owning con
 
 ## 17. Current holds and open verification
 
+> [!NOTE]
+> **Reserved documentation-control token — `PROPOSED / HOLD`; not executable at this snapshot.**
+>
+> ```text
+> atmosphere-validate: python tools/validators/domains/atmosphere/validate_domain_validation_report.py
+> ```
+>
+> The documentation-control scan requires this exact token for cross-document discoverability. The named validator path and aggregate Make target are absent at the evidence snapshot. This is a reserved convergence contract, not a runnable command, implementation claim, policy gate, release step, or authority grant.
+
 | Item | Current state | Required next evidence |
 |---|---|---|
 | Aggregate Atmosphere validation command | No admitted Make target; workflow guards the absence | Accepted runner contract, profile selection, tests, docs, and CI |

@@ -9,7 +9,7 @@ status: draft; repository-grounded; documentation-only; fixture-first; live-prop
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Atmosphere, source, evidence, policy, review, correction, release, cache, public-surface, Hazards-seam, and operations assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
-created: NEEDS VERIFICATION — the prior scaffold carried no creation date
+created: 2026-08-24
 updated: 2026-08-24
 policy_label: public; atmosphere; stale-state; supersession; fixture-first; no-network; non-release; not-for-life-safety
 current_path: docs/runbooks/atmosphere/STALE_STATE_RUNBOOK.md
@@ -81,6 +81,7 @@ related:
   - .github/workflows/domain-atmosphere.yml
 tags: [kfm, runbook, atmosphere, air, stale-state, freshness, expiry, supersession, lineage, correction, rollback, evidence, policy, no-network, not-for-life-safety]
 notes:
+  - "The prior scaffold's original creation date remains UNKNOWN; 2026-08-24 records the first substantive repository-grounded edition."
   - "Same-path documentation modernization under accepted ADR-0029; no root, lane, contract, schema, policy, fixture, validator, test, workflow, receipt, proof, release object, or public state is created or moved."
   - "The shared stale-state assessment is fixture-only and review-required. It does not decide actual freshness or mutate any object."
   - "The Atmosphere freshness Rego file remains a proposed default-deny scaffold, and no executable Atmosphere connector was verified."
