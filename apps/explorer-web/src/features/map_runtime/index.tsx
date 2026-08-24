@@ -13,6 +13,8 @@ import {
   type EvidenceDrawerViewModel,
 } from "../evidence_drawer";
 
+export * from "./runtime-trust-status";
+
 export { MAP_FEATURE_SELECTION_PROFILE };
 export type { MapFeatureSelection };
 

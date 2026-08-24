@@ -91,6 +91,7 @@ Rendered properties are therefore request scope, never evidence, and the resolve
 | Resolver throws | `ERROR / GOVERNED_RESOLVER_ERROR` |
 | Resolver widens evidence scope | `ERROR / DRAWER_EVIDENCE_OUTSIDE_SELECTION` |
 | Runtime leaves `READY` while resolution is pending | Pending result invalidated; no late drawer delivery |
+| Runtime snapshot changes | A separate text-first status presenter exposes the exact KFM-owned state and reason without inferring evidence, policy, sensitivity, review, release, correction, rollback authority, or publication state |
 | Strict drawer returns a governed negative state | Existing `ABSTAIN`, `DENY`, or `ERROR` projection |
 | Strict drawer returns supported evidence | `ANSWER / SUPPORTED` |
 
@@ -109,22 +110,28 @@ The bridge preserves the Evidence Drawer's current no-leak rules: denial and ope
 
 This is browser behavior evidence for the governed handoff, not proof of a real map renderer.
 
+`mountMapRuntimeTrustStatus(...)` subscribes to the same renderer-neutral port and keeps every finite runtime state visible through a stable `status` or `alert` region. Only `READY` is marked eligible to emit a candidate selection. Critical `DENIED`, `WITHDRAWN`, and `ERROR` states are assertive; other bounded states remain polite. The presenter uses fixed copy and exact reason codes, never raw renderer errors or upstream payloads.
+
 ## Files and tests
 
 - `apps/explorer-web/src/features/map_runtime/index.tsx`
 - `apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts`
+- `apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts`
 - `packages/maplibre/src/map-runtime-port.ts`
 - `packages/maplibre/src/null-map-runtime.ts`
 - `apps/explorer-web/tests/map-runtime-port.test.ts`
 - `apps/explorer-web/tests/map-runtime-evidence-binding.test.ts`
+- `apps/explorer-web/tests/map-runtime-trust-status.test.ts`
 - `apps/explorer-web/tests/map-evidence-drawer.test.ts`
 - `apps/explorer-web/tests/browser/map-evidence-drawer.spec.ts`
 - `apps/explorer-web/tests/browser/map-evidence-drawer.fixture.ts`
+- `apps/explorer-web/tests/browser/map-runtime-trust-status.spec.ts`
+- `apps/explorer-web/tests/browser/map-runtime-trust-status.fixture.ts`
 - `.github/workflows/ui-build.yml`
 - `tools/validators/maplibre/assess_acquisition_inventory.py`
 - `tests/maplibre/test_assess_acquisition_inventory.py`
 
-The test matrix covers matching layer admission, held/denied/invalid admission, cross-layer manifest reuse denial, supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, runtime trust-state invalidation, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection and snapshot events, strict runtime-to-evidence translation, invalid camera/selection/state rejection, selection clearing on negative state, stale-result suppression, and idempotent disposal.
+The test matrix covers matching layer admission, held/denied/invalid admission, cross-layer manifest reuse denial, supported evidence, missing evidence, policy denial, upstream error, evidence-scope widening, stale request suppression, runtime trust-state invalidation, visible text-first runtime status, critical alert semantics, keyboard use, accessibility status, and teardown. Shared-port coverage additionally proves deterministic initialization, KFM-owned selection and snapshot events, strict runtime-to-evidence translation, invalid camera/selection/state rejection, selection clearing on negative state, stale-result suppression, and idempotent disposal.
 
 ## Explicit non-effects
 

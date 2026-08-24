@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map runtime trust-status browser fixture</title>
+  </head>
+  <body>
+    <main aria-labelledby="fixture-title">
+      <h1 id="fixture-title">Map runtime trust-status browser fixture</h1>
+      <div aria-label="Runtime fixture controls">
+        <button type="button" data-runtime-action="initialize">Initialize runtime</button>
+        <button type="button" data-runtime-state="STALE">Mark runtime stale</button>
+        <button type="button" data-runtime-state="WITHDRAWN">Withdraw runtime</button>
+        <button type="button" data-runtime-state="ERROR">Mark runtime error</button>
+        <button type="button" data-runtime-action="dispose">Dispose runtime</button>
+      </div>
+      <div id="fixture-root"></div>
+    </main>
+    <script type="module" src="./map-runtime-trust-status.fixture.ts"></script>
+  </body>
+</html>
